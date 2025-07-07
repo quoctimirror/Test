@@ -1,0 +1,123 @@
+/* src/components/css/ARJewelryTryOn.css */
+
+/**
+ * Container chính:
+ * - Đây là phần sửa lỗi quan trọng nhất.
+ * - Component giờ đây tự định nghĩa kích thước của mình, không phụ thuộc vào cha.
+ */
+ .ar-jewelry-container {
+  /* Các thuộc tính về kích thước, đảm bảo component luôn có hình dạng đúng */
+  width: 100%;
+  max-width: 960px;          /* Giới hạn chiều rộng tối đa trên màn hình lớn */
+  aspect-ratio: 16 / 9;      /* Ép tỷ lệ khung hình video, tự động tính chiều cao */
+     
+  /* Các thuộc tính về giao diện và định vị */
+  border: 5px solid #646cff; /* Màu viền xanh tím để phân biệt với các component khác */
+  position: relative;
+  overflow: hidden;
+  background-color: #000;    /* Nền đen trong khi chờ video tải */
+  border-radius: 8px;        /* (Thêm) bo góc cho đẹp */
+}
+
+/**
+ * Kiểu chung cho cả Video và Canvas:
+ * - Chúng được xếp chồng lên nhau, với canvas nằm trên video.
+ * - `position: absolute` và các thuộc tính top/left/transform được dùng để
+ *   căn giữa cả hai phần tử một cách hoàn hảo trong container.
+ */
+.ar-video, .ar-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+     
+  /*
+   * Kỹ thuật responsive để lấp đầy container mà không làm méo hình:
+   * - `object-fit: cover` (cho video): Phóng to video để lấp đầy, cắt bớt phần thừa.
+   * - `height: 100%` và `width: 100%`: Đảm bảo lấp đầy container cha.
+   */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/**
+ * ✅ THAY ĐỔI CHÍNH: Loại bỏ scaleX(-1) cho camera sau
+ * - TRƯỚC: transform: translate(-50%, -50%) scaleX(-1); (hiệu ứng gương)
+ * - SAU: transform: translate(-50%, -50%); (camera sau tự nhiên)
+ * 
+ * Camera sau sẽ hiển thị đúng như thực tế:
+ * - Tay trái sẽ ở bên trái màn hình
+ * - Tay phải sẽ ở bên phải màn hình
+ * - Không có hiệu ứng "gương soi" làm người dùng bối rối
+ */
+.ar-video {
+  transform: translate(-50%, -50%);
+  /* Bỏ scaleX(-1) để có hiệu ứng camera sau */
+}
+
+/*
+ * Canvas sẽ nằm trên cùng, nhưng vì nó trong suốt (alpha: true trong JS),
+ * chúng ta sẽ thấy video phía sau. Các vật thể 3D sẽ được render lên đây.
+ */
+.ar-canvas {
+  /* Không cần thêm CSS gì đặc biệt ở đây */
+}
+
+/**
+ * Lớp phủ thông báo loading:
+ * - Nằm trên tất cả các lớp khác (`z-index: 10`).
+ * - Dùng flexbox để căn giữa nội dung một cách đơn giản.
+ * - Nền đen bán trong suốt để làm nổi bật thông báo.
+ */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  color: white;
+  font-size: 1.2rem;
+  font-family: sans-serif;
+  text-align: center;
+  padding: 1rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  border-radius: inherit; /* Kế thừa bo góc từ container cha */
+}
+
+/* ===============================================
+ * ✨ BỔ SUNG: CSS cho chế độ camera sau vs camera trước
+ * =============================================== */
+
+/**
+ * Nếu bạn muốn có thể chuyển đổi giữa camera trước và camera sau,
+ * có thể sử dụng các class modifier này:
+ */
+
+/* Camera trước (mirror/selfie mode) */
+.ar-video.front-camera {
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+/* Camera sau (rear camera mode) - mặc định */
+.ar-video.rear-camera {
+  transform: translate(-50%, -50%);
+}
+
+/* 
+ * Cách sử dụng trong JavaScript:
+ * 
+ * // Chuyển sang camera trước
+ * videoElement.className = 'ar-video front-camera';
+ * 
+ * // Chuyển sang camera sau  
+ * videoElement.className = 'ar-video rear-camera';
+ * 
+ * // Hoặc chỉ dùng class mặc định cho camera sau
+ * videoElement.className = 'ar-video';
+ */

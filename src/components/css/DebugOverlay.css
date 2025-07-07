@@ -1,0 +1,41 @@
+/* src/components/css/DebugOverlay.css */
+.debug-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 20; /* Nằm trên cả camera và canvas 3D */
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  pointer-events: none; /* Không bắt sự kiện chuột */
+  min-width: 250px;
+}
+
+.debug-overlay strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #ff9800; /* Màu cam */
+  font-size: 16px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 5px;
+}
+
+.debug-overlay pre {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  white-space: pre; /* Giữ nguyên các dấu xuống dòng (\n) */
+}
+
+/* Media query cho màn hình nhỏ */
+@media (max-width: 600px) {
+  .debug-overlay {
+    font-size: 11px;
+    min-width: 180px;
+    padding: 8px;
+  }
+}

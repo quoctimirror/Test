@@ -1,0 +1,5 @@
+npm create vite@latest
+npm i @mediapipe/tasks-vision
+tree -I 'node_modules|.git|build|.vscode'
+
+Authtoken saved to configuration file: /home/quocti/snap/ngrok/280/.config/ngrok/ngrok.yml

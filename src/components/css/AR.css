@@ -1,0 +1,99 @@
+/* src/components/css/AR.css */
+
+/**
+ * Container chính:
+ * - Giữ nguyên cấu trúc tuyệt vời của bạn: responsive, có tỷ lệ khung hình,
+ *   và tự định nghĩa kích thước.
+ */
+ .ar-jewelry-container {
+  width: 100%;
+  max-width: 960px;
+  aspect-ratio: 16 / 9;
+  border: 5px solid #646cff;
+  position: relative;
+  overflow: hidden;
+  background-color: #000;
+  border-radius: 8px;
+  margin: auto; /* (Thêm) Tự động căn giữa component */
+}
+
+/**
+ * ✅ THAY ĐỔI CHÍNH: Cấu trúc Xếp lớp (Layering)
+ * 
+ * - Chúng ta cần 3 lớp: Video < Canvas 2D < Canvas 3D.
+ * - Đoạn code này định nghĩa kiểu chung cho tất cả các lớp.
+ * - `position: absolute` và `transform` để căn giữa tất cả các lớp.
+ */
+.ar-jewelry-container > * {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+/**
+ * Lớp 1: Video (z-index: 1, dưới cùng)
+ * - Hiển thị feed từ camera.
+ * - `object-fit: cover` để lấp đầy container mà không bị méo.
+ */
+.ar-video {
+  z-index: 1;
+  object-fit: cover;
+}
+
+/**
+ * Lớp 2: Canvas 2D để vẽ Debug (z-index: 2, ở giữa)
+ * - Dùng để vẽ các landmarks, connectors, và chấm tròn trung điểm.
+ * - Phải trong suốt để thấy được video bên dưới.
+ */
+.debug-canvas {
+  z-index: 2;
+  background-color: transparent;
+}
+
+/**
+ * Lớp 3: Canvas 3D để render Nhẫn (z-index: 3, trên cùng)
+ * - Dùng để render model 3D của Three.js.
+ * - Cũng phải trong suốt để thấy được canvas 2D và video bên dưới.
+ */
+.three-canvas {
+  z-index: 3;
+  background-color: transparent;
+}
+
+/**
+ * Lớp phủ thông báo loading:
+ * - Nằm trên tất cả các lớp khác (`z-index: 100`).
+ * - Giữ nguyên thiết kế rất tốt của bạn.
+ */
+.loading-overlay {
+  z-index: 100; /* Tăng z-index để chắc chắn nó luôn ở trên cùng */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 1.2rem;
+  font-family: sans-serif;
+  text-align: center;
+  padding: 1rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  border-radius: inherit;
+}
+
+/* ===============================================
+ * ✨ BỔ SUNG: CSS cho chế độ camera sau vs camera trước
+ * - Giữ nguyên phần code rất hay này của bạn.
+ * =============================================== */
+
+/* Camera trước (mirror/selfie mode) */
+.ar-video.front-camera {
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+/* Camera sau (rear camera mode) - mặc định */
+.ar-video.rear-camera {
+  transform: translate(-50%, -50%);
+}

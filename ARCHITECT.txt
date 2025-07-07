@@ -1,0 +1,47 @@
+├── ARCHITECT.txt
+├── README.md
+├── eslint.config.js
+├── index.html
+├── init_commands.txt
+├── package-lock.json
+├── package.json
+├── public
+│   ├── models
+│   │   ├── ring_test_model.glb
+│   │   └── ring_test_model.glb:Zone.Identifier
+│   └── vite.svg
+├── src
+│   ├── App.css
+│   ├── App.jsx
+│   ├── assets
+│   │   ├── react.svg
+│   │   ├── ring.png
+│   │   └── ringfront.jpg
+│   ├── components
+│   │   ├── css
+│   │   │   ├── AR.css
+│   │   │   ├── ARJewelryTryOn.css
+│   │   │   ├── ComparativeDebugDisplay.css
+│   │   │   ├── DebugDisplay.css
+│   │   │   ├── DebugOverlay.css
+│   │   │   ├── FingerDetector.css
+│   │   │   ├── ModelViewer.css
+│   │   │   ├── RealWorldCamera.css
+│   │   │   └── RingFingerDetector.css
+│   │   └── jsx
+│   │       ├── AR.jsx
+│   │       ├── ARJewelryTryOn.jsx
+│   │       ├── CameraTest.jsx
+│   │       ├── ComparativeDebugDisplay.jsx
+│   │       ├── DebugDisplay.jsx
+│   │       ├── DebugOverlay.jsx
+│   │       ├── FingerDetector.jsx
+│   │       ├── ModelViewer.jsx
+│   │       ├── RealWorldCamera.jsx
+│   │       └── RingFingerDetector.jsx
+│   ├── index.css
+│   ├── main.jsx
+│   └── utils
+│       ├── ReviewRingStructure.js
+│       └── RingTargetCalculator.js
+└── vite.config.js

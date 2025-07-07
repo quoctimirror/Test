@@ -1,0 +1,39 @@
+.debug-screen-overlay {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 220px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.debug-screen-overlay h4 {
+  margin: 0 0 10px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #555;
+  color: #00ffdd;
+  font-size: 16px;
+}
+
+.debug-screen-overlay .debug-section {
+  margin-bottom: 10px;
+}
+.debug-screen-overlay .debug-section:last-child {
+  margin-bottom: 0;
+}
+
+.debug-screen-overlay strong {
+  color: #ffc400;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.debug-screen-overlay p {
+  margin: 3px 0;
+}
