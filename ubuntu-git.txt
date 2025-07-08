@@ -1,0 +1,14 @@
+sudo apt install git -y
+git --version
+git config --global user.name "quocti"
+git config --global user.email "ti.le@mirrorfuturediamond.com"
+git init 
+ls -a
+cat gitignore
+git remote add origin <URL_REPO_CUA_BAN>
+git remote -v --> check remote success yet ?
+git add . 
+git status
+git commit 
+git checkout -b tên branch của bạn
+git push -u origin tên nhánh của bạn 

@@ -5,50 +5,24 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import '../css/AR1.css'; // Giả sử bạn vẫn dùng chung CSS
 
-
-// --- HÀM TIỆN ÍCH ---
-/**
- * Tính toán góc có dấu (signed angle) giữa vector "thẳng lên" (0, 1) và
- * hình chiếu 2D của một vector 3D trên mặt phẳng Oxy.
- * 
- * @param {THREE.Vector3} targetVec - Vector 3D của mu bàn tay (palmNormal).
- * @returns {number} - Góc quay tính bằng radian.
- */
-function calculateSignedAngleOnXY(targetVec) {
-    // Vector tham chiếu: Trục Oy trong không gian 2D, tương đương (0, 1).
-    const upVecX = 0;
-    const upVecY = 1;
-
-    // Lấy thành phần X và Y của vector mục tiêu
-    const targetX = targetVec.x;
-    const targetY = targetVec.y;
-
-    // Công thức tính góc có dấu giữa vector A(Ax, Ay) và B(Bx, By): atan2(Ax*By - Ay*Bx, Ax*Bx + Ay*By)
-    const dot = upVecX * targetX + upVecY * targetY; // = targetY
-    const det = upVecX * targetY - upVecY * targetX; // = -targetX
-    
-    const signedAngleRad = Math.atan2(det, dot);
-    
-    return signedAngleRad;
-}
-
-
 // --- PHẦN 2: ĐỊNH NGHĨA COMPONENT ---
 const AR3_rotateRingZ = () => {
     // --- 2.1: KHỞI TẠO REF VÀ STATE ---
     const videoRef = useRef(null);
     const threeCanvasRef = useRef(null);
     const [loadingMessage, setLoadingMessage] = useState("Đang khởi tạo...");
-
+    
     // --- 2.2: CÁC HẰNG SỐ ĐIỀU CHỈNH ---
     const SCALE_ADJUSTMENT_FACTOR = 0.2;
     const BASE_RING_SCALE = 0.48;
     const PALM_FACING_THRESHOLD = 0.3;
     const USE_OCCLUDER = true;
     const OCCLUDER_RADIUS_FACTOR = 0.1;
-    const SMOOTHING_FACTOR = 0.25;
+    const SMOOTHING_FACTOR = 0.8;
+    const AUTO_ROTATION_SPEED = 0.1; 
+    const TILT_THRESHOLD = 0.2; 
 
-    // --- 2.3: KHỞI TẠO TRẠNG THÁI ỨNG DỤNG ---
+    // --- CẢI TIẾN 2: TỐI ƯU HÓA BỘ NHỚ ---
     const appState = useRef({
         handLandmarker: null,
         animationFrameId: null,
@@ -59,14 +33,31 @@ const AR3_rotateRingZ = () => {
         ringParts: { diamond: null, band: null },
         fingerOccluder: null,
         math: {
-            p0: new THREE.Vector3(), p5: new THREE.Vector3(), p9: new THREE.Vector3(),
-            p13: new THREE.Vector3(), p14: new THREE.Vector3(), p17: new THREE.Vector3(),
-            fingerDir: new THREE.Vector3(), palmDirX: new THREE.Vector3(), palmDirY: new THREE.Vector3(),
-            palmNormal: new THREE.Vector3(), fingerX: new THREE.Vector3(), fingerY: new THREE.Vector3(),
-            fingerZ: new THREE.Vector3(), midPoint: new THREE.Vector3(), targetScale: new THREE.Vector3(),
-            targetQuaternion: new THREE.Quaternion(), targetMatrix: new THREE.Matrix4(),
-            targetOccluderScale: new THREE.Vector3(), targetOccluderQuaternion: new THREE.Quaternion(),
+            p0: new THREE.Vector3(),
+            p5: new THREE.Vector3(),
+            p9: new THREE.Vector3(),
+            p13: new THREE.Vector3(),
+            p14: new THREE.Vector3(),
+            p17: new THREE.Vector3(),
+            fingerDir: new THREE.Vector3(),
+            palmDirX: new THREE.Vector3(),
+            palmDirY: new THREE.Vector3(),
+            palmNormal: new THREE.Vector3(),
+            fingerX: new THREE.Vector3(),
+            fingerY: new THREE.Vector3(),
+            fingerZ: new THREE.Vector3(),
+            midPoint: new THREE.Vector3(),
+            targetScale: new THREE.Vector3(),
+            targetQuaternion: new THREE.Quaternion(), // Dùng để lưu hướng chính của ngón tay
+            targetMatrix: new THREE.Matrix4(),
+            targetOccluderScale: new THREE.Vector3(),
+            targetOccluderQuaternion: new THREE.Quaternion(),
             yAxis: new THREE.Vector3(0, 1, 0),
+            rotationAngle: 0,
+            autoRotationQuaternion: new THREE.Quaternion(), // Dùng để lưu góc xoay phụ
+            // *** DÒNG THAY ĐỔI 1: THÊM BIẾN TẠM ĐỂ GIỮ KẾT QUẢ CUỐI CÙNG ***
+            finalRingQuaternion: new THREE.Quaternion(), // Dùng để kết hợp hướng chính và xoay phụ
+            localZAxis: new THREE.Vector3(0, 0, 1)
         }
     }).current;
 
@@ -166,8 +157,7 @@ const AR3_rotateRingZ = () => {
             };
             animate();
         };
-
-        // TỐI ƯU HÓA: Hàm này giờ sẽ ghi kết quả vào một vector có sẵn thay vì tạo mới.
+        
         const getWorldVector = (landmark, distance, targetVector) => {
             const fovInRadians = (appState.camera.fov * Math.PI) / 180;
             const height = 2 * Math.tan(fovInRadians / 2) * distance;
@@ -188,8 +178,8 @@ const AR3_rotateRingZ = () => {
                 const handedness = results.handedness?.[0]?.[0]?.categoryName;
 
                 if (landmarks[13] && landmarks[14] && landmarks[0] && landmarks[5] && landmarks[17] && landmarks[9] && handedness) {
-                    // --- PHẦN A: TÍNH TOÁN CÁC VECTOR CƠ BẢN ---
                     const distance = appState.camera.position.z - 1.5;
+
                     getWorldVector(landmarks[0], distance, math.p0);
                     getWorldVector(landmarks[5], distance, math.p5);
                     getWorldVector(landmarks[9], distance, math.p9);
@@ -202,6 +192,7 @@ const AR3_rotateRingZ = () => {
                     math.targetScale.set(requiredScale, requiredScale, requiredScale);
                     appState.ringModel.scale.lerp(math.targetScale, SMOOTHING_FACTOR);
 
+                    // --- TÍNH TOÁN CÁC HƯỚNG CƠ BẢN CỦA BÀN TAY ---
                     math.fingerDir.subVectors(math.p14, math.p13).normalize();
                     math.palmDirX.subVectors(math.p5, math.p17).normalize();
                     math.palmDirY.subVectors(math.p5, math.p0).normalize();
@@ -212,31 +203,36 @@ const AR3_rotateRingZ = () => {
                     math.fingerX.crossVectors(math.fingerDir, math.fingerZ).normalize();
                     math.fingerY.crossVectors(math.fingerZ, math.fingerX).normalize();
                     math.midPoint.addVectors(math.p13, math.p14).multiplyScalar(0.5);
-
-                    // --- PHẦN B: CẬP NHẬT NHẪN VỚI LOGIC XOAY MỚI ---
                     appState.ringModel.position.lerp(math.midPoint, SMOOTHING_FACTOR);
-                    
-                    // B.1: Định hướng cơ bản cho nhẫn (đặt lên ngón tay)
+
+                    // *** KHỐI LOGIC THAY ĐỔI 2: TÁCH BIỆT VIỆC TÍNH TOÁN VÀ ÁP DỤNG ***
+
+                    // BƯỚC A: Tính hướng chính của nhẫn theo ngón tay
                     math.targetMatrix.makeBasis(math.fingerX, math.fingerZ, math.fingerY.negate());
                     math.targetQuaternion.setFromRotationMatrix(math.targetMatrix);
-                    appState.ringModel.quaternion.slerp(math.targetQuaternion, SMOOTHING_FACTOR);
 
-                    // B.2: Tính góc xoay phụ quanh trục Z-local
-                    let wristTwistAngle = 0;
+                    // BƯỚC B: Tính góc xoay phụ dựa trên độ nghiêng của mu bàn tay
                     const isPalmFacingCamera = math.palmNormal.z < -PALM_FACING_THRESHOLD;
-                    
                     if (!isPalmFacingCamera) {
-                        wristTwistAngle = calculateSignedAngleOnXY(math.palmNormal);
+                        if (math.palmNormal.x > TILT_THRESHOLD) {
+                            math.rotationAngle -= AUTO_ROTATION_SPEED;
+                        } else if (math.palmNormal.x < -TILT_THRESHOLD) {
+                            math.rotationAngle += AUTO_ROTATION_SPEED;
+                        }
                     }
-                    
-                    // B.3: Áp dụng góc xoay phụ vào thuộc tính rotation.z của nhẫn
-                    appState.ringModel.rotation.z = THREE.MathUtils.lerp(
-                        appState.ringModel.rotation.y,
-                        wristTwistAngle,
-                        SMOOTHING_FACTOR
-                    );
+                    math.autoRotationQuaternion.setFromAxisAngle(math.localZAxis, math.rotationAngle);
 
-                    // --- PHẦN C: CẬP NHẬT CÁC THÀNH PHẦN KHÁC ---
+                    // BƯỚC C: Kết hợp hướng chính và góc xoay phụ thành hướng cuối cùng
+                    // Bắt đầu bằng hướng chính, sau đó nhân với góc xoay phụ
+                    math.finalRingQuaternion
+                        .copy(math.targetQuaternion)
+                        .multiply(math.autoRotationQuaternion);
+
+                    // BƯỚC D: Áp dụng hướng cuối cùng vào model một cách mượt mà
+                    appState.ringModel.quaternion.slerp(math.finalRingQuaternion, SMOOTHING_FACTOR);
+
+
+                    // --- CÁC LOGIC KHÁC ---
                     if (USE_OCCLUDER && appState.fingerOccluder) {
                         appState.fingerOccluder.visible = true;
                         const occluderRadius = fingerWidth * OCCLUDER_RADIUS_FACTOR;
@@ -249,7 +245,6 @@ const AR3_rotateRingZ = () => {
                     }
                     
                     appState.ringParts.band.visible = true;
-                    // Logic hiển thị kim cương lấy từ code gốc bạn cung cấp
                     appState.ringParts.diamond.visible = !isPalmFacingCamera;
 
                 } else {

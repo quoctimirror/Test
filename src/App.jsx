@@ -24,7 +24,6 @@ function App() {
     <div className="App">
       <header className="app-header-custom">
         <h1>💍 Virtual Ring Try-On</h1>
-        <p>Select a feature to test below.</p>
       </header>
 
       {/* <AR1 /> */}
