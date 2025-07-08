@@ -31,8 +31,9 @@ function App() {
       {/* <AR1 /> */}
       {/* <AR2_SmoothlyMotion /> */}
       {/* <AR3_rotateRingZ /> */}
-      {/* {<AR4 />}; */}
+      
       {<QRScan />}
+      {<AR4 />}
       
       
       

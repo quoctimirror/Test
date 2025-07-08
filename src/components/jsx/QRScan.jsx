@@ -18,9 +18,9 @@ const QRScan = () => {
       />
 
       {/* Tiêu đề tiếng Việt */}
-      <h2 className="qr-scan-subtitle">
+      {/* <h2 className="qr-scan-subtitle">
         Trải nghiệm AR Thử Nhẫn
-      </h2>
+      </h2> */}
     </div>
   );
 };

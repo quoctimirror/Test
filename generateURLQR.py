@@ -2,10 +2,10 @@ import qrcode
 import os
 
 # Đường dẫn tuyệt đối đến thư mục public của React
-public_path = os.path.join("react-app", "public", "ar_try_on_rings_qr.png")
+public_path = os.path.join("public", "ar_try_on_rings_qr.png")
 
 # URL đích
-url = "https://fec6-118-69-29-164.ngrok-free.app"
+url = "https://b8d74ae25ea9.ngrok-free.app"
 
 # Tạo mã QR
 qr = qrcode.QRCode(
