@@ -1,0 +1,65 @@
+/* QRScan.css */
+/* --- Container chính, tối ưu cho mọi màn hình --- *//* --- Container chính, tối ưu cho mọi màn hình --- */
+.qr-scan-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Vẫn giữ để căn giữa trong không gian còn lại */
+  min-height: 100vh;
+  background-color: var(--background-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  text-align: center;
+  
+  /* 
+    THAY ĐỔI Ở ĐÂY:
+    Padding trên nhỏ hơn padding dưới sẽ đẩy nội dung lên cao hơn.
+    Sử dụng đơn vị vh (viewport height) để nó co giãn theo chiều cao màn hình.
+  */
+  padding-top: 5vh; 
+  padding-bottom: 20vh;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước tổng */
+}
+
+.qr-scan-icon {
+  margin-right: 15px;
+  /* Icon sẽ có kích thước tương ứng với font size của cha nó */
+}
+
+/* --- Hình ảnh mã QR --- */
+.qr-code-image {
+  /*
+    Kích thước responsive:
+    - Rộng 65% chiều rộng màn hình
+    - Nhưng không bao giờ nhỏ hơn 180px và không lớn hơn 250px
+  */
+  width: clamp(180px, 65vw, 250px);
+  height: auto; /* Giữ đúng tỷ lệ của ảnh */
+  
+  background-color: white;
+  border: 8px solid white;
+  border-radius: 12px;
+  padding: 10px;
+  box-sizing: content-box; /* Padding sẽ được thêm vào bên trong, không ảnh hưởng đến width */
+}
+
+/* --- Tiêu đề tiếng Việt (Trải nghiệm AR Thử Nhẫn) --- */
+.qr-scan-subtitle {
+  color: var(--secondary-text-color);
+  font-weight: bold;
+  font-size: clamp(1.8rem, 7vw, 2.5rem);
+  margin-top: 30px;
+}
+
+/* --- Điều chỉnh cho màn hình lớn hơn (Tablet trở lên) --- */
+@media (min-width: 768px) {
+  .qr-scan-title {
+    margin-bottom: 20px;
+  }
+
+  .qr-scan-subtitle {
+    margin-top: 40px;
+  }
+}

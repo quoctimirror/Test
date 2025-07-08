@@ -13,6 +13,8 @@ import AR from './components/jsx/AR';
 import AR1 from './components/jsx/AR1';
 import AR2_SmoothlyMotion from './components/jsx/AR2_SmoothlyMotion';
 import AR3_rotateRingZ from './components/jsx/AR3_rotateRingZ';
+import AR4 from './components/jsx/AR4';
+import QRScan from './components/jsx/QRScan';
 import './App.css';
 
 
@@ -28,7 +30,10 @@ function App() {
 
       {/* <AR1 /> */}
       {/* <AR2_SmoothlyMotion /> */}
-      <AR3_rotateRingZ />
+      {/* <AR3_rotateRingZ /> */}
+      {/* {<AR4 />}; */}
+      {<QRScan />}
+      
       
       
       {/* Sử dụng <nav> cho ngữ nghĩa tốt hơn */}
