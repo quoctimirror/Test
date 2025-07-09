@@ -4,15 +4,59 @@ body,
 html {
   margin: 0;
   padding: 0;
-  height: 100%;
+  /* height: 100%; */
   font-family: "Georgia", serif;
+  overflow-x: hidden;
+}
+
+/* Container chứa toàn bộ hiệu ứng cuộn */
+.scroll-container {
+  height: 200vh; /* Cao gấp đôi để chứa cả 2 giai đoạn */
+  position: relative;
+}
+
+/* Lớp phủ màu trắng cho hiệu ứng trượt vào */
+.white-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 2; /* Nằm trên gradient */
+  transform: translateX(100%); /* Ban đầu ẩn hoàn toàn ở bên phải */
+}
+
+/* Div bọc các phần tử cần làm mờ */
+.elements-to-fade {
+  /* Biến nó thành một lớp tuyệt đối, phủ đầy màn hình */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Đặt z-index cao nhất để nó và các con của nó nằm trên cùng */
+  z-index: 4;
+
+  /* Giữ lại transition cho mượt */
+  transition: opacity 0.1s linear;
+
+  /* RẤT QUAN TRỌNG: Lớp này sẽ chặn các sự kiện chuột. 
+     Thuộc tính này làm cho lớp này "trong suốt" với các cú click,
+     cho phép bạn tương tác với các button bên dưới khi cần. */
+  pointer-events: none;
 }
 
 .homepage {
   height: 100vh;
-  position: relative;
+  /* Dùng position: fixed để nó cố định hoàn toàn */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   color: white;
-  overflow: hidden;
+  z-index: 1;
 }
 
 .gradient-top {
@@ -32,6 +76,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 .gradient-bottom {
@@ -51,6 +96,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
 }
 
 /* Navbar */
@@ -63,7 +109,7 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 10;
+  z-index: auto;
 }
 
 .menu-wrapper {
@@ -171,16 +217,19 @@ html {
   top: 0;
   left: 0;
   background: white;
-  border-radius: 20px;
-  padding: 15px;
+  border-radius: 30px;
   width: 456px;
-  height: 487px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  padding: 70px 40px 70px 52px;
+  box-sizing: border-box;
   transform: scale(0);
   transform-origin: top left;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: 1;
   opacity: 0;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .menu-wrapper:hover .menu-popup {
@@ -193,28 +242,30 @@ html {
   color: black;
 }
 
+.menu-popup .menu-section-2 li {
+  font-size: 14px;
+}
+
 .menu-popup ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .menu-popup li {
-  margin-bottom: 10px;
-  color: #888;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #e0e0e0;
   cursor: pointer;
-  transition: color 0.2s;
-  padding: 5px 10px;
-  border-radius: 5px;
+  transition: color 0.2s ease;
+  padding: 2px 0;
 }
 
-.menu-popup li.disabled {
-  color: #ccc;
-  pointer-events: none;
-}
-
-.menu-popup li:hover:not(.disabled) {
+.menu-popup li:hover {
   color: black;
 }
 
@@ -230,7 +281,7 @@ html {
   top: 50.25%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 5;
+  z-index: 3;
 }
 
 .main-logo {
@@ -242,9 +293,9 @@ html {
 /* Tagline Section */
 .tagline-section {
   position: absolute;
-  top: 75vh;
+  top: calc(50% + 150px);
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   z-index: 5;
   text-align: center;
   color: white;
@@ -254,7 +305,7 @@ html {
   font-family: "Georgia", serif;
   font-size: clamp(14px, 1.5vw, 16px);
   font-weight: 400;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   letter-spacing: 1.5px;
   opacity: 0.9;
   white-space: nowrap;
@@ -328,8 +379,8 @@ html {
   background: transparent;
   border: 1px solid white;
   border-radius: 100%;
-  /* width: clamp(40px, 8vw, 50px); */
-  height: clamp(45px, 8vw, 60px);
+  width: clamp(40px, 8vw, 50px);
+  height: clamp(45px, 8vw, 50px);
   /* font-size: clamp(24px, 6vw, 40px); */
   color: white;
   cursor: pointer;
@@ -341,6 +392,47 @@ html {
 
 .scroll-down button:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Vetor Button */
+.vetor-button {
+  position: absolute;
+  bottom: 20px;
+  right: 50px;
+  z-index: 10;
+}
+
+.vetor-button button {
+  background: transparent;
+  border: 1.5px solid white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.vetor-button button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.vetor-button button img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Kích hoạt lại sự kiện chuột cho các vùng tương tác */
+.navbar,
+.tagline-section,
+.scroll-down,
+.vetor-button {
+  pointer-events: auto;
 }
 
 /* Media Queries for Mobile */
@@ -372,16 +464,28 @@ html {
   }
 
   .tagline-section {
-    top: calc(50% + 120px);
+    top: 75vh;
+  }
+
+  .menu-popup {
+    width: 90vw;
+    max-width: 400px;
+    padding: 50px 30px 50px 40px;
+    gap: 60px;
+  }
+
+  .menu-popup li {
+    font-size: 14px;
+  }
+
+  .menu-popup .menu-section-2 li {
+    font-size: 12px;
   }
 
   .tagline-top {
     font-size: clamp(10px, 2vw, 14px);
     margin-bottom: 8px;
-    width: 165px;
-    height: 14px;
     white-space: nowrap;
-    overflow: hidden;
   }
 
   .future-text,
@@ -409,6 +513,21 @@ html {
     height: 45px;
     font-size: 20px;
   }
+
+  .vetor-button {
+    bottom: 30px;
+    right: 20px;
+  }
+
+  .vetor-button button {
+    width: 45px;
+    height: 45px;
+  }
+
+  .vetor-button button img {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -434,16 +553,28 @@ html {
   }
 
   .tagline-section {
-    top: calc(50% + 100px);
+    top: 70vh;
+  }
+
+  .menu-popup {
+    width: 95vw;
+    max-width: 350px;
+    padding: 40px 20px 40px 30px;
+    gap: 50px;
+  }
+
+  .menu-popup li {
+    font-size: 13px;
+  }
+
+  .menu-popup .menu-section-2 li {
+    font-size: 11px;
   }
 
   .tagline-top {
     font-size: clamp(8px, 2.5vw, 12px);
     margin-bottom: 6px;
-    width: 165px;
-    height: 14px;
     white-space: nowrap;
-    overflow: hidden;
   }
 
   .future-text,
@@ -472,4 +603,50 @@ html {
     height: 40px;
     font-size: 18px;
   }
+
+  .vetor-button {
+    bottom: 30px;
+    right: 15px;
+  }
+
+  .vetor-button button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .vetor-button button img {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Thêm vào cuối file home.css */
+.next-section {
+  background-color: #f0f0f0;
+  color: #333;
+  
+  /* Đặt chiều cao cho nó để tạo ra không gian cuộn thực sự */
+  height: 100vh;
+  
+  padding: 100px 5%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  /* Thêm để đảm bảo nó nằm trên lớp gradient cũ khi cuộn lên */
+  position: relative;
+  z-index: 5;
+}
+
+.next-section h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.next-section p {
+  font-size: 1.2rem;
+  max-width: 600px;
 }

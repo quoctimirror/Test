@@ -15,15 +15,21 @@ export default function Navbar() {
           <span className="menu-text">Menu</span>
         </div>
         <div className="menu-popup">
-          <ul>
-            <li>Homepage</li>
-            <li>The gems</li>
-            <li>Services</li>
-            <li>About</li>
-            <li>Location</li>
-            <li>Contact</li>
-            <li>Account</li>
-          </ul>
+          <div className="menu-section-1">
+            <ul>
+              <li>Homepage</li>
+              <li>The gems</li>
+              <li>Services</li>
+              <li>About</li>
+            </ul>
+          </div>
+          <div className="menu-section-2">
+            <ul>
+              <li>Location</li>
+              <li>Contact</li>
+              <li>Account</li>
+            </ul>
+          </div>
         </div>
       </div>
       <img src={MirrorLogo} alt="Mirror Logo" className="navbar-logo" />
