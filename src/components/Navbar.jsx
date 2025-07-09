@@ -1,6 +1,7 @@
 import "../styles/home.css";
 import { IoMdMenu } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
+import MirrorLogo from "../assets/images/Mirror_Logo_new.svg";
 
 export default function Navbar() {
   return (
@@ -25,7 +26,7 @@ export default function Navbar() {
           </ul>
         </div>
       </div>
-      <div className="title">MIRROR</div>
+      <img src={MirrorLogo} alt="Mirror Logo" className="navbar-logo" />
       <a href="#contact" className="contact-link">
         Contact us
       </a>

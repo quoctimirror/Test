@@ -149,11 +149,21 @@ html {
 .contact-link {
   background: transparent;
   color: white;
-  border: 1px solid white;
   padding: 8px 16px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: clamp(12px, 2vw, 14px);
+  font-family: "BT Beau Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 110%;
+  letter-spacing: 0%;
+  text-align: center;
+  width: clamp(70px, 8vw, 84px);
+  height: clamp(10px, 1.2vw, 12px);
+  opacity: 1;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-popup {
@@ -208,26 +218,71 @@ html {
   color: black;
 }
 
-.title {
-  font-size: clamp(20px, 4vw, 30px);
-  letter-spacing: 3px;
-  font-weight: 400;
-  font-style: normal;
-  font-family: "PPNeueMontreal-Semibold", sans-serif;
+.navbar-logo {
+  width: 126.65px;
+  /* height: 25px; */
+  opacity: 1;
 }
 
 /* Logo Center */
 .logo-center {
   position: absolute;
-  top: 50%;
+  top: 50.25%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
 }
 
 .main-logo {
-  max-width: 200px;
-  height: auto;
+  width: 111.78px;
+  height: 224.18px;
+  opacity: 1;
+}
+
+/* Tagline Section */
+.tagline-section {
+  position: absolute;
+  top: 75vh;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  text-align: center;
+  color: white;
+}
+
+.tagline-top {
+  font-family: "Georgia", serif;
+  font-size: clamp(14px, 1.5vw, 16px);
+  font-weight: 400;
+  margin-bottom: 15px;
+  letter-spacing: 1.5px;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.tagline-bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.future-text {
+  font-family: "SaolDisplay-Regular", serif;
+  font-size: clamp(38px, 5vw, 60px);
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.diamond-text {
+  font-family: "SaolDisplay-RegularItalic", serif;
+  font-size: clamp(38px, 5vw, 60px);
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1;
+  font-style: italic;
 }
 
 /* Logo Reflection */
@@ -294,15 +349,49 @@ html {
     padding: 0 20px;
   }
 
-  .menu-button,
-  .contact-link {
+  .menu-button {
     padding: 6px 12px;
     font-size: 12px;
   }
 
-  .title {
-    font-size: 20px;
-    letter-spacing: 2px;
+  .contact-link {
+    padding: 6px 12px;
+    font-size: 14px;
+    width: clamp(60px, 10vw, 75px);
+    height: clamp(8px, 1.5vw, 10px);
+  }
+
+  .navbar-logo {
+    width: clamp(80px, 12vw, 126.65px);
+    height: clamp(16px, 3vw, 25px);
+  }
+
+  .main-logo {
+    width: clamp(60px, 15vw, 111.78px);
+    height: clamp(120px, 30vw, 224.18px);
+  }
+
+  .tagline-section {
+    top: calc(50% + 120px);
+  }
+
+  .tagline-top {
+    font-size: clamp(10px, 2vw, 14px);
+    margin-bottom: 8px;
+    width: 165px;
+    height: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: clamp(20px, 5vw, 36px);
+  }
+
+  .tagline-bottom {
+    width: 395px;
+    height: 64px;
   }
 
   .logo-top,
@@ -327,15 +416,49 @@ html {
     padding: 0 15px;
   }
 
-  .menu-button,
-  .contact-link {
+  .menu-button {
     padding: 4px 8px;
     font-size: 11px;
   }
 
-  .title {
-    font-size: 18px;
-    letter-spacing: 1px;
+  .contact-link {
+    padding: 4px 8px;
+    font-size: 12px;
+    width: clamp(50px, 12vw, 65px);
+    height: clamp(6px, 2vw, 8px);
+  }
+
+  .main-logo {
+    width: clamp(50px, 18vw, 111.78px);
+    height: clamp(100px, 36vw, 224.18px);
+  }
+
+  .tagline-section {
+    top: calc(50% + 100px);
+  }
+
+  .tagline-top {
+    font-size: clamp(8px, 2.5vw, 12px);
+    margin-bottom: 6px;
+    width: 165px;
+    height: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: clamp(16px, 6vw, 28px);
+  }
+
+  .tagline-bottom {
+    width: 395px;
+    height: 64px;
+  }
+
+  .navbar-logo {
+    width: clamp(70px, 15vw, 126.65px);
+    height: clamp(14px, 4vw, 25px);
   }
 
   .logo-top,
