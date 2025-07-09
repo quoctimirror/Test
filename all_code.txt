@@ -1,0 +1,1367 @@
+================================================================================
+MIRROR FUTURE DIAMOND WEBSITE - TOÀN BỘ SOURCE CODE
+================================================================================
+Tổng số: 15 file code
+Ngày tạo: 2025-01-09
+
+================================================================================
+1. package.json
+================================================================================
+{
+  "name": "mirror-diamond-website",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.1",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "eslint": "^9.30.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "vite": "^7.0.3"
+  }
+}
+
+================================================================================
+2. vite.config.js
+================================================================================
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+})
+
+================================================================================
+3. eslint.config.js
+================================================================================
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{js,jsx}'],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs['recommended-latest'],
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
+    rules: {
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+    },
+  },
+])
+
+================================================================================
+4. index.html
+================================================================================
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Mirror Future Diamond</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta property="twitter:card" content="summary_large_image" />
+
+  <!-- Các thư viện bên thứ 3 -->
+  <link rel="stylesheet" href="https://unpkg.com/animate.css@4.1.1/animate.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@teleporthq/teleport-custom-scripts/dist/style.css" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
+
+================================================================================
+5. src/main.jsx
+================================================================================
+// src/main.jsx
+
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+
+// SỬA LỖI: Import các file CSS cần thiết
+import './styles/global.css';      // 1. Reset và style chung
+import './styles/variables.css';  // 2. Biến và class của Design System
+import './styles/fonts.css';        // 3. fonts
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+
+================================================================================
+6. src/App.jsx
+================================================================================
+// src/App.jsx
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from './routes/AppRoutes';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
+}
+
+export default App;
+
+================================================================================
+7. src/routes/AppRoutes.jsx
+================================================================================
+// src/routes/index.jsx
+
+import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
+
+// Lazy-load components
+const HomePage = lazy(() => import("../pages/HomePage"));
+const UniverseSection = lazy(() => import("../components/UniverseSection"));
+
+export default function AppRoutes() {
+  return (
+    // SỬA LỖI: Bọc Routes bằng Suspense để lazy loading hoạt động
+    // Fallback là UI sẽ hiển thị trong khi component đang được tải
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '2rem' }}>Loading...</div>}>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/universe-section-developing" element={<UniverseSection />} />
+        {/* SỬA LỖI: Thêm route cho các đường dẫn không tồn tại */}
+        {/* <Route path="*" element={<NotFound />} /> */}
+      </Routes>
+    </Suspense>
+  );
+}
+
+================================================================================
+8. src/pages/HomePage.jsx
+================================================================================
+// src/pages/HomePage.jsx
+
+import { Link } from "react-router-dom";
+
+export default function HomePage() {
+  return (
+    <div style={{ padding: "2rem", textAlign: "center", minHeight: '200vh' }}>
+      <h1>Chào mừng đến trang chủ!</h1>
+      <p>Đây là landing page chính.</p>
+      <p style={{ marginTop: '2rem' }}>Scroll xuống để thấy nhiều nội dung hơn...</p>
+      
+      <div style={{ marginTop: "50vh" }}>
+        <Link 
+          // SỬA LỖI: Cập nhật đường dẫn cho đúng với file routes/index.jsx
+          to="/universe-section-developing" 
+          style={{
+            display: "inline-block",
+            padding: "1rem 2rem",
+            backgroundColor: "#007bff",
+            color: "white",
+            textDecoration: "none",
+            borderRadius: "5px",
+            fontSize: "1.1rem"
+          }}
+        >
+          {/* Sửa lại text cho phù hợp */}
+          Xem Universe Section (Đang phát triển)
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+================================================================================
+9. src/components/UniverseSection.jsx
+================================================================================
+import React from 'react';
+import './universe_section.css';
+
+const UniverseSection = () => {
+  return (
+    // Đã đổi tên class
+    <div className="universe-section-container">
+      {/* Đã đổi tên class */}
+      <div className="universe-section__viewport">
+        <img
+          src="/universe/rectangle229635-sx2i-2000w.png"
+          alt="Starry background"
+          // Đã đổi tên class
+          className="universe-section__background-image"
+        />
+
+        {/* Đã đổi tên class */}
+        <div className="universe-section__graphic-container">
+          <img src="/universe/ellipse58644-i3f-200h.png" alt="" className="universe-section__ellipse--center-1" />
+          <img src="/universe/ellipse88644-ai1s-300h.png" alt="" className="universe-section__ellipse--center-2" />
+          <img src="/universe/ellipse98644-3eex-400h.png" alt="" className="universe-section__ellipse--center-3" />
+          <img src="/universe/ellipse108644-assc-500h.png" alt="" className="universe-section__ellipse--center-4" />
+          <img src="/universe/ellipse118644-eef-600h.png" alt="" className="universe-section__ellipse--center-5" />
+          <img src="/universe/ellipse128644-asu-700h.png" alt="" className="universe-section__ellipse--center-6" />
+          
+          <img src="/universe/ellipse158645-2518r-200h.png" alt="" className="universe-section__dot-1" />
+          <img src="/universe/ellipse178645-bp2c-200h.png" alt="" className="universe-section__dot-2" />
+          <img src="/universe/ellipse168645-7rj-200h.png" alt="" className="universe-section__dot-3" />
+
+          {/* === ĐÃ ĐỔI TÊN CLASS VÀ ÁP DỤNG FONT MỚI === */}
+          <span className="universe-section__text">
+            <span>MIRROR</span>
+            <br />
+            <span>EXPERIENCES</span>
+          </span>
+          
+          <div className="universe-section__group-107">
+            <img src="/universe/ellipse13i864-m3pj-200h.png" alt="" className="universe-section__group-107-ellipse" />
+          </div>
+          
+          <div className="universe-section__group-266-1"></div>
+          
+          <div className="universe-section__group-266-2">
+            <img src="/universe/ellipse18i864-f59o-200h.png" alt="" className="universe-section__group-266-2-ellipse" />
+          </div>
+          
+          <div className="universe-section__group-268">
+            <img src="/universe/ellipse7i864-vs3a-200h.png" alt="" className="universe-section__group-268-ellipse" />
+          </div>
+          
+          <div className="universe-section__group-267">
+            <img src="/universe/ellipse14i864-mguv-200h.png" alt="" className="universe-section__group-267-ellipse" />
+          </div>
+
+          <img src="/universe/ellipse1699555-qgp-200h.png" alt="" className="universe-section__ellipse--final" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UniverseSection;
+
+================================================================================
+10. src/styles/global.css
+================================================================================
+:root {
+  font-family: var(--font-primary);
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  /* Chúng ta đã xóa display:flex và place-items:center từ đây */
+}
+
+================================================================================
+11. src/styles/variables.css
+================================================================================
+:root {
+  --font-primary: 'BT Beau Sans', sans-serif;
+  --font-secondary: 'Saol Display', serif;
+
+  --dl-layout-size-large: 144px;
+  --dl-layout-size-small: 48px;
+  --dl-layout-space-unit: 16px;
+  --dl-color-default-pink: rgba(188, 34, 76, 1);
+  --dl-layout-size-medium: 96px;
+  --dl-layout-size-xlarge: 192px;
+  --dl-layout-size-xsmall: 16px;
+  --dl-color-default-black: rgba(0, 0, 0, 1);
+  --dl-color-default-gray1: rgba(246, 246, 246, 1);
+  --dl-color-default-gray2: rgba(223, 223, 223, 1);
+  --dl-color-default-gray3: rgba(120, 120, 120, 1);
+  --dl-color-default-white: rgba(255, 255, 255, 1);
+  --dl-color-theme-accent1: #FFFFFF;
+  --dl-color-theme-accent2: #F5D1B0;
+  --dl-layout-radius-round: 50%;
+  --dl-layout-size-xxlarge: 288px;
+  --dl-color-theme-primary1: #BF4408;
+  --dl-color-theme-primary2: #E65103;
+  --dl-layout-size-maxwidth: 1400px;
+  --dl-layout-radius-radius2: 2px;
+  --dl-layout-radius-radius4: 4px;
+  --dl-layout-radius-radius8: 8px;
+  --dl-layout-space-halfunit: 8px;
+  --dl-layout-space-sixunits: 96px;
+  --dl-layout-space-twounits: 32px;
+  --dl-color-default-gradient: rgba(173, 173, 173, 1);
+  --dl-color-theme-secondary1: #FFFFFF;
+  --dl-color-theme-secondary2: #FBF1EB;
+  --dl-layout-space-fiveunits: 80px;
+  --dl-layout-space-fourunits: 64px;
+  --dl-layout-space-threeunits: 48px;
+  --dl-color-theme-neutral-dark: #191818;
+  --dl-layout-radius-cardradius: 8px;
+  --dl-color-theme-neutral-light: #FBFAF9;
+  --dl-layout-radius-imageradius: 8px;
+  --dl-layout-radius-inputradius: 24px;
+  --dl-layout-radius-buttonradius: 24px;
+  --dl-layout-space-oneandhalfunits: 24px;
+  --dl-color-default-transparentblack25: rgba(0, 0, 0, 0.25);
+  --dl-color-default-transparentwhite25: rgba(255, 255, 255, 0.25);
+  --dl-color-default-transparentwhite50: rgba(255, 255, 255, 0.5);
+  --dl-color-default-transparentwhite70: rgba(255, 255, 255, 0.699999988079071);
+}
+ 
+.button {
+  color: var(--dl-color-theme-neutral-dark);
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-color: var(--dl-color-theme-neutral-dark);
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.input {
+  color: var(--dl-color-theme-neutral-dark);
+  cursor: auto;
+  padding: 0.5rem 1rem;
+  border-color: var(--dl-color-theme-neutral-dark);
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.textarea {
+  color: var(--dl-color-theme-neutral-dark);
+  cursor: auto;
+  padding: 0.5rem;
+  border-color: var(--dl-color-theme-neutral-dark);
+  border-width: 1px;
+  border-radius: 4px;
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.list {
+  width: 100%;
+  margin: 1em 0px 1em 0px;
+  display: block;
+  padding: 0px 0px 0px 1.5rem;
+  list-style-type: none;
+  list-style-position: outside;
+}
+ 
+.list-item {
+  display: list-item;
+}
+ 
+.teleport-show {
+  display: flex !important;
+  transform: none !important;
+}
+ 
+.thq-input {
+  color: var(--dl-color-theme-neutral-dark);
+  cursor: auto;
+  outline: none;
+  padding: 0.5rem 1rem;
+  align-self: stretch;
+  text-align: center;
+  border-color: var(--dl-color-theme-neutral-dark);
+  border-width: 1px;
+  border-radius: var(--dl-layout-radius-inputradius);
+  background-color: var(--dl-color-theme-neutral-light);
+}
+ 
+.thq-input:focus {
+  outline: 1px solid var(--dl-color-theme-primary1);
+}
+ 
+.thq-button-filled {
+  gap: var(--dl-layout-space-halfunit);
+  fill: var(--dl-color-theme-secondary1);
+  color: var(--dl-color-theme-secondary1);
+  cursor: pointer;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  font-weight: bold;
+  padding-top: var(--dl-layout-space-halfunit);
+  white-space: nowrap;
+  border-color: var(--dl-color-theme-primary1);
+  border-width: 1px;
+  padding-left: var(--dl-layout-space-oneandhalfunits);
+  border-radius: var(--dl-layout-radius-buttonradius);
+  padding-right: var(--dl-layout-space-oneandhalfunits);
+  padding-bottom: var(--dl-layout-space-halfunit);
+  justify-content: center;
+  background-color: var(--dl-color-theme-primary1);
+}
+ 
+.thq-button-filled:hover {
+  fill: var(--dl-color-theme-secondary2);
+  color: var(--dl-color-theme-secondary2);
+  border-color: var(--dl-color-theme-primary2);
+  background-color: var(--dl-color-theme-primary2);
+}
+ 
+.thq-button-outline {
+  gap: var(--dl-layout-space-halfunit);
+  fill: var(--dl-color-theme-primary1);
+  color: var(--dl-color-theme-primary1);
+  border: 1px solid;
+  cursor: pointer;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  font-weight: bold;
+  padding-top: var(--dl-layout-space-halfunit);
+  white-space: nowrap;
+  border-color: var(--dl-color-theme-primary1);
+  padding-left: var(--dl-layout-space-oneandhalfunits);
+  border-radius: var(--dl-layout-radius-buttonradius);
+  padding-right: var(--dl-layout-space-oneandhalfunits);
+  padding-bottom: var(--dl-layout-space-halfunit);
+  justify-content: center;
+}
+ 
+.thq-button-outline:hover {
+  fill: var(--dl-color-theme-secondary2);
+  color: var(--dl-color-theme-secondary2);
+  border-color: var(--dl-color-theme-primary2);
+  background-color: var(--dl-color-theme-primary2);
+}
+ 
+.thq-button-flat {
+  gap: var(--dl-layout-space-halfunit);
+  fill: var(--dl-color-theme-primary1);
+  color: var(--dl-color-theme-primary1);
+  cursor: pointer;
+  display: flex;
+  transition: 0.3s;
+  align-items: center;
+  font-weight: bold;
+  padding-top: var(--dl-layout-space-halfunit);
+  white-space: nowrap;
+  border-color: transparent;
+  border-width: 1px;
+  padding-left: var(--dl-layout-space-oneandhalfunits);
+  border-radius: var(--dl-layout-radius-buttonradius);
+  padding-right: var(--dl-layout-space-oneandhalfunits);
+  padding-bottom: var(--dl-layout-space-halfunit);
+  justify-content: center;
+}
+ 
+.thq-button-flat:hover {
+  fill: var(--dl-color-theme-secondary1);
+  color: var(--dl-color-theme-secondary1);
+  border-color: var(--dl-color-theme-primary2);
+  background-color: var(--dl-color-theme-primary2);
+}
+ 
+.thq-heading-1 {
+  font-size: 48px;
+  font-family: STIX Two Text;
+  font-weight: 700;
+  line-height: 1.5;
+}
+ 
+.thq-heading-2 {
+  font-size: 35px;
+  font-family: STIX Two Text;
+  font-weight: 600;
+  line-height: 1.5;
+}
+ 
+.thq-heading-3 {
+  font-size: 26px;
+  font-family: STIX Two Text;
+  font-weight: 600;
+  line-height: 1.5;
+}
+ 
+.thq-body-large {
+  font-size: 18px;
+  font-family: Noto Sans;
+  line-height: 1.5;
+}
+ 
+.thq-body-small {
+  font-size: 16px;
+  font-family: Noto Sans;
+  line-height: 1.5;
+}
+ 
+.thq-team-image-round {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+ 
+.thq-section-padding {
+  width: 100%;
+  display: flex;
+  padding: var(--dl-layout-space-fiveunits);
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.thq-section-max-width {
+  width: 100%;
+  max-width: var(--dl-layout-size-maxwidth);
+}
+ 
+.thq-img-ratio-1-1 {
+  width: 100%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+  border-radius: var(--dl-layout-radius-imageradius);
+}
+ 
+.thq-img-ratio-16-9 {
+  width: 100%;
+  object-fit: cover;
+  aspect-ratio: 16/9;
+  border-radius: var(--dl-layout-radius-imageradius);
+}
+ 
+.thq-img-ratio-4-3 {
+  width: 100%;
+  object-fit: cover;
+  aspect-ratio: 4/3;
+  border-radius: var(--dl-layout-radius-imageradius);
+}
+ 
+.thq-img-ratio-4-6 {
+  width: 100%;
+  object-fit: cover;
+  aspect-ratio: 4/6;
+  border-radius: var(--dl-layout-radius-imageradius);
+}
+ 
+.thq-img-round {
+  width: 100%;
+  border-radius: var(--dl-layout-radius-round);
+}
+ 
+.thq-flex-column {
+  gap: var(--dl-layout-space-twounits);
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+}
+ 
+.thq-flex-row {
+  gap: var(--dl-layout-space-twounits);
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+}
+ 
+.thq-grid-6 {
+  display: grid;
+  grid-gap: var(--dl-layout-space-twounits);
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+ 
+.thq-grid-5 {
+  display: grid;
+  grid-gap: var(--dl-layout-space-twounits);
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+ 
+.thq-card {
+  gap: var(--dl-layout-space-oneandhalfunits);
+  display: flex;
+  padding: var(--dl-layout-space-twounits);
+  align-items: stretch;
+  border-radius: var(--dl-layout-radius-cardradius);
+  flex-direction: column;
+}
+ 
+.thq-box-shadow {
+  box-shadow: 0px 0px 5px -2px var(--dl-color-theme-neutral-dark);
+}
+ 
+.thq-grid-3 {
+  display: grid;
+  grid-gap: var(--dl-layout-space-twounits);
+  grid-template-columns: 1fr 1fr 1fr;
+}
+ 
+.thq-grid-4 {
+  display: grid;
+  grid-gap: var(--dl-layout-space-twounits);
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+ 
+.thq-grid-2 {
+  width: 100%;
+  display: grid;
+  grid-gap: var(--dl-layout-space-twounits);
+  grid-template-columns: 1fr 1fr;
+}
+ 
+.thq-checkbox {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.thq-select {
+  cursor: pointer;
+  appearance: none;
+  padding-top: var(--dl-layout-space-halfunit);
+  padding-left: var(--dl-layout-space-unit);
+  border-radius: var(--dl-layout-radius-inputradius);
+  padding-right: var(--dl-layout-space-twounits);
+  padding-bottom: var(--dl-layout-space-halfunit);
+  background-color: var(--dl-color-theme-neutral-light);
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg width%3D%2220%22 height%3D%2220%22 xmlns%3D%22http%3A//www.w3.org/2000/svg%22 viewBox%3D%220 0 20 20%22 fill%3D%22%23000%22%3E%3Cpath d%3D%22M4.293 7.293a1 1 0 011.414 0L10 11.586l4.293-4.293a1 1 0 111.414 1.414l-5 5a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414z%22/%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+ 
+.thq-divider-horizontal {
+  width: 100%;
+  height: 1px;
+  background-color: var(--dl-color-theme-neutral-dark);
+}
+ 
+.thq-icon-small {
+  width: 24px;
+  height: 24px;
+}
+ 
+.thq-button-icon {
+  fill: var(--dl-color-theme-secondary1);
+  padding: 3px;
+  transition: 0.3s;
+  border-radius: var(--dl-layout-radius-round);
+}
+ 
+.thq-button-icon:hover {
+  fill: var(--dl-color-theme-secondary2);
+}
+ 
+.thq-icon-medium {
+  width: var(--dl-layout-size-small);
+  height: var(--dl-layout-size-small);
+}
+ 
+.thq-icon-x-small {
+  width: var(--dl-layout-size-xsmall);
+  height: var(--dl-layout-size-xsmall);
+}
+ 
+.thq-link {
+  cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
+  background: linear-gradient(to right, var(--dl-color-theme-primary1) 50%, var(--dl-color-theme-neutral-dark) 50%);
+  transition: background-position 300ms ease;
+  font-weight: 600;
+  background-clip: text;
+  background-size: 200% 100%;
+  background-position: 100%;
+  -webkit-text-fill-color: transparent;
+}
+ 
+.thq-link:hover {
+  background-position: 0 100%;
+}
+ 
+.thq-grid-auto-300 {
+  display: grid;
+  grid-gap: var(--dl-layout-space-oneandhalfunits);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+ 
+.thq-animated-group-vertical-reverse {
+  gap: var(--dl-layout-space-unit);
+  width: 100%;
+  display: flex;
+  animation: scroll-y 20s linear infinite;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-around;
+  animation-direction: reverse;
+}
+ 
+.thq-animated-group-horizontal-reverse {
+  gap: var(--dl-layout-space-unit);
+  display: flex;
+  animation: scroll-x 20s linear infinite;
+  min-width: 100%;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: space-around;
+  animation-direction: reverse;
+}
+ 
+.thq-animated-group-vertical {
+  gap: var(--dl-layout-space-unit);
+  width: 100%;
+  display: flex;
+  animation: scroll-y 20s linear infinite;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-around;
+}
+ 
+.thq-animated-group-horizontal {
+  gap: var(--dl-layout-space-unit);
+  display: flex;
+  animation: scroll-x 20s linear infinite;
+  min-width: 100%;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: space-around;
+}
+ 
+.thq-animated-group-container-vertical {
+  gap: var(--dl-layout-space-unit);
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+}
+ 
+.thq-animated-group-container-horizontal {
+  gap: var(--dl-layout-space-unit);
+  display: flex;
+  overflow: hidden;
+}
+ 
+.thq-mask-image-vertical {
+  mask-image: linear-gradient(to bottom, transparent, black 1%, black 99%, transparent);
+}
+ 
+.thq-mask-image-horizontal {
+  mask-image: linear-gradient(to right, transparent, black 1%, black 99%, transparent);
+}
+ 
+.thq-img-scale {
+  transition: 0.3s;
+}
+ 
+.thq-img-scale:hover {
+  scale: 1.05;
+}
+ 
+.thq-animated-card-bg-1 {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s;
+  border-radius: var(--dl-layout-radius-cardradius);
+  background-color: var(--dl-color-theme-accent1);
+}
+ 
+.thq-animated-card-bg-2 {
+  transition: transform 0.3s;
+  border-radius: var(--dl-layout-radius-cardradius);
+  background-color: var(--dl-color-theme-accent2);
+}
+ 
+.thq-button-animated {
+  outline: none;
+  z-index: 1;
+  overflow: hidden;
+  position: relative;
+  border-width: 2px;
+}
+ 
+.thq-input::placeholder {
+  text-align: center;
+  vertical-align: middle;
+}
+ 
+.thq-animated-group-container-vertical:hover div {
+  animation-play-state: paused;
+}
+ 
+.thq-animated-group-container-horizontal:hover div {
+  animation-play-state: paused;
+}
+ 
+.thq-animated-card-bg-2:has([data-animated="true"]:hover) {
+  transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(3deg) skew(0deg, 0deg);
+}
+ 
+.thq-animated-card-bg-1:has([data-animated="true"]:hover) {
+  transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(-6deg) skew(0deg, 0deg);
+}
+ 
+.thq-button-animated:before {
+  top: 0;
+  left: -20%;
+  color: var(--dl-color-theme-neutral-light);
+  width: 200%;
+  height: 101%;
+  content: "";
+  z-index: 1;
+  position: absolute;
+  transform: scaleX(0);
+  transition: transform 0.5s;
+  border-radius: var(--dl-layout-radius-buttonradius);
+  background-color: var(--dl-color-theme-neutral-dark);
+  transform-origin: 0 0;
+  transition-timing-function: cubic-bezier(0.5, 1.6, 0.4, 0.7);
+}
+ 
+.thq-button-animated:hover::before {
+  color: var(--dl-color-theme-neutral-light);
+  z-index: -1;
+  transform: scaleX(1);
+}
+ 
+.Content {
+  font-size: 16px;
+  font-family: Inter;
+  font-weight: 400;
+  line-height: 1.15;
+  text-transform: none;
+  text-decoration: none;
+}
+ 
+.Saol_64pt_regular {
+  font-size: 64px;
+  font-style: normal;
+  font-family: Saol Display;
+  font-weight: 300px;
+  font-stretch: normal;
+  letter-spacing: -0.03em;
+}
+ 
+.H1 {
+  font-size: 105px;
+  font-style: normal;
+  font-family: Saol Display;
+  font-weight: 400px;
+  font-stretch: normal;
+  letter-spacing: -0.03em;
+}
+ 
+.H2 {
+  font-size: 85px;
+  font-style: normal;
+  font-family: Saol Display;
+  font-weight: 400px;
+  font-stretch: normal;
+  letter-spacing: -0.03em;
+}
+ 
+.BTBeauSans_32pt_regular {
+  font-size: 32px;
+  font-style: normal;
+  font-family: BT Beau Sans;
+  font-weight: 400px;
+  font-stretch: normal;
+  letter-spacing: 0em;
+}
+ 
+.Saol_24pt_regular {
+  font-size: 24px;
+  font-style: normal;
+  font-family: Saol Display;
+  font-weight: 400px;
+  font-stretch: normal;
+  letter-spacing: 0em;
+}
+ 
+.BTBeauSans_20pt_regular {
+  font-size: 20px;
+  font-style: normal;
+  font-family: BT Beau Sans;
+  font-weight: 400px;
+  font-stretch: normal;
+  letter-spacing: 0em;
+}
+ 
+.H5 {
+  font-size: 20px;
+  font-style: normal;
+  font-family: Saol Display;
+  font-weight: 400px;
+  font-stretch: normal;
+  letter-spacing: 0em;
+}
+ 
+.BTBeauSans_16pt_regular {
+  font-size: 16px;
+  font-style: normal;
+  font-family: BT Beau Sans;
+  font-weight: 400px;
+  font-stretch: normal;
+  letter-spacing: 0em;
+}
+ 
+.BTBeauSans_12pt_regular {
+  font-size: 12px;
+  font-style: normal;
+  font-family: BT Beau Sans;
+  font-weight: 400px;
+  font-stretch: normal;
+  letter-spacing: 0em;
+}
+ 
+@media(max-width: 991px) {
+  .thq-grid-4 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+ 
+@media(max-width: 767px) {
+  .thq-section-padding {
+    padding: var(--dl-layout-space-threeunits);
+  }
+  .thq-flex-column {
+    gap: var(--dl-layout-space-oneandhalfunits);
+  }
+  .thq-flex-row {
+    gap: var(--dl-layout-space-oneandhalfunits);
+  }
+  .thq-grid-6 {
+    grid-gap: var(--dl-layout-space-oneandhalfunits);
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .thq-grid-5 {
+    grid-gap: var(--dl-layout-space-oneandhalfunits);
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .thq-card {
+    padding: var(--dl-layout-space-oneandhalfunits);
+  }
+  .thq-grid-3 {
+    grid-gap: var(--dl-layout-space-oneandhalfunits);
+    grid-template-columns: 1fr 1fr;
+  }
+  .thq-grid-4 {
+    grid-gap: var(--dl-layout-space-oneandhalfunits);
+    flex-direction: row;
+    grid-template-columns: 1fr 1fr;
+  }
+  .thq-grid-2 {
+    grid-gap: var(--dl-layout-space-oneandhalfunits);
+    grid-template-columns: 1fr;
+  }
+  .thq-img-scale {
+    width: 100%;
+  }
+}
+ 
+@media(max-width: 479px) {
+  .thq-section-padding {
+    padding: var(--dl-layout-space-oneandhalfunits);
+  }
+  .thq-flex-column {
+    gap: var(--dl-layout-space-unit);
+  }
+  .thq-flex-row {
+    gap: var(--dl-layout-space-unit);
+  }
+  .thq-grid-6 {
+    grid-gap: var(--dl-layout-space-unit);
+    grid-template-columns: 1fr 1fr;
+  }
+  .thq-grid-5 {
+    grid-gap: var(--dl-layout-space-unit);
+    grid-template-columns: 1fr 1fr;
+  }
+  .thq-grid-3 {
+    grid-gap: var(--dl-layout-space-unit);
+    align-items: center;
+    grid-template-columns: 1fr;
+  }
+  .thq-grid-4 {
+    grid-gap: var(--dl-layout-space-unit);
+    align-items: center;
+    flex-direction: column;
+    grid-template-columns: 1fr;
+  }
+  .thq-grid-2 {
+    grid-gap: var(--dl-layout-space-unit);
+  }
+  .thq-grid-auto-300 {
+    grid-template-columns: 1fr;
+  }
+}
+
+================================================================================
+12. src/styles/fonts.css
+================================================================================
+/* src/styles/fonts.css */
+
+/* XÓA CÁC DÒNG @import CŨ CỦA GOOGLE FONTS VÀ THAY BẰNG KHỐI NÀY */
+
+/*****************************************************
+ * KHAI BÁO FONT CHỮ LOCAL
+ *****************************************************/
+
+/* 
+============================================
+ Font: BT Beau Sans
+============================================ 
+*/
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-Italic.ttf') format('truetype');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-Light.ttf') format('truetype');
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-LightItalic.ttf') format('truetype');
+  font-weight: 300; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-Medium.ttf') format('truetype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-MediumItalic.ttf') format('truetype');
+  font-weight: 500; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-Bold.ttf') format('truetype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-BoldItalic.ttf') format('truetype');
+  font-weight: 700; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-ExtraBold.ttf') format('truetype');
+  font-weight: 800; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'BT Beau Sans';
+  src: url('./fonts/BTBeauSans/BT-BeauSans-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800; font-style: italic; font-display: swap;
+}
+
+/* 
+============================================
+ Font: Saol Display
+============================================ 
+*/
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-RegularItalic.ttf') format('truetype');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-Light.ttf') format('truetype');
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-LightItalic.ttf') format('truetype');
+  font-weight: 300; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-Medium.ttf') format('truetype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-MediumItalic.ttf') format('truetype');
+  font-weight: 500; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-Semibold.ttf') format('truetype');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-SemiboldItalic.ttf') format('truetype');
+  font-weight: 600; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-Bold.ttf') format('truetype');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Saol Display';
+  src: url('./fonts/SaolDisplay/TTF/SaolDisplay-BoldItalic.ttf') format('truetype');
+  font-weight: 700; font-style: italic; font-display: swap;
+}
+
+================================================================================
+13. src/styles/home.css
+================================================================================
+/* File này hiện tại trống */
+
+================================================================================
+14. src/components/universe_section.css
+================================================================================
+/* src/components/universe_section.css */
+
+/* ==========================================================================
+   Main Container & Layout
+   ========================================================================== */
+
+   .universe-section-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--dl-color-default-black);
+  }
+  
+  .universe-section__viewport {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+  
+  .universe-section__background-image {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    object-fit: cover;
+  }
+  
+  /* ==========================================================================
+     Graphic Elements Container
+     Đây là "artboard" từ Figma, được scale nhỏ lại để responsive.
+     Tất cả các phần tử bên trong sẽ được định vị theo container này.
+     ========================================================================== */
+  
+  .universe-section__graphic-container {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    flex-shrink: 0; /* Ngăn container bị co lại */
+    transform: scale(0.5); /* Thu nhỏ toàn bộ khối đồ họa */
+    /* Bạn có thể thay đổi giá trị scale để tinh chỉnh kích thước */
+  }
+  
+  
+  /* ==========================================================================
+     Text Style (QUAN TRỌNG: Đã áp dụng font)
+     ========================================================================== */
+     .universe-section__text {
+      /* Vị trí từ Figma */
+      top: 522px;
+      left: 895px;
+      position: absolute;
+      z-index: 10; /* <<< SỬA LỖI 1: Đưa chữ lên lớp trên cùng, cao hơn các hành tinh */
+    
+      /* Style chữ đã được cập nhật */
+      font-family: var(--font-primary); /* Dùng font BT Beau Sans */
+      font-weight: 400; /* 'regular' */
+      font-size: 27px; /* 20pt ~ 27px */
+      color: var(--dl-color-default-white); /* <<< SỬA LỖI 2: Đổi thành màu trắng cho dễ đọc */
+      line-height: 1.1;
+      text-align: center;
+      width: 130px; /* Thêm chiều rộng để căn chữ tốt hơn */
+    }
+  
+  
+  /* ==========================================================================
+     Positioning for Individual Graphic Elements
+     (Các thuộc tính vị trí này được giữ nguyên để bảo toàn thiết kế)
+     ========================================================================== */
+  
+  .universe-section__ellipse--center-1 {
+    top: 450px;
+    left: 870px;
+    width: 180px;
+    height: 180px;
+    position: absolute;
+  }
+  .universe-section__ellipse--center-2 {
+    top: 400px;
+    left: 820px;
+    width: 280px;
+    height: 280px;
+    position: absolute;
+  }
+  .universe-section__ellipse--center-3 {
+    top: 350px;
+    left: 770px;
+    width: 380px;
+    height: 380px;
+    position: absolute;
+  }
+  .universe-section__ellipse--center-4 {
+    top: 300px;
+    left: 720px;
+    width: 480px;
+    height: 480px;
+    position: absolute;
+  }
+  .universe-section__ellipse--center-5 {
+    top: 250px;
+    left: 670px;
+    width: 580px;
+    height: 580px;
+    position: absolute;
+  }
+  .universe-section__ellipse--center-6 {
+    top: 200px;
+    left: 620px;
+    width: 680px;
+    height: 680px;
+    position: absolute;
+  }
+  
+  /* Các chấm nhỏ và các element khác */
+  .universe-section__dot-1 {
+    top: 449px;
+    left: 1178px;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+  }
+  .universe-section__dot-2 {
+    top: 722px;
+    left: 938px;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+  }
+  .universe-section__dot-3 {
+    top: 298px;
+    left: 706px;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+  }
+  .universe-section__group-107 {
+    top: 280px;
+    left: 800px;
+    width: 70px;
+    height: 74px;
+    position: absolute;
+  }
+  .universe-section__group-107-ellipse {
+    top: 31px;
+    left: 11px;
+    width: 47px;
+    height: 47px;
+    position: absolute;
+  }
+  .universe-section__group-266-1 {
+    top: 780px;
+    left: 715px;
+    width: 48px;
+    position: absolute;
+  }
+  .universe-section__group-266-2 {
+    top: 591px;
+    left: 663px;
+    width: 48px;
+    position: absolute;
+  }
+  .universe-section__group-266-2-ellipse {
+    width: 33px;
+    height: 33px;
+  }
+  .universe-section__group-268 {
+    top: 513px;
+    left: 1105px;
+    width: 90px;
+    position: absolute;
+  }
+  .universe-section__group-268-ellipse {
+    width: 25px;
+    height: 25px;
+  }
+  .universe-section__group-267 {
+    top: 688px;
+    left: 1140px;
+    width: 60px;
+    position: absolute;
+  }
+  .universe-section__group-267-ellipse {
+    width: 37px;
+    height: 37px;
+  }
+  .universe-section__ellipse--final {
+    top: 311px;
+    left: 811px;
+    width: 47px;
+    height: 47px;
+    position: absolute;
+  }
+
+================================================================================
+15. package-lock.json
+================================================================================
+[FILE NÀY CÓ NỘI DUNG RẤT DÀI VỚI DEPENDENCY LOCK - ĐƯỢC TẠO TỰ ĐỘNG BỞI NPM]
+[KHOẢNG 10000+ DÒNG CODE VỚI THÔNG TIN DEPENDENCIES]
+[KHÔNG HIỂN THỊ TOÀN BỘ ĐỂ TIẾT KIỆM KHÔNG GIAN]
+
+================================================================================
+KẾT THÚC
+================================================================================
+Tổng số file: 15 file
+Công nghệ: React 19.1.0 + Vite + React Router DOM + Custom Fonts
+Cấu trúc: SPA với 2 trang chính (HomePage và UniverseSection)
+Fonts: BT Beau Sans, Saol Display (local fonts)
+Images: Stored in public/universe/ folder
