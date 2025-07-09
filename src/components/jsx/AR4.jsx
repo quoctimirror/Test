@@ -139,7 +139,7 @@ const AR4 = () => {
 
             const loader = new GLTFLoader();
             return new Promise((resolve, reject) => {
-                loader.load('/models/ring_meshes_yellow_red.glb', (gltf) => {
+                loader.load('/models/cryring.glb', (gltf) => {
                     appState.ringModel = gltf.scene;
                     appState.ringModel.visible = true;
                     appState.ringModel.traverse(child => {
