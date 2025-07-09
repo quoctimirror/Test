@@ -1,0 +1,49 @@
+@font-face {
+  font-family: "PPNeueMontreal-Book";
+  src: url("../assets/fonts/ppneuemontreal-book.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PPNeueMontreal-Medium";
+  src: url("../assets/fonts/ppneuemontreal-medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PPNeueMontreal-Bold";
+  src: url("../assets/fonts/ppneuemontreal-bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PPNeueMontreal-Italic";
+  src: url("../assets/fonts/ppneuemontreal-italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "PPNeueMontreal-Semibold";
+  src: url("../assets/fonts/ppneuemontreal-semibolditalic.otf")
+    format("opentype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "SaolDisplay-Regular";
+  src: url("../assets/fonts/SaolDisplay-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SaolDisplay-RegularItalic";
+  src: url("../assets/fonts/SaolDisplay-RegularItalic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+}
