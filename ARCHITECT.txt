@@ -1,0 +1,31 @@
+.
+├── ARCHITECT.txt
+├── README.md
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── public/                                 # Nơi chứa các tài sản tĩnh (static assets) không cần xử lý bởi Vite. [File ảnh lớn]
+│   └── universe/
+├── src/
+│   ├── App.jsx                             # Component cha (con của ông nội entry point)
+│   ├── api/
+│   ├── assets/                             # Như là logo, icon được import trực tiếp
+│   │   ├── images/
+│   │   └── ...
+│   ├── components/
+│   │   ├── UniverseSection.jsx
+│   │   └── universe_section.css
+│   ├── hooks/
+│   ├── main.jsx
+│   ├── pages/
+│   │   └── HomePage.jsx
+│   ├── routes/
+│   │   └── AppRoutes.jsx
+│   ├── styles/
+│   │   ├── fonts.css                       
+│   │   ├── global.css                      # style reset các quy tắc chung cho body, html ...
+│   │   ├── home.css
+│   │   └── variables.css                   # Design system ==> hệ thống để thiết kế (biến màu, font, spacing)
+│   └── utils/
+└── vite.config.js
