@@ -6,57 +6,99 @@ html {
   padding: 0;
   /* height: 100%; */
   font-family: "Georgia", serif;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
-/* Container chứa toàn bộ hiệu ứng cuộn */
+/* Container for entire scroll effect */
 .scroll-container {
-  height: 200vh; /* Cao gấp đôi để chứa cả 2 giai đoạn */
+  height: 200vh;
   position: relative;
 }
 
-/* Lớp phủ màu trắng cho hiệu ứng trượt vào */
-.white-overlay {
+/* Layer containing initial gradient */
+.gradient-initial {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: white;
-  z-index: 2; /* Nằm trên gradient */
-  transform: translateX(100%); /* Ban đầu ẩn hoàn toàn ở bên phải */
+  z-index: 1;
 }
 
-/* Div bọc các phần tử cần làm mờ */
-.elements-to-fade {
-  /* Biến nó thành một lớp tuyệt đối, phủ đầy màn hình */
+/* Final gradient (light pink) will be on top */
+.gradient-final {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
 
-  /* Đặt z-index cao nhất để nó và các con của nó nằm trên cùng */
+  /* background: linear-gradient(to right, #ffc3d4, #ffe8ef, white); */
+  background: white;
+  z-index: 2;
+
+  --wipe-progress: 400%;
+  --feather-amount: 15%;
+
+  mask-image: radial-gradient(
+    ellipse 150vw 150vh at var(--wipe-progress) 50%,
+    black 10%,
+    transparent 20%
+  );
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 700vw 700vh at var(--wipe-progress) 50%,
+    black 10%,
+    transparent 50%
+  );
+
+  /* mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    transparent calc(var(--wipe-progress) - var(--feather-amount)),
+    black calc(var(--wipe-progress) + var(--feather-amount)),
+    black 100%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(var(--wipe-progress) - var(--feather-amount)),
+    black calc(var(--wipe-progress) + var(--feather-amount)),
+    black 100%
+  ); */
+}
+
+/* Wrapper div for elements that need to fade */
+.elements-to-fade {
+  /* Make it an absolute layer, covering the full screen */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Set highest z-index so it and its children are on top */
   z-index: 4;
 
-  /* Giữ lại transition cho mượt */
+  /* Keep transition for smoothness */
   transition: opacity 0.1s linear;
 
-  /* RẤT QUAN TRỌNG: Lớp này sẽ chặn các sự kiện chuột. 
-     Thuộc tính này làm cho lớp này "trong suốt" với các cú click,
-     cho phép bạn tương tác với các button bên dưới khi cần. */
+  /* VERY IMPORTANT: This layer will block mouse events. 
+     This property makes this layer "transparent" to clicks,
+     allowing you to interact with buttons below when needed. */
   pointer-events: none;
 }
 
 .homepage {
   height: 100vh;
-  /* Dùng position: fixed để nó cố định hoàn toàn */
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
   color: white;
   z-index: 1;
+  overflow: hidden;
 }
 
 .gradient-top {
@@ -179,7 +221,7 @@ html {
 
 .menu-text {
   color: white;
-  font-family: "BT Beau Sans", sans-serif;
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
@@ -302,7 +344,7 @@ html {
 }
 
 .tagline-top {
-  font-family: "Georgia", serif;
+  font-family: "BT-BeauSans-Regular-ttf", serif;
   font-size: clamp(14px, 1.5vw, 16px);
   font-weight: 400;
   margin-bottom: 8px;
@@ -320,7 +362,7 @@ html {
 }
 
 .future-text {
-  font-family: "SaolDisplay-Regular", serif;
+  font-family: "SaolDisplay-Regular-ttf", serif;
   font-size: clamp(38px, 5vw, 60px);
   font-weight: 400;
   letter-spacing: 1px;
@@ -328,7 +370,7 @@ html {
 }
 
 .diamond-text {
-  font-family: "SaolDisplay-RegularItalic", serif;
+  font-family: "SaolDisplay-RegularItalic-ttf", serif;
   font-size: clamp(38px, 5vw, 60px);
   font-weight: 400;
   letter-spacing: 1px;
@@ -427,7 +469,7 @@ html {
   height: 24px;
 }
 
-/* Kích hoạt lại sự kiện chuột cho các vùng tương tác */
+/* Re-enable mouse events for interactive areas */
 .navbar,
 .tagline-section,
 .scroll-down,
@@ -620,14 +662,11 @@ html {
   }
 }
 
-/* Thêm vào cuối file home.css */
+/* Added to the end of home.css file */
 .next-section {
-  background-color: #f0f0f0;
+  background-color: white;
   color: #333;
-  
-  /* Đặt chiều cao cho nó để tạo ra không gian cuộn thực sự */
   height: 100vh;
-  
   padding: 100px 5%;
   box-sizing: border-box;
   display: flex;
@@ -635,8 +674,6 @@ html {
   align-items: center;
   justify-content: center;
   text-align: center;
-
-  /* Thêm để đảm bảo nó nằm trên lớp gradient cũ khi cuộn lên */
   position: relative;
   z-index: 5;
 }
