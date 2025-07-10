@@ -29,3 +29,106 @@
 │   │   └── variables.css                   # Design system ==> hệ thống để thiết kế (biến màu, font, spacing)
 │   └── utils/
 └── vite.config.js
+
+
+
+
+mirror-diamond-website/
+  ├── ARCHITECT.txt
+  ├── README.md
+  ├── all_code.txt
+  ├── dist/
+  ├── eslint.config.js
+  ├── index.html
+  ├── init_commands.txt
+  ├── node_modules/
+  ├── package-lock.json
+  ├── package.json
+  ├── public/
+  │   └── universe/
+  │       ├── ellipse108644-assc-500h.png
+  │       ├── ellipse118644-eef-600h.png
+  │       ├── ellipse128644-asu-700h.png
+  │       ├── ellipse13i864-m3pj-200h.png
+  │       ├── ellipse158645-2518r-200h.png
+  │       ├── ellipse168645-7rj-200h.png
+  │       ├── ellipse178645-bp2c-200h.png
+  │       ├── ellipse58644-i3f-200h.png
+  │       ├── ellipse88644-ai1s-300h.png
+  │       ├── ellipse98644-3eex-400h.png
+  │       ├── planet1.png
+  │       ├── planet2.png
+  │       ├── planet3.png
+  │       ├── planet4.png
+  │       └── universe_background_image.png
+  ├── src/
+  │   ├── App.css
+  │   ├── App.jsx
+  │   ├── api/
+  │   ├── assets/
+  │   │   ├── fonts/
+  │   │   │   ├── BTBeauSans/
+  │   │   │   │   ├── BT Beau Sans Typeface License.pdf
+  │   │   │   │   ├── BT-BeauSans-Bold.ttf
+  │   │   │   │   ├── BT-BeauSans-BoldItalic.ttf
+  │   │   │   │   ├── BT-BeauSans-ExtraBold.ttf
+  │   │   │   │   ├── BT-BeauSans-ExtraBoldItalic.ttf
+  │   │   │   │   ├── BT-BeauSans-Italic.ttf
+  │   │   │   │   ├── BT-BeauSans-Light.ttf
+  │   │   │   │   ├── BT-BeauSans-LightItalic.ttf
+  │   │   │   │   ├── BT-BeauSans-Medium.ttf
+  │   │   │   │   ├── BT-BeauSans-MediumItalic.ttf
+  │   │   │   │   └── BT-BeauSans-Regular.ttf
+  │   │   │   ├── SaolDisplay-Regular.otf
+  │   │   │   ├── SaolDisplay-RegularItalic.otf
+  │   │   │   ├── SaolDisplay/
+  │   │   │   │   ├── OTF/
+  │   │   │   │   │   ├── SaolDisplay-Bold.otf
+  │   │   │   │   │   ├── SaolDisplay-BoldItalic.otf
+  │   │   │   │   │   ├── SaolDisplay-Light.otf
+  │   │   │   │   │   ├── SaolDisplay-LightItalic.otf
+  │   │   │   │   │   ├── SaolDisplay-Medium.otf
+  │   │   │   │   │   ├── SaolDisplay-MediumItalic.otf
+  │   │   │   │   │   ├── SaolDisplay-Regular.otf
+  │   │   │   │   │   ├── SaolDisplay-RegularItalic.otf
+  │   │   │   │   │   ├── SaolDisplay-Semibold.otf
+  │   │   │   │   │   └── SaolDisplay-SemiboldItalic.otf
+  │   │   │   │   └── TTF/
+  │   │   │   │       ├── SaolDisplay-Bold.ttf
+  │   │   │   │       ├── SaolDisplay-BoldItalic.ttf
+  │   │   │   │       ├── SaolDisplay-Light.ttf
+  │   │   │   │       ├── SaolDisplay-LightItalic.ttf
+  │   │   │   │       ├── SaolDisplay-Medium.ttf
+  │   │   │   │       ├── SaolDisplay-MediumItalic.ttf
+  │   │   │   │       ├── SaolDisplay-Regular.ttf
+  │   │   │   │       ├── SaolDisplay-RegularItalic.ttf
+  │   │   │   │       ├── SaolDisplay-Semibold.ttf
+  │   │   │   │       └── SaolDisplay-SemiboldItalic.ttf
+  │   │   │   ├── ppneuemontreal-bold.otf
+  │   │   │   ├── ppneuemontreal-book.otf
+  │   │   │   ├── ppneuemontreal-italic.otf
+  │   │   │   ├── ppneuemontreal-medium.otf
+  │   │   │   └── ppneuemontreal-semibolditalic.otf
+  │   │   └── images/
+  │   │       ├── Logo.svg
+  │   │       ├── Mirror_Logo_new.svg
+  │   │       ├── Vector_2.svg
+  │   │       └── arrow-right.svg
+  │   ├── components/
+  │   │   ├── Navbar.jsx
+  │   │   ├── UniverseSection.jsx
+  │   │   └── universe_section.css
+  │   ├── hooks/
+  │   ├── index.css
+  │   ├── main.jsx
+  │   ├── pages/
+  │   │   └── HomePage.jsx
+  │   ├── routes/
+  │   │   └── AppRoutes.jsx
+  │   ├── styles/
+  │   │   ├── fonts.css
+  │   │   ├── global.css
+  │   │   ├── home.css
+  │   │   └── variables.css
+  │   └── utils/
+  └── vite.config.js

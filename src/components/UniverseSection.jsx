@@ -1,63 +1,114 @@
 // src/components/UniverseSection.jsx
 
-import React from 'react';
+// ✨ BƯỚC 1: IMPORT 'useState' TỪ REACT ✨
+import React, { useState } from 'react';
 import './universe_section.css';
 
 const UniverseSection = () => {
+  // "Bản đồ" quỹ đạo (không đổi)
+  const orbitRingSizes = {
+    1: '30%', 2: '42%', 3: '54%', 4: '66%', 5: '78%'
+  };
+  // Dữ liệu hành tinh xám (không đổi)
+  const grayPlanetResponsiveSize = 'clamp(8px, 0.9vw, 12px)';
+  const grayPlanets = [
+    { orbitRing: 2, angle: '195deg' },
+    { orbitRing: 3, angle: '60deg' },
+    { orbitRing: 5, angle: '-40deg' }
+  ];
+
+  // Bảng điều khiển đoàn tàu (không đổi)
+  const TRAIN_SPEED = 20;
+  const TRAIN_DIRECTION = 'counter-clockwise';
+  const ANGLE_SEPARATION = 90;
+
+  // Dữ liệu hành tinh trắng (không đổi)
+  const whitePlanetsData = [
+    { orbitRing: 2, responsiveSize: 'clamp(12px, 1vw, 16px)', content: "Data Analytics" },
+    { orbitRing: 3, responsiveSize: 'clamp(20px, 1.5vw, 30px)', content: "AI & Machine Learning" },
+    { orbitRing: 4, responsiveSize: 'clamp(14px, 1.2vw, 20px)', content: "Cloud Infrastructure" },
+    { orbitRing: 5, responsiveSize: 'clamp(10px, 0.9vw, 14px)', content: "User Experience" },
+  ];
+
+  // ✨ BƯỚC 2: TẠO STATE ĐỂ LƯU LẠI HÀNH TINH ĐANG ĐƯỢC HOVER ✨
+  // `null` có nghĩa là không có hành tinh nào được hover.
+  const [hoveredPlanetIndex, setHoveredPlanetIndex] = useState(null);
+
+
   return (
-    <div className="universe-section-container">
-      <div className="universe-section__viewport">
-        <img
-          src="/universe/rectangle229635-sx2i-2000w.png"
-          alt="Starry background"
-          className="universe-section__background-image"
-        />
+    <div className="universe-section">
+      <div className="universe-container">
+        <div className="orbit-system">
+          {/* Orbit rings */}
+          <div className="orbit-ring orbit-ring-1"></div>
+          <div className="orbit-ring orbit-ring-2"></div>
+          <div className="orbit-ring orbit-ring-3"></div>
+          <div className="orbit-ring orbit-ring-4"></div>
+          <div className="orbit-ring orbit-ring-5"></div>
 
-        <div className="universe-section__graphic-container">
-          {/* Cấu trúc các vòng tròn và hành tinh khác giữ nguyên */}
-          <img src="/universe/ellipse88644-ai1s-300h.png" alt="" className="universe-section__ellipse--center-2" />
-          <img src="/universe/ellipse98644-3eex-400h.png" alt="" className="universe-section__ellipse--center-3" />
-          <img src="/universe/ellipse108644-assc-500h.png" alt="" className="universe-section__ellipse--center-4" />
-          <img src="/universe/ellipse118644-eef-600h.png" alt="" className="universe-section__ellipse--center-5" />
-          <img src="/universe/ellipse128644-asu-700h.png" alt="" className="universe-section__ellipse--center-6" />
+          {/* Render các hành tinh XÁM (tĩnh) */}
+          {grayPlanets.map((planet, index) => (
+            <div
+              key={`gray-${index}`}
+              className="planet-wrapper"
+              style={{
+                '--orbit-size': orbitRingSizes[planet.orbitRing],
+                '--orbit-angle': planet.angle
+              }}
+            >
+              <div
+                className="planet gray-planet"
+                style={{ '--planet-size': grayPlanetResponsiveSize }}
+              ></div>
+            </div>
+          ))}
 
-          <img src="/universe/ellipse158645-2518r-200h.png" alt="" className="universe-section__dot-1" />
-          <img src="/universe/ellipse178645-bp2c-200h.png" alt="" className="universe-section__dot-2" />
-          <img src="/universe/ellipse168645-7rj-200h.png" alt="" className="universe-section__dot-3" />
+          {/* TỰ ĐỘNG RENDER ĐOÀN TÀU 4 HÀNH TINH */}
+          {whitePlanetsData.map((planetData, index) => {
+            const initialAngle = index * ANGLE_SEPARATION;
+            const speed = TRAIN_SPEED + (planetData.orbitRing - 2) * 8;
+            const animationDelay = -(speed / 360) * initialAngle;
 
-          {/* 
-            ================================================================
-            <<< THAY ĐỔI CẤU TRÚC QUAN TRỌNG Ở ĐÂY >>>
-            - Hình tròn trung tâm giờ là một DIV container (.universe-section__center-hub).
-            - Hình ảnh của nó (.universe-section__ellipse--center-1) nằm bên trong.
-            - Chữ (.universe-section__text) cũng nằm bên trong, làm cho nó phụ thuộc vào kích thước của hình tròn.
-            ================================================================
-          */}
-          <div className="universe-section__center-hub">
-            <img
-              src="/universe/ellipse58644-i3f-200h.png"
-              alt=""
-              className="universe-section__ellipse--center-1"
-            />
-            <div className="universe-section__text">
-              <span>MIRROR</span>
-              <br />
-              <span>EXPERIENCES</span>
+            const wrapperStyle = {
+              '--orbit-size': orbitRingSizes[planetData.orbitRing],
+              '--orbit-duration': `${speed}s`,
+              '--orbit-direction': TRAIN_DIRECTION === 'clockwise' ? 'reverse' : 'normal',
+              'animation-delay': `${animationDelay}s`,
+
+              // ✨ BƯỚC 3: ĐIỀU KHIỂN 'animationPlayState' BẰNG STATE ✨
+              // Nếu index của hành tinh này TRÙNG với index đang được hover -> 'paused'
+              // Nếu không -> 'running'
+              animationPlayState: hoveredPlanetIndex === index ? 'paused' : 'running',
+            };
+
+            return (
+              <div
+                key={`white-${index}`}
+                className="planet-wrapper animated"
+                style={wrapperStyle}
+                // ✨ BƯỚC 4: THÊM CÁC EVENT HANDLER ĐỂ CẬP NHẬT STATE ✨
+                onMouseEnter={() => setHoveredPlanetIndex(index)}
+                onMouseLeave={() => setHoveredPlanetIndex(null)}
+              >
+                <div
+                  className="planet white-planet"
+                  style={{ '--planet-size': planetData.responsiveSize }}
+                >
+                  {index + 1}
+                  {/* Nội dung vẫn có thể hiển thị bằng CSS như cũ, 
+                      hoặc bạn có thể điều khiển bằng state `hoveredPlanetIndex === index` */}
+                  <div className="planet-content">{planetData.content}</div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Center circle */}
+          <div className="center-circle">
+            <div className="center-text">
+              MIRROR<br />EXPERIENCE
             </div>
           </div>
-
-          {/* Các element còn lại */}
-          <div className="universe-section__group-266-1"></div>
-          <div className="universe-section__group-266-2">
-            <img src="/universe/ellipse18i864-f59o-200h.png" alt="" className="universe-section__group-266-2-ellipse" />
-          </div>
-          <div className="universe-section__group-268">
-            <img src="/universe/ellipse7i864-vs3a-200h.png" alt="" className="universe-section__group-268-ellipse" />
-          </div>
-          <div className="universe-section__group-267">
-            <img src="/universe/ellipse14i864-mguv-200h.png" alt="" className="universe-section__group-267-ellipse" />
-          </div>
-          <img src="/universe/ellipse1699555-qgp-200h.png" alt="" className="universe-section__ellipse--final" />
         </div>
       </div>
     </div>
