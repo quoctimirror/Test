@@ -1,0 +1,652 @@
+@import url("./fonts.css");
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  /* height: 100%; */
+  font-family: "Georgia", serif;
+  overflow-x: hidden;
+}
+
+/* Container chứa toàn bộ hiệu ứng cuộn */
+.scroll-container {
+  height: 200vh; /* Cao gấp đôi để chứa cả 2 giai đoạn */
+  position: relative;
+}
+
+/* Lớp phủ màu trắng cho hiệu ứng trượt vào */
+.white-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 2; /* Nằm trên gradient */
+  transform: translateX(100%); /* Ban đầu ẩn hoàn toàn ở bên phải */
+}
+
+/* Div bọc các phần tử cần làm mờ */
+.elements-to-fade {
+  /* Biến nó thành một lớp tuyệt đối, phủ đầy màn hình */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Đặt z-index cao nhất để nó và các con của nó nằm trên cùng */
+  z-index: 4;
+
+  /* Giữ lại transition cho mượt */
+  transition: opacity 0.1s linear;
+
+  /* RẤT QUAN TRỌNG: Lớp này sẽ chặn các sự kiện chuột. 
+     Thuộc tính này làm cho lớp này "trong suốt" với các cú click,
+     cho phép bạn tương tác với các button bên dưới khi cần. */
+  pointer-events: none;
+}
+
+.homepage {
+  height: 100vh;
+  /* Dùng position: fixed để nó cố định hoàn toàn */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: white;
+  z-index: 1;
+}
+
+.gradient-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  transform: rotate(-180deg);
+  opacity: 1;
+  background: linear-gradient(
+    83.46deg,
+    #ffffff -0.46%,
+    #ec3667 51.6%,
+    #000000 115.98%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.gradient-bottom {
+  position: absolute;
+  top: 50vh;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  transform: rotate(0deg);
+  opacity: 1;
+  background: linear-gradient(
+    95.54deg,
+    #000000 0.98%,
+    #ec3667 63.43%,
+    #ffffff 98.65%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Navbar */
+.navbar {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  padding: 0 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: auto;
+}
+
+.menu-wrapper {
+  position: relative;
+}
+
+.menu-button {
+  position: relative;
+  background: unset;
+  color: white;
+  border: 1px solid white;
+  border-radius: 30px;
+  padding: 11px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  z-index: 2;
+  transition: all 0.3s;
+  font-size: clamp(12px, 2vw, 14px);
+  width: 124px;
+  height: 45px;
+  box-sizing: border-box;
+}
+
+.icon-container {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+
+.menu-icon {
+  color: white;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  opacity: 1;
+  stroke-width: 1.5px;
+}
+
+.menu-icon-close {
+  color: black;
+  font-size: 20px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.menu-wrapper:hover .menu-icon {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.menu-wrapper:hover .menu-icon-close {
+  opacity: 1;
+  transform: rotate(0deg);
+  color: black;
+}
+
+.menu-text {
+  color: white;
+  font-family: "BT Beau Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 110%;
+  letter-spacing: 0%;
+  text-align: center;
+}
+
+.menu-wrapper:hover .menu-text {
+  color: black;
+}
+
+.contact-link {
+  background: transparent;
+  color: white;
+  padding: 8px 16px;
+  font-family: "BT Beau Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 110%;
+  letter-spacing: 0%;
+  text-align: center;
+  width: clamp(70px, 8vw, 84px);
+  height: clamp(10px, 1.2vw, 12px);
+  opacity: 1;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: white;
+  border-radius: 30px;
+  width: 456px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  padding: 70px 40px 70px 52px;
+  box-sizing: border-box;
+  transform: scale(0);
+  transform-origin: top left;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: 1;
+  opacity: 0;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.menu-wrapper:hover .menu-popup {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.menu-wrapper:hover .menu-button {
+  background: white;
+  color: black;
+}
+
+.menu-popup .menu-section-2 li {
+  font-size: 14px;
+}
+
+.menu-popup ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.menu-popup li {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #e0e0e0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 2px 0;
+}
+
+.menu-popup li:hover {
+  color: black;
+}
+
+.navbar-logo {
+  width: 126.65px;
+  /* height: 25px; */
+  opacity: 1;
+}
+
+/* Logo Center */
+.logo-center {
+  position: absolute;
+  top: 50.25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.main-logo {
+  width: 111.78px;
+  height: 224.18px;
+  opacity: 1;
+}
+
+/* Tagline Section */
+.tagline-section {
+  position: absolute;
+  top: calc(50% + 150px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  text-align: center;
+  color: white;
+}
+
+.tagline-top {
+  font-family: "Georgia", serif;
+  font-size: clamp(14px, 1.5vw, 16px);
+  font-weight: 400;
+  margin-bottom: 8px;
+  letter-spacing: 1.5px;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.tagline-bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.future-text {
+  font-family: "SaolDisplay-Regular", serif;
+  font-size: clamp(38px, 5vw, 60px);
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.diamond-text {
+  font-family: "SaolDisplay-RegularItalic", serif;
+  font-size: clamp(38px, 5vw, 60px);
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1;
+  font-style: italic;
+}
+
+/* Logo Reflection */
+.logo-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.logo-top {
+  font-size: clamp(80px, 15vw, 200px);
+  line-height: 0.8;
+  font-weight: 100;
+  letter-spacing: clamp(3px, 1vw, 8px);
+  font-family: "Georgia", serif;
+  color: white;
+  margin-bottom: auto;
+  transform: scaleX(-1);
+}
+
+.logo-bottom {
+  font-size: clamp(80px, 15vw, 200px);
+  line-height: 0.8;
+  font-weight: 100;
+  letter-spacing: clamp(3px, 1vw, 8px);
+  font-family: "Georgia", serif;
+  color: white;
+  margin-bottom: auto;
+}
+
+/* Scroll down */
+.scroll-down {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.scroll-down button {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 100%;
+  width: clamp(40px, 8vw, 50px);
+  height: clamp(45px, 8vw, 50px);
+  /* font-size: clamp(24px, 6vw, 40px); */
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.scroll-down button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Vetor Button */
+.vetor-button {
+  position: absolute;
+  bottom: 20px;
+  right: 50px;
+  z-index: 10;
+}
+
+.vetor-button button {
+  background: transparent;
+  border: 1.5px solid white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.vetor-button button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.vetor-button button img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Kích hoạt lại sự kiện chuột cho các vùng tương tác */
+.navbar,
+.tagline-section,
+.scroll-down,
+.vetor-button {
+  pointer-events: auto;
+}
+
+/* Media Queries for Mobile */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .menu-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .contact-link {
+    padding: 6px 12px;
+    font-size: 14px;
+    width: clamp(60px, 10vw, 75px);
+    height: clamp(8px, 1.5vw, 10px);
+  }
+
+  .navbar-logo {
+    width: clamp(80px, 12vw, 126.65px);
+    height: clamp(16px, 3vw, 25px);
+  }
+
+  .main-logo {
+    width: clamp(60px, 15vw, 111.78px);
+    height: clamp(120px, 30vw, 224.18px);
+  }
+
+  .tagline-section {
+    top: 75vh;
+  }
+
+  .menu-popup {
+    width: 90vw;
+    max-width: 400px;
+    padding: 50px 30px 50px 40px;
+    gap: 60px;
+  }
+
+  .menu-popup li {
+    font-size: 14px;
+  }
+
+  .menu-popup .menu-section-2 li {
+    font-size: 12px;
+  }
+
+  .tagline-top {
+    font-size: clamp(10px, 2vw, 14px);
+    margin-bottom: 8px;
+    white-space: nowrap;
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: clamp(20px, 5vw, 36px);
+  }
+
+  .tagline-bottom {
+    width: 395px;
+    height: 64px;
+  }
+
+  .logo-top,
+  .logo-bottom {
+    font-size: 15vw;
+    letter-spacing: 2px;
+  }
+
+  .scroll-down {
+    bottom: 30px;
+  }
+
+  .scroll-down button {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .vetor-button {
+    bottom: 30px;
+    right: 20px;
+  }
+
+  .vetor-button button {
+    width: 45px;
+    height: 45px;
+  }
+
+  .vetor-button button img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0 15px;
+  }
+
+  .menu-button {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .contact-link {
+    padding: 4px 8px;
+    font-size: 12px;
+    width: clamp(50px, 12vw, 65px);
+    height: clamp(6px, 2vw, 8px);
+  }
+
+  .main-logo {
+    width: clamp(50px, 18vw, 111.78px);
+    height: clamp(100px, 36vw, 224.18px);
+  }
+
+  .tagline-section {
+    top: 70vh;
+  }
+
+  .menu-popup {
+    width: 95vw;
+    max-width: 350px;
+    padding: 40px 20px 40px 30px;
+    gap: 50px;
+  }
+
+  .menu-popup li {
+    font-size: 13px;
+  }
+
+  .menu-popup .menu-section-2 li {
+    font-size: 11px;
+  }
+
+  .tagline-top {
+    font-size: clamp(8px, 2.5vw, 12px);
+    margin-bottom: 6px;
+    white-space: nowrap;
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: clamp(16px, 6vw, 28px);
+  }
+
+  .tagline-bottom {
+    width: 395px;
+    height: 64px;
+  }
+
+  .navbar-logo {
+    width: clamp(70px, 15vw, 126.65px);
+    height: clamp(14px, 4vw, 25px);
+  }
+
+  .logo-top,
+  .logo-bottom {
+    font-size: 18vw;
+    letter-spacing: 1px;
+  }
+
+  .scroll-down button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .vetor-button {
+    bottom: 30px;
+    right: 15px;
+  }
+
+  .vetor-button button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .vetor-button button img {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Thêm vào cuối file home.css */
+.next-section {
+  background-color: #f0f0f0;
+  color: #333;
+  
+  /* Đặt chiều cao cho nó để tạo ra không gian cuộn thực sự */
+  height: 100vh;
+  
+  padding: 100px 5%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  /* Thêm để đảm bảo nó nằm trên lớp gradient cũ khi cuộn lên */
+  position: relative;
+  z-index: 5;
+}
+
+.next-section h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.next-section p {
+  font-size: 1.2rem;
+  max-width: 600px;
+}

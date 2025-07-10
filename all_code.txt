@@ -1,86 +1,5 @@
 ================================================================================
 MIRROR FUTURE DIAMOND WEBSITE - TOÀN BỘ SOURCE CODE
-================================================================================
-Tổng số: 15 file code
-Ngày tạo: 2025-01-09
-
-================================================================================
-1. package.json
-================================================================================
-{
-  "name": "mirror-diamond-website",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.3"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.30.1",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
-    "eslint": "^9.30.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
-    "vite": "^7.0.3"
-  }
-}
-
-================================================================================
-2. vite.config.js
-================================================================================
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
-})
-
-================================================================================
-3. eslint.config.js
-================================================================================
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import { defineConfig, globalIgnores } from 'eslint/config'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{js,jsx}'],
-    extends: [
-      js.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-    ],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
-      },
-    },
-    rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-    },
-  },
-])
-
-================================================================================
 4. index.html
 ================================================================================
 <!doctype html>
@@ -1350,17 +1269,7 @@ body {
     position: absolute;
   }
 
-================================================================================
-15. package-lock.json
-================================================================================
-[FILE NÀY CÓ NỘI DUNG RẤT DÀI VỚI DEPENDENCY LOCK - ĐƯỢC TẠO TỰ ĐỘNG BỞI NPM]
-[KHOẢNG 10000+ DÒNG CODE VỚI THÔNG TIN DEPENDENCIES]
-[KHÔNG HIỂN THỊ TOÀN BỘ ĐỂ TIẾT KIỆM KHÔNG GIAN]
 
-================================================================================
-KẾT THÚC
-================================================================================
-Tổng số file: 15 file
 Công nghệ: React 19.1.0 + Vite + React Router DOM + Custom Fonts
 Cấu trúc: SPA với 2 trang chính (HomePage và UniverseSection)
 Fonts: BT Beau Sans, Saol Display (local fonts)
