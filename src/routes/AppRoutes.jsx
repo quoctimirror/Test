@@ -5,7 +5,7 @@ import { lazy, Suspense } from "react";
 
 // Lazy-load components
 const HomePage = lazy(() => import("../pages/HomePage"));
-const UniverseSection = lazy(() => import("../components/UniverseSection"));
+const UniverseSection = lazy(() => import("../components/UniverseSection/UniverseSection"));
 const HoverExpandSection = lazy(() =>
   import("../components/HoverExpandSection")
 );

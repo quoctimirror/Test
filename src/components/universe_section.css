@@ -149,6 +149,7 @@
 .white-planet {
   background-color: #FFFFFF;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+  cursor: pointer;
 }
 
 /* =================================================================== */
@@ -193,7 +194,7 @@
 
 
 /* =================================================================== */
-/*           ✨ BẮT ĐẦU: CSS CHO TƯƠNG TÁC HOVER ✨                */
+/*           ✨ BẮT ĐẦU: CSS CHO TƯƠNG TÁC HOVER (ĐÃ XÓA) ✨             */
 /* =================================================================== */
 
 /* 1. Thêm con trỏ để báo hiệu có thể tương tác */
@@ -211,27 +212,20 @@
 /* 3. Style cho nội dung bên trong hành tinh (ẩn đi theo mặc định) */
 .planet-content {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-
-  /* Đặt vị trí ban đầu (ví dụ: ngay bên trên hành tinh) */
+  padding: 4px 8px;
+  border-radius: 6px;
   bottom: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(-10px);
-  /* Dịch lên một chút */
+  transform-origin: center bottom;
 
-  /* Hiệu ứng xuất hiện */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s;
+  /* THAY ĐỔI: Không cần opacity, visibility hay transition nữa vì đã được React quản lý */
+  /* opacity: 0; */
+  /* visibility: hidden; */
 
-  /* Các thuộc tính khác */
   font-size: 14px;
-  text-align: center;
+  font-family: 'BT Beau Sans', sans-serif;
   white-space: nowrap;
-  /* Ngăn không cho nội dung xuống dòng */
   pointer-events: none;
   /* Tránh việc con trỏ bị kẹt trên tooltip */
 }
@@ -240,6 +234,12 @@
 .planet-wrapper.animated.paused .planet-content {
   opacity: 1;
   visibility: visible;
+  text-shadow: 0 0 5px #fff, 0 0 10px #aaa;
+
+  /* BỎ ĐI: Hiệu ứng chuyển động không còn cần thiết */
+  /* transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; */
 }
+
+
 
 
