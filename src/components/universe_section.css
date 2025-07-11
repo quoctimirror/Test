@@ -201,8 +201,8 @@
   cursor: pointer;
 }
 
-/* 2. Khi hover vào WRAPPER, hãy DỪNG animation lại */
-.planet-wrapper.animated:hover {
+/* 2. Khi hover vào PLANET, hãy DỪNG animation của WRAPPER */
+.planet-wrapper.animated.paused {
   animation-play-state: paused;
   /* Thêm z-index để nó nổi lên trên các hành tinh khác khi hover */
   z-index: 20;
@@ -236,8 +236,8 @@
   /* Tránh việc con trỏ bị kẹt trên tooltip */
 }
 
-/* 4. Khi hover vào WRAPPER, hãy HIỆN nội dung lên */
-.planet-wrapper.animated:hover .planet-content {
+/* 4. Khi hover vào PLANET, hãy HIỆN nội dung lên */
+.planet-wrapper.animated.paused .planet-content {
   opacity: 1;
   visibility: visible;
 }
