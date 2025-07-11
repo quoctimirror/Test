@@ -1,8 +1,9 @@
 // src/components/UniverseSection.jsx
 
-// ✨ BƯỚC 1: IMPORT 'useState' TỪ REACT ✨
-import React, { useState } from 'react';
+// ✨ BƯỚC 1: IMPORT 'useState' VÀ 'useRef' TỪ REACT ✨
+import React, { useState, useRef } from 'react';
 import './universe_section.css';
+import './universe-section/demo.css';
 
 const UniverseSection = () => {
   // "Bản đồ" quỹ đạo (không đổi)
@@ -31,8 +32,87 @@ const UniverseSection = () => {
   ];
 
   // ✨ BƯỚC 2: TẠO STATE ĐỂ LƯU LẠI HÀNH TINH ĐANG ĐƯỢC HOVER ✨
-  // `null` có nghĩa là không có hành tinh nào được hover.
-  const [hoveredPlanetIndex, setHoveredPlanetIndex] = useState(null);
+  // Object để track hover state của từng planet riêng biệt
+  const [hoveredPlanets, setHoveredPlanets] = useState({});
+
+  // ✨ STATE MỚI: Lưu style cho animation
+  const [circleStyle, setCircleStyle] = useState({});
+  const [isSensesVisible, setIsSensesVisible] = useState(false);
+
+  // ✨ BƯỚC 2: TẠO REF CHO VÒNG TRÒN TRUNG TÂM
+  const centerCircleRef = useRef(null);
+
+  // Helper functions để quản lý hover state của từng planet
+  const setPlanetHovered = (planetId, isHovered) => {
+    setHoveredPlanets(prev => ({
+      ...prev,
+      [planetId]: isHovered
+    }));
+  };
+
+  // ✨ BƯỚC 2: CẬP NHẬT HANDLER KHI CLICK HÀNH TINH với Transform Origin FIX
+  const handlePlanetClick = (event) => {
+    event.stopPropagation(); // Ngăn sự kiện nổi bọt
+
+    // Lấy vị trí thực tế của planet tại thời điểm click (vị trí hiện tại)
+    const clickedRect = event.currentTarget.getBoundingClientRect();
+    
+    // Lấy vị trí của vòng tròn trung tâm (mục tiêu cố định)
+    if (!centerCircleRef.current) return;
+    const centerRect = centerCircleRef.current.getBoundingClientRect();
+
+    // --- LOGIC TÍNH TOÁN HƯỚNG CHÍNH XÁC ---
+
+    // 1. Tính toán tâm thực tế của planet tại thời điểm click
+    const clickedCenterX = clickedRect.left + clickedRect.width / 2;
+    const clickedCenterY = clickedRect.top + clickedRect.height / 2;
+    
+    // 2. Tính toán tâm của center-circle (luôn cố định)
+    const targetCenterX = centerRect.left + centerRect.width / 2;
+    const targetCenterY = centerRect.top + centerRect.height / 2;
+
+    // 3. Tính vector hướng từ vị trí click hiện tại đến center
+    const dx = targetCenterX - clickedCenterX;
+    const dy = targetCenterY - clickedCenterY;
+
+    // 4. Chuẩn hóa vector để có hướng chuẩn
+    const length = Math.sqrt(dx * dx + dy * dy);
+    const normDx = length > 0 ? dx / length : 0;
+    const normDy = length > 0 ? dy / length : 0;
+
+    // 5. Tính transform-origin để circle nở VỀ PHÍA center
+    // Logic: Nếu center ở bên phải của planet, origin sẽ ở bên phải của circle
+    // Điều này làm cho circle expand từ bên phải về phía center
+    const originX = 50 + normDx * 40; // Tăng từ 30% lên 40% để rõ ràng hơn
+    const originY = 50 + normDy * 40;
+    
+    // Giới hạn origin trong khoảng hợp lý (10% - 90%)
+    const clampedOriginX = Math.max(10, Math.min(90, originX));
+    const clampedOriginY = Math.max(10, Math.min(90, originY));
+
+    // --- KẾT THÚC LOGIC TÍNH TOÁN ---
+
+    // Set style với vị trí click thực tế và transform-origin đã tính
+    setCircleStyle({
+      top: `${clickedRect.top}px`,
+      left: `${clickedRect.left}px`,
+      width: `${clickedRect.width}px`,
+      height: `${clickedRect.height}px`,
+      transformOrigin: `${clampedOriginX}% ${clampedOriginY}%`,
+    });
+
+    setTimeout(() => {
+      setIsSensesVisible(true);
+    }, 10);
+  };
+
+  // ✨ BƯỚC 3: CẬP NHẬT HANDLER ĐỂ ĐÓNG GIAO DIỆN
+  const closeSensesInterface = (event) => {
+    // Đóng khi click vào nền overlay hoặc mouse leave khỏi circle
+    if (event.target === event.currentTarget || event.type === 'mouseleave') {
+      setIsSensesVisible(false);
+    }
+  };
 
 
   return (
@@ -69,6 +149,9 @@ const UniverseSection = () => {
             const speed = TRAIN_SPEED + (planetData.orbitRing - 2) * 8;
             const animationDelay = -(speed / 360) * initialAngle;
 
+            const planetId = `white-${index}`;
+            const isHovered = hoveredPlanets[planetId] === true;
+
             const wrapperStyle = {
               '--orbit-size': orbitRingSizes[planetData.orbitRing],
               '--orbit-duration': `${speed}s`,
@@ -76,23 +159,22 @@ const UniverseSection = () => {
               'animation-delay': `${animationDelay}s`,
 
               // ✨ BƯỚC 3: ĐIỀU KHIỂN 'animationPlayState' BẰNG STATE ✨
-              // Nếu index của hành tinh này TRÙNG với index đang được hover -> 'paused'
-              // Nếu không -> 'running'
-              animationPlayState: hoveredPlanetIndex === index ? 'paused' : 'running',
+              // Nếu planet này đang được hover -> 'paused', nếu không -> 'running'
+              animationPlayState: isHovered ? 'paused' : 'running',
             };
 
             return (
               <div
                 key={`white-${index}`}
-                className="planet-wrapper animated"
+                className={`planet-wrapper animated ${isHovered ? 'paused' : ''}`}
                 style={wrapperStyle}
-                // ✨ BƯỚC 4: THÊM CÁC EVENT HANDLER ĐỂ CẬP NHẬT STATE ✨
-                onMouseEnter={() => setHoveredPlanetIndex(index)}
-                onMouseLeave={() => setHoveredPlanetIndex(null)}
               >
                 <div
-                  className="planet white-planet"
+                  className="planet white-planet clickable"
                   style={{ '--planet-size': planetData.responsiveSize }}
+                  onMouseEnter={() => setPlanetHovered(planetId, true)}
+                  onMouseLeave={() => setPlanetHovered(planetId, false)}
+                  onClick={handlePlanetClick}
                 >
                   {index + 1}
                   {/* Nội dung vẫn có thể hiển thị bằng CSS như cũ, 
@@ -104,10 +186,43 @@ const UniverseSection = () => {
           })}
 
           {/* Center circle */}
-          <div className="center-circle">
+          <div 
+            className="center-circle"
+            ref={centerCircleRef}
+          >
             <div className="center-text">
               MIRROR<br />EXPERIENCE
             </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* ✨ BƯỚC 4: CẤU TRÚC MỚI CHO HIỆU ỨNG VÀ GIAO DIỆN SENSES với Circle Grow */}
+      <div
+        className={`senses-overlay ${isSensesVisible ? 'show' : ''}`}
+        style={circleStyle}
+        onClick={closeSensesInterface}
+      >
+        <div 
+          className="senses-content-wrapper"
+          onMouseLeave={closeSensesInterface}
+        >
+          {/* Decorative white lines inside circle */}
+          <div className="internal-lines">
+            <div className="line line-vertical"></div>
+            <div className="line line-horizontal"></div>
+            <div className="line line-diagonal-1"></div>
+            <div className="line line-diagonal-2"></div>
+          </div>
+          
+          <h2 className="senses-title">Space</h2>
+          <div className="senses-items">
+            <div className="sense-item sight">Sight</div>
+            <div className="sense-item touch">Touch</div>
+            <div className="sense-item scent">Scent</div>
+            <div className="sense-item sound">Sound</div>
+            <div className="sense-item taste">Taste</div>
           </div>
         </div>
       </div>
