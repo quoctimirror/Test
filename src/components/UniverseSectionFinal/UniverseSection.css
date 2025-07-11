@@ -1,0 +1,236 @@
+/* UniverseSection.css */
+
+/* SECTION 1: KHUNG CẢNH VŨ TRỤ */
+.universe-section {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    /* Ảnh nền vũ trụ */
+    background-color: #0b020a;
+    background-image:
+        url('/universe/universe_background_image.webp'),
+        url('/universe/universe_background_image.png'),
+        url('/universe/universe_background_image.jpg'),
+        radial-gradient(circle at center, #4a1a3d 0%, #2d1024 40%, #1a0a14 70%, #000000 100%);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.universe-container {
+    position: relative;
+    width: 50vmin;
+    height: 50vmin;
+    max-width: 560px;
+    max-height: 560px;
+    min-width: 280px;
+    min-height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* SECTION 2: HỆ THỐNG QUỸ ĐẠO VÀ VÒNG TRÒN TRUNG TÂM */
+.orbit-system {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orbit-ring {
+    position: absolute;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+}
+
+.orbit-ring-1 {
+    width: 30%;
+    height: 30%;
+}
+
+.orbit-ring-2 {
+    width: 42%;
+    height: 42%;
+}
+
+.orbit-ring-3 {
+    width: 54%;
+    height: 54%;
+}
+
+.orbit-ring-4 {
+    width: 66%;
+    height: 66%;
+}
+
+.orbit-ring-5 {
+    width: 78%;
+    height: 78%;
+}
+
+.center-circle {
+    position: absolute;
+    width: 20%;
+    height: 20%;
+    min-width: 90px;
+    min-height: 90px;
+    max-width: 180px;
+    max-height: 180px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    container-type: inline-size;
+    container-name: circle-container;
+}
+
+.center-text {
+    font-family: 'BT Beau Sans', sans-serif;
+    font-size: clamp(0.5rem, 18cqw, 0.8rem);
+    font-weight: 400;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+    padding: 8px;
+}
+
+/* SECTION 3: HÀNH TINH XÁM VÀ CHUYỂN ĐỘNG */
+
+/* Style cơ bản cho hành tinh */
+.planet {
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    /* Kích thước được xác định bởi biến CSS --planet-size */
+    width: var(--planet-size, 12px);
+    height: var(--planet-size, 12px);
+}
+
+/* Style riêng cho hành tinh xám */
+.gray-planet {
+    background-color: #999;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.gray-planet:hover {
+    transform: scale(1.4);
+}
+
+/* Keyframes cho chuyển động trên quỹ đạo */
+@keyframes move-on-path {
+    from {
+        offset-distance: 0%;
+    }
+
+    to {
+        offset-distance: 100%;
+    }
+}
+
+/* Class áp dụng animation cho hành tinh */
+.planet.animated {
+    /* offset-path xác định đường đi hình tròn */
+    offset-path: circle(var(--orbit-radius) at center);
+    offset-rotate: 0deg;
+    /* Giữ cho hành tinh không tự xoay */
+
+    /* Áp dụng animation với các biến tùy chỉnh từ style inline */
+    animation: move-on-path var(--orbit-duration) linear infinite var(--orbit-direction);
+}
+
+/* SECTION 4: RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .universe-container {
+        width: 80vmin;
+        height: 80vmin;
+        min-width: 240px;
+        min-height: 240px;
+    }
+
+    .center-circle {
+        min-width: 70px;
+        min-height: 70px;
+        max-width: 120px;
+        max-height: 120px;
+    }
+
+    .center-text {
+        font-size: clamp(0.4rem, 16cqw, 0.6rem);
+        padding: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .universe-container {
+        width: 90vmin;
+        height: 90vmin;
+        min-width: 200px;
+        min-height: 200px;
+    }
+
+    .center-circle {
+        min-width: 60px;
+        min-height: 60px;
+        max-width: 100px;
+        max-height: 100px;
+    }
+
+    .center-text {
+        font-size: clamp(0.35rem, 14cqw, 0.5rem);
+        padding: 4px;
+    }
+
+    .orbit-ring {
+        border-width: 1px;
+    }
+}
+
+/* SECTION 5: ANIMATION PERFORMANCE */
+.orbit-system * {
+    will-change: transform;
+}
+
+.planet.animated {
+    transform-origin: center;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* SECTION 6: ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+    .planet.animated {
+        animation-duration: 60s;
+    }
+
+    .planet:hover,
+    .gray-planet:hover {
+        transform: scale(1.1);
+    }
+}
+
+/* SECTION 7: HIGH DPI DISPLAYS */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    .orbit-ring {
+        border-width: 1px;
+    }
+
+    .center-circle {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+}

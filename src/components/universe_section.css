@@ -9,15 +9,12 @@
 .universe-section {
   width: 100%;
   height: 100vh;
-  background: url("/universe/universe_background_image.jpg") center center/cover
-      no-repeat,
-    radial-gradient(
-      circle at center,
+  background: url("/universe/universe_background_image.jpg") center center/cover no-repeat,
+    radial-gradient(circle at center,
       #4a1a3d 0%,
       #2d1024 40%,
       #1a0a14 70%,
-      #000000 100%
-    );
+      #000000 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -154,7 +151,6 @@
 .white-planet {
   background-color: #ffffff;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
-  cursor: pointer;
 }
 
 /* =================================================================== */
@@ -198,7 +194,7 @@
 }
 
 /* =================================================================== */
-/*           ✨ BẮT ĐẦU: CSS CHO TƯƠNG TÁC HOVER (ĐÃ XÓA) ✨             */
+/*           ✨ BẮT ĐẦU: CSS CHO TƯƠNG TÁC HOVER ✨                */
 /* =================================================================== */
 
 /* 1. Chỉ thêm cursor pointer cho planet, không phải wrapper */
@@ -245,6 +241,7 @@
 /* Planet content tooltip styles */
 .planet-content {
   position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 10px 15px;
   border-radius: 8px;
@@ -256,7 +253,7 @@
   visibility: hidden;
   transition: opacity 0.3s, visibility 0.3s;
   font-size: 14px;
-  font-family: 'BT Beau Sans', sans-serif;
+  text-align: center;
   white-space: nowrap;
   pointer-events: none;
   min-width: max-content;
@@ -294,5 +291,3 @@
 .planet-wrapper.animated:hover {
   animation-play-state: paused !important;
 }
-
-
