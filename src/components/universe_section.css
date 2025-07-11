@@ -9,18 +9,23 @@
 .universe-section {
   width: 100%;
   height: 100vh;
-  background:
-    url('/universe/universe_background_image.jpg') center center/cover no-repeat,
-    radial-gradient(circle at center, #4a1a3d 0%, #2d1024 40%, #1a0a14 70%, #000000 100%);
+  background: url("/universe/universe_background_image.jpg") center center/cover
+      no-repeat,
+    radial-gradient(
+      circle at center,
+      #4a1a3d 0%,
+      #2d1024 40%,
+      #1a0a14 70%,
+      #000000 100%
+    );
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   overflow: hidden;
-  background-image:
-    url('/universe/universe_background_image.webp'),
-    url('/universe/universe_background_image.png'),
-    url('/universe/universe_background_image.jpg');
+  background-image: url("/universe/universe_background_image.webp"),
+    url("/universe/universe_background_image.png"),
+    url("/universe/universe_background_image.jpg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -110,7 +115,7 @@
 
 /* ✨ TRỤ CỘT 2: FONT-SIZE DÙNG CQW ĐỂ PHỤ THUỘC VÀO VÒNG TRÒN ✨ */
 .center-text {
-  font-family: 'BT Beau Sans', sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   /* Kích thước chữ giờ đây sẽ luôn bằng ~18% chiều rộng của vòng tròn chứa nó */
   font-size: clamp(0.5rem, 18cqw, 0.8rem);
   font-weight: 400;
@@ -147,7 +152,7 @@
 }
 
 .white-planet {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
 }
 
@@ -191,14 +196,26 @@
   animation-iteration-count: infinite;
 }
 
-
 /* =================================================================== */
 /*           ✨ BẮT ĐẦU: CSS CHO TƯƠNG TÁC HOVER ✨                */
 /* =================================================================== */
 
-/* 1. Thêm con trỏ để báo hiệu có thể tương tác */
-.planet-wrapper.animated {
+/* 1. Chỉ thêm cursor pointer cho planet, không phải wrapper */
+.planet-wrapper.animated .planet.clickable {
   cursor: pointer;
+}
+
+/* Wrapper không có cursor pointer và disable pointer events để tránh can thiệp */
+.planet-wrapper.animated {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Chỉ planet mới có pointer events */
+.planet-wrapper.animated .planet {
+  pointer-events: all;
+  position: relative;
+  z-index: 10;
 }
 
 /* 2. Khi hover vào PLANET, hãy DỪNG animation của WRAPPER */
@@ -208,38 +225,72 @@
   z-index: 20;
 }
 
-/* 3. Style cho nội dung bên trong hành tinh (ẩn đi theo mặc định) */
+/* CSS hover only on planet element, not the whole wrapper */
+.planet-wrapper.animated .planet:hover {
+  transform: scale(1.1);
+}
+
+.planet-wrapper.animated:has(.planet:hover) {
+  animation-play-state: paused !important;
+  z-index: 20 !important;
+}
+
+.planet-wrapper.animated:has(.planet:hover) .planet-content {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 100 !important;
+}
+
+/* Planet content tooltip styles */
 .planet-content {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 10px 15px;
   border-radius: 8px;
-
-  /* Đặt vị trí ban đầu (ví dụ: ngay bên trên hành tinh) */
+  z-index: 50;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(-10px);
-  /* Dịch lên một chút */
-
-  /* Hiệu ứng xuất hiện */
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s, visibility 0.3s;
-
-  /* Các thuộc tính khác */
   font-size: 14px;
   text-align: center;
   white-space: nowrap;
-  /* Ngăn không cho nội dung xuống dòng */
   pointer-events: none;
-  /* Tránh việc con trỏ bị kẹt trên tooltip */
+  min-width: max-content;
 }
 
-/* 4. Khi hover vào PLANET, hãy HIỆN nội dung lên */
-.planet-wrapper.animated.paused .planet-content {
-  opacity: 1;
-  visibility: visible;
+.planet-wrapper.animated.paused .planet-content,
+.planet-wrapper.paused .planet-content {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 100 !important;
 }
 
+/* Clickable planet styles */
+.white-planet.clickable {
+  transition: transform 0.2s ease;
+  /* Tăng hover area một chút nhưng giữ visual size */
+  padding: 2px;
+  margin: -2px;
+  /* Đảm bảo vẫn tròn */
+  border-radius: 50%;
+  /* Force pointer events */
+  pointer-events: all !important;
+  cursor: pointer !important;
+}
 
+.white-planet.clickable:hover {
+  transform: scale(1.1) !important;
+}
+
+/* Force hover effects to work */
+.planet-wrapper.animated .white-planet.clickable:hover {
+  transform: scale(1.1) !important;
+}
+
+.planet-wrapper.animated:hover {
+  animation-play-state: paused !important;
+}

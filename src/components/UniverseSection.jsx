@@ -2,6 +2,10 @@
 
 // ✨ BƯỚC 1: IMPORT 'useState' VÀ 'useRef' TỪ REACT ✨
 import React, { useState, useRef } from 'react';
+import WhitePlanet1 from './universe-section/WhitePlanet1';
+import WhitePlanet2 from './universe-section/WhitePlanet2';
+import WhitePlanet3 from './universe-section/WhitePlanet3';
+import WhitePlanet4 from './universe-section/WhitePlanet4';
 import './universe_section.css';
 import './universe-section/demo.css';
 
@@ -31,24 +35,12 @@ const UniverseSection = () => {
     { orbitRing: 5, responsiveSize: 'clamp(10px, 0.9vw, 14px)', content: "User Experience" },
   ];
 
-  // ✨ BƯỚC 2: TẠO STATE ĐỂ LƯU LẠI HÀNH TINH ĐANG ĐƯỢC HOVER ✨
-  // Object để track hover state của từng planet riêng biệt
-  const [hoveredPlanets, setHoveredPlanets] = useState({});
-
   // ✨ STATE MỚI: Lưu style cho animation
   const [circleStyle, setCircleStyle] = useState({});
   const [isSensesVisible, setIsSensesVisible] = useState(false);
 
   // ✨ BƯỚC 2: TẠO REF CHO VÒNG TRÒN TRUNG TÂM
   const centerCircleRef = useRef(null);
-
-  // Helper functions để quản lý hover state của từng planet
-  const setPlanetHovered = (planetId, isHovered) => {
-    setHoveredPlanets(prev => ({
-      ...prev,
-      [planetId]: isHovered
-    }));
-  };
 
   // ✨ BƯỚC 2: CẬP NHẬT HANDLER KHI CLICK HÀNH TINH với Transform Origin FIX
   const handlePlanetClick = (event) => {
@@ -115,6 +107,7 @@ const UniverseSection = () => {
   };
 
 
+
   return (
     <div className="universe-section">
       <div className="universe-container">
@@ -132,13 +125,13 @@ const UniverseSection = () => {
               key={`gray-${index}`}
               className="planet-wrapper"
               style={{
-                '--orbit-size': orbitRingSizes[planet.orbitRing],
-                '--orbit-angle': planet.angle
+                "--orbit-size": orbitRingSizes[planet.orbitRing],
+                "--orbit-angle": planet.angle,
               }}
             >
               <div
                 className="planet gray-planet"
-                style={{ '--planet-size': grayPlanetResponsiveSize }}
+                style={{ "--planet-size": grayPlanetResponsiveSize }}
               ></div>
             </div>
           ))}
@@ -149,39 +142,21 @@ const UniverseSection = () => {
             const speed = TRAIN_SPEED + (planetData.orbitRing - 2) * 8;
             const animationDelay = -(speed / 360) * initialAngle;
 
-            const planetId = `white-${index}`;
-            const isHovered = hoveredPlanets[planetId] === true;
-
-            const wrapperStyle = {
-              '--orbit-size': orbitRingSizes[planetData.orbitRing],
-              '--orbit-duration': `${speed}s`,
-              '--orbit-direction': TRAIN_DIRECTION === 'clockwise' ? 'reverse' : 'normal',
-              'animation-delay': `${animationDelay}s`,
-
-              // ✨ BƯỚC 3: ĐIỀU KHIỂN 'animationPlayState' BẰNG STATE ✨
-              // Nếu planet này đang được hover -> 'paused', nếu không -> 'running'
-              animationPlayState: isHovered ? 'paused' : 'running',
-            };
+            // Select the appropriate planet component based on index
+            const PlanetComponents = [WhitePlanet1, WhitePlanet2, WhitePlanet3, WhitePlanet4];
+            const PlanetComponent = PlanetComponents[index];
 
             return (
-              <div
+              <PlanetComponent
                 key={`white-${index}`}
-                className={`planet-wrapper animated ${isHovered ? 'paused' : ''}`}
-                style={wrapperStyle}
-              >
-                <div
-                  className="planet white-planet clickable"
-                  style={{ '--planet-size': planetData.responsiveSize }}
-                  onMouseEnter={() => setPlanetHovered(planetId, true)}
-                  onMouseLeave={() => setPlanetHovered(planetId, false)}
-                  onClick={handlePlanetClick}
-                >
-                  {index + 1}
-                  {/* Nội dung vẫn có thể hiển thị bằng CSS như cũ, 
-                      hoặc bạn có thể điều khiển bằng state `hoveredPlanetIndex === index` */}
-                  <div className="planet-content">{planetData.content}</div>
-                </div>
-              </div>
+                planetData={planetData}
+                index={index}
+                orbitSize={orbitRingSizes[planetData.orbitRing]}
+                speed={speed}
+                animationDelay={animationDelay}
+                direction={TRAIN_DIRECTION}
+                onClick={handlePlanetClick}
+              />
             );
           })}
 
