@@ -3,7 +3,7 @@
 import React from 'react';
 import './WhitePlanet.css';
 
-const WhitePlanet = ({ planets, orbitRadii }) => {
+const WhitePlanet = ({ planets, orbitRadii, onPlanetClick }) => {
     return (
         <>
             {planets.map((planet) => {
@@ -12,8 +12,7 @@ const WhitePlanet = ({ planets, orbitRadii }) => {
 
                 const radiusValue = parseFloat(radiusString);
 
-                // --- CẬP NHẬT TÍNH TOÁN VỊ TRÍ ---
-                // ✨ Dùng parseFloat để lấy số từ chuỗi angle (ví dụ: '89deg' -> 89)
+                // Dùng parseFloat để lấy số từ chuỗi angle (ví dụ: '89deg' -> 89)
                 const angleInDegrees = parseFloat(planet.angle);
 
                 // Chuyển đổi góc từ độ sang radian để tính toán
@@ -24,18 +23,20 @@ const WhitePlanet = ({ planets, orbitRadii }) => {
                 const y = radiusValue * Math.sin(angleInRad);
 
                 // Tạo style inline để định vị hành tinh
+                // Sử dụng 'width' và 'height' thay vì biến CSS để đảm bảo tính nhất quán
                 const planetStyle = {
                     left: `calc(50% + ${x}%)`,
                     top: `calc(50% + ${y}%)`,
-                    // ✨ Sử dụng kích thước tùy chỉnh từ dữ liệu
-                    '--planet-size': planet.size,
+                    width: planet.size,
+                    height: planet.size,
                 };
 
                 return (
                     <div
                         key={planet.name}
-                        className="planet white-planet"
+                        className="planet white-planet" // Bỏ 'clickable' nếu không dùng style riêng
                         style={planetStyle}
+                        onClick={(e) => onPlanetClick && onPlanetClick(e, planet.name)}
                     >
                         <span className="planet-label">{planet.name}</span>
                     </div>

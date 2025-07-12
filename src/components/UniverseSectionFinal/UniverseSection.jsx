@@ -1,14 +1,16 @@
-// UniverseSection.jsx
+// UniverseSection.jsx - Enhanced Version with Even Distribution
 
-import React from 'react';
+import React, { useState } from 'react';
 import './UniverseSection.css';
 import WhitePlanet from './WhitePlanet';
+import SpaceOverlay from './SpaceOverlay';
+import BaseOverlay from './BaseOverlay';
+import PresenceOverlay from './PresenceOverlay';
+import TimeOverlay from './TimeOverlay';
 
 const UniverseSection = () => {
-    // Dữ liệu BÁN KÍNH quỹ đạo cho tất cả các hành tinh
     const orbitRadii = { 1: '15.2%', 2: '21%', 3: '27.5%', 4: '33.2%', 5: '39%' };
 
-    // ✨ DỮ LIỆU MỚI CHO CÁC HÀNH TINH TRẮNG ✨
     const whitePlanetsData = [
         { name: 'Presence', orbitRing: 2, angle: '-2deg', size: 'clamp(12px, 1vw, 16px)' },
         { name: 'Senses', orbitRing: 3, angle: '235deg', size: 'clamp(20px, 1.5vw, 30px)' },
@@ -16,59 +18,118 @@ const UniverseSection = () => {
         { name: 'Space', orbitRing: 5, angle: '55deg', size: 'clamp(10px, 0.9vw, 14px)' },
     ];
 
-    // Dữ liệu hành tinh xám (giữ nguyên)
-    const BASE_SPEED = 20;
-    const SPEED_INCREMENT = 5;
-    const grayPlanetResponsiveSize = 'clamp(8px, 0.9vw, 12px)';
+    const BASE_SPEED = 15;
+    const SPEED_INCREMENT = 4;
+    const grayPlanetResponsiveSize = 'clamp(10px, 1.1vw, 16px)';
+
     const grayPlanets = [
-        { orbitRing: 1, angle: '180deg', direction: 'clockwise' },
-        { orbitRing: 2, angle: '45deg', direction: 'counter-clockwise' },
-        { orbitRing: 3, angle: '210deg', direction: 'counter-clockwise' },
-        { orbitRing: 4, angle: '310deg', direction: 'clockwise' },
-        { orbitRing: 5, angle: '120deg', direction: 'counter-clockwise' }
+        { orbitRing: 1, direction: 'clockwise', pulseDuration: '2.5s', color: 'default' },
+        { orbitRing: 2, direction: 'counter-clockwise', pulseDuration: '3.0s', color: 'blue-tint' },
+        { orbitRing: 3, direction: 'clockwise', pulseDuration: '2.8s', color: 'purple-tint' },
+        { orbitRing: 4, direction: 'counter-clockwise', pulseDuration: '3.2s', color: 'green-tint' },
+        { orbitRing: 5, direction: 'clockwise', pulseDuration: '2.3s', color: 'orange-tint' }
     ];
+
+    const [activePlanet, setActivePlanet] = useState(null);
+    const [overlayStyle, setOverlayStyle] = useState({});
+
+    const handlePlanetClick = (event, planetName) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        setOverlayStyle({
+            top: `${rect.top}px`,
+            left: `${rect.left}px`,
+            width: `${rect.width}px`,
+            height: `${rect.height}px`,
+        });
+        if (planetName.toLowerCase() === 'space') {
+            setActivePlanet('space');
+        }
+        else if (planetName.toLowerCase() === 'presence') {
+            setActivePlanet('presence');
+        }
+        else if (planetName.toLowerCase() === 'time') {
+            setActivePlanet('time');
+        }
+    };
+
+    const closeOverlay = () => {
+        setActivePlanet(null);
+    };
 
     return (
         <div className="universe-section">
             <div className="universe-container">
                 <div className="orbit-system">
-                    {/* Các vòng quỹ đạo */}
                     <div className="orbit-ring orbit-ring-1"></div>
                     <div className="orbit-ring orbit-ring-2"></div>
                     <div className="orbit-ring orbit-ring-3"></div>
                     <div className="orbit-ring orbit-ring-4"></div>
                     <div className="orbit-ring orbit-ring-5"></div>
 
-                    {/* Hiển thị các hành tinh trắng tĩnh với dữ liệu mới */}
-                    <WhitePlanet planets={whitePlanetsData} orbitRadii={orbitRadii} />
+                    <WhitePlanet
+                        planets={whitePlanetsData}
+                        orbitRadii={orbitRadii}
+                        onPlanetClick={handlePlanetClick}
+                    />
 
-                    {/* Render các hành tinh xám chuyển động (giữ nguyên) */}
                     {grayPlanets.map((planet, index) => {
                         const speed = BASE_SPEED + (planet.orbitRing - 1) * SPEED_INCREMENT;
                         const directionValue = planet.direction === 'clockwise' ? 'reverse' : 'normal';
+
+                        // ✨ [THAY ĐỔI] Tính toán delay âm để rải đều các hành tinh ✨
+                        // Logic: Chia vòng tròn cho số hành tinh và đặt vị trí bắt đầu bằng delay âm.
+                        const startOffsetDelay = - (speed * (index / grayPlanets.length));
 
                         const planetStyle = {
                             '--orbit-radius': orbitRadii[planet.orbitRing],
                             '--orbit-duration': `${speed}s`,
                             '--orbit-direction': directionValue,
                             '--planet-size': grayPlanetResponsiveSize,
+                            '--pulse-duration': planet.pulseDuration,
+                            // Áp dụng delay âm
+                            animationDelay: `${startOffsetDelay}s`,
                         };
 
                         return (
                             <div
                                 key={`gray-${index}`}
-                                className="planet gray-planet animated"
+                                className={`planet gray-planet animated ${planet.color}`}
                                 style={planetStyle}
+                                title={`Gray Planet ${index + 1}`}
                             ></div>
                         );
                     })}
 
-                    {/* Vòng tròn trung tâm */}
                     <div className="center-circle">
                         <div className="center-text">MIRROR<br />EXPERIENCE</div>
                     </div>
                 </div>
             </div>
+
+            <PresenceOverlay
+                isActive={activePlanet === 'presence'}
+                overlayStyle={overlayStyle}
+                onClose={closeOverlay}
+            />
+
+            <SpaceOverlay
+                isActive={activePlanet === 'space'}
+                overlayStyle={overlayStyle}
+                onClose={closeOverlay}
+            />
+
+            <TimeOverlay
+                isActive={activePlanet === 'time'}
+                overlayStyle={overlayStyle}
+                onClose={closeOverlay}
+            />
+
+
+            {/* <BaseOverlay
+                isActive={activePlanet === 'space'}
+                overlayStyle={overlayStyle}
+                onClose={closeOverlay}
+            /> */}
         </div>
     );
 };

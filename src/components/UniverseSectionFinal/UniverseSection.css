@@ -1,4 +1,4 @@
-/* UniverseSection.css */
+/* UniverseSection.css - Enhanced Version */
 
 /* SECTION 1: KHUNG CẢNH VŨ TRỤ */
 .universe-section {
@@ -49,6 +49,10 @@
     position: absolute;
     border: 2px dashed rgba(255, 255, 255, 0.3);
     border-radius: 50%;
+    /* Thêm hiệu ứng phát sáng cho quỹ đạo */
+    box-shadow:
+        0 0 10px rgba(255, 255, 255, 0.1),
+        inset 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
 .orbit-ring-1 {
@@ -90,9 +94,29 @@
     justify-content: center;
     align-items: center;
     z-index: 10;
-    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    box-shadow:
+        0 0 40px rgba(255, 255, 255, 0.3),
+        0 0 80px rgba(255, 255, 255, 0.1);
     container-type: inline-size;
     container-name: circle-container;
+    /* Hiệu ứng nhấp nháy nhẹ */
+    animation: center-glow 4s ease-in-out infinite;
+}
+
+@keyframes center-glow {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 40px rgba(255, 255, 255, 0.3),
+            0 0 80px rgba(255, 255, 255, 0.1);
+    }
+
+    50% {
+        box-shadow:
+            0 0 60px rgba(255, 255, 255, 0.4),
+            0 0 120px rgba(255, 255, 255, 0.2);
+    }
 }
 
 .center-text {
@@ -106,7 +130,7 @@
     padding: 8px;
 }
 
-/* SECTION 3: HÀNH TINH XÁM VÀ CHUYỂN ĐỘNG */
+/* SECTION 3: HÀNH TINH XÁM VÀ CHUYỂN ĐỘNG NÂNG CAP */
 
 /* Style cơ bản cho hành tinh */
 .planet {
@@ -115,23 +139,96 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     /* Kích thước được xác định bởi biến CSS --planet-size */
     width: var(--planet-size, 12px);
     height: var(--planet-size, 12px);
+    cursor: pointer;
 }
 
-/* Style riêng cho hành tinh xám */
+/* Style nâng cao cho hành tinh xám */
 .gray-planet {
-    background-color: #999;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+    background: linear-gradient(135deg, #b8b8b8 0%, #666666 50%, #999999 100%);
+    box-shadow:
+        0 0 15px rgba(255, 255, 255, 0.3),
+        0 0 30px rgba(184, 184, 184, 0.2),
+        inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+
+    /* Hiệu ứng nhấp nháy */
+    animation: planet-pulse var(--pulse-duration, 3s) ease-in-out infinite;
+}
+
+/* Thêm hiệu ứng phản chiếu ánh sáng */
+.gray-planet::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 20%;
+    width: 30%;
+    height: 30%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Hiệu ứng đuôi sáng */
+.gray-planet::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 2px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.3) 20%,
+            rgba(184, 184, 184, 0.6) 50%,
+            transparent 100%);
+    top: 50%;
+    left: -100%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .gray-planet:hover {
-    transform: scale(1.4);
+    transform: scale(1.5);
+    box-shadow:
+        0 0 25px rgba(255, 255, 255, 0.6),
+        0 0 50px rgba(184, 184, 184, 0.4),
+        inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+    animation-play-state: paused;
 }
 
-/* Keyframes cho chuyển động trên quỹ đạo */
+.gray-planet:hover::after {
+    opacity: 1;
+}
+
+/* Keyframes cho hiệu ứng nhấp nháy */
+@keyframes planet-pulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 0 15px rgba(255, 255, 255, 0.3),
+            0 0 30px rgba(184, 184, 184, 0.2),
+            inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+            inset 1px 1px 2px rgba(255, 255, 255, 0.4);
+    }
+
+    50% {
+        box-shadow:
+            0 0 20px rgba(255, 255, 255, 0.5),
+            0 0 40px rgba(184, 184, 184, 0.3),
+            inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+            inset 1px 1px 2px rgba(255, 255, 255, 0.6);
+    }
+}
+
+/* ✨ [THAY ĐỔI] Đơn giản hóa keyframe, vì timing function sẽ được đặt trong rule `.planet.animated` */
 @keyframes move-on-path {
     from {
         offset-distance: 0%;
@@ -142,15 +239,48 @@
     }
 }
 
+/* Xóa keyframe 'move-with-variation' không cần thiết nữa */
+
+
 /* Class áp dụng animation cho hành tinh */
 .planet.animated {
     /* offset-path xác định đường đi hình tròn */
     offset-path: circle(var(--orbit-radius) at center);
     offset-rotate: 0deg;
-    /* Giữ cho hành tinh không tự xoay */
 
-    /* Áp dụng animation với các biến tùy chỉnh từ style inline */
-    animation: move-on-path var(--orbit-duration) linear infinite var(--orbit-direction);
+    /* ✨ [THAY ĐỔI] Áp dụng animation với timing là 'linear' để chuyển động đều ✨ */
+    animation:
+        move-on-path var(--orbit-duration) linear infinite var(--orbit-direction),
+        planet-pulse var(--pulse-duration, 3s) ease-in-out infinite;
+
+    /* Thêm hiệu ứng chuyển đổi mượt mà */
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Hiệu ứng đặc biệt cho từng hành tinh */
+.planet.animated:nth-child(6) {
+    --pulse-duration: 2.5s;
+    filter: hue-rotate(0deg);
+}
+
+.planet.animated:nth-child(7) {
+    --pulse-duration: 3.2s;
+    filter: hue-rotate(20deg);
+}
+
+.planet.animated:nth-child(8) {
+    --pulse-duration: 2.8s;
+    filter: hue-rotate(40deg);
+}
+
+.planet.animated:nth-child(9) {
+    --pulse-duration: 3.5s;
+    filter: hue-rotate(60deg);
+}
+
+.planet.animated:nth-child(10) {
+    --pulse-duration: 2.3s;
+    filter: hue-rotate(80deg);
 }
 
 /* SECTION 4: RESPONSIVE DESIGN */
@@ -172,6 +302,10 @@
     .center-text {
         font-size: clamp(0.4rem, 16cqw, 0.6rem);
         padding: 6px;
+    }
+
+    .gray-planet:hover {
+        transform: scale(1.3);
     }
 }
 
@@ -198,28 +332,49 @@
     .orbit-ring {
         border-width: 1px;
     }
+
+    .gray-planet:hover {
+        transform: scale(1.2);
+    }
 }
 
 /* SECTION 5: ANIMATION PERFORMANCE */
 .orbit-system * {
-    will-change: transform;
+    will-change: transform, filter, box-shadow;
 }
 
 .planet.animated {
     transform-origin: center;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
 /* SECTION 6: ACCESSIBILITY */
 @media (prefers-reduced-motion: reduce) {
     .planet.animated {
         animation-duration: 60s;
+        /* Vẫn giữ linear cho người dùng muốn chuyển động chậm hơn, không giật cục */
+        animation-timing-function: linear;
     }
 
     .planet:hover,
     .gray-planet:hover {
         transform: scale(1.1);
+    }
+
+    .center-circle {
+        animation: none;
+    }
+
+    @keyframes planet-pulse {
+
+        0%,
+        100% {
+            box-shadow:
+                0 0 15px rgba(255, 255, 255, 0.3),
+                0 0 30px rgba(184, 184, 184, 0.2);
+        }
     }
 }
 
@@ -231,6 +386,16 @@
     }
 
     .center-circle {
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        box-shadow:
+            0 0 40px rgba(255, 255, 255, 0.3),
+            0 0 80px rgba(255, 255, 255, 0.1);
+    }
+
+    .gray-planet {
+        box-shadow:
+            0 0 12px rgba(255, 255, 255, 0.3),
+            0 0 24px rgba(184, 184, 184, 0.2),
+            inset -1px -1px 2px rgba(0, 0, 0, 0.3),
+            inset 1px 1px 1px rgba(255, 255, 255, 0.4);
     }
 }
