@@ -10,7 +10,6 @@
     box-shadow: 0 0 2px 7px rgba(35, 179, 187, 0.9), 0 0 25px 8px rgba(35, 179, 187, 0.4);
 }
 */
-
 /*
  * CONTENT WRAPPER - Đây là SÂN KHẤU CHÍNH, chiếm 100% overlay
  */
@@ -71,7 +70,7 @@
     /* Xuất hiện sớm */
 
     color: #BC224C;
-    font-family: "Saol Display", serif;
+    font-family: "PP Neue Montreal", serif;
     font-size: clamp(2.5rem, 4.5vw, 4rem);
     font-weight: 300;
     line-height: 90%;
@@ -104,7 +103,7 @@
  */
 .presence-text-bottom {
     bottom: 28%;
-    left: 5%;
+    left: 15%;
     width: auto;
     text-align: left;
     animation-delay: 1.1s;

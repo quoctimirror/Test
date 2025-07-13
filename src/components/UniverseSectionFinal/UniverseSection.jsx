@@ -1,12 +1,12 @@
 // UniverseSection.jsx - Enhanced Version with Even Distribution
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UniverseSection.css';
 import WhitePlanet from './WhitePlanet';
 import SpaceOverlay from './SpaceOverlay';
 import BaseOverlay from './BaseOverlay';
 import PresenceOverlay from './PresenceOverlay';
 import TimeOverlay from './TimeOverlay';
+import SensesOverlay from './SensesOverlay';
 
 const UniverseSection = () => {
     const orbitRadii = { 1: '15.2%', 2: '21%', 3: '27.5%', 4: '33.2%', 5: '39%' };
@@ -50,11 +50,37 @@ const UniverseSection = () => {
         else if (planetName.toLowerCase() === 'time') {
             setActivePlanet('time');
         }
+        else if (planetName.toLowerCase() === 'senses') {
+            setActivePlanet('senses');
+        }
     };
 
     const closeOverlay = () => {
         setActivePlanet(null);
     };
+
+    // ✨ =================================================================== ✨
+    // ✨                        THÊM LOGIC XỬ LÝ ESCAPE                      ✨
+    // ✨ =================================================================== ✨
+    useEffect(() => {
+        // Định nghĩa hàm xử lý sự kiện keydown
+        const handleKeyDown = (event) => {
+            // Kiểm tra nếu phím được nhấn là 'Escape'
+            if (event.key === 'Escape') {
+                closeOverlay(); // Gọi hàm đóng overlay
+            }
+        };
+
+        // Thêm event listener vào document khi component được mount
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Hàm dọn dẹp: Xóa event listener khi component unmount
+        // Điều này cực kỳ quan trọng để tránh memory leaks.
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []); // Mảng rỗng `[]` đảm bảo effect này chỉ chạy một lần khi component mount.
+    // ✨ =================================================================== ✨
 
     return (
         <div className="universe-section">
@@ -120,6 +146,12 @@ const UniverseSection = () => {
 
             <TimeOverlay
                 isActive={activePlanet === 'time'}
+                overlayStyle={overlayStyle}
+                onClose={closeOverlay}
+            />
+
+            <SensesOverlay
+                isActive={activePlanet === 'senses'}
                 overlayStyle={overlayStyle}
                 onClose={closeOverlay}
             />
