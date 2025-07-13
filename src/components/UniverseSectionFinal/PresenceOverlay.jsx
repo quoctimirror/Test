@@ -18,8 +18,8 @@ const PresenceOverlay = ({
         <div
             className={`base-overlay presence-overlay ${isActive ? 'show' : ''}`}
             style={overlayStyle}
+            onMouseLeave={onClose}
             onClick={onClose}
-        // onMouseLeave={onClose}
         >
             {/* 4 đường cross-lines giữ nguyên */}
             <div className="cross-lines">
