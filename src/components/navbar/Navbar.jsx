@@ -1,7 +1,7 @@
-import "../styles/home.css";
+import "./navbar.css";
 import { IoMdMenu } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
-import MirrorLogo from "../assets/images/Mirror_Logo_new.svg";
+import MirrorLogo from "../../assets/images/Mirror_Logo_new.svg";
 
 export default function Navbar() {
   return (
