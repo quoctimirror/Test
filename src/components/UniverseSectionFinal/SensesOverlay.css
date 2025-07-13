@@ -1,4 +1,20 @@
-/* SensesOverlay.css - UPDATED */
+/* ✨ [THÊM MỚI] Ghi đè style nền cho Senses Overlay */
+.base-overlay.senses-overlay {
+    background: radial-gradient(50% 50% at 50% 50%,
+            #FFF 36%,
+            rgba(255, 255, 255, 0.70) 66%,
+            rgba(187, 35, 76, 0.10) 95.67%,
+            #BB234C 100%);
+    /* <-- Màu viền hồng */
+}
+
+/* ✨ [THÊM MỚI] Ghi đè box-shadow để khớp với màu nền hồng */
+.base-overlay.senses-overlay.show {
+    box-shadow:
+        0 0 0 2px rgba(187, 35, 76, 0.6),
+        0 0 15px rgba(187, 35, 76, 0.3),
+        0 0 30px rgba(187, 35, 76, 0.1);
+}
 
 /* Định nghĩa animation bồng bềnh */
 @keyframes floatAnimation {

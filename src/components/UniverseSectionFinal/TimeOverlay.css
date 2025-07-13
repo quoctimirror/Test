@@ -10,6 +10,16 @@
             rgba(255, 255, 255, 0.70) 65.87%,
             rgba(187, 35, 76, 0.10) 95.67%,
             #9D23BB 100%);
+    /* <-- Màu viền là Tím này */
+}
+
+/* ✨ [THÊM MỚI] Ghi đè box-shadow khi overlay hiển thị để khớp với màu Tím (#9D23BB) */
+.base-overlay.time-overlay-theme.show {
+    box-shadow:
+        0 0 0 2px rgba(157, 35, 187, 0.6),
+        /* rgb(157, 35, 187) là #9D23BB */
+        0 0 15px rgba(157, 35, 187, 0.3),
+        0 0 30px rgba(157, 35, 187, 0.1);
 }
 
 

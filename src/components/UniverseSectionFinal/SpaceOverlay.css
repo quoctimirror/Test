@@ -7,10 +7,14 @@
  */
 .space-overlay {
     position: fixed;
-    background: radial-gradient(50% 50% at 50% 50%, #FFFFFF 36%, rgba(255, 255, 255, 0.7) 66%, rgba(187, 35, 76, 0.1) 95.67%, #BB234C 100%);
+    /* ✨ [CẬP NHẬT] Thay đổi màu viền nền sang Xanh Dương */
+    background: radial-gradient(50% 50% at 50% 50%,
+            #FFF 36.06%,
+            rgba(255, 255, 255, 0.70) 65.87%,
+            rgba(187, 35, 76, 0.10) 95.67%,
+            #2358BB 100%);
     backdrop-filter: blur(10px);
     border-radius: 50%;
-
     opacity: 0;
     transform: scale(0.1);
     pointer-events: none;
@@ -31,7 +35,13 @@
     opacity: 1;
     transform: scale(1) translate(-50%, -50%);
     pointer-events: all;
-    box-shadow: 0 0 0 2px rgba(130, 170, 255, 0.6), 0 0 15px rgba(130, 170, 255, 0.3);
+
+    /* ✨ [CẬP NHẬT] Hiệu ứng phát sáng khớp với màu Xanh Dương (#2358BB) */
+    box-shadow:
+        0 0 0 2px rgba(35, 88, 187, 0.6),
+        /* rgb(35, 88, 187) là #2358BB */
+        0 0 15px rgba(35, 88, 187, 0.3),
+        0 0 30px rgba(35, 88, 187, 0.1);
 }
 
 /*

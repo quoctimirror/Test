@@ -40,6 +40,8 @@
     opacity: 1;
     transform: scale(1) translate(-50%, -50%);
     pointer-events: all;
+
+    /* Hiệu ứng phát sáng */
     box-shadow:
         0 0 0 2px rgba(130, 170, 255, 0.6),
         0 0 15px rgba(130, 170, 255, 0.3),
