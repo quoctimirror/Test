@@ -9,15 +9,12 @@
 .universe-section {
   width: 100%;
   height: 100vh;
-  background: url("/universe/universe_background_image.jpg") center center/cover
-      no-repeat,
-    radial-gradient(
-      circle at center,
+  background: url("/universe/universe_background_image.jpg") center center/cover no-repeat,
+    radial-gradient(circle at center,
       #4a1a3d 0%,
       #2d1024 40%,
       #1a0a14 70%,
-      #000000 100%
-    );
+      #000000 100%);
   display: flex;
   justify-content: center;
   align-items: center;

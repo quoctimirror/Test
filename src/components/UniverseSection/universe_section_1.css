@@ -1,0 +1,204 @@
+/* ============================================================= */
+/*           File: src/components/universe_section.css           */
+/*                  PHIÊN BẢN RESPONSIVE 100%                    */
+/* ============================================================= */
+
+/*
+ * SECTION 1: STYLING CHO KHUNG CẢNH VŨ TRỤ
+ */
+.universe-section {
+    width: 100%;
+    height: 100vh;
+    background:
+        url('/universe/universe_background_image.jpg') center center/cover no-repeat,
+        radial-gradient(circle at center, #4a1a3d 0%, #2d1024 40%, #1a0a14 70%, #000000 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background-image:
+        url('/universe/universe_background_image.webp'),
+        url('/universe/universe_background_image.png'),
+        url('/universe/universe_background_image.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.universe-container {
+    position: relative;
+    width: 50vmin;
+    height: 50vmin;
+    max-width: 560px;
+    max-height: 560px;
+    min-width: 280px;
+    min-height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*
+ * SECTION 2: HỆ THỐNG QUỸ ĐẠO VÀ VÒNG TRÒN TRUNG TÂM
+ */
+.orbit-system {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orbit-ring {
+    position: absolute;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+}
+
+.orbit-ring-1 {
+    width: 30%;
+    height: 30%;
+}
+
+.orbit-ring-2 {
+    width: 42%;
+    height: 42%;
+}
+
+.orbit-ring-3 {
+    width: 54%;
+    height: 54%;
+}
+
+.orbit-ring-4 {
+    width: 66%;
+    height: 66%;
+}
+
+.orbit-ring-5 {
+    width: 78%;
+    height: 78%;
+}
+
+.center-circle {
+    position: absolute;
+    width: 20%;
+    height: 20%;
+    min-width: 90px;
+    min-height: 90px;
+    max-width: 180px;
+    max-height: 180px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    container-type: inline-size;
+    container-name: circle-container;
+}
+
+.center-text {
+    font-family: 'BT Beau Sans', sans-serif;
+    font-size: clamp(0.5rem, 18cqw, 0.8rem);
+    font-weight: 400;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+    padding: 8px;
+}
+
+/*
+ * SECTION 3: HỆ THỐNG CSS CHO CÁC HÀNH TINH
+ */
+.planet-wrapper {
+    position: absolute;
+    width: var(--orbit-size);
+    height: var(--orbit-size);
+    transform: rotate(var(--orbit-angle));
+}
+
+.planet {
+    position: absolute;
+    width: var(--planet-size, 12px);
+    height: var(--planet-size, 12px);
+    border-radius: 50%;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    /* Thêm để căn giữa label nếu cần */
+    align-items: center;
+    justify-content: center;
+}
+
+.gray-planet {
+    background-color: #999;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.white-planet {
+    background-color: #FFFFFF;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+}
+
+/* ✨ THÊM: CSS cho các hành tinh có thể click được */
+.white-planet.clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.white-planet.clickable:hover {
+    /* Hiệu ứng phóng to nhẹ khi di chuột vào để tăng tính tương tác */
+    transform: scale(1.15) translate(-43.5%, -43.5%);
+}
+
+/* =================================================================== */
+/*           CSS CHO ANIMATION HÀNH TINH XÁM                           */
+/* =================================================================== */
+
+@keyframes orbit {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.planet-wrapper.animated {
+    animation-name: orbit;
+    animation-duration: var(--orbit-duration, 20s);
+    animation-direction: var(--orbit-direction, normal);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+/* =================================================================== */
+/*           CSS CHO LABEL CỦA HÀNH TINH TRẮNG                         */
+/* =================================================================== */
+
+.planet-content {
+    position: absolute;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    bottom: 100%;
+    left: 50%;
+    transform-origin: center bottom;
+    font-size: 14px;
+    font-family: 'BT Beau Sans', sans-serif;
+    white-space: nowrap;
+    pointer-events: none;
+    text-shadow: 0 0 5px #fff, 0 0 10px #aaa;
+
+    /* ✨ QUAN TRỌNG: Giữ lại transition để label ẩn/hiện mượt mà khi hiệu ứng được kích hoạt.
+     React sẽ thay đổi opacity từ 1 về 0, và transition này sẽ lo phần còn lại. */
+    transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
+}
