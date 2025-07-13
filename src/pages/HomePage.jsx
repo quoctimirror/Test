@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/navbar/Navbar";
 import HoverExpandSection from "../components/HoverExpandSection";
 import Logo from "../assets/images/Logo.svg";
 import Vector2 from "../assets/images/Vector_2.svg";
+import ArrowRight from "../assets/images/arrow-right.svg";
 import "../styles/home.css";
 
 export default function HomePage() {
@@ -73,10 +74,7 @@ export default function HomePage() {
             </div>
             <div className="scroll-down">
               <button>
-                <img
-                  src="/src/assets/images/arrow-right.svg"
-                  alt="Arrow Right"
-                />
+                <img src={ArrowRight} alt="Arrow Right" />
               </button>
             </div>
             <div className="vetor-button">
