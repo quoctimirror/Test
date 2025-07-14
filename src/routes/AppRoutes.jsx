@@ -5,11 +5,12 @@ import { lazy, Suspense } from "react";
 
 // Lazy-load components
 const HomePage = lazy(() => import("../pages/HomePage"));
-const UniverseSection = lazy(() => import("../components/UniverseSection/UniverseSection"));
-const UniverseSection1_Nam = lazy(() => import("../components/UniverseSection"));
-const UVFinal = lazy(() => import("../components/UniverseSectionFinal/UniverseSection"));
+
+const UVFinal = lazy(() =>
+  import("../components/UniverseSectionFinal/UniverseSection")
+);
 const HoverExpandSection = lazy(() =>
-  import("../components/HoverExpandSection")
+  import("../components/hover-expand-section/HoverExpandSection.jsx")
 );
 
 export default function AppRoutes() {
@@ -23,18 +24,9 @@ export default function AppRoutes() {
     >
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route
-          path="/universe-section-developing"
-          element={<UniverseSection />}
-        />
-        <Route
-          path="/universe-final"
-          element={<UVFinal />}
-        />
-        <Route
-          path="/universe-section-developing-nam"
-          element={<UniverseSection1_Nam />}
-        />
+
+        <Route path="/universe-final" element={<UVFinal />} />
+
         <Route path="/hover-expand" element={<HoverExpandSection />} />
         {/* SỬA LỖI: Thêm route cho các đường dẫn không tồn tại */}
         {/* <Route path="*" element={<NotFound />} /> */}
