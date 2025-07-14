@@ -1,6 +1,6 @@
 :root {
-  --font-primary: 'BT Beau Sans', sans-serif;
-  --font-secondary: 'Saol Display', serif;
+  --font-primary: 'BT-BeauSans-Regular-ttf', sans-serif;
+  --font-secondary: 'SaolDisplay-Regular-ttf', serif;
 
   --dl-layout-size-large: 144px;
   --dl-layout-size-small: 48px;
@@ -564,7 +564,7 @@
 .Saol_64pt_regular {
   font-size: 64px;
   font-style: normal;
-  font-family: Saol Display;
+  font-family: SaolDisplay-Regular-ttf;
   font-weight: 300px;
   font-stretch: normal;
   letter-spacing: -0.03em;
@@ -573,7 +573,7 @@
 .H1 {
   font-size: 105px;
   font-style: normal;
-  font-family: Saol Display;
+  font-family: SaolDisplay-Regular-ttf;
   font-weight: 400px;
   font-stretch: normal;
   letter-spacing: -0.03em;
@@ -582,7 +582,7 @@
 .H2 {
   font-size: 85px;
   font-style: normal;
-  font-family: Saol Display;
+  font-family: SaolDisplay-Regular-ttf;
   font-weight: 400px;
   font-stretch: normal;
   letter-spacing: -0.03em;
@@ -591,7 +591,7 @@
 .BTBeauSans_32pt_regular {
   font-size: 32px;
   font-style: normal;
-  font-family: BT Beau Sans;
+  font-family: BT-BeauSans-Regular-ttf;
   font-weight: 400px;
   font-stretch: normal;
   letter-spacing: 0em;
@@ -600,7 +600,7 @@
 .Saol_24pt_regular {
   font-size: 24px;
   font-style: normal;
-  font-family: Saol Display;
+  font-family: SaolDisplay-Regular-ttf;
   font-weight: 400px;
   font-stretch: normal;
   letter-spacing: 0em;
@@ -609,7 +609,7 @@
 .BTBeauSans_20pt_regular {
   font-size: 20px;
   font-style: normal;
-  font-family: BT Beau Sans;
+  font-family: BT-BeauSans-Regular-ttf;
   font-weight: 400px;
   font-stretch: normal;
   letter-spacing: 0em;
@@ -618,7 +618,7 @@
 .H5 {
   font-size: 20px;
   font-style: normal;
-  font-family: Saol Display;
+  font-family: SaolDisplay-Regular-ttf;
   font-weight: 400px;
   font-stretch: normal;
   letter-spacing: 0em;
@@ -627,7 +627,7 @@
 .BTBeauSans_16pt_regular {
   font-size: 16px;
   font-style: normal;
-  font-family: BT Beau Sans;
+  font-family: BT-BeauSans-Regular-ttf;
   font-weight: 400px;
   font-stretch: normal;
   letter-spacing: 0em;
@@ -636,7 +636,7 @@
 .BTBeauSans_12pt_regular {
   font-size: 12px;
   font-style: normal;
-  font-family: BT Beau Sans;
+  font-family: BT-BeauSans-Regular-ttf;
   font-weight: 400px;
   font-stretch: normal;
   letter-spacing: 0em;
