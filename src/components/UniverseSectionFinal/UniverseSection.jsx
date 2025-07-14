@@ -9,13 +9,13 @@ import TimeOverlay from './TimeOverlay';
 import SensesOverlay from './SensesOverlay';
 
 const UniverseSection = () => {
-    const orbitRadii = { 1: '15.2%', 2: '21%', 3: '27.5%', 4: '33.2%', 5: '39%' };
+    const orbitRadii = { 1: '22.5%', 2: '31%', 3: '39.5%', 4: '48%', 5: '56.5%' };
 
     const whitePlanetsData = [
-        { name: 'Presence', orbitRing: 2, angle: '-2deg', size: 'clamp(12px, 1vw, 16px)' },
-        { name: 'Senses', orbitRing: 3, angle: '235deg', size: 'clamp(20px, 1.5vw, 30px)' },
-        { name: 'Time', orbitRing: 4, angle: '145deg', size: 'clamp(14px, 1.2vw, 20px)' },
-        { name: 'Space', orbitRing: 5, angle: '55deg', size: 'clamp(10px, 0.9vw, 14px)' },
+        { name: 'Presence', orbitRing: 2, angle: '8deg', size: 'clamp(16px, 1.3vw, 20px)' },
+        { name: 'Senses', orbitRing: 3, angle: '225deg', size: 'clamp(30px, 2.1vw, 42px)' },
+        { name: 'Time', orbitRing: 4, angle: '135deg', size: 'clamp(18px, 1.5vw, 26px)' },
+        { name: 'Space', orbitRing: 5, angle: '45deg', size: 'clamp(22px, 1.8vw, 30px)' },
     ];
 
     const BASE_SPEED = 15;
@@ -32,8 +32,12 @@ const UniverseSection = () => {
 
     const [activePlanet, setActivePlanet] = useState(null);
     const [overlayStyle, setOverlayStyle] = useState({});
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
     const handlePlanetClick = (event, planetName) => {
+        // Ngăn click khi đang transition
+        if (isTransitioning) return;
+
         const rect = event.currentTarget.getBoundingClientRect();
         setOverlayStyle({
             top: `${rect.top}px`,
@@ -41,22 +45,35 @@ const UniverseSection = () => {
             width: `${rect.width}px`,
             height: `${rect.height}px`,
         });
-        if (planetName.toLowerCase() === 'space') {
-            setActivePlanet('space');
+
+        const planetLower = planetName.toLowerCase();
+        
+        // Nếu click vào cùng một planet đang active, đóng overlay
+        if (activePlanet === planetLower) {
+            closeOverlay();
+            return;
         }
-        else if (planetName.toLowerCase() === 'presence') {
-            setActivePlanet('presence');
-        }
-        else if (planetName.toLowerCase() === 'time') {
-            setActivePlanet('time');
-        }
-        else if (planetName.toLowerCase() === 'senses') {
-            setActivePlanet('senses');
-        }
+
+        // Set transition state và mở overlay mới
+        setIsTransitioning(true);
+        setActivePlanet(planetLower);
+        
+        // Clear transition state sau khi animation hoàn thành
+        setTimeout(() => {
+            setIsTransitioning(false);
+        }, 700); // Match với CSS transition duration
     };
 
     const closeOverlay = () => {
+        if (isTransitioning) return;
+        
+        setIsTransitioning(true);
         setActivePlanet(null);
+        
+        // Clear transition state sau khi close animation hoàn thành
+        setTimeout(() => {
+            setIsTransitioning(false);
+        }, 700);
     };
 
     // ✨ =================================================================== ✨

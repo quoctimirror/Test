@@ -2,91 +2,156 @@
 
 /* ✨ CẬP NHẬT: Tăng cường độ sáng và độ lan tỏa của vầng hào quang */
 @keyframes pulse-glow {
-    0% {
-        /* Trạng thái nghỉ, vẫn có vầng sáng rõ rệt */
-        box-shadow:
-            0 0 8px rgba(255, 255, 255, 1),
-            /* Lớp trong cùng sáng rõ */
-            0 0 20px rgba(255, 255, 255, 0.9),
-            0 0 45px rgba(220, 180, 235, 0.7),
-            /* Ánh tím nhẹ lan rộng */
-            0 0 70px rgba(200, 150, 220, 0.5);
-    }
+  0% {
+    /* Trạng thái nghỉ, vẫn có vầng sáng rõ rệt */
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1),
+      /* Lớp trong cùng sáng rõ */ 0 0 20px rgba(255, 255, 255, 0.9),
+      0 0 45px rgba(220, 180, 235, 0.7),
+      /* Ánh tím nhẹ lan rộng */ 0 0 70px rgba(200, 150, 220, 0.5);
+  }
 
-    50% {
-        /* Trạng thái sáng nhất, hào quang rực rỡ và lan rộng */
-        box-shadow:
-            0 0 12px rgba(255, 255, 255, 1),
-            0 0 35px rgba(255, 255, 255, 1),
-            /* Lớp trắng thứ hai cực sáng và rộng */
-            0 0 65px rgba(220, 180, 235, 0.8),
-            /* Ánh tím mạnh hơn */
-            0 0 100px rgba(200, 150, 220, 0.6);
-        /* Vầng sáng ngoài cùng lan rất xa */
-    }
+  50% {
+    /* Trạng thái sáng nhất, hào quang rực rỡ và lan rộng */
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 35px rgba(255, 255, 255, 1),
+      /* Lớp trắng thứ hai cực sáng và rộng */ 0 0 65px rgba(220, 180, 235, 0.8),
+      /* Ánh tím mạnh hơn */ 0 0 100px rgba(200, 150, 220, 0.6);
+    /* Vầng sáng ngoài cùng lan rất xa */
+  }
 
-    100% {
-        /* Quay trở lại trạng thái nghỉ */
-        box-shadow:
-            0 0 8px rgba(255, 255, 255, 1),
-            0 0 20px rgba(255, 255, 255, 0.9),
-            0 0 45px rgba(220, 180, 235, 0.7),
-            0 0 70px rgba(200, 150, 220, 0.5);
-    }
+  100% {
+    /* Quay trở lại trạng thái nghỉ */
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1),
+      0 0 20px rgba(255, 255, 255, 0.9), 0 0 45px rgba(220, 180, 235, 0.7),
+      0 0 70px rgba(200, 150, 220, 0.5);
+  }
 }
 
 .white-planet {
-    background: #fff;
-    border-radius: 50%;
-    z-index: 5;
-    cursor: pointer;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #ffffff 62.5%,
+    rgba(255, 255, 255, 0.7) 71.63%,
+    rgba(187, 35, 76, 0.1) 95.67%,
+    rgba(187, 35, 76, 0.7) 100%
+  );
+  border-radius: 50%;
+  z-index: 5;
+  cursor: pointer;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%, -50%);
 
-    /* Áp dụng animation đã được làm sáng hơn */
-    animation: pulse-glow 4s infinite ease-in-out;
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  /* Áp dụng animation đã được làm sáng hơn */
+  /* animation: pulse-glow 4s infinite ease-in-out;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); */
 }
 
 .white-planet:hover {
-    animation-play-state: paused;
-    transform: translate(-50%, -50%) scale(1.15);
-    z-index: 6;
+  animation-play-state: paused;
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 6;
 }
 
 /* Phần label giữ nguyên không đổi */
 .planet-label {
-    position: absolute;
-    bottom: calc(100% + 12px);
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'BT Beau Sans', sans-serif;
-    font-size: clamp(0.6rem, 1.5vmin, 0.8rem);
-    font-weight: 500;
-    color: white;
-    letter-spacing: 1px;
-    text-shadow: 0 0 5px #fff, 0 0 10px #aaa;
-    white-space: nowrap;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 4px 10px;
-    border-radius: 5px;
-    text-shadow:
-        /* Lớp 1: Vầng sáng trắng mạnh, sát chữ */
-        0 0 7px rgba(255, 255, 255, 1),
-        /* Lớp 2: Vầng sáng trắng lan tỏa rộng hơn */
-        0 0 15px rgba(255, 255, 255, 0.8),
-        /* Lớp 3: Thêm ánh tím nhẹ để đồng bộ với hành tinh */
-        0 0 25px rgba(220, 180, 235, 0.7);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+  position: absolute;
+  bottom: calc(100% + clamp(8px, 2vmin, 16px));
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: clamp(0.5rem, 1.8vmin, 0.9rem);
+  font-weight: 500;
+  color: white;
+  letter-spacing: clamp(0.5px, 0.2vmin, 1.2px);
+  white-space: nowrap;
+  background: rgba(0, 0, 0, clamp(0.3, 0.1vmin + 0.3, 0.5));
+  padding: clamp(3px, 1vmin, 8px) clamp(6px, 2vmin, 12px);
+  border-radius: clamp(3px, 1vmin, 6px);
+  text-shadow:
+        /* Lớp 1: Vầng sáng trắng mạnh, sát chữ */ 0 0
+      clamp(5px, 1.5vmin, 10px) rgba(255, 255, 255, 1),
+    /* Lớp 2: Vầng sáng trắng lan tỏa rộng hơn */ 0 0 clamp(10px, 3vmin, 20px)
+      rgba(255, 255, 255, 0.8),
+    /* Lớp 3: Thêm ánh tím nhẹ để đồng bộ với hành tinh */ 0 0
+      clamp(15px, 4vmin, 30px) rgba(220, 180, 235, 0.7);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out, visibility 0.3s ease-out,
+    transform 0.3s ease-out;
 }
 
 .white-planet:hover .planet-label {
-    opacity: 1;
-    visibility: visible;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* RESPONSIVE DESIGN CHO PLANET LABELS */
+
+/* Desktop lớn (>1200px) */
+@media (min-width: 1200px) {
+  .planet-label {
+    font-size: clamp(0.7rem, 2vmin, 1.1rem);
+    bottom: calc(100% + clamp(12px, 3vmin, 20px));
+    padding: clamp(6px, 1.5vmin, 10px) clamp(10px, 2.5vmin, 16px);
+    letter-spacing: clamp(0.8px, 0.3vmin, 1.5px);
+  }
+}
+
+/* Tablet portrait (768px-1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .planet-label {
+    font-size: clamp(0.55rem, 1.6vmin, 0.85rem);
+    bottom: calc(100% + clamp(10px, 2.5vmin, 14px));
+    padding: clamp(4px, 1.2vmin, 7px) clamp(8px, 2vmin, 11px);
+    letter-spacing: clamp(0.6px, 0.25vmin, 1px);
+  }
+}
+
+/* Mobile landscape (480px-768px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  .planet-label {
+    font-size: clamp(0.45rem, 1.4vmin, 0.7rem);
+    bottom: calc(100% + clamp(8px, 2vmin, 12px));
+    padding: clamp(3px, 1vmin, 6px) clamp(6px, 1.8vmin, 10px);
+    letter-spacing: clamp(0.4px, 0.2vmin, 0.8px);
+    border-radius: clamp(2px, 0.8vmin, 4px);
+  }
+}
+
+/* Mobile (max-width: 767px) */
+@media (max-width: 767px) {
+  .planet-label {
+    font-size: clamp(0.4rem, 1.2vmin, 0.65rem);
+    bottom: calc(100% + clamp(6px, 1.8vmin, 10px));
+    padding: clamp(2px, 0.8vmin, 5px) clamp(5px, 1.5vmin, 8px);
+    letter-spacing: clamp(0.3px, 0.15vmin, 0.7px);
+  }
+}
+
+/* Mobile small (max-width: 480px) */
+@media (max-width: 480px) {
+  .planet-label {
+    font-size: clamp(0.35rem, 1vmin, 0.55rem);
+    bottom: calc(100% + clamp(5px, 1.5vmin, 8px));
+    padding: clamp(2px, 0.6vmin, 4px) clamp(4px, 1.2vmin, 6px);
+    letter-spacing: clamp(0.2px, 0.1vmin, 0.5px);
+    border-radius: clamp(2px, 0.6vmin, 3px);
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Mobile extra small (max-width: 360px) */
+@media (max-width: 360px) {
+  .planet-label {
+    font-size: clamp(0.3rem, 0.8vmin, 0.45rem);
+    bottom: calc(100% + clamp(4px, 1.2vmin, 6px));
+    padding: clamp(1px, 0.5vmin, 3px) clamp(3px, 1vmin, 5px);
+    letter-spacing: clamp(0.1px, 0.08vmin, 0.3px);
+    text-shadow: 0 0 clamp(3px, 1vmin, 5px) rgba(255, 255, 255, 1),
+      0 0 clamp(6px, 2vmin, 10px) rgba(255, 255, 255, 0.8),
+      0 0 clamp(10px, 3vmin, 15px) rgba(220, 180, 235, 0.7);
+  }
 }
