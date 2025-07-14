@@ -1,4 +1,4 @@
-import "./navbar.css";
+import "./Navbar.css";
 import { IoMdMenu } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import MirrorLogo from "../../assets/images/Mirror_Logo_new.svg";

@@ -1,0 +1,456 @@
+/* ✨ [THÊM MỚI] Ghi đè style nền cho Senses Overlay */
+.base-overlay.senses-overlay {
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #fff 36%,
+    rgba(255, 255, 255, 0.7) 66%,
+    rgba(187, 35, 76, 0.1) 95.67%,
+    #bb234c 100%
+  );
+  /* <-- Màu viền hồng */
+}
+
+/* ✨ [THÊM MỚI] Ghi đè box-shadow để khớp với màu nền hồng */
+.base-overlay.senses-overlay.show {
+  box-shadow: 0 0 0 2px rgba(187, 35, 76, 0.6), 0 0 15px rgba(187, 35, 76, 0.3),
+    0 0 30px rgba(187, 35, 76, 0.1);
+}
+
+/* Định nghĩa animation bồng bềnh */
+@keyframes floatAnimation {
+  0% {
+    transform: translate(-50%, -50%) translateY(0px);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) translateY(-8px);
+    /* Di chuyển lên */
+  }
+
+  100% {
+    transform: translate(-50%, -50%) translateY(0px);
+    /* Trở về vị trí cũ */
+  }
+}
+
+/* Container chính để bố trí các senses */
+.senses-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 600px;
+  padding: 40px;
+}
+
+/* Style cho tiêu đề chính "Senses" */
+.senses-title {
+  color: var(--Pink, #bc224c);
+  text-align: center;
+  font-family: "SaolDisplay-Regular-ttf";
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 90%;
+  letter-spacing: -1.92px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-60%, -50%);
+  z-index: 10;
+}
+
+/* Style chung cho các sense items */
+.sense-item {
+  color: var(--Pink, #bc224c);
+  text-align: center;
+  font-family: "BT-BeauSans-Regular-ttf";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 110%;
+  position: absolute !important;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translate(-50%, -50%);
+  animation: floatAnimation 4s ease-in-out infinite;
+  z-index: 5;
+}
+
+.sense-item:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  opacity: 0.8;
+}
+
+/* Tooltip styling */
+.sense-tooltip {
+  position: absolute;
+  background: transparent;
+  color: #797979;
+  padding: 1;
+  border-radius: 0;
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+  width: 450px;
+  min-height: 90px;
+  white-space: normal;
+  text-align: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: tooltipFadeIn 0.3s ease forwards;
+  box-shadow: none;
+  border: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transform-origin: center;
+  pointer-events: none;
+}
+
+@keyframes tooltipFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Tooltip positioning for each sense - tất cả hiển thị ngay dưới item */
+.sense-sight .sense-tooltip {
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, 0);
+  text-align: center;
+}
+
+.sense-touch .sense-tooltip {
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, 0);
+  text-align: center;
+}
+
+.sense-scent .sense-tooltip {
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, 0);
+  text-align: center;
+}
+
+.sense-sound .sense-tooltip {
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, 0);
+  text-align: center;
+}
+
+.sense-taste .sense-tooltip {
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, 0);
+  text-align: center;
+}
+
+/* Responsive tooltip positioning */
+@media (max-width: 768px) {
+  .sense-tooltip {
+    max-width: 200px;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .sense-sight .sense-tooltip,
+  .sense-touch .sense-tooltip,
+  .sense-scent .sense-tooltip,
+  .sense-sound .sense-tooltip,
+  .sense-taste .sense-tooltip {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    max-width: 90vw;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}
+
+/* 
+ * 🎯 [VỊ TRÍ CÁC PHẦN TỬ - CHỈNH SỬA TẠI ĐÂY]
+ * 
+ * Để di chuyển các phần tử:
+ * - top/bottom: điều chỉnh lên xuống (0% = trên cùng, 100% = dưới cùng)
+ * - left/right: điều chỉnh trái phải (0% = bên trái, 100% = bên phải)
+ * 
+ * VÍ DỤ:
+ * - Muốn di chuyển Sight xuống: tăng giá trị top từ 20% lên 25%
+ * - Muốn di chuyển Touch sang trái: giảm giá trị left từ 25% xuống 20%
+ * - Muốn di chuyển Scent sang phải: tăng giá trị right từ 20% lên 25%
+ */
+
+/* Sight: Vị trí trên cùng */
+.sense-sight {
+  top: 15%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG */
+  left: -10%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI */
+  animation-delay: 0s;
+}
+
+/* Touch: Vị trí trên bên trái */
+.sense-touch {
+  top: 25%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG */
+  right: -110%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI */
+  animation-delay: -1.5s;
+}
+
+/* Scent: Vị trí bên phải */
+.sense-scent {
+  top: 48%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG */
+  left: -130%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI (right càng nhỏ = càng sang phải) */
+  animation-delay: -0.5s;
+}
+
+/* Sound: Vị trí dưới bên trái */
+.sense-sound {
+  bottom: 15%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG (bottom càng nhỏ = càng xuống dưới) */
+  left: -4%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI */
+  animation-delay: -2.5s;
+}
+
+/* Taste: Vị trí dưới bên phải */
+.sense-taste {
+  bottom: 20%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG (bottom càng nhỏ = càng xuống dưới) */
+  right: -120%;
+  /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI (right càng nhỏ = càng sang phải) */
+  animation-delay: -1s;
+}
+
+/* RESPONSIVE DESIGN CHO SENSE ELEMENTS - GIỮ NGUYÊN VỊ TRÍ BAN ĐẦU */
+
+/* Desktop lớn (>1200px) - chỉ thay đổi font size */
+@media (min-width: 1200px) {
+  .senses-title {
+    font-size: clamp(64px, 6vw, 80px);
+    letter-spacing: clamp(-1.8px, -0.2vw, -2.5px);
+  }
+
+  .sense-item {
+    font-size: clamp(20px, 2vw, 28px);
+  }
+
+  /* Giữ nguyên vị trí gốc, chỉ scale font */
+  .sense-sight {
+    top: 15%;
+    left: -10%;
+  }
+
+  .sense-touch {
+    top: 25%;
+    right: -110%;
+  }
+
+  .sense-scent {
+    top: 48%;
+    left: -130%;
+  }
+
+  .sense-sound {
+    bottom: 15%;
+    left: -4%;
+  }
+
+  .sense-taste {
+    bottom: 20%;
+    right: -120%;
+  }
+}
+
+/* Tablet portrait (768px-1024px) - giữ vị trí gốc nhưng scale nhẹ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .senses-title {
+    font-size: clamp(52px, 5.5vw, 64px);
+    letter-spacing: clamp(-1.5px, -0.15vw, -1.9px);
+  }
+
+  .sense-item {
+    font-size: clamp(16px, 1.8vw, 20px);
+  }
+
+  /* Giữ tương đối vị trí gốc */
+  .sense-sight {
+    top: 15%;
+    left: -8%;
+  }
+
+  .sense-touch {
+    top: 25%;
+    right: -100%;
+  }
+
+  .sense-scent {
+    top: 48%;
+    left: -120%;
+  }
+
+  .sense-sound {
+    bottom: 15%;
+    left: -2%;
+  }
+
+  .sense-taste {
+    bottom: 20%;
+    right: -110%;
+  }
+}
+
+/* Mobile landscape (480px-768px) - điều chỉnh nhẹ để phù hợp */
+@media (min-width: 480px) and (max-width: 767px) {
+  .senses-title {
+    font-size: clamp(40px, 5vw, 52px);
+    letter-spacing: clamp(-1.2px, -0.12vw, -1.5px);
+  }
+
+  .sense-item {
+    font-size: clamp(14px, 1.6vw, 16px);
+  }
+
+  /* Điều chỉnh nhẹ để không bị crop */
+  .sense-sight {
+    top: 18%;
+    left: -5%;
+  }
+
+  .sense-touch {
+    top: 28%;
+    right: -90%;
+  }
+
+  .sense-scent {
+    top: 50%;
+    left: -110%;
+  }
+
+  .sense-sound {
+    bottom: 18%;
+    left: 0%;
+  }
+
+  .sense-taste {
+    bottom: 23%;
+    right: -100%;
+  }
+}
+
+/* Mobile (max-width: 479px) - điều chỉnh tối thiểu */
+@media (max-width: 479px) {
+  .senses-title {
+    font-size: clamp(32px, 4.5vw, 40px);
+    letter-spacing: clamp(-0.8px, -0.1vw, -1.2px);
+  }
+
+  .sense-item {
+    font-size: clamp(12px, 1.5vw, 14px);
+  }
+
+  .senses-container {
+    padding: clamp(20px, 5vw, 30px);
+  }
+
+  /* Giữ tương đối vị trí gốc nhưng thu gọn */
+  .sense-sight {
+    top: 20%;
+    left: -2%;
+  }
+
+  .sense-touch {
+    top: 30%;
+    right: -80%;
+  }
+
+  .sense-scent {
+    top: 52%;
+    left: -100%;
+  }
+
+  .sense-sound {
+    bottom: 20%;
+    left: 2%;
+  }
+
+  .sense-taste {
+    bottom: 25%;
+    right: -90%;
+  }
+}
+
+/* Mobile extra small (max-width: 360px) - điều chỉnh compact nhất */
+@media (max-width: 360px) {
+  .senses-title {
+    font-size: clamp(28px, 4vw, 32px);
+    letter-spacing: clamp(-0.6px, -0.08vw, -0.8px);
+  }
+
+  .sense-item {
+    font-size: clamp(11px, 1.4vw, 12px);
+  }
+
+  .senses-container {
+    padding: clamp(15px, 4vw, 20px);
+  }
+
+  /* Compact nhất nhưng vẫn giữ layout gốc */
+  .sense-sight {
+    top: 22%;
+    left: 0%;
+  }
+
+  .sense-touch {
+    top: 32%;
+    right: -70%;
+  }
+
+  .sense-scent {
+    top: 54%;
+    left: -90%;
+  }
+
+  .sense-sound {
+    bottom: 22%;
+    left: 4%;
+  }
+
+  .sense-taste {
+    bottom: 27%;
+    right: -80%;
+  }
+}
+
+/* Nút action không thay đổi */
+.senses-content-wrapper .action-button {
+  background-color: #bb234c;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: clamp(0.85rem, 1.8vw, 1.2rem);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 15px;
+  box-shadow: 0 0 15px rgba(187, 35, 76, 0.5);
+}
+
+.senses-content-wrapper .action-button:hover {
+  background-color: #dd3366;
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(187, 35, 76, 0.7);
+}

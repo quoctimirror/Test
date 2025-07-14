@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-import Navbar from "../components/navbar/Navbar";
-import HoverExpandSection from "../components/hover-expand-section/HoverExpandSection";
+import HoverExpandSection from "../components/hoverExpandSection/HoverExpandSection";
 import Logo from "../assets/images/Logo.svg";
 import Vector2 from "../assets/images/Vector_2.svg";
 import ArrowRight from "../assets/images/arrow-right.svg";
@@ -64,7 +63,6 @@ export default function HomePage() {
           </div>
 
           <div className="elements-to-fade" ref={elementsToFadeRef}>
-            <Navbar />
             <div className="tagline-section">
               <div className="tagline-top">Exploring The Universe Of</div>
               <div className="tagline-bottom">
