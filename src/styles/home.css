@@ -159,7 +159,7 @@ html {
 /* Tagline Section */
 .tagline-section {
   position: absolute;
-  top: calc(50% + 250px);
+  top: calc(50% + 280px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 5;
