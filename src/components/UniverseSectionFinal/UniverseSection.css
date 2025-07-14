@@ -120,7 +120,7 @@
 }
 
 .center-text {
-    font-family: 'BT Beau Sans', sans-serif;
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
     font-size: clamp(0.5rem, 18cqw, 0.8rem);
     font-weight: 400;
     color: #333;

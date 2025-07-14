@@ -63,7 +63,7 @@
     bottom: calc(100% + 12px);
     left: 50%;
     transform: translateX(-50%);
-    font-family: 'BT Beau Sans', sans-serif;
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
     font-size: clamp(0.6rem, 1.5vmin, 0.8rem);
     font-weight: 500;
     color: white;
