@@ -57,42 +57,42 @@
   /* Thêm hiệu ứng phát sáng cho quỹ đạo */
   /* box-shadow: 0 0 10px rgba(255, 255, 255, 0.1),
     inset 0 0 10px rgba(255, 255, 255, 0.05); */
-  opacity: 0.5;
+  opacity: 1;
 }
 
 .orbit-ring-1 {
-  width: 45%;
-  height: 45%;
+  width: 40%;
+  height: 40%;
 }
 
 .orbit-ring-2 {
-  width: 62%;
-  height: 62%;
+  width: 60%;
+  height: 60%;
 }
 
 .orbit-ring-3 {
-  width: 79%;
-  height: 79%;
+  width: 80%;
+  height: 80%;
 }
 
 .orbit-ring-4 {
-  width: 96%;
-  height: 96%;
+  width: 110%;
+  height: 110%;
 }
 
 .orbit-ring-5 {
-  width: 113%;
-  height: 113%;
+  width: 140%;
+  height: 140%;
 }
 
 .center-circle {
   position: absolute;
-  width: 30%;
-  height: 30%;
-  min-width: 90px;
-  min-height: 90px;
-  max-width: 180px;
-  max-height: 180px;
+  width: 25%;
+  height: 25%;
+  min-width: 75px;
+  min-height: 75px;
+  max-width: 150px;
+  max-height: 150px;
   background: white;
   border-radius: 50%;
   display: flex;

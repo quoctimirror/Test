@@ -2,9 +2,9 @@
 .navbar {
   position: absolute;
   top: 20px;
-  left: 0;
-  right: 0;
-  padding: 0 5%;
+  left: 30px;
+  right: 30px;
+  padding: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -171,6 +171,7 @@
 .navbar-logo {
   width: 126.65px;
   opacity: 1;
+  margin-right: 30px;
 }
 
 /* Re-enable mouse events for interactive areas */

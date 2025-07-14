@@ -9,7 +9,7 @@ import TimeOverlay from './TimeOverlay';
 import SensesOverlay from './SensesOverlay';
 
 const UniverseSection = () => {
-    const orbitRadii = { 1: '22.5%', 2: '31%', 3: '39.5%', 4: '48%', 5: '56.5%' };
+    const orbitRadii = { 1: '20%', 2: '30%', 3: '40%', 4: '55%', 5: '70%' };
 
     const whitePlanetsData = [
         { name: 'Presence', orbitRing: 2, angle: '8deg', size: 'clamp(16px, 1.3vw, 20px)' },
