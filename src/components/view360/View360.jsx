@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { createViewer } from "../../utils/AR/Three";
+import QRPopup from "../qrPopup/QRPopup";
 import "./View360.css";
 
 const View360 = () => {
@@ -8,6 +9,7 @@ const View360 = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [autoRotate, setAutoRotate] = useState(false);
   const [rotationSpeed, setRotationSpeed] = useState(0.5);
+  const [showQRPopup, setShowQRPopup] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current || viewerRef.current) return;
@@ -62,9 +64,16 @@ const View360 = () => {
     }
   };
 
+  const handleARTryOnClick = () => {
+    setShowQRPopup(true);
+  };
+
+  const handleCloseQRPopup = () => {
+    setShowQRPopup(false);
+  };
+
   return (
     <div className="view-360-section">
-
       {/* Main Content */}
       <div className="view-360-main">
         <div className="view-360-viewer" ref={containerRef}>
@@ -78,18 +87,13 @@ const View360 = () => {
 
         {/* Bottom Controls */}
         <div className="view-360-bottom-controls">
-          <button className="ar-try-btn">
-            <span className="ar-icon">📱</span>
+          <button className="ar-try-btn" onClick={handleARTryOnClick}>
             AR Try on
-          </button>
-          <button className="customize-btn">
-            Customize your own
-            <span className="arrow-icon">↓</span>
           </button>
         </div>
 
         {/* Hidden Controls for Development */}
-        <div className="dev-controls" style={{display: 'none'}}>
+        <div className="dev-controls" style={{ display: "none" }}>
           <button
             className={`control-btn ${autoRotate ? "active" : ""}`}
             onClick={handleAutoRotateToggle}
@@ -120,6 +124,13 @@ const View360 = () => {
           </div>
         </div>
       </div>
+
+      {/* QR Popup */}
+      <QRPopup 
+        isOpen={showQRPopup} 
+        onClose={handleCloseQRPopup}
+        ringId="nhanVang"
+      />
     </div>
   );
 };
