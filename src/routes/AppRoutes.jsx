@@ -23,7 +23,8 @@ export default function AppRoutes() {
       }
     >
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<UVFinal />} />
+        {/* <Route path="/" element={<HomePage />} /> */}
 
         <Route path="/universe-final" element={<UVFinal />} />
 
