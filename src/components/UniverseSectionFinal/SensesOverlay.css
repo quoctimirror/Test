@@ -1,14 +1,18 @@
-/* ✨ [THÊM MỚI] Ghi đè style nền cho Senses Overlay */
+/* ============================================================= */
+/*                    SensesOverlay.css - RESPONSIVE 100%        */
+/*     (Đã tinh chỉnh Font Size & Hướng dẫn chỉnh khoảng cách)     */
+/* ============================================================= */
+
+/* ✨ [KHÔNG ĐỔI] Ghi đè style nền cho Senses Overlay */
 .base-overlay.senses-overlay {
     background: radial-gradient(50% 50% at 50% 50%,
             #FFF 36%,
             rgba(255, 255, 255, 0.70) 66%,
             rgba(187, 35, 76, 0.10) 95.67%,
             #BB234C 100%);
-    /* <-- Màu viền hồng */
 }
 
-/* ✨ [THÊM MỚI] Ghi đè box-shadow để khớp với màu nền hồng */
+/* ✨ [KHÔNG ĐỔI] Ghi đè box-shadow để khớp với màu nền hồng */
 .base-overlay.senses-overlay.show {
     box-shadow:
         0 0 0 2px rgba(187, 35, 76, 0.6),
@@ -16,7 +20,7 @@
         0 0 30px rgba(187, 35, 76, 0.1);
 }
 
-/* Định nghĩa animation bồng bềnh */
+/* [KHÔNG ĐỔI] Định nghĩa animation bồng bềnh */
 @keyframes floatAnimation {
     0% {
         transform: translate(-50%, -50%) translateY(0px);
@@ -24,54 +28,65 @@
 
     50% {
         transform: translate(-50%, -50%) translateY(-8px);
-        /* Di chuyển lên */
     }
 
     100% {
         transform: translate(-50%, -50%) translateY(0px);
-        /* Trở về vị trí cũ */
     }
 }
 
-/* Container chính để bố trí các senses */
+/* [SỬA LỖI] Wrapper để đảm bảo container có kích thước */
+.senses-content-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* [KHÔNG ĐỔI] Container chính để bố trí các senses */
 .senses-container {
     position: relative;
     width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 600px;
-    padding: 40px;
+    height: 100%;
+    padding: 2vmin;
+    box-sizing: border-box;
 }
 
-/* Style cho tiêu đề chính "Senses" */
+/* 
+ * [CẬP NHẬT] Style cho tiêu đề chính "Senses"
+*/
 .senses-title {
-    color: var(--Pink, #BC224C);
+    color: #BC224C;
     text-align: center;
-    font-family: "SaolDisplay-Regular-ttf";
-    font-size: 64px;
+    font-family: "SaolDisplay-Regular-ttf", serif;
+    /* 🎯 FONT RESPONSIVE: clamp(MIN, PREFERRED, MAX) */
+    font-size: clamp(2.2rem, 8vw, 4.5rem);
     font-style: normal;
     font-weight: 300;
     line-height: 90%;
-    letter-spacing: -1.92px;
+    letter-spacing: -0.03em;
+
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-60%, -50%);
+    transform: translate(-50%, -50%);
     z-index: 10;
 }
 
-/* Style chung cho các sense items */
+/* 
+ * [CẬP NHẬT] Style chung cho các sense items
+*/
 .sense-item {
-    color: var(--Pink, #BC224C);
+    color: #BC224C;
     text-align: center;
-    font-family: "BT-BeauSans-Regular-ttf";
-    font-size: 20px;
+    font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+    /* 🎯 FONT RESPONSIVE: clamp(MIN, PREFERRED, MAX) */
+    font-size: clamp(0.75rem, 3vw, 1.2rem);
     font-style: normal;
     font-weight: 400;
     line-height: 110%;
-    position: absolute !important;
+    white-space: nowrap;
+
+    position: absolute;
     cursor: pointer;
     transition: opacity 0.3s ease;
     transform: translate(-50%, -50%);
@@ -80,138 +95,59 @@
 }
 
 /* 
- * 🎯 [VỊ TRÍ CÁC PHẦN TỬ - CHỈNH SỬA TẠI ĐÂY]
- * 
- * Để di chuyển các phần tử:
- * - top/bottom: điều chỉnh lên xuống (0% = trên cùng, 100% = dưới cùng)
- * - left/right: điều chỉnh trái phải (0% = bên trái, 100% = bên phải)
- * 
- * VÍ DỤ:
- * - Muốn di chuyển Sight xuống: tăng giá trị top từ 20% lên 25%
- * - Muốn di chuyển Touch sang trái: giảm giá trị left từ 25% xuống 20%
- * - Muốn di chuyển Scent sang phải: tăng giá trị right từ 20% lên 25%
- */
+ * 🎯 [CẬP NHẬT] VỊ TRÍ CÁC PHẦN TỬ
+ * Điều chỉnh giá trị `left` để thay đổi khoảng cách ngang.
+*/
 
-/* Sight: Vị trí trên cùng */
-.sense-sight {
-    top: 15%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG */
-    left: -10%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI */
-    animation-delay: 0s;
-}
-
-/* Touch: Vị trí trên bên trái */
-.sense-touch {
-    top: 25%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG */
-    right: -110%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI */
-    animation-delay: -1.5s;
-}
-
-/* Scent: Vị trí bên phải */
+/* Scent (Vị trí ~9 giờ) */
 .sense-scent {
-    top: 48%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG */
-    left: -130%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI (right càng nhỏ = càng sang phải) */
+    top: 50%;
+    /* 🎯 ĐỂ TĂNG KHOẢNG CÁCH VỚI "SENSES": GIẢM GIÁ TRỊ NÀY (ví dụ: 18%) */
+    left: 22%;
     animation-delay: -0.5s;
 }
 
-/* Sound: Vị trí dưới bên trái */
-.sense-sound {
-    bottom: 15%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG (bottom càng nhỏ = càng xuống dưới) */
-    left: -4%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI */
-    animation-delay: -2.5s;
+/* Sight (Vị trí ~11 giờ) */
+.sense-sight {
+    top: 24%;
+    left: 46%;
+    animation-delay: 0s;
 }
 
-/* Taste: Vị trí dưới bên phải */
+/* Touch (Vị trí ~2 giờ) */
+.sense-touch {
+    top: 35%;
+    /* Để đẩy "Touch" ra xa hơn, giảm giá trị left */
+    left: 75%;
+    animation-delay: -1.5s;
+}
+
+/* Taste (Vị trí ~4 giờ) */
 .sense-taste {
-    bottom: 20%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN LÊN/XUỐNG (bottom càng nhỏ = càng xuống dưới) */
-    right: -120%;
-    /* ← CHỈNH ĐỂ DI CHUYỂN TRÁI/PHẢI (right càng nhỏ = càng sang phải) */
+    top: 72%;
+    left: 80%;
     animation-delay: -1s;
 }
 
-/* Responsive adjustments cho tablet */
+/* Sound (Vị trí ~7 giờ) */
+.sense-sound {
+    top: 82%;
+    left: 45%;
+    animation-delay: -2.5s;
+}
+
+/* 
+ * [KHÔNG ĐỔI] Responsive adjustments
+*/
 @media (max-width: 768px) {
-    .senses-title {
-        font-size: 48px;
-    }
-
-    .sense-item {
-        font-size: 16px;
-    }
-
-    /* 🎯 [VỊ TRÍ CHO MÀN HÌNH TABLET - CHỈNH SỬA NẾU CẦN] */
-    .sense-sight {
-        top: 22%;
-        left: 50%;
-    }
-
-    .sense-touch {
-        top: 32%;
-        left: 22%;
-    }
-
-    .sense-scent {
-        top: 50%;
-        right: 18%;
-    }
-
-    .sense-sound {
-        bottom: 32%;
-        left: 22%;
-    }
-
-    .sense-taste {
-        bottom: 32%;
-        right: 22%;
-    }
+    /* Layout đã tự động co giãn. Không cần thay đổi. */
 }
 
-/* Responsive adjustments cho mobile */
 @media (max-width: 480px) {
-    .senses-title {
-        font-size: 36px;
-    }
-
-    .sense-item {
-        font-size: 14px;
-    }
-
-    /* 🎯 [VỊ TRÍ CHO MÀN HÌNH MOBILE - CHỈNH SỬA NẾU CẦN] */
-    .sense-sight {
-        top: 25%;
-        left: 50%;
-    }
-
-    .sense-touch {
-        top: 35%;
-        left: 20%;
-    }
-
-    .sense-scent {
-        top: 50%;
-        right: 15%;
-    }
-
-    .sense-sound {
-        bottom: 35%;
-        left: 20%;
-    }
-
-    .sense-taste {
-        bottom: 35%;
-        right: 20%;
-    }
+    /* Layout đã tự động co giãn. Không cần thay đổi. */
 }
 
-/* Nút action không thay đổi */
+/* [KHÔNG ĐỔI] Nút action nếu có */
 .senses-content-wrapper .action-button {
     background-color: #BB234C;
     color: white;
