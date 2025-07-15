@@ -1,6 +1,6 @@
-/* UniverseSection.css - Enhanced Version */
+/* UniverseSection.css - Cleaned & Optimized */
 
-/* SECTION 1: KHUNG CẢNH VŨ TRỤ */
+/* ===== UNIVERSE BACKGROUND ===== */
 .universe-section {
   width: 100%;
   height: 100vh;
@@ -9,18 +9,17 @@
   align-items: center;
   position: relative;
   overflow: hidden;
-  /* Ảnh nền vũ trụ */
+  
   background-color: #0b020a;
-  background-image: url("/universe/universe_background_image.webp"),
+  background-image: 
+    url("/universe/universe_background_image.webp"),
     url("/universe/universe_background_image.png"),
     url("/universe/universe_background_image.jpg"),
-    radial-gradient(
-      circle at center,
+    radial-gradient(circle at center,
       #4a1a3d 0%,
       #2d1024 40%,
       #1a0a14 70%,
-      #000000 100%
-    );
+      #000000 100%);
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -29,10 +28,10 @@
 
 .universe-container {
   position: relative;
-  width: 50vmin;
-  height: 50vmin;
-  max-width: 560px;
-  max-height: 560px;
+  width: min(75vmin, 90vw, 90vh);
+  height: min(75vmin, 90vw, 90vh);
+  max-width: 500px;
+  max-height: 500px;
   min-width: 280px;
   min-height: 280px;
   display: flex;
@@ -40,7 +39,7 @@
   align-items: center;
 }
 
-/* SECTION 2: HỆ THỐNG QUỸ ĐẠO VÀ VÒNG TRÒN TRUNG TÂM */
+/* ===== ORBIT SYSTEM ===== */
 .orbit-system {
   position: relative;
   width: 100%;
@@ -54,86 +53,68 @@
   position: absolute;
   border: 2px dashed #797979;
   border-radius: 50%;
-  /* Thêm hiệu ứng phát sáng cho quỹ đạo */
-  /* box-shadow: 0 0 10px rgba(255, 255, 255, 0.1),
-    inset 0 0 10px rgba(255, 255, 255, 0.05); */
   opacity: 1;
 }
 
-.orbit-ring-1 {
-  width: 40%;
-  height: 40%;
-}
+.orbit-ring-1 { width: 50%; height: 50%; }
+.orbit-ring-2 { width: 70%; height: 70%; }
+.orbit-ring-3 { width: 90%; height: 90%; }
+.orbit-ring-4 { width: 110%; height: 110%; }
+.orbit-ring-5 { width: 130%; height: 130%; }
 
-.orbit-ring-2 {
-  width: 60%;
-  height: 60%;
-}
-
-.orbit-ring-3 {
-  width: 80%;
-  height: 80%;
-}
-
-.orbit-ring-4 {
-  width: 110%;
-  height: 110%;
-}
-
-.orbit-ring-5 {
-  width: 140%;
-  height: 140%;
-}
-
+/* ===== CENTER CIRCLE ===== */
 .center-circle {
   position: absolute;
-  width: 25%;
-  height: 25%;
-  min-width: 75px;
-  min-height: 75px;
-  max-width: 150px;
-  max-height: 150px;
+  width: 40%;
+  height: 40%;
+  min-width: 120px;
+  min-height: 120px;
+  max-width: 220px;
+  max-height: 220px;
   background: white;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10;
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.3),
+  
+  box-shadow: 
+    0 0 40px rgba(255, 255, 255, 0.3),
     0 0 80px rgba(255, 255, 255, 0.1);
+  
   container-type: inline-size;
   container-name: circle-container;
-  /* Hiệu ứng nhấp nháy nhẹ */
   animation: center-glow 4s ease-in-out infinite;
 }
 
 @keyframes center-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3),
+  0%, 100% {
+    box-shadow: 
+      0 0 40px rgba(255, 255, 255, 0.3),
       0 0 80px rgba(255, 255, 255, 0.1);
   }
-
   50% {
-    box-shadow: 0 0 60px rgba(255, 255, 255, 0.4),
+    box-shadow: 
+      0 0 60px rgba(255, 255, 255, 0.4),
       0 0 120px rgba(255, 255, 255, 0.2);
   }
 }
 
 .center-text {
   font-family: "BT Beau Sans", sans-serif;
-  font-size: clamp(0.4rem, 14cqw, 0.65rem);
+  font-size: clamp(0.45rem, 14cqw, 0.7rem);
   font-weight: 400;
   color: #333;
   text-align: center;
   line-height: 1.2;
   letter-spacing: 0.5px;
   padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* SECTION 3: HÀNH TINH XÁM VÀ CHUYỂN ĐỘNG NÂNG CAP */
-
-/* Style cơ bản cho hành tinh */
+/* ===== GRAY PLANETS ===== */
 .planet {
   position: absolute;
   border-radius: 50%;
@@ -141,26 +122,23 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  /* Kích thước được xác định bởi biến CSS --planet-size */
   width: var(--planet-size, 12px);
   height: var(--planet-size, 12px);
   cursor: pointer;
 }
 
-/* Style nâng cao cho hành tinh xám */
 .gray-planet {
   background: linear-gradient(135deg, #b8b8b8 0%, #666666 50%, #999999 100%);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3),
-    0 0 30px rgba(184, 184, 184, 0.2), inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+  box-shadow:
+    0 0 15px rgba(255, 255, 255, 0.3),
+    0 0 30px rgba(184, 184, 184, 0.2),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.3),
     inset 1px 1px 2px rgba(255, 255, 255, 0.4);
   position: relative;
   overflow: hidden;
-
-  /* Hiệu ứng nhấp nháy */
   animation: planet-pulse var(--pulse-duration, 3s) ease-in-out infinite;
 }
 
-/* Thêm hiệu ứng phản chiếu ánh sáng */
 .gray-planet::before {
   content: "";
   position: absolute;
@@ -168,28 +146,23 @@
   left: 20%;
   width: 30%;
   height: 30%;
-  background: radial-gradient(
-    circle,
+  background: radial-gradient(circle,
     rgba(255, 255, 255, 0.8) 0%,
-    transparent 70%
-  );
+    transparent 70%);
   border-radius: 50%;
   pointer-events: none;
 }
 
-/* Hiệu ứng đuôi sáng */
 .gray-planet::after {
   content: "";
   position: absolute;
   width: 200%;
   height: 2px;
-  background: linear-gradient(
-    90deg,
+  background: linear-gradient(90deg,
     transparent 0%,
     rgba(255, 255, 255, 0.3) 20%,
     rgba(184, 184, 184, 0.6) 50%,
-    transparent 100%
-  );
+    transparent 100%);
   top: 50%;
   left: -100%;
   transform: translateY(-50%);
@@ -200,8 +173,10 @@
 
 .gray-planet:hover {
   transform: scale(1.5);
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.6),
-    0 0 50px rgba(184, 184, 184, 0.4), inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+  box-shadow:
+    0 0 25px rgba(255, 255, 255, 0.6),
+    0 0 50px rgba(184, 184, 184, 0.4),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.3),
     inset 1px 1px 2px rgba(255, 255, 255, 0.6);
   animation-play-state: paused;
 }
@@ -210,311 +185,321 @@
   opacity: 1;
 }
 
-/* Keyframes cho hiệu ứng nhấp nháy */
 @keyframes planet-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3),
-      0 0 30px rgba(184, 184, 184, 0.2), inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+  0%, 100% {
+    box-shadow:
+      0 0 15px rgba(255, 255, 255, 0.3),
+      0 0 30px rgba(184, 184, 184, 0.2),
+      inset -2px -2px 4px rgba(0, 0, 0, 0.3),
       inset 1px 1px 2px rgba(255, 255, 255, 0.4);
   }
-
   50% {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
-      0 0 40px rgba(184, 184, 184, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+    box-shadow:
+      0 0 20px rgba(255, 255, 255, 0.5),
+      0 0 40px rgba(184, 184, 184, 0.3),
+      inset -2px -2px 4px rgba(0, 0, 0, 0.3),
       inset 1px 1px 2px rgba(255, 255, 255, 0.6);
   }
 }
 
-/* ✨ [THAY ĐỔI] Đơn giản hóa keyframe, vì timing function sẽ được đặt trong rule `.planet.animated` */
+/* ===== PLANET MOVEMENT ===== */
 @keyframes move-on-path {
-  from {
-    offset-distance: 0%;
-  }
-
-  to {
-    offset-distance: 100%;
-  }
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
 }
 
-/* Xóa keyframe 'move-with-variation' không cần thiết nữa */
-
-/* Class áp dụng animation cho hành tinh */
 .planet.animated {
-  /* offset-path xác định đường đi hình tròn */
   offset-path: circle(var(--orbit-radius) at center);
   offset-rotate: 0deg;
-
-  /* ✨ [THAY ĐỔI] Áp dụng animation với timing là 'linear' để chuyển động đều ✨ */
-  animation: move-on-path var(--orbit-duration) linear infinite
-      var(--orbit-direction),
+  animation: 
+    move-on-path var(--orbit-duration) linear infinite var(--orbit-direction),
     planet-pulse var(--pulse-duration, 3s) ease-in-out infinite;
-
-  /* Thêm hiệu ứng chuyển đổi mượt mà */
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Hiệu ứng đặc biệt cho từng hành tinh */
-.planet.animated:nth-child(6) {
-  --pulse-duration: 2.5s;
-  filter: hue-rotate(0deg);
-}
+/* ===== RESPONSIVE DESIGN ===== */
 
-.planet.animated:nth-child(7) {
-  --pulse-duration: 3.2s;
-  filter: hue-rotate(20deg);
-}
-
-.planet.animated:nth-child(8) {
-  --pulse-duration: 2.8s;
-  filter: hue-rotate(40deg);
-}
-
-.planet.animated:nth-child(9) {
-  --pulse-duration: 3.5s;
-  filter: hue-rotate(60deg);
-}
-
-.planet.animated:nth-child(10) {
-  --pulse-duration: 2.3s;
-  filter: hue-rotate(80deg);
-}
-
-/* SECTION 4: RESPONSIVE DESIGN */
-
-/* Desktop lớn (>1200px) */
-@media (min-width: 1200px) {
+/* Desktop large (>1400px) */
+@media (min-width: 1400px) {
   .universe-container {
-    width: 45vmin;
-    height: 45vmin;
+    width: min(65vmin, 80vw, 80vh);
+    height: min(65vmin, 80vw, 80vh);
     max-width: 650px;
     max-height: 650px;
   }
-
+  
   .center-circle {
-    max-width: 200px;
-    max-height: 200px;
+    max-width: 220px;
+    max-height: 220px;
   }
-
+  
   .center-text {
-    font-size: clamp(0.6rem, 20cqw, 1rem);
-    padding: 12px;
+    font-size: clamp(0.65rem, 20cqw, 1.1rem);
+    padding: 15px;
   }
-
+  
   .orbit-ring {
     border-width: 3px;
   }
 }
 
-/* Tablet portrait (768px-1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
+/* Desktop standard (1200px-1400px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
   .universe-container {
-    width: 60vmin;
-    height: 60vmin;
-    min-width: 320px;
-    min-height: 320px;
-    max-width: 500px;
-    max-height: 500px;
+    width: min(70vmin, 85vw, 85vh);
+    height: min(70vmin, 85vw, 85vh);
+    max-width: 580px;
+    max-height: 580px;
   }
-
+  
   .center-circle {
-    min-width: 80px;
-    min-height: 80px;
-    max-width: 140px;
-    max-height: 140px;
+    max-width: 200px;
+    max-height: 200px;
   }
-
+  
   .center-text {
-    font-size: clamp(0.45rem, 17cqw, 0.7rem);
-    padding: 8px;
+    font-size: clamp(0.6rem, 18cqw, 1rem);
+    padding: 12px;
   }
-
-  .gray-planet:hover {
-    transform: scale(1.4);
+  
+  .orbit-ring {
+    border-width: 2.5px;
   }
 }
 
-/* Mobile landscape (480px-768px) */
-@media (min-width: 480px) and (max-width: 767px) {
+/* Tablet landscape (1024px-1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
   .universe-container {
-    width: 70vmin;
-    height: 70vmin;
+    width: min(75vmin, 90vw, 90vh);
+    height: min(75vmin, 90vw, 90vh);
+    max-width: 520px;
+    max-height: 520px;
+  }
+  
+  .center-circle {
+    max-width: 180px;
+    max-height: 180px;
+  }
+  
+  .center-text {
+    font-size: clamp(0.55rem, 16cqw, 0.9rem);
+    padding: 10px;
+  }
+  
+  .orbit-ring {
+    border-width: 2px;
+  }
+}
+
+/* Tablet portrait (768px-1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .universe-container {
+    width: min(80vmin, 95vw, 95vh);
+    height: min(80vmin, 95vw, 95vh);
+    min-width: 320px;
+    min-height: 320px;
+    max-width: 480px;
+    max-height: 480px;
+  }
+  
+  .center-circle {
+    min-width: 90px;
+    min-height: 90px;
+    max-width: 160px;
+    max-height: 160px;
+  }
+  
+  .center-text {
+    font-size: clamp(0.5rem, 15cqw, 0.8rem);
+    padding: 8px;
+  }
+  
+  .orbit-ring {
+    border-width: 2px;
+  }
+}
+
+/* Mobile (max-width: 767px) */
+@media (max-width: 767px) {
+  .universe-container {
+    width: min(85vmin, 95vw, 95vh);
+    height: min(85vmin, 95vw, 95vh);
     min-width: 280px;
     min-height: 280px;
     max-width: 400px;
     max-height: 400px;
   }
-
+  
   .center-circle {
     min-width: 75px;
     min-height: 75px;
-    max-width: 130px;
-    max-height: 130px;
+    max-width: 140px;
+    max-height: 140px;
   }
-
+  
   .center-text {
-    font-size: clamp(0.42rem, 15cqw, 0.65rem);
-    padding: 7px;
+    font-size: clamp(0.42rem, 13cqw, 0.65rem);
+    padding: 6px;
     line-height: 1.1;
+    letter-spacing: 0.3px;
   }
-
-  .gray-planet:hover {
-    transform: scale(1.35);
-  }
-
+  
   .orbit-ring {
     border-width: 1.5px;
   }
 }
 
-/* Tablet (max-width: 768px) - Cập nhật lại */
-@media (max-width: 767px) {
+/* Mobile small (max-width: 480px) */
+@media (max-width: 480px) {
   .universe-container {
-    width: 80vmin;
-    height: 80vmin;
+    width: min(90vmin, 95vw, 95vh);
+    height: min(90vmin, 95vw, 95vh);
     min-width: 240px;
     min-height: 240px;
+    max-width: 320px;
+    max-height: 320px;
   }
-
+  
   .center-circle {
-    min-width: 70px;
-    min-height: 70px;
-    max-width: 120px;
-    max-height: 120px;
+    min-width: 60px;
+    min-height: 60px;
+    max-width: 110px;
+    max-height: 110px;
   }
-
+  
   .center-text {
-    font-size: clamp(0.4rem, 16cqw, 0.6rem);
-    padding: 6px;
+    font-size: clamp(0.38rem, 12cqw, 0.55rem);
+    padding: 5px;
+    line-height: 1.1;
+    letter-spacing: 0.2px;
   }
+  
+  .orbit-ring {
+    border-width: 1px;
+  }
+}
 
-  .gray-planet:hover {
+/* Mobile extra small (max-width: 320px) */
+@media (max-width: 320px) {
+  .universe-container {
+    width: min(95vmin, 95vw, 95vh);
+    height: min(95vmin, 95vw, 95vh);
+    min-width: 200px;
+    min-height: 200px;
+    max-width: 260px;
+    max-height: 260px;
+  }
+  
+  .center-circle {
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 90px;
+    max-height: 90px;
+  }
+  
+  .center-text {
+    font-size: clamp(0.3rem, 10cqw, 0.4rem);
+    padding: 3px;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  
+  .orbit-ring {
+    border-width: 1px;
+  }
+}
+
+/* ===== TOUCH DEVICES ===== */
+@media (hover: none) and (pointer: coarse) {
+  .gray-planet:hover,
+  .gray-planet:active {
     transform: scale(1.3);
   }
 }
 
-/* Mobile small (max-width: 480px) - Cải thiện */
-@media (max-width: 480px) {
+/* ===== LANDSCAPE ORIENTATION ===== */
+@media (orientation: landscape) and (max-height: 600px) {
+  .universe-section {
+    padding: 0;
+  }
+  
   .universe-container {
-    width: 85vmin;
-    height: 85vmin;
-    min-width: 220px;
-    min-height: 220px;
-    max-width: 320px;
-    max-height: 320px;
-  }
-
-  .center-circle {
-    min-width: 65px;
-    min-height: 65px;
-    max-width: 110px;
-    max-height: 110px;
-  }
-
-  .center-text {
-    font-size: clamp(0.38rem, 14cqw, 0.55rem);
-    padding: 5px;
-    line-height: 1.1;
-    letter-spacing: 0.3px;
-  }
-
-  .orbit-ring {
-    border-width: 1px;
-  }
-
-  .gray-planet:hover {
-    transform: scale(1.25);
+    width: min(80vh, 90vw);
+    height: min(80vh, 90vw);
+    max-width: min(80vh, 90vw);
+    max-height: min(80vh, 90vw);
   }
 }
 
-/* Mobile extra small (max-width: 360px) */
-@media (max-width: 360px) {
+/* ===== OVERFLOW PREVENTION ===== */
+@media (max-width: 400px), (max-height: 600px) {
   .universe-container {
-    width: 90vmin;
-    height: 90vmin;
-    min-width: 200px;
-    min-height: 200px;
-    max-width: 280px;
-    max-height: 280px;
-  }
-
-  .center-circle {
-    min-width: 55px;
-    min-height: 55px;
-    max-width: 90px;
-    max-height: 90px;
-  }
-
-  .center-text {
-    font-size: clamp(0.3rem, 12cqw, 0.45rem);
-    padding: 3px;
-    line-height: 1;
-    letter-spacing: 0.2px;
-  }
-
-  .gray-planet:hover {
-    transform: scale(1.15);
-  }
-
-  /* Giảm kích thước hành tinh trên màn hình rất nhỏ */
-  .planet {
-    width: clamp(8px, 0.8vw, 12px);
-    height: clamp(8px, 0.8vw, 12px);
+    width: min(85vmin, 90vw, 90vh);
+    height: min(85vmin, 90vw, 90vh);
   }
 }
 
-/* SECTION 5: ANIMATION PERFORMANCE */
-.orbit-system * {
-  will-change: transform, filter, box-shadow;
+/* ===== SAFE AREA SUPPORT ===== */
+@supports (padding: max(0px)) {
+  .universe-section {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
 }
 
-.planet.animated {
-  transform-origin: center;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform-style: preserve-3d;
-}
-
-/* SECTION 6: ACCESSIBILITY */
+/* ===== ACCESSIBILITY ===== */
 @media (prefers-reduced-motion: reduce) {
   .planet.animated {
     animation-duration: 60s;
-    /* Vẫn giữ linear cho người dùng muốn chuyển động chậm hơn, không giật cục */
     animation-timing-function: linear;
   }
-
-  .planet:hover,
-  .gray-planet:hover {
-    transform: scale(1.1);
-  }
-
+  
   .center-circle {
     animation: none;
   }
-
+  
   @keyframes planet-pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3),
+    0%, 100% {
+      box-shadow: 
+        0 0 15px rgba(255, 255, 255, 0.3),
         0 0 30px rgba(184, 184, 184, 0.2);
     }
   }
 }
 
-/* SECTION 7: HIGH DPI DISPLAYS */
+/* ===== HIGH DPI DISPLAYS ===== */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .orbit-ring {
     border-width: 1px;
   }
-
+  
   .center-circle {
-    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3),
+    box-shadow: 
+      0 0 40px rgba(255, 255, 255, 0.3),
       0 0 80px rgba(255, 255, 255, 0.1);
   }
-
+  
   .gray-planet {
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.3),
-      0 0 24px rgba(184, 184, 184, 0.2), inset -1px -1px 2px rgba(0, 0, 0, 0.3),
+    box-shadow: 
+      0 0 12px rgba(255, 255, 255, 0.3),
+      0 0 24px rgba(184, 184, 184, 0.2), 
+      inset -1px -1px 2px rgba(0, 0, 0, 0.3),
       inset 1px 1px 1px rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATION ===== */
+@media (prefers-reduced-motion: no-preference) {
+  .orbit-system * {
+    will-change: transform, filter, box-shadow, opacity;
+  }
+  
+  .planet.animated {
+    transform-origin: center;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
   }
 }
