@@ -1,7 +1,5 @@
-// PresenceOverlay.jsx - Responsive Structure
-
 import React from "react";
-import "./BaseOverlay.css";
+import BaseOverlay from "./BaseOverlay";
 import "./PresenceOverlay.css";
 
 const PresenceOverlay = ({ isActive, overlayStyle, onClose }) => {
@@ -11,20 +9,14 @@ const PresenceOverlay = ({ isActive, overlayStyle, onClose }) => {
   };
 
   return (
-    <div
-      className={`base-overlay presence-overlay ${isActive ? "show" : ""}`}
-      style={overlayStyle}
-      onMouseLeave={onClose}
-      onClick={onClose}
+    <BaseOverlay
+      isActive={isActive}
+      overlayStyle={overlayStyle}
+      onClose={onClose}
+      customClassName="presence-overlay"
+      disableDefaultClose={false}
+      closeOnMouseLeave={true}
     >
-      {/* Cross-lines pattern */}
-      <div className="cross-lines">
-        <div className="line line-vertical"></div>
-        <div className="line line-horizontal"></div>
-        <div className="line line-diagonal-1"></div>
-        <div className="line line-diagonal-2"></div>
-      </div>
-
       {/* Content wrapper - sử dụng CSS Grid layout */}
       <div className="presence-content-wrapper" onClick={handleContentClick}>
         {/* Title */}
@@ -54,7 +46,7 @@ const PresenceOverlay = ({ isActive, overlayStyle, onClose }) => {
           </p>
         </div>
       </div>
-    </div>
+    </BaseOverlay>
   );
 };
 
