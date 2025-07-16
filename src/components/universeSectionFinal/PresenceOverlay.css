@@ -1,5 +1,5 @@
 /* ============================================================= */
-/*                    PresenceOverlay.css                        */
+/*                    PresenceOverlay.css - RESPONSIVE 100%     */
 /* ============================================================= */
 .base-overlay.presence-overlay {
     background: radial-gradient(50% 50% at 50% 50%,
@@ -7,117 +7,134 @@
             rgba(255, 255, 255, 0.70) 65.87%,
             rgba(187, 35, 76, 0.10) 95.67%,
             #23B3BB 100%);
-    /* <-- Màu viền là Xanh Cyan này */
 }
 
 .base-overlay.presence-overlay.show {
     opacity: 1;
     pointer-events: auto;
-
-    /* ✨ [THAY ĐỔI] Ghi đè box-shadow để khớp với màu Xanh Cyan (#23B3BB) */
     box-shadow:
         0 0 0 2px rgba(35, 179, 187, 0.6),
-        /* rgb(35, 179, 187) là #23B3BB */
         0 0 15px rgba(35, 179, 187, 0.3),
         0 0 30px rgba(35, 179, 187, 0.1);
 }
 
 /*
- * CONTENT WRAPPER - Đây là SÂN KHẤU CHÍNH, chiếm 100% overlay
+ * CONTENT WRAPPER - SÂN KHẤU CHÍNH
+ * Sử dụng CSS Grid để tạo layout responsive hoàn toàn
  */
 .presence-content-wrapper {
     /* Animation */
     opacity: 0;
     transition: opacity 0.6s ease-out 0.5s;
 
-    /* Định vị - RẤT QUAN TRỌNG */
+    /* Layout chính - sử dụng CSS Grid */
     position: relative;
     width: 100%;
     height: 100%;
+    padding: 8%;
+    /* Padding tương đối để đảm bảo nội dung luôn trong overlay */
+    box-sizing: border-box;
 
-    /* Dùng flex để CĂN GIỮA "sân khấu phụ" (.presence-content-container) */
-    display: flex;
-    justify-content: center;
+    /* CSS Grid setup - tạo lưới 3x5 để text gần title hơn */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 10fr 1fr 10fr;
+    grid-template-areas:
+        ". . text-top text-top ."
+        ". . title . ."
+        ". text-bottom text-bottom . .";
+    gap: 0.4vmin;
+    /* Giảm khoảng cách từ 1.5vmin xuống 0.8vmin */
     align-items: center;
+    justify-items: center;
 }
 
 .base-overlay.presence-overlay.show .presence-content-wrapper {
     opacity: 1;
 }
 
-/* ... các style còn lại giữ nguyên ... */
-
 /*
- * CONTAINER CHO 2 ĐOẠN TEXT - Đây là "sân khấu" phụ, có max-width
+ * TITLE - Căn giữa hoàn toàn
  */
-.presence-content-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    max-width: 650px;
-}
-
-/*
- * ĐỊNH VỊ CÁC PHẦN TỬ (Rule chung)
- */
-.presence-text-top,
-.presence-text-bottom,
 .presence-title {
-    position: absolute;
+    grid-area: title;
+    justify-self: center;
+    align-self: center;
+
     margin: 0;
     padding: 0;
     animation: fadeInFloat 0.8s ease-out forwards;
-    opacity: 0;
-}
-
-/*
- * TITLE - CĂN GIỮA TUYỆT ĐỐI VỚI SÂN KHẤU CHÍNH (.presence-content-wrapper)
- */
-.presence-title {
-    top: 46.3%;
-    left: 40%;
-    transform: translate(-50%, -50%);
     animation-delay: 0.7s;
+    opacity: 0;
+
     color: #BC224C;
-    font-family: "PPNeueMontreal-Book-otf", serif;
-    font-size: clamp(2.5rem, 4.5vw, 4rem);
+    font-family: "SaolDisplay-Regular-ttf", serif;
+    font-size: clamp(2rem, 8vmin, 4.5rem);
+    /* Responsive font size */
     font-weight: 300;
     line-height: 90%;
-    letter-spacing: -1.92px;
+    letter-spacing: clamp(-1px, -0.3vmin, -2px);
+    /* Responsive letter spacing */
+    text-align: center;
     z-index: 10;
 }
 
 /*
- * KHỐI VĂN BẢN TRÊN CÙNG - Định vị theo sân khấu phụ (.presence-content-container)
+ * TEXT TOP - Vị trí trên bên phải so với Title
  */
 .presence-text-top {
-    top: 32%;
-    right: -10%;
-    width: auto;
-    text-align: left;
+    grid-area: text-top;
+    justify-self: center;
+    align-self: center;
+
+    margin: 0;
+    padding: 0;
+    animation: fadeInFloat 0.8s ease-out forwards;
     animation-delay: 0.9s;
+    opacity: 0;
+
     color: #000;
     font-family: "BT-BeauSans-Regular-ttf", sans-serif;
-    font-size: 16px;
-    font-style: normal;
+    font-size: clamp(0.6rem, 2.2vmin, 1rem);
+    /* Responsive font size */
     font-weight: 400;
     line-height: 110%;
+    text-align: center;
+    /* Căn giữa để text cân đối */
+
+    /* Đảm bảo text không tràn ra ngoài */
+    max-width: 100%;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 /*
- * KHỐI VĂN BẢN DƯỚI CÙNG - Định vị theo sân khấu phụ (.presence-content-container)
+ * TEXT BOTTOM - Vị trí dưới bên trái so với Title
  */
 .presence-text-bottom {
-    bottom: 28%;
-    left: 15%;
-    width: auto;
-    text-align: left;
+    grid-area: text-bottom;
+    justify-self: center;
+    align-self: center;
+
+    margin: 0;
+    padding: 0;
+    animation: fadeInFloat 0.8s ease-out forwards;
     animation-delay: 1.1s;
+    opacity: 0;
+
     color: #797979;
     font-family: "BT-BeauSans-Regular-ttf", sans-serif;
-    font-size: 16px;
+    font-size: clamp(0.6rem, 2.2vmin, 1rem);
+    /* Responsive font size */
     font-weight: 400;
     line-height: 110%;
+    text-align: center;
+    /* Căn giữa để text cân đối */
+
+    /* Đảm bảo text không tràn ra ngoài */
+    max-width: 100%;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 /*
@@ -136,64 +153,102 @@
 }
 
 /*
- * RESPONSIVE DESIGN - Điều chỉnh vị trí cho màn hình nhỏ
+ * RESPONSIVE DESIGN - Điều chỉnh cho màn hình nhỏ
  */
+
+/* Tablet */
 @media (max-width: 768px) {
-    .presence-text-top {
-        top: 25%;
-        right: 10%;
-        width: 45%;
-        font-size: 14px;
-    }
-
-    .presence-text-bottom {
-        bottom: 22%;
-        left: 10%;
-        width: 50%;
-        font-size: 14px;
-    }
-}
-
-/* Khi màn hình quá nhỏ, quay về layout xếp chồng cho dễ đọc */
-@media (max-width: 480px) {
     .presence-content-wrapper {
-        align-items: flex-start;
-        padding-top: 25%;
+        padding: 10%;
+        /* Giữ nguyên layout 3x5 cho tablet */
+        grid-template-areas:
+            ". . text-top text-top ."
+            ". . title . ."
+            ". text-bottom text-bottom . .";
     }
 
-    .presence-content-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 5%;
-        max-width: 90%;
-        height: auto;
+    .presence-title {
+        font-size: clamp(1.8rem, 7vmin, 3.5rem);
     }
 
     .presence-text-top,
-    .presence-text-bottom,
-    .presence-title {
-        position: static;
-        transform: none;
-        width: 100%;
-        text-align: center;
-    }
-
-    .presence-text-top {
-        order: 2;
-        margin-bottom: 20px;
-        font-size: 12px;
-    }
-
-    .presence-title {
-        order: 1;
-        margin-bottom: 20px;
-        font-size: 2.5rem;
-    }
-
     .presence-text-bottom {
-        order: 3;
-        font-size: 12px;
+        font-size: clamp(0.55rem, 2vmin, 0.9rem);
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .presence-content-wrapper {
+        padding: 12%;
+        /* Layout dọc cho mobile nhưng vẫn giữ thứ tự: top -> title -> bottom */
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+        grid-template-areas:
+            "text-top"
+            "."
+            "title"
+            "."
+            "text-bottom";
+        gap: 3vmin;
+    }
+
+    .presence-title {
+        font-size: clamp(1.5rem, 6vmin, 2.5rem);
+        margin: 1vmin 0;
+    }
+
+    .presence-text-top,
+    .presence-text-bottom {
+        justify-self: center;
+        align-self: center;
+        text-align: center;
+        font-size: clamp(0.5rem, 1.8vmin, 0.8rem);
+        line-height: 120%;
+        max-width: 95%;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+    .presence-content-wrapper {
+        padding: 15%;
+        gap: 3vmin;
+    }
+
+    .presence-title {
+        font-size: clamp(1.3rem, 5.5vmin, 2rem);
+    }
+
+    .presence-text-top,
+    .presence-text-bottom {
+        font-size: clamp(0.5rem, 1.8vmin, 0.8rem);
+        line-height: 125%;
+    }
+}
+
+/* Large screens - giới hạn kích thước tối đa */
+@media (min-width: 1200px) {
+    .presence-content-wrapper {
+        padding: 6%;
+    }
+
+    .presence-title {
+        font-size: clamp(3rem, 6vmin, 4.5rem);
+    }
+
+    .presence-text-top,
+    .presence-text-bottom {
+        font-size: clamp(0.9rem, 2vmin, 1.2rem);
+    }
+}
+
+/* Ultra-wide screens */
+@media (min-width: 1600px) {
+    .presence-content-wrapper {
+        padding: 5%;
+        max-width: 80vmin;
+        max-height: 80vmin;
+        margin: auto;
     }
 }

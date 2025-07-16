@@ -34,7 +34,8 @@ const WhitePlanet = ({ planets, orbitRadii, onPlanetClick }) => {
                 return (
                     <div
                         key={planet.name}
-                        className="planet white-planet" // Bỏ 'clickable' nếu không dùng style riêng
+                        className="planet white-planet"
+                        data-planet={planet.name}
                         style={planetStyle}
                         onClick={(e) => onPlanetClick && onPlanetClick(e, planet.name)}
                     >

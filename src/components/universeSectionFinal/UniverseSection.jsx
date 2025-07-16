@@ -1,21 +1,28 @@
-// UniverseSection.jsx - Enhanced Version with Even Distribution
+// ============== FILE: UniverseSection.jsx ==============
 import React, { useState, useEffect } from 'react';
 import './UniverseSection.css';
 import WhitePlanet from './WhitePlanet';
 import SpaceOverlay from './SpaceOverlay';
-import BaseOverlay from './BaseOverlay';
 import PresenceOverlay from './PresenceOverlay';
 import TimeOverlay from './TimeOverlay';
 import SensesOverlay from './SensesOverlay';
 
 const UniverseSection = () => {
-    const orbitRadii = { 1: '20%', 2: '30%', 3: '40%', 4: '55%', 5: '70%' };
+    // ✨ [CẬP NHẬT] Đồng bộ bán kính quỹ đạo với file CSS mới của bạn
+    const orbitRadii = {
+        1: '25%',    // Tương ứng với width 50%
+        2: '35%',    // Tương ứng với width 70%
+        3: '45%',    // Tương ứng với width 90%
+        4: '55%',    // Tương ứng với width 110%
+        5: '65%',    // Tương ứng với width 130%
+    };
 
+    // ✨ [CẬP NHẬT] Thêm 'glowColor' và 'animationDelay' để tạo hiệu ứng chớp tắt riêng
     const whitePlanetsData = [
-        { name: 'Presence', orbitRing: 2, angle: '8deg', size: 'clamp(16px, 1.3vw, 20px)' },
-        { name: 'Senses', orbitRing: 3, angle: '225deg', size: 'clamp(30px, 2.1vw, 42px)' },
-        { name: 'Time', orbitRing: 4, angle: '135deg', size: 'clamp(18px, 1.5vw, 26px)' },
-        { name: 'Space', orbitRing: 5, angle: '45deg', size: 'clamp(22px, 1.8vw, 30px)' },
+        { name: 'Presence', orbitRing: 2, angle: '8deg', size: 'clamp(18px, 2.5vw, 35px)', glowColor: '#23B3BB', animationDelay: '0s' },
+        { name: 'Senses', orbitRing: 3, angle: '225deg', size: 'clamp(24px, 3.5vw, 45px)', glowColor: '#BB234C', animationDelay: '-1.2s' },
+        { name: 'Time', orbitRing: 4, angle: '135deg', size: 'clamp(20px, 3vw, 40px)', glowColor: '#9D23BB', animationDelay: '-0.5s' },
+        { name: 'Space', orbitRing: 5, angle: '45deg', size: 'clamp(16px, 2vw, 30px)', glowColor: '#2358BB', animationDelay: '-2.1s' },
     ];
 
     const BASE_SPEED = 15;
@@ -23,11 +30,11 @@ const UniverseSection = () => {
     const grayPlanetResponsiveSize = 'clamp(10px, 1.1vw, 16px)';
 
     const grayPlanets = [
-        { orbitRing: 1, direction: 'clockwise', pulseDuration: '2.5s', color: 'default' },
-        { orbitRing: 2, direction: 'counter-clockwise', pulseDuration: '3.0s', color: 'blue-tint' },
-        { orbitRing: 3, direction: 'clockwise', pulseDuration: '2.8s', color: 'purple-tint' },
-        { orbitRing: 4, direction: 'counter-clockwise', pulseDuration: '3.2s', color: 'green-tint' },
-        { orbitRing: 5, direction: 'clockwise', pulseDuration: '2.3s', color: 'orange-tint' }
+        { orbitRing: 1, direction: 'clockwise', pulseDuration: '2.5s' },
+        { orbitRing: 2, direction: 'counter-clockwise', pulseDuration: '3.0s' },
+        { orbitRing: 3, direction: 'clockwise', pulseDuration: '2.8s' },
+        { orbitRing: 4, direction: 'counter-clockwise', pulseDuration: '3.2s' },
+        { orbitRing: 5, direction: 'clockwise', pulseDuration: '2.3s' }
     ];
 
     const [activePlanet, setActivePlanet] = useState(null);
@@ -35,9 +42,7 @@ const UniverseSection = () => {
     const [isTransitioning, setIsTransitioning] = useState(false);
 
     const handlePlanetClick = (event, planetName) => {
-        // Ngăn click khi đang transition
         if (isTransitioning) return;
-
         const rect = event.currentTarget.getBoundingClientRect();
         setOverlayStyle({
             top: `${rect.top}px`,
@@ -45,59 +50,32 @@ const UniverseSection = () => {
             width: `${rect.width}px`,
             height: `${rect.height}px`,
         });
-
         const planetLower = planetName.toLowerCase();
-        
-        // Nếu click vào cùng một planet đang active, đóng overlay
         if (activePlanet === planetLower) {
             closeOverlay();
             return;
         }
-
-        // Set transition state và mở overlay mới
         setIsTransitioning(true);
         setActivePlanet(planetLower);
-        
-        // Clear transition state sau khi animation hoàn thành
-        setTimeout(() => {
-            setIsTransitioning(false);
-        }, 700); // Match với CSS transition duration
+        setTimeout(() => setIsTransitioning(false), 700);
     };
 
     const closeOverlay = () => {
         if (isTransitioning) return;
-        
         setIsTransitioning(true);
         setActivePlanet(null);
-        
-        // Clear transition state sau khi close animation hoàn thành
-        setTimeout(() => {
-            setIsTransitioning(false);
-        }, 700);
+        setTimeout(() => setIsTransitioning(false), 700);
     };
 
-    // ✨ =================================================================== ✨
-    // ✨                        THÊM LOGIC XỬ LÝ ESCAPE                      ✨
-    // ✨ =================================================================== ✨
     useEffect(() => {
-        // Định nghĩa hàm xử lý sự kiện keydown
         const handleKeyDown = (event) => {
-            // Kiểm tra nếu phím được nhấn là 'Escape'
             if (event.key === 'Escape') {
-                closeOverlay(); // Gọi hàm đóng overlay
+                closeOverlay();
             }
         };
-
-        // Thêm event listener vào document khi component được mount
         document.addEventListener('keydown', handleKeyDown);
-
-        // Hàm dọn dẹp: Xóa event listener khi component unmount
-        // Điều này cực kỳ quan trọng để tránh memory leaks.
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-    }, []); // Mảng rỗng `[]` đảm bảo effect này chỉ chạy một lần khi component mount.
-    // ✨ =================================================================== ✨
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     return (
         <div className="universe-section">
@@ -118,9 +96,6 @@ const UniverseSection = () => {
                     {grayPlanets.map((planet, index) => {
                         const speed = BASE_SPEED + (planet.orbitRing - 1) * SPEED_INCREMENT;
                         const directionValue = planet.direction === 'clockwise' ? 'reverse' : 'normal';
-
-                        // ✨ [THAY ĐỔI] Tính toán delay âm để rải đều các hành tinh ✨
-                        // Logic: Chia vòng tròn cho số hành tinh và đặt vị trí bắt đầu bằng delay âm.
                         const startOffsetDelay = - (speed * (index / grayPlanets.length));
 
                         const planetStyle = {
@@ -129,14 +104,13 @@ const UniverseSection = () => {
                             '--orbit-direction': directionValue,
                             '--planet-size': grayPlanetResponsiveSize,
                             '--pulse-duration': planet.pulseDuration,
-                            // Áp dụng delay âm
                             animationDelay: `${startOffsetDelay}s`,
                         };
 
                         return (
                             <div
                                 key={`gray-${index}`}
-                                className={`planet gray-planet animated ${planet.color}`}
+                                className="planet gray-planet animated"
                                 style={planetStyle}
                                 title={`Gray Planet ${index + 1}`}
                             ></div>
@@ -149,36 +123,10 @@ const UniverseSection = () => {
                 </div>
             </div>
 
-            <PresenceOverlay
-                isActive={activePlanet === 'presence'}
-                overlayStyle={overlayStyle}
-                onClose={closeOverlay}
-            />
-
-            <SpaceOverlay
-                isActive={activePlanet === 'space'}
-                overlayStyle={overlayStyle}
-                onClose={closeOverlay}
-            />
-
-            <TimeOverlay
-                isActive={activePlanet === 'time'}
-                overlayStyle={overlayStyle}
-                onClose={closeOverlay}
-            />
-
-            <SensesOverlay
-                isActive={activePlanet === 'senses'}
-                overlayStyle={overlayStyle}
-                onClose={closeOverlay}
-            />
-
-
-            {/* <BaseOverlay
-                isActive={activePlanet === 'space'}
-                overlayStyle={overlayStyle}
-                onClose={closeOverlay}
-            /> */}
+            <PresenceOverlay isActive={activePlanet === 'presence'} overlayStyle={overlayStyle} onClose={closeOverlay} />
+            <SpaceOverlay isActive={activePlanet === 'space'} overlayStyle={overlayStyle} onClose={closeOverlay} />
+            <TimeOverlay isActive={activePlanet === 'time'} overlayStyle={overlayStyle} onClose={closeOverlay} />
+            <SensesOverlay isActive={activePlanet === 'senses'} overlayStyle={overlayStyle} onClose={closeOverlay} />
         </div>
     );
 };

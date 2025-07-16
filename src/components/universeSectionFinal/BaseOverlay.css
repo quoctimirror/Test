@@ -29,6 +29,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    /* ✨ [THÊM MỚI] Định nghĩa đây là một container truy vấn kích thước */
+    container-type: inline-size;
+    container-name: overlay-container;
 }
 
 /* Trạng thái hiển thị: mở rộng ra toàn màn hình */
