@@ -30,8 +30,9 @@
 .space-overlay.show {
     top: 50% !important;
     left: 50% !important;
-    width: 140vmin !important;
-    height: 140vmin !important;
+    /* ✨ [CẬP NHẬT] Kích thước giống với BaseOverlay/TimeOverlay */
+    width: 120vmin !important;
+    height: 120vmin !important;
     opacity: 1;
     transform: scale(1) translate(-50%, -50%);
     pointer-events: all;
@@ -269,11 +270,19 @@
  * SECTION 7: RESPONSIVE BREAKPOINTS
  */
 
-/* Tablet */
-@media (max-width: 768px) {
+/* Desktop mặc định - giống với TimeOverlay */
+@media (min-width: 769px) {
     .space-overlay.show {
         width: 120vmin !important;
         height: 120vmin !important;
+    }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .space-overlay.show {
+        width: 100vmin !important;
+        height: 100vmin !important;
     }
 
     .space-content-wrapper {
@@ -296,8 +305,8 @@
 /* Mobile */
 @media (max-width: 480px) {
     .space-overlay.show {
-        width: 95vmin !important;
-        height: 95vmin !important;
+        width: 85vmin !important;
+        height: 85vmin !important;
     }
 
     .space-content-wrapper {
@@ -325,8 +334,8 @@
 /* Very small screens */
 @media (max-width: 360px) {
     .space-overlay.show {
-        width: 90vmin !important;
-        height: 90vmin !important;
+        width: 80vmin !important;
+        height: 80vmin !important;
     }
 
     .space-content-wrapper {
@@ -350,8 +359,8 @@
 /* Large screens */
 @media (min-width: 1200px) {
     .space-overlay.show {
-        width: 140vmin !important;
-        height: 140vmin !important;
+        width: 120vmin !important;
+        height: 120vmin !important;
     }
 
     .space-content-wrapper {
@@ -370,8 +379,10 @@
 /* Ultra-wide screens */
 @media (min-width: 1600px) {
     .space-overlay.show {
-        max-width: 80vmin;
-        max-height: 80vmin;
+        width: 120vmin !important;
+        height: 120vmin !important;
+        max-width: 120vmin;
+        max-height: 120vmin;
     }
 
     .space-content-wrapper {
