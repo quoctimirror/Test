@@ -14,19 +14,20 @@ const HoverExpandSection = lazy(() =>
   import("../components/hoverExpandSection/HoverExpandSection.jsx")
 );
 const View360 = lazy(() => import("../components/view360/View360.jsx"));
+const AR = lazy(() => import("../components/arTryOn/AR.jsx"));
 
 export default function AppRoutes() {
   const location = useLocation();
-  
+
   // Routes that should NOT show the navbar
-  const routesWithoutNavbar = ['/universe-final'];
+  const routesWithoutNavbar = ["/universe-final"];
   const shouldShowNavbar = !routesWithoutNavbar.includes(location.pathname);
 
   return (
     <>
       {/* Conditional Navbar */}
       {shouldShowNavbar && <Navbar />}
-      
+
       {/* Routes */}
       <Suspense
         fallback={
@@ -41,6 +42,8 @@ export default function AppRoutes() {
           <Route path="/hover-expand" element={<HoverExpandSection />} />
 
           <Route path="/view-360" element={<View360 />} />
+
+          <Route path="/ar/rings/:ringId" element={<AR />} />
           {/* SỬA LỖI: Thêm route cho các đường dẫn không tồn tại */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
