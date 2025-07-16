@@ -3,41 +3,19 @@
 /* ============================================================= */
 
 /*
- * SECTION 1: LỚP PHỦ CHÍNH (HIỆU ỨNG QUẢ CẦU)
+ * SECTION 1: THEME STYLING - Using BaseOverlay structure
  */
-.space-overlay {
-    position: fixed;
-    /* ✨ [CẬP NHẬT] Thay đổi màu viền nền sang Xanh Dương */
+.base-overlay.space-overlay {
     background: radial-gradient(50% 50% at 50% 50%,
             #FFF 36.06%,
             rgba(255, 255, 255, 0.70) 65.87%,
             rgba(187, 35, 76, 0.10) 95.67%,
             #2358BB 100%);
-    backdrop-filter: blur(10px);
-    border-radius: 50%;
-    opacity: 0;
-    transform: scale(0.1);
-    pointer-events: none;
-    transition-property: top, left, width, height, opacity, transform, transform-origin, box-shadow;
-    transition-duration: 0.7s;
-    transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.space-overlay.show {
-    top: 50% !important;
-    left: 50% !important;
-    /* ✨ [CẬP NHẬT] Kích thước giống với BaseOverlay/TimeOverlay */
-    width: 120vmin !important;
-    height: 120vmin !important;
+.base-overlay.space-overlay.show {
     opacity: 1;
-    transform: scale(1) translate(-50%, -50%);
-    pointer-events: all;
-
-    /* ✨ [CẬP NHẬT] Hiệu ứng phát sáng khớp với màu Xanh Dương (#2358BB) */
+    pointer-events: auto;
     box-shadow:
         0 0 0 2px rgba(35, 88, 187, 0.6),
         0 0 15px rgba(35, 88, 187, 0.3),
@@ -50,7 +28,7 @@
 .space-content-wrapper {
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.6s ease-out 0.3s, transform 0.6s ease-out 0.3s;
+    transition: opacity 0.6s ease-out 0.5s, transform 0.6s ease-out 0.5s;
     position: relative;
     width: 100%;
     height: 100%;
@@ -61,7 +39,7 @@
     box-sizing: border-box;
 }
 
-.space-overlay.show .space-content-wrapper {
+.base-overlay.space-overlay.show .space-content-wrapper {
     opacity: 1;
     transform: translateY(0);
 }
@@ -87,114 +65,9 @@
     }
 }
 
-/*
- * SECTION 4: CSS cho 4 đường kẻ của "SPACE" - Tạo 8 đỉnh
- */
-.cross-lines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: 0;
-    animation: fadeInLines 0.8s ease-out 0.8s forwards;
-    animation-fill-mode: forwards;
-}
-
-.cross-lines .line {
-    position: absolute;
-    opacity: 0.35;
-}
-
-/* Đường dọc chính (tạo 2 đỉnh trên-dưới) */
-.cross-lines .line-vertical {
-    top: 5%;
-    left: 50%;
-    width: 1.5px;
-    height: 90%;
-    transform: translateX(-50%);
-    background: linear-gradient(to bottom,
-            transparent 0%,
-            rgba(255, 255, 255, 0.1) 5%,
-            rgba(255, 255, 255, 0.8) 10%,
-            white 15%,
-            rgba(255, 255, 255, 0.8) 20%,
-            rgba(255, 255, 255, 0.3) 50%,
-            rgba(255, 255, 255, 0.8) 80%,
-            white 85%,
-            rgba(255, 255, 255, 0.8) 90%,
-            rgba(255, 255, 255, 0.1) 95%,
-            transparent 100%);
-}
-
-/* Đường ngang chính (tạo 2 đỉnh trái-phải) */
-.cross-lines .line-horizontal {
-    top: 50%;
-    left: 5%;
-    width: 90%;
-    height: 1.5px;
-    transform: translateY(-50%);
-    background: linear-gradient(to right,
-            transparent 0%,
-            rgba(255, 255, 255, 0.1) 5%,
-            rgba(255, 255, 255, 0.8) 10%,
-            white 15%,
-            rgba(255, 255, 255, 0.8) 20%,
-            rgba(255, 255, 255, 0.3) 50%,
-            rgba(255, 255, 255, 0.8) 80%,
-            white 85%,
-            rgba(255, 255, 255, 0.8) 90%,
-            rgba(255, 255, 255, 0.1) 95%,
-            transparent 100%);
-}
-
-/* Đường chéo 45° (tạo 2 đỉnh chéo) */
-.cross-lines .line-diagonal-1 {
-    top: 50%;
-    left: 5%;
-    width: 90%;
-    height: 1.5px;
-    transform: translateY(-50%) rotate(45deg);
-    transform-origin: center;
-    background: linear-gradient(to right,
-            transparent 0%,
-            rgba(255, 255, 255, 0.1) 5%,
-            rgba(255, 255, 255, 0.8) 10%,
-            white 15%,
-            rgba(255, 255, 255, 0.8) 20%,
-            rgba(255, 255, 255, 0.3) 50%,
-            rgba(255, 255, 255, 0.8) 80%,
-            white 85%,
-            rgba(255, 255, 255, 0.8) 90%,
-            rgba(255, 255, 255, 0.1) 95%,
-            transparent 100%);
-}
-
-/* Đường chéo -45° (tạo 2 đỉnh chéo còn lại) */
-.cross-lines .line-diagonal-2 {
-    top: 50%;
-    left: 5%;
-    width: 90%;
-    height: 1.5px;
-    transform: translateY(-50%) rotate(-45deg);
-    transform-origin: center;
-    background: linear-gradient(to right,
-            transparent 0%,
-            rgba(255, 255, 255, 0.1) 5%,
-            rgba(255, 255, 255, 0.8) 10%,
-            white 15%,
-            rgba(255, 255, 255, 0.8) 20%,
-            rgba(255, 255, 255, 0.3) 50%,
-            rgba(255, 255, 255, 0.8) 80%,
-            white 85%,
-            rgba(255, 255, 255, 0.8) 90%,
-            rgba(255, 255, 255, 0.1) 95%,
-            transparent 100%);
-}
 
 /*
- * SECTION 5: CONTAINER CHÍNH - RESPONSIVE 100%
+ * SECTION 3: CONTAINER CHÍNH - RESPONSIVE 100%
  */
 .space-content-container {
     position: relative;
@@ -210,7 +83,7 @@
 }
 
 /*
- * SECTION 6: TEXT STYLING CHO SPACE - RESPONSIVE 100%
+ * SECTION 4: TEXT STYLING CHO SPACE - RESPONSIVE 100%
  */
 .space-description {
     animation: fadeInFloat 0.8s ease-out 0.5s forwards;
@@ -267,24 +140,11 @@
 }
 
 /*
- * SECTION 7: RESPONSIVE BREAKPOINTS
+ * SECTION 5: RESPONSIVE BREAKPOINTS - Content only (sizing handled by BaseOverlay)
  */
-
-/* Desktop mặc định - giống với TimeOverlay */
-@media (min-width: 769px) {
-    .space-overlay.show {
-        width: 120vmin !important;
-        height: 120vmin !important;
-    }
-}
 
 /* Tablet */
 @media (max-width: 768px) {
-    .space-overlay.show {
-        width: 100vmin !important;
-        height: 100vmin !important;
-    }
-
     .space-content-wrapper {
         padding: 10%;
     }
@@ -304,11 +164,6 @@
 
 /* Mobile */
 @media (max-width: 480px) {
-    .space-overlay.show {
-        width: 85vmin !important;
-        height: 85vmin !important;
-    }
-
     .space-content-wrapper {
         padding: 12%;
     }
@@ -333,11 +188,6 @@
 
 /* Very small screens */
 @media (max-width: 360px) {
-    .space-overlay.show {
-        width: 80vmin !important;
-        height: 80vmin !important;
-    }
-
     .space-content-wrapper {
         padding: 15%;
     }
@@ -358,11 +208,6 @@
 
 /* Large screens */
 @media (min-width: 1200px) {
-    .space-overlay.show {
-        width: 120vmin !important;
-        height: 120vmin !important;
-    }
-
     .space-content-wrapper {
         padding: 6%;
     }
@@ -378,13 +223,6 @@
 
 /* Ultra-wide screens */
 @media (min-width: 1600px) {
-    .space-overlay.show {
-        width: 120vmin !important;
-        height: 120vmin !important;
-        max-width: 120vmin;
-        max-height: 120vmin;
-    }
-
     .space-content-wrapper {
         padding: 5%;
     }
