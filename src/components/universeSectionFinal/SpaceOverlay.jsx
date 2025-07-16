@@ -8,7 +8,7 @@ const SpaceOverlay = ({
     overlayStyle,
     onClose
 }) => {
-    // Ngăn chặn sự kiện click lan ra ngoài khi click vào nội dung bên trong
+    // Prevent click event propagation when clicking on inner content
     const handleContentClick = (e) => {
         e.stopPropagation();
     };
@@ -21,7 +21,7 @@ const SpaceOverlay = ({
             onMouseLeave={onClose}
         >
             <div className="space-content-wrapper" onClick={handleContentClick}>
-                {/* 4 đường line tạo thành 8 đỉnh */}
+                {/* 4 lines creating 8 vertices */}
                 <div className="cross-lines">
                     <div className="line line-vertical"></div>
                     <div className="line line-horizontal"></div>
@@ -44,7 +44,7 @@ const SpaceOverlay = ({
                         </p>
                     </div>
 
-                    {/* Chữ Space title */}
+                    {/* Space title text */}
                     <h2 className="space-title">Space</h2>
                 </div>
             </div>

@@ -10,9 +10,9 @@ import {
 } from "@mediapipe/tasks-vision";
 import "./AR.css";
 
-import { calculateRingTarget } from "../../utils/AR/RingTargetCalculator.js";
+import { calculateRingTarget } from "@utils/AR/RingTargetCalculator.js";
 import ComparativeDebugDisplay from "./ComparativeDebugDisplay.jsx";
-import { getRingById, DEFAULT_RING_ID } from "../../config/rings.js";
+import { getRingById, DEFAULT_RING_ID } from "@config/models/rings.js";
 
 const AR = () => {
   const { ringId } = useParams();
@@ -20,10 +20,10 @@ const AR = () => {
   const threeCanvasRef = useRef(null);
   const debugCanvasRef = useRef(null);
 
-  const [loadingMessage, setLoadingMessage] = useState("Đang khởi tạo...");
+  const [loadingMessage, setLoadingMessage] = useState("Initializing...");
+  const [_currentRing, setCurrentRing] = useState(null);
   const [targetDebugData, setTargetDebugData] = useState(null);
   const [ringDebugData, setRingDebugData] = useState(null);
-  const [currentRing, setCurrentRing] = useState(null);
 
   const appState = useRef({
     handLandmarker: null,
@@ -39,25 +39,25 @@ const AR = () => {
     // Determine which ring to load
     const selectedRingId = ringId || DEFAULT_RING_ID;
     const ringConfig = getRingById(selectedRingId);
-    
+
     if (!ringConfig) {
-      setLoadingMessage(`Không tìm thấy nhẫn với ID: ${selectedRingId}`);
+      setLoadingMessage(`Ring not found with ID: ${selectedRingId}`);
       return;
     }
-    
+
     setCurrentRing(ringConfig);
     console.log("Loading ring:", ringConfig);
 
-    // --- 1. HÀM KHỞI TẠO TỔNG THỂ ---
+    // --- 1. MAIN INITIALIZATION FUNCTION ---
     const initialize = async () => {
       await Promise.all([setupMediaPipe(), setupThreeScene(ringConfig)]);
       await startWebcam();
       startAnimationLoop();
     };
 
-    // --- 2. CÀI ĐẶT MEDIAPIPE ---
+    // --- 2. MEDIAPIPE SETUP ---
     const setupMediaPipe = async () => {
-      setLoadingMessage("Tải mô hình nhận diện tay...");
+      setLoadingMessage("Loading hand detection model...");
       const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.12/wasm"
       );
@@ -67,14 +67,14 @@ const AR = () => {
           delegate: "GPU",
         },
         runningMode: "VIDEO",
-        numHands: 1, // Tối ưu chỉ cần 1 tay
+        numHands: 1, // Optimized for only 1 hand
       });
-      console.log("MediaPipe đã sẵn sàng.");
+      console.log("MediaPipe ready.");
     };
 
-    // --- 3. CÀI ĐẶT SCENE 3D ---
+    // --- 3. 3D SCENE SETUP ---
     const setupThreeScene = async (ringConfig) => {
-      setLoadingMessage("Chuẩn bị không gian 3D...");
+      setLoadingMessage("Preparing 3D space...");
       appState.scene = new THREE.Scene();
       appState.camera = new THREE.PerspectiveCamera(50, 16 / 9, 0.1, 1000);
       appState.camera.position.z = 5;
@@ -86,11 +86,11 @@ const AR = () => {
 
       const loader = new GLTFLoader();
       return new Promise((resolve) => {
-        setLoadingMessage(`Đang tải model ${ringConfig.name}...`);
+        setLoadingMessage(`Loading model ${ringConfig.name}...`);
         loader.load(
           ringConfig.modelPath,
           (gltf) => {
-            console.log(`✅ Model ${ringConfig.name} đã được tải.`);
+            console.log(`Model ${ringConfig.name} loaded successfully.`);
             appState.ringModel = gltf.scene;
             appState.ringModel.scale.set(
               ringConfig.scale.x,
@@ -103,16 +103,16 @@ const AR = () => {
           },
           undefined,
           (error) => {
-            console.error("❌ Lỗi tải model:", error);
-            setLoadingMessage(`Lỗi: Không tải được model ${ringConfig.name}.`);
+            console.error("Model loading error:", error);
+            setLoadingMessage(`Error: Could not load model ${ringConfig.name}.`);
           }
         );
       });
     };
 
-    // --- 4. KHỞI ĐỘNG WEBCAM & RENDERER ---
+    // --- 4. WEBCAM & RENDERER STARTUP ---
     const startWebcam = async () => {
-      setLoadingMessage("Mở camera...");
+      setLoadingMessage("Opening camera...");
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { width: 1280, height: 720, facingMode: "environment" },
@@ -140,17 +140,17 @@ const AR = () => {
             });
             appState.renderer.setSize(vWidth, vHeight);
             appState.renderer.setPixelRatio(window.devicePixelRatio);
-            console.log("Webcam và Renderer đã sẵn sàng.");
+            console.log("Webcam and Renderer ready.");
             resolve();
           };
         });
       } catch (error) {
-        console.error("Lỗi Webcam:", error);
-        setLoadingMessage("Không thể truy cập camera. Vui lòng cấp quyền.");
+        console.error("Webcam error:", error);
+        setLoadingMessage("Cannot access camera. Please grant permission.");
       }
     };
 
-    // --- 5. VÒNG LẶP ANIMATION CHÍNH ---
+    // --- 5. MAIN ANIMATION LOOP ---
     const startAnimationLoop = () => {
       setLoadingMessage("");
       const debugCtx = debugCanvasRef.current.getContext("2d");
@@ -173,7 +173,7 @@ const AR = () => {
       animate();
     };
 
-    // --- 6. HÀM XỬ LÝ MỖI FRAME ---
+    // --- 6. FRAME PROCESSING FUNCTION ---
     const processFrame = (results, ctx) => {
       drawHandLandmarks(ctx, results);
 
@@ -237,7 +237,7 @@ const AR = () => {
       }
     };
 
-    // --- 7. HÀM PHỤ TRỢ ---
+    // --- 7. HELPER FUNCTIONS ---
     const drawHandLandmarks = (ctx, results) => {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       if (results.landmarks && results.landmarks.length > 0) {
@@ -274,7 +274,7 @@ const AR = () => {
       return { width, height };
     };
 
-    // --- 8. KHỞI CHẠY VÀ DỌN DẸP ---
+    // --- 8. INITIALIZATION AND CLEANUP ---
     initialize();
     return () => {
       if (appState.animationFrameId) {
@@ -286,7 +286,7 @@ const AR = () => {
     };
   }, [ringId, appState]);
 
-  // --- 9. RENDER GIAO DIỆN ---
+  // --- 9. RENDER UI ---
   return (
     <>
       <div className="ar-jewelry-container">

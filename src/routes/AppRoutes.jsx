@@ -2,7 +2,7 @@
 
 import { Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import Navbar from "../components/navbar/Navbar";
+import Navbar from "@components/navbar/Navbar";
 
 // Lazy-load components
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -44,7 +44,7 @@ export default function AppRoutes() {
           <Route path="/view-360" element={<View360 />} />
 
           <Route path="/ar/rings/:ringId" element={<AR />} />
-          {/* SỬA LỖI: Thêm route cho các đường dẫn không tồn tại */}
+          {/* FIX: Add route for non-existent paths */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
       </Suspense>

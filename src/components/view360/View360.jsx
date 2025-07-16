@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import { createViewer } from "../../utils/AR/Three";
-import QRPopup from "../qrPopup/QRPopup";
+import { createViewer } from "@utils/AR/Three";
+import QRPopup from "@components/qrPopup/QRPopup";
 import "./View360.css";
 
 const View360 = () => {
@@ -126,10 +126,10 @@ const View360 = () => {
       </div>
 
       {/* QR Popup */}
-      <QRPopup 
-        isOpen={showQRPopup} 
+      <QRPopup
+        isOpen={showQRPopup}
         onClose={handleCloseQRPopup}
-        ringId="nhanVang"
+        ringId="nhanXam"
       />
     </div>
   );

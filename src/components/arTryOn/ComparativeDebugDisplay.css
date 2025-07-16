@@ -3,7 +3,7 @@
   top: 15px;
   right: 15px;
   display: flex;
-  gap: 15px; /* Khoảng cách giữa 2 cột */
+  gap: 15px; /* Gap between 2 columns */
   z-index: 9999;
   pointer-events: none;
 }
@@ -25,11 +25,11 @@
   border-bottom: 1px solid #555;
   font-size: 15px;
 }
-/* Màu cho cột 1 (Target) */
+/* Color for column 1 (Target) */
 .debug-column:first-child h4 {
   color: #00ffdd; /* Cyan */
 }
-/* Màu cho cột 2 (Actual Ring) */
+/* Color for column 2 (Actual Ring) */
 .debug-column:last-child h4 {
   color: #ffc400; /* Yellow */
 }
