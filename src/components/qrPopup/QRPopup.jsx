@@ -11,6 +11,13 @@ const QRPopup = ({ isOpen, onClose, ringId }) => {
   const generateURL = useCallback(async () => {
     setIsLoading(true);
     try {
+      // Debug logging
+      console.log("=== QR Code Debug Info ===");
+      console.log("Current hostname:", window.location.hostname);
+      console.log("Vite MODE:", import.meta.env?.MODE);
+      console.log("Config object:", config);
+      console.log("Config app:", config.app);
+
       // Determine which ring ID to use
       const selectedRingId =
         ringId && isValidRingId(ringId) ? ringId : DEFAULT_RING_ID;
@@ -18,15 +25,31 @@ const QRPopup = ({ isOpen, onClose, ringId }) => {
       // Create URL based on environment
       let baseUrl;
 
-      if (config.app.host === "localhost") {
-        // Local development - sử dụng HTTP
-        baseUrl = `http://${config.app.host}:${config.app.port}`;
-      } else if (config.app.baseUrl) {
-        // Development/Production - sử dụng HTTPS
-        baseUrl = config.app.baseUrl;
+      // Force detection based on current URL for Vercel deployment
+      if (typeof window !== "undefined") {
+        const hostname = window.location.hostname;
+
+        if (hostname.includes("vercel.app")) {
+          // Development/staging environment
+          baseUrl = "https://mirror-clone-eight.vercel.app";
+          console.log("Detected Vercel development environment");
+        } else if (hostname.includes("mirror-diamond.com")) {
+          // Production environment
+          baseUrl = "https://mirror-diamond.com";
+          console.log("Detected production environment");
+        } else if (hostname === "localhost" || hostname === "127.0.0.1") {
+          // Local development
+          baseUrl = `http://${hostname}:${config.app.port || 5173}`;
+          console.log("Detected local development environment");
+        } else {
+          // Unknown environment - use current location
+          baseUrl = `${window.location.protocol}//${window.location.host}`;
+          console.log("Unknown environment, using current location");
+        }
       } else {
-        // Fallback - extract from API URL
-        baseUrl = config.api.baseUrl.replace("/api", "");
+        // Server-side fallback
+        baseUrl = config.app.baseUrl || config.api.baseUrl.replace("/api", "");
+        console.log("Server-side fallback");
       }
 
       // Create URL with ring ID
@@ -34,8 +57,10 @@ const QRPopup = ({ isOpen, onClose, ringId }) => {
 
       setArUrl(fullArUrl);
 
+      console.log("Final base URL:", baseUrl);
       console.log("Generated QR for URL:", fullArUrl);
       console.log("Ring ID:", selectedRingId);
+      console.log("=== End Debug Info ===");
     } catch (error) {
       console.error("Error generating URL:", error);
     } finally {
