@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
-import HoverExpandSection from "../components/hoverExpandSection/HoverExpandSection";
-import Logo from "../assets/images/Logo.svg";
-import Vector2 from "../assets/images/Vector_2.svg";
-import ArrowRight from "../assets/images/arrow-right.svg";
+import Logo from "@assets/images/Logo.svg";
+import Vector2 from "@assets/images/Vector_2.svg";
+import ArrowRight from "@assets/images/arrow-right.svg";
 import "../styles/home.css";
 
 export default function HomePage() {

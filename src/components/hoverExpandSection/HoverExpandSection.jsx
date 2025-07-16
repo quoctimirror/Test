@@ -1,8 +1,8 @@
 import "./HoverExpand.css";
-import image1 from "../../assets/images/hover-expand/image_1.svg";
-import image2 from "../../assets/images/hover-expand/image_2.svg";
-import image3 from "../../assets/images/hover-expand/image_3.svg";
-import image4 from "../../assets/images/hover-expand/image_4.svg";
+import image1 from "@assets/images/hover-expand/image_1.svg";
+import image2 from "@assets/images/hover-expand/image_2.svg";
+import image3 from "@assets/images/hover-expand/image_3.svg";
+import image4 from "@assets/images/hover-expand/image_4.svg";
 
 const HoverExpandSection = () => {
   return (

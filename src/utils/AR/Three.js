@@ -11,7 +11,7 @@ export class ThreeJSViewer {
     this.camera = null;
     this.renderer = null;
 
-    // === THAY ĐỔI: Thêm pivot vào thuộc tính lớp ===
+    // === CHANGE: Add pivot to class properties ===
     this.pivot = null;
     this.model = null;
 
@@ -68,17 +68,17 @@ export class ThreeJSViewer {
     );
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.shadowMap.enabled = false; // Disable shadows for mirror effect
-    this.renderer.outputEncoding = THREE.sRGBEncoding;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1;
 
     // Add renderer to container
     this.container.appendChild(this.renderer.domElement);
 
-    // Biến điều khiển xoay
+    // Rotation control variables
     this.isMouseDown = false;
     this.mouseX = 0;
-    // === SỬA LỖI: Bắt đầu xoay từ góc ban đầu ===
+    // === FIX: Start rotation from initial angle ===
     this.targetRotationY = this.initialYRotation;
     this.currentRotationY = this.initialYRotation;
 
@@ -103,7 +103,7 @@ export class ThreeJSViewer {
   }
 
   addMouseEvents() {
-    // Giữ nguyên logic điều khiển chuột của bạn, nó đã tốt rồi
+    // Keep your mouse control logic as is, it's already good
     this.container.style.cursor = "grab";
 
     this.onMouseDown = (event) => {
@@ -235,36 +235,36 @@ export class ThreeJSViewer {
 
       this.model = gltf.scene;
 
-      // === THAY ĐỔI QUAN TRỌNG NHẤT: SỬ DỤNG PIVOT ===
+      // === MOST IMPORTANT CHANGE: USING PIVOT ===
 
-      // 1. Tạo một Object3D vô hình để làm "bệ xoay" (pivot)
+      // 1. Create an invisible Object3D to act as a "rotation base" (pivot)
       this.pivot = new THREE.Object3D();
 
-      // 2. ĐÚNG: Đặt PIVOT tại vị trí tâm xoay mong muốn của chiếc nhẫn
+      // 2. CORRECT: Place PIVOT at the desired rotation center of the ring
       this.pivot.position.set(
         this.modelPosition.x,
         this.modelPosition.y,
         this.modelPosition.z
       );
 
-      // 3. ĐÚNG: Áp dụng góc xoay ban đầu cho PIVOT
+      // 3. CORRECT: Apply initial rotation angle to PIVOT
       this.pivot.rotation.y = this.initialYRotation;
 
-      // 4. Thêm pivot vào scene
+      // 4. Add pivot to scene
       this.scene.add(this.pivot);
 
-      // 5. Cấu hình model
+      // 5. Configure model
       this.model.scale.setScalar(this.modelScale);
 
-      // 6. ĐÚNG: Đặt MODEL tại tâm của PIVOT (0,0,0) so với PIVOT
+      // 6. CORRECT: Place MODEL at the center of PIVOT (0,0,0) relative to PIVOT
       this.model.position.set(0, 0, 0);
 
-      // 7. Áp dụng độ nghiêng (trục X, Z) cho model
+      // 7. Apply tilt angles (X, Z axes) to model
       this.model.rotation.x = -Math.PI / 20;
       this.model.rotation.z = -Math.PI / 2.2;
-      // Không cần đặt rotation.y cho model nữa, vì pivot sẽ xử lý việc đó
+      // No need to set rotation.y for model anymore, as pivot will handle that
 
-      // 7. Thêm model vào làm CON của pivot
+      // 7. Add model as a CHILD of pivot
       this.pivot.add(this.model);
 
       // ===============================================
@@ -343,13 +343,13 @@ export class ThreeJSViewer {
   animate() {
     this.animationId = requestAnimationFrame(() => this.animate());
 
-    // === THAY ĐỔI: Áp dụng xoay cho PIVOT, không phải model ===
+    // === CHANGE: Apply rotation to PIVOT, not model ===
     if (this.pivot) {
-      // Làm mượt chuyển động
+      // Smooth movement
       this.currentRotationY +=
         (this.targetRotationY - this.currentRotationY) * 0.1;
 
-      // Áp dụng góc xoay cho bệ xoay (pivot)
+      // Apply rotation angle to the rotation base (pivot)
       this.pivot.rotation.y = this.currentRotationY;
     }
     // ========================================================
@@ -394,11 +394,11 @@ export class ThreeJSViewer {
   }
 
   resetCamera() {
-    // Sửa lại để reset về góc xoay ban đầu
+    // Fix to reset to initial rotation angle
     this.targetRotationY = this.initialYRotation;
-    // this.currentRotationY sẽ tự động cập nhật trong vòng lặp animate
+    // this.currentRotationY will automatically update in the animate loop
 
-    // Camera và gương không đổi
+    // Camera and mirror remain unchanged
   }
 
   // Cleanup

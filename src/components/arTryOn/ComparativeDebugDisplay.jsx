@@ -1,9 +1,9 @@
 import React from "react";
-import "./ComparativeDebugDisplay.css"; // Sẽ tạo file CSS ngay sau đây
+import "./ComparativeDebugDisplay.css"; // Will create CSS file right after this
 
-// Một cột dữ liệu nhỏ, có thể tái sử dụng
+// A small, reusable data column
 const DataColumn = ({ title, data }) => {
-  // Hàm làm tròn số cho đẹp
+  // Function to round numbers for display
   const formatPos = (num) => (num !== undefined ? num.toFixed(4) : "N/A");
   const formatRot = (num) => (num !== undefined ? num.toFixed(1) : "N/A");
 
@@ -32,13 +32,13 @@ const DataColumn = ({ title, data }) => {
   );
 };
 
-// Component chính để hiển thị so sánh
+// Main component for comparison display
 const ComparativeDebugDisplay = ({ targetData, ringData }) => {
   return (
     <div className="debug-comparison-overlay">
-      {/* Cột 1: Dữ liệu từ ngón tay */}
+      {/* Column 1: Data from finger */}
       <DataColumn title="Target (Hand)" data={targetData} />
-      {/* Cột 2: Dữ liệu thực tế từ nhẫn 3D */}
+      {/* Column 2: Actual data from 3D ring */}
       <DataColumn title="Actual (3D Ring)" data={ringData} />
     </div>
   );

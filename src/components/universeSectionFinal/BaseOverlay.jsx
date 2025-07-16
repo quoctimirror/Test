@@ -12,7 +12,7 @@ const BaseOverlay = ({
     children,
     customClassName = '',
     disableDefaultClose = false,
-    closeOnMouseLeave = false // ✨ Prop này là "công tắc" để bật/tắt tính năng
+    closeOnMouseLeave = false // ✨ This prop is a "switch" to enable/disable the feature
 }) => {
 
     const handleCloseOnClick = () => {
@@ -21,9 +21,9 @@ const BaseOverlay = ({
         }
     };
 
-    // Handler này chỉ được gọi khi chuột rời khỏi
+    // This handler is only called when mouse leaves
     const handleMouseLeave = () => {
-        // Chỉ gọi hàm onClose nếu "công tắc" closeOnMouseLeave được bật
+        // Only call onClose function if the "switch" closeOnMouseLeave is enabled
         if (closeOnMouseLeave) {
             onClose();
         }
