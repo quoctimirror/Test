@@ -15,7 +15,7 @@ const HoverExpandSection = lazy(() =>
 );
 const View360 = lazy(() => import("../components/view360/View360.jsx"));
 const AR = lazy(() => import("../components/arTryOn/AR4.jsx"));
-
+const Collection = lazy(() => import("@components/collections/Collection.jsx"));
 export default function AppRoutes() {
   const location = useLocation();
 
@@ -35,7 +35,8 @@ export default function AppRoutes() {
         }
       >
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          {/* <Route path="/" element={<HomePage />} /> */}
+          <Route path="/" element={<Collection />} />
 
           <Route path="/universe-final" element={<UVFinal />} />
 
@@ -44,6 +45,8 @@ export default function AppRoutes() {
           <Route path="/view-360" element={<View360 />} />
 
           <Route path="/ar/rings/:ringId" element={<AR />} />
+
+
           {/* FIX: Add route for non-existent paths */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
