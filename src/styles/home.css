@@ -1,0 +1,440 @@
+@import url("./fonts.css");
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  /* height: 100%; */
+  font-family: "Georgia", serif;
+  /* overflow-x: hidden; */
+}
+
+/* Container for entire scroll effect */
+.scroll-container {
+  height: 200vh;
+  position: relative;
+}
+
+/* Layer containing initial gradient */
+.gradient-initial {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Final gradient (light pink) will be on top */
+.gradient-final {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* background: linear-gradient(to right, #ffc3d4, #ffe8ef, white); */
+  background: white;
+  z-index: 2;
+
+  --wipe-progress: 400%;
+  --feather-amount: 15%;
+
+  mask-image: radial-gradient(
+    ellipse 150vw 150vh at var(--wipe-progress) 50%,
+    black 10%,
+    transparent 20%
+  );
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 700vw 700vh at var(--wipe-progress) 50%,
+    black 10%,
+    transparent 50%
+  );
+
+  /* mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    transparent calc(var(--wipe-progress) - var(--feather-amount)),
+    black calc(var(--wipe-progress) + var(--feather-amount)),
+    black 100%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(var(--wipe-progress) - var(--feather-amount)),
+    black calc(var(--wipe-progress) + var(--feather-amount)),
+    black 100%
+  ); */
+}
+
+/* Wrapper div for elements that need to fade */
+.elements-to-fade {
+  /* Make it an absolute layer, covering the full screen */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Set highest z-index so it and its children are on top */
+  z-index: 4;
+
+  /* Keep transition for smoothness */
+  transition: opacity 0.1s linear;
+
+  /* VERY IMPORTANT: This layer will block mouse events. 
+     This property makes this layer "transparent" to clicks,
+     allowing you to interact with buttons below when needed. */
+  pointer-events: none;
+}
+
+.homepage {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: white;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.gradient-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  transform: rotate(-180deg);
+  opacity: 1;
+  background: linear-gradient(
+    83.46deg,
+    #ffffff -0.46%,
+    #ec3667 51.6%,
+    #000000 115.98%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.gradient-bottom {
+  position: absolute;
+  top: 50vh;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  transform: rotate(0deg);
+  opacity: 1;
+  background: linear-gradient(
+    95.54deg,
+    #000000 0.98%,
+    #ec3667 63.43%,
+    #ffffff 98.65%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Logo Center */
+.logo-center {
+  position: absolute;
+  top: 50.25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.main-logo {
+  width: 111.78px;
+  height: 224.18px;
+  opacity: 1;
+}
+
+/* Tagline Section */
+.tagline-section {
+  position: absolute;
+  top: calc(50% + 280px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  text-align: center;
+  color: white;
+}
+
+.tagline-top {
+  font-family: "BT-BeauSans-Regular-ttf", serif;
+  font-size: clamp(9px, 1vw, 11px);
+  font-weight: 400;
+  margin-bottom: 8px;
+  letter-spacing: 1.5px;
+  opacity: 0.9;
+  white-space: nowrap;
+}
+
+.tagline-bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.future-text {
+  font-family: "SaolDisplay-Light-ttf", serif;
+  font-size: clamp(38px, 5vw, 60px);
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.diamond-text {
+  font-family: "SaolDisplay-LightItalic-ttf", serif;
+  font-size: clamp(38px, 5vw, 60px);
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1;
+  font-style: italic;
+}
+
+/* Logo Reflection */
+.logo-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.logo-top {
+  font-size: clamp(80px, 15vw, 200px);
+  line-height: 0.8;
+  font-weight: 100;
+  letter-spacing: clamp(3px, 1vw, 8px);
+  font-family: "Georgia", serif;
+  color: white;
+  margin-bottom: auto;
+  transform: scaleX(-1);
+}
+
+.logo-bottom {
+  font-size: clamp(80px, 15vw, 200px);
+  line-height: 0.8;
+  font-weight: 100;
+  letter-spacing: clamp(3px, 1vw, 8px);
+  font-family: "Georgia", serif;
+  color: white;
+  margin-bottom: auto;
+}
+
+/* Scroll down */
+.scroll-down {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.scroll-down button {
+  background: transparent;
+  border: 1px solid white;
+  border-radius: 100%;
+  width: clamp(40px, 8vw, 50px);
+  height: clamp(45px, 8vw, 50px);
+  /* font-size: clamp(24px, 6vw, 40px); */
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.scroll-down button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Vetor Button */
+.vetor-button {
+  position: absolute;
+  bottom: 20px;
+  right: 50px;
+  z-index: 10;
+}
+
+.vetor-button button {
+  background: transparent;
+  border: 1.5px solid white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.vetor-button button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.vetor-button button img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Re-enable mouse events for interactive areas */
+.tagline-section,
+.scroll-down,
+.vetor-button {
+  pointer-events: auto;
+}
+
+/* Media Queries for Mobile */
+@media (max-width: 768px) {
+  .main-logo {
+    width: clamp(60px, 15vw, 111.78px);
+    height: clamp(120px, 30vw, 224.18px);
+  }
+
+  .tagline-section {
+    top: 75vh;
+  }
+
+  .tagline-top {
+    font-size: clamp(10px, 2vw, 14px);
+    margin-bottom: 8px;
+    white-space: nowrap;
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: clamp(20px, 5vw, 36px);
+  }
+
+  .tagline-bottom {
+    width: 395px;
+    height: 64px;
+  }
+
+  .logo-top,
+  .logo-bottom {
+    font-size: 15vw;
+    letter-spacing: 2px;
+  }
+
+  .scroll-down {
+    bottom: 30px;
+  }
+
+  .scroll-down button {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .vetor-button {
+    bottom: 30px;
+    right: 20px;
+  }
+
+  .vetor-button button {
+    width: 45px;
+    height: 45px;
+  }
+
+  .vetor-button button img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-logo {
+    width: clamp(50px, 18vw, 111.78px);
+    height: clamp(100px, 36vw, 224.18px);
+  }
+
+  .tagline-section {
+    top: 70vh;
+  }
+
+  .tagline-top {
+    font-size: clamp(8px, 2.5vw, 12px);
+    margin-bottom: 6px;
+    white-space: nowrap;
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: clamp(16px, 6vw, 28px);
+  }
+
+  .tagline-bottom {
+    width: 395px;
+    height: 64px;
+  }
+
+  .logo-top,
+  .logo-bottom {
+    font-size: 18vw;
+    letter-spacing: 1px;
+  }
+
+  .scroll-down button {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .vetor-button {
+    bottom: 30px;
+    right: 15px;
+  }
+
+  .vetor-button button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .vetor-button button img {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Added to the end of home.css file */
+.next-section {
+  background-color: white;
+  color: #333;
+  height: 100vh;
+  padding: 100px 5%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+.next-section h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.next-section p {
+  font-size: 1.2rem;
+  max-width: 600px;
+}

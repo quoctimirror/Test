@@ -1,0 +1,89 @@
+.
+├── ARCHITECT.txt
+├── README.md
+├── eslint.config.js
+├── index.html
+├── init_commands.txt
+├── package-lock.json
+├── package.json
+├── public
+│   └── universe
+│       ├── ellipse108644-assc-500h.png
+│       ├── ellipse118644-eef-600h.png
+│       ├── ellipse128644-asu-700h.png
+│       ├── ellipse13i864-m3pj-200h.png
+│       ├── ellipse158645-2518r-200h.png
+│       ├── ellipse168645-7rj-200h.png
+│       ├── ellipse178645-bp2c-200h.png
+│       ├── ellipse58644-i3f-200h.png
+│       ├── ellipse88644-ai1s-300h.png
+│       ├── ellipse98644-3eex-400h.png
+│       ├── planet1.png
+│       ├── planet2.png
+│       ├── planet3.png
+│       ├── planet4.png
+│       └── universe_background_image.png
+├── src
+│   ├── App.css
+│   ├── App.jsx
+│   ├── api
+│   ├── assets
+│   │   ├── fonts
+│   │   │   ├── BTBeauSans
+│   │   │   └── SaolDisplay
+│   │   │       ├── OTF
+│   │   │       └── TTF
+│   │   └── images
+│   │       ├── Logo.svg
+│   │       ├── Mirror_Logo_new.svg
+│   │       ├── Vector_2.svg
+│   │       ├── arrow-right.svg
+│   │       └── hover-expand
+│   │           ├── image_1.svg
+│   │           ├── image_2.svg
+│   │           ├── image_3.svg
+│   │           └── image_4.svg
+│   ├── components
+│   │   ├── HoverExpandSection.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── UniverseSection
+│   │   │   ├── UniverseSection.jsx
+│   │   │   ├── demo.css
+│   │   │   └── universe_section_1.css
+│   │   ├── UniverseSection.jsx
+│   │   ├── UniverseSectionFinal
+│   │   │   ├── BaseOverlay.css
+│   │   │   ├── BaseOverlay.jsx
+│   │   │   ├── PresenceOverlay.css
+│   │   │   ├── PresenceOverlay.jsx
+│   │   │   ├── SensesOverlay.css
+│   │   │   ├── SensesOverlay.jsx
+│   │   │   ├── SpaceOverlay.css
+│   │   │   ├── SpaceOverlay.jsx
+│   │   │   ├── TimeOverlay.css
+│   │   │   ├── TimeOverlay.jsx
+│   │   │   ├── UniverseSection.css
+│   │   │   ├── UniverseSection.jsx
+│   │   │   ├── WhitePlanet.css
+│   │   │   └── WhitePlanet.jsx
+│   │   ├── universe-section
+│   │   │   ├── WhitePlanet1.jsx
+│   │   │   ├── WhitePlanet2.jsx
+│   │   │   ├── WhitePlanet3.jsx
+│   │   │   ├── WhitePlanet4.jsx
+│   │   │   └── demo.css
+│   │   └── universe_section.css
+│   ├── hooks
+│   ├── main.jsx
+│   ├── pages
+│   │   └── HomePage.jsx
+│   ├── routes
+│   │   └── AppRoutes.jsx
+│   ├── styles
+│   │   ├── fonts.css
+│   │   ├── global.css
+│   │   ├── home.css
+│   │   ├── hover_expand.css
+│   │   └── variables.css
+│   └── utils
+└── vite.config.js
