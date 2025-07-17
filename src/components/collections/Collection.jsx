@@ -1,14 +1,21 @@
 // Thêm 'useRef' vào dòng import từ React
 import React, { useRef } from 'react';
 import './Collection.css';
+import specialButton from '../../assets/images/specialbutton.svg';
 
 function Collection() {
-    // Tạo một ref để gắn vào section-2
+    // Tạo các ref để gắn vào các section
     const section2Ref = useRef(null);
+    const section3Ref = useRef(null);
 
-    // Hàm xử lý việc cuộn trang
-    const handleScrollDown = () => {
+    // Hàm xử lý việc cuộn từ section 1 xuống section 2
+    const handleScrollToSection2 = () => {
         section2Ref.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // Hàm xử lý việc cuộn từ section 2 xuống section 3
+    const handleScrollToSection3 = () => {
+        section3Ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
@@ -24,7 +31,7 @@ function Collection() {
                 {/* --- THAY ĐỔI NÚT Ở ĐÂY --- */}
                 <button
                     className="scroll-down-arrow"
-                    onClick={handleScrollDown}
+                    onClick={handleScrollToSection2}
                     aria-label="Scroll down" // Thêm aria-label cho khả năng truy cập
                 >
                     {/* Icon mũi tên SVG thay cho chữ */}
@@ -83,11 +90,27 @@ function Collection() {
                                 future you're building together.
                             </p>
                             <button className="explore-button">
-                                Explore this gem
+                                <img src={specialButton} alt="Explore this gem" />
                             </button>
                         </div>
                     </div>
                 </div>
+
+                {/* Nút scroll down từ section 2 xuống section 3 */}
+                <button
+                    className="scroll-down-arrow"
+                    onClick={handleScrollToSection3}
+                    aria-label="Scroll to section 3"
+                >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 9L12 16L5 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                </button>
+            </div>
+
+            {/* --- SECTION 3 --- */}
+            <div className="section-3" ref={section3Ref}>
+                <h2 className="mirror-collection-title">Mirror Collection 3</h2>
             </div>
 
         </div>
