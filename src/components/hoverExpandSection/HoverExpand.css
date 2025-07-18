@@ -13,7 +13,7 @@
 .hover-expand-header {
   text-align: center;
   margin-bottom: 0;
-  margin-top: 80px;
+  margin-top: calc(8%);
   flex-shrink: 0;
 }
 
@@ -28,7 +28,7 @@
 
 .hover-expand-subtitle {
   font-family: "BT-BeauSans-Regular-ttf", serif;
-  font-size: clamp(12px, 1.3vw, 16px);
+  font-size: clamp(10px, 1.5vw, 18px);
   font-weight: 300;
   margin: -20px 0 0 0;
   opacity: 1;
@@ -41,8 +41,7 @@
   gap: 0;
   width: 100%;
   max-width: 100%;
-  flex: 1;
-  max-height: 600px;
+  height: 65vh !important;
   overflow: hidden;
   align-self: flex-end;
 }
@@ -52,7 +51,7 @@
   .hover-expand-gallery {
     grid-template-columns: repeat(4, 480px);
     justify-content: center;
-    height: 766px;
+    height: 65vh !important;
     margin-top: auto;
     margin-bottom: 0;
   }
@@ -112,8 +111,7 @@
 
   .hover-expand-gallery {
     flex-wrap: wrap;
-    flex: 1;
-    max-height: 500px;
+    height: 65vh !important;
     gap: 1px;
     align-self: flex-end;
   }
@@ -143,14 +141,10 @@
     font-size: clamp(24px, 6vw, 36px);
   }
 
-  .hover-expand-subtitle {
-    font-size: clamp(12px, 3vw, 16px);
-  }
 
   .hover-expand-gallery {
     flex-wrap: wrap;
-    flex: 1;
-    max-height: 400px;
+    height: 65vh !important;
     gap: 1px;
     align-self: flex-end;
   }
@@ -182,14 +176,10 @@
     margin-bottom: 4px;
   }
 
-  .hover-expand-subtitle {
-    font-size: clamp(11px, 4vw, 14px);
-  }
 
   .hover-expand-gallery {
     flex-wrap: wrap;
-    flex: 1;
-    max-height: 300px;
+    height: 65vh !important;
     gap: 1px;
     align-self: flex-end;
   }

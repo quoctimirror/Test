@@ -123,6 +123,191 @@
   transform: translateY(-2px);
 }
 
+.color-controls-btn {
+  padding: 12px 24px;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.color-controls-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Color Controls Panel */
+.color-controls-panel {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 200;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.color-controls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 64, 129, 0.2);
+}
+
+.color-controls-header h3 {
+  color: #ff4081;
+  font-size: 18px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #ff4081;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 64, 129, 0.1);
+  transform: scale(1.1);
+}
+
+.color-section {
+  margin-bottom: 20px;
+}
+
+.color-section:last-child {
+  margin-bottom: 0;
+}
+
+.color-section h4 {
+  color: #333;
+  font-size: 14px;
+  margin: 0 0 12px 0;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.color-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.color-btn {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: #f8f9fa;
+  color: #333;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.color-btn:hover {
+  background: #e9ecef;
+  border-color: #ff4081;
+  transform: translateY(-1px);
+}
+
+.color-btn.gold {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #b8860b;
+}
+
+.color-btn.bright-gold {
+  background: linear-gradient(135deg, #ffef00, #fff200);
+  color: #cc9900;
+}
+
+.color-btn.silver {
+  background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+  color: #696969;
+}
+
+.color-btn.platinum {
+  background: linear-gradient(135deg, #e5e4e2, #f0f0f0);
+  color: #666;
+}
+
+.color-btn.diamond {
+  background: linear-gradient(135deg, #e6f3ff, #ffffff);
+  color: #0066cc;
+}
+
+.color-btn.reset {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  color: white;
+}
+
+.color-btn.gold:hover {
+  background: linear-gradient(135deg, #ffed4e, #ffd700);
+}
+
+.color-btn.bright-gold:hover {
+  background: linear-gradient(135deg, #fff200, #ffef00);
+}
+
+.color-btn.silver:hover {
+  background: linear-gradient(135deg, #e8e8e8, #c0c0c0);
+}
+
+.color-btn.platinum:hover {
+  background: linear-gradient(135deg, #f0f0f0, #e5e4e2);
+}
+
+.color-btn.diamond:hover {
+  background: linear-gradient(135deg, #ffffff, #e6f3ff);
+}
+
+.color-btn.reset:hover {
+  background: linear-gradient(135deg, #ff8e8e, #ff6b6b);
+}
+
 .ar-icon,
 .arrow-icon {
   font-size: 16px;
@@ -243,9 +428,30 @@
     gap: 12px;
   }
 
-  .ar-try-btn {
+  .ar-try-btn,
+  .color-controls-btn {
     padding: 10px 20px;
     font-size: 13px;
+  }
+
+  .color-controls-panel {
+    bottom: 140px;
+    width: 95%;
+    max-width: 350px;
+    padding: 15px;
+  }
+
+  .color-controls-header h3 {
+    font-size: 16px;
+  }
+
+  .color-section h4 {
+    font-size: 12px;
+  }
+
+  .color-btn {
+    padding: 10px 12px;
+    font-size: 12px;
   }
 }
 
@@ -259,9 +465,30 @@
     bottom: 20px;
   }
 
-  .ar-try-btn {
+  .ar-try-btn,
+  .color-controls-btn {
     padding: 8px 16px;
     font-size: 12px;
+  }
+
+  .color-controls-panel {
+    bottom: 120px;
+    width: 98%;
+    max-width: 300px;
+    padding: 12px;
+  }
+
+  .color-controls-header h3 {
+    font-size: 14px;
+  }
+
+  .color-section h4 {
+    font-size: 11px;
+  }
+
+  .color-btn {
+    padding: 8px 10px;
+    font-size: 11px;
   }
 }
 

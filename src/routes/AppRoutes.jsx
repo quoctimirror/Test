@@ -3,9 +3,11 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Navbar from "@components/navbar/Navbar";
+import Footer from "@components/footer/Footer";
 
 // Lazy-load components
 const HomePage = lazy(() => import("../pages/HomePage"));
+const CollectionPage = lazy(() => import("../pages/CollectionPage"));
 
 const UVFinal = lazy(() =>
   import("../components/universeSectionFinal/UniverseSection.jsx")
@@ -20,8 +22,12 @@ export default function AppRoutes() {
   const location = useLocation();
 
   // Routes that should NOT show the navbar
-  const routesWithoutNavbar = ["/universe-final"];
+  const routesWithoutNavbar = ["/universe-final", "/hover-expand"];
   const shouldShowNavbar = !routesWithoutNavbar.includes(location.pathname);
+
+  // Routes that should NOT show the footer (same as navbar)
+  const routesWithoutFooter = ["/universe-final", "/hover-expand"];
+  const shouldShowFooter = !routesWithoutFooter.includes(location.pathname);
 
   return (
     <>
@@ -37,6 +43,8 @@ export default function AppRoutes() {
         <Routes>
           <Route path="/" element={<HomePage />} />
 
+          <Route path="/collection" element={<CollectionPage />} />
+
           <Route path="/universe-final" element={<UVFinal />} />
 
           <Route path="/hover-expand" element={<HoverExpandSection />} />
@@ -48,6 +56,9 @@ export default function AppRoutes() {
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
       </Suspense>
+
+      {/* Conditional Footer */}
+      {shouldShowFooter && <Footer />}
     </>
   );
 }

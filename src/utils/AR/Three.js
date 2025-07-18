@@ -26,8 +26,8 @@ export class ThreeJSViewer {
     this.mirror = null;
 
     // Model settings
-    this.modelPath = "/view360/0.glb";
-    this.modelScale = 6;
+    this.modelPath = "/view360/ring.glb";
+    this.modelScale = 3;
     this.modelPosition = { x: 8, y: 0, z: 0 };
     this.initialYRotation = Math.PI;
 
@@ -158,30 +158,40 @@ export class ThreeJSViewer {
   }
 
   setupLighting() {
-    // Ambient light for overall illumination
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    // Enhanced lighting setup from 3d-viewer-color
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
     this.scene.add(ambientLight);
     this.lights.push(ambientLight);
 
-    // Main directional light for clear reflections
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    mainLight.position.set(5, 10, 5);
-    mainLight.castShadow = false; // Disable shadows for mirror effect
-    this.scene.add(mainLight);
-    this.lights.push(mainLight);
+    // Main directional light with enhanced intensity
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight.position.set(10, 10, 5);
+    directionalLight.castShadow = false;
+    this.scene.add(directionalLight);
+    this.lights.push(directionalLight);
 
-    // Secondary light for better ring illumination
-    const secondaryLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    secondaryLight.position.set(-5, 8, -5);
-    secondaryLight.castShadow = false;
-    this.scene.add(secondaryLight);
-    this.lights.push(secondaryLight);
+    // Secondary directional light for fill lighting
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight2.position.set(-10, -10, -5);
+    this.scene.add(directionalLight2);
+    this.lights.push(directionalLight2);
 
-    // Point light for enhanced reflections
-    const pointLight = new THREE.PointLight(0xffffff, 0.5, 50);
-    pointLight.position.set(0, 15, 0);
-    this.scene.add(pointLight);
-    this.lights.push(pointLight);
+    // Enhanced HDR environment mapping for better reflections
+    const envMapLoader = new THREE.CubeTextureLoader();
+    const envMap = envMapLoader.load([
+      "https://threejs.org/examples/textures/cube/Bridge2/posx.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/negx.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/posy.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/negy.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/posz.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/negz.jpg",
+    ]);
+    this.scene.environment = envMap;
+    // Keep the pink background instead of environment background
+    // this.scene.background = envMap;
+
+    // Store environment map for material usage
+    this.envMap = envMap;
   }
 
   addMirrorGround() {
@@ -215,10 +225,10 @@ export class ThreeJSViewer {
     );
 
     // Position both mirror and surface horizontally like in reference image
-    this.mirror.position.y = -2.9;
+    this.mirror.position.y = -3.7;
     this.mirror.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
-    mirrorSurface.position.y = -2.89; // Slightly above reflector
+    mirrorSurface.position.y = -3.69; // Slightly above reflector
     mirrorSurface.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
     this.scene.add(this.mirror);
@@ -269,15 +279,182 @@ export class ThreeJSViewer {
 
       // ===============================================
 
-      // Configure ring materials - keep original appearance
+      // Configure ring materials - only enhance diamonds
       this.model.traverse((child) => {
         if (child.isMesh) {
           child.castShadow = false; // Disable shadow casting
           child.receiveShadow = false; // Disable shadow receiving
 
-          // Keep original material properties for authentic look
-          if (child.material) {
+          // Enhanced diamond detection logic
+          const name = child.name ? child.name.toLowerCase() : "";
+          const materialName =
+            child.material && child.material.name
+              ? child.material.name.toLowerCase()
+              : "";
+
+          const isDiamond =
+            name.includes("diamond") ||
+            name.includes("gem") ||
+            name.includes("stone") ||
+            name.includes("crystal") ||
+            materialName.includes("diamond") ||
+            materialName.includes("gem") ||
+            materialName.includes("crystal") ||
+            // Additional checks for common diamond naming patterns
+            name.includes("brilliant") ||
+            name.includes("round") ||
+            name.includes("cut") ||
+            // Check if material has transparency properties (likely diamond)
+            (child.material && child.material.transparent) ||
+            (child.material && child.material.opacity < 1.0);
+
+          // Debug logging to identify all meshes
+          console.log(
+            `🔍 Mesh: "${child.name}" | Material: "${materialName}" | IsDiamond: ${isDiamond}`
+          );
+
+          // Store material type information
+          child.userData.isDiamond = isDiamond;
+          child.userData.isMetal = !isDiamond;
+
+          if (isDiamond) {
+            console.log(
+              `💎 Applying ENHANCED DIAMOND material to: "${child.name}"`
+            );
+            // Enhanced diamond material with transmission and sparkle
+            child.material = new THREE.MeshPhysicalMaterial({
+              color: 0xffffff, // Pure white
+              metalness: 0.0,
+              roughness: 0.0,
+              transmission: 0.99, // Maximum transparency
+              transparent: true,
+              opacity: 0.98, // Nearly transparent
+              reflectivity: 1.0,
+              envMapIntensity: 2.0, // Moderate reflection
+              clearcoat: 1.0,
+              clearcoatRoughness: 0.0,
+              ior: 2.42, // Diamond's refractive index
+              thickness: 0.1, // Very thin for maximum clarity
+              attenuationDistance: 0.1,
+              attenuationColor: new THREE.Color(0xffffff), // Pure white attenuation
+              side: THREE.DoubleSide,
+            });
             child.material.needsUpdate = true;
+          } else {
+            // Apply default gold material to metal parts
+            console.log(`🔧 Applying GOLD material to: "${child.name}"`);
+            child.material = new THREE.MeshStandardMaterial({
+              color: 0xffd700, // Gold color
+              metalness: 0.8,
+              roughness: 0.2,
+              envMapIntensity: 1.0,
+            });
+            child.material.needsUpdate = true;
+          }
+        }
+      });
+
+      // SUPER AGGRESSIVE FINAL PASS - Force ALL diamonds to be identical
+      console.log("🔧 SUPER AGGRESSIVE: Final pass to ensure ALL diamonds are identical...");
+      
+      // First pass: Identify ALL potential diamond meshes with extensive logging
+      const diamondMeshes = [];
+      this.model.traverse((child) => {
+        if (child.isMesh) {
+          const name = child.name ? child.name.toLowerCase() : "";
+          const materialName = child.material && child.material.name ? child.material.name.toLowerCase() : "";
+          
+          console.log(`🔎 DETAILED MESH ANALYSIS: "${child.name}"`);
+          console.log(`   - Material name: "${materialName}"`);
+          console.log(`   - Current material type: ${child.material ? child.material.constructor.name : 'none'}`);
+          console.log(`   - Material color: ${child.material && child.material.color ? child.material.color.getHex() : 'none'}`);
+          console.log(`   - Material transparent: ${child.material ? child.material.transparent : 'none'}`);
+          console.log(`   - Material opacity: ${child.material ? child.material.opacity : 'none'}`);
+          
+          // Check if name contains diamond/gem keywords
+          if (name.includes("diamond") || name.includes("gem") || name.includes("stone") || name.includes("crystal")) {
+            diamondMeshes.push(child);
+            console.log(`✅ ADDED TO DIAMOND LIST: "${child.name}"`);
+            
+            // GEOMETRY DEBUGGING
+            if (child.geometry) {
+              console.log(`🔍 GEOMETRY INFO for "${child.name}":`);
+              console.log(`   - Vertices count: ${child.geometry.attributes.position ? child.geometry.attributes.position.count : 'none'}`);
+              console.log(`   - Has UV: ${child.geometry.attributes.uv ? 'yes' : 'no'}`);
+              console.log(`   - Has normals: ${child.geometry.attributes.normal ? 'yes' : 'no'}`);
+              console.log(`   - Has colors: ${child.geometry.attributes.color ? 'yes' : 'no'}`);
+              console.log(`   - Geometry type: ${child.geometry.constructor.name}`);
+              
+              // Check if geometry has vertex colors
+              if (child.geometry.attributes.color) {
+                console.log(`⚠️  WARNING: "${child.name}" has vertex colors that might override material!`);
+                console.log(`   - Color attribute array length: ${child.geometry.attributes.color.array.length}`);
+              }
+            }
+          }
+        }
+      });
+      
+      console.log(`📊 Found ${diamondMeshes.length} diamond meshes total`);
+      
+      // Second pass: Force identical material on ALL identified diamonds
+      diamondMeshes.forEach((diamondMesh, index) => {
+        console.log(`💎 FORCING identical material on diamond ${index + 1}: "${diamondMesh.name}"`);
+        console.log(`   - BEFORE: Material type: ${diamondMesh.material.constructor.name}`);
+        console.log(`   - BEFORE: Color: ${diamondMesh.material.color.getHex()}`);
+        
+        // REMOVE vertex colors that might be causing the issue
+        if (diamondMesh.geometry && diamondMesh.geometry.attributes.color) {
+          console.log(`🧹 REMOVING vertex colors from "${diamondMesh.name}"`);
+          diamondMesh.geometry.deleteAttribute('color');
+        }
+        
+        // APPLY EXACT SAME MATERIAL AS 3D-VIEWER-COLOR INDEX.HTML
+        diamondMesh.material = new THREE.MeshPhysicalMaterial({
+          color: 0xffffff,
+          metalness: 0.0,
+          roughness: 0.0,
+          transmission: 0.98,
+          transparent: true,
+          opacity: 0.95,
+          reflectivity: 1.0,
+          envMapIntensity: 3.0,
+          clearcoat: 1.0,
+          clearcoatRoughness: 0.0,
+          ior: 2.42,
+          thickness: 0.3,
+          attenuationDistance: 0.3,
+          attenuationColor: new THREE.Color(0xffffff),
+          side: THREE.DoubleSide
+        });
+        
+        console.log(`💎 APPLIED 3D-VIEWER-COLOR DIAMOND MATERIAL to "${diamondMesh.name}"`);
+        
+        diamondMesh.material.needsUpdate = true;
+        diamondMesh.userData.isDiamond = true;
+        diamondMesh.userData.isMetal = false;
+        
+        // Log final material properties
+        console.log(`   - AFTER: Material type: ${diamondMesh.material.constructor.name}`);
+        console.log(`   - AFTER: Color: ${diamondMesh.material.color.getHex()}`);
+        console.log(`   - AFTER: Transmission: ${diamondMesh.material.transmission}`);
+        console.log(`   - AFTER: Opacity: ${diamondMesh.material.opacity}`);
+        console.log(`   - AFTER: Transparent: ${diamondMesh.material.transparent}`);
+      });
+      
+      // THIRD PASS: Double-check all meshes after material application
+      console.log("🔍 VERIFICATION PASS: Checking all meshes after material application...");
+      this.model.traverse((child) => {
+        if (child.isMesh) {
+          const name = child.name ? child.name.toLowerCase() : "";
+          if (name.includes("diamond") || name.includes("gem") || name.includes("stone") || name.includes("crystal")) {
+            console.log(`🔍 VERIFICATION - "${child.name}":`, {
+              materialType: child.material.constructor.name,
+              color: child.material.color.getHex(),
+              transmission: child.material.transmission,
+              opacity: child.material.opacity,
+              transparent: child.material.transparent
+            });
           }
         }
       });
@@ -380,6 +557,167 @@ export class ThreeJSViewer {
 
     resizeObserver.observe(this.container);
     this.resizeObserver = resizeObserver;
+  }
+
+  // Material control methods
+  setGoldMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isMetal) {
+        child.material = new THREE.MeshStandardMaterial({
+          color: 0xffd700, // Gold color
+          metalness: 0.8,
+          roughness: 0.2,
+          envMapIntensity: 1.0,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  setSilverMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isMetal) {
+        child.material = new THREE.MeshStandardMaterial({
+          color: 0xc0c0c0, // Silver color
+          metalness: 0.9,
+          roughness: 0.1,
+          envMapIntensity: 1.2,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  setPlatinumMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isMetal) {
+        child.material = new THREE.MeshStandardMaterial({
+          color: 0xe5e4e2, // Platinum color
+          metalness: 0.9,
+          roughness: 0.15,
+          envMapIntensity: 1.1,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  setRoseGoldMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isMetal) {
+        child.material = new THREE.MeshStandardMaterial({
+          color: 0xe8b4a0, // Rose gold color
+          metalness: 0.8,
+          roughness: 0.2,
+          envMapIntensity: 1.0,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  setDiamondMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isDiamond) {
+        child.material = new THREE.MeshPhysicalMaterial({
+          color: 0xffffff, // Pure white
+          metalness: 0.0,
+          roughness: 0.0,
+          transmission: 0.99, // Maximum transparency
+          transparent: true,
+          opacity: 0.98, // Nearly transparent
+          reflectivity: 1.0,
+          envMapIntensity: 2.0, // Moderate reflection
+          clearcoat: 1.0,
+          clearcoatRoughness: 0.0,
+          ior: 2.42, // Diamond refractive index
+          thickness: 0.1, // Very thin for maximum clarity
+          attenuationDistance: 0.1,
+          attenuationColor: new THREE.Color(0xffffff), // Pure white attenuation
+          side: THREE.DoubleSide,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  // Force all diamonds to have the same material - for troubleshooting
+  forceAllDiamondsUniform() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh) {
+        const name = child.name ? child.name.toLowerCase() : "";
+        const materialName =
+          child.material && child.material.name
+            ? child.material.name.toLowerCase()
+            : "";
+
+        // Force any mesh that might be diamond to have diamond material
+        const couldBeDiamond =
+          name.includes("diamond") ||
+          name.includes("gem") ||
+          name.includes("stone") ||
+          name.includes("crystal") ||
+          materialName.includes("diamond") ||
+          materialName.includes("gem") ||
+          materialName.includes("crystal") ||
+          name.includes("brilliant") ||
+          name.includes("round") ||
+          name.includes("cut") ||
+          // Check material color - if it's very bright/white, likely diamond
+          (child.material &&
+            child.material.color &&
+            child.material.color.r > 0.8 &&
+            child.material.color.g > 0.8 &&
+            child.material.color.b > 0.8) ||
+          // Check if material has transparency
+          (child.material && child.material.transparent) ||
+          (child.material && child.material.opacity < 1.0);
+
+        if (couldBeDiamond) {
+          console.log(`💎 FORCING diamond material on: "${child.name}"`);
+          child.userData.isDiamond = true;
+          child.userData.isMetal = false;
+
+          child.material = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            metalness: 0.0,
+            roughness: 0.0,
+            transmission: 0.98,
+            transparent: true,
+            opacity: 0.95,
+            reflectivity: 1.0,
+              envMapIntensity: 3.5,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.0,
+            ior: 2.42,
+            thickness: 0.3,
+            attenuationDistance: 0.3,
+            attenuationColor: new THREE.Color(0xffffff),
+            side: THREE.DoubleSide,
+          });
+          child.material.needsUpdate = true;
+        }
+      }
+    });
+  }
+
+  resetToOriginalMaterials() {
+    if (!this.model) return;
+
+    // Reset to gold material as default
+    this.setGoldMaterial();
   }
 
   // Control methods

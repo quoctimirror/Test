@@ -1,0 +1,351 @@
+/* SelectOptionSection Styles */
+.select-option-section {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Ring Display */
+.ring-display {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.ring-image {
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+}
+
+/* Control Panel */
+.control-panel {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Help Section */
+.help-section {
+  text-align: center;
+}
+
+.help-section h3 {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.help-section p {
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.contact-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.contact-btn:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Selection Section */
+.selection-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.save-btn {
+  background: #e9ecef;
+  color: #495057;
+  border: 1px solid #ced4da;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.save-btn:hover {
+  background: #dee2e6;
+  transform: translateY(-1px);
+}
+
+.save-text {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.stone-options {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.stone-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #f8f9fa;
+  border: 2px solid transparent;
+  min-width: 80px;
+}
+
+.stone-option:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+}
+
+.stone-option.selected {
+  background: #fff3cd;
+  border-color: #ffc107;
+  box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+}
+
+.stone-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.stone-name {
+  font-size: 0.9rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+/* Pricing Section */
+.pricing-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.price-info {
+  margin-bottom: 10px;
+}
+
+.price-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.price-amount {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.appointment-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  width: 100%;
+  max-width: 200px;
+}
+
+.appointment-btn:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.order-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  width: 100%;
+  max-width: 200px;
+}
+
+.order-btn:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+}
+
+.details-btn {
+  background: transparent;
+  color: #6c757d;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: underline;
+}
+
+.details-btn:hover {
+  color: #495057;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .control-panel {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    text-align: center;
+  }
+  
+  .stone-options {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .select-option-section {
+    padding: 20px 15px;
+  }
+  
+  .control-panel {
+    padding: 20px;
+    gap: 25px;
+  }
+  
+  .ring-display {
+    margin-bottom: 30px;
+  }
+  
+  .ring-image {
+    max-height: 300px;
+  }
+  
+  .stone-options {
+    gap: 15px;
+  }
+  
+  .stone-option {
+    min-width: 70px;
+    padding: 12px;
+  }
+  
+  .stone-icon {
+    font-size: 1.5rem;
+  }
+  
+  .help-section h3 {
+    font-size: 1.2rem;
+  }
+  
+  .help-section p {
+    font-size: 0.85rem;
+  }
+  
+  .price-amount {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .select-option-section {
+    padding: 15px 10px;
+  }
+  
+  .control-panel {
+    padding: 15px;
+    gap: 20px;
+  }
+  
+  .stone-options {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .stone-option {
+    flex-direction: row;
+    min-width: 120px;
+    padding: 10px 15px;
+  }
+  
+  .stone-icon {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+  
+  .help-section h3 {
+    font-size: 1.1rem;
+  }
+  
+  .price-amount {
+    font-size: 1.3rem;
+  }
+  
+  .contact-btn,
+  .appointment-btn,
+  .order-btn {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Animation for smooth transitions */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.control-panel {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.ring-display {
+  animation: fadeInUp 0.8s ease-out;
+}
