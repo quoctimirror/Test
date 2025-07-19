@@ -73,7 +73,7 @@ const View360 = () => {
     setShowQRPopup(false);
   };
 
-  // Color control handlers
+  // Color control handlers (ORIGINAL)
   const handleGoldMaterial = () => {
     if (viewerRef.current) {
       viewerRef.current.setGoldMaterial();

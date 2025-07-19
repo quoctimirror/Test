@@ -3,6 +3,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Reflector } from "three/examples/jsm/objects/Reflector.js";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 
 export class ThreeJSViewer {
   constructor(container) {
@@ -25,14 +27,14 @@ export class ThreeJSViewer {
     // Mirror reflector
     this.mirror = null;
 
-    // Model settings
+    // Model settings - optimized for target image
     this.modelPath = "/view360/ring.glb";
-    this.modelScale = 3;
-    this.modelPosition = { x: 8, y: 0, z: 0 };
-    this.initialYRotation = Math.PI;
+    this.modelScale = 3; // Increased scale for more presence
+    this.modelPosition = { x: 8, y: 0, z: 0 }; // Centered, slightly raised
+    this.initialYRotation = Math.PI; // Better starting angle
 
     // Camera settings
-    this.cameraPosition = { x: 0, y: 0, z: 5 };
+    this.cameraPosition = { x: 0, y: 0, z: 5 }; // Adjusted for better view
   }
 
   init() {
@@ -40,7 +42,7 @@ export class ThreeJSViewer {
 
     // Create scene
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xf3b1c1); // Pink background around mirror
+    this.scene.background = new THREE.Color(0xd4859a); // Much darker pink background
 
     // Create camera
     const aspect = this.container.clientWidth / this.container.clientHeight;
@@ -70,7 +72,7 @@ export class ThreeJSViewer {
     this.renderer.shadowMap.enabled = false; // Disable shadows for mirror effect
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1;
+    this.renderer.toneMappingExposure = 0.8; // Reduced exposure for softer lighting
 
     // Add renderer to container
     this.container.appendChild(this.renderer.domElement);
@@ -84,8 +86,9 @@ export class ThreeJSViewer {
 
     this.addMouseEvents();
 
-    // Setup lighting
+    // Setup lighting and environment
     this.setupLighting();
+    this.setupEnvironment();
 
     // Add mirror reflector
     this.addMirrorGround();
@@ -158,23 +161,30 @@ export class ThreeJSViewer {
   }
 
   setupLighting() {
-    // Enhanced lighting setup from 3d-viewer-color
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+    // Minimal ambient light
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
     this.scene.add(ambientLight);
     this.lights.push(ambientLight);
 
-    // Main directional light with enhanced intensity
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
-    directionalLight.position.set(10, 10, 5);
-    directionalLight.castShadow = false;
-    this.scene.add(directionalLight);
-    this.lights.push(directionalLight);
+    // Brighter key light focused on model
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    keyLight.position.set(5, 5, 5);
+    keyLight.castShadow = false;
+    this.scene.add(keyLight);
+    this.lights.push(keyLight);
 
-    // Secondary directional light for fill lighting
-    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight2.position.set(-10, -10, -5);
-    this.scene.add(directionalLight2);
-    this.lights.push(directionalLight2);
+    // Additional focused light for ring highlights
+    const ringLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    ringLight.position.set(-3, 8, 3);
+    ringLight.castShadow = false;
+    this.scene.add(ringLight);
+    this.lights.push(ringLight);
+
+    // Subtle fill light
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+    fillLight.position.set(-5, -5, -5);
+    this.scene.add(fillLight);
+    this.lights.push(fillLight);
 
     // Enhanced HDR environment mapping for better reflections
     const envMapLoader = new THREE.CubeTextureLoader();
@@ -192,6 +202,36 @@ export class ThreeJSViewer {
 
     // Store environment map for material usage
     this.envMap = envMap;
+  }
+
+  async setupEnvironment() {
+    // Load bright photo studio HDRI for maximum diamond sparkle
+    const rgbeLoader = new RGBELoader();
+    try {
+      // Load the bright photo studio .hdr file
+      const envMap = await rgbeLoader.loadAsync("/hdr/studio_small_03_4k.hdr");
+      envMap.mapping = THREE.EquirectangularReflectionMapping;
+
+      // Apply the environment map to the scene for lighting and reflections
+      this.scene.environment = envMap;
+
+      // Store for material usage
+      this.envMap = envMap;
+    } catch (error) {
+      error;
+      // Fallback to existing cube texture
+      const envMapLoader = new THREE.CubeTextureLoader();
+      const envMap = envMapLoader.load([
+        "https://threejs.org/examples/textures/cube/Bridge2/posx.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/negx.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/posy.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/negy.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/posz.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/negz.jpg",
+      ]);
+      this.scene.environment = envMap;
+      this.envMap = envMap;
+    }
   }
 
   addMirrorGround() {
@@ -309,152 +349,68 @@ export class ThreeJSViewer {
             (child.material && child.material.opacity < 1.0);
 
           // Debug logging to identify all meshes
-          console.log(
-            `🔍 Mesh: "${child.name}" | Material: "${materialName}" | IsDiamond: ${isDiamond}`
-          );
 
           // Store material type information
           child.userData.isDiamond = isDiamond;
           child.userData.isMetal = !isDiamond;
 
+          // ❗❗❗ ALWAYS CHECK FOR VERTEX COLORS AND REMOVE THEM ❗❗❗
+          if (child.geometry.attributes.color) {
+            child.geometry.deleteAttribute("color");
+          }
+
           if (isDiamond) {
-            console.log(
-              `💎 Applying ENHANCED DIAMOND material to: "${child.name}"`
-            );
-            // Enhanced diamond material with transmission and sparkle
+            // FORCE GEOMETRY CONSISTENCY
+            if (child.geometry) {
+              // Force recompute normals
+              child.geometry.computeVertexNormals();
+              // Force flat shading off
+              child.material = null; // Clear any existing material first
+            }
+
+            // Opal/Moonstone material - milky white, translucent stone
             child.material = new THREE.MeshPhysicalMaterial({
               color: 0xffffff, // Pure white
               metalness: 0.0,
-              roughness: 0.0,
-              transmission: 0.99, // Maximum transparency
+              roughness: 0.2, // KEY CHANGE: Blurs reflections for milky look
+              transmission: 0.9, // Allows light to enter
               transparent: true,
-              opacity: 0.98, // Nearly transparent
-              reflectivity: 1.0,
-              envMapIntensity: 2.0, // Moderate reflection
-              clearcoat: 1.0,
-              clearcoatRoughness: 0.0,
-              ior: 2.42, // Diamond's refractive index
-              thickness: 0.1, // Very thin for maximum clarity
-              attenuationDistance: 0.1,
-              attenuationColor: new THREE.Color(0xffffff), // Pure white attenuation
+              opacity: 1.0,
+              ior: 1.45, // IOR of Opal/Moonstone (not diamond)
+              reflectivity: 0.5, // Moderate reflectivity
+              envMapIntensity: 1.5, // Increased for better light interaction
+              clearcoat: 0.3, // Minimal clearcoat
+              clearcoatRoughness: 0.2,
+              // CRITICAL: These create internal light scattering (milky effect)
+              thickness: 2.0, // Thick for light scattering
+              attenuationColor: new THREE.Color(0xffffff), // Light inside stays white
+              attenuationDistance: 0.5, // Light scatters quickly
               side: THREE.DoubleSide,
+              // FORCE CONSISTENT RENDERING
+              flatShading: false,
+              vertexColors: false,
             });
             child.material.needsUpdate = true;
-          } else {
-            // Apply default gold material to metal parts
-            console.log(`🔧 Applying GOLD material to: "${child.name}"`);
-            child.material = new THREE.MeshStandardMaterial({
-              color: 0xffd700, // Gold color
-              metalness: 0.8,
-              roughness: 0.2,
-              envMapIntensity: 1.0,
-            });
-            child.material.needsUpdate = true;
-          }
-        }
-      });
 
-      // SUPER AGGRESSIVE FINAL PASS - Force ALL diamonds to be identical
-      console.log("🔧 SUPER AGGRESSIVE: Final pass to ensure ALL diamonds are identical...");
-      
-      // First pass: Identify ALL potential diamond meshes with extensive logging
-      const diamondMeshes = [];
-      this.model.traverse((child) => {
-        if (child.isMesh) {
-          const name = child.name ? child.name.toLowerCase() : "";
-          const materialName = child.material && child.material.name ? child.material.name.toLowerCase() : "";
-          
-          console.log(`🔎 DETAILED MESH ANALYSIS: "${child.name}"`);
-          console.log(`   - Material name: "${materialName}"`);
-          console.log(`   - Current material type: ${child.material ? child.material.constructor.name : 'none'}`);
-          console.log(`   - Material color: ${child.material && child.material.color ? child.material.color.getHex() : 'none'}`);
-          console.log(`   - Material transparent: ${child.material ? child.material.transparent : 'none'}`);
-          console.log(`   - Material opacity: ${child.material ? child.material.opacity : 'none'}`);
-          
-          // Check if name contains diamond/gem keywords
-          if (name.includes("diamond") || name.includes("gem") || name.includes("stone") || name.includes("crystal")) {
-            diamondMeshes.push(child);
-            console.log(`✅ ADDED TO DIAMOND LIST: "${child.name}"`);
-            
-            // GEOMETRY DEBUGGING
-            if (child.geometry) {
-              console.log(`🔍 GEOMETRY INFO for "${child.name}":`);
-              console.log(`   - Vertices count: ${child.geometry.attributes.position ? child.geometry.attributes.position.count : 'none'}`);
-              console.log(`   - Has UV: ${child.geometry.attributes.uv ? 'yes' : 'no'}`);
-              console.log(`   - Has normals: ${child.geometry.attributes.normal ? 'yes' : 'no'}`);
-              console.log(`   - Has colors: ${child.geometry.attributes.color ? 'yes' : 'no'}`);
-              console.log(`   - Geometry type: ${child.geometry.constructor.name}`);
-              
-              // Check if geometry has vertex colors
-              if (child.geometry.attributes.color) {
-                console.log(`⚠️  WARNING: "${child.name}" has vertex colors that might override material!`);
-                console.log(`   - Color attribute array length: ${child.geometry.attributes.color.array.length}`);
-              }
+            // FORCE GEOMETRY UPDATE
+            child.geometry.attributes.position.needsUpdate = true;
+            if (child.geometry.attributes.normal) {
+              child.geometry.attributes.normal.needsUpdate = true;
             }
-          }
-        }
-      });
-      
-      console.log(`📊 Found ${diamondMeshes.length} diamond meshes total`);
-      
-      // Second pass: Force identical material on ALL identified diamonds
-      diamondMeshes.forEach((diamondMesh, index) => {
-        console.log(`💎 FORCING identical material on diamond ${index + 1}: "${diamondMesh.name}"`);
-        console.log(`   - BEFORE: Material type: ${diamondMesh.material.constructor.name}`);
-        console.log(`   - BEFORE: Color: ${diamondMesh.material.color.getHex()}`);
-        
-        // REMOVE vertex colors that might be causing the issue
-        if (diamondMesh.geometry && diamondMesh.geometry.attributes.color) {
-          console.log(`🧹 REMOVING vertex colors from "${diamondMesh.name}"`);
-          diamondMesh.geometry.deleteAttribute('color');
-        }
-        
-        // APPLY EXACT SAME MATERIAL AS 3D-VIEWER-COLOR INDEX.HTML
-        diamondMesh.material = new THREE.MeshPhysicalMaterial({
-          color: 0xffffff,
-          metalness: 0.0,
-          roughness: 0.0,
-          transmission: 0.98,
-          transparent: true,
-          opacity: 0.95,
-          reflectivity: 1.0,
-          envMapIntensity: 3.0,
-          clearcoat: 1.0,
-          clearcoatRoughness: 0.0,
-          ior: 2.42,
-          thickness: 0.3,
-          attenuationDistance: 0.3,
-          attenuationColor: new THREE.Color(0xffffff),
-          side: THREE.DoubleSide
-        });
-        
-        console.log(`💎 APPLIED 3D-VIEWER-COLOR DIAMOND MATERIAL to "${diamondMesh.name}"`);
-        
-        diamondMesh.material.needsUpdate = true;
-        diamondMesh.userData.isDiamond = true;
-        diamondMesh.userData.isMetal = false;
-        
-        // Log final material properties
-        console.log(`   - AFTER: Material type: ${diamondMesh.material.constructor.name}`);
-        console.log(`   - AFTER: Color: ${diamondMesh.material.color.getHex()}`);
-        console.log(`   - AFTER: Transmission: ${diamondMesh.material.transmission}`);
-        console.log(`   - AFTER: Opacity: ${diamondMesh.material.opacity}`);
-        console.log(`   - AFTER: Transparent: ${diamondMesh.material.transparent}`);
-      });
-      
-      // THIRD PASS: Double-check all meshes after material application
-      console.log("🔍 VERIFICATION PASS: Checking all meshes after material application...");
-      this.model.traverse((child) => {
-        if (child.isMesh) {
-          const name = child.name ? child.name.toLowerCase() : "";
-          if (name.includes("diamond") || name.includes("gem") || name.includes("stone") || name.includes("crystal")) {
-            console.log(`🔍 VERIFICATION - "${child.name}":`, {
-              materialType: child.material.constructor.name,
-              color: child.material.color.getHex(),
-              transmission: child.material.transmission,
-              opacity: child.material.opacity,
-              transparent: child.material.transparent
+            if (child.geometry.attributes.uv) {
+              child.geometry.attributes.uv.needsUpdate = true;
+            }
+          } else {
+            // Apply enhanced gold material to metal parts
+            child.material = new THREE.MeshPhysicalMaterial({
+              color: 0xeecdae, // Correct rose gold color
+              metalness: 1.0,
+              roughness: 0.15, // Slightly less rough for more shine
+              clearcoat: 1.0, // Strong clearcoat for deep shine
+              clearcoatRoughness: 0.1,
+              envMapIntensity: 2.0, // Increased for better light reflection
             });
+            child.material.needsUpdate = true;
           }
         }
       });
@@ -559,7 +515,7 @@ export class ThreeJSViewer {
     this.resizeObserver = resizeObserver;
   }
 
-  // Material control methods
+  // Material control methods (ORIGINAL)
   setGoldMaterial() {
     if (!this.model) return;
 
@@ -686,7 +642,6 @@ export class ThreeJSViewer {
           (child.material && child.material.opacity < 1.0);
 
         if (couldBeDiamond) {
-          console.log(`💎 FORCING diamond material on: "${child.name}"`);
           child.userData.isDiamond = true;
           child.userData.isMetal = false;
 
@@ -698,7 +653,7 @@ export class ThreeJSViewer {
             transparent: true,
             opacity: 0.95,
             reflectivity: 1.0,
-              envMapIntensity: 3.5,
+            envMapIntensity: 3.5,
             clearcoat: 1.0,
             clearcoatRoughness: 0.0,
             ior: 2.42,

@@ -1,6 +1,5 @@
-// SpaceOverlay.jsx
-
 import React from 'react';
+import BaseOverlay from './BaseOverlay';
 import './SpaceOverlay.css';
 
 const SpaceOverlay = ({
@@ -14,21 +13,15 @@ const SpaceOverlay = ({
     };
 
     return (
-        <div
-            className={`space-overlay ${isActive ? 'show' : ''}`}
-            style={overlayStyle}
-            onClick={onClose}
-            onMouseLeave={onClose}
+        <BaseOverlay
+            isActive={isActive}
+            overlayStyle={overlayStyle}
+            onClose={onClose}
+            customClassName="space-overlay"
+            disableDefaultClose={false}
+            closeOnMouseLeave={true}
         >
             <div className="space-content-wrapper" onClick={handleContentClick}>
-                {/* 4 lines creating 8 vertices */}
-                <div className="cross-lines">
-                    <div className="line line-vertical"></div>
-                    <div className="line line-horizontal"></div>
-                    <div className="line line-diagonal-1"></div>
-                    <div className="line line-diagonal-2"></div>
-                </div>
-
                 <div className="space-content-container">
                     <div className="space-description">
                         <p>Mirror moves with you — from glowing showrooms<br />
@@ -48,7 +41,7 @@ const SpaceOverlay = ({
                     <h2 className="space-title">Space</h2>
                 </div>
             </div>
-        </div>
+        </BaseOverlay>
     );
 };
 
