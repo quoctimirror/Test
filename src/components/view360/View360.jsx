@@ -10,6 +10,7 @@ const View360 = () => {
   const [autoRotate, setAutoRotate] = useState(false);
   const [rotationSpeed, setRotationSpeed] = useState(0.5);
   const [showQRPopup, setShowQRPopup] = useState(false);
+  const [showColorControls, setShowColorControls] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current || viewerRef.current) return;
@@ -72,6 +73,53 @@ const View360 = () => {
     setShowQRPopup(false);
   };
 
+  // Color control handlers (ORIGINAL)
+  const handleGoldMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setGoldMaterial();
+    }
+  };
+
+  const handleSilverMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setSilverMaterial();
+    }
+  };
+
+  const handlePlatinumMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setPlatinumMaterial();
+    }
+  };
+
+  const handleRoseGoldMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setRoseGoldMaterial();
+    }
+  };
+
+  const handleDiamondMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setDiamondMaterial();
+    }
+  };
+
+  const handleForceAllDiamondsUniform = () => {
+    if (viewerRef.current) {
+      viewerRef.current.forceAllDiamondsUniform();
+    }
+  };
+
+  const handleResetMaterials = () => {
+    if (viewerRef.current) {
+      viewerRef.current.resetToOriginalMaterials();
+    }
+  };
+
+  const toggleColorControls = () => {
+    setShowColorControls(!showColorControls);
+  };
+
   return (
     <div className="view-360-section">
       {/* Main Content */}
@@ -90,7 +138,81 @@ const View360 = () => {
           <button className="ar-try-btn" onClick={handleARTryOnClick}>
             AR Try on
           </button>
+          <button className="color-controls-btn" onClick={toggleColorControls}>
+            🎨 Colors
+          </button>
         </div>
+
+        {/* Color Controls Panel */}
+        {showColorControls && (
+          <div className="color-controls-panel">
+            <div className="color-controls-header">
+              <h3>Customize Ring</h3>
+              <button className="close-btn" onClick={toggleColorControls}>×</button>
+            </div>
+            
+            <div className="color-section">
+              <h4>Metal Colors</h4>
+              <div className="color-buttons">
+                <button 
+                  className="color-btn gold" 
+                  onClick={handleGoldMaterial}
+                  title="Gold"
+                >
+                  Gold
+                </button>
+                <button 
+                  className="color-btn silver" 
+                  onClick={handleSilverMaterial}
+                  title="Silver"
+                >
+                  Silver
+                </button>
+                <button 
+                  className="color-btn platinum" 
+                  onClick={handlePlatinumMaterial}
+                  title="Platinum"
+                >
+                  Platinum
+                </button>
+                <button 
+                  className="color-btn rose-gold" 
+                  onClick={handleRoseGoldMaterial}
+                  title="Rose Gold"
+                >
+                  Rose Gold
+                </button>
+              </div>
+            </div>
+
+            <div className="color-section">
+              <h4>Diamond Enhancement</h4>
+              <div className="color-buttons">
+                <button 
+                  className="color-btn diamond" 
+                  onClick={handleDiamondMaterial}
+                  title="Enhanced Diamonds"
+                >
+                  💎 Enhance
+                </button>
+                <button 
+                  className="color-btn uniform" 
+                  onClick={handleForceAllDiamondsUniform}
+                  title="Make All Diamonds Uniform"
+                >
+                  🔧 Fix All
+                </button>
+                <button 
+                  className="color-btn reset" 
+                  onClick={handleResetMaterials}
+                  title="Reset to Original"
+                >
+                  🔄 Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Hidden Controls for Development */}
         <div className="dev-controls" style={{ display: "none" }}>

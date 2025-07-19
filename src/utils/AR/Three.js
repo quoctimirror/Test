@@ -3,6 +3,8 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Reflector } from "three/examples/jsm/objects/Reflector.js";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 
 export class ThreeJSViewer {
   constructor(container) {
@@ -25,14 +27,14 @@ export class ThreeJSViewer {
     // Mirror reflector
     this.mirror = null;
 
-    // Model settings
-    this.modelPath = "/view360/0.glb";
-    this.modelScale = 6;
-    this.modelPosition = { x: 8, y: 0, z: 0 };
-    this.initialYRotation = Math.PI;
+    // Model settings - optimized for target image
+    this.modelPath = "/view360/ring.glb";
+    this.modelScale = 3; // Increased scale for more presence
+    this.modelPosition = { x: 8, y: 0, z: 0 }; // Centered, slightly raised
+    this.initialYRotation = Math.PI; // Better starting angle
 
     // Camera settings
-    this.cameraPosition = { x: 0, y: 0, z: 5 };
+    this.cameraPosition = { x: 0, y: 0, z: 5 }; // Adjusted for better view
   }
 
   init() {
@@ -40,7 +42,7 @@ export class ThreeJSViewer {
 
     // Create scene
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xf3b1c1); // Pink background around mirror
+    this.scene.background = new THREE.Color(0xd4859a); // Much darker pink background
 
     // Create camera
     const aspect = this.container.clientWidth / this.container.clientHeight;
@@ -70,7 +72,7 @@ export class ThreeJSViewer {
     this.renderer.shadowMap.enabled = false; // Disable shadows for mirror effect
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1;
+    this.renderer.toneMappingExposure = 0.8; // Reduced exposure for softer lighting
 
     // Add renderer to container
     this.container.appendChild(this.renderer.domElement);
@@ -84,8 +86,9 @@ export class ThreeJSViewer {
 
     this.addMouseEvents();
 
-    // Setup lighting
+    // Setup lighting and environment
     this.setupLighting();
+    this.setupEnvironment();
 
     // Add mirror reflector
     this.addMirrorGround();
@@ -158,30 +161,77 @@ export class ThreeJSViewer {
   }
 
   setupLighting() {
-    // Ambient light for overall illumination
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    // Minimal ambient light
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
     this.scene.add(ambientLight);
     this.lights.push(ambientLight);
 
-    // Main directional light for clear reflections
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    mainLight.position.set(5, 10, 5);
-    mainLight.castShadow = false; // Disable shadows for mirror effect
-    this.scene.add(mainLight);
-    this.lights.push(mainLight);
+    // Brighter key light focused on model
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    keyLight.position.set(5, 5, 5);
+    keyLight.castShadow = false;
+    this.scene.add(keyLight);
+    this.lights.push(keyLight);
 
-    // Secondary light for better ring illumination
-    const secondaryLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    secondaryLight.position.set(-5, 8, -5);
-    secondaryLight.castShadow = false;
-    this.scene.add(secondaryLight);
-    this.lights.push(secondaryLight);
+    // Additional focused light for ring highlights
+    const ringLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    ringLight.position.set(-3, 8, 3);
+    ringLight.castShadow = false;
+    this.scene.add(ringLight);
+    this.lights.push(ringLight);
 
-    // Point light for enhanced reflections
-    const pointLight = new THREE.PointLight(0xffffff, 0.5, 50);
-    pointLight.position.set(0, 15, 0);
-    this.scene.add(pointLight);
-    this.lights.push(pointLight);
+    // Subtle fill light
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+    fillLight.position.set(-5, -5, -5);
+    this.scene.add(fillLight);
+    this.lights.push(fillLight);
+
+    // Enhanced HDR environment mapping for better reflections
+    const envMapLoader = new THREE.CubeTextureLoader();
+    const envMap = envMapLoader.load([
+      "https://threejs.org/examples/textures/cube/Bridge2/posx.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/negx.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/posy.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/negy.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/posz.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/negz.jpg",
+    ]);
+    this.scene.environment = envMap;
+    // Keep the pink background instead of environment background
+    // this.scene.background = envMap;
+
+    // Store environment map for material usage
+    this.envMap = envMap;
+  }
+
+  async setupEnvironment() {
+    // Load bright photo studio HDRI for maximum diamond sparkle
+    const rgbeLoader = new RGBELoader();
+    try {
+      // Load the bright photo studio .hdr file
+      const envMap = await rgbeLoader.loadAsync("/hdr/studio_small_03_4k.hdr");
+      envMap.mapping = THREE.EquirectangularReflectionMapping;
+
+      // Apply the environment map to the scene for lighting and reflections
+      this.scene.environment = envMap;
+
+      // Store for material usage
+      this.envMap = envMap;
+    } catch (error) {
+      error;
+      // Fallback to existing cube texture
+      const envMapLoader = new THREE.CubeTextureLoader();
+      const envMap = envMapLoader.load([
+        "https://threejs.org/examples/textures/cube/Bridge2/posx.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/negx.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/posy.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/negy.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/posz.jpg",
+        "https://threejs.org/examples/textures/cube/Bridge2/negz.jpg",
+      ]);
+      this.scene.environment = envMap;
+      this.envMap = envMap;
+    }
   }
 
   addMirrorGround() {
@@ -215,10 +265,10 @@ export class ThreeJSViewer {
     );
 
     // Position both mirror and surface horizontally like in reference image
-    this.mirror.position.y = -2.9;
+    this.mirror.position.y = -3.7;
     this.mirror.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
-    mirrorSurface.position.y = -2.89; // Slightly above reflector
+    mirrorSurface.position.y = -3.69; // Slightly above reflector
     mirrorSurface.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
     this.scene.add(this.mirror);
@@ -269,14 +319,97 @@ export class ThreeJSViewer {
 
       // ===============================================
 
-      // Configure ring materials - keep original appearance
+      // Configure ring materials - only enhance diamonds
       this.model.traverse((child) => {
         if (child.isMesh) {
           child.castShadow = false; // Disable shadow casting
           child.receiveShadow = false; // Disable shadow receiving
 
-          // Keep original material properties for authentic look
-          if (child.material) {
+          // Enhanced diamond detection logic
+          const name = child.name ? child.name.toLowerCase() : "";
+          const materialName =
+            child.material && child.material.name
+              ? child.material.name.toLowerCase()
+              : "";
+
+          const isDiamond =
+            name.includes("diamond") ||
+            name.includes("gem") ||
+            name.includes("stone") ||
+            name.includes("crystal") ||
+            materialName.includes("diamond") ||
+            materialName.includes("gem") ||
+            materialName.includes("crystal") ||
+            // Additional checks for common diamond naming patterns
+            name.includes("brilliant") ||
+            name.includes("round") ||
+            name.includes("cut") ||
+            // Check if material has transparency properties (likely diamond)
+            (child.material && child.material.transparent) ||
+            (child.material && child.material.opacity < 1.0);
+
+          // Debug logging to identify all meshes
+
+          // Store material type information
+          child.userData.isDiamond = isDiamond;
+          child.userData.isMetal = !isDiamond;
+
+          // ❗❗❗ ALWAYS CHECK FOR VERTEX COLORS AND REMOVE THEM ❗❗❗
+          if (child.geometry.attributes.color) {
+            child.geometry.deleteAttribute("color");
+          }
+
+          if (isDiamond) {
+            // FORCE GEOMETRY CONSISTENCY
+            if (child.geometry) {
+              // Force recompute normals
+              child.geometry.computeVertexNormals();
+              // Force flat shading off
+              child.material = null; // Clear any existing material first
+            }
+
+            // Opal/Moonstone material - milky white, translucent stone
+            child.material = new THREE.MeshPhysicalMaterial({
+              color: 0xffffff, // Pure white
+              metalness: 0.0,
+              roughness: 0.2, // KEY CHANGE: Blurs reflections for milky look
+              transmission: 0.9, // Allows light to enter
+              transparent: true,
+              opacity: 1.0,
+              ior: 1.45, // IOR of Opal/Moonstone (not diamond)
+              reflectivity: 0.5, // Moderate reflectivity
+              envMapIntensity: 1.5, // Increased for better light interaction
+              clearcoat: 0.3, // Minimal clearcoat
+              clearcoatRoughness: 0.2,
+              // CRITICAL: These create internal light scattering (milky effect)
+              thickness: 2.0, // Thick for light scattering
+              attenuationColor: new THREE.Color(0xffffff), // Light inside stays white
+              attenuationDistance: 0.5, // Light scatters quickly
+              side: THREE.DoubleSide,
+              // FORCE CONSISTENT RENDERING
+              flatShading: false,
+              vertexColors: false,
+            });
+            child.material.needsUpdate = true;
+
+            // FORCE GEOMETRY UPDATE
+            child.geometry.attributes.position.needsUpdate = true;
+            if (child.geometry.attributes.normal) {
+              child.geometry.attributes.normal.needsUpdate = true;
+            }
+            if (child.geometry.attributes.uv) {
+              child.geometry.attributes.uv.needsUpdate = true;
+            }
+          } else {
+            // Apply enhanced gold material to metal parts
+            child.material = new THREE.MeshPhysicalMaterial({
+              color: 0xeecdae, // Correct rose gold color
+              metalness: 1.0,
+              roughness: 0.15, // Slightly less rough for more shine
+              clearcoat: 1.0, // Strong clearcoat for deep shine
+              clearcoatRoughness: 0.1,
+              envMapIntensity: 2.0, // Increased for better light reflection
+            });
             child.material.needsUpdate = true;
           }
         }
@@ -380,6 +513,166 @@ export class ThreeJSViewer {
 
     resizeObserver.observe(this.container);
     this.resizeObserver = resizeObserver;
+  }
+
+  // Material control methods (ORIGINAL)
+  setGoldMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isMetal) {
+        child.material = new THREE.MeshStandardMaterial({
+          color: 0xffd700, // Gold color
+          metalness: 0.8,
+          roughness: 0.2,
+          envMapIntensity: 1.0,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  setSilverMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isMetal) {
+        child.material = new THREE.MeshStandardMaterial({
+          color: 0xc0c0c0, // Silver color
+          metalness: 0.9,
+          roughness: 0.1,
+          envMapIntensity: 1.2,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  setPlatinumMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isMetal) {
+        child.material = new THREE.MeshStandardMaterial({
+          color: 0xe5e4e2, // Platinum color
+          metalness: 0.9,
+          roughness: 0.15,
+          envMapIntensity: 1.1,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  setRoseGoldMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isMetal) {
+        child.material = new THREE.MeshStandardMaterial({
+          color: 0xe8b4a0, // Rose gold color
+          metalness: 0.8,
+          roughness: 0.2,
+          envMapIntensity: 1.0,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  setDiamondMaterial() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.userData.isDiamond) {
+        child.material = new THREE.MeshPhysicalMaterial({
+          color: 0xffffff, // Pure white
+          metalness: 0.0,
+          roughness: 0.0,
+          transmission: 0.99, // Maximum transparency
+          transparent: true,
+          opacity: 0.98, // Nearly transparent
+          reflectivity: 1.0,
+          envMapIntensity: 2.0, // Moderate reflection
+          clearcoat: 1.0,
+          clearcoatRoughness: 0.0,
+          ior: 2.42, // Diamond refractive index
+          thickness: 0.1, // Very thin for maximum clarity
+          attenuationDistance: 0.1,
+          attenuationColor: new THREE.Color(0xffffff), // Pure white attenuation
+          side: THREE.DoubleSide,
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
+  // Force all diamonds to have the same material - for troubleshooting
+  forceAllDiamondsUniform() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh) {
+        const name = child.name ? child.name.toLowerCase() : "";
+        const materialName =
+          child.material && child.material.name
+            ? child.material.name.toLowerCase()
+            : "";
+
+        // Force any mesh that might be diamond to have diamond material
+        const couldBeDiamond =
+          name.includes("diamond") ||
+          name.includes("gem") ||
+          name.includes("stone") ||
+          name.includes("crystal") ||
+          materialName.includes("diamond") ||
+          materialName.includes("gem") ||
+          materialName.includes("crystal") ||
+          name.includes("brilliant") ||
+          name.includes("round") ||
+          name.includes("cut") ||
+          // Check material color - if it's very bright/white, likely diamond
+          (child.material &&
+            child.material.color &&
+            child.material.color.r > 0.8 &&
+            child.material.color.g > 0.8 &&
+            child.material.color.b > 0.8) ||
+          // Check if material has transparency
+          (child.material && child.material.transparent) ||
+          (child.material && child.material.opacity < 1.0);
+
+        if (couldBeDiamond) {
+          child.userData.isDiamond = true;
+          child.userData.isMetal = false;
+
+          child.material = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            metalness: 0.0,
+            roughness: 0.0,
+            transmission: 0.98,
+            transparent: true,
+            opacity: 0.95,
+            reflectivity: 1.0,
+            envMapIntensity: 3.5,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.0,
+            ior: 2.42,
+            thickness: 0.3,
+            attenuationDistance: 0.3,
+            attenuationColor: new THREE.Color(0xffffff),
+            side: THREE.DoubleSide,
+          });
+          child.material.needsUpdate = true;
+        }
+      }
+    });
+  }
+
+  resetToOriginalMaterials() {
+    if (!this.model) return;
+
+    // Reset to gold material as default
+    this.setGoldMaterial();
   }
 
   // Control methods
