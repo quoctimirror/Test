@@ -42,7 +42,8 @@ export class ThreeJSViewer {
 
     // Create scene
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xd4859a); // Much darker pink background
+    // Create gradient background like in reference image
+    this.createGradientBackground();
 
     // Create camera
     const aspect = this.container.clientWidth / this.container.clientHeight;
@@ -103,6 +104,26 @@ export class ThreeJSViewer {
     this.handleResize();
 
     this.isInitialized = true;
+  }
+
+  createGradientBackground() {
+    // Create gradient background from pink to purple like reference image
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext("2d");
+
+    // Create vertical gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, "#FFB3D9"); // Light pink at top
+    gradient.addColorStop(0.5, "#E091AA"); // Medium pink in middle
+    gradient.addColorStop(1, "#B8698A"); // Darker pink-purple at bottom
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    this.scene.background = texture;
   }
 
   addMouseEvents() {
@@ -235,7 +256,7 @@ export class ThreeJSViewer {
   }
 
   addMirrorGround() {
-    // Create mirror geometry - much larger for bigger mirror
+    // Create mirror geometry - even larger mirror
     const mirrorGeometry = new THREE.PlaneGeometry(50, 25);
 
     // Create reflector for mirror functionality (invisible/transparent)
@@ -247,16 +268,16 @@ export class ThreeJSViewer {
       recursion: 1,
     });
 
-    // Create colored mirror surface - much larger for bigger mirror
+    // Create colored mirror surface with pink reflection
     const mirrorSurfaceGeometry = new THREE.PlaneGeometry(50, 25);
     const mirrorSurfaceMaterial = new THREE.MeshStandardMaterial({
-      color: 0xc67589, // Pink mirror surface color
-      metalness: 0.3,
-      roughness: 0.2,
+      color: 0xe69ca9, // Pink mirror surface (#e69ca9)
+      metalness: 0.8, // More metallic for better reflection
+      roughness: 0.1, // Smoother for cleaner reflection
       transparent: true,
-      opacity: 0.7, // Higher opacity to show true color
-      emissive: 0xc67589, // Add emissive to make color more vibrant
-      emissiveIntensity: 0.2,
+      opacity: 0.8, // Higher opacity for deeper color
+      emissive: 0xd18a98, // Slightly darker pink emissive
+      emissiveIntensity: 0.3,
     });
 
     const mirrorSurface = new THREE.Mesh(
@@ -309,9 +330,10 @@ export class ThreeJSViewer {
       // 6. CORRECT: Place MODEL at the center of PIVOT (0,0,0) relative to PIVOT
       this.model.position.set(0, 0, 0);
 
-      // 7. Apply tilt angles (X, Z axes) to model
-      this.model.rotation.x = -Math.PI / 20;
-      this.model.rotation.z = -Math.PI / 2.2;
+      // 7. Set ring to lie flat horizontally like in reference image
+      this.model.rotation.x = -Math.PI / 1.8; // Rotate 90 degrees to lay flat
+      this.model.rotation.z = -Math.PI / 3; // No Z rotation needed
+      this.model.rotation.y = Math.PI / 18;
       // No need to set rotation.y for model anymore, as pivot will handle that
 
       // 7. Add model as a CHILD of pivot
@@ -360,13 +382,17 @@ export class ThreeJSViewer {
           }
 
           if (isDiamond) {
-            // FORCE GEOMETRY CONSISTENCY
-            if (child.geometry) {
-              // Force recompute normals
-              child.geometry.computeVertexNormals();
-              // Force flat shading off
-              child.material = null; // Clear any existing material first
+            // ❗❗❗ Xóa các thuộc tính không cần thiết và đảm bảo hình học sạch sẽ
+            if (child.geometry.attributes.color) {
+              child.geometry.deleteAttribute("color");
             }
+            child.geometry.computeVertexNormals();
+
+            // ❗❗❗ Xóa các thuộc tính không cần thiết và đảm bảo hình học sạch sẽ
+            if (child.geometry.attributes.color) {
+              child.geometry.deleteAttribute("color");
+            }
+            child.geometry.computeVertexNormals();
 
             // Opal/Moonstone material - milky white, translucent stone
             child.material = new THREE.MeshPhysicalMaterial({
@@ -391,17 +417,8 @@ export class ThreeJSViewer {
               vertexColors: false,
             });
             child.material.needsUpdate = true;
-
-            // FORCE GEOMETRY UPDATE
-            child.geometry.attributes.position.needsUpdate = true;
-            if (child.geometry.attributes.normal) {
-              child.geometry.attributes.normal.needsUpdate = true;
-            }
-            if (child.geometry.attributes.uv) {
-              child.geometry.attributes.uv.needsUpdate = true;
-            }
           } else {
-            // Apply enhanced gold material to metal parts
+            // Apply enhanced rose gold material to metal parts
             child.material = new THREE.MeshPhysicalMaterial({
               color: 0xeecdae, // Correct rose gold color
               metalness: 1.0,
