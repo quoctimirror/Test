@@ -225,3 +225,24 @@
     font-size: 1rem;
     color: #888;
 }
+
+/* ... các style cũ của bạn ... */
+
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background-color: rgba(255, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 0, 0, 0.5);
+}
+
+.error-text {
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    max-width: 300px;
+    margin: 0;
+}
