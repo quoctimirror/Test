@@ -1,0 +1,227 @@
+/* src/components/jsx/lab/BackCamera.css */
+
+.mirror-container {
+    position: fixed;
+    inset: 0;
+    background-color: #f0f0f0;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+}
+
+.camera-feed {
+    position: absolute;
+    inset: 0;
+    background-color: #000;
+}
+
+.camera-video,
+.detection-canvas,
+.captured-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+}
+
+/* Thêm z-index để đảm bảo thứ tự xếp chồng một cách tường minh */
+.camera-video {
+    z-index: 1;
+    /* Lớp video nền */
+}
+
+.detection-canvas {
+    z-index: 2;
+    /* Lớp canvas 3D (có nhẫn) nằm trên video */
+}
+
+.captured-image {
+    z-index: 3;
+    /* Lớp ảnh đã chụp (nếu có) */
+}
+
+
+.ui-overlay {
+    position: relative;
+    z-index: 10;
+    /* Lớp giao diện người dùng luôn nằm trên cùng */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: env(safe-area-inset-top, 15px) env(safe-area-inset-right, 20px) env(safe-area-inset-bottom, 15px) env(safe-area-inset-left, 20px);
+}
+
+.mirror-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 60px;
+}
+
+.close-button {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.5rem;
+    line-height: 1;
+    font-weight: 300;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.mirror-title {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 400;
+    font-size: 1.2rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: white;
+}
+
+.mirror-main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.scanner-frame {
+    width: 60vw;
+    height: 60vw;
+    max-width: 300px;
+    max-height: 300px;
+    position: relative;
+}
+
+.scanner-frame::before,
+.scanner-frame::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: #c0c0c0;
+    border-style: solid;
+}
+
+.scanner-frame::before {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+
+.scanner-frame::after {
+    top: 0;
+    right: 0;
+    border-width: 2px 2px 0 0;
+}
+
+.scanner-frame-bottom-corners::before,
+.scanner-frame-bottom-corners::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: #c0c0c0;
+    border-style: solid;
+}
+
+.scanner-frame-bottom-corners::before {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 2px 2px;
+}
+
+.scanner-frame-bottom-corners::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+
+.instruction-text {
+    font-size: 0.9rem;
+    margin-top: 20px;
+    opacity: 1;
+    /* Hiển thị mặc định */
+    transition: opacity 0.3s ease;
+}
+
+.instruction-text--hidden {
+    opacity: 0;
+    /* Class để ẩn đi */
+}
+
+
+.mirror-footer {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.capture-button {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: white;
+    border: 4px solid #e0e0e0;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: auto;
+}
+
+.capture-button:active {
+    transform: scale(0.9);
+}
+
+.action-button {
+    padding: 12px 24px;
+    border-radius: 25px;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    pointer-events: auto;
+}
+
+.action-button:hover {
+    background: white;
+    color: #333;
+}
+
+.action-button:active {
+    transform: scale(0.95);
+}
+
+.loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(240, 240, 240, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+}
+
+.loading-text {
+    font-size: 1rem;
+    color: #888;
+}

@@ -33,10 +33,10 @@ const getTwistAngleFromQuaternion = (totalRotation, baseRotation) => {
     if (twistQuaternion.z < 0) {
         angle = -angle;
     }
-    
+
     // Đảm bảo góc nằm trong khoảng -PI và PI cho nhất quán
     if (angle > Math.PI) {
-      angle -= 2 * Math.PI;
+        angle -= 2 * Math.PI;
     }
 
     return angle;
@@ -49,7 +49,7 @@ const AR4 = () => {
     const videoRef = useRef(null);
     const threeCanvasRef = useRef(null);
     const [loadingMessage, setLoadingMessage] = useState("Đang khởi tạo...");
-    
+
     // --- 2.2: CÁC HẰNG SỐ ĐIỀU CHỈNH ---
     const SCALE_ADJUSTMENT_FACTOR = 0.2;
     const BASE_RING_SCALE = 0.48;
@@ -57,8 +57,8 @@ const AR4 = () => {
     const USE_OCCLUDER = true;
     const OCCLUDER_RADIUS_FACTOR = 0.1;
     const SMOOTHING_FACTOR = 0.8;
-    const AUTO_ROTATION_SPEED = 0.02; 
-    const TILT_THRESHOLD = 0.2; 
+    const AUTO_ROTATION_SPEED = 0.02;
+    const TILT_THRESHOLD = 0.2;
 
     const appState = useRef({
         handLandmarker: null,
@@ -139,7 +139,7 @@ const AR4 = () => {
 
             const loader = new GLTFLoader();
             return new Promise((resolve, reject) => {
-                loader.load('/models/cryring.glb', (gltf) => {
+                loader.load('/models/ring_meshes_yellow_red.glb', (gltf) => {
                     appState.ringModel = gltf.scene;
                     appState.ringModel.visible = true;
                     appState.ringModel.traverse(child => {
@@ -174,7 +174,7 @@ const AR4 = () => {
                 };
             });
         };
-        
+
         const startAnimationLoop = () => {
             setLoadingMessage("");
             const animate = () => {
@@ -187,7 +187,7 @@ const AR4 = () => {
             };
             animate();
         };
-        
+
         const getWorldVector = (landmark, distance, targetVector) => {
             const fovInRadians = (appState.camera.fov * Math.PI) / 180;
             const height = 2 * Math.tan(fovInRadians / 2) * distance;
@@ -198,7 +198,7 @@ const AR4 = () => {
                 -distance
             );
         };
-        
+
         const processFrame = (results) => {
             const { math } = appState;
 
@@ -226,7 +226,7 @@ const AR4 = () => {
                     math.palmDirY.subVectors(math.p5, math.p0).normalize();
                     math.palmNormal.crossVectors(math.palmDirX, math.palmDirY).normalize();
                     if (handedness === 'Right') math.palmNormal.negate();
-                    
+
                     math.fingerZ.copy(math.palmNormal);
                     math.fingerX.crossVectors(math.fingerDir, math.fingerZ).normalize();
                     math.fingerY.crossVectors(math.fingerZ, math.fingerX).normalize();
@@ -269,7 +269,7 @@ const AR4 = () => {
                     const retrievedAngleRad = getTwistAngleFromQuaternion(currentTotalRotation, currentBaseRotation);
                     const retrievedAngleDeg = retrievedAngleRad * (180 / Math.PI); // Đổi sang độ cho dễ đọc
                     // In ra để so sánh (Mở F12 -> Console để xem)
-                    console.log(`Góc gốc (độ): ${ (math.rotationAngle * 180 / Math.PI).toFixed(2) } | Góc lấy lại (độ): ${retrievedAngleDeg.toFixed(2)}`);
+                    console.log(`Góc gốc (độ): ${(math.rotationAngle * 180 / Math.PI).toFixed(2)} | Góc lấy lại (độ): ${retrievedAngleDeg.toFixed(2)}`);
 
                     // --- CÁC LOGIC KHÁC ---
                     if (USE_OCCLUDER && appState.fingerOccluder) {
@@ -282,7 +282,7 @@ const AR4 = () => {
                         math.targetOccluderQuaternion.setFromUnitVectors(math.yAxis, math.fingerDir);
                         appState.fingerOccluder.quaternion.slerp(math.targetOccluderQuaternion, SMOOTHING_FACTOR);
                     }
-                    
+
                     appState.ringParts.band.visible = true;
                     appState.ringParts.diamond.visible = !isPalmFacingCamera;
 

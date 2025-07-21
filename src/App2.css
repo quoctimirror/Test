@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* Ngăn thanh cuộn xuất hiện */
+  background-color: #111;
+  /* Đặt màu nền tối cho toàn bộ trang */
+}
+
+/* Đảm bảo canvas lấp đầy container của nó */
+canvas {
+  display: block;
+}

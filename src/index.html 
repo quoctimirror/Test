@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Đeo Nhẫn AR Chân Thật</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 100;
+        }
+        .control-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        input[type="range"] {
+            width: 150px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 2px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="controls">
+            <h3>Điều khiển nhẫn AR</h3>
+            
+            <div class="control-group">
+                <label>Độ dày nhẫn:</label>
+                <input type="range" id="ringThickness" min="0.5" max="3" step="0.1" value="1.5">
+            </div>
+            
+            <div class="control-group">
+                <label>Kích thước nhẫn:</label>
+                <input type="range" id="ringSize" min="0.8" max="1.5" step="0.05" value="1.1">
+            </div>
+            
+            <div class="control-group">
+                <label>Độ phản chiếu:</label>
+                <input type="range" id="metallic" min="0" max="1" step="0.1" value="0.9">
+            </div>
+            
+            <div class="control-group">
+                <label>Độ nhám:</label>
+                <input type="range" id="roughness" min="0" max="1" step="0.1" value="0.1">
+            </div>
+            
+            <div class="control-group">
+                <button onclick="toggleMaterial('gold')">Vàng</button>
+                <button onclick="toggleMaterial('silver')">Bạc</button>
+                <button onclick="toggleMaterial('platinum')">Bạch kim</button>
+            </div>
+            
+            <div class="control-group">
+                <button onclick="toggleDiamond()">Bật/Tắt Kim cương</button>
+                <button onclick="toggleAnimation()">Bật/Tắt Hoạt hình</button>
+            </div>
+        </div>
+        
+        <div id="info">
+            <h4>Kỹ thuật làm nhẫn AR chân thật:</h4>
+            <p><strong>1. Geometry chính xác:</strong> Ring geometry phải có hole để ngón tay xuyên qua</p>
+            <p><strong>2. Material thực tế:</strong> PBR shading với metallic/roughness maps</p>
+            <p><strong>3. Lighting:</strong> Environment mapping + point lights để tạo phản chiếu</p>
+            <p><strong>4. Shadow mapping:</strong> Nhẫn tạo bóng lên ngón tay</p>
+            <p><strong>5. Occlusion:</strong> Ambient occlusion cho độ sâu</p>
+            <p><strong>6. Physics constraints:</strong> Nhẫn chỉ di chuyển theo ngón tay</p>
+        </div>
+    </div>
+
+    <script>
+        // Khởi tạo Three.js
+        let scene, camera, renderer, ring, finger, diamond;
+        let ringMesh, fingerMesh, diamondMesh;
+        let animationEnabled = true;
+        let diamondEnabled = true;
+
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x222222);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 5);
+
+            // Renderer với shadows
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.physicallyCorrectLights = true;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            document.getElementById('container').appendChild(renderer.domElement);
+
+            // Lighting setup cho độ chân thật
+            setupLighting();
+            
+            // Tạo ngón tay
+            createFinger();
+            
+            // Tạo nhẫn
+            createRing();
+            
+            // Tạo kim cương
+            createDiamond();
+
+            // Event listeners
+            setupControls();
+            
+            // Animation loop
+            animate();
+        }
+
+        function setupLighting() {
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+            scene.add(ambientLight);
+
+            // Main directional light (sunlight)
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(5, 5, 5);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+
+            // Fill lights
+            const fillLight1 = new THREE.PointLight(0x4080ff, 0.5, 10);
+            fillLight1.position.set(-3, 2, 3);
+            scene.add(fillLight1);
+
+            const fillLight2 = new THREE.PointLight(0xff8040, 0.3, 8);
+            fillLight2.position.set(3, -2, 2);
+            scene.add(fillLight2);
+
+            // Environment map cho phản chiếu
+            const loader = new THREE.CubeTextureLoader();
+            // Tạo environment map đơn giản
+            const envMap = createSimpleEnvMap();
+            scene.environment = envMap;
+        }
+
+        function createSimpleEnvMap() {
+            const size = 256;
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Gradient từ xanh da trời đến trắng
+            const gradient = ctx.createLinearGradient(0, 0, 0, size);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(1, '#ffffff');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            return new THREE.CubeTexture([texture, texture, texture, texture, texture, texture]);
+        }
+
+        function createFinger() {
+            // Tạo hình trụ cho ngón tay với tỷ lệ thực tế
+            const fingerGeometry = new THREE.CylinderGeometry(0.4, 0.35, 3, 16);
+            
+            // Material da người với subsurface scattering giả lập
+            const fingerMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xfdbcb4,
+                roughness: 0.8,
+                metalness: 0.0,
+                clearcoat: 0.1,
+                clearcoatRoughness: 0.9,
+                transmission: 0.1, // Một chút trong suốt cho hiệu ứng da
+            });
+
+            fingerMesh = new THREE.Mesh(fingerGeometry, fingerMaterial);
+            fingerMesh.position.set(0, 0, 0);
+            fingerMesh.castShadow = true;
+            fingerMesh.receiveShadow = true;
+            scene.add(fingerMesh);
+        }
+
+        function createRing() {
+            // Tạo geometry nhẫn với lỗ ở giữa
+            const outerRadius = 0.55;
+            const innerRadius = 0.42; // Lỗ để ngón tay xuyên qua
+            const height = 0.15;
+            
+            // Sử dụng RingGeometry và extrude để tạo nhẫn 3D
+            const shape = new THREE.Shape();
+            shape.absarc(0, 0, outerRadius, 0, Math.PI * 2, false);
+            
+            const hole = new THREE.Path();
+            hole.absarc(0, 0, innerRadius, 0, Math.PI * 2, true);
+            shape.holes.push(hole);
+
+            const extrudeSettings = {
+                depth: height,
+                bevelEnabled: true,
+                bevelThickness: 0.02,
+                bevelSize: 0.02,
+                bevelSegments: 8
+            };
+
+            const ringGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            ringGeometry.rotateX(-Math.PI / 2);
+
+            // Material kim loại chân thật với PBR
+            const ringMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xffd700, // Vàng
+                metalness: 0.9,
+                roughness: 0.1,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1,
+                envMapIntensity: 1.5,
+            });
+
+            ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+            ringMesh.position.set(0, -0.3, 0); // Đặt trên ngón tay
+            ringMesh.castShadow = true;
+            ringMesh.receiveShadow = true;
+            scene.add(ringMesh);
+        }
+
+        function createDiamond() {
+            // Tạo kim cương đơn giản
+            const diamondGeometry = new THREE.OctahedronGeometry(0.08, 0);
+            const diamondMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,
+                metalness: 0.0,
+                roughness: 0.0,
+                transmission: 0.9,
+                ior: 2.4, // Index of refraction của kim cương
+                thickness: 0.1,
+                envMapIntensity: 2.0,
+            });
+
+            diamondMesh = new THREE.Mesh(diamondGeometry, diamondMaterial);
+            diamondMesh.position.set(0, -0.3, 0.6); // Trên nhẫn
+            diamondMesh.castShadow = true;
+            scene.add(diamondMesh);
+        }
+
+        function setupControls() {
+            // Ring thickness
+            document.getElementById('ringThickness').addEventListener('input', (e) => {
+                const thickness = parseFloat(e.target.value);
+                ringMesh.scale.y = thickness;
+            });
+
+            // Ring size
+            document.getElementById('ringSize').addEventListener('input', (e) => {
+                const size = parseFloat(e.target.value);
+                ringMesh.scale.x = size;
+                ringMesh.scale.z = size;
+            });
+
+            // Metallic
+            document.getElementById('metallic').addEventListener('input', (e) => {
+                const metallic = parseFloat(e.target.value);
+                ringMesh.material.metalness = metallic;
+            });
+
+            // Roughness
+            document.getElementById('roughness').addEventListener('input', (e) => {
+                const roughness = parseFloat(e.target.value);
+                ringMesh.material.roughness = roughness;
+            });
+        }
+
+        function toggleMaterial(type) {
+            switch(type) {
+                case 'gold':
+                    ringMesh.material.color.setHex(0xffd700);
+                    break;
+                case 'silver':
+                    ringMesh.material.color.setHex(0xc0c0c0);
+                    break;
+                case 'platinum':
+                    ringMesh.material.color.setHex(0xe5e4e2);
+                    break;
+            }
+        }
+
+        function toggleDiamond() {
+            diamondEnabled = !diamondEnabled;
+            diamondMesh.visible = diamondEnabled;
+        }
+
+        function toggleAnimation() {
+            animationEnabled = !animationEnabled;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (animationEnabled) {
+                // Xoay nhẹ để thấy hiệu ứng ánh sáng
+                ringMesh.rotation.y += 0.005;
+                if (diamondEnabled) {
+                    diamondMesh.rotation.y += 0.01;
+                }
+                
+                // Breathing animation cho ngón tay
+                fingerMesh.scale.x = 1 + Math.sin(Date.now() * 0.002) * 0.02;
+                fingerMesh.scale.z = 1 + Math.sin(Date.now() * 0.002) * 0.02;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Responsive
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Khởi tạo
+        init();
+    </script>
+</body>
+</html>

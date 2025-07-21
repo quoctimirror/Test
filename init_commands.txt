@@ -1,5 +1,20 @@
 npm create vite@latest
 npm i @mediapipe/tasks-vision
-tree -I 'node_modules|.git|build|.vscode'
+tree -I 'node_modules|.git|.vscode|dist|build|*.lock'
 
 Authtoken saved to configuration file: /home/quocti/snap/ngrok/280/.config/ngrok/ngrok.yml
+
+
+
+python3 -m venv .venv
+
+# B3: Kích hoạt môi trường ảo
+source .venv/bin/activate
+
+# B4: Cài đặt pygltflib trong venv
+pip install pygltflib
+
+Cái này để coi các cái dữ liệu của cái nhẫn
+npm install --global @gltf-transform/cli
+phải cd tới cái chỗ chứa cái file .glb đó
+gltf-transform copy demo-ring.glb unpacked-demo-ring.gltf --format gltf

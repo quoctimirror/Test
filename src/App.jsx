@@ -20,23 +20,26 @@ import './App.css';
 
 function App() {
   // Đặt chế độ mặc định là 'ar_tryon' để dễ dàng kiểm tra ngay
-  const [mode, setMode] = useState('ar_tryon');
+  // const [mode, setMode] = useState('ar_tryon');
 
   return (
     <div className="App">
-      <header className="app-header-custom">
+      {/* <header className="app-header-custom">
         <h1>💍 Virtual Ring Try-On</h1>
-      </header>
+      </header> */}
 
+
+      {/* {< ModelViewer />} */}
       {/* <AR1 /> */}
       {/* <AR2_SmoothlyMotion /> */}
       {/* <AR3_rotateRingZ /> */}
-      {/* {<QRScan />}
-      {<AR4 />} */}
-      {< ModelViewer />}
-      
-      
-      
+      {/* {<QRScan />} */}
+      {<AR4 />}
+
+
+
+
+
       {/* Sử dụng <nav> cho ngữ nghĩa tốt hơn */}
       {/* <nav className="mode-switcher">
         <button 
@@ -64,7 +67,7 @@ function App() {
           3D Model Viewer
         </button>
       </nav> */}
-      
+
       <main className="app-main">
         {/* --- BƯỚC 1.3: THÊM LOGIC RENDER CHO COMPONENT AR --- */}
         {/* {mode === 'ar_tryon' && <ARJewelryTryOn />}

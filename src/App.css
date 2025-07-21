@@ -1,103 +1,16 @@
-/* src/App.css */
+/* src/index.css */
 
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 1rem; /* Giảm padding một chút */
-  text-align: center;
+body {
+    margin: 0;
 }
 
+/* Đảm bảo các thẻ gốc chiếm toàn bộ không gian */
+html,
+body,
+#root,
 .App {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: 100%;
-}
-
-.app-header-custom h1 {
-  color: #ffc107;
-  font-size: 2.5em; /* Giảm kích thước một chút */
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-}
-
-.app-header-custom p {
-  margin-top: 0;
-  font-size: 1.1em;
-  color: #bdbdbd;
-}
-
-.mode-switcher {
-  display: flex;
-  flex-wrap: wrap; /* Rất quan trọng để các nút tự xuống hàng */
-  justify-content: center;
-  gap: 10px; /* Giảm khoảng cách */
-  margin-bottom: 25px;
-  padding-bottom: 25px;
-  border-bottom: 1px solid #444;
-  width: 100%;
-}
-
-.mode-button {
-  background-color: #3a3a3a;
-  color: #f0f0f0;
-  border: 2px solid #555;
-  padding: 8px 16px; /* Giảm padding */
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.9em; /* Giảm font-size */
-  font-weight: 500;
-  font-family: inherit;
-  transition: all 0.2s ease-in-out;
-}
-
-.mode-button:hover {
-  background-color: #4a4a4a;
-  border-color: #ff9800;
-  transform: translateY(-2px);
-}
-
-.mode-button.active {
-  background-color: #ff9800;
-  color: #1a1a1a;
-  border-color: #ffc107;
-  font-weight: 700;
-  box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
-}
-
-/* 
-  PHẦN SỬA DUY NHẤT VÀ QUAN TRỌNG NHẤT
-  .app-main giờ chỉ làm đúng một nhiệm vụ: căn giữa bất kỳ component nào được đặt bên trong nó.
-  Nó không còn chịu trách nhiệm về kích thước của component nữa.
-*/
-.app-main {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* --- MEDIA QUERY CHO THIẾT BỊ DI ĐỘNG --- */
-@media (max-width: 768px) {
-  #root {
-    padding: 1rem 0.5rem; /* Giảm padding hai bên trên màn hình nhỏ */
-  }
-
-  .app-header-custom h1 {
-    font-size: 2em; /* Giảm font-size header */
-    gap: 10px;
-  }
-  
-  .app-header-custom p {
-    font-size: 1em;
-  }
-
-  .mode-button {
-    font-size: 0.85em; /* Giảm font-size nút thêm chút nữa */
-    padding: 8px 12px;
-  }
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    /* Ngăn thanh cuộn */
 }
