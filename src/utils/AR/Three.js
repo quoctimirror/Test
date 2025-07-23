@@ -5,6 +5,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Reflector } from "three/examples/jsm/objects/Reflector.js";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
+import { RingEnhancer } from "./RingEnhancer.js";
 
 export class ThreeJSViewer {
   constructor(container) {
@@ -26,6 +27,9 @@ export class ThreeJSViewer {
 
     // Mirror reflector
     this.mirror = null;
+
+    // Ring enhancer instance
+    this.ringEnhancer = null;
 
     // Model settings - optimized for target image
     this.modelPath = "/view360/ring.glb";
@@ -432,6 +436,10 @@ export class ThreeJSViewer {
         }
       });
 
+      // Use RingEnhancer to enhance only diamond meshes
+      this.ringEnhancer = new RingEnhancer(this.envMap);
+      this.ringEnhancer.enhanceRingModel(this.model, this.envMap);
+
       // Setup animations if any
       if (gltf.animations && gltf.animations.length > 0) {
         this.mixer = new THREE.AnimationMixer(this.model);
@@ -598,98 +606,26 @@ export class ThreeJSViewer {
   }
 
   setDiamondMaterial() {
-    if (!this.model) return;
-
-    this.model.traverse((child) => {
-      if (child.isMesh && child.userData.isDiamond) {
-        child.material = new THREE.MeshPhysicalMaterial({
-          color: 0xffffff, // Pure white
-          metalness: 0.0,
-          roughness: 0.0,
-          transmission: 0.99, // Maximum transparency
-          transparent: true,
-          opacity: 0.98, // Nearly transparent
-          reflectivity: 1.0,
-          envMapIntensity: 2.0, // Moderate reflection
-          clearcoat: 1.0,
-          clearcoatRoughness: 0.0,
-          ior: 2.42, // Diamond refractive index
-          thickness: 0.1, // Very thin for maximum clarity
-          attenuationDistance: 0.1,
-          attenuationColor: new THREE.Color(0xffffff), // Pure white attenuation
-          side: THREE.DoubleSide,
-        });
-        child.material.needsUpdate = true;
-      }
-    });
+    if (this.ringEnhancer) {
+      this.ringEnhancer.setStandardDiamondMaterial();
+    }
   }
 
   // Force all diamonds to have the same material - for troubleshooting
   forceAllDiamondsUniform() {
-    if (!this.model) return;
-
-    this.model.traverse((child) => {
-      if (child.isMesh) {
-        const name = child.name ? child.name.toLowerCase() : "";
-        const materialName =
-          child.material && child.material.name
-            ? child.material.name.toLowerCase()
-            : "";
-
-        // Force any mesh that might be diamond to have diamond material
-        const couldBeDiamond =
-          name.includes("diamond") ||
-          name.includes("gem") ||
-          name.includes("stone") ||
-          name.includes("crystal") ||
-          materialName.includes("diamond") ||
-          materialName.includes("gem") ||
-          materialName.includes("crystal") ||
-          name.includes("brilliant") ||
-          name.includes("round") ||
-          name.includes("cut") ||
-          // Check material color - if it's very bright/white, likely diamond
-          (child.material &&
-            child.material.color &&
-            child.material.color.r > 0.8 &&
-            child.material.color.g > 0.8 &&
-            child.material.color.b > 0.8) ||
-          // Check if material has transparency
-          (child.material && child.material.transparent) ||
-          (child.material && child.material.opacity < 1.0);
-
-        if (couldBeDiamond) {
-          child.userData.isDiamond = true;
-          child.userData.isMetal = false;
-
-          child.material = new THREE.MeshPhysicalMaterial({
-            color: 0xffffff,
-            metalness: 0.0,
-            roughness: 0.0,
-            transmission: 0.98,
-            transparent: true,
-            opacity: 0.95,
-            reflectivity: 1.0,
-            envMapIntensity: 3.5,
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.0,
-            ior: 2.42,
-            thickness: 0.3,
-            attenuationDistance: 0.3,
-            attenuationColor: new THREE.Color(0xffffff),
-            side: THREE.DoubleSide,
-          });
-          child.material.needsUpdate = true;
-        }
-      }
-    });
+    if (this.ringEnhancer) {
+      this.ringEnhancer.forceAllPotentialDiamondsUniform();
+    }
   }
 
   resetToOriginalMaterials() {
-    if (!this.model) return;
-
-    // Reset to gold material as default
+    // Reset metal materials to gold
     this.setGoldMaterial();
+    
+    // Reset diamond materials via RingEnhancer
+    if (this.ringEnhancer) {
+      this.ringEnhancer.resetToOriginalMaterials();
+    }
   }
 
   // Control methods
@@ -760,6 +696,12 @@ export class ThreeJSViewer {
     if (this.mirrorSurface) {
       this.mirrorSurface.geometry.dispose();
       this.mirrorSurface.material.dispose();
+    }
+
+    // Clean up ring enhancer
+    if (this.ringEnhancer) {
+      this.ringEnhancer.dispose();
+      this.ringEnhancer = null;
     }
 
     // Clean up scene
