@@ -33,12 +33,12 @@ export class ThreeJSViewer {
 
     // Model settings - optimized for target image
     this.modelPath = "/view360/ring.glb";
-    this.modelScale = 3; // Increased scale for more presence
-    this.modelPosition = { x: 8, y: 0, z: 0 }; // Centered, slightly raised
+    this.modelScale = 2.5; // Increased scale for more presence
+    this.modelPosition = { x: 0, y: 0, z: 0 }; // Centered, slightly raised
     this.initialYRotation = Math.PI; // Better starting angle
 
     // Camera settings
-    this.cameraPosition = { x: 0, y: 0, z: 5 }; // Adjusted for better view
+    this.cameraPosition = { x: 0, y: 5.3, z: 10.5 }; // Adjusted for better view
   }
 
   init() {
@@ -51,7 +51,7 @@ export class ThreeJSViewer {
 
     // Create camera
     const aspect = this.container.clientWidth / this.container.clientHeight;
-    this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(65, aspect, 0.1, 1000);
     this.camera.position.set(
       this.cameraPosition.x,
       this.cameraPosition.y,
@@ -111,22 +111,26 @@ export class ThreeJSViewer {
   }
 
   createGradientBackground() {
-    // Create gradient background from pink to purple like reference image
+    // Create gradient background matching exact CSS values
     const canvas = document.createElement("canvas");
     canvas.width = 512;
     canvas.height = 512;
     const ctx = canvas.getContext("2d");
 
-    // Create vertical gradient
+    // CSS: linear-gradient(180deg, #4F1E2B -20.93%, #BB234C 45.58%, #000000 100%)
+    // Create exact gradient matching CSS values
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, "#FFB3D9"); // Light pink at top
-    gradient.addColorStop(0.5, "#E091AA"); // Medium pink in middle
-    gradient.addColorStop(1, "#B8698A"); // Darker pink-purple at bottom
+
+    // Recreate the exact CSS gradient behavior
+    gradient.addColorStop(0, "#4F1E2B"); // Dark red-brown at top
+    gradient.addColorStop(0.4558, "#BB234C"); // Bright red-pink at 45.58%
+    gradient.addColorStop(1, "#000000"); // Pure black at bottom 100%
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
     this.scene.background = texture;
   }
 
@@ -186,30 +190,31 @@ export class ThreeJSViewer {
   }
 
   setupLighting() {
-    // Minimal ambient light
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
-    this.scene.add(ambientLight);
-    this.lights.push(ambientLight);
+    // No ambient light to avoid affecting background/mirror
 
-    // Brighter key light focused on model
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
-    keyLight.position.set(5, 5, 5);
+    // Create lights that will only affect the ring
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    keyLight.position.set(3, 6, 4);
     keyLight.castShadow = false;
-    this.scene.add(keyLight);
+    // Don't add to scene yet - will be added after ring is loaded
+    this.keyLight = keyLight;
     this.lights.push(keyLight);
 
-    // Additional focused light for ring highlights
+    // Highlight light for metal parts
+    const highlightLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    highlightLight.position.set(-2, 4, 2);
+    highlightLight.castShadow = false;
+    // Don't add to scene yet - will be added after ring is loaded
+    this.highlightLight = highlightLight;
+    this.lights.push(highlightLight);
+
+    // Ring light for diamond sparkle
     const ringLight = new THREE.DirectionalLight(0xffffff, 0.8);
     ringLight.position.set(-3, 8, 3);
     ringLight.castShadow = false;
-    this.scene.add(ringLight);
+    // Don't add to scene yet - will be added after ring is loaded
+    this.ringLight = ringLight;
     this.lights.push(ringLight);
-
-    // Subtle fill light
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
-    fillLight.position.set(-5, -5, -5);
-    this.scene.add(fillLight);
-    this.lights.push(fillLight);
 
     // Enhanced HDR environment mapping for better reflections
     const envMapLoader = new THREE.CubeTextureLoader();
@@ -222,7 +227,7 @@ export class ThreeJSViewer {
       "https://threejs.org/examples/textures/cube/Bridge2/negz.jpg",
     ]);
     this.scene.environment = envMap;
-    // Keep the pink background instead of environment background
+    // Keep the custom background instead of environment background
     // this.scene.background = envMap;
 
     // Store environment map for material usage
@@ -260,8 +265,27 @@ export class ThreeJSViewer {
   }
 
   addMirrorGround() {
-    // Create mirror geometry - even larger mirror
-    const mirrorGeometry = new THREE.PlaneGeometry(50, 25);
+    // Create trapezoid mirror geometry using Shape and ShapeGeometry
+    const createTrapezoidGeometry = () => {
+      const shape = new THREE.Shape();
+
+      // Define trapezoid vertices (wider at bottom, narrower at top)
+      const width = 10;
+      const height = 9;
+      const narrowFactor = 0.6; // Top is 60% width of bottom
+
+      // Start from bottom left, go clockwise
+      shape.moveTo(-width, -height); // Bottom left
+      shape.lineTo(width, -height); // Bottom right
+      shape.lineTo(width * narrowFactor, height); // Top right (narrower)
+      shape.lineTo(-width * narrowFactor, height); // Top left (narrower)
+      shape.lineTo(-width, -height); // Back to start
+
+      const geometry = new THREE.ShapeGeometry(shape);
+      return geometry;
+    };
+
+    const mirrorGeometry = createTrapezoidGeometry();
 
     // Create reflector for mirror functionality (invisible/transparent)
     this.mirror = new Reflector(mirrorGeometry, {
@@ -272,31 +296,57 @@ export class ThreeJSViewer {
       recursion: 1,
     });
 
-    // Create colored mirror surface with pink reflection
-    const mirrorSurfaceGeometry = new THREE.PlaneGeometry(50, 25);
-    const mirrorSurfaceMaterial = new THREE.MeshStandardMaterial({
-      color: 0xe69ca9, // Pink mirror surface (#e69ca9)
-      metalness: 0.8, // More metallic for better reflection
-      roughness: 0.1, // Smoother for cleaner reflection
-      transparent: true,
-      opacity: 0.8, // Higher opacity for deeper color
-      emissive: 0xd18a98, // Slightly darker pink emissive
-      emissiveIntensity: 0.3,
+    // Create colored mirror surface with gradient reflection
+    const mirrorSurfaceGeometry = createTrapezoidGeometry();
+
+    // Create gradient texture for the trapezoid mirror (updated colors)
+    const createGradientTexture = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+
+      // Create vertical gradient (top to bottom) since mirror is rotated horizontally
+      // This will become front-to-back gradient when rotated
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, "rgba(236, 54, 103, 0.6)"); // Front edge - đậm nhất (hồng nhạt)
+      gradient.addColorStop(0.5, "#B22148"); // Center - sáng nhất (đỏ sẫm)
+      gradient.addColorStop(1.0, "rgba(236, 54, 103, 0.6)"); // Back edge - đậm nhất (hồng nhạt)
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      return new THREE.CanvasTexture(canvas);
+    };
+
+    const gradientTexture = createGradientTexture();
+    gradientTexture.colorSpace = THREE.SRGBColorSpace;
+    gradientTexture.needsUpdate = true; // Force texture update
+
+    const mirrorSurfaceMaterial = new THREE.MeshBasicMaterial({
+      map: gradientTexture, // Apply gradient texture
+      transparent: false, // Remove transparency to show full gradient colors
+      opacity: 1.0, // Full opacity for vibrant colors
+      side: THREE.DoubleSide, // Ensure visibility from both sides
     });
+    mirrorSurfaceMaterial.needsUpdate = true; // Force material update
 
     const mirrorSurface = new THREE.Mesh(
       mirrorSurfaceGeometry,
       mirrorSurfaceMaterial
     );
 
+    this.mirror.position.z = 2;
+    mirrorSurface.position.z = 2;
+
     // Position both mirror and surface horizontally like in reference image
-    this.mirror.position.y = -3.7;
+    this.mirror.position.y = -2.5;
     this.mirror.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
-    mirrorSurface.position.y = -3.69; // Slightly above reflector
+    mirrorSurface.position.y = -3; // Higher above reflector to ensure visibility
     mirrorSurface.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
-    this.scene.add(this.mirror);
+    this.scene.add(this.mirror); // Temporarily hide reflector to see gradient surface
     this.scene.add(mirrorSurface);
     this.mirrorSurface = mirrorSurface;
   }
@@ -439,6 +489,11 @@ export class ThreeJSViewer {
       // Use RingEnhancer to enhance only diamond meshes
       this.ringEnhancer = new RingEnhancer(this.envMap);
       this.ringEnhancer.enhanceRingModel(this.model, this.envMap);
+
+      // Add lights to scene only after ring is loaded, and configure them to only affect the ring
+      this.scene.add(this.keyLight);
+      this.scene.add(this.highlightLight);
+      this.scene.add(this.ringLight);
 
       // Setup animations if any
       if (gltf.animations && gltf.animations.length > 0) {
@@ -621,7 +676,7 @@ export class ThreeJSViewer {
   resetToOriginalMaterials() {
     // Reset metal materials to gold
     this.setGoldMaterial();
-    
+
     // Reset diamond materials via RingEnhancer
     if (this.ringEnhancer) {
       this.ringEnhancer.resetToOriginalMaterials();

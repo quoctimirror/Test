@@ -2,7 +2,7 @@
 .view-360-section {
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(135deg, #ff8fb7 0%, #ffb3d9 50%, #ff99cc 100%);
+  background: linear-gradient(0.1deg, rgba(236, 54, 103, 0.1) 16.65%, #C74D6D 71.89%, #B22148 99.91%);
   position: relative;
   padding: 0;
   box-sizing: border-box;

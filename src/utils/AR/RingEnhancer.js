@@ -431,7 +431,7 @@ export default RingEnhancer;
 
 // // Three.js đã load studio_small_03_4k.hdr trong setupEnvironment() và truyền vào RingEnhancer thông qua:
 
-//   // Trong loadModel() của Three.js
+//   Trong loadModel() của Three.js
 //   this.ringEnhancer = new RingEnhancer(this.envMap);
 //   this.ringEnhancer.enhanceRingModel(this.model, this.envMap);
 
