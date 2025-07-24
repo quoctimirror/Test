@@ -11,6 +11,7 @@ const View360 = () => {
   const [rotationSpeed, setRotationSpeed] = useState(0.5);
   const [showQRPopup, setShowQRPopup] = useState(false);
   const [showColorControls, setShowColorControls] = useState(false);
+  const [activeMaterial, setActiveMaterial] = useState("default"); // Track active material
 
   useEffect(() => {
     if (!containerRef.current || viewerRef.current) return;
@@ -77,24 +78,28 @@ const View360 = () => {
   const handleGoldMaterial = () => {
     if (viewerRef.current) {
       viewerRef.current.setGoldMaterial();
+      setActiveMaterial("gold");
     }
   };
 
   const handleSilverMaterial = () => {
     if (viewerRef.current) {
       viewerRef.current.setSilverMaterial();
+      setActiveMaterial("silver");
     }
   };
 
   const handlePlatinumMaterial = () => {
     if (viewerRef.current) {
       viewerRef.current.setPlatinumMaterial();
+      setActiveMaterial("platinum");
     }
   };
 
   const handleRoseGoldMaterial = () => {
     if (viewerRef.current) {
       viewerRef.current.setRoseGoldMaterial();
+      setActiveMaterial("rose-gold");
     }
   };
 
@@ -113,6 +118,7 @@ const View360 = () => {
   const handleResetMaterials = () => {
     if (viewerRef.current) {
       viewerRef.current.resetToOriginalMaterials();
+      setActiveMaterial("default");
     }
   };
 
@@ -138,81 +144,52 @@ const View360 = () => {
           <button className="ar-try-btn" onClick={handleARTryOnClick}>
             AR Try on
           </button>
-          <button className="color-controls-btn" onClick={toggleColorControls}>
-            🎨 Colors
+          <button
+            className={`color-btn gold ${
+              activeMaterial === "gold" ? "active" : ""
+            }`}
+            onClick={handleGoldMaterial}
+            title="Gold"
+          >
+            Gold
+          </button>
+          <button
+            className={`color-btn silver ${
+              activeMaterial === "silver" ? "active" : ""
+            }`}
+            onClick={handleSilverMaterial}
+            title="Silver"
+          >
+            Silver
+          </button>
+          <button
+            className={`color-btn platinum ${
+              activeMaterial === "platinum" ? "active" : ""
+            }`}
+            onClick={handlePlatinumMaterial}
+            title="Platinum"
+          >
+            Platinum
+          </button>
+          <button
+            className={`color-btn rose-gold ${
+              activeMaterial === "rose-gold" ? "active" : ""
+            }`}
+            onClick={handleRoseGoldMaterial}
+            title="Rose Gold"
+          >
+            Rose Gold
+          </button>
+          <button
+            className={`color-btn reset ${
+              activeMaterial === "default" ? "active" : ""
+            }`}
+            onClick={handleResetMaterials}
+            title="Reset to Original"
+          >
+            Reset
           </button>
         </div>
-
-        {/* Color Controls Panel */}
-        {showColorControls && (
-          <div className="color-controls-panel">
-            <div className="color-controls-header">
-              <h3>Customize Ring</h3>
-              <button className="close-btn" onClick={toggleColorControls}>×</button>
-            </div>
-            
-            <div className="color-section">
-              <h4>Metal Colors</h4>
-              <div className="color-buttons">
-                <button 
-                  className="color-btn gold" 
-                  onClick={handleGoldMaterial}
-                  title="Gold"
-                >
-                  Gold
-                </button>
-                <button 
-                  className="color-btn silver" 
-                  onClick={handleSilverMaterial}
-                  title="Silver"
-                >
-                  Silver
-                </button>
-                <button 
-                  className="color-btn platinum" 
-                  onClick={handlePlatinumMaterial}
-                  title="Platinum"
-                >
-                  Platinum
-                </button>
-                <button 
-                  className="color-btn rose-gold" 
-                  onClick={handleRoseGoldMaterial}
-                  title="Rose Gold"
-                >
-                  Rose Gold
-                </button>
-              </div>
-            </div>
-
-            <div className="color-section">
-              <h4>Diamond Enhancement</h4>
-              <div className="color-buttons">
-                <button 
-                  className="color-btn diamond" 
-                  onClick={handleDiamondMaterial}
-                  title="Enhanced Diamonds"
-                >
-                  💎 Enhance
-                </button>
-                <button 
-                  className="color-btn uniform" 
-                  onClick={handleForceAllDiamondsUniform}
-                  title="Make All Diamonds Uniform"
-                >
-                  🔧 Fix All
-                </button>
-                <button 
-                  className="color-btn reset" 
-                  onClick={handleResetMaterials}
-                  title="Reset to Original"
-                >
-                  🔄 Reset
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Hidden Controls for Development */}
         <div className="dev-controls" style={{ display: "none" }}>
@@ -251,7 +228,7 @@ const View360 = () => {
       <QRPopup
         isOpen={showQRPopup}
         onClose={handleCloseQRPopup}
-        ringId="nhanXam"
+        ringId="nhanBase"
       />
     </div>
   );

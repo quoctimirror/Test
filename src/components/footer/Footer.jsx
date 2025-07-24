@@ -23,10 +23,10 @@ const Footer = () => {
                   <a href="/">Homepage</a>
                 </li>
                 <li>
-                  <a href="/collection">Collection</a>
+                  <a href="/collection">Our Gems</a>
                 </li>
                 <li>
-                  <a href="/services">Services & Support</a>
+                  <a href="/services">Mirror Care</a>
                 </li>
                 <li>
                   <a href="/about">The Mirrorverse</a>
@@ -40,7 +40,10 @@ const Footer = () => {
 
           <div className="footer-center">
             <div className="newsletter-section">
-              <h2 className="newsletter-title">ENTER THE UNIVERSE</h2>
+              <h2 className="newsletter-title">
+                ENTER <br />
+                THE UNIVERSE
+              </h2>
               <p className="newsletter-subtitle">
                 For a more personalized experience and exclusive news.
               </p>
@@ -52,9 +55,11 @@ const Footer = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="email-input"
                 />
-                <button onClick={handleSignUp} className="signup-button">
-                  Sign up
-                </button>
+                <div className="signup-button-wrapper">
+                  <button onClick={handleSignUp} className="signup-button">
+                    Sign up
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -74,34 +79,35 @@ const Footer = () => {
         </div>
 
         <div className="footer-bottom">
-          <div className="footer-bottom-left">
-            <p>All rights reserved � 2025</p>
-          </div>
-
           <div className="footer-bottom-center">
             <div className="social-icons">
-              <a href="#" className="social-icon facebook">
+              <a className="social-icon facebook">
                 <i className="fab fa-facebook-f"></i>
               </a>
-              <a href="#" className="social-icon instagram">
+              <a className="social-icon instagram">
                 <i className="fab fa-instagram"></i>
               </a>
-              <a href="#" className="social-icon youtube">
+              <a className="social-icon youtube">
                 <i className="fab fa-youtube"></i>
               </a>
-              <a href="#" className="social-icon linkedin">
+              <a className="social-icon linkedin">
                 <i className="fab fa-linkedin-in"></i>
               </a>
-              <a href="#" className="social-icon pinterest">
+              <a className="social-icon pinterest">
                 <i className="fab fa-pinterest-p"></i>
               </a>
             </div>
           </div>
-
-          <div className="footer-bottom-right">
-            <a className="legal-link">Legal mentions</a>
-          </div>
         </div>
+      </div>
+
+      {/* Footer Bottom Left & Right - Outside container for full width */}
+      <div className="footer-bottom-left">
+        <p>All rights reserved © 2025</p>
+      </div>
+
+      <div className="footer-bottom-right">
+        <a className="legal-link">Legal mentions</a>
       </div>
     </footer>
   );

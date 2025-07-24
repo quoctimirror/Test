@@ -6,17 +6,17 @@ import Navbar from "@components/navbar/Navbar";
 import Footer from "@components/footer/Footer";
 
 // Lazy-load components
-const HomePage = lazy(() => import("../pages/HomePage"));
-const CollectionPage = lazy(() => import("../pages/CollectionPage"));
+const HomePage = lazy(() => import("@pages/HomePage"));
+const ProductsPage = lazy(() => import("@pages/ProductsPage"));
 
 const UVFinal = lazy(() =>
-  import("../components/universeSectionFinal/UniverseSection.jsx")
+  import("@components/universeSectionFinal/UniverseSection.jsx")
 );
 const HoverExpandSection = lazy(() =>
-  import("../components/hoverExpandSection/HoverExpandSection.jsx")
+  import("@components/hoverExpandSection/HoverExpandSection.jsx")
 );
-const View360 = lazy(() => import("../components/view360/View360.jsx"));
-const AR = lazy(() => import("../components/arTryOn/AR.jsx"));
+const View360 = lazy(() => import("@components/view360/View360.jsx"));
+const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -43,7 +43,7 @@ export default function AppRoutes() {
         <Routes>
           <Route path="/" element={<HomePage />} />
 
-          <Route path="/collection" element={<CollectionPage />} />
+          <Route path="/products" element={<ProductsPage />} />
 
           <Route path="/universe-final" element={<UVFinal />} />
 

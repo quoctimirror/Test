@@ -1,3 +1,6 @@
+/* ========================================
+   FOOTER MAIN CONTAINER
+======================================== */
 .footer {
   width: 100%;
   height: 800px;
@@ -21,6 +24,9 @@
   gap: 15px;
 }
 
+/* ========================================
+   FOOTER CONTENT (TOP SECTION)
+======================================== */
 .footer-content {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
@@ -29,27 +35,44 @@
   padding-top: 60px;
 }
 
+/* LEFT SECTION - Discover Menu */
 .footer-left {
   width: 298px;
   height: 140px;
-  padding-left: 30px;
+  position: absolute;
+  left: 30px;
+  top: 60px;
   box-sizing: border-box;
 }
 
+/* RIGHT SECTION - Contact Info */
 .footer-right {
-  width: 100%;
+  width: 298px;
+  height: 140px;
+  position: absolute;
+  right: 30px;
+  top: 60px;
   text-align: right;
-  padding-right: 30px;
   box-sizing: border-box;
 }
 
+/* CENTER SECTION - Newsletter */
 .footer-center {
-  width: 100%;
+  width: 550px;
+  height: 235px;
+  position: absolute;
+  top: 283px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 1;
 }
 
+/* ========================================
+   FOOTER SECTIONS CONTENT
+======================================== */
 .footer-section {
   margin-bottom: 40px;
 }
@@ -61,7 +84,7 @@
   font-size: 24px;
   line-height: 100%;
   letter-spacing: 0%;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   color: #ffffff;
 }
 
@@ -88,7 +111,7 @@
   font-size: 16px;
   line-height: 120%;
   letter-spacing: 0%;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(133, 123, 125, 255);
   text-decoration: none;
   transition: color 0.3s ease;
   white-space: nowrap;
@@ -111,88 +134,168 @@
   font-size: 16px;
   line-height: 120%;
   letter-spacing: 0%;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(133, 123, 125, 255);
   margin: 0;
   white-space: nowrap;
 }
 
+/* ========================================
+   NEWSLETTER SECTION
+======================================== */
 .newsletter-section {
   text-align: center;
-  max-width: 500px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
 }
 
 .newsletter-title {
   font-family: "SaolDisplay-Light-ttf", serif;
-  font-size: 36px;
+  font-size: 58px;
   font-weight: 300;
   letter-spacing: 3px;
-  margin-bottom: 20px;
-  color: #ffffff;
+  margin-bottom: -18px;
+  color: #bc224c;
+  text-align: center;
+  line-height: 1.1;
 }
 
 .newsletter-subtitle {
   font-family: "BT-BeauSans-Regular-ttf", sans-serif;
-  font-size: 16px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 40px;
+  margin-bottom: 43px;
   line-height: 1.5;
+  text-align: center;
 }
 
 .newsletter-form {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0;
-  max-width: 400px;
-  margin: 0 auto;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
 }
 
 .email-input {
   font-family: "BT-BeauSans-Regular-ttf", sans-serif;
   flex: 1;
+  max-width: 500px;
   padding: 15px 20px;
   border: none;
-  border-radius: 50px 0 0 50px;
-  background: rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid #ffffff;
+  background: transparent;
   color: white;
   font-size: 16px;
   outline: none;
-  backdrop-filter: blur(10px);
+  border-radius: 0;
+  text-align: left;
 }
 
 .email-input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: #ffffff;
 }
 
+/* Đây là lớp wrapper mới, đóng vai trò là ĐƯỜNG VIỀN */
+.signup-button-wrapper {
+  /* Màu của đường viền */
+  background: rgba(255, 255, 255, 0.7);
+  /* Độ dày của đường viền */
+  padding: 1px;
+  margin-left: 0px;
+  min-width: 50px;
+  transition: background 0.3s ease;
+
+  /* Thuộc tính quan trọng nhất: Tạo hình dạng góc vát */
+  /* Bạn có thể thay đổi giá trị 8px để góc vát to hoặc nhỏ hơn */
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
+    0 8px
+  );
+}
+
+/* Button thật sự bên trong, đóng vai trò là NỀN */
 .signup-button {
   font-family: "BT-BeauSans-Regular-ttf", sans-serif;
-  padding: 15px 30px;
+  padding: 12px 25px;
+
+  /* Nền trong suốt để thấy màu gradient của footer */
+  background: #76152f;
+  /* Bỏ border mặc định vì đã có wrapper làm viền */
   border: none;
-  border-radius: 0 50px 50px 0;
-  background: #000000;
+  border-radius: 0; /* Bỏ bo tròn góc */
+
   color: white;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  width: 100%;
+
+  /* Cần clip-path giống hệt wrapper để button cũng có hình dạng đó */
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
+    0 8px
+  );
+}
+
+/* Hiệu ứng khi hover */
+.signup-button-wrapper:hover {
+  background: rgba(255, 255, 255, 1); /* Viền sáng hơn */
 }
 
 .signup-button:hover {
-  background: rgba(0, 0, 0, 0.8);
+  /* Thêm một lớp nền mờ khi hover để nổi bật hơn */
+  background: #bc224c;
 }
 
+/* ========================================
+   FOOTER BOTTOM SECTION
+======================================== */
 .footer-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 15px;
-  align-items: center;
-  padding: 40px 30px;
+  position: relative;
+  height: 120px;
+  padding: 40px 0;
+}
+
+/* Footer Bottom Left - Copyright */
+.footer-bottom-left {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  z-index: 100;
 }
 
 .footer-bottom-left p {
-  color: rgba(255, 255, 255, 0.7);
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
   font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
   margin: 0;
+}
+
+/* Footer Bottom Center - Social Icons */
+.footer-bottom-center {
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  z-index: 100;
 }
 
 .social-icons {
@@ -221,14 +324,20 @@
   transform: translateY(-2px);
 }
 
+/* Footer Bottom Right - Legal */
 .footer-bottom-right {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
   text-align: right;
+  z-index: 100;
 }
 
 .legal-link {
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  font-size: 14px;
   transition: color 0.3s ease;
 }
 
@@ -236,14 +345,28 @@
   color: #ffffff;
 }
 
-/* Tablet Large */
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+/* Tablet Large - 1440px */
 @media (max-width: 1440px) {
   .footer {
     padding: 0 30px;
   }
 
+  .footer-center {
+    width: 480px;
+    height: 200px;
+    top: 250px;
+  }
+
+  .newsletter-section {
+    gap: 40px;
+  }
+
   .newsletter-title {
-    font-size: 32px;
+    font-size: 40px;
   }
 
   .footer-content {
@@ -255,10 +378,25 @@
   }
 }
 
-/* Tablet */
+/* Tablet - 1200px */
 @media (max-width: 1200px) {
   .footer {
     padding: 0 30px;
+  }
+
+  .footer-center {
+    width: 420px;
+    height: 180px;
+    top: 220px;
+  }
+
+  .newsletter-section {
+    gap: 35px;
+  }
+
+  .newsletter-title {
+    font-size: 36px;
+    letter-spacing: 2px;
   }
 
   .footer-content {
@@ -271,11 +409,6 @@
     gap: 15px;
   }
 
-  .newsletter-title {
-    font-size: 28px;
-    letter-spacing: 2px;
-  }
-
   .footer-title {
     font-size: 16px;
   }
@@ -286,11 +419,55 @@
   }
 }
 
-/* Tablet Small */
+/* Tablet Small - 992px */
 @media (max-width: 992px) {
   .footer {
     height: auto;
     min-height: 700px;
+  }
+
+  .footer-center {
+    position: relative;
+    width: 100%;
+    height: auto;
+    top: auto;
+    left: auto;
+    max-width: 450px;
+    margin: 0 auto;
+    transform: none;
+  }
+
+  .footer-left,
+  .footer-right {
+    position: relative;
+    width: 100%;
+    left: auto;
+    right: auto;
+    top: auto;
+  }
+
+  .footer-bottom-left,
+  .footer-bottom-center,
+  .footer-bottom-right {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+  }
+
+  .newsletter-section {
+    gap: 30px;
+    order: -1;
+  }
+
+  .newsletter-title {
+    font-size: 32px;
+  }
+
+  .newsletter-form {
+    max-width: 350px;
+    margin: 0 auto;
   }
 
   .footer-content {
@@ -311,31 +488,13 @@
     text-align: center;
   }
 
-  .footer-left,
-  .footer-center,
-  .footer-right {
-    width: 100%;
-  }
-
-  .newsletter-section {
-    order: -1;
-  }
-
-  .newsletter-title {
-    font-size: 26px;
-  }
-
-  .newsletter-form {
-    max-width: 350px;
-  }
-
   .social-icons {
     order: -1;
     gap: 15px;
   }
 }
 
-/* Mobile Large */
+/* Mobile Large - 768px */
 @media (max-width: 768px) {
   .footer {
     height: auto;
@@ -343,19 +502,30 @@
     padding: 0 20px;
   }
 
-  .footer-content {
-    padding-top: 50px;
-    gap: 40px;
+  .footer-center {
+    max-width: 350px;
+  }
+
+  .newsletter-section {
+    gap: 25px;
   }
 
   .newsletter-title {
-    font-size: 24px;
+    font-size: 28px;
     letter-spacing: 1.5px;
   }
 
   .newsletter-subtitle {
     font-size: 14px;
-    margin-bottom: 30px;
+  }
+
+  .newsletter-form {
+    max-width: 300px;
+  }
+
+  .footer-content {
+    padding-top: 50px;
+    gap: 40px;
   }
 
   .footer-title {
@@ -391,35 +561,52 @@
   }
 }
 
-/* Mobile Medium */
+/* Mobile Medium - 480px */
 @media (max-width: 480px) {
   .footer {
     min-height: 550px;
     padding: 0 15px;
   }
 
-  .footer-content {
-    padding-top: 40px;
-    gap: 35px;
+  .footer-center {
+    max-width: 280px;
+  }
+
+  .newsletter-section {
+    gap: 20px;
   }
 
   .newsletter-title {
-    font-size: 20px;
+    font-size: 24px;
     letter-spacing: 1px;
   }
 
   .newsletter-form {
     flex-direction: column;
     gap: 15px;
-    max-width: 280px;
+    max-width: 100%;
   }
 
-  .email-input,
+  .email-input {
+    border-radius: 0;
+    border-bottom: 1px solid #ffffff;
+    width: 100%;
+    padding: 12px 0;
+    font-size: 14px;
+    margin-left: 0;
+  }
+
   .signup-button {
     border-radius: 25px;
     width: 100%;
     padding: 12px 18px;
     font-size: 14px;
+    margin-left: 0;
+  }
+
+  .footer-content {
+    padding-top: 40px;
+    gap: 35px;
   }
 
   .footer-section {
@@ -449,28 +636,36 @@
   }
 }
 
-/* Mobile Small */
+/* Mobile Small - 360px */
 @media (max-width: 360px) {
   .footer {
     padding: 0 15px;
   }
 
-  .footer-bottom {
-    padding: 30px 0;
-  }
-
-  .newsletter-title {
-    font-size: 18px;
-  }
-
-  .newsletter-form {
+  .footer-center {
     max-width: 250px;
   }
 
-  .email-input,
+  .newsletter-section {
+    gap: 18px;
+  }
+
+  .newsletter-title {
+    font-size: 20px;
+  }
+
+  .email-input {
+    padding: 10px 0;
+    font-size: 13px;
+  }
+
   .signup-button {
     padding: 10px 15px;
     font-size: 13px;
+  }
+
+  .footer-bottom {
+    padding: 30px 0;
   }
 
   .footer-title {

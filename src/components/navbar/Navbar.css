@@ -117,7 +117,7 @@
 .menu-popup {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 30px;
   background: white;
   border-radius: 30px;
   width: 456px;
