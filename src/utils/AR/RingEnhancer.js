@@ -130,11 +130,15 @@ export class RingEnhancer {
   }
 
   /**
-   * Áp dụng vật liệu kim cương chất lượng cao
-   * Tạo hiệu ứng như opal/moonstone với độ trong mờ đẹp mắt
+   * Áp dụng vật liệu kim cương chất lượng cao với hiệu ứng lấp lánh (iridescence)
+   * Tạo hiệu ứng như kim cương thật với tán sắc và lấp lánh
    * @private
    */
   _applyDiamondMaterial(mesh) {
+    console.log(
+      `💎🔥 Áp dụng vật liệu kim cương CÓ LỬA cho: ${mesh.name || "mesh"}`
+    );
+
     mesh.material = new THREE.MeshPhysicalMaterial({
       // Màu trắng tinh khiết
       color: 0xffffff,
@@ -142,31 +146,28 @@ export class RingEnhancer {
       // Không phải kim loại
       metalness: 0.0,
 
-      // Độ nhám vừa phải để tạo hiệu ứng mờ như opal
-      roughness: 0.2,
+      // Độ nhám thấp cho kim cương thật
+      roughness: 0.0,
 
       // Transmission cao cho hiệu ứng trong suốt
-      transmission: 0.9,
+      transmission: 1.0,
       transparent: true,
       opacity: 1.0,
 
-      // IOR của opal/moonstone (không phải kim cương)
-      ior: 1.45,
+      // IOR của kim cương thật
+      ior: 2.417,
 
-      // Phản xạ vừa phải
-      reflectivity: 0.5,
+      // Thickness cho hiệu ứng ánh sáng
+      thickness: 1.5,
 
-      // Tăng cường environment mapping
-      envMapIntensity: 1.5,
+      // --- HIỆU ỨNG LẤPL ÁNH TÁN SẮC (IRIDESCENCE) - Giảm độ chói ---
+      iridescence: 0.4, // Giảm từ 1.0 xuống 0.6 - vừa đủ lấp lánh
+      iridescenceIOR: 1.2, // Giảm từ 1.8 xuống 1.5 - nhẹ nhàng hơn
+      iridescenceThicknessRange: [200, 300], // Thu nhỏ range để ít chói hơn
 
-      // Clearcoat nhẹ
-      clearcoat: 0.3,
-      clearcoatRoughness: 0.2,
-
-      // Tạo hiệu ứng tán xạ ánh sáng bên trong (milky effect)
-      thickness: 2.0,
-      attenuationColor: new THREE.Color(0xffffff),
-      attenuationDistance: 0.5,
+      // QUAN TRỌNG: Sử dụng HDR environment riêng thay vì scene.environment
+      envMap: this.envMap, // HDR riêng cho kim cương
+      envMapIntensity: 1.3, // Tăng lên 1.3 để sáng hơn một chút
 
       // Render cả hai mặt
       side: THREE.DoubleSide,

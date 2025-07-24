@@ -278,7 +278,7 @@
 .footer-bottom-left {
   position: absolute;
   left: 30px;
-  bottom: 60px;
+  bottom: 30px;
   z-index: 100;
 }
 
@@ -293,7 +293,7 @@
 .footer-bottom-center {
   position: absolute;
   left: 50%;
-  bottom: 60px;
+  bottom: 30px;
   transform: translateX(-50%);
   z-index: 100;
 }
@@ -328,7 +328,7 @@
 .footer-bottom-right {
   position: absolute;
   right: 30px;
-  bottom: 60px;
+  bottom: 30px;
   text-align: right;
   z-index: 100;
 }

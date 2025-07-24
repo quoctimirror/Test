@@ -7,12 +7,26 @@ import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 import { RingEnhancer } from "./RingEnhancer.js";
 
+// --- NHẬP CÁC MODULE HẬU KỲ ---
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+
 export class ThreeJSViewer {
   constructor(container) {
     this.container = container;
     this.scene = null;
     this.camera = null;
     this.renderer = null;
+
+    // === POST-PROCESSING ===
+    this.composer = null;
+
+    // === REFLECTION CONTROL ===
+    this.reflectionScene = null; // Separate scene for non-sparkle reflections
+    this.originalScene = null; // Reference to main scene
+    this.reflectionModel = null; // Model clone for reflection
+    this.reflectionPivot = null; // Pivot clone for reflection
 
     // === CHANGE: Add pivot to class properties ===
     this.pivot = null;
@@ -77,10 +91,31 @@ export class ThreeJSViewer {
     this.renderer.shadowMap.enabled = false; // Disable shadows for mirror effect
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 0.8; // Reduced exposure for softer lighting
+    this.renderer.toneMappingExposure = 1.2; // Tăng exposure để nhẫn sáng hơn
 
     // Add renderer to container
     this.container.appendChild(this.renderer.domElement);
+
+    // === ADD SELECTIVE POST-PROCESSING ===
+    this.composer = new EffectComposer(this.renderer);
+    const renderPass = new RenderPass(this.scene, this.camera);
+    this.composer.addPass(renderPass);
+
+    // Create selective bloom - exclude mirror reflection from bloom
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(
+        this.container.clientWidth,
+        this.container.clientHeight
+      ),
+      0.2, // Strength: Giảm từ 0.4 xuống 0.2 - rất nhẹ
+      0.08, // Radius: Giảm từ 0.1 xuống 0.05 - ánh sáng nhỏ hơn
+      0.9 // Threshold: Tăng từ 0.85 lên 0.9 - ít vật phát sáng hơn
+    );
+    this.composer.addPass(bloomPass);
+
+    // Store reference to bloom pass for selective rendering
+    this.bloomPass = bloomPass;
+    // ===========================
 
     // Rotation control variables
     this.isMouseDown = false;
@@ -92,7 +127,7 @@ export class ThreeJSViewer {
     this.addMouseEvents();
 
     // Setup lighting and environment
-    this.setupLighting();
+    // this.setupLighting(); // Comment out - let HDR be the only light source
     this.setupEnvironment();
 
     // Add mirror reflector
@@ -235,32 +270,53 @@ export class ThreeJSViewer {
   }
 
   async setupEnvironment() {
-    // Load bright photo studio HDRI for maximum diamond sparkle
+    // Load basic environment for fallback, but DON'T apply to scene
+    // Scene will keep gradient background, ring will have separate HDR
+    const envMapLoader = new THREE.CubeTextureLoader();
+    const basicEnvMap = envMapLoader.load([
+      "https://threejs.org/examples/textures/cube/Bridge2/posx.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/negx.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/posy.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/negy.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/posz.jpg",
+      "https://threejs.org/examples/textures/cube/Bridge2/negz.jpg",
+    ]);
+
+    // Store basic env map for fallback
+    this.envMap = basicEnvMap;
+
+    // DON'T apply to scene - keep gradient background
+    // this.scene.environment = null;
+  }
+
+  /**
+   * Create separate HDR environment specifically for ring materials
+   * This won't affect the background gradient
+   */
+  async createRingEnvironment() {
     const rgbeLoader = new RGBELoader();
+    const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
+    pmremGenerator.compileEquirectangularShader();
+
     try {
-      // Load the bright photo studio .hdr file
-      const envMap = await rgbeLoader.loadAsync("/hdr/studio_small_03_4k.hdr");
-      envMap.mapping = THREE.EquirectangularReflectionMapping;
+      console.log("🔄 Loading HDR environment for ring sparkle...");
+      const hdrTexture = await rgbeLoader.loadAsync(
+        "/hdr/studio_small_03_4k.hdr"
+      );
+      const ringEnvMap = pmremGenerator.fromEquirectangular(hdrTexture).texture;
 
-      // Apply the environment map to the scene for lighting and reflections
-      this.scene.environment = envMap;
+      // Áp dụng HDR cho toàn bộ scene
+      this.scene.environment = ringEnvMap; // <-- Áp dụng HDR cho toàn bộ scene
 
-      // Store for material usage
-      this.envMap = envMap;
+      // Clean up
+      hdrTexture.dispose();
+      pmremGenerator.dispose();
+
+      console.log("✨ HDR environment applied to entire scene!");
+      return ringEnvMap;
     } catch (error) {
-      error;
-      // Fallback to existing cube texture
-      const envMapLoader = new THREE.CubeTextureLoader();
-      const envMap = envMapLoader.load([
-        "https://threejs.org/examples/textures/cube/Bridge2/posx.jpg",
-        "https://threejs.org/examples/textures/cube/Bridge2/negx.jpg",
-        "https://threejs.org/examples/textures/cube/Bridge2/posy.jpg",
-        "https://threejs.org/examples/textures/cube/Bridge2/negy.jpg",
-        "https://threejs.org/examples/textures/cube/Bridge2/posz.jpg",
-        "https://threejs.org/examples/textures/cube/Bridge2/negz.jpg",
-      ]);
-      this.scene.environment = envMap;
-      this.envMap = envMap;
+      console.warn("Failed to load HDR, using fallback:", error);
+      return this.envMap; // Return basic cube texture as fallback
     }
   }
 
@@ -287,14 +343,39 @@ export class ThreeJSViewer {
 
     const mirrorGeometry = createTrapezoidGeometry();
 
-    // Create reflector for mirror functionality (invisible/transparent)
+    // Create separate reflection scene without sparkle effects
+    this.reflectionScene = new THREE.Scene();
+    this.originalScene = this.scene;
+
+    // Create reflector for mirror functionality with custom reflection scene
     this.mirror = new Reflector(mirrorGeometry, {
       clipBias: 0.003,
       textureWidth: window.innerWidth * window.devicePixelRatio,
       textureHeight: window.innerHeight * window.devicePixelRatio,
-      color: 0xffffff, // Keep reflection neutral
-      recursion: 1,
+      color: 0xe6e6e6, // 90% độ sáng - sáng như hồi nãy
+      recursion: 0, // No recursive reflections to avoid bloom accumulation
     });
+
+    // Override mirror's render method to use non-sparkle reflection scene
+    const originalOnBeforeRender = this.mirror.onBeforeRender;
+    this.mirror.onBeforeRender = (renderer, scene, camera) => {
+      // Create non-sparkle reflection scene on first render
+      if (!this.reflectionScene.children.length && this.model) {
+        this.setupNonSparkleReflectionScene();
+      }
+
+      // Always use reflection scene if it has content, fallback to main scene
+      if (this.reflectionScene && this.reflectionScene.children.length > 0) {
+        originalOnBeforeRender.call(
+          this.mirror,
+          renderer,
+          this.reflectionScene,
+          camera
+        );
+      } else {
+        originalOnBeforeRender.call(this.mirror, renderer, scene, camera);
+      }
+    };
 
     // Create colored mirror surface with gradient reflection
     const mirrorSurfaceGeometry = createTrapezoidGeometry();
@@ -306,12 +387,13 @@ export class ThreeJSViewer {
       canvas.height = 512;
       const ctx = canvas.getContext("2d");
 
-      // Create vertical gradient (top to bottom) since mirror is rotated horizontally
-      // This will become front-to-back gradient when rotated
+      // Create vertical gradient từ đỉnh hình thang đến đáy (top to bottom)
+      // Gradient mượt mà từ trắng đến tối dần - các màu cách đều nhau để smooth
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, "rgba(236, 54, 103, 0.6)"); // Front edge - đậm nhất (hồng nhạt)
-      gradient.addColorStop(0.5, "#B22148"); // Center - sáng nhất (đỏ sẫm)
-      gradient.addColorStop(1.0, "rgba(236, 54, 103, 0.6)"); // Back edge - đậm nhất (hồng nhạt)
+      gradient.addColorStop(0, "#821834"); // Đỉnh - trắng sáng nhất
+      gradient.addColorStop(0.25, "#821834"); // 25% - hồng
+      gradient.addColorStop(0.65, "#821834"); // 65% - đỏ sẫm
+      gradient.addColorStop(1.0, "#821834"); // Đáy - tối nhất
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -325,8 +407,8 @@ export class ThreeJSViewer {
 
     const mirrorSurfaceMaterial = new THREE.MeshBasicMaterial({
       map: gradientTexture, // Apply gradient texture
-      transparent: false, // Remove transparency to show full gradient colors
-      opacity: 1.0, // Full opacity for vibrant colors
+      transparent: true, // Remove transparency to show full gradient colors
+      opacity: 0, // Full opacity for vibrant colors
       side: THREE.DoubleSide, // Ensure visibility from both sides
     });
     mirrorSurfaceMaterial.needsUpdate = true; // Force material update
@@ -336,19 +418,109 @@ export class ThreeJSViewer {
       mirrorSurfaceMaterial
     );
 
+    // Configure mirror reflection properties - no bloom, darker reflection
     this.mirror.position.z = 2;
+
+    // Ensure reflection material doesn't contribute to bloom
+    this.mirror.material.transparent = true;
+    this.mirror.material.opacity = 1; // Reduce reflection intensity for darker look
+
+    // Mark mirror as non-bloomable by setting low emissive
+    this.mirror.material.emissive = new THREE.Color(0x000000);
+    this.mirror.material.emissiveIntensity = 0;
+
     mirrorSurface.position.z = 2;
 
     // Position both mirror and surface horizontally like in reference image
     this.mirror.position.y = -2.5;
     this.mirror.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
-    mirrorSurface.position.y = -3; // Higher above reflector to ensure visibility
+    mirrorSurface.position.y = -2.49; // Higher above reflector to ensure visibility
     mirrorSurface.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
-    this.scene.add(this.mirror); // Temporarily hide reflector to see gradient surface
+    this.scene.add(this.mirror); // Re-enable reflector with gradient surface
     this.scene.add(mirrorSurface);
     this.mirrorSurface = mirrorSurface;
+  }
+
+  /**
+   * Setup reflection scene without sparkle effects
+   * This scene will only be used for what appears in mirror reflections
+   */
+  setupNonSparkleReflectionScene() {
+    if (!this.model || !this.reflectionScene) return;
+
+    console.log("🪞 Setting up non-sparkle reflection scene...");
+
+    // Copy model to reflection scene
+    const modelClone = this.model.clone();
+    const pivotClone = new THREE.Object3D();
+
+    // Copy pivot properties
+    pivotClone.position.copy(this.pivot.position);
+    pivotClone.rotation.copy(this.pivot.rotation);
+    pivotClone.scale.copy(this.pivot.scale);
+
+    // Add cloned model to cloned pivot
+    pivotClone.add(modelClone);
+
+    // Replace all materials with simple non-sparkle materials
+    modelClone.traverse((child) => {
+      if (child.isMesh) {
+        if (child.userData.isDiamond) {
+          // Simple glass material for diamonds in reflection - no iridescence
+          child.material = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            metalness: 0.0,
+            roughness: 0.1,
+            transmission: 0.9,
+            transparent: true,
+            opacity: 0.8,
+            ior: 1.5, // Lower IOR for less refraction
+            // NO iridescence effects
+            envMapIntensity: 0.3, // Much lower env map intensity
+          });
+        } else {
+          // Simple metal material for metal parts in reflection
+          const originalColor =
+            child.material.color || new THREE.Color(0xeecdae);
+          child.material = new THREE.MeshPhysicalMaterial({
+            color: originalColor,
+            metalness: 0.8,
+            roughness: 0.3,
+            envMapIntensity: 0.5, // Lower env map intensity
+            // NO clearcoat or special effects
+          });
+        }
+        child.material.needsUpdate = true;
+      }
+    });
+
+    this.reflectionScene.add(pivotClone);
+
+    // Copy background from main scene to reflection scene
+    if (this.scene.background) {
+      this.reflectionScene.background = this.scene.background;
+    }
+
+    // Copy environment from main scene but with lower intensity
+    if (this.scene.environment) {
+      this.reflectionScene.environment = this.scene.environment;
+    }
+
+    // Add basic lighting to reflection scene
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    this.reflectionScene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(3, 6, 4);
+    this.reflectionScene.add(directionalLight);
+
+    // Store references for updates
+    this.reflectionModel = modelClone;
+    this.reflectionPivot = pivotClone;
+
+    console.log("✨ Non-sparkle reflection scene setup complete");
   }
 
   async loadModel() {
@@ -395,100 +567,17 @@ export class ThreeJSViewer {
 
       // ===============================================
 
-      // Configure ring materials - only enhance diamonds
-      this.model.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = false; // Disable shadow casting
-          child.receiveShadow = false; // Disable shadow receiving
+      // Save original materials before RingEnhancer processes them
+      this.saveOriginalMaterials();
 
-          // Enhanced diamond detection logic
-          const name = child.name ? child.name.toLowerCase() : "";
-          const materialName =
-            child.material && child.material.name
-              ? child.material.name.toLowerCase()
-              : "";
+      // Let RingEnhancer handle ALL material processing
 
-          const isDiamond =
-            name.includes("diamond") ||
-            name.includes("gem") ||
-            name.includes("stone") ||
-            name.includes("crystal") ||
-            materialName.includes("diamond") ||
-            materialName.includes("gem") ||
-            materialName.includes("crystal") ||
-            // Additional checks for common diamond naming patterns
-            name.includes("brilliant") ||
-            name.includes("round") ||
-            name.includes("cut") ||
-            // Check if material has transparency properties (likely diamond)
-            (child.material && child.material.transparent) ||
-            (child.material && child.material.opacity < 1.0);
+      // Create HDR environment specifically for ring
+      const ringEnvMap = await this.createRingEnvironment();
 
-          // Debug logging to identify all meshes
-
-          // Store material type information
-          child.userData.isDiamond = isDiamond;
-          child.userData.isMetal = !isDiamond;
-
-          // ❗❗❗ ALWAYS CHECK FOR VERTEX COLORS AND REMOVE THEM ❗❗❗
-          if (child.geometry.attributes.color) {
-            child.geometry.deleteAttribute("color");
-          }
-
-          if (isDiamond) {
-            // ❗❗❗ Xóa các thuộc tính không cần thiết và đảm bảo hình học sạch sẽ
-            if (child.geometry.attributes.color) {
-              child.geometry.deleteAttribute("color");
-            }
-            child.geometry.computeVertexNormals();
-
-            // ❗❗❗ Xóa các thuộc tính không cần thiết và đảm bảo hình học sạch sẽ
-            if (child.geometry.attributes.color) {
-              child.geometry.deleteAttribute("color");
-            }
-            child.geometry.computeVertexNormals();
-
-            // Opal/Moonstone material - milky white, translucent stone
-            child.material = new THREE.MeshPhysicalMaterial({
-              color: 0xffffff, // Pure white
-              metalness: 0.0,
-              roughness: 0.2, // KEY CHANGE: Blurs reflections for milky look
-              transmission: 0.9, // Allows light to enter
-              transparent: true,
-              opacity: 1.0,
-              ior: 1.45, // IOR of Opal/Moonstone (not diamond)
-              reflectivity: 0.5, // Moderate reflectivity
-              envMapIntensity: 1.5, // Increased for better light interaction
-              clearcoat: 0.3, // Minimal clearcoat
-              clearcoatRoughness: 0.2,
-              // CRITICAL: These create internal light scattering (milky effect)
-              thickness: 2.0, // Thick for light scattering
-              attenuationColor: new THREE.Color(0xffffff), // Light inside stays white
-              attenuationDistance: 0.5, // Light scatters quickly
-              side: THREE.DoubleSide,
-              // FORCE CONSISTENT RENDERING
-              flatShading: false,
-              vertexColors: false,
-            });
-            child.material.needsUpdate = true;
-          } else {
-            // Apply enhanced rose gold material to metal parts
-            child.material = new THREE.MeshPhysicalMaterial({
-              color: 0xeecdae, // Correct rose gold color
-              metalness: 1.0,
-              roughness: 0.15, // Slightly less rough for more shine
-              clearcoat: 1.0, // Strong clearcoat for deep shine
-              clearcoatRoughness: 0.1,
-              envMapIntensity: 2.0, // Increased for better light reflection
-            });
-            child.material.needsUpdate = true;
-          }
-        }
-      });
-
-      // Use RingEnhancer to enhance only diamond meshes
-      this.ringEnhancer = new RingEnhancer(this.envMap);
-      this.ringEnhancer.enhanceRingModel(this.model, this.envMap);
+      // Use RingEnhancer with separate HDR environment
+      this.ringEnhancer = new RingEnhancer(ringEnvMap);
+      this.ringEnhancer.enhanceRingModel(this.model, ringEnvMap);
 
       // Add lights to scene only after ring is loaded, and configure them to only affect the ring
       this.scene.add(this.keyLight);
@@ -564,6 +653,11 @@ export class ThreeJSViewer {
 
       // Apply rotation angle to the rotation base (pivot)
       this.pivot.rotation.y = this.currentRotationY;
+
+      // Sync reflection pivot rotation if it exists
+      if (this.reflectionPivot) {
+        this.reflectionPivot.rotation.y = this.currentRotationY;
+      }
     }
     // ========================================================
 
@@ -572,9 +666,9 @@ export class ThreeJSViewer {
       this.mixer.update(0.016); // ~60fps
     }
 
-    // Render the scene
-    if (this.renderer && this.scene && this.camera) {
-      this.renderer.render(this.scene, this.camera);
+    // Render the scene with post-processing
+    if (this.composer) {
+      this.composer.render();
     }
   }
 
@@ -583,10 +677,12 @@ export class ThreeJSViewer {
       for (let entry of entries) {
         const { width, height } = entry.contentRect;
 
-        if (this.camera && this.renderer) {
+        if (this.camera && this.renderer && this.composer) {
+          // Thêm composer vào
           this.camera.aspect = width / height;
           this.camera.updateProjectionMatrix();
           this.renderer.setSize(width, height);
+          this.composer.setSize(width, height); // <-- Thêm dòng này
         }
       }
     });
@@ -595,69 +691,121 @@ export class ThreeJSViewer {
     this.resizeObserver = resizeObserver;
   }
 
-  // Material control methods (ORIGINAL)
+  // Material control methods - Updated for RingEnhancer compatibility
   setGoldMaterial() {
     if (!this.model) return;
 
+    const goldConfig = {
+      color: 0xffd700, // Gold color
+      metalness: 1.0,
+      roughness: 0.15,
+      clearcoat: 0.8,
+      clearcoatRoughness: 0.15,
+      envMapIntensity: 1.0,
+    };
+
+    // Apply to main model
     this.model.traverse((child) => {
-      if (child.isMesh && child.userData.isMetal) {
-        child.material = new THREE.MeshStandardMaterial({
-          color: 0xffd700, // Gold color
-          metalness: 0.8,
-          roughness: 0.2,
-          envMapIntensity: 1.0,
+      if (child.isMesh && !child.userData.isDiamond) {
+        child.material = new THREE.MeshPhysicalMaterial({
+          ...goldConfig,
+          envMap: this.ringEnhancer ? this.ringEnhancer.envMap : this.envMap,
         });
         child.material.needsUpdate = true;
+        child.userData.isMetal = true;
       }
     });
+
+    // Apply to reflection model
+    this.updateReflectionMaterial(goldConfig);
+    console.log("🥇 Đã áp dụng vật liệu vàng cho cả main và reflection");
   }
 
   setSilverMaterial() {
     if (!this.model) return;
 
+    const silverConfig = {
+      color: 0xc0c0c0, // Silver color
+      metalness: 0.9,
+      roughness: 0.1,
+      clearcoat: 0.9,
+      clearcoatRoughness: 0.1,
+      envMapIntensity: 1.2,
+    };
+
+    // Apply to main model
     this.model.traverse((child) => {
-      if (child.isMesh && child.userData.isMetal) {
-        child.material = new THREE.MeshStandardMaterial({
-          color: 0xc0c0c0, // Silver color
-          metalness: 0.9,
-          roughness: 0.1,
-          envMapIntensity: 1.2,
+      if (child.isMesh && !child.userData.isDiamond) {
+        child.material = new THREE.MeshPhysicalMaterial({
+          ...silverConfig,
+          envMap: this.ringEnhancer ? this.ringEnhancer.envMap : this.envMap,
         });
         child.material.needsUpdate = true;
+        child.userData.isMetal = true;
       }
     });
+
+    // Apply to reflection model
+    this.updateReflectionMaterial(silverConfig);
+    console.log("🥈 Đã áp dụng vật liệu bạc cho cả main và reflection");
   }
 
   setPlatinumMaterial() {
     if (!this.model) return;
 
+    const platinumConfig = {
+      color: 0xe5e4e2, // Platinum color
+      metalness: 0.9,
+      roughness: 0.15,
+      clearcoat: 0.85,
+      clearcoatRoughness: 0.12,
+      envMapIntensity: 1.1,
+    };
+
+    // Apply to main model
     this.model.traverse((child) => {
-      if (child.isMesh && child.userData.isMetal) {
-        child.material = new THREE.MeshStandardMaterial({
-          color: 0xe5e4e2, // Platinum color
-          metalness: 0.9,
-          roughness: 0.15,
-          envMapIntensity: 1.1,
+      if (child.isMesh && !child.userData.isDiamond) {
+        child.material = new THREE.MeshPhysicalMaterial({
+          ...platinumConfig,
+          envMap: this.ringEnhancer ? this.ringEnhancer.envMap : this.envMap,
         });
         child.material.needsUpdate = true;
+        child.userData.isMetal = true;
       }
     });
+
+    // Apply to reflection model
+    this.updateReflectionMaterial(platinumConfig);
+    console.log("🤍 Đã áp dụng vật liệu bạch kim cho cả main và reflection");
   }
 
   setRoseGoldMaterial() {
     if (!this.model) return;
 
+    const roseGoldConfig = {
+      color: 0xeecdae, // Rose gold color (corrected)
+      metalness: 1.0,
+      roughness: 0.15,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1,
+      envMapIntensity: 2.0,
+    };
+
+    // Apply to main model
     this.model.traverse((child) => {
-      if (child.isMesh && child.userData.isMetal) {
-        child.material = new THREE.MeshStandardMaterial({
-          color: 0xe8b4a0, // Rose gold color
-          metalness: 0.8,
-          roughness: 0.2,
-          envMapIntensity: 1.0,
+      if (child.isMesh && !child.userData.isDiamond) {
+        child.material = new THREE.MeshPhysicalMaterial({
+          ...roseGoldConfig,
+          envMap: this.ringEnhancer ? this.ringEnhancer.envMap : this.envMap,
         });
         child.material.needsUpdate = true;
+        child.userData.isMetal = true;
       }
     });
+
+    // Apply to reflection model
+    this.updateReflectionMaterial(roseGoldConfig);
+    console.log("🌹 Đã áp dụng vật liệu vàng hồng cho cả main và reflection");
   }
 
   setDiamondMaterial() {
@@ -673,14 +821,89 @@ export class ThreeJSViewer {
     }
   }
 
+  // Save original materials from GLB file before any modifications
+  saveOriginalMaterials() {
+    if (!this.model) return;
+
+    this.model.traverse((child) => {
+      if (child.isMesh && child.material) {
+        // Clone and save the original material from GLB file
+        child.userData.originalMaterial = child.material.clone();
+        console.log(`💾 Saved original material for: ${child.name || 'mesh'}`);
+      }
+    });
+    console.log("✅ All original materials saved");
+  }
+
+  // Helper method to update reflection model materials
+  updateReflectionMaterial(materialConfig) {
+    if (!this.reflectionModel) return;
+
+    this.reflectionModel.traverse((child) => {
+      if (child.isMesh && !child.userData.isDiamond) {
+        // Apply simpler material for reflection (no clearcoat, lower env intensity)
+        child.material = new THREE.MeshPhysicalMaterial({
+          color: materialConfig.color,
+          metalness: materialConfig.metalness || 0.8,
+          roughness: materialConfig.roughness || 0.3,
+          envMapIntensity: (materialConfig.envMapIntensity || 1.0) * 0.5, // Lower intensity for reflection
+          // NO clearcoat or special effects for reflection
+        });
+        child.material.needsUpdate = true;
+      }
+    });
+  }
+
   resetToOriginalMaterials() {
-    // Reset metal materials to gold
-    this.setGoldMaterial();
+    if (!this.model) return;
+
+    console.log("🔄 Starting reset to original materials...");
+
+    // Reset main model to original materials
+    this.model.traverse((child) => {
+      if (child.isMesh) {
+        if (child.userData.originalMaterial) {
+          // Reset to the original GLB material
+          child.material = child.userData.originalMaterial.clone();
+          child.material.needsUpdate = true;
+          console.log(`🔄 Reset material for: ${child.name || 'mesh'}`);
+        } else {
+          console.warn(`⚠️ No original material found for: ${child.name || 'mesh'}`);
+        }
+      }
+    });
+
+    // Reset reflection model to match original materials
+    if (this.reflectionModel) {
+      this.reflectionModel.traverse((child) => {
+        if (child.isMesh && !child.userData.isDiamond) {
+          // Find corresponding mesh in main model to get original color
+          let originalColor = new THREE.Color(0xeecdae); // Default fallback
+          
+          // Try to find matching mesh in main model
+          this.model.traverse((mainChild) => {
+            if (mainChild.name === child.name && mainChild.userData.originalMaterial) {
+              originalColor = mainChild.userData.originalMaterial.color || originalColor;
+            }
+          });
+
+          child.material = new THREE.MeshPhysicalMaterial({
+            color: originalColor,
+            metalness: 0.8,
+            roughness: 0.3,
+            envMapIntensity: 0.5,
+          });
+          child.material.needsUpdate = true;
+        }
+      });
+    }
 
     // Reset diamond materials via RingEnhancer
     if (this.ringEnhancer) {
       this.ringEnhancer.resetToOriginalMaterials();
     }
+
+    console.log("✅ Reset to original materials completed for both main and reflection");
   }
 
   // Control methods
@@ -758,6 +981,28 @@ export class ThreeJSViewer {
       this.ringEnhancer.dispose();
       this.ringEnhancer = null;
     }
+
+    // Clean up reflection scene
+    if (this.reflectionScene) {
+      this.reflectionScene.traverse((object) => {
+        if (object.geometry) {
+          object.geometry.dispose();
+        }
+        if (object.material) {
+          if (Array.isArray(object.material)) {
+            object.material.forEach((material) => material.dispose());
+          } else {
+            object.material.dispose();
+          }
+        }
+      });
+      this.reflectionScene.clear();
+      this.reflectionScene = null;
+    }
+
+    // Clean up reflection references
+    this.reflectionModel = null;
+    this.reflectionPivot = null;
 
     // Clean up scene
     if (this.scene) {

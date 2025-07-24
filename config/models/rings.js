@@ -20,6 +20,16 @@ export const ringModels = {
     material: "platinum",
     category: "casual",
   },
+  nhanBase: {
+    id: "nhanBase",
+    name: "Silver Ring",
+    description: "Modern silver ring",
+    modelPath: "/arTryOn/nhanBase.glb",
+    scale: { x: 15, y: 15, z: 15 },
+    color: "#808080",
+    material: "platinum",
+    category: "casual",
+  },
 };
 
 // Helper function to get ring by ID
