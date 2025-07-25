@@ -1,28 +1,47 @@
-.
 ├── ARCHITECT.txt
 ├── README.md
+├── TODOLIST.txt
+├── commands.txt
+├── config
+│   ├── default.js
+│   ├── development.js
+│   ├── index.js
+│   ├── models
+│   │   └── rings.js
+│   └── production.js
 ├── eslint.config.js
 ├── index.html
-├── init_commands.txt
 ├── package-lock.json
 ├── package.json
 ├── public
-│   └── universe
-│       ├── ellipse108644-assc-500h.png
-│       ├── ellipse118644-eef-600h.png
-│       ├── ellipse128644-asu-700h.png
-│       ├── ellipse13i864-m3pj-200h.png
-│       ├── ellipse158645-2518r-200h.png
-│       ├── ellipse168645-7rj-200h.png
-│       ├── ellipse178645-bp2c-200h.png
-│       ├── ellipse58644-i3f-200h.png
-│       ├── ellipse88644-ai1s-300h.png
-│       ├── ellipse98644-3eex-400h.png
-│       ├── planet1.png
-│       ├── planet2.png
-│       ├── planet3.png
-│       ├── planet4.png
-│       └── universe_background_image.png
+│   ├── arTryOn
+│   │   ├── nhanVang.glb
+│   │   ├── nhanXam.glb
+│   │   ├── ring1.jpg
+│   │   └── ring_meshes_yellow_red.glb
+│   ├── collections
+│   │   ├── Button 4.svg:Zone.Identifier
+│   │   ├── banner-collection-2.png
+│   │   ├── banner-collection-2.png:Zone.Identifier
+│   │   ├── banner-collection-3.png
+│   │   ├── banner-collection-3.png:Zone.Identifier
+│   │   ├── orient.gif
+│   │   ├── orient.gif:Zone.Identifier
+│   │   ├── pendant.png
+│   │   ├── pendant.png:Zone.Identifier
+│   │   ├── ring.png
+│   │   ├── ring.png:Zone.Identifier
+│   │   ├── sub-footer.jpg
+│   │   ├── sub-footer.jpg:Zone.Identifier
+│   │   ├── woman-collection-2.png
+│   │   ├── woman-collection-2.png:Zone.Identifier
+│   │   ├── woman-collection-3.png
+│   │   └── woman-collection-3.png:Zone.Identifier
+│   ├── universe
+│   │   ├── universe_background_image.png
+│   │   └── universe_background_image.png:Zone.Identifier
+│   └── view360
+│       └── 0.glb
 ├── src
 │   ├── App.css
 │   ├── App.jsx
@@ -30,28 +49,87 @@
 │   ├── assets
 │   │   ├── fonts
 │   │   │   ├── BTBeauSans
-│   │   │   └── SaolDisplay
-│   │   │       ├── OTF
-│   │   │       └── TTF
+│   │   │   │   ├── BT Beau Sans Typeface License.pdf
+│   │   │   │   ├── BT-BeauSans-Bold.ttf
+│   │   │   │   ├── BT-BeauSans-BoldItalic.ttf
+│   │   │   │   ├── BT-BeauSans-ExtraBold.ttf
+│   │   │   │   ├── BT-BeauSans-ExtraBoldItalic.ttf
+│   │   │   │   ├── BT-BeauSans-Italic.ttf
+│   │   │   │   ├── BT-BeauSans-Light.ttf
+│   │   │   │   ├── BT-BeauSans-LightItalic.ttf
+│   │   │   │   ├── BT-BeauSans-Medium.ttf
+│   │   │   │   ├── BT-BeauSans-MediumItalic.ttf
+│   │   │   │   └── BT-BeauSans-Regular.ttf
+│   │   │   ├── SaolDisplay
+│   │   │   │   ├── OTF
+│   │   │   │   │   ├── SaolDisplay-Bold.otf
+│   │   │   │   │   ├── SaolDisplay-BoldItalic.otf
+│   │   │   │   │   ├── SaolDisplay-Light.otf
+│   │   │   │   │   ├── SaolDisplay-LightItalic.otf
+│   │   │   │   │   ├── SaolDisplay-Medium.otf
+│   │   │   │   │   ├── SaolDisplay-MediumItalic.otf
+│   │   │   │   │   ├── SaolDisplay-Regular.otf
+│   │   │   │   │   ├── SaolDisplay-RegularItalic.otf
+│   │   │   │   │   ├── SaolDisplay-Semibold.otf
+│   │   │   │   │   └── SaolDisplay-SemiboldItalic.otf
+│   │   │   │   └── TTF
+│   │   │   │       ├── SaolDisplay-Bold.ttf
+│   │   │   │       ├── SaolDisplay-BoldItalic.ttf
+│   │   │   │       ├── SaolDisplay-Light.ttf
+│   │   │   │       ├── SaolDisplay-LightItalic.ttf
+│   │   │   │       ├── SaolDisplay-Medium.ttf
+│   │   │   │       ├── SaolDisplay-MediumItalic.ttf
+│   │   │   │       ├── SaolDisplay-Regular.ttf
+│   │   │   │       ├── SaolDisplay-RegularItalic.ttf
+│   │   │   │       ├── SaolDisplay-Semibold.ttf
+│   │   │   │       └── SaolDisplay-SemiboldItalic.ttf
+│   │   │   ├── ppneuemontreal-bold.otf
+│   │   │   ├── ppneuemontreal-book.otf
+│   │   │   ├── ppneuemontreal-italic.otf
+│   │   │   ├── ppneuemontreal-medium.otf
+│   │   │   └── ppneuemontreal-semibolditalic.otf
 │   │   └── images
+│   │       ├── Button 4.svg:Zone.Identifier
 │   │       ├── Logo.svg
 │   │       ├── Mirror_Logo_new.svg
 │   │       ├── Vector_2.svg
+│   │       ├── arrow-left.svg
+│   │       ├── arrow-left.svg:Zone.Identifier
 │   │       ├── arrow-right.svg
+│   │       ├── explore-this-gem-button.svg
 │   │       └── hover-expand
 │   │           ├── image_1.svg
 │   │           ├── image_2.svg
 │   │           ├── image_3.svg
 │   │           └── image_4.svg
 │   ├── components
-│   │   ├── HoverExpandSection.jsx
-│   │   ├── Navbar.jsx
-│   │   ├── UniverseSection
-│   │   │   ├── UniverseSection.jsx
-│   │   │   ├── demo.css
-│   │   │   └── universe_section_1.css
-│   │   ├── UniverseSection.jsx
-│   │   ├── UniverseSectionFinal
+│   │   ├── arTryOn
+│   │   │   ├── lab
+│   │   │   └── processing
+│   │   │       ├── AR3.css
+│   │   │       ├── AR4.jsx
+│   │   │       ├── CameraTest.jsx
+│   │   │       ├── FingerDetector.css
+│   │   │       ├── FingerDetector.jsx
+│   │   │       ├── ModelViewer.css
+│   │   │       ├── ModelViewer.jsx
+│   │   │       ├── RealWorldCamera.css
+│   │   │       ├── RealWorldCamera.jsx
+│   │   │       ├── RingFingerDetector.css
+│   │   │       └── RingFingerDetector.jsx
+│   │   ├── collections
+│   │   │   ├── Collection.css
+│   │   │   └── Collection.jsx
+│   │   ├── hoverExpandSection
+│   │   │   ├── HoverExpand.css
+│   │   │   └── HoverExpandSection.jsx
+│   │   ├── navbar
+│   │   │   ├── Navbar.css
+│   │   │   └── Navbar.jsx
+│   │   ├── qrPopup
+│   │   │   ├── QRPopup.css
+│   │   │   └── QRPopup.jsx
+│   │   ├── universeSectionFinal
 │   │   │   ├── BaseOverlay.css
 │   │   │   ├── BaseOverlay.jsx
 │   │   │   ├── PresenceOverlay.css
@@ -66,13 +144,9 @@
 │   │   │   ├── UniverseSection.jsx
 │   │   │   ├── WhitePlanet.css
 │   │   │   └── WhitePlanet.jsx
-│   │   ├── universe-section
-│   │   │   ├── WhitePlanet1.jsx
-│   │   │   ├── WhitePlanet2.jsx
-│   │   │   ├── WhitePlanet3.jsx
-│   │   │   ├── WhitePlanet4.jsx
-│   │   │   └── demo.css
-│   │   └── universe_section.css
+│   │   └── view360
+│   │       ├── View360.css
+│   │       └── View360.jsx
 │   ├── hooks
 │   ├── main.jsx
 │   ├── pages
@@ -83,7 +157,10 @@
 │   │   ├── fonts.css
 │   │   ├── global.css
 │   │   ├── home.css
-│   │   ├── hover_expand.css
 │   │   └── variables.css
 │   └── utils
+│       └── AR
+│           ├── RingTargetCalculator.js
+│           └── Three.js
+├── vercel.json
 └── vite.config.js

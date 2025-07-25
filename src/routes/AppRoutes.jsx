@@ -14,7 +14,7 @@ const HoverExpandSection = lazy(() =>
   import("../components/hoverExpandSection/HoverExpandSection.jsx")
 );
 const View360 = lazy(() => import("../components/view360/View360.jsx"));
-const AR = lazy(() => import("../components/arTryOn/AR4.jsx"));
+// const AR = lazy(() => import("../components/arTryOn/AR4.jsx"));
 const Collection = lazy(() => import("@components/collections/Collection.jsx"));
 export default function AppRoutes() {
   const location = useLocation();
@@ -44,7 +44,7 @@ export default function AppRoutes() {
 
           <Route path="/view-360" element={<View360 />} />
 
-          <Route path="/ar/rings/:ringId" element={<AR />} />
+          {/* <Route path="/ar/rings/:ringId" element={<AR />} /> */}
 
 
           {/* FIX: Add route for non-existent paths */}

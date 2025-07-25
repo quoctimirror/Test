@@ -12,6 +12,29 @@ html {
     KEYFRAMES CHO ANIMATION
 ============================================================
 */
+/* ============================================================ */
+/*    MỚI: CSS ĐƠN GIẢN CHO HIỆU ỨNG SLIDER                      */
+/* ============================================================ */
+
+/* 1. Định nghĩa một keyframe duy nhất cho hiệu ứng xuất hiện */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+        /* Hiệu ứng trượt nhẹ từ dưới lên */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 2. Tạo một class để áp dụng animation này */
+/* 'forwards' để giữ lại trạng thái cuối cùng của animation (opacity: 1) */
+.slide-effect {
+    animation: fadeIn 0.4s ease-out forwards;
+}
 
 /* Định nghĩa animation nhún nhảy cho mũi tên */
 @keyframes bounce-arrow {
@@ -33,7 +56,6 @@ html {
     }
 }
 
-
 /*
 ============================================================
     SECTION 1: HERO BANNER
@@ -42,7 +64,7 @@ html {
 .collection-page .section-1 {
     min-height: 100vh;
     width: 100%;
-    background: lightgray url('/collections/collection_preference.gif') no-repeat fixed center / cover;
+    background: lightgray url('/collections/orient.gif') no-repeat fixed center / cover;
     position: relative;
 }
 
@@ -126,7 +148,6 @@ html {
     background: rgba(255, 255, 255, 0.25);
     animation-play-state: paused;
 }
-
 
 /*
 ============================================================
@@ -212,7 +233,7 @@ html {
 
 /* Tiêu đề "AURORA" */
 .product-title {
-    letter-spacing: 0.01sem;
+    letter-spacing: 0.01rem;
     /* Giảm khoảng cách chữ */
     margin: 0 0 0.5rem 0;
 
@@ -245,27 +266,50 @@ html {
 /* Nút "Explore this gem" */
 .explore-button {
     background: none;
+    /* Không dùng background của button nữa */
     border: none;
     cursor: pointer;
     padding: 0;
     transition: transform 0.3s ease;
+    /* Chỉ cần transition cho transform */
+    line-height: 0;
+    /* Loại bỏ khoảng trống thừa có thể có do thẻ button */
 }
 
-.explore-button img {
-    width: 200px;
-    height: 50px;
-    display: block;
-    filter: brightness(0) saturate(100%);
+/* Style cho SVG bên trong button */
+.explore-button .explore-gem-svg .button-background,
+.explore-button .explore-gem-svg .button-text {
+    transition: fill 0.3s ease;
+    /* Thêm hiệu ứng chuyển màu mượt mà */
 }
 
+/* Trạng thái bình thường */
+.explore-button .explore-gem-svg .button-text {
+    fill: #000000;
+    /* Màu chữ mặc định là đen */
+}
+
+/* KHI HOVER VÀO BUTTON */
 .explore-button:hover {
     transform: scale(1.05);
+}
+
+/* Thay đổi màu nền của SVG khi hover */
+.explore-button:hover .explore-gem-svg .button-background {
+    fill: #BC224C;
+    /* Đây là màu hồng bạn muốn */
+}
+
+/* Thay đổi màu chữ của SVG khi hover */
+.explore-button:hover .explore-gem-svg .button-text {
+    fill: #FFFFFF;
+    /* Đổi chữ thành màu trắng */
 }
 
 .collection-page .section-3 {
     min-height: 100vh;
     width: 100%;
-    background: url('/collections/section3.png') lightgray 50% / cover no-repeat;
+    background: url('/collections/banner-collection-2.png') lightgray 50% / cover no-repeat;
     filter: grayscale(0%);
     position: relative;
 }

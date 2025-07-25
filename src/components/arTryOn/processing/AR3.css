@@ -1,0 +1,164 @@
+/* === PHẦN 1: THIẾT LẬP TOÀN CỤC VÀ TRANG TRÍ TRANG === */
+
+/*
+ * Thiết lập reset cơ bản và font chữ cho toàn bộ trang.
+ * - `box-sizing: border-box;` giúp việc tính toán kích thước (width/height) dễ dàng hơn.
+ * - `font-family` sử dụng font hệ thống, giúp trang web trông tự nhiên trên mọi HĐH.
+ * - `background` tạo một dải màu gradient tròn tối màu, trông chuyên nghiệp và hiện đại.
+ */
+ *, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #121212; /* Màu nền dự phòng nếu gradient không hiển thị */
+  color: #f0f0f0;
+  background-image: radial-gradient(circle at top, #41414b, #121212 40%);
+  min-height: 100vh; /* Đảm bảo background luôn lấp đầy màn hình */
+}
+
+/*
+ * Container chính của toàn bộ trang.
+ * - Dùng Flexbox để dễ dàng căn chỉnh nội dung.
+ * - `flex-direction: column;` xếp các phần tử (header, AR view) theo chiều dọc.
+ * - `align-items: center;` CĂN GIỮA tất cả các phần tử theo chiều ngang.
+ * - `padding`: Tạo khoảng trống ở trên/dưới và hai bên để nội dung không bị dính vào cạnh màn hình.
+ * - `min-height: 100vh;` đảm bảo container này luôn cao ít nhất bằng chiều cao màn hình.
+ */
+.ar-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/*
+ * Phần tiêu đề của trang.
+ */
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  /* Hiệu ứng text-shadow tinh tế */
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.page-header p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #b0b0b0;
+}
+
+/* === PHẦN 2: KHUNG HIỂN THỊ AR === */
+
+/**
+ * Container chính cho khung AR:
+ * - `width: 100%` và `max-width` giúp nó responsive: nó sẽ co giãn nhưng không vượt quá 960px.
+ * - `aspect-ratio: 16 / 9;` duy trì tỷ lệ khung hình chuẩn.
+ * - `position: relative;` là nền tảng để các lớp video/canvas bên trong có thể xếp chồng lên nhau.
+ * - `overflow: hidden;` đảm bảo không có gì tràn ra khỏi khung hình.
+ * - `border-radius` và `box-shadow` tạo hiệu ứng nổi, có chiều sâu và mềm mại hơn.
+ * - `margin: 0;` thay vì `margin: auto;` vì việc căn giữa đã được parent (.ar-page-container) xử lý.
+ */
+.ar-jewelry-container {
+  width: 100%;
+  max-width: 960px;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  background-color: #000;
+  border-radius: 16px; /* Bo góc mềm mại hơn */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1); /* Đổ bóng và thêm viền sáng tinh tế */
+  margin: 0;
+}
+
+/**
+ * Cấu trúc Xếp lớp (Layering)
+ * - `position: absolute` và `transform` để căn giữa tất cả các lớp bên trong khung AR.
+ */
+.ar-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+/**
+ * Lớp 1: Video (z-index: 1, dưới cùng)
+ * - `object-fit: cover` lấp đầy container mà không bị méo hình.
+ */
+.ar-video {
+  z-index: 1;
+  object-fit: cover;
+}
+
+/**
+ * Lớp 2: Canvas 3D (z-index: 3, trên cùng)
+ */
+.three-canvas {
+  z-index: 3;
+  background-color: transparent;
+}
+
+/**
+ * Lớp phủ thông báo loading:
+ */
+.loading-overlay {
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  color: white;
+  font-size: 1.2rem;
+  font-family: sans-serif;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  border-radius: inherit; /* Kế thừa bo góc từ parent */
+}
+
+/* === PHẦN 3: CÁC TIỆN ÍCH KHÁC (giữ nguyên) === */
+.ar-video.front-camera {
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+.ar-video.rear-camera {
+  transform: translate(-50%, -50%);
+}
+
+/* === PHẦN 4: RESPONSIVE CHO THIẾT BỊ DI ĐỘNG === */
+
+/*
+ * Khi màn hình có chiều rộng từ 600px trở xuống (điện thoại)
+ * - Giảm font-size của tiêu đề để không chiếm quá nhiều không gian.
+ * - Giảm khoảng đệm của trang để tối ưu diện tích.
+ */
+@media (max-width: 600px) {
+  .ar-page-container {
+    padding: 1rem 0.5rem;
+  }
+  
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .page-header p {
+    font-size: 1rem;
+  }
+
+  .ar-jewelry-container {
+     border-radius: 12px; /* Giảm bo góc trên di động */
+  }
+}

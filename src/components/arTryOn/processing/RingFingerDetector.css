@@ -1,0 +1,98 @@
+/* src/components/css/RingFingerDetector.css */
+
+.ring-detector-container {
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 4 / 3;
+  position: relative;
+  margin: 0; /* Bỏ margin auto để nó vừa khít .app-main */
+  border: 5px solid #ff4136;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.ring-detector-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+.loading-message {
+  color: white;
+  font-size: 1rem;
+  font-family: sans-serif;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background: rgba(0,0,0,0.6);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  width: 80%;
+}
+
+/* === THÊM MỚI: STYLE CHO BẢNG DỮ LIỆU === */
+
+/* Container chính cho toàn bộ các bảng dữ liệu (cho 1 hoặc 2 tay) */
+.data-overlay-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 15; /* Nằm trên canvas nhưng dưới các UI quan trọng khác nếu có */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Khoảng cách giữa các bảng nếu có 2 tay */
+  color: white;
+  font-family: 'Courier New', Courier, monospace; /* Font chữ đơn cách để các số thẳng hàng */
+}
+
+/* Style cho từng hộp thông tin của một bàn tay */
+.hand-data-box {
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 220px; /* Cố định chiều rộng để layout ổn định */
+}
+
+/* Tiêu đề của bảng (Tay Trái / Tay Phải) */
+.hand-data-box strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #ff9800; /* Màu cam để nổi bật */
+  font-size: 16px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 5px;
+  text-align: center;
+}
+
+/* Layout cho một dòng dữ liệu (ví dụ: "Position: X,Y,Z") */
+.hand-data-box .data-group {
+  display: grid;
+  /* Chia thành 2 cột: nhãn (vd: Position) và giá trị */
+  grid-template-columns: 100px 1fr; 
+  align-items: start;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+/* Style cho nhãn (Position, Rotation) */
+.data-group span {
+  font-weight: bold;
+  color: #a0e9ff; /* Màu xanh nhạt */
+}
+
+/* Style cho khối hiển thị tọa độ X, Y, Z */
+.data-group pre {
+  margin: 0;
+  padding: 0;
+  font-family: inherit; /* Kế thừa font từ .data-overlay-container */
+  font-size: 14px;
+  white-space: pre; /* Giữ nguyên các dấu xuống dòng (\n) */
+  line-height: 1.3;
+}
