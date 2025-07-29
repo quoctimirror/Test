@@ -30,6 +30,12 @@ export const ringModels = {
     material: "platinum",
     category: "casual",
   },
+  nhanDario: {
+    id: "nhanDario",
+    name: "",
+    description: "",
+    modelPath: "/arTryOn/nhanDario.glb",
+  },
 };
 
 // Helper function to get ring by ID
@@ -48,6 +54,6 @@ export const isValidRingId = (id) => {
 };
 
 // Default ring ID for fallback
-export const DEFAULT_RING_ID = "nhanBase";
+export const DEFAULT_RING_ID = "nhanDario";
 
 export default ringModels;

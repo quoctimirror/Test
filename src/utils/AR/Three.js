@@ -26,28 +26,28 @@ export class ThreeJSViewer {
       modelScale: 2.5,
       modelPosition: { x: 0, y: 0, z: 0 },
       initialYRotation: Math.PI,
-      
+
       // Camera settings
       cameraPosition: { x: 0, y: 5.3, z: 10.5 },
       cameraFov: 65,
-      
+
       // Renderer settings
       backgroundColor: null, // Will use gradient background
       antialias: true,
       alpha: true,
       pixelRatio: Math.min(window.devicePixelRatio, 2),
-      
+
       // Post-processing settings
       bloomStrength: 0.2,
       bloomRadius: 0.08,
       bloomThreshold: 0.9,
-      
+
       // Mirror settings
       mirrorColor: 0xe6e6e6,
       mirrorPosition: { y: -2.5, z: 2 },
-      
+
       // Override defaults with user config
-      ...config
+      ...config,
     };
 
     // Apply configuration to instance properties for backward compatibility
@@ -94,7 +94,12 @@ export class ThreeJSViewer {
 
     // Create camera
     const aspect = this.container.clientWidth / this.container.clientHeight;
-    this.camera = new THREE.PerspectiveCamera(this.config.cameraFov, aspect, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(
+      this.config.cameraFov,
+      aspect,
+      0.1,
+      1000
+    );
     this.camera.position.set(
       this.cameraPosition.x,
       this.cameraPosition.y,
@@ -910,7 +915,6 @@ export class ThreeJSViewer {
         if (child.isMesh && !child.userData.isDiamond) {
           // Find corresponding mesh in main model to get original color
           let originalColor = new THREE.Color(0xeecdae); // Default fallback
-
           // Try to find matching mesh in main model
           this.model.traverse((mainChild) => {
             if (

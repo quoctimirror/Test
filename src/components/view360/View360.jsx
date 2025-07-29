@@ -86,31 +86,31 @@ const View360 = () => {
     if (!viewerRef.current) return;
 
     switch (materialType) {
-      case 'gold':
+      case "gold":
         viewerRef.current.setGoldMaterial();
         setActiveMaterial("gold");
         break;
-      case 'silver':
+      case "silver":
         viewerRef.current.setSilverMaterial();
         setActiveMaterial("silver");
         break;
-      case 'platinum':
+      case "platinum":
         viewerRef.current.setPlatinumMaterial();
         setActiveMaterial("platinum");
         break;
-      case 'rose-gold':
+      case "rose-gold":
         viewerRef.current.setRoseGoldMaterial();
         setActiveMaterial("rose-gold");
         break;
-      case 'diamond':
+      case "diamond":
         viewerRef.current.setDiamondMaterial();
         // Diamond doesn't change activeMaterial state
         break;
-      case 'force-diamond-uniform':
+      case "force-diamond-uniform":
         viewerRef.current.forceAllDiamondsUniform();
         // Force diamond doesn't change activeMaterial state
         break;
-      case 'reset':
+      case "reset":
         viewerRef.current.resetToOriginalMaterials();
         setActiveMaterial("default");
         break;
@@ -120,13 +120,14 @@ const View360 = () => {
   };
 
   // Backward compatibility - keep original function names but use new handler
-  const handleGoldMaterial = () => handleMaterialChange('gold');
-  const handleSilverMaterial = () => handleMaterialChange('silver');
-  const handlePlatinumMaterial = () => handleMaterialChange('platinum');
-  const handleRoseGoldMaterial = () => handleMaterialChange('rose-gold');
-  const handleDiamondMaterial = () => handleMaterialChange('diamond');
-  const handleForceAllDiamondsUniform = () => handleMaterialChange('force-diamond-uniform');
-  const handleResetMaterials = () => handleMaterialChange('reset');
+  const handleGoldMaterial = () => handleMaterialChange("gold");
+  const handleSilverMaterial = () => handleMaterialChange("silver");
+  const handlePlatinumMaterial = () => handleMaterialChange("platinum");
+  const handleRoseGoldMaterial = () => handleMaterialChange("rose-gold");
+  const handleDiamondMaterial = () => handleMaterialChange("diamond");
+  const handleForceAllDiamondsUniform = () =>
+    handleMaterialChange("force-diamond-uniform");
+  const handleResetMaterials = () => handleMaterialChange("reset");
 
   const toggleColorControls = () => {
     setShowColorControls(!showColorControls);
@@ -154,7 +155,7 @@ const View360 = () => {
             className={`color-btn gold ${
               activeMaterial === "gold" ? "active" : ""
             }`}
-            onClick={() => handleMaterialChange('gold')}
+            onClick={() => handleMaterialChange("gold")}
             title="Gold"
           >
             Gold
@@ -163,7 +164,7 @@ const View360 = () => {
             className={`color-btn silver ${
               activeMaterial === "silver" ? "active" : ""
             }`}
-            onClick={() => handleMaterialChange('silver')}
+            onClick={() => handleMaterialChange("silver")}
             title="Silver"
           >
             Silver
@@ -172,7 +173,7 @@ const View360 = () => {
             className={`color-btn platinum ${
               activeMaterial === "platinum" ? "active" : ""
             }`}
-            onClick={() => handleMaterialChange('platinum')}
+            onClick={() => handleMaterialChange("platinum")}
             title="Platinum"
           >
             Platinum
@@ -181,7 +182,7 @@ const View360 = () => {
             className={`color-btn rose-gold ${
               activeMaterial === "rose-gold" ? "active" : ""
             }`}
-            onClick={() => handleMaterialChange('rose-gold')}
+            onClick={() => handleMaterialChange("rose-gold")}
             title="Rose Gold"
           >
             Rose Gold
@@ -190,7 +191,7 @@ const View360 = () => {
             className={`color-btn reset ${
               activeMaterial === "default" ? "active" : ""
             }`}
-            onClick={() => handleMaterialChange('reset')}
+            onClick={() => handleMaterialChange("reset")}
             title="Reset to Original"
           >
             Reset
