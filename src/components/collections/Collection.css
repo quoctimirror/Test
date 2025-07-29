@@ -1,0 +1,670 @@
+/*
+============================================================
+    GLOBAL SCROLL BEHAVIOR
+============================================================
+*/
+html {
+    scroll-behavior: smooth;
+}
+
+/*
+============================================================
+    KEYFRAMES CHO ANIMATION
+============================================================
+*/
+/* ============================================================ */
+/*    MỚI: CSS ĐƠN GIẢN CHO HIỆU ỨNG SLIDER                      */
+/* ============================================================ */
+
+/* 1. Định nghĩa một keyframe duy nhất cho hiệu ứng xuất hiện */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+        /* Hiệu ứng trượt nhẹ từ dưới lên */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 2. Tạo một class để áp dụng animation này */
+/* 'forwards' để giữ lại trạng thái cuối cùng của animation (opacity: 1) */
+.slide-effect {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Định nghĩa animation nhún nhảy cho mũi tên */
+@keyframes bounce-arrow {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0) translateX(-50%);
+    }
+
+    40% {
+        transform: translateY(-10px) translateX(-50%);
+    }
+
+    60% {
+        transform: translateY(-5px) translateX(-50%);
+    }
+}
+
+/*
+============================================================
+    SECTION 1: HERO BANNER
+============================================================
+*/
+.collection-page .section-1 {
+    min-height: 100vh;
+    width: 100%;
+    background: lightgray url('/collections/orient.gif') no-repeat fixed center / cover;
+    position: relative;
+}
+
+/* Container chính để định vị toàn bộ khối văn bản */
+.hero-text-container {
+    position: absolute;
+    top: 25vh;
+    left: 10vw;
+    z-index: 10;
+}
+
+/* Các style chung áp dụng cho cả 3 dòng text */
+.hero-text-container div {
+    font-size: 50px;
+    line-height: 105%;
+    background: linear-gradient(180deg, #2A7786 0%, #134E5C 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Style riêng cho "TREASURE" */
+.text-treasure {
+    font-family: "SaolDisplay-Regular-ttf";
+    background: linear-gradient(180deg, #2A7786 0%, #134E5C 100%);
+    font-size: 50px;
+    line-height: 105%;
+    font-weight: 400;
+}
+
+/* Style riêng cho "of the" */
+.text-of-the {
+    padding-left: 3.0em;
+    font-family: "SaolDisplay-LightItalic-ttf";
+    font-size: 50px;
+    font-weight: 300;
+    line-height: 105%;
+    /* 52.5px */
+    background: linear-gradient(180deg, #2A7786 0%, #134E5C 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Style riêng cho "ORIENT" */
+.text-orient {
+    font-style: normal;
+    font-weight: 400;
+    text-align: right;
+    padding-left: 4.0em;
+    font-family: "SaolDisplay-Regular-ttf";
+    background: linear-gradient(180deg, #2A7786 0%, #134E5C 100%);
+    font-size: 50px;
+    line-height: 105%;
+    font-weight: 400;
+}
+
+/* Nút mũi tên cuộn xuống */
+.scroll-down-arrow {
+    display: inline-flex;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(2.5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    animation: bounce-arrow 2.5s infinite;
+}
+
+.scroll-down-arrow:hover {
+    background: rgba(255, 255, 255, 0.25);
+    animation-play-state: paused;
+}
+
+/*
+============================================================
+    SECTION 2: NỘI DUNG CHIA ĐÔI (VIẾT LẠI THEO ẢNH MẪU)
+============================================================
+*/
+.section-2 {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* CỘT ẢNH BÊN TRÁI (Ảnh nhẫn) */
+.collection-image-panel {
+    width: 50%;
+    padding: 0;
+}
+
+.collection-image-panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Loại bỏ khoảng trống thừa bên dưới ảnh */
+}
+
+/* CỘT NỘI DUNG BÊN PHẢI (Chứa slider) */
+.collection-content-panel {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    box-sizing: border-box;
+    background-color: #f7f7f7;
+    /* Màu nền xám rất nhạt giống ảnh mẫu */
+}
+
+/* Container cho slider, giới hạn chiều rộng để cân đối */
+.product-slider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 550px;
+    /* Giới hạn chiều rộng để không bị quá xa nhau */
+}
+
+/* Hàng chứa mũi tên và ảnh */
+.slider-main-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Đẩy mũi tên ra hai bên */
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+/* Khối bọc ảnh */
+.product-image-container {
+    padding: 0 1rem;
+    /* Tạo khoảng cách nhỏ với mũi tên */
+    margin-top: 8rem;
+    /* Đẩy container xuống dưới */
+}
+
+/* Ảnh sản phẩm (Mặt dây chuyền) */
+.product-image {
+    width: 180px;
+    height: 290px;
+    object-fit: contain;
+}
+
+/* Khối chứa thông tin sản phẩm (tiêu đề, mô tả, nút) */
+.product-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Tiêu đề "AURORA" */
+.product-title {
+    letter-spacing: 0.01rem;
+    /* Giảm khoảng cách chữ */
+    margin: 0 0 0.5rem 0;
+
+    /* Saol_24pt_light */
+    font-family: "SaolDisplay-Light-ttf";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    text-transform: uppercase;
+    color: #000000;
+    text-align: center;
+}
+
+/* Đoạn mô tả sản phẩm */
+.product-description {
+    font-family: 'BT-BeauSans-Light-ttf';
+    text-align: center;
+    font-size: 16px;
+    color: #E0E0E0;
+    max-width: 450px;
+    line-height: 105%;
+    /* 16.8px */
+    font-style: normal;
+    font-weight: 300;
+    margin: 0 0 2rem 0;
+    align-self: stretch;
+}
+
+/* Nút "Explore this gem" */
+.explore-button {
+    background: none;
+    /* Không dùng background của button nữa */
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.3s ease;
+    /* Chỉ cần transition cho transform */
+    line-height: 0;
+    /* Loại bỏ khoảng trống thừa có thể có do thẻ button */
+}
+
+/* Style cho SVG bên trong button */
+.explore-button .explore-gem-svg .button-background,
+.explore-button .explore-gem-svg .button-text {
+    transition: fill 0.3s ease;
+    /* Thêm hiệu ứng chuyển màu mượt mà */
+}
+
+/* Trạng thái bình thường */
+.explore-button .explore-gem-svg .button-text {
+    fill: #000000;
+    /* Màu chữ mặc định là đen */
+}
+
+/* KHI HOVER VÀO BUTTON */
+.explore-button:hover {
+    transform: scale(1.05);
+}
+
+/* Thay đổi màu nền của SVG khi hover */
+.explore-button:hover .explore-gem-svg .button-background {
+    fill: #BC224C;
+    /* Đây là màu hồng bạn muốn */
+}
+
+/* Thay đổi màu chữ của SVG khi hover */
+.explore-button:hover .explore-gem-svg .button-text {
+    fill: #FFFFFF;
+    /* Đổi chữ thành màu trắng */
+}
+
+.collection-page .section-3 {
+    min-height: 100vh;
+    width: 100%;
+    background: url('/collections/banner-collection-2.png') lightgray 50% / cover no-repeat;
+    filter: grayscale(0%);
+    position: relative;
+}
+
+/*
+============================================================
+    RESPONSIVE DESIGN
+============================================================
+*/
+
+/* Tablet landscape (1024px và xuống) */
+@media screen and (max-width: 1024px) {
+    .hero-text-container {
+        top: 20vh;
+        left: 8vw;
+    }
+
+    .hero-text-container div {
+        font-size: 42px;
+    }
+
+    .product-slider {
+        max-width: 480px;
+    }
+
+    .product-image {
+        width: 150px;
+        height: 240px;
+    }
+}
+
+/* Tablet portrait (768px và xuống) */
+@media screen and (max-width: 768px) {
+    .section-2 {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .collection-image-panel,
+    .collection-content-panel {
+        width: 100%;
+    }
+
+    .collection-image-panel {
+        height: 40vh;
+        min-height: 300px;
+    }
+
+    .collection-content-panel {
+        padding: 1.5rem;
+    }
+
+    .hero-text-container {
+        top: 15vh;
+        left: 6vw;
+    }
+
+    .hero-text-container div {
+        font-size: 36px;
+    }
+
+    .text-of-the {
+        padding-left: 2.5em;
+    }
+
+    .text-orient {
+        padding-left: 3.5em;
+    }
+
+    .product-slider {
+        max-width: 420px;
+    }
+
+    .slider-main-row {
+        margin-bottom: 1.5rem;
+    }
+
+    .product-image {
+        width: 130px;
+        height: 210px;
+    }
+
+    .product-image-container {
+        margin-top: 1.5rem;
+    }
+
+    .product-title {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .product-description {
+        font-size: 0.95rem;
+        max-width: 380px;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Mobile landscape (640px và xuống) */
+@media screen and (max-width: 640px) {
+    .hero-text-container {
+        top: 12vh;
+        left: 5vw;
+    }
+
+    .hero-text-container div {
+        font-size: 28px;
+    }
+
+    .text-of-the {
+        padding-left: 2em;
+    }
+
+    .text-orient {
+        padding-left: 3em;
+    }
+
+    .collection-content-panel {
+        padding: 1rem;
+    }
+
+    .product-slider {
+        max-width: 360px;
+    }
+
+    .product-image {
+        width: 110px;
+        height: 180px;
+    }
+
+    .product-image-container {
+        margin-top: 1rem;
+        padding: 0 0.5rem;
+    }
+
+    .slider-arrow {
+        width: 45px;
+        height: 45px;
+    }
+
+    .product-title {
+        font-size: 1.2rem;
+        letter-spacing: 0.3em;
+    }
+
+    .product-description {
+        font-size: 0.9rem;
+        max-width: 320px;
+    }
+
+    .explore-button {
+        padding: 0.8rem 2rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile portrait (480px và xuống) */
+@media screen and (max-width: 480px) {
+    .hero-text-container {
+        top: 10vh;
+        left: 4vw;
+    }
+
+    .hero-text-container div {
+        font-size: 24px;
+    }
+
+    .text-of-the {
+        padding-left: 1.5em;
+    }
+
+    .text-orient {
+        padding-left: 2.5em;
+    }
+
+    .collection-image-panel {
+        height: 35vh;
+        min-height: 250px;
+    }
+
+    .collection-content-panel {
+        padding: 1rem 0.5rem;
+    }
+
+    .product-slider {
+        max-width: 300px;
+    }
+
+    .slider-main-row {
+        margin-bottom: 1rem;
+    }
+
+    .product-image {
+        width: 90px;
+        height: 150px;
+    }
+
+    .product-image-container {
+        margin-top: 0.5rem;
+        padding: 0 0.3rem;
+    }
+
+    .slider-arrow {
+        width: 40px;
+        height: 40px;
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        letter-spacing: 0.25em;
+        margin-bottom: 0.8rem;
+    }
+
+    .product-description {
+        font-size: 0.85rem;
+        max-width: 280px;
+        margin-bottom: 1.2rem;
+    }
+
+    .explore-button {
+        padding: 0.7rem 1.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Mobile nhỏ (360px và xuống) */
+@media screen and (max-width: 360px) {
+    .hero-text-container {
+        top: 8vh;
+        left: 3vw;
+    }
+
+    .hero-text-container div {
+        font-size: 20px;
+    }
+
+    .text-of-the {
+        padding-left: 1.2em;
+    }
+
+    .text-orient {
+        padding-left: 2em;
+    }
+
+    .collection-content-panel {
+        padding: 0.8rem 0.4rem;
+    }
+
+    .product-slider {
+        max-width: 280px;
+    }
+
+    .product-image {
+        width: 80px;
+        height: 130px;
+    }
+
+    .product-image-container {
+        margin-top: 0.3rem;
+        padding: 0 0.2rem;
+    }
+
+    .slider-arrow {
+        width: 35px;
+        height: 35px;
+    }
+
+    .product-title {
+        font-size: 1rem;
+        letter-spacing: 0.2em;
+    }
+
+    .product-description {
+        font-size: 0.8rem;
+        max-width: 250px;
+    }
+
+    .explore-button {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.75rem;
+    }
+
+    .scroll-down-arrow {
+        width: 45px;
+        height: 45px;
+        bottom: 30px;
+    }
+}
+
+/* Nút mũi tên của slider */
+.slider-arrow {
+    background-color: rgba(0, 0, 0, 0.10);
+    backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(2.5px);
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: #ffffff;
+    /* Màu mũi tên trắng */
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Đẩy arrow xuống dưới */
+    margin-top: 12rem;
+    /* Thêm khoảng cách từ trên xuống */
+}
+
+.slider-arrow:hover {
+    background: rgba(0, 0, 0, 0.15);
+    color: #ffffff;
+}
+
+/* Nút scroll down trong section 2 */
+.section-2 .scroll-down-arrow {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+/*
+============================================================
+    SECTION 3: PLACEHOLDER CONTENT
+============================================================
+*/
+.section-3 {
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.mirror-collection-title {
+    position: absolute;
+    top: 40%;
+    left: 10vw;
+    /* Khoảng cách 10% từ cạnh trái */
+    transform: translateY(-50%);
+    font-family: "SaolDisplay-Regular-ttf", serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: var(--White, #FFF);
+    z-index: 2;
+    text-align: center;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 90%;
+    /* 57.6px */
+    letter-spacing: -1.92px;
+}

@@ -879,7 +879,11 @@ export class ThreeJSViewer {
         if (child.isMesh && !child.userData.isDiamond) {
           // Find corresponding mesh in main model to get original color
           let originalColor = new THREE.Color(0xeecdae); // Default fallback
+<<<<<<< HEAD
           
+=======
+
+>>>>>>> quoctimirror
           // Try to find matching mesh in main model
           this.model.traverse((mainChild) => {
             if (mainChild.name === child.name && mainChild.userData.originalMaterial) {
