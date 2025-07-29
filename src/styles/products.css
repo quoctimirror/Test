@@ -25,37 +25,6 @@
   box-sizing: border-box;
 }
 
-/* Section 3: Related Products */
-.collection-section-3 {
-  width: 100%;
-  min-height: 50vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  box-sizing: border-box;
-}
-
-.collection-section-3 .section-content {
-  max-width: 800px;
-  text-align: center;
-  color: white;
-}
-
-.collection-section-3 h2 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.collection-section-3 p {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0;
-}
 
 /* Footer */
 .collection-footer {
@@ -80,21 +49,19 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .collection-section-2 h2,
-  .collection-section-3 h2 {
+  .collection-section-2 h2 {
     font-size: 2rem;
   }
 
-  .collection-section-2 p,
-  .collection-section-3 p {
+  .collection-section-2 p {
     font-size: 1rem;
   }
 
-  .collection-section-2,
-  .collection-section-3 {
+  .collection-section-2 {
     padding: 40px 15px;
     min-height: 40vh;
   }
+
 
   .collection-footer {
     padding: 30px 15px;
@@ -102,21 +69,19 @@
 }
 
 @media (max-width: 480px) {
-  .collection-section-2 h2,
-  .collection-section-3 h2 {
+  .collection-section-2 h2 {
     font-size: 1.8rem;
   }
 
-  .collection-section-2 p,
-  .collection-section-3 p {
+  .collection-section-2 p {
     font-size: 0.9rem;
   }
 
-  .collection-section-2,
-  .collection-section-3 {
+  .collection-section-2 {
     padding: 30px 10px;
     min-height: 35vh;
   }
+
 
   .collection-footer {
     padding: 20px 10px;
