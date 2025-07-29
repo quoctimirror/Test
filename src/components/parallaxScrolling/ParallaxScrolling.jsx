@@ -158,12 +158,18 @@ const ParallaxScrolling = () => {
           </div>
           <div className="text-pane">
             <div className="text-content">
-              <h4>THE ICONIC COLLECTION</h4>
+              <h4>THE FIRST COLLECTION</h4>
+              <h1>LUMINA RING</h1>
               <p>
-                Sự kết hợp táo bạo giữa hình khối kiến trúc và vẻ đẹp của đá quý
-                tự nhiên. Mỗi thiết kế là một tuyên ngôn về phong cách độc đáo,
-                mạnh mẽ và đầy cá tính, nơi nghệ thuật và trang sức hòa quyện
-                làm một.
+                The LUMINA Band features five perfectly
+                <br />
+                calibrated future diamonds round brilliant
+                <br /> diamonds, each 0.5ct, symbolizing five <br />
+                transformative chapters of your journey. Set in
+                <br /> a hard-prong aerial band, this ring captures
+                <br />
+                light from every angle — soft, luminous, and
+                <br /> unmistakably personal.
               </p>
             </div>
           </div>

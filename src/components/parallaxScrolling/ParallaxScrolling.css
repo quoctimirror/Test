@@ -92,20 +92,38 @@
 }
 
 .text-content h4 {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 0.2em; /* Giãn cách ký tự */
-  margin-bottom: 2rem;
-  color: #333;
+  font-family: "BT-BeauSans-Medium-ttf", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 110%;
+  letter-spacing: 0%;
+  text-align: center;
+  margin-bottom: 0.8 rem;
+  color: #797979;
+}
+
+.text-content h1 {
+  font-family: "SaolDisplay-Light-ttf", serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 64px;
+  line-height: 90%;
+  letter-spacing: -3%;
+  text-align: center;
+  margin: 0 0 2rem 0;
+  color: #000000;
 }
 
 .text-content p {
-  font-family: "Montserrat", sans-serif;
-  font-size: 1rem;
-  line-height: 1.8;
-  color: #555;
-  font-weight: 300;
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #797979;
 }
 
 /* Responsive Design */
