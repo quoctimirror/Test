@@ -54,6 +54,6 @@ export const isValidRingId = (id) => {
 };
 
 // Default ring ID for fallback
-export const DEFAULT_RING_ID = "nhanXam";
+export const DEFAULT_RING_ID = "nhanDario";
 
 export default ringModels;

@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import * as THREE from 'three';
 import { useParams } from 'react-router-dom';
+import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
 
 import { modelLoader } from '@utils/AR/modelLoader.js';
 import { SimpleRingEnhancer1 } from '@utils/AR/SimpleRingEnhancer1.js';
@@ -562,6 +563,7 @@ const TryOnRing = () => {
     }, []);
 
     const handleClose = useCallback(() => {
+        window.history.back();
         console.log("🚪 Closing app");
         cleanup();
     }, [cleanup]);
@@ -584,6 +586,7 @@ const TryOnRing = () => {
                 <header className="mirror-header">
                     <button onClick={handleClose} className="close-button">×</button>
                     <h1 className="mirror-title">MIRROR</h1>
+                    {/* <img src={MirrorLogo} alt="Mirror Logo" className="mirror-logo" /> */}
                 </header>
 
                 {!capturedImage && !error && !loadingMessage && (
