@@ -27,4 +27,4 @@ TODO
 - LÀM CHO CÁI NHẪN CHUYỂN ĐỘNG KHỚP VỚI CHUYỂN ĐỘNG CỦA TAY [CHƯA ĐỦ ĐIỀU KIỆN ĐỂ ĐÁNH GIÁ POSSIBILITY]
 
 
-==> Vậy là mình đã có một cái AR Try On Ring hoàn chỉnh -> chính xác!
+==> Vậy là mình đã có một cái AR Try On Ring hoàn chỉnh

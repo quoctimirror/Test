@@ -3,25 +3,31 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Navbar from "@components/navbar/Navbar";
+import Footer from "@components/footer/Footer";
 
 // Lazy-load components
-const HomePage = lazy(() => import("../pages/HomePage"));
+const HomePage = lazy(() => import("@pages/HomePage"));
+const ProductsPage = lazy(() => import("@pages/ProductsPage"));
 
 const UVFinal = lazy(() =>
-  import("../components/universeSectionFinal/UniverseSection.jsx")
+  import("@components/universeSectionFinal/UniverseSection.jsx")
 );
 const HoverExpandSection = lazy(() =>
-  import("../components/hoverExpandSection/HoverExpandSection.jsx")
+  import("@components/hoverExpandSection/HoverExpandSection.jsx")
 );
-const View360 = lazy(() => import("../components/view360/View360.jsx"));
-// const AR = lazy(() => import("../components/arTryOn/AR4.jsx"));
-const Collection = lazy(() => import("@components/collections/Collection.jsx"));
+const View360 = lazy(() => import("@components/view360/View360.jsx"));
+const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
+
 export default function AppRoutes() {
   const location = useLocation();
 
   // Routes that should NOT show the navbar
-  const routesWithoutNavbar = ["/universe-final"];
+  const routesWithoutNavbar = ["/universe-final", "/hover-expand"];
   const shouldShowNavbar = !routesWithoutNavbar.includes(location.pathname);
+
+  // Routes that should NOT show the footer (same as navbar)
+  const routesWithoutFooter = ["/universe-final", "/hover-expand"];
+  const shouldShowFooter = !routesWithoutFooter.includes(location.pathname);
 
   return (
     <>
@@ -35,8 +41,9 @@ export default function AppRoutes() {
         }
       >
         <Routes>
-          {/* <Route path="/" element={<HomePage />} /> */}
-          <Route path="/" element={<Collection />} />
+          <Route path="/" element={<HomePage />} />
+
+          <Route path="/products" element={<ProductsPage />} />
 
           <Route path="/universe-final" element={<UVFinal />} />
 
@@ -44,13 +51,14 @@ export default function AppRoutes() {
 
           <Route path="/view-360" element={<View360 />} />
 
-          {/* <Route path="/ar/rings/:ringId" element={<AR />} /> */}
-
-
+          <Route path="/ar/rings/:ringId" element={<AR />} />
           {/* FIX: Add route for non-existent paths */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
       </Suspense>
+
+      {/* Conditional Footer */}
+      {shouldShowFooter && <Footer />}
     </>
   );
 }

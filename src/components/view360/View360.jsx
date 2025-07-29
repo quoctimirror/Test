@@ -10,6 +10,8 @@ const View360 = () => {
   const [autoRotate, setAutoRotate] = useState(false);
   const [rotationSpeed, setRotationSpeed] = useState(0.5);
   const [showQRPopup, setShowQRPopup] = useState(false);
+  const [showColorControls, setShowColorControls] = useState(false);
+  const [activeMaterial, setActiveMaterial] = useState("default"); // Track active material
 
   useEffect(() => {
     if (!containerRef.current || viewerRef.current) return;
@@ -72,6 +74,58 @@ const View360 = () => {
     setShowQRPopup(false);
   };
 
+  // Color control handlers (ORIGINAL)
+  const handleGoldMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setGoldMaterial();
+      setActiveMaterial("gold");
+    }
+  };
+
+  const handleSilverMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setSilverMaterial();
+      setActiveMaterial("silver");
+    }
+  };
+
+  const handlePlatinumMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setPlatinumMaterial();
+      setActiveMaterial("platinum");
+    }
+  };
+
+  const handleRoseGoldMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setRoseGoldMaterial();
+      setActiveMaterial("rose-gold");
+    }
+  };
+
+  const handleDiamondMaterial = () => {
+    if (viewerRef.current) {
+      viewerRef.current.setDiamondMaterial();
+    }
+  };
+
+  const handleForceAllDiamondsUniform = () => {
+    if (viewerRef.current) {
+      viewerRef.current.forceAllDiamondsUniform();
+    }
+  };
+
+  const handleResetMaterials = () => {
+    if (viewerRef.current) {
+      viewerRef.current.resetToOriginalMaterials();
+      setActiveMaterial("default");
+    }
+  };
+
+  const toggleColorControls = () => {
+    setShowColorControls(!showColorControls);
+  };
+
   return (
     <div className="view-360-section">
       {/* Main Content */}
@@ -89,6 +143,46 @@ const View360 = () => {
         <div className="view-360-bottom-controls">
           <button className="ar-try-btn" onClick={handleARTryOnClick}>
             AR Try on
+          </button>
+          <button
+            className={`color-btn gold ${activeMaterial === "gold" ? "active" : ""
+              }`}
+            onClick={handleGoldMaterial}
+            title="Gold"
+          >
+            Gold
+          </button>
+          <button
+            className={`color-btn silver ${activeMaterial === "silver" ? "active" : ""
+              }`}
+            onClick={handleSilverMaterial}
+            title="Silver"
+          >
+            Silver
+          </button>
+          <button
+            className={`color-btn platinum ${activeMaterial === "platinum" ? "active" : ""
+              }`}
+            onClick={handlePlatinumMaterial}
+            title="Platinum"
+          >
+            Platinum
+          </button>
+          <button
+            className={`color-btn rose-gold ${activeMaterial === "rose-gold" ? "active" : ""
+              }`}
+            onClick={handleRoseGoldMaterial}
+            title="Rose Gold"
+          >
+            Rose Gold
+          </button>
+          <button
+            className={`color-btn reset ${activeMaterial === "default" ? "active" : ""
+              }`}
+            onClick={handleResetMaterials}
+            title="Reset to Original"
+          >
+            Reset
           </button>
         </div>
 
@@ -129,7 +223,7 @@ const View360 = () => {
       <QRPopup
         isOpen={showQRPopup}
         onClose={handleCloseQRPopup}
-        ringId="nhanXam"
+        ringId="nhanBase"
       />
     </div>
   );
