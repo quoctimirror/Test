@@ -16,7 +16,14 @@ const View360 = () => {
   useEffect(() => {
     if (!containerRef.current || viewerRef.current) return;
 
-    // Initialize Three.js viewer
+    // Initialize Three.js viewer with default configuration
+    // For customization, pass config object as second parameter:
+    // const viewer = createViewer(containerRef.current, {
+    //   modelPath: "/view360/custom-ring.glb",
+    //   modelScale: 3.0,
+    //   cameraPosition: { x: 0, y: 6, z: 12 },
+    //   bloomStrength: 0.3
+    // });
     const viewer = createViewer(containerRef.current);
     viewerRef.current = viewer;
 
@@ -74,53 +81,52 @@ const View360 = () => {
     setShowQRPopup(false);
   };
 
-  // Color control handlers (ORIGINAL)
-  const handleGoldMaterial = () => {
-    if (viewerRef.current) {
-      viewerRef.current.setGoldMaterial();
-      setActiveMaterial("gold");
+  // Unified material change handler - more maintainable and extensible
+  const handleMaterialChange = (materialType) => {
+    if (!viewerRef.current) return;
+
+    switch (materialType) {
+      case 'gold':
+        viewerRef.current.setGoldMaterial();
+        setActiveMaterial("gold");
+        break;
+      case 'silver':
+        viewerRef.current.setSilverMaterial();
+        setActiveMaterial("silver");
+        break;
+      case 'platinum':
+        viewerRef.current.setPlatinumMaterial();
+        setActiveMaterial("platinum");
+        break;
+      case 'rose-gold':
+        viewerRef.current.setRoseGoldMaterial();
+        setActiveMaterial("rose-gold");
+        break;
+      case 'diamond':
+        viewerRef.current.setDiamondMaterial();
+        // Diamond doesn't change activeMaterial state
+        break;
+      case 'force-diamond-uniform':
+        viewerRef.current.forceAllDiamondsUniform();
+        // Force diamond doesn't change activeMaterial state
+        break;
+      case 'reset':
+        viewerRef.current.resetToOriginalMaterials();
+        setActiveMaterial("default");
+        break;
+      default:
+        console.warn(`Unknown material type: ${materialType}`);
     }
   };
 
-  const handleSilverMaterial = () => {
-    if (viewerRef.current) {
-      viewerRef.current.setSilverMaterial();
-      setActiveMaterial("silver");
-    }
-  };
-
-  const handlePlatinumMaterial = () => {
-    if (viewerRef.current) {
-      viewerRef.current.setPlatinumMaterial();
-      setActiveMaterial("platinum");
-    }
-  };
-
-  const handleRoseGoldMaterial = () => {
-    if (viewerRef.current) {
-      viewerRef.current.setRoseGoldMaterial();
-      setActiveMaterial("rose-gold");
-    }
-  };
-
-  const handleDiamondMaterial = () => {
-    if (viewerRef.current) {
-      viewerRef.current.setDiamondMaterial();
-    }
-  };
-
-  const handleForceAllDiamondsUniform = () => {
-    if (viewerRef.current) {
-      viewerRef.current.forceAllDiamondsUniform();
-    }
-  };
-
-  const handleResetMaterials = () => {
-    if (viewerRef.current) {
-      viewerRef.current.resetToOriginalMaterials();
-      setActiveMaterial("default");
-    }
-  };
+  // Backward compatibility - keep original function names but use new handler
+  const handleGoldMaterial = () => handleMaterialChange('gold');
+  const handleSilverMaterial = () => handleMaterialChange('silver');
+  const handlePlatinumMaterial = () => handleMaterialChange('platinum');
+  const handleRoseGoldMaterial = () => handleMaterialChange('rose-gold');
+  const handleDiamondMaterial = () => handleMaterialChange('diamond');
+  const handleForceAllDiamondsUniform = () => handleMaterialChange('force-diamond-uniform');
+  const handleResetMaterials = () => handleMaterialChange('reset');
 
   const toggleColorControls = () => {
     setShowColorControls(!showColorControls);
@@ -148,7 +154,7 @@ const View360 = () => {
             className={`color-btn gold ${
               activeMaterial === "gold" ? "active" : ""
             }`}
-            onClick={handleGoldMaterial}
+            onClick={() => handleMaterialChange('gold')}
             title="Gold"
           >
             Gold
@@ -157,7 +163,7 @@ const View360 = () => {
             className={`color-btn silver ${
               activeMaterial === "silver" ? "active" : ""
             }`}
-            onClick={handleSilverMaterial}
+            onClick={() => handleMaterialChange('silver')}
             title="Silver"
           >
             Silver
@@ -166,7 +172,7 @@ const View360 = () => {
             className={`color-btn platinum ${
               activeMaterial === "platinum" ? "active" : ""
             }`}
-            onClick={handlePlatinumMaterial}
+            onClick={() => handleMaterialChange('platinum')}
             title="Platinum"
           >
             Platinum
@@ -175,7 +181,7 @@ const View360 = () => {
             className={`color-btn rose-gold ${
               activeMaterial === "rose-gold" ? "active" : ""
             }`}
-            onClick={handleRoseGoldMaterial}
+            onClick={() => handleMaterialChange('rose-gold')}
             title="Rose Gold"
           >
             Rose Gold
@@ -184,7 +190,7 @@ const View360 = () => {
             className={`color-btn reset ${
               activeMaterial === "default" ? "active" : ""
             }`}
-            onClick={handleResetMaterials}
+            onClick={() => handleMaterialChange('reset')}
             title="Reset to Original"
           >
             Reset

@@ -1,0 +1,135 @@
+/* Import fonts */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Cormorant+Garamond:wght@400;700&display=swap");
+
+/* Thiết lập cơ bản */
+.parallax-container {
+  width: 100%;
+  height: 300vh; /* Đặt chiều cao cố định để sticky hoạt động trong phạm vi này */
+  position: relative;
+}
+
+/* Bố cục cho mỗi màn hình */
+.screen {
+  width: 100%;
+  height: 100vh; /* Chiếm 100% chiều cao của màn hình */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff; /* Nền trắng cho các section */
+}
+
+/* Sticky screen - giữ nguyên vị trí khi scroll */
+.sticky-screen {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 100vh;
+}
+
+.split-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  box-sizing: border-box;
+}
+
+/* Các khung chứa hình ảnh */
+.image-pane {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+/* Container cho parallax images */
+.parallax-image-container {
+  position: relative;
+}
+
+/* Parallax images styling */
+.parallax-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.parallax-image:hover {
+  filter: grayscale(0%);
+}
+
+.image-pane img:not(.parallax-image) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.image-pane img:not(.parallax-image):hover {
+  filter: grayscale(0%);
+}
+
+/* Khung chứa văn bản */
+.text-pane {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem;
+  background-color: #f8f8f8; /* Màu nền hơi khác để tạo chiều sâu */
+}
+
+.text-content {
+  max-width: 400px;
+  text-align: left;
+}
+
+.text-content h4 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2em; /* Giãn cách ký tự */
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.text-content p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #555;
+  font-weight: 300;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .split-container {
+    flex-direction: column;
+  }
+
+  .image-pane,
+  .text-pane {
+    width: 100%;
+    height: 50%;
+  }
+
+  .text-pane {
+    padding: 2rem;
+  }
+
+  .text-content h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .text-content p {
+    font-size: 0.9rem;
+  }
+}

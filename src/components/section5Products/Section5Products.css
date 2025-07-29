@@ -1,0 +1,179 @@
+/* Section 5 Products - Reach Out */
+.hero {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  z-index: 0;
+  filter: grayscale(100%) brightness(0.5);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 405px;
+  height: 305px;
+  padding: 0;
+  background: transparent;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-content h4 {
+  font-family: "SaolDisplay-Regular-otf", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  margin: 0;
+  color: #e0e0e0;
+}
+
+.hero-content h1 {
+  font-family: "SaolDisplay-Light-ttf", serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 64px;
+  line-height: 90%;
+  letter-spacing: -3%;
+  text-align: center;
+  margin: 50px 0 15px 0;
+  color: #ffffff;
+}
+
+.hero-content p {
+  font-family: "SaolDisplay-Regular-otf", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  margin: 0 0 20px 0;
+  color: #e0e0e0;
+}
+
+.hero-content p:last-of-type {
+  margin-bottom: 15px;
+}
+
+.contact-us-button-wrapper {
+  display: inline-block;
+  position: relative;
+  /* (MODIFIED) Wrapper bây giờ là cái VIỀN */
+  background: white; /* Màu của viền */
+  padding: 1px; /* Độ dày của viền */
+  transition: background 0.3s ease;
+
+  /* Áp dụng clip-path cho wrapper */
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
+    0 8px
+  );
+}
+
+.contact-us-button {
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  padding: 12px 25px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block; /* Quan trọng để button lấp đầy wrapper */
+
+  /* (MODIFIED) Button bây giờ là phần NỘI DUNG */
+  /* 
+    Đây là chìa khóa: Đặt màu nền cho button khớp với màu nền chung của ảnh.
+    Vì ảnh của bạn là greyscale, một màu xám tối sẽ hoạt động tốt.
+    Bạn có thể dùng công cụ color picker để chọn màu chính xác từ ảnh.
+  */
+  background-color: #383838;
+
+  /* Áp dụng clip-path Y HỆT cho button bên trong */
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
+    0 8px
+  );
+}
+
+/* Hiệu ứng hover sẽ thay đổi màu nền của button bên trong */
+.contact-us-button:hover {
+  background-color: #bc224c;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content h1 {
+    font-size: 36px;
+  }
+
+  .content h4 {
+    font-size: 12px;
+  }
+
+  .content p {
+    font-size: 14px;
+  }
+
+  .signup-button {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    max-width: 90%;
+  }
+
+  .content h1 {
+    font-size: 28px;
+  }
+
+  .content h4 {
+    font-size: 11px;
+  }
+
+  .content p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .signup-button {
+    font-size: 13px;
+    padding: 8px 18px;
+  }
+}

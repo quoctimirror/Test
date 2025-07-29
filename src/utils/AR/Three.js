@@ -13,11 +13,49 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
 export class ThreeJSViewer {
-  constructor(container) {
+  constructor(container, config = {}) {
     this.container = container;
     this.scene = null;
     this.camera = null;
     this.renderer = null;
+
+    // === Configuration with defaults ===
+    this.config = {
+      // Model settings
+      modelPath: "/view360/ring.glb",
+      modelScale: 2.5,
+      modelPosition: { x: 0, y: 0, z: 0 },
+      initialYRotation: Math.PI,
+      
+      // Camera settings
+      cameraPosition: { x: 0, y: 5.3, z: 10.5 },
+      cameraFov: 65,
+      
+      // Renderer settings
+      backgroundColor: null, // Will use gradient background
+      antialias: true,
+      alpha: true,
+      pixelRatio: Math.min(window.devicePixelRatio, 2),
+      
+      // Post-processing settings
+      bloomStrength: 0.2,
+      bloomRadius: 0.08,
+      bloomThreshold: 0.9,
+      
+      // Mirror settings
+      mirrorColor: 0xe6e6e6,
+      mirrorPosition: { y: -2.5, z: 2 },
+      
+      // Override defaults with user config
+      ...config
+    };
+
+    // Apply configuration to instance properties for backward compatibility
+    this.modelPath = this.config.modelPath;
+    this.modelScale = this.config.modelScale;
+    this.modelPosition = this.config.modelPosition;
+    this.initialYRotation = this.config.initialYRotation;
+    this.cameraPosition = this.config.cameraPosition;
 
     // === POST-PROCESSING ===
     this.composer = null;
@@ -44,15 +82,6 @@ export class ThreeJSViewer {
 
     // Ring enhancer instance
     this.ringEnhancer = null;
-
-    // Model settings - optimized for target image
-    this.modelPath = "/view360/ring.glb";
-    this.modelScale = 2.5; // Increased scale for more presence
-    this.modelPosition = { x: 0, y: 0, z: 0 }; // Centered, slightly raised
-    this.initialYRotation = Math.PI; // Better starting angle
-
-    // Camera settings
-    this.cameraPosition = { x: 0, y: 5.3, z: 10.5 }; // Adjusted for better view
   }
 
   init() {
@@ -65,7 +94,7 @@ export class ThreeJSViewer {
 
     // Create camera
     const aspect = this.container.clientWidth / this.container.clientHeight;
-    this.camera = new THREE.PerspectiveCamera(65, aspect, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(this.config.cameraFov, aspect, 0.1, 1000);
     this.camera.position.set(
       this.cameraPosition.x,
       this.cameraPosition.y,
@@ -80,14 +109,14 @@ export class ThreeJSViewer {
 
     // Create renderer
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
+      antialias: this.config.antialias,
+      alpha: this.config.alpha,
     });
     this.renderer.setSize(
       this.container.clientWidth,
       this.container.clientHeight
     );
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(this.config.pixelRatio);
     this.renderer.shadowMap.enabled = false; // Disable shadows for mirror effect
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -107,9 +136,9 @@ export class ThreeJSViewer {
         this.container.clientWidth,
         this.container.clientHeight
       ),
-      0.2, // Strength: Giảm từ 0.4 xuống 0.2 - rất nhẹ
-      0.08, // Radius: Giảm từ 0.1 xuống 0.05 - ánh sáng nhỏ hơn
-      0.9 // Threshold: Tăng từ 0.85 lên 0.9 - ít vật phát sáng hơn
+      this.config.bloomStrength, // Configurable strength
+      this.config.bloomRadius, // Configurable radius
+      this.config.bloomThreshold // Configurable threshold
     );
     this.composer.addPass(bloomPass);
 
@@ -352,7 +381,7 @@ export class ThreeJSViewer {
       clipBias: 0.003,
       textureWidth: window.innerWidth * window.devicePixelRatio,
       textureHeight: window.innerHeight * window.devicePixelRatio,
-      color: 0xe6e6e6, // 90% độ sáng - sáng như hồi nãy
+      color: this.config.mirrorColor, // Configurable mirror color
       recursion: 0, // No recursive reflections to avoid bloom accumulation
     });
 
@@ -419,7 +448,7 @@ export class ThreeJSViewer {
     );
 
     // Configure mirror reflection properties - no bloom, darker reflection
-    this.mirror.position.z = 2;
+    this.mirror.position.z = this.config.mirrorPosition.z;
 
     // Ensure reflection material doesn't contribute to bloom
     this.mirror.material.transparent = true;
@@ -429,13 +458,13 @@ export class ThreeJSViewer {
     this.mirror.material.emissive = new THREE.Color(0x000000);
     this.mirror.material.emissiveIntensity = 0;
 
-    mirrorSurface.position.z = 2;
+    mirrorSurface.position.z = this.config.mirrorPosition.z;
 
     // Position both mirror and surface horizontally like in reference image
-    this.mirror.position.y = -2.5;
+    this.mirror.position.y = this.config.mirrorPosition.y;
     this.mirror.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
-    mirrorSurface.position.y = -2.49; // Higher above reflector to ensure visibility
+    mirrorSurface.position.y = this.config.mirrorPosition.y + 0.01; // Slightly higher above reflector
     mirrorSurface.rotation.x = -Math.PI / 2; // Keep horizontal rotation
 
     this.scene.add(this.mirror); // Re-enable reflector with gradient surface
@@ -829,7 +858,7 @@ export class ThreeJSViewer {
       if (child.isMesh && child.material) {
         // Clone and save the original material from GLB file
         child.userData.originalMaterial = child.material.clone();
-        console.log(`💾 Saved original material for: ${child.name || 'mesh'}`);
+        console.log(`💾 Saved original material for: ${child.name || "mesh"}`);
       }
     });
     console.log("✅ All original materials saved");
@@ -866,9 +895,11 @@ export class ThreeJSViewer {
           // Reset to the original GLB material
           child.material = child.userData.originalMaterial.clone();
           child.material.needsUpdate = true;
-          console.log(`🔄 Reset material for: ${child.name || 'mesh'}`);
+          console.log(`🔄 Reset material for: ${child.name || "mesh"}`);
         } else {
-          console.warn(`⚠️ No original material found for: ${child.name || 'mesh'}`);
+          console.warn(
+            `⚠️ No original material found for: ${child.name || "mesh"}`
+          );
         }
       }
     });
@@ -879,11 +910,15 @@ export class ThreeJSViewer {
         if (child.isMesh && !child.userData.isDiamond) {
           // Find corresponding mesh in main model to get original color
           let originalColor = new THREE.Color(0xeecdae); // Default fallback
-          
+
           // Try to find matching mesh in main model
           this.model.traverse((mainChild) => {
-            if (mainChild.name === child.name && mainChild.userData.originalMaterial) {
-              originalColor = mainChild.userData.originalMaterial.color || originalColor;
+            if (
+              mainChild.name === child.name &&
+              mainChild.userData.originalMaterial
+            ) {
+              originalColor =
+                mainChild.userData.originalMaterial.color || originalColor;
             }
           });
 
@@ -903,7 +938,9 @@ export class ThreeJSViewer {
       this.ringEnhancer.resetToOriginalMaterials();
     }
 
-    console.log("✅ Reset to original materials completed for both main and reflection");
+    console.log(
+      "✅ Reset to original materials completed for both main and reflection"
+    );
   }
 
   // Control methods
@@ -1025,8 +1062,8 @@ export class ThreeJSViewer {
 }
 
 // Utility function to create a viewer instance
-export const createViewer = (container) => {
-  return new ThreeJSViewer(container);
+export const createViewer = (container, config = {}) => {
+  return new ThreeJSViewer(container, config);
 };
 
 // Export Three.js for direct use
