@@ -43,9 +43,9 @@ const SelectOptionSection = () => {
     if (!currentComponent) return [];
 
     // Filter options by componentId and reverse the order
-    return componentOptions.filter(
-      (option) => option.componentId === currentComponent.componentId
-    ).reverse();
+    return componentOptions
+      .filter((option) => option.componentId === currentComponent.componentId)
+      .reverse();
   };
 
   const handleOptionSelect = (option) => {
@@ -157,10 +157,10 @@ const SelectOptionSection = () => {
         </div>
 
         {/* Center - Content area */}
-        <div 
+        <div
           className="content"
           style={{
-            '--grid-columns': Math.min(getCurrentTabOptions().length || 1, 6)
+            "--grid-columns": Math.min(getCurrentTabOptions().length || 1, 6),
           }}
         >
           {getCurrentTabOptions().map((option) => (
@@ -183,27 +183,6 @@ const SelectOptionSection = () => {
         {/* Right side - Summary */}
         <div className="summary">
           <h2>From {currentPrice}</h2>
-          {/* {selectedCategory && (
-            <div className="category-info">
-              <p><strong>Category:</strong> {selectedCategory.categoryName}</p>
-              <p><strong>ID:</strong> {selectedCategory.categoryId}</p>
-              <p><strong>Description:</strong> {selectedCategory.description}</p>
-            </div>
-          )} */}
-          {selectedOption && (
-            <div className="selected-option-info">
-              <p>
-                <strong>Selected:</strong>{" "}
-                {selectedOption.componentOptionalName}
-              </p>
-              <p>
-                <strong>Component:</strong> {selectedOption.componentName}
-              </p>
-              <p>
-                <strong>Description:</strong> {selectedOption.description}
-              </p>
-            </div>
-          )}
           <button className="button outline" onClick={handleBookAppointment}>
             Book An Appointment
           </button>
