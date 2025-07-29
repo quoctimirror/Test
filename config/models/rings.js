@@ -30,6 +30,12 @@ export const ringModels = {
     material: "platinum",
     category: "casual",
   },
+  nhanDario: {
+    id: "nhanDario",
+    name: "",
+    description: "",
+    modelPath: "/arTryOn/nhanDario.glb",
+  },
 };
 
 // Helper function to get ring by ID

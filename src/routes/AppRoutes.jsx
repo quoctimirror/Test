@@ -4,7 +4,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Navbar from "@components/navbar/Navbar";
 import Footer from "@components/footer/Footer";
-
+import TryOnRingLayout from '@layouts/TryOnRingLayout';
 // Lazy-load components
 const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
@@ -16,18 +16,22 @@ const HoverExpandSection = lazy(() =>
   import("@components/hoverExpandSection/HoverExpandSection.jsx")
 );
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
-const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
+// const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
+const TryOnRing = lazy(() => import("@components/arTryOn/TryOnRing.jsx"));
+
 
 export default function AppRoutes() {
   const location = useLocation();
 
-  // Routes that should NOT show the navbar
-  const routesWithoutNavbar = ["/universe-final", "/hover-expand"];
-  const shouldShowNavbar = !routesWithoutNavbar.includes(location.pathname);
 
-  // Routes that should NOT show the footer (same as navbar)
-  const routesWithoutFooter = ["/universe-final", "/hover-expand"];
-  const shouldShowFooter = !routesWithoutFooter.includes(location.pathname);
+  // Danh sách các route tĩnh khác cần ẩn Navbar/Footer
+  const staticRoutesToHideNavBar = ["/universe-final", "/hover-expand"];
+  const staticRoutesToHideFooter = ["/universe-final", "/hover-expand"];
+
+  // Kiểm tra xem đường dẫn có phải là trang AR hay không, bất kể ID của nhẫn là gì.
+  const isARPage = location.pathname.startsWith('/ar/rings');
+  const shouldShowNavbar = !staticRoutesToHideNavBar.includes(location.pathname) && !isARPage;
+  const shouldShowFooter = !staticRoutesToHideFooter.includes(location.pathname) && !isARPage;
 
   return (
     <>
@@ -51,7 +55,9 @@ export default function AppRoutes() {
 
           <Route path="/view-360" element={<View360 />} />
 
-          <Route path="/ar/rings/:ringId" element={<AR />} />
+          <Route element={<TryOnRingLayout />}>
+            <Route path="/ar/rings/:ringId" element={<TryOnRing />} />
+          </Route>
           {/* FIX: Add route for non-existent paths */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
