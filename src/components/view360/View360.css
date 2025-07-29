@@ -80,11 +80,8 @@
   0% {
     transform: rotate(0deg);
   }
-<<<<<<< HEAD
-=======
 
->>>>>>> quoctimirror
-  100% {
+    {
     transform: rotate(360deg);
   }
 }
@@ -173,11 +170,8 @@
     opacity: 0;
     transform: translateX(-50%) translateY(20px);
   }
-<<<<<<< HEAD
-=======
 
->>>>>>> quoctimirror
-  to {
+  <<<<<<< HEAD=======>>>>>>>quoctimirror to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
@@ -557,10 +551,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
-<<<<<<< HEAD
-=======
 
->>>>>>> quoctimirror
   to {
     opacity: 1;
     transform: translateY(0);
@@ -569,8 +560,4 @@
 
 .view-360-main {
   animation: fadeIn 0.8s ease-out;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> quoctimirror

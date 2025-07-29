@@ -145,70 +145,40 @@ const View360 = () => {
             AR Try on
           </button>
           <button
-<<<<<<< HEAD
-            className={`color-btn gold ${
-              activeMaterial === "gold" ? "active" : ""
-            }`}
-=======
             className={`color-btn gold ${activeMaterial === "gold" ? "active" : ""
               }`}
->>>>>>> quoctimirror
             onClick={handleGoldMaterial}
             title="Gold"
           >
             Gold
           </button>
           <button
-<<<<<<< HEAD
-            className={`color-btn silver ${
-              activeMaterial === "silver" ? "active" : ""
-            }`}
-=======
             className={`color-btn silver ${activeMaterial === "silver" ? "active" : ""
               }`}
->>>>>>> quoctimirror
             onClick={handleSilverMaterial}
             title="Silver"
           >
             Silver
           </button>
           <button
-<<<<<<< HEAD
-            className={`color-btn platinum ${
-              activeMaterial === "platinum" ? "active" : ""
-            }`}
-=======
             className={`color-btn platinum ${activeMaterial === "platinum" ? "active" : ""
               }`}
->>>>>>> quoctimirror
             onClick={handlePlatinumMaterial}
             title="Platinum"
           >
             Platinum
           </button>
           <button
-<<<<<<< HEAD
-            className={`color-btn rose-gold ${
-              activeMaterial === "rose-gold" ? "active" : ""
-            }`}
-=======
             className={`color-btn rose-gold ${activeMaterial === "rose-gold" ? "active" : ""
               }`}
->>>>>>> quoctimirror
             onClick={handleRoseGoldMaterial}
             title="Rose Gold"
           >
             Rose Gold
           </button>
           <button
-<<<<<<< HEAD
-            className={`color-btn reset ${
-              activeMaterial === "default" ? "active" : ""
-            }`}
-=======
             className={`color-btn reset ${activeMaterial === "default" ? "active" : ""
               }`}
->>>>>>> quoctimirror
             onClick={handleResetMaterials}
             title="Reset to Original"
           >
