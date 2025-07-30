@@ -398,3 +398,100 @@
 .ring-display {
   animation: fadeInUp 0.8s ease-out;
 }
+
+/* Overview Content Styles */
+.overview-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  align-items: center;
+}
+
+.overview-item {
+  background: transparent;
+  border-radius: 0;
+  padding: 5px 3px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 80px;
+  overflow: visible;
+  gap: 8px;
+}
+
+.overview-item:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.overview-label {
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #797979;
+  text-transform: none;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.overview-value {
+  font-family: "SaolDisplay-Regular-ttf", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 22px;
+  line-height: 90%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #000000;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
+/* Responsive adjustments for overview */
+@media (max-width: 768px) {
+  .overview-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 8px;
+  }
+
+  .overview-item {
+    padding: 4px 2px;
+  }
+
+  .overview-label {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+
+  .overview-value {
+    font-size: 18px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}

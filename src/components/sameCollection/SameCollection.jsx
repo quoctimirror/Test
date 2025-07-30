@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import "./same-collection/SameCollection.css";
+import "./SameCollection.css";
 
 const SameCollection = () => {
   const products = [
@@ -10,20 +10,24 @@ const SameCollection = () => {
     { id: 5, name: "Lumina", image: "/products/more_r.png" },
     { id: 6, name: "Lumina", image: "/products/more_r.png" },
     { id: 7, name: "Lumina", image: "/products/more_r.png" },
-    { id: 8, name: "Lumina", image: "/products/more_r.png" }
+    { id: 8, name: "Lumina", image: "/products/more_r.png" },
   ];
 
   const scrollRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const [lastX, setLastX] = useState(0);
+  const [lastTime, setLastTime] = useState(0);
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
     setStartX(e.pageX - scrollRef.current.offsetLeft);
     setScrollLeft(scrollRef.current.scrollLeft);
-    scrollRef.current.style.scrollBehavior = 'auto';
-    scrollRef.current.classList.add('dragging');
+    setLastX(e.pageX);
+    setLastTime(Date.now());
+    scrollRef.current.style.scrollBehavior = "auto";
+    scrollRef.current.classList.add("dragging");
   };
 
   const handleMouseMove = (e) => {
@@ -32,22 +36,63 @@ const SameCollection = () => {
     const x = e.pageX - scrollRef.current.offsetLeft;
     const walk = (x - startX) * 1.5;
     scrollRef.current.scrollLeft = scrollLeft - walk;
+
+    // Track velocity for momentum
+    setLastX(e.pageX);
+    setLastTime(Date.now());
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e) => {
     setIsDragging(false);
-    scrollRef.current.style.scrollBehavior = 'smooth';
-    scrollRef.current.classList.remove('dragging');
-    
-    // Add momentum effect
-    const velocity = (scrollRef.current.scrollLeft - scrollLeft) * 0.1;
-    scrollRef.current.scrollLeft += velocity;
+    scrollRef.current.classList.remove("dragging");
+
+    // Calculate velocity for momentum
+    const currentTime = Date.now();
+    const timeDiff = currentTime - lastTime;
+    const xDiff = e.pageX - lastX;
+
+    // Only apply momentum if movement was fast enough (within 100ms and significant distance)
+    if (timeDiff < 100 && Math.abs(xDiff) > 5) {
+      const velocity = xDiff / timeDiff; // pixels per ms
+      const momentum = velocity * 80; // reduced to 60 for very gentle effect
+
+      // Apply momentum with smooth animation
+      scrollRef.current.style.scrollBehavior = "smooth";
+      scrollRef.current.scrollLeft -= momentum;
+
+      // Reset to auto after animation
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.style.scrollBehavior = "auto";
+        }
+      }, 300);
+    }
   };
 
-  const handleMouseLeave = () => {
-    setIsDragging(false);
-    scrollRef.current.style.scrollBehavior = 'smooth';
-    scrollRef.current.classList.remove('dragging');
+  const handleMouseLeave = (e) => {
+    if (isDragging) {
+      setIsDragging(false);
+      scrollRef.current.classList.remove("dragging");
+
+      // Apply same momentum logic when mouse leaves during drag
+      const currentTime = Date.now();
+      const timeDiff = currentTime - lastTime;
+      const xDiff = e.pageX - lastX;
+
+      if (timeDiff < 100 && Math.abs(xDiff) > 5) {
+        const velocity = xDiff / timeDiff;
+        const momentum = velocity * 80;
+
+        scrollRef.current.style.scrollBehavior = "smooth";
+        scrollRef.current.scrollLeft -= momentum;
+
+        setTimeout(() => {
+          if (scrollRef.current) {
+            scrollRef.current.style.scrollBehavior = "auto";
+          }
+        }, 300);
+      }
+    }
   };
 
   return (
@@ -64,7 +109,7 @@ const SameCollection = () => {
           </p>
         </div>
 
-        <div 
+        <div
           className="same-collection-grid"
           ref={scrollRef}
           onMouseDown={handleMouseDown}

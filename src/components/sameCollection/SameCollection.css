@@ -48,22 +48,15 @@
   gap: 10px;
   overflow-x: auto;
   padding: 10px 0;
-  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
   cursor: grab;
   user-select: none;
-  scroll-behavior: smooth;
-  transition: scroll-left 0.3s ease-out;
 }
 
 .same-collection-grid:active {
   cursor: grabbing;
-}
-
-.same-collection-grid.dragging {
-  scroll-snap-type: none;
 }
 
 .same-collection-grid.dragging .product-card:hover {
@@ -76,7 +69,6 @@
 
 .product-card {
   flex: 0 0 456px;
-  scroll-snap-align: start;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   margin-bottom: 60px;
