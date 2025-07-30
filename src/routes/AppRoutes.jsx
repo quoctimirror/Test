@@ -8,6 +8,7 @@ import TryOnRingLayout from '@layouts/TryOnRingLayout';
 // Lazy-load components
 const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
+const CollectionPage = lazy(() => import("@pages/CollectionPage"));
 
 const UVFinal = lazy(() =>
   import("@components/universeSectionFinal/UniverseSection.jsx")
@@ -48,6 +49,8 @@ export default function AppRoutes() {
           <Route path="/" element={<HomePage />} />
 
           <Route path="/products" element={<ProductsPage />} />
+          
+          <Route path="/collections" element={<CollectionPage />} />
 
           <Route path="/universe-final" element={<UVFinal />} />
 

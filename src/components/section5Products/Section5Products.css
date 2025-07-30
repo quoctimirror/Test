@@ -77,61 +77,25 @@
 }
 
 .contact-us-button-wrapper {
-  display: inline-block;
-  position: relative;
-  /* (MODIFIED) Wrapper bây giờ là cái VIỀN */
-  background: white; /* Màu của viền */
-  padding: 1px; /* Độ dày của viền */
-  transition: background 0.3s ease;
-
-  /* Áp dụng clip-path cho wrapper */
-  clip-path: polygon(
-    8px 0,
-    calc(100% - 8px) 0,
-    100% 8px,
-    100% calc(100% - 8px),
-    calc(100% - 8px) 100%,
-    8px 100%,
-    0 calc(100% - 8px),
-    0 8px
-  );
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 .contact-us-button {
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
-  padding: 12px 25px;
+  background: none;
   border: none;
-  color: white;
-  font-size: 16px;
-  font-weight: 400;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: block; /* Quan trọng để button lấp đầy wrapper */
-
-  /* (MODIFIED) Button bây giờ là phần NỘI DUNG */
-  /* 
-    Đây là chìa khóa: Đặt màu nền cho button khớp với màu nền chung của ảnh.
-    Vì ảnh của bạn là greyscale, một màu xám tối sẽ hoạt động tốt.
-    Bạn có thể dùng công cụ color picker để chọn màu chính xác từ ảnh.
-  */
-  background-color: #383838;
-
-  /* Áp dụng clip-path Y HỆT cho button bên trong */
-  clip-path: polygon(
-    8px 0,
-    calc(100% - 8px) 0,
-    100% 8px,
-    100% calc(100% - 8px),
-    calc(100% - 8px) 100%,
-    8px 100%,
-    0 calc(100% - 8px),
-    0 8px
-  );
+  padding: 0;
+  line-height: 0;
 }
 
-/* Hiệu ứng hover sẽ thay đổi màu nền của button bên trong */
-.contact-us-button:hover {
-  background-color: #bc224c;
+.contact-us-button:hover .button-background {
+  fill: #BC224C;
+}
+
+.contact-us-button:hover .button-text {
+  fill: #ffffff;
 }
 
 /* Responsive Design */

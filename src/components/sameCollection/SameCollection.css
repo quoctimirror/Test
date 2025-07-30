@@ -144,3 +144,26 @@
     height: 312px;
   }
 }
+
+/* View Product Button */
+.view-product-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.view-product-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 0;
+}
+
+.view-product-button:hover .button-background {
+  fill: #BC224C;
+}
+
+.view-product-button:hover .button-text {
+  fill: #ffffff;
+}

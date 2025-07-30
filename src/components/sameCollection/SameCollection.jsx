@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import "./SameCollection.css";
 
-const SameCollection = () => {
+const SameCollection = ({ showViewProductButton = false }) => {
   const products = [
     { id: 1, name: "Lumina", image: "/products/more_r.png" },
     { id: 2, name: "Lumina", image: "/products/more_r.png" },
@@ -128,6 +128,43 @@ const SameCollection = () => {
             </div>
           ))}
         </div>
+
+        {showViewProductButton && (
+          <div className="view-product-button-container">
+            <button className="view-product-button">
+              <svg
+                width="160"
+                height="50"
+                viewBox="0 0 160 50"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  className="button-background"
+                  d="M9 1 L151 1 L159 10 L159 41 L151 49 L9 49 L1 40 L1 9 Z"
+                  fill="transparent"
+                />
+                <path
+                  className="button-border"
+                  d="M9 1 L151 1 L159 10 L159 41 L151 49 L9 49 L1 40 L1 9 Z"
+                  stroke="black"
+                  fill="none"
+                />
+                <text
+                  className="button-text"
+                  x="80"
+                  y="30"
+                  textAnchor="middle"
+                  fill="black"
+                  fontSize="14"
+                  fontFamily="BT-BeauSans-Regular-ttf"
+                >
+                  View all products
+                </text>
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

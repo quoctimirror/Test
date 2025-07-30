@@ -167,7 +167,7 @@ const SelectOptionSection = () => {
       {/* Main ring display */}
       <div className="ring-display">
         <img
-          src="/collection/nhan_ex.png"
+          src="/products/nhan_ex.png"
           alt="Wedding Ring Set"
           className="ring-image"
         />

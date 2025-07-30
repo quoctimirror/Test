@@ -14,7 +14,38 @@ const Section5Products = () => {
         <p>We would love to hear from you.</p>
         <p>Our client care experts are always here to help.</p>
         <div className="contact-us-button-wrapper">
-          <button className="contact-us-button">Contact us</button>
+          <button className="contact-us-button">
+            <svg
+              width="120"
+              height="50"
+              viewBox="0 0 120 50"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                className="button-background"
+                d="M9 1 L111 1 L119 10 L119 41 L111 49 L9 49 L1 40 L1 9 Z"
+                fill="transparent"
+              />
+              <path
+                className="button-border"
+                d="M9 1 L111 1 L119 10 L119 41 L111 49 L9 49 L1 40 L1 9 Z"
+                stroke="white"
+                fill="none"
+              />
+              <text
+                className="button-text"
+                x="60"
+                y="30"
+                textAnchor="middle"
+                fill="white"
+                fontSize="14"
+                fontFamily="BT-BeauSans-Regular-ttf"
+              >
+                Contact us
+              </text>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
