@@ -68,7 +68,7 @@
   line-height: 120%;
   letter-spacing: 0%;
   text-align: center;
-  margin: 0 0 20px 0;
+  margin: 0 0 5px 0;
   color: #e0e0e0;
 }
 
@@ -91,7 +91,7 @@
 }
 
 .contact-us-button:hover .button-background {
-  fill: #BC224C;
+  fill: #bc224c;
 }
 
 .contact-us-button:hover .button-text {

@@ -1,5 +1,7 @@
 // Thêm 'useState', 'useRef' từ React
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import CollectionHeroSection from "./CollectionHeroSection";
 import "./Collection.css";
 
 const products = [
@@ -26,8 +28,9 @@ const products = [
   },
 ];
 
-function Collection() {
+function Collection({ collectionId = "treasure-of-the-orient" }) {
   const section2Ref = useRef(null);
+  const navigate = useNavigate();
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -49,38 +52,14 @@ function Collection() {
 
   const currentProduct = products[currentIndex];
 
+  const handleExploreCollection = () => {
+    navigate(`/collections/${collectionId}`);
+  };
+
   return (
     <div className="collection-page">
       {/* --- SECTION 1 --- */}
-      <div className="section-1">
-        <div className="hero-text-container">
-          <div className="text-treasure">TREASURE</div>
-          <div className="text-of-the">of the</div>
-          <div className="text-orient">ORIENT</div>
-        </div>
-
-        <button
-          className="scroll-down-arrow"
-          onClick={handleScrollToSection2}
-          aria-label="Scroll down"
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M19 9L12 16L5 9"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      </div>
+      <CollectionHeroSection onScrollToSection2={handleScrollToSection2} />
 
       {/* --- SECTION 2 --- */}
       <div className="section-2" ref={section2Ref}>
@@ -97,7 +76,7 @@ function Collection() {
             <br />
             heritage, vibrant artistry, and timeless mystique of the East.
           </div>
-          <button className="hero-explore-button">
+          <button className="hero-explore-button" onClick={handleExploreCollection}>
             <svg
               width="200"
               height="50"

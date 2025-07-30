@@ -1,0 +1,27 @@
+/* Collection Video Section */
+.collection-video-section {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-background {
+  width: 100%;
+  height: 100%;
+  background: lightgray url('/collections/orient.gif') no-repeat fixed center / cover;
+  position: relative;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .collection-video-section {
+    height: 70vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .collection-video-section {
+    height: 60vh;
+  }
+}

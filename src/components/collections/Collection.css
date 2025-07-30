@@ -68,6 +68,29 @@ html {
   position: relative;
 }
 
+/* Hero Section với CollectionVideoSection */
+.hero-section-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-overlay-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hero-overlay-content .hero-text-container,
+.hero-overlay-content .scroll-down-arrow {
+  pointer-events: auto;
+}
+
 /* Container chính để định vị toàn bộ khối văn bản */
 .hero-text-container {
   position: absolute;
@@ -437,11 +460,6 @@ html {
 .explore-button .explore-gem-svg .button-text {
   fill: #ffffff;
   /* Màu chữ trắng */
-}
-
-/* KHI HOVER VÀO BUTTON - chỉ đổi màu, không zoom */
-.explore-button:hover {
-  /* Loại bỏ transform: scale(1.05) */
 }
 
 /* Thay đổi màu nền của SVG khi hover */

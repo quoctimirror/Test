@@ -1,0 +1,138 @@
+/* Section 2 Collection Detail */
+.section2-collection-detail {
+  width: 100%;
+  min-height: 100vh;
+  padding: 80px 0;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.collection-detail-content {
+  max-width: 800px;
+  width: 100%;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.collection-detail-subtitle {
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #797979;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.collection-detail-title {
+  font-family: "SaolDisplay-Light-ttf", serif;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 64px;
+  line-height: 90%;
+  letter-spacing: -3%;
+  text-align: center;
+  color: #000000;
+  margin-bottom: 2rem;
+}
+
+.collection-detail-description {
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #797979;
+  text-align: left;
+  width: 610px;
+  height: 300px;
+  max-width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.collection-detail-description p {
+  margin-bottom: 1.5rem;
+}
+
+.collection-detail-description p:first-child {
+  margin-bottom: 3.5rem;
+}
+
+.collection-detail-description p:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .collection-detail-description {
+    width: 500px;
+    height: 245px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section2-collection-detail {
+    padding: 60px 0;
+  }
+
+  .collection-detail-content {
+    padding: 0 1.5rem;
+  }
+
+  .collection-detail-title {
+    font-size: 48px;
+    letter-spacing: -2%;
+  }
+
+  .collection-detail-subtitle {
+    font-size: 14px;
+    letter-spacing: 1.5px;
+  }
+
+  .collection-detail-description {
+    font-size: 15px;
+    line-height: 1.7;
+    width: 400px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section2-collection-detail {
+    padding: 40px 0;
+  }
+
+  .collection-detail-content {
+    padding: 0 1rem;
+  }
+
+  .collection-detail-title {
+    font-size: 36px;
+    letter-spacing: -1.5%;
+    margin-bottom: 2rem;
+  }
+
+  .collection-detail-subtitle {
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+  }
+
+  .collection-detail-description {
+    font-size: 14px;
+    line-height: 1.6;
+    width: 300px;
+    height: 150px;
+  }
+
+  .collection-detail-description p {
+    margin-bottom: 1.5rem;
+  }
+}
