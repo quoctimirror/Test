@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import CollectionVideoSection from "../components/collections/CollectionVideoSection";
 import Section2CollectionDetail from "../components/collections/Section2CollectionDetail";
 import Section3CollectionDetail from "../components/collections/Section3CollectionDetail";
-import SameCollection from "../components/sameCollection/SameCollection";
+import Section4CollectionDetail from "../components/collections/Section4CollectionDetail";
 import Section5Products from "../components/section5Products/Section5Products";
 
 const CollectionDetailPage = () => {
@@ -21,7 +21,7 @@ const CollectionDetailPage = () => {
       <Section3CollectionDetail />
 
       {/* Section 4: Same Collection */}
-      <SameCollection showViewProductButton={true} />
+      <Section4CollectionDetail showViewProductButton={true} />
 
       {/* Section 5: Section5Products */}
       <Section5Products />

@@ -1,5 +1,5 @@
 .section3-collection-detail {
-  background: #F6F6F6;
+  background: #f6f6f6;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,8 +21,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #F6F6F6;
+  background: #f6f6f6;
   padding: 40px;
+  box-sizing: border-box;
 }
 
 .main-display img {
@@ -39,37 +40,44 @@
   align-items: center;
   justify-content: center;
   padding: 40px;
+  box-sizing: border-box;
 }
 
 .carousel {
-  width: 952px;
+  width: 100%;
+  max-width: 952px;
   height: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel-track {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 8px;
   height: 100%;
   align-items: center;
-  transition: transform 1s ease;
+  min-width: max-content;
 }
 
 .carousel img {
-  width: 85px;
-  height: 160px;
-  border-radius: 6px;
+  max-width: 80px;
+  max-height: 150px;
   opacity: 0.7;
   transition: opacity 0.3s, transform 0.3s, filter 0.3s;
-  object-fit: cover;
+  object-fit: contain;
   flex-shrink: 0;
   image-rendering: auto;
   image-rendering: -webkit-optimize-contrast;
   filter: grayscale(100%);
+  scroll-snap-align: start;
 }
 
 .carousel img.active {
@@ -78,8 +86,6 @@
   transform: scale(1.1);
   filter: grayscale(0%);
 }
-
-
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -114,8 +120,8 @@
   }
 
   .carousel img {
-    width: 80px;
-    height: 80px;
+    max-width: 80px;
+    max-height: 80px;
   }
 }
 
@@ -131,8 +137,8 @@
   }
 
   .carousel img {
-    width: 60px;
-    height: 60px;
+    max-width: 60px;
+    max-height: 60px;
   }
 
   .carousel-track {
