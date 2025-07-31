@@ -1,0 +1,418 @@
+import React, { useState, useEffect } from "react";
+
+const ItemVariantsManager = () => {
+  const [itemVariants, setItemVariants] = useState([]);
+  const [items, setItems] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingVariant, setEditingVariant] = useState(null);
+  const [formData, setFormData] = useState({
+    itemVariantUrl: "",
+    description: "",
+    isActive: true,
+  });
+
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isErrorFadingOut, setIsErrorFadingOut] = useState(false);
+
+  // Auto-hide error message after 5 seconds
+  useEffect(() => {
+    if (errorMessage) {
+      setIsErrorFadingOut(false);
+      const timer = setTimeout(() => {
+        setIsErrorFadingOut(true);
+        setTimeout(() => {
+          setErrorMessage(null);
+          setIsErrorFadingOut(false);
+        }, 300);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
+  // Close error message manually
+  const closeErrorMessage = () => {
+    setIsErrorFadingOut(true);
+    setTimeout(() => {
+      setErrorMessage(null);
+      setIsErrorFadingOut(false);
+    }, 300);
+  };
+
+  // API calls
+  const fetchData = async () => {
+    try {
+      // Fetch items (for dropdown)
+      const itemsResponse = await fetch("/api/item-variants");
+      if (itemsResponse.ok) {
+        const itemsData = await itemsResponse.json();
+        console.log("API Items data (for variants):", itemsData); // Debug log
+
+        // Transform API data to match our component structure
+        const transformedItems = itemsData.map((item) => ({
+          id: item.itemId || item.id,
+          name: item.itemName || item.name,
+        }));
+
+        console.log("Transformed Items (for variants):", transformedItems); // Debug log
+        setItems(transformedItems);
+      } else {
+        console.error("Failed to fetch items");
+        setItems([
+          { id: 1, name: "Diamond Ring" },
+          { id: 2, name: "Gold Necklace" },
+          { id: 3, name: "Silver Earrings" },
+        ]);
+      }
+
+      // Fetch item variants
+      const variantsResponse = await fetch("/api/item-variants");
+      if (variantsResponse.ok) {
+        const variantsData = await variantsResponse.json();
+        console.log("API Item Variants data:", variantsData); // Debug log
+
+        // Transform API data to match our component structure
+        const transformedVariants = variantsData.map((item) => ({
+          id: item.itemVariantId,
+          itemVariantUrl: item.itemVariantUrl || "",
+          description: item.description || "",
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+          createdBy: item.createdBy,
+          updatedBy: item.updatedBy,
+          isActive: item.isActive,
+        }));
+
+        console.log("Transformed Item Variants:", transformedVariants); // Debug log
+        setItemVariants(transformedVariants);
+      } else {
+        console.error("Failed to fetch item variants");
+        setItemVariants([
+          {
+            id: "ITEM0001",
+            itemVariantUrl: "test",
+            description: "URL model 1",
+            createdAt: "2025-07-23T02:45:38.454355Z",
+            updatedAt: "2025-07-23T02:45:38.454355Z",
+            createdBy: "system",
+            updatedBy: "system",
+            isActive: true,
+          },
+          {
+            id: "ITEM0002", 
+            itemVariantUrl: "test-2",
+            description: "URL model 2",
+            createdAt: "2025-07-23T02:45:38.454355Z",
+            updatedAt: "2025-07-23T02:45:38.454355Z",
+            createdBy: "system",
+            updatedBy: "system",
+            isActive: false,
+          }
+        ]);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      // Fallback to mock data
+      setItems([
+        { id: 1, name: "Diamond Ring" },
+        { id: 2, name: "Gold Necklace" },
+        { id: 3, name: "Silver Earrings" },
+      ]);
+      setItemVariants([
+        {
+          id: "ITEM0001",
+          itemVariantUrl: "test",
+          description: "URL model 1",
+          createdAt: "2025-07-23T02:45:38.454355Z",
+          updatedAt: "2025-07-23T02:45:38.454355Z",
+          createdBy: "system",
+          updatedBy: "system",
+          isActive: true,
+        },
+        {
+          id: "ITEM0002", 
+          itemVariantUrl: "test-2",
+          description: "URL model 2",
+          createdAt: "2025-07-23T02:45:38.454355Z",
+          updatedAt: "2025-07-23T02:45:38.454355Z",
+          createdBy: "system",
+          updatedBy: "system",
+          isActive: false,
+        }
+      ]);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage(null);
+
+    try {
+      if (editingVariant) {
+        // Update existing variant
+        const response = await fetch(
+          `/api/item-variants/${editingVariant.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
+
+        if (response.ok) {
+          const updatedVariant = await response.json();
+          setItemVariants(
+            itemVariants.map((variant) =>
+              variant.id === editingVariant.id
+                ? { ...updatedVariant, id: updatedVariant.itemVariantId }
+                : variant
+            )
+          );
+        } else {
+          const errorText = await response.text();
+          console.error("Failed to update item variant:", errorText);
+          setErrorMessage(errorText);
+          return;
+        }
+      } else {
+        // Add new variant
+        const response = await fetch("/api/item-variants", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          const newVariant = await response.json();
+          setItemVariants([...itemVariants, { ...newVariant, id: newVariant.itemVariantId }]);
+        } else {
+          const errorText = await response.text();
+          console.error("Failed to create item variant:", errorText);
+          setErrorMessage(errorText);
+          return;
+        }
+      }
+
+      closeModal();
+    } catch (error) {
+      console.error("Error submitting item variant:", error);
+      setErrorMessage("A network error occurred. Please try again.");
+    }
+  };
+
+  const handleEdit = (variant) => {
+    setErrorMessage(null);
+    setEditingVariant(variant);
+    setFormData({
+      itemVariantUrl: variant.itemVariantUrl,
+      description: variant.description,
+      isActive: variant.isActive,
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    setErrorMessage(null);
+    if (window.confirm("Are you sure you want to delete this item variant?")) {
+      try {
+        const response = await fetch(`/api/item-variants/${id}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          setItemVariants(itemVariants.filter((variant) => variant.id !== id));
+        } else {
+          const errorText = await response.text();
+          console.error("Failed to delete item variant:", errorText);
+          setErrorMessage(errorText);
+        }
+      } catch (error) {
+        console.error("Error deleting item variant:", error);
+        setErrorMessage("A network error occurred. Please try again.");
+      }
+    }
+  };
+
+  const openModal = () => {
+    setErrorMessage(null);
+    setEditingVariant(null);
+    setFormData({
+      itemVariantUrl: "",
+      description: "",
+      isActive: true,
+    });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingVariant(null);
+    setFormData({
+      itemVariantUrl: "",
+      description: "",
+      isActive: true,
+    });
+  };
+
+  return (
+    <div className="manager-container">
+      <div className="manager-header">
+        <h2>Item Variants Management</h2>
+        <button className="add-button" onClick={openModal}>
+          Add New Variant
+        </button>
+      </div>
+
+      {errorMessage && (
+        <div className={`error-message-container ${isErrorFadingOut ? 'fade-out' : ''}`}>
+          <p>{errorMessage}</p>
+          <button className="error-close-button" onClick={closeErrorMessage}>
+            ×
+          </button>
+        </div>
+      )}
+
+      <div className="table-container">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>URL</th>
+              <th>Description</th>
+              <th>Created At</th>
+              <th>Created By</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {itemVariants.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="7"
+                  style={{ textAlign: "center", padding: "2rem" }}
+                >
+                  Loading item variants...
+                </td>
+              </tr>
+            ) : (
+              itemVariants.map((variant, index) => {
+                console.log("Rendering item variant:", variant); // Debug log
+                return (
+                  <tr key={`variant-${variant.id || index}`}>
+                    <td>{variant.id}</td>
+                    <td>{variant.itemVariantUrl}</td>
+                    <td>{variant.description}</td>
+                    <td>{new Date(variant.createdAt).toLocaleDateString()}</td>
+                    <td>{variant.createdBy}</td>
+                    <td>
+                      <span className={`status-badge ${variant.isActive ? 'active' : 'inactive'}`}>
+                        {variant.isActive ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        className="edit-button"
+                        onClick={() => handleEdit(variant)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="delete-button"
+                        onClick={() => handleDelete(variant.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>
+                {editingVariant ? "Edit Item Variant" : "Add New Item Variant"}
+              </h3>
+              <button className="close-button" onClick={closeModal}>
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="modal-form">
+              <div className="form-group">
+                <label htmlFor="itemVariantUrl">URL:</label>
+                <input
+                  type="text"
+                  id="itemVariantUrl"
+                  value={formData.itemVariantUrl}
+                  onChange={(e) =>
+                    setFormData({ ...formData, itemVariantUrl: e.target.value })
+                  }
+                  placeholder="e.g., test"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="description">Description:</label>
+                <textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  rows="3"
+                  placeholder="e.g., URL model 1"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="isActive">Status:</label>
+                <select
+                  id="isActive"
+                  value={formData.isActive.toString()}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isActive: e.target.value === 'true' })
+                  }
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+              </div>
+
+              <div className="form-actions">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="cancel-button"
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="submit-button">
+                  {editingVariant ? "Update" : "Create"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ItemVariantsManager;

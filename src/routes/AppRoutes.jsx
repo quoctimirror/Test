@@ -20,6 +20,7 @@ const HoverExpandSection = lazy(() =>
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
 // const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
 const TryOnRing = lazy(() => import("@components/arTryOn/TryOnRing.jsx"));
+const ManageProducts = lazy(() => import("@components/manage-products/ManageProducts.jsx"));
 
 
 export default function AppRoutes() {
@@ -27,8 +28,8 @@ export default function AppRoutes() {
 
 
   // Danh sách các route tĩnh khác cần ẩn Navbar/Footer
-  const staticRoutesToHideNavBar = ["/universe-final", "/hover-expand"];
-  const staticRoutesToHideFooter = ["/universe-final", "/hover-expand"];
+  const staticRoutesToHideNavBar = ["/universe-final", "/hover-expand", "/manage-products"];
+  const staticRoutesToHideFooter = ["/universe-final", "/hover-expand", "/manage-products"];
 
   // Kiểm tra xem đường dẫn có phải là trang AR hay không, bất kể ID của nhẫn là gì.
   const isARPage = location.pathname.startsWith('/ar/rings');
@@ -64,6 +65,9 @@ export default function AppRoutes() {
           <Route element={<TryOnRingLayout />}>
             <Route path="/ar/rings/:ringId" element={<TryOnRing />} />
           </Route>
+
+          <Route path="/manage-products" element={<ManageProducts />} />
+          
           {/* FIX: Add route for non-existent paths */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
