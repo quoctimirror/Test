@@ -1,0 +1,268 @@
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=BT-BeauSans-Regular-ttf:wght@400;500&display=swap');
+
+/* --- General Styling & Centering --- */
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f8f8f8;
+    padding: 40px 20px;
+    /* Thêm padding trên dưới */
+    box-sizing: border-box;
+}
+
+.register-form-wrapper {
+    width: 100%;
+    max-width: 480px;
+}
+
+/* --- Title --- */
+.register-title {
+    font-family: 'SaolDisplay-Regular-ttf', serif;
+    color: var(--Black, #000);
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -1.92px;
+    font-style: normal;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 60px;
+    white-space: nowrap;
+    margin-left: -18%;
+}
+
+.register-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Title Selection --- */
+.title-group {
+    margin-bottom: 35px;
+}
+
+.title-group label {
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.title-options {
+    display: flex;
+    gap: 30px;
+}
+
+.title-option {
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
+    font-size: 1rem;
+    color: #888;
+    cursor: pointer;
+    padding-bottom: 5px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.title-option.active {
+    color: #000;
+    border-bottom-color: #000;
+}
+
+/* 
+--- THAY ĐỔI CSS CHO INPUT VÀ LỖI --- 
+*/
+
+/* Class mới để bọc input và lỗi */
+.form-field-container {
+    /* Khoảng cách giữa các trường input */
+    margin-bottom: 35px;
+    position: relative;
+}
+
+.input-group {
+    position: relative;
+    /* Bỏ margin-bottom ở đây */
+}
+
+/* Chữ người dùng gõ vào */
+.input-group input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background-color: transparent;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+/* Label ban đầu */
+.input-group label {
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
+    font-size: 1.1rem;
+    color: #888;
+    position: absolute;
+    left: 0;
+    top: 10px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+}
+
+/* Trạng thái "nổi lên" của label */
+.input-group input:focus+label,
+.input-group input:not(:placeholder-shown)+label {
+    top: -14px;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.input-group input:focus {
+    border-bottom-color: #333;
+}
+
+/* --- Lớp CSS cho hiển thị lỗi --- */
+.input-error {
+    color: #d9534f;
+    font-size: 0.8rem;
+    text-align: left;
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
+    margin-top: 8px;
+    /* Khoảng cách với đường gạch */
+}
+
+/* --- Password Field Specifics --- */
+.password-group {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #888;
+    transition: color 0.3s ease;
+    z-index: 2;
+}
+
+.password-toggle:hover {
+    color: #333;
+}
+
+/* --- Các phần còn lại --- */
+.password-requirements {
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: -15px;
+    /* Giảm khoảng trống do margin của form-field-container cuối cùng */
+    margin-bottom: 40px;
+}
+
+.password-requirements p {
+    margin: 0 0 10px 0;
+}
+
+.password-requirements ul {
+    list-style-type: none;
+    padding-left: 15px;
+    margin: 0;
+}
+
+.password-requirements li {
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 4px;
+}
+
+.password-requirements li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.privacy-info {
+    text-align: center;
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 30px;
+}
+
+.privacy-info strong {
+    color: #000;
+    font-weight: 500;
+}
+
+.create-account-button {
+    padding: 14px 20px;
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid #333;
+    border-radius: 40px;
+    font-size: 1rem;
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.create-account-button:hover {
+    background-color: #333;
+    color: #f8f8f8;
+}
+
+/* Style cho nút khi bị vô hiệu hóa */
+.create-account-button:disabled {
+    background-color: #ccc;
+    border-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.create-account-button:disabled:hover {
+    background-color: #ccc;
+    color: #666;
+}
+
+
+.return-login-link {
+    display: block;
+    text-align: center;
+    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
+    font-weight: 500;
+    color: #000;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.return-login-link:hover {
+    color: #BC224C;
+    cursor: pointer;
+}
+
+@media (max-width: 480px) {
+    .register-container {
+        padding: 40px 15px;
+    }
+
+    .register-title {
+        font-size: 2.2rem;
+        letter-spacing: 0.1em;
+        margin-bottom: 40px;
+    }
+}

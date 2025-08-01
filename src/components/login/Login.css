@@ -1,0 +1,210 @@
+/* src/components/Login/Login.css */
+
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap');
+
+/* --- General Styling & Centering --- */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f8f8f8;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.login-form-wrapper {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* --- Title --- */
+.login-title {
+    font-family: "SaolDisplay-Light-ttf";
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -1.92px;
+    color: var(--Black, #000);
+    margin-bottom: 50px;
+    white-space: nowrap;
+    text-align: center;
+    text-transform: uppercase;
+    margin-left: -10%;
+}
+
+/* --- Form & Input Fields --- */
+.login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 
+--- THAY ĐỔI CHÍNH BẮT ĐẦU TỪ ĐÂY --- 
+*/
+
+/* 1. Class mới để bọc input và lỗi */
+.form-field-container {
+    /* Chuyển margin chính vào đây để tạo khoảng cách giữa các trường */
+    margin-bottom: 35px;
+    text-align: left;
+    font-family: "BT-BeauSans-Regular-ttf";
+}
+
+.input-group {
+    position: relative;
+    /* Bỏ margin-bottom ở đây để lỗi có thể nằm sát ngay dưới */
+    /* margin-bottom: 35px; <- Xóa dòng này */
+    border-bottom: 1px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    padding: 8px 0;
+    font-size: 1.1rem;
+    color: #333;
+    outline: none;
+}
+
+.input-group:focus-within {
+    border-bottom-color: #333;
+}
+
+.input-group input::placeholder {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* --- Password Toggle Button --- */
+.password-group {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #333;
+}
+
+.password-toggle svg {
+    display: block;
+}
+
+/* --- Links --- */
+.forgot-password-link {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #888;
+    text-decoration: none;
+    /* Điều chỉnh lại margin-top để không bị dính vào lỗi */
+    margin-top: -20px;
+    margin-bottom: 30px;
+    transition: color 0.3s ease;
+}
+
+.forgot-password-link:hover {
+    color: #000;
+}
+
+/* --- Sign In Button --- */
+.sign-in-button {
+    padding: 14px 20px;
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid #333;
+    border-radius: 40px;
+    font-size: 1rem;
+    font-family: 'BT-BeauSans-Regular-ttf', serif;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.sign-in-button:hover {
+    background-color: #333;
+    color: #f8f8f8;
+}
+
+/* --- Register Prompt --- */
+.register-prompt {
+    font-size: 0.9rem;
+    color: #888;
+    font-family: "BT-BeauSans-Regular-ttf";
+}
+
+.register-link {
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.register-link:hover {
+    color: #BC224C;
+    cursor: pointer;
+}
+
+/* --- Styles for Validation and Loading State --- */
+.input-error {
+    color: #d9534f;
+    font-size: 0.8rem;
+    text-align: left;
+    /* Thêm một chút margin-top để tạo khoảng cách với đường gạch */
+    margin-top: 4px;
+}
+
+/* Xóa bỏ luật CSS cũ không cần thiết nữa */
+/* 
+.input-group {
+    margin-bottom: 35px;
+} 
+*/
+
+.sign-in-button:disabled {
+    background-color: #ccc;
+    border-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.sign-in-button:disabled:hover {
+    background-color: #ccc;
+    color: #666;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 480px) {
+    .login-title {
+        font-size: 2.2rem;
+        letter-spacing: 0.15em;
+        margin-bottom: 40px;
+    }
+
+    .login-form-wrapper {
+        padding: 0 10px;
+    }
+
+    .sign-in-button {
+        padding: 12px 15px;
+    }
+}
