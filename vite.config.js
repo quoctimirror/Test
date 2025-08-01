@@ -9,7 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [react()],
   server: {
-    allowedHosts: ['d96514094916.ngrok-free.app'],
+    allowedHosts: 'all',
     proxy: {
       "/api": {
         target: "http://localhost:8080",

@@ -60,7 +60,7 @@ export default function AppRoutes() {
 
 
           <Route element={<TryOnRingLayout />}>
-            <Route path="/ar/rings/:ringId" element={<OccluderVersion />} />
+            <Route path="/ar/rings/:ringId" element={<TryOnRing />} />
           </Route>
           {/* FIX: Add route for non-existent paths */}
           {/* <Route path="*" element={<NotFound />} /> */}
