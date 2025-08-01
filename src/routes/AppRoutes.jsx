@@ -10,6 +10,7 @@ const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
 const CollectionPage = lazy(() => import("@pages/CollectionPage"));
 const CollectionDetailPage = lazy(() => import("@pages/CollectionDetailPage"));
+const ServicesPage = lazy(() => import("@pages/ServicesPage"));
 
 const UVFinal = lazy(() =>
   import("@components/universeSectionFinal/UniverseSection.jsx")
@@ -68,6 +69,8 @@ export default function AppRoutes() {
             path="/collections/:collectionId"
             element={<CollectionDetailPage />}
           />
+
+          <Route path="/services" element={<ServicesPage />} />
 
           <Route path="/universe-final" element={<UVFinal />} />
 

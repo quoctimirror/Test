@@ -11,6 +11,8 @@ const ItemVariantsManager = () => {
     description: "",
     isActive: true,
   });
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const [errorMessage, setErrorMessage] = useState(null);
   const [isErrorFadingOut, setIsErrorFadingOut] = useState(false);
@@ -38,6 +40,44 @@ const ItemVariantsManager = () => {
       setErrorMessage(null);
       setIsErrorFadingOut(false);
     }, 300);
+  };
+
+  // Handle file selection
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setSelectedFile(null);
+      setImagePreview(null);
+    }
+  };
+
+  // Upload file to server
+  const uploadFile = async (file) => {
+    const uploadFormData = new FormData();
+    uploadFormData.append('file', file);
+    uploadFormData.append('description', 'Item variant image');
+    uploadFormData.append('bucketName', 'mirror-storage');
+    uploadFormData.append('folderPath', 'public');
+
+    const response = await fetch('/api/files/upload', {
+      method: 'POST',
+      body: uploadFormData,
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      return result.publicUrl;
+    } else {
+      throw new Error('Failed to upload file');
+    }
   };
 
   // API calls
@@ -158,6 +198,12 @@ const ItemVariantsManager = () => {
     setErrorMessage(null);
 
     try {
+      let imageUrl = formData.itemVariantUrl;
+      
+      // Upload file if a new file is selected
+      if (selectedFile) {
+        imageUrl = await uploadFile(selectedFile);
+      }
       if (editingVariant) {
         // Update existing variant
         const response = await fetch(
@@ -169,7 +215,7 @@ const ItemVariantsManager = () => {
             },
             body: JSON.stringify({
               itemVariantName: formData.name,
-              itemVariantUrl: formData.itemVariantUrl,
+              itemVariantUrl: imageUrl,
               description: formData.description,
               isActive: formData.isActive,
             }),
@@ -204,7 +250,7 @@ const ItemVariantsManager = () => {
           },
           body: JSON.stringify({
             itemVariantName: formData.name,
-            itemVariantUrl: formData.itemVariantUrl,
+            itemVariantUrl: imageUrl,
             description: formData.description,
             isActive: formData.isActive,
           }),
@@ -241,6 +287,8 @@ const ItemVariantsManager = () => {
       description: variant.description,
       isActive: variant.isActive,
     });
+    setSelectedFile(null);
+    setImagePreview(null);
     setIsModalOpen(true);
   };
 
@@ -275,6 +323,8 @@ const ItemVariantsManager = () => {
       description: "",
       isActive: true,
     });
+    setSelectedFile(null);
+    setImagePreview(null);
     setIsModalOpen(true);
   };
 
@@ -287,6 +337,8 @@ const ItemVariantsManager = () => {
       description: "",
       isActive: true,
     });
+    setSelectedFile(null);
+    setImagePreview(null);
   };
 
   return (
@@ -313,7 +365,7 @@ const ItemVariantsManager = () => {
             <tr>
               <th>ID</th>
               <th>Name</th>
-              <th>URL</th>
+              <th>Image</th>
               <th>Description</th>
               <th>Created At</th>
               <th>Created By</th>
@@ -338,7 +390,20 @@ const ItemVariantsManager = () => {
                   <tr key={`variant-${variant.id || index}`}>
                     <td>{variant.id}</td>
                     <td>{variant.name}</td>
-                    <td>{variant.itemVariantUrl}</td>
+                    <td>
+                      {variant.itemVariantUrl && (
+                        <img 
+                          src={variant.itemVariantUrl} 
+                          alt={variant.name || 'Item variant'}
+                          style={{ 
+                            width: '60px', 
+                            height: '60px', 
+                            objectFit: 'cover', 
+                            borderRadius: '4px' 
+                          }}
+                        />
+                      )}
+                    </td>
                     <td>{variant.description}</td>
                     <td>{new Date(variant.createdAt).toLocaleDateString()}</td>
                     <td>{variant.createdBy}</td>
@@ -397,17 +462,32 @@ const ItemVariantsManager = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="itemVariantUrl">URL:</label>
+                <label htmlFor="imageFile">Image:</label>
                 <input
-                  type="text"
-                  id="itemVariantUrl"
-                  value={formData.itemVariantUrl}
-                  onChange={(e) =>
-                    setFormData({ ...formData, itemVariantUrl: e.target.value })
-                  }
-                  placeholder="e.g., test"
-                  required
+                  type="file"
+                  id="imageFile"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  required={!editingVariant}
                 />
+                {imagePreview && (
+                  <div style={{ marginTop: '10px' }}>
+                    <img 
+                      src={imagePreview} 
+                      alt="Preview" 
+                      style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+                    />
+                  </div>
+                )}
+                {editingVariant && formData.itemVariantUrl && !imagePreview && (
+                  <div style={{ marginTop: '10px' }}>
+                    <img 
+                      src={formData.itemVariantUrl} 
+                      alt="Current image" 
+                      style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="form-group">

@@ -1,0 +1,127 @@
+.services-section1 {
+  height: 100vh;
+  background-image: url("/public/services/section_1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+}
+
+.section1-background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.section1-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.section1-content {
+  width: 597px;
+  height: auto;
+  min-height: 116px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  color: #ffffff;
+  opacity: 1;
+  justify-content: center;
+}
+
+.section1-title {
+  font-family: "SaolDisplay-Regular-ttf", serif;
+  font-size: 50px;
+  font-weight: 400;
+  font-style: normal;
+  color: #ffffff;
+  width: 421px;
+  height: 34px;
+  margin: 0;
+  letter-spacing: 0%;
+  line-height: 105%;
+  text-align: center;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.section1-description {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  font-style: normal;
+  color: white;
+  width: 597px;
+  height: 66px;
+  line-height: 110%;
+  letter-spacing: 0%;
+  text-align: center;
+  margin: 0;
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .section1-title {
+    font-size: 36px;
+    letter-spacing: 0%;
+    width: 100%;
+    height: auto;
+    max-width: 421px;
+  }
+
+  .section1-description {
+    font-size: 14px;
+    padding: 0 1rem;
+    width: 100%;
+    height: auto;
+    max-width: 597px;
+  }
+
+  .section1-container {
+    padding: 0 1rem;
+  }
+
+  .section1-content {
+    width: 100%;
+    height: auto;
+    max-width: 597px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section1-title {
+    font-size: 28px;
+    width: 100%;
+    height: auto;
+    max-width: 300px;
+  }
+
+  .section1-description {
+    font-size: 12px;
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+  }
+
+  .section1-content {
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+  }
+}
