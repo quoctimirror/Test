@@ -6,6 +6,7 @@ const ItemVariantsManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingVariant, setEditingVariant] = useState(null);
   const [formData, setFormData] = useState({
+    name: "",
     itemVariantUrl: "",
     description: "",
     isActive: true,
@@ -74,6 +75,7 @@ const ItemVariantsManager = () => {
         // Transform API data to match our component structure
         const transformedVariants = variantsData.map((item) => ({
           id: item.itemVariantId,
+          name: item.itemVariantName || item.name || "",
           itemVariantUrl: item.itemVariantUrl || "",
           description: item.description || "",
           createdAt: item.createdAt,
@@ -90,6 +92,7 @@ const ItemVariantsManager = () => {
         setItemVariants([
           {
             id: "ITEM0001",
+            name: "Sample Item Variant 1",
             itemVariantUrl: "test",
             description: "URL model 1",
             createdAt: "2025-07-23T02:45:38.454355Z",
@@ -100,6 +103,7 @@ const ItemVariantsManager = () => {
           },
           {
             id: "ITEM0002", 
+            name: "Sample Item Variant 2",
             itemVariantUrl: "test-2",
             description: "URL model 2",
             createdAt: "2025-07-23T02:45:38.454355Z",
@@ -121,6 +125,7 @@ const ItemVariantsManager = () => {
       setItemVariants([
         {
           id: "ITEM0001",
+          name: "Sample Item Variant 1",
           itemVariantUrl: "test",
           description: "URL model 1",
           createdAt: "2025-07-23T02:45:38.454355Z",
@@ -131,6 +136,7 @@ const ItemVariantsManager = () => {
         },
         {
           id: "ITEM0002", 
+          name: "Sample Item Variant 2",
           itemVariantUrl: "test-2",
           description: "URL model 2",
           createdAt: "2025-07-23T02:45:38.454355Z",
@@ -161,7 +167,12 @@ const ItemVariantsManager = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({
+              itemVariantName: formData.name,
+              itemVariantUrl: formData.itemVariantUrl,
+              description: formData.description,
+              isActive: formData.isActive,
+            }),
           }
         );
 
@@ -170,7 +181,11 @@ const ItemVariantsManager = () => {
           setItemVariants(
             itemVariants.map((variant) =>
               variant.id === editingVariant.id
-                ? { ...updatedVariant, id: updatedVariant.itemVariantId }
+                ? { 
+                    ...updatedVariant, 
+                    id: updatedVariant.itemVariantId,
+                    name: updatedVariant.itemVariantName || updatedVariant.name
+                  }
                 : variant
             )
           );
@@ -187,12 +202,21 @@ const ItemVariantsManager = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            itemVariantName: formData.name,
+            itemVariantUrl: formData.itemVariantUrl,
+            description: formData.description,
+            isActive: formData.isActive,
+          }),
         });
 
         if (response.ok) {
           const newVariant = await response.json();
-          setItemVariants([...itemVariants, { ...newVariant, id: newVariant.itemVariantId }]);
+          setItemVariants([...itemVariants, { 
+            ...newVariant, 
+            id: newVariant.itemVariantId,
+            name: newVariant.itemVariantName || newVariant.name
+          }]);
         } else {
           const errorText = await response.text();
           console.error("Failed to create item variant:", errorText);
@@ -212,6 +236,7 @@ const ItemVariantsManager = () => {
     setErrorMessage(null);
     setEditingVariant(variant);
     setFormData({
+      name: variant.name,
       itemVariantUrl: variant.itemVariantUrl,
       description: variant.description,
       isActive: variant.isActive,
@@ -245,6 +270,7 @@ const ItemVariantsManager = () => {
     setErrorMessage(null);
     setEditingVariant(null);
     setFormData({
+      name: "",
       itemVariantUrl: "",
       description: "",
       isActive: true,
@@ -256,6 +282,7 @@ const ItemVariantsManager = () => {
     setIsModalOpen(false);
     setEditingVariant(null);
     setFormData({
+      name: "",
       itemVariantUrl: "",
       description: "",
       isActive: true,
@@ -285,6 +312,7 @@ const ItemVariantsManager = () => {
           <thead>
             <tr>
               <th>ID</th>
+              <th>Name</th>
               <th>URL</th>
               <th>Description</th>
               <th>Created At</th>
@@ -297,7 +325,7 @@ const ItemVariantsManager = () => {
             {itemVariants.length === 0 ? (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="8"
                   style={{ textAlign: "center", padding: "2rem" }}
                 >
                   Loading item variants...
@@ -309,6 +337,7 @@ const ItemVariantsManager = () => {
                 return (
                   <tr key={`variant-${variant.id || index}`}>
                     <td>{variant.id}</td>
+                    <td>{variant.name}</td>
                     <td>{variant.itemVariantUrl}</td>
                     <td>{variant.description}</td>
                     <td>{new Date(variant.createdAt).toLocaleDateString()}</td>
@@ -353,6 +382,20 @@ const ItemVariantsManager = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="modal-form">
+              <div className="form-group">
+                <label htmlFor="name">Name:</label>
+                <input
+                  type="text"
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  placeholder="e.g., Diamond Ring Variant 1"
+                  required
+                />
+              </div>
+
               <div className="form-group">
                 <label htmlFor="itemVariantUrl">URL:</label>
                 <input

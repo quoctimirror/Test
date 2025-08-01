@@ -49,6 +49,7 @@ const ItemVariantConfigsManager = () => {
         const itemVariantsData = await itemVariantsResponse.json();
         const transformedItemVariants = itemVariantsData.map((item) => ({
           itemVariantId: item.itemVariantId || item.id,
+          itemVariantName: item.itemVariantName || item.name,
           itemVariantUrl: item.itemVariantUrl,
           description: item.description,
         }));
@@ -56,8 +57,8 @@ const ItemVariantConfigsManager = () => {
       } else {
         console.error("Failed to fetch item variants");
         setItemVariants([
-          { itemVariantId: "ITEM0001", itemVariantUrl: "test", description: "URL model 1" },
-          { itemVariantId: "ITEM0002", itemVariantUrl: "test-2", description: "URL model 2" },
+          { itemVariantId: "ITEM0001", itemVariantName: "Sample Item Variant 1", itemVariantUrl: "test", description: "URL model 1" },
+          { itemVariantId: "ITEM0002", itemVariantName: "Sample Item Variant 2", itemVariantUrl: "test-2", description: "URL model 2" },
         ]);
       }
 
@@ -86,11 +87,12 @@ const ItemVariantConfigsManager = () => {
         console.log("API Item Variant Configs data:", configsData);
 
         const transformedConfigs = configsData.map((item) => ({
-          id: item.itemVariantConfigId || item.id,
-          itemVariantId: item.itemVariant?.itemVariantId || item.itemVariantId,
-          itemVariantUrl: item.itemVariant?.itemVariantUrl || "Unknown",
-          componentOptionalId: item.componentOptional?.componentOptionalId || item.componentOptionalId,
-          componentOptionalName: item.componentOptional?.componentOptionalName || "Unknown",
+          id: item.itemVariantConfigId,
+          itemVariantConfigId: item.itemVariantConfigId,
+          itemVariantId: item.itemVariantId,
+          itemVariantName: item.itemVariantUrl || "Unknown",
+          componentOptionalId: item.componentOptionalId,
+          componentOptionalName: item.componentOptionalName || "Unknown",
           isActive: item.isActive,
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
@@ -104,19 +106,21 @@ const ItemVariantConfigsManager = () => {
         console.error("Failed to fetch item variant configs");
         setItemVariantConfigs([
           {
-            id: "CONFIG001",
+            id: "IVCF0001",
+            itemVariantConfigId: "IVCF0001",
             itemVariantId: "ITEM0001",
-            itemVariantUrl: "test",
-            componentOptionalId: "OPT001",
+            itemVariantName: "test 1",
+            componentOptionalId: "COPT0001",
             componentOptionalName: "White Gold Option",
             isActive: true,
             createdBy: "system",
           },
           {
-            id: "CONFIG002",
+            id: "IVCF0002",
+            itemVariantConfigId: "IVCF0002",
             itemVariantId: "ITEM0002",
-            itemVariantUrl: "test-2",
-            componentOptionalId: "OPT002",
+            itemVariantName: "test 2",
+            componentOptionalId: "COPT0002",
             componentOptionalName: "Rose Gold Option",
             isActive: true,
             createdBy: "system",
@@ -127,8 +131,8 @@ const ItemVariantConfigsManager = () => {
       console.error("Error fetching data:", error);
       // Fallback to mock data
       setItemVariants([
-        { itemVariantId: "ITEM0001", itemVariantUrl: "test", description: "URL model 1" },
-        { itemVariantId: "ITEM0002", itemVariantUrl: "test-2", description: "URL model 2" },
+        { itemVariantId: "ITEM0001", itemVariantName: "Sample Item Variant 1", itemVariantUrl: "test", description: "URL model 1" },
+        { itemVariantId: "ITEM0002", itemVariantName: "Sample Item Variant 2", itemVariantUrl: "test-2", description: "URL model 2" },
       ]);
       setComponentOptionals([
         { componentOptionalId: "OPT001", componentOptionalName: "White Gold Option", description: "White gold material" },
@@ -136,19 +140,21 @@ const ItemVariantConfigsManager = () => {
       ]);
       setItemVariantConfigs([
         {
-          id: "CONFIG001",
+          id: "IVCF0001",
+          itemVariantConfigId: "IVCF0001",
           itemVariantId: "ITEM0001",
-          itemVariantUrl: "test",
-          componentOptionalId: "OPT001",
+          itemVariantName: "test 1",
+          componentOptionalId: "COPT0001",
           componentOptionalName: "White Gold Option",
           isActive: true,
           createdBy: "system",
         },
         {
-          id: "CONFIG002",
+          id: "IVCF0002",
+          itemVariantConfigId: "IVCF0002",
           itemVariantId: "ITEM0002",
-          itemVariantUrl: "test-2",
-          componentOptionalId: "OPT002",
+          itemVariantName: "test 2",
+          componentOptionalId: "COPT0002",
           componentOptionalName: "Rose Gold Option",
           isActive: true,
           createdBy: "system",
@@ -181,8 +187,9 @@ const ItemVariantConfigsManager = () => {
           const transformedConfig = {
             ...updatedConfig,
             id: updatedConfig.itemVariantConfigId,
-            itemVariantUrl: updatedConfig.itemVariant?.itemVariantUrl || "Unknown",
-            componentOptionalName: updatedConfig.componentOptional?.componentOptionalName || "Unknown",
+            itemVariantConfigId: updatedConfig.itemVariantConfigId,
+            itemVariantName: updatedConfig.itemVariantUrl || "Unknown",
+            componentOptionalName: updatedConfig.componentOptionalName || "Unknown",
           };
           setItemVariantConfigs(
             itemVariantConfigs.map((config) =>
@@ -210,8 +217,9 @@ const ItemVariantConfigsManager = () => {
           const transformedConfig = {
             ...newConfig,
             id: newConfig.itemVariantConfigId,
-            itemVariantUrl: newConfig.itemVariant?.itemVariantUrl || "Unknown",
-            componentOptionalName: newConfig.componentOptional?.componentOptionalName || "Unknown",
+            itemVariantConfigId: newConfig.itemVariantConfigId,
+            itemVariantName: newConfig.itemVariantUrl || "Unknown",
+            componentOptionalName: newConfig.componentOptionalName || "Unknown",
           };
           setItemVariantConfigs([...itemVariantConfigs, transformedConfig]);
         } else {
@@ -305,8 +313,8 @@ const ItemVariantConfigsManager = () => {
         <table className="data-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Item Variant URL</th>
+              <th>Config ID</th>
+              <th>Item Variant Name</th>
               <th>Component Option</th>
               <th>Created By</th>
               <th>Status</th>
@@ -328,8 +336,8 @@ const ItemVariantConfigsManager = () => {
                 console.log("Rendering item variant config:", config);
                 return (
                   <tr key={config.id || config.itemVariantConfigId || `config-${config.itemVariantId}-${config.componentOptionalId}`}>
-                    <td>{config.id}</td>
-                    <td>{config.itemVariantUrl}</td>
+                    <td>{config.itemVariantConfigId}</td>
+                    <td>{config.itemVariantName}</td>
                     <td>{config.componentOptionalName}</td>
                     <td>{config.createdBy}</td>
                     <td>
@@ -385,7 +393,7 @@ const ItemVariantConfigsManager = () => {
                   <option value="">Select Item Variant</option>
                   {itemVariants.map((variant) => (
                     <option key={variant.itemVariantId} value={variant.itemVariantId}>
-                      {variant.itemVariantUrl} - {variant.description}
+                      {variant.itemVariantId} - {variant.itemVariantName || variant.description}
                     </option>
                   ))}
                 </select>
