@@ -1,6 +1,6 @@
 // Thêm 'useState', 'useRef' từ React
 import React, { useState, useRef } from 'react';
-import './Collection.css';
+import './Collections.css';
 
 const products = [
     {
@@ -23,7 +23,7 @@ const products = [
     },
 ];
 
-function Collection() {
+function Collections() {
     const section2Ref = useRef(null);
     const section3Ref = useRef(null);
 
@@ -151,4 +151,4 @@ function Collection() {
     );
 }
 
-export default Collection;
+export default Collections;
