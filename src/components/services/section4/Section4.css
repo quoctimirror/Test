@@ -59,11 +59,33 @@
 
 .section4-content {
   padding: 4rem;
-  max-width: 500px;
+  max-width: 700px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.section4-header-description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.section4-full-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
 }
 
 .section4-header {
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
 .section4-subtitle {
@@ -75,8 +97,7 @@
   text-align: center;
   color: #797979;
   text-transform: uppercase;
-  display: block;
-  margin-bottom: 1rem;
+  margin: 0;
 }
 
 .section4-title {
@@ -89,6 +110,7 @@
   color: #000000;
   margin: 0;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .section4-description {
@@ -99,14 +121,14 @@
   letter-spacing: 0%;
   text-align: center;
   color: #797979;
-  margin-bottom: 3rem;
+  margin: 0;
   max-width: 400px;
 }
 
 .section4-cta {
   background: transparent;
-  border: 1px solid #333;
-  padding: 12px 24px;
+  border: 0.5px solid #333;
+  padding: 20px 36px;
   font-family: "BT-BeauSans-Regular-ttf", sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -114,14 +136,21 @@
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: capitalize;
-  border-radius: 25px;
-  margin: 0 auto;
-  display: block;
+  border-radius: 100px;
+  margin: 0;
+  min-width: 137px;
+  height: 51px;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .section4-cta:hover {
-  background: #333;
-  color: white;
+  background: #000000;
+  color: #ffffff;
 }
 
 /* Section 4 Part 2 - Sizing Guide */

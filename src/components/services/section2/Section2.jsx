@@ -75,23 +75,27 @@ const Section2 = () => {
             style={{
               opacity: scrollProgress < 0.5 ? 1 - scrollProgress * 2 : 0,
               transform: `translateY(${
-                scrollProgress < 1 ? scrollProgress * -100 : -100
+                scrollProgress < 0.5 ? (1 - scrollProgress * 2) * 50 : 0
               }px)`,
               pointerEvents: scrollProgress < 0.5 ? "auto" : "none",
             }}
           >
             <div className="section2-content">
-              <div className="section2-header">
-                <span className="section2-subtitle">EXPLORE OUR</span>
-                <h2 className="section2-title">PRODUCT CARE & REPAIR</h2>
+              <div className="section2-full-content">
+                <div className="section2-header-description">
+                  <div className="section2-header">
+                    <span className="section2-subtitle">EXPLORE OUR</span>
+                    <h2 className="section2-title">PRODUCT CARE & REPAIR</h2>
+                  </div>
+                  <p className="section2-description">
+                    Extend the life and brilliance of your jewelry with
+                    <br /> Mirror's professional care and repair services,
+                    <br /> tailored to keep each piece as radiant as the day
+                    <br /> you received it.
+                  </p>
+                </div>
+                <button className="section2-cta">See more</button>
               </div>
-              <p className="section2-description">
-                Extend the life and brilliance of your jewelry with
-                <br /> Mirror's professional care and repair services,
-                <br /> tailored to keep each piece as radiant as the day
-                <br /> you received it.
-              </p>
-              <button className="section2-cta">See more</button>
             </div>
           </div>
 
@@ -100,22 +104,26 @@ const Section2 = () => {
             style={{
               opacity: scrollProgress > 0.5 ? (scrollProgress - 0.5) * 2 : 0,
               transform: `translateY(${
-                scrollProgress < 1 ? scrollProgress * -100 : -100
+                scrollProgress > 0.5 ? (1 - (scrollProgress - 0.5) * 2) * 50 : 50
               }px)`,
               pointerEvents: scrollProgress > 0.5 ? "auto" : "none",
             }}
           >
             <div className="section2-content">
-              <div className="section2-header">
-                <span className="section2-subtitle">EXPLORE OUR</span>
-                <h2 className="section2-title">TRADE IN</h2>
+              <div className="section2-full-content">
+                <div className="section2-header-description">
+                  <div className="section2-header">
+                    <span className="section2-subtitle">EXPLORE OUR</span>
+                    <h2 className="section2-title">TRADE IN</h2>
+                  </div>
+                  <p className="section2-description">
+                    Elevate your gift with our signature wrapping — a carefully
+                    crafted presentation that captures the essence of refined
+                    giving.
+                  </p>
+                </div>
+                <button className="section2-cta">See more</button>
               </div>
-              <p className="section2-description">
-                Elevate your gift with our signature wrapping — a carefully
-                crafted presentation that captures the essence of refined
-                giving.
-              </p>
-              <button className="section2-cta">See more</button>
             </div>
           </div>
         </div>

@@ -1,0 +1,45 @@
+import React, { useState } from 'react';
+import './Support.css';
+import ReturnExchange from './ReturnExchange';
+import SizingGuide from './SizingGuide';
+import WarrantyInfo from './WarrantyInfo';
+import FAQs from './FAQs';
+
+const Support = () => {
+  const [activeTab, setActiveTab] = useState('return-exchange');
+
+  const tabs = [
+    { id: 'return-exchange', label: 'Return & Exchange', component: ReturnExchange },
+    { id: 'sizing-guide', label: 'Sizing Guide', component: SizingGuide },
+    { id: 'warranty-info', label: 'Warranty Information', component: WarrantyInfo },
+    { id: 'faqs', label: 'FAQs', component: FAQs }
+  ];
+
+  return (
+    <div className="support-container">
+      <div className="support-tabs">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            className={`support-tab ${activeTab === tab.id ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      <div className="support-content">
+        {tabs.map(tab => (
+          <div
+            key={tab.id}
+            className={`tab-content ${activeTab === tab.id ? 'active' : ''}`}
+          >
+            {activeTab === tab.id && <tab.component />}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Support;

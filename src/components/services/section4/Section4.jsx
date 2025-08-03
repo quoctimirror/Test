@@ -19,9 +19,9 @@ const Section4 = () => {
       const scrollHeight = sectionHeight - windowHeight;
       const rawProgress = Math.max(0, Math.min(1, scrollTop / scrollHeight));
 
-      // Add buffer zones: 20% buffer at start, 60% transition zone, 20% buffer at end
-      const startBuffer = 0.2;
-      const endBuffer = 0.8; // transitions complete at 80%, leaving 20% buffer at end
+      // Add buffer zones: 30% buffer at start, 40% transition zone, 30% buffer at end
+      const startBuffer = 0.3;
+      const endBuffer = 0.7; // transitions complete at 70%, leaving 30% buffer at end
 
       let adjustedProgress = 0;
       if (rawProgress < startBuffer) {
@@ -29,7 +29,7 @@ const Section4 = () => {
       } else if (rawProgress > endBuffer) {
         adjustedProgress = 1; // Buffer zone after transitions complete
       } else {
-        // Active transition zone (20% to 80% of total scroll)
+        // Active transition zone (30% to 70% of total scroll)
         adjustedProgress =
           (rawProgress - startBuffer) / (endBuffer - startBuffer);
       }
@@ -52,9 +52,9 @@ const Section4 = () => {
             className="section4-image-layer section4-image-1"
             style={{
               transform: `translateY(${
-                scrollProgress < 0.5 ? scrollProgress * 2 * -100 : -100
+                scrollProgress < 0.35 ? scrollProgress * 2.86 * -100 : -100
               }%)`,
-              opacity: scrollProgress < 0.5 ? 1 - scrollProgress * 1 : 0.5,
+              opacity: scrollProgress < 0.35 ? 1 - scrollProgress * 2.86 : 0,
             }}
           >
             <img
@@ -66,14 +66,18 @@ const Section4 = () => {
             className="section4-image-layer section4-image-2"
             style={{
               transform: `translateY(${
-                scrollProgress < 0.5
-                  ? (1 - scrollProgress * 2) * 100
-                  : (scrollProgress - 0.5) * 2 * -100
+                scrollProgress < 0.35
+                  ? (1 - scrollProgress * 2.86) * 100
+                  : scrollProgress < 0.7
+                  ? 0
+                  : (scrollProgress - 0.7) * 3.33 * -100
               }%)`,
               opacity:
-                scrollProgress < 0.5
-                  ? scrollProgress * 2
-                  : 1 - (scrollProgress - 0.5) * 1,
+                scrollProgress < 0.35
+                  ? scrollProgress * 2.86
+                  : scrollProgress < 0.7
+                  ? 1
+                  : 1 - (scrollProgress - 0.7) * 3.33,
             }}
           >
             <img
@@ -85,9 +89,9 @@ const Section4 = () => {
             className="section4-image-layer section4-image-3"
             style={{
               transform: `translateY(${
-                scrollProgress < 0.5 ? 100 : (1 - scrollProgress) * 200
+                scrollProgress < 0.7 ? 100 : (1 - scrollProgress) * 333
               }%)`,
-              opacity: scrollProgress > 0.5 ? (scrollProgress - 0.5) * 2 : 0,
+              opacity: scrollProgress > 0.7 ? (scrollProgress - 0.7) * 3.33 : 0,
             }}
           >
             <img
@@ -102,24 +106,28 @@ const Section4 = () => {
           <div
             className="section4-content-layer section4-content-1"
             style={{
-              opacity: scrollProgress < 0.33 ? 1 - scrollProgress * 3 : 0,
+              opacity: scrollProgress < 0.35 ? 1 - scrollProgress * 2.86 : 0,
               transform: `translateY(${
-                scrollProgress < 1 ? scrollProgress * -100 : -100
+                scrollProgress < 0.35 ? (1 - scrollProgress * 2.86) * 50 : 0
               }px)`,
-              pointerEvents: scrollProgress < 0.33 ? "auto" : "none",
+              pointerEvents: scrollProgress < 0.35 ? "auto" : "none",
             }}
           >
             <div className="section4-content">
-              <div className="section4-header">
-                <span className="section4-subtitle">EXPLORE OUR</span>
-                <h2 className="section4-title">RETURN & EXCHANGE</h2>
+              <div className="section4-full-content">
+                <div className="section4-header-description">
+                  <div className="section4-header">
+                    <span className="section4-subtitle">EXPLORE OUR</span>
+                    <h2 className="section4-title">RETURN & EXCHANGE</h2>
+                  </div>
+                  <p className="section4-description">
+                    Extend the life and brilliance of your jewelry with Mirror's
+                    professional care and repair services, tailored to keep each
+                    piece as radiant as the day you received it.
+                  </p>
+                </div>
+                <button className="section4-cta">See more</button>
               </div>
-              <p className="section4-description">
-                Extend the life and brilliance of your jewelry with Mirror's
-                professional care and repair services, tailored to keep each
-                piece as radiant as the day you received it.
-              </p>
-              <button className="section4-cta">See more</button>
             </div>
           </div>
 
@@ -127,53 +135,65 @@ const Section4 = () => {
             className="section4-content-layer section4-content-2"
             style={{
               opacity:
-                scrollProgress > 0.33 && scrollProgress < 0.67
-                  ? (scrollProgress - 0.33) * 3
+                scrollProgress > 0.3 && scrollProgress < 0.75
+                  ? (scrollProgress - 0.3) * 2.22
                   : 0,
               transform: `translateY(${
-                scrollProgress < 1 ? scrollProgress * -100 : -100
+                scrollProgress > 0.3 && scrollProgress < 0.75
+                  ? (1 - (scrollProgress - 0.3) * 2.22) * 50
+                  : scrollProgress <= 0.3
+                  ? 50
+                  : 0
               }px)`,
               pointerEvents:
-                scrollProgress > 0.33 && scrollProgress < 0.67
-                  ? "auto"
-                  : "none",
+                scrollProgress > 0.3 && scrollProgress < 0.75 ? "auto" : "none",
             }}
           >
             <div className="section4-content">
-              <div className="section4-header">
-                <span className="section4-subtitle">EXPLORE OUR</span>
-                <h2 className="section4-title">SIZING GUIDE</h2>
+              <div className="section4-full-content">
+                <div className="section4-header-description">
+                  <div className="section4-header">
+                    <span className="section4-subtitle">EXPLORE OUR</span>
+                    <h2 className="section4-title">SIZING GUIDE</h2>
+                  </div>
+                  <p className="section4-description">
+                    Elevate your gift with our signature wrapping — a carefully
+                    crafted presentation that captures the essence of refined
+                    giving.
+                  </p>
+                </div>
+                <button className="section4-cta">See more</button>
               </div>
-              <p className="section4-description">
-                Elevate your gift with our signature wrapping — a carefully
-                crafted presentation that captures the essence of refined
-                giving.
-              </p>
-              <button className="section4-cta">See more</button>
             </div>
           </div>
 
           <div
             className="section4-content-layer section4-content-3"
             style={{
-              opacity: scrollProgress > 0.67 ? (scrollProgress - 0.67) * 3 : 0,
+              opacity: scrollProgress > 0.75 ? (scrollProgress - 0.75) * 4 : 0,
               transform: `translateY(${
-                scrollProgress < 1 ? scrollProgress * -100 : -100
+                scrollProgress > 0.75
+                  ? (1 - (scrollProgress - 0.75) * 4) * 50
+                  : 50
               }px)`,
-              pointerEvents: scrollProgress > 0.67 ? "auto" : "none",
+              pointerEvents: scrollProgress > 0.75 ? "auto" : "none",
             }}
           >
             <div className="section4-content">
-              <div className="section4-header">
-                <span className="section4-subtitle">EXPLORE OUR</span>
-                <h2 className="section4-title">WARRANTY & INFO</h2>
+              <div className="section4-full-content">
+                <div className="section4-header-description">
+                  <div className="section4-header">
+                    <span className="section4-subtitle">EXPLORE OUR</span>
+                    <h2 className="section4-title">WARRANTY & INFO</h2>
+                  </div>
+                  <p className="section4-description">
+                    Elevate your gift with our signature wrapping — a carefully
+                    crafted presentation that captures the essence of refined
+                    giving.
+                  </p>
+                </div>
+                <button className="section4-cta">See more</button>
               </div>
-              <p className="section4-description">
-                Elevate your gift with our signature wrapping — a carefully
-                crafted presentation that captures the essence of refined
-                giving.
-              </p>
-              <button className="section4-cta">See more</button>
             </div>
           </div>
         </div>

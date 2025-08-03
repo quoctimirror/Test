@@ -35,6 +35,9 @@
 .section3-content {
   text-align: center;
   color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .section3-title {
