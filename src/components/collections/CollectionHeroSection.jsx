@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import CollectionVideoSection from "./CollectionVideoSection";
-import "./Collection.css";
+import "./Collections.css";
 
 const CollectionHeroSection = ({ onScrollToSection2 }) => {
   const handleScrollDown = () => {
@@ -13,7 +13,7 @@ const CollectionHeroSection = ({ onScrollToSection2 }) => {
     <div className="hero-section-wrapper">
       {/* Background Video */}
       <CollectionVideoSection />
-      
+
       {/* Text và Button Overlay */}
       <div className="hero-overlay-content">
         <div className="hero-text-container">
