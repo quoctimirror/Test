@@ -59,7 +59,7 @@
   border-radius: 30px;
   background: transparent;
   color: #f6f6f6;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 12px;
@@ -153,7 +153,7 @@
 }
 
 .label {
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
@@ -191,7 +191,7 @@
 .summary h2,
 .help h2 {
   margin: 0;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 20px;
@@ -256,7 +256,7 @@
   height: 45px;
   color: #797979;
   box-sizing: border-box;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
@@ -278,7 +278,7 @@
   height: 45px;
   box-sizing: border-box;
   align-self: center;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
@@ -444,7 +444,7 @@
 }
 
 .overview-label {
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 12px;
@@ -458,7 +458,7 @@
 }
 
 .overview-value {
-  font-family: "SaolDisplay-Regular-ttf", serif;
+  font-family: "Saol Display", serif;
   font-weight: 400;
   font-style: normal;
   font-size: 22px;

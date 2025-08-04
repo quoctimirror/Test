@@ -168,7 +168,7 @@ html {
 }
 
 .tagline-top {
-  font-family: "BT-BeauSans-Regular-ttf", serif;
+  font-family: "BT Beau Sans", serif;
   font-size: clamp(6px, 1.2vw, 12px);
   font-weight: 400;
   margin-bottom: 8px;
@@ -186,7 +186,7 @@ html {
 }
 
 .future-text {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: clamp(38px, 5vw, 60px);
   font-weight: 400;
   letter-spacing: 1px;
@@ -194,7 +194,7 @@ html {
 }
 
 .diamond-text {
-  font-family: "SaolDisplay-LightItalic-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: clamp(38px, 5vw, 60px);
   font-weight: 400;
   letter-spacing: 1px;

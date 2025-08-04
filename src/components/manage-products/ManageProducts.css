@@ -1,7 +1,7 @@
 /* Main Container */
 .manage-products-container {
   display: flex;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   background-color: #f8f9fa;
   min-height: 100vh;
 }
@@ -13,7 +13,7 @@
 }
 
 .manage-products-title {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: 48px;
   font-weight: 300;
   color: #333;
@@ -44,7 +44,7 @@
 }
 
 .sidebar-title {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: 24px;
   font-weight: 300;
   color: white;
@@ -133,7 +133,7 @@
 }
 
 .content-header h1 {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: 32px;
   font-weight: 300;
   color: #333;
@@ -173,7 +173,7 @@
 }
 
 .manager-header h2 {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: 32px;
   font-weight: 300;
   color: #333;
@@ -366,7 +366,7 @@
 }
 
 .modal-header h3 {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: 24px;
   font-weight: 300;
   color: #333;

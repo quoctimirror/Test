@@ -76,7 +76,10 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
             <br />
             heritage, vibrant artistry, and timeless mystique of the East.
           </div>
-          <button className="hero-explore-button" onClick={handleExploreCollection}>
+          <button
+            className="hero-explore-button"
+            onClick={handleExploreCollection}
+          >
             <svg
               width="200"
               height="50"
@@ -102,7 +105,7 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
                 textAnchor="middle"
                 fill="white"
                 fontSize="14"
-                fontFamily="BT-BeauSans-Regular-ttf"
+                fontFamily="BT Beau Sans"
               >
                 Explore this collection
               </text>

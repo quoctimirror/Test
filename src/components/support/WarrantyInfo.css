@@ -1,0 +1,33 @@
+/* Warranty Info Specific Styles */
+
+.warranty-info .limited-warranty-section {
+  /* Specific styles for limited warranty section */
+}
+
+.warranty-info .warranty-overview {
+  /* Styles for warranty overview */
+}
+
+.warranty-info .warranty-covered {
+  /* Styles for what's covered list */
+}
+
+.warranty-info .warranty-exclusions {
+  /* Styles for warranty exclusions */
+}
+
+.warranty-info .warranty-exclusions h4 {
+  /* Specific styles for exclusions heading */
+}
+
+.warranty-info .warranty-note {
+  /* Styles for warranty note */
+}
+
+.warranty-info .warranty-activation-section {
+  /* Specific styles for warranty activation section */
+}
+
+.warranty-info .activation-details {
+  /* Styles for activation details */
+}

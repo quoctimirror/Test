@@ -40,7 +40,7 @@ const Section5Products = () => {
                 textAnchor="middle"
                 fill="white"
                 fontSize="14"
-                fontFamily="BT-BeauSans-Regular-ttf"
+                fontFamily="BT Beau Sans"
               >
                 Contact us
               </text>

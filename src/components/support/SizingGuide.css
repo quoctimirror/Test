@@ -1,0 +1,56 @@
+/* Sizing Guide Specific Styles */
+
+.sizing-guide .ring-size-section {
+  /* Specific styles for ring size section */
+}
+
+.sizing-guide .step-by-step-guide {
+  /* Styles for step-by-step guide container */
+}
+
+.sizing-guide .step {
+  /* Common styles for all steps */
+}
+
+.sizing-guide .wrap-step {
+  /* Specific styles for wrap step */
+}
+
+.sizing-guide .mark-step {
+  /* Specific styles for mark step */
+}
+
+.sizing-guide .measure-step {
+  /* Specific styles for measure step */
+}
+
+.sizing-guide .find-size-step {
+  /* Specific styles for find size step */
+}
+
+.sizing-guide .tip-section {
+  /* Styles for tip section */
+}
+
+.sizing-guide .size-chart {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.sizing-guide .chart-image {
+  width: auto;
+  height: auto;
+  max-width: 483px;
+  max-height: 852px;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sizing-guide .necklace-section {
+  /* Specific styles for necklace section */
+}
+
+.sizing-guide .bracelet-section {
+  /* Specific styles for bracelet section */
+}

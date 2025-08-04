@@ -111,7 +111,7 @@ html {
 
 /* Style riêng cho "TREASURE" */
 .text-treasure {
-  font-family: "SaolDisplay-Regular-ttf";
+  font-family: "Saol Display";
   background: linear-gradient(180deg, #2a7786 0%, #134e5c 100%);
   font-size: 50px;
   line-height: 105%;
@@ -121,7 +121,7 @@ html {
 /* Style riêng cho "of the" */
 .text-of-the {
   padding-left: 3em;
-  font-family: "SaolDisplay-LightItalic-ttf";
+  font-family: "Saol Display";
   font-size: 50px;
   font-weight: 300;
   line-height: 105%;
@@ -138,7 +138,7 @@ html {
   font-weight: 400;
   text-align: right;
   padding-left: 4em;
-  font-family: "SaolDisplay-Regular-ttf";
+  font-family: "Saol Display";
   background: linear-gradient(180deg, #2a7786 0%, #134e5c 100%);
   font-size: 50px;
   line-height: 105%;
@@ -268,7 +268,7 @@ html {
   margin: 0 0 0.5rem 0;
 
   /* Saol_24pt_light */
-  font-family: "SaolDisplay-Light-ttf";
+  font-family: "Saol Display";
   font-size: 24px;
   font-style: normal;
   font-weight: 300;
@@ -280,7 +280,7 @@ html {
 
 /* Đoạn mô tả sản phẩm */
 .product-description {
-  font-family: "BT-BeauSans-Light-ttf";
+  font-family: "BT Beau Sans";
   text-align: center;
   font-size: 16px;
   color: #ffffff;
@@ -321,7 +321,7 @@ html {
 }
 
 .collection-page .section-2 .hero-subtitle {
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
@@ -334,7 +334,7 @@ html {
 }
 
 .collection-page .section-2 .hero-description {
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-size: 16px;
   font-weight: 400;
   color: #797979;
@@ -351,7 +351,7 @@ html {
 
 /* Section 2 text-treasure styling */
 .collection-page .section-2 .hero-title .text-treasure {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-weight: 300;
   font-style: normal;
   font-size: 64px;
@@ -390,7 +390,7 @@ html {
   padding: 0;
   margin-top: 1rem;
   color: #797979;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
 }
 
 .hover-underline {
@@ -825,7 +825,7 @@ html {
 }
 
 .other-collections-subtitle {
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
@@ -845,7 +845,7 @@ html {
 }
 
 .collection-name {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-weight: 300;
   font-style: normal;
   font-size: 64px;

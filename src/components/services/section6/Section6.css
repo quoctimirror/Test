@@ -17,7 +17,7 @@
 }
 
 .section6-title {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: 64px;
   font-weight: 300;
   color: #fff;
@@ -28,7 +28,7 @@
 }
 
 .section6-subtitle {
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-size: 16px;
   font-weight: 400;
   color: #999;
@@ -86,7 +86,7 @@
 }
 
 .contact-method {
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-size: 20px;
   font-weight: 400;
   color: #fff;
@@ -98,7 +98,7 @@
 }
 
 .contact-details {
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-size: 14px;
   font-weight: 400;
   color: #ccc;

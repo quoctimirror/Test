@@ -1,0 +1,123 @@
+/* src/styles/typographySystem.css */
+/* Version updated to match the design specification image. */
+
+/*
+=====================================================
+  1. DESIGN TOKENS (CSS VARIABLES)
+     Dịch các thông số từ thiết kế thành các biến.
+=====================================================
+*/
+:root {
+  /* -- FONT FAMILIES -- */
+  --font-heading: "Saol Display", serif;
+  --font-body: "BT Beau Sans", sans-serif;
+
+  /* -- FONT WEIGHTS -- */
+  /* Các giá trị này khớp với các file font bạn đã có */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+
+  /* -- TYPOGRAPHIC SCALE (Cỡ chữ) -- */
+  /* Chuyển đổi từ pt sang rem (1rem = 16px) để dễ co giãn */
+  --font-size-h1: 4rem; /* 64px */
+  --font-size-h2: 1.5rem; /* 24px */
+  --font-size-body-1: 1.25rem; /* 20px */
+  --font-size-body-2: 1rem; /* 16px - Base size */
+  --font-size-body-3: 1rem; /* 16px */
+  --font-size-body-4: 0.875rem; /* 14px */
+  --font-size-body-5: 0.875rem; /* 14px */
+
+  /* -- LINE HEIGHTS (Chiều cao dòng) -- */
+  --line-height-heading: 0.9; /* 90% */
+  --line-height-body: 1.2; /* 120% */
+
+  /* -- LETTER SPACING (Khoảng cách ký tự) -- */
+  --letter-spacing-h1: -0.02em; /* -2% */
+
+  /* -- SPACING (Khoảng cách đoạn văn) -- */
+  --paragraph-spacing: 24px;
+}
+
+/*
+=====================================================
+  2. BASE STYLES
+     Sử dụng Bodytext 3 (16pt, regular) làm style mặc định
+=====================================================
+*/
+body {
+  font-family: var(--font-body);
+  font-size: 16px; /* Thiết lập cỡ chữ gốc là 16px */
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  color: #333;
+}
+
+/*
+=====================================================
+  3. TYPOGRAPHY CLASSES
+     Các class này khớp 1-1 với các dòng trong thiết kế của bạn.
+=====================================================
+*/
+
+/* --- Heading Styles --- */
+.text-heading-1,
+.text-h1 {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-heading);
+  letter-spacing: var(--letter-spacing-h1);
+  margin-bottom: var(--paragraph-spacing);
+}
+
+.text-heading-2,
+.text-h2 {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-heading);
+  margin-bottom: var(--paragraph-spacing);
+}
+
+/* --- Bodytext Styles --- */
+.text-body-1 {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-1);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  margin-bottom: var(--paragraph-spacing);
+}
+
+.text-body-2 {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-2);
+  font-weight: var(--font-weight-bold); /* Bold */
+  line-height: var(--line-height-body);
+  margin-bottom: var(--paragraph-spacing);
+}
+
+.text-body-3 {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-3);
+  font-weight: var(--font-weight-regular); /* Regular */
+  line-height: var(--line-height-body);
+  margin-bottom: var(--paragraph-spacing);
+}
+
+.text-body-4 {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-4);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-body);
+  margin-bottom: var(--paragraph-spacing);
+}
+
+.text-body-5 {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-5);
+  font-weight: var(--font-weight-regular);
+  font-style: italic; /* Italic Regular */
+  line-height: var(--line-height-body);
+  margin-bottom: var(--paragraph-spacing);
+}

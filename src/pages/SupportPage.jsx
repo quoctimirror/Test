@@ -4,7 +4,7 @@ import Support from '../components/support/Support';
 const SupportPage = () => {
   return (
     <div className="support-page">
-      <main style={{ paddingTop: '80px', minHeight: '100vh' }}>
+      <main>
         <Support />
       </main>
     </div>

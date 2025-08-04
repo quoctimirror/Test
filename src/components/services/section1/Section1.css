@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
 }
 
 .section1-background-overlay {
@@ -46,7 +46,7 @@
 }
 
 .section1-title {
-  font-family: "SaolDisplay-Regular-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: 50px;
   font-weight: 400;
   font-style: normal;

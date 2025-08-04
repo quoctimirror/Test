@@ -1,7 +1,9 @@
 .services-section5 {
-  padding: 5rem 0;
+  height: 1251px;
+  padding: 0;
   background: white;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
+  box-sizing: border-box;
 }
 
 .section5-container {
@@ -15,7 +17,7 @@
 }
 
 .section5-title {
-  font-family: "SaolDisplay-Light-ttf", serif;
+  font-family: "Saol Display", serif;
   font-size: 64px;
   font-weight: 300;
   line-height: 90%;
@@ -23,29 +25,43 @@
   text-align: center;
   color: #000000;
   margin: 0;
+  margin-top: 200px;
+  margin-bottom: 120px;
   text-transform: uppercase;
 }
 
 .faq-list {
-  margin-bottom: 3rem;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 60px;
+  width: 922px;
+  height: 753px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .faq-item {
   border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
 }
 
 .faq-question {
   width: 100%;
   background: none;
   border: none;
-  padding: 1.5rem 0;
+  padding: 36px 0;
+  margin: 0;
   text-align: left;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-size: 20px;
   font-weight: 400;
   color: #000000;
@@ -94,7 +110,7 @@
 .view-all-btn {
   background: transparent;
   border: 1px solid #333;
-  padding: 12px 24px;
+  padding: 0;
   font-family: "BT Beau Sans", sans-serif;
   font-size: 14px;
   font-weight: 500;
@@ -103,6 +119,9 @@
   transition: all 0.3s ease;
   text-transform: capitalize;
   border-radius: 25px;
+  width: 125px;
+  height: 51px;
+  opacity: 1;
 }
 
 .view-all-btn:hover {

@@ -157,7 +157,7 @@ const SameCollection = ({ showViewProductButton = false }) => {
                   textAnchor="middle"
                   fill="black"
                   fontSize="14"
-                  fontFamily="BT-BeauSans-Regular-ttf"
+                  fontFamily="BT Beau Sans"
                 >
                   View all products
                 </text>
