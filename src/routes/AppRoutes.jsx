@@ -20,7 +20,7 @@ const HoverExpandSection = lazy(() =>
   import("@components/hoverExpandSection/HoverExpandSection.jsx")
 );
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
-// const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
+const Collections = lazy(() => import("@components/collections/Collections"));
 const TryOnRing = lazy(() => import("@components/arTryOn/TryOnRing.jsx"));
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
@@ -80,6 +80,7 @@ export default function AppRoutes() {
           <Route path="/hover-expand" element={<HoverExpandSection />} />
 
           <Route path="/view-360" element={<View360 />} />
+          <Route path="/collections" element={<Collections />} />
 
           <Route element={<TryOnRingLayout />}>
             <Route path="/ar/rings/:ringId" element={<TryOnRing />} />

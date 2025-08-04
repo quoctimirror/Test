@@ -2,7 +2,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import CollectionHeroSection from "./CollectionHeroSection";
-import "./Collection.css";
+import "./Collections.css";
 
 const products = [
   {

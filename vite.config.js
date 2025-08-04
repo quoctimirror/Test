@@ -9,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [react()],
   server: {
+    allowedHosts: 'all',
     proxy: {
       "/api": {
         target: "http://localhost:8080",
@@ -16,6 +17,7 @@ export default defineConfig({
         secure: false,
       },
     },
+
   },
   resolve: {
     alias: {

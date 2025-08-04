@@ -1,8 +1,15 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 // Khởi tạo loader một lần duy nhất để tái sử dụng
 const gltfLoader = new GLTFLoader();
+const dracoLoader = new DRACOLoader();
+// Chỉ định đường dẫn đến thư mục chứa file giải mã của Draco
+// Bạn cần tải các file này từ repo của three.js và đặt chúng trong thư mục public
+dracoLoader.setDecoderPath('/draco/gltf/');
+// Gán dracoLoader cho gltfLoader
+gltfLoader.setDRACOLoader(dracoLoader);
 
 // --- HELPER FUNCTIONS (Sao chép từ ModelViewer.jsx) ---
 const RING_AXES_CONFIG = [
@@ -88,12 +95,12 @@ export const modelLoader = (url) => {
                         child.castShadow = true;
                         child.receiveShadow = true;
 
-                        // child.material.transparent = false;
-                        // child.material.depthTest = true;
-                        // child.material.depthWrite = true;
-                        // child.material.colorWrite = true;
-                        // child.material.blending = THREE.NoBlending;
-                        // child.renderOrder = 1;
+                        child.material.transparent = false;
+                        child.material.depthTest = true;
+                        child.material.depthWrite = true;
+                        child.material.colorWrite = true;
+                        child.material.blending = THREE.NoBlending;
+                        child.renderOrder = 1;
                     }
                 });
                 const boxHelper = new THREE.Box3Helper(new THREE.Box3().setFromObject(container), 0xffffff);
