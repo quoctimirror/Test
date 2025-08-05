@@ -1,33 +1,73 @@
 /* Warranty Info Specific Styles */
 
-.warranty-info .limited-warranty-section {
-  /* Specific styles for limited warranty section */
+/* Typography consistency */
+.warranty-info p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin: 0 0 16px 0;
+  color: #000000;
 }
 
-.warranty-info .warranty-overview {
-  /* Styles for warranty overview */
+.warranty-info h4 {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin-bottom: 16px;
+  color: #000000;
 }
 
-.warranty-info .warranty-covered {
-  /* Styles for what's covered list */
+/* List styling consistency */
+.warranty-info ul {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin: 16px 0;
+  padding-left: 20px;
+  list-style: none;
 }
 
-.warranty-info .warranty-exclusions {
-  /* Styles for warranty exclusions */
+.warranty-info ul li {
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 0px;
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #000000;
 }
 
-.warranty-info .warranty-exclusions h4 {
-  /* Specific styles for exclusions heading */
+.warranty-info ul li::before {
+  content: "•";
+  position: absolute;
+  left: -13px;
+  top: 0;
+  color: #000000;
 }
 
-.warranty-info .warranty-note {
-  /* Styles for warranty note */
-}
-
-.warranty-info .warranty-activation-section {
-  /* Specific styles for warranty activation section */
-}
-
-.warranty-info .activation-details {
-  /* Styles for activation details */
+.warranty-info .warranty-note-text {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #BC224C;
+  margin: 0;
 }

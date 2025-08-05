@@ -1,16 +1,55 @@
 /* Return & Exchange Specific Styles */
 
-.international-orders-list {
+.international-orders-list,
+.showroom-purchases-list,
+.nationwide-shipping-list,
+.non-exchangeable-items-list {
   font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, sans-serif;
-  font-weight: 700;
-  font-style: Bold;
+  font-weight: 400;
+  font-style: normal;
   font-size: 16px;
   leading-trim: NONE;
   line-height: 120%;
   letter-spacing: 0%;
   margin: 16px 0;
   padding-left: 20px;
+  list-style: none;
+}
+
+.international-orders-list li,
+.showroom-purchases-list li,
+.nationwide-shipping-list li,
+.non-exchangeable-items-list li {
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 0px;
+}
+
+.international-orders-list li::before,
+.showroom-purchases-list li::before,
+.nationwide-shipping-list li::before,
+.non-exchangeable-items-list li::before {
+  content: "•";
+  position: absolute;
+  left: -13px;
+  top: 0;
+  color: #000000;
+}
+
+.international-orders-list li p,
+.showroom-purchases-list li p,
+.nationwide-shipping-list li p,
+.non-exchangeable-items-list li p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin: 0;
+  color: #000000;
 }
 
 .return-exchange .international-orders-section {
@@ -33,6 +72,63 @@
   /* Specific styles for non-exchangeable items section if needed */
 }
 
-.return-exchange .why-sales-final-section {
-  /* Specific styles for why sales final section if needed */
+.return-exchange .why-sales-final-section p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin: 0;
+  color: #000000;
+}
+
+.return-exchange h4 {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin-bottom: 16px;
+  color: #000000;
+}
+
+/* Remove bullet points from nested ul elements */
+.showroom-purchases-list ul,
+.nationwide-shipping-list ul {
+  list-style: none;
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.showroom-purchases-list ul li,
+.nationwide-shipping-list ul li {
+  position: relative;
+  padding-left: 10px;
+  margin-bottom: 8px;
+}
+
+.showroom-purchases-list ul li::before,
+.nationwide-shipping-list ul li::before {
+  content: "•";
+  position: absolute;
+  left: -13px;
+  top: 0;
+  color: #000000;
+}
+
+.showroom-purchases-list ul li p,
+.nationwide-shipping-list ul li p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin: 0;
+  color: #000000;
 }

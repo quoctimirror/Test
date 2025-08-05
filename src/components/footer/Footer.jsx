@@ -55,11 +55,9 @@ const Footer = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="email-input"
                 />
-                <div className="signup-button-wrapper">
-                  <button onClick={handleSignUp} className="signup-button">
-                    Sign up
-                  </button>
-                </div>
+                <button onClick={handleSignUp} className="signup-button">
+                  Sign up
+                </button>
               </div>
             </div>
           </div>

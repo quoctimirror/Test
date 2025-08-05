@@ -2,11 +2,11 @@
 .navbar {
   position: fixed;
   top: 20px;
-  left: 30px;
-  right: 30px;
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
+  left: 0;
+  right: 0;
+  padding: 0 30px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   z-index: 1000;
   pointer-events: auto;
@@ -20,21 +20,15 @@
   position: relative;
   background: unset;
   color: white;
-  border: 1px solid white;
-  border-radius: 30px;
-  padding: 11px 20px;
+  border: none;
+  padding: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
   z-index: 2;
   transition: all 0.3s;
-  font-size: clamp(12px, 2vw, 14px);
-  width: 124px;
-  height: 45px;
-  box-sizing: border-box;
-  margin-left: 30px;
+  margin-left: 0;
 }
 
 .icon-container {
@@ -83,97 +77,164 @@
   font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 110%;
-  letter-spacing: 0%;
+  letter-spacing: 1px;
   text-align: center;
 }
 
 .menu-wrapper:hover .menu-text {
-  color: black;
+  color: white;
 }
 
-.contact-link {
-  background: transparent;
-  color: white;
-  padding: 8px 16px;
+.immersive-button {
   font-family: "BT Beau Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 110%;
-  letter-spacing: 0%;
-  text-align: center;
-  width: clamp(70px, 8vw, 84px);
-  height: clamp(10px, 1.2vw, 12px);
-  opacity: 1;
-  text-decoration: none;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 100px;
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  width: auto;
+  padding: 20px 36px;
+  height: 57px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 30px;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+  margin-right: 0;
+}
+
+.immersive-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.immersive-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.immersive-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border: 0.5px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.1);
 }
 
 .menu-popup {
   position: absolute;
-  top: 0;
-  left: 30px;
-  background: white;
-  border-radius: 30px;
-  width: 456px;
-  display: flex;
-  flex-direction: column;
-  gap: 80px;
-  padding: 70px 40px 70px 52px;
+  top: 30px;
+  left: 0;
+  background: transparent;
+  padding: 0;
   box-sizing: border-box;
-  transform: scale(0);
-  transform-origin: top left;
-  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s ease;
   z-index: 1;
   opacity: 0;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .menu-wrapper:hover .menu-popup {
-  transform: scale(1);
+  transform: scaleY(1);
   opacity: 1;
 }
 
 .menu-wrapper:hover .menu-button {
-  background: white;
-  color: black;
+  background: none;
 }
 
-.menu-popup .menu-section-2 li {
-  font-size: 14px;
-}
-
-.menu-popup ul {
+.menu-list {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 15px;
 }
 
-.menu-popup li {
+.menu-list li {
   font-family: "BT Beau Sans", sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
-  color: #e0e0e0;
+  color: #999999;
   cursor: pointer;
-  transition: color 0.2s ease;
-  padding: 2px 0;
+  transition: color 0.3s ease;
+  line-height: 1.2;
 }
 
-.menu-popup li:hover {
-  color: black;
+.menu-list li:hover {
+  color: #333333;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 10px 0;
+  cursor: default !important;
+  width: 50px;
 }
 
 .navbar-logo {
   width: 126.65px;
   opacity: 1;
+  justify-self: center;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  justify-self: end;
+}
+
+.account-link {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.account-link:hover {
+  color: #cccccc;
 }
 
 /* Re-enable mouse events for interactive areas */

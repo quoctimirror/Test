@@ -1,37 +1,44 @@
 /* Thêm container để xác định "vùng" mà sidebar sẽ sticky */
 .faqs-sticky-container {
-  padding: 100px 0; /* Tạo khoảng trống trên dưới để thấy rõ hiệu ứng bắt đầu/kết thúc */
+  padding: 0 0 120px 0;
   background: white;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+/* Smooth scroll behavior cho navigation */
+html {
+  scroll-behavior: smooth;
 }
 
 /* --- Thay đổi quan trọng: Chuyển faqs-wrapper sang Flexbox --- */
 .faqs-wrapper {
-  /* position: relative; */ /* Không còn cần thiết */
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 30px;
-  display: flex; /* Kích hoạt Flexbox */
-  align-items: flex-start; /* Quan trọng: để sidebar không bị kéo dài */
-  gap: 80px; /* Khoảng cách giữa sidebar và nội dung */
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 50px;
 }
 
 /* --- Thay đổi cốt lõi: Chuyển sidebar sang position: sticky --- */
 .faq-sidebar-section {
-  position: sticky; /* Đây là thay đổi chính */
-  top: 150px; /* Dính lại khi cách top 150px */
-
-  /* Bỏ các thuộc tính của position:fixed */
-  /* left: 30px; top: 50%; transform: translateY(-50%); */
-
-  flex-shrink: 0; /* Để sidebar không bị co lại */
+  position: sticky;
+  top: 330px;
+  flex-shrink: 0;
+  align-self: flex-start;
   z-index: 100;
+  margin-left: 30px;
+  margin-bottom: 378px;
+  width: 163px;
 }
 
 .faq-nav {
-  width: 163px;
+  width: 100%;
   height: auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   opacity: 1;
 }
 
@@ -48,26 +55,48 @@
 }
 
 .faq-nav .nav-item a {
-  text-decoration: none;
-  font-size: 14px;
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
   font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-decoration: none;
   color: #999;
-  line-height: 1.6;
-  display: block;
+  display: inline-block;
   transition: all 0.3s ease;
   white-space: nowrap;
-  border-bottom: 2px solid transparent;
   padding-bottom: 2px;
+  position: relative;
+}
+
+.faq-nav .nav-item a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
 }
 
 .faq-nav .nav-item.active a {
   color: #000;
   font-weight: 500;
-  border-bottom-color: #000;
+}
+
+.faq-nav .nav-item.active a::after,
+.faq-nav .nav-item:hover a::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .faq-nav .nav-item:hover a {
-  color: #666;
+  color: #000;
 }
 
 /* Các class nav cụ thể không cần nữa vì đã render động */
@@ -75,13 +104,15 @@
 
 /* --- Nội dung chính bên phải --- */
 .faqs-main-section {
-  /* max-width và margin không cần ở đây nữa vì đã có ở wrapper */
   width: 100%;
+  max-width: 1434px;
   min-width: 0;
 }
 
 .faq-content-section {
   width: 100%;
+  max-width: 922px;
+  margin: 0 auto;
 }
 
 .search-section {
@@ -91,39 +122,64 @@
 
 .search-container {
   display: flex;
-  width: 100%;
-  max-width: 610px; /* Giới hạn chiều rộng của search bar */
-  height: 49px;
+  align-items: center;
+  justify-content: center;
   gap: 12px;
+  width: 100%;
+  max-width: 610px;
+  margin: 0 auto;
 }
 
 .search-input {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
   flex: 1;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
+  max-width: 500px;
+  padding: 15px 20px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  color: #000;
+  font-size: 16px;
   outline: none;
-  transition: border-color 0.3s ease;
+  border-radius: 0;
+  text-align: left;
 }
 
-.search-input:focus {
-  border-color: #007bff;
+.search-input::placeholder {
+  color: #999;
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
 }
 
 .search-button {
-  padding: 12px 20px;
-  background: #000;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  font-family: "BT Beau Sans", sans-serif;
+  background: transparent;
+  border: 0.5px solid #333;
+  padding: 20px 36px;
   font-size: 14px;
-  transition: background-color 0.3s ease;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  border-radius: 100px;
+  margin: 0;
+  width: 119px;
+  height: 57px;
+  gap: 10px;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .search-button:hover {
-  background: #333;
+  background: #000000;
+  color: #ffffff;
 }
 
 .faq-sections {
@@ -152,7 +208,6 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 36px;
-  border-radius: 8px;
 }
 
 .placeholder-box {
@@ -168,8 +223,27 @@
 }
 
 .faq-item {
-  border-bottom: 1px solid #e0e0e0;
   padding: 36px 0;
+  position: relative;
+}
+
+/* .faq-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #e0e0e0;
+  transform-origin: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+} */
+.faq-item {
+  padding: 36px 0;
+  /* Bỏ position: relative; vì không còn ::after */
+
+  /* Thêm lại border-bottom trực tiếp */
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .faq-item:first-child {
@@ -181,6 +255,13 @@
 }
 
 .faq-question {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: 0%;
   width: 100%;
   padding: 0;
   background: none;
@@ -190,20 +271,39 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
-  color: #333;
+  color: #000000;
   transition: background-color 0.3s ease;
-  line-height: 1.6;
 }
 
 .faq-question:hover {
   background: transparent;
+  color: #bb234c;
 }
 
 .faq-icon {
+  position: relative;
+  width: 35px;
+  height: 35px;
   transition: transform 0.3s ease;
-  color: #666;
-  font-size: 12px;
+  transform-origin: center;
+  overflow: visible;
+}
+
+.faq-icon::before {
+  content: "";
+  position: absolute;
+  /* 1. Sử dụng hình vuông để tạo chevron đối xứng */
+  width: 12px;
+  height: 12px;
+  /* 2. Điều chỉnh vị trí để căn giữa và không bị cắt */
+  top: 8px;
+  left: 10px;
+  border: none;
+  border-bottom: 1.5px solid #000;
+  border-right: 1.5px solid #000;
+  border-radius: 1px; /* Có thể bỏ đi nếu không cần bo góc nhỏ này */
+  transform: rotate(45deg);
+  transition: all 0.3s ease; /* Thêm transition để màu sắc chuyển mượt hơn khi hover */
 }
 
 .faq-icon.expanded {
@@ -211,26 +311,24 @@
 }
 
 .faq-answer {
-  padding: 16px 0 0 0;
-  background: transparent;
-  animation: slideDown 0.3s ease-out;
+  padding: 0 0;
+  background-color: white;
+  max-height: 0;
   overflow: hidden;
+  transition: max-height 0.3s ease-out;
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    max-height: 200px;
-  }
-}
+/* Không cần class expanded nữa - sẽ dùng inline style */
 
 .faq-answer p {
-  color: #666;
-  line-height: 1.6;
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #797979;
   margin: 0;
-  font-size: 14px;
+  padding: 12px 0 0 0;
 }

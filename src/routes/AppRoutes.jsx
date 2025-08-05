@@ -11,6 +11,7 @@ const ProductsPage = lazy(() => import("@pages/ProductsPage"));
 const CollectionPage = lazy(() => import("@pages/CollectionPage"));
 const CollectionDetailPage = lazy(() => import("@pages/CollectionDetailPage"));
 const ServicesPage = lazy(() => import("@pages/ServicesPage"));
+const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
 const SupportPage = lazy(() => import("@pages/SupportPage"));
 
 const UVFinal = lazy(() =>
@@ -72,6 +73,8 @@ export default function AppRoutes() {
           />
 
           <Route path="/services" element={<ServicesPage />} />
+          
+          <Route path="/services/detail" element={<ServicesDetailPage />} />
 
           <Route path="/support" element={<SupportPage />} />
 

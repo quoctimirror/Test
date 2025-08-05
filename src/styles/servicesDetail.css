@@ -1,0 +1,459 @@
+/* Services Detail Page Layout */
+.services-detail-hero-section {
+  width: 100%;
+  height: 600px;
+  background-image: url("/public/services/service_detail_img.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: grayscale(100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: white;
+}
+
+.services-detail-hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #00000057;
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #FFFFFF80;
+}
+
+.hero-content h1 {
+  font-family: "Saol Display", serif;
+  font-weight: 400;
+  font-size: 60px;
+  line-height: 90%;
+  letter-spacing: 0%;
+  margin: 0;
+  color: #FFFFFF80;
+}
+
+/* Services Detail Tabs */
+.services-detail-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 30px 60px 30px;
+}
+
+.services-detail-tabs {
+  display: flex;
+  margin-top: 30px;
+  margin-bottom: 120px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 60px;
+  background: #fff;
+  width: 922px;
+  height: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  padding: 0;
+  position: relative;
+  z-index: 9999;
+}
+
+.services-detail-tab {
+  background: none;
+  border: none;
+  padding: 10px 5px;
+  cursor: pointer;
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #999;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  line-height: 120%;
+  letter-spacing: 0%;
+  position: relative;
+  z-index: 10000;
+  display: inline-block;
+}
+
+.services-detail-tab::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s ease-out;
+}
+
+.services-detail-tab:hover {
+  color: #000;
+}
+
+.services-detail-tab:hover::after {
+  transform: scaleX(1);
+  transform-origin: right;
+}
+
+.services-detail-tab.active {
+  color: #000;
+  font-weight: 500;
+}
+
+.services-detail-tab.active::after {
+  transform: scaleX(1);
+}
+
+/* Services Detail Content */
+.services-detail-content {
+  width: 100%;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Product Care & Repair Styles */
+.product-care-repair {
+  max-width: 922px;
+  margin: 0 auto;
+}
+
+.trade-in-upgrade {
+  max-width: 922px;
+  margin: 0 auto;
+}
+
+.intro-section {
+  margin-bottom: 60px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.intro-section h2 {
+  font-family: "Saol Display", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 90%;
+  letter-spacing: 0%;
+  color: #000000;
+  margin-bottom: 24px;
+}
+
+.intro-section p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #000000;
+  margin: 0 0 24px 0;
+  text-align: left;
+}
+
+.intro-section p.availability-note {
+  margin: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.service-section {
+  margin-bottom: 60px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.service-section:last-of-type,
+.service-section.last-section {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.service-section h2 {
+  font-family: "Saol Display", serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 120%;
+  color: #000000;
+  margin-bottom: 24px;
+}
+
+.service-section > p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  color: #000000;
+  margin-bottom: 24px;
+}
+
+.service-item {
+  margin-bottom: 32px;
+}
+
+/* Indent nested service items */
+.service-item .service-item {
+  padding-left: 20px;
+}
+
+/* Indent repair services list items */
+.service-item ul {
+  padding-left: 40px;
+}
+
+.service-item h4 {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 120%;
+  color: #000000;
+  margin-bottom: 16px;
+}
+
+.service-item ul {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  margin: 16px 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.service-item ul li {
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 0px;
+  color: #000000;
+}
+
+.service-item ul li::before {
+  content: "•";
+  position: absolute;
+  left: -13px;
+  top: 0;
+  color: #000000;
+}
+
+/* Style for ul directly in service-section (like Jewelry Care Tips) */
+.service-section > ul {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  margin: 16px 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.service-section > ul li {
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 0px;
+  color: #000000;
+}
+
+.service-section > ul li::before {
+  content: "•";
+  position: absolute;
+  left: -13px;
+  top: 0;
+  color: #000000;
+}
+
+.service-section > ul li p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  color: #000000;
+  margin: 0;
+}
+
+.service-item ul li p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  color: #000000;
+  margin: 0;
+}
+
+.note-section {
+  margin-top: 24px;
+}
+
+.note-text {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 140%;
+  color: #bc224c;
+  margin: 0;
+}
+
+.availability-note {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #bc224c;
+  margin: 0;
+  margin-bottom: 0;
+  text-align: left;
+}
+
+/* Trade-In & Upgrade Specific Styles */
+.how-it-works-section {
+  margin-bottom: 48px;
+}
+
+.how-it-works-section h2 {
+  font-family: "Saol Display", serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 120%;
+  color: #000000;
+  margin-bottom: 24px;
+}
+
+.process-item {
+  margin-bottom: 24px;
+}
+
+.process-item h4 {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 120%;
+  color: #000000;
+  margin-bottom: 16px;
+}
+
+.process-item ul {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  margin: 16px 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.process-item ul li {
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 0px;
+  color: #000000;
+}
+
+.process-item ul li::before {
+  content: "•";
+  position: absolute;
+  left: -13px;
+  top: 0;
+  color: #000000;
+}
+
+.process-item ul li p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  color: #000000;
+  margin: 0;
+}
+
+/* CTA Section */
+.cta-section {
+  text-align: center;
+}
+
+.services-cta {
+  font-family: "BT Beau Sans", sans-serif;
+  background: transparent;
+  border: 0.5px solid #333;
+  padding: 20px 36px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  border-radius: 100px;
+  margin: 0;
+  min-width: 180px;
+  height: 57px;
+  opacity: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.services-cta:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .services-detail-wrapper {
+    padding: 40px 20px;
+  }
+
+  .services-detail-tabs {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .hero-content h1 {
+    font-size: 40px;
+  }
+
+  .product-care-repair,
+  .trade-in-upgrade {
+    max-width: 100%;
+  }
+
+  .service-section h2,
+  .how-it-works-section h2 {
+    font-size: 24px;
+  }
+}
