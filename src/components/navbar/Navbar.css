@@ -12,14 +12,21 @@
   pointer-events: auto;
 }
 
-.menu-wrapper {
+.menu-container {
   position: relative;
+  display: inline-block;
+  width: fit-content;
+}
+
+.menu-container::after,
+.menu-container::before {
+  display: none !important;
 }
 
 .menu-button {
   position: relative;
   background: unset;
-  color: white;
+  color: rgba(255, 255, 255, 0.5);
   border: none;
   padding: 0;
   cursor: pointer;
@@ -39,7 +46,7 @@
 }
 
 .menu-icon {
-  color: white;
+  color: rgba(255, 255, 255, 0.5);
   font-size: 20px;
   transition: all 0.3s ease;
   position: absolute;
@@ -61,19 +68,19 @@
   transition: all 0.3s ease;
 }
 
-.menu-wrapper:hover .menu-icon {
+.menu-container:hover .menu-icon {
   opacity: 0;
   transform: rotate(90deg);
 }
 
-.menu-wrapper:hover .menu-icon-close {
+.menu-container:hover .menu-icon-close {
   opacity: 1;
   transform: rotate(0deg);
   color: black;
 }
 
 .menu-text {
-  color: white;
+  color: rgba(255, 255, 255, 0.5);
   font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
@@ -83,7 +90,15 @@
   text-align: center;
 }
 
-.menu-wrapper:hover .menu-text {
+.menu-text::after {
+  display: none !important;
+}
+
+.menu-button::after {
+  display: none !important;
+}
+
+.menu-container:hover .menu-text {
   color: white;
 }
 
@@ -101,7 +116,7 @@
   padding: 0;
   font-size: 14px;
   font-weight: 500;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: capitalize;
@@ -158,25 +173,35 @@
 
 .menu-popup {
   position: absolute;
-  top: 30px;
-  left: 0;
+  top: 10px;
+  left: -20px;
   background: transparent;
-  padding: 0;
+  padding: 26px 20px 20px 20px;
   box-sizing: border-box;
   transform: scaleY(0);
   transform-origin: top;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
   z-index: 1;
   opacity: 0;
+  pointer-events: none;
+  display: none;
 }
 
-.menu-wrapper:hover .menu-popup {
+.menu-popup.active {
+  display: block;
   transform: scaleY(1);
   opacity: 1;
+  pointer-events: auto;
 }
 
-.menu-wrapper:hover .menu-button {
+.menu-container:hover .menu-button {
   background: none;
+}
+
+.menu-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
 }
 
 .menu-list {
@@ -188,18 +213,38 @@
   gap: 15px;
 }
 
-.menu-list li {
+.menu-popup .menu-list li {
   font-family: "BT Beau Sans", sans-serif;
   font-size: 14px;
   font-weight: 400;
-  color: #999999;
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   transition: color 0.3s ease;
   line-height: 1.2;
+  position: relative;
+  white-space: nowrap;
 }
 
-.menu-list li:hover {
-  color: #333333;
+.menu-popup.active .menu-list li::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
+}
+
+.menu-popup .menu-list li:hover {
+  color: white;
+}
+
+.menu-popup.active .menu-list li:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .menu-divider {
@@ -227,14 +272,34 @@
   font-family: "BT Beau Sans", sans-serif;
   font-size: 14px;
   font-weight: 400;
-  color: white;
+  color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
   transition: color 0.3s ease;
   cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.account-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s ease-out;
 }
 
 .account-link:hover {
-  color: #cccccc;
+  color: white;
+}
+
+.account-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: right;
 }
 
 /* Re-enable mouse events for interactive areas */
