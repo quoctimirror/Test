@@ -1,35 +1,87 @@
 /* Sizing Guide Specific Styles */
 
-.sizing-guide .ring-size-section {
-  /* Specific styles for ring size section */
+/* Typography consistency */
+.sizing-guide p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin: 0 0 16px 0;
+  color: #000000;
 }
 
-.sizing-guide .step-by-step-guide {
-  /* Styles for step-by-step guide container */
+.sizing-guide h4 {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin-bottom: 16px;
+  color: #000000;
 }
 
-.sizing-guide .step {
-  /* Common styles for all steps */
+.sizing-guide h5 {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin-bottom: 8px;
+  color: #000000;
 }
 
-.sizing-guide .wrap-step {
-  /* Specific styles for wrap step */
+/* List styling consistency */
+.sizing-guide ul {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin: 16px 0;
+  padding-left: 20px;
+  list-style: none;
 }
 
-.sizing-guide .mark-step {
-  /* Specific styles for mark step */
+.sizing-guide ul li {
+  margin-bottom: 12px;
+  position: relative;
+  padding-left: 0px;
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #000000;
 }
 
-.sizing-guide .measure-step {
-  /* Specific styles for measure step */
+.sizing-guide ul li::before {
+  content: "•";
+  position: absolute;
+  left: -13px;
+  top: 0;
+  color: #000000;
 }
 
-.sizing-guide .find-size-step {
-  /* Specific styles for find size step */
-}
-
-.sizing-guide .tip-section {
-  /* Styles for tip section */
+.sizing-guide .tip-text {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #BC224C;
+  margin: 0;
 }
 
 .sizing-guide .size-chart {
@@ -44,13 +96,5 @@
   max-height: 852px;
   border: 1px solid #e1e1e1;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.sizing-guide .necklace-section {
-  /* Specific styles for necklace section */
-}
-
-.sizing-guide .bracelet-section {
-  /* Specific styles for bracelet section */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

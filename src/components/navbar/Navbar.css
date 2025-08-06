@@ -1,40 +1,103 @@
-/* Navbar */
-.navbar {
+/* Logo container riêng cho blend mode */
+.logo-fixed-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 101;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.logo-fixed-container .navbar-logo-svg {
+  width: 151.98065185546875px;
+  height: 29.999998092651367px;
+  display: block;
+}
+
+.logo-fixed-container .navbar-logo-svg path {
+  fill: white;
+}
+
+/* Menu container với blend mode */
+.menu-fixed-container {
   position: fixed;
   top: 20px;
   left: 30px;
-  right: 30px;
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1000;
+  z-index: 101;
+  mix-blend-mode: difference;
   pointer-events: auto;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
 }
 
-.menu-wrapper {
+.menu-fixed-container:hover {
+  opacity: 1;
+}
+
+/* Account link container với blend mode */
+.account-fixed-container {
+  position: fixed;
+  top: 20px;
+  right: calc(
+    30px + 221px + 48px
+  ); /* 30px (margin) + 221px (button width) + 48px (gap) */
+  z-index: 101;
+  mix-blend-mode: difference;
+  pointer-events: auto;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.account-fixed-container:hover {
+  opacity: 1;
+}
+
+/* Immersive button container KHÔNG có blend mode cho background */
+.immersive-fixed-container {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  z-index: 101;
+  pointer-events: auto;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  /* opacity: 0.75; */
+  transition: opacity 0.3s ease;
+}
+
+/* .immersive-fixed-container:hover {
+  opacity: 1;
+} */
+
+.menu-container {
   position: relative;
+  display: inline-block;
+  width: fit-content;
+}
+
+.menu-container::after,
+.menu-container::before {
+  display: none !important;
 }
 
 .menu-button {
   position: relative;
   background: unset;
-  color: white;
-  border: 1px solid white;
-  border-radius: 30px;
-  padding: 11px 20px;
+  color: rgba(255, 255, 255, 0.5);
+  border: none;
+  padding: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 12px;
   z-index: 2;
   transition: all 0.3s;
-  font-size: clamp(12px, 2vw, 14px);
-  width: 124px;
-  height: 45px;
-  box-sizing: border-box;
-  margin-left: 30px;
+  margin-left: 0;
 }
 
 .icon-container {
@@ -45,7 +108,7 @@
 }
 
 .menu-icon {
-  color: white;
+  color: rgba(255, 255, 255, 0.5);
   font-size: 20px;
   transition: all 0.3s ease;
   position: absolute;
@@ -67,12 +130,12 @@
   transition: all 0.3s ease;
 }
 
-.menu-wrapper:hover .menu-icon {
+.menu-container:hover .menu-icon {
   opacity: 0;
   transform: rotate(90deg);
 }
 
-.menu-wrapper:hover .menu-icon-close {
+.menu-container:hover .menu-icon-close {
   opacity: 1;
   transform: rotate(0deg);
   color: black;
@@ -85,95 +148,252 @@
   font-style: normal;
   font-size: 16px;
   line-height: 110%;
-  letter-spacing: 0%;
+  letter-spacing: 1px;
   text-align: center;
 }
 
-.menu-wrapper:hover .menu-text {
-  color: black;
+.menu-text::after {
+  display: none !important;
 }
 
-.contact-link {
-  background: transparent;
+.menu-button::after {
+  display: none !important;
+}
+
+.menu-container:hover .menu-text {
   color: white;
-  padding: 8px 16px;
+}
+
+.immersive-button {
   font-family: "BT Beau Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 110%;
-  letter-spacing: 0%;
-  text-align: center;
-  width: clamp(70px, 8vw, 84px);
-  height: clamp(10px, 1.2vw, 12px);
-  opacity: 1;
-  text-decoration: none;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 100px;
+  border: none;
+  /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05); */
+  font-size: 14px;
+  font-weight: 500;
+  color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  width: 221px;
+  height: 57px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 30px;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+  margin-right: 0;
+  /* CRITICAL: Tạo isolation để text không bị ảnh hưởng bởi backdrop-filter */
+  isolation: isolate;
+}
+
+/* Container riêng cho text với blend mode */
+.immersive-text-container {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  width: 221px;
+  height: 57px;
+  z-index: 103; /* Cao nhất để ở trên cùng */
+  mix-blend-mode: difference;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+/* Border hover - phải hover vào button background bên dưới */
+.immersive-fixed-container:hover ~ .immersive-border-container {
+  opacity: 1;
+}
+
+/* Text hover - phải hover vào button background bên dưới */
+.immersive-fixed-container:hover ~ .immersive-text-container {
+  opacity: 1;
+}
+
+/* Text element */
+.immersive-text {
+  color: white;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* Container riêng cho border với blend mode */
+.immersive-border-container {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  width: 221px;
+  height: 57px;
+  z-index: 102; /* Cao hơn button nhưng thấp hơn text */
+  mix-blend-mode: difference;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+/* Border element */
+.immersive-border {
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+  border: 0.5px solid white;
+  background: transparent;
+}
+
+.immersive-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  /* Box-shadow removed - chỉ tăng background opacity khi hover */
 }
 
 .menu-popup {
   position: absolute;
-  top: 0;
-  left: 30px;
-  background: white;
-  border-radius: 30px;
-  width: 456px;
-  display: flex;
-  flex-direction: column;
-  gap: 80px;
-  padding: 70px 40px 70px 52px;
+  top: 10px;
+  left: -20px;
+  background: transparent;
+  padding: 26px 20px 20px 20px;
   box-sizing: border-box;
-  transform: scale(0);
-  transform-origin: top left;
-  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s ease, opacity 0.3s ease;
   z-index: 1;
   opacity: 0;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  display: none;
 }
 
-.menu-wrapper:hover .menu-popup {
-  transform: scale(1);
+.menu-popup.active {
+  display: block;
+  transform: scaleY(1);
   opacity: 1;
+  pointer-events: auto;
 }
 
-.menu-wrapper:hover .menu-button {
-  background: white;
-  color: black;
+.menu-container:hover .menu-button {
+  background: none;
 }
 
-.menu-popup .menu-section-2 li {
-  font-size: 14px;
+.menu-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
 }
 
-.menu-popup ul {
+.menu-list {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 15px;
 }
 
-.menu-popup li {
+.menu-popup .menu-list li {
   font-family: "BT Beau Sans", sans-serif;
   font-size: 16px;
   font-weight: 400;
-  color: #e0e0e0;
+  color: white;
   cursor: pointer;
-  transition: color 0.2s ease;
-  padding: 2px 0;
+  transition: color 0.3s ease, opacity 0.3s ease;
+  line-height: 1.2;
+  position: relative;
+  white-space: nowrap;
+  opacity: 0.5;
+  display: inline-block;
+  width: fit-content;
 }
 
-.menu-popup li:hover {
-  color: black;
-}
-
-.navbar-logo {
-  width: 126.65px;
+.menu-popup .menu-list li:hover {
   opacity: 1;
+}
+
+.menu-popup.active .menu-list li::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
+}
+
+.menu-popup .menu-list li:hover {
+  color: white;
+}
+
+.menu-popup.active .menu-list li:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 10px 0;
+  cursor: default !important;
+  width: 50px;
+}
+
+/* Xóa các class cũ không còn sử dụng */
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  justify-self: end;
+}
+
+.account-link {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+
+.account-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
+}
+
+.account-link:hover {
+  color: white;
+}
+
+.account-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* Re-enable mouse events for interactive areas */

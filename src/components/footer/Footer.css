@@ -200,69 +200,71 @@
   color: #ffffff;
 }
 
-/* Đây là lớp wrapper mới, đóng vai trò là ĐƯỜNG VIỀN */
-.signup-button-wrapper {
-  /* Màu của đường viền */
-  background: rgba(255, 255, 255, 0.7);
-  /* Độ dày của đường viền */
-  padding: 1px;
-  margin-left: 0px;
-  min-width: 50px;
-  transition: background 0.3s ease;
-
-  /* Thuộc tính quan trọng nhất: Tạo hình dạng góc vát */
-  /* Bạn có thể thay đổi giá trị 8px để góc vát to hoặc nhỏ hơn */
-  clip-path: polygon(
-    8px 0,
-    calc(100% - 8px) 0,
-    100% 8px,
-    100% calc(100% - 8px),
-    calc(100% - 8px) 100%,
-    8px 100%,
-    0 calc(100% - 8px),
-    0 8px
-  );
-}
-
-/* Button thật sự bên trong, đóng vai trò là NỀN */
 .signup-button {
   font-family: "BT Beau Sans", sans-serif;
-  padding: 12px 25px;
-
-  /* Nền trong suốt để thấy màu gradient của footer */
-  background: #76152f;
-  /* Bỏ border mặc định vì đã có wrapper làm viền */
-  border: none;
-  border-radius: 0; /* Bỏ bo tròn góc */
-
-  color: white;
-  font-size: 16px;
-  font-weight: 400;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 100px;
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
+  text-transform: capitalize;
+  width: 123px;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+}
 
-  /* Cần clip-path giống hệt wrapper để button cũng có hình dạng đó */
-  clip-path: polygon(
-    8px 0,
-    calc(100% - 8px) 0,
-    100% 8px,
-    100% calc(100% - 8px),
-    calc(100% - 8px) 100%,
-    8px 100%,
-    0 calc(100% - 8px),
-    0 8px
+.signup-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
   );
 }
 
-/* Hiệu ứng khi hover */
-.signup-button-wrapper:hover {
-  background: rgba(255, 255, 255, 1); /* Viền sáng hơn */
+.signup-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
 }
 
 .signup-button:hover {
-  /* Thêm một lớp nền mờ khi hover để nổi bật hơn */
-  background: #bc224c;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.8);
 }
 
 /* ========================================

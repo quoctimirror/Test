@@ -4,6 +4,7 @@ import ReturnExchange from "./ReturnExchange";
 import SizingGuide from "./SizingGuide";
 import WarrantyInfo from "./WarrantyInfo";
 import FAQs from "./FAQs";
+import Section6 from "../services/section6/Section6";
 
 const Support = () => {
   const [activeTab, setActiveTab] = useState("return-exchange");
@@ -58,6 +59,8 @@ const Support = () => {
           </div>
         </div>
       </div>
+      
+      {activeTab !== "faqs" && <Section6 />}
     </>
   );
 };

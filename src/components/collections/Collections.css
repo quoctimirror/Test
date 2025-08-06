@@ -1,10 +1,36 @@
 /*
 ============================================================
-    GLOBAL SCROLL BEHAVIOR
+    GLOBAL SCROLL BEHAVIOR & OVERFLOW FIX
 ============================================================
 */
-html {
+html, body {
   scroll-behavior: smooth;
+  overflow-x: hidden; /* Ngăn scroll ngang */
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Container chính */
+.collection-page {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+/* Fix cho tất cả elements */
+.collection-page * {
+  box-sizing: border-box;
+}
+
+/* Đảm bảo các sections không vượt quá viewport */
+.collection-page .section-1,
+.collection-page .section-2, 
+.collection-page .section-3 {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /*
@@ -431,10 +457,11 @@ html {
 /* Full width style for collection content panel */
 .collection-content-panel.full-width {
   width: 100%;
-  max-width: 100%;
+  max-width: 100vw; /* Đảm bảo không vượt quá viewport */
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-x: hidden; /* Ngăn overflow ngang */
   padding: 2rem;
   box-sizing: border-box;
   background: transparent;

@@ -52,7 +52,23 @@ const FAQs = () => {
   }, []);
 
   const toggleFAQ = (id) => {
-    setExpandedFAQ(expandedFAQ === id ? null : id);
+    const panel = document.querySelector(`[data-faq-id="${id}"]`);
+    
+    if (panel) {
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+        setExpandedFAQ(null);
+      } else {
+        // Đóng tất cả panels khác trước
+        document.querySelectorAll('.faq-answer').forEach(p => {
+          p.style.maxHeight = null;
+        });
+        
+        // Mở panel hiện tại
+        panel.style.maxHeight = panel.scrollHeight + "px";
+        setExpandedFAQ(id);
+      }
+    }
   };
 
   return (
@@ -113,15 +129,14 @@ const FAQs = () => {
                                 ? "expanded"
                                 : ""
                             }`}
-                          >
-                            ▼
-                          </span>
+                          ></span>
                         </button>
-                        {expandedFAQ === `${section.id}-${index}` && (
-                          <div className="faq-answer">
-                            <p>Answer for: {question}</p>
-                          </div>
-                        )}
+                        <div
+                          className="faq-answer"
+                          data-faq-id={`${section.id}-${index}`}
+                        >
+                          <p>Answer for: {question}</p>
+                        </div>
                       </div>
                     ))}
                   </div>

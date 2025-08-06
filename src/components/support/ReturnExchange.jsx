@@ -19,16 +19,23 @@ const ReturnExchange = () => {
         <h3>1. International Orders</h3>
         <ul className="international-orders-list">
           <li>
-            <strong>All international sales are final.</strong>
+            <p>
+              <strong>All international sales are final.</strong>
+            </p>
           </li>
           <li>
-            <strong>No exchanges or returns</strong> are accepted for
-            international shipments.
+            <p>
+              <strong>No exchanges or returns</strong> are accepted for
+              international shipments.
+            </p>
           </li>
           <li>
-            We strongly recommend booking a virtual consultation prior to
-            purchase to ensure accurate sizing, style selection, and
-            customization preferences.
+            <p>
+              We strongly recommend booking{" "}
+              <strong>a virtual consultation</strong> prior to purchase to
+              ensure accurate sizing, style selection, and customization
+              preferences.
+            </p>
           </li>
         </ul>
       </section>
@@ -37,52 +44,82 @@ const ReturnExchange = () => {
         <h3>2. Domestic Orders (Vietnam)</h3>
 
         <div className="subsection showroom-purchases">
-          <h4>1. Showroom & In-Person Purchases</h4>
-          <ul>
+          <h4>
+            <strong>1. Showroom & In-Person Purchases</strong>
+          </h4>
+          <ul className="showroom-purchases-list">
             <li>
-              Exchanges may be{" "}
-              <strong>permitted within 3 days of purchase</strong>.
+              <p>
+                Exchanges may be{" "}
+                <strong>permitted within 3 days of purchase</strong>.
+              </p>
             </li>
             <li>
-              Items must be returned <strong>in person</strong> to the original
-              showroom.
+              <p>
+                Items must be returned <strong>in person</strong> to the
+                original showroom.
+              </p>
             </li>
-            <li>Products must be:</li>
+            <li>
+              <p>Products must be:</p>
+            </li>
             <ul>
               <li>
-                <strong>Unworn and in original</strong>, pristine condition
+                <p>
+                  <strong>Unworn and in original</strong>, pristine condition
+                </p>
               </li>
               <li>
-                Accompanied by all original packaging, certificates, and
-                documentation
+                <p>
+                  Accompanied by all original packaging, certificates, and
+                  documentation
+                </p>
               </li>
             </ul>
-            <li>No refunds or store credit will be issued.</li>
+            <li>
+              <p>No refunds or store credit will be issued.</p>
+            </li>
           </ul>
         </div>
 
         <div className="subsection nationwide-shipping">
-          <h4>2. Nationwide Shipping (Vietnam)</h4>
-          <ul>
+          <h4>
+            <strong>2. Nationwide Shipping (Vietnam</strong>)
+          </h4>
+          <ul className="nationwide-shipping-list">
             <li>
-              Exchange requests <strong>may be requested within 5 days</strong>{" "}
-              <strong>of confirmed delivery</strong>.
+              <p>
+                Exchange requests{" "}
+                <strong>may be requested within 5 days</strong> of confirmed
+                delivery.
+              </p>
             </li>
             <li>
-              Returned items will undergo a <strong>quality review</strong>{" "}
-              before exchange approval.
+              <p>
+                Returned items will undergo a quality review before exchange
+                approval.
+              </p>
             </li>
-            <li>Items must be:</li>
+            <li>
+              <p>Items must be:</p>
+            </li>
             <ul>
-              <li>Unused and undamaged</li>
               <li>
-                Returned with original packaging and all accompanying documents
+                <p>Unused and undamaged</p>
+              </li>
+              <li>
+                <p>
+                  Returned with original packaging and all accompanying
+                  documents
+                </p>
               </li>
             </ul>
             <li>
-              Customers are responsible for{" "}
-              <strong>shipping and handling costs</strong> associated with the
-              exchange.
+              <p>
+                Customers are responsible for{" "}
+                <strong>shipping and handling costs</strong> associated with the
+                exchange.
+              </p>
             </li>
           </ul>
         </div>
@@ -90,12 +127,22 @@ const ReturnExchange = () => {
 
       <section className="section non-exchangeable-items-section">
         <h3>3. Non-Exchangeable Items</h3>
-        <ul>
-          <li>Custom or engraved items</li>
-          <li>Earrings (for hygiene reasons)</li>
-          <li>Promotional or discounted items</li>
-          <li>Items without original certificates or packaging</li>
-          <li>Damaged, altered, or worn items</li>
+        <ul className="non-exchangeable-items-list">
+          <li>
+            <p>Custom or engraved items</p>
+          </li>
+          <li>
+            <p>Earrings (for hygiene reasons)</p>
+          </li>
+          <li>
+            <p>Promotional or discounted items</p>
+          </li>
+          <li>
+            <p>Items without original certificates or packaging</p>
+          </li>
+          <li>
+            <p>Damaged, altered, or worn items</p>
+          </li>
         </ul>
       </section>
 
