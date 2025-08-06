@@ -1,287 +1,82 @@
 import "./Navbar.css";
-import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logoRef = useRef(null);
-  const lastColorRef = useRef(null); // Cache màu cuối để tránh flicker
-
-  useEffect(() => {
-    const adjustLogoColor = () => {
-      if (!logoRef.current) return;
-
-      // 1. Tự động phát hiện màu nền thực tế phía sau
-      const logoRect = logoRef.current.getBoundingClientRect();
-      const centerX = logoRect.left + logoRect.width / 2;
-      const centerY = logoRect.top + logoRect.height / 2;
-
-      // Tạm thời ẩn navbar để "nhìn thấy" phía sau
-      const navbar = logoRef.current.closest('.navbar');
-      navbar.style.visibility = 'hidden';
-
-      try {
-        // Lấy nhiều điểm xung quanh logo (5 điểm)
-        const points = [
-          { x: centerX, y: centerY },           // Trung tâm
-          { x: centerX - 25, y: centerY },      // Trái
-          { x: centerX + 25, y: centerY },      // Phải  
-          { x: centerX, y: centerY - 12 },      // Trên
-          { x: centerX, y: centerY + 12 }       // Dưới
-        ];
-
-        const backgroundColors = [];
-
-        // Tìm background color hoặc image của các elements
-        points.forEach(point => {
-          const element = document.elementFromPoint(point.x, point.y);
-          if (element) {
-            let currentElement = element;
-            while (currentElement && currentElement !== document.documentElement) {
-              const styles = window.getComputedStyle(currentElement);
-              const bgColor = styles.backgroundColor;
-              const bgImage = styles.backgroundImage;
-
-              // Ưu tiên detect background image trước
-              if (bgImage && bgImage !== 'none') {
-                // Phân tích URL để estimate tone màu đồng bộ
-                const imageUrl = bgImage.match(/url\(["']?([^"')]+)["']?\)/)?.[1];
-                console.log(`🖼️ Detected background image: ${imageUrl}`);
-                
-                if (imageUrl) {
-                  if (imageUrl.includes('orient') || imageUrl.includes('dark') || imageUrl.includes('night') || imageUrl.includes('black')) {
-                    // GIF orient hoặc các ảnh tối
-                    backgroundColors.push('rgb(40, 40, 40)'); // Tối
-                    console.log(`🌑 Dark image detected: ${imageUrl}`);
-                  } else if (imageUrl.includes('light') || imageUrl.includes('bright') || imageUrl.includes('white') || imageUrl.includes('day')) {
-                    backgroundColors.push('rgb(220, 220, 220)'); // Sáng
-                    console.log(`☀️ Light image detected: ${imageUrl}`);
-                  } else {
-                    // Default cho unknown images - giả sử trung bình
-                    backgroundColors.push('rgb(80, 80, 80)'); // Hơi tối
-                    console.log(`🔍 Unknown image detected: ${imageUrl} - assuming medium-dark`);
-                  }
-                } else {
-                  // Nếu không parse được URL, giả sử tối
-                  backgroundColors.push('rgb(60, 60, 60)');
-                  console.log(`❓ Could not parse image URL, assuming dark`);
-                }
-                break;
-              }
-
-              if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
-                backgroundColors.push(bgColor);
-                break;
-              }
-
-              currentElement = currentElement.parentElement;
-            }
-          }
-        });
-
-        // Khôi phục navbar
-        navbar.style.visibility = 'visible';
-
-        // 2. Tính toán màu trung bình từ nhiều điểm để có kết quả chính xác
-        let avgR = 0, avgG = 0, avgB = 0;
-        let validColors = 0;
-
-        backgroundColors.forEach(color => {
-          const rgb = color.match(/\d+/g);
-          if (rgb && rgb.length >= 3) {
-            const [r, g, b] = rgb.map(Number);
-            avgR += r;
-            avgG += g;
-            avgB += b;
-            validColors++;
-          }
-        });
-
-        if (validColors > 0) {
-          avgR = Math.round(avgR / validColors);
-          avgG = Math.round(avgG / validColors);
-          avgB = Math.round(avgB / validColors);
-        } else {
-          // Default: giả sử nền trắng
-          avgR = avgG = avgB = 255;
-        }
-
-        // Tính luminance để quyết định màu logo
-        const luminance = 0.2126 * avgR + 0.7152 * avgG + 0.0722 * avgB;
-
-        console.log(`🎨 Detected background RGB: (${avgR}, ${avgG}, ${avgB})`);
-        console.log(`💡 Background luminance: ${luminance.toFixed(1)}`);
-
-        // 4. Calculate optimal contrast color using advanced color theory
-        const calculateContrastColor = (bgR, bgG, bgB) => {
-          // Convert RGB to HSL for better color manipulation
-          const r = bgR / 255;
-          const g = bgG / 255;
-          const b = bgB / 255;
-          
-          const max = Math.max(r, g, b);
-          const min = Math.min(r, g, b);
-          let h, s, l;
-          
-          l = (max + min) / 2;
-          
-          if (max === min) {
-            h = s = 0; // achromatic
-          } else {
-            const d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-            
-            switch (max) {
-              case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-              case g: h = (b - r) / d + 2; break;
-              case b: h = (r - g) / d + 4; break;
-            }
-            h /= 6;
-          }
-          
-          // Calculate complementary color with high contrast
-          let contrastH = (h + 0.5) % 1; // Complementary hue
-          let contrastS = Math.min(1, s + 0.3); // Increase saturation
-          let contrastL = l > 0.5 ? Math.max(0.1, l - 0.7) : Math.min(0.9, l + 0.7); // High contrast lightness
-          
-          // Convert back to RGB
-          const hue2rgb = (p, q, t) => {
-            if (t < 0) t += 1;
-            if (t > 1) t -= 1;
-            if (t < 1/6) return p + (q - p) * 6 * t;
-            if (t < 1/2) return q;
-            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-            return p;
-          };
-          
-          let contrastR, contrastG, contrastB;
-          
-          if (contrastS === 0) {
-            contrastR = contrastG = contrastB = contrastL;
-          } else {
-            const q = contrastL < 0.5 ? 
-              contrastL * (1 + contrastS) : 
-              contrastL + contrastS - contrastL * contrastS;
-            const p = 2 * contrastL - q;
-            
-            contrastR = hue2rgb(p, q, contrastH + 1/3);
-            contrastG = hue2rgb(p, q, contrastH);
-            contrastB = hue2rgb(p, q, contrastH - 1/3);
-          }
-          
-          return {
-            r: Math.round(contrastR * 255),
-            g: Math.round(contrastG * 255),
-            b: Math.round(contrastB * 255)
-          };
-        };
-        
-        console.log(`🎨 Detected background RGB: (${avgR}, ${avgG}, ${avgB})`);
-        console.log(`💡 Background luminance: ${luminance.toFixed(1)}`);
-
-        // 4. Tự động đổi màu với caching để tránh flicker
-        const newFilter = luminance > 128 ? 'invert(1)' : 'none';
-        
-        // Chỉ apply filter nếu khác với lần trước
-        if (lastColorRef.current !== newFilter) {
-          logoRef.current.style.filter = newFilter;
-          lastColorRef.current = newFilter;
-          
-          if (luminance > 128) {
-            console.log('☀️ Light background detected -> Black logo');
-          } else {
-            console.log('🌙 Dark background detected -> White logo');
-          }
-        }
-
-      } catch (error) {
-        // Try-catch để tránh lỗi
-        console.error('❌ Error detecting background:', error);
-        navbar.style.visibility = 'visible';
-        logoRef.current.style.filter = 'none';
-      }
-
-    };
-
-    // Chạy khi load
-    adjustLogoColor();
-
-    // 3. Real-time monitoring với requestAnimationFrame
-    let isMonitoring = true;
-    
-    const realTimeColorAdjustment = () => {
-      if (isMonitoring) {
-        adjustLogoColor();
-        requestAnimationFrame(realTimeColorAdjustment);
-      }
-    };
-
-    // Bắt đầu monitoring real-time
-    requestAnimationFrame(realTimeColorAdjustment);
-
-    // Backup với scroll event (throttled)
-    let scrollTimer;
-    const handleScroll = () => {
-      if (scrollTimer) return;
-      scrollTimer = setTimeout(() => {
-        adjustLogoColor();
-        scrollTimer = null;
-      }, 16); // ~60fps
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', adjustLogoColor, { passive: true });
-
-    return () => {
-      isMonitoring = false;
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', adjustLogoColor);
-      clearTimeout(scrollTimer);
-    };
-  }, []);
 
   return (
-    <div className="navbar">
-      <div className="menu-container">
-        <div 
-          className="menu-button"
-          onMouseEnter={() => setIsMenuOpen(true)}
-          onMouseLeave={() => setIsMenuOpen(false)}
+    <>
+      {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
+      <div className="logo-fixed-container">
+        <svg
+          ref={logoRef}
+          viewBox="0 0 152 30"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="navbar-logo-svg"
         >
-          <span className="menu-text">Menu</span>
-        </div>
-        <div 
-          className={`menu-popup ${isMenuOpen ? 'active' : ''}`}
-          onMouseEnter={() => setIsMenuOpen(true)}
-          onMouseLeave={() => setIsMenuOpen(false)}
-        >
-          <div className="menu-groups">
-            <ul className="menu-list">
-              <li>Products</li>
-              <li>Service & Support</li>
-              <li>About Mirror</li>
-              <li>News</li>
-            </ul>
-            <ul className="menu-list">
-              <li>Location</li>
-              <li>Contact us</li>
-              <li>Account</li>
-            </ul>
+          <path d="M26.3415 0.423076L17.3087 24.0459L7.705 0.423076H0V0.987626H0.0788478C0.993482 1.04124 1.74727 1.17055 2.33705 1.3724C2.92998 1.57425 3.39992 1.93065 3.75 2.44158C4.10008 2.95251 4.27355 3.65268 4.27355 4.53893V25.3957C4.27355 26.7141 3.93608 27.6066 3.2643 28.0766C2.59251 28.5465 1.58326 28.8367 0.239697 28.9439V29.5084H9.5595V28.9439C8.18755 28.8367 7.16569 28.5465 6.4939 28.0766C5.82212 27.6066 5.48465 26.7109 5.48465 25.3957V3.91761L15.8106 29.4706H16.4571L26.3415 3.77884V25.3547C26.3415 26.2694 26.1932 26.9759 25.8968 27.4742C25.6003 27.9725 25.2155 28.3226 24.7456 28.5244C24.2757 28.7263 23.6638 28.8524 22.91 28.906V29.4706H33.1571V28.906C32.4033 28.8524 31.7914 28.7231 31.3215 28.5244C30.8516 28.3226 30.4731 27.9725 30.1924 27.4742C29.9117 26.9759 29.7698 26.2694 29.7698 25.3547V4.53893C29.7698 3.6243 29.9117 2.91782 30.1924 2.4195C30.4762 1.92118 30.8516 1.5711 31.3215 1.36925C31.7914 1.1674 32.4033 1.04124 33.1571 0.984472V0.419922H26.3383L26.3415 0.423076Z" fill="white"/>
+          <path d="M119.385 1.92073C117.363 0.640244 115.165 0 112.793 0C110.422 0 108.223 0.640244 106.202 1.92073C104.18 3.20122 102.568 4.96741 101.37 7.21615C100.172 9.46804 99.5723 11.9943 99.5723 14.7981C99.5723 17.602 100.172 20.2039 101.37 22.5221C102.568 24.8402 104.18 26.6663 106.202 28.0004C108.223 29.3345 110.419 30.0031 112.793 30.0031C115.168 30.0031 117.36 29.3345 119.385 28.0004C121.407 26.6663 123.025 24.8402 124.236 22.5221C125.45 20.2039 126.056 17.6304 126.056 14.7981C126.056 11.9659 125.45 9.50273 124.236 7.23822C123.022 4.97372 121.407 3.20122 119.385 1.92073ZM120.943 21.7935C120.202 23.9224 119.123 25.6287 117.71 26.9092C116.294 28.1896 114.657 28.8299 112.797 28.8299C110.936 28.8299 109.312 28.1896 107.924 26.9092C106.536 25.6287 105.464 23.9256 104.71 21.7935C103.956 19.6646 103.578 17.3465 103.578 14.8391C103.578 12.3318 103.947 10.042 104.691 7.96678C105.432 5.8915 106.505 4.23255 107.905 2.99306C109.305 1.75357 110.936 1.13225 112.797 1.13225C114.657 1.13225 116.294 1.75357 117.71 2.99306C119.127 4.23255 120.202 5.8915 120.943 7.96678C121.684 10.042 122.056 12.3192 122.056 14.7981C122.056 17.2771 121.684 19.6646 120.943 21.7935Z" fill="white"/>
+          <path d="M76.0095 28.9377C74.7259 28.9377 73.253 27.8654 71.7959 25.9163C67.0776 19.6022 65.343 16.0603 64.4094 15.3822C64.5135 15.3917 72.023 15.972 72.023 8.36163C72.023 2.58051 67.721 0.486313 63.8606 0.486313C61.5898 0.486313 50.0654 0.445312 50.0654 0.445312V1.00986H50.1033C50.8571 1.06348 51.4784 1.18964 51.9609 1.39464C52.4466 1.59649 52.8283 1.94342 53.1121 2.44174C53.396 2.94006 53.5379 3.64653 53.5379 4.56432V25.3959C53.5379 26.3105 53.396 27.017 53.1121 27.5153C52.8283 28.0136 52.4403 28.3637 51.942 28.5656C51.4437 28.7674 50.8192 28.8936 50.0654 28.9472V29.5149H60.5206V28.9472C59.7385 28.8936 59.1077 28.7674 58.622 28.5656C58.1394 28.3637 57.7547 28.0136 57.474 27.5153C57.1901 27.017 57.0482 26.3105 57.0482 25.3959V14.3982C59.8142 14.3982 61.4668 16.2937 61.9052 16.9529C63.9994 20.0942 70.2915 29.5149 70.2915 29.5149H76.5961V28.9062C76.41 28.9346 76.2145 28.9377 76.0095 28.9377ZM57.0482 13.8147V1.57441H61.7727C63.6998 1.57441 68.2919 2.00334 68.2919 8.39317C68.2919 14.783 64.8005 14.6537 63.7502 14.6095C62.2584 14.5496 58.9531 13.8147 57.0482 13.8147Z" fill="white"/>
+          <path d="M96.3613 25.9163C91.6431 19.6022 89.9084 16.0603 88.9748 15.3822C89.0789 15.3917 96.5884 15.972 96.5884 8.36163C96.5884 2.58051 92.2865 0.486313 88.4261 0.486313C86.1552 0.486313 74.6309 0.445312 74.6309 0.445312V1.00986H74.6687C75.4225 1.06348 76.0438 1.18964 76.5264 1.39464C77.0121 1.59649 77.3937 1.94342 77.6775 2.44174C77.9614 2.94006 78.1033 3.64653 78.1033 4.56432V25.3959C78.1033 26.3105 77.9614 27.017 77.6775 27.5153C77.3937 28.0136 77.0058 28.3637 76.5074 28.5656C76.0091 28.7674 75.3846 28.8936 74.6309 28.9472V29.5149H85.0861V28.9472C84.3039 28.8936 83.6731 28.7674 83.1874 28.5656C82.7049 28.3637 82.3201 28.0136 82.0394 27.5153C81.7555 27.017 81.6136 26.3105 81.6136 25.3959V14.3982C84.3796 14.3982 86.0323 16.2937 86.4706 16.9529C88.5648 20.0942 94.8569 29.5149 94.8569 29.5149H100.575V28.9377C99.2913 28.9377 97.8184 27.8654 96.3613 25.9163ZM88.3157 14.6095C86.8239 14.5496 83.5186 13.8147 81.6136 13.8147V1.57441H86.3382C88.2652 1.57441 92.8573 2.00334 92.8573 8.39317C92.8573 14.783 89.3691 14.6537 88.3157 14.6095Z" fill="white"/>
+          <path d="M147.767 25.9163C143.048 19.6022 141.314 16.0603 140.38 15.3822C140.484 15.3917 147.994 15.972 147.994 8.36163C147.994 2.58051 143.692 0.486313 139.831 0.486313C137.561 0.486313 126.036 0.445312 126.036 0.445312V1.00986H126.074C126.828 1.06348 127.449 1.18964 127.932 1.39464C128.417 1.59649 128.799 1.94342 129.083 2.44174C129.367 2.94006 129.509 3.64653 129.509 4.56432V25.3959C129.509 26.3105 129.367 27.017 129.083 27.5153C128.799 28.0136 128.411 28.3637 127.913 28.5656C127.414 28.7674 126.79 28.8936 126.036 28.9472V29.5149H136.491V28.9472C135.709 28.8936 135.078 28.7674 134.593 28.5656C134.11 28.3637 133.725 28.0136 133.445 27.5153C133.161 27.017 133.019 26.3105 133.019 25.3959V14.3982C135.785 14.3982 137.438 16.2937 137.876 16.9529C139.97 20.0942 146.262 29.5149 146.262 29.5149H151.98V28.9377C150.697 28.9377 149.224 27.8654 147.767 25.9163ZM139.721 14.6095C138.229 14.5496 134.924 13.8147 133.019 13.8147V1.57441H137.743C139.67 1.57441 144.263 2.00334 144.263 8.39317C144.263 14.783 140.774 14.6537 139.721 14.6095Z" fill="white"/>
+          <path d="M36.418 0.964941C37.2001 1.01856 37.8404 1.14787 38.3387 1.34972C38.837 1.55157 39.2281 1.90165 39.512 2.39997C39.7958 2.89829 39.9346 3.60792 39.9346 4.52255V25.3857C39.9346 26.3035 39.7927 27.0099 39.512 27.5083C39.2281 28.0066 38.837 28.3567 38.3387 28.5585C37.8404 28.7604 37.2001 28.8897 36.418 28.9433V29.5078H46.8101V28.9433C46.0279 28.8897 45.3877 28.7604 44.8894 28.5585C44.3911 28.3567 44 28.0066 43.7161 27.5083C43.4323 27.0099 43.2903 26.3035 43.2903 25.3857V4.52255C43.2903 3.60476 43.4323 2.89829 43.7161 2.39997C44 1.90165 44.3879 1.55157 44.8894 1.34972C45.3877 1.14787 46.0279 1.01856 46.8101 0.964941V0.400391H36.418V0.964941Z" fill="white"/>
+        </svg>
+      </div>
+
+      {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
+      <div className="menu-fixed-container">
+        <div className="menu-container">
+          <div 
+            className="menu-button"
+            onMouseEnter={() => setIsMenuOpen(true)}
+            onMouseLeave={() => setIsMenuOpen(false)}
+          >
+            <span className="menu-text">Menu</span>
+          </div>
+          <div 
+            className={`menu-popup ${isMenuOpen ? 'active' : ''}`}
+            onMouseEnter={() => setIsMenuOpen(true)}
+            onMouseLeave={() => setIsMenuOpen(false)}
+          >
+            <div className="menu-groups">
+              <ul className="menu-list">
+                <li>Products</li>
+                <li>Service & Support</li>
+                <li>About Mirror</li>
+                <li>News</li>
+              </ul>
+              <ul className="menu-list">
+                <li>Location</li>
+                <li>Contact us</li>
+                <li>Account</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-      <img 
-        ref={logoRef}
-        src={MirrorLogo} 
-        alt="Mirror Logo" 
-        className="navbar-logo"
-      />
-      <div className="navbar-right">
+
+      <div className="account-fixed-container">
         <a href="#account" className="account-link">
           Account
         </a>
-        <button className="immersive-button">Immersive Showroom</button>
       </div>
-    </div>
+
+      {/* IMMERSIVE BUTTON - chỉ glassmorphism */}
+      <div className="immersive-fixed-container">
+        <button className="immersive-button"></button>
+      </div>
+
+      {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
+      <div className="immersive-border-container">
+        <div className="immersive-border"></div>
+      </div>
+
+      {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
+      <div className="immersive-text-container">
+        <span className="immersive-text">Immersive Showroom</span>
+      </div>
+    </>
   );
 }

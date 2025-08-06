@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Bouncing Objects with Dynamic Background and Interactive SVG Logo
+    </title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000; /* Initial fallback background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: "Inter", sans-serif; /* Using Inter as a common sans-serif font */
+      }
+
+      canvas {
+        display: block; /* Ensures no extra space below canvas */
+      }
+
+      /* Custom cursor styles */
+      .cursor,
+      .cursor--big {
+        position: fixed;
+        pointer-events: none; /* Allows clicks to pass through */
+        border-radius: 50%;
+        mix-blend-mode: difference; /* Creates a contrasting color effect */
+        z-index: 9999;
+        transition: transform 0.2s ease-out, background 0.2s ease-out;
+      }
+
+      .cursor {
+        width: 12px;
+        height: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        transform: translate(-50%, -50%); /* Centers the cursor */
+      }
+
+      .cursor--big {
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        transform: translate(-50%, -50%) scale(1); /* Default scale */
+      }
+
+      /* Menu button (for existing cursor interaction) */
+      .menu-button {
+        position: fixed;
+        top: 24px;
+        left: 24px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        cursor: pointer; /* Shows native pointer cursor */
+        backdrop-filter: blur(4px);
+        transition: transform 0.2s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+
+    <!-- Custom cursor elements -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor--big" id="cursor-big"></div>
+    <div class="menu-button" id="menuBtn">🌸</div>
+
+    <script>
+      const canvas = document.getElementById("myCanvas");
+      const ctx = canvas.getContext("2d");
+
+      // Set canvas dimensions to full window size
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Get cursor elements
+      const cursor = document.getElementById("cursor");
+      const bigCursor = document.getElementById("cursor-big");
+      const menuBtn = document.getElementById("menuBtn");
+
+      // Flags to track if cursor is over interactive elements
+      let isCursorOverMenuButton = false;
+      let isCursorOverLogo = false; // Flag for the new SVG logo
+
+      // Function to update the big cursor's scale based on hover state
+      function updateBigCursorTransform() {
+        if (isCursorOverMenuButton || isCursorOverLogo) {
+          bigCursor.style.transform = "translate(-50%, -50%) scale(2)"; // Enlarge
+        } else {
+          bigCursor.style.transform = "translate(-50%, -50%) scale(1)"; // Normal size
+        }
+      }
+
+      // Event listeners for menu button
+      menuBtn.addEventListener("mouseenter", () => {
+        isCursorOverMenuButton = true;
+        updateBigCursorTransform();
+      });
+      menuBtn.addEventListener("mouseleave", () => {
+        isCursorOverMenuButton = false;
+        updateBigCursorTransform();
+      });
+
+      // Global mousemove listener to update cursor position and check logo hover
+      document.addEventListener("mousemove", (e) => {
+        // Update small cursor position
+        cursor.style.left = `${e.clientX}px`;
+        cursor.style.top = `${e.clientY}px`;
+
+        // Update big cursor position (it will be scaled by updateBigCursorTransform)
+        bigCursor.style.left = `${e.clientX}px`;
+        bigCursor.style.top = `${e.clientY}px`;
+
+        // --- Check if cursor is over the logo ---
+        // Use the actual SVG logo dimensions for the bounding box
+        const logoLeft = logoX - logoWidth / 2;
+        const logoRight = logoX + logoWidth / 2;
+        const logoTop = logoY - logoHeight / 2;
+        const logoBottom = logoY + logoHeight / 2;
+
+        // Check if mouse coordinates are within the logo's bounding box
+        if (
+          e.clientX > logoLeft &&
+          e.clientX < logoRight &&
+          e.clientY > logoTop &&
+          e.clientY < logoBottom
+        ) {
+          isCursorOverLogo = true;
+        } else {
+          isCursorOverLogo = false;
+        }
+
+        // Update the big cursor's state based on all hover flags
+        updateBigCursorTransform();
+      });
+
+      document.addEventListener("mousedown", () => {
+        cursor.style.transform = "translate(-50%, -50%) scale(0.6)";
+        bigCursor.style.transform = "translate(-50%, -50%) scale(0.8)";
+      });
+      document.addEventListener("mouseup", () => {
+        cursor.style.transform = "translate(-50%, -50%) scale(1)";
+        updateBigCursorTransform(); // Reset bigCursor to its hover state or default after mouseup
+      });
+
+      // Class to represent a single bouncing object
+      class BouncingObject {
+        constructor(x, y, radius, dx, dy, color) {
+          this.x = x;
+          this.y = y;
+          this.radius = radius;
+          this.dx = dx; // Velocity in x-direction
+          this.dy = dy; // Velocity in y-direction
+          this.color = color;
+        }
+
+        // Draws the object on the canvas
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); // Draw a circle
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.closePath();
+        }
+
+        // Updates the object's position and handles bouncing off walls
+        update() {
+          // Reverse x-direction if hitting horizontal walls
+          if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+            this.dx = -this.dx;
+          }
+          // Reverse y-direction if hitting vertical walls
+          if (
+            this.y + this.radius > canvas.height ||
+            this.y - this.radius < 0
+          ) {
+            this.dy = -this.dy;
+          }
+          // Update position
+          this.x += this.dx;
+          this.y += this.dy;
+        }
+      }
+
+      // --- New SVG Logo Data ---
+      const svgLogoPaths = [
+        "M26.3415 0.423076L17.3087 24.0459L7.705 0.423076H0V0.987626H0.0788478C0.993482 1.04124 1.74727 1.17055 2.33705 1.3724C2.92998 1.57425 3.39992 1.93065 3.75 2.44158C4.10008 2.95251 4.27355 3.65268 4.27355 4.53893V25.3957C4.27355 26.7141 3.93608 27.6066 3.2643 28.0766C2.59251 28.5465 1.58326 28.8367 0.239697 28.9439V29.5084H9.5595V28.9439C8.18755 28.8367 7.16569 28.5465 6.4939 28.0766C5.82212 27.6066 5.48465 26.7109 5.48465 25.3957V3.91761L15.8106 29.4706H16.4571L26.3415 3.77884V25.3547C26.3415 26.2694 26.1932 26.9759 25.8968 27.4742C25.6003 27.9725 25.2155 28.3226 24.7456 28.5244C24.2757 28.7263 23.6638 28.8524 22.91 28.906V29.4706H33.1571V28.906C32.4033 28.8524 31.7914 28.7231 31.3215 28.5244C30.8516 28.3226 30.4731 27.9725 30.1924 27.4742C29.9117 26.9759 29.7698 26.2694 29.7698 25.3547V4.53893C29.7698 3.6243 29.9117 2.91782 30.1924 2.4195C30.4762 1.92118 30.8516 1.5711 31.3215 1.36925C31.7914 1.1674 32.4033 1.04124 33.1571 0.984472V0.419922H26.3383L26.3415 0.423076Z",
+        "M119.385 1.92073C117.363 0.640244 115.165 0 112.793 0C110.422 0 108.223 0.640244 106.202 1.92073C104.18 3.20122 102.568 4.96741 101.37 7.21615C100.172 9.46804 99.5723 11.9943 99.5723 14.7981C99.5723 17.602 100.172 20.2039 101.37 22.5221C102.568 24.8402 104.18 26.6663 106.202 28.0004C108.223 29.3345 110.419 30.0031 112.793 30.0031C115.168 30.0031 117.36 29.3345 119.385 28.0004C121.407 26.6663 123.025 24.8402 124.236 22.5221C125.45 20.2039 126.056 17.6304 126.056 14.7981C126.056 11.9659 125.45 9.50273 124.236 7.23822C123.022 4.97372 121.407 3.20122 119.385 1.92073ZM120.943 21.7935C120.202 23.9224 119.123 25.6287 117.71 26.9092C116.294 28.1896 114.657 28.8299 112.797 28.8299C110.936 28.8299 109.312 28.1896 107.924 26.9092C106.536 25.6287 105.464 23.9256 104.71 21.7935C103.956 19.6646 103.578 17.3465 103.578 14.8391C103.578 12.3318 103.947 10.042 104.691 7.96678C105.432 5.8915 106.505 4.23255 107.905 2.99306C109.305 1.75357 110.936 1.13225 112.797 1.13225C114.657 1.13225 116.294 1.75357 117.71 2.99306C119.127 4.23255 120.202 5.8915 120.943 7.96678C121.684 10.042 122.056 12.3192 122.056 14.7981C122.056 17.2771 121.684 19.6646 120.943 21.7935Z",
+        "M76.0095 28.9377C74.7259 28.9377 73.253 27.8654 71.7959 25.9163C67.0776 19.6022 65.343 16.0603 64.4094 15.3822C64.5135 15.3917 72.023 15.972 72.023 8.36163C72.023 2.58051 67.721 0.486313 63.8606 0.486313C61.5898 0.486313 50.0654 0.445312 50.0654 0.445312V1.00986H50.1033C50.8571 1.06348 51.4784 1.18964 51.9609 1.39464C52.4466 1.59649 52.8283 1.94342 53.1121 2.44174C53.396 2.94006 53.5379 3.64653 53.5379 4.56432V25.3959C53.5379 26.3105 53.396 27.017 53.1121 27.5153C52.8283 28.0136 52.4403 28.3637 51.942 28.5656C51.4437 28.7674 50.8192 28.8936 50.0654 28.9472V29.5149H60.5206V28.9472C59.7385 28.8936 59.1077 28.7674 58.622 28.5656C58.1394 28.3637 57.7547 28.0136 57.474 27.5153C57.1901 27.017 57.0482 26.3105 57.0482 25.3959V14.3982C59.8142 14.3982 61.4668 16.2937 61.9052 16.9529C63.9994 20.0942 70.2915 29.5149 70.2915 29.5149H76.5961V28.9062C76.41 28.9346 76.2145 28.9377 76.0095 28.9377ZM57.0482 13.8147V1.57441H61.7727C63.6998 1.57441 68.2919 2.00334 68.2919 8.39317C68.2919 14.783 64.8005 14.6537 63.7502 14.6095C62.2584 14.5496 58.9531 13.8147 57.0482 13.8147Z",
+        "M96.3613 25.9163C91.6431 19.6022 89.9084 16.0603 88.9748 15.3822C89.0789 15.3917 96.5884 15.972 96.5884 8.36163C96.5884 2.58051 92.2865 0.486313 88.4261 0.486313C86.1552 0.486313 74.6309 0.445312 74.6309 0.445312V1.00986H74.6687C75.4225 1.06348 76.0438 1.18964 76.5264 1.39464C77.0121 1.59649 77.3937 1.94342 77.6775 2.44174C77.9614 2.94006 78.1033 3.64653 78.1033 4.56432V25.3959C78.1033 26.3105 77.9614 27.017 77.6775 27.5153C77.3937 28.0136 77.0058 28.3637 76.5074 28.5656C76.0091 28.7674 75.3846 28.8936 74.6309 28.9472V29.5149H85.0861V28.9472C84.3039 28.8936 83.6731 28.7674 83.1874 28.5656C82.7049 28.3637 82.3201 28.0136 82.0394 27.5153C81.7555 27.017 81.6136 26.3105 81.6136 25.3959V14.3982C84.3796 14.3982 86.0323 16.2937 86.4706 16.9529C88.5648 20.0942 94.8569 29.5149 94.8569 29.5149H100.575V28.9377C99.2913 28.9377 97.8184 27.8654 96.3613 25.9163ZM88.3157 14.6095C86.8239 14.5496 83.5186 13.8147 81.6136 13.8147V1.57441H86.3382C88.2652 1.57441 92.8573 2.00334 92.8573 8.39317C92.8573 14.783 89.3691 14.6537 88.3157 14.6095Z",
+        "M147.767 25.9163C143.048 19.6022 141.314 16.0603 140.38 15.3822C140.484 15.3917 147.994 15.972 147.994 8.36163C147.994 2.58051 143.692 0.486313 139.831 0.486313C137.561 0.486313 126.036 0.445312 126.036 0.445312V1.00986H126.074C126.828 1.06348 127.449 1.18964 127.932 1.39464C128.417 1.59649 128.799 1.94342 129.083 2.44174C129.367 2.94006 129.509 3.64653 129.509 4.56432V25.3959C129.509 26.3105 129.367 27.017 129.083 27.5153C128.799 28.0136 128.411 28.3637 127.913 28.5656C127.414 28.7674 126.79 28.8936 126.036 28.9472V29.5149H136.491V28.9472C135.709 28.8936 135.078 28.7674 134.593 28.5656C134.11 28.3637 133.725 28.0136 133.445 27.5153C133.161 27.017 133.019 26.3105 133.019 25.3959V14.3982C135.785 14.3982 137.438 16.2937 137.876 16.9529C139.97 20.0942 146.262 29.5149 146.262 29.5149H151.98V28.9377C150.697 28.9377 149.224 27.8654 147.767 25.9163ZM139.721 14.6095C138.229 14.5496 134.924 13.8147 133.019 13.8147V1.57441H137.743C139.67 1.57441 144.263 2.00334 144.263 8.39317C144.263 14.783 140.774 14.6537 139.721 14.6095Z",
+        "M36.418 0.964941C37.2001 1.01856 37.8404 1.14787 38.3387 1.34972C38.837 1.55157 39.2281 1.90165 39.512 2.39997C39.7958 2.89829 39.9346 3.60792 39.9346 4.52255V25.3857C39.9346 26.3035 39.7927 27.0099 39.512 27.5083C39.2281 28.0066 38.837 28.3567 38.3387 28.5585C37.8404 28.7604 37.2001 28.8897 36.418 28.9433V29.5078H46.8101V28.9433C46.0279 28.8897 45.3877 28.7604 44.8894 28.5585C44.3911 28.3567 44 28.0066 43.7161 27.5083C43.4323 27.0099 43.2903 26.3035 43.2903 25.3857V4.52255C43.2903 3.60476 43.4323 2.89829 43.7161 2.39997C44 1.90165 44.3879 1.55157 44.8894 1.34972C45.3877 1.14787 46.0279 1.01856 46.8101 0.964941V0.400391H36.418V0.964941Z",
+      ];
+      const logoWidth = 152; // From SVG viewBox
+      const logoHeight = 30; // From SVG viewBox
+
+      // Logo properties for the SVG-like shape
+      let logoX, logoY, logoDx, logoDy;
+
+      // Function to draw the new SVG logo
+      function drawSvgLogo() {
+        const centerX = logoX;
+        const centerY = logoY;
+
+        // Translate to the center of the logo's position
+        ctx.translate(centerX, centerY);
+        // Translate again to account for the SVG's origin (0,0) being top-left
+        // We want to draw it centered, so shift by negative half its dimensions
+        ctx.translate(-logoWidth / 2, -logoHeight / 2);
+
+        // Set fill and stroke for the SVG paths (these will be 'differenced' later)
+        ctx.fillStyle = "rgba(255, 255, 255, 0.8)"; // Base white color for difference blend
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.9)"; // White stroke
+        ctx.lineWidth = 1; // Adjust stroke width for the new logo
+
+        // Draw each path from the SVG data
+        svgLogoPaths.forEach((pathData) => {
+          const path = new Path2D(pathData);
+          ctx.fill(path);
+          ctx.stroke(path);
+        });
+
+        // Reset transformations for subsequent drawing operations
+        ctx.translate(logoWidth / 2, logoHeight / 2); // Translate back from logo's top-left
+        ctx.translate(-centerX, -centerY); // Translate back from logo's center
+      }
+
+      // Function to update logo position and handle collisions
+      function updateLogoPosition() {
+        // Collision detection for X-axis using logoWidth
+        if (logoX + logoWidth / 2 > canvas.width || logoX - logoWidth / 2 < 0) {
+          logoDx = -logoDx;
+        }
+        // Collision detection for Y-axis using logoHeight
+        if (
+          logoY + logoHeight / 2 > canvas.height ||
+          logoY - logoHeight / 2 < 0
+        ) {
+          logoDy = -logoDy;
+        }
+
+        // Update logo position
+        logoX += logoDx;
+        logoY += logoDy;
+      }
+
+      let bouncingObjects = []; // Array to hold all bouncing objects
+      const objectCount = 50; // Number of bouncing objects
+
+      // Function to generate a random hex color
+      function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      // Background color variables for smooth transition
+      let currentBgColor = [0, 0, 0]; // Start with black (RGB)
+      let targetBgColor = [0, 0, 0];
+      const colorChangeSpeed = 0.005; // Controls the smoothness/speed of color change (smaller is slower)
+
+      // Function to generate a random RGB color array
+      function getRandomRgbColor() {
+        return [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+      }
+
+      // Linear interpolation function for numbers (used for color components)
+      function lerp(start, end, t) {
+        return start * (1 - t) + end * t;
+      }
+
+      // Function to update the background color smoothly
+      function updateBackgroundColor() {
+        // If the current color is very close to the target color, pick a new target
+        if (
+          Math.abs(currentBgColor[0] - targetBgColor[0]) < 1 &&
+          Math.abs(currentBgColor[1] - targetBgColor[1]) < 1 &&
+          Math.abs(currentBgColor[2] - targetBgColor[2]) < 1
+        ) {
+          targetBgColor = getRandomRgbColor();
+        }
+
+        // Interpolate each color component towards the target
+        currentBgColor[0] = lerp(
+          currentBgColor[0],
+          targetBgColor[0],
+          colorChangeSpeed
+        );
+        currentBgColor[1] = lerp(
+          currentBgColor[1],
+          targetBgColor[1],
+          colorChangeSpeed
+        );
+        currentBgColor[2] = lerp(
+          currentBgColor[2],
+          targetBgColor[2],
+          colorChangeSpeed
+        );
+      }
+
+      // Initialize the bouncing objects and logo
+      function init() {
+        // Initialize logo position and velocity
+        logoX = canvas.width / 2;
+        logoY = canvas.height / 2;
+        logoDx = (Math.random() - 0.5) * 2; // Slower speed for logo
+        logoDy = (Math.random() - 0.5) * 2;
+
+        // Initialize background colors
+        currentBgColor = getRandomRgbColor();
+        targetBgColor = getRandomRgbColor();
+
+        for (let i = 0; i < objectCount; i++) {
+          // Increased radius by 10x
+          const radius = (Math.random() * 10 + 5) * 10; // Random radius between 50 and 150
+          // Ensure objects start within canvas bounds
+          const x = Math.random() * (canvas.width - 2 * radius) + radius;
+          const y = Math.random() * (canvas.height - 2 * radius) + radius;
+          const dx = (Math.random() - 0.5) * 4; // Random velocity between -2 and 2
+          const dy = (Math.random() - 0.5) * 4; // Random velocity between -2 and 2
+          const color = getRandomColor();
+          bouncingObjects.push(new BouncingObject(x, y, radius, dx, dy, color));
+        }
+      }
+
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate); // Request next animation frame
+
+        // 1. Update background color and draw it first
+        updateBackgroundColor();
+        ctx.fillStyle = `rgb(${currentBgColor[0]}, ${currentBgColor[1]}, ${currentBgColor[2]})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // Draw the background rectangle
+
+        // 2. Update and draw each bouncing object
+        bouncingObjects.forEach((obj) => {
+          obj.update();
+          obj.draw();
+        });
+
+        // 3. Update logo position
+        updateLogoPosition();
+
+        // 4. Draw the SVG logo LAST, with difference blend mode and scaling
+        ctx.save(); // Save the current canvas state
+
+        // Apply scaling if cursor is over the logo
+        if (isCursorOverLogo) {
+          const scaleFactor = 1.2; // How much to scale (20% larger)
+          ctx.translate(logoX, logoY); // Move origin to logo center
+          ctx.scale(scaleFactor, scaleFactor); // Apply scale
+          ctx.translate(-logoX, -logoY); // Move origin back
+        }
+
+        ctx.globalCompositeOperation = "difference"; // Apply difference blend mode for the logo
+        drawSvgLogo(); // Draw the SVG logo (it will now blend with background)
+
+        ctx.restore(); // Restore canvas state to remove transformations and blend mode
+      }
+
+      // Start initialization and animation when the window loads
+      window.onload = function () {
+        init();
+        animate();
+      };
+
+      // Handle window resizing to keep the canvas responsive
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        // Re-initialize objects and logo to fit new canvas size
+        bouncingObjects = [];
+        init();
+      });
+    </script>
+  </body>
+</html>
