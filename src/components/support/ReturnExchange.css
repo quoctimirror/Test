@@ -1,0 +1,38 @@
+/* Return & Exchange Specific Styles */
+
+.international-orders-list {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 16px;
+  leading-trim: NONE;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin: 16px 0;
+  padding-left: 20px;
+}
+
+.return-exchange .international-orders-section {
+  /* Specific styles for international orders section if needed */
+}
+
+.return-exchange .domestic-orders-section {
+  /* Specific styles for domestic orders section if needed */
+}
+
+.return-exchange .showroom-purchases {
+  /* Specific styles for showroom purchases subsection if needed */
+}
+
+.return-exchange .nationwide-shipping {
+  /* Specific styles for nationwide shipping subsection if needed */
+}
+
+.return-exchange .non-exchangeable-items-section {
+  /* Specific styles for non-exchangeable items section if needed */
+}
+
+.return-exchange .why-sales-final-section {
+  /* Specific styles for why sales final section if needed */
+}

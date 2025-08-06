@@ -47,7 +47,7 @@
   background: #e0e0e0;
   border-radius: 40px;
   overflow: hidden;
-  padding: 8px;
+  padding: 3px 3px;
   width: 880px;
   height: 56px;
   max-width: 880px;
@@ -58,13 +58,25 @@
   padding: 10px 20px;
   border-radius: 30px;
   background: transparent;
-  color: #6c757d;
-  font-weight: 500;
+  color: #f6f6f6;
+  font-family: "BT Beau Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
   cursor: pointer;
   flex: 1;
-  text-align: center;
   transition: all 0.3s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab:hover {
+  color: black;
 }
 
 .tab.active {
@@ -129,7 +141,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #adb5bd;
+  background: #797979;
   transition: all 0.3s ease;
   border: 2px solid transparent;
 }
@@ -141,9 +153,14 @@
 }
 
 .label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #343a40;
+  font-family: "BT Beau Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #000000;
 }
 
 /* Summary and Help Sections */
@@ -157,25 +174,45 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: center;
   text-align: center;
   box-sizing: border-box;
   overflow: hidden;
 }
 
+.help {
+  justify-content: center;
+}
+
+.summary {
+  justify-content: flex-end;
+}
+
 .summary h2,
 .help h2 {
   margin: 0;
-  font-size: 16px;
-  font-weight: bold;
+  font-family: "BT Beau Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
   color: #212529;
   flex-shrink: 0;
 }
 
+.help h2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+}
+
 .help-text {
-  color: #495057;
-  margin: 5px 0;
+  color: #797979;
+  margin: 10px 0;
   line-height: 1.3;
   font-size: 12px;
   flex-grow: 1;
@@ -217,8 +254,15 @@
   border: 1px solid #ced4da;
   width: 274px;
   height: 45px;
-  color: #495057;
+  color: #797979;
   box-sizing: border-box;
+  font-family: "BT Beau Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
 }
 
 .outline:hover {
@@ -234,6 +278,13 @@
   height: 45px;
   box-sizing: border-box;
   align-self: center;
+  font-family: "BT Beau Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
 }
 
 .solid:hover {
@@ -346,4 +397,101 @@
 
 .ring-display {
   animation: fadeInUp 0.8s ease-out;
+}
+
+/* Overview Content Styles */
+.overview-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  align-items: center;
+}
+
+.overview-item {
+  background: transparent;
+  border-radius: 0;
+  padding: 5px 3px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border-bottom: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 80px;
+  overflow: visible;
+  gap: 8px;
+}
+
+.overview-item:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.overview-label {
+  font-family: "BT Beau Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #797979;
+  text-transform: none;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.overview-value {
+  font-family: "Saol Display", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 22px;
+  line-height: 90%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #000000;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
+/* Responsive adjustments for overview */
+@media (max-width: 768px) {
+  .overview-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 8px;
+  }
+
+  .overview-item {
+    padding: 4px 2px;
+  }
+
+  .overview-label {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+
+  .overview-value {
+    font-size: 18px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
 }

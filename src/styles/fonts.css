@@ -1,4 +1,4 @@
-/* src/styles/fonts.css */
+/* src/styles/fonts.css (CORRECTED VERSION) */
 
 /*****************************************************
  * LOCAL FONT DECLARATIONS - STANDARDIZED NAMING
@@ -7,26 +7,11 @@
 /* 
 ============================================
  Font: BT Beau Sans
+ (All variations grouped under one family name)
 ============================================ 
 */
 @font-face {
-  font-family: "BT-BeauSans-Regular-ttf";
-  src: url("@fonts/BTBeauSans/BT-BeauSans-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "BT-BeauSans-Italic-ttf";
-  src: url("@fonts/BTBeauSans/BT-BeauSans-Italic.ttf") format("truetype");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "BT-BeauSans-Light-ttf";
+  font-family: "BT Beau Sans";
   src: url("@fonts/BTBeauSans/BT-BeauSans-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
@@ -34,7 +19,7 @@
 }
 
 @font-face {
-  font-family: "BT-BeauSans-LightItalic-ttf";
+  font-family: "BT Beau Sans";
   src: url("@fonts/BTBeauSans/BT-BeauSans-LightItalic.ttf") format("truetype");
   font-weight: 300;
   font-style: italic;
@@ -42,7 +27,23 @@
 }
 
 @font-face {
-  font-family: "BT-BeauSans-Medium-ttf";
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "BT Beau Sans";
   src: url("@fonts/BTBeauSans/BT-BeauSans-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
@@ -50,7 +51,7 @@
 }
 
 @font-face {
-  font-family: "BT-BeauSans-MediumItalic-ttf";
+  font-family: "BT Beau Sans";
   src: url("@fonts/BTBeauSans/BT-BeauSans-MediumItalic.ttf") format("truetype");
   font-weight: 500;
   font-style: italic;
@@ -58,7 +59,7 @@
 }
 
 @font-face {
-  font-family: "BT-BeauSans-Bold-ttf";
+  font-family: "BT Beau Sans";
   src: url("@fonts/BTBeauSans/BT-BeauSans-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
@@ -66,7 +67,7 @@
 }
 
 @font-face {
-  font-family: "BT-BeauSans-BoldItalic-ttf";
+  font-family: "BT Beau Sans";
   src: url("@fonts/BTBeauSans/BT-BeauSans-BoldItalic.ttf") format("truetype");
   font-weight: 700;
   font-style: italic;
@@ -74,7 +75,7 @@
 }
 
 @font-face {
-  font-family: "BT-BeauSans-ExtraBold-ttf";
+  font-family: "BT Beau Sans";
   src: url("@fonts/BTBeauSans/BT-BeauSans-ExtraBold.ttf") format("truetype");
   font-weight: 800;
   font-style: normal;
@@ -82,7 +83,7 @@
 }
 
 @font-face {
-  font-family: "BT-BeauSans-ExtraBoldItalic-ttf";
+  font-family: "BT Beau Sans";
   src: url("@fonts/BTBeauSans/BT-BeauSans-ExtraBoldItalic.ttf")
     format("truetype");
   font-weight: 800;
@@ -93,10 +94,12 @@
 /* 
 ============================================
  Font: Saol Display
+ (Note: You have both TTF and OTF. Using one is enough. 
+  Here we group the TTF versions. The OTF are commented out or can be removed.)
 ============================================ 
 */
 @font-face {
-  font-family: "SaolDisplay-Light-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
@@ -104,7 +107,7 @@
 }
 
 @font-face {
-  font-family: "SaolDisplay-LightItalic-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-LightItalic.ttf")
     format("truetype");
   font-weight: 300;
@@ -113,7 +116,7 @@
 }
 
 @font-face {
-  font-family: "SaolDisplay-Regular-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
@@ -121,7 +124,7 @@
 }
 
 @font-face {
-  font-family: "SaolDisplay-RegularItalic-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-RegularItalic.ttf")
     format("truetype");
   font-weight: 400;
@@ -130,7 +133,7 @@
 }
 
 @font-face {
-  font-family: "SaolDisplay-Medium-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
@@ -138,7 +141,7 @@
 }
 
 @font-face {
-  font-family: "SaolDisplay-MediumItalic-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-MediumItalic.ttf")
     format("truetype");
   font-weight: 500;
@@ -147,7 +150,7 @@
 }
 
 @font-face {
-  font-family: "SaolDisplay-Semibold-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Semibold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
@@ -155,7 +158,7 @@
 }
 
 @font-face {
-  font-family: "SaolDisplay-SemiboldItalic-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-SemiboldItalic.ttf")
     format("truetype");
   font-weight: 600;
@@ -164,7 +167,7 @@
 }
 
 @font-face {
-  font-family: "SaolDisplay-Bold-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
@@ -172,99 +175,9 @@
 }
 
 @font-face {
-  font-family: "SaolDisplay-BoldItalic-ttf";
+  font-family: "Saol Display";
   src: url("@fonts/SaolDisplay/TTF/SaolDisplay-BoldItalic.ttf")
     format("truetype");
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-/* 
-============================================
- Font: Saol Display OTF
-============================================ 
-*/
-@font-face {
-  font-family: "Saol-Display-Light-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-Light.otf") format("opentype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saol-Display-LightItalic-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-LightItalic.otf")
-    format("opentype");
-  font-weight: 300;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saol-Display-Regular-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-Regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saol-Display-RegularItalic-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-RegularItalic.otf")
-    format("opentype");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saol-Display-Medium-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saol-Display-MediumItalic-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-MediumItalic.otf")
-    format("opentype");
-  font-weight: 500;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saol-Display-Semibold-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-Semibold.otf") format("opentype");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saol-Display-SemiboldItalic-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-SemiboldItalic.otf")
-    format("opentype");
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saol-Display-Bold-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-Bold.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Saol-Display-BoldItalic-otf";
-  src: url("@fonts/SaolDisplay/OTF/SaolDisplay-BoldItalic.otf")
-    format("opentype");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -276,15 +189,15 @@
 ============================================ 
 */
 @font-face {
-  font-family: "PPNeueMontreal-Book-otf";
+  font-family: "PP Neue Montreal";
   src: url("@fonts/ppneuemontreal-book.otf") format("opentype");
-  font-weight: 400;
+  font-weight: 400; /* Book is usually 400 */
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "PPNeueMontreal-BookItalic-otf";
+  font-family: "PP Neue Montreal";
   src: url("@fonts/ppneuemontreal-italic.otf") format("opentype");
   font-weight: 400;
   font-style: italic;
@@ -292,7 +205,7 @@
 }
 
 @font-face {
-  font-family: "PPNeueMontreal-Medium-otf";
+  font-family: "PP Neue Montreal";
   src: url("@fonts/ppneuemontreal-medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
@@ -300,7 +213,7 @@
 }
 
 @font-face {
-  font-family: "PPNeueMontreal-SemiboldItalic-otf";
+  font-family: "PP Neue Montreal";
   src: url("@fonts/ppneuemontreal-semibolditalic.otf") format("opentype");
   font-weight: 600;
   font-style: italic;
@@ -308,7 +221,7 @@
 }
 
 @font-face {
-  font-family: "PPNeueMontreal-Bold-otf";
+  font-family: "PP Neue Montreal";
   src: url("@fonts/ppneuemontreal-bold.otf") format("opentype");
   font-weight: 700;
   font-style: normal;

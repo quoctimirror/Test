@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { createViewer } from "@utils/AR/Three";
+import { createViewer } from "@utils/view360/Three";
 import QRPopup from "@components/qrPopup/QRPopup";
 import "./View360.css";
 

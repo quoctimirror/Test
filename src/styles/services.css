@@ -1,0 +1,19 @@
+.services-page {
+  min-height: 100vh;
+  background: white;
+}
+
+/* Smooth scrolling for the entire page */
+.services-page {
+  scroll-behavior: smooth;
+}
+
+/* Add some global styles for consistency */
+.services-page * {
+  box-sizing: border-box;
+}
+
+/* Ensure sections flow nicely */
+.services-page section {
+  width: 100%;
+}

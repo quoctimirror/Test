@@ -1,0 +1,430 @@
+/* Section 4 Sticky Scroll Layout */
+.section4-wrapper {
+  position: relative;
+  height: 600vh; /* Reduced height for smoother transitions */
+  background: white;
+  font-family: "BT Beau Sans", sans-serif;
+}
+
+.section4-sticky-container {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.section4-sticky-images {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.section4-image-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  will-change: transform, opacity;
+}
+
+.section4-image-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
+}
+
+.section4-sticky-content {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section4-content-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity, transform;
+}
+
+.section4-content {
+  padding: 4rem;
+  max-width: 700px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.section4-header-description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.section4-full-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+.section4-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.section4-subtitle {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #797979;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.section4-title {
+  font-family: "Saol Display", serif;
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 90%;
+  letter-spacing: -3%;
+  text-align: center;
+  color: #000000;
+  margin: 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.section4-description {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #797979;
+  margin: 0;
+  max-width: 400px;
+}
+
+.section4-cta {
+  background: transparent;
+  border: 0.5px solid #333;
+  padding: 20px 36px;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  border-radius: 100px;
+  margin: 0;
+  min-width: 137px;
+  height: 51px;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.section4-cta:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Section 4 Part 2 - Sizing Guide */
+.services-section4-part2 {
+  height: 100vh;
+  background: white;
+  font-family: "BT Beau Sans", sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+.section4-part2-container {
+  width: 100%;
+  height: 100%;
+}
+
+.section4-part2-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  align-items: center;
+}
+
+.section4-part2-image {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.section4-part2-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
+}
+
+.section4-part2-content {
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.section4-part2-header {
+  margin-bottom: 2rem;
+}
+
+.section4-part2-subtitle {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #666;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.section4-part2-title {
+  font-family: "Saol Display", serif;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 105%;
+  color: #333;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.section4-part2-description {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 150%;
+  color: #666;
+  margin-bottom: 3rem;
+  max-width: 400px;
+}
+
+.section4-part2-cta {
+  background: transparent;
+  border: 1px solid #333;
+  padding: 12px 24px;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+  text-transform: capitalize;
+}
+
+.section4-part2-cta:hover {
+  background: #333;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .section4-wrapper {
+    height: auto;
+  }
+
+  .section4-sticky-container {
+    position: relative;
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .section4-sticky-images {
+    height: 50vh;
+    order: 1;
+  }
+
+  .section4-sticky-content {
+    height: auto;
+    order: 2;
+    position: relative;
+  }
+
+  .section4-content-layer {
+    position: relative;
+    height: auto;
+    padding: 2rem 0;
+  }
+
+  .section4-content-2,
+  .section4-content-3 {
+    display: none;
+  }
+
+  .section4-content {
+    padding: 2rem;
+  }
+
+  .section4-title {
+    font-size: 36px;
+  }
+
+  .section4-description {
+    font-size: 14px;
+  }
+
+  /* Disable transforms on mobile */
+  .section4-image-layer {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .section4-image-2,
+  .section4-image-3 {
+    display: none;
+  }
+
+  .section4-content-layer {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Section 4 Part 3 - Warranty & Info */
+.services-section4-part3 {
+  height: 100vh;
+  background: white;
+  font-family: "BT Beau Sans", sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+.section4-part3-container {
+  width: 100%;
+  height: 100%;
+}
+
+.section4-part3-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  align-items: center;
+}
+
+.section4-part3-image {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.section4-part3-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%);
+}
+
+.section4-part3-content {
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.section4-part3-header {
+  margin-bottom: 2rem;
+}
+
+.section4-part3-subtitle {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #666;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.section4-part3-title {
+  font-family: "Saol Display", serif;
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 105%;
+  color: #333;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.section4-part3-description {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 150%;
+  color: #666;
+  margin-bottom: 3rem;
+  max-width: 400px;
+}
+
+.section4-part3-cta {
+  background: transparent;
+  border: 1px solid #333;
+  padding: 12px 24px;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+  text-transform: capitalize;
+}
+
+.section4-part3-cta:hover {
+  background: #333;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .section4-part3-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .section4-part3-image {
+    height: 50vh;
+  }
+
+  .section4-part3-content {
+    padding: 2rem;
+    height: auto;
+  }
+
+  .section4-part3-title {
+    font-size: 36px;
+  }
+
+  .section4-part3-description {
+    font-size: 14px;
+  }
+}

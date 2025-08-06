@@ -1,0 +1,400 @@
+/* Typography Utilities */
+.typography-1 {
+  font-family: "Saol Display", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 90%;
+  letter-spacing: 0%;
+}
+
+.typography-2 {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+}
+
+.typography-3 {
+  font-family: "Saol Display", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 90%;
+  letter-spacing: 0%;
+}
+
+.typography-4 {
+  font-family: "Saol Display", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 90%;
+  letter-spacing: 0%;
+}
+
+/* Support Page Layout */
+.support-hero-section {
+  width: 100%;
+  height: 600px;
+  background-image: url("/public/support/section_1.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  filter: grayscale(100%);
+}
+
+.support-hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #00000094;
+  z-index: 1;
+}
+
+.hero-content {
+  text-align: center;
+  color: white;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-family: "Saol Display", serif;
+  font-weight: 300;
+  font-style: Light;
+  font-size: 64px;
+  leading-trim: NONE;
+  line-height: 90%;
+  letter-spacing: -2%;
+  text-align: center;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.hero-content p {
+  font-family: "Saol Display", serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.4;
+  margin: 5px 0;
+}
+
+.support-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 20px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.support-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+/* Tab Navigation */
+.support-tabs {
+  display: flex;
+  margin-top: 30px;
+  margin-bottom: 120px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 60px;
+  background: #fff;
+  width: 922px;
+  height: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  padding: 0;
+  position: relative;
+  z-index: 9999;
+}
+
+.support-tab {
+  background: none;
+  border: none;
+  padding: 10px 5px;
+  cursor: pointer;
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #999;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  line-height: 120%;
+  letter-spacing: 0%;
+  position: relative;
+  z-index: 10000;
+}
+
+.support-tab:hover {
+  color: #666;
+}
+
+.support-tab.active {
+  color: #000;
+  border-bottom-color: #000;
+  font-weight: 500;
+}
+
+/* Tab Content */
+.support-content {
+  position: relative;
+  min-height: 600px;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Common Content Styles */
+.header-section {
+  text-align: left;
+  margin-bottom: 60px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #e0e0e0;
+  max-width: 922px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header-section h2 {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 16px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 120%;
+  letter-spacing: 0%;
+  margin-bottom: 24px;
+  color: #000;
+}
+
+.header-section p {
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 16px;
+  leading-trim: CAP_HEIGHT;
+  line-height: 120%;
+  letter-spacing: 0%;
+  color: #333;
+  max-width: none;
+  margin: 0;
+}
+
+.section {
+  margin-bottom: 50px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #e0e0e0;
+  max-width: 922px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.section h3 {
+  font-family: "Saol Display", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 90%;
+  letter-spacing: 0%;
+  margin-bottom: 24px;
+  color: #000;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.section h4 {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: #000;
+  letter-spacing: 0.3px;
+}
+
+.section h5 {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #000;
+}
+
+.section p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.section ul {
+  margin: 16px 0;
+  padding-left: 20px;
+  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0%;
+}
+
+.section li {
+  margin-bottom: 12px;
+  line-height: 1.8;
+  color: #333;
+  font-size: 14px;
+}
+
+.section li strong {
+  color: #000;
+  font-weight: 500;
+}
+
+.subsection {
+  margin: 32px 0;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  border-left: none;
+}
+
+.subsection ul {
+  margin-top: 16px;
+}
+
+/* Height Controls */
+.return-exchange {
+  min-height: 1780px;
+}
+
+.sizing-guide {
+  min-height: 2150px;
+}
+
+.warranty-info {
+  min-height: 1250px;
+}
+
+.faqs {
+  min-height: auto;
+}
+
+/* FAQ Navigation */
+
+.faq-nav.hidden {
+  display: none;
+}
+
+.faq-nav.visible {
+  display: flex;
+}
+
+.faq-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.faq-nav .nav-item a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #999;
+  line-height: 1.6;
+  display: block;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.faq-nav .nav-item.active a {
+  color: #000;
+  font-weight: 500;
+  border-bottom: 2px solid #000;
+  padding-bottom: 2px;
+}
+
+.faq-nav .nav-item:hover a {
+  color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .support-container {
+    padding: 15px;
+  }
+
+  .support-tabs {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .support-tab {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+  }
+
+  .header-section h2 {
+    font-size: 24px;
+  }
+
+  .section h3 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .support-container {
+    padding: 10px;
+  }
+
+  .header-section h2 {
+    font-size: 20px;
+  }
+
+  .section h3 {
+    font-size: 18px;
+  }
+
+  .section h4 {
+    font-size: 16px;
+  }
+}

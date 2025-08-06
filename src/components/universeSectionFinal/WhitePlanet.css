@@ -4,26 +4,19 @@
 
 @keyframes pulse-glow {
   0% {
-    box-shadow:
-      0 0 8px rgba(255, 255, 255, 1),
-      0 0 20px rgba(255, 255, 255, 0.9),
-      0 0 45px rgba(220, 180, 235, 0.7),
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1),
+      0 0 20px rgba(255, 255, 255, 0.9), 0 0 45px rgba(220, 180, 235, 0.7),
       0 0 70px rgba(200, 150, 220, 0.5);
   }
 
   50% {
-    box-shadow:
-      0 0 12px rgba(255, 255, 255, 1),
-      0 0 35px rgba(255, 255, 255, 1),
-      0 0 65px rgba(220, 180, 235, 0.8),
-      0 0 100px rgba(200, 150, 220, 0.6);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 35px rgba(255, 255, 255, 1),
+      0 0 65px rgba(220, 180, 235, 0.8), 0 0 100px rgba(200, 150, 220, 0.6);
   }
 
   100% {
-    box-shadow:
-      0 0 8px rgba(255, 255, 255, 1),
-      0 0 20px rgba(255, 255, 255, 0.9),
-      0 0 45px rgba(220, 180, 235, 0.7),
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1),
+      0 0 20px rgba(255, 255, 255, 0.9), 0 0 45px rgba(220, 180, 235, 0.7),
       0 0 70px rgba(200, 150, 220, 0.5);
   }
 }
@@ -56,7 +49,7 @@
   bottom: calc(100% + 12px);
   left: 50%;
   transform: translateX(-50%);
-  font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-size: clamp(0.6rem, 1.5vmin, 0.8rem);
   font-weight: 500;
   color: white;
@@ -65,9 +58,7 @@
   background: rgba(0, 0, 0, 0.4);
   padding: 4px 10px;
   border-radius: 5px;
-  text-shadow:
-    0 0 7px rgba(255, 255, 255, 1),
-    0 0 15px rgba(255, 255, 255, 0.8),
+  text-shadow: 0 0 7px rgba(255, 255, 255, 1), 0 0 15px rgba(255, 255, 255, 0.8),
     0 0 25px rgba(220, 180, 235, 0.7);
   /* Mặc định có ánh tím */
   opacity: 0;
@@ -81,18 +72,13 @@
   visibility: visible;
 }
 
-
-
 /* --- ✨ KEYFRAME DÀNH RIÊNG CHO SENSES PLANET (ĐỎ-HỒNG) ✨ --- */
 /* Cần có keyframe này để animation "pulse-glow-red" hoạt động */
 @keyframes pulse-glow-red {
-
   /* Giai đoạn 1: Sáng ổn định */
   0%,
   25% {
-    box-shadow:
-      0 0 12px rgba(255, 255, 255, 1),
-      0 0 40px rgba(187, 35, 76, 1),
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 40px rgba(187, 35, 76, 1),
       0 0 80px rgba(187, 35, 76, 0.7);
   }
 
@@ -104,9 +90,7 @@
 
   /* Giai đoạn 4: Sáng dần lên */
   100% {
-    box-shadow:
-      0 0 12px rgba(255, 255, 255, 1),
-      0 0 40px rgba(187, 35, 76, 1),
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 40px rgba(187, 35, 76, 1),
       0 0 80px rgba(187, 35, 76, 0.7);
   }
 }
@@ -116,7 +100,13 @@
 /* Sử dụng bộ chọn thuộc tính để nhắm chính xác đến Senses Planet */
 .white-planet[data-planet="Senses"] {
   /* Đặt nền gradient đặc trưng */
-  background: radial-gradient(50% 50% at 50% 50%, #FFF 36%, rgba(255, 255, 255, 0.70) 66%, rgba(187, 35, 76, 0.10) 95.67%, #BB234C 100%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #fff 36%,
+    rgba(255, 255, 255, 0.7) 66%,
+    rgba(187, 35, 76, 0.1) 95.67%,
+    #bb234c 100%
+  );
 
   /* Ghi đè animation, sử dụng hiệu ứng màu đỏ-hồng mới */
   animation-name: pulse-glow-red;
@@ -130,15 +120,11 @@
 
 /* Ghi đè text-shadow cho label của Senses Planet để đồng bộ với màu đỏ-hồng */
 .white-planet[data-planet="Senses"] .planet-label {
-  text-shadow:
-    0 0 7px rgba(255, 255, 255, 1),
-    /* Lõi trắng */
-    0 0 15px rgba(187, 35, 76, 0.9),
-    /* Ánh đỏ-hồng */
-    0 0 25px rgba(187, 35, 76, 0.8);
+  text-shadow: 0 0 7px rgba(255, 255, 255, 1),
+    /* Lõi trắng */ 0 0 15px rgba(187, 35, 76, 0.9),
+    /* Ánh đỏ-hồng */ 0 0 25px rgba(187, 35, 76, 0.8);
   /* Ánh đỏ-hồng lan tỏa */
 }
-
 
 /* =================================================================== */
 /*             HIỆU ỨNG RIÊNG CHO CÁC HÀNH TINH ĐẶC BIỆT              */
@@ -149,14 +135,10 @@
 /* --- ✨ 1. PRESENCE PLANET (MÀU CYAN TINH KHIẾT #00FFFF) ✨ --- */
 
 @keyframes pulse-glow-presence {
-
   0%,
   25% {
-    box-shadow:
-      0 0 12px rgba(255, 255, 255, 1),
-      0 0 45px rgba(0, 255, 255, 1),
-      /* Màu Cyan tinh khiết */
-      0 0 90px rgba(0, 255, 255, 0.7);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 45px rgba(0, 255, 255, 1),
+      /* Màu Cyan tinh khiết */ 0 0 90px rgba(0, 255, 255, 0.7);
     /* Màu Cyan tinh khiết */
   }
 
@@ -166,18 +148,21 @@
   }
 
   100% {
-    box-shadow:
-      0 0 12px rgba(255, 255, 255, 1),
-      0 0 45px rgba(0, 255, 255, 1),
-      /* Màu Cyan tinh khiết */
-      0 0 90px rgba(0, 255, 255, 0.7);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 45px rgba(0, 255, 255, 1),
+      /* Màu Cyan tinh khiết */ 0 0 90px rgba(0, 255, 255, 0.7);
     /* Màu Cyan tinh khiết */
   }
 }
 
 .white-planet[data-planet="Presence"] {
   /* Thay đổi màu cuối cùng thành màu cyan rực rỡ nhất */
-  background: radial-gradient(50% 50% at 50% 50%, #FFF 36.06%, rgba(255, 255, 255, 0.70) 65.87%, rgba(187, 35, 76, 0.10) 95.67%, #00FFFF 100%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #fff 36.06%,
+    rgba(255, 255, 255, 0.7) 65.87%,
+    rgba(187, 35, 76, 0.1) 95.67%,
+    #00ffff 100%
+  );
 
   animation-name: pulse-glow-presence;
   animation-duration: 3s;
@@ -185,23 +170,17 @@
 }
 
 .white-planet[data-planet="Presence"] .planet-label {
-  text-shadow:
-    0 0 7px rgba(255, 255, 255, 1),
-    0 0 15px rgba(0, 255, 255, 0.9),
-    /* Màu Cyan tinh khiết */
-    0 0 25px rgba(0, 255, 255, 0.8);
+  text-shadow: 0 0 7px rgba(255, 255, 255, 1), 0 0 15px rgba(0, 255, 255, 0.9),
+    /* Màu Cyan tinh khiết */ 0 0 25px rgba(0, 255, 255, 0.8);
   /* Màu Cyan tinh khiết */
 }
 
 /* --- ✨ 2. TIME PLANET (MÀU TÍM #9D23BB) ✨ --- */
 
 @keyframes pulse-glow-time {
-
   0%,
   25% {
-    box-shadow:
-      0 0 12px rgba(255, 255, 255, 1),
-      0 0 40px rgba(157, 35, 187, 1),
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 40px rgba(157, 35, 187, 1),
       0 0 80px rgba(157, 35, 187, 0.7);
   }
 
@@ -211,39 +190,36 @@
   }
 
   100% {
-    box-shadow:
-      0 0 12px rgba(255, 255, 255, 1),
-      0 0 40px rgba(157, 35, 187, 1),
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 40px rgba(157, 35, 187, 1),
       0 0 80px rgba(157, 35, 187, 0.7);
   }
 }
 
 .white-planet[data-planet="Time"] {
-  background: radial-gradient(50% 50% at 50% 50%, #FFF 36.06%, rgba(255, 255, 255, 0.70) 65.87%, rgba(187, 35, 76, 0.10) 95.67%, #9D23BB 100%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #fff 36.06%,
+    rgba(255, 255, 255, 0.7) 65.87%,
+    rgba(187, 35, 76, 0.1) 95.67%,
+    #9d23bb 100%
+  );
   animation-name: pulse-glow-time;
   animation-duration: 4s;
   animation-timing-function: linear;
 }
 
 .white-planet[data-planet="Time"] .planet-label {
-  text-shadow:
-    0 0 7px rgba(255, 255, 255, 1),
-    0 0 15px rgba(157, 35, 187, 0.9),
+  text-shadow: 0 0 7px rgba(255, 255, 255, 1), 0 0 15px rgba(157, 35, 187, 0.9),
     0 0 25px rgba(157, 35, 187, 0.8);
 }
-
 
 /* --- ✨ 3. SPACE PLANET (MÀU XANH DƯƠNG TƯƠI SÁNG #0099FF) ✨ --- */
 
 @keyframes pulse-glow-space {
-
   0%,
   25% {
-    box-shadow:
-      0 0 12px rgba(255, 255, 255, 1),
-      0 0 40px rgba(0, 153, 255, 1),
-      /* Màu xanh dương tươi mới */
-      0 0 80px rgba(0, 153, 255, 0.7);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 40px rgba(0, 153, 255, 1),
+      /* Màu xanh dương tươi mới */ 0 0 80px rgba(0, 153, 255, 0.7);
     /* Màu xanh dương tươi mới */
   }
 
@@ -253,18 +229,21 @@
   }
 
   100% {
-    box-shadow:
-      0 0 12px rgba(255, 255, 255, 1),
-      0 0 40px rgba(0, 153, 255, 1),
-      /* Màu xanh dương tươi mới */
-      0 0 80px rgba(0, 153, 255, 0.7);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 40px rgba(0, 153, 255, 1),
+      /* Màu xanh dương tươi mới */ 0 0 80px rgba(0, 153, 255, 0.7);
     /* Màu xanh dương tươi mới */
   }
 }
 
 .white-planet[data-planet="Space"] {
   /* Thay đổi màu cuối cùng thành màu xanh dương tươi sáng hơn */
-  background: radial-gradient(50% 50% at 50% 50%, #FFF 36.06%, rgba(255, 255, 255, 0.70) 65.87%, rgba(187, 35, 76, 0.10) 95.67%, #0099FF 100%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #fff 36.06%,
+    rgba(255, 255, 255, 0.7) 65.87%,
+    rgba(187, 35, 76, 0.1) 95.67%,
+    #0099ff 100%
+  );
 
   animation-name: pulse-glow-space;
   animation-duration: 4.5s;
@@ -272,10 +251,7 @@
 }
 
 .white-planet[data-planet="Space"] .planet-label {
-  text-shadow:
-    0 0 7px rgba(255, 255, 255, 1),
-    0 0 15px rgba(0, 153, 255, 0.9),
-    /* Màu xanh dương tươi mới */
-    0 0 25px rgba(0, 153, 255, 0.8);
+  text-shadow: 0 0 7px rgba(255, 255, 255, 1), 0 0 15px rgba(0, 153, 255, 0.9),
+    /* Màu xanh dương tươi mới */ 0 0 25px rgba(0, 153, 255, 0.8);
   /* Màu xanh dương tươi mới */
 }

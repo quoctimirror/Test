@@ -1,0 +1,155 @@
+.services-section5 {
+  height: 1251px;
+  padding: 0;
+  background: white;
+  font-family: "BT Beau Sans", sans-serif;
+  box-sizing: border-box;
+}
+
+.section5-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section5-content {
+  text-align: center;
+}
+
+.section5-title {
+  font-family: "Saol Display", serif;
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 90%;
+  letter-spacing: -3%;
+  text-align: center;
+  color: #000000;
+  margin: 0;
+  margin-top: 200px;
+  margin-bottom: 120px;
+  text-transform: uppercase;
+}
+
+.faq-list {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 60px;
+  width: 922px;
+  height: 753px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid #e0e0e0;
+  margin: 0;
+  padding: 0;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 36px 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #000000;
+  transition: color 0.3s ease;
+}
+
+.faq-question:hover {
+  color: #bb234c;
+}
+
+.faq-question span:first-child {
+  flex: 1;
+  text-align: left;
+}
+
+.faq-icon {
+  font-size: 18px;
+  color: #666;
+  transition: transform 0.3s ease;
+  margin-left: 1rem;
+}
+
+.faq-icon.active {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  padding: 0 0 1.5rem 0;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.faq-answer p {
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+}
+
+.view-all-section {
+  text-align: center;
+}
+
+.view-all-btn {
+  background: transparent;
+  border: 1px solid #333;
+  padding: 0;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  border-radius: 25px;
+  width: 125px;
+  height: 51px;
+  opacity: 1;
+}
+
+.view-all-btn:hover {
+  background: #333;
+  color: white;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .section5-title {
+    font-size: 36px;
+  }
+
+  .faq-question {
+    font-size: 14px;
+  }
+
+  .faq-answer p {
+    font-size: 13px;
+  }
+}

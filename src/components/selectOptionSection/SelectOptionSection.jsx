@@ -11,6 +11,33 @@ const SelectOptionSection = () => {
   const [tabs, setTabs] = useState([]);
   const [componentOptions, setComponentOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [userSelections, setUserSelections] = useState({});
+
+  // Default values for overview when no selection is made
+  const defaultValues = {
+    Stone: "Oval",
+    Metal: "Yellow Gold",
+    "Band Style": "Single Band",
+    Size: "6",
+    Engraving: "No",
+    "Gift Wrapping": "Yes",
+    Quantity: "1",
+  };
+
+  // Functions to handle localStorage
+  const saveSelectionsToLocalStorage = (selections) => {
+    localStorage.setItem("ringConfiguration", JSON.stringify(selections));
+  };
+
+  const loadSelectionsFromLocalStorage = () => {
+    try {
+      const saved = localStorage.getItem("ringConfiguration");
+      return saved ? JSON.parse(saved) : {};
+    } catch (error) {
+      console.error("Error loading from localStorage:", error);
+      return {};
+    }
+  };
 
   const handleSaveSettings = () => {
     console.log("Settings saved:", { selectedStone, currentPrice });
@@ -36,6 +63,9 @@ const SelectOptionSection = () => {
   const getCurrentTabOptions = () => {
     if (!activeTab || !components.length || !componentOptions.length) return [];
 
+    // If Overview tab is selected, return empty array (no options to display)
+    if (activeTab === "Overview") return [];
+
     // Find the component that matches the active tab
     const currentComponent = components.find(
       (comp) => comp.componentName === activeTab
@@ -43,14 +73,28 @@ const SelectOptionSection = () => {
     if (!currentComponent) return [];
 
     // Filter options by componentId and reverse the order
-    return componentOptions.filter(
-      (option) => option.componentId === currentComponent.componentId
-    ).reverse();
+    return componentOptions
+      .filter((option) => option.componentId === currentComponent.componentId)
+      .reverse();
   };
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
+
+    // Update user selections with current tab and option
+    const updatedSelections = {
+      ...userSelections,
+      [activeTab]: {
+        componentOptionalId: option.componentOptionalId,
+        componentOptionalName: option.componentOptionalName,
+        componentId: option.componentId,
+      },
+    };
+
+    setUserSelections(updatedSelections);
+    saveSelectionsToLocalStorage(updatedSelections);
     console.log("Selected option:", option);
+    console.log("Updated selections:", updatedSelections);
   };
 
   // Fetch categories and components from API
@@ -69,7 +113,6 @@ const SelectOptionSection = () => {
           );
           if (ringCategory) {
             setSelectedCategory(ringCategory);
-            console.log("Selected Ring category:", ringCategory);
           }
         }
 
@@ -84,19 +127,17 @@ const SelectOptionSection = () => {
             .reverse();
           setComponents(ringComponents);
 
-          // Create tabs from component names
+          // Create tabs from component names and add Overview tab at the end
           const componentTabs = ringComponents.map(
             (comp) => comp.componentName
           );
-          setTabs(componentTabs);
+          const allTabs = [...componentTabs, "Overview"];
+          setTabs(allTabs);
 
           // Set first component as active tab if available
           if (componentTabs.length > 0) {
             setActiveTab(componentTabs[0]);
           }
-
-          console.log("Ring components:", ringComponents);
-          console.log("Dynamic tabs:", componentTabs);
         }
 
         // Fetch component options
@@ -104,7 +145,6 @@ const SelectOptionSection = () => {
         if (optionsResponse.ok) {
           const optionsData = await optionsResponse.json();
           setComponentOptions(optionsData);
-          console.log("Component options:", optionsData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -114,12 +154,20 @@ const SelectOptionSection = () => {
     fetchData();
   }, []);
 
+  // Reset to default values on page load (don't load from localStorage)
+  useEffect(() => {
+    // Clear any existing localStorage data on page load
+    localStorage.removeItem("ringConfiguration");
+    // Keep userSelections as empty object so it uses defaultValues
+    setUserSelections({});
+  }, []);
+
   return (
     <div className="select-option-section">
       {/* Main ring display */}
       <div className="ring-display">
         <img
-          src="/collection/nhan_ex.png"
+          src="/products/nhan_ex.png"
           alt="Wedding Ring Set"
           className="ring-image"
         />
@@ -157,53 +205,54 @@ const SelectOptionSection = () => {
         </div>
 
         {/* Center - Content area */}
-        <div 
+        <div
           className="content"
           style={{
-            '--grid-columns': Math.min(getCurrentTabOptions().length || 1, 6)
+            "--grid-columns": Math.min(getCurrentTabOptions().length || 1, 6),
           }}
         >
-          {getCurrentTabOptions().map((option) => (
-            <div
-              key={option.componentOptionalId}
-              className={`option ${
-                selectedOption?.componentOptionalId ===
-                option.componentOptionalId
-                  ? "selected"
-                  : ""
-              }`}
-              onClick={() => handleOptionSelect(option)}
-            >
-              <div className="circle"></div>
-              <div className="label">{option.componentOptionalName}</div>
+          {activeTab === "Overview" ? (
+            <div className="overview-content">
+              <div className="overview-grid">
+                {tabs
+                  .filter((tab) => tab !== "Overview")
+                  .map((tabName) => {
+                    const selection = userSelections[tabName];
+                    const displayValue = selection
+                      ? selection.componentOptionalName
+                      : defaultValues[tabName] || "No Selection";
+
+                    return (
+                      <div key={tabName} className="overview-item">
+                        <div className="overview-label">{tabName}</div>
+                        <div className="overview-value">{displayValue}</div>
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
-          ))}
+          ) : (
+            getCurrentTabOptions().map((option) => (
+              <div
+                key={option.componentOptionalId}
+                className={`option ${
+                  selectedOption?.componentOptionalId ===
+                  option.componentOptionalId
+                    ? "selected"
+                    : ""
+                }`}
+                onClick={() => handleOptionSelect(option)}
+              >
+                <div className="circle"></div>
+                <div className="label">{option.componentOptionalName}</div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Right side - Summary */}
         <div className="summary">
           <h2>From {currentPrice}</h2>
-          {/* {selectedCategory && (
-            <div className="category-info">
-              <p><strong>Category:</strong> {selectedCategory.categoryName}</p>
-              <p><strong>ID:</strong> {selectedCategory.categoryId}</p>
-              <p><strong>Description:</strong> {selectedCategory.description}</p>
-            </div>
-          )} */}
-          {selectedOption && (
-            <div className="selected-option-info">
-              <p>
-                <strong>Selected:</strong>{" "}
-                {selectedOption.componentOptionalName}
-              </p>
-              <p>
-                <strong>Component:</strong> {selectedOption.componentName}
-              </p>
-              <p>
-                <strong>Description:</strong> {selectedOption.description}
-              </p>
-            </div>
-          )}
           <button className="button outline" onClick={handleBookAppointment}>
             Book An Appointment
           </button>

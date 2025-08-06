@@ -49,7 +49,7 @@
 .senses-title {
   color: var(--Pink, #bc224c);
   text-align: center;
-  font-family: "SaolDisplay-Regular-ttf";
+  font-family: "Saol Display";
   font-size: 64px;
   font-style: normal;
   font-weight: 300;
@@ -66,7 +66,7 @@
 .sense-item {
   color: var(--Pink, #bc224c);
   text-align: center;
-  font-family: "BT-BeauSans-Regular-ttf";
+  font-family: "BT Beau Sans";
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -91,7 +91,7 @@
   color: #797979;
   padding: 1;
   border-radius: 0;
-  font-family: "BT-BeauSans-Regular-ttf", sans-serif;
+  font-family: "BT Beau Sans", sans-serif;
   font-size: 12px;
   font-weight: 400;
   line-height: 1.3;
