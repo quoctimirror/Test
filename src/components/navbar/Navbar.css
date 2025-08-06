@@ -8,8 +8,9 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  z-index: 1000;
+  z-index: 10; /* Giảm z-index để logo có thể blend */
   pointer-events: auto;
+  /* Transparent - không có background để logo có thể blend với nền phía sau */
 }
 
 .menu-container {
@@ -257,8 +258,12 @@
 
 .navbar-logo {
   width: 126.65px;
-  opacity: 1;
+  height: auto;
   justify-self: center;
+  /* Smooth transition khi đổi màu - real-time responsive */
+  transition: filter 0.15s ease-out;
+  /* Default: logo trắng */
+  filter: none;
 }
 
 .navbar-right {
