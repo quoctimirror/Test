@@ -21,7 +21,7 @@ const Login = () => {
     setPassword('');
     setShowPassword(false);
     setErrors({});
-    
+
     // Force reset any cached styles
     const passwordToggles = document.querySelectorAll('.password-toggle');
     passwordToggles.forEach(toggle => {
@@ -59,8 +59,18 @@ const Login = () => {
     setIsLoading(true);
     setErrors({}); // Xóa lỗi cũ trước khi gọi API
 
+    const payload = {
+      username: loginInput.trim(),
+      password: password
+    };
+
     try {
-      const response = await api.post('/api/v1/auth/login', {
+      // --- THÊM 2 DÒNG NÀY VÀO ---
+      console.log("Sending request to URL:", api.defaults.baseURL + '/api/v1/auth/authenticate');
+      console.log("With payload:", payload);
+      // -----------------------------
+
+      const response = await api.post('/api/v1/auth/authenticate', {
         username: loginInput.trim(),
         password: password
       });
@@ -163,8 +173,8 @@ const Login = () => {
             Forgot password?
           </Link>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="bodytext-4--no-margin sign-in-button"
             disabled={isLoading}
           >
