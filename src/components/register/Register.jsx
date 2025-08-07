@@ -79,7 +79,7 @@ const Register = () => {
         try {
             await api.post('/api/v1/auth/register', payload);
 
-            alert('Account created successfully! Please log in.');
+            // alert('Account created successfully! Please log in.');
             navigate('/auth/login');
 
         } catch (error) {

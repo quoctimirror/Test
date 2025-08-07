@@ -80,7 +80,7 @@ const Login = () => {
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
 
-      alert('Login successful!');
+      // alert('Login successful!');
       navigate('/user-profile');
 
     } catch (error) {

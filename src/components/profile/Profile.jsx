@@ -159,7 +159,7 @@ const Profile = () => {
 
         try {
             await api.put('/api/v1/users/me', payload);
-            alert('Your changes have been saved successfully!');
+            // alert('Your changes have been saved successfully!');
         } catch (error) {
             console.error('Failed to save profile:', error);
             const errorMessage = error.response?.data?.message || 'Save failed. Please try again.';
