@@ -33,8 +33,7 @@ const FINGER_GEOMETRY_DATA = {
     },
     "Index": {
         positionLandmarks: [5, 6],
-        // widthLandmarks: [5, 9]
-        widthLandmarks: [9, 5]
+        widthLandmarks: [5, 9]
     },
     "Pinky": {
         positionLandmarks: [17, 18],
@@ -51,7 +50,7 @@ const TARGET_FPS = 30;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 // --- COMPONENT CHÍNH ---
-const Occluder = () => {
+const Occluder2 = () => {
     const { ringId } = useParams();
 
     const [loadingMessage, setLoadingMessage] = useState("Loading...");
@@ -212,17 +211,6 @@ const Occluder = () => {
                     threeState.ringModel = ringContainer;
                 }
 
-                // === FIX RING POSITIONING ===
-                // Reset hoàn toàn vị trí nhẫn về tâm
-                // threeState.ringModel.position.set(0, 0, 0);
-                // threeState.ringModel.rotation.set(0, 0, 0);
-                // threeState.ringModel.scale.set(1.5, 1.5, 1.5);
-
-                // Kiểm tra bounding box để đảm bảo model ở giữa
-                // const box = new THREE.Box3().setFromObject(threeState.ringModel);
-                // const center = box.getCenter(new THREE.Vector3());
-                // threeState.ringModel.position.sub(center); // Dịch chuyển để center thực sự ở gốc tọa độ
-
                 threeState.ringModel.visible = false;
                 threeState.scene.add(threeState.ringModel);
 
@@ -234,7 +222,6 @@ const Occluder = () => {
                 throw new Error("Không thể tải mô hình 3D.");
             }
 
-
             // === BẮT ĐẦU: TẠO VÀ CẤU HÌNH OCCLUDER ===
             console.log("🛠️ Tạo Finger Occluder...");
 
@@ -245,7 +232,6 @@ const Occluder = () => {
             // theo một hướng khác. Chúng ta xoay geometry trước để "chiều dài" của nó
             // nằm dọc theo trục X, giúp việc scale sau này dễ dàng hơn.
             occluderGeometry.rotateX(Math.PI / 2);
-
 
             // TẠO VẬT LIỆU DEBUG: Lưới màu đỏ để bạn có thể thấy occluder
             const occluderMaterial = new THREE.MeshBasicMaterial({
@@ -364,6 +350,7 @@ const Occluder = () => {
             };
             animationFrameIdRef.current = requestAnimationFrame(animate);
         };
+
         const processFrame = () => {
             if (!handLandmarkerRef.current || !threeState.renderer || !videoRef.current || !threeState.camera) {
                 return;
@@ -426,23 +413,72 @@ const Occluder = () => {
                     const targetScaleValue = fingerWidthInWorld * SCALE_ADJUSTMENT_FACTOR;
                     const targetScale = new THREE.Vector3(targetScaleValue, targetScaleValue, targetScaleValue);
 
+                    // === ROTATION LOGIC MỚI - HOẠT ĐỘNG CHO TẤT CẢ 5 NGÓN ===
                     const fingerDirection = new THREE.Vector3().subVectors(worldPos2, worldPos1).normalize();
-                    const sideDirection = new THREE.Vector3().subVectors(landmarkToWorld(widthLm1), landmarkToWorld(widthLm2)).normalize();
-                    const handUp = handedness === "Left"
-                        ? new THREE.Vector3().crossVectors(fingerDirection, sideDirection).normalize()
-                        : new THREE.Vector3().crossVectors(sideDirection, fingerDirection).normalize();
 
+                    // Sử dụng hướng từ ngón tay về cổ tay để xác định hướng mu bàn tay
+                    const wristLandmark = landmarks[0]; // Cổ tay
+                    const wristWorld = landmarkToWorld(wristLandmark);
+                    const fingerBaseWorld = landmarkToWorld(widthLm1); // Gốc ngón tay
+
+                    // Vector từ gốc ngón tay về cổ tay (chỉ về phía mu bàn tay)
+                    const toWrist = new THREE.Vector3().subVectors(wristWorld, fingerBaseWorld).normalize();
+
+                    // Tính handUp vector dựa trên hướng mu bàn tay
+                    let handUp;
+                    if (handedness === "Left") {
+                        // Tay trái: cross product theo thứ tự ngược lại
+                        handUp = new THREE.Vector3().crossVectors(toWrist, fingerDirection).normalize();
+                    } else {
+                        // Tay phải: cross product theo thứ tự thuận
+                        handUp = new THREE.Vector3().crossVectors(fingerDirection, toWrist).normalize();
+                    }
+
+                    // === XỬ LÝ ĐẶC BIỆT CHO NGÓN CÁI ===
+                    if (fingerName === "Thumb") {
+                        // Ngón cái cần thêm một góc xoay để đúng hướng tự nhiên
+                        const thumbCorrection = new THREE.Quaternion().setFromAxisAngle(fingerDirection, Math.PI * 0.25); // 45 độ
+                        const thumbUpMatrix = new THREE.Matrix4().lookAt(new THREE.Vector3(), handUp, fingerDirection);
+                        const thumbUpQuaternion = new THREE.Quaternion().setFromRotationMatrix(thumbUpMatrix);
+                        handUp = new THREE.Vector3(0, 1, 0).applyQuaternion(thumbUpQuaternion.multiply(thumbCorrection));
+                    }
+
+                    // Tạo rotation matrix
                     const rotationMatrix = new THREE.Matrix4();
                     rotationMatrix.lookAt(new THREE.Vector3(), fingerDirection, handUp);
                     const baseTargetQuaternion = new THREE.Quaternion().setFromRotationMatrix(rotationMatrix);
                     const targetQuaternion = new THREE.Quaternion().setFromRotationMatrix(rotationMatrix);
 
-                    // === BẮT ĐẦU PHẦN SỬA LỖI QUAN TRỌNG ===
-                    // Sau khi có được hướng chính xác, chúng ta cần xoay lại 90 độ
-                    // quanh trục X CỤC BỘ của nhẫn để "dựng nó đứng dậy" cho đúng tư thế đeo.
+                    // Áp dụng correction để nhẫn đứng đúng tư thế
                     const correctionQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -(Math.PI / 2));
                     targetQuaternion.multiply(correctionQuaternion);
-                    // === KẾT THÚC PHẦN SỬA LỖI ===
+
+                    // === BỔ SUNG: FINE-TUNING CHO TỪNG NGÓN CỤ THỂ ===
+                    let fingerSpecificCorrection = new THREE.Quaternion();
+
+                    switch (fingerName) {
+                        case "Index":
+                            // Ngón trỏ: có thể cần xoay thêm một chút
+                            fingerSpecificCorrection.setFromAxisAngle(new THREE.Vector3(0, 0, 1), handedness === "Left" ? Math.PI * 0.1 : -Math.PI * 0.1);
+                            break;
+                        case "Middle":
+                            // Ngón giữa: thường chuẩn nhất, không cần điều chỉnh
+                            break;
+                        case "Ring":
+                            // Ngón áp út: có thể cần xoay nhẹ
+                            fingerSpecificCorrection.setFromAxisAngle(new THREE.Vector3(0, 0, 1), handedness === "Left" ? -Math.PI * 0.05 : Math.PI * 0.05);
+                            break;
+                        case "Pinky":
+                            // Ngón út: cần xoay nhiều hơn do góc nghiêng tự nhiên
+                            fingerSpecificCorrection.setFromAxisAngle(new THREE.Vector3(0, 0, 1), handedness === "Left" ? -Math.PI * 0.15 : Math.PI * 0.15);
+                            break;
+                        case "Thumb":
+                            // Ngón cái: đã xử lý ở trên
+                            break;
+                    }
+
+                    targetQuaternion.multiply(fingerSpecificCorrection);
+                    // === KẾT THÚC ROTATION LOGIC MỚI ===
 
                     threeState.ringModel.position.lerp(targetPosition, SMOOTHING_FACTOR);
                     threeState.fingerOccluder.position.lerp(targetPosition, SMOOTHING_FACTOR);
@@ -453,7 +489,6 @@ const Occluder = () => {
                     const occluderLength = fingerWidthInWorld * 2; // Chiều dài đủ lớn để che hết nhẫn
                     // Vì đã xoay geometry 90 độ, nên scale Y và Z sẽ là bán kính, scale X là chiều dài
                     threeState.fingerOccluder.scale.set(occluderRadius, occluderRadius, occluderLength);
-                    // <-------------------------------------------------------------
 
                     threeState.ringModel.quaternion.slerp(targetQuaternion, SMOOTHING_FACTOR);
                     threeState.fingerOccluder.quaternion.slerp(baseTargetQuaternion, SMOOTHING_FACTOR);
@@ -548,7 +583,6 @@ const Occluder = () => {
         };
     }, [capturedImage, cleanup, ringId, ringConfig, selectedRingId]);
 
-
     const capturePhoto = useCallback(() => {
         try {
             const video = videoRef.current;
@@ -591,8 +625,6 @@ const Occluder = () => {
             setError("Không thể chụp ảnh. Có lỗi xảy ra.");
         }
     }, []); // Dependencies để trống vì chúng ta lấy từ ref.current
-
-    // --- KẾT THÚC THAY THẾ TẠI ĐÂY ---
 
     const retakePhoto = useCallback(() => {
         setCapturedImage(null);
@@ -708,4 +740,4 @@ const Occluder = () => {
     );
 };
 
-export default Occluder;
+export default Occluder2;

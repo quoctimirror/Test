@@ -60,7 +60,7 @@ const Login = () => {
     setErrors({}); // Xóa lỗi cũ trước khi gọi API
 
     try {
-      const response = await api.post('/api/v1/auth/authenticate', {
+      const response = await api.post('/api/v1/auth/login', {
         username: loginInput.trim(),
         password: password
       });

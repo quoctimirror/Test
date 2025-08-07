@@ -3,22 +3,37 @@ import axios from 'axios';
 
 // Determine which backend URL to use
 const getBackendURL = () => {
-    // Production mode (Vercel deployment)
-    if (import.meta.env.VITE_MODE === 'production' && import.meta.env.VITE_BACKEND_NGROK_URL) {
-        return import.meta.env.VITE_BACKEND_NGROK_URL;
+    // Debug logging
+    console.log('🔍 Backend URL Detection Debug:', {
+        hostname: window.location.hostname,
+        VITE_MODE: import.meta.env.VITE_MODE,
+        VITE_BACKEND_NGROK_URL: import.meta.env.VITE_BACKEND_NGROK_URL,
+        VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL
+    });
+
+    // For Vercel deployment, always use ngrok backend URL
+    if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('ngrok')) {
+        const url = import.meta.env.VITE_BACKEND_NGROK_URL || import.meta.env.VITE_API_BASE_URL;
+        console.log('✅ Using Vercel/Ngrok URL:', url);
+        return url;
     }
-    // If accessing via ngrok, use backend ngrok URL
-    if (window.location.hostname.includes('ngrok')) {
-        return import.meta.env.VITE_BACKEND_NGROK_URL || 'http://localhost:8081';
+    // For development mode, use ngrok URL if available
+    if (import.meta.env.VITE_MODE === 'development' && import.meta.env.VITE_BACKEND_NGROK_URL) {
+        const url = import.meta.env.VITE_BACKEND_NGROK_URL;
+        console.log('✅ Using Development Ngrok URL:', url);
+        return url;
     }
-    // Otherwise use local backend
-    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
+    // Fallback to local backend
+    const url = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
+    console.log('✅ Using Local Backend URL:', url);
+    return url;
 };
 
 const api = axios.create({
     baseURL: getBackendURL(),
     headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
     },
 });
 
