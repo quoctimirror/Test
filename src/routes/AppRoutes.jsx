@@ -22,32 +22,30 @@ const HoverExpandSection = lazy(() =>
 );
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
 // const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
-const TryOnRing = lazy(() => import("@components/arTryOn/TryOnRing.jsx"));
+const TryOnRing = lazy(() => import("@components/arTryOn/Occluder.jsx"));
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
 const AuthPage = lazy(() => import("@pages/AuthPage"));
 const Login = lazy(() => import("@components/login/Login"));
 const Register = lazy(() => import("@components/register/Register"));
-
-
+const Profile = lazy(() => import("@components/profile/Profile"));
 
 
 
 
 export default function AppRoutes() {
   const location = useLocation();
-
-  const staticRoutesToHideNavBar = location.pathname.startsWith('/auth') ||
+  const staticRoutesToHideNavBar =
     location.pathname.startsWith('/universe-final') ||
     location.pathname.startsWith('/hover-expand') ||
-    location.pathname.startsWith('/ar/rings') || 
+    location.pathname.startsWith('/ar/rings') ||
     location.pathname.startsWith('/dashboard/admin/manage-products');
 
-  const staticRoutesToHideFooter = location.pathname.startsWith('/auth') ||
+  const staticRoutesToHideFooter =
     location.pathname.startsWith('/universe-final') ||
     location.pathname.startsWith('/hover-expand') ||
-    location.pathname.startsWith('/ar/rings') || 
+    location.pathname.startsWith('/ar/rings') ||
     location.pathname.startsWith("/dashboard/admin/manage-products");
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
@@ -66,6 +64,8 @@ export default function AppRoutes() {
       >
         <Routes>
           <Route path="/" element={<HomePage />} />
+
+
           <Route path="/auth" element={<AuthPage />}>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
@@ -83,7 +83,7 @@ export default function AppRoutes() {
           />
 
           <Route path="/services" element={<ServicesPage />} />
-          
+
           <Route path="/services/detail" element={<ServicesDetailPage />} />
 
           <Route path="/support" element={<SupportPage />} />
@@ -93,7 +93,10 @@ export default function AppRoutes() {
           <Route path="/hover-expand" element={<HoverExpandSection />} />
 
           <Route path="/view-360" element={<View360 />} />
-          <Route path="/collections" element={<Collections />} />
+
+          <Route path="/user-profile" element={
+            <Profile />
+          } />
 
           <Route element={<TryOnRingLayout />}>
             <Route path="/ar/rings/:ringId" element={<TryOnRing />} />

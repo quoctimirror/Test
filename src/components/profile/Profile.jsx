@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/axiosConfig'; // <-- THAY THẾ AXIOS BẰNG INSTANCE API CỦA CHÚNG TA
 import './Profile.css';
+import '@styles/typography.css';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import ChangePassword from './ChangePassword';
@@ -15,7 +16,7 @@ const Profile = () => {
     const { logout } = useAuth();
 
     // ... (Các state và hằng số không thay đổi)
-    const titles = ['Mr', 'Mrs', 'Ms'];
+    const titles = ['Ms', 'Mrs', 'Mr'];
     const navItems = ['My Passport', 'Orders', 'Services', 'Address Book', 'Wishlist'];
 
     // Danh sách các quốc gia
@@ -180,7 +181,7 @@ const Profile = () => {
                 {/* Profile Header */}
                 <div className="profile-header">
                     <div className="profile-info">
-                        <h1 className="profile-name">{formData.firstName}<br />{formData.lastName}</h1>
+                        <h1 className="heading-1 profile-name">{formData.firstName}<br />{formData.lastName}</h1>
                         <div className="profile-logout" onClick={handleLogout}>Logout</div>
                     </div>
                     <div className="profile-center"><div className="profile-logo"></div></div>
@@ -206,13 +207,13 @@ const Profile = () => {
                     <form className="profile-form" onSubmit={handleSubmit} noValidate>
                         {/* Title */}
                         <div className="title-group">
-                            <label className="form-field-label">Title*</label>
+                            <label className="bodytext-3--no-margin">Title*</label>
                             <div className="title-options">
                                 {titles.map(title => (
                                     <span
                                         key={title}
                                         onClick={() => handleTitleSelect(title)}
-                                        className={`title-option ${formData.title?.toLowerCase() === title.toLowerCase() ? 'active' : ''}`}
+                                        className={`title-option bodytext-3--no-margin ${formData.title?.toLowerCase() === title.toLowerCase() ? 'active' : ''}`}
                                     >
                                         {title}
                                     </span>
@@ -222,46 +223,46 @@ const Profile = () => {
 
                         {/* Form Fields */}
                         <div className="form-field-container">
-                            <label className="form-field-label">First Name*</label>
-                            <input type="text" name="firstName" value={formData.firstName || ''} onChange={handleInputChange} className="form-input" required />
-                            {errors.firstName && <p className="input-error">{errors.firstName}</p>}
+                            <label className="bodytext-3--no-margin">First Name*</label>
+                            <input type="text" name="firstName" value={formData.firstName || ''} onChange={handleInputChange} className="form-input bodytext-3--no-margin" required />
+                            {errors.firstName && <p className="input-error bodytext-4--no-margin">{errors.firstName}</p>}
                         </div>
                         <div className="form-field-container">
-                            <label className="form-field-label">Last name*</label>
-                            <input type="text" name="lastName" value={formData.lastName || ''} onChange={handleInputChange} className="form-input" required />
-                            {errors.lastName && <p className="input-error">{errors.lastName}</p>}
+                            <label className="bodytext-3--no-margin">Last name*</label>
+                            <input type="text" name="lastName" value={formData.lastName || ''} onChange={handleInputChange} className="form-input bodytext-3--no-margin" required />
+                            {errors.lastName && <p className="input-error bodytext-4--no-margin">{errors.lastName}</p>}
                         </div>
                         <div className="form-field-container">
-                            <label className="form-field-label">Email Address*</label>
-                            <input type="email" name="email" value={formData.email || ''} onChange={handleInputChange} className="form-input" required />
-                            {errors.email && <p className="input-error">{errors.email}</p>}
+                            <label className="bodytext-3--no-margin">Email Address*</label>
+                            <input type="email" name="email" value={formData.email || ''} onChange={handleInputChange} className="form-input bodytext-3--no-margin" required />
+                            {errors.email && <p className="input-error bodytext-4--no-margin">{errors.email}</p>}
                         </div>
                         <div className="form-field-container">
-                            <label className="form-field-label">Day of Birth</label>
-                            <input type="date" name="dateOfBirth" value={formData.dateOfBirth || ''} onChange={handleInputChange} className="form-input" />
-                            {errors.dateOfBirth && <p className="input-error">{errors.dateOfBirth}</p>}
+                            <label className="bodytext-3--no-margin">Day of Birth</label>
+                            <input type="date" name="dateOfBirth" value={formData.dateOfBirth || ''} onChange={handleInputChange} className="form-input bodytext-3--no-margin" />
+                            {errors.dateOfBirth && <p className="input-error bodytext-4--no-margin">{errors.dateOfBirth}</p>}
                         </div>
 
                         <div className="phone-input-container">
-                            <label className="phone-label">Phone Number</label>
+                            <label className="bodytext-3--no-margin">Phone Number</label>
                             <PhoneInput
                                 country={'vn'}
                                 value={formData.phoneNumber}
                                 onChange={handlePhoneChange}
-                                inputClass="phone-input-field"
+                                inputClass="phone-input-field bodytext-3--no-margin"
                                 containerClass="phone-input-control"
                                 buttonClass="phone-dropdown-button"
                             />
-                            {errors.phoneNumber && <p className="input-error">{errors.phoneNumber}</p>}
+                            {errors.phoneNumber && <p className="input-error bodytext-4--no-margin">{errors.phoneNumber}</p>}
                         </div>
 
                         <div className="form-field-container">
-                            <label className="form-field-label">Nationality</label>
+                            <label className="bodytext-3--no-margin">Nationality</label>
                             <select
                                 name="nationality"
                                 value={formData.nationality || ''}
                                 onChange={handleNationalityChange}
-                                className="form-input nationality-dropdown"
+                                className="form-input nationality-dropdown bodytext-3--no-margin"
                             >
                                 <option value="">Select a country</option>
                                 {countries.map(country => (
@@ -273,17 +274,17 @@ const Profile = () => {
                         </div>
 
                         {/* Action Buttons */}
-                        {errors.form && <div className="form-field-container"><p className="input-error">{errors.form}</p></div>}
+                        {errors.form && <div className="form-field-container"><p className="input-error bodytext-4--no-margin">{errors.form}</p></div>}
 
                         <div className="action-buttons-container">
                             <button
                                 type="button"
                                 onClick={() => setShowChangePassword(true)}
-                                className="change-password-button"
+                                className="change-password-button bodytext-3--no-margin"
                             >
                                 Change Password
                             </button>
-                            <button type="submit" disabled={isLoading} className="save-profile-button">
+                            <button type="submit" disabled={isLoading} className="save-profile-button bodytext-3--no-margin">
                                 {isLoading ? 'Saving...' : 'Save Profile'}
                             </button>
                         </div>

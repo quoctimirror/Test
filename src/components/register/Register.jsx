@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api/axiosConfig';
 import './Register.css';
 
 // Tách SVG ra để dùng lại, cho code gọn gàng
@@ -9,9 +10,8 @@ const EyeSlashIcon = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill
 
 const Register = () => {
     const navigate = useNavigate();
-    const titles = ['Mr', 'Mrs', 'Ms'];
+    const titles = ['Ms', 'Mrs', 'Mr'];
 
-    // State cho toàn bộ form data
     const [formData, setFormData] = useState({
         title: 'Ms',
         firstName: '',
@@ -22,20 +22,15 @@ const Register = () => {
         confirmPassword: ''
     });
 
-    // State cho việc hiển thị mật khẩu
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-    // State cho lỗi và loading
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
 
-    // --- LOGIC VALIDATION ---
     const validateForm = () => {
         const newErrors = {};
         const { firstName, lastName, username, email, password, confirmPassword } = formData;
 
-        // Các kiểm tra cơ bản
         if (!firstName.trim()) newErrors.firstName = 'First Name is required';
         if (!lastName.trim()) newErrors.lastName = 'Last Name is required';
         if (!username.trim()) newErrors.username = 'Username is required';
@@ -45,19 +40,12 @@ const Register = () => {
             newErrors.email = 'Email address is invalid';
         }
 
-        // Kiểm tra mật khẩu phức tạp
         if (!password) {
             newErrors.password = 'Password is required';
-        } else {
-            if (password.length < 10) newErrors.password = 'Password must be at least 10 characters long.';
-            else if (!/[a-z]/.test(password)) newErrors.password = 'Password must contain at least one lowercase character.';
-            else if (!/[A-Z]/.test(password)) newErrors.password = 'Password must contain at least one uppercase character.';
-            else if (!/[0-9]/.test(password)) newErrors.password = 'Password must contain at least one number.';
-            else if (!/[!#$€£%&()*+,-./:;<=>?@\[\]\^_~]/.test(password)) newErrors.password = 'Password must contain at least one special character.';
-            else if (/(.)\1\1/.test(password)) newErrors.password = 'Password cannot contain a repetition of more than two characters.';
+        } else if (password.length < 8) { // Cập nhật độ dài tối thiểu theo backend (nếu có)
+            newErrors.password = 'Password must be at least 8 characters long.';
         }
 
-        // Kiểm tra xác nhận mật khẩu
         if (!confirmPassword) {
             newErrors.confirmPassword = 'Please confirm your password';
         } else if (password && password !== confirmPassword) {
@@ -68,52 +56,41 @@ const Register = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    // Hàm xử lý khi submit form
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     if (!validateForm()) return;
-
-    //     setIsLoading(true);
-    //     console.log("Form is valid, submitting data:", formData);
-
-    //     setTimeout(() => {
-    //         setIsLoading(false);
-    //         alert('Account created successfully! Redirecting to login...');
-    //         navigate('/auth/login');
-    //     }, 2000);
-    // };
-
-    const handleSubmit = async (e) => { // Chuyển thành hàm async
+    // --- BƯỚC 3: CẬP NHẬT HOÀN CHỈNH HÀM SUBMIT ---
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        // Thực hiện validation phía client trước
         if (!validateForm()) return;
 
         setIsLoading(true);
-        setErrors({});
+        setErrors({}); // Xóa lỗi cũ trước khi gửi
 
         // Tạo payload để gửi đi, chỉ chứa các trường backend cần
         const payload = {
+            title: formData.title,
+            firstName: formData.firstName.trim(),
+            lastName: formData.lastName.trim(),
             username: formData.username.trim(),
             email: formData.email.trim(),
             password: formData.password,
-            firstName: formData.firstName.trim(),
-            lastName: formData.lastName.trim(),
-            // phoneNumber là optional trong backend, có thể thêm nếu có input
+            // phoneNumber là optional, có thể thêm vào nếu form có
         };
 
         try {
-            await axios.post('http://localhost:8081/api/v1/auth/register', payload);
+            await api.post('/api/v1/auth/register', payload);
 
-            // --- XỬ LÝ KHI THÀNH CÔNG ---
             alert('Account created successfully! Please log in.');
-            navigate('/auth/login'); // Chuyển hướng đến trang đăng nhập
+            navigate('/auth/login');
 
         } catch (error) {
-            // --- XỬ LÝ KHI THẤT BẠI ---
+            // Xử lý khi thất bại
             let errorMessage = 'Registration failed. Please try again.';
-            if (error.response && error.response.data) {
-                console.error("API Error:", error.response.data);
-                errorMessage = error.response.data.message || errorMessage;
-                // Hiển thị lỗi cụ thể
+
+            // Lấy thông báo lỗi cụ thể từ response của backend
+            if (error.response && error.response.data && error.response.data.message) {
+                errorMessage = error.response.data.message;
+
+                // Hiển thị lỗi ngay tại trường input tương ứng
                 if (errorMessage.toLowerCase().includes('username')) {
                     setErrors({ username: errorMessage });
                 } else if (errorMessage.toLowerCase().includes('email')) {
@@ -121,29 +98,27 @@ const Register = () => {
                 } else if (errorMessage.toLowerCase().includes('password')) {
                     setErrors({ password: errorMessage });
                 } else {
+                    // Lỗi chung không thuộc trường nào
                     setErrors({ form: errorMessage });
                 }
             } else {
+                // Lỗi mạng hoặc lỗi không xác định
                 console.error('Registration failed:', error);
-                setErrors({ form: 'Cannot connect to the server.' });
+                setErrors({ form: 'Cannot connect to the server. Please try again later.' });
             }
         } finally {
-            setIsLoading(false);
+            setIsLoading(false); // Luôn dừng loading sau khi hoàn tất
         }
     };
 
-    // Hàm xử lý chung cho việc thay đổi input
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-
-        // Xóa lỗi khi người dùng bắt đầu nhập
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: null }));
         }
     };
 
-    // Hàm render nút toggle password
     const renderPasswordToggle = (isVisible, toggleVisibility) => (
         <button type="button" className="password-toggle" onClick={toggleVisibility} aria-label={isVisible ? "Hide password" : "Show password"}>
             {isVisible ? <EyeSlashIcon /> : <EyeIcon />}
@@ -153,10 +128,13 @@ const Register = () => {
     return (
         <div className="register-container">
             <div className="register-form-wrapper">
-                <h1 className="register-title">CREATE YOUR ACCOUNT</h1>
+                <h1 className="heading-1 register-title">CREATE YOUR ACCOUNT</h1>
                 <form className="register-form" onSubmit={handleSubmit} noValidate>
+                    {/* Hiển thị lỗi chung của form */}
+                    {errors.form && <p className="input-error form-error bodytext-4--no-margin">{errors.form}</p>}
+
                     <div className="title-group">
-                        <label>Title*</label>
+                        <label className="bodytext-3--no-margin">Title*</label>
                         <div className="title-options">
                             {titles.map((title) => (
                                 <span key={title} className={`title-option ${formData.title === title ? 'active' : ''}`} onClick={() => setFormData(prev => ({ ...prev, title }))}>
@@ -166,77 +144,78 @@ const Register = () => {
                         </div>
                     </div>
 
-                    {/* === CẤU TRÚC FORM ĐÃ ĐƯỢC CẬP NHẬT === */}
                     <div className="form-field-container">
                         <div className="input-group">
                             <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} placeholder=" " required />
-                            <label htmlFor="firstName">First Name*</label>
+                            <label htmlFor="firstName" className="bodytext-3--no-margin">First Name*</label>
                         </div>
-                        {errors.firstName && <p className="input-error">{errors.firstName}</p>}
+                        {errors.firstName && <p className="input-error bodytext-3--no-margin">{errors.firstName}</p>}
                     </div>
 
                     <div className="form-field-container">
                         <div className="input-group">
                             <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} placeholder=" " required />
-                            <label htmlFor="lastName">Last name*</label>
+                            <label htmlFor="lastName" className="bodytext-3--no-margin">Last name*</label>
                         </div>
-                        {errors.lastName && <p className="input-error">{errors.lastName}</p>}
+                        {errors.lastName && <p className="input-error bodytext-3--no-margin">{errors.lastName}</p>}
                     </div>
 
                     <div className="form-field-container">
                         <div className="input-group">
                             <input type="text" id="username" name="username" value={formData.username} onChange={handleInputChange} placeholder=" " required />
-                            <label htmlFor="username">Username*</label>
+                            <label htmlFor="username" className="bodytext-3--no-margin">Username*</label>
                         </div>
-                        {errors.username && <p className="input-error">{errors.username}</p>}
+                        {errors.username && <p className="input-error bodytext-3--no-margin">{errors.username}</p>}
                     </div>
 
                     <div className="form-field-container">
                         <div className="input-group">
                             <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} placeholder=" " required />
-                            <label htmlFor="email">Email Address*</label>
+                            <label htmlFor="email" className="bodytext-3--no-margin">Email Address*</label>
                         </div>
-                        {errors.email && <p className="input-error">{errors.email}</p>}
+                        {errors.email && <p className="input-error bodytext-3--no-margin">{errors.email}</p>}
                     </div>
 
                     <div className="form-field-container">
                         <div className="input-group password-group">
                             <input type={showPassword ? 'text' : 'password'} id="password" name="password" value={formData.password} onChange={handleInputChange} placeholder=" " required />
-                            <label htmlFor="password">Password*</label>
+                            <label htmlFor="password" className="bodytext-3--no-margin">Password*</label>
                             {renderPasswordToggle(showPassword, () => setShowPassword(!showPassword))}
                         </div>
-                        {errors.password && <p className="input-error">{errors.password}</p>}
+                        {errors.password && <p className="input-error bodytext-3--no-margin">{errors.password}</p>}
                     </div>
 
                     <div className="form-field-container">
                         <div className="input-group password-group">
                             <input type={showConfirmPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleInputChange} placeholder=" " required />
-                            <label htmlFor="confirmPassword">Confirm Password*</label>
+                            <label htmlFor="confirmPassword" className="bodytext-3--no-margin">Confirm Password*</label>
                             {renderPasswordToggle(showConfirmPassword, () => setShowConfirmPassword(!showConfirmPassword))}
                         </div>
-                        {errors.confirmPassword && <p className="input-error">{errors.confirmPassword}</p>}
+                        {errors.confirmPassword && <p className="input-error bodytext-3--no-margin">{errors.confirmPassword}</p>}
                     </div>
-
 
                     <div className="password-requirements">
-                        <p>Password requirements</p>
+                        <p className="bodytext-5--no-margin">Password requirements</p>
                         <ul>
-                            <li>No repetition of more than two characters</li>
-                            <li>One lowercase character</li>
-                            <li>One number</li>
-                            <li>One uppercase character</li>
-                            <li>At least 1 special character(s)</li>
-                            <li>10 characters minimum</li>
-                            <li>{'Allowed special character(s) from !#$€£%&()*+,-./:;<=>?@[]^_~'}</li>
+                            <li className="bodytext-5--no-margin">No repetition of more than two characters</li>
+                            <li className="bodytext-5--no-margin">One lowercase character</li>
+                            <li className="bodytext-5--no-margin">One number</li>
+                            <li className="bodytext-5--no-margin">One uppercase character</li>
+                            <li className="bodytext-5--no-margin">At least 1 special character(s)</li>
+                            <li className="bodytext-5--no-margin">8 characters minimum</li>
+                            <li className="bodytext-5--no-margin">{'Allowed special character(s) from !#$€£%&()*+,-./:;<=>?@[]^_~'}</li>
                         </ul>
                     </div>
-                    <p className="privacy-info"> For further information about how <br /> we use your personal information, please see our <strong>Privacy Policy</strong> </p>
-                    <button type="submit" className="create-account-button" disabled={isLoading}>
+                    <p className="privacy-info bodytext-4--no-margin"> For further information about how <br /> we use your personal information, please see our <strong>Privacy Policy</strong> </p>
+                    <button type="submit" className="create-account-button bodytext-4--no-margin" disabled={isLoading}>
                         {isLoading ? 'Creating Account...' : 'Create account'}
                     </button>
-                    <a onClick={() => navigate('/auth/login')} className="return-login-link">
-                        Return to Login
-                    </a>
+                    <p className="bodytext-3--no-margin login-prompt">
+                        Already a member?{' '}
+                        <a onClick={() => navigate('/auth/login')} className="bodytext-3--no-margin return-login-link">
+                            Login now
+                        </a>
+                    </p>
                 </form>
             </div>
         </div>

@@ -50,15 +50,17 @@
     height: 40vh;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     padding: 0 60px;
     position: relative;
     overflow: hidden;
+    gap: 200px;
 }
 
 .profile-info {
     z-index: 2;
     position: relative;
+    text-align: right;
 }
 
 .profile-name {
@@ -67,7 +69,6 @@
     font-weight: 300;
     margin: 0;
     line-height: 1.2;
-    font-family: 'Cormorant Garamond', serif;
 }
 
 .profile-logout {
@@ -85,11 +86,10 @@
 }
 
 .profile-center {
-    z-index: 2;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    z-index: 3;
+    position: relative;
+    width: 20vh;
+    height: 20vh;
 }
 
 .profile-logo {
@@ -98,30 +98,41 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20vh;
-    height: 20vh;
-    margin-left: -39%;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-45deg);
 }
 
 .profile-tier {
     z-index: 2;
     position: relative;
-    text-align: right;
+    text-align: left;
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    font-family: "BT Beau Sans";
+    font-style: normal;
+    font-display: swap;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 120%;
+    /* 38.4px */
 }
 
 .tier-level {
-    color: white;
-    font-size: 18px;
-    font-weight: 400;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
     margin: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: inherit;
+    line-height: inherit;
 }
 
 .tier-name {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 14px;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
     margin: 4px 0 0 0;
-    font-family: 'Arial', sans-serif;
+    font-family: inherit;
+    line-height: inherit;
 }
 
 /* Header Navigation */
@@ -179,25 +190,23 @@
 
 /* Title Selection */
 .title-group {
-    margin-bottom: 50px;
+    margin-bottom: 36px;
 }
 
 .title-group label {
     display: block;
-    margin-bottom: 20px;
-    font-size: 16px;
-    color: #666;
-    font-weight: 400;
+    margin-bottom: 5px;
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
 }
 
 .title-options {
     display: flex;
-    gap: 40px;
+    gap: 36px;
 }
 
 .title-option {
     cursor: pointer;
-    padding-bottom: 8px;
+    padding-bottom: 3px;
     border-bottom: 2px solid transparent;
     color: #888;
     font-size: 18px;
@@ -217,18 +226,26 @@
 
 /* Form Fields */
 .form-field-container {
-    margin-bottom: 45px;
+    margin-bottom: 36px;
     position: relative;
 }
 
-.form-field-label,
+/* Ensure all labels have consistent color */
+.form-field-container label,
+.title-group label,
+.phone-input-container label {
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+}
+
+.form-field-label {
+    display: block;
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+}
+
 .phone-label {
     display: block;
-    margin-bottom: 8px;
-    font-size: 16px;
-    color: #666 !important;
-    font-weight: 400;
-    font-family: 'Arial', sans-serif;
+    margin-bottom: 0;
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
 }
 
 .form-input:disabled {
@@ -241,78 +258,108 @@
 /* Đảm bảo tất cả input đều có màu viền đúng */
 .form-input {
     width: 100%;
-    padding: 15px 0;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    font-size: 18px;
+    padding: 10px 0;
+    border: none !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+    border-radius: 0 !important;
+    font-size: 1.1rem;
+    font-family: var(--font-bt-beau-sans);
     background-color: transparent;
-    outline: none;
+    outline: none !important;
     color: #333;
     box-sizing: border-box;
-    transition: border-color 0.2s ease;
+    transition: border-bottom-color 0.3s ease;
 }
 
 .form-input:focus,
 .form-input:hover,
 .form-input:active {
     outline: none !important;
-    border-bottom-color: #BC224C !important;
-    border-color: #BC224C !important;
+    border: none !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
     box-shadow: none !important;
 }
 
 /* Đảm bảo không có outline mặc định của browser */
 .form-input:focus-visible {
     outline: none !important;
-    border-bottom-color: #BC224C !important;
+    border: none !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
 }
 
 /* Rule cụ thể cho từng loại input */
 input[type="text"]:focus,
 input[type="email"]:focus,
-input[type="date"]:focus {
+input[type="date"]:focus,
+select.form-input:focus {
     outline: none !important;
-    border-bottom-color: #BC224C !important;
-    border-color: #BC224C !important;
+    border: none !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
     box-shadow: none !important;
+}
+
+/* Rule cho select để cũng chỉ có underline */
+select.form-input,
+.nationality-dropdown {
+    border: none !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+    border-radius: 0 !important;
+    outline: none !important;
 }
 
 
 /* --- Styles for react-phone-input-2 --- */
 .phone-input-container {
-    margin-bottom: 45px;
+    margin-bottom: 36px;
     position: relative;
 }
 
 .phone-input-control.react-tel-input {
-    border: none;
+    border: none !important;
+    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-radius: 0 !important;
     font-family: inherit;
     position: relative;
+    background: transparent !important;
 }
 
-/* Tạo viền liền mạch cho toàn bộ phone input */
-.phone-input-control.react-tel-input::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background-color: #ccc;
-    transition: background-color 0.2s ease;
-}
-
-.phone-input-control.react-tel-input:focus-within::after,
-.phone-input-control.react-tel-input:hover::after {
-    background-color: var(--primary-color);
+.phone-input-control.react-tel-input:focus,
+.phone-input-control.react-tel-input:hover,
+.phone-input-control.react-tel-input:focus-within {
+    border: none !important;
+    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .phone-input-field {
     width: 100% !important;
-    padding: 15px 0 15px 58px !important;
+    padding: 10px 0 10px 58px !important;
     border: none !important;
     border-bottom: none !important;
-    font-size: 18px !important;
+    font-size: 1.1rem !important;
+    font-family: var(--font-bt-beau-sans) !important;
     background-color: transparent !important;
     outline: none !important;
     color: #333 !important;

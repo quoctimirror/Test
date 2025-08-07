@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
+import api from '../../api/axiosConfig';
 
 // Tách SVG ra cho sạch sẽ
 const EyeIcon = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>);
 const EyeSlashIcon = () => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.12 14.12C13.8454 14.4148 13.5141 14.6512 13.1462 14.8151C12.7782 14.9790 12.3809 15.0670 11.9781 15.0744C11.5753 15.0818 11.1749 15.0085 10.8007 14.8590C10.4266 14.7096 10.0875 14.4873 9.80385 14.2037C9.52016 13.9200 9.29792 13.5809 9.14843 13.2068C8.99895 12.8326 8.92559 12.4322 8.93303 12.0294C8.94047 11.6266 9.02848 11.2293 9.19239 10.8614C9.35630 10.4934 9.59270 10.1621 9.88748 9.88748M17.94 17.94C16.2306 19.243 14.1491 19.9649 12 20C5 20 1 12 1 12C2.24389 9.68192 3.96914 7.65663 6.06 6.06M9.9 4.24C10.5883 4.0789 11.2931 3.99836 12 4C19 4 23 12 23 12C22.393 13.1356 21.6691 14.2048 20.84 15.19M14.12 14.12L9.88 9.88M14.12 14.12L20 20M9.88 9.88L4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>);
 
 const Login = () => {
+  const navigate = useNavigate();
   const [loginInput, setLoginInput] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+  // Reset form when component mounts (when navigating from register)
+  useEffect(() => {
+    setLoginInput('');
+    setPassword('');
+    setShowPassword(false);
+    setErrors({});
+    
+    // Force reset any cached styles
+    const passwordToggles = document.querySelectorAll('.password-toggle');
+    passwordToggles.forEach(toggle => {
+      toggle.style.color = 'var(--transparent-black-50, rgba(0, 0, 0, 0.50))';
+    });
+  }, []);
 
   const isEmailFormat = (input) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -35,16 +51,6 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (!validateForm()) return;
-  //   console.log('Form is valid:', { login: loginInput.trim(), password });
-  //   setIsLoading(true);
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //     alert(`Login simulation for "${loginInput.trim()}" finished!`);
-  //   }, 2000);
-  // };
 
   const handleSubmit = async (e) => { // Chuyển thành hàm async
     e.preventDefault();
@@ -54,23 +60,18 @@ const Login = () => {
     setErrors({}); // Xóa lỗi cũ trước khi gọi API
 
     try {
-      const response = await axios.post('http://localhost:8081/api/v1/auth/authenticate', {
-        username: loginInput.trim(), // Backend của bạn đang chờ 'username'
+      const response = await api.post('/api/v1/auth/authenticate', {
+        username: loginInput.trim(),
         password: password
       });
 
-      // --- XỬ LÝ KHI THÀNH CÔNG ---
       const { accessToken, refreshToken } = response.data;
 
-      // Lưu token vào localStorage để sử dụng cho các lần gọi API sau
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
 
-      // Thiết lập header mặc định cho axios để tự động gửi token
-      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-
       alert('Login successful!');
-      navigate('/dashboard'); // Chuyển hướng đến trang dashboard hoặc trang chính
+      navigate('/user-profile');
 
     } catch (error) {
       // --- XỬ LÝ KHI THẤT BẠI ---
@@ -107,7 +108,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-form-wrapper">
-        <h1 className="login-title">WELCOME BACK!</h1>
+        <h1 className="heading-1 login-title">WELCOME BACK!</h1>
 
         <form className="login-form" onSubmit={handleSubmit} noValidate>
           {/* === THAY ĐỔI BẮT ĐẦU TỪ ĐÂY === */}
@@ -121,12 +122,13 @@ const Login = () => {
                 name="login"
                 value={loginInput}
                 onChange={(e) => handleInputChange(e, setLoginInput)}
-                placeholder="Username/Email"
+                placeholder=" "
                 required
               />
+              <label htmlFor="login" className="bodytext-3--no-margin floating-label">Username/Email</label>
             </div>
             {/* Chuyển lỗi ra ngoài input-group */}
-            {errors.login && <p className="input-error">{errors.login}</p>}
+            {errors.login && <p className="bodytext-4--no-margin input-error">{errors.login}</p>}
           </div>
 
           {/* Cụm Input cho Password */}
@@ -138,9 +140,10 @@ const Login = () => {
                 name="password"
                 value={password}
                 onChange={(e) => handleInputChange(e, setPassword)}
-                placeholder="Password"
+                placeholder=" "
                 required
               />
+              <label htmlFor="password" className="bodytext-3--no-margin floating-label">Password</label>
               <button
                 type="button"
                 className="password-toggle"
@@ -151,23 +154,27 @@ const Login = () => {
               </button>
             </div>
             {/* Chuyển lỗi ra ngoài input-group */}
-            {errors.password && <p className="input-error">{errors.password}</p>}
+            {errors.password && <p className="bodytext-4--no-margin input-error">{errors.password}</p>}
           </div>
 
           {/* === KẾT THÚC THAY ĐỔI === */}
 
-          <Link to="/forgot-password" className="forgot-password-link">
+          <Link to="/forgot-password" className="bodytext-4--no-margin forgot-password-link">
             Forgot password?
           </Link>
 
-          <button type="submit" className="sign-in-button" disabled={isLoading}>
+          <button 
+            type="submit" 
+            className="bodytext-4--no-margin sign-in-button"
+            disabled={isLoading}
+          >
             {isLoading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <p className="register-prompt">
+        <p className="bodytext-3--no-margin register-prompt">
           Not a member?{' '}
-          <Link to="/auth/register" className="register-link">
+          <Link to="/auth/register" className="bodytext-3--no-margin register-link">
             Register now
           </Link>
         </p>

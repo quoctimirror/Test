@@ -1,5 +1,4 @@
-/* --- Google Font Import --- */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=BT-BeauSans-Regular-ttf:wght@400;500&display=swap');
+/* Typography classes được import từ typography.css */
 
 /* --- General Styling & Centering --- */
 .register-container {
@@ -9,9 +8,10 @@
     min-height: 100vh;
     width: 100%;
     background-color: #f8f8f8;
-    padding: 40px 20px;
+    /* padding: 40px 20px; */
     /* Thêm padding trên dưới */
     box-sizing: border-box;
+    background: linear-gradient(0deg, #000 -16.37%, #EC3667 4.03%, #FFF 36.66%);
 }
 
 .register-form-wrapper {
@@ -21,17 +21,11 @@
 
 /* --- Title --- */
 .register-title {
-    font-family: 'SaolDisplay-Regular-ttf', serif;
     color: var(--Black, #000);
-    font-size: 64px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 90%;
-    letter-spacing: -1.92px;
-    font-style: normal;
     text-transform: uppercase;
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 48px;
+    margin-top: 206px;
     white-space: nowrap;
     margin-left: -18%;
 }
@@ -48,21 +42,19 @@
 }
 
 .title-group label {
-    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
-    font-size: 0.9rem;
-    color: #888;
-    margin-bottom: 15px;
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
+    margin-bottom: 0px;
+    margin-top: 0;
     display: block;
 }
 
 .title-options {
     display: flex;
     gap: 30px;
+    margin-top: 10px;
 }
 
 .title-option {
-    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
-    font-size: 1rem;
     color: #888;
     cursor: pointer;
     padding-bottom: 5px;
@@ -82,7 +74,7 @@
 /* Class mới để bọc input và lỗi */
 .form-field-container {
     /* Khoảng cách giữa các trường input */
-    margin-bottom: 35px;
+    margin-bottom: 36px;
     position: relative;
 }
 
@@ -95,7 +87,7 @@
 .input-group input {
     width: 100%;
     border: none;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50));
     background-color: transparent;
     padding: 10px 0;
     font-size: 1.1rem;
@@ -106,9 +98,7 @@
 
 /* Label ban đầu */
 .input-group label {
-    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
-    font-size: 1.1rem;
-    color: #888;
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
     position: absolute;
     left: 0;
     top: 10px;
@@ -125,15 +115,13 @@
 }
 
 .input-group input:focus {
-    border-bottom-color: #333;
+    border-bottom-color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
 }
 
 /* --- Lớp CSS cho hiển thị lỗi --- */
 .input-error {
     color: #d9534f;
-    font-size: 0.8rem;
     text-align: left;
-    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
     margin-top: 8px;
     /* Khoảng cách với đường gạch */
 }
@@ -163,12 +151,10 @@
 
 /* --- Các phần còn lại --- */
 .password-requirements {
-    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
-    font-size: 0.8rem;
-    color: #888;
-    margin-top: -15px;
+    color: #F00;
+    margin-top: 36px;
     /* Giảm khoảng trống do margin của form-field-container cuối cùng */
-    margin-bottom: 40px;
+    margin-bottom: 48px;
 }
 
 .password-requirements p {
@@ -196,10 +182,8 @@
 
 .privacy-info {
     text-align: center;
-    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
-    font-size: 0.9rem;
-    color: #888;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
 }
 
 .privacy-info strong {
@@ -209,21 +193,60 @@
 
 .create-account-button {
     padding: 14px 20px;
-    width: 100%;
-    background-color: transparent;
-    border: 1px solid #333;
+    width: 300px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 40px;
-    font-size: 1rem;
-    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
-    color: #333;
+    border: 0.5px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+    color: var(--transparent-white-75, rgba(255, 255, 255, 0.75));
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    margin: 0 auto 48px auto;
+    display: block;
+    position: relative;
+    overflow: hidden;
+}
+
+.create-account-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.8),
+            transparent);
+}
+
+.create-account-button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.8),
+            transparent,
+            rgba(255, 255, 255, 0.3));
+    color: black;
 }
 
 .create-account-button:hover {
-    background-color: #333;
-    color: #f8f8f8;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 0 16px 8px rgba(255, 255, 255, 0.8);
+    color: black;
 }
 
 /* Style cho nút khi bị vô hiệu hóa */
@@ -240,20 +263,50 @@
 }
 
 
-.return-login-link {
-    display: block;
+/* --- Login Prompt --- */
+.login-prompt {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
     text-align: center;
-    font-family: 'BT-BeauSans-Regular-ttf', sans-serif;
-    font-weight: 500;
-    color: #000;
+    margin-bottom: 120px;
+}
+
+.return-login-link {
+    color: var(--Black, #000);
     text-decoration: none;
-    font-size: 1rem;
+    position: relative;
+    display: inline-block;
+}
+
+.return-login-link::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background-color: var(--Black, #000);
+    transition: width 0.3s ease;
 }
 
 .return-login-link:hover {
-    color: #BC224C;
+    color: var(--Black, #000);
     cursor: pointer;
 }
+
+.return-login-link:hover::after {
+    width: 100%;
+}
+
+.form-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
 
 @media (max-width: 480px) {
     .register-container {
@@ -261,8 +314,8 @@
     }
 
     .register-title {
-        font-size: 2.2rem;
-        letter-spacing: 0.1em;
         margin-bottom: 40px;
+        margin-left: 0;
+        /* Reset margin-left tr\u00ean mobile */
     }
 }

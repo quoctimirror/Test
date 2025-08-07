@@ -1,8 +1,22 @@
 // src/api/axiosConfig.js
 import axios from 'axios';
 
+// Determine which backend URL to use
+const getBackendURL = () => {
+    // Production mode (Vercel deployment)
+    if (import.meta.env.VITE_MODE === 'production' && import.meta.env.VITE_BACKEND_NGROK_URL) {
+        return import.meta.env.VITE_BACKEND_NGROK_URL;
+    }
+    // If accessing via ngrok, use backend ngrok URL
+    if (window.location.hostname.includes('ngrok')) {
+        return import.meta.env.VITE_BACKEND_NGROK_URL || 'http://localhost:8081';
+    }
+    // Otherwise use local backend
+    return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
+};
+
 const api = axios.create({
-    baseURL: 'http://localhost:8081',
+    baseURL: getBackendURL(),
     headers: {
         'Content-Type': 'application/json',
     },
@@ -39,7 +53,7 @@ api.interceptors.response.use(
                 }
 
                 // Gọi API làm mới token bằng axios gốc
-                const refreshResponse = await axios.post('http://localhost:8081/api/v1/auth/refresh-token', { refreshToken });
+                const refreshResponse = await axios.post(`${getBackendURL()}/api/v1/auth/refresh-token`, { refreshToken });
                 const { accessToken: newAccessToken } = refreshResponse.data;
 
                 localStorage.setItem('accessToken', newAccessToken);
