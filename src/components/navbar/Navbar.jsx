@@ -6,10 +6,40 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logoRef = useRef(null);
 
+  const handleLogoClick = () => {
+    if (window.location.pathname === "/") {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        window.location.reload();
+      }, 0);
+    } else {
+      sessionStorage.setItem('scrollToTop', 'true');
+      window.location.href = "/";
+    }
+  };
+
+  const handleProductsClick = () => {
+    if (window.location.pathname === "/collections") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      sessionStorage.setItem('scrollToTop', 'true');
+      window.location.href = "/collections";
+    }
+  };
+
+  const handleServicesClick = () => {
+    if (window.location.pathname === "/services") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      sessionStorage.setItem('scrollToTop', 'true');
+      window.location.href = "/services";
+    }
+  };
+
   return (
     <>
       {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
-      <div className="logo-fixed-container">
+      <div className="logo-fixed-container" onClick={handleLogoClick}>
         <img
           ref={logoRef}
           src={MirrorLogo}
@@ -35,8 +65,8 @@ export default function Navbar() {
           >
             <div className="menu-groups">
               <ul className="menu-list">
-                <li>Products</li>
-                <li>Service & Support</li>
+                <li onClick={handleProductsClick}>Products</li>
+                <li onClick={handleServicesClick}>Service & Support</li>
                 <li>About Mirror</li>
                 <li>News</li>
               </ul>

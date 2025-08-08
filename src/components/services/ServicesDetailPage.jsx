@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/servicesDetail.css";
+import "@pages/servicesDetail.css";
 import ProductCareRepair from "./ProductCareRepair";
 import TradeInUpgrade from "./TradeInUpgrade";
 import Section6 from "./section6/Section6";

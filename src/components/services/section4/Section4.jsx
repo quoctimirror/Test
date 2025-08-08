@@ -58,7 +58,7 @@ const Section4 = () => {
             }}
           >
             <img
-              src="/public/services/img_1_section_3.jpg"
+              src="/services/img_1_section_3.jpg"
               alt="Return & Exchange"
             />
           </div>
@@ -81,7 +81,7 @@ const Section4 = () => {
             }}
           >
             <img
-              src="/public/services/img_2_section_3.jpg"
+              src="/services/img_2_section_3.jpg"
               alt="Sizing Guide"
             />
           </div>
@@ -95,7 +95,7 @@ const Section4 = () => {
             }}
           >
             <img
-              src="/public/services/img_2_section_2.jpg"
+              src="/services/img_2_section_2.jpg"
               alt="Warranty & Info"
             />
           </div>

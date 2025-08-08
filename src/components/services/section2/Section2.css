@@ -153,35 +153,64 @@
   color: #ffffff;
 }
 
-@media (max-width: 768px) {
-  .section2-grid {
-    grid-template-columns: 1fr;
-    height: auto;
-  }
-
-  .section2-image {
-    height: 50vh;
-  }
-
+/* Responsive Design */
+@media (max-width: 1200px) {
   .section2-content {
-    padding: 2rem;
-    height: auto;
+    padding: 3rem;
+    max-width: 600px;
   }
-
+  
   .section2-title {
-    font-size: 36px;
+    font-size: 56px;
+    letter-spacing: -2.5%;
   }
-
+  
+  .section2-subtitle {
+    font-size: 15px;
+  }
+  
   .section2-description {
     font-size: 14px;
+    max-width: 350px;
   }
 }
 
-/* Remove old part2 styles - now integrated into sticky layout */
+@media (max-width: 992px) {
+  .section2-wrapper {
+    height: 300vh;
+  }
+  
+  .section2-content {
+    padding: 2.5rem;
+    max-width: 550px;
+  }
+  
+  .section2-title {
+    font-size: 48px;
+    letter-spacing: -2%;
+  }
+  
+  .section2-subtitle {
+    font-size: 15px;
+  }
+  
+  .section2-description {
+    font-size: 13px;
+    max-width: 320px;
+  }
+  
+  .section2-cta {
+    padding: 18px 32px;
+    font-size: 13px;
+    height: 48px;
+    min-width: 125px;
+  }
+}
 
 @media (max-width: 768px) {
   .section2-wrapper {
     height: auto;
+    min-height: 100vh;
   }
 
   .section2-sticky-container {
@@ -192,6 +221,7 @@
 
   .section2-sticky-images {
     height: 50vh;
+    min-height: 400px;
     order: 1;
   }
 
@@ -199,12 +229,13 @@
     height: auto;
     order: 2;
     position: relative;
+    min-height: auto;
   }
 
   .section2-content-layer {
     position: relative;
     height: auto;
-    padding: 2rem 0;
+    padding: 3rem 0;
   }
 
   .section2-content-2 {
@@ -213,14 +244,29 @@
 
   .section2-content {
     padding: 2rem;
+    max-width: 100%;
   }
 
   .section2-title {
-    font-size: 36px;
+    font-size: 40px;
+    letter-spacing: -1.5%;
+    white-space: normal;
+  }
+  
+  .section2-subtitle {
+    font-size: 14px;
   }
 
   .section2-description {
-    font-size: 14px;
+    font-size: 13px;
+    max-width: 350px;
+  }
+  
+  .section2-cta {
+    padding: 16px 28px;
+    font-size: 13px;
+    height: 45px;
+    min-width: 120px;
   }
 
   /* Disable transforms on mobile */
@@ -236,5 +282,86 @@
   .section2-content-layer {
     opacity: 1 !important;
     transform: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .section2-sticky-images {
+    height: 45vh;
+    min-height: 300px;
+  }
+  
+  .section2-content-layer {
+    padding: 2rem 0;
+  }
+
+  .section2-content {
+    padding: 1.5rem;
+  }
+
+  .section2-title {
+    font-size: 32px;
+    letter-spacing: -1%;
+  }
+  
+  .section2-subtitle {
+    font-size: 13px;
+  }
+
+  .section2-description {
+    font-size: 12px;
+    max-width: 300px;
+    line-height: 1.5;
+  }
+  
+  .section2-cta {
+    padding: 14px 24px;
+    font-size: 12px;
+    height: 42px;
+    min-width: 110px;
+  }
+  
+  .section2-header-description {
+    gap: 20px;
+  }
+  
+  .section2-full-content {
+    gap: 28px;
+  }
+  
+  .section2-header {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .section2-sticky-images {
+    height: 40vh;
+    min-height: 280px;
+  }
+  
+  .section2-content {
+    padding: 1rem;
+  }
+
+  .section2-title {
+    font-size: 28px;
+    letter-spacing: -0.5%;
+  }
+  
+  .section2-subtitle {
+    font-size: 12px;
+  }
+
+  .section2-description {
+    font-size: 11px;
+    max-width: 250px;
+  }
+  
+  .section2-cta {
+    padding: 12px 20px;
+    font-size: 11px;
+    height: 38px;
+    min-width: 100px;
   }
 }

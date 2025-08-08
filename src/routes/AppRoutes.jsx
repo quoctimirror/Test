@@ -4,7 +4,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Navbar from "@components/navbar/Navbar";
 import Footer from "@components/footer/Footer";
-import TryOnRingLayout from '@layouts/TryOnRingLayout';
+import TryOnRingLayout from "@layouts/TryOnRingLayout";
 // Lazy-load components
 const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
@@ -13,6 +13,7 @@ const CollectionDetailPage = lazy(() => import("@pages/CollectionDetailPage"));
 const ServicesPage = lazy(() => import("@pages/ServicesPage"));
 const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
 const SupportPage = lazy(() => import("@pages/SupportPage"));
+const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 const UVFinal = lazy(() =>
   import("@components/universeSectionFinal/UniverseSection.jsx")
@@ -31,21 +32,18 @@ const Login = lazy(() => import("@components/login/Login"));
 const Register = lazy(() => import("@components/register/Register"));
 const Profile = lazy(() => import("@components/profile/Profile"));
 
-
-
-
 export default function AppRoutes() {
   const location = useLocation();
   const staticRoutesToHideNavBar =
-    location.pathname.startsWith('/universe-final') ||
-    location.pathname.startsWith('/hover-expand') ||
-    location.pathname.startsWith('/ar/rings') ||
-    location.pathname.startsWith('/dashboard/admin/manage-products');
+    location.pathname.startsWith("/universe-final") ||
+    location.pathname.startsWith("/hover-expand") ||
+    location.pathname.startsWith("/ar/rings") ||
+    location.pathname.startsWith("/dashboard/admin/manage-products");
 
   const staticRoutesToHideFooter =
-    location.pathname.startsWith('/universe-final') ||
-    location.pathname.startsWith('/hover-expand') ||
-    location.pathname.startsWith('/ar/rings') ||
+    location.pathname.startsWith("/universe-final") ||
+    location.pathname.startsWith("/hover-expand") ||
+    location.pathname.startsWith("/ar/rings") ||
     location.pathname.startsWith("/dashboard/admin/manage-products");
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
@@ -64,7 +62,7 @@ export default function AppRoutes() {
       >
         <Routes>
           <Route path="/" element={<HomePage />} />
-          
+
           <Route path="/auth" element={<AuthPage />}>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
@@ -91,9 +89,7 @@ export default function AppRoutes() {
 
           <Route path="/view-360" element={<View360 />} />
 
-          <Route path="/user-profile" element={
-            <Profile />
-          } />
+          <Route path="/user-profile" element={<Profile />} />
 
           <Route element={<TryOnRingLayout />}>
             <Route path="/ar/rings/:ringId" element={<TryOnRing />} />
@@ -104,8 +100,8 @@ export default function AppRoutes() {
             element={<ManageProducts />}
           />
 
-          {/* FIX: Add route for non-existent paths */}
-          {/* <Route path="*" element={<NotFound />} /> */}
+          {/* 404 - Catch all route for non-existent paths */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
 

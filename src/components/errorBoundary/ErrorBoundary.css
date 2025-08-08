@@ -1,0 +1,471 @@
+/* Error Boundary Styles - Similar to 404 but for JS errors */
+.error-boundary-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 50%, #fee2e2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: "BT Beau Sans", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.error-boundary-container {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.error-boundary-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 4rem 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.error-code {
+  font-family: "Saol Display", serif;
+  font-size: 120px;
+  font-weight: 300;
+  color: #dc2626;
+  margin: 0;
+  line-height: 0.8;
+  margin-bottom: 1rem;
+  text-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+  animation: pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.error-message h1 {
+  font-family: "Saol Display", serif;
+  font-size: 48px;
+  font-weight: 300;
+  color: #333;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.error-message p {
+  font-size: 18px;
+  color: #666;
+  margin: 0 0 3rem 0;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.primary-button,
+.secondary-button {
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  font-family: "BT Beau Sans", sans-serif;
+}
+
+.primary-button {
+  background: #dc2626;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+}
+
+.primary-button:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(220, 38, 38, 0.4);
+}
+
+.secondary-button {
+  background: transparent;
+  color: #333;
+  border: 2px solid #333;
+}
+
+.secondary-button:hover {
+  background: #333;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Error Details for Development */
+.error-details {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.error-details summary {
+  font-weight: 600;
+  color: #dc2626;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.error-details summary:hover {
+  background: rgba(220, 38, 38, 0.15);
+}
+
+.error-stack {
+  padding: 1rem 0;
+}
+
+.error-stack h4 {
+  color: #333;
+  margin: 1rem 0 0.5rem 0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.error-stack pre {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 12px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.helpful-links {
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.helpful-links h3 {
+  font-family: "Saol Display", serif;
+  font-size: 24px;
+  font-weight: 300;
+  color: #333;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.helpful-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.helpful-link:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.link-icon {
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(220, 38, 38, 0.1);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.helpful-link strong {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.helpful-link small {
+  font-size: 14px;
+  color: #666;
+  display: block;
+}
+
+/* Decorative Elements */
+.error-boundary-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.diamond-shape {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: rgba(220, 38, 38, 0.1);
+  transform: rotate(45deg);
+  border-radius: 8px;
+  animation: float 6s ease-in-out infinite;
+}
+
+.diamond-shape:nth-child(1) {
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.diamond-shape:nth-child(2) {
+  top: 20%;
+  right: 15%;
+  animation-delay: 2s;
+  width: 40px;
+  height: 40px;
+}
+
+.diamond-shape:nth-child(3) {
+  bottom: 15%;
+  left: 20%;
+  animation-delay: 4s;
+  width: 80px;
+  height: 80px;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: rotate(45deg) translateY(0px);
+    opacity: 0.3;
+  }
+  50% {
+    transform: rotate(45deg) translateY(-20px);
+    opacity: 0.6;
+  }
+}
+
+/* Responsive Design - Same breakpoints as NotFound */
+@media (max-width: 1200px) {
+  .error-boundary-content {
+    padding: 3.5rem 1.8rem;
+  }
+  
+  .error-code {
+    font-size: 100px;
+  }
+  
+  .error-message h1 {
+    font-size: 42px;
+  }
+  
+  .error-message p {
+    font-size: 17px;
+  }
+  
+  .primary-button,
+  .secondary-button {
+    padding: 15px 28px;
+    font-size: 15px;
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 992px) {
+  .error-boundary-content {
+    padding: 3rem 1.5rem;
+  }
+  
+  .error-code {
+    font-size: 90px;
+  }
+  
+  .error-message h1 {
+    font-size: 38px;
+  }
+  
+  .error-message p {
+    font-size: 16px;
+  }
+  
+  .helpful-links h3 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .error-boundary-page {
+    padding: 15px;
+  }
+  
+  .error-boundary-content {
+    padding: 2.5rem 1.2rem;
+  }
+  
+  .error-code {
+    font-size: 80px;
+  }
+  
+  .error-message h1 {
+    font-size: 32px;
+  }
+  
+  .error-message p {
+    font-size: 15px;
+    margin-bottom: 2.5rem;
+  }
+  
+  .error-actions {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2.5rem;
+  }
+  
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .error-details {
+    padding: 1rem;
+    margin: 1.5rem 0;
+  }
+  
+  .error-stack pre {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .error-boundary-content {
+    padding: 2rem 1rem;
+  }
+  
+  .error-code {
+    font-size: 70px;
+  }
+  
+  .error-message h1 {
+    font-size: 28px;
+  }
+  
+  .error-message p {
+    font-size: 14px;
+  }
+  
+  .primary-button,
+  .secondary-button {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+  
+  .helpful-links h3 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .error-boundary-content {
+    padding: 1.5rem 0.8rem;
+  }
+  
+  .error-code {
+    font-size: 60px;
+  }
+  
+  .error-message h1 {
+    font-size: 24px;
+  }
+  
+  .error-message p {
+    font-size: 13px;
+  }
+  
+  .primary-button,
+  .secondary-button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+  
+  .helpful-links h3 {
+    font-size: 18px;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Animation for page entrance */
+.error-boundary-content {
+  animation: slideUp 0.8s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Touch-friendly improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .primary-button:hover,
+  .secondary-button:hover,
+  .helpful-link:hover {
+    transform: none;
+  }
+  
+  .primary-button:active,
+  .secondary-button:active {
+    transform: scale(0.95);
+  }
+  
+  .helpful-link:active {
+    transform: scale(0.98);
+  }
+}

@@ -296,8 +296,164 @@
     color: #666;
 }
 
+/* --- Enhanced Responsive Design --- */
+@media (max-width: 1200px) {
+    .login-container {
+        padding: 18px;
+    }
+    
+    .login-form-wrapper {
+        max-width: 380px;
+    }
+    
+    .login-title {
+        margin-bottom: 42px;
+        margin-left: -8%;
+    }
+    
+    .form-field-container {
+        margin-bottom: 32px;
+    }
+    
+    .forgot-password-link {
+        margin-top: 42px;
+        margin-bottom: 22px;
+    }
+    
+    .sign-in-button {
+        padding: 13px 110px;
+        margin-bottom: 28px;
+    }
+}
 
-/* --- Responsive Design --- */
+@media (max-width: 992px) {
+    .login-container {
+        padding: 16px;
+    }
+    
+    .login-form-wrapper {
+        max-width: 360px;
+    }
+    
+    .login-title {
+        margin-bottom: 40px;
+        margin-left: -6%;
+    }
+    
+    .form-field-container {
+        margin-bottom: 30px;
+    }
+    
+    .input-group input {
+        font-size: 15px;
+        padding: 9px 0;
+    }
+    
+    .floating-label {
+        font-size: 15px;
+    }
+    
+    .input-group input:focus+.floating-label,
+    .input-group input:not(:placeholder-shown)+.floating-label,
+    .input-group input:valid+.floating-label {
+        font-size: 0.75rem;
+    }
+    
+    .forgot-password-link {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+    
+    .sign-in-button {
+        padding: 12px 100px;
+        margin-bottom: 26px;
+        font-size: 14px;
+    }
+    
+    .register-prompt {
+        font-size: 14px;
+    }
+    
+    .register-link {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        padding: 15px;
+    }
+    
+    .login-form-wrapper {
+        max-width: 340px;
+        padding: 0 8px;
+    }
+    
+    .login-title {
+        margin-bottom: 36px;
+        margin-left: -4%;
+        white-space: normal;
+        line-height: 1.1;
+    }
+    
+    .form-field-container {
+        margin-bottom: 28px;
+    }
+    
+    .input-group input {
+        font-size: 14px;
+        padding: 8px 0;
+    }
+    
+    .floating-label {
+        font-size: 14px;
+        top: 8px;
+    }
+    
+    .input-group input:focus+.floating-label,
+    .input-group input:not(:placeholder-shown)+.floating-label,
+    .input-group input:valid+.floating-label {
+        top: -12px;
+        font-size: 0.7rem;
+    }
+    
+    .password-toggle {
+        padding: 4px;
+    }
+    
+    .password-toggle img {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .input-error {
+        font-size: 12px;
+        margin-top: 3px;
+    }
+    
+    .forgot-password-link {
+        margin-top: 36px;
+        margin-bottom: 18px;
+        font-size: 13px;
+    }
+    
+    .sign-in-button {
+        padding: 11px 90px;
+        margin-bottom: 24px;
+        font-size: 13px;
+    }
+    
+    .register-prompt {
+        font-size: 13px;
+    }
+    
+    .register-link {
+        font-size: 13px;
+    }
+}
+
+/* --- Original Mobile Styles --- */
 @media (max-width: 480px) {
     .login-title {
         margin-bottom: 40px;

@@ -1,0 +1,249 @@
+/* Immersive Showroom */
+.immersive-showroom {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.showroom-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+.showroom-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.showroom-subtitle {
+  text-align: center;
+  margin: 0 0 12px 0;
+  color: #E0E0E0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.showroom-title {
+  text-align: center;
+  margin: 0 0 24px 0;
+  color: #ffffff;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.showroom-description {
+  text-align: center;
+  margin: 0 0 36px 0;
+  color: #E0E0E0;
+  letter-spacing: 0.5px;
+}
+
+.explore-button {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 40px;
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  padding: 0;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  width: 123px;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.explore-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.explore-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.explore-button:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .showroom-title {
+    font-size: 52px;
+  }
+
+  .showroom-description {
+    font-size: 15px;
+    margin-bottom: 44px;
+  }
+
+  .explore-button {
+    width: 118px;
+    height: 54px;
+  }
+}
+
+@media (max-width: 992px) {
+  .showroom-content {
+    max-width: 550px;
+  }
+
+  .showroom-title {
+    font-size: 48px;
+    margin-bottom: 28px;
+  }
+
+  .showroom-description {
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+
+  .explore-button {
+    width: 115px;
+    height: 52px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .showroom-content {
+    max-width: 500px;
+    padding: 0 25px;
+  }
+
+  .showroom-subtitle {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  .showroom-title {
+    font-size: 42px;
+    margin-bottom: 24px;
+  }
+
+  .showroom-description {
+    font-size: 14px;
+    line-height: 140%;
+    margin-bottom: 36px;
+  }
+
+  .explore-button {
+    width: 110px;
+    height: 50px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .showroom-content {
+    max-width: 90%;
+    padding: 0 20px;
+  }
+
+  .showroom-subtitle {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+
+  .showroom-title {
+    font-size: 32px;
+    margin-bottom: 20px;
+    line-height: 95%;
+    white-space: normal;
+  }
+
+  .showroom-description {
+    font-size: 13px;
+    line-height: 135%;
+    margin-bottom: 32px;
+  }
+
+  .showroom-description br {
+    display: none;
+  }
+
+  .explore-button {
+    width: 105px;
+    height: 46px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .showroom-subtitle {
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+
+  .showroom-title {
+    font-size: 28px;
+    margin-bottom: 18px;
+    white-space: normal;
+  }
+
+  .showroom-description {
+    font-size: 12px;
+    margin-bottom: 28px;
+  }
+
+  .explore-button {
+    width: 100px;
+    height: 44px;
+    font-size: 11px;
+  }
+}
