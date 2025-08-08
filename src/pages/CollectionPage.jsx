@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import Collection from "../components/collections/Collections";
-import SameCollection from "../components/sameCollection/SameCollection";
-import Section5Products from "../components/section5Products/Section5Products";
+import Collection from "@components/collections/Collections";
+import SameCollection from "@components/sameCollection/SameCollection";
+import Section5Products from "@components/section5Products/Section5Products";
 
 const CollectionPage = () => {
   useEffect(() => {

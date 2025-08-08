@@ -3,7 +3,7 @@ import SelectOptionSection from "@components/selectOptionSection/SelectOptionSec
 import ParallaxScrolling from "@components/parallaxScrolling/ParallaxScrolling";
 import SameCollection from "@components/sameCollection/SameCollection";
 import Section5Products from "@components/section5Products/Section5Products";
-import "@styles/products.css";
+import "./products.css";
 
 const ProductsPage = () => {
   return (

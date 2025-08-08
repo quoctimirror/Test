@@ -132,3 +132,296 @@
   margin: 0;
   color: #000000;
 }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .return-exchange {
+    padding: 0 20px;
+  }
+  
+  .international-orders-list,
+  .showroom-purchases-list,
+  .nationwide-shipping-list,
+  .non-exchangeable-items-list {
+    font-size: 15px;
+    padding-left: 18px;
+  }
+  
+  .international-orders-list li p,
+  .showroom-purchases-list li p,
+  .nationwide-shipping-list li p,
+  .non-exchangeable-items-list li p {
+    font-size: 15px;
+  }
+  
+  .return-exchange .why-sales-final-section p {
+    font-size: 15px;
+  }
+  
+  .return-exchange h4 {
+    font-size: 15px;
+  }
+  
+  .showroom-purchases-list ul li p,
+  .nationwide-shipping-list ul li p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 992px) {
+  .return-exchange {
+    padding: 0 15px;
+  }
+  
+  .international-orders-list,
+  .showroom-purchases-list,
+  .nationwide-shipping-list,
+  .non-exchangeable-items-list {
+    font-size: 14px;
+    padding-left: 16px;
+    margin: 12px 0;
+  }
+  
+  .international-orders-list li,
+  .showroom-purchases-list li,
+  .nationwide-shipping-list li,
+  .non-exchangeable-items-list li {
+    margin-bottom: 10px;
+  }
+  
+  .international-orders-list li p,
+  .showroom-purchases-list li p,
+  .nationwide-shipping-list li p,
+  .non-exchangeable-items-list li p {
+    font-size: 14px;
+    line-height: 140%;
+  }
+  
+  .return-exchange .why-sales-final-section p {
+    font-size: 14px;
+    line-height: 140%;
+  }
+  
+  .return-exchange h4 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .showroom-purchases-list ul,
+  .nationwide-shipping-list ul {
+    padding-left: 16px;
+    margin: 6px 0;
+  }
+  
+  .showroom-purchases-list ul li,
+  .nationwide-shipping-list ul li {
+    margin-bottom: 6px;
+  }
+  
+  .showroom-purchases-list ul li p,
+  .nationwide-shipping-list ul li p {
+    font-size: 14px;
+    line-height: 140%;
+  }
+}
+
+@media (max-width: 768px) {
+  .return-exchange {
+    padding: 0 10px;
+  }
+  
+  .international-orders-list,
+  .showroom-purchases-list,
+  .nationwide-shipping-list,
+  .non-exchangeable-items-list {
+    font-size: 13px;
+    padding-left: 14px;
+    margin: 10px 0;
+  }
+  
+  .international-orders-list li,
+  .showroom-purchases-list li,
+  .nationwide-shipping-list li,
+  .non-exchangeable-items-list li {
+    margin-bottom: 8px;
+  }
+  
+  .international-orders-list li p,
+  .showroom-purchases-list li p,
+  .nationwide-shipping-list li p,
+  .non-exchangeable-items-list li p {
+    font-size: 13px;
+    line-height: 150%;
+  }
+  
+  .return-exchange .why-sales-final-section p {
+    font-size: 13px;
+    line-height: 150%;
+  }
+  
+  .return-exchange h4 {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  
+  .showroom-purchases-list ul,
+  .nationwide-shipping-list ul {
+    padding-left: 14px;
+    margin: 4px 0;
+  }
+  
+  .showroom-purchases-list ul li,
+  .nationwide-shipping-list ul li {
+    margin-bottom: 4px;
+    padding-left: 8px;
+  }
+  
+  .showroom-purchases-list ul li::before,
+  .nationwide-shipping-list ul li::before {
+    left: -10px;
+  }
+  
+  .showroom-purchases-list ul li p,
+  .nationwide-shipping-list ul li p {
+    font-size: 13px;
+    line-height: 150%;
+  }
+}
+
+@media (max-width: 480px) {
+  .return-exchange {
+    padding: 0 8px;
+  }
+  
+  .international-orders-list,
+  .showroom-purchases-list,
+  .nationwide-shipping-list,
+  .non-exchangeable-items-list {
+    font-size: 12px;
+    padding-left: 12px;
+    margin: 8px 0;
+  }
+  
+  .international-orders-list li::before,
+  .showroom-purchases-list li::before,
+  .nationwide-shipping-list li::before,
+  .non-exchangeable-items-list li::before {
+    left: -10px;
+  }
+  
+  .international-orders-list li,
+  .showroom-purchases-list li,
+  .nationwide-shipping-list li,
+  .non-exchangeable-items-list li {
+    margin-bottom: 6px;
+  }
+  
+  .international-orders-list li p,
+  .showroom-purchases-list li p,
+  .nationwide-shipping-list li p,
+  .non-exchangeable-items-list li p {
+    font-size: 12px;
+    line-height: 160%;
+  }
+  
+  .return-exchange .why-sales-final-section p {
+    font-size: 12px;
+    line-height: 160%;
+  }
+  
+  .return-exchange h4 {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .showroom-purchases-list ul,
+  .nationwide-shipping-list ul {
+    padding-left: 12px;
+  }
+  
+  .showroom-purchases-list ul li,
+  .nationwide-shipping-list ul li {
+    padding-left: 6px;
+  }
+  
+  .showroom-purchases-list ul li::before,
+  .nationwide-shipping-list ul li::before {
+    left: -8px;
+  }
+  
+  .showroom-purchases-list ul li p,
+  .nationwide-shipping-list ul li p {
+    font-size: 12px;
+    line-height: 160%;
+  }
+}
+
+@media (max-width: 360px) {
+  .return-exchange {
+    padding: 0 5px;
+  }
+  
+  .international-orders-list,
+  .showroom-purchases-list,
+  .nationwide-shipping-list,
+  .non-exchangeable-items-list {
+    font-size: 11px;
+    padding-left: 10px;
+    margin: 6px 0;
+  }
+  
+  .international-orders-list li::before,
+  .showroom-purchases-list li::before,
+  .nationwide-shipping-list li::before,
+  .non-exchangeable-items-list li::before {
+    left: -8px;
+    font-size: 10px;
+  }
+  
+  .international-orders-list li,
+  .showroom-purchases-list li,
+  .nationwide-shipping-list li,
+  .non-exchangeable-items-list li {
+    margin-bottom: 4px;
+  }
+  
+  .international-orders-list li p,
+  .showroom-purchases-list li p,
+  .nationwide-shipping-list li p,
+  .non-exchangeable-items-list li p {
+    font-size: 11px;
+    line-height: 170%;
+  }
+  
+  .return-exchange .why-sales-final-section p {
+    font-size: 11px;
+    line-height: 170%;
+  }
+  
+  .return-exchange h4 {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+  
+  .showroom-purchases-list ul,
+  .nationwide-shipping-list ul {
+    padding-left: 10px;
+  }
+  
+  .showroom-purchases-list ul li,
+  .nationwide-shipping-list ul li {
+    padding-left: 4px;
+  }
+  
+  .showroom-purchases-list ul li::before,
+  .nationwide-shipping-list ul li::before {
+    left: -6px;
+    font-size: 10px;
+  }
+  
+  .showroom-purchases-list ul li p,
+  .nationwide-shipping-list ul li p {
+    font-size: 11px;
+    line-height: 170%;
+  }
+}

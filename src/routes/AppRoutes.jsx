@@ -13,6 +13,7 @@ const CollectionDetailPage = lazy(() => import("@pages/CollectionDetailPage"));
 const ServicesPage = lazy(() => import("@pages/ServicesPage"));
 const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
 const SupportPage = lazy(() => import("@pages/SupportPage"));
+const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 const UVFinal = lazy(() =>
   import("@components/universeSectionFinal/UniverseSection.jsx")
@@ -94,8 +95,8 @@ export default function AppRoutes() {
             element={<ManageProducts />}
           />
 
-          {/* FIX: Add route for non-existent paths */}
-          {/* <Route path="*" element={<NotFound />} /> */}
+          {/* 404 - Catch all route for non-existent paths */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
 

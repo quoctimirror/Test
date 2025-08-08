@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "../../styles/support.css";
+import "@pages/support.css";
 import ReturnExchange from "./ReturnExchange";
 import SizingGuide from "./SizingGuide";
 import WarrantyInfo from "./WarrantyInfo";
 import FAQs from "./FAQs";
-import Section6 from "../services/section6/Section6";
+import Section6 from "@components/services/section6/Section6";
 
 const Support = () => {
   const [activeTab, setActiveTab] = useState("return-exchange");

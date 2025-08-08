@@ -511,6 +511,42 @@ html, body {
 ============================================================
 */
 
+/* Large Desktop - 1600px */
+@media screen and (max-width: 1600px) {
+  .hero-text-container {
+    top: 23vh;
+    left: 9vw;
+  }
+
+  .hero-text-container div {
+    font-size: 48px;
+  }
+  
+  .collection-page .section-2 .hero-title .text-treasure {
+    font-size: 60px;
+  }
+}
+
+/* Desktop - 1200px */
+@media screen and (max-width: 1200px) {
+  .hero-text-container {
+    top: 22vh;
+    left: 8.5vw;
+  }
+
+  .hero-text-container div {
+    font-size: 45px;
+  }
+  
+  .collection-page .section-2 .hero-title .text-treasure {
+    font-size: 56px;
+  }
+  
+  .product-slider {
+    max-width: 500px;
+  }
+}
+
 /* Tablet landscape (1024px và xuống) */
 @media screen and (max-width: 1024px) {
   .hero-text-container {
@@ -521,14 +557,26 @@ html, body {
   .hero-text-container div {
     font-size: 42px;
   }
+  
+  .collection-page .section-2 .hero-title .text-treasure {
+    font-size: 52px;
+  }
 
   .product-slider {
     max-width: 480px;
   }
 
-  .product-image {
-    width: 120px;
-    height: 190px;
+  .collection-page .product-image {
+    width: 200px !important;
+    height: 310px !important;
+  }
+  
+  .product-image-container {
+    margin-top: 6rem;
+  }
+  
+  .slider-arrow {
+    margin-top: 10rem;
   }
 }
 
@@ -537,6 +585,7 @@ html, body {
   .section-2 {
     flex-direction: column;
     min-height: auto;
+    padding: 3rem 0;
   }
 
   .collection-image-panel,
@@ -551,6 +600,10 @@ html, body {
 
   .collection-content-panel {
     padding: 1.5rem;
+  }
+  
+  .collection-content-panel.full-width {
+    margin-top: -3rem;
   }
 
   .hero-text-container {
@@ -569,6 +622,15 @@ html, body {
   .text-orient {
     padding-left: 3.5em;
   }
+  
+  .collection-page .section-2 .hero-title .text-treasure {
+    font-size: 45px;
+  }
+  
+  .collection-page .section-2 .hero-content {
+    padding: 2rem 2rem;
+    margin-bottom: 4rem;
+  }
 
   .product-slider {
     max-width: 420px;
@@ -578,24 +640,39 @@ html, body {
     margin-bottom: 1.5rem;
   }
 
-  .product-image {
-    width: 110px;
-    height: 170px;
+  .collection-page .product-image {
+    width: 180px !important;
+    height: 280px !important;
   }
 
   .product-image-container {
-    margin-top: 1.5rem;
+    margin-top: 4rem;
+  }
+  
+  .slider-arrow {
+    margin-top: 8rem;
+    width: 45px;
+    height: 45px;
   }
 
   .product-title {
-    font-size: 1.3rem;
+    font-size: 22px;
     margin-bottom: 1rem;
   }
 
   .product-description {
-    font-size: 0.95rem;
+    font-size: 15px;
     max-width: 380px;
     margin-bottom: 1.5rem;
+  }
+  
+  .other-collections-subtitle {
+    font-size: 15px;
+    margin-bottom: 2.5rem;
+  }
+  
+  .collection-name {
+    font-size: 52px;
   }
 }
 
@@ -617,6 +694,10 @@ html, body {
   .text-orient {
     padding-left: 3em;
   }
+  
+  .collection-page .section-2 .hero-title .text-treasure {
+    font-size: 38px;
+  }
 
   .collection-content-panel {
     padding: 1rem;
@@ -626,39 +707,42 @@ html, body {
     max-width: 360px;
   }
 
-  .product-image {
-    width: 90px;
-    height: 140px;
+  .collection-page .product-image {
+    width: 150px !important;
+    height: 230px !important;
   }
 
   .product-image-container {
-    margin-top: 1rem;
+    margin-top: 3rem;
     padding: 0 0.5rem;
   }
 
   .slider-arrow {
-    width: 45px;
-    height: 45px;
+    width: 42px;
+    height: 42px;
+    margin-top: 6rem;
   }
 
   .product-title {
-    font-size: 1.2rem;
-    letter-spacing: 0.3em;
+    font-size: 20px;
   }
 
   .product-description {
-    font-size: 0.9rem;
+    font-size: 14px;
     max-width: 320px;
   }
-
-  .explore-button {
-    padding: 0.8rem 2rem;
-    font-size: 0.85rem;
+  
+  .collection-name {
+    font-size: 42px;
   }
 }
 
 /* Mobile portrait (480px và xuống) */
 @media screen and (max-width: 480px) {
+  .section-2 {
+    padding: 2rem 0;
+  }
+  
   .hero-text-container {
     top: 10vh;
     left: 4vw;
@@ -675,6 +759,23 @@ html, body {
   .text-orient {
     padding-left: 2.5em;
   }
+  
+  .collection-page .section-2 .hero-title .text-treasure {
+    font-size: 32px;
+  }
+  
+  .collection-page .section-2 .hero-content {
+    padding: 1.5rem 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .collection-page .section-2 .hero-subtitle {
+    font-size: 14px;
+  }
+  
+  .collection-page .section-2 .hero-description {
+    font-size: 14px;
+  }
 
   .collection-image-panel {
     height: 35vh;
@@ -684,50 +785,68 @@ html, body {
   .collection-content-panel {
     padding: 1rem 0.5rem;
   }
+  
+  .collection-content-panel.full-width {
+    margin-top: -2rem;
+  }
 
   .product-slider {
-    max-width: 300px;
+    max-width: 320px;
   }
 
   .slider-main-row {
     margin-bottom: 1rem;
   }
 
-  .product-image {
-    width: 75px;
-    height: 120px;
+  .collection-page .product-image {
+    width: 120px !important;
+    height: 185px !important;
   }
 
   .product-image-container {
-    margin-top: 0.5rem;
+    margin-top: 2rem;
     padding: 0 0.3rem;
   }
 
   .slider-arrow {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
+    margin-top: 4rem;
   }
 
   .product-title {
-    font-size: 1.1rem;
-    letter-spacing: 0.25em;
+    font-size: 18px;
     margin-bottom: 0.8rem;
   }
 
   .product-description {
-    font-size: 0.85rem;
+    font-size: 13px;
     max-width: 280px;
     margin-bottom: 1.2rem;
+    line-height: 1.5;
   }
-
-  .explore-button {
-    padding: 0.7rem 1.8rem;
-    font-size: 0.8rem;
+  
+  .other-collections-subtitle {
+    font-size: 13px;
+    margin-bottom: 2rem;
+  }
+  
+  .collection-name {
+    font-size: 36px;
+  }
+  
+  .section-3 {
+    padding: 3rem 1.5rem;
+    min-height: auto;
   }
 }
 
 /* Mobile nhỏ (360px và xuống) */
 @media screen and (max-width: 360px) {
+  .section-2 {
+    padding: 1.5rem 0;
+  }
+  
   .hero-text-container {
     top: 8vh;
     left: 3vw;
@@ -744,6 +863,23 @@ html, body {
   .text-orient {
     padding-left: 2em;
   }
+  
+  .collection-page .section-2 .hero-title .text-treasure {
+    font-size: 28px;
+  }
+  
+  .collection-page .section-2 .hero-content {
+    padding: 1rem 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .collection-page .section-2 .hero-subtitle {
+    font-size: 12px;
+  }
+  
+  .collection-page .section-2 .hero-description {
+    font-size: 12px;
+  }
 
   .collection-content-panel {
     padding: 0.8rem 0.4rem;
@@ -753,40 +889,49 @@ html, body {
     max-width: 280px;
   }
 
-  .product-image {
-    width: 65px;
-    height: 105px;
+  .collection-page .product-image {
+    width: 100px !important;
+    height: 155px !important;
   }
 
   .product-image-container {
-    margin-top: 0.3rem;
+    margin-top: 1.5rem;
     padding: 0 0.2rem;
   }
 
   .slider-arrow {
     width: 35px;
     height: 35px;
+    margin-top: 3rem;
   }
 
   .product-title {
-    font-size: 1rem;
-    letter-spacing: 0.2em;
+    font-size: 16px;
   }
 
   .product-description {
-    font-size: 0.8rem;
+    font-size: 12px;
     max-width: 250px;
-  }
-
-  .explore-button {
-    padding: 0.6rem 1.5rem;
-    font-size: 0.75rem;
+    line-height: 1.4;
   }
 
   .scroll-down-arrow {
     width: 45px;
     height: 45px;
     bottom: 30px;
+  }
+  
+  .other-collections-subtitle {
+    font-size: 12px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .collection-name {
+    font-size: 28px;
+  }
+  
+  .section-3 {
+    padding: 2.5rem 1rem;
   }
 }
 

@@ -89,6 +89,50 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .same-collection-title {
+    font-size: 56px;
+    letter-spacing: -2.5%;
+  }
+  
+  .same-collection-description {
+    font-size: 16px;
+  }
+  
+  .product-card {
+    flex: 0 0 380px;
+  }
+  
+  .product-image {
+    width: 380px;
+    height: 475px;
+  }
+}
+
+@media (max-width: 992px) {
+  .collection-section-4 {
+    padding: 70px 0;
+  }
+  
+  .same-collection-header {
+    margin-bottom: 60px;
+  }
+  
+  .same-collection-title {
+    font-size: 52px;
+    letter-spacing: -2%;
+  }
+  
+  .product-card {
+    flex: 0 0 350px;
+  }
+  
+  .product-image {
+    width: 350px;
+    height: 438px;
+  }
+}
+
 @media (max-width: 768px) {
   .collection-section-4 {
     padding: 60px 0;
@@ -97,10 +141,15 @@
   .same-collection-container {
     padding: 0 20px;
   }
+  
+  .same-collection-header {
+    margin-bottom: 50px;
+  }
 
   .same-collection-title {
-    font-size: 48px;
+    font-size: 45px;
     letter-spacing: -2%;
+    margin-bottom: 20px;
   }
 
   .same-collection-description {
@@ -108,40 +157,77 @@
   }
 
   .product-card {
-    flex: 0 0 320px;
+    flex: 0 0 300px;
+    margin-bottom: 40px;
   }
 
   .product-image {
-    width: 320px;
-    height: 400px;
+    width: 300px;
+    height: 375px;
   }
 }
 
 @media (max-width: 480px) {
   .collection-section-4 {
-    padding: 40px 0;
+    padding: 50px 0;
   }
 
   .same-collection-container {
     padding: 0 15px;
   }
+  
+  .same-collection-header {
+    margin-bottom: 40px;
+  }
 
   .same-collection-title {
-    font-size: 36px;
+    font-size: 32px;
     letter-spacing: -1.5%;
+    margin-bottom: 15px;
   }
 
   .same-collection-description {
     font-size: 14px;
+    line-height: 1.5;
   }
 
   .product-card {
-    flex: 0 0 250px;
+    flex: 0 0 280px;
+    margin-bottom: 30px;
   }
 
   .product-image {
-    width: 250px;
-    height: 312px;
+    width: 280px;
+    height: 350px;
+  }
+}
+
+@media (max-width: 360px) {
+  .collection-section-4 {
+    padding: 40px 0;
+  }
+
+  .same-collection-container {
+    padding: 0 10px;
+  }
+
+  .same-collection-title {
+    font-size: 28px;
+    letter-spacing: -1%;
+  }
+
+  .same-collection-description {
+    font-size: 13px;
+  }
+
+  .product-card {
+    flex: 0 0 240px;
+    margin-bottom: 25px;
+  }
+
+  .product-image {
+    width: 240px;
+    height: 300px;
   }
 }
 

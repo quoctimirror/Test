@@ -76,52 +76,140 @@
   opacity: 1;
 }
 
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .section1-title {
+    font-size: 45px;
+    width: 380px;
+  }
+
+  .section1-description {
+    font-size: 15px;
+    width: 540px;
+    height: auto;
+  }
+
+  .section1-content {
+    width: 540px;
+  }
+}
+
+@media (max-width: 992px) {
+  .services-section1 {
+    height: 80vh;
+    min-height: 600px;
+  }
+  
+  .section1-title {
+    font-size: 40px;
+    width: 350px;
+    height: auto;
+  }
+
+  .section1-description {
+    font-size: 15px;
+    width: 500px;
+    height: auto;
+  }
+
+  .section1-content {
+    width: 500px;
+    gap: 20px;
+  }
+}
+
 @media (max-width: 768px) {
+  .services-section1 {
+    height: 70vh;
+    min-height: 500px;
+  }
+  
+  .section1-container {
+    padding: 0 20px;
+  }
+  
+  .section1-content {
+    width: 100%;
+    max-width: 500px;
+    gap: 18px;
+  }
+
   .section1-title {
     font-size: 36px;
-    letter-spacing: 0%;
+    letter-spacing: -0.5%;
     width: 100%;
+    max-width: 400px;
     height: auto;
-    max-width: 421px;
   }
 
   .section1-description {
     font-size: 14px;
-    padding: 0 1rem;
     width: 100%;
+    max-width: 450px;
     height: auto;
-    max-width: 597px;
-  }
-
-  .section1-container {
-    padding: 0 1rem;
-  }
-
-  .section1-content {
-    width: 100%;
-    height: auto;
-    max-width: 597px;
+    line-height: 1.4;
   }
 }
 
 @media (max-width: 480px) {
+  .services-section1 {
+    height: 60vh;
+    min-height: 450px;
+  }
+  
+  .section1-container {
+    padding: 0 15px;
+  }
+  
+  .section1-content {
+    width: 100%;
+    max-width: 350px;
+    gap: 15px;
+  }
+
   .section1-title {
     font-size: 28px;
     width: 100%;
+    max-width: 280px;
     height: auto;
+  }
+
+  .section1-description {
+    font-size: 13px;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 360px) {
+  .services-section1 {
+    height: 55vh;
+    min-height: 400px;
+  }
+  
+  .section1-container {
+    padding: 0 12px;
+  }
+  
+  .section1-content {
+    width: 100%;
     max-width: 300px;
+    gap: 12px;
+  }
+
+  .section1-title {
+    font-size: 24px;
+    width: 100%;
+    max-width: 250px;
+    height: auto;
   }
 
   .section1-description {
     font-size: 12px;
     width: 100%;
+    max-width: 280px;
     height: auto;
-    max-width: 400px;
-  }
-
-  .section1-content {
-    width: 100%;
-    height: auto;
-    max-width: 400px;
   }
 }
