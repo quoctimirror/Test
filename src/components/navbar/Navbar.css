@@ -6,7 +6,8 @@
   transform: translateX(-50%);
   z-index: 101;
   mix-blend-mode: difference;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .logo-fixed-container .navbar-logo-svg {

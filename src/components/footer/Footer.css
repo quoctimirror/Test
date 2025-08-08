@@ -102,6 +102,7 @@
 
 .footer-links li {
   margin-bottom: 0;
+  width: fit-content;
 }
 
 .footer-links a {
@@ -111,32 +112,91 @@
   font-size: 16px;
   line-height: 120%;
   letter-spacing: 0%;
-  color: rgba(133, 123, 125, 255);
+  color: #ffffff;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: opacity 0.3s ease;
   white-space: nowrap;
+  position: relative;
+  display: inline-block;
+  opacity: 0.5;
+}
+
+.footer-links a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
 }
 
 .footer-links a:hover {
+  opacity: 1;
   color: #ffffff;
 }
 
+.footer-links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
 .contact-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: 5px;
+  align-items: flex-end;
 }
 
-.contact-info p {
+.contact-info li {
+  margin-bottom: 0;
+  width: fit-content;
+  text-align: right;
+}
+
+.contact-info a {
   font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
   line-height: 120%;
   letter-spacing: 0%;
-  color: rgba(133, 123, 125, 255);
-  margin: 0;
+  color: #ffffff;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
   white-space: nowrap;
+  position: relative;
+  display: inline-block;
+  opacity: 0.5;
+}
+
+.contact-info a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
+}
+
+.contact-info a:hover {
+  opacity: 1;
+  color: #ffffff;
+}
+
+.contact-info a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* ========================================
@@ -416,7 +476,7 @@
   }
 
   .footer-links a,
-  .contact-info p {
+  .contact-info a {
     font-size: 14px;
   }
 }
@@ -536,7 +596,7 @@
   }
 
   .footer-links a,
-  .contact-info p {
+  .contact-info a {
     font-size: 13px;
   }
 
@@ -619,7 +679,7 @@
     margin-bottom: 10px;
   }
 
-  .contact-info p {
+  .contact-info li {
     margin-bottom: 8px;
   }
 
@@ -675,7 +735,7 @@
   }
 
   .footer-links a,
-  .contact-info p {
+  .contact-info a {
     font-size: 12px;
   }
 }

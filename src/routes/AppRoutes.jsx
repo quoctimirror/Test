@@ -39,7 +39,7 @@ export default function AppRoutes() {
   const staticRoutesToHideFooter = [
     "/universe-final",
     "/hover-expand",
-    "/manage-products",
+    "/dashboard/admin/manage-products",
   ];
 
   // Kiểm tra xem đường dẫn có phải là trang AR hay không, bất kể ID của nhẫn là gì.
@@ -73,7 +73,7 @@ export default function AppRoutes() {
           />
 
           <Route path="/services" element={<ServicesPage />} />
-          
+
           <Route path="/services/detail" element={<ServicesDetailPage />} />
 
           <Route path="/support" element={<SupportPage />} />

@@ -23,13 +23,13 @@ const Footer = () => {
                   <a href="/">Homepage</a>
                 </li>
                 <li>
-                  <a href="/collection">Our Gems</a>
+                  <a href="/collections">Product</a>
                 </li>
                 <li>
-                  <a href="/services">Mirror Care</a>
+                  <a href="/services">Service & Support</a>
                 </li>
                 <li>
-                  <a href="/about">The Mirrorverse</a>
+                  <a href="/about">About Mirror</a>
                 </li>
                 <li>
                   <a href="/news">News</a>
@@ -65,13 +65,13 @@ const Footer = () => {
           <div className="footer-right">
             <div className="footer-section">
               <h3 className="footer-title">CONTACT</h3>
-              <div className="contact-info">
-                <p>Contact us</p>
-                <p>support@mirrorfuturediamond.com</p>
-                <p>+97.130.0938</p>
-                <p>Book an appointment</p>
-                <p>Location</p>
-              </div>
+              <ul className="contact-info">
+                <li><a href="#">Contact us</a></li>
+                <li><a href="mailto:support@mirrorfuturediamond.com">support@mirrorfuturediamond.com</a></li>
+                <li><a href="tel:+97.130.0938">+97.130.0938</a></li>
+                <li><a href="#">Book an appointment</a></li>
+                <li><a href="#">Location</a></li>
+              </ul>
             </div>
           </div>
         </div>

@@ -9,6 +9,14 @@ export default function HomePage() {
   const elementsToFadeRef = useRef(null);
 
   useEffect(() => {
+    // Check if we need to scroll to top
+    if (sessionStorage.getItem('scrollToTop') === 'true') {
+      window.scrollTo(0, 0);
+      sessionStorage.removeItem('scrollToTop');
+    }
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const animationStart = 0;
