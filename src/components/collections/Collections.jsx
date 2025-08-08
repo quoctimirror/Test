@@ -63,12 +63,12 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
 
       {/* --- SECTION 2 --- */}
       <div className="section-2" ref={section2Ref}>
-        <div className="hero-content">
-          <div className="hero-subtitle">THE NEWEST COLLECTION</div>
-          <div className="hero-title">
+        <div className="collection-hero-content">
+          <div className="collection-hero-subtitle">THE NEWEST COLLECTION</div>
+          <div className="collection-hero-title">
             <div className="text-treasure">TREASURE OF THE ORIENT</div>
           </div>
-          <div className="hero-description">
+          <div className="collection-hero-description">
             Step into a world where ancient splendor meets modern elegance. The
             <br />
             <strong>TREASURE OF THE ORIENT</strong> collection draws inspiration
@@ -77,7 +77,7 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
             heritage, vibrant artistry, and timeless mystique of the East.
           </div>
           <button
-            className="hero-explore-button"
+            className="collection-hero-explore-button"
             onClick={handleExploreCollection}
           >
             <svg

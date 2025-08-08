@@ -99,13 +99,14 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
     <section className="collection-section-4">
       <div className="same-collection-container">
         <div className="same-collection-header">
-          <h2 className="same-collection-title">VIEW ALL PRODUCTS</h2>
+          <h2 className="same-collection-title">MORE GEMS</h2>
           <p className="same-collection-description">
             Mirror's curation of visionary designs - where each piece embodies
+            the essence of future
             <br />
-            the essence of future luxury. From bold signatures to refined
-            <br />
-            silhouettes, these are the diamonds reimagined for a new era.
+            luxury. From bold signatures to refined silhouettes, these are the
+            diamonds reimagined for
+            <br />a new era.
           </p>
         </div>
 
