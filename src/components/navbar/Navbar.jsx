@@ -81,7 +81,7 @@ export default function Navbar() {
       </div>
 
       <div className="account-fixed-container">
-        <a href="#account" className="account-link">
+        <a href="/auth" className="account-link">
           Account
         </a>
       </div>
