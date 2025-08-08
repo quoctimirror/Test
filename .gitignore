@@ -23,3 +23,16 @@ dist-ssr
 *.sln
 *.sw?
 
+
+# Environment variables
+.env*
+!.env.example
+
+# Zone Identifier files (Windows download artifacts)
+*.Zone.Identifier
+
+# Font license files
+*.pdf
+
+# macOS system files
+__MACOSX/
