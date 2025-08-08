@@ -1,25 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './ChangePassword.css';
-
-// Tách SVG ra cho sạch sẽ
-const EyeIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-);
-
-const EyeSlashIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M14.12 14.12C13.8454 14.4148 13.5141 14.6512 13.1462 14.8151C12.7782 14.9790 12.3809 15.0670 11.9781 15.0744C11.5753 15.0818 11.1749
-  15.0085 10.8007 14.8590C10.4266 14.7096 10.0875 14.4873 9.80385 14.2037C9.52016 13.9200 9.29792 13.5809 9.14843 13.2068C8.99895 12.8326 8.92559 12.4322       
-  8.93303 12.0294C8.94047 11.6266 9.02848 11.2293 9.19239 10.8614C9.35630 10.4934 9.59270 10.1621 9.88748 9.88748M17.94 17.94C16.2306 19.243 14.1491
-  19.9649 12 20C5 20 1 12 1 12C2.24389 9.68192 3.96914 7.65663 6.06 6.06M9.9 4.24C10.5883 4.0789 11.2931 3.99836 12 4C19 4 23 12 23 12C22.393 13.1356
-  21.6691 14.2048 20.84 15.19M14.12 14.12L9.88 9.88M14.12 14.12L20 20M9.88 9.88L4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-            strokeLinejoin="round" />
-    </svg>
-);
+import EyeIconSvg from '../../assets/images/icons/EyeIcon.svg';
+import EyeSlashIconSvg from '../../assets/images/icons/EyeSlashIcon.svg';
 
 const ChangePassword = ({ onClose }) => {
     const [passwordData, setPasswordData] = useState({
@@ -156,7 +139,7 @@ const ChangePassword = ({ onClose }) => {
                                 onClick={() => togglePasswordVisibility('currentPassword')}
                                 aria-label={showPasswords.currentPassword ? "Hide password" : "Show password"}
                             >
-                                {showPasswords.currentPassword ? <EyeSlashIcon /> : <EyeIcon />}
+                                <img src={showPasswords.currentPassword ? EyeSlashIconSvg : EyeIconSvg} alt={showPasswords.currentPassword ? "Hide password" : "Show password"} width="20" height="20" />
                             </button>
                         </div>
                         {errors.currentPassword && <p className="input-error">{errors.currentPassword}</p>}
@@ -179,7 +162,7 @@ const ChangePassword = ({ onClose }) => {
                                 onClick={() => togglePasswordVisibility('newPassword')}
                                 aria-label={showPasswords.newPassword ? "Hide password" : "Show password"}
                             >
-                                {showPasswords.newPassword ? <EyeSlashIcon /> : <EyeIcon />}
+                                <img src={showPasswords.newPassword ? EyeSlashIconSvg : EyeIconSvg} alt={showPasswords.newPassword ? "Hide password" : "Show password"} width="20" height="20" />
                             </button>
                         </div>
                         {errors.newPassword && <p className="input-error">{errors.newPassword}</p>}
@@ -202,7 +185,7 @@ const ChangePassword = ({ onClose }) => {
                                 onClick={() => togglePasswordVisibility('confirmPassword')}
                                 aria-label={showPasswords.confirmPassword ? "Hide password" : "Show password"}
                             >
-                                {showPasswords.confirmPassword ? <EyeSlashIcon /> : <EyeIcon />}
+                                <img src={showPasswords.confirmPassword ? EyeSlashIconSvg : EyeIconSvg} alt={showPasswords.confirmPassword ? "Hide password" : "Show password"} width="20" height="20" />
                             </button>
                         </div>
                         {errors.confirmPassword && <p className="input-error">{errors.confirmPassword}</p>}

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import api from '@api/axiosConfig';
-import EyeIcon from '@assets/images/icons/EyeIcon';
-import EyeSlashIcon from '@assets/images/icons/EyeSlashIcon';
+import EyeIconSvg from '@assets/images/icons/EyeIcon.svg';
+import EyeSlashIconSvg from '@assets/images/icons/EyeSlashIcon.svg';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -155,7 +155,7 @@ const Login = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+                <img src={showPassword ? EyeSlashIconSvg : EyeIconSvg} alt={showPassword ? "Hide password" : "Show password"} width="20" height="20" />
               </button>
             </div>
             {/* Chuyển lỗi ra ngoài input-group */}

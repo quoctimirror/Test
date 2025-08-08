@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '@api/axiosConfig';
 import './Register.css';
-import EyeIcon from '@assets/images/icons/EyeIcon';
-import EyeSlashIcon from '@assets/images/icons/EyeSlashIcon';
+import EyeIconSvg from '@assets/images/icons/EyeIcon.svg';
+import EyeSlashIconSvg from '@assets/images/icons/EyeSlashIcon.svg';
 
 
 const Register = () => {
@@ -119,7 +119,7 @@ const Register = () => {
 
     const renderPasswordToggle = (isVisible, toggleVisibility) => (
         <button type="button" className="password-toggle" onClick={toggleVisibility} aria-label={isVisible ? "Hide password" : "Show password"}>
-            {isVisible ? <EyeSlashIcon /> : <EyeIcon />}
+            <img src={isVisible ? EyeSlashIconSvg : EyeIconSvg} alt={isVisible ? "Hide password" : "Show password"} width="20" height="20" />
         </button>
     );
 
