@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Collection from "@components/collections/Collections";
 import SameCollection from "@components/sameCollection/SameCollection";
-import Section5Products from "@components/section5Products/Section5Products";
+import ContactUs from "@components/contactUs/ContactUs";
 
 const CollectionPage = () => {
   useEffect(() => {
@@ -27,8 +27,8 @@ const CollectionPage = () => {
       {/* Section 4: Same Collection */}
       <SameCollection showViewProductButton={true} />
 
-      {/* Section 5: Section5Products */}
-      <Section5Products />
+      {/* Section 5: Contact Us */}
+      <ContactUs />
     </div>
   );
 };

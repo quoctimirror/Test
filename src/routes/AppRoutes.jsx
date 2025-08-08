@@ -22,33 +22,32 @@ const HoverExpandSection = lazy(() =>
   import("@components/hoverExpandSection/HoverExpandSection.jsx")
 );
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
-const Collections = lazy(() => import("@components/collections/Collections"));
-const TryOnRing = lazy(() => import("@components/arTryOn/TryOnRing.jsx"));
+// const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
+const TryOnRing = lazy(() => import("@components/arTryOn/Occluder.jsx"));
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
+const AuthPage = lazy(() => import("@pages/AuthPage"));
+const Login = lazy(() => import("@components/login/Login"));
+const Register = lazy(() => import("@components/register/Register"));
+const Profile = lazy(() => import("@components/profile/Profile"));
 
 export default function AppRoutes() {
   const location = useLocation();
+  const staticRoutesToHideNavBar =
+    location.pathname.startsWith("/universe-final") ||
+    location.pathname.startsWith("/hover-expand") ||
+    location.pathname.startsWith("/ar/rings") ||
+    location.pathname.startsWith("/dashboard/admin/manage-products");
 
-  // Danh sách các route tĩnh khác cần ẩn Navbar/Footer
-  const staticRoutesToHideNavBar = [
-    "/universe-final",
-    "/hover-expand",
-    "/dashboard/admin/manage-products",
-  ];
-  const staticRoutesToHideFooter = [
-    "/universe-final",
-    "/hover-expand",
-    "/dashboard/admin/manage-products",
-  ];
+  const staticRoutesToHideFooter =
+    location.pathname.startsWith("/universe-final") ||
+    location.pathname.startsWith("/hover-expand") ||
+    location.pathname.startsWith("/ar/rings") ||
+    location.pathname.startsWith("/dashboard/admin/manage-products");
 
-  // Kiểm tra xem đường dẫn có phải là trang AR hay không, bất kể ID của nhẫn là gì.
-  const isARPage = location.pathname.startsWith("/ar/rings");
-  const shouldShowNavbar =
-    !staticRoutesToHideNavBar.includes(location.pathname) && !isARPage;
-  const shouldShowFooter =
-    !staticRoutesToHideFooter.includes(location.pathname) && !isARPage;
+  const shouldShowNavbar = !staticRoutesToHideNavBar;
+  const shouldShowFooter = !staticRoutesToHideFooter;
 
   return (
     <>
@@ -63,6 +62,11 @@ export default function AppRoutes() {
       >
         <Routes>
           <Route path="/" element={<HomePage />} />
+
+          <Route path="/auth" element={<AuthPage />}>
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+          </Route>
 
           <Route path="/products" element={<ProductsPage />} />
 
@@ -84,7 +88,8 @@ export default function AppRoutes() {
           <Route path="/hover-expand" element={<HoverExpandSection />} />
 
           <Route path="/view-360" element={<View360 />} />
-          <Route path="/collections" element={<Collections />} />
+
+          <Route path="/user-profile" element={<Profile />} />
 
           <Route element={<TryOnRingLayout />}>
             <Route path="/ar/rings/:ringId" element={<TryOnRing />} />

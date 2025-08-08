@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   opacity: 1;
-  padding: 0 30px;
+  padding: 0 2.5%;
   box-sizing: border-box;
 }
 
@@ -40,7 +40,7 @@
   width: 298px;
   height: 140px;
   position: absolute;
-  left: 30px;
+  left: 2.5%;
   top: 60px;
   box-sizing: border-box;
 }
@@ -50,7 +50,7 @@
   width: 298px;
   height: 140px;
   position: absolute;
-  right: 30px;
+  right: 2.5%;
   top: 60px;
   text-align: right;
   box-sizing: border-box;
@@ -320,12 +320,13 @@
 }
 
 .signup-button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.7),
     inset 0 -1px 0 rgba(255, 255, 255, 0.2),
     inset 0 0 16px 8px rgba(255, 255, 255, 0.8);
+  color: black;
 }
 
 /* ========================================
@@ -340,7 +341,7 @@
 /* Footer Bottom Left - Copyright */
 .footer-bottom-left {
   position: absolute;
-  left: 30px;
+  left: 2.5%;
   bottom: 30px;
   z-index: 100;
 }
@@ -390,7 +391,7 @@
 /* Footer Bottom Right - Legal */
 .footer-bottom-right {
   position: absolute;
-  right: 30px;
+  right: 2.5%;
   bottom: 30px;
   text-align: right;
   z-index: 100;
@@ -413,17 +414,17 @@
     height: 750px;
     padding: 0 25px;
   }
-  
+
   .footer-left,
   .footer-right {
     width: 280px;
   }
-  
+
   .footer-center {
     width: 520px;
     top: 270px;
   }
-  
+
   .newsletter-title {
     font-size: 52px;
   }
@@ -433,7 +434,7 @@
 @media (max-width: 1440px) {
   .footer {
     height: 720px;
-    padding: 0 30px;
+    padding: 0 2.5%;
   }
 
   .footer-center {

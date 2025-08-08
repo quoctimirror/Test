@@ -2,20 +2,22 @@
   background-color: #000;
   color: #fff;
   padding: 0;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+  position: relative;
+  width: 100%;
 }
 
 .hover-expand-header {
   text-align: center;
-  margin-bottom: 0;
-  margin-top: clamp(40px, 8vh, 120px);
-  flex-shrink: 0;
-  padding: 0 20px;
+  padding-top: 60px;
+  padding-bottom: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .hover-expand-title {
@@ -36,15 +38,80 @@
   letter-spacing: 1px;
 }
 
+.explore-more-button {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 40px;
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  width: 163px;
+  height: 57px;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  margin-top: 36px;
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.explore-more-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.explore-more-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.explore-more-button:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
 .hover-expand-gallery {
   display: flex;
   flex-wrap: nowrap;
   gap: 0;
   width: 100%;
   max-width: 100%;
-  height: 65vh !important;
+  height: 65vh;
   overflow: hidden;
-  align-self: flex-end;
+  margin-top: auto;
 }
 
 /* Kích thước cụ thể cho màn hình 1920x1080 */
@@ -52,7 +119,6 @@
   .hover-expand-gallery {
     grid-template-columns: repeat(4, 480px);
     justify-content: center;
-    height: 65vh !important;
     margin-top: auto;
     margin-bottom: 0;
   }
@@ -103,10 +169,25 @@
   flex: 1;
 }
 
+@media (max-width: 1200px) {
+  .explore-more-button {
+    width: 150px;
+    height: 54px;
+    font-size: 14px;
+    margin-top: 32px;
+  }
+}
+
 @media (max-width: 1024px) {
+  .explore-more-button {
+    width: 145px;
+    height: 52px;
+    font-size: 13px;
+    margin-top: 30px;
+  }
+
   .hover-expand-gallery {
     flex-wrap: wrap;
-    height: 65vh !important;
     gap: 1px;
     align-self: flex-end;
   }
@@ -130,9 +211,15 @@
     font-size: clamp(24px, 6vw, 36px);
   }
 
+  .explore-more-button {
+    width: 135px;
+    height: 48px;
+    font-size: 13px;
+    margin-top: 28px;
+  }
+
   .hover-expand-gallery {
     flex-wrap: wrap;
-    height: 65vh !important;
     gap: 1px;
     align-self: flex-end;
   }
@@ -162,9 +249,15 @@
     margin-bottom: 4px;
   }
 
+  .explore-more-button {
+    width: 120px;
+    height: 44px;
+    font-size: 12px;
+    margin-top: 24px;
+  }
+
   .hover-expand-gallery {
     flex-wrap: wrap;
-    height: 65vh !important;
     gap: 1px;
     align-self: flex-end;
   }
@@ -180,6 +273,45 @@
   .gallery-item:hover img {
     opacity: 1;
     transform: scale(1.01);
+    filter: grayscale(0%);
+  }
+}
+
+/* Mobile Small - 360px */
+@media (max-width: 360px) {
+  .hover-expand-header {
+    padding: 0 12px;
+  }
+
+  .hover-expand-title {
+    font-size: clamp(18px, 10vw, 24px);
+    margin-bottom: 3px;
+  }
+
+  .explore-more-button {
+    width: 100px;
+    height: 40px;
+    font-size: 11px;
+    margin-top: 20px;
+  }
+
+  .hover-expand-gallery {
+    flex-wrap: wrap;
+    gap: 1px;
+    align-self: flex-end;
+  }
+
+  .gallery-item {
+    flex: 1 1 100%;
+  }
+
+  .gallery-item:hover {
+    flex: 1 1 100%;
+  }
+
+  .gallery-item:hover img {
+    opacity: 1;
+    transform: scale(1);
     filter: grayscale(0%);
   }
 }

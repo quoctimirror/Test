@@ -4,7 +4,7 @@ import CollectionVideoSection from "@components/collections/CollectionVideoSecti
 import Section2CollectionDetail from "@components/collections/Section2CollectionDetail";
 import Section3CollectionDetail from "@components/collections/Section3CollectionDetail";
 import Section4CollectionDetail from "@components/collections/Section4CollectionDetail";
-import Section5Products from "@components/section5Products/Section5Products";
+import ContactUs from "@components/contactUs/ContactUs";
 
 const CollectionDetailPage = () => {
   const { collectionId } = useParams();
@@ -23,8 +23,8 @@ const CollectionDetailPage = () => {
       {/* Section 4: Same Collection */}
       <Section4CollectionDetail showViewProductButton={true} />
 
-      {/* Section 5: Section5Products */}
-      <Section5Products />
+      {/* Section 5: Contact Us */}
+      <ContactUs />
     </div>
   );
 };

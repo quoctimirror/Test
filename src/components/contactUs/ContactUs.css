@@ -1,0 +1,312 @@
+/* Contact Us - Reach Out */
+.hero {
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+/* For screens larger than 1920x1080, maintain 800px */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .hero {
+    height: 800px;
+  }
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 405px;
+  height: 305px;
+  padding: 0;
+  background: transparent;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-content h4 {
+  text-align: center;
+  margin: 0;
+  color: #e0e0e0;
+}
+
+.hero-content h1 {
+  text-align: center;
+  margin: 12px 0 24px 0;
+  color: #ffffff;
+}
+
+.hero-content p {
+  text-align: center;
+  margin: 0;
+  color: #e0e0e0;
+}
+
+.hero-content p:last-of-type {
+  margin-bottom: 0;
+}
+
+.contact-us-button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
+}
+
+.contact-us-button {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 40px;
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  padding: 0;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  width: 145px;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-us-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.contact-us-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.contact-us-button:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .hero {
+    height: 700px;
+  }
+  
+  .hero-content {
+    width: 385px;
+    height: 290px;
+  }
+  
+  .hero-content h1 {
+    font-size: 58px;
+    margin: 10px 0 22px 0;
+  }
+  
+  .hero-content h4 {
+    font-size: 15px;
+  }
+  
+  .hero-content p {
+    font-size: 15px;
+  }
+
+  .contact-us-button {
+    width: 135px;
+    height: 54px;
+    font-size: 13px;
+  }
+  
+  .contact-us-button-wrapper {
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 992px) {
+  .hero {
+    height: 650px;
+  }
+  
+  .hero-content {
+    width: 365px;
+    height: 275px;
+  }
+  
+  .hero-content h1 {
+    font-size: 54px;
+    margin: 8px 0 20px 0;
+  }
+  
+  .hero-content h4 {
+    font-size: 15px;
+  }
+  
+  .hero-content p {
+    font-size: 15px;
+  }
+
+  .contact-us-button {
+    width: 130px;
+    height: 52px;
+    font-size: 13px;
+  }
+  
+  .contact-us-button-wrapper {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 600px;
+  }
+  
+  .hero-content {
+    width: 340px;
+    height: 260px;
+  }
+
+  .hero-content h1 {
+    font-size: 48px;
+    margin: 6px 0 18px 0;
+  }
+
+  .hero-content h4 {
+    font-size: 14px;
+  }
+
+  .hero-content p {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .contact-us-button {
+    width: 125px;
+    height: 50px;
+    font-size: 13px;
+  }
+  
+  .contact-us-button-wrapper {
+    margin-top: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 500px;
+  }
+
+  .hero-content {
+    width: 90%;
+    max-width: 320px;
+    height: 240px;
+  }
+
+  .hero-content h1 {
+    font-size: 36px;
+    margin: 4px 0 16px 0;
+  }
+
+  .hero-content h4 {
+    font-size: 13px;
+  }
+
+  .hero-content p {
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .contact-us-button {
+    width: 110px;
+    height: 44px;
+    font-size: 12px;
+  }
+  
+  .contact-us-button-wrapper {
+    margin-top: 24px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero {
+    height: 480px;
+  }
+
+  .hero-content {
+    width: 95%;
+    max-width: 300px;
+    height: 220px;
+  }
+
+  .hero-content h1 {
+    font-size: 32px;
+    margin: 2px 0 14px 0;
+  }
+
+  .hero-content h4 {
+    font-size: 12px;
+  }
+
+  .hero-content p {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .contact-us-button {
+    width: 100px;
+    height: 42px;
+    font-size: 11px;
+  }
+  
+  .contact-us-button-wrapper {
+    margin-top: 20px;
+  }
+}

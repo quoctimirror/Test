@@ -2,6 +2,9 @@ import { useEffect, useRef } from "react";
 import Logo from "@assets/images/Logo.svg";
 import Vector2 from "@assets/images/Vector_2.svg";
 import ArrowRight from "@assets/images/arrow-right.svg";
+import ImmersiveShowroom from "@components/immersiveShowroom/ImmersiveShowroom";
+import HoverExpandSection from "@components/hoverExpandSection/HoverExpandSection";
+import ContactUs from "@components/contactUs/ContactUs";
 import "./home.css";
 
 export default function HomePage() {
@@ -32,12 +35,6 @@ export default function HomePage() {
       if (finalGradientRef.current) {
         // Calculation MUST go from POSITIVE to NEGATIVE (120 -> -20)
         const wipePosition = 400 - progress * 350;
-        console.log(
-          "Scrolling! Progress:",
-          progress,
-          "Wipe Position:",
-          wipePosition
-        );
         finalGradientRef.current.style.setProperty(
           "--wipe-progress",
           `${wipePosition}%`
@@ -91,13 +88,11 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="next-section">
-        <h1>Welcome to the Main Content</h1>
-        <p>
-          This content will now scroll up from underneath the sticky hero
-          section.
-        </p>
-      </div>
+      <ImmersiveShowroom />
+
+      <HoverExpandSection />
+
+      <ContactUs />
     </>
   );
 }
