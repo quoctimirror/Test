@@ -1,28 +1,44 @@
 // src/api/axiosConfig.js
 import axios from 'axios';
 
-// Hàm xác định URL của backend, không có gì thay đổi ở đây
+// Hàm xác định URL của backend - có thể dễ dàng chuyển đổi giữa local và ngrok
 const getBackendURL = () => {
     // Debug logging
     console.log('🔍 Backend URL Detection Debug:', {
         hostname: window.location.hostname,
         VITE_MODE: import.meta.env.VITE_MODE,
         VITE_BACKEND_NGROK_URL: import.meta.env.VITE_BACKEND_NGROK_URL,
-        VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL
+        VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+        VITE_USE_LOCAL_BACKEND: import.meta.env.VITE_USE_LOCAL_BACKEND
     });
 
+    // Nếu frontend chạy trên Vercel hoặc production, ưu tiên ngrok URL
     if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('ngrok')) {
         const url = import.meta.env.VITE_BACKEND_NGROK_URL || import.meta.env.VITE_API_BASE_URL;
-        console.log('✅ Using Vercel/Ngrok URL:', url);
+        console.log('✅ Using Production/Vercel URL:', url);
         return url;
     }
-    if (import.meta.env.VITE_MODE === 'development' && import.meta.env.VITE_BACKEND_NGROK_URL) {
-        const url = import.meta.env.VITE_BACKEND_NGROK_URL;
-        console.log('✅ Using Development Ngrok URL:', url);
-        return url;
+    
+    // Trong development, kiểm tra biến môi trường để quyết định dùng local hay ngrok
+    if (import.meta.env.VITE_MODE === 'development') {
+        // Nếu VITE_USE_LOCAL_BACKEND = 'true', dùng local backend
+        if (import.meta.env.VITE_USE_LOCAL_BACKEND === 'true') {
+            const url = 'http://localhost:8081';
+            console.log('✅ Using Local Backend URL (forced):', url);
+            return url;
+        }
+        
+        // Nếu có VITE_BACKEND_NGROK_URL, dùng ngrok (mặc định cho development)
+        if (import.meta.env.VITE_BACKEND_NGROK_URL) {
+            const url = import.meta.env.VITE_BACKEND_NGROK_URL;
+            console.log('✅ Using Development Ngrok URL:', url);
+            return url;
+        }
     }
+    
+    // Fallback: dùng local backend
     const url = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
-    console.log('✅ Using Local Backend URL:', url);
+    console.log('✅ Using Fallback Backend URL:', url);
     return url;
 };
 
