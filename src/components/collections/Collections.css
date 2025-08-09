@@ -440,7 +440,7 @@ body {
   font-size: 16px;
   line-height: 120%;
   letter-spacing: 0%;
-  text-align: right;
+  text-align: left;
   color: #ffffff80;
   position: relative;
   display: inline-block;
@@ -455,7 +455,7 @@ body {
   bottom: -5px;
   left: 0;
   transform: scaleX(0);
-  transform-origin: left;
+  transform-origin: right;
   transition: transform 0.4s ease-out;
 }
 
@@ -465,7 +465,7 @@ body {
 
 .hover-underline:hover::after {
   transform: scaleX(1);
-  transform-origin: right;
+  transform-origin: left;
 }
 
 /* Full width style for collection content panel */

@@ -99,8 +99,8 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
     <section className="collection-section-4">
       <div className="same-collection-container">
         <div className="same-collection-header">
-          <h2 className="same-collection-title">MORE GEMS</h2>
-          <p className="same-collection-description">
+          <h2 className="heading-1 same-collection-title">MORE GEMS</h2>
+          <p className="bodytext-4 same-collection-description">
             Mirror's curation of visionary designs - where each piece embodies
             the essence of future
             <br />

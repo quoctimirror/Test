@@ -1,12 +1,12 @@
 /* Section 2 Collection Detail */
 .section2-collection-detail {
   width: 100%;
-  min-height: 100vh;
-  padding: 80px 0;
   background-color: #f5f5f5;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding: 240px 0;
+  box-sizing: border-box;
 }
 
 .collection-detail-content {
@@ -14,6 +14,9 @@
   width: 100%;
   padding: 0 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .collection-detail-subtitle {
@@ -26,7 +29,8 @@
   text-align: center;
   color: #797979;
   text-transform: uppercase;
-  margin-bottom: 2rem;
+  margin-bottom: 12px;
+  width: 100%;
 }
 
 .collection-detail-title {
@@ -38,7 +42,8 @@
   letter-spacing: -3%;
   text-align: center;
   color: #000000;
-  margin-bottom: 2rem;
+  margin-bottom: 36px;
+  width: 100%;
 }
 
 .collection-detail-description {
@@ -49,20 +54,21 @@
   line-height: 120%;
   letter-spacing: 0%;
   color: #797979;
-  text-align: left;
+  text-align: center;
   width: 610px;
-  height: 300px;
   max-width: 100%;
   overflow: hidden;
   margin: 0 auto;
 }
 
 .collection-detail-description p {
+  margin-top: 0;
   margin-bottom: 1.5rem;
 }
 
 .collection-detail-description p:first-child {
-  margin-bottom: 3.5rem;
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 .collection-detail-description p:last-child {
@@ -73,13 +79,14 @@
 @media (max-width: 1200px) {
   .collection-detail-description {
     width: 500px;
-    height: 245px;
+    height: auto;
+    max-height: 300px;
   }
 }
 
 @media (max-width: 768px) {
   .section2-collection-detail {
-    padding: 60px 0;
+    padding: 120px 0;
   }
 
   .collection-detail-content {
@@ -98,15 +105,17 @@
 
   .collection-detail-description {
     font-size: 15px;
-    line-height: 1.7;
-    width: 400px;
-    height: 200px;
+    line-height: 1.5;
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+    max-height: 250px;
   }
 }
 
 @media (max-width: 480px) {
   .section2-collection-detail {
-    padding: 40px 0;
+    padding: 80px 0;
   }
 
   .collection-detail-content {
@@ -127,9 +136,11 @@
 
   .collection-detail-description {
     font-size: 14px;
-    line-height: 1.6;
-    width: 300px;
-    height: 150px;
+    line-height: 1.5;
+    width: 90%;
+    max-width: 300px;
+    height: auto;
+    max-height: 200px;
   }
 
   .collection-detail-description p {

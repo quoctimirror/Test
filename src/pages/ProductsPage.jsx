@@ -30,7 +30,7 @@ const ProductsPage = () => {
       <ParallaxScrolling />
 
       {/* Section 4: View All Products */}
-      <ViewAllProduct />
+      <ViewAllProduct showViewProductButton={true} />
 
       {/* Section 5: Reach Out */}
       <ContactUs />

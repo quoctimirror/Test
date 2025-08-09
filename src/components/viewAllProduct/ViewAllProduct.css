@@ -20,27 +20,21 @@
 }
 
 .same-collection-title {
-  font-family: "Saol Display", serif;
-  font-weight: 300;
-  font-style: normal;
-  font-size: 64px;
-  line-height: 90%;
-  letter-spacing: -3%;
+  /* Sử dụng class heading-1 từ typography.css */
+  /* Các thuộc tính font đã được xác định trong heading-1 */
   text-align: center;
   color: #333;
-  margin: 0 0 30px 0;
+  /* Ghi đè margin mặc định của heading-1 */
+  margin: 0 0 30px 0 !important;
 }
 
 .same-collection-description {
-  font-family: "BT Beau Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 17px;
-  line-height: 120%;
-  letter-spacing: 0%;
+  /* Sử dụng class body-text-4 từ typography.css */
+  /* Các thuộc tính font đã được xác định trong body-text-4 */
   text-align: center;
   color: #797979;
-  margin: 0;
+  /* Ghi đè margin mặc định của body-text-4 */
+  margin: 0 !important;
 }
 
 .same-collection-grid {
@@ -90,12 +84,12 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
   .same-collection-title {
+    /* Font-size responsive cho heading-1 */
     font-size: 56px;
-    letter-spacing: -2.5%;
   }
 
   .same-collection-description {
-    font-size: 16px;
+    /* Body-text-4 giữ nguyên font-size 14px */
   }
 
   .product-card {
@@ -120,7 +114,6 @@
 
   .same-collection-title {
     font-size: 52px;
-    letter-spacing: -2%;
   }
 
   .product-card {
@@ -149,12 +142,11 @@
 
   .same-collection-title {
     font-size: 45px;
-    letter-spacing: -2%;
-    margin-bottom: 20px;
+    margin-bottom: 20px !important;
   }
 
   .same-collection-description {
-    font-size: 15px;
+    /* Body-text-4 giữ nguyên font-size 14px */
   }
 
   .product-card {
@@ -183,12 +175,11 @@
 
   .same-collection-title {
     font-size: 32px;
-    letter-spacing: -1.5%;
-    margin-bottom: 15px;
+    margin-bottom: 15px !important;
   }
 
   .same-collection-description {
-    font-size: 14px;
+    /* Body-text-4 đã có font-size 14px */
     line-height: 1.5;
   }
 
@@ -214,7 +205,6 @@
 
   .same-collection-title {
     font-size: 28px;
-    letter-spacing: -1%;
   }
 
   .same-collection-description {
