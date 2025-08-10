@@ -360,19 +360,6 @@
   margin-top: 16px;
 }
 
-/* Height Controls - Bỏ min-height để ôm sát content */
-.return-exchange {
-  /* min-height: auto; */
-}
-
-.sizing-guide {
-  /* min-height: auto; */
-}
-
-.warranty-info {
-  /* min-height: auto; */
-}
-
 .faqs {
   min-height: auto;
 }
