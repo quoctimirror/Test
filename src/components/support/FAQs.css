@@ -1,7 +1,7 @@
 /* Thêm container để xác định "vùng" mà sidebar sẽ sticky */
 .faqs-sticky-container {
   padding: 0 0 120px 0;
-  background: white;
+  /* background: white; */
   width: 100vw;
   margin-left: calc(-50vw + 50%);
 }
@@ -11,27 +11,22 @@ html {
   scroll-behavior: smooth;
 }
 
-/* --- Thay đổi quan trọng: Chuyển faqs-wrapper sang Flexbox --- */
+/* --- Container tạo vùng sticky bounds --- */
 .faqs-wrapper {
   position: relative;
   width: 100%;
-  margin: 0;
-  padding: 0;
+  padding-left: 0; /* Dành chỗ cho sidebar 200px + margin 40px */
   display: flex;
   align-items: flex-start;
-  gap: 50px;
 }
 
-/* --- Thay đổi cốt lõi: Chuyển sidebar sang position: sticky --- */
+/* --- Sidebar sticky trong bounds --- */
 .faq-sidebar-section {
-  position: sticky;
-  top: 330px;
-  flex-shrink: 0;
-  align-self: flex-start;
-  z-index: 100;
-  margin-left: 30px;
-  margin-bottom: 378px;
-  width: 163px;
+  position: absolute;
+  left: 2.5%;
+  top: 0;
+  width: 200px;
+  height: 100%; /* Chiều cao bằng wrapper (tức là bằng main content) */
 }
 
 .faq-nav {
@@ -40,6 +35,11 @@ html {
   display: flex;
   align-items: flex-start;
   opacity: 1;
+  /* Sticky trong vùng giới hạn của faq-sidebar-section */
+  position: sticky;
+  top: 150px;
+  /* background: rgba(255, 255, 255, 0.95); */
+  /* backdrop-filter: blur(8px); */
 }
 
 /* Loại bỏ class .sticky vì không còn dùng state đó nữa */
@@ -102,17 +102,16 @@ html {
 /* Các class nav cụ thể không cần nữa vì đã render động */
 /* .faq-nav .products-nav, .orders-nav, etc... */
 
-/* --- Nội dung chính bên phải --- */
+/* --- Main content căn giữa toàn trang --- */
 .faqs-main-section {
   width: 100%;
-  max-width: 1434px;
-  min-width: 0;
+  max-width: 922px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .faq-content-section {
   width: 100%;
-  max-width: 922px;
-  margin: 0 auto;
 }
 
 .search-section {
@@ -126,7 +125,7 @@ html {
   justify-content: center;
   gap: 12px;
   width: 100%;
-  max-width: 610px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
@@ -189,7 +188,7 @@ html {
 }
 
 .faq-section {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 0;
   overflow: hidden;
   box-shadow: none;
@@ -202,12 +201,13 @@ html {
 }
 
 .faq-image-placeholder {
-  height: 500px;
-  background: #d3d3d3;
+  height: 300px;
+  background: #c0c0c0;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
+  border-radius: 4px;
 }
 
 .placeholder-box {
@@ -271,8 +271,8 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #000000;
-  transition: background-color 0.3s ease;
+  color: rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
 }
 
 .faq-question:hover {
@@ -312,7 +312,7 @@ html {
 
 .faq-answer {
   padding: 0 0;
-  background-color: white;
+  /* background-color: white; */
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out;
@@ -338,40 +338,40 @@ html {
   .faqs-wrapper {
     gap: 40px;
   }
-  
+
   .faq-sidebar-section {
     width: 150px;
-    margin-left: 25px;
+    left: 2.3%;
   }
-  
+
   .faq-nav .nav-item a {
     font-size: 15px;
   }
-  
+
   .search-input {
     font-size: 15px;
     padding: 13px 18px;
   }
-  
+
   .search-button {
     font-size: 13px;
     padding: 18px 32px;
     width: 110px;
     height: 52px;
   }
-  
+
   .faq-question {
     font-size: 18px;
   }
-  
+
   .faq-answer p {
     font-size: 15px;
   }
-  
+
   .faq-image-placeholder {
     height: 450px;
   }
-  
+
   .placeholder-box {
     font-size: 1.8rem;
   }
@@ -381,74 +381,74 @@ html {
   .faqs-wrapper {
     gap: 30px;
   }
-  
+
   .faq-sidebar-section {
     width: 140px;
-    margin-left: 20px;
+    left: 2%;
     top: 300px;
   }
-  
+
   .faq-nav .nav-item a {
     font-size: 14px;
   }
-  
+
   .faq-nav ul {
     gap: 20px;
   }
-  
+
   .search-section {
-    margin-bottom: 100px;
+    margin-bottom: 120px;
   }
-  
+
   .search-container {
     gap: 10px;
   }
-  
+
   .search-input {
     font-size: 14px;
     padding: 12px 16px;
   }
-  
+
   .search-button {
     font-size: 12px;
     padding: 16px 28px;
     width: 100px;
     height: 48px;
   }
-  
+
   .faq-question {
     font-size: 16px;
     line-height: 140%;
   }
-  
+
   .faq-answer p {
     font-size: 14px;
     line-height: 140%;
     padding: 10px 0 0 0;
   }
-  
+
   .faq-item {
     padding: 30px 0;
   }
-  
+
   .faq-section {
     padding-bottom: 100px;
   }
-  
+
   .faq-image-placeholder {
     height: 400px;
     margin-bottom: 30px;
   }
-  
+
   .placeholder-box {
     font-size: 1.6rem;
   }
-  
+
   .faq-icon {
     width: 30px;
     height: 30px;
   }
-  
+
   .faq-icon::before {
     width: 10px;
     height: 10px;
@@ -461,12 +461,12 @@ html {
   .faqs-sticky-container {
     padding: 0 0 80px 0;
   }
-  
+
   .faqs-wrapper {
     flex-direction: column;
     gap: 20px;
   }
-  
+
   .faq-sidebar-section {
     position: relative;
     top: auto;
@@ -475,18 +475,18 @@ html {
     margin-bottom: 0;
     order: 1;
   }
-  
+
   .faq-nav {
     width: 100%;
   }
-  
+
   .faq-nav ul {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 15px;
     justify-content: center;
   }
-  
+
   .faq-nav .nav-item a {
     font-size: 13px;
     white-space: nowrap;
@@ -496,43 +496,43 @@ html {
     background: #f8f8f8;
     transition: all 0.3s ease;
   }
-  
+
   .faq-nav .nav-item.active a {
     background: #000;
     color: #fff;
     border-color: #000;
   }
-  
+
   .faq-nav .nav-item:hover a {
     background: #000;
     color: #fff;
     border-color: #000;
   }
-  
+
   .faq-nav .nav-item a::after {
     display: none;
   }
-  
+
   .faqs-main-section {
     order: 2;
     padding: 0 15px;
   }
-  
+
   .search-section {
     margin-bottom: 60px;
   }
-  
+
   .search-container {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .search-input {
     font-size: 13px;
     padding: 12px 15px;
     text-align: center;
   }
-  
+
   .search-button {
     font-size: 12px;
     padding: 14px 24px;
@@ -540,41 +540,41 @@ html {
     height: 44px;
     align-self: center;
   }
-  
+
   .faq-question {
     font-size: 15px;
     line-height: 150%;
   }
-  
+
   .faq-answer p {
     font-size: 13px;
     line-height: 150%;
     padding: 8px 0 0 0;
   }
-  
+
   .faq-item {
     padding: 24px 0;
   }
-  
+
   .faq-section {
     padding-bottom: 60px;
     min-height: auto;
   }
-  
+
   .faq-image-placeholder {
     height: 300px;
     margin-bottom: 20px;
   }
-  
+
   .placeholder-box {
     font-size: 1.4rem;
   }
-  
+
   .faq-icon {
     width: 28px;
     height: 28px;
   }
-  
+
   .faq-icon::before {
     width: 9px;
     height: 9px;
@@ -588,73 +588,73 @@ html {
   .faqs-sticky-container {
     padding: 0 0 60px 0;
   }
-  
+
   .faq-nav ul {
     gap: 10px;
   }
-  
+
   .faq-nav .nav-item a {
     font-size: 12px;
     padding: 6px 10px;
   }
-  
+
   .faqs-main-section {
     padding: 0 10px;
   }
-  
+
   .search-section {
     margin-bottom: 40px;
   }
-  
+
   .search-container {
     gap: 12px;
   }
-  
+
   .search-input {
     font-size: 12px;
     padding: 10px 12px;
   }
-  
+
   .search-button {
     font-size: 11px;
     padding: 12px 20px;
     width: 80px;
     height: 40px;
   }
-  
+
   .faq-question {
     font-size: 14px;
     line-height: 160%;
   }
-  
+
   .faq-answer p {
     font-size: 12px;
     line-height: 160%;
     padding: 6px 0 0 0;
   }
-  
+
   .faq-item {
     padding: 20px 0;
   }
-  
+
   .faq-section {
     padding-bottom: 40px;
   }
-  
+
   .faq-image-placeholder {
     height: 250px;
     margin-bottom: 15px;
   }
-  
+
   .placeholder-box {
     font-size: 1.2rem;
   }
-  
+
   .faq-icon {
     width: 25px;
     height: 25px;
   }
-  
+
   .faq-icon::before {
     width: 8px;
     height: 8px;
@@ -667,73 +667,73 @@ html {
   .faqs-sticky-container {
     padding: 0 0 40px 0;
   }
-  
+
   .faq-nav ul {
     gap: 8px;
   }
-  
+
   .faq-nav .nav-item a {
     font-size: 11px;
     padding: 5px 8px;
   }
-  
+
   .faqs-main-section {
     padding: 0 8px;
   }
-  
+
   .search-section {
     margin-bottom: 30px;
   }
-  
+
   .search-container {
     gap: 10px;
   }
-  
+
   .search-input {
     font-size: 11px;
     padding: 8px 10px;
   }
-  
+
   .search-button {
     font-size: 10px;
     padding: 10px 16px;
     width: 70px;
     height: 36px;
   }
-  
+
   .faq-question {
     font-size: 13px;
     line-height: 170%;
   }
-  
+
   .faq-answer p {
     font-size: 11px;
     line-height: 170%;
     padding: 4px 0 0 0;
   }
-  
+
   .faq-item {
     padding: 16px 0;
   }
-  
+
   .faq-section {
     padding-bottom: 30px;
   }
-  
+
   .faq-image-placeholder {
     height: 200px;
     margin-bottom: 12px;
   }
-  
+
   .placeholder-box {
     font-size: 1rem;
   }
-  
+
   .faq-icon {
     width: 22px;
     height: 22px;
   }
-  
+
   .faq-icon::before {
     width: 7px;
     height: 7px;

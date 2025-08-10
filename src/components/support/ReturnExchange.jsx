@@ -5,7 +5,7 @@ const ReturnExchange = () => {
   return (
     <div className="return-exchange">
       <div className="header-section">
-        <h2>Created by Science. Crafted for Eternity.</h2>
+        <h2 className="heading-2">Created by Science. Crafted for Eternity.</h2>
         <p>
           Each Mirror piece is meticulously crafted with rare precision,
           intention, and limited availability. To preserve the integrity and
@@ -20,21 +20,23 @@ const ReturnExchange = () => {
         <ul className="international-orders-list">
           <li>
             <p>
-              <strong>All international sales are final.</strong>
+              <span className="bodytext-2">
+                All international sales are final.
+              </span>
             </p>
           </li>
           <li>
             <p>
-              <strong>No exchanges or returns</strong> are accepted for
-              international shipments.
+              <span className="bodytext-2">No exchanges or returns</span> are
+              accepted for international shipments.
             </p>
           </li>
           <li>
             <p>
               We strongly recommend booking{" "}
-              <strong>a virtual consultation</strong> prior to purchase to
-              ensure accurate sizing, style selection, and customization
-              preferences.
+              <span className="bodytext-2">a virtual consultation</span> prior
+              to purchase to ensure accurate sizing, style selection, and
+              customization preferences.
             </p>
           </li>
         </ul>
@@ -45,19 +47,25 @@ const ReturnExchange = () => {
 
         <div className="subsection showroom-purchases">
           <h4>
-            <strong>1. Showroom & In-Person Purchases</strong>
+            <span className="bodytext-2">
+              1. Showroom & In-Person Purchases
+            </span>
           </h4>
           <ul className="showroom-purchases-list">
             <li>
               <p>
                 Exchanges may be{" "}
-                <strong>permitted within 3 days of purchase</strong>.
+                <span className="bodytext-2">
+                  permitted within 3 days of purchase
+                </span>
+                .
               </p>
             </li>
             <li>
               <p>
-                Items must be returned <strong>in person</strong> to the
-                original showroom.
+                Items must be returned{" "}
+                <span className="bodytext-2">in person</span> to the original
+                showroom.
               </p>
             </li>
             <li>
@@ -66,7 +74,8 @@ const ReturnExchange = () => {
             <ul>
               <li>
                 <p>
-                  <strong>Unworn and in original</strong>, pristine condition
+                  <span className="bodytext-2">Unworn and in original</span>,
+                  pristine condition
                 </p>
               </li>
               <li>
@@ -84,14 +93,16 @@ const ReturnExchange = () => {
 
         <div className="subsection nationwide-shipping">
           <h4>
-            <strong>2. Nationwide Shipping (Vietnam</strong>)
+            <span className="bodytext-2">2. Nationwide Shipping (Vietnam)</span>
           </h4>
           <ul className="nationwide-shipping-list">
             <li>
               <p>
                 Exchange requests{" "}
-                <strong>may be requested within 5 days</strong> of confirmed
-                delivery.
+                <span className="bodytext-2">
+                  may be requested within 5 days
+                </span>{" "}
+                of confirmed delivery.
               </p>
             </li>
             <li>
@@ -117,8 +128,8 @@ const ReturnExchange = () => {
             <li>
               <p>
                 Customers are responsible for{" "}
-                <strong>shipping and handling costs</strong> associated with the
-                exchange.
+                <span className="bodytext-2">shipping and handling costs</span>{" "}
+                associated with the exchange.
               </p>
             </li>
           </ul>

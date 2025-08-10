@@ -53,17 +53,17 @@ const FAQs = () => {
 
   const toggleFAQ = (id) => {
     const panel = document.querySelector(`[data-faq-id="${id}"]`);
-    
+
     if (panel) {
       if (panel.style.maxHeight) {
         panel.style.maxHeight = null;
         setExpandedFAQ(null);
       } else {
         // Đóng tất cả panels khác trước
-        document.querySelectorAll('.faq-answer').forEach(p => {
+        document.querySelectorAll(".faq-answer").forEach((p) => {
           p.style.maxHeight = null;
         });
-        
+
         // Mở panel hiện tại
         panel.style.maxHeight = panel.scrollHeight + "px";
         setExpandedFAQ(id);
