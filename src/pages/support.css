@@ -118,7 +118,7 @@
   margin-right: auto;
   align-items: center;
   padding: 0;
-  /* Đặt z-index thấp hơn navbar để mix-blend-mode hoạt động */
+  /* Đặt z-index giống service detail để có thể tương tác và mix-blend-mode hoạt động */
   position: relative;
   z-index: 100;
 }

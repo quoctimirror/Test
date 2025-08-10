@@ -51,19 +51,20 @@
 
 .services-detail-tabs {
   display: flex;
-  /* margin-top: 30px; */
+  margin-top: 0;
   margin-bottom: 120px;
   justify-content: center;
   flex-wrap: nowrap;
   gap: 60px;
-  background: #fff;
-  width: 922px;
-  height: 20px;
+  /* background: #fff; Comment out để mix-blend-mode của navbar hoạt động */
+  width: 100%;
+  max-width: 922px;
+  /* height: 20px; Bỏ height cố định */
   margin-left: auto;
   margin-right: auto;
   align-items: center;
   padding: 0;
-  /* Đặt z-index thấp hơn navbar để mix-blend-mode hoạt động */
+  /* Đặt z-index cao hơn navbar để có thể tương tác */
   position: relative;
   z-index: 100;
 }
@@ -83,9 +84,8 @@
   white-space: nowrap;
   line-height: 120%;
   letter-spacing: 0%;
-  /* Đặt z-index thấp hơn navbar để mix-blend-mode hoạt động */
   position: relative;
-  z-index: 100;
+  /* Đảm bảo có thể tương tác */
   display: inline-block;
 }
 
@@ -407,12 +407,12 @@
 
 .services-cta {
   font-family: "BT Beau Sans", sans-serif;
-  background: transparent;
-  border: 0.5px solid #333;
+  background: rgba(0, 0, 0, 0.1);
+  border: 0.5px solid rgba(0, 0, 0, 0.5);
   padding: 20px 36px;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: rgba(0, 0, 0, 0.75);
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: capitalize;
@@ -429,8 +429,9 @@
 }
 
 .services-cta:hover {
-  background: #000000;
-  color: #ffffff;
+  background: rgba(0, 0, 0, 0.75);
+  border-color: rgba(0, 0, 0, 0.8);
+  color: white;
 }
 
 /* Responsive Design */
