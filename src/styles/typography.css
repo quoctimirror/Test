@@ -186,7 +186,22 @@
     /*paragraph spacing*/
 }
 
+/* heading-2 ---> 3 */
 .heading-2 {
+    font-family: var(--font-saol);
+    font-size: 64px;
+    font-style: italic;
+    font-weight: 300;
+    /* regular */
+    line-height: 0.9;
+    /* 90% */
+    letter-spacing: -2%;
+    /* 0% */
+    margin-bottom: 12px;
+    margin-top: 24px;
+}
+
+.heading-3 {
     font-family: var(--font-saol);
     font-size: 24px;
     font-weight: 400;
