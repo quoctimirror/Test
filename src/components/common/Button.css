@@ -1,0 +1,74 @@
+.common-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 0;
+  transition: all 0.3s ease;
+}
+
+/* Default theme hover */
+.common-button--default:hover .button-background {
+  fill: rgba(0, 0, 0, 0.75);
+  stroke: rgba(0, 0, 0, 0.8);
+}
+
+.common-button--default:hover .button-text {
+  fill: white;
+}
+
+/* White theme hover */
+.common-button--white:hover .button-background {
+  fill: rgba(255, 255, 255, 0.75);
+  stroke: rgba(255, 255, 255, 0.8);
+}
+
+.common-button--white:hover .button-text {
+  fill: black;
+}
+
+/* Pink theme hover */
+.common-button--pink:hover .button-background {
+  fill: #bc224c;
+  stroke: #bc224c;
+}
+
+.common-button--pink:hover .button-text {
+  fill: white;
+}
+
+/* Glass theme */
+.common-button--glass {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.common-button--glass .button-background {
+  filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.1));
+}
+
+.common-button--glass:hover .button-background {
+  fill: rgba(255, 255, 255, 0.75);
+  stroke: rgba(255, 255, 255, 0.5);
+  filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.15));
+}
+
+.common-button--glass:hover .button-text {
+  fill: black;
+}
+
+/* Outline theme */
+.common-button--outline .button-background {
+  stroke-width: 2;
+  filter: drop-shadow(0 4px 15px rgba(188, 34, 76, 0.2));
+}
+
+.common-button--outline:hover .button-background {
+  fill: #BC224C;
+  stroke: #BC224C;
+  filter: drop-shadow(0 6px 20px rgba(188, 34, 76, 0.4));
+}
+
+.common-button--outline:hover .button-text {
+  fill: white;
+}

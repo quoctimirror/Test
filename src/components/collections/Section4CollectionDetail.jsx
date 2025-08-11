@@ -1,7 +1,11 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import GlassButton from '../common/GlassButton';
 import "./Section4CollectionDetail.css";
 
 const Section4CollectionDetail = ({ showViewProductButton = false }) => {
+  const navigate = useNavigate();
+  
   const collections = [
     {
       id: 1,
@@ -51,6 +55,11 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [lastX, setLastX] = useState(0);
   const [lastTime, setLastTime] = useState(0);
+
+  const handleViewAllProducts = () => {
+    window.scrollTo(0, 0);
+    navigate('/all-gems');
+  };
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -158,35 +167,7 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
 
         {showViewProductButton && (
           <div className="view-product-button-container">
-            <button className="view-product-button">
-              <svg
-                width="189"
-                height="57"
-                viewBox="0 0 189 57"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  x="0.5"
-                  y="0.5"
-                  width="188"
-                  height="56"
-                  rx="28"
-                  fill="rgba(0, 0, 0, 0.1)"
-                  stroke="rgba(0, 0, 0, 0.5)"
-                  className="button-background"
-                />
-                <text
-                  x="94.5"
-                  y="34"
-                  textAnchor="middle"
-                  fill="rgba(0, 0, 0, 0.75)"
-                  className="button-text bodytext-4"
-                >
-                  View all products
-                </text>
-              </svg>
-            </button>
+            <GlassButton theme="default" onClick={handleViewAllProducts}>View all products</GlassButton>
           </div>
         )}
       </div>

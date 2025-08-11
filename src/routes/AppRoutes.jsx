@@ -31,6 +31,7 @@ const AuthPage = lazy(() => import("@pages/AuthPage"));
 const Login = lazy(() => import("@components/login/Login"));
 const Register = lazy(() => import("@components/register/Register"));
 const Profile = lazy(() => import("@components/profile/Profile"));
+const AllGemsPage = lazy(() => import("@pages/AllGemsPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -69,6 +70,8 @@ export default function AppRoutes() {
           </Route>
 
           <Route path="/products" element={<ProductsPage />} />
+          
+          <Route path="/all-gems" element={<AllGemsPage />} />
 
           <Route path="/collections" element={<CollectionPage />} />
 

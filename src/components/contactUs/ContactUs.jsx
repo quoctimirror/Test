@@ -1,5 +1,6 @@
 import "./ContactUs.css";
 import { useNavigate } from "react-router-dom";
+import GlassButton from '../common/GlassButton';
 
 const ContactUs = () => {
   const navigate = useNavigate();
@@ -22,9 +23,15 @@ const ContactUs = () => {
         <p className="bodytext-3">We would love to hear from you.</p>
         <p className="bodytext-3">Our client care experts are always here to help.</p>
         <div className="contact-us-button-wrapper">
-          <button className="contact-us-button bodytext-4" onClick={handleContactUsClick}>
+          <GlassButton 
+            width={150} 
+            height={57} 
+            fontSize={14}
+            onClick={handleContactUsClick}
+            className="contact-us-button"
+          >
             Contact us
-          </button>
+          </GlassButton>
         </div>
       </div>
     </div>

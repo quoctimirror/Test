@@ -191,76 +191,13 @@
     font-weight: 500;
 }
 
-.create-account-button {
-    padding: 14px 20px;
-    width: 300px;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 40px;
-    border: 0.5px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
-    color: var(--transparent-white-75, rgba(255, 255, 255, 0.75));
-    cursor: pointer;
-    transition: all 0.3s ease;
+.create-account-button-wrapper {
+    display: flex;
+    justify-content: center;
     margin: 0 auto 48px auto;
-    display: block;
-    position: relative;
-    overflow: hidden;
 }
 
-.create-account-button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg,
-            transparent,
-            rgba(255, 255, 255, 0.8),
-            transparent);
-}
-
-.create-account-button::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1px;
-    height: 100%;
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.8),
-            transparent,
-            rgba(255, 255, 255, 0.3));
-    color: black;
-}
-
-.create-account-button:hover {
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 0 16px 8px rgba(255, 255, 255, 0.8);
-    color: black;
-}
-
-/* Style cho nút khi bị vô hiệu hóa */
-.create-account-button:disabled {
-    background-color: #ccc;
-    border-color: #ccc;
-    color: #666;
-    cursor: not-allowed;
-}
-
-.create-account-button:disabled:hover {
-    background-color: #ccc;
-    color: #666;
-}
+/* Button styles moved to common Button component */
 
 
 /* --- Login Prompt --- */

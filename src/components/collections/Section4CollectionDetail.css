@@ -175,11 +175,4 @@
   transition: all 0.3s ease;
 }
 
-.view-product-button:hover .button-background {
-  fill: rgba(0, 0, 0, 0.75);
-  stroke: rgba(0, 0, 0, 0.8);
-}
-
-.view-product-button:hover .button-text {
-  fill: white;
-}
+/* Button styles moved to common Button component */

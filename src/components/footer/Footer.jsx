@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Footer.css";
+import GlassButton from '../common/GlassButton';
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -55,9 +56,14 @@ const Footer = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="email-input"
                 />
-                <button onClick={handleSignUp} className="signup-button">
+                <GlassButton 
+                  onClick={handleSignUp} 
+                  className="signup-button"
+                  width={123}
+                  height={57}
+                >
                   Sign up
-                </button>
+                </GlassButton>
               </div>
             </div>
           </div>

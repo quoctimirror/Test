@@ -1,9 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Section4.css";
+import GlassButton from "../../common/GlassButton";
 
 const Section4 = () => {
+  const navigate = useNavigate();
   const sectionRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  const handleReturnExchangeClick = () => {
+    window.scrollTo(0, 0);
+    navigate("/support?tab=return-exchange");
+  };
+
+  const handleSizingGuideClick = () => {
+    window.scrollTo(0, 0);
+    navigate("/support?tab=sizing-guide");
+  };
+
+  const handleWarrantyInfoClick = () => {
+    window.scrollTo(0, 0);
+    navigate("/support?tab=warranty-info");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,10 +75,7 @@ const Section4 = () => {
               opacity: scrollProgress < 0.35 ? 1 - scrollProgress * 2.86 : 0,
             }}
           >
-            <img
-              src="/services/img_1_section_3.jpg"
-              alt="Return & Exchange"
-            />
+            <img src="/services/img_1_section_3.jpg" alt="Return & Exchange" />
           </div>
           <div
             className="section4-image-layer section4-image-2"
@@ -80,10 +95,7 @@ const Section4 = () => {
                   : 1 - (scrollProgress - 0.7) * 3.33,
             }}
           >
-            <img
-              src="/services/img_2_section_3.jpg"
-              alt="Sizing Guide"
-            />
+            <img src="/services/img_2_section_3.jpg" alt="Sizing Guide" />
           </div>
           <div
             className="section4-image-layer section4-image-3"
@@ -94,10 +106,7 @@ const Section4 = () => {
               opacity: scrollProgress > 0.7 ? (scrollProgress - 0.7) * 3.33 : 0,
             }}
           >
-            <img
-              src="/services/img_2_section_2.jpg"
-              alt="Warranty & Info"
-            />
+            <img src="/services/img_2_section_2.jpg" alt="Warranty & Info" />
           </div>
         </div>
 
@@ -126,7 +135,16 @@ const Section4 = () => {
                     piece as radiant as the day you received it.
                   </p>
                 </div>
-                <button className="section4-cta">See more</button>
+                <GlassButton
+                  className="section4-cta"
+                  theme="default"
+                  width={137}
+                  height={57}
+                  fontSize={14}
+                  onClick={handleReturnExchangeClick}
+                >
+                  See more
+                </GlassButton>
               </div>
             </div>
           </div>
@@ -162,7 +180,16 @@ const Section4 = () => {
                     giving.
                   </p>
                 </div>
-                <button className="section4-cta">See more</button>
+                <GlassButton
+                  className="section4-cta"
+                  theme="default"
+                  width={137}
+                  height={57}
+                  fontSize={14}
+                  onClick={handleSizingGuideClick}
+                >
+                  See more
+                </GlassButton>
               </div>
             </div>
           </div>
@@ -192,7 +219,16 @@ const Section4 = () => {
                     giving.
                   </p>
                 </div>
-                <button className="section4-cta">See more</button>
+                <GlassButton
+                  className="section4-cta"
+                  theme="default"
+                  width={137}
+                  height={57}
+                  fontSize={14}
+                  onClick={handleWarrantyInfoClick}
+                >
+                  See more
+                </GlassButton>
               </div>
             </div>
           </div>

@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import CollectionHeroSection from "./CollectionHeroSection";
+import GlassButton from '../common/GlassButton';
 import "./Collections.css";
 
 const products = [
@@ -76,38 +77,15 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
             <br />
             heritage, vibrant artistry, and timeless mystique of the East.
           </div>
-          <button
-            className="collection-hero-explore-button"
+          <GlassButton
+            width={221}
+            height={57}
+            theme="white"
             onClick={handleExploreCollection}
+            className="collection-hero-explore-button"
           >
-            <svg
-              width="221"
-              height="57"
-              viewBox="0 0 221 57"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x="0.5"
-                y="0.5"
-                width="220"
-                height="56"
-                rx="28"
-                fill="rgba(255, 255, 255, 0.1)"
-                stroke="rgba(255, 255, 255, 0.5)"
-                className="button-background"
-              />
-              <text
-                x="110.5"
-                y="34"
-                textAnchor="middle"
-                fill="white"
-                className="button-text bodytext-4"
-              >
-                Explore this collection
-              </text>
-            </svg>
-          </button>
+            Explore this collection
+          </GlassButton>
         </div>
 
         <div className="collection-content-panel full-width">
