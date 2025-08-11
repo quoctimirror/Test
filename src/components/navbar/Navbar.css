@@ -29,7 +29,8 @@
   z-index: 101;
   mix-blend-mode: difference;
   pointer-events: none;
-  opacity: 0.5;
+  /* opacity: 1; */
+  color: rgba(255, 255, 255, 0.7); /* Start dimmed */
   transition: opacity 0.3s ease;
   height: 57px;
   display: flex;
@@ -37,21 +38,24 @@
 }
 
 .menu-fixed-container:hover {
-  opacity: 1;
+  /* opacity: 1; */
+  color: rgba(255, 255, 255, 1); /* Full brightness */
 }
 
 /* Account link container với blend mode */
 .account-fixed-container {
   position: fixed;
   top: 20px;
-  right: calc(2.5% + 221px + 1.875%); /* 2.5% (immersive margin) + 221px (button width) + 1.875% (gap) */
+  right: calc(
+    2.5% + 221px + 1.875%
+  ); /* 2.5% (immersive margin) + 221px (button width) + 1.875% (gap) */
   z-index: 101;
   mix-blend-mode: difference;
   pointer-events: none;
   height: 57px;
   display: flex;
   align-items: center;
-  opacity: 0.5;
+  opacity: 1;
   transition: opacity 0.3s ease;
 }
 
@@ -102,7 +106,7 @@
   z-index: 2;
   transition: all 0.3s;
   margin-left: 0;
-  opacity: 0.5;
+  opacity: 1;
 }
 
 .icon-container {
@@ -156,10 +160,21 @@
   letter-spacing: 1px;
   text-align: center;
   pointer-events: auto;
+  position: relative;
+  display: inline-block;
 }
 
 .menu-text::after {
-  display: none !important;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
 }
 
 .menu-button::after {
@@ -169,6 +184,11 @@
 
 .menu-container:hover .menu-text {
   color: white;
+}
+
+.menu-container:hover .menu-text::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .immersive-button {
@@ -187,7 +207,7 @@
   font-weight: 500;
   color: transparent;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
   text-transform: capitalize;
   width: 221px;
   height: 57px;
@@ -215,7 +235,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.5;
+  opacity: 1;
   transition: opacity 0.3s ease;
 }
 
@@ -252,7 +272,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.5;
+  opacity: 1;
   transition: opacity 0.3s ease;
 }
 
@@ -272,10 +292,10 @@
 
 .menu-popup {
   position: absolute;
-  top: 10px;
+  top: 20px;
   left: -20px;
   background: transparent;
-  padding: 26px 20px 20px 20px;
+  padding: 32px 20px 20px 20px;
   box-sizing: border-box;
   transform: scaleY(0);
   transform-origin: top;
@@ -322,7 +342,7 @@
   line-height: 1.2;
   position: relative;
   white-space: nowrap;
-  opacity: 0.5;
+  opacity: 1;
   display: inline-block;
   width: fit-content;
 }

@@ -70,6 +70,10 @@
   margin-top: 36px;
 }
 
+.contact-us-button {
+  margin: 0;
+}
+
 /* Button styles moved to common Button component */
 
 /* Responsive Design */

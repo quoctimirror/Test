@@ -2,7 +2,7 @@
   font-family: "BT Beau Sans", sans-serif;
   border-radius: 100px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,9 +51,9 @@
 /* Outline theme - matches Button outline theme */
 .glass-button--outline {
   background: white;
-  border: 1px solid #BC224C;
+  border: 1px solid #bc224c;
   box-shadow: none;
-  color: #BC224C;
+  color: #bc224c;
 }
 
 /* Light theme - for light backgrounds */
@@ -132,8 +132,8 @@
 
 /* Outline theme hover - matches Button outline theme */
 .glass-button--outline:hover {
-  background: #BC224C;
-  border: 1px solid #BC224C;
+  background: #bc224c;
+  border: 1px solid #bc224c;
   box-shadow: none;
   color: white;
 }
