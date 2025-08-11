@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import "./SameCollection.css";
+import "./ViewAllProduct.css";
 
-const SameCollection = ({ showViewProductButton = false }) => {
+const ViewAllProduct = ({ showViewProductButton = false }) => {
   const products = [
     { id: 1, name: "Lumina", image: "/products/more_r.png" },
     { id: 2, name: "Lumina", image: "/products/more_r.png" },
@@ -99,13 +99,14 @@ const SameCollection = ({ showViewProductButton = false }) => {
     <section className="collection-section-4">
       <div className="same-collection-container">
         <div className="same-collection-header">
-          <h2 className="same-collection-title">SAME COLLECTION</h2>
-          <p className="same-collection-description">
+          <h2 className="heading-1 same-collection-title">MORE GEMS</h2>
+          <p className="bodytext-4 same-collection-description">
             Mirror's curation of visionary designs - where each piece embodies
+            the essence of future
             <br />
-            the essence of future luxury. From bold signatures to refined
-            <br />
-            silhouettes, these are the diamonds reimagined for a new era.
+            luxury. From bold signatures to refined silhouettes, these are the
+            diamonds reimagined for
+            <br />a new era.
           </p>
         </div>
 
@@ -133,31 +134,28 @@ const SameCollection = ({ showViewProductButton = false }) => {
           <div className="view-product-button-container">
             <button className="view-product-button">
               <svg
-                width="160"
-                height="50"
-                viewBox="0 0 160 50"
+                width="189"
+                height="57"
+                viewBox="0 0 189 57"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
+                <rect
+                  x="0.5"
+                  y="0.5"
+                  width="188"
+                  height="56"
+                  rx="28"
+                  fill="rgba(0, 0, 0, 0.1)"
+                  stroke="rgba(0, 0, 0, 0.5)"
                   className="button-background"
-                  d="M9 1 L151 1 L159 10 L159 41 L151 49 L9 49 L1 40 L1 9 Z"
-                  fill="transparent"
-                />
-                <path
-                  className="button-border"
-                  d="M9 1 L151 1 L159 10 L159 41 L151 49 L9 49 L1 40 L1 9 Z"
-                  stroke="black"
-                  fill="none"
                 />
                 <text
-                  className="button-text"
-                  x="80"
-                  y="30"
+                  x="94.5"
+                  y="34"
                   textAnchor="middle"
-                  fill="black"
-                  fontSize="14"
-                  fontFamily="BT Beau Sans"
+                  fill="rgba(0, 0, 0, 0.75)"
+                  className="button-text bodytext-4"
                 >
                   View all products
                 </text>
@@ -170,4 +168,4 @@ const SameCollection = ({ showViewProductButton = false }) => {
   );
 };
 
-export default SameCollection;
+export default ViewAllProduct;

@@ -3,7 +3,8 @@
     GLOBAL SCROLL BEHAVIOR & OVERFLOW FIX
 ============================================================
 */
-html, body {
+html,
+body {
   scroll-behavior: smooth;
   overflow-x: hidden; /* Ngăn scroll ngang */
   width: 100%;
@@ -25,7 +26,7 @@ html, body {
 
 /* Đảm bảo các sections không vượt quá viewport */
 .collection-page .section-1,
-.collection-page .section-2, 
+.collection-page .section-2,
 .collection-page .section-3 {
   width: 100%;
   max-width: 100vw;
@@ -211,7 +212,7 @@ html, body {
   position: relative;
   background-color: #000000;
   color: #ffffff;
-  padding: 4rem 0;
+  padding: 0 0;
   z-index: 1;
 }
 
@@ -247,9 +248,9 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: 550px;
-  /* Giới hạn chiều rộng để không bị quá xa nhau */
+  width: 426px;
+  height: 461px;
+  max-width: 426px;
 }
 
 /* Hàng chứa mũi tên và ảnh */
@@ -258,15 +259,15 @@ html, body {
   align-items: center;
   justify-content: space-between;
   /* Đẩy mũi tên ra hai bên */
-  width: 100%;
-  margin-bottom: 2rem;
+  width: 726px;
+  margin-bottom: 3rem;
 }
 
 /* Khối bọc ảnh */
 .product-image-container {
-  padding: 0 1rem;
+  /* padding: 0 1rem; */
   /* Tạo khoảng cách nhỏ với mũi tên */
-  margin-top: 8rem;
+  margin-top: 0;
   /* Đẩy container xuống dưới */
 }
 
@@ -291,7 +292,7 @@ html, body {
 .product-title {
   letter-spacing: 0.01rem;
   /* Giảm khoảng cách chữ */
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0 0;
 
   /* Saol_24pt_light */
   font-family: "Saol Display";
@@ -332,81 +333,94 @@ html, body {
 }
 
 /* Section 2 Hero Content */
-.collection-page .section-2 .hero-content {
+.collection-page .section-2 .collection-hero-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 2rem;
-  width: 100%;
+  gap: 0;
+  width: fit-content;
   max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem 4rem;
-  margin-bottom: 6rem;
+  margin: 240px auto 240px auto;
+  padding: 0;
   order: 1;
 }
 
-.collection-page .section-2 .hero-subtitle {
+.collection-page .section-2 .collection-hero-subtitle {
   font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 16px;
-  line-height: 120%;
+  line-height: 1;
   letter-spacing: 0%;
   text-align: center;
   color: #797979;
   text-transform: uppercase;
-  margin: 0;
+  margin: 0 0 12px 0;
+  padding: 0;
 }
 
-.collection-page .section-2 .hero-description {
+.collection-page .section-2 .collection-hero-description {
   font-family: "BT Beau Sans", sans-serif;
   font-size: 16px;
   font-weight: 400;
   color: #797979;
-  line-height: 1.6;
+  line-height: 1.4;
   max-width: 600px;
   text-align: center;
-  margin: 0;
+  margin: 0 0 36px 0;
+  padding: 0;
 }
 
-.collection-page .section-2 .hero-description strong {
+.collection-page .section-2 .collection-hero-description strong {
   color: #797979;
   font-weight: 600;
 }
 
 /* Section 2 text-treasure styling */
-.collection-page .section-2 .hero-title .text-treasure {
+.collection-page .section-2 .collection-hero-title {
+  margin: 0 0 24px 0;
+  padding: 0;
+  line-height: 1;
+}
+
+.collection-page .section-2 .collection-hero-title .text-treasure {
   font-family: "Saol Display", serif;
   font-weight: 300;
   font-style: normal;
   font-size: 64px;
-  line-height: 90%;
+  line-height: 1;
   letter-spacing: -3%;
   text-align: center;
   color: #ffffff;
   margin: 0;
+  padding: 0;
   background: transparent;
   background-clip: initial;
   -webkit-background-clip: initial;
   -webkit-text-fill-color: initial;
 }
 
-.collection-page .section-2 .hero-explore-button {
+.collection-page .section-2 .collection-hero-explore-button {
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
   line-height: 0;
-  margin-top: 1rem;
+  margin: 0;
+  transition: all 0.3s ease;
 }
 
-.collection-page .section-2 .hero-explore-button:hover .button-background {
-  fill: #bc224c;
+.collection-page
+  .section-2
+  .collection-hero-explore-button:hover
+  .button-background {
+  fill: rgba(255, 255, 255, 0.75);
+  stroke: rgba(255, 255, 255, 0.8);
 }
 
-.collection-page .section-2 .hero-explore-button:hover .button-text {
-  fill: #ffffff;
+.collection-page .section-2 .collection-hero-explore-button:hover .button-text {
+  fill: black;
 }
 
 .shop-now-button {
@@ -414,7 +428,7 @@ html, body {
   border: none;
   cursor: pointer;
   padding: 0;
-  margin-top: 1rem;
+  margin-top: 36px;
   color: #797979;
   font-family: "BT Beau Sans", sans-serif;
 }
@@ -426,7 +440,7 @@ html, body {
   font-size: 16px;
   line-height: 120%;
   letter-spacing: 0%;
-  text-align: right;
+  text-align: left;
   color: #ffffff80;
   position: relative;
   display: inline-block;
@@ -441,7 +455,7 @@ html, body {
   bottom: -5px;
   left: 0;
   transform: scaleX(0);
-  transform-origin: left;
+  transform-origin: right;
   transition: transform 0.4s ease-out;
 }
 
@@ -451,7 +465,7 @@ html, body {
 
 .hover-underline:hover::after {
   transform: scaleX(1);
-  transform-origin: right;
+  transform-origin: left;
 }
 
 /* Full width style for collection content panel */
@@ -462,16 +476,18 @@ html, body {
   justify-content: center;
   align-items: center;
   overflow-x: hidden; /* Ngăn overflow ngang */
-  padding: 2rem;
+  padding: 0;
   box-sizing: border-box;
   background: transparent;
   order: 2;
-  margin-top: -5rem;
+  margin-top: 0;
+  margin-bottom: 240px;
 }
 
 .collection-content-panel.full-width .product-slider {
-  width: 100%;
-  max-width: 800px;
+  width: 426px;
+  height: 490px;
+  max-width: 426px;
 }
 
 /* Style cho SVG bên trong button */
@@ -521,14 +537,19 @@ html, body {
   .hero-text-container div {
     font-size: 48px;
   }
-  
-  .collection-page .section-2 .hero-title .text-treasure {
+
+  .collection-page .section-2 .collection-hero-title .text-treasure {
     font-size: 60px;
   }
 }
 
 /* Desktop - 1200px */
 @media screen and (max-width: 1200px) {
+  .slider-main-row {
+    width: 100%;
+    max-width: 650px;
+  }
+
   .hero-text-container {
     top: 22vh;
     left: 8.5vw;
@@ -537,18 +558,31 @@ html, body {
   .hero-text-container div {
     font-size: 45px;
   }
-  
-  .collection-page .section-2 .hero-title .text-treasure {
+
+  .collection-page .section-2 .collection-hero-title .text-treasure {
     font-size: 56px;
   }
-  
+
   .product-slider {
-    max-width: 500px;
+    width: 380px;
+    height: 420px;
+    max-width: 380px;
+  }
+
+  .collection-content-panel.full-width .product-slider {
+    width: 380px;
+    height: 420px;
+    max-width: 380px;
   }
 }
 
 /* Tablet landscape (1024px và xuống) */
 @media screen and (max-width: 1024px) {
+  .slider-main-row {
+    width: 100%;
+    max-width: 550px;
+  }
+
   .hero-text-container {
     top: 20vh;
     left: 8vw;
@@ -557,26 +591,34 @@ html, body {
   .hero-text-container div {
     font-size: 42px;
   }
-  
-  .collection-page .section-2 .hero-title .text-treasure {
+
+  .collection-page .section-2 .collection-hero-title .text-treasure {
     font-size: 52px;
   }
 
   .product-slider {
-    max-width: 480px;
+    width: 360px;
+    height: 400px;
+    max-width: 360px;
+  }
+
+  .collection-content-panel.full-width .product-slider {
+    width: 360px;
+    height: 400px;
+    max-width: 360px;
   }
 
   .collection-page .product-image {
     width: 200px !important;
     height: 310px !important;
   }
-  
+
   .product-image-container {
-    margin-top: 6rem;
+    margin-top: 0;
   }
-  
+
   .slider-arrow {
-    margin-top: 10rem;
+    margin-top: 0;
   }
 }
 
@@ -601,9 +643,10 @@ html, body {
   .collection-content-panel {
     padding: 1.5rem;
   }
-  
+
   .collection-content-panel.full-width {
-    margin-top: -3rem;
+    margin-top: 0;
+    margin-bottom: 180px;
   }
 
   .hero-text-container {
@@ -622,21 +665,31 @@ html, body {
   .text-orient {
     padding-left: 3.5em;
   }
-  
-  .collection-page .section-2 .hero-title .text-treasure {
+
+  .collection-page .section-2 .collection-hero-title .text-treasure {
     font-size: 45px;
   }
-  
-  .collection-page .section-2 .hero-content {
-    padding: 2rem 2rem;
-    margin-bottom: 4rem;
+
+  .collection-page .section-2 .collection-hero-content {
+    margin: 180px auto 180px auto;
+    padding: 0;
   }
 
   .product-slider {
-    max-width: 420px;
+    width: 320px;
+    height: 380px;
+    max-width: 320px;
+  }
+
+  .collection-content-panel.full-width .product-slider {
+    width: 320px;
+    height: 380px;
+    max-width: 320px;
   }
 
   .slider-main-row {
+    width: 100%;
+    max-width: 600px;
     margin-bottom: 1.5rem;
   }
 
@@ -646,11 +699,11 @@ html, body {
   }
 
   .product-image-container {
-    margin-top: 4rem;
+    margin-top: 0;
   }
-  
+
   .slider-arrow {
-    margin-top: 8rem;
+    margin-top: 0;
     width: 45px;
     height: 45px;
   }
@@ -665,12 +718,12 @@ html, body {
     max-width: 380px;
     margin-bottom: 1.5rem;
   }
-  
+
   .other-collections-subtitle {
     font-size: 15px;
     margin-bottom: 2.5rem;
   }
-  
+
   .collection-name {
     font-size: 52px;
   }
@@ -678,6 +731,11 @@ html, body {
 
 /* Mobile landscape (640px và xuống) */
 @media screen and (max-width: 640px) {
+  .slider-main-row {
+    width: 100%;
+    max-width: 480px;
+  }
+
   .hero-text-container {
     top: 12vh;
     left: 5vw;
@@ -694,8 +752,8 @@ html, body {
   .text-orient {
     padding-left: 3em;
   }
-  
-  .collection-page .section-2 .hero-title .text-treasure {
+
+  .collection-page .section-2 .collection-hero-title .text-treasure {
     font-size: 38px;
   }
 
@@ -704,7 +762,15 @@ html, body {
   }
 
   .product-slider {
-    max-width: 360px;
+    width: 280px;
+    height: 350px;
+    max-width: 280px;
+  }
+
+  .collection-content-panel.full-width .product-slider {
+    width: 280px;
+    height: 350px;
+    max-width: 280px;
   }
 
   .collection-page .product-image {
@@ -713,14 +779,14 @@ html, body {
   }
 
   .product-image-container {
-    margin-top: 3rem;
+    margin-top: 0;
     padding: 0 0.5rem;
   }
 
   .slider-arrow {
     width: 42px;
     height: 42px;
-    margin-top: 6rem;
+    margin-top: 0;
   }
 
   .product-title {
@@ -731,7 +797,7 @@ html, body {
     font-size: 14px;
     max-width: 320px;
   }
-  
+
   .collection-name {
     font-size: 42px;
   }
@@ -742,7 +808,7 @@ html, body {
   .section-2 {
     padding: 2rem 0;
   }
-  
+
   .hero-text-container {
     top: 10vh;
     left: 4vw;
@@ -759,21 +825,21 @@ html, body {
   .text-orient {
     padding-left: 2.5em;
   }
-  
-  .collection-page .section-2 .hero-title .text-treasure {
+
+  .collection-page .section-2 .collection-hero-title .text-treasure {
     font-size: 32px;
   }
-  
-  .collection-page .section-2 .hero-content {
-    padding: 1.5rem 1.5rem;
-    margin-bottom: 3rem;
+
+  .collection-page .section-2 .collection-hero-content {
+    margin: 120px auto 120px auto;
+    padding: 0;
   }
-  
-  .collection-page .section-2 .hero-subtitle {
+
+  .collection-page .section-2 .collection-hero-subtitle {
     font-size: 14px;
   }
-  
-  .collection-page .section-2 .hero-description {
+
+  .collection-page .section-2 .collection-hero-description {
     font-size: 14px;
   }
 
@@ -785,16 +851,27 @@ html, body {
   .collection-content-panel {
     padding: 1rem 0.5rem;
   }
-  
+
   .collection-content-panel.full-width {
-    margin-top: -2rem;
+    margin-top: 0;
+    margin-bottom: 120px;
   }
 
   .product-slider {
-    max-width: 320px;
+    width: 260px;
+    height: 320px;
+    max-width: 260px;
+  }
+
+  .collection-content-panel.full-width .product-slider {
+    width: 260px;
+    height: 320px;
+    max-width: 260px;
   }
 
   .slider-main-row {
+    width: 100%;
+    max-width: 400px;
     margin-bottom: 1rem;
   }
 
@@ -804,14 +881,14 @@ html, body {
   }
 
   .product-image-container {
-    margin-top: 2rem;
+    margin-top: 0;
     padding: 0 0.3rem;
   }
 
   .slider-arrow {
     width: 38px;
     height: 38px;
-    margin-top: 4rem;
+    margin-top: 0;
   }
 
   .product-title {
@@ -825,28 +902,37 @@ html, body {
     margin-bottom: 1.2rem;
     line-height: 1.5;
   }
-  
+
   .other-collections-subtitle {
     font-size: 13px;
     margin-bottom: 2rem;
   }
-  
+
   .collection-name {
     font-size: 36px;
   }
-  
+
   .section-3 {
-    padding: 3rem 1.5rem;
+    padding: 0;
     min-height: auto;
+  }
+
+  .other-collections-content {
+    padding: 180px 1.5rem;
   }
 }
 
 /* Mobile nhỏ (360px và xuống) */
 @media screen and (max-width: 360px) {
+  .slider-main-row {
+    width: 100%;
+    max-width: 320px;
+  }
+
   .section-2 {
     padding: 1.5rem 0;
   }
-  
+
   .hero-text-container {
     top: 8vh;
     left: 3vw;
@@ -863,21 +949,21 @@ html, body {
   .text-orient {
     padding-left: 2em;
   }
-  
-  .collection-page .section-2 .hero-title .text-treasure {
+
+  .collection-page .section-2 .collection-hero-title .text-treasure {
     font-size: 28px;
   }
-  
-  .collection-page .section-2 .hero-content {
-    padding: 1rem 1rem;
-    margin-bottom: 2rem;
+
+  .collection-page .section-2 .collection-hero-content {
+    margin: 80px auto 80px auto;
+    padding: 0;
   }
-  
-  .collection-page .section-2 .hero-subtitle {
+
+  .collection-page .section-2 .collection-hero-subtitle {
     font-size: 12px;
   }
-  
-  .collection-page .section-2 .hero-description {
+
+  .collection-page .section-2 .collection-hero-description {
     font-size: 12px;
   }
 
@@ -886,7 +972,15 @@ html, body {
   }
 
   .product-slider {
-    max-width: 280px;
+    width: 240px;
+    height: 300px;
+    max-width: 240px;
+  }
+
+  .collection-content-panel.full-width .product-slider {
+    width: 240px;
+    height: 300px;
+    max-width: 240px;
   }
 
   .collection-page .product-image {
@@ -895,14 +989,14 @@ html, body {
   }
 
   .product-image-container {
-    margin-top: 1.5rem;
+    margin-top: 0;
     padding: 0 0.2rem;
   }
 
   .slider-arrow {
     width: 35px;
     height: 35px;
-    margin-top: 3rem;
+    margin-top: 0;
   }
 
   .product-title {
@@ -920,18 +1014,22 @@ html, body {
     height: 45px;
     bottom: 30px;
   }
-  
+
   .other-collections-subtitle {
     font-size: 12px;
     margin-bottom: 1.5rem;
   }
-  
+
   .collection-name {
     font-size: 28px;
   }
-  
+
   .section-3 {
-    padding: 2.5rem 1rem;
+    padding: 0;
+  }
+
+  .other-collections-content {
+    padding: 120px 1rem;
   }
 }
 
@@ -953,7 +1051,7 @@ html, body {
   flex-shrink: 0;
   transition: background-color 0.3s ease, color 0.3s ease;
   /* Đẩy arrow xuống dưới */
-  margin-top: 12rem;
+  margin-top: 0;
   /* Thêm khoảng cách từ trên xuống */
 }
 
@@ -987,13 +1085,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
 }
 
 .other-collections-content {
   text-align: center;
   max-width: 800px;
   width: 100%;
+  padding: 240px 0;
 }
 
 .other-collections-subtitle {

@@ -5,7 +5,7 @@ const WarrantyInfo = () => {
   return (
     <div className="warranty-info">
       <div className="header-section">
-        <h2>Created by Science. Crafted for Eternity.</h2>
+        <h2 className="heading-2">Created by Science. Crafted for Eternity.</h2>
         <p>
           Each Mirror piece is meticulously crafted with rare precision,
           intention, and limited availability. To preserve the integrity and
@@ -20,7 +20,8 @@ const WarrantyInfo = () => {
         <div className="warranty-overview">
           <p>
             All jewelry purchased from Mirror Future Diamond is covered by a{" "}
-            <strong>12-month limited warranty</strong>, which includes:
+            <span className="bodytext-2">12-month limited warranty</span>, which
+            includes:
           </p>
 
           <div className="warranty-covered">
@@ -37,7 +38,7 @@ const WarrantyInfo = () => {
 
         <div className="warranty-exclusions">
           <h4>
-            <strong>What's Not Covered:</strong>
+            <span className="bodytext-2">What's Not Covered:</span>
           </h4>
           <p>This warranty does not apply to:</p>
           <ul>

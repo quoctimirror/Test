@@ -126,13 +126,13 @@
 }
 
 .section4-cta {
-  background: transparent;
-  border: 0.5px solid #333;
+  background: rgba(0, 0, 0, 0.1);
+  border: 0.5px solid rgba(0, 0, 0, 0.5);
   padding: 20px 36px;
   font-family: "BT Beau Sans", sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: rgba(0, 0, 0, 0.75);
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: capitalize;
@@ -149,8 +149,9 @@
 }
 
 .section4-cta:hover {
-  background: #000000;
-  color: #ffffff;
+  background: rgba(0, 0, 0, 0.75);
+  border-color: rgba(0, 0, 0, 0.8);
+  color: white;
 }
 
 /* Section 4 Part 2 - Sizing Guide */

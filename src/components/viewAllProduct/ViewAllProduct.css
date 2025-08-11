@@ -2,7 +2,7 @@
 .collection-section-4 {
   width: 100%;
   min-height: 100vh;
-  padding: 80px 0;
+  padding: 120px 0;
   background: #f8f9fa;
   box-sizing: border-box;
 }
@@ -16,38 +16,31 @@
 
 .same-collection-header {
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 120px;
 }
 
 .same-collection-title {
-  font-family: "Saol Display", serif;
-  font-weight: 300;
-  font-style: normal;
-  font-size: 64px;
-  line-height: 90%;
-  letter-spacing: -3%;
+  /* Sử dụng class heading-1 từ typography.css */
+  /* Các thuộc tính font đã được xác định trong heading-1 */
   text-align: center;
   color: #333;
-  margin: 0 0 30px 0;
+  /* Ghi đè margin mặc định của heading-1 */
+  margin: 0 0 30px 0 !important;
 }
 
 .same-collection-description {
-  font-family: "BT Beau Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 17px;
-  line-height: 120%;
-  letter-spacing: 0%;
+  /* Sử dụng class body-text-4 từ typography.css */
+  /* Các thuộc tính font đã được xác định trong body-text-4 */
   text-align: center;
   color: #797979;
-  margin: 0;
+  /* Ghi đè margin mặc định của body-text-4 */
+  margin: 0 !important;
 }
 
 .same-collection-grid {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding: 10px 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -70,8 +63,8 @@
 .product-card {
   flex: 0 0 456px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin-bottom: 60px;
+  height: fit-content;
+  line-height: 0;
 }
 
 .product-image {
@@ -91,18 +84,19 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
   .same-collection-title {
+    /* Font-size responsive cho heading-1 */
     font-size: 56px;
-    letter-spacing: -2.5%;
   }
-  
+
   .same-collection-description {
-    font-size: 16px;
+    /* Body-text-4 giữ nguyên font-size 14px */
   }
-  
+
   .product-card {
     flex: 0 0 380px;
+    height: fit-content;
   }
-  
+
   .product-image {
     width: 380px;
     height: 475px;
@@ -113,20 +107,20 @@
   .collection-section-4 {
     padding: 70px 0;
   }
-  
+
   .same-collection-header {
     margin-bottom: 60px;
   }
-  
+
   .same-collection-title {
     font-size: 52px;
-    letter-spacing: -2%;
   }
-  
+
   .product-card {
     flex: 0 0 350px;
+    height: fit-content;
   }
-  
+
   .product-image {
     width: 350px;
     height: 438px;
@@ -141,24 +135,23 @@
   .same-collection-container {
     padding: 0 20px;
   }
-  
+
   .same-collection-header {
     margin-bottom: 50px;
   }
 
   .same-collection-title {
     font-size: 45px;
-    letter-spacing: -2%;
-    margin-bottom: 20px;
+    margin-bottom: 20px !important;
   }
 
   .same-collection-description {
-    font-size: 15px;
+    /* Body-text-4 giữ nguyên font-size 14px */
   }
 
   .product-card {
     flex: 0 0 300px;
-    margin-bottom: 40px;
+    height: fit-content;
   }
 
   .product-image {
@@ -175,25 +168,24 @@
   .same-collection-container {
     padding: 0 15px;
   }
-  
+
   .same-collection-header {
     margin-bottom: 40px;
   }
 
   .same-collection-title {
     font-size: 32px;
-    letter-spacing: -1.5%;
-    margin-bottom: 15px;
+    margin-bottom: 15px !important;
   }
 
   .same-collection-description {
-    font-size: 14px;
+    /* Body-text-4 đã có font-size 14px */
     line-height: 1.5;
   }
 
   .product-card {
     flex: 0 0 280px;
-    margin-bottom: 30px;
+    height: fit-content;
   }
 
   .product-image {
@@ -213,7 +205,6 @@
 
   .same-collection-title {
     font-size: 28px;
-    letter-spacing: -1%;
   }
 
   .same-collection-description {
@@ -222,7 +213,7 @@
 
   .product-card {
     flex: 0 0 240px;
-    margin-bottom: 25px;
+    height: fit-content;
   }
 
   .product-image {
@@ -235,7 +226,7 @@
 .view-product-button-container {
   display: flex;
   justify-content: center;
-  margin-top: 3rem;
+  margin-top: 60px;
 }
 
 .view-product-button {
@@ -244,12 +235,14 @@
   cursor: pointer;
   padding: 0;
   line-height: 0;
+  transition: all 0.3s ease;
 }
 
 .view-product-button:hover .button-background {
-  fill: #bc224c;
+  fill: rgba(0, 0, 0, 0.75);
+  stroke: rgba(0, 0, 0, 0.8);
 }
 
 .view-product-button:hover .button-text {
-  fill: #ffffff;
+  fill: white;
 }

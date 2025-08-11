@@ -16,7 +16,7 @@ const SizingGuide = () => {
 
           <div className="step wrap-step">
             <h5>
-              <strong>1. Wrap</strong>
+              <span className="bodytext-2">1. Wrap</span>
             </h5>
             <ul>
               <li>
@@ -28,7 +28,7 @@ const SizingGuide = () => {
 
           <div className="step mark-step">
             <h5>
-              <strong>2. Mark</strong>
+              <span className="bodytext-2">2. Mark</span>
             </h5>
             <ul>
               <li>Mark the exact point where the string overlaps.</li>
@@ -37,7 +37,7 @@ const SizingGuide = () => {
 
           <div className="step measure-step">
             <h5>
-              <strong>3. Measure</strong>
+              <span className="bodytext-2">3. Measure</span>
             </h5>
             <ul>
               <li>
@@ -49,7 +49,7 @@ const SizingGuide = () => {
 
           <div className="step find-size-step">
             <h5>
-              <strong>4. Find Your Size</strong>
+              <span className="bodytext-2">4. Find Your Size</span>
             </h5>
             <ul>
               <li>
@@ -79,29 +79,28 @@ const SizingGuide = () => {
 
       <section className="section necklace-section">
         <h3>2. Necklace</h3>
+        <p>
+          Choose the perfect necklace length for your style:
+        </p>
         <ul>
-          <ul>
-            <li>Unused and undamaged</li>
-            <li>
-              Returned with original packaging and all accompanying documents
-            </li>
-          </ul>
-          <li>
-            Customers are responsible for{" "}
-            <strong>shipping and handling costs</strong> associated with the
-            exchange.
-          </li>
+          <li>14-16 inches: Choker length, sits close to the neck</li>
+          <li>18 inches: Princess length, sits at the collarbone</li>
+          <li>20-24 inches: Matinee length, sits between collarbone and bust</li>
+          <li>28-36 inches: Opera length, sits at the bust or below</li>
+          <li>Over 36 inches: Rope length, can be doubled or tripled</li>
         </ul>
       </section>
 
       <section className="section bracelet-section">
         <h3>3. Bracelet</h3>
+        <p>
+          To measure your bracelet size:
+        </p>
         <ul>
-          <li>Custom or engraved items</li>
-          <li>Earrings (for hygiene reasons)</li>
-          <li>Promotional or discounted items</li>
-          <li>Items without original certificates or packaging</li>
-          <li>Damaged, altered, or worn items</li>
+          <li>Measure your wrist with a flexible tape measure</li>
+          <li>Add 0.5-1 inch for a comfortable fit</li>
+          <li>Standard sizes range from 6.5 to 8 inches</li>
+          <li>Consider the bracelet style - bangles need more room</li>
         </ul>
       </section>
     </div>

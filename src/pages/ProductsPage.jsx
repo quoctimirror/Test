@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import View360 from "@components/view360/View360";
 import SelectOptionSection from "@components/selectOptionSection/SelectOptionSection";
 import ParallaxScrolling from "@components/parallaxScrolling/ParallaxScrolling";
-import SameCollection from "@components/sameCollection/SameCollection";
+import ViewAllProduct from "@components/viewAllProduct/ViewAllProduct";
 import ContactUs from "@components/contactUs/ContactUs";
 import "./products.css";
 
@@ -29,8 +29,8 @@ const ProductsPage = () => {
       {/* Section 3 */}
       <ParallaxScrolling />
 
-      {/* Section 4: Same Collection */}
-      <SameCollection />
+      {/* Section 4: View All Products */}
+      <ViewAllProduct showViewProductButton={true} />
 
       {/* Section 5: Reach Out */}
       <ContactUs />

@@ -63,12 +63,12 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
 
       {/* --- SECTION 2 --- */}
       <div className="section-2" ref={section2Ref}>
-        <div className="hero-content">
-          <div className="hero-subtitle">THE NEWEST COLLECTION</div>
-          <div className="hero-title">
+        <div className="collection-hero-content">
+          <div className="collection-hero-subtitle">THE NEWEST COLLECTION</div>
+          <div className="collection-hero-title">
             <div className="text-treasure">TREASURE OF THE ORIENT</div>
           </div>
-          <div className="hero-description">
+          <div className="collection-hero-description">
             Step into a world where ancient splendor meets modern elegance. The
             <br />
             <strong>TREASURE OF THE ORIENT</strong> collection draws inspiration
@@ -77,35 +77,32 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
             heritage, vibrant artistry, and timeless mystique of the East.
           </div>
           <button
-            className="hero-explore-button"
+            className="collection-hero-explore-button"
             onClick={handleExploreCollection}
           >
             <svg
-              width="200"
-              height="50"
-              viewBox="0 0 200 50"
+              width="221"
+              height="57"
+              viewBox="0 0 221 57"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path
+              <rect
+                x="0.5"
+                y="0.5"
+                width="220"
+                height="56"
+                rx="28"
+                fill="rgba(255, 255, 255, 0.1)"
+                stroke="rgba(255, 255, 255, 0.5)"
                 className="button-background"
-                d="M9 1 L191 1 L199 10 L199 41 L191 49 L9 49 L1 40 L1 9 Z"
-                fill="transparent"
-              />
-              <path
-                className="button-border"
-                d="M9 1 L191 1 L199 10 L199 41 L191 49 L9 49 L1 40 L1 9 Z"
-                stroke="white"
-                fill="none"
               />
               <text
-                className="button-text"
-                x="100"
-                y="30"
+                x="110.5"
+                y="34"
                 textAnchor="middle"
                 fill="white"
-                fontSize="14"
-                fontFamily="BT Beau Sans"
+                className="button-text bodytext-4"
               >
                 Explore this collection
               </text>

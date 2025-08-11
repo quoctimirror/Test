@@ -1,8 +1,8 @@
 /* Section 4: Same Collection */
-.collection-section-4 {
+.collection-section-4-detail {
   width: 100%;
   min-height: 100vh;
-  padding: 80px 0;
+  padding: 120px 0;
   background: #f8f9fa;
   box-sizing: border-box;
 }
@@ -16,19 +16,16 @@
 
 .same-collection-header {
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 120px;
 }
 
 .same-collection-title {
-  font-family: "Saol Display", serif;
-  font-weight: 300;
-  font-style: normal;
-  font-size: 64px;
-  line-height: 90%;
-  letter-spacing: -3%;
+  /* Sử dụng class heading-1 từ typography.css */
+  /* Các thuộc tính font đã được xác định trong heading-1 */
   text-align: center;
   color: #333;
-  margin: 0 0 30px 0;
+  /* Ghi đè margin mặc định của heading-1 */
+  margin: 0 0 30px 0 !important;
 }
 
 .same-collection-description {
@@ -47,7 +44,7 @@
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding: 10px 0;
+  padding: 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -71,7 +68,9 @@
   flex: 0 0 456px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin-bottom: 60px;
+  margin: 0;
+  line-height: 0;
+  height: fit-content;
 }
 
 .product-image {
@@ -90,17 +89,21 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .collection-section-4 {
-    padding: 60px 0;
+  .collection-section-4-detail {
+    padding: 80px 0;
   }
 
   .same-collection-container {
     padding: 0 20px;
   }
 
+  .same-collection-header {
+    margin-bottom: 60px;
+  }
+
   .same-collection-title {
-    font-size: 48px;
-    letter-spacing: -2%;
+    /* Responsive cho heading-1 đã được xử lý trong typography.css */
+    margin: 0 0 20px 0 !important;
   }
 
   .same-collection-description {
@@ -109,6 +112,9 @@
 
   .product-card {
     flex: 0 0 320px;
+    line-height: 0;
+    height: fit-content;
+    margin: 0;
   }
 
   .product-image {
@@ -118,17 +124,22 @@
 }
 
 @media (max-width: 480px) {
-  .collection-section-4 {
-    padding: 40px 0;
+  .collection-section-4-detail {
+    padding: 60px 0;
   }
 
   .same-collection-container {
     padding: 0 15px;
   }
 
+  .same-collection-header {
+    margin-bottom: 40px;
+  }
+
   .same-collection-title {
-    font-size: 36px;
-    letter-spacing: -1.5%;
+    /* Responsive cho heading-1 đã được xử lý trong typography.css */
+    font-size: 36px !important;
+    margin: 0 0 15px 0 !important;
   }
 
   .same-collection-description {
@@ -137,6 +148,9 @@
 
   .product-card {
     flex: 0 0 250px;
+    line-height: 0;
+    height: fit-content;
+    margin: 0;
   }
 
   .product-image {
@@ -149,7 +163,7 @@
 .view-product-button-container {
   display: flex;
   justify-content: center;
-  margin-top: 3rem;
+  margin-top: 60px;
 }
 
 .view-product-button {
@@ -158,12 +172,14 @@
   cursor: pointer;
   padding: 0;
   line-height: 0;
+  transition: all 0.3s ease;
 }
 
 .view-product-button:hover .button-background {
-  fill: #bc224c;
+  fill: rgba(0, 0, 0, 0.75);
+  stroke: rgba(0, 0, 0, 0.8);
 }
 
 .view-product-button:hover .button-text {
-  fill: #ffffff;
+  fill: white;
 }

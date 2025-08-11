@@ -36,7 +36,21 @@ const Section5 = () => {
   ];
 
   const toggleFaq = (id) => {
-    setOpenFaq(openFaq === id ? null : id);
+    const panel = document.querySelector(`[data-faq-id="${id}"]`);
+    if (panel) {
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+        setOpenFaq(null);
+      } else {
+        // Đóng tất cả panels khác trước
+        document.querySelectorAll(".faq-answer").forEach((p) => {
+          p.style.maxHeight = null;
+        });
+        // Mở panel hiện tại
+        panel.style.maxHeight = panel.scrollHeight + "px";
+        setOpenFaq(id);
+      }
+    }
   };
 
   return (
@@ -54,15 +68,12 @@ const Section5 = () => {
                   aria-expanded={openFaq === faq.id}
                 >
                   <span>{faq.question}</span>
-                  <span className={`faq-icon ${openFaq === faq.id ? 'active' : ''}`}>
-                    &#8964;
+                  <span className={`faq-icon ${openFaq === faq.id ? 'expanded' : ''}`}>
                   </span>
                 </button>
-                {openFaq === faq.id && (
-                  <div className="faq-answer">
-                    <p>This is the answer content for "{faq.question}". Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  </div>
-                )}
+                <div className="faq-answer" data-faq-id={faq.id}>
+                  <p>This is the answer content for "{faq.question}". Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
               </div>
             ))}
           </div>

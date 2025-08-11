@@ -128,10 +128,10 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
   };
 
   return (
-    <section className="collection-section-4">
+    <section className="collection-section-4-detail">
       <div className="same-collection-container">
         <div className="same-collection-header">
-          <h2 className="same-collection-title">
+          <h2 className="same-collection-title heading-1">
             EXPLORE THIS COLLECTION GEMS
           </h2>
         </div>
@@ -160,31 +160,28 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
           <div className="view-product-button-container">
             <button className="view-product-button">
               <svg
-                width="160"
-                height="50"
-                viewBox="0 0 160 50"
+                width="189"
+                height="57"
+                viewBox="0 0 189 57"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
+                <rect
+                  x="0.5"
+                  y="0.5"
+                  width="188"
+                  height="56"
+                  rx="28"
+                  fill="rgba(0, 0, 0, 0.1)"
+                  stroke="rgba(0, 0, 0, 0.5)"
                   className="button-background"
-                  d="M9 1 L151 1 L159 10 L159 41 L151 49 L9 49 L1 40 L1 9 Z"
-                  fill="transparent"
-                />
-                <path
-                  className="button-border"
-                  d="M9 1 L151 1 L159 10 L159 41 L151 49 L9 49 L1 40 L1 9 Z"
-                  stroke="black"
-                  fill="none"
                 />
                 <text
-                  className="button-text"
-                  x="80"
-                  y="30"
+                  x="94.5"
+                  y="34"
                   textAnchor="middle"
-                  fill="black"
-                  fontSize="14"
-                  fontFamily="BT Beau Sans"
+                  fill="rgba(0, 0, 0, 0.75)"
+                  className="button-text bodytext-4"
                 >
                   View all products
                 </text>
