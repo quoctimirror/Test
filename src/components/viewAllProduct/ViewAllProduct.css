@@ -2,9 +2,32 @@
 .collection-section-4 {
   width: 100%;
   min-height: 100vh;
-  padding: 120px 0;
+  padding: 200px 0;
   background: #f8f9fa;
   box-sizing: border-box;
+}
+
+/* GSAP Horizontal Scroll Layout */
+.collection-section-4-gsap {
+  width: 100%;
+  min-height: 100vh;
+  padding: 200px 0;
+  background: #f8f9fa;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.horizontal-scroll-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.same-collection-grid-gsap {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  width: fit-content;
 }
 
 .same-collection-container {
@@ -81,6 +104,42 @@
   transform: scale(1.1);
 }
 
+/* Desktop 1920x1080 */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .product-card {
+    flex: 0 0 447px;
+  }
+
+  .product-image {
+    width: 447px;
+    height: 559px;
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .product-card {
+    flex: 0 0 380px;
+  }
+
+  .product-image {
+    width: 380px;
+    height: 475px;
+  }
+}
+
+/* Medium desktop */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .product-card {
+    flex: 0 0 350px;
+  }
+
+  .product-image {
+    width: 350px;
+    height: 438px;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .same-collection-title {
@@ -91,7 +150,9 @@
   .same-collection-description {
     /* Body-text-4 giữ nguyên font-size 14px */
   }
+}
 
+@media (max-width: 1023px) {
   .product-card {
     flex: 0 0 380px;
     height: fit-content;
@@ -104,7 +165,8 @@
 }
 
 @media (max-width: 992px) {
-  .collection-section-4 {
+  .collection-section-4,
+  .collection-section-4-gsap {
     padding: 70px 0;
   }
 
@@ -128,7 +190,8 @@
 }
 
 @media (max-width: 768px) {
-  .collection-section-4 {
+  .collection-section-4,
+  .collection-section-4-gsap {
     padding: 60px 0;
   }
 
@@ -161,7 +224,8 @@
 }
 
 @media (max-width: 480px) {
-  .collection-section-4 {
+  .collection-section-4,
+  .collection-section-4-gsap {
     padding: 50px 0;
   }
 
@@ -195,7 +259,8 @@
 }
 
 @media (max-width: 360px) {
-  .collection-section-4 {
+  .collection-section-4,
+  .collection-section-4-gsap {
     padding: 40px 0;
   }
 

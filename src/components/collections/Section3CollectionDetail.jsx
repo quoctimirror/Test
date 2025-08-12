@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
 import "./Section3CollectionDetail.css";
 
 const Section3CollectionDetail = () => {
@@ -18,6 +19,7 @@ const Section3CollectionDetail = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mainImage, setMainImage] = useState(images[0]);
   const carouselTrackRef = useRef(null);
+  const isAnimating = useRef(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,15 +30,27 @@ const Section3CollectionDetail = () => {
   }, [currentIndex]);
 
   const updateCarousel = () => {
-    // Move first image to end (shift right to left)
-    if (carouselTrackRef.current) {
-      const first = carouselTrackRef.current.firstElementChild;
-      if (first) {
-        carouselTrackRef.current.appendChild(first);
-      }
-    }
+    if (isAnimating.current || !carouselTrackRef.current) return;
     
-    // Update main image to always show the first image in carousel
+    isAnimating.current = true;
+    const track = carouselTrackRef.current;
+    const firstImage = track.firstElementChild;
+    const imageWidth = firstImage.offsetWidth + 12; // width + gap
+    
+    // Animate sliding left
+    gsap.to(track, {
+      x: -imageWidth,
+      duration: 0.8,
+      ease: "power2.inOut",
+      onComplete: () => {
+        // After animation, move first image to end and reset position
+        track.appendChild(firstImage);
+        gsap.set(track, { x: 0 });
+        isAnimating.current = false;
+      }
+    });
+    
+    // Update main image
     const nextIndex = (currentIndex + 1) % images.length;
     setCurrentIndex(nextIndex);
     setMainImage(images[nextIndex]);

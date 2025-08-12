@@ -15,7 +15,7 @@ const GlassButton = ({
     <button 
       onClick={onClick}
       disabled={disabled}
-      className={`glass-button glass-button--${theme} bodytext-4 ${className}`}
+      className={`glass-button glass-button--${theme} bodytext-4--no-margin ${className}`}
       style={{
         width: `${width}px`,
         height: `${height}px`,
