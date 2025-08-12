@@ -36,6 +36,15 @@ export default function Navbar() {
     }
   };
 
+  const handleNewsClick = () => {
+    if (window.location.pathname === "/news") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      sessionStorage.setItem('scrollToTop', 'true');
+      window.location.href = "/news";
+    }
+  };
+
   return (
     <>
       {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
@@ -56,7 +65,7 @@ export default function Navbar() {
             onMouseEnter={() => setIsMenuOpen(true)}
             onMouseLeave={() => setIsMenuOpen(false)}
           >
-            <span className="menu-text">Menu</span>
+            <span className="menu-text bodytext-3--no-margin">Menu</span>
           </div>
           <div
             className={`menu-popup ${isMenuOpen ? "active" : ""}`}
@@ -65,15 +74,15 @@ export default function Navbar() {
           >
             <div className="menu-groups">
               <ul className="menu-list">
-                <li onClick={handleProductsClick}>Products</li>
-                <li onClick={handleServicesClick}>Service & Support</li>
-                <li>About Mirror</li>
-                <li>News</li>
+                <li className="bodytext-3--no-margin" onClick={handleProductsClick}>Products</li>
+                <li className="bodytext-3--no-margin" onClick={handleServicesClick}>Service & Support</li>
+                <li className="bodytext-3--no-margin">About Mirror</li>
+                <li className="bodytext-3--no-margin" onClick={handleNewsClick}>News</li>
               </ul>
               <ul className="menu-list">
-                <li>Location</li>
-                <li>Contact us</li>
-                <li>Account</li>
+                <li className="bodytext-3--no-margin">Location</li>
+                <li className="bodytext-3--no-margin">Contact us</li>
+                <li className="bodytext-3--no-margin">Account</li>
               </ul>
             </div>
           </div>
@@ -81,7 +90,7 @@ export default function Navbar() {
       </div>
 
       <div className="account-fixed-container">
-        <a href="/auth" className="account-link">
+        <a href="/auth" className="account-link bodytext-3--no-margin">
           Account
         </a>
       </div>
@@ -98,7 +107,7 @@ export default function Navbar() {
 
       {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
       <div className="immersive-text-container">
-        <span className="immersive-text">Immersive Showroom</span>
+        <span className="immersive-text bodytext-4--no-margin">Immersive Showroom</span>
       </div>
     </>
   );

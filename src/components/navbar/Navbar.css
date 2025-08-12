@@ -152,11 +152,6 @@
 
 .menu-text {
   color: white;
-  font-family: "BT Beau Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 110%;
   letter-spacing: 1px;
   text-align: center;
   pointer-events: auto;
@@ -252,9 +247,6 @@
 /* Text element */
 .immersive-text {
   color: white;
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 14px;
-  font-weight: 500;
   text-transform: capitalize;
   white-space: nowrap;
 }
@@ -333,13 +325,9 @@
 }
 
 .menu-popup .menu-list li {
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
   color: white;
   cursor: pointer;
   transition: color 0.3s ease, opacity 0.3s ease;
-  line-height: 1.2;
   position: relative;
   white-space: nowrap;
   opacity: 1;
@@ -391,9 +379,6 @@
 }
 
 .account-link {
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
   color: white;
   text-decoration: none;
   transition: color 0.3s ease;
@@ -464,9 +449,6 @@
     height: 50px;
   }
 
-  .immersive-text {
-    font-size: 12px;
-  }
 
   .account-fixed-container {
     right: calc(20px + 180px + 25px);
@@ -477,13 +459,7 @@
     height: 50px;
   }
 
-  .account-link {
-    font-size: 14px;
-  }
 
-  .menu-text {
-    font-size: 14px;
-  }
 }
 
 @media (max-width: 768px) {
@@ -522,17 +498,11 @@
     height: 45px;
   }
 
-  .immersive-text {
-    font-size: 11px;
-  }
 
   .account-fixed-container {
     display: none; /* Hide account link on mobile */
   }
 
-  .menu-text {
-    font-size: 13px;
-  }
 
   .menu-popup {
     width: 90vw;
@@ -541,9 +511,6 @@
     left: -15px;
   }
 
-  .menu-popup .menu-list li {
-    font-size: 14px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -582,13 +549,7 @@
     height: 40px;
   }
 
-  .immersive-text {
-    font-size: 10px;
-  }
 
-  .menu-text {
-    font-size: 12px;
-  }
 
   .menu-popup {
     width: 95vw;
@@ -596,9 +557,6 @@
     padding: 30px 20px;
   }
 
-  .menu-popup .menu-list li {
-    font-size: 13px;
-  }
 }
 
 @media (max-width: 360px) {
@@ -614,9 +572,6 @@
     height: 38px;
   }
 
-  .immersive-text {
-    font-size: 9px;
-  }
 
   .logo-fixed-container .navbar-logo-svg {
     width: 90px;

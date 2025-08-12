@@ -13,7 +13,7 @@ const Section3CollectionDetail = () => {
     "/collections/collectionDetail/collectionDetail_7.png",
     "/collections/collectionDetail/collectionDetail_8.png",
     "/collections/collectionDetail/collectionDetail_9.png",
-    "/collections/collectionDetail/collectionDetail_10.png"
+    "/collections/collectionDetail/collectionDetail_10.png",
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,12 +31,12 @@ const Section3CollectionDetail = () => {
 
   const updateCarousel = () => {
     if (isAnimating.current || !carouselTrackRef.current) return;
-    
+
     isAnimating.current = true;
     const track = carouselTrackRef.current;
     const firstImage = track.firstElementChild;
     const imageWidth = firstImage.offsetWidth + 12; // width + gap
-    
+
     // Animate sliding left
     gsap.to(track, {
       x: -imageWidth,
@@ -47,9 +47,9 @@ const Section3CollectionDetail = () => {
         track.appendChild(firstImage);
         gsap.set(track, { x: 0 });
         isAnimating.current = false;
-      }
+      },
     });
-    
+
     // Update main image
     const nextIndex = (currentIndex + 1) % images.length;
     setCurrentIndex(nextIndex);

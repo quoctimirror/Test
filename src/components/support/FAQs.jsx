@@ -126,7 +126,7 @@ const FAQs = () => {
                   <div className="faq-list">
                     {/* QUAN TRỌNG: Lặp qua `faqData` gốc để render TẤT CẢ câu hỏi trong MỖI section */}
                     {faqData.map((question, index) => (
-                      <div key={`${section.id}-${index}`} className="faq-item">
+                      <div key={`${section.id}-${index}`} className={`faq-item ${expandedFAQ === `${section.id}-${index}` ? 'active' : ''}`}>
                         <button
                           className="faq-question"
                           onClick={() => toggleFAQ(`${section.id}-${index}`)}

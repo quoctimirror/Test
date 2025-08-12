@@ -12,6 +12,16 @@ const Footer = () => {
     }
   };
 
+  const handleNewsClick = (e) => {
+    e.preventDefault();
+    if (window.location.pathname === "/news") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      sessionStorage.setItem('scrollToTop', 'true');
+      window.location.href = "/news";
+    }
+  };
+
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -33,7 +43,7 @@ const Footer = () => {
                   <a className="bodytext-3" href="/about">About Mirror</a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="/news">News</a>
+                  <a className="bodytext-3" href="/news" onClick={handleNewsClick}>News</a>
                 </li>
               </ul>
             </div>

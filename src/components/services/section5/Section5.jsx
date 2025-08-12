@@ -69,7 +69,7 @@ const Section5 = () => {
 
           <div className="faq-list">
             {faqs.map((faq) => (
-              <div key={faq.id} className="faq-item">
+              <div key={faq.id} className={`faq-item ${openFaq === faq.id ? 'active' : ''}`}>
                 <button
                   className="faq-question"
                   onClick={() => toggleFaq(faq.id)}

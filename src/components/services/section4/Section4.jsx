@@ -126,10 +126,14 @@ const Section4 = () => {
               <div className="section4-full-content">
                 <div className="section4-header-description">
                   <div className="section4-header">
-                    <span className="section4-subtitle">EXPLORE OUR</span>
-                    <h2 className="section4-title">RETURN & EXCHANGE</h2>
+                    <span className="section4-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section4-title heading-1--no-margin">
+                      RETURN & EXCHANGE
+                    </h2>
                   </div>
-                  <p className="section4-description">
+                  <p className="section4-description bodytext-6--no-margin">
                     Extend the life and brilliance of your jewelry with Mirror's
                     professional care and repair services, tailored to keep each
                     piece as radiant as the day you received it.
@@ -171,10 +175,14 @@ const Section4 = () => {
               <div className="section4-full-content">
                 <div className="section4-header-description">
                   <div className="section4-header">
-                    <span className="section4-subtitle">EXPLORE OUR</span>
-                    <h2 className="section4-title">SIZING GUIDE</h2>
+                    <span className="section4-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section4-title heading-1--no-margin">
+                      SIZING GUIDE
+                    </h2>
                   </div>
-                  <p className="section4-description">
+                  <p className="section4-description bodytext-6--no-margin">
                     Elevate your gift with our signature wrapping — a carefully
                     crafted presentation that captures the essence of refined
                     giving.
@@ -210,13 +218,16 @@ const Section4 = () => {
               <div className="section4-full-content">
                 <div className="section4-header-description">
                   <div className="section4-header">
-                    <span className="section4-subtitle">EXPLORE OUR</span>
-                    <h2 className="section4-title">WARRANTY & INFO</h2>
+                    <span className="section4-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section4-title heading-1--no-margin">
+                      WARRANTY & INFO
+                    </h2>
                   </div>
-                  <p className="section4-description">
-                    Elevate your gift with our signature wrapping — a carefully
-                    crafted presentation that captures the essence of refined
-                    giving.
+                  <p className="section4-description bodytext-6--no-margin">
+                    Activate your warranty to ensure your Future <br /> Diamond
+                    is protected under our care.
                   </p>
                 </div>
                 <GlassButton

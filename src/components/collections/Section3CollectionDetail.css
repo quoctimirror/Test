@@ -41,6 +41,7 @@
   justify-content: flex-start;
   padding: 0 0.3125% 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .carousel {

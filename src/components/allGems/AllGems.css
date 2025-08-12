@@ -28,8 +28,8 @@
   /* 2.5% margin on each side = 48px at 1920px width */
   margin-left: 2.5%;
   margin-right: 2.5%;
-  /* Gap between items = 0.625% = 12px at 1920px width */
-  --gap: 0.625%;
+  /* Gap between items - default for desktop */
+  --gap: 12px;
 }
 
 .gems-row {
@@ -127,17 +127,36 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 120px 2.5%;
+  padding: 60px 2.5%;
 }
 
 /* Button styles moved to common Button component */
 
 /* Responsive adjustments */
+@media (min-width: 1441px) and (max-width: 1919px) {
+  .gems-grid-container {
+    --gap: 11px;
+    margin-left: 42px;
+    margin-right: 42px;
+  }
+  
+  .gem-grid-2x2 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+}
+
 @media (max-width: 1440px) {
   .gems-grid-container {
     --gap: 10px;
     margin-left: 36px;
     margin-right: 36px;
+  }
+  
+  /* Ensure gem-grid-2x2 stays consistent at this breakpoint */
+  .gem-grid-2x2 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
   }
 }
 
@@ -200,11 +219,17 @@
   }
 }
 
-/* For exactly 1920x1080 screens */
-@media (width: 1920px) {
+/* For 1920px and larger screens */
+@media (min-width: 1920px) {
   .gems-grid-container {
     margin-left: 48px;
     margin-right: 48px;
     --gap: 12px;
+  }
+  
+  /* Ensure gem-grid-2x2 maintains 2x2 layout on large screens */
+  .gem-grid-2x2 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
   }
 }
