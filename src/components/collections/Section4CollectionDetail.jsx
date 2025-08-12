@@ -1,7 +1,19 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import GlassButton from '../common/GlassButton';
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Section4CollectionDetail.css";
 
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
+
 const Section4CollectionDetail = ({ showViewProductButton = false }) => {
+  const navigate = useNavigate();
+  const sectionRef = useRef(null);
+  const containerRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  
   const collections = [
     {
       id: 1,
@@ -45,148 +57,96 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
     },
   ];
 
-  const scrollRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [lastX, setLastX] = useState(0);
-  const [lastTime, setLastTime] = useState(0);
-
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-    setLastX(e.pageX);
-    setLastTime(Date.now());
-    scrollRef.current.style.scrollBehavior = "auto";
-    scrollRef.current.classList.add("dragging");
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-
-    // Track velocity for momentum
-    setLastX(e.pageX);
-    setLastTime(Date.now());
-  };
-
-  const handleMouseUp = (e) => {
-    setIsDragging(false);
-    scrollRef.current.classList.remove("dragging");
-
-    // Calculate velocity for momentum
-    const currentTime = Date.now();
-    const timeDiff = currentTime - lastTime;
-    const xDiff = e.pageX - lastX;
-
-    // Only apply momentum if movement was fast enough (within 100ms and significant distance)
-    if (timeDiff < 100 && Math.abs(xDiff) > 5) {
-      const velocity = xDiff / timeDiff; // pixels per ms
-      const momentum = velocity * 80; // reduced to 60 for very gentle effect
-
-      // Apply momentum with smooth animation
-      scrollRef.current.style.scrollBehavior = "smooth";
-      scrollRef.current.scrollLeft -= momentum;
-
-      // Reset to auto after animation
-      setTimeout(() => {
-        if (scrollRef.current) {
-          scrollRef.current.style.scrollBehavior = "auto";
+  useEffect(() => {
+    // Wait for DOM to be ready
+    const initScrollTrigger = () => {
+      if (!scrollContainerRef.current) return;
+      
+      // Get all product cards
+      const cards = scrollContainerRef.current.querySelectorAll('.product-card');
+      if (cards.length === 0) return;
+      
+      // Calculate dimensions
+      const containerWidth = scrollContainerRef.current.scrollWidth;
+      const viewportWidth = window.innerWidth;
+      const scrollAmount = containerWidth - viewportWidth;
+      
+      // Create the horizontal scroll animation
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          pin: true,
+          scrub: 1,
+          start: "center center", // Start when section reaches center
+          end: () => `+=${scrollAmount * 1.5}`, // Extra scroll distance to see last image fully
+          invalidateOnRefresh: true,
         }
-      }, 300);
-    }
-  };
+      });
+      
+      // Animate the container moving left
+      tl.to(scrollContainerRef.current, {
+        x: -scrollAmount,
+        ease: "none",
+        duration: 1
+      });
+      
+      // Refresh ScrollTrigger on window resize
+      const handleResize = () => {
+        ScrollTrigger.refresh();
+      };
+      window.addEventListener('resize', handleResize);
+      
+      // Cleanup
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      };
+    };
+    
+    // Initialize after a short delay to ensure DOM is ready
+    const timer = setTimeout(initScrollTrigger, 100);
+    
+    return () => {
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
 
-  const handleMouseLeave = (e) => {
-    if (isDragging) {
-      setIsDragging(false);
-      scrollRef.current.classList.remove("dragging");
-
-      // Apply same momentum logic when mouse leaves during drag
-      const currentTime = Date.now();
-      const timeDiff = currentTime - lastTime;
-      const xDiff = e.pageX - lastX;
-
-      if (timeDiff < 100 && Math.abs(xDiff) > 5) {
-        const velocity = xDiff / timeDiff;
-        const momentum = velocity * 80;
-
-        scrollRef.current.style.scrollBehavior = "smooth";
-        scrollRef.current.scrollLeft -= momentum;
-
-        setTimeout(() => {
-          if (scrollRef.current) {
-            scrollRef.current.style.scrollBehavior = "auto";
-          }
-        }, 300);
-      }
-    }
+  const handleViewAllProducts = () => {
+    window.scrollTo(0, 0);
+    navigate('/all-gems');
   };
 
   return (
-    <section className="collection-section-4-detail">
-      <div className="same-collection-container">
+    <section className="collection-section-4-detail-gsap" ref={sectionRef}>
+      <div className="same-collection-container" ref={containerRef}>
         <div className="same-collection-header">
           <h2 className="same-collection-title heading-1">
             EXPLORE THIS COLLECTION GEMS
           </h2>
         </div>
 
-        <div
-          className="same-collection-grid"
-          ref={scrollRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-        >
-          {collections.map((collection) => (
-            <div key={collection.id} className="product-card">
-              <img
-                src={collection.image}
-                alt={`${collection.name} Ring`}
-                className="product-image"
-                draggable={false}
-              />
-            </div>
-          ))}
+        <div className="horizontal-scroll-wrapper">
+          <div 
+            className="same-collection-grid-gsap"
+            ref={scrollContainerRef}
+          >
+            {collections.map((collection) => (
+              <div key={collection.id} className="product-card">
+                <img
+                  src={collection.image}
+                  alt={`${collection.name} Ring`}
+                  className="product-image"
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {showViewProductButton && (
           <div className="view-product-button-container">
-            <button className="view-product-button">
-              <svg
-                width="189"
-                height="57"
-                viewBox="0 0 189 57"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  x="0.5"
-                  y="0.5"
-                  width="188"
-                  height="56"
-                  rx="28"
-                  fill="rgba(0, 0, 0, 0.1)"
-                  stroke="rgba(0, 0, 0, 0.5)"
-                  className="button-background"
-                />
-                <text
-                  x="94.5"
-                  y="34"
-                  textAnchor="middle"
-                  fill="rgba(0, 0, 0, 0.75)"
-                  className="button-text bodytext-4"
-                >
-                  View all products
-                </text>
-              </svg>
-            </button>
+            <GlassButton theme="default" onClick={handleViewAllProducts}>View all products</GlassButton>
           </div>
         )}
       </div>

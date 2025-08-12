@@ -5,7 +5,7 @@ const WarrantyInfo = () => {
   return (
     <div className="warranty-info">
       <div className="header-section">
-        <h2 className="heading-2">Created by Science. Crafted for Eternity.</h2>
+        <h2 className="heading-3">Created by Science. Crafted for Eternity.</h2>
         <p>
           Each Mirror piece is meticulously crafted with rare precision,
           intention, and limited availability. To preserve the integrity and

@@ -401,27 +401,7 @@ body {
   -webkit-text-fill-color: initial;
 }
 
-.collection-page .section-2 .collection-hero-explore-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  line-height: 0;
-  margin: 0;
-  transition: all 0.3s ease;
-}
-
-.collection-page
-  .section-2
-  .collection-hero-explore-button:hover
-  .button-background {
-  fill: rgba(255, 255, 255, 0.75);
-  stroke: rgba(255, 255, 255, 0.8);
-}
-
-.collection-page .section-2 .collection-hero-explore-button:hover .button-text {
-  fill: black;
-}
+/* Button styles moved to common Button component */
 
 .shop-now-button {
   background: none;

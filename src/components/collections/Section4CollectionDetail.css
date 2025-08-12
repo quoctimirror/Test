@@ -5,6 +5,36 @@
   padding: 120px 0;
   background: #f8f9fa;
   box-sizing: border-box;
+  position: relative;
+}
+
+.collection-section-4-detail.is-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* GSAP Horizontal Scroll Layout */
+.collection-section-4-detail-gsap {
+  width: 100%;
+  min-height: 100vh;
+  padding: 120px 0;
+  background: #f8f9fa;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.horizontal-scroll-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.same-collection-grid-gsap {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  width: fit-content;
 }
 
 .same-collection-container {
@@ -44,12 +74,14 @@
   display: flex;
   gap: 10px;
   overflow-x: auto;
+  overflow-y: hidden;
   padding: 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
   cursor: grab;
   user-select: none;
+  scroll-behavior: smooth;
 }
 
 .same-collection-grid:active {
@@ -87,9 +119,46 @@
   transform: scale(1.1);
 }
 
+/* Desktop 1920x1080 */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .product-card {
+    flex: 0 0 447px;
+  }
+
+  .product-image {
+    width: 447px;
+    height: 559px;
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .product-card {
+    flex: 0 0 380px;
+  }
+
+  .product-image {
+    width: 380px;
+    height: 475px;
+  }
+}
+
+/* Medium desktop */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .product-card {
+    flex: 0 0 350px;
+  }
+
+  .product-image {
+    width: 350px;
+    height: 438px;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .collection-section-4-detail {
+  .collection-section-4-detail,
+  .collection-section-4-detail-gsap {
     padding: 80px 0;
   }
 
@@ -111,20 +180,21 @@
   }
 
   .product-card {
-    flex: 0 0 320px;
+    flex: 0 0 300px;
     line-height: 0;
     height: fit-content;
     margin: 0;
   }
 
   .product-image {
-    width: 320px;
-    height: 400px;
+    width: 300px;
+    height: 375px;
   }
 }
 
 @media (max-width: 480px) {
-  .collection-section-4-detail {
+  .collection-section-4-detail,
+  .collection-section-4-detail-gsap {
     padding: 60px 0;
   }
 
@@ -175,11 +245,4 @@
   transition: all 0.3s ease;
 }
 
-.view-product-button:hover .button-background {
-  fill: rgba(0, 0, 0, 0.75);
-  stroke: rgba(0, 0, 0, 0.8);
-}
-
-.view-product-button:hover .button-text {
-  fill: white;
-}
+/* Button styles moved to common Button component */

@@ -8,6 +8,7 @@ import '@styles/typography.css';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import ChangePassword from './ChangePassword';
+import GlassButton from '../common/GlassButton';
 import { useAuth } from '../../context/AuthContext';
 
 const Profile = () => {
@@ -284,9 +285,15 @@ const Profile = () => {
                             >
                                 Change Password
                             </button>
-                            <button type="submit" disabled={isLoading} className="save-profile-button bodytext-3--no-margin">
+                            <GlassButton 
+                                width={150} 
+                                height={50} 
+                                theme="outline"
+                                onClick={() => {}} 
+                                className="save-profile-button"
+                            >
                                 {isLoading ? 'Saving...' : 'Save Profile'}
-                            </button>
+                            </GlassButton>
                         </div>
                     </form>
                 </div>

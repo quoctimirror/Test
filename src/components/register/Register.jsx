@@ -4,6 +4,7 @@ import api from '@api/axiosConfig';
 import './Register.css';
 import EyeIconSvg from '@assets/images/icons/EyeIcon.svg';
 import EyeSlashIconSvg from '@assets/images/icons/EyeSlashIcon.svg';
+import GlassButton from '../common/GlassButton';
 
 
 const Register = () => {
@@ -205,9 +206,17 @@ const Register = () => {
                         </ul>
                     </div>
                     <p className="privacy-info bodytext-4--no-margin"> For further information about how <br /> we use your personal information, please see our <strong>Privacy Policy</strong> </p>
-                    <button type="submit" className="create-account-button bodytext-4--no-margin" disabled={isLoading}>
-                        {isLoading ? 'Creating Account...' : 'Create account'}
-                    </button>
+                    <div className="create-account-button-wrapper">
+                        <GlassButton 
+                            width={300} 
+                            height={50} 
+                            theme="glass"
+                            onClick={() => {}} 
+                            className="create-account-button"
+                        >
+                            {isLoading ? 'Creating Account...' : 'Create account'}
+                        </GlassButton>
+                    </div>
                     <p className="bodytext-3--no-margin login-prompt">
                         Already a member?{' '}
                         <a onClick={() => navigate('/auth/login')} className="bodytext-3--no-margin return-login-link">

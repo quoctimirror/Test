@@ -235,62 +235,161 @@ html {
 /* Scroll down */
 .scroll-down {
   position: absolute;
-  bottom: 20px;
+  bottom: 84px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
+  width: 58px;
+  height: 58px;
 }
 
 .scroll-down button {
-  background: transparent;
-  border: 1px solid white;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
   border-radius: 100%;
-  width: clamp(40px, 8vw, 50px);
-  height: clamp(45px, 8vw, 50px);
-  /* font-size: clamp(24px, 6vw, 40px); */
-  color: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  width: 57px;
+  height: 57px;
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  opacity: 0.5;
+}
+
+.scroll-down button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.scroll-down button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
 }
 
 .scroll-down button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
 }
 
 /* Vetor Button */
 .vetor-button {
   position: absolute;
-  bottom: 20px;
+  bottom: 84px;
   right: 50px;
   z-index: 10;
+  width: 58px;
+  height: 58px;
 }
 
 .vetor-button button {
-  background: transparent;
-  border: 1.5px solid white;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  color: white;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  width: 57px;
+  height: 57px;
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  opacity: 1;
-  transform: rotate(0deg);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  opacity: 0.5;
+}
+
+.vetor-button button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.vetor-button button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
 }
 
 .vetor-button button:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
 }
 
 .vetor-button button img {
-  width: 24px;
-  height: 24px;
+  width: 57px;
+  height: 57px;
 }
 
 /* Re-enable mouse events for interactive areas */
@@ -301,6 +400,19 @@ html {
 }
 
 /* Media Queries for Mobile */
+/* Kích thước cụ thể cho màn hình 1920x1080 */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .scroll-down button {
+    width: 57px;
+    height: 57px;
+  }
+
+  .vetor-button button {
+    width: 57px;
+    height: 57px;
+  }
+}
+
 @media (max-width: 768px) {
   .main-logo {
     width: clamp(60px, 15vw, 111.78px);
@@ -345,6 +457,8 @@ html {
   .vetor-button {
     bottom: 30px;
     right: 20px;
+    width: 46px;
+    height: 46px;
   }
 
   .vetor-button button {
@@ -398,6 +512,8 @@ html {
   .vetor-button {
     bottom: 30px;
     right: 15px;
+    width: 41px;
+    height: 41px;
   }
 
   .vetor-button button {
