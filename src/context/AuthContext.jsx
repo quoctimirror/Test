@@ -1,6 +1,5 @@
 // src/context/AuthContext.js
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import axios from 'axios'; // Chỉ dùng cho API đăng nhập không cần token
 import api from '../api/axiosConfig'; // <-- SỬ DỤNG INSTANCE API ĐÃ CẤU HÌNH
 
 const AuthContext = createContext(null);
@@ -10,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const login = async (username, password) => {
-        const response = await axios.post('http://localhost:8081/api/v1/auth/authenticate', { username, password });
+        const response = await api.post('/api/v1/auth/authenticate', { username, password });
 
         // SỬA LỖI Ở ĐÂY: Dùng đúng tên biến
         const { accessToken, refreshToken } = response.data;
