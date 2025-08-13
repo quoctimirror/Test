@@ -8,7 +8,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logoRef = useRef(null);
   const { isAuthenticated, user } = useAuth();
-  
+
   // Debug log - remove in production
   // console.log('Navbar - isAuthenticated:', isAuthenticated, 'user:', user, 'isLoading:', isLoading);
 
@@ -19,57 +19,66 @@ export default function Navbar() {
         window.location.reload();
       }, 0);
     } else {
-      sessionStorage.setItem('scrollToTop', 'true');
+      sessionStorage.setItem("scrollToTop", "true");
       window.location.href = "/";
     }
   };
 
   const handleProductsClick = () => {
     if (window.location.pathname === "/collections") {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      sessionStorage.setItem('scrollToTop', 'true');
+      sessionStorage.setItem("scrollToTop", "true");
       window.location.href = "/collections";
     }
   };
 
   const handleServicesClick = () => {
     if (window.location.pathname === "/services") {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      sessionStorage.setItem('scrollToTop', 'true');
+      sessionStorage.setItem("scrollToTop", "true");
       window.location.href = "/services";
     }
   };
 
   const handleNewsClick = () => {
     if (window.location.pathname === "/news") {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      sessionStorage.setItem('scrollToTop', 'true');
+      sessionStorage.setItem("scrollToTop", "true");
       window.location.href = "/news";
+    }
+  };
+
+  const handleContactClick = () => {
+    if (window.location.pathname === "/contact") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      sessionStorage.setItem("scrollToTop", "true");
+      window.location.href = "/contact";
     }
   };
 
   const handleAccountClick = () => {
     // Enhanced check: also verify token exists as fallback
-    const hasToken = localStorage.getItem('accessToken');
+    const hasToken = localStorage.getItem("accessToken");
     const isLoggedIn = (isAuthenticated && user) || hasToken;
-    
+
     // Debug logs to see what's happening
-    console.log('=== Account Click Debug ===');
-    console.log('isAuthenticated:', isAuthenticated);
-    console.log('user exists:', !!user);
-    console.log('hasToken:', !!hasToken);
-    console.log('isLoggedIn:', isLoggedIn);
-    console.log('========================');
-    
+    console.log("=== Account Click Debug ===");
+    console.log("isAuthenticated:", isAuthenticated);
+    console.log("user exists:", !!user);
+    console.log("hasToken:", !!hasToken);
+    console.log("isLoggedIn:", isLoggedIn);
+    console.log("========================");
+
     if (isLoggedIn) {
-      console.log('Navigating to profile');
+      console.log("Navigating to profile");
       navigate("/user-profile");
     } else {
-      console.log('Navigating to login');
-      navigate("/auth/login"); 
+      console.log("Navigating to login");
+      navigate("/auth/login");
     }
   };
 
@@ -102,14 +111,31 @@ export default function Navbar() {
           >
             <div className="menu-groups">
               <ul className="menu-list">
-                <li className="bodytext-3--no-margin" onClick={handleProductsClick}>Products</li>
-                <li className="bodytext-3--no-margin" onClick={handleServicesClick}>Service & Support</li>
+                <li
+                  className="bodytext-3--no-margin"
+                  onClick={handleProductsClick}
+                >
+                  Products
+                </li>
+                <li
+                  className="bodytext-3--no-margin"
+                  onClick={handleServicesClick}
+                >
+                  Service & Support
+                </li>
                 <li className="bodytext-3--no-margin">About Mirror</li>
-                <li className="bodytext-3--no-margin" onClick={handleNewsClick}>News</li>
+                <li className="bodytext-3--no-margin" onClick={handleNewsClick}>
+                  News
+                </li>
               </ul>
               <ul className="menu-list">
                 <li className="bodytext-3--no-margin">Location</li>
-                <li className="bodytext-3--no-margin">Contact us</li>
+                <li
+                  className="bodytext-3--no-margin"
+                  onClick={handleContactClick}
+                >
+                  Contact us
+                </li>
                 <li className="bodytext-3--no-margin">Account</li>
               </ul>
             </div>
@@ -118,7 +144,10 @@ export default function Navbar() {
       </div>
 
       <div className="account-fixed-container">
-        <button onClick={handleAccountClick} className="account-link bodytext-3--no-margin">
+        <button
+          onClick={handleAccountClick}
+          className="account-link bodytext-3--no-margin"
+        >
           Account
         </button>
       </div>
@@ -135,7 +164,9 @@ export default function Navbar() {
 
       {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
       <div className="immersive-text-container">
-        <span className="immersive-text bodytext-4--no-margin">Immersive Showroom</span>
+        <span className="immersive-text bodytext-4--no-margin">
+          Immersive Showroom
+        </span>
       </div>
     </>
   );

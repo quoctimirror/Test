@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../../api/axiosConfig";
 
 const ComponentsManager = () => {
   const [components, setComponents] = useState([]);
@@ -44,9 +45,9 @@ const ComponentsManager = () => {
   const fetchData = async () => {
     try {
       // Fetch categories
-      const categoriesResponse = await fetch('/api/categories');
-      if (categoriesResponse.ok) {
-        const categoriesData = await categoriesResponse.json();
+      const categoriesResponse = await api.get('/api/categories');
+      if (categoriesResponse.status === 200) {
+        const categoriesData = categoriesResponse.data;
         // Transform API data to match our component structure
         const transformedCategories = categoriesData.map(item => ({
           categoryId: item.categoryId || item.id,
@@ -64,9 +65,9 @@ const ComponentsManager = () => {
       }
 
       // Fetch components
-      const componentsResponse = await fetch('/api/components');
-      if (componentsResponse.ok) {
-        const componentsData = await componentsResponse.json();
+      const componentsResponse = await api.get('/api/components');
+      if (componentsResponse.status === 200) {
+        const componentsData = componentsResponse.data;
         console.log('API Components data:', componentsData); // Debug log
         
         // Transform API data to match our component structure
@@ -168,16 +169,10 @@ const ComponentsManager = () => {
     try {
       if (editingComponent) {
         // Update existing component
-        const response = await fetch(`/api/components/${editingComponent.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await api.put(`/api/components/${editingComponent.id}`, formData);
 
-        if (response.ok) {
-          const updatedComponent = await response.json();
+        if (response.status === 200) {
+          const updatedComponent = response.data;
           setComponents(
             components.map((comp) =>
               comp.id === editingComponent.id ? {
@@ -189,23 +184,16 @@ const ComponentsManager = () => {
             )
           );
         } else {
-          const errorText = await response.text();
-          console.error("Failed to update component:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to update component:", response.data);
+          setErrorMessage(response.data?.message || "Failed to update component");
           return;
         }
       } else {
         // Add new component
-        const response = await fetch("/api/components", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await api.post("/api/components", formData);
 
-        if (response.ok) {
-          const newComponent = await response.json();
+        if (response.status === 201 || response.status === 200) {
+          const newComponent = response.data;
           setComponents([...components, {
             ...newComponent,
             id: newComponent.componentId,
@@ -213,9 +201,8 @@ const ComponentsManager = () => {
             categoryName: newComponent.category?.categoryName || 'Unknown Category'
           }]);
         } else {
-          const errorText = await response.text();
-          console.error("Failed to create component:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to create component:", response.data);
+          setErrorMessage(response.data?.message || "Failed to create component");
           return;
         }
       }
@@ -243,16 +230,13 @@ const ComponentsManager = () => {
     setErrorMessage(null);
     if (window.confirm("Are you sure you want to delete this component?")) {
       try {
-        const response = await fetch(`/api/components/${id}`, {
-          method: "DELETE",
-        });
+        const response = await api.delete(`/api/components/${id}`);
 
-        if (response.ok) {
+        if (response.status === 200 || response.status === 204) {
           setComponents(components.filter((comp) => comp.id !== id));
         } else {
-          const errorText = await response.text();
-          console.error("Failed to delete component:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to delete component:", response.data);
+          setErrorMessage(response.data?.message || "Failed to delete component");
         }
       } catch (error) {
         console.error("Error deleting component:", error);

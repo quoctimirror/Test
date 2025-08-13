@@ -5,7 +5,7 @@ import ReturnExchange from "./ReturnExchange";
 import SizingGuide from "./SizingGuide";
 import WarrantyInfo from "./WarrantyInfo";
 import FAQs from "./FAQs";
-import Section6 from "@components/services/section6/Section6";
+import Contact from "@components/contactUs/contact";
 
 const Support = () => {
   const [searchParams] = useSearchParams();
@@ -70,7 +70,7 @@ const Support = () => {
         </div>
       </div>
       
-      {activeTab !== "faqs" && <Section6 />}
+      {activeTab !== "faqs" && <Contact />}
     </>
   );
 };

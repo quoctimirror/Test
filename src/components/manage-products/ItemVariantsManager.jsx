@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../../api/axiosConfig";
 
 const ItemVariantsManager = () => {
   const [itemVariants, setItemVariants] = useState([]);
@@ -67,13 +68,14 @@ const ItemVariantsManager = () => {
     uploadFormData.append('bucketName', 'mirror-storage');
     uploadFormData.append('folderPath', 'public');
 
-    const response = await fetch('/api/files/upload', {
-      method: 'POST',
-      body: uploadFormData,
+    const response = await api.post('/api/files/upload', uploadFormData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
 
-    if (response.ok) {
-      const result = await response.json();
+    if (response.status === 200 || response.status === 201) {
+      const result = response.data;
       return result.publicUrl;
     } else {
       throw new Error('Failed to upload file');
@@ -84,9 +86,9 @@ const ItemVariantsManager = () => {
   const fetchData = async () => {
     try {
       // Fetch items (for dropdown)
-      const itemsResponse = await fetch("/api/item-variants");
-      if (itemsResponse.ok) {
-        const itemsData = await itemsResponse.json();
+      const itemsResponse = await api.get("/api/item-variants");
+      if (itemsResponse.status === 200) {
+        const itemsData = itemsResponse.data;
         console.log("API Items data (for variants):", itemsData); // Debug log
 
         // Transform API data to match our component structure
@@ -107,9 +109,9 @@ const ItemVariantsManager = () => {
       }
 
       // Fetch item variants
-      const variantsResponse = await fetch("/api/item-variants");
-      if (variantsResponse.ok) {
-        const variantsData = await variantsResponse.json();
+      const variantsResponse = await api.get("/api/item-variants");
+      if (variantsResponse.status === 200) {
+        const variantsData = variantsResponse.data;
         console.log("API Item Variants data:", variantsData); // Debug log
 
         // Transform API data to match our component structure
@@ -206,24 +208,15 @@ const ItemVariantsManager = () => {
       }
       if (editingVariant) {
         // Update existing variant
-        const response = await fetch(
-          `/api/item-variants/${editingVariant.id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              itemVariantName: formData.name,
-              itemVariantUrl: imageUrl,
-              description: formData.description,
-              isActive: formData.isActive,
-            }),
-          }
-        );
+        const response = await api.put(`/api/item-variants/${editingVariant.id}`, {
+          itemVariantName: formData.name,
+          itemVariantUrl: imageUrl,
+          description: formData.description,
+          isActive: formData.isActive,
+        });
 
-        if (response.ok) {
-          const updatedVariant = await response.json();
+        if (response.status === 200) {
+          const updatedVariant = response.data;
           setItemVariants(
             itemVariants.map((variant) =>
               variant.id === editingVariant.id
@@ -236,37 +229,29 @@ const ItemVariantsManager = () => {
             )
           );
         } else {
-          const errorText = await response.text();
-          console.error("Failed to update item variant:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to update item variant:", response.data);
+          setErrorMessage(response.data?.message || "Failed to update item variant");
           return;
         }
       } else {
         // Add new variant
-        const response = await fetch("/api/item-variants", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            itemVariantName: formData.name,
-            itemVariantUrl: imageUrl,
-            description: formData.description,
-            isActive: formData.isActive,
-          }),
+        const response = await api.post("/api/item-variants", {
+          itemVariantName: formData.name,
+          itemVariantUrl: imageUrl,
+          description: formData.description,
+          isActive: formData.isActive,
         });
 
-        if (response.ok) {
-          const newVariant = await response.json();
+        if (response.status === 201 || response.status === 200) {
+          const newVariant = response.data;
           setItemVariants([...itemVariants, { 
             ...newVariant, 
             id: newVariant.itemVariantId,
             name: newVariant.itemVariantName || newVariant.name
           }]);
         } else {
-          const errorText = await response.text();
-          console.error("Failed to create item variant:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to create item variant:", response.data);
+          setErrorMessage(response.data?.message || "Failed to create item variant");
           return;
         }
       }
@@ -296,16 +281,13 @@ const ItemVariantsManager = () => {
     setErrorMessage(null);
     if (window.confirm("Are you sure you want to delete this item variant?")) {
       try {
-        const response = await fetch(`/api/item-variants/${id}`, {
-          method: "DELETE",
-        });
+        const response = await api.delete(`/api/item-variants/${id}`);
 
-        if (response.ok) {
+        if (response.status === 200 || response.status === 204) {
           setItemVariants(itemVariants.filter((variant) => variant.id !== id));
         } else {
-          const errorText = await response.text();
-          console.error("Failed to delete item variant:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to delete item variant:", response.data);
+          setErrorMessage(response.data?.message || "Failed to delete item variant");
         }
       } catch (error) {
         console.error("Error deleting item variant:", error);

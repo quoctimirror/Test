@@ -34,6 +34,8 @@ const Profile = lazy(() => import("@components/profile/Profile"));
 const AllGemsPage = lazy(() => import("@pages/AllGemsPage"));
 const AllNewsPage = lazy(() => import("@pages/AllNewsPage"));
 const NewCutPage = lazy(() => import("@pages/NewCutPage"));
+const ContactPage = lazy(() => import("@pages/ContactPage"));
+const AboutPage = lazy(() => import("@pages/AboutPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -87,6 +89,10 @@ export default function AppRoutes() {
           <Route path="/services/detail" element={<ServicesDetailPage />} />
 
           <Route path="/support" element={<SupportPage />} />
+          
+          <Route path="/contact" element={<ContactPage />} />
+          
+          <Route path="/about" element={<AboutPage />} />
           
           <Route path="/news" element={<AllNewsPage />} />
           

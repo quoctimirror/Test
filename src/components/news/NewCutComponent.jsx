@@ -1,11 +1,99 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import "./NewCutComponent.css";
 
 const NewCutComponent = () => {
+  const heroRef = useRef(null);
+  const isScrolling = useRef(false);
+
+  useEffect(() => {
+    let scrollTimeout;
+    let lastScrollPosition = 0;
+
+    const smoothScrollTo = (targetPosition, duration = 800) => {
+      const startPosition = window.pageYOffset;
+      const distance = targetPosition - startPosition;
+      let start = null;
+
+      const animation = (currentTime) => {
+        if (start === null) start = currentTime;
+        const timeElapsed = currentTime - start;
+        const progress = Math.min(timeElapsed / duration, 1);
+
+        // Easing function for smooth acceleration/deceleration
+        const easeInOutCubic =
+          progress < 0.5
+            ? 4 * progress * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        window.scrollTo(0, startPosition + distance * easeInOutCubic);
+
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animation);
+        } else {
+          isScrolling.current = false;
+        }
+      };
+
+      requestAnimationFrame(animation);
+    };
+
+    const handleScroll = () => {
+      const scrolled = window.pageYOffset;
+      const windowHeight = window.innerHeight;
+      const scrollDirection = scrolled > lastScrollPosition ? "down" : "up";
+
+      // Fade effect for hero
+      if (heroRef.current) {
+        const opacity = Math.max(0, 1 - scrolled / (windowHeight * 0.7)); // Fade nhanh hơn cho sync với 700ms
+        const scale = 1 - (scrolled / windowHeight) * 0.08; // Scale nhẹ hơn
+
+        heroRef.current.style.opacity = opacity;
+        heroRef.current.style.transform = `scale(${scale})`;
+      }
+
+      // Auto-scroll DOWN to article when user scrolls down just a little
+      if (
+        !isScrolling.current &&
+        scrollDirection === "down" &&
+        scrolled > 30 &&
+        scrolled < windowHeight * 0.5
+      ) {
+        isScrolling.current = true;
+        smoothScrollTo(windowHeight, 700); // Article trượt lên trong 1 giây
+      }
+
+      // Auto-scroll UP to hero when user scrolls up just a little
+      if (
+        !isScrolling.current &&
+        scrollDirection === "up" &&
+        scrolled < windowHeight &&
+        scrolled > windowHeight * 0.5
+      ) {
+        isScrolling.current = true;
+        smoothScrollTo(0, 700); // Quay về hero trong 0.8 giây
+      }
+
+      // Update last scroll position
+      lastScrollPosition = scrolled;
+
+      // Clear timeout
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isScrolling.current = false;
+      }, 150);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
+
   return (
     <div className="new-cut-page">
       {/* Hero Section */}
-      <section className="new-cut-hero">
+      <section className="new-cut-hero" ref={heroRef}>
         <div className="hero-content">
           <div className="hero-text">
             <div className="hero-text-main">

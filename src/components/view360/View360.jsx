@@ -235,7 +235,7 @@ const View360 = () => {
       <QRPopup
         isOpen={showQRPopup}
         onClose={handleCloseQRPopup}
-        ringId="nhanBase"
+        ringId="nhanDario"
       />
     </div>
   );

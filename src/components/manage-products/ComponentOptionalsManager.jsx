@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../../api/axiosConfig";
 
 const ComponentOptionalsManager = () => {
   const [componentOptionals, setComponentOptionals] = useState([]);
@@ -44,9 +45,9 @@ const ComponentOptionalsManager = () => {
   const fetchData = async () => {
     try {
       // Fetch components
-      const componentsResponse = await fetch("/api/components");
-      if (componentsResponse.ok) {
-        const componentsData = await componentsResponse.json();
+      const componentsResponse = await api.get("/api/components");
+      if (componentsResponse.status === 200) {
+        const componentsData = componentsResponse.data;
         console.log("API Components data (for options):", componentsData); // Debug log
 
         // Transform API data to match our component structure
@@ -70,9 +71,9 @@ const ComponentOptionalsManager = () => {
       }
 
       // Fetch component optionals
-      const optionalsResponse = await fetch("/api/component-optionals");
-      if (optionalsResponse.ok) {
-        const optionalsData = await optionalsResponse.json();
+      const optionalsResponse = await api.get("/api/component-optionals");
+      if (optionalsResponse.status === 200) {
+        const optionalsData = optionalsResponse.data;
         console.log("API Component Optionals data:", optionalsData); // Debug log
 
         // Transform API data to match our component structure
@@ -192,16 +193,10 @@ const ComponentOptionalsManager = () => {
     try {
       if (editingOption) {
         // Update existing component optional
-        const response = await fetch(`/api/component-optionals/${editingOption.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await api.put(`/api/component-optionals/${editingOption.id}`, formData);
 
-        if (response.ok) {
-          const updatedOption = await response.json();
+        if (response.status === 200) {
+          const updatedOption = response.data;
           setComponentOptionals(
             componentOptionals.map((option) =>
               option.id === editingOption.id ? {
@@ -213,23 +208,16 @@ const ComponentOptionalsManager = () => {
             )
           );
         } else {
-          const errorText = await response.text();
-          console.error("Failed to update component optional:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to update component optional:", response.data);
+          setErrorMessage(response.data?.message || "Failed to update component optional");
           return;
         }
       } else {
         // Add new component optional
-        const response = await fetch("/api/component-optionals", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await api.post("/api/component-optionals", formData);
 
-        if (response.ok) {
-          const newOption = await response.json();
+        if (response.status === 201 || response.status === 200) {
+          const newOption = response.data;
           setComponentOptionals([...componentOptionals, {
             ...newOption,
             id: newOption.componentOptionalId,
@@ -237,9 +225,8 @@ const ComponentOptionalsManager = () => {
             componentName: newOption.component?.componentName || 'Unknown Component'
           }]);
         } else {
-          const errorText = await response.text();
-          console.error("Failed to create component optional:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to create component optional:", response.data);
+          setErrorMessage(response.data?.message || "Failed to create component optional");
           return;
         }
       }
@@ -269,18 +256,15 @@ const ComponentOptionalsManager = () => {
       window.confirm("Are you sure you want to delete this component option?")
     ) {
       try {
-        const response = await fetch(`/api/component-optionals/${id}`, {
-          method: "DELETE",
-        });
+        const response = await api.delete(`/api/component-optionals/${id}`);
 
-        if (response.ok) {
+        if (response.status === 200 || response.status === 204) {
           setComponentOptionals(
             componentOptionals.filter((option) => option.id !== id)
           );
         } else {
-          const errorText = await response.text();
-          console.error("Failed to delete component optional:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to delete component optional:", response.data);
+          setErrorMessage(response.data?.message || "Failed to delete component optional");
         }
       } catch (error) {
         console.error("Error deleting component optional:", error);
