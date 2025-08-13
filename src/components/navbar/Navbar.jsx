@@ -42,6 +42,25 @@ export default function Navbar() {
     }
   };
 
+
+  const handleSupportClick = () => {
+    if (window.location.pathname === "/support") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      sessionStorage.setItem("scrollToTop", "true");
+      window.location.href = "/support";
+    }
+  };
+
+  const handleAboutClick = () => {
+    if (window.location.pathname === "/about") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      sessionStorage.setItem("scrollToTop", "true");
+      window.location.href = "/about";
+    }
+  };
+
   const handleNewsClick = () => {
     if (window.location.pathname === "/news") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -79,6 +98,15 @@ export default function Navbar() {
     } else {
       console.log("Navigating to login");
       navigate("/auth/login");
+    }
+  };
+
+  const handleLocationClick = () => {
+    if (window.location.pathname === "/locations") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      sessionStorage.setItem('scrollToTop', 'true');
+      window.location.href = "/locations";
     }
   };
 
@@ -121,15 +149,16 @@ export default function Navbar() {
                   className="bodytext-3--no-margin"
                   onClick={handleServicesClick}
                 >
-                  Service & Support
+                  Services</li>
+                <li className="bodytext-3--no-margin" onClick={handleSupportClick}>Support
                 </li>
-                <li className="bodytext-3--no-margin">About Mirror</li>
+                <li className="bodytext-3--no-margin" onClick={handleAboutClick}>About Mirror</li>
                 <li className="bodytext-3--no-margin" onClick={handleNewsClick}>
                   News
                 </li>
               </ul>
               <ul className="menu-list">
-                <li className="bodytext-3--no-margin">Location</li>
+                <li className="bodytext-3--no-margin" onClick={handleLocationClick}>Location</li>
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleContactClick}
