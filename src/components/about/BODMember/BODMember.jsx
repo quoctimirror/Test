@@ -52,7 +52,7 @@ const BODMember = () => {
       visible.push({
         ...teamMembers[memberIndex],
         isHighlighted: i === 1, // Vị trí thứ 2 từ trái (index 1)
-        position: i,
+        position: i
       });
     }
     return visible;
@@ -60,9 +60,7 @@ const BODMember = () => {
 
   const getHighlightedMember = () => {
     const visibleMembers = getVisibleMembers();
-    return (
-      visibleMembers.find((member) => member.isHighlighted) || teamMembers[0]
-    );
+    return visibleMembers.find(member => member.isHighlighted) || teamMembers[0];
   };
 
   return (
@@ -73,9 +71,7 @@ const BODMember = () => {
           {getVisibleMembers().map((member, index) => (
             <div
               key={`${member.name}-${index}`}
-              className={`team-member ${
-                member.isHighlighted ? "highlighted" : ""
-              }`}
+              className={`team-member ${member.isHighlighted ? 'highlighted' : ''}`}
             >
               <div className="member-photo">
                 <img
@@ -93,6 +89,25 @@ const BODMember = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Leader Quote */}
+      <div className="leader-quote">
+        <p className="quote-text">
+          "As intelligence becomes abundant through technology, 
+          what remains rare is genuine emotion. Mirror exists to 
+          preserve that emotion — to cherish every loving moment 
+          and transform each gift you give into an extension of your 
+          heart. Because we believe the most precious gift isn't its 
+          value — it's the feeling of being truly understood. In a 
+          world chasing perfection, we choose what's real."
+        </p>
+      </div>
+
+      {/* Leader Details */}
+      <div className="leader-details">
+        <span className="leader-position">{getHighlightedMember().position}</span>
+        <h2 className="leader-name">{getHighlightedMember().name}</h2>
       </div>
     </div>
   );

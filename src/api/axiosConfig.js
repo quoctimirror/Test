@@ -1,10 +1,11 @@
 // src/api/axiosConfig.js
+// Force rebuild for Vercel
 import axios from "axios";
 
 // ============= REMOTE BACKEND INSTANCE =============
 // Instance cho remote backend (deployed) - dùng cho login, auth, etc.
 const remoteApi = axios.create({
-  baseURL: import.meta.env.VITE_REMOTE_API_BASE_URL || 'https://your-deployed-backend.com',
+  baseURL: "https://nwkg3ymv2p.ap-southeast-1.awsapprunner.com",
   headers: {
     "Content-Type": "application/json",
     "ngrok-skip-browser-warning": "true",
@@ -28,7 +29,7 @@ remoteApi.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    
+
     const isAuthEndpoint =
       originalRequest.url.includes("/auth/authenticate") ||
       originalRequest.url.includes("/auth/refresh-token");
@@ -51,7 +52,7 @@ remoteApi.interceptors.response.use(
         }
 
         const refreshResponse = await axios.post(
-          `${import.meta.env.VITE_REMOTE_API_BASE_URL}/api/v1/auth/refresh-token`,
+          `https://nwkg3ymv2p.ap-southeast-1.awsapprunner.com/api/v1/auth/refresh-token`,
           { refreshToken }
         );
         const { accessToken: newAccessToken } = refreshResponse.data;
@@ -75,12 +76,13 @@ remoteApi.interceptors.response.use(
 
 // ============= LOCAL BACKEND INSTANCE =============
 
-// Hàm kiểm tra port có sẵn
+// Hàm kiểm tra port có sẵn cho local backend
 const checkPortAvailable = async (port) => {
   try {
-    const response = await fetch(`http://localhost:${port}/api/v1/health`, {
-      method: 'GET',
-      timeout: 2000
+    // Local backend không có /v1 prefix
+    const response = await fetch(`http://localhost:${port}/api/categories`, {
+      method: "GET",
+      timeout: 2000,
     });
     return response.ok;
   } catch (error) {
@@ -88,10 +90,10 @@ const checkPortAvailable = async (port) => {
   }
 };
 
-// Hàm auto-detect backend port
+// Hàm auto-detect backend port - ưu tiên 8080
 const detectBackendPort = async () => {
   const portsToCheck = [8080, 8081, 3000, 5000];
-  
+
   for (const port of portsToCheck) {
     console.log(`🔍 Checking port ${port}...`);
     const isAvailable = await checkPortAvailable(port);
@@ -100,9 +102,9 @@ const detectBackendPort = async () => {
       return port;
     }
   }
-  
+
   console.log("❌ No backend detected on common ports");
-  return 8081; // fallback
+  return 8080; // fallback to 8080
 };
 
 // Hàm xác định URL của backend - có thể dễ dàng chuyển đổi giữa local và ngrok
@@ -155,14 +157,15 @@ const getBackendURL = async () => {
   }
 
   // Fallback: dùng local backend với port được chỉ định
-  const fallbackPort = import.meta.env.VITE_LOCAL_BACKEND_PORT || "8081";
-  const url = import.meta.env.VITE_API_BASE_URL || `http://localhost:${fallbackPort}`;
+  const fallbackPort = import.meta.env.VITE_LOCAL_BACKEND_PORT || "8080";
+  const url =
+    import.meta.env.VITE_API_BASE_URL || `http://localhost:${fallbackPort}`;
   console.log("✅ Using Fallback Backend URL:", url);
   return url;
 };
 
 // Khởi tạo instance của axios với async baseURL
-let baseURL = "http://localhost:8081"; // default fallback
+let baseURL = "http://localhost:8080"; // default fallback to 8080
 
 // Async function để set baseURL
 const initializeAPI = async () => {
@@ -184,10 +187,7 @@ const api = axios.create({
   },
 });
 
-// Initialize API when module loads
-initializeAPI();
-
-// Request Interceptor: Đính kèm token vào mỗi request. Giữ nguyên, không thay đổi.
+// Request Interceptor: Đính kèm token vào mỗi request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
@@ -199,9 +199,9 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Xử lý làm mới token. Đây là nơi chúng ta sửa lỗi.
+// Response Interceptor: Xử lý làm mới token
 api.interceptors.response.use(
-  (response) => response, // Nếu request thành công, trả về response luôn
+  (response) => response, // Return response as-is
   async (error) => {
     const originalRequest = error.config;
 
@@ -221,10 +221,15 @@ api.interceptors.response.use(
     // --- KẾT THÚC SỬA LỖI ---
 
     // Logic làm mới token cho các API khác (ví dụ: /users/me, /products...)
-    // Nếu lỗi là 401 và request này chưa được thử lại (_retry = false)
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Chỉ xử lý 401 cho các endpoint cần authentication
+    const requiresAuth = originalRequest.url.includes("/users/") || 
+                        originalRequest.url.includes("/orders/") || 
+                        originalRequest.url.includes("/profile/");
+    
+    // Đối với product endpoints (/categories, /components), không làm mới token
+    if (error.response?.status === 401 && !originalRequest._retry && requiresAuth) {
       originalRequest._retry = true; // Đánh dấu là đã thử lại để tránh vòng lặp vô hạn
-      console.log("Access Token expired. Refreshing...");
+      console.log("Access Token expired for protected endpoint. Refreshing...");
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
@@ -235,9 +240,9 @@ api.interceptors.response.use(
           return Promise.reject(error);
         }
 
-        // Gọi API để làm mới token
+        // Gọi API để làm mới token - use remote API for auth
         const refreshResponse = await axios.post(
-          `${getBackendURL()}/api/v1/auth/refresh-token`,
+          `https://nwkg3ymv2p.ap-southeast-1.awsapprunner.com/api/v1/auth/refresh-token`,
           { refreshToken }
         );
         const { accessToken: newAccessToken } = refreshResponse.data;

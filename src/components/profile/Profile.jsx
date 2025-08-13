@@ -278,18 +278,20 @@ const Profile = () => {
                         {errors.form && <div className="form-field-container"><p className="input-error bodytext-4--no-margin">{errors.form}</p></div>}
 
                         <div className="action-buttons-container">
-                            <button
-                                type="button"
+                            <GlassButton
+                                width={200}
+                                height={50}
+                                theme="outline"
                                 onClick={() => setShowChangePassword(true)}
-                                className="change-password-button bodytext-3--no-margin"
+                                className="change-password-button"
                             >
                                 Change Password
-                            </button>
-                            <GlassButton 
-                                width={150} 
-                                height={50} 
+                            </GlassButton>
+                            <GlassButton
+                                width={200}
+                                height={50}
                                 theme="outline"
-                                onClick={() => {}} 
+                                onClick={() => { }}
                                 className="save-profile-button"
                             >
                                 {isLoading ? 'Saving...' : 'Save Profile'}

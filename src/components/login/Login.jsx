@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
-import { remoteApi } from "@api/axiosConfig";
+import { useAuth } from "@/context/AuthContext";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
 // import "@styles/typography.css";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [loginInput, setLoginInput] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -68,19 +69,10 @@ const Login = () => {
     };
 
     try {
-      // --- DEBUG LOGGING ---
-      // console.log("Sending request to URL:", remoteApi.defaults.baseURL + '/api/v1/auth/authenticate');
-      // console.log("With payload:", payload);
-      // -----------------------------
+      // Sử dụng login function từ AuthContext
+      await login(payload.username, payload.password);
 
-      const response = await remoteApi.post("/api/v1/auth/authenticate", payload);
-
-      const { accessToken, refreshToken } = response.data;
-
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-
-      // alert('Login successful!');
+      console.log("Login successful, redirecting to profile...");
       navigate("/user-profile");
     } catch (error) {
       // --- XỬ LÝ KHI THẤT BẠI ---

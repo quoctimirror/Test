@@ -9,18 +9,18 @@ import "./products.css";
 const ProductsPage = () => {
   useEffect(() => {
     // Check if we need to scroll to top
-    if (sessionStorage.getItem('scrollToTop') === 'true') {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      sessionStorage.removeItem('scrollToTop');
+    if (sessionStorage.getItem("scrollToTop") === "true") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      sessionStorage.removeItem("scrollToTop");
     }
   }, []);
 
   return (
     <div className="collection-page">
       {/* Section 1: View360 Component */}
-      {/* <section className="collection-section-1">
+      <section className="collection-section-1">
         <View360 />
-      </section> */}
+      </section>
 
       {/* Section 2: SelectOptionSection */}
       <section className="collection-section-2">

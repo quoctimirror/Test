@@ -7,12 +7,17 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [react()],
     server: {
-      allowedHosts: ['localhost', /\.ngrok-free\.app$/, /\.ngrok\.io$/, /\.ngrok\.app$/],
-      host: '0.0.0.0',
+      allowedHosts: [
+        "localhost",
+        /\.ngrok-free\.app$/,
+        /\.ngrok\.io$/,
+        /\.ngrok\.app$/,
+      ],
+      host: "0.0.0.0",
       port: 5173,
       proxy: {
         "/api": {
