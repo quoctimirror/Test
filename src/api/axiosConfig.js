@@ -1,4 +1,5 @@
 // src/api/axiosConfig.js
+// Force rebuild for Vercel
 import axios from "axios";
 
 // Hàm xác định URL của backend - có thể dễ dàng chuyển đổi giữa local và ngrok
@@ -56,7 +57,7 @@ const api = axios.create({
   },
 });
 
-// Request Interceptor: Đính kèm token vào mỗi request. Giữ nguyên, không thay đổi.
+// Request Interceptor: Đính kèm token vào mỗi request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
@@ -68,9 +69,9 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Xử lý làm mới token. Đây là nơi chúng ta sửa lỗi.
+// Response Interceptor: Xử lý làm mới token
 api.interceptors.response.use(
-  (response) => response, // Nếu request thành công, trả về response luôn
+  (response) => response, // Return response as-is
   async (error) => {
     const originalRequest = error.config;
 

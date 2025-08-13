@@ -1,10 +1,16 @@
 import "./Navbar.css";
 import { useState, useRef } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
-
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 export default function Navbar() {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logoRef = useRef(null);
+  const { isAuthenticated, user } = useAuth();
+  
+  // Debug log - remove in production
+  // console.log('Navbar - isAuthenticated:', isAuthenticated, 'user:', user, 'isLoading:', isLoading);
 
   const handleLogoClick = () => {
     if (window.location.pathname === "/") {
@@ -42,6 +48,28 @@ export default function Navbar() {
     } else {
       sessionStorage.setItem('scrollToTop', 'true');
       window.location.href = "/news";
+    }
+  };
+
+  const handleAccountClick = () => {
+    // Enhanced check: also verify token exists as fallback
+    const hasToken = localStorage.getItem('accessToken');
+    const isLoggedIn = (isAuthenticated && user) || hasToken;
+    
+    // Debug logs to see what's happening
+    console.log('=== Account Click Debug ===');
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('user exists:', !!user);
+    console.log('hasToken:', !!hasToken);
+    console.log('isLoggedIn:', isLoggedIn);
+    console.log('========================');
+    
+    if (isLoggedIn) {
+      console.log('Navigating to profile');
+      navigate("/user-profile");
+    } else {
+      console.log('Navigating to login');
+      navigate("/auth/login"); 
     }
   };
 
@@ -90,9 +118,9 @@ export default function Navbar() {
       </div>
 
       <div className="account-fixed-container">
-        <a href="/auth" className="account-link bodytext-3--no-margin">
+        <button onClick={handleAccountClick} className="account-link bodytext-3--no-margin">
           Account
-        </a>
+        </button>
       </div>
 
       {/* IMMERSIVE BUTTON - chỉ glassmorphism */}

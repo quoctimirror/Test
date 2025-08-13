@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axiosConfig';
 import './ChangePassword.css';
 import EyeIconSvg from '../../assets/images/icons/EyeIcon.svg';
 import EyeSlashIconSvg from '../../assets/images/icons/EyeSlashIcon.svg';
@@ -85,15 +85,10 @@ const ChangePassword = ({ onClose }) => {
 
             console.log('Sending request to change password...');
 
-            const response = await axios.post('http://localhost:8081/api/v1/users/change-password', {
+            const response = await api.post('/api/v1/users/change-password', {
                 currentPassword: passwordData.currentPassword,
                 newPassword: passwordData.newPassword,
                 confirmPassword: passwordData.confirmPassword
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
-                }
             });
 
             console.log('Password changed successfully:', response.data);
