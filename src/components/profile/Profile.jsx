@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/axiosConfig'; // <-- THAY THẾ AXIOS BẰNG INSTANCE API CỦA CHÚNG TA
+import { remoteApi } from '../../api/axiosConfig'; // <-- SỬ DỤNG REMOTE API CHO PROFILE
 import './Profile.css';
 import '@styles/typography.css';
 import PhoneInput from 'react-phone-input-2';
@@ -111,8 +111,8 @@ const Profile = () => {
         const fetchUserProfile = async () => {
             setIsLoading(true);
             try {
-                // Chỉ cần gọi api.get. Mọi thứ khác đã được interceptor xử lý.
-                const response = await api.get('/api/v1/users/me');
+                // Chỉ cần gọi remoteApi.get. Mọi thứ khác đã được interceptor xử lý.
+                const response = await remoteApi.get('/api/v1/users/me');
                 let userData = response.data;
                 if (userData.dateOfBirth) {
                     userData.dateOfBirth = userData.dateOfBirth.split('T')[0];
@@ -159,7 +159,7 @@ const Profile = () => {
         };
 
         try {
-            await api.put('/api/v1/users/me', payload);
+            await remoteApi.put('/api/v1/users/me', payload);
             // alert('Your changes have been saved successfully!');
         } catch (error) {
             console.error('Failed to save profile:', error);

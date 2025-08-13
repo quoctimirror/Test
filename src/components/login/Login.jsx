@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
-import api from "@api/axiosConfig";
+import { remoteApi } from "@api/axiosConfig";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
 // import "@styles/typography.css";
@@ -69,11 +69,11 @@ const Login = () => {
 
     try {
       // --- DEBUG LOGGING ---
-      // console.log("Sending request to URL:", api.defaults.baseURL + '/api/v1/auth/authenticate');
+      // console.log("Sending request to URL:", remoteApi.defaults.baseURL + '/api/v1/auth/authenticate');
       // console.log("With payload:", payload);
       // -----------------------------
 
-      const response = await api.post("/api/v1/auth/authenticate", payload);
+      const response = await remoteApi.post("/api/v1/auth/authenticate", payload);
 
       const { accessToken, refreshToken } = response.data;
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../../api/axiosConfig";
 
 const ItemVariantConfigsManager = () => {
   const [itemVariantConfigs, setItemVariantConfigs] = useState([]);
@@ -44,9 +45,9 @@ const ItemVariantConfigsManager = () => {
   const fetchData = async () => {
     try {
       // Fetch item variants
-      const itemVariantsResponse = await fetch("/api/item-variants");
-      if (itemVariantsResponse.ok) {
-        const itemVariantsData = await itemVariantsResponse.json();
+      const itemVariantsResponse = await api.get("/api/item-variants");
+      if (itemVariantsResponse.status === 200) {
+        const itemVariantsData = itemVariantsResponse.data;
         const transformedItemVariants = itemVariantsData.map((item) => ({
           itemVariantId: item.itemVariantId || item.id,
           itemVariantName: item.itemVariantName || item.name,
@@ -63,9 +64,9 @@ const ItemVariantConfigsManager = () => {
       }
 
       // Fetch component optionals
-      const componentOptionalsResponse = await fetch("/api/component-optionals");
-      if (componentOptionalsResponse.ok) {
-        const componentOptionalsData = await componentOptionalsResponse.json();
+      const componentOptionalsResponse = await api.get("/api/component-optionals");
+      if (componentOptionalsResponse.status === 200) {
+        const componentOptionalsData = componentOptionalsResponse.data;
         const transformedComponentOptionals = componentOptionalsData.map((item) => ({
           componentOptionalId: item.componentOptionalId || item.id,
           componentOptionalName: item.componentOptionalName,
@@ -81,9 +82,9 @@ const ItemVariantConfigsManager = () => {
       }
 
       // Fetch item variant configs
-      const configsResponse = await fetch("/api/item-variant-configs");
-      if (configsResponse.ok) {
-        const configsData = await configsResponse.json();
+      const configsResponse = await api.get("/api/item-variant-configs");
+      if (configsResponse.status === 200) {
+        const configsData = configsResponse.data;
         console.log("API Item Variant Configs data:", configsData);
 
         const transformedConfigs = configsData.map((item) => ({
@@ -174,16 +175,10 @@ const ItemVariantConfigsManager = () => {
     try {
       if (editingConfig) {
         // Update existing config
-        const response = await fetch(`/api/item-variant-configs/${editingConfig.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await api.put(`/api/item-variant-configs/${editingConfig.id}`, formData);
 
-        if (response.ok) {
-          const updatedConfig = await response.json();
+        if (response.status === 200) {
+          const updatedConfig = response.data;
           const transformedConfig = {
             ...updatedConfig,
             id: updatedConfig.itemVariantConfigId,
@@ -197,23 +192,16 @@ const ItemVariantConfigsManager = () => {
             )
           );
         } else {
-          const errorText = await response.text();
-          console.error("Failed to update item variant config:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to update item variant config:", response.data);
+          setErrorMessage(response.data?.message || "Failed to update item variant config");
           return;
         }
       } else {
         // Add new config
-        const response = await fetch("/api/item-variant-configs", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await api.post("/api/item-variant-configs", formData);
 
-        if (response.ok) {
-          const newConfig = await response.json();
+        if (response.status === 201 || response.status === 200) {
+          const newConfig = response.data;
           const transformedConfig = {
             ...newConfig,
             id: newConfig.itemVariantConfigId,
@@ -223,9 +211,8 @@ const ItemVariantConfigsManager = () => {
           };
           setItemVariantConfigs([...itemVariantConfigs, transformedConfig]);
         } else {
-          const errorText = await response.text();
-          console.error("Failed to create item variant config:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to create item variant config:", response.data);
+          setErrorMessage(response.data?.message || "Failed to create item variant config");
           return;
         }
       }
@@ -252,16 +239,13 @@ const ItemVariantConfigsManager = () => {
     setErrorMessage(null);
     if (window.confirm("Are you sure you want to delete this item variant config?")) {
       try {
-        const response = await fetch(`/api/item-variant-configs/${id}`, {
-          method: "DELETE",
-        });
+        const response = await api.delete(`/api/item-variant-configs/${id}`);
 
-        if (response.ok) {
+        if (response.status === 200 || response.status === 204) {
           setItemVariantConfigs(itemVariantConfigs.filter((config) => config.id !== id));
         } else {
-          const errorText = await response.text();
-          console.error("Failed to delete item variant config:", errorText);
-          setErrorMessage(errorText);
+          console.error("Failed to delete item variant config:", response.data);
+          setErrorMessage(response.data?.message || "Failed to delete item variant config");
         }
       } catch (error) {
         console.error("Error deleting item variant config:", error);

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "./SelectOptionSection.css";
+import GlassButton from "../common/GlassButton";
+import api from "../../api/axiosConfig";
 
 const SelectOptionSection = () => {
   const [selectedStone, setSelectedStone] = useState("oval");
@@ -12,6 +14,7 @@ const SelectOptionSection = () => {
   const [componentOptions, setComponentOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [userSelections, setUserSelections] = useState({});
+  const [sizeValue, setSizeValue] = useState(6); // State for size slider
 
   // Default values for overview when no selection is made
   const defaultValues = {
@@ -40,23 +43,23 @@ const SelectOptionSection = () => {
   };
 
   const handleSaveSettings = () => {
-    console.log("Settings saved:", { selectedStone, currentPrice });
+    // Settings saved
   };
 
   const handleContactUs = () => {
-    console.log("Contact us clicked");
+    // Contact us clicked
   };
 
   const handleBookAppointment = () => {
-    console.log("Book appointment clicked");
+    // Book appointment clicked
   };
 
   const handleOrderNow = () => {
-    console.log("Order now clicked");
+    // Order now clicked
   };
 
   const handleMoreDetails = () => {
-    console.log("More details clicked");
+    // More details clicked
   };
 
   // Get options for current active tab
@@ -93,8 +96,23 @@ const SelectOptionSection = () => {
 
     setUserSelections(updatedSelections);
     saveSelectionsToLocalStorage(updatedSelections);
-    console.log("Selected option:", option);
-    console.log("Updated selections:", updatedSelections);
+  };
+
+  const handleSizeChange = (value) => {
+    setSizeValue(value);
+    
+    // Update user selections for Size tab
+    const updatedSelections = {
+      ...userSelections,
+      Size: {
+        componentOptionalId: `SIZE_${value}`,
+        componentOptionalName: value.toString(),
+        componentId: "COMP004", // Size component ID
+      },
+    };
+
+    setUserSelections(updatedSelections);
+    saveSelectionsToLocalStorage(updatedSelections);
   };
 
   // Fetch categories and components from API
@@ -102,52 +120,113 @@ const SelectOptionSection = () => {
     const fetchData = async () => {
       try {
         // Fetch categories
-        const categoriesResponse = await fetch("/api/categories");
-        if (categoriesResponse.ok) {
-          const categoriesData = await categoriesResponse.json();
-          setCategories(categoriesData);
+        const categoriesResponse = await api.get("/api/categories");
+        const categoriesData = categoriesResponse.data;
+        setCategories(categoriesData);
 
-          // Find and set the Ring category (CAT0001) as selected
-          const ringCategory = categoriesData.find(
-            (cat) => cat.categoryId === "CAT0001"
-          );
-          if (ringCategory) {
-            setSelectedCategory(ringCategory);
-          }
+        // Find and set the Ring category (CAT0001) as selected
+        const ringCategory = categoriesData.find(
+          (cat) => cat.categoryId === "CAT0001"
+        );
+        if (ringCategory) {
+          setSelectedCategory(ringCategory);
         }
 
         // Fetch components
-        const componentsResponse = await fetch("/api/components");
-        if (componentsResponse.ok) {
-          const componentsData = await componentsResponse.json();
+        const componentsResponse = await api.get("/api/components");
+        const componentsData = componentsResponse.data;
 
-          // Filter components by categoryId CAT0001 and reverse the order
-          const ringComponents = componentsData
-            .filter((comp) => comp.categoryId === "CAT0001")
-            .reverse();
-          setComponents(ringComponents);
+        // Filter components by categoryId CAT0001 and reverse the order
+        const ringComponents = componentsData
+          .filter((comp) => comp.categoryId === "CAT0001")
+          .reverse();
+        setComponents(ringComponents);
 
-          // Create tabs from component names and add Overview tab at the end
-          const componentTabs = ringComponents.map(
-            (comp) => comp.componentName
-          );
-          const allTabs = [...componentTabs, "Overview"];
-          setTabs(allTabs);
+        // Create tabs from component names and add Overview tab at the end
+        const componentTabs = ringComponents.map(
+          (comp) => comp.componentName
+        );
+        const allTabs = [...componentTabs, "Overview"];
+        setTabs(allTabs);
 
-          // Set first component as active tab if available
-          if (componentTabs.length > 0) {
-            setActiveTab(componentTabs[0]);
-          }
+        // Set first component as active tab if available
+        if (componentTabs.length > 0) {
+          setActiveTab(componentTabs[0]);
         }
 
         // Fetch component options
-        const optionsResponse = await fetch("/api/component-optionals");
-        if (optionsResponse.ok) {
-          const optionsData = await optionsResponse.json();
-          setComponentOptions(optionsData);
-        }
+        const optionsResponse = await api.get("/api/component-optionals");
+        const optionsData = optionsResponse.data;
+        setComponentOptions(optionsData);
       } catch (error) {
         console.error("Error fetching data:", error);
+        
+        // Fallback data khi API thất bại
+        
+        // Fallback categories
+        const fallbackCategories = [
+          { categoryId: "CAT0001", categoryName: "Rings", description: "Wedding and engagement rings" }
+        ];
+        setCategories(fallbackCategories);
+        setSelectedCategory(fallbackCategories[0]);
+        
+        // Fallback components
+        const fallbackComponents = [
+          { componentId: "COMP001", componentName: "Stone", categoryId: "CAT0001" },
+          { componentId: "COMP002", componentName: "Metal", categoryId: "CAT0001" },
+          { componentId: "COMP003", componentName: "Band Style", categoryId: "CAT0001" },
+          { componentId: "COMP004", componentName: "Size", categoryId: "CAT0001" },
+          { componentId: "COMP005", componentName: "Engraving", categoryId: "CAT0001" },
+          { componentId: "COMP006", componentName: "Gift Wrapping", categoryId: "CAT0001" },
+          { componentId: "COMP007", componentName: "Quantity", categoryId: "CAT0001" }
+        ];
+        setComponents(fallbackComponents);
+        
+        // Create tabs
+        const componentTabs = fallbackComponents.map(comp => comp.componentName);
+        const allTabs = [...componentTabs, "Overview"];
+        setTabs(allTabs);
+        setActiveTab(componentTabs[0]);
+        
+        // Fallback component options
+        const fallbackOptions = [
+          // Stone options
+          { componentOptionalId: "OPT001", componentOptionalName: "Oval", componentId: "COMP001" },
+          { componentOptionalId: "OPT002", componentOptionalName: "Round", componentId: "COMP001" },
+          { componentOptionalId: "OPT003", componentOptionalName: "Princess", componentId: "COMP001" },
+          { componentOptionalId: "OPT004", componentOptionalName: "Emerald", componentId: "COMP001" },
+          
+          // Metal options
+          { componentOptionalId: "OPT005", componentOptionalName: "Yellow Gold", componentId: "COMP002" },
+          { componentOptionalId: "OPT006", componentOptionalName: "White Gold", componentId: "COMP002" },
+          { componentOptionalId: "OPT007", componentOptionalName: "Rose Gold", componentId: "COMP002" },
+          { componentOptionalId: "OPT008", componentOptionalName: "Platinum", componentId: "COMP002" },
+          
+          // Band Style options
+          { componentOptionalId: "OPT009", componentOptionalName: "Single Band", componentId: "COMP003" },
+          { componentOptionalId: "OPT010", componentOptionalName: "Double Band", componentId: "COMP003" },
+          { componentOptionalId: "OPT011", componentOptionalName: "Twisted Band", componentId: "COMP003" },
+          
+          // Size options
+          { componentOptionalId: "OPT012", componentOptionalName: "5", componentId: "COMP004" },
+          { componentOptionalId: "OPT013", componentOptionalName: "6", componentId: "COMP004" },
+          { componentOptionalId: "OPT014", componentOptionalName: "7", componentId: "COMP004" },
+          { componentOptionalId: "OPT015", componentOptionalName: "8", componentId: "COMP004" },
+          
+          // Engraving options
+          { componentOptionalId: "OPT016", componentOptionalName: "No", componentId: "COMP005" },
+          { componentOptionalId: "OPT017", componentOptionalName: "Yes", componentId: "COMP005" },
+          
+          // Gift Wrapping options
+          { componentOptionalId: "OPT018", componentOptionalName: "Yes", componentId: "COMP006" },
+          { componentOptionalId: "OPT019", componentOptionalName: "No", componentId: "COMP006" },
+          
+          // Quantity options
+          { componentOptionalId: "OPT020", componentOptionalName: "1", componentId: "COMP007" },
+          { componentOptionalId: "OPT021", componentOptionalName: "2", componentId: "COMP007" },
+          { componentOptionalId: "OPT022", componentOptionalName: "3", componentId: "COMP007" }
+        ];
+        setComponentOptions(fallbackOptions);
       }
     };
 
@@ -182,7 +261,7 @@ const SelectOptionSection = () => {
               className={`tab ${activeTab === tab ? "active" : ""}`}
               onClick={() => setActiveTab(tab)}
             >
-              {tab}
+              <span className="bodytext-6--no-margin">{tab}</span>
             </div>
           ))}
         </div>
@@ -192,23 +271,29 @@ const SelectOptionSection = () => {
       <div className="main">
         {/* Left side - Help section */}
         <div className="help">
-          <h2>Need help?</h2>
-          <p className="help-text">
+          <h2 className="bodytext-1--no-margin">Need help?</h2>
+          <p className="help-text bodytext-6--no-margin">
             There's no question too small or request too big for our client
             advisors.
             <br />
             We're always at your service.
           </p>
-          <button className="button solid" onClick={handleContactUs}>
+          <GlassButton 
+            theme="light"
+            width={274}
+            height={57}
+            fontSize={14}
+            onClick={handleContactUs}
+          >
             Contact Us
-          </button>
+          </GlassButton>
         </div>
 
         {/* Center - Content area */}
         <div
-          className="content"
+          className={`content ${activeTab === "Size" ? "content-size" : ""}`}
           style={{
-            "--grid-columns": Math.min(getCurrentTabOptions().length || 1, 6),
+            "--grid-columns": activeTab === "Size" ? 1 : Math.min(getCurrentTabOptions().length || 1, 6),
           }}
         >
           {activeTab === "Overview" ? (
@@ -218,9 +303,15 @@ const SelectOptionSection = () => {
                   .filter((tab) => tab !== "Overview")
                   .map((tabName) => {
                     const selection = userSelections[tabName];
-                    const displayValue = selection
-                      ? selection.componentOptionalName
-                      : defaultValues[tabName] || "No Selection";
+                    let displayValue;
+                    
+                    if (selection) {
+                      displayValue = selection.componentOptionalName;
+                    } else if (tabName === "Size") {
+                      displayValue = sizeValue.toString();
+                    } else {
+                      displayValue = defaultValues[tabName] || "No Selection";
+                    }
 
                     return (
                       <div key={tabName} className="overview-item">
@@ -231,6 +322,36 @@ const SelectOptionSection = () => {
                   })}
               </div>
             </div>
+          ) : activeTab === "Size" ? (
+            // Size slider
+            <>
+              <div className="size-slider-container">
+                <div className="size-slider-wrapper">
+                  <div 
+                    className="size-value bodytext-3--no-margin"
+                    style={{
+                      left: `${((sizeValue - 1) / 9) * 100}%`
+                    }}
+                  >
+                    {sizeValue}
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    value={sizeValue}
+                    onChange={(e) => handleSizeChange(parseInt(e.target.value))}
+                    className="size-slider"
+                    style={{
+                      '--progress-width': `${((sizeValue - 1) / 9) * 100}%`
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="find-size-link bodytext-6--no-margin">
+                Find your size →
+              </div>
+            </>
           ) : (
             getCurrentTabOptions().map((option) => (
               <div
@@ -244,7 +365,7 @@ const SelectOptionSection = () => {
                 onClick={() => handleOptionSelect(option)}
               >
                 <div className="circle"></div>
-                <div className="label">{option.componentOptionalName}</div>
+                <div className="label bodytext-3--no-margin">{option.componentOptionalName}</div>
               </div>
             ))
           )}
@@ -252,13 +373,27 @@ const SelectOptionSection = () => {
 
         {/* Right side - Summary */}
         <div className="summary">
-          <h2>From {currentPrice}</h2>
-          <button className="button outline" onClick={handleBookAppointment}>
+          <h2 className="bodytext-1--no-margin">From {currentPrice}</h2>
+          <GlassButton 
+            theme="custom"
+            width={274}
+            height={57}
+            fontSize={14}
+            onClick={handleBookAppointment}
+            className="book-appointment-button"
+          >
             Book An Appointment
-          </button>
-          <button className="button solid" onClick={handleOrderNow}>
+          </GlassButton>
+          <GlassButton 
+            theme="custom"
+            width={274}
+            height={57}
+            fontSize={14}
+            onClick={handleOrderNow}
+            className="order-now-button"
+          >
             Order Now
-          </button>
+          </GlassButton>
         </div>
       </div>
 

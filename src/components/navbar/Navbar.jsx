@@ -45,6 +45,15 @@ export default function Navbar() {
     }
   };
 
+  const handleContactClick = () => {
+    if (window.location.pathname === "/contact") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      sessionStorage.setItem('scrollToTop', 'true');
+      window.location.href = "/contact";
+    }
+  };
+
   return (
     <>
       {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
@@ -81,7 +90,7 @@ export default function Navbar() {
               </ul>
               <ul className="menu-list">
                 <li className="bodytext-3--no-margin">Location</li>
-                <li className="bodytext-3--no-margin">Contact us</li>
+                <li className="bodytext-3--no-margin" onClick={handleContactClick}>Contact us</li>
                 <li className="bodytext-3--no-margin">Account</li>
               </ul>
             </div>

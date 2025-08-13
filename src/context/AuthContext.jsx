@@ -1,7 +1,6 @@
 // src/context/AuthContext.js
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import axios from 'axios'; // Chỉ dùng cho API đăng nhập không cần token
-import api from '../api/axiosConfig'; // <-- SỬ DỤNG INSTANCE API ĐÃ CẤU HÌNH
+import { remoteApi } from '../api/axiosConfig'; // <-- SỬ DỤNG REMOTE API CHO AUTH
 
 const AuthContext = createContext(null);
 
@@ -10,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const login = async (username, password) => {
-        const response = await axios.post('http://localhost:8081/api/v1/auth/authenticate', { username, password });
+        const response = await remoteApi.post('/api/v1/auth/authenticate', { username, password });
 
         // SỬA LỖI Ở ĐÂY: Dùng đúng tên biến
         const { accessToken, refreshToken } = response.data;
@@ -18,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
 
-        const userProfileResponse = await api.get('/api/v1/users/me');
+        const userProfileResponse = await remoteApi.get('/api/v1/users/me');
         setUser(userProfileResponse.data);
         return userProfileResponse.data;
     };
@@ -34,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         const verifyUser = async () => {
             if (localStorage.getItem('accessToken')) {
                 try {
-                    const response = await api.get('/api/v1/users/me');
+                    const response = await remoteApi.get('/api/v1/users/me');
                     setUser(response.data);
                 } catch (error) {
                     // Interceptor đã tự động logout nếu cần

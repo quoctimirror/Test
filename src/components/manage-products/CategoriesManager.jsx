@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../../api/axiosConfig";
 
 const CategoriesManager = () => {
   const [categories, setCategories] = useState([]);
@@ -40,9 +41,9 @@ const CategoriesManager = () => {
   // API calls
   const fetchCategories = async () => {
     try {
-      const response = await fetch("/api/categories");
-      if (response.ok) {
-        const data = await response.json();
+      const response = await api.get("/api/categories");
+      if (response.status === 200) {
+        const data = response.data;
         console.log("API Categories data:", data); // Debug log
 
         // Transform API data to match our component structure if needed
@@ -131,22 +132,11 @@ const CategoriesManager = () => {
         // Update existing category
         console.log('Updating category with ID:', editingCategory.id);
         console.log('Form data being sent:', formData);
-        const response = await fetch(`/api/categories/${editingCategory.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await api.put(`/api/categories/${editingCategory.id}`, formData);
         console.log('Update response status:', response.status);
         
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Update failed with error:', errorText);
-        }
-
-        if (response.ok) {
-          const updatedCategory = await response.json();
+        if (response.status === 200) {
+          const updatedCategory = response.data;
           console.log('API response after update:', updatedCategory);
           const transformedCategory = {
             ...updatedCategory,
@@ -181,16 +171,10 @@ const CategoriesManager = () => {
         }
       } else {
         // Add new category
-        const response = await fetch("/api/categories", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await api.post("/api/categories", formData);
 
-        if (response.ok) {
-          const newCategory = await response.json();
+        if (response.status === 201 || response.status === 200) {
+          const newCategory = response.data;
           const transformedCategory = {
             ...newCategory,
             id: newCategory.categoryId || newCategory.id,
@@ -250,17 +234,13 @@ const CategoriesManager = () => {
     setErrorMessage(null);
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
-        const response = await fetch(`/api/categories/${id}`, {
-          method: "DELETE",
-        });
+        const response = await api.delete(`/api/categories/${id}`);
 
-        if (response.ok) {
+        if (response.status === 200 || response.status === 204) {
           setCategories(categories.filter((cat) => cat.id !== id));
         } else {
-          const errorText = await response.text();
-          console.error("Failed to delete category:", errorText);
-
-          setErrorMessage(errorText);
+          console.error("Failed to delete category:", response.data);
+          setErrorMessage(response.data?.message || "Failed to delete category");
         }
       } catch (error) {
         console.error("Error deleting category:", error);
