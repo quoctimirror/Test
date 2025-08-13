@@ -22,7 +22,7 @@
   align-items: center;
   justify-content: center;
   background: #f6f6f6;
-  padding: 40px;
+  padding: 0 0.3125% 0 2.5%;
   box-sizing: border-box;
 }
 
@@ -38,20 +38,21 @@
   width: 50%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 40px;
+  justify-content: flex-start;
+  padding: 0 0.3125% 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .carousel {
   width: 100%;
-  max-width: 952px;
-  height: 180px;
-  overflow-x: auto;
-  overflow-y: hidden;
+  max-width: none;
+  height: 100%;
+  overflow: visible;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  position: relative;
 }
 
 .carousel::-webkit-scrollbar {
@@ -61,15 +62,20 @@
 .carousel-track {
   display: flex;
   flex-direction: row;
-  gap: 8px;
-  height: 100%;
+  gap: 12px;
   align-items: center;
-  min-width: max-content;
+  width: fit-content;
+  flex-wrap: nowrap;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  will-change: transform;
 }
 
 .carousel img {
-  max-width: 80px;
-  max-height: 150px;
+  max-width: 140px;
+  max-height: 195px;
   opacity: 0.7;
   transition: opacity 0.3s, transform 0.3s, filter 0.3s;
   object-fit: contain;
@@ -93,21 +99,21 @@
     flex-direction: column;
     height: auto;
   }
-  
+
   .main-display,
   .carousel-wrapper {
     width: 100%;
   }
-  
+
   .main-display {
     height: 60vh;
     padding: 30px;
   }
-  
+
   .carousel-wrapper {
     padding: 20px;
   }
-  
+
   .carousel {
     height: 120px;
   }
@@ -145,7 +151,7 @@
   }
 
   .carousel img {
-    max-width: 70px;
+    max-width: 85px;
     max-height: 120px;
   }
 }
@@ -160,7 +166,7 @@
     min-height: 300px;
     padding: 15px;
   }
-  
+
   .carousel-wrapper {
     padding: 10px;
   }
@@ -170,7 +176,7 @@
   }
 
   .carousel img {
-    max-width: 55px;
+    max-width: 70px;
     max-height: 100px;
   }
 
@@ -195,7 +201,7 @@
   }
 
   .carousel img {
-    max-width: 45px;
+    max-width: 60px;
     max-height: 80px;
   }
 

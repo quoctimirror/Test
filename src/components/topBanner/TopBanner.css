@@ -1,0 +1,51 @@
+.top-banner {
+  width: 100%;
+  height: 36px;
+  background: #BC224C;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 50;
+  padding: 0 2.5%;
+  box-sizing: border-box;
+}
+
+.banner-content {
+  text-align: left;
+}
+
+.banner-text {
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .top-banner {
+    height: 34px;
+  }
+}
+
+@media (max-width: 992px) {
+  .top-banner {
+    height: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-banner {
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-banner {
+    height: 28px;
+  }
+}
+
+@media (max-width: 360px) {
+  .top-banner {
+    height: 26px;
+  }
+}

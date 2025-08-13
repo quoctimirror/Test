@@ -1,0 +1,186 @@
+.glass-button {
+  font-family: "BT Beau Sans", sans-serif;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glass theme (default) - for dark backgrounds */
+.glass-button--glass {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+/* Default theme - matches Button default theme */
+.glass-button--default {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  box-shadow: none;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+/* White theme - matches Button white theme */
+.glass-button--white {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+  color: white;
+}
+
+/* Pink theme - matches Button pink theme */
+.glass-button--pink {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+  color: white;
+}
+
+/* Outline theme - matches Button outline theme */
+.glass-button--outline {
+  background: white;
+  border: 1px solid #bc224c;
+  box-shadow: none;
+  color: #bc224c;
+}
+
+/* Light theme - for light backgrounds */
+.glass-button--light {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.75);
+}
+
+/* Pseudo-elements for glass theme only */
+.glass-button--glass::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.glass-button--glass::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+/* Glass theme hover */
+.glass-button--glass:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.8);
+  color: black;
+}
+
+/* Default theme hover - matches Button default theme */
+.glass-button--default:hover {
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  box-shadow: none;
+  color: white;
+}
+
+/* White theme hover - matches Button white theme */
+.glass-button--white:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: none;
+  color: black;
+}
+
+/* Pink theme hover - matches Button pink theme */
+.glass-button--pink:hover {
+  background: #bc224c;
+  border: 1px solid #bc224c;
+  box-shadow: none;
+  color: white;
+}
+
+/* Outline theme hover - matches Button outline theme */
+.glass-button--outline:hover {
+  background: #bc224c;
+  border: 1px solid #bc224c;
+  box-shadow: none;
+  color: white;
+}
+
+/* Light theme hover */
+.glass-button--light:hover {
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+  color: white;
+}
+
+/* Disabled states */
+.glass-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.glass-button--glass:disabled {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.glass-button--light:disabled {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.glass-button:disabled:hover {
+  /* Prevent hover effects when disabled */
+}
+
+.glass-button--glass:disabled:hover {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+}
+
+.glass-button--light:disabled:hover {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}

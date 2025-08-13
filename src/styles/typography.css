@@ -3,357 +3,400 @@
 
 /* BT Beau Sans Font Family */
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-Light.ttf') format('truetype');
-    /* src: url('@fonts/BTBeauSans/BT-BeauSans-Light.ttf') format('truetype'); */
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-Light.ttf") format("truetype");
+  /* src: url('@fonts/BTBeauSans/BT-BeauSans-Light.ttf') format('truetype'); */
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-LightItalic.ttf') format('truetype');
-    font-weight: 300;
-    font-style: italic;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-LightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-Italic.ttf') format('truetype');
-    font-weight: 400;
-    font-style: italic;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-MediumItalic.ttf') format('truetype');
-    font-weight: 500;
-    font-style: italic;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-MediumItalic.ttf") format("truetype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-BoldItalic.ttf') format('truetype');
-    font-weight: 700;
-    font-style: italic;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-ExtraBold.ttf') format('truetype');
-    font-weight: 800;
-    font-style: normal;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'BT Beau Sans';
-    src: url('@fonts/BTBeauSans/BT-BeauSans-ExtraBoldItalic.ttf') format('truetype');
-    font-weight: 800;
-    font-style: italic;
-    font-display: swap;
+  font-family: "BT Beau Sans";
+  src: url("@fonts/BTBeauSans/BT-BeauSans-ExtraBoldItalic.ttf")
+    format("truetype");
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
 }
 
 /* Saol Display Font Family */
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-LightItalic.ttf') format('truetype');
-    font-weight: 300;
-    font-style: italic;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-LightItalic.ttf")
+    format("truetype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-RegularItalic.ttf') format('truetype');
-    font-weight: 400;
-    font-style: italic;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-RegularItalic.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-MediumItalic.ttf') format('truetype');
-    font-weight: 500;
-    font-style: italic;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-MediumItalic.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-BoldItalic.ttf') format('truetype');
-    font-weight: 700;
-    font-style: italic;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-BoldItalic.ttf")
+    format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-Semibold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-Semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Saol Display';
-    src: url('@fonts/SaolDisplay/TTF/SaolDisplay-SemiboldItalic.ttf') format('truetype');
-    font-weight: 600;
-    font-style: italic;
-    font-display: swap;
+  font-family: "Saol Display";
+  src: url("@fonts/SaolDisplay/TTF/SaolDisplay-SemiboldItalic.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
 }
 
 /* CSS Variables */
 :root {
-    --font-saol: 'Saol Display', serif;
-    --font-bt-beau-sans: 'BT Beau Sans', sans-serif;
+  --font-saol: "Saol Display", serif;
+  --font-bt-beau-sans: "BT Beau Sans", sans-serif;
 }
 
 /* Typography Classes */
 .heading-1 {
-    font-family: var(--font-saol);
-    font-size: 64px;
-    font-weight: 300;
-    /* light */
-    line-height: 0.9;
-    /* 90% */
-    letter-spacing: -0.02em;
-    /* -2% */
-    margin-bottom: 12px;
-    /*list spacing*/
-    margin-top: 24px;
-    /*paragraph spacing*/
+  font-family: var(--font-saol);
+  font-size: 64px;
+  font-weight: 300;
+  /* light */
+  line-height: 0.9;
+  /* 90% */
+  letter-spacing: -0.02em;
+  /* -2% */
+  margin-bottom: 12px;
+  /*list spacing*/
+  margin-top: 24px;
+  /*paragraph spacing*/
 }
 
 /* heading-2 ---> 3 */
 .heading-2 {
-    font-family: var(--font-saol);
-    font-size: 64px;
-    font-style: italic;
-    font-weight: 300;
-    /* regular */
-    line-height: 0.9;
-    /* 90% */
-    letter-spacing: -2%;
-    /* 0% */
-    margin-bottom: 12px;
-    margin-top: 24px;
+  font-family: var(--font-saol);
+  font-size: 64px;
+  font-style: italic;
+  font-weight: 300;
+  /* regular */
+  line-height: 0.9;
+  /* 90% */
+  letter-spacing: -0.02em;
+  /* 0% */
+  margin-bottom: 12px;
+  margin-top: 24px;
 }
 
 .heading-3 {
-    font-family: var(--font-saol);
-    font-size: 24px;
-    font-weight: 400;
-    /* regular */
-    line-height: 0.9;
-    /* 90% */
-    letter-spacing: 0;
-    /* 0% */
-    margin-bottom: 12px;
-    margin-top: 24px;
+  font-family: var(--font-saol);
+  font-size: 24px;
+  font-weight: 400;
+  /* regular */
+  line-height: 0.9;
+  /* 90% */
+  letter-spacing: 0;
+  /* 0% */
+  margin-bottom: 12px;
+  margin-top: 24px;
 }
 
 .bodytext-1 {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 20px;
-    font-weight: 400;
-    /* regular */
-    line-height: 1.2;
-    /* 120% */
-    letter-spacing: 0;
-    margin-bottom: 12px;
-    margin-top: 24px;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 20px;
+  font-weight: 400;
+  /* regular */
+  line-height: 1.3;
+  /* 120% */
+  letter-spacing: 0;
+  margin-bottom: 12px;
+  margin-top: 24px;
 }
 
 .bodytext-2 {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 16px;
-    font-weight: 700;
-    /* bold */
-    line-height: 1.2;
-    /* 120% */
-    letter-spacing: 0;
-    margin-bottom: 12px;
-    margin-top: 24px;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 16px;
+  font-weight: 700;
+  /* bold */
+  line-height: 1.3;
+  /* 120% */
+  letter-spacing: 0;
+  margin-bottom: 12px;
+  margin-top: 24px;
 }
 
 .bodytext-3 {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 16px;
-    font-weight: 400;
-    /* regular */
-    line-height: 1.2;
-    /* 120% */
-    letter-spacing: 0;
-    margin-bottom: 12px;
-    margin-top: 24px;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 16px;
+  font-weight: 400;
+  /* regular */
+  line-height: 1.3;
+  /* 120% */
+  letter-spacing: 0;
+  margin-bottom: 12px;
+  margin-top: 24px;
 }
 
 .bodytext-4 {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 14px;
-    font-weight: 400;
-    /* regular */
-    line-height: 1.2;
-    /* 120% */
-    letter-spacing: 0;
-    margin-bottom: 12px;
-    margin-top: 24px;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 14px;
+  font-weight: 400;
+  /* regular */
+  line-height: 1.3;
+  /* 120% */
+  letter-spacing: 0;
+  margin-bottom: 12px;
+  margin-top: 12px;
 }
 
 .bodytext-5 {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 14px;
-    font-weight: 400;
-    /* regular */
-    font-style: italic;
-    /* italic regular */
-    line-height: 1.2;
-    /* 120% */
-    letter-spacing: 0;
-    /* 0% */
-    margin-bottom: 0;
-    /* List spacing = 0 */
-    margin-top: 24px;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 14px;
+  font-weight: 400;
+  /* regular */
+  font-style: italic;
+  /* italic regular */
+  line-height: 1.3;
+  /* 120% */
+  letter-spacing: 0;
+  /* 0% */
+  margin-bottom: 0;
+  /* List spacing = 0 */
+  margin-top: 12px;
+}
+
+.bodytext-6 {
+  font-family: var(--font-bt-beau-sans);
+  font-size: 12px;
+  font-weight: 400;
+  /* regular */
+  line-height: 1;
+  /* 120% */
+  letter-spacing: 1.3;
+  /* 0% */
+  margin-bottom: 0;
+  /* List spacing = 0 */
+  margin-top: 12px;
 }
 
 /* Optional: Reset margins if you want to control spacing manually */
 .heading-1--no-margin {
-    font-family: var(--font-saol);
-    font-size: 64px;
-    font-weight: 300;
-    line-height: 0.9;
-    letter-spacing: -0.02em;
-    margin: 0;
+  font-family: var(--font-saol);
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  margin: 0;
 }
 
 .heading-2--no-margin {
-    font-family: var(--font-saol);
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 0.9;
-    letter-spacing: 0;
-    margin: 0;
+  font-family: var(--font-saol);
+  font-size: 64px;
+  font-style: italic;
+  font-weight: 300;
+  /* regular */
+  line-height: 0.9;
+  /* 90% */
+  letter-spacing: -0.02em;
+  /* 0% */
+}
+
+.heading-3--no-margin {
+  font-family: var(--font-saol);
+  font-size: 24px;
+  font-weight: 400;
+  /* regular */
+  line-height: 0.9;
+  /* 90% */
+  letter-spacing: 0;
+  /* 0% */
 }
 
 .bodytext-1--no-margin {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: 0;
-    margin: 0;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0;
+  margin: 0;
 }
 
 .bodytext-2--no-margin {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: 0;
-    margin: 0;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0;
+  margin: 0;
 }
 
 .bodytext-3--no-margin {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: 0;
-    margin: 0;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0;
+  margin: 0;
 }
 
 .bodytext-4--no-margin {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: 0;
-    margin: 0;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0;
+  margin: 0;
 }
 
 .bodytext-5--no-margin {
-    font-family: var(--font-bt-beau-sans);
-    font-size: 14px;
-    font-weight: 400;
-    font-style: italic;
-    line-height: 1.2;
-    letter-spacing: 0;
-    margin: 0;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.3;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.bodytext-6--no-margin {
+  font-family: var(--font-bt-beau-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0;
+  margin: 0;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .heading-1 {
-        font-size: 48px;
-    }
+  .heading-1 {
+    font-size: 48px;
+  }
 
-    .heading-2 {
-        font-size: 20px;
-    }
+  .heading-2 {
+    font-size: 20px;
+  }
 
-    .bodytext-1 {
-        font-size: 18px;
-    }
+  .bodytext-1 {
+    font-size: 18px;
+  }
 }

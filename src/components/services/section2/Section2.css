@@ -85,43 +85,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .section2-subtitle {
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 120%;
-  letter-spacing: 0%;
-  text-align: center;
   color: #797979;
+  text-align: center;
   text-transform: uppercase;
-  margin: 0;
 }
 
 .section2-title {
-  font-family: "Saol Display", serif;
-  font-size: 64px;
-  font-weight: 300;
-  line-height: 90%;
-  letter-spacing: -3%;
-  text-align: center;
   color: #000000;
-  margin: 0;
+  text-align: center;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .section2-description {
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 120%;
-  letter-spacing: 0%;
-  text-align: center;
   color: #797979;
-  margin: 0;
+  text-align: center;
   max-width: 400px;
 }
 
@@ -160,16 +142,16 @@
     padding: 3rem;
     max-width: 600px;
   }
-  
+
   .section2-title {
     font-size: 56px;
     letter-spacing: -2.5%;
   }
-  
+
   .section2-subtitle {
     font-size: 15px;
   }
-  
+
   .section2-description {
     font-size: 14px;
     max-width: 350px;
@@ -180,26 +162,26 @@
   .section2-wrapper {
     height: 300vh;
   }
-  
+
   .section2-content {
     padding: 2.5rem;
     max-width: 550px;
   }
-  
+
   .section2-title {
     font-size: 48px;
     letter-spacing: -2%;
   }
-  
+
   .section2-subtitle {
     font-size: 15px;
   }
-  
+
   .section2-description {
     font-size: 13px;
     max-width: 320px;
   }
-  
+
   .section2-cta {
     padding: 18px 32px;
     font-size: 13px;
@@ -253,7 +235,7 @@
     letter-spacing: -1.5%;
     white-space: normal;
   }
-  
+
   .section2-subtitle {
     font-size: 14px;
   }
@@ -262,7 +244,7 @@
     font-size: 13px;
     max-width: 350px;
   }
-  
+
   .section2-cta {
     padding: 16px 28px;
     font-size: 13px;
@@ -291,7 +273,7 @@
     height: 45vh;
     min-height: 300px;
   }
-  
+
   .section2-content-layer {
     padding: 2rem 0;
   }
@@ -304,7 +286,7 @@
     font-size: 32px;
     letter-spacing: -1%;
   }
-  
+
   .section2-subtitle {
     font-size: 13px;
   }
@@ -314,22 +296,22 @@
     max-width: 300px;
     line-height: 1.5;
   }
-  
+
   .section2-cta {
     padding: 14px 24px;
     font-size: 12px;
     height: 42px;
     min-width: 110px;
   }
-  
+
   .section2-header-description {
     gap: 20px;
   }
-  
+
   .section2-full-content {
     gap: 28px;
   }
-  
+
   .section2-header {
     gap: 12px;
   }
@@ -340,7 +322,7 @@
     height: 40vh;
     min-height: 280px;
   }
-  
+
   .section2-content {
     padding: 1rem;
   }
@@ -349,7 +331,7 @@
     font-size: 28px;
     letter-spacing: -0.5%;
   }
-  
+
   .section2-subtitle {
     font-size: 12px;
   }
@@ -358,7 +340,7 @@
     font-size: 11px;
     max-width: 250px;
   }
-  
+
   .section2-cta {
     padding: 12px 20px;
     font-size: 11px;

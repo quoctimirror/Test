@@ -38,7 +38,6 @@
   margin: 0 0 12px 0;
   color: #E0E0E0;
   text-transform: uppercase;
-  letter-spacing: 2px;
 }
 
 .showroom-title {
@@ -53,7 +52,6 @@
   text-align: center;
   margin: 0 0 36px 0;
   color: #E0E0E0;
-  letter-spacing: 0.5px;
 }
 
 .explore-button {
@@ -67,6 +65,7 @@
     inset 0 -1px 0 rgba(255, 255, 255, 0.1),
     inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
   padding: 0;
+  margin: 0;
   color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -127,7 +126,6 @@
   }
 
   .showroom-description {
-    font-size: 15px;
     margin-bottom: 44px;
   }
 
@@ -148,7 +146,6 @@
   }
 
   .showroom-description {
-    font-size: 15px;
     margin-bottom: 40px;
   }
 
@@ -166,7 +163,6 @@
   }
 
   .showroom-subtitle {
-    font-size: 13px;
     margin-bottom: 14px;
   }
 
@@ -176,7 +172,6 @@
   }
 
   .showroom-description {
-    font-size: 14px;
     line-height: 140%;
     margin-bottom: 36px;
   }
@@ -195,8 +190,6 @@
   }
 
   .showroom-subtitle {
-    font-size: 12px;
-    letter-spacing: 1.5px;
     margin-bottom: 12px;
   }
 
@@ -208,7 +201,6 @@
   }
 
   .showroom-description {
-    font-size: 13px;
     line-height: 135%;
     margin-bottom: 32px;
   }
@@ -226,7 +218,6 @@
 
 @media (max-width: 360px) {
   .showroom-subtitle {
-    font-size: 11px;
     margin-bottom: 10px;
   }
 
@@ -237,7 +228,6 @@
   }
 
   .showroom-description {
-    font-size: 12px;
     margin-bottom: 28px;
   }
 

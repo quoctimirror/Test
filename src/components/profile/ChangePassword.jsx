@@ -3,6 +3,7 @@ import api from '../../api/axiosConfig';
 import './ChangePassword.css';
 import EyeIconSvg from '../../assets/images/icons/EyeIcon.svg';
 import EyeSlashIconSvg from '../../assets/images/icons/EyeSlashIcon.svg';
+import GlassButton from '../common/GlassButton';
 
 const ChangePassword = ({ onClose }) => {
     const [passwordData, setPasswordData] = useState({
@@ -192,9 +193,15 @@ const ChangePassword = ({ onClose }) => {
                         <button type="button" onClick={onClose} className="cancel-button">
                             Cancel
                         </button>
-                        <button type="submit" disabled={isLoading} className="submit-button">
+                        <GlassButton 
+                            width={150} 
+                            height={50} 
+                            theme="outline"
+                            onClick={() => {}} 
+                            className="submit-button"
+                        >
                             {isLoading ? 'Saving...' : 'Save Changes'}
-                        </button>
+                        </GlassButton>
                     </div>
                 </form>
             </div>

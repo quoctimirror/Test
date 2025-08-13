@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import Logo from "@assets/images/Logo.svg";
-import Vector2 from "@assets/images/Vector_2.svg";
-import ArrowRight from "@assets/images/arrow-right.svg";
+import SoundIcon from "@assets/images/button/sound.svg";
+import ArrowButton from "@assets/images/button/arrow-button.svg";
+import TopBanner from "@components/topBanner/TopBanner";
 import ImmersiveShowroom from "@components/immersiveShowroom/ImmersiveShowroom";
 import HoverExpandSection from "@components/hoverExpandSection/HoverExpandSection";
 import ContactUs from "@components/contactUs/ContactUs";
@@ -13,9 +14,9 @@ export default function HomePage() {
 
   useEffect(() => {
     // Check if we need to scroll to top
-    if (sessionStorage.getItem('scrollToTop') === 'true') {
+    if (sessionStorage.getItem("scrollToTop") === "true") {
       window.scrollTo(0, 0);
-      sessionStorage.removeItem('scrollToTop');
+      sessionStorage.removeItem("scrollToTop");
     }
   }, []);
 
@@ -53,6 +54,7 @@ export default function HomePage() {
 
   return (
     <>
+      <TopBanner />
       <div className="scroll-container">
         <div className="homepage">
           <div className="gradient-initial">
@@ -67,21 +69,21 @@ export default function HomePage() {
           </div>
 
           <div className="elements-to-fade" ref={elementsToFadeRef}>
-            <div className="tagline-section">
+            {/* <div className="tagline-section">
               <div className="tagline-top">Exploring The Universe Of</div>
               <div className="tagline-bottom">
                 <span className="future-text">Future</span>
                 <span className="diamond-text">Diamond</span>
               </div>
-            </div>
+            </div> */}
             <div className="scroll-down">
               <button>
-                <img src={ArrowRight} alt="Arrow Right" />
+                <img src={ArrowButton} alt="Arrow Button" />
               </button>
             </div>
             <div className="vetor-button">
               <button>
-                <img src={Vector2} alt="Vetor 2" />
+                <img src={SoundIcon} alt="Sound" />
               </button>
             </div>
           </div>

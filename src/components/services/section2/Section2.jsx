@@ -1,9 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Section2.css";
+import GlassButton from "../../common/GlassButton";
 
 const Section2 = () => {
+  const navigate = useNavigate();
   const sectionRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  const handleProductCareClick = () => {
+    window.scrollTo(0, 0);
+    navigate("/services/detail?tab=product-care-repair");
+  };
+
+  const handleTradeInClick = () => {
+    window.scrollTo(0, 0);
+    navigate("/services/detail?tab=trade-in-upgrade");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,17 +97,30 @@ const Section2 = () => {
               <div className="section2-full-content">
                 <div className="section2-header-description">
                   <div className="section2-header">
-                    <span className="section2-subtitle">EXPLORE OUR</span>
-                    <h2 className="section2-title">PRODUCT CARE & REPAIR</h2>
+                    <span className="section2-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section2-title heading-1--no-margin">
+                      PRODUCT CARE & REPAIR
+                    </h2>
                   </div>
-                  <p className="section2-description">
+                  <p className="section2-description bodytext-6--no-margin">
                     Extend the life and brilliance of your jewelry with
                     <br /> Mirror's professional care and repair services,
                     <br /> tailored to keep each piece as radiant as the day
                     <br /> you received it.
                   </p>
                 </div>
-                <button className="section2-cta">See more</button>
+                <GlassButton
+                  className="section2-cta"
+                  theme="default"
+                  width={137}
+                  height={57}
+                  fontSize={14}
+                  onClick={handleProductCareClick}
+                >
+                  See more
+                </GlassButton>
               </div>
             </div>
           </div>
@@ -104,7 +130,9 @@ const Section2 = () => {
             style={{
               opacity: scrollProgress > 0.5 ? (scrollProgress - 0.5) * 2 : 0,
               transform: `translateY(${
-                scrollProgress > 0.5 ? (1 - (scrollProgress - 0.5) * 2) * 50 : 50
+                scrollProgress > 0.5
+                  ? (1 - (scrollProgress - 0.5) * 2) * 50
+                  : 50
               }px)`,
               pointerEvents: scrollProgress > 0.5 ? "auto" : "none",
             }}
@@ -113,16 +141,33 @@ const Section2 = () => {
               <div className="section2-full-content">
                 <div className="section2-header-description">
                   <div className="section2-header">
-                    <span className="section2-subtitle">EXPLORE OUR</span>
-                    <h2 className="section2-title">TRADE IN</h2>
+                    <span className="section2-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section2-title heading-1--no-margin">
+                      TRADE IN
+                    </h2>
                   </div>
-                  <p className="section2-description">
-                    Elevate your gift with our signature wrapping — a carefully
-                    crafted presentation that captures the essence of refined
-                    giving.
+                  <p className="section2-description bodytext-6--no-margin">
+                    Mirror’s “Reclaim & Renew” program allows you to
+                    <br />
+                    trade in eligible pieces in the future toward
+                    <br />
+                    upgraded designs— a promise of continuous
+                    <br />
+                    evolution in your jewelry journey.
                   </p>
                 </div>
-                <button className="section2-cta">See more</button>
+                <GlassButton
+                  className="section2-cta"
+                  theme="default"
+                  width={137}
+                  height={57}
+                  fontSize={14}
+                  onClick={handleTradeInClick}
+                >
+                  See more
+                </GlassButton>
               </div>
             </div>
           </div>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import "@pages/support.css";
 import ReturnExchange from "./ReturnExchange";
 import SizingGuide from "./SizingGuide";
@@ -7,7 +8,16 @@ import FAQs from "./FAQs";
 import Section6 from "@components/services/section6/Section6";
 
 const Support = () => {
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("return-exchange");
+
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab');
+    const validTabs = ['return-exchange', 'sizing-guide', 'warranty-info', 'faqs'];
+    if (tabFromUrl && validTabs.includes(tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams]);
 
   const tabs = [
     {

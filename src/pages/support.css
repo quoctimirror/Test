@@ -126,7 +126,6 @@
 .support-tab {
   background: none;
   border: none;
-  padding: 10px 5px;
   cursor: pointer;
   font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, sans-serif;
@@ -141,6 +140,7 @@
   position: relative;
   /* Đảm bảo có thể tương tác */
   display: inline-block;
+  padding: 0 0;
 }
 
 .support-tab::after {

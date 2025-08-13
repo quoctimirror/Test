@@ -241,11 +241,10 @@ html {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 } */
 .faq-item {
-  padding: 36px 0;
-  /* Bỏ position: relative; vì không còn ::after */
-
-  /* Thêm lại border-bottom trực tiếp */
+  border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
+  padding: 36px 0;
+  transition: border-color 0.3s ease;
 }
 
 .faq-item:first-child {
@@ -280,35 +279,45 @@ html {
   z-index: 105;
 }
 
-.faq-question:hover {
+.faq-item:hover .faq-question {
   background: transparent;
-  color: #bb234c;
+  color: #BC224C;
 }
+
+.faq-item:hover .faq-icon {
+  background-image: url('/src/assets/images/button/arrow-FAQs-pink.svg');
+  opacity: 1;
+}
+
+
+.faq-item:hover,
+.faq-item.active {
+  border-top-color: #BC224C;
+  border-bottom-color: #BC224C;
+}
+
+.faq-item.active .faq-question {
+  color: #BC224C;
+}
+
+.faq-item.active .faq-icon {
+  background-image: url('/src/assets/images/button/arrow-FAQs-pink.svg');
+  opacity: 1;
+}
+
 
 .faq-icon {
   position: relative;
   width: 35px;
   height: 35px;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
   transform-origin: center;
   overflow: visible;
-}
-
-.faq-icon::before {
-  content: "";
-  position: absolute;
-  /* 1. Sử dụng hình vuông để tạo chevron đối xứng */
-  width: 12px;
-  height: 12px;
-  /* 2. Điều chỉnh vị trí để căn giữa và không bị cắt */
-  top: 8px;
-  left: 10px;
-  border: none;
-  border-bottom: 1.5px solid #000;
-  border-right: 1.5px solid #000;
-  border-radius: 1px; /* Có thể bỏ đi nếu không cần bo góc nhỏ này */
-  transform: rotate(45deg);
-  transition: all 0.3s ease; /* Thêm transition để màu sắc chuyển mượt hơn khi hover */
+  background-image: url('/src/assets/images/button/arrow-FAQs.svg');
+  background-size: 19px 19px;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.5;
 }
 
 .faq-icon.expanded {

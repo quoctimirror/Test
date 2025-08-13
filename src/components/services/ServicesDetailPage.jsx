@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import "@pages/servicesDetail.css";
 import ProductCareRepair from "./ProductCareRepair";
 import TradeInUpgrade from "./TradeInUpgrade";
 import Section6 from "./section6/Section6";
 
 const ServicesDetailPage = () => {
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("product-care-repair");
+
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab');
+    if (tabFromUrl && (tabFromUrl === 'product-care-repair' || tabFromUrl === 'trade-in-upgrade')) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams]);
 
   const tabs = [
     {

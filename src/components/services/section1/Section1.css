@@ -38,7 +38,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   text-align: center;
   color: #ffffff;
   opacity: 1;
@@ -46,31 +46,18 @@
 }
 
 .section1-title {
-  font-family: "Saol Display", serif;
-  font-size: 50px;
-  font-weight: 400;
-  font-style: normal;
   color: #ffffff;
-  width: 421px;
-  height: 34px;
-  margin: 0;
-  letter-spacing: 0%;
-  line-height: 105%;
+  width: auto;
   text-align: center;
   text-transform: uppercase;
   opacity: 1;
+  white-space: nowrap;
 }
 
 .section1-description {
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  font-style: normal;
   color: white;
   width: 597px;
   height: 66px;
-  line-height: 110%;
-  letter-spacing: 0%;
   text-align: center;
   margin: 0;
   opacity: 1;
@@ -79,12 +66,10 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
   .section1-title {
-    font-size: 45px;
-    width: 380px;
+    width: auto;
   }
 
   .section1-description {
-    font-size: 15px;
     width: 540px;
     height: auto;
   }
@@ -99,15 +84,12 @@
     height: 80vh;
     min-height: 600px;
   }
-  
+
   .section1-title {
-    font-size: 40px;
-    width: 350px;
-    height: auto;
+    width: auto;
   }
 
   .section1-description {
-    font-size: 15px;
     width: 500px;
     height: auto;
   }
@@ -123,11 +105,11 @@
     height: 70vh;
     min-height: 500px;
   }
-  
+
   .section1-container {
     padding: 0 20px;
   }
-  
+
   .section1-content {
     width: 100%;
     max-width: 500px;
@@ -135,19 +117,15 @@
   }
 
   .section1-title {
-    font-size: 36px;
-    letter-spacing: -0.5%;
     width: 100%;
     max-width: 400px;
     height: auto;
   }
 
   .section1-description {
-    font-size: 14px;
     width: 100%;
     max-width: 450px;
     height: auto;
-    line-height: 1.4;
   }
 }
 
@@ -156,11 +134,11 @@
     height: 60vh;
     min-height: 450px;
   }
-  
+
   .section1-container {
     padding: 0 15px;
   }
-  
+
   .section1-content {
     width: 100%;
     max-width: 350px;
@@ -168,18 +146,15 @@
   }
 
   .section1-title {
-    font-size: 28px;
     width: 100%;
     max-width: 280px;
     height: auto;
   }
 
   .section1-description {
-    font-size: 13px;
     width: 100%;
     max-width: 320px;
     height: auto;
-    line-height: 1.5;
   }
 }
 
@@ -188,11 +163,11 @@
     height: 55vh;
     min-height: 400px;
   }
-  
+
   .section1-container {
     padding: 0 12px;
   }
-  
+
   .section1-content {
     width: 100%;
     max-width: 300px;
@@ -200,14 +175,12 @@
   }
 
   .section1-title {
-    font-size: 24px;
     width: 100%;
     max-width: 250px;
     height: auto;
   }
 
   .section1-description {
-    font-size: 12px;
     width: 100%;
     max-width: 280px;
     height: auto;

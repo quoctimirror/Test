@@ -16,8 +16,8 @@ const HoverExpandSection = () => {
   return (
     <div className="hover-expand-section">
       <div className="hover-expand-header">
-        <h2 className="hover-expand-title">EXPLORE THE GEMS</h2>
-        <p className="hover-expand-subtitle">
+        <h2 className="heading-1 hover-expand-title">EXPLORE THE GEMS</h2>
+        <p className="bodytext-3 hover-expand-subtitle">
           Discover a variety of our pieces.
         </p>
         <button className="explore-more-button bodytext-4" onClick={handleExploreMoreClick}>
