@@ -1,6 +1,7 @@
 .new-cut-page {
   width: 100%;
   background: white;
+  position: relative;
 }
 
 /* Hero Section */
@@ -8,6 +9,12 @@
   width: 100%;
   height: 100vh;
   background: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform-origin: center center;
 }
 
 .hero-content {
@@ -72,7 +79,7 @@
 .hero-image img {
   width: 100%;
   height: 100%;
-  object-fit: none;
+  object-fit: cover;
   object-position: center;
 }
 
@@ -81,6 +88,12 @@
   width: 100%;
   padding: 240px 0 120px 0;
   background: #f6f6f6;
+  position: relative;
+  z-index: 10;
+  margin-top: 100vh; /* Start below the hero */
+  /* box-shadow: 0 -50px 100px rgba(0, 0, 0, 0.15);
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px; */
 }
 
 .article-container {
@@ -207,8 +220,8 @@
 
 @media (max-width: 992px) {
   .new-cut-hero {
-    height: auto;
-    padding: 120px 0 80px 0;
+    height: 100vh;
+    position: fixed;
   }
 
   .hero-content {
@@ -267,8 +280,8 @@
 
 @media (max-width: 768px) {
   .new-cut-hero {
-    height: auto;
-    padding: 100px 0 60px 0;
+    height: 100vh;
+    position: fixed;
   }
 
   .hero-content {
@@ -314,8 +327,8 @@
 
 @media (max-width: 480px) {
   .new-cut-hero {
-    height: auto;
-    padding: 80px 0 50px 0;
+    height: 100vh;
+    position: fixed;
   }
 
   .hero-content {
@@ -368,7 +381,8 @@
 
 @media (max-width: 360px) {
   .new-cut-hero {
-    padding: 60px 0 40px 0;
+    height: 100vh;
+    position: fixed;
   }
 
   .hero-content {

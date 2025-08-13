@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import "./NewCutComponent.css";
 
 const NewCutComponent = () => {
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.pageYOffset;
+      const windowHeight = window.innerHeight;
+      
+      if (heroRef.current) {
+        // Fade out hero as user scrolls
+        const opacity = Math.max(0, 1 - (scrolled / (windowHeight * 0.8)));
+        const scale = 1 - (scrolled / windowHeight) * 0.1;
+        
+        heroRef.current.style.opacity = opacity;
+        heroRef.current.style.transform = `scale(${scale})`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="new-cut-page">
       {/* Hero Section */}
-      <section className="new-cut-hero">
+      <section className="new-cut-hero" ref={heroRef}>
         <div className="hero-content">
           <div className="hero-text">
             <div className="hero-text-main">
