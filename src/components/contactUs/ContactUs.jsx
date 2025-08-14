@@ -6,8 +6,13 @@ const ContactUs = () => {
   const navigate = useNavigate();
 
   const handleContactUsClick = () => {
-    sessionStorage.setItem('scrollToTop', 'true');
-    navigate("/support");
+    const contactSection = document.getElementById('contact-section');
+    if (contactSection) {
+      contactSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
   };
 
   return (
