@@ -48,31 +48,64 @@ const BODMember = () => {
     return () => clearInterval(interval);
   }, [currentIndex]);
 
+  // Reset track position sau mỗi lần React re-render
+  useEffect(() => {
+    if (carouselTrackRef.current && !isAnimating.current) {
+      gsap.set(carouselTrackRef.current, { x: 0 });
+    }
+  }, [currentIndex]);
+
   const updateCarousel = () => {
     if (isAnimating.current || !carouselTrackRef.current) return;
 
     isAnimating.current = true;
     const track = carouselTrackRef.current;
-    const firstMember = track.firstElementChild;
-    const memberWidth = firstMember.offsetWidth + window.innerWidth * 0.00625; // width + gap
+    const members = Array.from(track.children);
+    const firstMember = members[0];
+    const lastMember = members[members.length - 1]; // Hidden member
+    const currentHighlighted = members[1]; // Currently highlighted 
+    const nextHighlighted = members[2]; // Will be highlighted next
+    
+    const memberWidth = firstMember.offsetWidth + window.innerWidth * 0.00625;
 
-    // Animate sliding left with GSAP
-    gsap.to(track, {
-      x: -memberWidth,
-      duration: 0.8,
-      ease: "power2.inOut",
+    // Create timeline để sync tất cả animations
+    const tl = gsap.timeline({
       onComplete: () => {
-        // After slide animation, move first member to end and reset position
-        track.appendChild(firstMember);
-        gsap.set(track, { x: 0 });
-        
-        // Update index to trigger re-render with new highlighted state
+        // CHỈ update state, KHÔNG touch DOM trong animation
         const nextIndex = (currentIndex + 1) % teamMembers.length;
         setCurrentIndex(nextIndex);
-        
         isAnimating.current = false;
-      },
+      }
     });
+
+    // 1. Slide toàn bộ track sang trái (ảnh 1 biến mất từ từ)
+    tl.to(track, {
+      x: -memberWidth,
+      duration: 0.8,
+      ease: "power2.inOut"
+    }, 0);
+
+    // 2. Hidden member (ảnh 6) xuất hiện từ từ CÙNG LÚC
+    if (lastMember && lastMember.classList.contains('hidden-member')) {
+      tl.fromTo(lastMember, 
+        { width: 0, opacity: 0 },
+        { width: 294, opacity: 0.7, duration: 0.8, ease: "power2.inOut" }, 0
+      );
+      tl.fromTo(lastMember.querySelector('.member-photo'),
+        { width: 0, height: 0 },
+        { width: 294, height: 441, duration: 0.8, ease: "power2.inOut" }, 0
+      );
+    }
+
+    // 3. Current highlighted thu nhỏ về normal size
+    tl.to(currentHighlighted.querySelector('.member-photo'),
+      { width: 294, height: 441, duration: 0.8, ease: "power2.inOut" }, 0
+    );
+
+    // 4. Next highlighted zoom to lên
+    tl.to(nextHighlighted.querySelector('.member-photo'),
+      { width: 600, height: 902, duration: 0.8, ease: "power2.inOut" }, 0
+    );
   };
 
   const getVisibleMembers = () => {
