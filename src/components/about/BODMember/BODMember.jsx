@@ -199,7 +199,6 @@ const BODMember = () => {
           0
         );
       } else if (isLastMember) {
-        // Hidden member appears from right (giống carouselvip.html ghost card)
         tl.fromTo(
           member,
           { opacity: 0 },
