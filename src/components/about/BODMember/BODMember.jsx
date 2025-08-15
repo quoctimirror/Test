@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
 import "./BODMember.css";
 
 const BODMember = () => {
@@ -36,23 +37,54 @@ const BODMember = () => {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselTrackRef = useRef(null);
+  const isAnimating = useRef(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % teamMembers.length);
+      updateCarousel();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [teamMembers.length]);
+  }, [currentIndex]);
+
+  const updateCarousel = () => {
+    if (isAnimating.current || !carouselTrackRef.current) return;
+
+    isAnimating.current = true;
+    const track = carouselTrackRef.current;
+    const firstMember = track.firstElementChild;
+    const memberWidth = firstMember.offsetWidth + window.innerWidth * 0.00625; // width + gap
+
+    // Animate sliding left with GSAP
+    gsap.to(track, {
+      x: -memberWidth,
+      duration: 0.8,
+      ease: "power2.inOut",
+      onComplete: () => {
+        // After slide animation, move first member to end and reset position
+        track.appendChild(firstMember);
+        gsap.set(track, { x: 0 });
+        
+        // Update index to trigger re-render with new highlighted state
+        const nextIndex = (currentIndex + 1) % teamMembers.length;
+        setCurrentIndex(nextIndex);
+        
+        isAnimating.current = false;
+      },
+    });
+  };
 
   const getVisibleMembers = () => {
     const visible = [];
-    for (let i = 0; i < 5; i++) {
+    // Tạo 6 members: 5 visible + 1 ẩn bên phải để slide vào
+    for (let i = 0; i < 6; i++) {
       const memberIndex = (currentIndex + i) % teamMembers.length;
       visible.push({
         ...teamMembers[memberIndex],
         isHighlighted: i === 1, // Vị trí thứ 2 từ trái (index 1)
-        position: i
+        carouselPosition: i, // Dùng carouselPosition thay vì ghi đè position
+        isHidden: i === 5 // Member thứ 6 ẩn ban đầu
       });
     }
     return visible;
@@ -67,11 +99,11 @@ const BODMember = () => {
     <div className="bod-member-section">
       {/* Team Members Carousel */}
       <div className="team-carousel">
-        <div className="team-carousel-track">
+        <div className="team-carousel-track" ref={carouselTrackRef}>
           {getVisibleMembers().map((member, index) => (
             <div
               key={`${member.name}-${index}`}
-              className={`team-member ${member.isHighlighted ? 'highlighted' : ''}`}
+              className={`team-member ${member.isHighlighted ? 'highlighted' : ''} ${member.isHidden ? 'hidden-member' : ''}`}
             >
               <div className="member-photo">
                 <img
@@ -93,7 +125,7 @@ const BODMember = () => {
 
       {/* Leader Quote */}
       <div className="leader-quote">
-        <p className="quote-text">
+        <p className="bodytext-3--no-margin">
           "As intelligence becomes abundant through technology, 
           what remains rare is genuine emotion. Mirror exists to 
           preserve that emotion — to cherish every loving moment 
@@ -106,7 +138,7 @@ const BODMember = () => {
 
       {/* Leader Details */}
       <div className="leader-details">
-        <span className="leader-position">{getHighlightedMember().position}</span>
+        <h3 className="heading-3--no-margin">{getHighlightedMember().position}</h3>
         <h2 className="leader-name">{getHighlightedMember().name}</h2>
       </div>
     </div>
