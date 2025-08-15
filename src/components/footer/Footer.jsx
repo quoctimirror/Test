@@ -79,14 +79,14 @@ const Footer = () => {
           </div>
 
           <div className="footer-right">
-            <div className="footer-section">
+            <div className="footer-section" id="contact-section">
               <h3 className="heading-3 footer-title">CONTACT</h3>
               <ul className="contact-info">
                 <li><a className="bodytext-3" href="#">Contact us</a></li>
                 <li><a className="bodytext-3" href="mailto:support@mirrorfuturediamond.com">support@mirrorfuturediamond.com</a></li>
                 <li><a className="bodytext-3" href="tel:+97.130.0938">+97.130.0938</a></li>
                 <li><a className="bodytext-3" href="#">Book an appointment</a></li>
-                <li><a className="bodytext-3" href="#">Location</a></li>
+                <li><a className="bodytext-3" href="/locations">Location</a></li>
               </ul>
             </div>
           </div>

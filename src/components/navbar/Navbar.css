@@ -333,6 +333,8 @@
   opacity: 1;
   display: inline-block;
   width: fit-content;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 0, 0, 0.6);
+  font-weight: 500;
 }
 
 .menu-popup .menu-list li:hover {
@@ -354,6 +356,7 @@
 
 .menu-popup .menu-list li:hover {
   color: white;
+  text-shadow: 0 0 12px rgba(0, 0, 0, 1), 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
 .menu-popup.active .menu-list li:hover::after {

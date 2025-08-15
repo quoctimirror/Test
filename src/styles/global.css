@@ -12,4 +12,11 @@
 body {
   margin: 0;
   /* Chúng ta đã xóa display:flex và place-items:center từ đây */
+  overscroll-behavior: none;
+  -webkit-overscroll-behavior: none;
+}
+
+html {
+  overscroll-behavior: none;
+  -webkit-overscroll-behavior: none;
 }

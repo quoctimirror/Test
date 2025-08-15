@@ -36,6 +36,7 @@ const AllNewsPage = lazy(() => import("@pages/AllNewsPage"));
 const NewCutPage = lazy(() => import("@pages/NewCutPage"));
 const ContactPage = lazy(() => import("@pages/ContactPage"));
 const AboutPage = lazy(() => import("@pages/AboutPage"));
+const LocationsPage = lazy(() => import("@pages/LocationsPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -93,6 +94,8 @@ export default function AppRoutes() {
           <Route path="/contact" element={<ContactPage />} />
           
           <Route path="/about" element={<AboutPage />} />
+          
+          <Route path="/locations" element={<LocationsPage />} />
           
           <Route path="/news" element={<AllNewsPage />} />
           
