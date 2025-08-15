@@ -8,6 +8,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Isolate component scope */
+  isolation: isolate;
+  /* Reset any inherited styles */
+  position: relative;
+  z-index: 1;
 }
 
 /* Team Members Carousel */
@@ -69,16 +74,14 @@
 }
 
 .team-member.hidden-member {
-  width: 0;
   opacity: 0;
-  overflow: hidden;
   /* GSAP sẽ animate từ state này */
 }
 
 .team-member.hidden-member .member-photo {
-  width: 0;
-  height: 0;
-  /* GSAP sẽ animate từ state này */
+  width: 294px;
+  height: 441px;
+  /* Giữ kích thước như normal member */
 }
 
 .member-photo img {

@@ -61,51 +61,85 @@ const BODMember = () => {
     isAnimating.current = true;
     const track = carouselTrackRef.current;
     const members = Array.from(track.children);
-    const firstMember = members[0];
-    const lastMember = members[members.length - 1]; // Hidden member
-    const currentHighlighted = members[1]; // Currently highlighted 
-    const nextHighlighted = members[2]; // Will be highlighted next
     
-    const memberWidth = firstMember.offsetWidth + window.innerWidth * 0.00625;
-
-    // Create timeline để sync tất cả animations
+    // Inspired by carouselvip.html - smooth infinite loop
     const tl = gsap.timeline({
       onComplete: () => {
-        // CHỈ update state, KHÔNG touch DOM trong animation
+        // Move first element to end (như trong carouselvip.html)
+        const firstChild = track.firstElementChild;
+        track.appendChild(firstChild);
+        
+        // Reset track position
+        gsap.set(track, { x: 0 });
+        
+        // Update state
         const nextIndex = (currentIndex + 1) % teamMembers.length;
         setCurrentIndex(nextIndex);
         isAnimating.current = false;
       }
     });
 
-    // 1. Slide toàn bộ track sang trái (ảnh 1 biến mất từ từ)
+    // Calculate positions (based on carouselvip.html slot system)
+    const containerWidth = track.parentElement.offsetWidth;
+    const gap = containerWidth * 0.00625; // 0.625% gap như CSS
+    const baseWidth = 294;
+    const baseHeight = 441;
+    const highlightedWidth = 600;
+    const highlightedHeight = 902;
+    
+    // Smooth slide all elements to left (giống carouselvip.html line 122-125)
     tl.to(track, {
-      x: -memberWidth,
-      duration: 0.8,
-      ease: "power2.inOut"
+      x: -(baseWidth + gap),
+      duration: 0.95,
+      ease: "power3.out" // easeOutCubic như carouselvip
     }, 0);
 
-    // 2. Hidden member (ảnh 6) xuất hiện từ từ CÙNG LÚC
-    if (lastMember && lastMember.classList.contains('hidden-member')) {
-      tl.fromTo(lastMember, 
-        { width: 0, opacity: 0 },
-        { width: 294, opacity: 0.7, duration: 0.8, ease: "power2.inOut" }, 0
-      );
-      tl.fromTo(lastMember.querySelector('.member-photo'),
-        { width: 0, height: 0 },
-        { width: 294, height: 441, duration: 0.8, ease: "power2.inOut" }, 0
-      );
-    }
+    // Concurrent animations for each member (giống carouselvip.html concurrent approach)
+    members.forEach((member, index) => {
+      const photo = member.querySelector('.member-photo');
+      if (!photo) return;
 
-    // 3. Current highlighted thu nhỏ về normal size
-    tl.to(currentHighlighted.querySelector('.member-photo'),
-      { width: 294, height: 441, duration: 0.8, ease: "power2.inOut" }, 0
-    );
+      // Current state detection
+      const isCurrentlyHighlighted = member.classList.contains('highlighted');
+      const willBeHighlighted = index === 2; // Will be highlighted next
+      const isFirstMember = index === 0; // Will slide out
+      const isLastMember = index === members.length - 1; // Hidden member
 
-    // 4. Next highlighted zoom to lên
-    tl.to(nextHighlighted.querySelector('.member-photo'),
-      { width: 600, height: 902, duration: 0.8, ease: "power2.inOut" }, 0
-    );
+      // Apply size changes during slide (concurrent với track movement)
+      if (isCurrentlyHighlighted) {
+        // Currently highlighted shrinks to normal
+        tl.to(photo, {
+          width: baseWidth,
+          height: baseHeight,
+          duration: 0.95,
+          ease: "power3.out"
+        }, 0);
+      } else if (willBeHighlighted) {
+        // Next highlighted grows
+        tl.to(photo, {
+          width: highlightedWidth,
+          height: highlightedHeight,
+          duration: 0.95,
+          ease: "power3.out"
+        }, 0);
+      }
+
+      // Fade effects
+      if (isFirstMember) {
+        // First member fades out as it slides left
+        tl.to(member, {
+          opacity: 0,
+          duration: 0.95,
+          ease: "power3.out"
+        }, 0);
+      } else if (isLastMember) {
+        // Hidden member appears from right (giống carouselvip.html ghost card)
+        tl.fromTo(member, 
+          { opacity: 0 },
+          { opacity: 0.7, duration: 0.95, ease: "power3.out" }, 0
+        );
+      }
+    });
   };
 
   const getVisibleMembers = () => {
