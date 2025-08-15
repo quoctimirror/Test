@@ -318,6 +318,7 @@
   /* 90% */
   letter-spacing: -0.02em;
   /* 0% */
+  margin: 0;
 }
 
 .heading-3--no-margin {
@@ -329,6 +330,7 @@
   /* 90% */
   letter-spacing: 0;
   /* 0% */
+  margin: 0;
 }
 
 .bodytext-1--no-margin {

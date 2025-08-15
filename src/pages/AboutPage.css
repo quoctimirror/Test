@@ -2,5 +2,5 @@
 .about-page {
   width: 100%;
   min-height: 100vh;
-  background: #fdfdfd;
+  /* Loại bỏ background để các component tự control */
 }
