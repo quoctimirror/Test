@@ -177,13 +177,19 @@
   opacity: 0.7;
 }
 
-/* Leader Quote */
-.leader-quote {
+/* Leader Quote Fixed - positioned based on 4th member initial position */
+.leader-quote-fixed {
   position: absolute;
-  bottom: 120px;
-  right: 400px;
-  max-width: 350px;
+  bottom: 32vh;
+  left: calc(
+    2.5% + 294px + 0.625% + 294px + 0.625% + 294px + 0.625% + 294px + 0.625%
+  ); /* Position thứ 4: padding + 4 members + 4 gaps */
+  max-width: min(455px, 35vw); /* Responsive max-width */
   z-index: 1;
+  background: rgba(253, 253, 253, 0.95);
+  /* padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
 }
 
 .quote-text {
@@ -196,16 +202,18 @@
   text-align: left;
 }
 
-/* Leader Details */
+/* Leader Details - positioned at member thứ 3 */
 .leader-details {
   position: absolute;
-  bottom: 80px;
-  right: 80px;
+  bottom: 14.5vh; /* 155px responsive */
+  left: calc(
+    2.5% + 294px + 0.625% + 294px + 0.625% + 294px + 0.625%
+  ); /* Position thứ 3: padding + 3 members + 3 gaps */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
-  min-width: 200px;
+  gap: 1.6vh; /* 16px responsive */
+  min-width: min(200px, 20vw); /* Responsive min-width */
   z-index: 1;
 }
 
