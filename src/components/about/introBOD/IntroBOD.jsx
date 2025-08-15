@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import "./InroBOD.css";
+import "./IntroBOD.css";
 
 const InroBOD = () => {
   const containerRef = useRef(null);

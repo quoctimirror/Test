@@ -183,7 +183,7 @@
   bottom: 32vh;
   left: calc(
     2.5% + 294px + 0.625% + 294px + 0.625% + 294px + 0.625% + 294px + 0.625%
-  ); /* Position thứ 4: padding + 4 members + 4 gaps */
+  );
   max-width: min(455px, 35vw); /* Responsive max-width */
   z-index: 1;
   background: rgba(253, 253, 253, 0.95);
