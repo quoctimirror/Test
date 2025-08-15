@@ -55,6 +55,19 @@ const BODMember = () => {
     }
   }, [currentIndex]);
 
+  // Handle resize events for responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      if (!isAnimating.current && carouselTrackRef.current) {
+        // Force re-render on resize to update sizes
+        setCurrentIndex(prev => prev);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const updateCarousel = () => {
     if (isAnimating.current || !carouselTrackRef.current) return;
 
@@ -79,13 +92,40 @@ const BODMember = () => {
       }
     });
 
-    // Calculate positions (based on carouselvip.html slot system)
+    // Calculate responsive positions (based on carouselvip.html slot system)
     const containerWidth = track.parentElement.offsetWidth;
     const gap = containerWidth * 0.00625; // 0.625% gap như CSS
-    const baseWidth = 294;
-    const baseHeight = 441;
-    const highlightedWidth = 600;
-    const highlightedHeight = 902;
+    
+    // Responsive sizing based on screen width
+    const screenWidth = window.innerWidth;
+    let baseWidth, baseHeight, highlightedWidth, highlightedHeight;
+    
+    if (screenWidth <= 480) {
+      baseWidth = 110;
+      baseHeight = 160;
+      highlightedWidth = Math.min(220, screenWidth * 0.4); // Max 40% screen width
+      highlightedHeight = Math.min(320, screenWidth * 0.6);
+    } else if (screenWidth <= 768) {
+      baseWidth = 140;
+      baseHeight = 200;
+      highlightedWidth = Math.min(280, screenWidth * 0.35);
+      highlightedHeight = Math.min(400, screenWidth * 0.5);
+    } else if (screenWidth <= 992) {
+      baseWidth = 180;
+      baseHeight = 260;
+      highlightedWidth = Math.min(360, screenWidth * 0.32);
+      highlightedHeight = Math.min(520, screenWidth * 0.45);
+    } else if (screenWidth <= 1200) {
+      baseWidth = 240;
+      baseHeight = 340;
+      highlightedWidth = Math.min(480, screenWidth * 0.3);
+      highlightedHeight = Math.min(680, screenWidth * 0.42);
+    } else {
+      baseWidth = 294;
+      baseHeight = 441;
+      highlightedWidth = 600;
+      highlightedHeight = 902;
+    }
     
     // Smooth slide all elements to left (giống carouselvip.html line 122-125)
     tl.to(track, {
@@ -120,6 +160,23 @@ const BODMember = () => {
           width: highlightedWidth,
           height: highlightedHeight,
           duration: 0.95,
+          ease: "power3.out"
+        }, 0);
+      }
+
+      // Color effects - restore color immediately when becoming highlighted
+      if (willBeHighlighted) {
+        // Remove grayscale filter immediately when entering highlighted position
+        tl.set(member, {
+          filter: "grayscale(0%)",
+          opacity: 1
+        }, 0);
+      } else if (isCurrentlyHighlighted) {
+        // Apply grayscale when leaving highlighted position
+        tl.to(member, {
+          filter: "grayscale(100%)",
+          opacity: 0.7,
+          duration: 0.2,
           ease: "power3.out"
         }, 0);
       }
