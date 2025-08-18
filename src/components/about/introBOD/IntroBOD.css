@@ -34,139 +34,212 @@
 /* Header label - Cố định */
 .intro-bod-section .intro-header {
   position: absolute;
-  top: 20%;
+  top: 32%; /* Use percentage for all screen sizes */
   left: 50%;
   transform: translateX(-50%);
   z-index: 10; /* Luôn ở trên cùng */
 }
 
+/* For 1920x1080 specifically */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .intro-bod-section .intro-header {
+    top: 346px; /* Fixed pixels for 1920x1080 */
+  }
+}
+
 /* Main text lines - Di chuyển từ dưới lên */
 .intro-bod-section .intro-text {
   position: absolute;
-  top: 50%;
+  top: calc(32% + 16px + 24px); /* header height ~16px + gap 24px */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: row; /* Thay đổi thành hàng ngang */
   align-items: center;
   justify-content: center;
-  gap: 40px; /* Gap giữa các từ */
   white-space: nowrap; /* Không cho xuống dòng */
+}
+
+/* For 1920x1080 specifically */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .intro-bod-section .intro-text {
+    top: 386px; /* 346px + ~16px header height + 24px gap */
+  }
 }
 
 .intro-bod-section .intro-line {
   will-change: transform, opacity; /* Optimize cho animation */
-  /* Initial state - bắt đầu từ dưới và ẩn */
-  transform: translateY(400px);
-  opacity: 0;
+  /* Initial state - default bottom gap */
+  transform: translateY(calc(100vh - 32vh - 24px - 150px));
+  opacity: 1;
 }
 
+/* For 1920x1080 specifically */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .intro-bod-section .intro-line {
+    transform: translateY(590px); /* 960px (bottom:120px) - 370px = 590px */
+  }
+}
 
-/* Description - Di chuyển từ dưới lên */
+/* Typewriter text reveal effect */
+.intro-bod-section .text-reveal-wrapper {
+  display: inline-block;
+}
+
+.intro-bod-section .text-reveal-char {
+  display: inline-block;
+  will-change: color;
+  /* Initial color is light */
+  color: rgba(0, 0, 0, 0.1);
+  transition: color 0.3s ease;
+}
+
+.intro-bod-section .text-reveal-char.revealed {
+  color: rgba(0, 0, 0, 1);
+}
+
+/* Description - Animation từ bottom lên vị trí cách intro-text 120px */
 .intro-bod-section .intro-description {
   position: absolute;
-  bottom: 25%;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  max-width: 600px;
+  top: calc(32% + 16px + 24px); /* Same as intro-text final position */
+  left: 50%;
+  transform: translateX(-50%) translateY(590px); /* Initial bottom position - will be overridden by JS */
+  margin: 0;
+  width: 90%;
+  max-width: 609px;
   text-align: center;
-  will-change: transform, opacity; /* Optimize cho animation */
-  /* Initial state - bắt đầu từ dưới và ẩn */
-  transform: translateY(700px);
+  will-change: transform, opacity; /* Animate both transform and opacity */
+  /* Initial state - ở vị trí bottom nhưng bị ẩn */
   opacity: 0;
+  box-sizing: border-box;
+}
+
+/* For 1920x1080 specifically */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .intro-bod-section .intro-description {
+    top: 386px; /* Same as intro-text final position */
+    transform: translateX(-50%) translateY(590px); /* Initial - will be animated by JS */
+    width: 609px;
+  }
+}
+
+.intro-bod-section .intro-description p {
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .intro-bod-section .light-text {
-  color: rgba(0, 0, 0, 0.10); /* Màu nhạt cho phần còn lại */
-}
-
-.intro-bod-section .intro-line-2,
-.intro-bod-section .intro-line-3 {
-  color: rgba(0, 0, 0, 0.10) !important; /* Màu nhạt cho BEHIND và MIRROR */
+  color: rgba(0, 0, 0, 0.1); /* Màu nhạt cho phần còn lại */
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1440px) {
+  .intro-bod-section .intro-header {
+    top: 30%;
+  }
+  
+  .intro-bod-section .intro-text {
+    top: calc(30% + 14px + 22px); /* header height ~14px + gap 22px */
+  }
+  
   .intro-bod-section .intro-line {
-    font-size: 100px;
+    transform: translateY(calc(100vh - 30vh - 14px - 22px - 140px)); /* bottom: 140px */
   }
   
-  .intro-bod-section .intro-line-2 {
-    margin-left: 80px;
+  .intro-bod-section .intro-description {
+    top: calc(30% + 14px + 22px); /* Same as intro-text final position */
+  }
+}
+
+@media (max-width: 1200px) {
+  .intro-bod-section .intro-header {
+    top: 28%;
   }
   
-  .intro-bod-section .intro-line-3 {
-    margin-left: -60px;
+  .intro-bod-section .intro-text {
+    top: calc(28% + 14px + 20px); /* header height ~14px + gap 20px */
+  }
+  
+  .intro-bod-section .intro-line {
+    font-size: 80px;
+    transform: translateY(calc(100vh - 28vh - 14px - 20px - 160px)); /* bottom: 160px */
+  }
+
+  .intro-bod-section .intro-description {
+    top: calc(28% + 14px + 20px); /* Same as intro-text final position */
+    width: 80%;
+    max-width: 550px;
   }
 }
 
 @media (max-width: 992px) {
+  .intro-bod-section .intro-header {
+    top: 26%;
+  }
+
+  .intro-bod-section .intro-text {
+    top: calc(26% + 12px + 18px); /* header height ~12px + gap 18px */
+  }
+
   .intro-bod-section .intro-line {
-    font-size: 80px;
+    font-size: 60px;
+    transform: translateY(calc(100vh - 26vh - 12px - 18px - 180px)); /* bottom: 180px */
   }
-  
-  .intro-bod-section .intro-line-2 {
-    margin-left: 60px;
-  }
-  
-  .intro-bod-section .intro-line-3 {
-    margin-left: -40px;
-  }
-  
+
   .intro-bod-section .intro-description {
+    top: calc(26% + 12px + 18px); /* Same as intro-text final position */
+    width: 75%;
     max-width: 500px;
-    bottom: 20%;
   }
 }
 
 @media (max-width: 768px) {
+  .intro-bod-section .intro-header {
+    top: 24%;
+  }
+
+  .intro-bod-section .intro-text {
+    top: calc(24% + 12px + 16px); /* header height ~12px + gap 16px */
+  }
+
   .intro-bod-section .intro-line {
-    font-size: 60px;
+    font-size: 48px;
+    transform: translateY(calc(100vh - 24vh - 12px - 16px - 150px)); /* bottom: 150px */
   }
-  
-  .intro-bod-section .intro-line-2 {
-    margin-left: 40px;
-  }
-  
-  .intro-bod-section .intro-line-3 {
-    margin-left: -30px;
-  }
-  
+
   .intro-bod-section .intro-description {
+    top: calc(24% + 12px + 16px); /* Same as intro-text final position */
+    width: 85%;
     max-width: 400px;
-    bottom: 15%;
   }
-  
-  .intro-bod-section .intro-description .bodytext-3--no-margin {
+
+  .intro-bod-section .intro-description p {
     font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
-  .intro-bod-section .intro-line {
-    font-size: 48px;
-  }
-  
-  .intro-bod-section .intro-line-2 {
-    margin-left: 30px;
-  }
-  
-  .intro-bod-section .intro-line-3 {
-    margin-left: -20px;
-  }
-  
-  .intro-bod-section .intro-description {
-    max-width: 350px;
-    bottom: 10%;
-  }
-  
-  .intro-bod-section .intro-description .bodytext-3--no-margin {
-    font-size: 13px;
-  }
-  
-  .intro-bod-section .intro-label {
+  .intro-bod-section .intro-header {
+    top: 20%;
     font-size: 12px;
-    letter-spacing: 2px;
+  }
+
+  .intro-bod-section .intro-text {
+    top: calc(20% + 10px + 12px); /* header height ~10px + gap 12px */
+  }
+
+  .intro-bod-section .intro-line {
+    font-size: 32px;
+    transform: translateY(calc(100vh - 20vh - 10px - 12px - 100px)); /* bottom: 100px */
+  }
+
+  .intro-bod-section .intro-description {
+    top: calc(20% + 10px + 12px); /* Same as intro-text final position */
+    width: 90%;
+    max-width: 350px;
+  }
+
+  .intro-bod-section .intro-description p {
+    font-size: 12px;
+    line-height: 1.4;
   }
 }
