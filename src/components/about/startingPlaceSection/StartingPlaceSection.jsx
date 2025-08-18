@@ -89,7 +89,7 @@ const StartingPlaceSection = () => {
                   <span
                     key={index}
                     style={{
-                      color: isRevealed ? '#000' : 'rgba(0, 0, 0, 0.1)',
+                      color: isRevealed ? '#fff' : 'rgba(255, 255, 255, 0.25)',
                       transition: 'color 0.1s ease'
                     }}
                   >
@@ -111,7 +111,7 @@ const StartingPlaceSection = () => {
                   <span
                     key={index}
                     style={{
-                      color: isRevealed ? '#000' : 'rgba(0, 0, 0, 0.1)',
+                      color: isRevealed ? '#fff' : 'rgba(255, 255, 255, 0.25)',
                       transition: 'color 0.1s ease'
                     }}
                   >
@@ -133,7 +133,7 @@ const StartingPlaceSection = () => {
                   <span
                     key={index}
                     style={{
-                      color: isRevealed ? '#000' : 'rgba(0, 0, 0, 0.1)',
+                      color: isRevealed ? '#fff' : 'rgba(255, 255, 255, 0.25)',
                       transition: 'color 0.05s ease'
                     }}
                   >
