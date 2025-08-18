@@ -4,7 +4,6 @@
   height: 300vh; /* Scroll height for animation */
   background: linear-gradient(180deg, rgba(246, 246, 246, 1) 0%, rgba(236, 54, 103, 1) 50%, rgba(0, 0, 0, 1) 100%);
   position: relative;
-  z-index: 20;
 }
 
 .mirrorverse-sticky-wrapper {
