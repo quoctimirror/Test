@@ -2,7 +2,7 @@
 .bod-member-section {
   width: 100%;
   height: 100vh;
-  background: #fdfdfd;
+  background: #F6F6F6;
   padding: 0;
   box-sizing: border-box;
   display: flex;
@@ -21,7 +21,7 @@
   height: 100%;
   overflow: hidden;
   padding: 0 2.5%;
-  background: #fdfdfd;
+  background: #F6F6F6;
   display: flex;
   align-items: center;
   justify-content: center;
