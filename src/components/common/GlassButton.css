@@ -164,10 +164,6 @@
   color: rgba(0, 0, 0, 0.3);
 }
 
-.glass-button:disabled:hover {
-  /* Prevent hover effects when disabled */
-}
-
 .glass-button--glass:disabled:hover {
   background: rgba(255, 255, 255, 0.02);
   border-color: rgba(255, 255, 255, 0.1);

@@ -1,13 +1,12 @@
-/* MirrorverseSection Component Styles */
-.mirrorverse-section {
+/* SharedSection Component Styles */
+.shared-section {
   width: 100%;
   height: 300vh; /* Scroll height for animation */
-  background: linear-gradient(180deg, rgba(246, 246, 246, 1) 0%, rgba(236, 54, 103, 1) 50%, rgba(0, 0, 0, 1) 100%);
   position: relative;
-  z-index: 20;
+  isolation: isolate;
 }
 
-.mirrorverse-sticky-wrapper {
+.shared-sticky-wrapper {
   position: sticky;
   top: 0;
   width: 100%;
@@ -16,98 +15,117 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background-image: url('/about/bg2.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-.mirrorverse-content {
+.shared-content {
   width: 100%;
+  max-width: 800px;
+  padding: 0 40px;
   text-align: center;
   position: relative;
-  transform: translateY(50vh); /* Start from bottom */
+  transform: translateY(50vh) scale(0.8); /* Start from bottom and smaller */
   opacity: 0; /* Initially hidden */
   will-change: transform, opacity;
 }
 
 /* Header */
-.mirrorverse-header {
+.shared-header {
   margin-bottom: 12px;
 }
 
-.mirrorverse-header .bodytext-3--no-margin {
+.shared-header .bodytext-3--no-margin {
   text-transform: uppercase;
   /* Color controlled by JS */
 }
 
 /* Main Title */
-.mirrorverse-title {
+.shared-title {
   margin-bottom: 60px;
 }
 
 /* Description */
-.mirrorverse-description {
+.shared-description {
   max-width: 609px;
   margin: 0 auto 60px auto;
 }
 
-.mirrorverse-description .bodytext-1--no-margin {
+.shared-description .bodytext-1--no-margin {
   word-wrap: break-word;
   white-space: normal;
   /* Color controlled by JS */
 }
 
 /* Buttons */
-.mirrorverse-buttons {
+.shared-buttons {
   margin-top: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: 20px;
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-  .mirrorverse-content {
+  .shared-content {
     max-width: 900px;
     padding: 0 30px;
+  }
+
+  .shared-title .heading-1--no-margin {
+    font-size: clamp(40px, 7vw, 100px);
   }
 }
 
 @media (max-width: 768px) {
-  .mirrorverse-content {
+  .shared-content {
     padding: 0 20px;
   }
 
-  .mirrorverse-header {
+  .shared-header {
     margin-bottom: 40px;
   }
 
-  .mirrorverse-title {
+  .shared-title {
     margin-bottom: 60px;
   }
 
-  .mirrorverse-description {
+  .shared-title .heading-1--no-margin {
+    font-size: clamp(32px, 8vw, 60px);
+  }
+
+  .shared-description {
     margin-bottom: 40px;
   }
 
-  .mirrorverse-buttons {
+  .shared-buttons {
     flex-direction: column;
     gap: 15px;
   }
 }
 
 @media (max-width: 480px) {
-  .mirrorverse-content {
+  .shared-content {
     padding: 0 15px;
   }
 
-  .mirrorverse-header {
+  .shared-header {
     margin-bottom: 30px;
   }
 
-  .mirrorverse-title {
+  .shared-title {
     margin-bottom: 40px;
   }
 
-  .mirrorverse-description {
+  .shared-title .heading-1--no-margin {
+    font-size: clamp(24px, 10vw, 40px);
+  }
+
+  .shared-description {
     margin-bottom: 30px;
   }
 }

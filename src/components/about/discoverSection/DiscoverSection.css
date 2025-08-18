@@ -1,0 +1,217 @@
+/* DiscoverSection Component Styles */
+.discover-section {
+  width: 100%;
+  min-height: 200vh;
+  background: #f6f6f6;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Abstract Geometric Shapes */
+.discover-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.shape {
+  position: absolute;
+  background: rgba(128, 128, 128, 0.8);
+}
+
+/* Shape positioning and sizes based on the image */
+.shape-1 {
+  width: 190px;
+  height: 240px;
+  top: 20%;
+  left: 2%;
+}
+
+.shape-2 {
+  width: 75px;
+  height: 75px;
+  top: 35%;
+  left: 20%;
+  background: rgba(200, 200, 200, 0.6);
+}
+
+.shape-3 {
+  width: 180px;
+  height: 220px;
+  top: 40%;
+  left: 38%;
+}
+
+.shape-4 {
+  width: 125px;
+  height: 100px;
+  top: 8%;
+  right: 8%;
+}
+
+.shape-5 {
+  width: 175px;
+  height: 240px;
+  top: 18%;
+  right: 2%;
+}
+
+.shape-6 {
+  width: 85px;
+  height: 85px;
+  top: 70%;
+  left: 32%;
+  background: rgba(200, 200, 200, 0.6);
+}
+
+.shape-7 {
+  width: 240px;
+  height: 200px;
+  bottom: 15%;
+  left: 20%;
+}
+
+.shape-8 {
+  width: 140px;
+  height: 160px;
+  bottom: 15%;
+  right: 5%;
+}
+
+/* Button Container */
+.discover-button-container {
+  position: absolute;
+  bottom: 240px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .shape-1 {
+    width: 160px;
+    height: 180px;
+  }
+
+  .shape-3 {
+    width: 120px;
+    height: 150px;
+  }
+
+  .shape-5 {
+    width: 160px;
+    height: 200px;
+  }
+
+  .shape-7 {
+    width: 200px;
+    height: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .shape-1 {
+    width: 120px;
+    height: 140px;
+    top: 10%;
+    left: 5%;
+  }
+
+  .shape-2 {
+    width: 60px;
+    height: 60px;
+    top: 20%;
+    left: 25%;
+  }
+
+  .shape-3 {
+    width: 100px;
+    height: 120px;
+    top: 60%;
+    left: 35%;
+  }
+
+  .shape-4 {
+    width: 80px;
+    height: 80px;
+    top: 8%;
+    right: 10%;
+  }
+
+  .shape-5 {
+    width: 120px;
+    height: 160px;
+    top: 25%;
+    right: 5%;
+  }
+
+  .shape-6 {
+    width: 70px;
+    height: 90px;
+    bottom: 55%;
+    left: 30%;
+  }
+
+  .shape-7 {
+    width: 160px;
+    height: 120px;
+    bottom: 15%;
+    left: 15%;
+  }
+
+  .shape-8 {
+    width: 100px;
+    height: 100px;
+    bottom: 30%;
+    right: 10%;
+  }
+}
+
+@media (max-width: 480px) {
+  .shape-1 {
+    width: 80px;
+    height: 100px;
+  }
+
+  .shape-2 {
+    width: 40px;
+    height: 40px;
+  }
+
+  .shape-3 {
+    width: 70px;
+    height: 90px;
+  }
+
+  .shape-4 {
+    width: 60px;
+    height: 60px;
+  }
+
+  .shape-5 {
+    width: 80px;
+    height: 120px;
+  }
+
+  .shape-6 {
+    width: 50px;
+    height: 60px;
+  }
+
+  .shape-7 {
+    width: 120px;
+    height: 80px;
+  }
+
+  .shape-8 {
+    width: 70px;
+    height: 70px;
+  }
+}

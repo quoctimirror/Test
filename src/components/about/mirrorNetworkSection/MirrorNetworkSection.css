@@ -1,13 +1,13 @@
-/* MirrorverseSection Component Styles */
-.mirrorverse-section {
+/* MirrorNetworkSection Component Styles */
+.mirror-network-section {
   width: 100%;
   height: 300vh; /* Scroll height for animation */
-  background: linear-gradient(180deg, rgba(246, 246, 246, 1) 0%, rgba(236, 54, 103, 1) 50%, rgba(0, 0, 0, 1) 100%);
+  background: #F6F6F6;
   position: relative;
-  z-index: 20;
+  isolation: isolate;
 }
 
-.mirrorverse-sticky-wrapper {
+.mirror-network-sticky-wrapper {
   position: sticky;
   top: 0;
   width: 100%;
@@ -18,8 +18,10 @@
   overflow: hidden;
 }
 
-.mirrorverse-content {
+.mirror-network-content {
   width: 100%;
+  max-width: 1200px;
+  padding: 0 40px;
   text-align: center;
   position: relative;
   transform: translateY(50vh); /* Start from bottom */
@@ -28,86 +30,77 @@
 }
 
 /* Header */
-.mirrorverse-header {
+.mirror-network-header {
   margin-bottom: 12px;
 }
 
-.mirrorverse-header .bodytext-3--no-margin {
+.mirror-network-header .bodytext-3--no-margin {
   text-transform: uppercase;
   /* Color controlled by JS */
 }
 
 /* Main Title */
-.mirrorverse-title {
+.mirror-network-title {
   margin-bottom: 60px;
 }
 
 /* Description */
-.mirrorverse-description {
+.mirror-network-description {
   max-width: 609px;
-  margin: 0 auto 60px auto;
+  margin: 0 auto;
 }
 
-.mirrorverse-description .bodytext-1--no-margin {
+.mirror-network-description .bodytext-1--no-margin {
   word-wrap: break-word;
   white-space: normal;
-  /* Color controlled by JS */
 }
 
-/* Buttons */
-.mirrorverse-buttons {
-  margin-top: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-}
+/* Description text color controlled by JS */
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-  .mirrorverse-content {
+  .mirror-network-content {
     max-width: 900px;
     padding: 0 30px;
+  }
+
+  .mirror-network-title .heading-1--no-margin {
+    font-size: clamp(40px, 7vw, 100px);
   }
 }
 
 @media (max-width: 768px) {
-  .mirrorverse-content {
+  .mirror-network-content {
     padding: 0 20px;
   }
 
-  .mirrorverse-header {
+  .mirror-network-header {
     margin-bottom: 40px;
   }
 
-  .mirrorverse-title {
+  .mirror-network-title {
     margin-bottom: 60px;
   }
 
-  .mirrorverse-description {
-    margin-bottom: 40px;
-  }
-
-  .mirrorverse-buttons {
-    flex-direction: column;
-    gap: 15px;
+  .mirror-network-title .heading-1--no-margin {
+    font-size: clamp(32px, 8vw, 60px);
   }
 }
 
 @media (max-width: 480px) {
-  .mirrorverse-content {
+  .mirror-network-content {
     padding: 0 15px;
   }
 
-  .mirrorverse-header {
+  .mirror-network-header {
     margin-bottom: 30px;
   }
 
-  .mirrorverse-title {
+  .mirror-network-title {
     margin-bottom: 40px;
   }
 
-  .mirrorverse-description {
-    margin-bottom: 30px;
+  .mirror-network-title .heading-1--no-margin {
+    font-size: clamp(24px, 10vw, 40px);
   }
 }
