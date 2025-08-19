@@ -59,13 +59,13 @@
     #000000 85%,
     #000000 100%
   );
-  background-size: 200% 100%;
+  background-size: 800% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 
   /* Animation */
-  animation: gradientMove 10s ease-in-out infinite;
+  animation: gradientMove 5s ease-in-out infinite;
 }
 
 .future-diamond-description {
@@ -221,7 +221,7 @@
 
   .future-diamond-title {
     animation: fadeInUp 0.8s ease-out 0.4s forwards,
-      gradientMove 10s ease-in-out infinite;
+      gradientMove 5s ease-in-out infinite;
   }
 
   .description-text {
@@ -238,12 +238,12 @@
 
 @keyframes gradientMove {
   0% {
-    background-position: 100% 50%;
+    background-position: 55% 50%;
   }
   50% {
-    background-position: 0% 50%;
+    background-position: 20% 50%;
   }
   100% {
-    background-position: 100% 50%;
+    background-position: 55% 50%;
   }
 }
