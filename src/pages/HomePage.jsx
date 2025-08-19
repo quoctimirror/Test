@@ -3,8 +3,10 @@ import Logo from "@assets/images/Logo.svg";
 import SoundIcon from "@assets/images/button/sound.svg";
 import ArrowButton from "@assets/images/button/arrow-button.svg";
 import TopBanner from "@components/topBanner/TopBanner";
-import ImmersiveShowroom from "@components/immersiveShowroom/ImmersiveShowroom";
-import HoverExpandSection from "@components/hoverExpandSection/HoverExpandSection";
+import ImmersiveShowroom from "@components/home-page/immersiveShowroom/ImmersiveShowroom";
+import BrandPillars from "@components/home-page/brandPillars/BrandPillars";
+import FutureDiamond from "@components/home-page/futureDiamond/FutureDiamond";
+import HoverExpandSection from "@components/home-page/hoverExpandSection/HoverExpandSection";
 import ContactUs from "@components/contactUs/ContactUs";
 import "./home.css";
 
@@ -89,6 +91,9 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      <FutureDiamond />
+
+      <BrandPillars />
 
       <ImmersiveShowroom />
 

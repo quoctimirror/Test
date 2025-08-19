@@ -1,0 +1,452 @@
+/* BrandPillars Component Styles */
+.brand-pillars {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0px;
+}
+
+.brand-pillars-content {
+  width: 100%;
+}
+
+.brand-pillars-text {
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+.brand-group {
+  display: inline-block;
+  margin-bottom: 0.2em;
+  transition: color 0.3s ease;
+  position: relative;
+  overflow: visible;
+}
+
+.brand-group:last-child {
+  margin-bottom: 0;
+}
+
+.brand-main-text {
+  display: block;
+}
+
+.brand-expand-text {
+  position: absolute;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+.brand-expand-text .bodytext-3--no-margin {
+  color: rgba(255, 255, 255, 0.75);
+  white-space: normal;
+}
+
+.brand-group:nth-child(1) .brand-expand-text .bodytext-3--no-margin {
+  max-width: none;
+  white-space: nowrap;
+}
+
+.brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+  max-width: 453px;
+  white-space: normal;
+  text-align: right;
+}
+
+.brand-group:nth-child(3) .brand-expand-text .bodytext-3--no-margin {
+  max-width: none;
+  white-space: nowrap;
+}
+
+/* Specific sizes and positions for each group */
+.brand-group:nth-child(1) {
+  width: 898px;
+  height: 214px;
+  margin-left: 22.5%;
+}
+
+.brand-group:nth-child(1) .brand-line:nth-child(1) {
+  text-align: right;
+}
+
+.brand-group:nth-child(1) .brand-line:nth-child(2) {
+  text-align: left;
+}
+
+.brand-line-with-expand {
+  display: flex;
+  align-items: flex-end;
+}
+
+.brand-group:nth-child(1) .brand-expand-text {
+  position: relative;
+  margin-left: 12px;
+  width: 610px;
+  top: auto;
+  right: auto;
+  bottom: 12px;
+  transform: translateX(20px);
+}
+
+.brand-group:nth-child(2) {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-right: 13.4%;
+  margin-bottom: 0.2em;
+}
+
+.brand-group:nth-child(2) .brand-expand-text {
+  position: relative;
+  margin-right: 12px;
+  width: 453px;
+  transform: translateX(-20px);
+  text-align: right;
+}
+
+.brand-group:nth-child(3) {
+  width: 749px;
+  height: 214px;
+  margin-left: 15.7%;
+}
+
+.brand-group:nth-child(3) .brand-line:nth-child(1) {
+  text-align: left;
+}
+
+.brand-group:nth-child(3) .brand-line:nth-child(2) {
+  text-align: right;
+}
+
+.brand-group:nth-child(3) .brand-line-with-expand {
+  display: flex;
+  align-items: flex-end;
+}
+
+.brand-group:nth-child(3) .brand-expand-text {
+  position: relative;
+  margin-left: 12px;
+  width: 610px;
+  top: auto;
+  right: auto;
+  bottom: 12px;
+  transform: translateX(20px);
+}
+
+/* Hover effects */
+.brand-group:hover .brand-line {
+  color: #ffffff;
+}
+
+.brand-group:hover .brand-expand-text {
+  opacity: 1;
+}
+
+.brand-group:nth-child(1):hover .brand-expand-text {
+  transform: translateX(0);
+}
+
+.brand-group:nth-child(2):hover .brand-expand-text {
+  transform: translateX(0);
+}
+
+.brand-group:nth-child(3):hover .brand-expand-text {
+  transform: translateX(0);
+}
+
+.brand-line {
+  display: block;
+  font-family: "Saol Display", serif;
+  font-size: 128px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 80%;
+  letter-spacing: -3.84px;
+  text-transform: uppercase;
+  color: var(--Pink, #bc224c);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 1440px) {
+  .brand-line {
+    font-size: 100px;
+    letter-spacing: -3px;
+  }
+  
+  .brand-group:nth-child(1) {
+    width: 700px;
+    height: 167px;
+  }
+  
+  .brand-group:nth-child(1) .brand-expand-text {
+    width: 476px;
+  }
+  
+  .brand-group:nth-child(2) .brand-expand-text {
+    width: 354px;
+  }
+  
+  .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+    max-width: 354px;
+  }
+  
+  .brand-group:nth-child(3) {
+    width: 585px;
+    height: 167px;
+  }
+  
+  .brand-group:nth-child(3) .brand-expand-text {
+    width: 476px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .brand-pillars {
+    padding: 60px 30px;
+  }
+
+  .brand-line {
+    font-size: 80px;
+    letter-spacing: -2.4px;
+  }
+  
+  .brand-group:nth-child(1) {
+    width: 560px;
+    height: 134px;
+    margin-left: 20%;
+  }
+  
+  .brand-group:nth-child(1) .brand-expand-text {
+    width: 381px;
+  }
+  
+  .brand-group:nth-child(2) {
+    margin-right: 15%;
+  }
+  
+  .brand-group:nth-child(2) .brand-expand-text {
+    width: 283px;
+  }
+  
+  .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+    max-width: 283px;
+  }
+  
+  .brand-group:nth-child(3) {
+    width: 468px;
+    height: 134px;
+    margin-left: 18%;
+  }
+  
+  .brand-group:nth-child(3) .brand-expand-text {
+    width: 381px;
+  }
+}
+
+@media (max-width: 992px) {
+  .brand-line {
+    font-size: 64px;
+    letter-spacing: -1.92px;
+  }
+  
+  .brand-group:nth-child(1) {
+    width: 448px;
+    height: 107px;
+    margin-left: 15%;
+  }
+  
+  .brand-group:nth-child(1) .brand-expand-text {
+    width: 305px;
+    margin-left: 10px;
+    bottom: 10px;
+  }
+  
+  .brand-group:nth-child(2) {
+    margin-right: 12%;
+  }
+  
+  .brand-group:nth-child(2) .brand-expand-text {
+    width: 226px;
+    margin-right: 10px;
+  }
+  
+  .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+    max-width: 226px;
+  }
+  
+  .brand-group:nth-child(3) {
+    width: 374px;
+    height: 107px;
+    margin-left: 15%;
+  }
+  
+  .brand-group:nth-child(3) .brand-expand-text {
+    width: 305px;
+    margin-left: 10px;
+    bottom: 10px;
+  }
+  
+  .brand-line-with-expand {
+    align-items: center !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .brand-pillars {
+    padding: 40px 20px;
+    min-height: 80vh;
+  }
+
+  .brand-line {
+    font-size: 48px;
+    letter-spacing: -1.44px;
+  }
+  
+  .brand-group {
+    margin-bottom: 1em;
+  }
+  
+  .brand-group:nth-child(1) {
+    width: 100%;
+    height: auto;
+    margin-left: 0;
+    text-align: center;
+  }
+  
+  .brand-group:nth-child(1) .brand-line:nth-child(1),
+  .brand-group:nth-child(1) .brand-line:nth-child(2) {
+    text-align: center;
+  }
+  
+  .brand-group:nth-child(1) .brand-line-with-expand {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .brand-group:nth-child(1) .brand-expand-text {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
+    bottom: auto;
+    text-align: center;
+  }
+  
+  .brand-group:nth-child(2) {
+    flex-direction: column;
+    align-items: center;
+    margin-right: 0;
+    text-align: center;
+  }
+  
+  .brand-group:nth-child(2) .brand-expand-text {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+    text-align: center;
+    order: 2;
+  }
+  
+  .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+    max-width: 100%;
+    text-align: center;
+  }
+  
+  .brand-group:nth-child(2) .brand-main-text {
+    order: 1;
+  }
+  
+  .brand-group:nth-child(3) {
+    width: 100%;
+    height: auto;
+    margin-left: 0;
+    text-align: center;
+  }
+  
+  .brand-group:nth-child(3) .brand-line:nth-child(1),
+  .brand-group:nth-child(3) .brand-line:nth-child(2) {
+    text-align: center;
+  }
+  
+  .brand-group:nth-child(3) .brand-line-with-expand {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .brand-group:nth-child(3) .brand-expand-text {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
+    bottom: auto;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-pillars {
+    padding: 30px 15px;
+    min-height: 70vh;
+  }
+
+  .brand-line {
+    font-size: 36px;
+    letter-spacing: -1.08px;
+  }
+  
+  .brand-group {
+    margin-bottom: 1.5em;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand-line {
+    font-size: 28px;
+    letter-spacing: -0.84px;
+  }
+  
+  .brand-group {
+    margin-bottom: 2em;
+  }
+}
+
+/* Animation on scroll (optional) */
+@media (prefers-reduced-motion: no-preference) {
+  .brand-line {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .brand-line:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .brand-line:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .brand-line:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .brand-line:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+  .brand-line:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

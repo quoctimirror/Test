@@ -1,0 +1,249 @@
+/* FutureDiamond Component Styles */
+.future-diamond {
+  width: 100%;
+  min-height: 200vh;
+  background: linear-gradient(180deg, #000000 0%, #bc224c 45%, #000000 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+}
+
+.future-diamond-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 200vh;
+  position: relative;
+}
+
+.future-diamond-logo-container {
+  position: absolute;
+  top: 16.2%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.future-diamond-logo {
+  width: 120px;
+  height: auto;
+  opacity: 0.9;
+}
+
+.future-diamond-title {
+  text-align: center;
+  font-family: "Saol Display", serif;
+  font-size: 300px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 90%;
+  letter-spacing: -9px;
+  text-transform: none;
+  white-space: nowrap;
+
+  /* Gradient effect với màu mới */
+  background: linear-gradient(
+    90deg,
+    #000000 0%,
+    #000000 15%,
+    rgba(50, 6, 6, 1) 25%,
+    rgba(154, 14, 52, 1) 40%,
+    rgba(154, 14, 52, 1) 50%,
+    rgba(154, 14, 52, 1) 60%,
+    rgba(50, 6, 6, 1) 75%,
+    #000000 85%,
+    #000000 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Animation */
+  animation: gradientMove 10s ease-in-out infinite;
+}
+
+.future-diamond-description {
+  max-width: 600px;
+}
+
+.description-text {
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 1440px) {
+  .future-diamond-title {
+    font-size: 240px;
+    letter-spacing: -7.2px;
+  }
+
+  .future-diamond-logo {
+    width: 100px;
+  }
+
+  .description-text {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .future-diamond {
+    padding: 120px 30px;
+    min-height: 180vh;
+  }
+
+  .future-diamond-title {
+    font-size: 200px;
+    letter-spacing: -6px;
+  }
+
+  .future-diamond-logo-container {
+    top: 14%;
+  }
+
+  .future-diamond-logo {
+    width: 90px;
+  }
+}
+
+@media (max-width: 992px) {
+  .future-diamond-title {
+    font-size: 160px;
+    letter-spacing: -4.8px;
+  }
+
+  .future-diamond-logo-container {
+    top: 12%;
+  }
+
+  .future-diamond-logo {
+    width: 80px;
+  }
+
+  .description-text {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .future-diamond {
+    padding: 80px 20px;
+    min-height: 160vh;
+  }
+
+  .future-diamond-title {
+    font-size: 120px;
+    letter-spacing: -3.6px;
+  }
+
+  .future-diamond-logo-container {
+    top: 10%;
+  }
+
+  .future-diamond-logo {
+    width: 70px;
+  }
+
+  .description-text {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .future-diamond {
+    padding: 60px 15px;
+    min-height: 140vh;
+  }
+
+  .future-diamond-title {
+    font-size: 90px;
+    letter-spacing: -2.7px;
+  }
+
+  .future-diamond-logo-container {
+    top: 8%;
+  }
+
+  .future-diamond-logo {
+    width: 60px;
+  }
+
+  .description-text {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .future-diamond-title {
+    font-size: 70px;
+    letter-spacing: -2.1px;
+  }
+
+  .future-diamond-logo-container {
+    top: 6%;
+  }
+
+  .future-diamond-logo {
+    width: 50px;
+  }
+
+  .description-text {
+    font-size: 12px;
+  }
+}
+
+/* Animation on scroll (optional) */
+@media (prefers-reduced-motion: no-preference) {
+  .future-diamond-logo,
+  .future-diamond-title,
+  .description-text {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .future-diamond-logo {
+    animation-delay: 0.2s;
+  }
+
+  .future-diamond-title {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards,
+      gradientMove 10s ease-in-out infinite;
+  }
+
+  .description-text {
+    animation-delay: 0.6s;
+  }
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
