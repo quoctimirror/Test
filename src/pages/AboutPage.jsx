@@ -21,51 +21,52 @@ const AboutPage = () => {
     panels.forEach((panel) => {
       ScrollTrigger.create({
         trigger: panel,
-        start: () => panel.offsetHeight < window.innerHeight ? "top top" : "bottom bottom",
-        pin: true, 
-        pinSpacing: false 
+        start: () =>
+          panel.offsetHeight < window.innerHeight ? "top top" : "bottom bottom",
+        pin: true,
+        pinSpacing: false,
       });
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
   return (
     <div className="about-page">
-      <section className="panel">
-        <SloganSection />
-      </section>
-      
+      {/* <section className="panel"> */}
+      <SloganSection />
+      {/* </section> */}
+
       <section className="panel">
         <StartingPlaceSection />
       </section>
-      
+
       <section className="panel">
         <IntroBOD />
       </section>
-      
+
       <section className="panel">
         <BODMember />
       </section>
-      
+
       <section className="panel">
         <AtMirror />
       </section>
-      
+
       <section className="panel">
         <MirrorverseSection />
       </section>
-      
+
       <section className="panel">
         <MirrorNetworkSection />
       </section>
-      
+
       <section className="panel">
         <DiscoverSection />
       </section>
-      
+
       <section className="panel">
         <SharedSection />
       </section>
