@@ -1,0 +1,144 @@
+/* SharedSection Component Styles */
+.shared-section {
+  width: 100%;
+  height: 300vh; /* Scroll height for animation */
+  position: relative;
+  isolation: isolate;
+}
+
+.shared-sticky-wrapper {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.shared-sticky-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/about/bg2.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.shared-content {
+  width: 100%;
+  max-width: 1000px;
+  padding: 0 40px;
+  text-align: center;
+  position: relative;
+  transform: translateY(50vh) scale(0.8); /* Start from bottom and smaller */
+  opacity: 0; /* Initially hidden */
+  will-change: transform, opacity;
+}
+
+/* Header */
+.shared-header {
+  margin-bottom: 12px;
+}
+
+.shared-header .bodytext-3--no-margin {
+  text-transform: uppercase;
+  /* Color controlled by JS */
+}
+
+/* Main Title */
+.shared-title {
+  margin-bottom: 60px;
+}
+
+.shared-title .heading-1--no-margin {
+  white-space: nowrap;
+}
+
+/* Description */
+.shared-description {
+  max-width: 609px;
+  margin: 0 auto 60px auto;
+}
+
+.shared-description .bodytext-1--no-margin {
+  word-wrap: break-word;
+  white-space: normal;
+  /* Color controlled by JS */
+}
+
+/* Buttons */
+.shared-buttons {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .shared-content {
+    max-width: 900px;
+    padding: 0 30px;
+  }
+
+  .shared-title .heading-1--no-margin {
+    font-size: clamp(40px, 7vw, 100px);
+  }
+}
+
+@media (max-width: 768px) {
+  .shared-content {
+    padding: 0 20px;
+  }
+
+  .shared-header {
+    margin-bottom: 40px;
+  }
+
+  .shared-title {
+    margin-bottom: 60px;
+  }
+
+  .shared-title .heading-1--no-margin {
+    font-size: clamp(32px, 8vw, 60px);
+  }
+
+  .shared-description {
+    margin-bottom: 40px;
+  }
+
+  .shared-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .shared-content {
+    padding: 0 15px;
+  }
+
+  .shared-header {
+    margin-bottom: 30px;
+  }
+
+  .shared-title {
+    margin-bottom: 40px;
+  }
+
+  .shared-title .heading-1--no-margin {
+    font-size: clamp(24px, 10vw, 40px);
+  }
+
+  .shared-description {
+    margin-bottom: 30px;
+  }
+}

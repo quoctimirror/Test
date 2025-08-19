@@ -1,0 +1,112 @@
+/* MirrorverseSection Component Styles */
+.mirrorverse-section {
+  width: 100%;
+  height: 300vh; /* Scroll height for animation */
+  background: linear-gradient(180deg, rgba(246, 246, 246, 1) 0%, rgba(236, 54, 103, 1) 50%, rgba(0, 0, 0, 1) 100%);
+  position: relative;
+}
+
+.mirrorverse-sticky-wrapper {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mirrorverse-content {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  transform: translateY(50vh); /* Start from bottom */
+  opacity: 0; /* Initially hidden */
+  will-change: transform, opacity;
+}
+
+/* Header */
+.mirrorverse-header {
+  margin-bottom: 12px;
+}
+
+.mirrorverse-header .bodytext-3--no-margin {
+  text-transform: uppercase;
+  /* Color controlled by JS */
+}
+
+/* Main Title */
+.mirrorverse-title {
+  margin-bottom: 60px;
+}
+
+/* Description */
+.mirrorverse-description {
+  max-width: 609px;
+  margin: 0 auto 60px auto;
+}
+
+.mirrorverse-description .bodytext-1--no-margin {
+  word-wrap: break-word;
+  white-space: normal;
+  /* Color controlled by JS */
+}
+
+/* Buttons */
+.mirrorverse-buttons {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .mirrorverse-content {
+    max-width: 900px;
+    padding: 0 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mirrorverse-content {
+    padding: 0 20px;
+  }
+
+  .mirrorverse-header {
+    margin-bottom: 40px;
+  }
+
+  .mirrorverse-title {
+    margin-bottom: 60px;
+  }
+
+  .mirrorverse-description {
+    margin-bottom: 40px;
+  }
+
+  .mirrorverse-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mirrorverse-content {
+    padding: 0 15px;
+  }
+
+  .mirrorverse-header {
+    margin-bottom: 30px;
+  }
+
+  .mirrorverse-title {
+    margin-bottom: 40px;
+  }
+
+  .mirrorverse-description {
+    margin-bottom: 30px;
+  }
+}

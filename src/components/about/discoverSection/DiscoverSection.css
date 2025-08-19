@@ -1,0 +1,419 @@
+/* DiscoverSection Component Styles */
+.discover-section {
+  width: 100%;
+  min-height: 200vh;
+  background: #f6f6f6;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Abstract Geometric Shapes */
+.discover-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.shape {
+  position: absolute;
+  background: rgba(128, 128, 128, 0.8);
+}
+
+/* Shape positioning and sizes based on the image */
+.shape-1 {
+  width: 361px;
+  height: 451px;
+  top: 20%;
+  left: 2%;
+}
+
+.shape-2 {
+  width: 141px;
+  height: 176px;
+  top: 27%;
+  left: 25%;
+  background: rgba(200, 200, 200, 0.6);
+}
+
+.shape-3 {
+  width: 345px;
+  height: 431px;
+  top: 32%;
+  left: 50%;
+}
+
+.shape-4 {
+  width: 250px;
+  height: 312px;
+  top: 8%;
+  right: 25%;
+}
+
+.shape-5 {
+  width: 370px;
+  height: 462px;
+  top: 18%;
+  right: 0%;
+}
+
+.shape-6 {
+  width: 141px;
+  height: 176px;
+  top: 52%;
+  left: 42%;
+  background: rgba(200, 200, 200, 0.6);
+}
+
+.shape-7 {
+  width: 446px;
+  height: 558px;
+  bottom: 13%;
+  left: 26%;
+}
+
+.shape-8 {
+  width: 250px;
+  height: 312px;
+  bottom: 27%;
+  right: 13%;
+}
+
+/* Button Container */
+.discover-button-container {
+  position: absolute;
+  bottom: 240px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive Design */
+@media (max-width: 1440px) {
+  .shape-1 {
+    width: 300px;
+    height: 375px;
+  }
+
+  .shape-2 {
+    width: 120px;
+    height: 150px;
+  }
+
+  .shape-3 {
+    width: 290px;
+    height: 362px;
+  }
+
+  .shape-4 {
+    width: 210px;
+    height: 262px;
+  }
+
+  .shape-5 {
+    width: 310px;
+    height: 387px;
+  }
+
+  .shape-6 {
+    width: 120px;
+    height: 150px;
+  }
+
+  .shape-7 {
+    width: 375px;
+    height: 468px;
+  }
+
+  .shape-8 {
+    width: 210px;
+    height: 262px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .shape-1 {
+    width: 250px;
+    height: 312px;
+  }
+
+  .shape-2 {
+    width: 100px;
+    height: 125px;
+  }
+
+  .shape-3 {
+    width: 240px;
+    height: 300px;
+  }
+
+  .shape-4 {
+    width: 180px;
+    height: 225px;
+  }
+
+  .shape-5 {
+    width: 260px;
+    height: 325px;
+  }
+
+  .shape-6 {
+    width: 100px;
+    height: 125px;
+  }
+
+  .shape-7 {
+    width: 320px;
+    height: 400px;
+  }
+
+  .shape-8 {
+    width: 180px;
+    height: 225px;
+  }
+}
+
+@media (max-width: 992px) {
+  .shape-1 {
+    width: 200px;
+    height: 250px;
+    top: 15%;
+    left: 3%;
+  }
+
+  .shape-2 {
+    width: 80px;
+    height: 100px;
+    top: 25%;
+    left: 22%;
+  }
+
+  .shape-3 {
+    width: 190px;
+    height: 237px;
+    top: 35%;
+    left: 45%;
+  }
+
+  .shape-4 {
+    width: 150px;
+    height: 187px;
+    top: 10%;
+    right: 20%;
+  }
+
+  .shape-5 {
+    width: 210px;
+    height: 262px;
+    top: 20%;
+    right: 2%;
+  }
+
+  .shape-6 {
+    width: 80px;
+    height: 100px;
+    top: 50%;
+    left: 40%;
+  }
+
+  .shape-7 {
+    width: 260px;
+    height: 325px;
+    bottom: 15%;
+    left: 22%;
+  }
+
+  .shape-8 {
+    width: 150px;
+    height: 187px;
+    bottom: 25%;
+    right: 15%;
+  }
+}
+
+@media (max-width: 768px) {
+  .discover-section {
+    min-height: 150vh;
+  }
+
+  .shape-1 {
+    width: 140px;
+    height: 175px;
+    top: 12%;
+    left: 5%;
+  }
+
+  .shape-2 {
+    width: 60px;
+    height: 75px;
+    top: 22%;
+    left: 25%;
+  }
+
+  .shape-3 {
+    width: 130px;
+    height: 162px;
+    top: 45%;
+    left: 40%;
+  }
+
+  .shape-4 {
+    width: 100px;
+    height: 125px;
+    top: 8%;
+    right: 15%;
+  }
+
+  .shape-5 {
+    width: 150px;
+    height: 187px;
+    top: 25%;
+    right: 3%;
+  }
+
+  .shape-6 {
+    width: 60px;
+    height: 75px;
+    top: 52%;
+    left: 35%;
+  }
+
+  .shape-7 {
+    width: 180px;
+    height: 225px;
+    bottom: 18%;
+    left: 18%;
+  }
+
+  .shape-8 {
+    width: 110px;
+    height: 137px;
+    bottom: 28%;
+    right: 12%;
+  }
+
+  .discover-button-container {
+    bottom: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .discover-section {
+    min-height: 120vh;
+  }
+
+  .shape-1 {
+    width: 90px;
+    height: 112px;
+    top: 15%;
+    left: 8%;
+  }
+
+  .shape-2 {
+    width: 40px;
+    height: 50px;
+    top: 25%;
+    left: 30%;
+  }
+
+  .shape-3 {
+    width: 85px;
+    height: 106px;
+    top: 50%;
+    left: 45%;
+  }
+
+  .shape-4 {
+    width: 70px;
+    height: 87px;
+    top: 12%;
+    right: 18%;
+  }
+
+  .shape-5 {
+    width: 95px;
+    height: 118px;
+    top: 28%;
+    right: 5%;
+  }
+
+  .shape-6 {
+    width: 40px;
+    height: 50px;
+    top: 55%;
+    left: 38%;
+  }
+
+  .shape-7 {
+    width: 120px;
+    height: 150px;
+    bottom: 22%;
+    left: 20%;
+  }
+
+  .shape-8 {
+    width: 75px;
+    height: 93px;
+    bottom: 32%;
+    right: 15%;
+  }
+
+  .discover-button-container {
+    bottom: 80px;
+  }
+}
+
+@media (max-width: 360px) {
+  .discover-section {
+    min-height: 100vh;
+  }
+
+  .shape-1 {
+    width: 70px;
+    height: 87px;
+  }
+
+  .shape-2 {
+    width: 30px;
+    height: 37px;
+  }
+
+  .shape-3 {
+    width: 65px;
+    height: 81px;
+  }
+
+  .shape-4 {
+    width: 55px;
+    height: 68px;
+  }
+
+  .shape-5 {
+    width: 75px;
+    height: 93px;
+  }
+
+  .shape-6 {
+    width: 30px;
+    height: 37px;
+  }
+
+  .shape-7 {
+    width: 95px;
+    height: 118px;
+  }
+
+  .shape-8 {
+    width: 60px;
+    height: 75px;
+  }
+
+  .discover-button-container {
+    bottom: 60px;
+  }
+}

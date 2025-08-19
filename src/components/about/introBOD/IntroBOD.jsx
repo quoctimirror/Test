@@ -1,61 +1,74 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./IntroBOD.css";
 
-const InroBOD = () => {
+const IntroBOD = () => {
   const containerRef = useRef(null);
   const stickyRef = useRef(null);
-  const line1Ref = useRef(null);
-  const line2Ref = useRef(null);
-  const line3Ref = useRef(null);
+  const contentRef = useRef(null);
+  const headerRef = useRef(null);
+  const titleRef = useRef(null);
   const descRef = useRef(null);
+  const [headerRevealProgress, setHeaderRevealProgress] = useState(0);
+  const [titleRevealProgress, setTitleRevealProgress] = useState(0);
+  const [descRevealProgress, setDescRevealProgress] = useState(0);
+  
+  const headerText = "WHO WE ARE";
+  const titleText = "THE MINDS BEHIND MIRROR";
+  const descText = "Mirror is led by a collective of visionaries - blending innovation, design, and purpose. From strategy to storytelling, we shape a brand that's equal parts emotional and engineered.";
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current || !stickyRef.current) return;
+      if (!containerRef.current) return;
 
       const container = containerRef.current;
       const rect = container.getBoundingClientRect();
       const scrollHeight = container.offsetHeight - window.innerHeight;
-
-      // Calculate scroll progress within the sticky container (0 to 1)
       const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
-
-      // Phase 1 (0-50% scroll): intro-text xuất hiện từ dưới lên
-      if (progress <= 0.5) {
-        const textProgress = Math.max(0, Math.min(1, progress / 0.5));
-
-        if (line1Ref.current) {
-          const translateY = Math.max(-100, 400 - textProgress * 500);
-          line1Ref.current.style.transform = `translateY(${translateY}px)`;
-          line1Ref.current.style.opacity = Math.min(1, textProgress * 2);
-        }
-
-        if (line2Ref.current) {
-          const translateY = Math.max(-80, 500 - textProgress * 580);
-          line2Ref.current.style.transform = `translateY(${translateY}px)`;
-          line2Ref.current.style.opacity = Math.min(1, textProgress * 2);
-        }
-
-        if (line3Ref.current) {
-          const translateY = Math.max(-60, 600 - textProgress * 660);
-          line3Ref.current.style.transform = `translateY(${translateY}px)`;
-          line3Ref.current.style.opacity = Math.min(1, textProgress * 2);
-        }
+      
+      // Phase 1 (0-30% scroll): Move entire content to fixed position
+      const moveProgress = progress <= 0.3 ? Math.max(0, Math.min(1, progress / 0.3)) : 1;
+      
+      if (contentRef.current) {
+        // Calculate initial position (bottom of viewport) to final position (center)
+        const viewportHeight = window.innerHeight;
+        const initialTranslateY = viewportHeight * 0.5; // Start from bottom
+        
+        const currentTranslateY = initialTranslateY - (moveProgress * initialTranslateY);
+        contentRef.current.style.transform = `translateY(${currentTranslateY}px)`;
+        contentRef.current.style.opacity = moveProgress;
       }
 
-      // Phase 2 (50-100% scroll): intro-description xuất hiện từ dưới lên
-      const descProgress =
-        progress > 0.5 ? Math.max(0, Math.min(1, (progress - 0.5) / 0.5)) : 0;
+      // Phase 2 (30-50% scroll): Header text reveal
+      if (progress > 0.3 && progress <= 0.5) {
+        const revealProgress = (progress - 0.3) / 0.2;
+        setHeaderRevealProgress(revealProgress);
+      } else if (progress > 0.5) {
+        setHeaderRevealProgress(1);
+      } else {
+        setHeaderRevealProgress(0);
+      }
 
-      if (descRef.current) {
-        const translateY = Math.max(0, 700 - descProgress * 700);
-        descRef.current.style.transform = `translateY(${translateY}px)`;
-        descRef.current.style.opacity = Math.min(1, descProgress * 2);
+      // Phase 3 (50-70% scroll): Title text reveal
+      if (progress > 0.5 && progress <= 0.7) {
+        const revealProgress = (progress - 0.5) / 0.2;
+        setTitleRevealProgress(revealProgress);
+      } else if (progress > 0.7) {
+        setTitleRevealProgress(1);
+      } else {
+        setTitleRevealProgress(0);
+      }
+
+      // Phase 4 (70-100% scroll): Description text reveal
+      if (progress > 0.7) {
+        const revealProgress = (progress - 0.7) / 0.3;
+        setDescRevealProgress(Math.min(1, revealProgress));
+      } else {
+        setDescRevealProgress(0);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial call
+    handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -63,50 +76,70 @@ const InroBOD = () => {
   return (
     <div className="intro-bod-section" ref={containerRef}>
       <div className="intro-sticky-wrapper" ref={stickyRef}>
-        <div className="intro-content">
-          {/* WHO WE ARE cố định */}
-          <div className="intro-header">
-            <span className="bodytext-3--no-margin">WHO WE ARE</span>
+        <div className="intro-content" ref={contentRef}>
+          {/* Header */}
+          <div className="intro-header" ref={headerRef}>
+            <span className="bodytext-3--no-margin">
+              {headerText.split("").map((char, index) => {
+                const charProgress = (index + 1) / headerText.length;
+                const isRevealed = headerRevealProgress >= charProgress;
+                
+                return (
+                  <span
+                    key={index}
+                    style={{
+                      color: isRevealed ? '#000' : 'rgba(0, 0, 0, 0.1)',
+                      transition: 'color 0.1s ease'
+                    }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </span>
+                );
+              })}
+            </span>
           </div>
 
-          {/* Text với parallax scrolling từ dưới lên */}
-          <div className="intro-text">
-            <h1
-              className="heading-1--no-margin intro-line intro-line-1"
-              ref={line1Ref}
-            >
-              THE MINDS
-            </h1>
-            <h1
-              className="heading-1--no-margin intro-line intro-line-2"
-              ref={line2Ref}
-            >
-              BEHIND
-            </h1>
-            <h1
-              className="heading-1--no-margin intro-line intro-line-3"
-              ref={line3Ref}
-            >
-              MIRROR
+          {/* Main Title */}
+          <div className="intro-title" ref={titleRef}>
+            <h1 className="heading-1--no-margin">
+              {titleText.split("").map((char, index) => {
+                const charProgress = (index + 1) / titleText.length;
+                const isRevealed = titleRevealProgress >= charProgress;
+                
+                return (
+                  <span
+                    key={index}
+                    style={{
+                      color: isRevealed ? '#000' : 'rgba(0, 0, 0, 0.1)',
+                      transition: 'color 0.1s ease'
+                    }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </span>
+                );
+              })}
             </h1>
           </div>
 
-          {/* Description text */}
+          {/* Description */}
           <div className="intro-description" ref={descRef}>
             <p className="bodytext-1--no-margin">
-              Mirror is led by a{" "}
-              <span className="light-text">
-                collective of visionaries, blending innovation
-              </span>
-              <br />
-              <span className="light-text">with deep human insight to</span>
-              <span className="light-text">
-                craft extraordinary experiences
-              </span>
-              <br />
-              <span className="light-text">
-                rooted in love, craft, and meaningful connections.
-              </span>
+              {descText.split("").map((char, index) => {
+                const charProgress = (index + 1) / descText.length;
+                const isRevealed = descRevealProgress >= charProgress;
+                
+                return (
+                  <span
+                    key={index}
+                    style={{
+                      color: isRevealed ? '#000' : 'rgba(0, 0, 0, 0.1)',
+                      transition: 'color 0.05s ease'
+                    }}
+                  >
+                    {char}
+                  </span>
+                );
+              })}
             </p>
           </div>
         </div>
@@ -115,4 +148,4 @@ const InroBOD = () => {
   );
 };
 
-export default InroBOD;
+export default IntroBOD;

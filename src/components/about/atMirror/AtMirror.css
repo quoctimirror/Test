@@ -1,0 +1,68 @@
+/* AtMirror Component Styles */
+.at-mirror-section {
+  width: 100%;
+  height: 300vh; /* Scroll height for animation */
+  background: #f6f6f6;
+  position: relative;
+  isolation: isolate;
+}
+
+.at-mirror-sticky-wrapper {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.at-mirror-content {
+  width: 100%;
+  max-width: 800px;
+  padding: 0 40px;
+  text-align: center;
+  position: relative;
+  transform: translateY(50vh); /* Start from bottom */
+  opacity: 0; /* Initially hidden */
+  will-change: transform, opacity;
+}
+
+/* Text */
+.at-mirror-text {
+  max-width: 599px;
+  margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .at-mirror-content {
+    max-width: 700px;
+    padding: 0 30px;
+  }
+
+  .at-mirror-text {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .at-mirror-content {
+    padding: 0 20px;
+  }
+
+  .at-mirror-text {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .at-mirror-content {
+    padding: 0 15px;
+  }
+
+  .at-mirror-text {
+    max-width: 300px;
+  }
+}

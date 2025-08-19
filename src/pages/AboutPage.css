@@ -2,5 +2,10 @@
 .about-page {
   width: 100%;
   min-height: 100vh;
-  /* Loại bỏ background để các component tự control */
+}
+
+/* Panel wrapper for pinning effect */
+.panel {
+  width: 100%;
+  min-height: 100vh;
 }

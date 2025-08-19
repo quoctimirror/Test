@@ -1,10 +1,9 @@
-/* InroBOD Component Styles */
+/* IntroBOD Component Styles */
 .intro-bod-section {
   width: 100%;
-  height: 300vh; /* Tăng height để có không gian scroll */
-  background: #fdfdfd;
+  height: 300vh; /* Scroll height for animation */
+  background: #F6F6F6;
   position: relative;
-  /* Isolate component scope */
   isolation: isolate;
 }
 
@@ -21,152 +20,87 @@
 
 .intro-content {
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  max-width: 1200px;
+  padding: 0 40px;
   text-align: center;
-  padding: 0 5%;
   position: relative;
+  transform: translateY(50vh); /* Start from bottom */
+  opacity: 0; /* Initially hidden */
+  will-change: transform, opacity;
 }
 
-/* Header label - Cố định */
-.intro-bod-section .intro-header {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10; /* Luôn ở trên cùng */
+/* Header */
+.intro-header {
+  margin-bottom: 12px;
 }
 
-/* Main text lines - Di chuyển từ dưới lên */
-.intro-bod-section .intro-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: row; /* Thay đổi thành hàng ngang */
-  align-items: center;
-  justify-content: center;
-  gap: 40px; /* Gap giữa các từ */
-  white-space: nowrap; /* Không cho xuống dòng */
+.intro-header .bodytext-3--no-margin {
+  text-transform: uppercase;
+  /* Color controlled by JS */
 }
 
-.intro-bod-section .intro-line {
-  will-change: transform, opacity; /* Optimize cho animation */
-  /* Initial state - bắt đầu từ dưới và ẩn */
-  transform: translateY(400px);
-  opacity: 0;
+/* Main Title */
+.intro-title {
+  margin-bottom: 60px;
 }
 
-
-/* Description - Di chuyển từ dưới lên */
-.intro-bod-section .intro-description {
-  position: absolute;
-  bottom: 25%;
-  left: 0;
-  right: 0;
+/* Description */
+.intro-description {
+  max-width: 609px;
   margin: 0 auto;
-  max-width: 600px;
-  text-align: center;
-  will-change: transform, opacity; /* Optimize cho animation */
-  /* Initial state - bắt đầu từ dưới và ẩn */
-  transform: translateY(700px);
-  opacity: 0;
 }
 
-.intro-bod-section .light-text {
-  color: rgba(0, 0, 0, 0.10); /* Màu nhạt cho phần còn lại */
+.intro-description .bodytext-1--no-margin {
+  word-wrap: break-word;
+  white-space: normal;
 }
 
-.intro-bod-section .intro-line-2,
-.intro-bod-section .intro-line-3 {
-  color: rgba(0, 0, 0, 0.10) !important; /* Màu nhạt cho BEHIND và MIRROR */
-}
+/* Description text color controlled by JS */
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-  .intro-bod-section .intro-line {
-    font-size: 100px;
+  .intro-content {
+    max-width: 900px;
+    padding: 0 30px;
   }
-  
-  .intro-bod-section .intro-line-2 {
-    margin-left: 80px;
-  }
-  
-  .intro-bod-section .intro-line-3 {
-    margin-left: -60px;
-  }
-}
 
-@media (max-width: 992px) {
-  .intro-bod-section .intro-line {
-    font-size: 80px;
-  }
-  
-  .intro-bod-section .intro-line-2 {
-    margin-left: 60px;
-  }
-  
-  .intro-bod-section .intro-line-3 {
-    margin-left: -40px;
-  }
-  
-  .intro-bod-section .intro-description {
-    max-width: 500px;
-    bottom: 20%;
+  .intro-title .heading-1--no-margin {
+    font-size: clamp(40px, 7vw, 100px);
   }
 }
 
 @media (max-width: 768px) {
-  .intro-bod-section .intro-line {
-    font-size: 60px;
+  .intro-content {
+    padding: 0 20px;
   }
-  
-  .intro-bod-section .intro-line-2 {
-    margin-left: 40px;
+
+  .intro-header {
+    margin-bottom: 40px;
   }
-  
-  .intro-bod-section .intro-line-3 {
-    margin-left: -30px;
+
+  .intro-title {
+    margin-bottom: 60px;
   }
-  
-  .intro-bod-section .intro-description {
-    max-width: 400px;
-    bottom: 15%;
-  }
-  
-  .intro-bod-section .intro-description .bodytext-3--no-margin {
-    font-size: 14px;
+
+  .intro-title .heading-1--no-margin {
+    font-size: clamp(32px, 8vw, 60px);
   }
 }
 
 @media (max-width: 480px) {
-  .intro-bod-section .intro-line {
-    font-size: 48px;
+  .intro-content {
+    padding: 0 15px;
   }
-  
-  .intro-bod-section .intro-line-2 {
-    margin-left: 30px;
+
+  .intro-header {
+    margin-bottom: 30px;
   }
-  
-  .intro-bod-section .intro-line-3 {
-    margin-left: -20px;
+
+  .intro-title {
+    margin-bottom: 40px;
   }
-  
-  .intro-bod-section .intro-description {
-    max-width: 350px;
-    bottom: 10%;
-  }
-  
-  .intro-bod-section .intro-description .bodytext-3--no-margin {
-    font-size: 13px;
-  }
-  
-  .intro-bod-section .intro-label {
-    font-size: 12px;
-    letter-spacing: 2px;
+
+  .intro-title .heading-1--no-margin {
+    font-size: clamp(24px, 10vw, 40px);
   }
 }
