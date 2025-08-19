@@ -6,13 +6,7 @@ const ContactUs = () => {
   const navigate = useNavigate();
 
   const handleContactUsClick = () => {
-    const contactSection = document.getElementById('contact-section');
-    if (contactSection) {
-      contactSection.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'center'
-      });
-    }
+    navigate('/contact');
   };
 
   return (
