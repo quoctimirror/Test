@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import "@pages/servicesDetail.css";
 import ProductCareRepair from "./ProductCareRepair";
 import TradeInUpgrade from "./TradeInUpgrade";
-import Contact from "@components/contactUs/contact";
+import ContactUs from "@components/contactUs/ContactUs";
 
 const ServicesDetailPage = () => {
   const [searchParams] = useSearchParams();
@@ -65,7 +65,7 @@ const ServicesDetailPage = () => {
         </div>
       </div>
       
-      <Contact />
+      <ContactUs />
     </>
   );
 };

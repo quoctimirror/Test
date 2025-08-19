@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./SelectOptionSection.css";
 import GlassButton from "../common/GlassButton";
 import api from "../../api/axiosConfig";
 
 const SelectOptionSection = () => {
+  const navigate = useNavigate();
   const [selectedStone, setSelectedStone] = useState("oval");
   const [currentPrice, setCurrentPrice] = useState("4.000$");
   const [activeTab, setActiveTab] = useState("Stone");
@@ -47,7 +49,7 @@ const SelectOptionSection = () => {
   };
 
   const handleContactUs = () => {
-    // Contact us clicked
+    navigate('/contact');
   };
 
   const handleBookAppointment = () => {
