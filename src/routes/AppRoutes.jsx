@@ -19,7 +19,7 @@ const UVFinal = lazy(() =>
   import("@components/universeSectionFinal/UniverseSection.jsx")
 );
 const HoverExpandSection = lazy(() =>
-  import("@components/hoverExpandSection/HoverExpandSection.jsx")
+  import("@components/home-page/hoverExpandSection/HoverExpandSection.jsx")
 );
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
 // const AR = lazy(() => import("@components/arTryOn/AR.jsx"));

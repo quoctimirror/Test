@@ -1,0 +1,354 @@
+/* FutureDiamond Component Styles */
+.future-diamond {
+  width: 100%;
+  min-height: 300vh; /* Increased for sticky scroll effect */
+  background: linear-gradient(
+    180deg,
+    #000 0%,
+    #5e1226 25%,
+    #c9385f 42.31%,
+    #bb234c 48.56%,
+    #000 68.75%
+  );
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 6vh 0;
+}
+
+.future-diamond-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.future-diamond-logo-container {
+  flex-shrink: 0;
+  margin-top: 11%;
+}
+
+.future-diamond-logo {
+  width: 120px;
+  height: auto;
+  opacity: 0.9;
+  margin-top: 90vh;
+}
+
+.future-diamond-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: "Saol Display", serif;
+  font-size: 300px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 90%;
+  letter-spacing: -9px;
+  text-transform: none;
+  white-space: nowrap;
+  margin: 23vh 0 20vh 0;
+
+  /* Gradient effect với màu mới */
+  background: linear-gradient(
+    90deg,
+    #000000 0%,
+    #000000 15%,
+    rgba(50, 6, 6, 1) 25%,
+    rgba(154, 14, 52, 1) 40%,
+    rgba(154, 14, 52, 1) 50%,
+    rgba(154, 14, 52, 1) 60%,
+    rgba(50, 6, 6, 1) 75%,
+    #000000 85%,
+    #000000 100%
+  );
+  background-size: 800% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Animation */
+  animation: gradientMove 5s ease-in-out infinite;
+}
+
+.future-diamond-description-container {
+  height: 200vh; /* Extra height for scroll */
+  position: relative;
+}
+
+.future-diamond-sticky-wrapper {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+.future-diamond-description {
+  flex-shrink: 0;
+  color: white;
+  text-align: center;
+  max-width: 922px;
+  padding: 0 40px;
+}
+
+/* Responsive Design */
+/* Large Desktop - 1600px and above optimized for 1920x1080 */
+@media (max-width: 1600px) {
+  .future-diamond-title {
+    font-size: 280px;
+    letter-spacing: -8.4px;
+    margin: 21vh 0 18vh 0;
+  }
+
+  .future-diamond-logo {
+    width: 110px;
+    margin-top: 84vh;
+  }
+
+  .future-diamond-description {
+    max-width: 1100px;
+    padding: 0 35px;
+  }
+}
+
+/* Standard Desktop - 1440px */
+@media (max-width: 1440px) {
+  .future-diamond-title {
+    font-size: 240px;
+    letter-spacing: -7.2px;
+    margin: 19vh 0 16vh 0;
+  }
+
+  .future-diamond-logo {
+    width: 100px;
+    margin-top: 78vh;
+  }
+
+  .future-diamond-logo-container {
+    margin-top: 10%;
+  }
+
+  .future-diamond-description {
+    max-width: 1000px;
+    padding: 0 30px;
+  }
+}
+
+/* Large Laptop - 1200px */
+@media (max-width: 1200px) {
+  .future-diamond {
+    min-height: 280vh;
+  }
+
+  .future-diamond-title {
+    font-size: 200px;
+    letter-spacing: -6px;
+    margin: 17vh 0 14vh 0;
+  }
+
+  .future-diamond-logo {
+    width: 90px;
+    margin-top: 72vh;
+  }
+
+  .future-diamond-logo-container {
+    margin-top: 9%;
+  }
+
+  .future-diamond-description {
+    max-width: 900px;
+    padding: 0 25px;
+  }
+
+  .future-diamond-description-container {
+    height: 180vh;
+  }
+}
+
+/* Standard Laptop - 992px */
+@media (max-width: 992px) {
+  .future-diamond {
+    min-height: 260vh;
+  }
+
+  .future-diamond-title {
+    font-size: 160px;
+    letter-spacing: -4.8px;
+    margin: 15vh 0 12vh 0;
+  }
+
+  .future-diamond-logo {
+    width: 80px;
+    margin-top: 66vh;
+  }
+
+  .future-diamond-logo-container {
+    margin-top: 8%;
+  }
+
+  .future-diamond-description {
+    max-width: 800px;
+    padding: 0 20px;
+  }
+
+  .future-diamond-description-container {
+    height: 160vh;
+  }
+}
+
+/* Tablet - 768px */
+@media (max-width: 768px) {
+  .future-diamond {
+    min-height: 240vh;
+    padding: 4vh 0;
+  }
+
+  .future-diamond-title {
+    font-size: 120px;
+    letter-spacing: -3.6px;
+    margin: 13vh 0 10vh 0;
+  }
+
+  .future-diamond-logo {
+    width: 70px;
+    margin-top: 60vh;
+  }
+
+  .future-diamond-logo-container {
+    margin-top: 7%;
+  }
+
+  .future-diamond-description {
+    max-width: 700px;
+    padding: 0 15px;
+  }
+
+  .future-diamond-description-container {
+    height: 140vh;
+  }
+
+  .future-diamond-sticky-wrapper {
+    padding-top: 30px;
+  }
+}
+
+/* Large Mobile - 480px */
+@media (max-width: 480px) {
+  .future-diamond {
+    min-height: 220vh;
+    padding: 3vh 0;
+  }
+
+  .future-diamond-title {
+    font-size: 90px;
+    letter-spacing: -2.7px;
+    margin: 11vh 0 8vh 0;
+  }
+
+  .future-diamond-logo {
+    width: 60px;
+    margin-top: 54vh;
+  }
+
+  .future-diamond-logo-container {
+    margin-top: 6%;
+  }
+
+  .future-diamond-description {
+    max-width: 600px;
+    padding: 0 10px;
+  }
+
+  .future-diamond-description-container {
+    height: 120vh;
+  }
+
+  .future-diamond-sticky-wrapper {
+    padding-top: 20px;
+  }
+}
+
+/* Small Mobile - 360px */
+@media (max-width: 360px) {
+  .future-diamond {
+    min-height: 200vh;
+  }
+
+  .future-diamond-title {
+    font-size: 70px;
+    letter-spacing: -2.1px;
+    margin: 9vh 0 6vh 0;
+  }
+
+  .future-diamond-logo {
+    width: 50px;
+    margin-top: 48vh;
+  }
+
+  .future-diamond-logo-container {
+    margin-top: 5%;
+  }
+
+  .future-diamond-description {
+    max-width: 500px;
+    padding: 0 8px;
+  }
+
+  .future-diamond-description-container {
+    height: 100vh;
+  }
+
+  .future-diamond-sticky-wrapper {
+    padding-top: 15px;
+  }
+}
+
+/* Animation on scroll (optional) */
+@media (prefers-reduced-motion: no-preference) {
+  .future-diamond-logo,
+  .future-diamond-title,
+  .heading-1--no-margin {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .future-diamond-logo {
+    animation-delay: 0.2s;
+  }
+
+  .future-diamond-title {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards,
+      gradientMove 5s ease-in-out infinite;
+  }
+
+  .heading-1--no-margin {
+    animation-delay: 0.6s;
+  }
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 55% 50%;
+  }
+  50% {
+    background-position: 20% 50%;
+  }
+  100% {
+    background-position: 55% 50%;
+  }
+}
