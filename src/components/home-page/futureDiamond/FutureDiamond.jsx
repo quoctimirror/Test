@@ -6,8 +6,9 @@ const FutureDiamond = () => {
   const containerRef = useRef(null);
   const stickyRef = useRef(null);
   const [textRevealProgress, setTextRevealProgress] = useState(0);
-  
-  const descText = "The world's newest diamond cut, a new star is born. Its 91 facets sparkle the brightest, emitting a fire like no other in a celebration of the constellations and the extraordinary potential of mankind.";
+
+  const descText =
+    "The world's newest diamond cut, a new star is born. Its 91 facets sparkle the brightest, emitting a fire like no other in a celebration of the constellations and the extraordinary potential of mankind.";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,7 +18,7 @@ const FutureDiamond = () => {
       const rect = container.getBoundingClientRect();
       const scrollHeight = container.offsetHeight - window.innerHeight;
       const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
-      
+
       // Text reveal progress (starts at 50% of scroll)
       if (progress > 0.5) {
         const revealProgress = (progress - 0.5) / 0.5;
@@ -39,9 +40,9 @@ const FutureDiamond = () => {
         <div className="future-diamond-logo-container">
           <img src={Logo} alt="Mirror Logo" className="future-diamond-logo" />
         </div>
-        
+
         <h1 className="future-diamond-title">Future Diamond</h1>
-        
+
         <div className="future-diamond-description-container">
           <div className="future-diamond-sticky-wrapper" ref={stickyRef}>
             <div className="future-diamond-description">
@@ -49,13 +50,15 @@ const FutureDiamond = () => {
                 {descText.split("").map((char, index) => {
                   const charProgress = (index + 1) / descText.length;
                   const isRevealed = textRevealProgress >= charProgress;
-                  
+
                   return (
                     <span
                       key={index}
                       style={{
-                        color: isRevealed ? '#ffffff' : 'rgba(255, 255, 255, 0.15)',
-                        transition: 'color 0.05s ease'
+                        color: isRevealed
+                          ? "#ffffff"
+                          : "rgba(255, 255, 255, 0.15)",
+                        transition: "color 0.05s ease",
                       }}
                     >
                       {char}
