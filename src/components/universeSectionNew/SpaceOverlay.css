@@ -1,0 +1,285 @@
+.rect-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    cursor: pointer;
+    overflow: hidden;
+    border: none;
+    background-color: #000000;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.rect-overlay-open {
+    opacity: 1 !important;
+}
+
+.rect-overlay-closing {
+    opacity: 0;
+}
+
+.rect-overlay .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkle 5s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 1002;
+}
+
+.rect-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    background-image: url('/universeSection/rec-space-planet.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.space-title {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -1.28px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    margin: 0;
+}
+
+/* Thanh sáng hướng 12 giờ (lên trên) */
+.starlight-12-oclock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(180deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+/* Thanh sáng hướng 6 giờ (xuống dưới) */
+.starlight-6-oclock {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+/* ===== RESPONSIVE DESIGN CHO TẤT CẢ KÍCH THƯỚC ===== */
+
+/* Desktop lớn (1920x1080 và trên) */
+@media (min-width: 1920px) {
+    .space-title {
+        font-size: clamp(64px, 4vw, 80px);
+    }
+
+    .starlight-12-oclock {
+        top: 50%;
+        left: 50%;
+    }
+
+    .starlight-6-oclock {
+        top: 46%;
+        left: 50%;
+    }
+}
+
+/* Desktop trung bình (1366x768 - 1919px) */
+@media (min-width: 1200px) and (max-width: 1919px) {
+    .space-title {
+        font-size: clamp(56px, 3.5vw, 64px);
+    }
+
+    .starlight-12-oclock {
+        top: 50%;
+        left: 50%;
+    }
+
+    .starlight-6-oclock {
+        top: 46%;
+        left: 50%;
+    }
+}
+
+/* Desktop nhỏ và laptop (1024px - 1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+    .space-title {
+        font-size: clamp(48px, 3vw, 56px);
+    }
+
+    .starlight-12-oclock {
+        top: 50%;
+        left: 50%;
+    }
+
+    .starlight-6-oclock {
+        top: 46%;
+        left: 50%;
+    }
+}
+
+/* Tablet landscape (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .rect-container {
+        padding: 1.2rem;
+        width: 85%;
+        height: 85%;
+    }
+
+    .space-title {
+        font-size: clamp(40px, 2.8vw, 48px);
+    }
+
+    .starlight-12-oclock {
+        top: 50%;
+        left: 50%;
+    }
+
+    .starlight-6-oclock {
+        top: 46%;
+        left: 50%;
+    }
+}
+
+/* Tablet portrait (481px - 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+    .rect-container {
+        padding: 1rem;
+        width: 80%;
+        height: 80%;
+    }
+
+    .space-title {
+        font-size: clamp(32px, 2.5vw, 40px);
+    }
+
+    .starlight-12-oclock {
+        top: 50%;
+        left: 50%;
+    }
+
+    .starlight-6-oclock {
+        top: 46%;
+        left: 50%;
+    }
+}
+
+/* Mobile landscape (376px - 480px) */
+@media (min-width: 376px) and (max-width: 480px) {
+    .rect-container {
+        padding: 0.8rem;
+        width: 75%;
+        height: 75%;
+    }
+
+    .space-title {
+        font-size: clamp(28px, 2.2vw, 32px);
+    }
+
+    .starlight-12-oclock {
+        top: 50%;
+        left: 50%;
+    }
+
+    .starlight-6-oclock {
+        top: 46%;
+        left: 50%;
+    }
+}
+
+/* Mobile portrait (320px - 375px) */
+@media (min-width: 320px) and (max-width: 375px) {
+    .rect-container {
+        padding: 0.6rem;
+        width: 70%;
+        height: 70%;
+    }
+
+    .space-title {
+        font-size: clamp(24px, 2vw, 28px);
+    }
+
+    .starlight-12-oclock {
+        top: 50%;
+        left: 50%;
+    }
+
+    .starlight-6-oclock {
+        top: 40%;
+        left: 50%;
+    }
+}
+
+/* Mobile rất nhỏ (dưới 320px) */
+@media (max-width: 319px) {
+    .rect-container {
+        padding: 0.5rem;
+        width: 65%;
+        height: 65%;
+    }
+
+    .space-title {
+        font-size: clamp(20px, 1.8vw, 24px);
+    }
+
+    .starlight-12-oclock {
+        top: 50%;
+        left: 50%;
+    }
+
+    .starlight-6-oclock {
+        top: 40%;
+        left: 50%;
+    }
+}
+
+/* Responsive cho chiều cao màn hình */
+@media (max-height: 600px) {
+
+    .starlight-12-oclock {
+        top: 50%;
+    }
+
+    .starlight-6-oclock {
+        top: 50%;
+    }
+}

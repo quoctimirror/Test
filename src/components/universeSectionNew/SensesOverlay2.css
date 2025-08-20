@@ -1,0 +1,188 @@
+.heart-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    cursor: pointer;
+    overflow: hidden;
+    border: none;
+    background-color: #000000;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.heart-overlay-open {
+    opacity: 1 !important;
+}
+
+.heart-overlay-closing {
+    opacity: 0;
+}
+
+.presence-overlay .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkle 5s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 1002;
+}
+
+.heart-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-image: url('/universeSection/heart-senses-planet.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    margin: auto;
+}
+
+.senses-title {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -1.28px;
+    position: relative;
+    z-index: 20;
+    margin-top: -100px;
+}
+
+/* Thanh sáng hướng 11 giờ */
+.starlight-11-oclock {
+    position: absolute;
+    top: 51%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(150deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+/* Thanh sáng hướng 1 giờ */
+.starlight-1-oclock {
+    position: absolute;
+    top: 51%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(210deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+/* Thanh sáng hướng 4 giờ */
+.starlight-4-oclock {
+    position: absolute;
+    top: 49%;
+    left: 53%;
+    transform: translate(-50%, -50%) rotate(285deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+/* Thanh sáng hướng 6 giờ */
+.starlight-6-oclock {
+    position: absolute;
+    top: 47.5%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+/* Thanh sáng hướng 8 giờ */
+.starlight-8-oclock {
+    position: absolute;
+    top: 49%;
+    left: 47%;
+    transform: translate(-50%, -50%) rotate(75deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.presence-title {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -1.28px;
+    position: relative;
+    z-index: 20;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .presence-overlay {
+        width: 100vw;
+        height: 100vh;
+    }
+
+
+    .presence-container {
+        padding: 1rem;
+    }
+
+    .presence-container .heading-2 {
+        font-size: 2.4rem;
+    }
+
+    .presence-text-justify,
+    .presence-text-center {
+        max-width: 150px;
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 480px) {
+    .presence-overlay {
+        width: 100vw;
+        height: 100vh;
+    }
+
+
+    .presence-container {
+        padding: 0.8rem;
+    }
+
+    .presence-container .heading-2 {
+        font-size: 1.8rem;
+    }
+
+    .presence-text-justify,
+    .presence-text-center {
+        max-width: 120px;
+        font-size: 8px;
+    }
+}

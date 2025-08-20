@@ -1,0 +1,16 @@
+.star-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.star-container-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 50px; /* Khoảng cách dưới chữ Senses */
+    z-index: 10;
+    pointer-events: none;
+}

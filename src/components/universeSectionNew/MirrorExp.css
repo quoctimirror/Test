@@ -1,0 +1,257 @@
+/* MirrorExp.css */
+@keyframes rotateClockwise {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateCounterClockwise {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+.mirror-exp-container {
+    background-color: #000000;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.layer {
+    position: absolute;
+    width: auto;
+    transform-origin: center center;
+}
+
+.layer0 {
+    z-index: 6;
+    animation: rotateClockwise 3.5s linear infinite;
+}
+
+.layer1 {
+    position: absolute;
+    width: auto;
+    transform-origin: center center;
+    z-index: 5;
+    animation: rotateClockwise 10s linear infinite;
+}
+
+.layer2 {
+    position: absolute;
+    width: auto;
+    transform-origin: center center;
+    z-index: 4;
+    animation: rotateCounterClockwise 20s linear infinite;
+}
+
+.layer3 {
+    z-index: 3;
+    animation: rotateClockwise 2s linear infinite;
+}
+
+.layer4 {
+    z-index: 2;
+    animation: rotateCounterClockwise 4s linear infinite;
+}
+
+.layer5 {
+    position: absolute;
+    width: auto;
+    transform-origin: center center;
+    z-index: 1;
+    animation: rotateClockwise 30s linear infinite;
+}
+
+.layer5>img:first-child {
+    width: auto;
+    height: auto;
+}
+
+.mirror-experience-text {
+    position: absolute;
+    z-index: 7;
+}
+
+.circle-presence {
+    position: absolute;
+    width: auto;
+    left: calc(50% + min(18vh, 18vw));
+    top: calc(50% - min(6.5vh, 6.5vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+
+.heart-senses {
+    position: absolute;
+    width: auto;
+    left: calc(50% - min(12vh, 12vw));
+    top: calc(50% - min(20vh, 20vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.droplet-time {
+    position: absolute;
+    width: auto;
+    left: calc(50% - min(25vh, 25vw));
+    top: calc(50% + min(13.5vh, 13.5vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.rect-space {
+    position: absolute;
+    width: auto;
+    left: calc(50% + min(22vh, 22vw));
+    top: calc(50% + min(25vh, 25vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.meteoroid-layer-1 {
+    position: absolute;
+    width: auto;
+}
+
+
+.meteoroid-1 {
+    position: absolute;
+    left: calc(50% - min(13.8vh, 13.8vw));
+    top: calc(51%);
+    transform: translate(-50%, -50%);
+    height: 20px;
+}
+
+.meteoroid-2 {
+    position: absolute;
+    left: calc(50% + min(13.8vh, 13.8vw));
+    top: calc(51%);
+    transform: translate(-50%, -50%);
+    height: 20px;
+}
+
+.meteoroid-layer-2 {
+    position: absolute;
+    width: auto;
+}
+
+.meteoroid-layer2-1 {
+    position: absolute;
+    left: calc(50% + min(18.5vh, 18.5vw));
+    top: calc(52%);
+    transform: translate(-50%, -50%);
+}
+
+.meteoroid-layer2-2 {
+    position: absolute;
+    left: calc(50% - min(18.5vh, 18.5vw));
+    top: calc(52%);
+    transform: translate(-50%, -50%);
+}
+
+.meteoroid-layer-5 {
+    position: absolute;
+    width: auto;
+    z-index: 2;
+}
+
+.meteoroid-layer5-1 {
+    position: absolute;
+    left: calc(50% + min(33.5vh, 33.5vw));
+    top: calc(50%);
+    transform: translate(-50%, -50%);
+}
+
+.meteoroid-layer5-2 {
+    position: absolute;
+    left: calc(50% - min(14vh, 14vw));
+    top: calc(50% - min(30.5vh, 30.5vw));
+    transform: translate(-50%, -50%);
+}
+
+.meteoroid-layer5-3 {
+    position: absolute;
+    left: calc(50% - min(14vh, 14vw));
+    top: calc(50% + min(30.5vh, 30.5vw));
+    transform: translate(-50%, -50%);
+}
+
+/* Hover wrapper styling */
+.hover-wrapper {
+    position: absolute;
+}
+
+.hover-wrapper .hover-text {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    z-index: 10;
+}
+
+.hover-wrapper:hover .hover-text {
+    opacity: 1;
+}
+
+/* Position wrappers to match original image positions */
+.circle-presence-wrapper {
+    left: calc(50% + min(18vh, 18vw));
+    top: calc(50% - min(6.5vh, 6.5vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.heart-senses-wrapper {
+    left: calc(50% - min(12vh, 12vw));
+    top: calc(50% - min(20vh, 20vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.droplet-time-wrapper {
+    left: calc(50% - min(25vh, 25vw));
+    top: calc(50% + min(13.5vh, 13.5vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.rect-space-wrapper {
+    left: calc(50% + min(22vh, 22vw));
+    top: calc(50% + min(25vh, 25vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+/* Reset img positions since they're now inside wrappers */
+.hover-wrapper img {
+    position: relative;
+    transform: none;
+    left: auto;
+    top: auto;
+}

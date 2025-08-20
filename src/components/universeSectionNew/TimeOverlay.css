@@ -1,0 +1,123 @@
+.droplet-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    cursor: pointer;
+    overflow: hidden;
+    border: none;
+    background-color: #000000;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.droplet-overlay-open {
+    opacity: 1 !important;
+}
+
+.droplet-overlay-closing {
+    opacity: 0;
+}
+
+.droplet-overlay .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkle 5s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 1002;
+}
+
+.droplet-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    background-image: url('/universeSection/droplet-time-planet.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.time-title {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -1.28px;
+    position: relative;
+    z-index: 20;
+    margin-top: -100px;
+}
+
+/* Thanh sáng hướng 6 giờ */
+.starlight-6-oclock {
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .droplet-overlay {
+        width: min(85vh, 85vw);
+        height: min(85vh, 85vw);
+    }
+
+    .droplet-container {
+        padding: 1rem;
+    }
+
+    .time-title {
+        font-size: 2.4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .droplet-overlay {
+        width: min(90vh, 90vw);
+        height: min(90vh, 90vw);
+    }
+
+    .droplet-container {
+        padding: 0.8rem;
+    }
+
+    .time-title {
+        font-size: 1.8rem;
+    }
+}

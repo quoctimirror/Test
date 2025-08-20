@@ -16,7 +16,7 @@ const SupportPage = lazy(() => import("@pages/SupportPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 const UVFinal = lazy(() =>
-  import("@components/universeSectionFinal/UniverseSection.jsx")
+  import("@components/universeSectionNew/MirrorExp.jsx")
 );
 const HoverExpandSection = lazy(() =>
   import("@components/home-page/hoverExpandSection/HoverExpandSection.jsx")
@@ -75,7 +75,7 @@ export default function AppRoutes() {
           </Route>
 
           <Route path="/products" element={<ProductsPage />} />
-          
+
           <Route path="/all-gems" element={<AllGemsPage />} />
 
           <Route path="/collections" element={<CollectionPage />} />
@@ -90,15 +90,15 @@ export default function AppRoutes() {
           <Route path="/services/detail" element={<ServicesDetailPage />} />
 
           <Route path="/support" element={<SupportPage />} />
-          
+
           <Route path="/contact" element={<ContactPage />} />
-          
+
           <Route path="/about" element={<AboutPage />} />
-          
+
           <Route path="/locations" element={<LocationsPage />} />
-          
+
           <Route path="/news" element={<AllNewsPage />} />
-          
+
           <Route path="/news/:slug" element={<NewCutPage />} />
 
           <Route path="/universe-final" element={<UVFinal />} />
