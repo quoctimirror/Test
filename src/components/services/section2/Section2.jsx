@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Section2.css";
-import GlassButton from "../../common/GlassButton";
+import GlassButton from "../../common/button/GlassButton";
 
 const Section2 = () => {
   const navigate = useNavigate();

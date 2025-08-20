@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SelectOptionSection.css";
-import GlassButton from "../common/GlassButton";
+import GlassButton from "../common/button/GlassButton";
 import api from "../../api/axiosConfig";
 
 const SelectOptionSection = () => {
@@ -49,7 +49,7 @@ const SelectOptionSection = () => {
   };
 
   const handleContactUs = () => {
-    navigate('/contact');
+    navigate("/contact");
   };
 
   const handleBookAppointment = () => {
@@ -102,7 +102,7 @@ const SelectOptionSection = () => {
 
   const handleSizeChange = (value) => {
     setSizeValue(value);
-    
+
     // Update user selections for Size tab
     const updatedSelections = {
       ...userSelections,
@@ -145,9 +145,7 @@ const SelectOptionSection = () => {
         setComponents(ringComponents);
 
         // Create tabs from component names and add Overview tab at the end
-        const componentTabs = ringComponents.map(
-          (comp) => comp.componentName
-        );
+        const componentTabs = ringComponents.map((comp) => comp.componentName);
         const allTabs = [...componentTabs, "Overview"];
         setTabs(allTabs);
 
@@ -162,71 +160,193 @@ const SelectOptionSection = () => {
         setComponentOptions(optionsData);
       } catch (error) {
         console.error("Error fetching data:", error);
-        
+
         // Fallback data khi API thất bại
-        
+
         // Fallback categories
         const fallbackCategories = [
-          { categoryId: "CAT0001", categoryName: "Rings", description: "Wedding and engagement rings" }
+          {
+            categoryId: "CAT0001",
+            categoryName: "Rings",
+            description: "Wedding and engagement rings",
+          },
         ];
         setCategories(fallbackCategories);
         setSelectedCategory(fallbackCategories[0]);
-        
+
         // Fallback components
         const fallbackComponents = [
-          { componentId: "COMP001", componentName: "Stone", categoryId: "CAT0001" },
-          { componentId: "COMP002", componentName: "Metal", categoryId: "CAT0001" },
-          { componentId: "COMP003", componentName: "Band Style", categoryId: "CAT0001" },
-          { componentId: "COMP004", componentName: "Size", categoryId: "CAT0001" },
-          { componentId: "COMP005", componentName: "Engraving", categoryId: "CAT0001" },
-          { componentId: "COMP006", componentName: "Gift Wrapping", categoryId: "CAT0001" },
-          { componentId: "COMP007", componentName: "Quantity", categoryId: "CAT0001" }
+          {
+            componentId: "COMP001",
+            componentName: "Stone",
+            categoryId: "CAT0001",
+          },
+          {
+            componentId: "COMP002",
+            componentName: "Metal",
+            categoryId: "CAT0001",
+          },
+          {
+            componentId: "COMP003",
+            componentName: "Band Style",
+            categoryId: "CAT0001",
+          },
+          {
+            componentId: "COMP004",
+            componentName: "Size",
+            categoryId: "CAT0001",
+          },
+          {
+            componentId: "COMP005",
+            componentName: "Engraving",
+            categoryId: "CAT0001",
+          },
+          {
+            componentId: "COMP006",
+            componentName: "Gift Wrapping",
+            categoryId: "CAT0001",
+          },
+          {
+            componentId: "COMP007",
+            componentName: "Quantity",
+            categoryId: "CAT0001",
+          },
         ];
         setComponents(fallbackComponents);
-        
+
         // Create tabs
-        const componentTabs = fallbackComponents.map(comp => comp.componentName);
+        const componentTabs = fallbackComponents.map(
+          (comp) => comp.componentName
+        );
         const allTabs = [...componentTabs, "Overview"];
         setTabs(allTabs);
         setActiveTab(componentTabs[0]);
-        
+
         // Fallback component options
         const fallbackOptions = [
           // Stone options
-          { componentOptionalId: "OPT001", componentOptionalName: "Oval", componentId: "COMP001" },
-          { componentOptionalId: "OPT002", componentOptionalName: "Round", componentId: "COMP001" },
-          { componentOptionalId: "OPT003", componentOptionalName: "Princess", componentId: "COMP001" },
-          { componentOptionalId: "OPT004", componentOptionalName: "Emerald", componentId: "COMP001" },
-          
+          {
+            componentOptionalId: "OPT001",
+            componentOptionalName: "Oval",
+            componentId: "COMP001",
+          },
+          {
+            componentOptionalId: "OPT002",
+            componentOptionalName: "Round",
+            componentId: "COMP001",
+          },
+          {
+            componentOptionalId: "OPT003",
+            componentOptionalName: "Princess",
+            componentId: "COMP001",
+          },
+          {
+            componentOptionalId: "OPT004",
+            componentOptionalName: "Emerald",
+            componentId: "COMP001",
+          },
+
           // Metal options
-          { componentOptionalId: "OPT005", componentOptionalName: "Yellow Gold", componentId: "COMP002" },
-          { componentOptionalId: "OPT006", componentOptionalName: "White Gold", componentId: "COMP002" },
-          { componentOptionalId: "OPT007", componentOptionalName: "Rose Gold", componentId: "COMP002" },
-          { componentOptionalId: "OPT008", componentOptionalName: "Platinum", componentId: "COMP002" },
-          
+          {
+            componentOptionalId: "OPT005",
+            componentOptionalName: "Yellow Gold",
+            componentId: "COMP002",
+          },
+          {
+            componentOptionalId: "OPT006",
+            componentOptionalName: "White Gold",
+            componentId: "COMP002",
+          },
+          {
+            componentOptionalId: "OPT007",
+            componentOptionalName: "Rose Gold",
+            componentId: "COMP002",
+          },
+          {
+            componentOptionalId: "OPT008",
+            componentOptionalName: "Platinum",
+            componentId: "COMP002",
+          },
+
           // Band Style options
-          { componentOptionalId: "OPT009", componentOptionalName: "Single Band", componentId: "COMP003" },
-          { componentOptionalId: "OPT010", componentOptionalName: "Double Band", componentId: "COMP003" },
-          { componentOptionalId: "OPT011", componentOptionalName: "Twisted Band", componentId: "COMP003" },
-          
+          {
+            componentOptionalId: "OPT009",
+            componentOptionalName: "Single Band",
+            componentId: "COMP003",
+          },
+          {
+            componentOptionalId: "OPT010",
+            componentOptionalName: "Double Band",
+            componentId: "COMP003",
+          },
+          {
+            componentOptionalId: "OPT011",
+            componentOptionalName: "Twisted Band",
+            componentId: "COMP003",
+          },
+
           // Size options
-          { componentOptionalId: "OPT012", componentOptionalName: "5", componentId: "COMP004" },
-          { componentOptionalId: "OPT013", componentOptionalName: "6", componentId: "COMP004" },
-          { componentOptionalId: "OPT014", componentOptionalName: "7", componentId: "COMP004" },
-          { componentOptionalId: "OPT015", componentOptionalName: "8", componentId: "COMP004" },
-          
+          {
+            componentOptionalId: "OPT012",
+            componentOptionalName: "5",
+            componentId: "COMP004",
+          },
+          {
+            componentOptionalId: "OPT013",
+            componentOptionalName: "6",
+            componentId: "COMP004",
+          },
+          {
+            componentOptionalId: "OPT014",
+            componentOptionalName: "7",
+            componentId: "COMP004",
+          },
+          {
+            componentOptionalId: "OPT015",
+            componentOptionalName: "8",
+            componentId: "COMP004",
+          },
+
           // Engraving options
-          { componentOptionalId: "OPT016", componentOptionalName: "No", componentId: "COMP005" },
-          { componentOptionalId: "OPT017", componentOptionalName: "Yes", componentId: "COMP005" },
-          
+          {
+            componentOptionalId: "OPT016",
+            componentOptionalName: "No",
+            componentId: "COMP005",
+          },
+          {
+            componentOptionalId: "OPT017",
+            componentOptionalName: "Yes",
+            componentId: "COMP005",
+          },
+
           // Gift Wrapping options
-          { componentOptionalId: "OPT018", componentOptionalName: "Yes", componentId: "COMP006" },
-          { componentOptionalId: "OPT019", componentOptionalName: "No", componentId: "COMP006" },
-          
+          {
+            componentOptionalId: "OPT018",
+            componentOptionalName: "Yes",
+            componentId: "COMP006",
+          },
+          {
+            componentOptionalId: "OPT019",
+            componentOptionalName: "No",
+            componentId: "COMP006",
+          },
+
           // Quantity options
-          { componentOptionalId: "OPT020", componentOptionalName: "1", componentId: "COMP007" },
-          { componentOptionalId: "OPT021", componentOptionalName: "2", componentId: "COMP007" },
-          { componentOptionalId: "OPT022", componentOptionalName: "3", componentId: "COMP007" }
+          {
+            componentOptionalId: "OPT020",
+            componentOptionalName: "1",
+            componentId: "COMP007",
+          },
+          {
+            componentOptionalId: "OPT021",
+            componentOptionalName: "2",
+            componentId: "COMP007",
+          },
+          {
+            componentOptionalId: "OPT022",
+            componentOptionalName: "3",
+            componentId: "COMP007",
+          },
         ];
         setComponentOptions(fallbackOptions);
       }
@@ -280,7 +400,7 @@ const SelectOptionSection = () => {
             <br />
             We're always at your service.
           </p>
-          <GlassButton 
+          <GlassButton
             theme="light"
             width={274}
             height={57}
@@ -295,7 +415,10 @@ const SelectOptionSection = () => {
         <div
           className={`content ${activeTab === "Size" ? "content-size" : ""}`}
           style={{
-            "--grid-columns": activeTab === "Size" ? 1 : Math.min(getCurrentTabOptions().length || 1, 6),
+            "--grid-columns":
+              activeTab === "Size"
+                ? 1
+                : Math.min(getCurrentTabOptions().length || 1, 6),
           }}
         >
           {activeTab === "Overview" ? (
@@ -306,7 +429,7 @@ const SelectOptionSection = () => {
                   .map((tabName) => {
                     const selection = userSelections[tabName];
                     let displayValue;
-                    
+
                     if (selection) {
                       displayValue = selection.componentOptionalName;
                     } else if (tabName === "Size") {
@@ -329,10 +452,10 @@ const SelectOptionSection = () => {
             <>
               <div className="size-slider-container">
                 <div className="size-slider-wrapper">
-                  <div 
+                  <div
                     className="size-value bodytext-3--no-margin"
                     style={{
-                      left: `${((sizeValue - 1) / 9) * 100}%`
+                      left: `${((sizeValue - 1) / 9) * 100}%`,
                     }}
                   >
                     {sizeValue}
@@ -345,7 +468,7 @@ const SelectOptionSection = () => {
                     onChange={(e) => handleSizeChange(parseInt(e.target.value))}
                     className="size-slider"
                     style={{
-                      '--progress-width': `${((sizeValue - 1) / 9) * 100}%`
+                      "--progress-width": `${((sizeValue - 1) / 9) * 100}%`,
                     }}
                   />
                 </div>
@@ -367,7 +490,9 @@ const SelectOptionSection = () => {
                 onClick={() => handleOptionSelect(option)}
               >
                 <div className="circle"></div>
-                <div className="label bodytext-3--no-margin">{option.componentOptionalName}</div>
+                <div className="label bodytext-3--no-margin">
+                  {option.componentOptionalName}
+                </div>
               </div>
             ))
           )}
@@ -376,7 +501,7 @@ const SelectOptionSection = () => {
         {/* Right side - Summary */}
         <div className="summary">
           <h2 className="bodytext-1--no-margin">From {currentPrice}</h2>
-          <GlassButton 
+          <GlassButton
             theme="custom"
             width={274}
             height={57}
@@ -386,7 +511,7 @@ const SelectOptionSection = () => {
           >
             Book An Appointment
           </GlassButton>
-          <GlassButton 
+          <GlassButton
             theme="custom"
             width={274}
             height={57}
