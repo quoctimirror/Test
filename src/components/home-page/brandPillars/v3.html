@@ -53,12 +53,12 @@
       (() => {
         // ======= CONFIG =======
         const CONFIG = {
-          BLOB_COUNT: 13, // number of moving blobs (not counting mouse)
-          BASE_RADIUS: [0.45, 0.72], // min/max radius in normalized units (relative to canvas height)
+          BLOB_COUNT: 4, // number of moving blobs (not counting mouse)
+          BASE_RADIUS: [0.35, 0.5], // min/max radius in normalized units (relative to canvas height)
           SPEED: [0.15, 0.55], // angular speed range (radians/sec)
           INTENSITY: [0.8, 1.2], // multiplier per blob
           DPR_MAX: 1.75, // clamp devicePixelRatio for performance
-          EDGE_SHARPNESS: 1.65, // higher = crisper edges
+          EDGE_SHARPNESS: 0.01, // higher = crisper edges
           BG_COLOR: [0.0, 0.0, 0.0],
         };
 
@@ -125,7 +125,7 @@
         bp.x *= u_res.x / u_res.y;
         float r = max(0.0001, b.z);
         float d = length(p - bp);
-        float contrib = exp(-pow(d / r, 2.0) * 2.0) * b.w;
+        float contrib = exp(-pow(d / r, 2.0) * 0.8) * b.w;
         f += contrib;
       }
       return f;
@@ -146,24 +146,36 @@
       float fx = fieldAt(p + vec2(eps, 0.0)) - field;
       float fy = fieldAt(p + vec2(0.0, eps)) - field;
       float g = length(vec2(fx, fy));
-      float edge = pow(clamp(1.0 - smoothstep(0.4, 2.0, g * 180.0 * u_edgeSharp), 0.0, 1.0), 1.1);
+      float edge = pow(clamp(1.0 - smoothstep(0.05, 0.8, g * 30.0 * u_edgeSharp), 0.0, 1.0), 0.3);
 
       // Simple 3-color palette: black -> light pink -> dark pink
       vec3 lightPink = vec3(0.733, 0.137, 0.298);  // rgba(187, 35, 76)
       vec3 darkPink = vec3(0.604, 0.055, 0.204);   // rgba(154, 14, 52)
       vec3 black = vec3(0.0, 0.0, 0.0);            // rgba(0, 0, 0)
       
+      // Smooth gradient with soft edges
       vec3 base;
       if (t < 0.5) {
-        base = mix(black, lightPink, t * 2.0);
+        base = mix(black, lightPink, smoothstep(0.0, 0.5, t));
       } else {
-        base = mix(lightPink, darkPink, (t - 0.5) * 2.0);
+        base = mix(lightPink, darkPink, smoothstep(0.5, 1.0, t));
       }
 
-      // Add edge glow and subtle vignette
-      float vign = pow(16.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y), 0.22);
-      vec3 col = mix(u_bg, base, 0.85) + edge * darkPink;
-      col *= (0.55 + 0.45 * vign);
+      // Only show color where there are actual blobs - very low threshold for softer edges
+      float threshold = 0.05;
+      vec3 col = u_bg; // Start with pure background
+      
+      if (t > threshold) {
+        // Only apply colors where blobs exist
+        float intensity = min((t - threshold) * 2.0, 1.0);
+        col = mix(u_bg, base, intensity);
+        col += edge * darkPink * intensity * 0.8;
+        // Remove edge glow completely for natural look
+        
+        // Apply vignette only to blob areas
+        float vign = pow(16.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y), 0.22);
+        col *= (0.55 + 0.45 * vign);
+      }
 
       // Gamma-ish tweak
       col = pow(max(col, 0.0), vec3(0.9));
@@ -230,7 +242,7 @@
 
         // ======= BALLS =======
         const MAX = 32;
-        const count = Math.min(CONFIG.BLOB_COUNT, MAX - 1); // reserve one slot for mouse
+        const count = Math.min(CONFIG.BLOB_COUNT, MAX - 1); // reserve slot for mouse blob
 
         function randSeeded(i, a = 12.9898, b = 78.233, c = 43758.5453123) {
           // deterministic pseudo-rand from index
@@ -254,12 +266,23 @@
             CONFIG.INTENSITY[1],
             randSeeded(i + 3)
           );
-          const ax = 0.23 + 0.22 * randSeeded(i + 4); // x amplitude
-          const ay = 0.23 + 0.22 * randSeeded(i + 5); // y amplitude
+          const ax = 0.2 + 0.2 * randSeeded(i + 4); // x amplitude
+          const ay = 0.2 + 0.2 * randSeeded(i + 5); // y amplitude
           const phx = randSeeded(i + 6) * Math.PI * 2;
           const phy = randSeeded(i + 7) * Math.PI * 2;
           const dir = randSeeded(i + 8) > 0.5 ? 1 : -1;
-          blobs.push({ r, sp, inten, ax, ay, phx, phy, dir });
+          blobs.push({
+            r,
+            sp,
+            inten,
+            ax,
+            ay,
+            phx,
+            phy,
+            dir,
+            offsetX: 0,
+            offsetY: 0,
+          });
         }
 
         // Mouse-controlled blob
@@ -267,7 +290,7 @@
           x: 0.5,
           y: 0.5,
           r: 0.11,
-          inten: 1.15,
+          inten: 1,
           active: false,
           vx: 0,
           vy: 0,
@@ -320,8 +343,11 @@
             // animate procedural blobs (Lissajous-ish orbits)
             for (let i = 0; i < count; i++) {
               const b = blobs[i];
-              const x = 0.5 + b.ax * Math.cos((t * b.sp * 0.9 + b.phx) * b.dir);
-              const y = 0.5 + b.ay * Math.sin((t * b.sp * 1.1 + b.phy) * b.dir);
+              let x = 0.5 + b.ax * Math.cos((t * b.sp * 0.9 + b.phx) * b.dir);
+              let y = 0.5 + b.ay * Math.sin((t * b.sp * 1.1 + b.phy) * b.dir);
+
+              // No attraction effects - keep original movement
+
               const off = i * 4;
               ballsData[off + 0] = x;
               ballsData[off + 1] = y;
@@ -329,28 +355,25 @@
               ballsData[off + 3] = b.inten;
             }
 
-            // mouse-driven blob in the last slot
-            const mSlot = count * 4;
-            const speed = Math.hypot(mouse.vx, mouse.vy);
-            // radius expands a bit with motion
-            const r = mouse.active
-              ? Math.min(0.16, mouse.r + speed * 0.35)
-              : Math.max(0.08, mouse.r * 0.985);
-            mouse.r = r;
-            mouse.vx *= 0.85;
-            mouse.vy *= 0.85;
+            // Add mouse-controlled blob in the last slot
+            if (mouse.active) {
+              const mSlot = count * 4;
+              const speed = Math.hypot(mouse.vx, mouse.vy);
+              // Radius expands a bit with motion
+              const r = Math.min(0.18, 0.12 + speed * 0.4);
+              mouse.r = lerp(mouse.r, r, 0.15);
 
-            ballsData[mSlot + 0] = mouse.x;
-            ballsData[mSlot + 1] = mouse.y;
-            ballsData[mSlot + 2] = mouse.r;
-            ballsData[mSlot + 3] = mouse.active
-              ? mouse.inten
-              : mouse.inten * 0.75;
+              // Direct position following (fix Y axis)
+              ballsData[mSlot + 0] = mouse.x;
+              ballsData[mSlot + 1] = 1.0 - mouse.y; // Invert Y axis
+              ballsData[mSlot + 2] = mouse.r;
+              ballsData[mSlot + 3] = mouse.inten;
+            }
 
             // uniforms & draw
             gl.uniform2f(u_res, canvas.width, canvas.height);
             gl.uniform1f(u_time, t);
-            gl.uniform1i(u_count, count + 1);
+            gl.uniform1i(u_count, mouse.active ? count + 1 : count);
             gl.uniform4fv(u_balls, ballsData);
 
             gl.drawArrays(gl.TRIANGLES, 0, 3);

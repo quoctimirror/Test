@@ -1,8 +1,10 @@
+import NeonMetaballs from "../../common/NeonMetaballs/NeonMetaballs";
 import "./BrandPillars.css";
 
 const BrandPillars = () => {
   return (
     <section className="brand-pillars">
+      <NeonMetaballs className="brand-pillars-background" />
       <div className="brand-pillars-content">
         <h1 className="brand-pillars-text">
           <div className="brand-group">
