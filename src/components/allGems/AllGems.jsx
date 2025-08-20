@@ -1,5 +1,5 @@
 import React from "react";
-import GlassButton from "../common/GlassButton";
+import GlassButton from "../common/button/GlassButton";
 import "./AllGems.css";
 
 const AllGems = () => {

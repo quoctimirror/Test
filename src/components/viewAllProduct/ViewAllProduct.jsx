@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import GlassButton from '../common/GlassButton';
+import GlassButton from "../common/button/GlassButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./ViewAllProduct.css";
@@ -13,7 +13,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const scrollContainerRef = useRef(null);
-  
+
   const products = [
     { id: 1, name: "Lumina", image: "/products/more_r.png" },
     { id: 2, name: "Lumina", image: "/products/more_r.png" },
@@ -29,16 +29,17 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
     // Wait for DOM to be ready
     const initScrollTrigger = () => {
       if (!scrollContainerRef.current) return;
-      
+
       // Get all product cards
-      const cards = scrollContainerRef.current.querySelectorAll('.product-card');
+      const cards =
+        scrollContainerRef.current.querySelectorAll(".product-card");
       if (cards.length === 0) return;
-      
+
       // Calculate dimensions
       const containerWidth = scrollContainerRef.current.scrollWidth;
       const viewportWidth = window.innerWidth;
       const scrollAmount = containerWidth - viewportWidth;
-      
+
       // Only create horizontal scroll if container is wider than viewport
       if (scrollAmount > 0) {
         // Create the horizontal scroll animation
@@ -50,42 +51,42 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
             start: "center center", // Start when section reaches center
             end: () => `+=${scrollAmount * 1.5}`, // Extra scroll distance to see last image fully
             invalidateOnRefresh: true,
-          }
+          },
         });
-        
+
         // Animate the container moving left
         tl.to(scrollContainerRef.current, {
           x: -scrollAmount,
           ease: "none",
-          duration: 1
+          duration: 1,
         });
       }
-      
+
       // Refresh ScrollTrigger on window resize
       const handleResize = () => {
         ScrollTrigger.refresh();
       };
-      window.addEventListener('resize', handleResize);
-      
+      window.addEventListener("resize", handleResize);
+
       // Cleanup
       return () => {
-        window.removeEventListener('resize', handleResize);
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        window.removeEventListener("resize", handleResize);
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
       };
     };
-    
+
     // Initialize after a short delay to ensure DOM is ready
     const timer = setTimeout(initScrollTrigger, 100);
-    
+
     return () => {
       clearTimeout(timer);
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
   const handleViewAllProducts = () => {
     window.scrollTo(0, 0);
-    navigate('/all-gems');
+    navigate("/all-gems");
   };
 
   return (
@@ -104,10 +105,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
         </div>
 
         <div className="horizontal-scroll-wrapper">
-          <div 
-            className="same-collection-grid-gsap"
-            ref={scrollContainerRef}
-          >
+          <div className="same-collection-grid-gsap" ref={scrollContainerRef}>
             {products.map((product) => (
               <div key={product.id} className="product-card">
                 <img
@@ -123,10 +121,10 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
 
         {showViewProductButton && (
           <div className="view-product-button-container">
-            <GlassButton 
-              width={189} 
-              height={57} 
-              fontSize={14} 
+            <GlassButton
+              width={189}
+              height={57}
+              fontSize={14}
               theme="light"
               onClick={handleViewAllProducts}
             >

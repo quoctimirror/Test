@@ -1,4 +1,4 @@
-import NeonMetaballs from "../../common/NeonMetaballs/NeonMetaballs";
+import NeonMetaballs from "../../specialEffect/NeonMetaballs/NeonMetaballs";
 import "./BrandPillars.css";
 
 const BrandPillars = () => {

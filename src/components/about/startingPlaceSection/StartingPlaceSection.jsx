@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import GlassButton from "../../common/GlassButton";
+import GlassButton from "../../common/button/GlassButton";
 import "./StartingPlaceSection.css";
 
 const StartingPlaceSection = () => {
@@ -12,10 +12,11 @@ const StartingPlaceSection = () => {
   const [headerRevealProgress, setHeaderRevealProgress] = useState(0);
   const [titleRevealProgress, setTitleRevealProgress] = useState(0);
   const [descRevealProgress, setDescRevealProgress] = useState(0);
-  
+
   const headerText = "WHERE IT ALL BEGAN";
   const titleText = "FROM RARITY TO RESONANCE";
-  const descText = "In a world where diamond mines scar the earth, Mirror offers a different reflection - one where rare science becomes soul, and beauty carries meaning. Our Love-Grown Diamonds™ are created through cutting-edge science — a process that honors both planet and person. Each gem is shaped not by rarity, but by responsibility, intention, and the desire to connect.";
+  const descText =
+    "In a world where diamond mines scar the earth, Mirror offers a different reflection - one where rare science becomes soul, and beauty carries meaning. Our Love-Grown Diamonds™ are created through cutting-edge science — a process that honors both planet and person. Each gem is shaped not by rarity, but by responsibility, intention, and the desire to connect.";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,16 +26,18 @@ const StartingPlaceSection = () => {
       const rect = container.getBoundingClientRect();
       const scrollHeight = container.offsetHeight - window.innerHeight;
       const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
-      
+
       // Phase 1 (0-30% scroll): Move entire content to fixed position
-      const moveProgress = progress <= 0.3 ? Math.max(0, Math.min(1, progress / 0.3)) : 1;
-      
+      const moveProgress =
+        progress <= 0.3 ? Math.max(0, Math.min(1, progress / 0.3)) : 1;
+
       if (contentRef.current) {
         // Calculate initial position (bottom of viewport) to final position (center)
         const viewportHeight = window.innerHeight;
         const initialTranslateY = viewportHeight * 0.5; // Start from bottom
-        
-        const currentTranslateY = initialTranslateY - (moveProgress * initialTranslateY);
+
+        const currentTranslateY =
+          initialTranslateY - moveProgress * initialTranslateY;
         contentRef.current.style.transform = `translateY(${currentTranslateY}px)`;
         contentRef.current.style.opacity = moveProgress;
       }
@@ -84,13 +87,13 @@ const StartingPlaceSection = () => {
               {headerText.split("").map((char, index) => {
                 const charProgress = (index + 1) / headerText.length;
                 const isRevealed = headerRevealProgress >= charProgress;
-                
+
                 return (
                   <span
                     key={index}
                     style={{
-                      color: isRevealed ? '#fff' : 'rgba(255, 255, 255, 0.25)',
-                      transition: 'color 0.1s ease'
+                      color: isRevealed ? "#fff" : "rgba(255, 255, 255, 0.25)",
+                      transition: "color 0.1s ease",
                     }}
                   >
                     {char === " " ? "\u00A0" : char}
@@ -106,13 +109,13 @@ const StartingPlaceSection = () => {
               {titleText.split("").map((char, index) => {
                 const charProgress = (index + 1) / titleText.length;
                 const isRevealed = titleRevealProgress >= charProgress;
-                
+
                 return (
                   <span
                     key={index}
                     style={{
-                      color: isRevealed ? '#fff' : 'rgba(255, 255, 255, 0.25)',
-                      transition: 'color 0.1s ease'
+                      color: isRevealed ? "#fff" : "rgba(255, 255, 255, 0.25)",
+                      transition: "color 0.1s ease",
                     }}
                   >
                     {char === " " ? "\u00A0" : char}
@@ -128,13 +131,13 @@ const StartingPlaceSection = () => {
               {descText.split("").map((char, index) => {
                 const charProgress = (index + 1) / descText.length;
                 const isRevealed = descRevealProgress >= charProgress;
-                
+
                 return (
                   <span
                     key={index}
                     style={{
-                      color: isRevealed ? '#fff' : 'rgba(255, 255, 255, 0.25)',
-                      transition: 'color 0.05s ease'
+                      color: isRevealed ? "#fff" : "rgba(255, 255, 255, 0.25)",
+                      transition: "color 0.05s ease",
                     }}
                   >
                     {char}
@@ -146,9 +149,7 @@ const StartingPlaceSection = () => {
 
           {/* Explore Button */}
           <div className="starting-button">
-            <GlassButton>
-              Explore Our Drops
-            </GlassButton>
+            <GlassButton>Explore Our Drops</GlassButton>
           </div>
         </div>
       </div>

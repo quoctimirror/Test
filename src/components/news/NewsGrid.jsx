@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./NewsGrid.css";
-import GlassButton from "../common/GlassButton";
+import GlassButton from "../common/button/GlassButton";
 
 const NewsGrid = () => {
   const [visibleItems, setVisibleItems] = useState(12);

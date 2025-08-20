@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import GlassButton from "../../common/GlassButton";
+import GlassButton from "../../common/button/GlassButton";
 import "./SharedSection.css";
 
 const SharedSection = () => {
@@ -9,14 +9,15 @@ const SharedSection = () => {
   const headerRef = useRef(null);
   const titleRef = useRef(null);
   const descriptionRef = useRef(null);
-  
+
   const [headerRevealProgress, setHeaderRevealProgress] = useState(0);
   const [titleRevealProgress, setTitleRevealProgress] = useState(0);
   const [descriptionRevealProgress, setDescriptionRevealProgress] = useState(0);
 
   const headerText = "THE FUTURE IS SHARED";
   const titleText = "YOU DON'T JUST WEAR MIRROR.\nYOU BECOME PART OF IT.";
-  const descriptionText = "We invite you not just to own - but to belong.\nTo co-create, to grow, to reflect.\n\nEvery interaction with Mirror - a try-on, a purchase, a story - becomes a part of the Mirrorverse. Because luxury doesn't begin in the box. It begins with you.";
+  const descriptionText =
+    "We invite you not just to own - but to belong.\nTo co-create, to grow, to reflect.\n\nEvery interaction with Mirror - a try-on, a purchase, a story - becomes a part of the Mirrorverse. Because luxury doesn't begin in the box. It begins with you.";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,17 +27,19 @@ const SharedSection = () => {
       const rect = container.getBoundingClientRect();
       const scrollHeight = container.offsetHeight - window.innerHeight;
       const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
-      
+
       // Phase 1 (0-30% scroll): Move entire content to fixed position
-      const moveProgress = progress <= 0.3 ? Math.max(0, Math.min(1, progress / 0.3)) : 1;
-      
+      const moveProgress =
+        progress <= 0.3 ? Math.max(0, Math.min(1, progress / 0.3)) : 1;
+
       if (contentRef.current) {
         // Calculate initial position (bottom of viewport) to final position (center)
         const viewportHeight = window.innerHeight;
         const initialTranslateY = viewportHeight * 0.5; // Start from bottom
-        
-        const currentTranslateY = initialTranslateY - (moveProgress * initialTranslateY);
-        const currentScale = 0.8 + (moveProgress * 0.2); // Scale from 0.8 to 1.0
+
+        const currentTranslateY =
+          initialTranslateY - moveProgress * initialTranslateY;
+        const currentScale = 0.8 + moveProgress * 0.2; // Scale from 0.8 to 1.0
         contentRef.current.style.transform = `translateY(${currentTranslateY}px) scale(${currentScale})`;
         contentRef.current.style.opacity = moveProgress;
       }
@@ -86,13 +89,13 @@ const SharedSection = () => {
               {headerText.split("").map((char, index) => {
                 const charProgress = (index + 1) / headerText.length;
                 const isRevealed = headerRevealProgress >= charProgress;
-                
+
                 return (
                   <span
                     key={index}
                     style={{
-                      color: isRevealed ? '#fff' : 'rgba(255, 255, 255, 0.25)',
-                      transition: 'color 0.05s ease'
+                      color: isRevealed ? "#fff" : "rgba(255, 255, 255, 0.25)",
+                      transition: "color 0.05s ease",
                     }}
                   >
                     {char}
@@ -108,16 +111,16 @@ const SharedSection = () => {
               {titleText.split("").map((char, index) => {
                 const charProgress = (index + 1) / titleText.length;
                 const isRevealed = titleRevealProgress >= charProgress;
-                
+
                 return (
                   <span
                     key={index}
                     style={{
-                      color: isRevealed ? '#fff' : 'rgba(255, 255, 255, 0.25)',
-                      transition: 'color 0.05s ease'
+                      color: isRevealed ? "#fff" : "rgba(255, 255, 255, 0.25)",
+                      transition: "color 0.05s ease",
                     }}
                   >
-                    {char === '\n' ? <br /> : char}
+                    {char === "\n" ? <br /> : char}
                   </span>
                 );
               })}
@@ -130,16 +133,16 @@ const SharedSection = () => {
               {descriptionText.split("").map((char, index) => {
                 const charProgress = (index + 1) / descriptionText.length;
                 const isRevealed = descriptionRevealProgress >= charProgress;
-                
+
                 return (
                   <span
                     key={index}
                     style={{
-                      color: isRevealed ? '#fff' : 'rgba(255, 255, 255, 0.25)',
-                      transition: 'color 0.05s ease'
+                      color: isRevealed ? "#fff" : "rgba(255, 255, 255, 0.25)",
+                      transition: "color 0.05s ease",
                     }}
                   >
-                    {char === '\n' ? <br /> : char}
+                    {char === "\n" ? <br /> : char}
                   </span>
                 );
               })}
@@ -148,8 +151,12 @@ const SharedSection = () => {
 
           {/* Buttons */}
           <div className="shared-buttons">
-            <GlassButton theme="glass" width={136} height={57}>AR Try on</GlassButton>
-            <GlassButton theme="glass" width={221} height={57}>Immersive Showroom</GlassButton>
+            <GlassButton theme="glass" width={136} height={57}>
+              AR Try on
+            </GlassButton>
+            <GlassButton theme="glass" width={221} height={57}>
+              Immersive Showroom
+            </GlassButton>
           </div>
         </div>
       </div>

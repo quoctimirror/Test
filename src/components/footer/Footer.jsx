@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Footer.css";
-import GlassButton from '../common/GlassButton';
+import GlassButton from "../common/button/GlassButton";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -15,9 +15,9 @@ const Footer = () => {
   const handleNewsClick = (e) => {
     e.preventDefault();
     if (window.location.pathname === "/news") {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      sessionStorage.setItem('scrollToTop', 'true');
+      sessionStorage.setItem("scrollToTop", "true");
       window.location.href = "/news";
     }
   };
@@ -31,19 +31,33 @@ const Footer = () => {
               <h3 className="heading-3 footer-title">DISCOVER</h3>
               <ul className="footer-links">
                 <li>
-                  <a className="bodytext-3" href="/">Homepage</a>
+                  <a className="bodytext-3" href="/">
+                    Homepage
+                  </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="/collections">Product</a>
+                  <a className="bodytext-3" href="/collections">
+                    Product
+                  </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="/services">Service & Support</a>
+                  <a className="bodytext-3" href="/services">
+                    Service & Support
+                  </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="/about">About Mirror</a>
+                  <a className="bodytext-3" href="/about">
+                    About Mirror
+                  </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="/news" onClick={handleNewsClick}>News</a>
+                  <a
+                    className="bodytext-3"
+                    href="/news"
+                    onClick={handleNewsClick}
+                  >
+                    News
+                  </a>
                 </li>
               </ul>
             </div>
@@ -66,8 +80,8 @@ const Footer = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="email-input"
                 />
-                <GlassButton 
-                  onClick={handleSignUp} 
+                <GlassButton
+                  onClick={handleSignUp}
                   className="signup-button"
                   width={123}
                   height={57}
@@ -82,11 +96,34 @@ const Footer = () => {
             <div className="footer-section">
               <h3 className="heading-3 footer-title">CONTACT</h3>
               <ul className="contact-info">
-                <li><a className="bodytext-3" href="/contact">Contact us</a></li>
-                <li><a className="bodytext-3" href="mailto:support@mirrorfuturediamond.com">support@mirrorfuturediamond.com</a></li>
-                <li><a className="bodytext-3" href="tel:+97.130.0938">+97.130.0938</a></li>
-                <li><a className="bodytext-3" href="#">Book an appointment</a></li>
-                <li><a className="bodytext-3" href="/locations">Location</a></li>
+                <li>
+                  <a className="bodytext-3" href="/contact">
+                    Contact us
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="bodytext-3"
+                    href="mailto:support@mirrorfuturediamond.com"
+                  >
+                    support@mirrorfuturediamond.com
+                  </a>
+                </li>
+                <li>
+                  <a className="bodytext-3" href="tel:+97.130.0938">
+                    +97.130.0938
+                  </a>
+                </li>
+                <li>
+                  <a className="bodytext-3" href="#">
+                    Book an appointment
+                  </a>
+                </li>
+                <li>
+                  <a className="bodytext-3" href="/locations">
+                    Location
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -112,7 +149,7 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          
+
           {/* Footer Bottom Left & Right - Inside footer-bottom */}
           <div className="footer-bottom-row">
             <div className="footer-bottom-left">
