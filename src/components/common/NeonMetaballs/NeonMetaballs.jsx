@@ -22,14 +22,13 @@ const NeonMetaballs = ({ className = '' }) => {
       return;
     }
 
-    // ======= CONFIG =======
     const CONFIG = {
-      BLOB_COUNT: 4, // optimal for background
-      BASE_RADIUS: [0.35, 0.5], // size from v3
+      BLOB_COUNT: 4,
+      BASE_RADIUS: [0.35, 0.5],
       SPEED: [0.15, 0.55], 
-      INTENSITY: [0.6, 0.9], // adjusted for background
+      INTENSITY: [0.6, 0.9],
       DPR_MAX: 1.5,
-      EDGE_SHARPNESS: 0.01, // very soft edges like v3
+      EDGE_SHARPNESS: 0.01,
       BG_COLOR: [0.0, 0.0, 0.0],
     };
 
@@ -45,7 +44,6 @@ const NeonMetaballs = ({ className = '' }) => {
       }
     }
 
-    // ======= SHADERS =======
     const vertSrc = `
       attribute vec2 a_pos;
       varying vec2 v_uv;
@@ -74,7 +72,7 @@ const NeonMetaballs = ({ className = '' }) => {
           bp.x *= u_res.x / u_res.y;
           float r = max(0.0001, b.z);
           float d = length(p - bp);
-          float contrib = exp(-pow(d / r, 2.0) * 0.8) * b.w;  // v3 uses 0.8 instead of 2.0
+          float contrib = exp(-pow(d / r, 2.0) * 0.8) * b.w;
           f += contrib;
         }
         return f;
@@ -88,19 +86,16 @@ const NeonMetaballs = ({ className = '' }) => {
         float field = fieldAt(p);
         float t = clamp(field, 0.0, 1.0);
 
-        // v3 style edge enhancement - much softer
         float eps = 1.0 / min(u_res.x, u_res.y);
         float fx = fieldAt(p + vec2(eps, 0.0)) - field;
         float fy = fieldAt(p + vec2(0.0, eps)) - field;
         float g = length(vec2(fx, fy));
         float edge = pow(clamp(1.0 - smoothstep(0.05, 0.8, g * 30.0 * u_edgeSharp), 0.0, 1.0), 0.3);
 
-        // Brand colors
-        vec3 lightPink = vec3(0.733, 0.137, 0.298);  // #BB234C
-        vec3 darkPink = vec3(0.604, 0.055, 0.204);   // #9A0E34
+        vec3 lightPink = vec3(0.733, 0.137, 0.298);
+        vec3 darkPink = vec3(0.604, 0.055, 0.204);
         vec3 black = vec3(0.0, 0.0, 0.0);
 
-        // v3 style smooth gradient with soft edges
         vec3 base;
         if (t < 0.5) {
           base = mix(black, lightPink, smoothstep(0.0, 0.5, t));
@@ -108,22 +103,18 @@ const NeonMetaballs = ({ className = '' }) => {
           base = mix(lightPink, darkPink, smoothstep(0.5, 1.0, t));
         }
 
-        // v3 style threshold-based rendering for natural look
-        float threshold = 0.05;  // Very low threshold for soft edges
-        vec3 col = u_bg; // Start with pure background
+        float threshold = 0.05;
+        vec3 col = u_bg;
         
         if (t > threshold) {
-          // Only apply colors where blobs exist
           float intensity = min((t - threshold) * 2.0, 1.0);
           col = mix(u_bg, base, intensity);
           col += edge * darkPink * intensity * 0.8;
           
-          // Apply vignette only to blob areas
           float vign = pow(16.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y), 0.22);
           col *= (0.55 + 0.45 * vign);
         }
 
-        // Gamma correction
         col = pow(max(col, 0.0), vec3(0.9));
         gl_FragColor = vec4(col, 1.0);
       }
@@ -170,7 +161,6 @@ const NeonMetaballs = ({ className = '' }) => {
     gl.enableVertexAttribArray(a_pos);
     gl.vertexAttribPointer(a_pos, 2, gl.FLOAT, false, 0, 0);
 
-    // Uniforms
     const u_res = gl.getUniformLocation(prog, "u_res");
     const u_time = gl.getUniformLocation(prog, "u_time");
     const u_count = gl.getUniformLocation(prog, "u_count");
@@ -181,7 +171,6 @@ const NeonMetaballs = ({ className = '' }) => {
     gl.uniform3fv(u_bg, new Float32Array(CONFIG.BG_COLOR));
     gl.uniform1f(u_edgeSharp, CONFIG.EDGE_SHARPNESS);
 
-    // ======= BALLS =======
     const MAX = 32;
     const count = Math.min(CONFIG.BLOB_COUNT, MAX);
 
@@ -198,15 +187,14 @@ const NeonMetaballs = ({ className = '' }) => {
       const r = lerp(CONFIG.BASE_RADIUS[0], CONFIG.BASE_RADIUS[1], randSeeded(i + 1));
       const sp = lerp(CONFIG.SPEED[0], CONFIG.SPEED[1], randSeeded(i + 2));
       const inten = lerp(CONFIG.INTENSITY[0], CONFIG.INTENSITY[1], randSeeded(i + 3));
-      const ax = 0.2 + 0.2 * randSeeded(i + 4); // x amplitude
-      const ay = 0.2 + 0.2 * randSeeded(i + 5); // y amplitude
+      const ax = 0.2 + 0.2 * randSeeded(i + 4);
+      const ay = 0.2 + 0.2 * randSeeded(i + 5);
       const phx = randSeeded(i + 6) * Math.PI * 2;
       const phy = randSeeded(i + 7) * Math.PI * 2;
       const dir = randSeeded(i + 8) > 0.5 ? 1 : -1;
       blobs.push({ r, sp, inten, ax, ay, phx, phy, dir, offsetX: 0, offsetY: 0 });
     }
 
-    // Mouse-controlled blob
     const mouse = {
       x: 0.5,
       y: 0.5,
@@ -217,11 +205,8 @@ const NeonMetaballs = ({ className = '' }) => {
       vy: 0,
     };
 
-    // Document-level mouse tracking to work through overlapping elements
     function onPointer(e) {
       const rect = canvas.getBoundingClientRect();
-      
-      // Check if mouse is within canvas bounds
       if (e.clientX >= rect.left && e.clientX <= rect.right && 
           e.clientY >= rect.top && e.clientY <= rect.bottom) {
         const x = (e.clientX - rect.left) / rect.width;
@@ -236,11 +221,9 @@ const NeonMetaballs = ({ className = '' }) => {
       }
     }
 
-    // Use document-level events to track mouse everywhere
     document.addEventListener("pointermove", onPointer, { passive: true });
     document.addEventListener("pointerdown", onPointer, { passive: true });
 
-    // ======= RENDER LOOP =======
     const ballsData = new Float32Array(MAX * 4);
     let start = performance.now();
 
@@ -250,7 +233,6 @@ const NeonMetaballs = ({ className = '' }) => {
 
       resize();
 
-      // animate procedural blobs (Lissajous-ish orbits)
       for (let i = 0; i < count; i++) {
         const b = blobs[i];
         let x = 0.5 + b.ax * Math.cos((t * b.sp * 0.9 + b.phx) * b.dir);
@@ -263,22 +245,18 @@ const NeonMetaballs = ({ className = '' }) => {
         ballsData[off + 3] = b.inten;
       }
 
-      // Add mouse-controlled blob in the last slot
       if (mouse.active) {
         const mSlot = count * 4;
         const speed = Math.hypot(mouse.vx, mouse.vy);
-        // Radius expands a bit with motion
         const r = Math.min(0.18, 0.12 + speed * 0.4);
         mouse.r = lerp(mouse.r, r, 0.15);
 
-        // Direct position following (fix Y axis)
         ballsData[mSlot + 0] = mouse.x;
-        ballsData[mSlot + 1] = 1.0 - mouse.y; // Invert Y axis
+        ballsData[mSlot + 1] = 1.0 - mouse.y;
         ballsData[mSlot + 2] = mouse.r;
         ballsData[mSlot + 3] = mouse.inten;
       }
 
-      // uniforms & draw
       gl.uniform2f(u_res, canvas.width, canvas.height);
       gl.uniform1f(u_time, t);
       gl.uniform1i(u_count, mouse.active ? count + 1 : count);
@@ -288,7 +266,6 @@ const NeonMetaballs = ({ className = '' }) => {
       animationRef.current = requestAnimationFrame(frame);
     }
 
-    // Kick off
     gl.clearColor(CONFIG.BG_COLOR[0], CONFIG.BG_COLOR[1], CONFIG.BG_COLOR[2], 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
     
@@ -296,7 +273,6 @@ const NeonMetaballs = ({ className = '' }) => {
     resize();
     frame();
 
-    // Cleanup function
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
