@@ -2,31 +2,34 @@
 .future-diamond {
   width: 100%;
   min-height: 200vh;
-  background: linear-gradient(180deg, #000000 0%, #bc224c 45%, #000000 100%);
+  background: linear-gradient(
+    180deg,
+    #000 0%,
+    #5e1226 25%,
+    #c9385f 42.31%,
+    #bb234c 48.56%,
+    #000 68.75%
+  );
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
   position: relative;
+  padding: 6vh 0;
 }
 
 .future-diamond-content {
   width: 100%;
-  max-width: 1200px;
+  height: 200vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   text-align: center;
-  min-height: 200vh;
   position: relative;
 }
 
 .future-diamond-logo-container {
-  position: absolute;
-  top: 16.2%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
+  flex-shrink: 0;
+  margin-top: 11%;
 }
 
 .future-diamond-logo {
@@ -36,6 +39,10 @@
 }
 
 .future-diamond-title {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   font-family: "Saol Display", serif;
   font-size: 300px;
@@ -45,6 +52,7 @@
   letter-spacing: -9px;
   text-transform: none;
   white-space: nowrap;
+  margin-top: -13vh;
 
   /* Gradient effect với màu mới */
   background: linear-gradient(
@@ -69,17 +77,8 @@
 }
 
 .future-diamond-description {
-  max-width: 600px;
-}
-
-.description-text {
-  font-family: "Inter", sans-serif;
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0;
-  text-align: center;
+  flex-shrink: 0;
+  color: white;
 }
 
 /* Responsive Design */
@@ -92,25 +91,12 @@
   .future-diamond-logo {
     width: 100px;
   }
-
-  .description-text {
-    font-size: 16px;
-  }
 }
 
 @media (max-width: 1200px) {
-  .future-diamond {
-    padding: 120px 30px;
-    min-height: 180vh;
-  }
-
   .future-diamond-title {
     font-size: 200px;
     letter-spacing: -6px;
-  }
-
-  .future-diamond-logo-container {
-    top: 14%;
   }
 
   .future-diamond-logo {
@@ -130,10 +116,6 @@
 
   .future-diamond-logo {
     width: 80px;
-  }
-
-  .description-text {
-    font-size: 15px;
   }
 }
 
@@ -209,7 +191,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .future-diamond-logo,
   .future-diamond-title,
-  .description-text {
+  .heading-1--no-margin {
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.8s ease-out forwards;
@@ -224,7 +206,7 @@
       gradientMove 5s ease-in-out infinite;
   }
 
-  .description-text {
+  .heading-1--no-margin {
     animation-delay: 0.6s;
   }
 }
