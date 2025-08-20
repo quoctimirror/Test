@@ -38,8 +38,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     background-image: url('/universeSection/rec-space-planet.svg');
     background-size: contain;
     background-position: center;
@@ -161,8 +161,8 @@
 @media (min-width: 768px) and (max-width: 1023px) {
     .rect-container {
         padding: 1.2rem;
-        width: 85%;
-        height: 85%;
+        width: 95%;
+        height: 95%;
     }
 
     .space-title {
@@ -184,8 +184,8 @@
 @media (min-width: 481px) and (max-width: 767px) {
     .rect-container {
         padding: 1rem;
-        width: 80%;
-        height: 80%;
+        width: 100%;
+        height: 100%;
     }
 
     .space-title {
@@ -207,8 +207,8 @@
 @media (min-width: 376px) and (max-width: 480px) {
     .rect-container {
         padding: 0.8rem;
-        width: 75%;
-        height: 75%;
+        width: 95%;
+        height: 95%;
     }
 
     .space-title {
@@ -230,8 +230,8 @@
 @media (min-width: 320px) and (max-width: 375px) {
     .rect-container {
         padding: 0.6rem;
-        width: 70%;
-        height: 70%;
+        width: 85%;
+        height: 85%;
     }
 
     .space-title {
@@ -253,8 +253,8 @@
 @media (max-width: 319px) {
     .rect-container {
         padding: 0.5rem;
-        width: 65%;
-        height: 65%;
+        width: 75%;
+        height: 75%;
     }
 
     .space-title {

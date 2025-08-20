@@ -26,7 +26,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
                                 type="translate"
                                 from={`0 -${height}`}
                                 to={`0 ${height}`}
-                                dur="3s"
+                                dur="1.5s"
                                 repeatCount="indefinite"
                             />
                         </linearGradient>
@@ -60,7 +60,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
                                 type="translate"
                                 from={`0 ${height}`}
                                 to={`0 -${height}`}
-                                dur="3s"
+                                dur="1.5s"
                                 repeatCount="indefinite"
                             />
                         </linearGradient>
@@ -80,7 +80,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
                         <stop stopColor="#320606" />
                         <stop offset="0.552885" stopColor="#EC3667" />
                         <stop offset="1" stopColor="#F6F6F6" />
-                        <animateTransform attributeName="gradientTransform" type="translate" from="0 -170" to="0 170" dur="2s" repeatCount="indefinite" />
+                        <animateTransform attributeName="gradientTransform" type="translate" from="0 -170" to="0 170" dur="1s" repeatCount="indefinite" />
                     </linearGradient>
                 </defs>
             </svg>
