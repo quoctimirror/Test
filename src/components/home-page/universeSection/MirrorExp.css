@@ -22,6 +22,40 @@
     line-height: 120%; /* 24px */
 }
 
+/* ===== UNIFIED OVERLAY ANIMATIONS ===== */
+
+/* Base overlay styles */
+.base-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    cursor: pointer;
+    overflow: hidden;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: var(--origin-x, 50%) var(--origin-y, 50%);
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Overlay opening animation */
+.base-overlay.overlay-open {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+/* Overlay closing animation */
+.base-overlay.overlay-closing {
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.8s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
 @keyframes rotateClockwise {
     from {
         transform: rotate(0deg);
@@ -277,6 +311,16 @@
     transform: none;
     left: auto;
     top: auto;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hover-wrapper:hover img {
+    transform: scale(1.05);
+}
+
+.hover-wrapper:active img {
+    transform: scale(0.95);
+    transition: transform 0.1s ease-out;
 }
 
 /* ===== RESPONSIVE DESIGN CHO TẤT CẢ KÍCH THƯỚC MÀNG HÌNH ===== */

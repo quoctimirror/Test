@@ -101,7 +101,8 @@ export default function AppRoutes() {
 
           <Route path="/news/:slug" element={<NewCutPage />} />
 
-          <Route path="/universe-section" element={<UniverseSection />} />
+          {/* for observing UI universe-section final */}
+          {/* <Route path="/universe-section" element={<UniverseSection />} /> */}
 
           <Route path="/hover-expand" element={<HoverExpandSection />} />
 

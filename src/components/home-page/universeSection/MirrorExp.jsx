@@ -8,91 +8,105 @@ import SpaceOverlay from './SpaceOverlay';
 
 
 const MirrorExp = () => {
-    const [showCircle, setShowCircle] = useState(false);
-    const [showHeart, setShowHeart] = useState(false);
-    const [showDroplet, setShowDroplet] = useState(false);
-    const [showRect, setShowRect] = useState(false);
-    const [circleOrigin, setCircleOrigin] = useState({ x: 0, y: 0 });
-    const [heartOrigin, setHeartOrigin] = useState({ x: 0, y: 0 });
-    const [dropletOrigin, setDropletOrigin] = useState({ x: 0, y: 0 });
-    const [rectOrigin, setRectOrigin] = useState({ x: 0, y: 0 });
+    // Unified overlay state
+    const [overlays, setOverlays] = useState({
+        circle: { show: false, closing: false, origin: { x: 0, y: 0 } },
+        heart: { show: false, closing: false, origin: { x: 0, y: 0 } },
+        droplet: { show: false, closing: false, origin: { x: 0, y: 0 } },
+        rect: { show: false, closing: false, origin: { x: 0, y: 0 } }
+    });
+    
+    const [backgroundFaded, setBackgroundFaded] = useState(false);
 
-    const handleOpenCircle = (event) => {
+    // Unified handlers
+    const handleOpenOverlay = (overlayType) => (event) => {
         const rect = event.currentTarget.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        setCircleOrigin({ x: centerX, y: centerY });
-        setShowCircle(true);
+        
+        setOverlays(prev => ({
+            ...prev,
+            [overlayType]: {
+                ...prev[overlayType],
+                show: true,
+                origin: { x: centerX, y: centerY }
+            }
+        }));
+        setBackgroundFaded(true);
     };
 
-    const handleCloseCircle = () => {
-        setShowCircle(false);
-    };
-
-    const handleOpenHeart = (event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        setHeartOrigin({ x: centerX, y: centerY });
-        setShowHeart(true);
-    };
-
-    const handleCloseHeart = () => {
-        setShowHeart(false);
-    };
-
-    const handleOpenDroplet = (event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        setDropletOrigin({ x: centerX, y: centerY });
-        setShowDroplet(true);
-    };
-
-    const handleCloseDroplet = () => {
-        setShowDroplet(false);
-    };
-
-    const handleOpenRect = (event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        setRectOrigin({ x: centerX, y: centerY });
-        setShowRect(true);
-    };
-
-    const handleCloseRect = () => {
-        setShowRect(false);
+    const handleCloseOverlay = (overlayType) => () => {
+        setOverlays(prev => ({
+            ...prev,
+            [overlayType]: { ...prev[overlayType], closing: true }
+        }));
+        
+        setTimeout(() => {
+            setOverlays(prev => ({
+                ...prev,
+                [overlayType]: { show: false, closing: false, origin: { x: 0, y: 0 } }
+            }));
+            setBackgroundFaded(false);
+        }, 800);
     };
 
     useEffect(() => {
         const handleEscapeKey = (event) => {
             if (event.key === 'Escape') {
-                setShowCircle(false);
-                setShowHeart(false);
-                setShowDroplet(false);
-                setShowRect(false);
+                Object.keys(overlays).forEach(overlayType => {
+                    if (overlays[overlayType].show) {
+                        handleCloseOverlay(overlayType)();
+                    }
+                });
             }
         };
 
-        if (showCircle || showHeart || showDroplet || showRect) {
+        const anyOverlayOpen = Object.values(overlays).some(overlay => overlay.show);
+        if (anyOverlayOpen) {
             document.addEventListener('keydown', handleEscapeKey);
         }
 
         return () => {
             document.removeEventListener('keydown', handleEscapeKey);
         };
-    }, [showCircle, showHeart, showDroplet, showRect]);
+    }, [overlays]);
 
     const overlayStyle = {
-        opacity: (showCircle || showHeart || showDroplet || showRect) ? 0 : 1,
-        transition: 'opacity 0.5s ease-out',
-        pointerEvents: (showCircle || showHeart || showDroplet || showRect) ? 'none' : 'auto'
+        opacity: backgroundFaded ? 0.2 : 1,
+        filter: backgroundFaded ? 'blur(2px)' : 'blur(0px)',
+        transition: 'all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        pointerEvents: backgroundFaded ? 'none' : 'auto'
+    };
+
+    const clickableStyle = {
+        opacity: 1,
+        transition: 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        pointerEvents: 'auto',
+        cursor: 'pointer'
+    };
+
+    // Helper function to render overlay
+    const renderOverlay = (show, closing, origin, overlayClass, Component, onClose) => {
+        if (!show) return null;
+        
+        return (
+            <div
+                className={`base-overlay ${overlayClass} ${show && !closing ? 'overlay-open' : ''} ${closing ? 'overlay-closing' : ''}`}
+                style={{
+                    '--origin-x': `${origin.x}px`,
+                    '--origin-y': `${origin.y}px`,
+                    display: show ? 'block' : 'none'
+                }}
+                onClick={onClose}
+            >
+                <Component />
+            </div>
+        );
     };
 
     return (
         <>
-            <div className="mirror-exp-container" style={{ display: (showCircle || showHeart || showDroplet || showRect) ? 'none' : 'flex' }}>
+            <div className="mirror-exp-container">
                 <div className="bodytext1-section" style={overlayStyle}>
                     <span className="bodytext1">
                         Awakening luxury through your senses, in every time, space <br/>  
@@ -181,8 +195,8 @@ const MirrorExp = () => {
                         src="/universeSection/circle-presence.png"
                         alt="Circle Presence"
                         className="circle-presence"
-                        onClick={handleOpenCircle}
-                        style={{ ...overlayStyle, cursor: 'pointer' }}
+                        onClick={handleOpenOverlay('circle')}
+                        style={clickableStyle}
                     />
                     <span className="hover-text">Presence</span>
                 </div>
@@ -191,8 +205,8 @@ const MirrorExp = () => {
                         src="/universeSection/heart-senses.png"
                         alt="Heart Senses"
                         className="heart-senses"
-                        onClick={handleOpenHeart}
-                        style={{ ...overlayStyle, cursor: 'pointer' }}
+                        onClick={handleOpenOverlay('heart')}
+                        style={clickableStyle}
                     />
                     <span className="hover-text">Senses</span>
                 </div>
@@ -201,8 +215,8 @@ const MirrorExp = () => {
                         src="/universeSection/droplet-time.png"
                         alt="Droplet Time"
                         className="droplet-time"
-                        onClick={handleOpenDroplet}
-                        style={{ ...overlayStyle, cursor: 'pointer' }}
+                        onClick={handleOpenOverlay('droplet')}
+                        style={clickableStyle}
                     />
                     <span className="hover-text">Time</span>
                 </div>
@@ -211,60 +225,16 @@ const MirrorExp = () => {
                         src="/universeSection/rect-space.png"
                         alt="Rect Space"
                         className="rect-space"
-                        onClick={handleOpenRect}
-                        style={{ ...overlayStyle, cursor: 'pointer' }}
+                        onClick={handleOpenOverlay('rect')}
+                        style={clickableStyle}
                     />
                     <span className="hover-text">Space</span>
                 </div>
             </div>
-            {showCircle && (
-                <div
-                    className={`presence-overlay ${showCircle ? 'presence-overlay-open' : ''}`}
-                    style={{
-                        '--origin-x': `${circleOrigin.x}px`,
-                        '--origin-y': `${circleOrigin.y}px`,
-                        display: showCircle ? 'block' : 'none'
-                    }}
-                >
-                    <PresenceOverlay2 />
-                </div>
-            )}
-            {showHeart && (
-                <div
-                    className={`heart-overlay ${showHeart ? 'heart-overlay-open' : ''}`}
-                    style={{
-                        '--origin-x': `${heartOrigin.x}px`,
-                        '--origin-y': `${heartOrigin.y}px`,
-                        display: showHeart ? 'block' : 'none'
-                    }}
-                >
-                    <SensesOverlay2 />
-                </div>
-            )}
-            {showDroplet && (
-                <div
-                    className={`droplet-overlay ${showDroplet ? 'droplet-overlay-open' : ''}`}
-                    style={{
-                        '--origin-x': `${dropletOrigin.x}px`,
-                        '--origin-y': `${dropletOrigin.y}px`,
-                        display: showDroplet ? 'block' : 'none'
-                    }}
-                >
-                    <TimeOverlay />
-                </div>
-            )}
-            {showRect && (
-                <div
-                    className={`rect-overlay ${showRect ? 'rect-overlay-open' : ''}`}
-                    style={{
-                        '--origin-x': `${rectOrigin.x}px`,
-                        '--origin-y': `${rectOrigin.y}px`,
-                        display: showRect ? 'block' : 'none'
-                    }}
-                >
-                    <SpaceOverlay />
-                </div>
-            )}
+            {renderOverlay(overlays.circle.show, overlays.circle.closing, overlays.circle.origin, 'presence-overlay', PresenceOverlay2, handleCloseOverlay('circle'))}
+            {renderOverlay(overlays.heart.show, overlays.heart.closing, overlays.heart.origin, 'heart-overlay', SensesOverlay2, handleCloseOverlay('heart'))}
+            {renderOverlay(overlays.droplet.show, overlays.droplet.closing, overlays.droplet.origin, 'droplet-overlay', TimeOverlay, handleCloseOverlay('droplet'))}
+            {renderOverlay(overlays.rect.show, overlays.rect.closing, overlays.rect.origin, 'rect-overlay', SpaceOverlay, handleCloseOverlay('rect'))}
         </>
     );
 };

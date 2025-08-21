@@ -1,25 +1,4 @@
-.droplet-overlay {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    cursor: pointer;
-    overflow: hidden;
-    border: none;
-    background-color: #000000;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.droplet-overlay-open {
-    opacity: 1 !important;
-}
-
-.droplet-overlay-closing {
-    opacity: 0;
-}
+/* Droplet overlay uses base classes from MirrorExp.css */
 
 .droplet-overlay .star {
     position: absolute;

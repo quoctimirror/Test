@@ -1,24 +1,5 @@
 .presence-overlay {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    cursor: pointer;
-    overflow: hidden;
-    border: none;
-    background-color: #000000;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.presence-overlay-open {
-    opacity: 1 !important;
-}
-
-.presence-overlay-closing {
-    opacity: 0;
+    z-index: 9999; /* Higher z-index for presence overlay */
 }
 
 .presence-overlay .star {
