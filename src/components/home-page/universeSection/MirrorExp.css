@@ -1,0 +1,744 @@
+/* MirrorExp.css */
+
+/* Bodytext1 section styling */
+.bodytext1-section {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.bodytext1 {
+    color: var(--gray-3, #797979);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%; /* 24px */
+}
+
+/* ===== UNIFIED OVERLAY ANIMATIONS ===== */
+
+/* Base overlay styles */
+.base-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    cursor: pointer;
+    overflow: hidden;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: var(--origin-x, 50%) var(--origin-y, 50%);
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Overlay opening animation */
+.base-overlay.overlay-open {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+/* Overlay closing animation */
+.base-overlay.overlay-closing {
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.8s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+@keyframes rotateClockwise {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotateCounterClockwise {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+.mirror-exp-container {
+    background-color: #000000;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.layer {
+    position: absolute;
+    width: auto;
+    transform-origin: center center;
+}
+
+.layer0 {
+    z-index: 6;
+    animation: rotateClockwise 3.5s linear infinite;
+}
+
+.layer1 {
+    position: absolute;
+    width: auto;
+    transform-origin: center center;
+    z-index: 5;
+    animation: rotateClockwise 10s linear infinite;
+}
+
+.layer2 {
+    position: absolute;
+    width: auto;
+    transform-origin: center center;
+    z-index: 4;
+    animation: rotateCounterClockwise 20s linear infinite;
+}
+
+.layer3 {
+    z-index: 3;
+    animation: rotateClockwise 2s linear infinite;
+}
+
+.layer4 {
+    z-index: 2;
+    animation: rotateCounterClockwise 4s linear infinite;
+}
+
+.layer5 {
+    position: absolute;
+    width: auto;
+    transform-origin: center center;
+    z-index: 1;
+    animation: rotateClockwise 30s linear infinite;
+}
+
+.layer5>img:first-child {
+    width: auto;
+    height: auto;
+}
+
+.mirror-experience-text {
+    position: absolute;
+    z-index: 7;
+}
+
+.circle-presence {
+    position: absolute;
+    width: auto;
+    left: calc(50% + min(18vh, 18vw));
+    top: calc(50% - min(6.5vh, 6.5vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+
+.heart-senses {
+    position: absolute;
+    width: auto;
+    left: calc(50% - min(15vh, 15vw));
+    top: calc(50% - min(30vh, 30vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.droplet-time {
+    position: absolute;
+    width: auto;
+    left: calc(50% - min(25vh, 25vw));
+    top: calc(50% + min(13.5vh, 13.5vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.rect-space {
+    position: absolute;
+    width: auto;
+    left: calc(50% + min(22vh, 22vw));
+    top: calc(50% + min(25vh, 25vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.meteoroid-layer-1 {
+    position: absolute;
+    width: auto;
+}
+
+
+.meteoroid-1 {
+    position: absolute;
+    left: calc(50% - min(13vh, 13vw));
+    top: calc(50%);
+    transform: translate(-50%, -50%);
+    height: 20px;
+}
+
+.meteoroid-2 {
+    position: absolute;
+    left: calc(50% + min(13vh, 13vw));
+    top: calc(51%);
+    transform: translate(-50%, -50%);
+    height: 20px;
+}
+
+.meteoroid-layer-2 {
+    position: absolute;
+    width: auto;
+}
+
+.meteoroid-layer2-1 {
+    position: absolute;
+    left: calc(50% + min(17.3vh, 17.3vw));
+    top: calc(52%);
+    transform: translate(-50%, -50%);
+}
+
+.meteoroid-layer2-2 {
+    position: absolute;
+    left: calc(50% - min(17.3vh, 17.3vw));
+    top: calc(52%);
+    transform: translate(-50%, -50%);
+}
+
+.meteoroid-layer-5 {
+    position: absolute;
+    width: auto;
+    z-index: 2;
+}
+
+.meteoroid-layer5-1 {
+    position: absolute;
+    left: calc(50% + min(30vh, 30vw));
+    top: calc(50%);
+    transform: translate(-50%, -50%);
+}
+
+.meteoroid-layer5-2 {
+    position: absolute;
+    left: calc(50% - min(18vh, 18vw));
+    top: calc(50% + min(26vh, 26vw));
+    transform: translate(-50%, -50%);
+}
+
+.meteoroid-layer5-3 {
+    position: absolute;
+    left: calc(50% - min(18vh, 18vw));
+    top: calc(50% - min(26vh, 26vw));
+    transform: translate(-50%, -50%);
+}
+
+/* Hover wrapper styling */
+.hover-wrapper {
+    position: absolute;
+}
+
+.hover-wrapper .hover-text {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    z-index: 10;
+}
+
+.hover-wrapper:hover .hover-text {
+    opacity: 1;
+}
+
+/* Position wrappers to match original image positions */
+.circle-presence-wrapper {
+    left: calc(50% + min(18vh, 18vw));
+    top: calc(50% - min(2vh, 2vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.heart-senses-wrapper {
+    left: calc(50% - min(12vh, 12vw));
+    top: calc(50% - min(20vh, 10vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.droplet-time-wrapper {
+    left: calc(50% - min(18vh, 18vw));
+    top: calc(50% + min(13.5vh, 13.5vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+.rect-space-wrapper {
+    left: calc(50% + min(22vh, 22vw));
+    top: calc(50% + min(25vh, 25vw));
+    transform: translate(-50%, -50%);
+    z-index: 8;
+}
+
+/* Reset img positions since they're now inside wrappers */
+.hover-wrapper img {
+    position: relative;
+    transform: none;
+    left: auto;
+    top: auto;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hover-wrapper:hover img {
+    transform: scale(1.05);
+}
+
+.hover-wrapper:active img {
+    transform: scale(0.95);
+    transition: transform 0.1s ease-out;
+}
+
+/* ===== RESPONSIVE DESIGN CHO TẤT CẢ KÍCH THƯỚC MÀNG HÌNH ===== */
+
+/* Desktop lớn (1920px+) */
+@media (min-width: 1920px) {
+    .mirror-experience-text {
+        width: clamp(100px, 8vw, 150px);
+        height: auto;
+    }
+
+    .hover-wrapper .hover-text {
+        font-size: 24px;
+        padding-bottom: 15px;
+    }
+
+    .meteoroid-1,
+    .meteoroid-2 {
+        height: 25px;
+    }
+}
+
+/* Desktop trung bình (1200px - 1919px) */
+@media (min-width: 1200px) and (max-width: 1919px) {
+    .mirror-experience-text {
+        width: clamp(90px, 7vw, 140px);
+        height: auto;
+    }
+
+    .hover-wrapper .hover-text {
+        font-size: 22px;
+        padding-bottom: 12px;
+    }
+
+    .meteoroid-1,
+    .meteoroid-2 {
+        height: 22px;
+    }
+}
+
+/* Laptop (1024px - 1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+    .mirror-experience-text {
+        width: clamp(80px, 6vw, 125px);
+        height: auto;
+    }
+
+    .hover-wrapper .hover-text {
+        font-size: 20px;
+        padding-bottom: 10px;
+    }
+
+    .meteoroid-1,
+    .meteoroid-2 {
+        height: 20px;
+    }
+
+    .circle-presence,
+    .heart-senses,
+    .droplet-time,
+    .rect-space {
+        width: clamp(40px, 8vw, 80px);
+        height: auto;
+    }
+}
+
+/* Tablet landscape (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .mirror-experience-text {
+        width: clamp(70px, 5vw, 100px);
+        height: auto;
+    }
+
+    .hover-wrapper .hover-text {
+        font-size: 18px;
+        padding-bottom: 8px;
+    }
+
+    .meteoroid-1,
+    .meteoroid-2 {
+        height: 18px;
+    }
+
+    .circle-presence,
+    .heart-senses,
+    .droplet-time,
+    .rect-space {
+        width: clamp(35px, 7vw, 70px);
+        height: auto;
+    }
+
+    /* Điều chỉnh vị trí các clickable elements */
+    .circle-presence-wrapper {
+        left: calc(50% + min(15vh, 15vw));
+        top: calc(50% - min(5vh, 5vw));
+    }
+
+    .heart-senses-wrapper {
+        left: calc(50% - min(10vh, 10vw));
+        top: calc(50% - min(8vh, 8vw));
+    }
+
+    .droplet-time-wrapper {
+        left: calc(50% - min(20vh, 20vw));
+        top: calc(50% + min(11vh, 11vw));
+    }
+
+    .rect-space-wrapper {
+        left: calc(50% + min(18vh, 18vw));
+        top: calc(50% + min(20vh, 20vw));
+    }
+}
+
+/* Tablet portrait (481px - 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+    .mirror-experience-text {
+        width: clamp(60px, 4.5vw, 90px);
+        height: auto;
+    }
+
+    .hover-wrapper .hover-text {
+        font-size: 16px;
+        padding-bottom: 6px;
+    }
+
+    .meteoroid-1,
+    .meteoroid-2 {
+        height: 16px;
+    }
+
+    .circle-presence,
+    .heart-senses,
+    .droplet-time,
+    .rect-space {
+        width: clamp(30px, 6vw, 60px);
+        height: auto;
+    }
+
+    /* Điều chỉnh vị trí các clickable elements */
+    .circle-presence-wrapper {
+        left: calc(50% + min(12vh, 12vw));
+        top: calc(50% - min(4vh, 4vw));
+    }
+
+    .heart-senses-wrapper {
+        left: calc(50% - min(8vh, 8vw));
+        top: calc(50% - min(6vh, 6vw));
+    }
+
+    .droplet-time-wrapper {
+        left: calc(50% - min(16vh, 16vw));
+        top: calc(50% + min(9vh, 9vw));
+    }
+
+    .rect-space-wrapper {
+        left: calc(50% + min(15vh, 15vw));
+        top: calc(50% + min(16vh, 16vw));
+    }
+
+    /* Điều chỉnh meteoroids */
+    .meteoroid-1 {
+        left: calc(50% - min(11vh, 11vw));
+    }
+
+    .meteoroid-2 {
+        left: calc(50% + min(11vh, 11vw));
+    }
+}
+
+/* Mobile landscape (376px - 480px) */
+@media (min-width: 376px) and (max-width: 480px) {
+    .mirror-experience-text {
+        width: clamp(50px, 4vw, 75px);
+        height: auto;
+    }
+
+    .hover-wrapper .hover-text {
+        font-size: 14px;
+        padding-bottom: 5px;
+    }
+
+    .meteoroid-1,
+    .meteoroid-2 {
+        height: 14px;
+    }
+
+    .circle-presence,
+    .heart-senses,
+    .droplet-time,
+    .rect-space {
+        width: clamp(25px, 5vw, 50px);
+        height: auto;
+    }
+
+    /* Điều chỉnh vị trí các clickable elements */
+    .circle-presence-wrapper {
+        left: calc(50% + min(10vh, 10vw));
+        top: calc(50% - min(3vh, 3vw));
+    }
+
+    .heart-senses-wrapper {
+        left: calc(50% - min(6vh, 6vw));
+        top: calc(50% - min(4vh, 4vw));
+    }
+
+    .droplet-time-wrapper {
+        left: calc(50% - min(12vh, 12vw));
+        top: calc(50% + min(7vh, 7vw));
+    }
+
+    .rect-space-wrapper {
+        left: calc(50% + min(12vh, 12vw));
+        top: calc(50% + min(12vh, 12vw));
+    }
+
+    /* Điều chỉnh meteoroids */
+    .meteoroid-1 {
+        left: calc(50% - min(9vh, 9vw));
+    }
+
+    .meteoroid-2 {
+        left: calc(50% + min(9vh, 9vw));
+    }
+
+    .meteoroid-layer2-1 {
+        left: calc(50% + min(14vh, 14vw));
+    }
+
+    .meteoroid-layer2-2 {
+        left: calc(50% - min(14vh, 14vw));
+    }
+}
+
+/* Mobile portrait (320px - 375px) */
+@media (min-width: 320px) and (max-width: 375px) {
+    .mirror-experience-text {
+        width: clamp(40px, 3.5vw, 60px);
+        height: auto;
+    }
+
+    .hover-wrapper .hover-text {
+        font-size: 12px;
+        padding-bottom: 4px;
+    }
+
+    .meteoroid-1,
+    .meteoroid-2 {
+        height: 12px;
+    }
+
+    .circle-presence,
+    .heart-senses,
+    .droplet-time,
+    .rect-space {
+        width: clamp(20px, 4vw, 40px);
+        height: auto;
+    }
+
+    /* Điều chỉnh vị trí các clickable elements - gần tâm hơn */
+    .circle-presence-wrapper {
+        left: calc(50% + min(8vh, 8vw));
+        top: calc(50% - min(2vh, 2vw));
+    }
+
+    .heart-senses-wrapper {
+        left: calc(50% - min(5vh, 5vw));
+        top: calc(50% - min(3vh, 3vw));
+    }
+
+    .droplet-time-wrapper {
+        left: calc(50% - min(10vh, 10vw));
+        top: calc(50% + min(5vh, 5vw));
+    }
+
+    .rect-space-wrapper {
+        left: calc(50% + min(10vh, 10vw));
+        top: calc(50% + min(10vh, 10vw));
+    }
+
+    /* Điều chỉnh meteoroids */
+    .meteoroid-1 {
+        left: calc(50% - min(7vh, 7vw));
+    }
+
+    .meteoroid-2 {
+        left: calc(50% + min(7vh, 7vw));
+    }
+
+    .meteoroid-layer2-1 {
+        left: calc(50% + min(12vh, 12vw));
+    }
+
+    .meteoroid-layer2-2 {
+        left: calc(50% - min(12vh, 12vw));
+    }
+
+    .meteoroid-layer5-1 {
+        left: calc(50% + min(28vh, 28vw));
+    }
+
+    .meteoroid-layer5-2 {
+        left: calc(50% - min(12vh, 12vw));
+        top: calc(50% - min(25vh, 25vw));
+    }
+
+    .meteoroid-layer5-3 {
+        left: calc(50% - min(12vh, 12vw));
+        top: calc(50% + min(25vh, 25vw));
+    }
+}
+
+/* Mobile rất nhỏ (dưới 320px) */
+@media (max-width: 319px) {
+    .mirror-experience-text {
+        width: clamp(30px, 3vw, 50px);
+        height: auto;
+    }
+
+    .hover-wrapper .hover-text {
+        font-size: 10px;
+        padding-bottom: 3px;
+    }
+
+    .meteoroid-1,
+    .meteoroid-2 {
+        height: 10px;
+    }
+
+    .circle-presence,
+    .heart-senses,
+    .droplet-time,
+    .rect-space {
+        width: clamp(15px, 3vw, 30px);
+        height: auto;
+    }
+
+    /* Điều chỉnh vị trí các clickable elements - rất gần tâm */
+    .circle-presence-wrapper {
+        left: calc(50% + min(6vh, 6vw));
+        top: calc(50% - min(1vh, 1vw));
+    }
+
+    .heart-senses-wrapper {
+        left: calc(50% - min(4vh, 4vw));
+        top: calc(50% - min(2vh, 2vw));
+    }
+
+    .droplet-time-wrapper {
+        left: calc(50% - min(8vh, 8vw));
+        top: calc(50% + min(4vh, 4vw));
+    }
+
+    .rect-space-wrapper {
+        left: calc(50% + min(8vh, 8vw));
+        top: calc(50% + min(8vh, 8vw));
+    }
+
+    /* Điều chỉnh meteoroids */
+    .meteoroid-1 {
+        left: calc(50% - min(6vh, 6vw));
+    }
+
+    .meteoroid-2 {
+        left: calc(50% + min(6vh, 6vw));
+    }
+
+    .meteoroid-layer2-1 {
+        left: calc(50% + min(10vh, 10vw));
+    }
+
+    .meteoroid-layer2-2 {
+        left: calc(50% - min(10vh, 10vw));
+    }
+
+    .meteoroid-layer5-1 {
+        left: calc(50% + min(25vh, 25vw));
+    }
+
+    .meteoroid-layer5-2 {
+        left: calc(50% - min(10vh, 10vw));
+        top: calc(50% - min(22vh, 22vw));
+    }
+
+    .meteoroid-layer5-3 {
+        left: calc(50% - min(10vh, 10vw));
+        top: calc(50% + min(22vh, 22vw));
+    }
+}
+
+/* Responsive cho chiều cao màn hình thấp */
+@media (max-height: 600px) {
+    .mirror-experience-text {
+        width: clamp(40px, 5vw, 80px);
+    }
+
+    .hover-wrapper .hover-text {
+        font-size: 14px;
+        padding-bottom: 5px;
+    }
+
+    /* Điều chỉnh vị trí các clickable elements cho màn hình thấp */
+    .circle-presence-wrapper {
+        left: calc(50% + min(12vw, 12vh));
+        top: calc(50% - min(4vw, 4vh));
+    }
+
+    .heart-senses-wrapper {
+        left: calc(50% - min(8vw, 8vh));
+        top: calc(50% - min(6vw, 6vh));
+    }
+
+    .droplet-time-wrapper {
+        left: calc(50% - min(18vw, 18vh));
+        top: calc(50% + min(8vw, 8vh));
+    }
+
+    .rect-space-wrapper {
+        left: calc(50% + min(16vw, 16vh));
+        top: calc(50% + min(15vw, 15vh));
+    }
+}

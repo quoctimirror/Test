@@ -1,0 +1,159 @@
+.presence-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    cursor: pointer;
+    border-radius: 50%;
+    overflow: hidden;
+    border: none;
+    background-color: #000000;
+    top: var(--origin-y);
+    left: var(--origin-x);
+    transform: translate(-50%, -50%) scale(0.05);
+    opacity: 0;
+    transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.presence-overlay-open {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+    opacity: 1 !important;
+}
+
+.presence-overlay-closing {
+    top: var(--origin-y);
+    left: var(--origin-x);
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+}
+
+.presence-overlay .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkle 5s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 1002;
+}
+
+.presence-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    background-image: url('/universeSection/circle-presence-planet.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.presence-container .heading-2 {
+    color: var(--White, #FFF);
+    text-align: center;
+    margin-top: 4rem;
+    font-size: 64px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -1.28px;
+    margin-bottom: 16px;
+    position: relative;
+    /* Ensure text is above shimmer */
+    z-index: 20;
+}
+
+.presence-text-flex {
+    display: flex;
+    justify-content: space-evenly;
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    gap: 4rem;
+    width: fit-content;
+    margin: 0 auto;
+    position: relative;
+    /* Ensure text is above shimmer */
+    z-index: 20;
+}
+
+.presence-text-center {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    text-align: center;
+    margin: 2rem 0 0 0;
+    max-width: 280px;
+    font-size: 12px;
+    position: relative;
+    /* Ensure text is above shimmer */
+    z-index: 20;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .presence-overlay {
+        width: 100vw;
+        height: 100vh;
+    }
+
+
+    .presence-container {
+        padding: 1rem;
+    }
+
+    .presence-container .heading-2 {
+        font-size: 2.4rem;
+    }
+
+    .presence-text-justify,
+    .presence-text-center {
+        max-width: 150px;
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 480px) {
+    .presence-overlay {
+        width: 100vw;
+        height: 100vh;
+    }
+
+
+    .presence-container {
+        padding: 0.8rem;
+    }
+
+    .presence-container .heading-2 {
+        font-size: 1.8rem;
+    }
+
+    .presence-text-justify,
+    .presence-text-center {
+        max-width: 120px;
+        font-size: 8px;
+    }
+}
