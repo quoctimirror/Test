@@ -1,4 +1,27 @@
 /* MirrorExp.css */
+
+/* Bodytext1 section styling */
+.bodytext1-section {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.bodytext1 {
+    color: var(--gray-3, #797979);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%; /* 24px */
+}
+
 @keyframes rotateClockwise {
     from {
         transform: rotate(0deg);

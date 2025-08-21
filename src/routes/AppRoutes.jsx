@@ -15,8 +15,8 @@ const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
 const SupportPage = lazy(() => import("@pages/SupportPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
-const UVFinal = lazy(() =>
-  import("@components/universeSectionNew/MirrorExp.jsx")
+const UniverseSection = lazy(() =>
+  import("@components/home-page/universeSection/MirrorExp.jsx")
 );
 const HoverExpandSection = lazy(() =>
   import("@components/home-page/hoverExpandSection/HoverExpandSection.jsx")
@@ -101,7 +101,7 @@ export default function AppRoutes() {
 
           <Route path="/news/:slug" element={<NewCutPage />} />
 
-          <Route path="/universe-final" element={<UVFinal />} />
+          <Route path="/universe-section" element={<UniverseSection />} />
 
           <Route path="/hover-expand" element={<HoverExpandSection />} />
 

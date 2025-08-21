@@ -93,6 +93,12 @@ const MirrorExp = () => {
     return (
         <>
             <div className="mirror-exp-container" style={{ display: (showCircle || showHeart || showDroplet || showRect) ? 'none' : 'flex' }}>
+                <div className="bodytext1-section" style={overlayStyle}>
+                    <span className="bodytext1">
+                        Awakening luxury through your senses, in every time, space <br/>  
+                        and presence.
+                    </span>
+                </div>
                 <div className="layer layer5" style={overlayStyle}>
                     <img
                         src="/universeSection/layer5.png"
