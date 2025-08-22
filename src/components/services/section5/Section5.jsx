@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Section5.css";
-import GlassButton from "../../common/GlassButton";
+import GlassButton from "../../common/button/GlassButton";
 
 const Section5 = () => {
   const navigate = useNavigate();
@@ -69,7 +69,10 @@ const Section5 = () => {
 
           <div className="faq-list">
             {faqs.map((faq) => (
-              <div key={faq.id} className={`faq-item ${openFaq === faq.id ? 'active' : ''}`}>
+              <div
+                key={faq.id}
+                className={`faq-item ${openFaq === faq.id ? "active" : ""}`}
+              >
                 <button
                   className="faq-question"
                   onClick={() => toggleFaq(faq.id)}

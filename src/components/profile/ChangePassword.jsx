@@ -3,7 +3,7 @@ import api from "../../api/axiosConfig";
 import "./ChangePassword.css";
 import EyeIconSvg from "../../assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "../../assets/images/icons/EyeSlashIcon.svg";
-import GlassButton from "../common/GlassButton";
+import GlassButton from "../common/button/GlassButton";
 
 const ChangePassword = ({ onClose }) => {
   const [passwordData, setPasswordData] = useState({

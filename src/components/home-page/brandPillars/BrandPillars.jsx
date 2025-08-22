@@ -1,8 +1,10 @@
+import MetaballBackground from "../../specialEffect/MetaballBackground/MetaballBackground";
 import "./BrandPillars.css";
 
 const BrandPillars = () => {
   return (
     <section className="brand-pillars">
+      <MetaballBackground className="brand-pillars-background" />
       <div className="brand-pillars-content">
         <h1 className="brand-pillars-text">
           <div className="brand-group">

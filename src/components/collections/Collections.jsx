@@ -2,7 +2,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import CollectionHeroSection from "./CollectionHeroSection";
-import GlassButton from '../common/GlassButton';
+import GlassButton from "../common/button/GlassButton";
 import "./Collections.css";
 
 const products = [

@@ -1,0 +1,318 @@
+.heart-overlay {
+    position: fixed;
+    width: min(90vh, 90vw);
+    height: min(90vh, 90vw);
+    z-index: 1000;
+    cursor: pointer;
+    overflow: hidden;
+    border: none;
+    top: var(--origin-y);
+    left: var(--origin-x);
+    transform: translate(-50%, -50%) scale(0.05);
+    opacity: 0;
+    transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.heart-overlay-open {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+    opacity: 1 !important;
+}
+
+.heart-overlay-closing {
+    top: var(--origin-y);
+    left: var(--origin-x);
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+}
+
+.heart-overlay .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkle 5s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 1002;
+}
+
+.heart-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-image: url('/universeSection/heart-senses-planet.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.senses-title {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -1.28px;
+    position: relative;
+    z-index: 20;
+    margin-top: -100px;
+    /* Điều chỉnh giá trị này để di chuyển cao/thấp */
+}
+
+/* CSS riêng cho StarlightEffect trong SensesOverlay */
+.heart-container .star-container-center {
+    margin-top: -10px;
+    /* Điều chỉnh khoảng cách thanh sáng với chữ Senses */
+}
+
+/* 5 thanh sáng tỏa ra từ trung tâm theo các hướng khác nhau */
+/* Thanh sáng hướng 1 giờ */
+.starlight-11-oclock {
+    position: absolute;
+    top: 41%;
+    left: 46%;
+    transform: translate(-50%, -50%) rotate(-230deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+.sight-text {
+    position: absolute;
+    top: 28%;
+    left: 35%;
+    transform: translateX(-50%);
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    z-index: 20;
+}
+
+/* Thanh sáng hướng 2 giờ */
+.starlight-2-oclock {
+    position: absolute;
+    top: 41%;
+    left: 55%;
+    transform: translate(-50%, -50%) rotate(-130deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+
+.touch-text {
+    position: absolute;
+    top: 28%;
+    left: 66%;
+    transform: translateX(-50%);
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    z-index: 20;
+}
+
+/* Thanh sáng hướng 4 giờ */
+.starlight-4-oclock {
+    position: absolute;
+    top: 48%;
+    left: 62%;
+    transform: translate(-50%, -50%) rotate(-50deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+.taste-text {
+    position: absolute;
+    top: 50%;
+    left: 70%;
+    transform: translateX(-50%);
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    z-index: 20;
+}
+
+.starlight-6-oclock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    transform-origin: center top;
+    z-index: 15;
+}
+
+
+
+/* CSS cho các text labels - định vị ở cuối mỗi thanh sáng */
+.sound-text {
+    position: absolute;
+    top: 72%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    z-index: 20;
+}
+
+
+
+
+
+
+
+.scent-text {
+    position: absolute;
+    top: 72%;
+    left: 25%;
+    transform: translateX(-50%);
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    z-index: 20;
+}
+
+
+@keyframes facetShimmer {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+.heart-container .heading-2 {
+    color: var(--White, #FFF);
+    text-align: center;
+    margin-top: 4rem;
+    font-size: 64px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -1.28px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 20;
+}
+
+.heart-text-flex {
+    display: flex;
+    justify-content: space-evenly;
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    gap: 4rem;
+    width: fit-content;
+    margin: 0 auto;
+    position: relative;
+    z-index: 20;
+}
+
+.heart-text-center {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    text-align: center;
+    margin: 2rem 0 0 0;
+    max-width: 280px;
+    font-size: 12px;
+    position: relative;
+    z-index: 20;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .heart-overlay {
+        width: min(85vh, 85vw);
+        height: min(85vh, 85vw);
+    }
+
+    .heart-overlay::after {
+        width: min(85vh, 85vw);
+        height: min(85vh, 85vw);
+    }
+
+    .heart-container {
+        padding: 1rem;
+    }
+
+    .heart-container .heading-2 {
+        font-size: 2.4rem;
+    }
+
+    .heart-text-justify,
+    .heart-text-center {
+        max-width: 150px;
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 480px) {
+    .heart-overlay {
+        width: min(90vh, 90vw);
+        height: min(90vh, 90vw);
+    }
+
+    .heart-overlay::after {
+        width: min(90vh, 90vw);
+        height: min(90vh, 90vw);
+    }
+
+    .heart-container {
+        padding: 0.8rem;
+    }
+
+    .heart-container .heading-2 {
+        font-size: 1.8rem;
+    }
+
+    .heart-text-justify,
+    .heart-text-center {
+        max-width: 120px;
+        font-size: 8px;
+    }
+}

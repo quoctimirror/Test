@@ -1,18 +1,24 @@
 import "./Navbar.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { reactTransitionUtils } from "../../utils/reactTransitionUtils";
 export default function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logoRef = useRef(null);
   const { isAuthenticated, user } = useAuth();
 
+  useEffect(() => {
+    // Initialize React transition utils
+    reactTransitionUtils.init();
+  }, []);
+
   // Debug log - remove in production
   // console.log('Navbar - isAuthenticated:', isAuthenticated, 'user:', user, 'isLoading:', isLoading);
 
-  const handleLogoClick = () => {
+  const handleLogoClick = async () => {
     if (window.location.pathname === "/") {
       window.scrollTo(0, 0);
       setTimeout(() => {
@@ -20,66 +26,75 @@ export default function Navbar() {
       }, 0);
     } else {
       sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/";
+      await reactTransitionUtils.transitionToRoute(navigate, "/");
     }
   };
 
-  const handleProductsClick = () => {
+  const handleProductsClick = async () => {
     if (window.location.pathname === "/collections") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/collections";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await reactTransitionUtils.transitionToRoute(navigate, "/collections", {
+      onStart: () => console.log('Starting transition to collections...'),
+      onComplete: () => console.log('Collections page transition completed!')
+    });
   };
 
-  const handleServicesClick = () => {
+  const handleServicesClick = async () => {
     if (window.location.pathname === "/services") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/services";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await reactTransitionUtils.transitionToRoute(navigate, "/services");
   };
 
 
-  const handleSupportClick = () => {
+  const handleSupportClick = async () => {
     if (window.location.pathname === "/support") {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/support";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await reactTransitionUtils.transitionToRoute(navigate, "/support");
   };
 
-  const handleAboutClick = () => {
+  const handleAboutClick = async () => {
     if (window.location.pathname === "/about") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/about";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await reactTransitionUtils.transitionToRoute(navigate, "/about");
   };
 
-  const handleNewsClick = () => {
+  const handleNewsClick = async () => {
     if (window.location.pathname === "/news") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/news";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await reactTransitionUtils.transitionToRoute(navigate, "/news");
   };
 
-  const handleContactClick = () => {
+  const handleContactClick = async () => {
     if (window.location.pathname === "/contact") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/contact";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await reactTransitionUtils.transitionToRoute(navigate, "/contact");
   };
 
-  const handleAccountClick = () => {
+  const handleAccountClick = async () => {
     // Enhanced check: also verify token exists as fallback
     const hasToken = localStorage.getItem("accessToken");
     const isLoggedIn = (isAuthenticated && user) || hasToken;
@@ -94,20 +109,31 @@ export default function Navbar() {
 
     if (isLoggedIn) {
       console.log("Navigating to profile");
-      navigate("/user-profile");
+      if (window.location.pathname === "/user-profile") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      sessionStorage.setItem("scrollToTop", "true");
+      await reactTransitionUtils.transitionToRoute(navigate, "/user-profile");
     } else {
       console.log("Navigating to login");
-      navigate("/auth/login");
+      if (window.location.pathname === "/auth/login") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      sessionStorage.setItem("scrollToTop", "true");
+      await reactTransitionUtils.transitionToRoute(navigate, "/auth/login");
     }
   };
 
-  const handleLocationClick = () => {
+  const handleLocationClick = async () => {
     if (window.location.pathname === "/locations") {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      sessionStorage.setItem('scrollToTop', 'true');
-      window.location.href = "/locations";
+      return;
     }
+
+    sessionStorage.setItem('scrollToTop', 'true');
+    await reactTransitionUtils.transitionToRoute(navigate, "/locations");
   };
 
   return (
@@ -165,7 +191,7 @@ export default function Navbar() {
                 >
                   Contact us
                 </li>
-                <li className="bodytext-3--no-margin">Account</li>
+                <li className="bodytext-3--no-margin" onClick={handleAccountClick}>Account</li>
               </ul>
             </div>
           </div>

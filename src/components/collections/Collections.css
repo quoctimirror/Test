@@ -1,16 +1,3 @@
-/*
-============================================================
-    GLOBAL SCROLL BEHAVIOR & OVERFLOW FIX
-============================================================
-*/
-html,
-body {
-  scroll-behavior: smooth;
-  overflow-x: hidden; /* Ngăn scroll ngang */
-  width: 100%;
-  max-width: 100vw;
-}
-
 /* Container chính */
 .collection-page {
   overflow-x: hidden;

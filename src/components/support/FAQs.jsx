@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./FAQs.css";
-import GlassButton from "../common/GlassButton";
+import GlassButton from "../common/button/GlassButton";
 
 const FAQs = () => {
   const [expandedFAQ, setExpandedFAQ] = useState(null);
@@ -126,7 +126,14 @@ const FAQs = () => {
                   <div className="faq-list">
                     {/* QUAN TRỌNG: Lặp qua `faqData` gốc để render TẤT CẢ câu hỏi trong MỖI section */}
                     {faqData.map((question, index) => (
-                      <div key={`${section.id}-${index}`} className={`faq-item ${expandedFAQ === `${section.id}-${index}` ? 'active' : ''}`}>
+                      <div
+                        key={`${section.id}-${index}`}
+                        className={`faq-item ${
+                          expandedFAQ === `${section.id}-${index}`
+                            ? "active"
+                            : ""
+                        }`}
+                      >
                         <button
                           className="faq-question"
                           onClick={() => toggleFAQ(`${section.id}-${index}`)}
