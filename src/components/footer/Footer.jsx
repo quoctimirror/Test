@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
 import GlassButton from "../common/button/GlassButton";
-<<<<<<< HEAD
 import { reactTransitionUtils } from "../../utils/reactTransitionUtils";
-=======
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -62,13 +59,7 @@ const Footer = () => {
     e.preventDefault();
     if (window.location.pathname === "/news") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-<<<<<<< HEAD
       return;
-=======
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/news";
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
     }
     sessionStorage.setItem("scrollToTop", "true");
     await reactTransitionUtils.transitionToRoute(navigate, "/news");
@@ -103,51 +94,43 @@ const Footer = () => {
               <h3 className="heading-3 footer-title">DISCOVER</h3>
               <ul className="footer-links">
                 <li>
-<<<<<<< HEAD
                   <a className="bodytext-3" href="/" onClick={handleHomeClick}>
-=======
-                  <a className="bodytext-3" href="/">
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
                     Homepage
                   </a>
                 </li>
                 <li>
-<<<<<<< HEAD
-                  <a className="bodytext-3" href="/collections" onClick={handleProductsClick}>
-=======
-                  <a className="bodytext-3" href="/collections">
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
+                  <a
+                    className="bodytext-3"
+                    href="/collections"
+                    onClick={handleProductsClick}
+                  >
                     Product
                   </a>
                 </li>
                 <li>
-<<<<<<< HEAD
-                  <a className="bodytext-3" href="/services" onClick={handleServicesClick}>
-=======
-                  <a className="bodytext-3" href="/services">
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
+                  <a
+                    className="bodytext-3"
+                    href="/services"
+                    onClick={handleServicesClick}
+                  >
                     Service & Support
                   </a>
                 </li>
                 <li>
-<<<<<<< HEAD
-                  <a className="bodytext-3" href="/about" onClick={handleAboutClick}>
-=======
-                  <a className="bodytext-3" href="/about">
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
+                  <a
+                    className="bodytext-3"
+                    href="/about"
+                    onClick={handleAboutClick}
+                  >
                     About Mirror
                   </a>
                 </li>
                 <li>
-<<<<<<< HEAD
-                  <a className="bodytext-3" href="/news" onClick={handleNewsClick}>
-=======
                   <a
                     className="bodytext-3"
                     href="/news"
                     onClick={handleNewsClick}
                   >
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
                     News
                   </a>
                 </li>
@@ -189,11 +172,11 @@ const Footer = () => {
               <h3 className="heading-3 footer-title">CONTACT</h3>
               <ul className="contact-info">
                 <li>
-<<<<<<< HEAD
-                  <a className="bodytext-3" href="/contact" onClick={handleContactClick}>
-=======
-                  <a className="bodytext-3" href="/contact">
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
+                  <a
+                    className="bodytext-3"
+                    href="/contact"
+                    onClick={handleContactClick}
+                  >
                     Contact us
                   </a>
                 </li>
@@ -216,11 +199,11 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-<<<<<<< HEAD
-                  <a className="bodytext-3" href="/locations" onClick={handleLocationClick}>
-=======
-                  <a className="bodytext-3" href="/locations">
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
+                  <a
+                    className="bodytext-3"
+                    href="/locations"
+                    onClick={handleLocationClick}
+                  >
                     Location
                   </a>
                 </li>
