@@ -30,11 +30,14 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
     const initScrollTrigger = () => {
       if (!scrollContainerRef.current) return;
 
+<<<<<<< HEAD
       // Kill any existing ScrollTriggers for this component
       ScrollTrigger.getAll()
         .filter(trigger => trigger.trigger === sectionRef.current)
         .forEach(trigger => trigger.kill());
 
+=======
+>>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
       // Get all product cards
       const cards =
         scrollContainerRef.current.querySelectorAll(".product-card");
@@ -76,15 +79,20 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
       // Cleanup
       return () => {
         window.removeEventListener("resize", handleResize);
+<<<<<<< HEAD
         ScrollTrigger.getAll()
           .filter(trigger => trigger.trigger === sectionRef.current)
           .forEach(trigger => trigger.kill());
+=======
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+>>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
       };
     };
 
     // Initialize after a short delay to ensure DOM is ready
     const timer = setTimeout(initScrollTrigger, 100);
 
+<<<<<<< HEAD
     // Listen for page transition complete event to reinitialize
     const handleTransitionComplete = () => {
       console.log('ViewAllProduct: Reinitializing after page transition');
@@ -98,6 +106,11 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
       ScrollTrigger.getAll()
         .filter(trigger => trigger.trigger === sectionRef.current)
         .forEach(trigger => trigger.kill());
+=======
+    return () => {
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+>>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
     };
   }, []);
 
