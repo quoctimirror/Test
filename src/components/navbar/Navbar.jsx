@@ -4,6 +4,7 @@ import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { reactTransitionUtils } from "../../utils/reactTransitionUtils";
+import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
 export default function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,12 +12,26 @@ export default function Navbar() {
   const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
-    // Initialize React transition utils
+    // Initialize both transition systems
     reactTransitionUtils.init();
+    optimizedTransitionUtils.init(); // Optimized version không cần wrapper
   }, []);
 
   // Debug log - remove in production
   // console.log('Navbar - isAuthenticated:', isAuthenticated, 'user:', user, 'isLoading:', isLoading);
+
+  // Helper function để chọn transition system
+  const useOptimizedTransition = true; // Set true để dùng optimized version
+  
+  const performTransition = async (route, options = {}) => {
+    if (useOptimizedTransition) {
+      // Sử dụng optimized version cho performance tốt hơn
+      await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
+    } else {
+      // Fallback về reactTransitionUtils gốc
+      await reactTransitionUtils.transitionToRoute(navigate, route, options);
+    }
+  };
 
   const handleLogoClick = async () => {
     if (window.location.pathname === "/") {
@@ -26,7 +41,7 @@ export default function Navbar() {
       }, 0);
     } else {
       sessionStorage.setItem("scrollToTop", "true");
-      await reactTransitionUtils.transitionToRoute(navigate, "/");
+      await performTransition("/");
     }
   };
 
@@ -37,7 +52,7 @@ export default function Navbar() {
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/collections", {
+    await performTransition("/collections", {
       onStart: () => console.log('Starting transition to collections...'),
       onComplete: () => console.log('Collections page transition completed!')
     });
@@ -50,7 +65,7 @@ export default function Navbar() {
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/services");
+    await performTransition("/services");
   };
 
 
@@ -61,7 +76,7 @@ export default function Navbar() {
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/support");
+    await performTransition("/support");
   };
 
   const handleAboutClick = async () => {
@@ -71,7 +86,7 @@ export default function Navbar() {
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/about");
+    await performTransition("/about");
   };
 
   const handleNewsClick = async () => {
@@ -81,7 +96,7 @@ export default function Navbar() {
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/news");
+    await performTransition("/news");
   };
 
   const handleContactClick = async () => {
@@ -91,7 +106,7 @@ export default function Navbar() {
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/contact");
+    await performTransition("/contact");
   };
 
   const handleAccountClick = async () => {
@@ -114,7 +129,7 @@ export default function Navbar() {
         return;
       }
       sessionStorage.setItem("scrollToTop", "true");
-      await reactTransitionUtils.transitionToRoute(navigate, "/user-profile");
+      await performTransition("/user-profile");
     } else {
       console.log("Navigating to login");
       if (window.location.pathname === "/auth/login") {
@@ -122,7 +137,7 @@ export default function Navbar() {
         return;
       }
       sessionStorage.setItem("scrollToTop", "true");
-      await reactTransitionUtils.transitionToRoute(navigate, "/auth/login");
+      await performTransition("/auth/login");
     }
   };
 
@@ -133,7 +148,7 @@ export default function Navbar() {
     }
 
     sessionStorage.setItem('scrollToTop', 'true');
-    await reactTransitionUtils.transitionToRoute(navigate, "/locations");
+    await performTransition("/locations");
   };
 
   return (
@@ -168,26 +183,45 @@ export default function Navbar() {
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleProductsClick}
+                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/collections')}
                 >
                   Products
                 </li>
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleServicesClick}
+                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/services')}
                 >
                   Services</li>
-                <li className="bodytext-3--no-margin" onClick={handleSupportClick}>Support
+                <li 
+                  className="bodytext-3--no-margin" 
+                  onClick={handleSupportClick}
+                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/support')}
+                >Support
                 </li>
-                <li className="bodytext-3--no-margin" onClick={handleAboutClick}>About Mirror</li>
-                <li className="bodytext-3--no-margin" onClick={handleNewsClick}>
+                <li 
+                  className="bodytext-3--no-margin" 
+                  onClick={handleAboutClick}
+                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/about')}
+                >About Mirror</li>
+                <li 
+                  className="bodytext-3--no-margin" 
+                  onClick={handleNewsClick}
+                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/news')}
+                >
                   News
                 </li>
               </ul>
               <ul className="menu-list">
-                <li className="bodytext-3--no-margin" onClick={handleLocationClick}>Location</li>
+                <li 
+                  className="bodytext-3--no-margin" 
+                  onClick={handleLocationClick}
+                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/locations')}
+                >Location</li>
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleContactClick}
+                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/contact')}
                 >
                   Contact us
                 </li>
