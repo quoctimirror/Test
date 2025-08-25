@@ -125,13 +125,12 @@ export const optimizedTransitionUtils = {
       const originalContent = root.innerHTML;
       const currentScrollY = window.scrollY;
       
-      // Create a frozen clone of current page to display during load
-      const frozenPage = document.createElement('div');
-      frozenPage.id = 'frozen-page';
-      frozenPage.innerHTML = originalContent;
-      frozenPage.style.cssText = `
+      // Create a wrapper that can contain the full page
+      const frozenWrapper = document.createElement('div');
+      frozenWrapper.id = 'frozen-wrapper';
+      frozenWrapper.style.cssText = `
         position: fixed;
-        top: ${-currentScrollY}px;
+        top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
@@ -140,7 +139,21 @@ export const optimizedTransitionUtils = {
         overflow: hidden;
         pointer-events: none;
       `;
-      document.body.appendChild(frozenPage);
+      
+      // Create the actual frozen page content
+      const frozenPage = document.createElement('div');
+      frozenPage.innerHTML = originalContent;
+      frozenPage.style.cssText = `
+        position: absolute;
+        top: ${-currentScrollY}px;
+        left: 0;
+        width: 100vw;
+        min-height: 100vh;
+        background: white;
+      `;
+      
+      frozenWrapper.appendChild(frozenPage);
+      document.body.appendChild(frozenWrapper);
 
       // Hide the real root temporarily
       root.style.opacity = '0';
@@ -204,15 +217,14 @@ export const optimizedTransitionUtils = {
       await waitForPageLoad();
 
       // Now content is loaded, prepare animation layers
-      // Remove frozen page and create animation layers
-      frozenPage.remove();
+      // Remove frozen wrapper and create animation layers
+      frozenWrapper.remove();
       
-      // Create animated clone of old page (keep current scroll position)
-      const currentPageClone = document.createElement('div');
-      currentPageClone.innerHTML = originalContent;
-      currentPageClone.style.cssText = `
+      // Create animated clone wrapper (keep current scroll position)
+      const currentPageWrapper = document.createElement('div');
+      currentPageWrapper.style.cssText = `
         position: fixed;
-        top: ${-currentScrollY}px;
+        top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
@@ -223,7 +235,21 @@ export const optimizedTransitionUtils = {
         ${optimizedTransitionUtils.config.enableGPU ? 'transform: translateZ(0);' : ''}
         ${optimizedTransitionUtils.config.enableWillChange ? 'will-change: transform, opacity;' : ''}
       `;
-      document.body.appendChild(currentPageClone);
+      
+      // Create the actual page content clone
+      const currentPageClone = document.createElement('div');
+      currentPageClone.innerHTML = originalContent;
+      currentPageClone.style.cssText = `
+        position: absolute;
+        top: ${-currentScrollY}px;
+        left: 0;
+        width: 100vw;
+        min-height: 100vh;
+        background: white;
+      `;
+      
+      currentPageWrapper.appendChild(currentPageClone);
+      document.body.appendChild(currentPageWrapper);
 
       // Create new page container with slide-up animation
       const newPageContainer = document.createElement('div');
@@ -245,7 +271,7 @@ export const optimizedTransitionUtils = {
 
       // Enable GPU acceleration
       if (optimizedTransitionUtils.config.enableGPU) {
-        optimizedTransitionUtils.optimizations.enableGPU(currentPageClone);
+        optimizedTransitionUtils.optimizations.enableGPU(currentPageWrapper);
         optimizedTransitionUtils.optimizations.enableGPU(newPageContainer);
       }
 
@@ -263,8 +289,8 @@ export const optimizedTransitionUtils = {
               // Current page fade out and scale down
               const opacity = Math.max(0, 1 - progress / 0.7);
               const scale = 1 - progress * 0.08;
-              currentPageClone.style.opacity = opacity;
-              currentPageClone.style.transform = `scale(${scale})`;
+              currentPageWrapper.style.opacity = opacity;
+              currentPageWrapper.style.transform = `scale(${scale}) ${optimizedTransitionUtils.config.enableGPU ? 'translateZ(0)' : ''}`;
 
               // New page slide up
               const translateY = 100 * (1 - progress);
@@ -282,7 +308,7 @@ export const optimizedTransitionUtils = {
             // GSAP fallback
             const tl = gsap.timeline({ onComplete: resolve });
             
-            tl.to(currentPageClone, {
+            tl.to(currentPageWrapper, {
               duration: duration,
               opacity: 0,
               scale: 0.92,
@@ -303,7 +329,7 @@ export const optimizedTransitionUtils = {
       // Clean up after animation
       root.style.opacity = '1';
       root.style.pointerEvents = '';
-      currentPageClone.remove();
+      currentPageWrapper.remove();
       newPageContainer.remove();
 
       // Cleanup GPU acceleration
