@@ -1,8 +1,8 @@
 // Optimized Transition Utils - Kết hợp ưu điểm của reactTransitionUtils và Barba.js
 // Không cần Barba wrapper, hoạt động trực tiếp với React
 
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export const optimizedTransitionUtils = {
   // Configuration
@@ -13,7 +13,7 @@ export const optimizedTransitionUtils = {
     enableGPU: true,
     enableWillChange: true,
     enableRAF: true,
-    prefetchDelay: 100
+    prefetchDelay: 100,
   },
 
   // State management
@@ -21,7 +21,7 @@ export const optimizedTransitionUtils = {
     isTransitioning: false,
     isInitialized: false,
     prefetchCache: new Set(),
-    rafId: null
+    rafId: null,
   },
 
   // Performance optimizations
@@ -29,29 +29,29 @@ export const optimizedTransitionUtils = {
     // Enable GPU acceleration
     enableGPU: (element) => {
       if (!element) return;
-      element.style.transform = 'translateZ(0)';
-      element.style.backfaceVisibility = 'hidden';
-      element.style.perspective = '1000px';
-      element.style.willChange = 'transform, opacity';
+      element.style.transform = "translateZ(0)";
+      element.style.backfaceVisibility = "hidden";
+      element.style.perspective = "1000px";
+      element.style.willChange = "transform, opacity";
     },
 
     disableGPU: (element) => {
       if (!element) return;
-      element.style.transform = '';
-      element.style.backfaceVisibility = '';
-      element.style.perspective = '';
-      element.style.willChange = '';
+      element.style.transform = "";
+      element.style.backfaceVisibility = "";
+      element.style.perspective = "";
+      element.style.willChange = "";
     },
 
     // Throttle function for performance
     throttle: (func, wait) => {
       let timeout;
       let previous = 0;
-      
-      return function(...args) {
+
+      return function (...args) {
         const now = Date.now();
         const remaining = wait - (now - previous);
-        
+
         if (remaining <= 0 || remaining > wait) {
           if (timeout) {
             clearTimeout(timeout);
@@ -61,44 +61,51 @@ export const optimizedTransitionUtils = {
           func.apply(this, args);
         }
       };
-    }
+    },
   },
 
   // Initialize the system
   init: () => {
     if (optimizedTransitionUtils.state.isInitialized) return;
-    
+
     // Setup prefetch on link hover
-    if (typeof document !== 'undefined') {
-      const prefetchLink = optimizedTransitionUtils.optimizations.throttle((href) => {
-        if (!optimizedTransitionUtils.state.prefetchCache.has(href)) {
-          optimizedTransitionUtils.state.prefetchCache.add(href);
-          
-          // Silently prefetch
-          setTimeout(() => {
-            fetch(href, { 
-              method: 'GET', 
-              credentials: 'same-origin',
-              headers: { 'X-Prefetch': 'true' }
-            }).catch(() => {});
-          }, optimizedTransitionUtils.config.prefetchDelay);
-        }
-      }, 200);
+    if (typeof document !== "undefined") {
+      const prefetchLink = optimizedTransitionUtils.optimizations.throttle(
+        (href) => {
+          if (!optimizedTransitionUtils.state.prefetchCache.has(href)) {
+            optimizedTransitionUtils.state.prefetchCache.add(href);
+
+            // Silently prefetch
+            setTimeout(() => {
+              fetch(href, {
+                method: "GET",
+                credentials: "same-origin",
+                headers: { "X-Prefetch": "true" },
+              }).catch(() => {});
+            }, optimizedTransitionUtils.config.prefetchDelay);
+          }
+        },
+        200
+      );
 
       // Add hover prefetch
-      document.addEventListener('mouseover', (e) => {
-        const link = e.target.closest('a[href]');
-        if (link) {
-          const href = link.getAttribute('href');
-          if (href && href.startsWith('/') && !href.startsWith('//')) {
-            prefetchLink(href);
+      document.addEventListener(
+        "mouseover",
+        (e) => {
+          const link = e.target.closest("a[href]");
+          if (link) {
+            const href = link.getAttribute("href");
+            if (href && href.startsWith("/") && !href.startsWith("//")) {
+              prefetchLink(href);
+            }
           }
-        }
-      }, { passive: true });
+        },
+        { passive: true }
+      );
     }
 
     optimizedTransitionUtils.state.isInitialized = true;
-    console.log('Optimized Transition Utils initialized');
+    console.log("Optimized Transition Utils initialized");
   },
 
   // Optimized page transition with preloading
@@ -107,10 +114,10 @@ export const optimizedTransitionUtils = {
       return;
     }
 
-    const { 
+    const {
       onStart = null,
       onComplete = null,
-      duration = optimizedTransitionUtils.config.duration
+      duration = optimizedTransitionUtils.config.duration,
     } = options;
 
     optimizedTransitionUtils.state.isTransitioning = true;
@@ -118,16 +125,16 @@ export const optimizedTransitionUtils = {
     try {
       if (onStart) onStart();
 
-      const root = document.getElementById('root');
-      if (!root) throw new Error('Root element not found');
+      const root = document.getElementById("root");
+      if (!root) throw new Error("Root element not found");
 
       // Save current page state and scroll position
       const originalContent = root.innerHTML;
       const currentScrollY = window.scrollY;
-      
+
       // Create a wrapper that can contain the full page
-      const frozenWrapper = document.createElement('div');
-      frozenWrapper.id = 'frozen-wrapper';
+      const frozenWrapper = document.createElement("div");
+      frozenWrapper.id = "frozen-wrapper";
       frozenWrapper.style.cssText = `
         position: fixed;
         top: 0;
@@ -139,9 +146,9 @@ export const optimizedTransitionUtils = {
         overflow: hidden;
         pointer-events: none;
       `;
-      
+
       // Create the actual frozen page content
-      const frozenPage = document.createElement('div');
+      const frozenPage = document.createElement("div");
       frozenPage.innerHTML = originalContent;
       frozenPage.style.cssText = `
         position: absolute;
@@ -151,30 +158,31 @@ export const optimizedTransitionUtils = {
         min-height: 100vh;
         background: white;
       `;
-      
+
       frozenWrapper.appendChild(frozenPage);
       document.body.appendChild(frozenWrapper);
 
       // Hide the real root temporarily
-      root.style.opacity = '0';
-      root.style.pointerEvents = 'none';
-      
+      root.style.opacity = "0";
+      root.style.pointerEvents = "none";
+
       // Navigate to new route (hidden)
       navigateFunction(route);
-      
-      // Ensure new page starts from top (but don't show it yet)
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-      }, 50);
+
+      // Ensure new page starts from top multiple times to be safe
+      setTimeout(() => window.scrollTo(0, 0), 10);
+      setTimeout(() => window.scrollTo(0, 0), 50);
+      setTimeout(() => window.scrollTo(0, 0), 100);
+      setTimeout(() => window.scrollTo(0, 0), 200);
 
       // Wait for new content to fully load
       const waitForPageLoad = async () => {
         let retries = 0;
         const maxRetries = 50; // 5 seconds max wait
-        
+
         while (retries < maxRetries) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
           // Check if React has rendered
           if (root.children.length === 0) {
             retries++;
@@ -182,14 +190,14 @@ export const optimizedTransitionUtils = {
           }
 
           // Check for critical resources
-          const images = root.querySelectorAll('img');
-          const videos = root.querySelectorAll('video');
-          
+          const images = root.querySelectorAll("img");
+          const videos = root.querySelectorAll("video");
+
           // Wait for critical images (above the fold)
           let criticalImagesLoaded = true;
           for (let i = 0; i < Math.min(images.length, 3); i++) {
             const img = images[i];
-            if (img && !img.complete && !img.src.includes('data:')) {
+            if (img && !img.complete && !img.src.includes("data:")) {
               criticalImagesLoaded = false;
               break;
             }
@@ -197,8 +205,9 @@ export const optimizedTransitionUtils = {
 
           // For videos, just ensure they have metadata
           for (const video of videos) {
-            if (video.readyState < 1) { // HAVE_METADATA
-              video.preload = 'metadata';
+            if (video.readyState < 1) {
+              // HAVE_METADATA
+              video.preload = "metadata";
             }
           }
 
@@ -206,12 +215,12 @@ export const optimizedTransitionUtils = {
           if (criticalImagesLoaded) {
             break;
           }
-          
+
           retries++;
         }
 
         // Extra wait for JS to settle
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       };
 
       await waitForPageLoad();
@@ -219,9 +228,9 @@ export const optimizedTransitionUtils = {
       // Now content is loaded, prepare animation layers
       // Remove frozen wrapper and create animation layers
       frozenWrapper.remove();
-      
+
       // Create animated clone wrapper (keep current scroll position)
-      const currentPageWrapper = document.createElement('div');
+      const currentPageWrapper = document.createElement("div");
       currentPageWrapper.style.cssText = `
         position: fixed;
         top: 0;
@@ -232,12 +241,20 @@ export const optimizedTransitionUtils = {
         background: white;
         overflow: hidden;
         pointer-events: none;
-        ${optimizedTransitionUtils.config.enableGPU ? 'transform: translateZ(0);' : ''}
-        ${optimizedTransitionUtils.config.enableWillChange ? 'will-change: transform, opacity;' : ''}
+        ${
+          optimizedTransitionUtils.config.enableGPU
+            ? "transform: translateZ(0);"
+            : ""
+        }
+        ${
+          optimizedTransitionUtils.config.enableWillChange
+            ? "will-change: transform, opacity;"
+            : ""
+        }
       `;
-      
+
       // Create the actual page content clone
-      const currentPageClone = document.createElement('div');
+      const currentPageClone = document.createElement("div");
       currentPageClone.innerHTML = originalContent;
       currentPageClone.style.cssText = `
         position: absolute;
@@ -247,12 +264,12 @@ export const optimizedTransitionUtils = {
         min-height: 100vh;
         background: white;
       `;
-      
+
       currentPageWrapper.appendChild(currentPageClone);
       document.body.appendChild(currentPageWrapper);
 
       // Create new page container with slide-up animation
-      const newPageContainer = document.createElement('div');
+      const newPageContainer = document.createElement("div");
       newPageContainer.innerHTML = root.innerHTML;
       newPageContainer.style.cssText = `
         position: fixed;
@@ -264,8 +281,16 @@ export const optimizedTransitionUtils = {
         background: white;
         overflow: hidden;
         pointer-events: none;
-        ${optimizedTransitionUtils.config.enableGPU ? 'transform: translateY(100%) translateZ(0);' : 'transform: translateY(100%);'}
-        ${optimizedTransitionUtils.config.enableWillChange ? 'will-change: transform;' : ''}
+        ${
+          optimizedTransitionUtils.config.enableGPU
+            ? "transform: translateY(100%) translateZ(0);"
+            : "transform: translateY(100%);"
+        }
+        ${
+          optimizedTransitionUtils.config.enableWillChange
+            ? "will-change: transform;"
+            : ""
+        }
       `;
       document.body.appendChild(newPageContainer);
 
@@ -277,7 +302,7 @@ export const optimizedTransitionUtils = {
 
       // Perform smooth animation
       const performAnimation = async () => {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           if (optimizedTransitionUtils.config.enableRAF) {
             const startTime = performance.now();
             const animationDuration = duration * 1000;
@@ -290,36 +315,47 @@ export const optimizedTransitionUtils = {
               const opacity = Math.max(0, 1 - progress / 0.7);
               const scale = 1 - progress * 0.08;
               currentPageWrapper.style.opacity = opacity;
-              currentPageWrapper.style.transform = `scale(${scale}) ${optimizedTransitionUtils.config.enableGPU ? 'translateZ(0)' : ''}`;
+              currentPageWrapper.style.transform = `scale(${scale}) ${
+                optimizedTransitionUtils.config.enableGPU ? "translateZ(0)" : ""
+              }`;
 
               // New page slide up
               const translateY = 100 * (1 - progress);
-              newPageContainer.style.transform = `translateY(${translateY}%)${optimizedTransitionUtils.config.enableGPU ? ' translateZ(0)' : ''}`;
+              newPageContainer.style.transform = `translateY(${translateY}%)${
+                optimizedTransitionUtils.config.enableGPU
+                  ? " translateZ(0)"
+                  : ""
+              }`;
 
               if (progress < 1) {
-                optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
+                optimizedTransitionUtils.state.rafId =
+                  requestAnimationFrame(animate);
               } else {
                 resolve();
               }
             };
 
-            optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
+            optimizedTransitionUtils.state.rafId =
+              requestAnimationFrame(animate);
           } else {
             // GSAP fallback
             const tl = gsap.timeline({ onComplete: resolve });
-            
+
             tl.to(currentPageWrapper, {
               duration: duration,
               opacity: 0,
               scale: 0.92,
-              ease: optimizedTransitionUtils.config.easing
-            })
-            .to(newPageContainer, {
-              y: "0%",
-              duration: duration,
               ease: optimizedTransitionUtils.config.easing,
-              force3D: optimizedTransitionUtils.config.enableGPU
-            }, 0);
+            }).to(
+              newPageContainer,
+              {
+                y: "0%",
+                duration: duration,
+                ease: optimizedTransitionUtils.config.easing,
+                force3D: optimizedTransitionUtils.config.enableGPU,
+              },
+              0
+            );
           }
         });
       };
@@ -327,10 +363,13 @@ export const optimizedTransitionUtils = {
       await performAnimation();
 
       // Clean up after animation
-      root.style.opacity = '1';
-      root.style.pointerEvents = '';
+      root.style.opacity = "1";
+      root.style.pointerEvents = "";
       currentPageWrapper.remove();
       newPageContainer.remove();
+
+      // Final scroll to top to ensure new page is at the beginning
+      window.scrollTo(0, 0);
 
       // Cleanup GPU acceleration
       if (optimizedTransitionUtils.config.enableGPU) {
@@ -339,9 +378,10 @@ export const optimizedTransitionUtils = {
 
       // Refresh ScrollTrigger
       setTimeout(() => {
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
         ScrollTrigger.refresh(true);
-        window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
+        window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
+        window.scrollTo(0, 0); // Extra scroll to top
       }, 100);
 
       // Apply lazy loading for remaining resources
@@ -349,27 +389,26 @@ export const optimizedTransitionUtils = {
 
       optimizedTransitionUtils.state.isTransitioning = false;
       if (onComplete) onComplete();
-
     } catch (error) {
-      console.error('Transition failed:', error);
-      
+      console.error("Transition failed:", error);
+
       // Cleanup on error
-      const root = document.getElementById('root');
+      const root = document.getElementById("root");
       if (root) {
-        root.style.opacity = '1';
+        root.style.opacity = "1";
         if (optimizedTransitionUtils.config.enableGPU) {
           optimizedTransitionUtils.optimizations.disableGPU(root);
         }
       }
-      
-      document.querySelectorAll('[style*="fixed"]').forEach(el => {
-        if (el.id !== 'root') el.remove();
+
+      document.querySelectorAll('[style*="fixed"]').forEach((el) => {
+        if (el.id !== "root") el.remove();
       });
-      
+
       if (optimizedTransitionUtils.state.rafId) {
         cancelAnimationFrame(optimizedTransitionUtils.state.rafId);
       }
-      
+
       optimizedTransitionUtils.state.isTransitioning = false;
       navigateFunction(route);
     }
@@ -381,10 +420,10 @@ export const optimizedTransitionUtils = {
       return;
     }
 
-    const { 
+    const {
       onStart = null,
       onComplete = null,
-      duration = optimizedTransitionUtils.config.duration
+      duration = optimizedTransitionUtils.config.duration,
     } = options;
 
     optimizedTransitionUtils.state.isTransitioning = true;
@@ -392,14 +431,14 @@ export const optimizedTransitionUtils = {
     try {
       if (onStart) onStart();
 
-      const root = document.getElementById('root');
-      if (!root) throw new Error('Root element not found');
+      const root = document.getElementById("root");
+      if (!root) throw new Error("Root element not found");
 
       // Capture current page state
       const currentContent = root.innerHTML;
-      
+
       // Create persistent overlay to prevent flash
-      const overlay = document.createElement('div');
+      const overlay = document.createElement("div");
       overlay.style.cssText = `
         position: fixed;
         top: 0;
@@ -420,48 +459,51 @@ export const optimizedTransitionUtils = {
       const waitForReady = async () => {
         let checks = 0;
         const maxChecks = 50; // 5 seconds max
-        
+
         while (checks < maxChecks) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
           // Check if content has changed
           if (root.innerHTML !== currentContent && root.children.length > 0) {
             // Additional checks for heavy content
-            const media = root.querySelectorAll('img, video');
-            
+            const media = root.querySelectorAll("img, video");
+
             if (media.length > 0) {
               // Wait for first few images
-              const images = Array.from(root.querySelectorAll('img')).slice(0, 2);
+              const images = Array.from(root.querySelectorAll("img")).slice(
+                0,
+                2
+              );
               let loaded = true;
-              
+
               for (const img of images) {
                 if (!img.complete && img.src) {
                   loaded = false;
                   break;
                 }
               }
-              
+
               if (loaded) break;
             } else {
               // No media, content is ready
               break;
             }
           }
-          
+
           checks++;
         }
-        
+
         // Final stabilization wait
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 50));
       };
 
       await waitForReady();
 
       // Smooth transition effect
       const newContent = root.innerHTML;
-      
+
       // Create new content layer
-      const newLayer = document.createElement('div');
+      const newLayer = document.createElement("div");
       newLayer.style.cssText = `
         position: fixed;
         top: 0;
@@ -479,25 +521,24 @@ export const optimizedTransitionUtils = {
 
       // Fade in new content
       requestAnimationFrame(() => {
-        newLayer.style.opacity = '1';
+        newLayer.style.opacity = "1";
       });
 
       // Clean up after transition
       setTimeout(() => {
         overlay.remove();
         newLayer.remove();
-        
+
         // Refresh ScrollTrigger
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
         ScrollTrigger.refresh(true);
-        window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
-        
+        window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
+
         optimizedTransitionUtils.state.isTransitioning = false;
         if (onComplete) onComplete();
       }, duration * 1000);
-
     } catch (error) {
-      console.error('Smooth transition failed:', error);
+      console.error("Smooth transition failed:", error);
       optimizedTransitionUtils.state.isTransitioning = false;
       navigateFunction(route);
     }
@@ -509,11 +550,11 @@ export const optimizedTransitionUtils = {
       return;
     }
 
-    const { 
+    const {
       onStart = null,
       onComplete = null,
       showLoader = true,
-      duration = optimizedTransitionUtils.config.duration
+      duration = optimizedTransitionUtils.config.duration,
     } = options;
 
     optimizedTransitionUtils.state.isTransitioning = true;
@@ -521,13 +562,13 @@ export const optimizedTransitionUtils = {
     try {
       if (onStart) onStart();
 
-      const root = document.getElementById('root');
-      if (!root) throw new Error('Root element not found');
+      const root = document.getElementById("root");
+      if (!root) throw new Error("Root element not found");
 
       // Show loading indicator if needed
       let loadingOverlay = null;
       if (showLoader) {
-        loadingOverlay = document.createElement('div');
+        loadingOverlay = document.createElement("div");
         loadingOverlay.style.cssText = `
           position: fixed;
           top: 0;
@@ -559,10 +600,10 @@ export const optimizedTransitionUtils = {
           </style>
         `;
         document.body.appendChild(loadingOverlay);
-        
+
         // Fade in loader
         requestAnimationFrame(() => {
-          loadingOverlay.style.opacity = '1';
+          loadingOverlay.style.opacity = "1";
         });
       }
 
@@ -573,24 +614,28 @@ export const optimizedTransitionUtils = {
       const waitForContent = async () => {
         let attempts = 0;
         const maxAttempts = 100; // 10 seconds max
-        
+
         while (attempts < maxAttempts) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
-          const content = document.getElementById('root');
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          const content = document.getElementById("root");
           if (!content || content.children.length === 0) {
             attempts++;
             continue;
           }
 
           // Check media loading status
-          const images = content.querySelectorAll('img');
-          const videos = content.querySelectorAll('video');
-          
+          const images = content.querySelectorAll("img");
+          const videos = content.querySelectorAll("video");
+
           // For heavy pages, wait for critical resources
-          if (route.includes('about') || images.length > 5 || videos.length > 0) {
+          if (
+            route.includes("about") ||
+            images.length > 5 ||
+            videos.length > 0
+          ) {
             let resourcesReady = true;
-            
+
             // Check first 3 images
             for (let i = 0; i < Math.min(images.length, 3); i++) {
               if (images[i] && !images[i].complete) {
@@ -598,23 +643,23 @@ export const optimizedTransitionUtils = {
                 break;
               }
             }
-            
+
             // Check video metadata
             for (const video of videos) {
               if (video.readyState < 1) {
-                video.preload = 'metadata';
+                video.preload = "metadata";
                 resourcesReady = false;
               }
             }
-            
+
             if (resourcesReady) break;
           } else {
             // Light pages - just ensure DOM is ready
-            if (content.querySelector('h1, h2, p, div')) {
+            if (content.querySelector("h1, h2, p, div")) {
               break;
             }
           }
-          
+
           attempts++;
         }
       };
@@ -623,7 +668,7 @@ export const optimizedTransitionUtils = {
 
       // Fade out loader and show content
       if (loadingOverlay) {
-        loadingOverlay.style.opacity = '0';
+        loadingOverlay.style.opacity = "0";
         setTimeout(() => loadingOverlay.remove(), 300);
       }
 
@@ -631,18 +676,18 @@ export const optimizedTransitionUtils = {
       optimizedTransitionUtils.preloadPageContent(route);
 
       optimizedTransitionUtils.state.isTransitioning = false;
-      
+
       // Refresh ScrollTrigger
       setTimeout(() => {
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
         ScrollTrigger.refresh(true);
-        window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
+        window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
+        window.scrollTo(0, 0); // Extra scroll to top
       }, 100);
 
       if (onComplete) onComplete();
-
     } catch (error) {
-      console.error('Smart transition failed:', error);
+      console.error("Smart transition failed:", error);
       optimizedTransitionUtils.state.isTransitioning = false;
       navigateFunction(route);
     }
@@ -658,19 +703,19 @@ export const optimizedTransitionUtils = {
     optimizedTransitionUtils.state.isTransitioning = true;
 
     try {
-      const container = document.getElementById('root') || document.body;
-      
+      const container = document.getElementById("root") || document.body;
+
       if (optimizedTransitionUtils.config.enableGPU) {
         optimizedTransitionUtils.optimizations.enableGPU(container);
       }
-      
+
       // Fade out
       await gsap.to(container, {
         duration: duration,
         opacity: 0,
         scale: 0.98,
         ease: optimizedTransitionUtils.config.fadeEasing,
-        force3D: optimizedTransitionUtils.config.enableGPU
+        force3D: optimizedTransitionUtils.config.enableGPU,
       });
 
       // Navigate
@@ -690,12 +735,11 @@ export const optimizedTransitionUtils = {
             }
             optimizedTransitionUtils.state.isTransitioning = false;
             if (onComplete) onComplete();
-          }
+          },
         });
       }, 50);
-
     } catch (error) {
-      console.error('Fade transition failed:', error);
+      console.error("Fade transition failed:", error);
       optimizedTransitionUtils.state.isTransitioning = false;
       navigateFunction(route);
     }
@@ -704,33 +748,36 @@ export const optimizedTransitionUtils = {
   // Preload page content with smart loading strategy
   preloadPageContent: async (route) => {
     // For heavy pages like About, implement progressive loading
-    if (route.includes('about')) {
+    if (route.includes("about")) {
       // Lazy load videos
       const lazyLoadVideos = () => {
-        const videos = document.querySelectorAll('video[data-src]');
-        const videoObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const video = entry.target;
-              video.src = video.dataset.src;
-              video.load();
-              videoObserver.unobserve(video);
-            }
-          });
-        }, { rootMargin: '50px' });
-        
-        videos.forEach(video => videoObserver.observe(video));
+        const videos = document.querySelectorAll("video[data-src]");
+        const videoObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const video = entry.target;
+                video.src = video.dataset.src;
+                video.load();
+                videoObserver.unobserve(video);
+              }
+            });
+          },
+          { rootMargin: "50px" }
+        );
+
+        videos.forEach((video) => videoObserver.observe(video));
       };
-      
+
       // Optimize images
       const optimizeImages = () => {
-        const images = document.querySelectorAll('img');
-        images.forEach(img => {
-          if (!img.loading) img.loading = 'lazy';
-          if (!img.decoding) img.decoding = 'async';
+        const images = document.querySelectorAll("img");
+        images.forEach((img) => {
+          if (!img.loading) img.loading = "lazy";
+          if (!img.decoding) img.decoding = "async";
         });
       };
-      
+
       requestAnimationFrame(() => {
         lazyLoadVideos();
         optimizeImages();
@@ -742,9 +789,9 @@ export const optimizedTransitionUtils = {
   prefetch: (route) => {
     if (!optimizedTransitionUtils.state.prefetchCache.has(route)) {
       optimizedTransitionUtils.state.prefetchCache.add(route);
-      fetch(route, { 
-        method: 'GET', 
-        credentials: 'same-origin' 
+      fetch(route, {
+        method: "GET",
+        credentials: "same-origin",
       }).catch(() => {});
     }
   },
@@ -757,7 +804,7 @@ export const optimizedTransitionUtils = {
     optimizedTransitionUtils.state.isInitialized = false;
     optimizedTransitionUtils.state.isTransitioning = false;
     optimizedTransitionUtils.state.prefetchCache.clear();
-  }
+  },
 };
 
 export default optimizedTransitionUtils;
