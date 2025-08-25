@@ -15,7 +15,7 @@ import "./AboutPage.css";
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutPage = () => {
-  useEffect(() => {
+  const setupScrollTriggers = () => {
     let panels = gsap.utils.toArray(".panel");
 
     panels.forEach((panel) => {
@@ -27,9 +27,22 @@ const AboutPage = () => {
         pinSpacing: false,
       });
     });
+  };
+
+  useEffect(() => {
+    setupScrollTriggers();
+
+    const handlePageTransitionComplete = () => {
+      setTimeout(() => {
+        setupScrollTriggers();
+      }, 150);
+    };
+
+    window.addEventListener("pageTransitionComplete", handlePageTransitionComplete);
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      window.removeEventListener("pageTransitionComplete", handlePageTransitionComplete);
     };
   }, []);
 
