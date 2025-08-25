@@ -101,7 +101,7 @@ export const optimizedTransitionUtils = {
     console.log('Optimized Transition Utils initialized');
   },
 
-  // Optimized page transition with RAF
+  // Optimized page transition with preloading
   transitionToRoute: async (navigateFunction, route, options = {}) => {
     if (optimizedTransitionUtils.state.isTransitioning) {
       return;
@@ -121,21 +121,96 @@ export const optimizedTransitionUtils = {
       const root = document.getElementById('root');
       if (!root) throw new Error('Root element not found');
 
-      // Enable GPU acceleration
-      if (optimizedTransitionUtils.config.enableGPU) {
-        optimizedTransitionUtils.optimizations.enableGPU(root);
-      }
+      // Save current page state
+      const originalContent = root.innerHTML;
+      
+      // Create a frozen clone of current page to display during load
+      const frozenPage = document.createElement('div');
+      frozenPage.id = 'frozen-page';
+      frozenPage.innerHTML = originalContent;
+      frozenPage.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9997;
+        background: white;
+        overflow: auto;
+        pointer-events: none;
+      `;
+      document.body.appendChild(frozenPage);
 
-      // Create optimized clone
+      // Hide the real root temporarily
+      root.style.opacity = '0';
+      root.style.pointerEvents = 'none';
+      
+      // Navigate to new route (hidden)
+      navigateFunction(route);
+
+      // Wait for new content to fully load
+      const waitForPageLoad = async () => {
+        let retries = 0;
+        const maxRetries = 50; // 5 seconds max wait
+        
+        while (retries < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          // Check if React has rendered
+          if (root.children.length === 0) {
+            retries++;
+            continue;
+          }
+
+          // Check for critical resources
+          const images = root.querySelectorAll('img');
+          const videos = root.querySelectorAll('video');
+          
+          // Wait for critical images (above the fold)
+          let criticalImagesLoaded = true;
+          for (let i = 0; i < Math.min(images.length, 3); i++) {
+            const img = images[i];
+            if (img && !img.complete && !img.src.includes('data:')) {
+              criticalImagesLoaded = false;
+              break;
+            }
+          }
+
+          // For videos, just ensure they have metadata
+          for (const video of videos) {
+            if (video.readyState < 1) { // HAVE_METADATA
+              video.preload = 'metadata';
+            }
+          }
+
+          // If critical resources are ready, proceed
+          if (criticalImagesLoaded) {
+            break;
+          }
+          
+          retries++;
+        }
+
+        // Extra wait for JS to settle
+        await new Promise(resolve => setTimeout(resolve, 100));
+      };
+
+      await waitForPageLoad();
+
+      // Now content is loaded, prepare animation layers
+      // Remove frozen page and create animation layers
+      frozenPage.remove();
+      
+      // Create animated clone of old page
       const currentPageClone = document.createElement('div');
-      currentPageClone.innerHTML = root.innerHTML;
+      currentPageClone.innerHTML = originalContent;
       currentPageClone.style.cssText = `
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        z-index: 1;
+        z-index: 9998;
         background: white;
         overflow: hidden;
         pointer-events: none;
@@ -144,157 +219,104 @@ export const optimizedTransitionUtils = {
       `;
       document.body.appendChild(currentPageClone);
 
-      // Create container for new page with loading placeholder
+      // Create new page container with slide-up animation
       const newPageContainer = document.createElement('div');
+      newPageContainer.innerHTML = root.innerHTML;
       newPageContainer.style.cssText = `
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        z-index: 10;
+        z-index: 9999;
         background: white;
         overflow: hidden;
         pointer-events: none;
         ${optimizedTransitionUtils.config.enableGPU ? 'transform: translateY(100%) translateZ(0);' : 'transform: translateY(100%);'}
         ${optimizedTransitionUtils.config.enableWillChange ? 'will-change: transform;' : ''}
       `;
-      
-      // Add loading skeleton/placeholder
-      const loadingPlaceholder = document.createElement('div');
-      loadingPlaceholder.style.cssText = `
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-        background-size: 200% 100%;
-        animation: shimmer 1.5s infinite;
-      `;
-      loadingPlaceholder.innerHTML = `
-        <style>
-          @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-          }
-        </style>
-      `;
-      newPageContainer.appendChild(loadingPlaceholder);
       document.body.appendChild(newPageContainer);
 
-      // Hide root during transition
-      root.style.opacity = '0';
-      
-      // Start animation immediately with placeholder
-      const startAnimation = () => {
-        if (optimizedTransitionUtils.config.enableRAF) {
-          const startTime = performance.now();
-          const animationDuration = duration * 1000;
+      // Enable GPU acceleration
+      if (optimizedTransitionUtils.config.enableGPU) {
+        optimizedTransitionUtils.optimizations.enableGPU(currentPageClone);
+        optimizedTransitionUtils.optimizations.enableGPU(newPageContainer);
+      }
 
-          const animate = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / animationDuration, 1);
+      // Perform smooth animation
+      const performAnimation = async () => {
+        return new Promise(resolve => {
+          if (optimizedTransitionUtils.config.enableRAF) {
+            const startTime = performance.now();
+            const animationDuration = duration * 1000;
 
-            // Current page animation
-            const opacity = Math.max(0, 1 - progress / 0.7);
-            const scale = 1 - progress * 0.08;
-            currentPageClone.style.opacity = opacity;
-            currentPageClone.style.transform = `scale(${scale})`;
+            const animate = (currentTime) => {
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / animationDuration, 1);
 
-            // New page animation
-            const translateY = 100 * (1 - progress);
-            newPageContainer.style.transform = `translateY(${translateY}%)${optimizedTransitionUtils.config.enableGPU ? ' translateZ(0)' : ''}`;
+              // Current page fade out and scale down
+              const opacity = Math.max(0, 1 - progress / 0.7);
+              const scale = 1 - progress * 0.08;
+              currentPageClone.style.opacity = opacity;
+              currentPageClone.style.transform = `scale(${scale})`;
 
-            if (progress < 1) {
-              optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
-            }
-          };
+              // New page slide up
+              const translateY = 100 * (1 - progress);
+              newPageContainer.style.transform = `translateY(${translateY}%)${optimizedTransitionUtils.config.enableGPU ? ' translateZ(0)' : ''}`;
 
-          optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
-        } else {
-          // Fallback GSAP animation
-          gsap.to(currentPageClone, {
-            duration: duration,
-            opacity: 0,
-            scale: 0.92,
-            ease: optimizedTransitionUtils.config.easing
-          });
-          
-          gsap.to(newPageContainer, {
-            y: "0%",
-            duration: duration,
-            ease: optimizedTransitionUtils.config.easing,
-            force3D: optimizedTransitionUtils.config.enableGPU
-          });
-        }
-      };
-      
-      // Start animation immediately
-      startAnimation();
+              if (progress < 1) {
+                optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
+              } else {
+                resolve();
+              }
+            };
 
-      // Navigate to new route
-      navigateFunction(route);
-
-      // Apply smart loading strategy for heavy pages
-      setTimeout(() => {
-        optimizedTransitionUtils.preloadPageContent(route);
-      }, 50);
-
-      // Wait for content to be ready
-      const waitForContent = async () => {
-        let attempts = 0;
-        const maxAttempts = 20; // 2 seconds max wait
-        
-        while (attempts < maxAttempts) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
-          // Check if new content is loaded
-          const newContent = document.getElementById('root');
-          if (newContent && newContent.children.length > 0) {
-            // Check for images and videos
-            const media = newContent.querySelectorAll('img, video');
-            if (media.length === 0) break;
+            optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
+          } else {
+            // GSAP fallback
+            const tl = gsap.timeline({ onComplete: resolve });
             
-            // Wait for at least first image to load
-            const firstImg = newContent.querySelector('img');
-            if (!firstImg || firstImg.complete) break;
+            tl.to(currentPageClone, {
+              duration: duration,
+              opacity: 0,
+              scale: 0.92,
+              ease: optimizedTransitionUtils.config.easing
+            })
+            .to(newPageContainer, {
+              y: "0%",
+              duration: duration,
+              ease: optimizedTransitionUtils.config.easing,
+              force3D: optimizedTransitionUtils.config.enableGPU
+            }, 0);
           }
-          attempts++;
-        }
+        });
       };
 
-      await waitForContent();
+      await performAnimation();
 
-      // Copy new content after it's ready
-      newPageContainer.innerHTML = root.innerHTML;
+      // Clean up after animation
+      root.style.opacity = '1';
+      root.style.pointerEvents = '';
+      currentPageClone.remove();
+      newPageContainer.remove();
 
-      // Wait for animation to complete
-      await new Promise(resolve => {
-        setTimeout(() => {
-          // Animation complete
-          root.style.opacity = '1';
-          currentPageClone.remove();
-          newPageContainer.remove();
+      // Cleanup GPU acceleration
+      if (optimizedTransitionUtils.config.enableGPU) {
+        optimizedTransitionUtils.optimizations.disableGPU(root);
+      }
 
-          // Cleanup GPU acceleration
-          if (optimizedTransitionUtils.config.enableGPU) {
-            optimizedTransitionUtils.optimizations.disableGPU(root);
-          }
+      // Refresh ScrollTrigger
+      setTimeout(() => {
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        ScrollTrigger.refresh(true);
+        window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
+      }, 100);
 
-          // Refresh ScrollTrigger
-          setTimeout(() => {
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-            ScrollTrigger.refresh(true);
-            window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
-          }, 100);
+      // Apply lazy loading for remaining resources
+      optimizedTransitionUtils.preloadPageContent(route);
 
-          optimizedTransitionUtils.state.isTransitioning = false;
-          if (onComplete) onComplete();
-          resolve();
-        }, duration * 1000);
-
-      });
+      optimizedTransitionUtils.state.isTransitioning = false;
+      if (onComplete) onComplete();
 
     } catch (error) {
       console.error('Transition failed:', error);
@@ -316,6 +338,279 @@ export const optimizedTransitionUtils = {
         cancelAnimationFrame(optimizedTransitionUtils.state.rafId);
       }
       
+      optimizedTransitionUtils.state.isTransitioning = false;
+      navigateFunction(route);
+    }
+  },
+
+  // Smooth transition without flash
+  smoothTransition: async (navigateFunction, route, options = {}) => {
+    if (optimizedTransitionUtils.state.isTransitioning) {
+      return;
+    }
+
+    const { 
+      onStart = null,
+      onComplete = null,
+      duration = optimizedTransitionUtils.config.duration
+    } = options;
+
+    optimizedTransitionUtils.state.isTransitioning = true;
+
+    try {
+      if (onStart) onStart();
+
+      const root = document.getElementById('root');
+      if (!root) throw new Error('Root element not found');
+
+      // Capture current page state
+      const currentContent = root.innerHTML;
+      
+      // Create persistent overlay to prevent flash
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 10000;
+        background: white;
+        pointer-events: none;
+      `;
+      overlay.innerHTML = currentContent;
+      document.body.appendChild(overlay);
+
+      // Navigate in background
+      navigateFunction(route);
+
+      // Wait for new content with intelligent checking
+      const waitForReady = async () => {
+        let checks = 0;
+        const maxChecks = 50; // 5 seconds max
+        
+        while (checks < maxChecks) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          // Check if content has changed
+          if (root.innerHTML !== currentContent && root.children.length > 0) {
+            // Additional checks for heavy content
+            const media = root.querySelectorAll('img, video');
+            
+            if (media.length > 0) {
+              // Wait for first few images
+              const images = Array.from(root.querySelectorAll('img')).slice(0, 2);
+              let loaded = true;
+              
+              for (const img of images) {
+                if (!img.complete && img.src) {
+                  loaded = false;
+                  break;
+                }
+              }
+              
+              if (loaded) break;
+            } else {
+              // No media, content is ready
+              break;
+            }
+          }
+          
+          checks++;
+        }
+        
+        // Final stabilization wait
+        await new Promise(resolve => setTimeout(resolve, 50));
+      };
+
+      await waitForReady();
+
+      // Smooth transition effect
+      const newContent = root.innerHTML;
+      
+      // Create new content layer
+      const newLayer = document.createElement('div');
+      newLayer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 10001;
+        background: white;
+        opacity: 0;
+        transition: opacity ${duration}s ease;
+        pointer-events: none;
+      `;
+      newLayer.innerHTML = newContent;
+      document.body.appendChild(newLayer);
+
+      // Fade in new content
+      requestAnimationFrame(() => {
+        newLayer.style.opacity = '1';
+      });
+
+      // Clean up after transition
+      setTimeout(() => {
+        overlay.remove();
+        newLayer.remove();
+        
+        // Refresh ScrollTrigger
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        ScrollTrigger.refresh(true);
+        window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
+        
+        optimizedTransitionUtils.state.isTransitioning = false;
+        if (onComplete) onComplete();
+      }, duration * 1000);
+
+    } catch (error) {
+      console.error('Smooth transition failed:', error);
+      optimizedTransitionUtils.state.isTransitioning = false;
+      navigateFunction(route);
+    }
+  },
+
+  // Smart transition with loading indicator
+  smartTransition: async (navigateFunction, route, options = {}) => {
+    if (optimizedTransitionUtils.state.isTransitioning) {
+      return;
+    }
+
+    const { 
+      onStart = null,
+      onComplete = null,
+      showLoader = true,
+      duration = optimizedTransitionUtils.config.duration
+    } = options;
+
+    optimizedTransitionUtils.state.isTransitioning = true;
+
+    try {
+      if (onStart) onStart();
+
+      const root = document.getElementById('root');
+      if (!root) throw new Error('Root element not found');
+
+      // Show loading indicator if needed
+      let loadingOverlay = null;
+      if (showLoader) {
+        loadingOverlay = document.createElement('div');
+        loadingOverlay.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(255, 255, 255, 0.95);
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        `;
+        loadingOverlay.innerHTML = `
+          <div style="
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f0f0f0;
+            border-top: 3px solid #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          "></div>
+          <style>
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          </style>
+        `;
+        document.body.appendChild(loadingOverlay);
+        
+        // Fade in loader
+        requestAnimationFrame(() => {
+          loadingOverlay.style.opacity = '1';
+        });
+      }
+
+      // Navigate and wait for content
+      navigateFunction(route);
+
+      // Smart waiting - check content weight
+      const waitForContent = async () => {
+        let attempts = 0;
+        const maxAttempts = 100; // 10 seconds max
+        
+        while (attempts < maxAttempts) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          const content = document.getElementById('root');
+          if (!content || content.children.length === 0) {
+            attempts++;
+            continue;
+          }
+
+          // Check media loading status
+          const images = content.querySelectorAll('img');
+          const videos = content.querySelectorAll('video');
+          
+          // For heavy pages, wait for critical resources
+          if (route.includes('about') || images.length > 5 || videos.length > 0) {
+            let resourcesReady = true;
+            
+            // Check first 3 images
+            for (let i = 0; i < Math.min(images.length, 3); i++) {
+              if (images[i] && !images[i].complete) {
+                resourcesReady = false;
+                break;
+              }
+            }
+            
+            // Check video metadata
+            for (const video of videos) {
+              if (video.readyState < 1) {
+                video.preload = 'metadata';
+                resourcesReady = false;
+              }
+            }
+            
+            if (resourcesReady) break;
+          } else {
+            // Light pages - just ensure DOM is ready
+            if (content.querySelector('h1, h2, p, div')) {
+              break;
+            }
+          }
+          
+          attempts++;
+        }
+      };
+
+      await waitForContent();
+
+      // Fade out loader and show content
+      if (loadingOverlay) {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => loadingOverlay.remove(), 300);
+      }
+
+      // Apply lazy loading for remaining resources
+      optimizedTransitionUtils.preloadPageContent(route);
+
+      optimizedTransitionUtils.state.isTransitioning = false;
+      
+      // Refresh ScrollTrigger
+      setTimeout(() => {
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        ScrollTrigger.refresh(true);
+        window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
+      }, 100);
+
+      if (onComplete) onComplete();
+
+    } catch (error) {
+      console.error('Smart transition failed:', error);
       optimizedTransitionUtils.state.isTransitioning = false;
       navigateFunction(route);
     }

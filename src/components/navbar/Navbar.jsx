@@ -25,7 +25,7 @@ export default function Navbar() {
   
   const performTransition = async (route, options = {}) => {
     if (useOptimizedTransition) {
-      // Sử dụng optimized version cho performance tốt hơn
+      // Sử dụng transitionToRoute với preload để tránh lag
       await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
     } else {
       // Fallback về reactTransitionUtils gốc
