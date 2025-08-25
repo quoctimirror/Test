@@ -15,8 +15,6 @@ export default function Navbar() {
     optimizedTransitionUtils.init();
   }, []);
 
-  // Debug log - remove in production
-  // console.log('Navbar - isAuthenticated:', isAuthenticated, 'user:', user, 'isLoading:', isLoading);
 
   const performTransition = async (route, options = {}) => {
     // Sử dụng optimized transition system
@@ -104,16 +102,7 @@ export default function Navbar() {
     const hasToken = localStorage.getItem("accessToken");
     const isLoggedIn = (isAuthenticated && user) || hasToken;
 
-    // Debug logs to see what's happening
-    console.log("=== Account Click Debug ===");
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("user exists:", !!user);
-    console.log("hasToken:", !!hasToken);
-    console.log("isLoggedIn:", isLoggedIn);
-    console.log("========================");
-
     if (isLoggedIn) {
-      console.log("Navigating to profile");
       if (window.location.pathname === "/user-profile") {
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;

@@ -1,6 +1,3 @@
-// Optimized Transition Utils - Kết hợp ưu điểm của reactTransitionUtils và Barba.js
-// Không cần Barba wrapper, hoạt động trực tiếp với React
-
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -105,7 +102,6 @@ export const optimizedTransitionUtils = {
     }
 
     optimizedTransitionUtils.state.isInitialized = true;
-    console.log("Optimized Transition Utils initialized");
   },
 
   // Optimized page transition with preloading
@@ -376,12 +372,20 @@ export const optimizedTransitionUtils = {
         optimizedTransitionUtils.optimizations.disableGPU(root);
       }
 
-      // Refresh ScrollTrigger
+      // Clean up ScrollTrigger and let pages handle their own setup
       setTimeout(() => {
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-        ScrollTrigger.refresh(true);
-        window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
-        window.scrollTo(0, 0); // Extra scroll to top
+        // Kill all existing triggers to prevent conflicts
+        try {
+          ScrollTrigger.killAll();
+        } catch (e) {
+          // Ignore cleanup errors
+        }
+
+        // Dispatch event for pages to reinitialize their ScrollTriggers
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
+          window.scrollTo(0, 0); // Extra scroll to top
+        }, 50);
       }, 100);
 
       // Apply lazy loading for remaining resources
@@ -529,10 +533,16 @@ export const optimizedTransitionUtils = {
         overlay.remove();
         newLayer.remove();
 
-        // Refresh ScrollTrigger
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-        ScrollTrigger.refresh(true);
-        window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
+        // Clean up ScrollTrigger and let pages handle their own setup
+        try {
+          ScrollTrigger.killAll();
+        } catch (e) {
+          // Ignore cleanup errors
+        }
+
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
+        }, 50);
 
         optimizedTransitionUtils.state.isTransitioning = false;
         if (onComplete) onComplete();
@@ -677,12 +687,18 @@ export const optimizedTransitionUtils = {
 
       optimizedTransitionUtils.state.isTransitioning = false;
 
-      // Refresh ScrollTrigger
+      // Clean up ScrollTrigger and let pages handle their own setup
       setTimeout(() => {
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-        ScrollTrigger.refresh(true);
-        window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
-        window.scrollTo(0, 0); // Extra scroll to top
+        try {
+          ScrollTrigger.killAll();
+        } catch (e) {
+          // Ignore cleanup errors
+        }
+
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
+          window.scrollTo(0, 0); // Extra scroll to top
+        }, 50);
       }, 100);
 
       if (onComplete) onComplete();
