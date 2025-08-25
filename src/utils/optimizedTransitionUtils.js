@@ -144,7 +144,7 @@ export const optimizedTransitionUtils = {
       `;
       document.body.appendChild(currentPageClone);
 
-      // Create container for new page
+      // Create container for new page with loading placeholder
       const newPageContainer = document.createElement('div');
       newPageContainer.style.cssText = `
         position: fixed;
@@ -159,112 +159,142 @@ export const optimizedTransitionUtils = {
         ${optimizedTransitionUtils.config.enableGPU ? 'transform: translateY(100%) translateZ(0);' : 'transform: translateY(100%);'}
         ${optimizedTransitionUtils.config.enableWillChange ? 'will-change: transform;' : ''}
       `;
+      
+      // Add loading skeleton/placeholder
+      const loadingPlaceholder = document.createElement('div');
+      loadingPlaceholder.style.cssText = `
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      `;
+      loadingPlaceholder.innerHTML = `
+        <style>
+          @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+          }
+        </style>
+      `;
+      newPageContainer.appendChild(loadingPlaceholder);
       document.body.appendChild(newPageContainer);
 
       // Hide root during transition
       root.style.opacity = '0';
+      
+      // Start animation immediately with placeholder
+      const startAnimation = () => {
+        if (optimizedTransitionUtils.config.enableRAF) {
+          const startTime = performance.now();
+          const animationDuration = duration * 1000;
+
+          const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / animationDuration, 1);
+
+            // Current page animation
+            const opacity = Math.max(0, 1 - progress / 0.7);
+            const scale = 1 - progress * 0.08;
+            currentPageClone.style.opacity = opacity;
+            currentPageClone.style.transform = `scale(${scale})`;
+
+            // New page animation
+            const translateY = 100 * (1 - progress);
+            newPageContainer.style.transform = `translateY(${translateY}%)${optimizedTransitionUtils.config.enableGPU ? ' translateZ(0)' : ''}`;
+
+            if (progress < 1) {
+              optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
+            }
+          };
+
+          optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
+        } else {
+          // Fallback GSAP animation
+          gsap.to(currentPageClone, {
+            duration: duration,
+            opacity: 0,
+            scale: 0.92,
+            ease: optimizedTransitionUtils.config.easing
+          });
+          
+          gsap.to(newPageContainer, {
+            y: "0%",
+            duration: duration,
+            ease: optimizedTransitionUtils.config.easing,
+            force3D: optimizedTransitionUtils.config.enableGPU
+          });
+        }
+      };
+      
+      // Start animation immediately
+      startAnimation();
 
       // Navigate to new route
       navigateFunction(route);
 
-      // Wait for React to render
-      await new Promise(resolve => setTimeout(resolve, 50));
+      // Apply smart loading strategy for heavy pages
+      setTimeout(() => {
+        optimizedTransitionUtils.preloadPageContent(route);
+      }, 50);
 
-      // Copy new content
+      // Wait for content to be ready
+      const waitForContent = async () => {
+        let attempts = 0;
+        const maxAttempts = 20; // 2 seconds max wait
+        
+        while (attempts < maxAttempts) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          // Check if new content is loaded
+          const newContent = document.getElementById('root');
+          if (newContent && newContent.children.length > 0) {
+            // Check for images and videos
+            const media = newContent.querySelectorAll('img, video');
+            if (media.length === 0) break;
+            
+            // Wait for at least first image to load
+            const firstImg = newContent.querySelector('img');
+            if (!firstImg || firstImg.complete) break;
+          }
+          attempts++;
+        }
+      };
+
+      await waitForContent();
+
+      // Copy new content after it's ready
       newPageContainer.innerHTML = root.innerHTML;
 
-      // Use RAF for smoother animation
-      if (optimizedTransitionUtils.config.enableRAF) {
-        const startTime = performance.now();
-        const animationDuration = duration * 1000;
+      // Wait for animation to complete
+      await new Promise(resolve => {
+        setTimeout(() => {
+          // Animation complete
+          root.style.opacity = '1';
+          currentPageClone.remove();
+          newPageContainer.remove();
 
-        const animate = (currentTime) => {
-          const elapsed = currentTime - startTime;
-          const progress = Math.min(elapsed / animationDuration, 1);
-
-          // Current page animation
-          const opacity = Math.max(0, 1 - progress / 0.7);
-          const scale = 1 - progress * 0.08;
-          currentPageClone.style.opacity = opacity;
-          currentPageClone.style.transform = `scale(${scale})`;
-
-          // New page animation
-          const translateY = 100 * (1 - progress);
-          newPageContainer.style.transform = `translateY(${translateY}%)${optimizedTransitionUtils.config.enableGPU ? ' translateZ(0)' : ''}`;
-
-          if (progress < 1) {
-            optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
-          } else {
-            // Animation complete
-            root.style.opacity = '1';
-            currentPageClone.remove();
-            newPageContainer.remove();
-
-            // Cleanup GPU acceleration
-            if (optimizedTransitionUtils.config.enableGPU) {
-              optimizedTransitionUtils.optimizations.disableGPU(root);
-            }
-
-            // Refresh ScrollTrigger
-            setTimeout(() => {
-              ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-              ScrollTrigger.refresh(true);
-              window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
-            }, 100);
-
-            optimizedTransitionUtils.state.isTransitioning = false;
-            if (onComplete) onComplete();
+          // Cleanup GPU acceleration
+          if (optimizedTransitionUtils.config.enableGPU) {
+            optimizedTransitionUtils.optimizations.disableGPU(root);
           }
-        };
 
-        optimizedTransitionUtils.state.rafId = requestAnimationFrame(animate);
+          // Refresh ScrollTrigger
+          setTimeout(() => {
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+            ScrollTrigger.refresh(true);
+            window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
+          }, 100);
 
-      } else {
-        // Fallback to GSAP
-        const tl = gsap.timeline({
-          onComplete: () => {
-            root.style.opacity = '1';
-            currentPageClone.remove();
-            newPageContainer.remove();
+          optimizedTransitionUtils.state.isTransitioning = false;
+          if (onComplete) onComplete();
+          resolve();
+        }, duration * 1000);
 
-            if (optimizedTransitionUtils.config.enableGPU) {
-              optimizedTransitionUtils.optimizations.disableGPU(root);
-            }
-
-            setTimeout(() => {
-              ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-              ScrollTrigger.refresh(true);
-              window.dispatchEvent(new CustomEvent('pageTransitionComplete'));
-            }, 100);
-
-            optimizedTransitionUtils.state.isTransitioning = false;
-            if (onComplete) onComplete();
-          }
-        });
-
-        // Animate current page
-        tl.to(currentPageClone, {
-          duration: duration,
-          ease: "none",
-          onUpdate: function() {
-            const progress = this.progress();
-            const opacity = Math.max(0, 1 - progress / 0.7);
-            const scale = 1 - progress * 0.08;
-            
-            gsap.set(currentPageClone, {
-              opacity: opacity,
-              scale: scale,
-              transformOrigin: "center center"
-            });
-          }
-        })
-        .to(newPageContainer, {
-          y: "0%",
-          duration: duration,
-          ease: optimizedTransitionUtils.config.easing,
-          force3D: optimizedTransitionUtils.config.enableGPU
-        }, 0);
-      }
+      });
 
     } catch (error) {
       console.error('Transition failed:', error);
@@ -341,6 +371,43 @@ export const optimizedTransitionUtils = {
       console.error('Fade transition failed:', error);
       optimizedTransitionUtils.state.isTransitioning = false;
       navigateFunction(route);
+    }
+  },
+
+  // Preload page content with smart loading strategy
+  preloadPageContent: async (route) => {
+    // For heavy pages like About, implement progressive loading
+    if (route.includes('about')) {
+      // Lazy load videos
+      const lazyLoadVideos = () => {
+        const videos = document.querySelectorAll('video[data-src]');
+        const videoObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const video = entry.target;
+              video.src = video.dataset.src;
+              video.load();
+              videoObserver.unobserve(video);
+            }
+          });
+        }, { rootMargin: '50px' });
+        
+        videos.forEach(video => videoObserver.observe(video));
+      };
+      
+      // Optimize images
+      const optimizeImages = () => {
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+          if (!img.loading) img.loading = 'lazy';
+          if (!img.decoding) img.decoding = 'async';
+        });
+      };
+      
+      requestAnimationFrame(() => {
+        lazyLoadVideos();
+        optimizeImages();
+      });
     }
   },
 

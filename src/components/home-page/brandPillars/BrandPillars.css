@@ -6,31 +6,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-<<<<<<< HEAD
   padding: 80px 40px;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
-=======
-  padding: 80px 0px;
-  position: relative;
-  overflow: hidden;
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
 }
 
 .brand-pillars-content {
   width: 100%;
-<<<<<<< HEAD
   max-width: 1920px;
   position: relative;
   z-index: 10; /* Higher z-index to be above metaball background */
   pointer-events: auto; /* Enable mouse events for text selection and hover */
   box-sizing: border-box;
-=======
-  position: relative;
-  z-index: 2;
-  pointer-events: auto; /* Enable mouse events for forwarding */
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
 }
 
 .brand-pillars-background {
@@ -40,11 +28,7 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-<<<<<<< HEAD
   /* Remove opacity override - let MetaballBackground handle its own opacity */
-=======
-  opacity: 0.25;
->>>>>>> 2b74290ebcd002ea182402f9ec0b98e27719d916
 }
 
 .brand-pillars-text {
@@ -219,13 +203,13 @@
     font-size: clamp(80px, 7vw, 100px);
     letter-spacing: clamp(-2.4px, -0.21vw, -3px);
   }
-  
+
   .brand-group:nth-child(1) {
     width: clamp(600px, 70vw, 700px);
     height: 167px;
     margin-left: clamp(15%, 18vw, 22.5%);
   }
-  
+
   .brand-group:nth-child(1) .brand-expand-text {
     width: clamp(350px, 40vw, 476px);
   }
@@ -233,21 +217,21 @@
   .brand-group:nth-child(2) {
     margin-right: clamp(8%, 10vw, 13.4%);
   }
-  
+
   .brand-group:nth-child(2) .brand-expand-text {
     width: clamp(300px, 35vw, 354px);
   }
-  
+
   .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
     max-width: clamp(300px, 35vw, 354px);
   }
-  
+
   .brand-group:nth-child(3) {
     width: clamp(500px, 60vw, 585px);
     height: 167px;
     margin-left: clamp(10%, 12vw, 15.7%);
   }
-  
+
   .brand-group:nth-child(3) .brand-expand-text {
     width: clamp(350px, 40vw, 476px);
   }
@@ -262,35 +246,35 @@
     font-size: 80px;
     letter-spacing: -2.4px;
   }
-  
+
   .brand-group:nth-child(1) {
     width: 560px;
     height: 134px;
     margin-left: 20%;
   }
-  
+
   .brand-group:nth-child(1) .brand-expand-text {
     width: 381px;
   }
-  
+
   .brand-group:nth-child(2) {
     margin-right: 15%;
   }
-  
+
   .brand-group:nth-child(2) .brand-expand-text {
     width: 283px;
   }
-  
+
   .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
     max-width: 283px;
   }
-  
+
   .brand-group:nth-child(3) {
     width: 468px;
     height: 134px;
     margin-left: 18%;
   }
-  
+
   .brand-group:nth-child(3) .brand-expand-text {
     width: 381px;
   }
@@ -301,44 +285,44 @@
     font-size: 64px;
     letter-spacing: -1.92px;
   }
-  
+
   .brand-group:nth-child(1) {
     width: 448px;
     height: 107px;
     margin-left: 15%;
   }
-  
+
   .brand-group:nth-child(1) .brand-expand-text {
     width: 305px;
     margin-left: 10px;
     bottom: 10px;
   }
-  
+
   .brand-group:nth-child(2) {
     margin-right: 12%;
   }
-  
+
   .brand-group:nth-child(2) .brand-expand-text {
     width: 226px;
     margin-right: 10px;
   }
-  
+
   .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
     max-width: 226px;
   }
-  
+
   .brand-group:nth-child(3) {
     width: 374px;
     height: 107px;
     margin-left: 15%;
   }
-  
+
   .brand-group:nth-child(3) .brand-expand-text {
     width: 305px;
     margin-left: 10px;
     bottom: 10px;
   }
-  
+
   .brand-line-with-expand {
     align-items: center !important;
   }
@@ -355,30 +339,30 @@
     letter-spacing: clamp(-1.44px, -0.24vw, -1.08px);
     line-height: 85%;
   }
-  
+
   .brand-group {
     margin-bottom: 1.2em;
   }
-  
+
   .brand-group:nth-child(1) {
     width: 100%;
     height: auto;
     margin-left: 0;
     text-align: center;
   }
-  
+
   .brand-group:nth-child(1) .brand-line:nth-child(1),
   .brand-group:nth-child(1) .brand-line:nth-child(2) {
     text-align: center;
   }
-  
+
   .brand-group:nth-child(1) .brand-line-with-expand {
     justify-content: center;
     flex-direction: column;
     align-items: center;
     gap: 15px;
   }
-  
+
   .brand-group:nth-child(1) .brand-expand-text {
     width: 100%;
     margin-left: 0;
@@ -388,7 +372,7 @@
     transform: none;
     opacity: 1;
   }
-  
+
   .brand-group:nth-child(2) {
     flex-direction: column;
     align-items: center;
@@ -396,7 +380,7 @@
     text-align: center;
     gap: 15px;
   }
-  
+
   .brand-group:nth-child(2) .brand-expand-text {
     width: 100%;
     margin-right: 0;
@@ -406,35 +390,35 @@
     transform: none;
     opacity: 1;
   }
-  
+
   .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
     max-width: 100%;
     text-align: center;
   }
-  
+
   .brand-group:nth-child(2) .brand-main-text {
     order: 1;
   }
-  
+
   .brand-group:nth-child(3) {
     width: 100%;
     height: auto;
     margin-left: 0;
     text-align: center;
   }
-  
+
   .brand-group:nth-child(3) .brand-line:nth-child(1),
   .brand-group:nth-child(3) .brand-line:nth-child(2) {
     text-align: center;
   }
-  
+
   .brand-group:nth-child(3) .brand-line-with-expand {
     justify-content: center;
     flex-direction: column;
     align-items: center;
     gap: 15px;
   }
-  
+
   .brand-group:nth-child(3) .brand-expand-text {
     width: 100%;
     margin-left: 0;
@@ -444,17 +428,17 @@
     transform: none;
     opacity: 1;
   }
-  
+
   /* Make expand text always visible on mobile */
   .brand-expand-text {
     pointer-events: auto;
   }
-  
+
   .brand-expand-text .bodytext-3--no-margin {
     font-size: clamp(12px, 3.5vw, 16px);
     line-height: 140%;
   }
-  
+
   /* Remove line breaks on mobile */
   .brand-expand-text br {
     display: none;
@@ -472,11 +456,11 @@
     letter-spacing: clamp(-1.08px, -0.21vw, -0.84px);
     line-height: 80%;
   }
-  
+
   .brand-group {
     margin-bottom: 2em;
   }
-  
+
   .brand-expand-text .bodytext-3--no-margin {
     font-size: clamp(11px, 3vw, 14px);
     line-height: 135%;
@@ -494,11 +478,11 @@
     letter-spacing: clamp(-0.84px, -0.195vw, -0.72px);
     line-height: 75%;
   }
-  
+
   .brand-group {
     margin-bottom: 2.5em;
   }
-  
+
   .brand-expand-text .bodytext-3--no-margin {
     font-size: clamp(10px, 2.8vw, 12px);
     line-height: 130%;

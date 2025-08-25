@@ -87,7 +87,6 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
 
     // Listen for page transition complete event to reinitialize
     const handleTransitionComplete = () => {
-      console.log("ViewAllProduct: Reinitializing after page transition");
       setTimeout(initScrollTrigger, 200);
     };
     window.addEventListener("pageTransitionComplete", handleTransitionComplete);
