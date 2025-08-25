@@ -387,6 +387,26 @@
   .cso-name {
     font-size: 48px;
   }
+
+  /* Fix responsive positioning for leader elements */
+  .leader-quote-fixed {
+    left: calc(
+      3% + 240px + 15px + 240px + 15px + 240px + 15px + 240px + 15px
+    );
+    max-width: calc(100vw - 6% - 480px - 60px);
+    bottom: 31vh;
+  }
+
+  .leader-details {
+    left: calc(
+      3% + 240px + 15px + 240px + 15px + 240px + 15px
+    );
+    bottom: 14.5vh;
+  }
+
+  .leader-name {
+    font-size: 36px;
+  }
 }
 
 @media (max-width: 992px) {
@@ -423,6 +443,26 @@
 
   .cso-name {
     font-size: 40px;
+  }
+
+  /* Fix responsive positioning for leader elements */
+  .leader-quote-fixed {
+    left: calc(
+      3.5% + 180px + 12px + 180px + 12px + 180px + 12px + 180px + 12px
+    );
+    max-width: calc(100vw - 7% - 360px - 48px);
+    bottom: 30vh;
+  }
+
+  .leader-details {
+    left: calc(
+      3.5% + 180px + 12px + 180px + 12px + 180px + 12px
+    );
+    bottom: 14vh;
+  }
+
+  .leader-name {
+    font-size: 32px;
   }
 }
 
@@ -462,6 +502,26 @@
 
   .quote-text {
     font-size: 14px;
+  }
+
+  /* Fix responsive positioning for leader elements */
+  .leader-quote-fixed {
+    left: calc(
+      4% + 140px + 10px + 140px + 10px + 140px + 10px + 140px + 10px
+    );
+    max-width: calc(100vw - 8% - 280px - 40px);
+    bottom: 28vh;
+  }
+
+  .leader-details {
+    left: calc(
+      4% + 140px + 10px + 140px + 10px + 140px + 10px
+    );
+    bottom: 13vh;
+  }
+
+  .leader-name {
+    font-size: 24px;
   }
 
   .cso-section {
@@ -550,5 +610,25 @@
 
   .cso-label {
     font-size: 12px;
+  }
+
+  /* Fix responsive positioning for leader elements */
+  .leader-quote-fixed {
+    left: calc(
+      5% + 110px + 8px + 110px + 8px + 110px + 8px + 110px + 8px
+    );
+    max-width: calc(100vw - 10% - 220px - 32px);
+    bottom: 25vh;
+  }
+
+  .leader-details {
+    left: calc(
+      5% + 110px + 8px + 110px + 8px + 110px + 8px
+    );
+    bottom: 12vh;
+  }
+
+  .leader-name {
+    font-size: 20px;
   }
 }
