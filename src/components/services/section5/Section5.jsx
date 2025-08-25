@@ -9,7 +9,6 @@ const Section5 = () => {
   const [openFaq, setOpenFaq] = useState(null);
 
   const handleViewAllFAQs = async () => {
-    window.scrollTo(0, 0);
     await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=faqs");
   };
 

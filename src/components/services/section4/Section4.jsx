@@ -10,17 +10,14 @@ const Section4 = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const handleReturnExchangeClick = async () => {
-    window.scrollTo(0, 0);
     await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=return-exchange");
   };
 
   const handleSizingGuideClick = async () => {
-    window.scrollTo(0, 0);
     await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=sizing-guide");
   };
 
   const handleWarrantyInfoClick = async () => {
-    window.scrollTo(0, 0);
     await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=warranty-info");
   };
 

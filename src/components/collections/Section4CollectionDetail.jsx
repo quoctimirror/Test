@@ -134,7 +134,6 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
   }, []);
 
   const handleViewAllProducts = async () => {
-    window.scrollTo(0, 0);
     await optimizedTransitionUtils.transitionToRoute(navigate, "/all-gems");
   };
 

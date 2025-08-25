@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
 import "./NewsGrid.css";
 import GlassButton from "../common/button/GlassButton";
 
@@ -96,10 +97,9 @@ const NewsGrid = () => {
     setVisibleItems((prev) => Math.min(prev + 8, newsData.length));
   };
 
-  const handleNewsItemClick = (item) => {
+  const handleNewsItemClick = async (item) => {
     if (item.id === 1) {
-      navigate("/news/new-cut");
-      window.scrollTo(0, 0);
+      await optimizedTransitionUtils.transitionToRoute(navigate, "/news/new-cut");
     }
   };
 

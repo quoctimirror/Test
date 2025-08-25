@@ -121,8 +121,9 @@ export const optimizedTransitionUtils = {
       const root = document.getElementById('root');
       if (!root) throw new Error('Root element not found');
 
-      // Save current page state
+      // Save current page state and scroll position
       const originalContent = root.innerHTML;
+      const currentScrollY = window.scrollY;
       
       // Create a frozen clone of current page to display during load
       const frozenPage = document.createElement('div');
@@ -130,13 +131,13 @@ export const optimizedTransitionUtils = {
       frozenPage.innerHTML = originalContent;
       frozenPage.style.cssText = `
         position: fixed;
-        top: 0;
+        top: ${-currentScrollY}px;
         left: 0;
         width: 100vw;
         height: 100vh;
         z-index: 9997;
         background: white;
-        overflow: auto;
+        overflow: hidden;
         pointer-events: none;
       `;
       document.body.appendChild(frozenPage);
@@ -147,6 +148,11 @@ export const optimizedTransitionUtils = {
       
       // Navigate to new route (hidden)
       navigateFunction(route);
+      
+      // Ensure new page starts from top (but don't show it yet)
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 50);
 
       // Wait for new content to fully load
       const waitForPageLoad = async () => {
@@ -201,12 +207,12 @@ export const optimizedTransitionUtils = {
       // Remove frozen page and create animation layers
       frozenPage.remove();
       
-      // Create animated clone of old page
+      // Create animated clone of old page (keep current scroll position)
       const currentPageClone = document.createElement('div');
       currentPageClone.innerHTML = originalContent;
       currentPageClone.style.cssText = `
         position: fixed;
-        top: 0;
+        top: ${-currentScrollY}px;
         left: 0;
         width: 100vw;
         height: 100vh;

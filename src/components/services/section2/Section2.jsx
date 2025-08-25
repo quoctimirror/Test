@@ -10,12 +10,10 @@ const Section2 = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const handleProductCareClick = async () => {
-    window.scrollTo(0, 0);
     await optimizedTransitionUtils.transitionToRoute(navigate, "/services/detail?tab=product-care-repair");
   };
 
   const handleTradeInClick = async () => {
-    window.scrollTo(0, 0);
     await optimizedTransitionUtils.transitionToRoute(navigate, "/services/detail?tab=trade-in-upgrade");
   };
 
