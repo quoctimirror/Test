@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
 import GlassButton from "../common/button/GlassButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -103,9 +104,9 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
     };
   }, []);
 
-  const handleViewAllProducts = () => {
+  const handleViewAllProducts = async () => {
     window.scrollTo(0, 0);
-    navigate("/all-gems");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/all-gems");
   };
 
   return (

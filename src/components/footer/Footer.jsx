@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
 import GlassButton from "../common/button/GlassButton";
-import { reactTransitionUtils } from "../../utils/reactTransitionUtils";
+import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Footer = () => {
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/");
   };
 
   const handleProductsClick = async (e) => {
@@ -32,7 +32,7 @@ const Footer = () => {
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/collections");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/collections");
   };
 
   const handleServicesClick = async (e) => {
@@ -42,7 +42,7 @@ const Footer = () => {
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/services");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/services");
   };
 
   const handleAboutClick = async (e) => {
@@ -52,7 +52,7 @@ const Footer = () => {
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/about");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/about");
   };
 
   const handleNewsClick = async (e) => {
@@ -62,7 +62,7 @@ const Footer = () => {
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/news");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/news");
   };
 
   const handleContactClick = async (e) => {
@@ -72,7 +72,7 @@ const Footer = () => {
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/contact");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/contact");
   };
 
   const handleLocationClick = async (e) => {
@@ -82,7 +82,7 @@ const Footer = () => {
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await reactTransitionUtils.transitionToRoute(navigate, "/locations");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/locations");
   };
 
   return (

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "../../../utils/optimizedTransitionUtils";
 import "./Section4.css";
 import GlassButton from "../../common/button/GlassButton";
 
@@ -8,19 +9,19 @@ const Section4 = () => {
   const sectionRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  const handleReturnExchangeClick = () => {
+  const handleReturnExchangeClick = async () => {
     window.scrollTo(0, 0);
-    navigate("/support?tab=return-exchange");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=return-exchange");
   };
 
-  const handleSizingGuideClick = () => {
+  const handleSizingGuideClick = async () => {
     window.scrollTo(0, 0);
-    navigate("/support?tab=sizing-guide");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=sizing-guide");
   };
 
-  const handleWarrantyInfoClick = () => {
+  const handleWarrantyInfoClick = async () => {
     window.scrollTo(0, 0);
-    navigate("/support?tab=warranty-info");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=warranty-info");
   };
 
   useEffect(() => {

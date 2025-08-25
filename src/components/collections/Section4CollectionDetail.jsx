@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
 import GlassButton from "../common/button/GlassButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -60,7 +61,12 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
   useEffect(() => {
     // Wait for DOM to be ready
     const initScrollTrigger = () => {
-      if (!scrollContainerRef.current) return;
+      if (!scrollContainerRef.current || !sectionRef.current) return;
+
+      // Kill any existing ScrollTriggers for this component
+      ScrollTrigger.getAll()
+        .filter((trigger) => trigger.trigger === sectionRef.current)
+        .forEach((trigger) => trigger.kill());
 
       // Get all product cards
       const cards =
@@ -72,24 +78,27 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
       const viewportWidth = window.innerWidth;
       const scrollAmount = containerWidth - viewportWidth;
 
-      // Create the horizontal scroll animation
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          pin: true,
-          scrub: 1,
-          start: "center center", // Start when section reaches center
-          end: () => `+=${scrollAmount * 1.5}`, // Extra scroll distance to see last image fully
-          invalidateOnRefresh: true,
-        },
-      });
+      // Only create horizontal scroll if container is wider than viewport
+      if (scrollAmount > 0) {
+        // Create the horizontal scroll animation
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            pin: true,
+            scrub: 1,
+            start: "center center", // Start when section reaches center
+            end: () => `+=${scrollAmount * 1.5}`, // Extra scroll distance to see last image fully
+            invalidateOnRefresh: true,
+          },
+        });
 
-      // Animate the container moving left
-      tl.to(scrollContainerRef.current, {
-        x: -scrollAmount,
-        ease: "none",
-        duration: 1,
-      });
+        // Animate the container moving left
+        tl.to(scrollContainerRef.current, {
+          x: -scrollAmount,
+          ease: "none",
+          duration: 1,
+        });
+      }
 
       // Refresh ScrollTrigger on window resize
       const handleResize = () => {
@@ -100,22 +109,33 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
       // Cleanup
       return () => {
         window.removeEventListener("resize", handleResize);
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+        ScrollTrigger.getAll()
+          .filter((trigger) => trigger.trigger === sectionRef.current)
+          .forEach((trigger) => trigger.kill());
       };
     };
 
     // Initialize after a short delay to ensure DOM is ready
     const timer = setTimeout(initScrollTrigger, 100);
+    
+    // Listen for page transition complete event to reinitialize
+    const handleTransitionComplete = () => {
+      setTimeout(initScrollTrigger, 200);
+    };
+    window.addEventListener("pageTransitionComplete", handleTransitionComplete);
 
     return () => {
       clearTimeout(timer);
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      window.removeEventListener("pageTransitionComplete", handleTransitionComplete);
+      ScrollTrigger.getAll()
+        .filter((trigger) => trigger.trigger === sectionRef.current)
+        .forEach((trigger) => trigger.kill());
     };
   }, []);
 
-  const handleViewAllProducts = () => {
+  const handleViewAllProducts = async () => {
     window.scrollTo(0, 0);
-    navigate("/all-gems");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/all-gems");
   };
 
   return (

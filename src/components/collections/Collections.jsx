@@ -1,6 +1,7 @@
 // Thêm 'useState', 'useRef' từ React
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
 import CollectionHeroSection from "./CollectionHeroSection";
 import GlassButton from "../common/button/GlassButton";
 import "./Collections.css";
@@ -53,8 +54,8 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
 
   const currentProduct = products[currentIndex];
 
-  const handleExploreCollection = () => {
-    navigate(`/collections/${collectionId}`);
+  const handleExploreCollection = async () => {
+    await optimizedTransitionUtils.transitionToRoute(navigate, `/collections/${collectionId}`);
   };
 
   return (

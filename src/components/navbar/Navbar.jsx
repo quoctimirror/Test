@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { reactTransitionUtils } from "../../utils/reactTransitionUtils";
 import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
 export default function Navbar() {
   const navigate = useNavigate();
@@ -12,25 +11,16 @@ export default function Navbar() {
   const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
-    // Initialize both transition systems
-    reactTransitionUtils.init();
-    optimizedTransitionUtils.init(); // Optimized version không cần wrapper
+    // Initialize optimized transition system
+    optimizedTransitionUtils.init();
   }, []);
 
   // Debug log - remove in production
   // console.log('Navbar - isAuthenticated:', isAuthenticated, 'user:', user, 'isLoading:', isLoading);
 
-  // Helper function để chọn transition system
-  const useOptimizedTransition = true; // Set true để dùng optimized version
-  
   const performTransition = async (route, options = {}) => {
-    if (useOptimizedTransition) {
-      // Sử dụng transitionToRoute với preload để tránh lag
-      await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
-    } else {
-      // Fallback về reactTransitionUtils gốc
-      await reactTransitionUtils.transitionToRoute(navigate, route, options);
-    }
+    // Sử dụng optimized transition system
+    await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
   };
 
   const handleLogoClick = async () => {
@@ -183,31 +173,31 @@ export default function Navbar() {
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleProductsClick}
-                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/collections')}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/collections')}
                 >
                   Products
                 </li>
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleServicesClick}
-                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/services')}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/services')}
                 >
                   Services</li>
                 <li 
                   className="bodytext-3--no-margin" 
                   onClick={handleSupportClick}
-                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/support')}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/support')}
                 >Support
                 </li>
                 <li 
                   className="bodytext-3--no-margin" 
                   onClick={handleAboutClick}
-                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/about')}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/about')}
                 >About Mirror</li>
                 <li 
                   className="bodytext-3--no-margin" 
                   onClick={handleNewsClick}
-                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/news')}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/news')}
                 >
                   News
                 </li>
@@ -216,12 +206,12 @@ export default function Navbar() {
                 <li 
                   className="bodytext-3--no-margin" 
                   onClick={handleLocationClick}
-                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/locations')}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/locations')}
                 >Location</li>
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleContactClick}
-                  onMouseEnter={() => useOptimizedTransition && optimizedTransitionUtils.prefetch('/contact')}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/contact')}
                 >
                   Contact us
                 </li>

@@ -1,12 +1,13 @@
 import "./ContactUs.css";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
 import GlassButton from "../common/button/GlassButton";
 
 const ContactUs = () => {
   const navigate = useNavigate();
 
-  const handleContactUsClick = () => {
-    navigate("/contact");
+  const handleContactUsClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/contact");
   };
 
   return (

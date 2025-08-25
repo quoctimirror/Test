@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "../../../utils/optimizedTransitionUtils";
 import "./Section5.css";
 import GlassButton from "../../common/button/GlassButton";
 
@@ -7,9 +8,9 @@ const Section5 = () => {
   const navigate = useNavigate();
   const [openFaq, setOpenFaq] = useState(null);
 
-  const handleViewAllFAQs = () => {
+  const handleViewAllFAQs = async () => {
     window.scrollTo(0, 0);
-    navigate("/support?tab=faqs");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=faqs");
   };
 
   const faqs = [
