@@ -108,6 +108,11 @@
 }
 
 /* Button styles now handled by ShineGlassButton component */
+.section2-cta {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
 
 /* Responsive Design */
 @media (max-width: 1200px) {

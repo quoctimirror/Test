@@ -108,6 +108,11 @@
 }
 
 /* Button styles now handled by ShineGlassButton component */
+.section4-cta {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
 
 /* Section 4 Part 2 - Sizing Guide */
 .services-section4-part2 {

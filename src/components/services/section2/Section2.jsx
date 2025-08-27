@@ -96,6 +96,7 @@ const Section2 = () => {
                 scrollProgress < 0.5 ? scrollProgress * -20 : -20
               }px)`,
               pointerEvents: scrollProgress < 0.5 ? "auto" : "none",
+              zIndex: scrollProgress < 0.5 ? 100 : 10,
             }}
           >
             <div className="section2-content">
@@ -140,6 +141,7 @@ const Section2 = () => {
                   : 50
               }px)`,
               pointerEvents: scrollProgress > 0.5 ? "auto" : "none",
+              zIndex: scrollProgress > 0.5 ? 100 : 10,
             }}
           >
             <div className="section2-content">

@@ -127,6 +127,7 @@ const Section4 = () => {
                 scrollProgress < 0.35 ? scrollProgress * 2.86 * -20 : -20
               }px)`,
               pointerEvents: scrollProgress < 0.35 ? "auto" : "none",
+              zIndex: scrollProgress < 0.35 ? 100 : 10,
             }}
           >
             <div className="section4-content">
@@ -176,6 +177,8 @@ const Section4 = () => {
               }px)`,
               pointerEvents:
                 scrollProgress > 0.3 && scrollProgress < 0.75 ? "auto" : "none",
+              zIndex:
+                scrollProgress > 0.3 && scrollProgress < 0.75 ? 100 : 10,
             }}
           >
             <div className="section4-content">
@@ -219,6 +222,7 @@ const Section4 = () => {
                   : 20
               }px)`,
               pointerEvents: scrollProgress > 0.75 ? "auto" : "none",
+              zIndex: scrollProgress > 0.75 ? 100 : 10,
             }}
           >
             <div className="section4-content">
