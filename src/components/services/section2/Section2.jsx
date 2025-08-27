@@ -93,7 +93,7 @@ const Section2 = () => {
             style={{
               opacity: scrollProgress < 0.5 ? 1 - scrollProgress * 2 : 0,
               transform: `translateY(${
-                scrollProgress < 0.5 ? (1 - scrollProgress * 2) * 50 : 0
+                scrollProgress < 0.5 ? scrollProgress * -20 : -20
               }px)`,
               pointerEvents: scrollProgress < 0.5 ? "auto" : "none",
             }}

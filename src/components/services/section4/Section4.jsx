@@ -124,7 +124,7 @@ const Section4 = () => {
             style={{
               opacity: scrollProgress < 0.35 ? 1 - scrollProgress * 2.86 : 0,
               transform: `translateY(${
-                scrollProgress < 0.35 ? (1 - scrollProgress * 2.86) * 50 : 0
+                scrollProgress < 0.35 ? scrollProgress * 2.86 * -20 : -20
               }px)`,
               pointerEvents: scrollProgress < 0.35 ? "auto" : "none",
             }}
@@ -169,10 +169,10 @@ const Section4 = () => {
                   : 0,
               transform: `translateY(${
                 scrollProgress > 0.3 && scrollProgress < 0.75
-                  ? (1 - (scrollProgress - 0.3) * 2.22) * 50
-                  : scrollProgress <= 0.3
-                  ? 50
-                  : 0
+                  ? (scrollProgress - 0.525) * 20
+                  : scrollProgress <= 0.525
+                  ? -10
+                  : 10
               }px)`,
               pointerEvents:
                 scrollProgress > 0.3 && scrollProgress < 0.75 ? "auto" : "none",
@@ -215,8 +215,8 @@ const Section4 = () => {
               opacity: scrollProgress > 0.75 ? (scrollProgress - 0.75) * 4 : 0,
               transform: `translateY(${
                 scrollProgress > 0.75
-                  ? (1 - (scrollProgress - 0.75) * 4) * 50
-                  : 50
+                  ? (1 - scrollProgress) * 20
+                  : 20
               }px)`,
               pointerEvents: scrollProgress > 0.75 ? "auto" : "none",
             }}
