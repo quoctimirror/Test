@@ -2,7 +2,7 @@
 @property --angle-1 {
   syntax: "<angle>";
   inherits: false;
-  initial-value: 0deg;
+  initial-value: 75deg;
 }
 
 :root {
@@ -47,7 +47,7 @@
 }
 
 .shine-glass-button:hover {
-  transform: scale(0.975);
+  transform: scale(1);
 }
 
 .shine-glass-button:disabled {
@@ -187,13 +187,14 @@
 /* Light theme */
 .shine-glass-button--light .glass-layer {
   background: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0.05)
-  ),
-  rgba(0, 0, 0, 0.05);
-  transition: background var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
+      -75deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05)
+    ),
+    rgba(0, 0, 0, 0.05);
+  transition: background var(--shine-anim--hover-time)
+    var(--shine-anim--hover-ease);
 }
 
 .shine-glass-button--light .button-text {

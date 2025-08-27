@@ -1,6 +1,7 @@
 import "./HoverExpand.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import image1 from "@assets/images/hover-expand/img_1.jpg";
 import image2 from "@assets/images/hover-expand/img_2.jpg";
 import image3 from "@assets/images/hover-expand/img_3.jpg";
@@ -10,7 +11,7 @@ const HoverExpandSection = () => {
   const navigate = useNavigate();
 
   const handleExploreMoreClick = async () => {
-    sessionStorage.setItem('scrollToTop', 'true');
+    sessionStorage.setItem("scrollToTop", "true");
     await optimizedTransitionUtils.transitionToRoute(navigate, "/collections");
   };
 
@@ -21,9 +22,16 @@ const HoverExpandSection = () => {
         <p className="bodytext-3 hover-expand-subtitle">
           Discover a variety of our pieces.
         </p>
-        <button className="explore-more-button bodytext-4" onClick={handleExploreMoreClick}>
+        <ShineGlassButton
+          width={163}
+          height={57}
+          fontSize={14}
+          theme="footer"
+          className="explore-more-button"
+          onClick={handleExploreMoreClick}
+        >
           Explore more
-        </button>
+        </ShineGlassButton>
       </div>
 
       <div className="hover-expand-gallery">

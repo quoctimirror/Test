@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Section4CollectionDetail.css";
@@ -117,7 +117,7 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
 
     // Initialize after a short delay to ensure DOM is ready
     const timer = setTimeout(initScrollTrigger, 100);
-    
+
     // Listen for page transition complete event to reinitialize
     const handleTransitionComplete = () => {
       setTimeout(initScrollTrigger, 200);
@@ -126,7 +126,10 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener("pageTransitionComplete", handleTransitionComplete);
+      window.removeEventListener(
+        "pageTransitionComplete",
+        handleTransitionComplete
+      );
       ScrollTrigger.getAll()
         .filter((trigger) => trigger.trigger === sectionRef.current)
         .forEach((trigger) => trigger.kill());
@@ -163,9 +166,15 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
 
         {showViewProductButton && (
           <div className="view-product-button-container">
-            <GlassButton theme="default" onClick={handleViewAllProducts}>
+            <ShineGlassButton
+              width={189}
+              height={57}
+              fontSize={14}
+              theme="light"
+              onClick={handleViewAllProducts}
+            >
               View all products
-            </GlassButton>
+            </ShineGlassButton>
           </div>
         )}
       </div>

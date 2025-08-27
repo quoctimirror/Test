@@ -1,5 +1,5 @@
 import React from "react";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import "./DiscoverSection.css";
 
 const DiscoverSection = () => {
@@ -19,9 +19,9 @@ const DiscoverSection = () => {
 
       {/* Button */}
       <div className="discover-button-container">
-        <GlassButton theme="light" width={260} height={57}>
+        <ShineGlassButton theme="light" width={260} height={57} fontSize={14}>
           Discover the Mirror Network
-        </GlassButton>
+        </ShineGlassButton>
       </div>
     </div>
   );

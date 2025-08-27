@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./Section2.css";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const Section2 = () => {
   const navigate = useNavigate();
@@ -10,11 +10,17 @@ const Section2 = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const handleProductCareClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/services/detail?tab=product-care-repair");
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/services/detail?tab=product-care-repair"
+    );
   };
 
   const handleTradeInClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/services/detail?tab=trade-in-upgrade");
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/services/detail?tab=trade-in-upgrade"
+    );
   };
 
   useEffect(() => {
@@ -110,16 +116,16 @@ const Section2 = () => {
                     <br /> you received it.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section2-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleProductCareClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>
@@ -157,16 +163,16 @@ const Section2 = () => {
                     evolution in your jewelry journey.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section2-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleTradeInClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import "./ContactUs.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const ContactUs = () => {
   const navigate = useNavigate();
@@ -25,15 +25,16 @@ const ContactUs = () => {
           Our client care experts are always here to help.
         </p>
         <div className="contact-us-button-wrapper">
-          <GlassButton
+          <ShineGlassButton
             width={150}
             height={57}
             fontSize={14}
+            theme="footer"
             onClick={handleContactUsClick}
             className="contact-us-button"
           >
             Contact us
-          </GlassButton>
+          </ShineGlassButton>
         </div>
       </div>
     </div>

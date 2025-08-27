@@ -1,5 +1,5 @@
 import React from "react";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const TradeInUpgrade = () => {
   return (
@@ -101,15 +101,15 @@ const TradeInUpgrade = () => {
       </div>
 
       <div className="cta-section">
-        <GlassButton
+        <ShineGlassButton
           className="services-cta"
-          theme="default"
+          theme="shine"
           width={220}
           height={57}
           fontSize={14}
         >
           Book an Appointment
-        </GlassButton>
+        </ShineGlassButton>
       </div>
     </div>
   );

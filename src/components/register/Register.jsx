@@ -4,7 +4,7 @@ import { remoteApi } from "@api/axiosConfig";
 import "./Register.css";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -336,15 +336,16 @@ const Register = () => {
             information, please see our <strong>Privacy Policy</strong>{" "}
           </p>
           <div className="create-account-button-wrapper">
-            <GlassButton
+            <ShineGlassButton
               width={300}
               height={50}
-              theme="glass"
+              fontSize={14}
+              theme="shine"
               onClick={() => {}}
               className="create-account-button"
             >
               {isLoading ? "Creating Account..." : "Create account"}
-            </GlassButton>
+            </ShineGlassButton>
           </div>
           <p className="bodytext-3--no-margin login-prompt">
             Already a member?{" "}

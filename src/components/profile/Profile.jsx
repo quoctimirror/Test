@@ -8,7 +8,7 @@ import "@styles/typography.css";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import ChangePassword from "./ChangePassword";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { useAuth } from "@/context/AuthContext";
 
 const Profile = () => {
@@ -431,24 +431,26 @@ const Profile = () => {
             )}
 
             <div className="action-buttons-container">
-              <GlassButton
+              <ShineGlassButton
                 width={200}
                 height={50}
-                theme="outline"
+                fontSize={14}
+                theme="light"
                 onClick={() => setShowChangePassword(true)}
                 className="change-password-button"
               >
                 Change Password
-              </GlassButton>
-              <GlassButton
+              </ShineGlassButton>
+              <ShineGlassButton
                 width={200}
                 height={50}
-                theme="outline"
+                fontSize={14}
+                theme="light"
                 onClick={() => {}}
                 className="save-profile-button"
               >
                 {isLoading ? "Saving..." : "Save Profile"}
-              </GlassButton>
+              </ShineGlassButton>
             </div>
           </form>
         </div>

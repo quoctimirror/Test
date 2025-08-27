@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./NewsGrid.css";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const NewsGrid = () => {
   const [visibleItems, setVisibleItems] = useState(12);
@@ -137,16 +137,16 @@ const NewsGrid = () => {
 
         {visibleItems < newsData.length && (
           <div className="view-more-section">
-            <GlassButton
+            <ShineGlassButton
               className="view-more-btn"
-              theme="default"
+              theme="shine"
               width={137}
               height={57}
               fontSize={14}
               onClick={handleViewMore}
             >
               View more
-            </GlassButton>
+            </ShineGlassButton>
           </div>
         )}
       </div>

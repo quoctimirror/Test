@@ -1,5 +1,5 @@
 import React from "react";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import "./AllGems.css";
 
 const AllGems = () => {
@@ -91,9 +91,9 @@ const AllGems = () => {
       </div>
 
       <div className="gems-footer">
-        <GlassButton theme="default" width={190} height={57} fontSize={14}>
+        <ShineGlassButton theme="shine" width={190} height={57} fontSize={14}>
           View more
-        </GlassButton>
+        </ShineGlassButton>
       </div>
     </div>
   );

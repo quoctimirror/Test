@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./Section4.css";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const Section4 = () => {
   const navigate = useNavigate();
@@ -10,15 +10,24 @@ const Section4 = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const handleReturnExchangeClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=return-exchange");
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/support?tab=return-exchange"
+    );
   };
 
   const handleSizingGuideClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=sizing-guide");
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/support?tab=sizing-guide"
+    );
   };
 
   const handleWarrantyInfoClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/support?tab=warranty-info");
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/support?tab=warranty-info"
+    );
   };
 
   useEffect(() => {
@@ -137,16 +146,16 @@ const Section4 = () => {
                     piece as radiant as the day you received it.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section4-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleReturnExchangeClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>
@@ -186,16 +195,16 @@ const Section4 = () => {
                     giving.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section4-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleSizingGuideClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>
@@ -228,16 +237,16 @@ const Section4 = () => {
                     is protected under our care.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section4-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleWarrantyInfoClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>

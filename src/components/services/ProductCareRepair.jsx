@@ -1,5 +1,5 @@
 import React from "react";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const ProductCareRepair = () => {
   return (
@@ -162,15 +162,15 @@ const ProductCareRepair = () => {
       </div>
 
       <div className="cta-section">
-        <GlassButton
+        <ShineGlassButton
           className="services-cta"
-          theme="default"
+          theme="shine"
           width={171}
           height={57}
           fontSize={14}
         >
           Book a Service
-        </GlassButton>
+        </ShineGlassButton>
       </div>
     </div>
   );
