@@ -103,7 +103,7 @@ const TradeInUpgrade = () => {
       <div className="cta-section">
         <ShineGlassButton
           className="services-cta"
-          theme="shine"
+          theme="light"
           width={220}
           height={57}
           fontSize={14}
