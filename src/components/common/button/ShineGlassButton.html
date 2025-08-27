@@ -109,6 +109,9 @@
         pointer-events: none;
         opacity: 0;
         transition: opacity 200ms ease;
+        /* Add smooth transition for mouse position variables */
+        transition: --mouse-x 300ms ease-out, --mouse-y 300ms ease-out,
+          opacity 200ms ease;
       }
 
       button:hover .shine-layer {
@@ -184,17 +187,16 @@
           );
         mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
         mask-composite: exclude;
-        transition: all var(--anim--hover-time) var(--anim--hover-ease),
-          --angle-1 500ms ease;
+        transition: --angle-1 600ms cubic-bezier(0.4, 0, 0.2, 1);
         pointer-events: none;
       }
 
       button:hover .border-layer {
-        --angle-1: -125deg;
+        --angle-1: 105deg; /* Xoay 180 độ từ -75deg */
       }
 
       button:active .border-layer {
-        --angle-1: -75deg;
+        --angle-1: 105deg;
       }
 
       @media (hover: none) and (pointer: coarse) {
@@ -244,25 +246,87 @@
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const button = document.getElementById("shinyButton");
+        const shineLayer = button.querySelector(".shine-layer");
+
+        // Variables for smooth interpolation
+        let currentX = 50;
+        let currentY = 50;
+        let targetX = 50;
+        let targetY = 50;
+        let animationFrame = null;
+
+        // Lerp function for smooth interpolation
+        function lerp(start, end, factor) {
+          return start + (end - start) * factor;
+        }
+
+        // Animation loop
+        function updateShinePosition() {
+          // Interpolate towards target position (0.15 = 15% per frame for smooth lag)
+          currentX = lerp(currentX, targetX, 0.15);
+          currentY = lerp(currentY, targetY, 0.15);
+
+          // Update CSS variables
+          shineLayer.style.setProperty("--mouse-x", currentX + "%");
+          shineLayer.style.setProperty("--mouse-y", currentY + "%");
+
+          // Continue animation if button is being hovered
+          if (
+            Math.abs(currentX - targetX) > 0.1 ||
+            Math.abs(currentY - targetY) > 0.1
+          ) {
+            animationFrame = requestAnimationFrame(updateShinePosition);
+          }
+        }
 
         button.addEventListener("mousemove", function (e) {
           const rect = button.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
 
-          // Convert to percentage
-          const xPercent = (x / rect.width) * 100;
-          const yPercent = (y / rect.height) * 100;
+          // Update target position
+          targetX = (x / rect.width) * 100;
+          targetY = (y / rect.height) * 100;
 
-          // Update CSS variables
-          button.style.setProperty("--mouse-x", xPercent + "%");
-          button.style.setProperty("--mouse-y", yPercent + "%");
+          // Start animation if not already running
+          if (!animationFrame) {
+            animationFrame = requestAnimationFrame(updateShinePosition);
+          }
+        });
+
+        button.addEventListener("mouseenter", function (e) {
+          const rect = button.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          // Set initial position
+          targetX = (x / rect.width) * 100;
+          targetY = (y / rect.height) * 100;
+          currentX = targetX;
+          currentY = targetY;
+
+          // Set initial position immediately
+          shineLayer.style.setProperty("--mouse-x", currentX + "%");
+          shineLayer.style.setProperty("--mouse-y", currentY + "%");
         });
 
         button.addEventListener("mouseleave", function () {
-          // Reset to center when mouse leaves
-          button.style.setProperty("--mouse-x", "50%");
-          button.style.setProperty("--mouse-y", "50%");
+          // Smoothly return to center
+          targetX = 50;
+          targetY = 50;
+
+          // Continue animation to return to center
+          if (!animationFrame) {
+            animationFrame = requestAnimationFrame(updateShinePosition);
+          }
+
+          // Clean up animation after returning to center
+          setTimeout(() => {
+            if (animationFrame) {
+              cancelAnimationFrame(animationFrame);
+              animationFrame = null;
+            }
+          }, 500);
         });
       });
     </script>

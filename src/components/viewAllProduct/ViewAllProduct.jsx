@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./ViewAllProduct.css";
@@ -140,7 +140,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
 
         {showViewProductButton && (
           <div className="view-product-button-container">
-            <GlassButton
+            <ShineGlassButton
               width={189}
               height={57}
               fontSize={14}
@@ -148,7 +148,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
               onClick={handleViewAllProducts}
             >
               View all products
-            </GlassButton>
+            </ShineGlassButton>
           </div>
         )}
       </div>

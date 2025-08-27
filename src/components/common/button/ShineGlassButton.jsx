@@ -18,31 +18,97 @@ const ShineGlassButton = ({
     const button = buttonRef.current;
     if (!button) return;
 
+    const shineLayer = button.querySelector('.shine-layer');
+    if (!shineLayer) return;
+
+    // Variables for smooth interpolation
+    let currentX = 50;
+    let currentY = 50;
+    let targetX = 50;
+    let targetY = 50;
+    let animationFrame = null;
+
+    // Lerp function for smooth interpolation
+    const lerp = (start, end, factor) => start + (end - start) * factor;
+
+    // Animation loop
+    const updateShinePosition = () => {
+      // Interpolate towards target position (0.15 = 15% per frame for smooth lag)
+      currentX = lerp(currentX, targetX, 0.15);
+      currentY = lerp(currentY, targetY, 0.15);
+
+      // Update CSS variables
+      shineLayer.style.setProperty("--mouse-x", currentX + "%");
+      shineLayer.style.setProperty("--mouse-y", currentY + "%");
+
+      // Continue animation if there's still movement needed
+      if (Math.abs(currentX - targetX) > 0.1 || Math.abs(currentY - targetY) > 0.1) {
+        animationFrame = requestAnimationFrame(updateShinePosition);
+      } else {
+        animationFrame = null;
+      }
+    };
+
     const handleMouseMove = (e) => {
       const rect = button.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      // Convert to percentage
-      const xPercent = (x / rect.width) * 100;
-      const yPercent = (y / rect.height) * 100;
+      // Update target position
+      targetX = (x / rect.width) * 100;
+      targetY = (y / rect.height) * 100;
 
-      // Update CSS variables
-      button.style.setProperty("--mouse-x", xPercent + "%");
-      button.style.setProperty("--mouse-y", yPercent + "%");
+      // Start animation if not already running
+      if (!animationFrame) {
+        animationFrame = requestAnimationFrame(updateShinePosition);
+      }
+    };
+
+    const handleMouseEnter = (e) => {
+      const rect = button.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Set initial position
+      targetX = (x / rect.width) * 100;
+      targetY = (y / rect.height) * 100;
+      currentX = targetX;
+      currentY = targetY;
+
+      // Set initial position immediately
+      shineLayer.style.setProperty("--mouse-x", currentX + "%");
+      shineLayer.style.setProperty("--mouse-y", currentY + "%");
     };
 
     const handleMouseLeave = () => {
-      // Reset to center when mouse leaves
-      button.style.setProperty("--mouse-x", "50%");
-      button.style.setProperty("--mouse-y", "50%");
+      // Smoothly return to center
+      targetX = 50;
+      targetY = 50;
+
+      // Continue animation to return to center
+      if (!animationFrame) {
+        animationFrame = requestAnimationFrame(updateShinePosition);
+      }
+
+      // Clean up animation after returning to center
+      setTimeout(() => {
+        if (animationFrame) {
+          cancelAnimationFrame(animationFrame);
+          animationFrame = null;
+        }
+      }, 500);
     };
 
     button.addEventListener("mousemove", handleMouseMove);
+    button.addEventListener("mouseenter", handleMouseEnter);
     button.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
       button.removeEventListener("mousemove", handleMouseMove);
+      button.removeEventListener("mouseenter", handleMouseEnter);
       button.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);

@@ -2,12 +2,12 @@
 @property --angle-1 {
   syntax: "<angle>";
   inherits: false;
-  initial-value: 15deg;
+  initial-value: 0deg;
 }
 
 :root {
   --shine-anim--hover-time: 600ms;
-  --shine-anim--hover-ease: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --shine-anim--hover-ease: cubic-bezier(0.4, 0, 0.2, 1);
   --mouse-x: 50%;
   --mouse-y: 50%;
 }
@@ -97,7 +97,9 @@
   z-index: 1;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 200ms ease;
+  /* Add smooth transition for mouse position variables */
+  transition: --mouse-x 300ms ease-out, --mouse-y 300ms ease-out,
+    opacity 200ms ease;
 }
 
 .shine-glass-button:hover .shine-layer {
@@ -168,18 +170,16 @@
   mask-composite: exclude;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
-  transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease),
-    --angle-1 500ms ease;
+  transition: --angle-1 600ms cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
-  will-change: transform;
 }
 
 .shine-glass-button:hover .border-layer {
-  --angle-1: 75deg;
+  --angle-1: 180deg;
 }
 
 .shine-glass-button:active .border-layer {
-  --angle-1: 45deg;
+  --angle-1: 90deg;
 }
 
 /* ========== THEME VARIANTS ========== */
@@ -188,30 +188,41 @@
 .shine-glass-button--light .glass-layer {
   background: linear-gradient(
     -75deg,
-    rgba(0, 0, 0, 0.05),
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.05)
-  );
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  ),
+  rgba(0, 0, 0, 0.05);
+  transition: background var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
 }
 
 .shine-glass-button--light .button-text {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(0, 0, 0, 0.75);
   transition: color var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
 }
 
-/* Hover effect for light theme - text turns black */
+/* Hover effect for light theme - text turns white and background turns black */
+.shine-glass-button--light:hover .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.95),
+    rgba(0, 0, 0, 0.98),
+    rgba(0, 0, 0, 0.95)
+  );
+}
+
 .shine-glass-button--light:hover .button-text {
-  color: rgba(0, 0, 0, 0.9);
+  color: rgba(255, 255, 255, 1);
 }
 
 .shine-glass-button--light .border-layer {
   background: conic-gradient(
       from var(--angle-1) at 50% 50%,
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0) 5% 40%,
-      rgba(255, 255, 255, 0.8) 50%,
-      rgba(255, 255, 255, 0) 60% 95%,
-      rgba(255, 255, 255, 0.8)
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0) 25%,
+      rgba(0, 0, 0, 1) 50%,
+      rgba(0, 0, 0, 0) 75%,
+      rgba(0, 0, 0, 1) 100%
     ),
     linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
@@ -224,7 +235,7 @@
     rgba(0, 0, 0, 0.1),
     rgba(0, 0, 0, 0.05)
   );
-  transition: background var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
+  transition: background 600ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .shine-glass-button--footer:hover .glass-layer {
@@ -234,8 +245,7 @@
     rgba(160, 160, 160, 0.95),
     rgba(140, 140, 140, 0.95)
   );
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
     inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
@@ -274,7 +284,7 @@
       rgba(255, 255, 255, 0) 60% 95%,
       rgba(255, 255, 255, 0.8)
     ),
-    linear-gradient(180deg, rgba(224, 224, 224, 0.5), rgba(224, 224, 224, 0.5));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
 }
 
 /* ========== RESPONSIVE BEHAVIOR ========== */
@@ -283,7 +293,7 @@
   .border-layer,
   .shine-glass-button:hover .border-layer,
   .shine-glass-button:active .border-layer {
-    --angle-1: 15deg;
+    --angle-1: 0deg;
   }
 
   .shine-layer {
