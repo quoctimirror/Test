@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SelectOptionSection.css";
-import GlassButton from "../common/button/GlassButton";
-import api from "../../api/axiosConfig";
+import GlassButton from "@components/common/button/GlassButton";
+import api from "@api/axiosConfig";
 
 const SelectOptionSection = () => {
   const navigate = useNavigate();

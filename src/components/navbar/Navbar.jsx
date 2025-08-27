@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 export default function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -1,9 +1,9 @@
 // Thêm 'useState', 'useRef' từ React
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import CollectionHeroSection from "./CollectionHeroSection";
-import GlassButton from "../common/button/GlassButton";
+import GlassButton from "@components/common/button/GlassButton";
 import "./Collections.css";
 
 const products = [

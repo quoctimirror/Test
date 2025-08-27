@@ -1,5 +1,5 @@
 import React from "react";
-import GlassButton from "../common/button/GlassButton";
+import GlassButton from "@components/common/button/GlassButton";
 
 const ProductCareRepair = () => {
   return (

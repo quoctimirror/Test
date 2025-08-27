@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "../../../utils/optimizedTransitionUtils";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./Section4.css";
-import GlassButton from "../../common/button/GlassButton";
+import GlassButton from "@components/common/button/GlassButton";
 
 const Section4 = () => {
   const navigate = useNavigate();

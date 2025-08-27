@@ -4,7 +4,7 @@ import { remoteApi } from "@api/axiosConfig";
 import "./Register.css";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
-import GlassButton from "../common/button/GlassButton";
+import GlassButton from "@components/common/button/GlassButton";
 
 const Register = () => {
   const navigate = useNavigate();

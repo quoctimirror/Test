@@ -1,4 +1,4 @@
-import MetaballBackground from "../../specialEffect/MetaballBackground/MetaballBackground";
+import MetaballBackground from "@components/specialEffect/MetaballBackground/MetaballBackground";
 import "./BrandPillars.css";
 
 const BrandPillars = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./FAQs.css";
-import GlassButton from "../common/button/GlassButton";
+import GlassButton from "@components/common/button/GlassButton";
 
 const FAQs = () => {
   const [expandedFAQ, setExpandedFAQ] = useState(null);

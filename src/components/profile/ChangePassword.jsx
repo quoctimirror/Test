@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import api from "../../api/axiosConfig";
+import api from "@api/axiosConfig";
 import "./ChangePassword.css";
-import EyeIconSvg from "../../assets/images/icons/EyeIcon.svg";
-import EyeSlashIconSvg from "../../assets/images/icons/EyeSlashIcon.svg";
-import GlassButton from "../common/button/GlassButton";
+import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
+import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
+import GlassButton from "@components/common/button/GlassButton";
 
 const ChangePassword = ({ onClose }) => {
   const [passwordData, setPasswordData] = useState({

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import GlassButton from "../../common/button/GlassButton";
+import GlassButton from "@components/common/button/GlassButton";
 import "./StartingPlaceSection.css";
 
 const StartingPlaceSection = () => {

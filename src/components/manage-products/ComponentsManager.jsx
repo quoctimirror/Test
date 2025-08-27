@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "../../api/axiosConfig";
+import api from "@api/axiosConfig";
 
 const ComponentsManager = () => {
   const [components, setComponents] = useState([]);

@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { remoteApi } from "../../api/axiosConfig"; // <-- SỬ DỤNG REMOTE API CHO PROFILE
+import { remoteApi } from "@api/axiosConfig"; // <-- SỬ DỤNG REMOTE API CHO PROFILE
 import "./Profile.css";
 import "@styles/typography.css";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import ChangePassword from "./ChangePassword";
-import GlassButton from "../common/button/GlassButton";
-import { useAuth } from "../../context/AuthContext";
+import GlassButton from "@components/common/button/GlassButton";
+import { useAuth } from "@/context/AuthContext";
 
 const Profile = () => {
   const navigate = useNavigate();

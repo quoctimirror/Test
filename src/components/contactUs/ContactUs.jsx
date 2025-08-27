@@ -1,7 +1,7 @@
 import "./ContactUs.css";
 import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
-import GlassButton from "../common/button/GlassButton";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import GlassButton from "@components/common/button/GlassButton";
 
 const ContactUs = () => {
   const navigate = useNavigate();

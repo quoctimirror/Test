@@ -1,6 +1,6 @@
 import "./HoverExpand.css";
 import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "../../../utils/optimizedTransitionUtils";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import image1 from "@assets/images/hover-expand/img_1.jpg";
 import image2 from "@assets/images/hover-expand/img_2.jpg";
 import image3 from "@assets/images/hover-expand/img_3.jpg";

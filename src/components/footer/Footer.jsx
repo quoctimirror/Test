@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
-import GlassButton from "../common/button/GlassButton";
-import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
+import GlassButton from "@components/common/button/GlassButton";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 
 const Footer = () => {
   const navigate = useNavigate();

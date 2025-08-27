@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "../../utils/optimizedTransitionUtils";
-import GlassButton from "../common/button/GlassButton";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import GlassButton from "@components/common/button/GlassButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Section4CollectionDetail.css";

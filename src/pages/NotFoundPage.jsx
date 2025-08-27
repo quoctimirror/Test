@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "../utils/optimizedTransitionUtils";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./NotFoundPage.css";
 
 const NotFoundPage = () => {
