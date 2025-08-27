@@ -149,7 +149,14 @@ const StartingPlaceSection = () => {
 
           {/* Explore Button */}
           <div className="starting-button">
-            <ShineGlassButton width={189} height={57} fontSize={14} theme="shine">Explore Our Drops</ShineGlassButton>
+            <ShineGlassButton
+              width={189}
+              height={57}
+              fontSize={14}
+              theme="footer"
+            >
+              Explore Our Drops
+            </ShineGlassButton>
           </div>
         </div>
       </div>
