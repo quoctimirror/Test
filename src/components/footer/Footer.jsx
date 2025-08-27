@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
-import GlassButton from "@components/common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 
 const Footer = () => {
@@ -155,14 +155,15 @@ const Footer = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="email-input"
                 />
-                <GlassButton
+                <ShineGlassButton
                   onClick={handleSignUp}
                   className="signup-button"
                   width={123}
                   height={57}
+                  theme="light"
                 >
                   Sign up
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>
