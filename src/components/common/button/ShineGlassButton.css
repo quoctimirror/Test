@@ -216,6 +216,67 @@
     linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
+/* Footer theme - Gray background on hover with white shine */
+.shine-glass-button--footer .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.05)
+  );
+  transition: background var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
+}
+
+.shine-glass-button--footer:hover .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(140, 140, 140, 0.95),
+    rgba(160, 160, 160, 0.95),
+    rgba(140, 140, 140, 0.95)
+  );
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.shine-glass-button--footer .button-text {
+  color: rgba(255, 255, 255, 0.9);
+  transition: color var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
+}
+
+.shine-glass-button--footer:hover .button-text {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+/* Footer theme - Enhanced white shine on hover */
+.shine-glass-button--footer .shine-layer {
+  mix-blend-mode: normal;
+}
+
+.shine-glass-button--footer .shine-layer::before {
+  background: radial-gradient(
+    circle 150px at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.9) 20%,
+    rgba(255, 255, 255, 0.6) 40%,
+    rgba(255, 255, 255, 0.3) 60%,
+    transparent 100%
+  );
+  mix-blend-mode: overlay;
+}
+
+.shine-glass-button--footer .border-layer {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0) 60% 95%,
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(180deg, rgba(224, 224, 224, 0.5), rgba(224, 224, 224, 0.5));
+}
+
 /* ========== RESPONSIVE BEHAVIOR ========== */
 
 @media (hover: none) and (pointer: coarse) {

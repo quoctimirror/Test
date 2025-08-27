@@ -160,7 +160,7 @@ const Footer = () => {
                   className="signup-button"
                   width={123}
                   height={57}
-                  theme="light"
+                  theme="footer"
                 >
                   Sign up
                 </ShineGlassButton>
