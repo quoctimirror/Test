@@ -6,8 +6,8 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import api from "../api/axiosConfig"; // Use local gateway for authentication
-import requestThrottle from "../utils/requestThrottle";
+import api from "@api/axiosConfig"; // Use remoteApi for authentication
+import requestThrottle from "@utils/transitionUtil/requestThrottle";
 
 const AuthContext = createContext(null);
 

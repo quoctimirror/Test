@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./NotFoundPage.css";
 
 const NotFoundPage = () => {
@@ -13,13 +14,17 @@ const NotFoundPage = () => {
     }
   }, []);
 
-  const handleGoHome = () => {
+  const handleGoHome = async () => {
     sessionStorage.setItem('scrollToTop', 'true');
-    navigate("/");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/");
   };
 
   const handleGoBack = () => {
     window.history.back();
+  };
+
+  const handleLinkClick = async (route) => {
+    await optimizedTransitionUtils.transitionToRoute(navigate, route);
   };
 
   return (
@@ -54,37 +59,37 @@ const NotFoundPage = () => {
           <div className="helpful-links">
             <h3>You might be looking for:</h3>
             <div className="links-grid">
-              <Link to="/collections" className="helpful-link">
+              <button onClick={() => handleLinkClick("/collections")} className="helpful-link">
                 <span className="link-icon">💎</span>
                 <div>
                   <strong>Collections</strong>
                   <small>Browse our diamond collections</small>
                 </div>
-              </Link>
+              </button>
               
-              <Link to="/products" className="helpful-link">
+              <button onClick={() => handleLinkClick("/collections")} className="helpful-link">
                 <span className="link-icon">💍</span>
                 <div>
                   <strong>Products</strong>
                   <small>Explore our jewelry pieces</small>
                 </div>
-              </Link>
+              </button>
               
-              <Link to="/services" className="helpful-link">
+              <button onClick={() => handleLinkClick("/services")} className="helpful-link">
                 <span className="link-icon">🛠️</span>
                 <div>
                   <strong>Services</strong>
                   <small>Our jewelry services</small>
                 </div>
-              </Link>
+              </button>
               
-              <Link to="/support" className="helpful-link">
+              <button onClick={() => handleLinkClick("/support")} className="helpful-link">
                 <span className="link-icon">💬</span>
                 <div>
                   <strong>Support</strong>
                   <small>Get help and support</small>
                 </div>
-              </Link>
+              </button>
             </div>
           </div>
         </div>

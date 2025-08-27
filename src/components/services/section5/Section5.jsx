@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./Section5.css";
-import GlassButton from "../../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const Section5 = () => {
   const navigate = useNavigate();
   const [openFaq, setOpenFaq] = useState(null);
 
-  const handleViewAllFAQs = () => {
-    window.scrollTo(0, 0);
-    navigate("/support?tab=faqs");
+  const handleViewAllFAQs = async () => {
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/support?tab=faqs"
+    );
   };
 
   const faqs = [
@@ -97,16 +100,16 @@ const Section5 = () => {
           </div>
 
           <div className="view-all-section">
-            <GlassButton
+            <ShineGlassButton
               className="view-all-btn"
-              theme="default"
+              theme="light"
               width={125}
               height={57}
               fontSize={14}
               onClick={handleViewAllFAQs}
             >
               View all
-            </GlassButton>
+            </ShineGlassButton>
           </div>
         </div>
       </div>

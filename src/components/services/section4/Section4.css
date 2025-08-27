@@ -107,33 +107,11 @@
   max-width: 400px;
 }
 
+/* Button styles now handled by ShineGlassButton component */
 .section4-cta {
-  background: rgba(0, 0, 0, 0.1);
-  border: 0.5px solid rgba(0, 0, 0, 0.5);
-  padding: 20px 36px;
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.75);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: capitalize;
-  border-radius: 100px;
-  margin: 0;
-  min-width: 137px;
-  height: 51px;
-  opacity: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  box-sizing: border-box;
-}
-
-.section4-cta:hover {
-  background: rgba(0, 0, 0, 0.75);
-  border-color: rgba(0, 0, 0, 0.8);
-  color: white;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 /* Section 4 Part 2 - Sizing Guide */
@@ -471,12 +449,6 @@
     max-width: 320px;
   }
 
-  .section4-cta {
-    padding: 18px 32px;
-    font-size: 13px;
-    height: 48px;
-    min-width: 125px;
-  }
 
   .section4-part2-content {
     padding: 2.5rem;
@@ -555,12 +527,6 @@
     max-width: 350px;
   }
 
-  .section4-cta {
-    padding: 16px 28px;
-    font-size: 13px;
-    height: 45px;
-    min-width: 120px;
-  }
 
   .section4-part2-content {
     padding: 2rem;
@@ -628,12 +594,6 @@
     line-height: 1.5;
   }
 
-  .section4-cta {
-    padding: 14px 24px;
-    font-size: 12px;
-    height: 42px;
-    min-width: 110px;
-  }
 
   .section4-part2-content {
     padding: 1.5rem;
@@ -697,12 +657,6 @@
     max-width: 250px;
   }
 
-  .section4-cta {
-    padding: 12px 20px;
-    font-size: 11px;
-    height: 38px;
-    min-width: 100px;
-  }
 
   .section4-part2-content {
     padding: 1rem;

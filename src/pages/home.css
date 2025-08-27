@@ -399,121 +399,255 @@ html {
   pointer-events: auto;
 }
 
-/* Media Queries for Mobile */
-/* Kích thước cụ thể cho màn hình 1920x1080 */
-@media (min-width: 1920px) and (min-height: 1080px) {
-  .scroll-down button {
-    width: 57px;
-    height: 57px;
+/* ============= RESPONSIVE DESIGN ============= */
+
+/* Ultra Wide Screens */
+@media (min-width: 2560px) {
+  .main-logo {
+    width: 140px;
+    height: 280px;
   }
 
+  .tagline-section {
+    top: calc(82%);
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: 72px;
+  }
+}
+
+/* Full HD Desktop */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .scroll-down button,
   .vetor-button button {
     width: 57px;
     height: 57px;
   }
 }
 
-@media (max-width: 768px) {
+/* Large Laptop (1440px) */
+@media (max-width: 1440px) {
   .main-logo {
-    width: clamp(60px, 15vw, 111.78px);
-    height: clamp(120px, 30vw, 224.18px);
+    width: 100px;
+    height: 200px;
   }
 
   .tagline-section {
-    top: 75vh;
-  }
-
-  .tagline-top {
-    margin-bottom: 8px;
-    white-space: nowrap;
+    top: calc(78%);
   }
 
   .future-text,
   .diamond-text {
-    font-size: clamp(20px, 5vw, 36px);
+    font-size: 52px;
+  }
+}
+
+/* Standard Laptop (1200px) */
+@media (max-width: 1200px) {
+  .homepage {
+    padding: 0 20px;
   }
 
-  .tagline-bottom {
-    width: 395px;
-    height: 64px;
+  .main-logo {
+    width: 95px;
+    height: 190px;
   }
 
-  .logo-top,
-  .logo-bottom {
-    font-size: 15vw;
-    letter-spacing: 2px;
+  .future-text,
+  .diamond-text {
+    font-size: 48px;
   }
 
   .scroll-down {
-    bottom: 30px;
-  }
-
-  .scroll-down button {
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
+    bottom: 60px;
   }
 
   .vetor-button {
-    bottom: 30px;
-    right: 20px;
+    bottom: 60px;
+    right: 40px;
+  }
+}
+
+/* Small Laptop (1024px) */
+@media (max-width: 1024px) {
+  .main-logo {
+    width: 90px;
+    height: 180px;
+  }
+
+  .tagline-section {
+    top: calc(76%);
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: 44px;
+  }
+
+  .tagline-top {
+    font-size: 11px;
+  }
+}
+
+/* Tablet (768px) */
+@media (max-width: 768px) {
+  .scroll-container {
+    height: 150vh;
+  }
+
+  .homepage {
+    padding: 0 15px;
+  }
+
+  .main-logo {
+    width: 70px;
+    height: 140px;
+  }
+
+  .logo-center {
+    top: 48%;
+  }
+
+  .tagline-section {
+    top: 72vh;
+    width: 90%;
+  }
+
+  .tagline-top {
+    font-size: 10px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: 32px;
+  }
+
+  .tagline-bottom {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Gradient adjustments */
+  .gradient-top,
+  .gradient-bottom {
+    height: 50vh;
+  }
+
+  /* Buttons */
+  .scroll-down {
+    bottom: 40px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .scroll-down button {
     width: 46px;
     height: 46px;
   }
 
+  .scroll-down button img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .vetor-button {
+    bottom: 40px;
+    right: 25px;
+    width: 48px;
+    height: 48px;
+  }
+
   .vetor-button button {
-    width: 45px;
-    height: 45px;
+    width: 46px;
+    height: 46px;
   }
 
   .vetor-button button img {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Next section */
+  .next-section {
+    padding: 60px 4%;
+  }
+
+  .next-section h1 {
+    font-size: 2.2rem;
+  }
+
+  .next-section p {
+    font-size: 1rem;
   }
 }
 
+/* Large Mobile (480px) */
 @media (max-width: 480px) {
+  .scroll-container {
+    height: 120vh;
+  }
+
+  .homepage {
+    padding: 0 10px;
+  }
+
   .main-logo {
-    width: clamp(50px, 18vw, 111.78px);
-    height: clamp(100px, 36vw, 224.18px);
+    width: 60px;
+    height: 120px;
+  }
+
+  .logo-center {
+    top: 45%;
   }
 
   .tagline-section {
-    top: 70vh;
+    top: 68vh;
+    width: 95%;
   }
 
   .tagline-top {
-    margin-bottom: 6px;
-    white-space: nowrap;
+    font-size: 9px;
+    margin-bottom: 5px;
+    letter-spacing: 0.8px;
   }
 
   .future-text,
   .diamond-text {
-    font-size: clamp(16px, 6vw, 28px);
+    font-size: 26px;
+    letter-spacing: 0.5px;
   }
 
   .tagline-bottom {
-    width: 395px;
-    height: 64px;
+    gap: 6px;
   }
 
-  .logo-top,
-  .logo-bottom {
-    font-size: 18vw;
-    letter-spacing: 1px;
+  /* Buttons smaller */
+  .scroll-down {
+    bottom: 30px;
+    width: 42px;
+    height: 42px;
   }
 
   .scroll-down button {
     width: 40px;
     height: 40px;
-    font-size: 18px;
+  }
+
+  .scroll-down button img {
+    width: 20px;
+    height: 20px;
   }
 
   .vetor-button {
     bottom: 30px;
-    right: 15px;
-    width: 41px;
-    height: 41px;
+    right: 20px;
+    width: 42px;
+    height: 42px;
   }
 
   .vetor-button button {
@@ -524,6 +658,80 @@ html {
   .vetor-button button img {
     width: 18px;
     height: 18px;
+  }
+
+  /* Next section mobile */
+  .next-section {
+    padding: 40px 3%;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .next-section h1 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+
+  .next-section p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
+/* Small Mobile (360px) */
+@media (max-width: 360px) {
+  .scroll-container {
+    height: 100vh;
+  }
+
+  .main-logo {
+    width: 50px;
+    height: 100px;
+  }
+
+  .tagline-section {
+    top: 65vh;
+  }
+
+  .tagline-top {
+    font-size: 8px;
+    letter-spacing: 0.6px;
+  }
+
+  .future-text,
+  .diamond-text {
+    font-size: 22px;
+  }
+
+  /* Even smaller buttons */
+  .scroll-down,
+  .vetor-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .scroll-down button,
+  .vetor-button button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .scroll-down button img,
+  .vetor-button button img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .vetor-button {
+    right: 15px;
+  }
+
+  .next-section h1 {
+    font-size: 1.5rem;
+  }
+
+  .next-section p {
+    font-size: 0.85rem;
   }
 }
 

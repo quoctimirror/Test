@@ -1,26 +1,33 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./Section4.css";
-import GlassButton from "../../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const Section4 = () => {
   const navigate = useNavigate();
   const sectionRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  const handleReturnExchangeClick = () => {
-    window.scrollTo(0, 0);
-    navigate("/support?tab=return-exchange");
+  const handleReturnExchangeClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/support?tab=return-exchange"
+    );
   };
 
-  const handleSizingGuideClick = () => {
-    window.scrollTo(0, 0);
-    navigate("/support?tab=sizing-guide");
+  const handleSizingGuideClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/support?tab=sizing-guide"
+    );
   };
 
-  const handleWarrantyInfoClick = () => {
-    window.scrollTo(0, 0);
-    navigate("/support?tab=warranty-info");
+  const handleWarrantyInfoClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/support?tab=warranty-info"
+    );
   };
 
   useEffect(() => {
@@ -117,9 +124,10 @@ const Section4 = () => {
             style={{
               opacity: scrollProgress < 0.35 ? 1 - scrollProgress * 2.86 : 0,
               transform: `translateY(${
-                scrollProgress < 0.35 ? (1 - scrollProgress * 2.86) * 50 : 0
+                scrollProgress < 0.35 ? scrollProgress * 2.86 * -20 : -20
               }px)`,
               pointerEvents: scrollProgress < 0.35 ? "auto" : "none",
+              zIndex: scrollProgress < 0.35 ? 100 : 10,
             }}
           >
             <div className="section4-content">
@@ -139,16 +147,16 @@ const Section4 = () => {
                     piece as radiant as the day you received it.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section4-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleReturnExchangeClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>
@@ -162,13 +170,15 @@ const Section4 = () => {
                   : 0,
               transform: `translateY(${
                 scrollProgress > 0.3 && scrollProgress < 0.75
-                  ? (1 - (scrollProgress - 0.3) * 2.22) * 50
-                  : scrollProgress <= 0.3
-                  ? 50
-                  : 0
+                  ? (scrollProgress - 0.525) * 20
+                  : scrollProgress <= 0.525
+                  ? -10
+                  : 10
               }px)`,
               pointerEvents:
                 scrollProgress > 0.3 && scrollProgress < 0.75 ? "auto" : "none",
+              zIndex:
+                scrollProgress > 0.3 && scrollProgress < 0.75 ? 100 : 10,
             }}
           >
             <div className="section4-content">
@@ -188,16 +198,16 @@ const Section4 = () => {
                     giving.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section4-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleSizingGuideClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>
@@ -208,10 +218,11 @@ const Section4 = () => {
               opacity: scrollProgress > 0.75 ? (scrollProgress - 0.75) * 4 : 0,
               transform: `translateY(${
                 scrollProgress > 0.75
-                  ? (1 - (scrollProgress - 0.75) * 4) * 50
-                  : 50
+                  ? (1 - scrollProgress) * 20
+                  : 20
               }px)`,
               pointerEvents: scrollProgress > 0.75 ? "auto" : "none",
+              zIndex: scrollProgress > 0.75 ? 100 : 10,
             }}
           >
             <div className="section4-content">
@@ -230,16 +241,16 @@ const Section4 = () => {
                     is protected under our care.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section4-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleWarrantyInfoClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>

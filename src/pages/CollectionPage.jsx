@@ -5,18 +5,6 @@ import ContactUs from "@components/contactUs/ContactUs";
 
 const CollectionPage = () => {
   useEffect(() => {
-    // Immediate scroll
-    window.scrollTo(0, 0);
-    
-    // Delayed scroll to ensure it works after render
-    setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 100);
-    
-    // Also check sessionStorage flag for hard refresh cases
-    if (sessionStorage.getItem('scrollToTop') === 'true') {
-      sessionStorage.removeItem('scrollToTop');
-    }
   }, []);
 
   return (

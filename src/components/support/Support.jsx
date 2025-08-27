@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import "@pages/support.css";
 import ReturnExchange from "./ReturnExchange";
 import SizingGuide from "./SizingGuide";
@@ -9,6 +9,7 @@ import ContactUs from "@components/contactUs/ContactUs";
 
 const Support = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("return-exchange");
 
   useEffect(() => {
@@ -34,6 +35,11 @@ const Support = () => {
     { id: "faqs", label: "FAQs", component: FAQs },
   ];
 
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+    navigate(`/support?tab=${tabId}`, { replace: true });
+  };
+
   return (
     <>
       <div className="support-hero-section">
@@ -48,7 +54,7 @@ const Support = () => {
             <button
               key={tab.id}
               className={`support-tab ${activeTab === tab.id ? "active" : ""}`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
             >
               {tab.label}
             </button>

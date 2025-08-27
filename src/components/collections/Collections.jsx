@@ -2,8 +2,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { collectionsAPI, handleAPIError } from "../../services/api";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import CollectionHeroSection from "./CollectionHeroSection";
-import GlassButton from "../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import "./Collections.css";
 
 // Removed hardcoded products - will be loaded from API
@@ -93,8 +94,11 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
 
   const currentProduct = products[currentIndex];
 
-  const handleExploreCollection = () => {
-    navigate(`/collections/${collectionId}`);
+  const handleExploreCollection = async () => {
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      `/collections/${collectionId}`
+    );
   };
 
   if (loading) {
@@ -166,15 +170,15 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
             {collection.description || 
              "Discover our latest jewelry collection featuring exquisite craftsmanship and timeless elegance."}
           </div>
-          <GlassButton
+          <ShineGlassButton
             width={221}
             height={57}
-            theme="white"
+            theme="footer"
             onClick={handleExploreCollection}
             className="collection-hero-explore-button"
           >
             Explore this collection
-          </GlassButton>
+          </ShineGlassButton>
         </div>
 
         <div className="collection-content-panel full-width">

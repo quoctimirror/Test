@@ -146,34 +146,7 @@
   transition: all 0.3s ease;
 }
 
-.view-all-btn {
-  background: rgba(0, 0, 0, 0.1);
-  border: 0.5px solid rgba(0, 0, 0, 0.5);
-  padding: 20px 36px;
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.75);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: capitalize;
-  border-radius: 100px;
-  margin: 0;
-  min-width: 137px;
-  height: 51px;
-  opacity: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  box-sizing: border-box;
-}
-
-.view-all-btn:hover {
-  background: rgba(0, 0, 0, 0.75);
-  border-color: rgba(0, 0, 0, 0.8);
-  color: white;
-}
+/* Button styles now handled by ShineGlassButton component */
 
 @keyframes fadeIn {
   from {

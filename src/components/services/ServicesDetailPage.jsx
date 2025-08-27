@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import "@pages/servicesDetail.css";
 import ProductCareRepair from "./ProductCareRepair";
 import TradeInUpgrade from "./TradeInUpgrade";
@@ -7,6 +7,7 @@ import ContactUs from "@components/contactUs/ContactUs";
 
 const ServicesDetailPage = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("product-care-repair");
 
   useEffect(() => {
@@ -15,6 +16,11 @@ const ServicesDetailPage = () => {
       setActiveTab(tabFromUrl);
     }
   }, [searchParams]);
+
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+    navigate(`/services/detail?tab=${tabId}`, { replace: true });
+  };
 
   const tabs = [
     {
@@ -43,7 +49,7 @@ const ServicesDetailPage = () => {
             <button
               key={tab.id}
               className={`services-detail-tab ${activeTab === tab.id ? "active" : ""}`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
             >
               {tab.label}
             </button>

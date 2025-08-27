@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./FAQs.css";
-import GlassButton from "../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const FAQs = () => {
   const [expandedFAQ, setExpandedFAQ] = useState(null);
@@ -102,15 +102,15 @@ const FAQs = () => {
                 placeholder="Search"
                 className="search-input"
               />
-              <GlassButton
+              <ShineGlassButton
                 className="search-button"
-                theme="default"
+                theme="light"
                 width={119}
                 height={57}
                 fontSize={14}
               >
                 Search
-              </GlassButton>
+              </ShineGlassButton>
             </div>
           </div>
 

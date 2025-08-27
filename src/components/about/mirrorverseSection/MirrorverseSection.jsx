@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import GlassButton from "../../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import "./MirrorverseSection.css";
 
 const MirrorverseSection = () => {
@@ -150,12 +150,22 @@ const MirrorverseSection = () => {
 
           {/* Buttons */}
           <div className="mirrorverse-buttons">
-            <GlassButton theme="glass" width={136} height={57}>
+            <ShineGlassButton
+              theme="footer"
+              width={136}
+              height={57}
+              fontSize={14}
+            >
               AR Try on
-            </GlassButton>
-            <GlassButton theme="glass" width={221} height={57}>
+            </ShineGlassButton>
+            <ShineGlassButton
+              theme="footer"
+              width={221}
+              height={57}
+              fontSize={14}
+            >
               Immersive Showroom
-            </GlassButton>
+            </ShineGlassButton>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import GlassButton from "../../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import "./StartingPlaceSection.css";
 
 const StartingPlaceSection = () => {
@@ -149,7 +149,14 @@ const StartingPlaceSection = () => {
 
           {/* Explore Button */}
           <div className="starting-button">
-            <GlassButton>Explore Our Drops</GlassButton>
+            <ShineGlassButton
+              width={189}
+              height={57}
+              fontSize={14}
+              theme="footer"
+            >
+              Explore Our Drops
+            </ShineGlassButton>
           </div>
         </div>
       </div>

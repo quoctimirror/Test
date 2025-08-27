@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import GlassButton from "../common/button/GlassButton";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./ViewAllProduct.css";
@@ -58,6 +59,11 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
       const initScrollTrigger = () => {
       if (!scrollContainerRef.current) return;
 
+      // Kill any existing ScrollTriggers for this component
+      ScrollTrigger.getAll()
+        .filter((trigger) => trigger.trigger === sectionRef.current)
+        .forEach((trigger) => trigger.kill());
+
       // Get all product cards
       const cards =
         scrollContainerRef.current.querySelectorAll(".product-card");
@@ -99,23 +105,36 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
       // Cleanup
       return () => {
         window.removeEventListener("resize", handleResize);
-        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+        ScrollTrigger.getAll()
+          .filter((trigger) => trigger.trigger === sectionRef.current)
+          .forEach((trigger) => trigger.kill());
       };
     };
 
     // Initialize after a short delay to ensure DOM is ready
     const timer = setTimeout(initScrollTrigger, 100);
 
+    // Listen for page transition complete event to reinitialize
+    const handleTransitionComplete = () => {
+      setTimeout(initScrollTrigger, 200);
+    };
+    window.addEventListener("pageTransitionComplete", handleTransitionComplete);
+
     return () => {
       clearTimeout(timer);
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      window.removeEventListener(
+        "pageTransitionComplete",
+        handleTransitionComplete
+      );
+      ScrollTrigger.getAll()
+        .filter((trigger) => trigger.trigger === sectionRef.current)
+        .forEach((trigger) => trigger.kill());
     };
     }
   }, [loading, products]);
 
-  const handleViewAllProducts = () => {
-    window.scrollTo(0, 0);
-    navigate("/all-gems");
+  const handleViewAllProducts = async () => {
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/all-gems");
   };
 
   return (
@@ -225,7 +244,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
 
         {showViewProductButton && (
           <div className="view-product-button-container">
-            <GlassButton
+            <ShineGlassButton
               width={189}
               height={57}
               fontSize={14}
@@ -233,7 +252,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
               onClick={handleViewAllProducts}
             >
               View all products
-            </GlassButton>
+            </ShineGlassButton>
           </div>
         )}
       </div>

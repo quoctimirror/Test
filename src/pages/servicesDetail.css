@@ -402,37 +402,13 @@
 
 /* CTA Section */
 .cta-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
-.services-cta {
-  font-family: "BT Beau Sans", sans-serif;
-  background: rgba(0, 0, 0, 0.1);
-  border: 0.5px solid rgba(0, 0, 0, 0.5);
-  padding: 20px 36px;
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.75);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: capitalize;
-  border-radius: 100px;
-  margin: 0;
-  min-width: 180px;
-  height: 57px;
-  opacity: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  box-sizing: border-box;
-}
-
-.services-cta:hover {
-  background: rgba(0, 0, 0, 0.75);
-  border-color: rgba(0, 0, 0, 0.8);
-  color: white;
-}
+/* Button styles now handled by ShineGlassButton component */
 
 /* Responsive Design */
 @media (max-width: 1200px) {
@@ -586,12 +562,6 @@
     line-height: 1.5;
   }
 
-  .services-cta {
-    padding: 18px 32px;
-    font-size: 13px;
-    height: 50px;
-    min-width: 160px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -677,12 +647,6 @@
     line-height: 1.5;
   }
 
-  .services-cta {
-    padding: 16px 28px;
-    font-size: 12px;
-    height: 45px;
-    min-width: 140px;
-  }
 
   .service-item {
     margin-bottom: 28px;
@@ -770,10 +734,4 @@
     font-size: 12px;
   }
 
-  .services-cta {
-    padding: 14px 24px;
-    font-size: 11px;
-    height: 40px;
-    min-width: 120px;
-  }
 }

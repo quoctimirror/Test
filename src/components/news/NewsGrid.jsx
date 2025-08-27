@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./NewsGrid.css";
-import GlassButton from "../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const NewsGrid = () => {
   const [visibleItems, setVisibleItems] = useState(12);
@@ -96,10 +97,9 @@ const NewsGrid = () => {
     setVisibleItems((prev) => Math.min(prev + 8, newsData.length));
   };
 
-  const handleNewsItemClick = (item) => {
+  const handleNewsItemClick = async (item) => {
     if (item.id === 1) {
-      navigate("/news/new-cut");
-      window.scrollTo(0, 0);
+      await optimizedTransitionUtils.transitionToRoute(navigate, "/news/new-cut");
     }
   };
 
@@ -137,16 +137,16 @@ const NewsGrid = () => {
 
         {visibleItems < newsData.length && (
           <div className="view-more-section">
-            <GlassButton
+            <ShineGlassButton
               className="view-more-btn"
-              theme="default"
+              theme="shine"
               width={137}
               height={57}
               fontSize={14}
               onClick={handleViewMore}
             >
               View more
-            </GlassButton>
+            </ShineGlassButton>
           </div>
         )}
       </div>

@@ -1,3 +1,22 @@
+/* CSS Custom Properties for rotating border effect */
+@property --angle-1 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -75deg;
+}
+
+@property --angle-2 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -45deg;
+}
+
+:root {
+  --anim--hover-time: 400ms;
+  --anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --border-width: 2px;
+}
+
 /* Logo container riêng cho blend mode */
 .logo-fixed-container {
   position: fixed;
@@ -234,6 +253,19 @@
   transition: opacity 0.3s ease;
 }
 
+/* Border hover - rotating animation when hovering button */
+.immersive-fixed-container:hover
+  ~ .immersive-border-container
+  .immersive-border::after {
+  --angle-1: -125deg;
+}
+
+.immersive-fixed-container:active
+  ~ .immersive-border-container
+  .immersive-border::after {
+  --angle-1: -75deg;
+}
+
 /* Border hover - phải hover vào button background bên dưới */
 .immersive-fixed-container:hover ~ .immersive-border-container {
   opacity: 1;
@@ -268,13 +300,45 @@
   transition: opacity 0.3s ease;
 }
 
-/* Border element */
+/* Border element with rotating effect */
 .immersive-border {
+  position: relative;
   width: 100%;
   height: 100%;
   border-radius: 100px;
-  border: 0.5px solid white;
   background: transparent;
+  padding: var(--border-width);
+  box-sizing: border-box;
+}
+
+/* Rotating border outline */
+.immersive-border::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: 100px;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0) 60% 95%,
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  transition: all var(--anim--hover-time) var(--anim--hover-ease),
+    --angle-1 500ms ease;
 }
 
 .immersive-button:hover {
@@ -461,7 +525,6 @@
     height: 50px;
   }
 
-
   .account-fixed-container {
     right: calc(20px + 180px + 25px);
     height: 50px;
@@ -470,8 +533,6 @@
   .menu-fixed-container {
     height: 50px;
   }
-
-
 }
 
 @media (max-width: 768px) {
@@ -510,11 +571,9 @@
     height: 45px;
   }
 
-
   .account-fixed-container {
     display: none; /* Hide account link on mobile */
   }
-
 
   .menu-popup {
     width: 90vw;
@@ -522,7 +581,6 @@
     padding: 40px 25px;
     left: -15px;
   }
-
 }
 
 @media (max-width: 480px) {
@@ -561,14 +619,11 @@
     height: 40px;
   }
 
-
-
   .menu-popup {
     width: 95vw;
     max-width: 350px;
     padding: 30px 20px;
   }
-
 }
 
 @media (max-width: 360px) {
@@ -583,7 +638,6 @@
     width: 100px;
     height: 38px;
   }
-
 
   .logo-fixed-container .navbar-logo-svg {
     width: 90px;
