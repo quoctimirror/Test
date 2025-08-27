@@ -9,7 +9,8 @@ const ShineGlassButton = ({
   width = 189,
   height = 57,
   fontSize = 14,
-  theme = 'shine' // 'shine' | 'light'
+  theme = 'shine', // 'shine' | 'light' | 'footer'
+  variant = 'default' // 'default' | 'custom'
 }) => {
   const buttonRef = useRef(null);
 
@@ -52,7 +53,7 @@ const ShineGlassButton = ({
         ref={buttonRef}
         onClick={onClick}
         disabled={disabled}
-        className={`shine-glass-button shine-glass-button--${theme} bodytext-4--no-margin ${className}`}
+        className={`shine-glass-button shine-glass-button--${theme} shine-glass-button--variant-${variant} bodytext-4--no-margin ${className}`}
         style={{
           width: `${width}px`,
           height: `${height}px`,

@@ -2,12 +2,12 @@
 @property --angle-1 {
   syntax: "<angle>";
   inherits: false;
-  initial-value: -75deg;
+  initial-value: 15deg;
 }
 
 :root {
-  --shine-anim--hover-time: 400ms;
-  --shine-anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --shine-anim--hover-time: 600ms;
+  --shine-anim--hover-ease: cubic-bezier(0.4, 0.0, 0.2, 1);
   --mouse-x: 50%;
   --mouse-y: 50%;
 }
@@ -157,11 +157,11 @@
   box-sizing: border-box;
   background: conic-gradient(
       from var(--angle-1) at 50% 50%,
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0) 5% 40%,
-      rgba(0, 0, 0, 0.5) 50%,
-      rgba(0, 0, 0, 0) 60% 95%,
-      rgba(0, 0, 0, 0.5)
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0) 60% 95%,
+      rgba(255, 255, 255, 0.8)
     ),
     linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -171,14 +171,15 @@
   transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease),
     --angle-1 500ms ease;
   pointer-events: none;
+  will-change: transform;
 }
 
 .shine-glass-button:hover .border-layer {
-  --angle-1: -125deg;
+  --angle-1: 75deg;
 }
 
 .shine-glass-button:active .border-layer {
-  --angle-1: -75deg;
+  --angle-1: 45deg;
 }
 
 /* ========== THEME VARIANTS ========== */
@@ -221,7 +222,7 @@
   .border-layer,
   .shine-glass-button:hover .border-layer,
   .shine-glass-button:active .border-layer {
-    --angle-1: -75deg;
+    --angle-1: 15deg;
   }
 
   .shine-layer {
