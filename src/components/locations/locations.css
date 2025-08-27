@@ -6,6 +6,12 @@
   color: white;
 }
 
+/* Loading Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Hero Section - Match ServicesDetailPage styling */
 .locations-hero-section {
   width: 100%;
@@ -333,7 +339,7 @@
 
 .map-container iframe {
   display: block;
-  filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(85%) sepia(15%) saturate(120%) hue-rotate(320deg);
+  filter: grayscale(100%) contrast(1.1) brightness(0.9);
 }
 
 /* Responsive Design */

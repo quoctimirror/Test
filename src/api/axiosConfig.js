@@ -142,7 +142,7 @@ const getBackendURL = async () => {
 
     // Nếu VITE_USE_LOCAL_BACKEND = 'true', dùng port được chỉ định
     if (import.meta.env.VITE_USE_LOCAL_BACKEND === "true") {
-      const port = import.meta.env.VITE_LOCAL_BACKEND_PORT || "8081";
+      const port = import.meta.env.VITE_LOCAL_BACKEND_PORT || "8090";
       const url = `http://localhost:${port}`;
       console.log("✅ Using Local Backend URL (forced):", url);
       return url;
@@ -157,7 +157,7 @@ const getBackendURL = async () => {
   }
 
   // Fallback: dùng local backend với port được chỉ định
-  const fallbackPort = import.meta.env.VITE_LOCAL_BACKEND_PORT || "8080";
+  const fallbackPort = import.meta.env.VITE_LOCAL_BACKEND_PORT || "8090";
   const url =
     import.meta.env.VITE_API_BASE_URL || `http://localhost:${fallbackPort}`;
   console.log("✅ Using Fallback Backend URL:", url);
@@ -165,7 +165,7 @@ const getBackendURL = async () => {
 };
 
 // Khởi tạo instance của axios với async baseURL
-let baseURL = "http://localhost:8080"; // default fallback to 8080
+let baseURL = "http://localhost:8090"; // default fallback to 8090
 
 // Async function để set baseURL
 const initializeAPI = async () => {
@@ -224,7 +224,7 @@ api.interceptors.response.use(
     // Chỉ xử lý 401 cho các endpoint cần authentication
     const requiresAuth = originalRequest.url.includes("/users/") || 
                         originalRequest.url.includes("/orders/") || 
-                        originalRequest.url.includes("/profile/");
+                        originalRequest.url.includes("/me/");
     
     // Đối với product endpoints (/categories, /components), không làm mới token
     if (error.response?.status === 401 && !originalRequest._retry && requiresAuth) {

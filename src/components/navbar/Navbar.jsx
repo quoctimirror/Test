@@ -7,8 +7,9 @@ import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransit
 export default function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const logoRef = useRef(null);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   useEffect(() => {
     // Initialize optimized transition system
@@ -97,27 +98,50 @@ export default function Navbar() {
     await performTransition("/contact");
   };
 
+  // Helper function to check if user is admin
+  const isUserAdmin = () => {
+    return user && user.roles && user.roles.includes("ADMIN");
+  };
+
   const handleAccountClick = async () => {
     // Enhanced check: also verify token exists as fallback
     const hasToken = localStorage.getItem("accessToken");
     const isLoggedIn = (isAuthenticated && user) || hasToken;
 
     if (isLoggedIn) {
-      if (window.location.pathname === "/user-profile") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        return;
-      }
-      sessionStorage.setItem("scrollToTop", "true");
-      await performTransition("/user-profile");
+      // If user is logged in, toggle account menu instead of direct navigation
+      setIsAccountMenuOpen(!isAccountMenuOpen);
     } else {
-      console.log("Navigating to login");
-      if (window.location.pathname === "/auth/login") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        return;
-      }
-      sessionStorage.setItem("scrollToTop", "true");
-      await performTransition("/auth/login");
+      // Show dropdown menu for non-authenticated users too
+      setIsAccountMenuOpen(!isAccountMenuOpen);
     }
+  };
+
+  const handleProfileClick = async () => {
+    setIsAccountMenuOpen(false);
+    await performTransition("/user-profile");
+  };
+
+  const handleAdminDashboardClick = async () => {
+    setIsAccountMenuOpen(false);
+    await performTransition("/dashboard/admin");
+  };
+
+  const handleLogoutClick = () => {
+    setIsAccountMenuOpen(false);
+    logout();
+  };
+
+  const handleLoginClick = async () => {
+    setIsAccountMenuOpen(false);
+    navigate("/auth/login");
+    console.log("Navigating to login");
+    if (window.location.pathname === "/auth/login") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition("/auth/login");
   };
 
   const handleLocationClick = async () => {
@@ -212,12 +236,68 @@ export default function Navbar() {
       </div>
 
       <div className="account-fixed-container">
-        <button
-          onClick={handleAccountClick}
-          className="account-link bodytext-3--no-margin"
-        >
-          Account
-        </button>
+        <div className="account-container">
+          <div
+            className="account-button"
+            onMouseEnter={() => setIsAccountMenuOpen(true)}
+            onMouseLeave={() => setIsAccountMenuOpen(false)}
+          >
+            <span className="account-text bodytext-3--no-margin">Account</span>
+          </div>
+          
+          {/* Account Dropdown Menu - Shows for both authenticated and non-authenticated users */}
+          <div
+            className={`account-popup ${isAccountMenuOpen ? "active" : ""}`}
+            onMouseEnter={() => setIsAccountMenuOpen(true)}
+            onMouseLeave={() => setIsAccountMenuOpen(false)}
+          >
+            <div className="account-groups">
+              {isAuthenticated ? (
+                <>
+                  <div className="account-user-info">
+                    <span className="bodytext-4--no-margin">
+                      {user?.username || "User"}
+                    </span>
+                  </div>
+                  
+                  <ul className="account-list">
+                    <li
+                      className="bodytext-3--no-margin"
+                      onClick={handleProfileClick}
+                    >
+                      My Profile
+                    </li>
+                    
+                    {isUserAdmin() && (
+                      <li
+                        className="bodytext-3--no-margin"
+                        onClick={handleAdminDashboardClick}
+                      >
+                        Admin Dashboard
+                      </li>
+                    )}
+                    
+                    <li
+                      className="bodytext-3--no-margin logout-item"
+                      onClick={handleLogoutClick}
+                    >
+                      Logout
+                    </li>
+                  </ul>
+                </>
+              ) : (
+                <ul className="account-list">
+                  <li
+                    className="bodytext-3--no-margin"
+                    onClick={handleLoginClick}
+                  >
+                    Login
+                  </li>
+                </ul>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* IMMERSIVE BUTTON - chỉ glassmorphism */}
