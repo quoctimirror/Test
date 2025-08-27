@@ -6,7 +6,7 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { remoteApi } from "../api/axiosConfig"; // Use remoteApi for authentication
+import api from "../api/axiosConfig"; // Use local gateway for authentication
 import requestThrottle from "../utils/requestThrottle";
 
 const AuthContext = createContext(null);
@@ -99,7 +99,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Only fetch from API if no cache available and not throttled
-    const endpoint = "/api/v1/users/me";
+    const endpoint = "/api/users/me";
 
     if (!requestThrottle.canMakeRequest(endpoint)) {
       const waitTime = requestThrottle.getTimeUntilNext(endpoint);
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       console.log("Fetching fresh user data from API");
-      const response = await remoteApi.get(endpoint);
+      const response = await api.get(endpoint);
       setCachedUser(response.data);
       return response.data;
     } catch (error) {
@@ -135,7 +135,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await remoteApi.post("/api/v1/auth/authenticate", {
+      const response = await api.post("/api/auth/authenticate", {
         username,
         password,
       });

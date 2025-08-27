@@ -27,10 +27,14 @@ const TryOnRing = lazy(() => import("@components/arTryOn/Occluder.jsx"));
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
+const AdminDashboard = lazy(() =>
+  import("@components/admin-dashboard/AdminDashboard.jsx")
+);
 const AuthPage = lazy(() => import("@pages/AuthPage"));
 const Login = lazy(() => import("@components/login/Login"));
 const Register = lazy(() => import("@components/register/Register"));
 const Profile = lazy(() => import("@components/profile/Profile"));
+const ProtectedRoute = lazy(() => import("@components/auth/ProtectedRoute"));
 const AllGemsPage = lazy(() => import("@pages/AllGemsPage"));
 const AllNewsPage = lazy(() => import("@pages/AllNewsPage"));
 const NewCutPage = lazy(() => import("@pages/NewCutPage"));
@@ -44,13 +48,13 @@ export default function AppRoutes() {
     location.pathname.startsWith("/universe-final") ||
     location.pathname.startsWith("/hover-expand") ||
     location.pathname.startsWith("/ar/rings") ||
-    location.pathname.startsWith("/dashboard/admin/manage-products");
+    location.pathname.startsWith("/dashboard/admin");
 
   const staticRoutesToHideFooter =
     location.pathname.startsWith("/universe-final") ||
     location.pathname.startsWith("/hover-expand") ||
     location.pathname.startsWith("/ar/rings") ||
-    location.pathname.startsWith("/dashboard/admin/manage-products");
+    location.pathname.startsWith("/dashboard/admin");
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -116,7 +120,20 @@ export default function AppRoutes() {
 
           <Route
             path="dashboard/admin/manage-products"
-            element={<ManageProducts />}
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <ManageProducts />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="dashboard/admin"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
           />
 
           {/* 404 - Catch all route for non-existent paths */}

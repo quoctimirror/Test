@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { remoteApi } from "@api/axiosConfig";
+import api from "@api/axiosConfig";
 import "./Register.css";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
@@ -77,7 +77,7 @@ const Register = () => {
     };
 
     try {
-      await remoteApi.post("/api/v1/auth/register", payload);
+      await api.post("/api/auth/register", payload);
 
       // alert('Account created successfully! Please log in.');
       navigate("/auth/login");

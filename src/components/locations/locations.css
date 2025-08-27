@@ -339,7 +339,7 @@
 
 .map-container iframe {
   display: block;
-  filter: invert(90%) hue-rotate(180deg) brightness(95%) contrast(85%) sepia(15%) saturate(120%) hue-rotate(320deg);
+  filter: grayscale(100%) contrast(1.1) brightness(0.9);
 }
 
 /* Responsive Design */

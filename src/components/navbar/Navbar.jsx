@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 export default function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const logoRef = useRef(null);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   // Debug log - remove in production
   // console.log('Navbar - isAuthenticated:', isAuthenticated, 'user:', user, 'isLoading:', isLoading);
@@ -79,26 +80,43 @@ export default function Navbar() {
     }
   };
 
+  // Helper function to check if user is admin
+  const isUserAdmin = () => {
+    return user && user.roles && user.roles.includes("ADMIN");
+  };
+
   const handleAccountClick = () => {
     // Enhanced check: also verify token exists as fallback
     const hasToken = localStorage.getItem("accessToken");
     const isLoggedIn = (isAuthenticated && user) || hasToken;
 
-    // Debug logs to see what's happening
-    console.log("=== Account Click Debug ===");
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("user exists:", !!user);
-    console.log("hasToken:", !!hasToken);
-    console.log("isLoggedIn:", isLoggedIn);
-    console.log("========================");
-
     if (isLoggedIn) {
-      console.log("Navigating to profile");
-      navigate("/user-profile");
+      // If user is logged in, toggle account menu instead of direct navigation
+      setIsAccountMenuOpen(!isAccountMenuOpen);
     } else {
-      console.log("Navigating to login");
-      navigate("/auth/login");
+      // Show dropdown menu for non-authenticated users too
+      setIsAccountMenuOpen(!isAccountMenuOpen);
     }
+  };
+
+  const handleProfileClick = () => {
+    setIsAccountMenuOpen(false);
+    navigate("/user-profile");
+  };
+
+  const handleAdminDashboardClick = () => {
+    setIsAccountMenuOpen(false);
+    navigate("/dashboard/admin");
+  };
+
+  const handleLogoutClick = () => {
+    setIsAccountMenuOpen(false);
+    logout();
+  };
+
+  const handleLoginClick = () => {
+    setIsAccountMenuOpen(false);
+    navigate("/auth/login");
   };
 
   const handleLocationClick = () => {
@@ -173,12 +191,68 @@ export default function Navbar() {
       </div>
 
       <div className="account-fixed-container">
-        <button
-          onClick={handleAccountClick}
-          className="account-link bodytext-3--no-margin"
-        >
-          Account
-        </button>
+        <div className="account-container">
+          <div
+            className="account-button"
+            onMouseEnter={() => setIsAccountMenuOpen(true)}
+            onMouseLeave={() => setIsAccountMenuOpen(false)}
+          >
+            <span className="account-text bodytext-3--no-margin">Account</span>
+          </div>
+          
+          {/* Account Dropdown Menu - Shows for both authenticated and non-authenticated users */}
+          <div
+            className={`account-popup ${isAccountMenuOpen ? "active" : ""}`}
+            onMouseEnter={() => setIsAccountMenuOpen(true)}
+            onMouseLeave={() => setIsAccountMenuOpen(false)}
+          >
+            <div className="account-groups">
+              {isAuthenticated ? (
+                <>
+                  <div className="account-user-info">
+                    <span className="bodytext-4--no-margin">
+                      {user?.username || "User"}
+                    </span>
+                  </div>
+                  
+                  <ul className="account-list">
+                    <li
+                      className="bodytext-3--no-margin"
+                      onClick={handleProfileClick}
+                    >
+                      My Profile
+                    </li>
+                    
+                    {isUserAdmin() && (
+                      <li
+                        className="bodytext-3--no-margin"
+                        onClick={handleAdminDashboardClick}
+                      >
+                        Admin Dashboard
+                      </li>
+                    )}
+                    
+                    <li
+                      className="bodytext-3--no-margin logout-item"
+                      onClick={handleLogoutClick}
+                    >
+                      Logout
+                    </li>
+                  </ul>
+                </>
+              ) : (
+                <ul className="account-list">
+                  <li
+                    className="bodytext-3--no-margin"
+                    onClick={handleLoginClick}
+                  >
+                    Login
+                  </li>
+                </ul>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* IMMERSIVE BUTTON - chỉ glassmorphism */}
