@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Footer.css";
-import GlassButton from "../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 
 const Footer = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
   const handleSignUp = () => {
@@ -12,14 +15,74 @@ const Footer = () => {
     }
   };
 
-  const handleNewsClick = (e) => {
+  const handleHomeClick = async (e) => {
+    e.preventDefault();
+    if (window.location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    sessionStorage.setItem("scrollToTop", "true");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/");
+  };
+
+  const handleProductsClick = async (e) => {
+    e.preventDefault();
+    if (window.location.pathname === "/collections") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    sessionStorage.setItem("scrollToTop", "true");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/collections");
+  };
+
+  const handleServicesClick = async (e) => {
+    e.preventDefault();
+    if (window.location.pathname === "/services") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    sessionStorage.setItem("scrollToTop", "true");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/services");
+  };
+
+  const handleAboutClick = async (e) => {
+    e.preventDefault();
+    if (window.location.pathname === "/about") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    sessionStorage.setItem("scrollToTop", "true");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/about");
+  };
+
+  const handleNewsClick = async (e) => {
     e.preventDefault();
     if (window.location.pathname === "/news") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/news";
+      return;
     }
+    sessionStorage.setItem("scrollToTop", "true");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/news");
+  };
+
+  const handleContactClick = async (e) => {
+    e.preventDefault();
+    if (window.location.pathname === "/contact") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    sessionStorage.setItem("scrollToTop", "true");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/contact");
+  };
+
+  const handleLocationClick = async (e) => {
+    e.preventDefault();
+    if (window.location.pathname === "/locations") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    sessionStorage.setItem("scrollToTop", "true");
+    await optimizedTransitionUtils.transitionToRoute(navigate, "/locations");
   };
 
   return (
@@ -31,22 +94,34 @@ const Footer = () => {
               <h3 className="heading-3 footer-title">DISCOVER</h3>
               <ul className="footer-links">
                 <li>
-                  <a className="bodytext-3" href="/">
+                  <a className="bodytext-3" href="/" onClick={handleHomeClick}>
                     Homepage
                   </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="/collections">
+                  <a
+                    className="bodytext-3"
+                    href="/collections"
+                    onClick={handleProductsClick}
+                  >
                     Product
                   </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="/services">
+                  <a
+                    className="bodytext-3"
+                    href="/services"
+                    onClick={handleServicesClick}
+                  >
                     Service & Support
                   </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="/about">
+                  <a
+                    className="bodytext-3"
+                    href="/about"
+                    onClick={handleAboutClick}
+                  >
                     About Mirror
                   </a>
                 </li>
@@ -80,14 +155,15 @@ const Footer = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="email-input"
                 />
-                <GlassButton
+                <ShineGlassButton
                   onClick={handleSignUp}
                   className="signup-button"
                   width={123}
                   height={57}
+                  theme="footer"
                 >
                   Sign up
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>
@@ -97,7 +173,11 @@ const Footer = () => {
               <h3 className="heading-3 footer-title">CONTACT</h3>
               <ul className="contact-info">
                 <li>
-                  <a className="bodytext-3" href="/contact">
+                  <a
+                    className="bodytext-3"
+                    href="/contact"
+                    onClick={handleContactClick}
+                  >
                     Contact us
                   </a>
                 </li>
@@ -120,7 +200,11 @@ const Footer = () => {
                   </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="/locations">
+                  <a
+                    className="bodytext-3"
+                    href="/locations"
+                    onClick={handleLocationClick}
+                  >
                     Location
                   </a>
                 </li>

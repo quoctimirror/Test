@@ -1,10 +1,10 @@
-import NeonMetaballs from "../../specialEffect/NeonMetaballs/NeonMetaballs";
+import MetaballBackground from "@components/specialEffect/MetaballBackground/MetaballBackground";
 import "./BrandPillars.css";
 
 const BrandPillars = () => {
   return (
     <section className="brand-pillars">
-      <NeonMetaballs className="brand-pillars-background" />
+      <MetaballBackground className="brand-pillars-background" />
       <div className="brand-pillars-content">
         <h1 className="brand-pillars-text">
           <div className="brand-group">

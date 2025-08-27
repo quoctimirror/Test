@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SelectOptionSection.css";
-import GlassButton from "../common/button/GlassButton";
-import api from "../../api/axiosConfig";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import api from "@api/axiosConfig";
 
 const SelectOptionSection = () => {
   const navigate = useNavigate();
@@ -400,7 +400,7 @@ const SelectOptionSection = () => {
             <br />
             We're always at your service.
           </p>
-          <GlassButton
+          <ShineGlassButton
             theme="light"
             width={274}
             height={57}
@@ -408,7 +408,7 @@ const SelectOptionSection = () => {
             onClick={handleContactUs}
           >
             Contact Us
-          </GlassButton>
+          </ShineGlassButton>
         </div>
 
         {/* Center - Content area */}
@@ -501,8 +501,8 @@ const SelectOptionSection = () => {
         {/* Right side - Summary */}
         <div className="summary">
           <h2 className="bodytext-1--no-margin">From {currentPrice}</h2>
-          <GlassButton
-            theme="custom"
+          <ShineGlassButton
+            theme="shine"
             width={274}
             height={57}
             fontSize={14}
@@ -510,9 +510,9 @@ const SelectOptionSection = () => {
             className="book-appointment-button"
           >
             Book An Appointment
-          </GlassButton>
-          <GlassButton
-            theme="custom"
+          </ShineGlassButton>
+          <ShineGlassButton
+            theme="shine"
             width={274}
             height={57}
             fontSize={14}
@@ -520,7 +520,7 @@ const SelectOptionSection = () => {
             className="order-now-button"
           >
             Order Now
-          </GlassButton>
+          </ShineGlassButton>
         </div>
       </div>
 

@@ -1,18 +1,27 @@
 import "./Navbar.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 export default function Navbar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logoRef = useRef(null);
   const { isAuthenticated, user } = useAuth();
 
-  // Debug log - remove in production
-  // console.log('Navbar - isAuthenticated:', isAuthenticated, 'user:', user, 'isLoading:', isLoading);
+  useEffect(() => {
+    // Initialize optimized transition system
+    optimizedTransitionUtils.init();
+  }, []);
 
-  const handleLogoClick = () => {
+
+  const performTransition = async (route, options = {}) => {
+    // Sử dụng optimized transition system
+    await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
+  };
+
+  const handleLogoClick = async () => {
     if (window.location.pathname === "/") {
       window.scrollTo(0, 0);
       setTimeout(() => {
@@ -20,94 +29,105 @@ export default function Navbar() {
       }, 0);
     } else {
       sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/";
+      await performTransition("/");
     }
   };
 
-  const handleProductsClick = () => {
+  const handleProductsClick = async () => {
     if (window.location.pathname === "/collections") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/collections";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition("/collections", {
+      onStart: () => console.log('Starting transition to collections...'),
+      onComplete: () => console.log('Collections page transition completed!')
+    });
   };
 
-  const handleServicesClick = () => {
+  const handleServicesClick = async () => {
     if (window.location.pathname === "/services") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/services";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition("/services");
   };
 
 
-  const handleSupportClick = () => {
+  const handleSupportClick = async () => {
     if (window.location.pathname === "/support") {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/support";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition("/support");
   };
 
-  const handleAboutClick = () => {
+  const handleAboutClick = async () => {
     if (window.location.pathname === "/about") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/about";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition("/about");
   };
 
-  const handleNewsClick = () => {
+  const handleNewsClick = async () => {
     if (window.location.pathname === "/news") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/news";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition("/news");
   };
 
-  const handleContactClick = () => {
+  const handleContactClick = async () => {
     if (window.location.pathname === "/contact") {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      sessionStorage.setItem("scrollToTop", "true");
-      window.location.href = "/contact";
+      return;
     }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition("/contact");
   };
 
-  const handleAccountClick = () => {
+  const handleAccountClick = async () => {
     // Enhanced check: also verify token exists as fallback
     const hasToken = localStorage.getItem("accessToken");
     const isLoggedIn = (isAuthenticated && user) || hasToken;
 
-    // Debug logs to see what's happening
-    console.log("=== Account Click Debug ===");
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("user exists:", !!user);
-    console.log("hasToken:", !!hasToken);
-    console.log("isLoggedIn:", isLoggedIn);
-    console.log("========================");
-
     if (isLoggedIn) {
-      console.log("Navigating to profile");
-      navigate("/user-profile");
+      if (window.location.pathname === "/user-profile") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      sessionStorage.setItem("scrollToTop", "true");
+      await performTransition("/user-profile");
     } else {
       console.log("Navigating to login");
-      navigate("/auth/login");
+      if (window.location.pathname === "/auth/login") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      sessionStorage.setItem("scrollToTop", "true");
+      await performTransition("/auth/login");
     }
   };
 
-  const handleLocationClick = () => {
+  const handleLocationClick = async () => {
     if (window.location.pathname === "/locations") {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      sessionStorage.setItem('scrollToTop', 'true');
-      window.location.href = "/locations";
+      return;
     }
+
+    sessionStorage.setItem('scrollToTop', 'true');
+    await performTransition("/locations");
   };
 
   return (
@@ -142,30 +162,49 @@ export default function Navbar() {
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleProductsClick}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/collections')}
                 >
                   Products
                 </li>
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleServicesClick}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/services')}
                 >
                   Services</li>
-                <li className="bodytext-3--no-margin" onClick={handleSupportClick}>Support
+                <li 
+                  className="bodytext-3--no-margin" 
+                  onClick={handleSupportClick}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/support')}
+                >Support
                 </li>
-                <li className="bodytext-3--no-margin" onClick={handleAboutClick}>About Mirror</li>
-                <li className="bodytext-3--no-margin" onClick={handleNewsClick}>
+                <li 
+                  className="bodytext-3--no-margin" 
+                  onClick={handleAboutClick}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/about')}
+                >About Mirror</li>
+                <li 
+                  className="bodytext-3--no-margin" 
+                  onClick={handleNewsClick}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/news')}
+                >
                   News
                 </li>
               </ul>
               <ul className="menu-list">
-                <li className="bodytext-3--no-margin" onClick={handleLocationClick}>Location</li>
+                <li 
+                  className="bodytext-3--no-margin" 
+                  onClick={handleLocationClick}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/locations')}
+                >Location</li>
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleContactClick}
+                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/contact')}
                 >
                   Contact us
                 </li>
-                <li className="bodytext-3--no-margin">Account</li>
+                <li className="bodytext-3--no-margin" onClick={handleAccountClick}>Account</li>
               </ul>
             </div>
           </div>

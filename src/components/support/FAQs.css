@@ -125,7 +125,7 @@ html {
   justify-content: center;
   gap: 12px;
   width: 100%;
-  max-width: 660px;
+  max-width: 635px;
   margin: 0 auto;
 }
 
@@ -151,37 +151,7 @@ html {
   font-weight: 400;
 }
 
-.search-button {
-  font-family: "BT Beau Sans", sans-serif;
-  background: rgba(0, 0, 0, 0.1);
-  border: 0.5px solid rgba(0, 0, 0, 0.5);
-  padding: 20px 36px;
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.75);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: capitalize;
-  border-radius: 100px;
-  margin: 0;
-  width: 119px;
-  height: 57px;
-  gap: 10px;
-  opacity: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  box-sizing: border-box;
-  position: relative;
-  z-index: 105;
-}
-
-.search-button:hover {
-  background: rgba(0, 0, 0, 0.75);
-  border-color: rgba(0, 0, 0, 0.8);
-  color: white;
-}
+/* Button styles now handled by ShineGlassButton component */
 
 .faq-sections {
   display: flex;
@@ -281,30 +251,28 @@ html {
 
 .faq-item:hover .faq-question {
   background: transparent;
-  color: #BC224C;
+  color: #bc224c;
 }
 
 .faq-item:hover .faq-icon {
-  background-image: url('/src/assets/images/button/arrow-FAQs-pink.svg');
+  background-image: url("/src/assets/images/button/arrow-FAQs-pink.svg");
   opacity: 1;
 }
-
 
 .faq-item:hover,
 .faq-item.active {
-  border-top-color: #BC224C;
-  border-bottom-color: #BC224C;
+  border-top-color: #bc224c;
+  border-bottom-color: #bc224c;
 }
 
 .faq-item.active .faq-question {
-  color: #BC224C;
+  color: #bc224c;
 }
 
 .faq-item.active .faq-icon {
-  background-image: url('/src/assets/images/button/arrow-FAQs-pink.svg');
+  background-image: url("/src/assets/images/button/arrow-FAQs-pink.svg");
   opacity: 1;
 }
-
 
 .faq-icon {
   position: relative;
@@ -313,7 +281,7 @@ html {
   transition: all 0.3s ease;
   transform-origin: center;
   overflow: visible;
-  background-image: url('/src/assets/images/button/arrow-FAQs.svg');
+  background-image: url("/src/assets/images/button/arrow-FAQs.svg");
   background-size: 19px 19px;
   background-repeat: no-repeat;
   background-position: center;
@@ -367,13 +335,6 @@ html {
     padding: 13px 18px;
   }
 
-  .search-button {
-    font-size: 13px;
-    padding: 18px 32px;
-    width: 110px;
-    height: 52px;
-  }
-
   .faq-question {
     font-size: 18px;
   }
@@ -423,13 +384,6 @@ html {
     padding: 12px 16px;
   }
 
-  .search-button {
-    font-size: 12px;
-    padding: 16px 28px;
-    width: 100px;
-    height: 48px;
-  }
-
   .faq-question {
     font-size: 16px;
     line-height: 140%;
@@ -474,23 +428,28 @@ html {
 @media (max-width: 768px) {
   .faqs-sticky-container {
     padding: 0 0 80px 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
   }
 
   .faqs-wrapper {
     flex-direction: column;
     gap: 20px;
+    padding: 0 15px;
   }
 
   .faq-sidebar-section {
     position: relative;
     top: auto;
+    left: 0;
     width: 100%;
     margin-left: 0;
-    margin-bottom: 0;
+    margin-bottom: 20px;
     order: 1;
   }
 
   .faq-nav {
+    position: static;
     width: 100%;
   }
 
@@ -529,7 +488,8 @@ html {
 
   .faqs-main-section {
     order: 2;
-    padding: 0 15px;
+    padding: 0;
+    max-width: 100%;
   }
 
   .search-section {
@@ -539,20 +499,14 @@ html {
   .search-container {
     flex-direction: column;
     gap: 15px;
+    max-width: 100%;
+    padding: 0 20px;
   }
 
   .search-input {
     font-size: 13px;
     padding: 12px 15px;
     text-align: center;
-  }
-
-  .search-button {
-    font-size: 12px;
-    padding: 14px 24px;
-    width: 90px;
-    height: 44px;
-    align-self: center;
   }
 
   .faq-question {
@@ -588,14 +542,6 @@ html {
     width: 28px;
     height: 28px;
   }
-
-  .faq-icon::before {
-    width: 9px;
-    height: 9px;
-    top: 6px;
-    left: 7px;
-    border-width: 1px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -613,7 +559,7 @@ html {
   }
 
   .faqs-main-section {
-    padding: 0 10px;
+    padding: 0;
   }
 
   .search-section {
@@ -622,18 +568,12 @@ html {
 
   .search-container {
     gap: 12px;
+    padding: 0 15px;
   }
 
   .search-input {
     font-size: 12px;
     padding: 10px 12px;
-  }
-
-  .search-button {
-    font-size: 11px;
-    padding: 12px 20px;
-    width: 80px;
-    height: 40px;
   }
 
   .faq-question {
@@ -692,7 +632,7 @@ html {
   }
 
   .faqs-main-section {
-    padding: 0 8px;
+    padding: 0;
   }
 
   .search-section {
@@ -706,13 +646,6 @@ html {
   .search-input {
     font-size: 11px;
     padding: 8px 10px;
-  }
-
-  .search-button {
-    font-size: 10px;
-    padding: 10px 16px;
-    width: 70px;
-    height: 36px;
   }
 
   .faq-question {

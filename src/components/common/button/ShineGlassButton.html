@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Button with Perfect Glass & Mouse Shine</title>
+    <style>
+      /* Defs */
+      @property --angle-1 {
+        syntax: "<angle>";
+        inherits: false;
+        initial-value: -75deg;
+      }
+
+      :root {
+        --global--size: clamp(2rem, 4vw, 5rem);
+        --anim--hover-time: 400ms;
+        --anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
+        --mouse-x: 50%;
+        --mouse-y: 50%;
+      }
+
+      /* Base Styles */
+      body {
+        width: 100%;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--global--size);
+        background-color: rgba(215, 215, 215, 1);
+        font-family: "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;
+      }
+
+      /* ========== BUTTON ========== */
+
+      /* Button Wrap Container */
+      .button-wrap {
+        position: relative;
+        z-index: 2;
+        border-radius: 999vw;
+        background: transparent;
+        pointer-events: none;
+        transition: all var(--anim--hover-time) var(--anim--hover-ease);
+      }
+
+      /* ========== BUTTON BASE STYLES ========== */
+
+      button {
+        /* Basic Styling */
+        --border-width: clamp(1px, 0.0625em, 4px);
+        all: unset;
+        cursor: pointer;
+        position: relative;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        pointer-events: auto;
+        z-index: 3;
+        border-radius: 999vw;
+        transition: transform var(--anim--hover-time) var(--anim--hover-ease);
+        overflow: hidden;
+
+        /* Isolate stacking context */
+        isolation: isolate;
+      }
+
+      button:hover {
+        transform: scale(0.975);
+      }
+
+      /* Glass Background Layer - Always Full Coverage */
+      .glass-layer {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          -75deg,
+          rgba(255, 255, 255, 0.05),
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0.05)
+        );
+        backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+        -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+        -moz-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+        -ms-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+        border-radius: 999vw;
+        z-index: 0;
+        transition: backdrop-filter var(--anim--hover-time)
+          var(--anim--hover-ease);
+      }
+
+      button:hover .glass-layer {
+        backdrop-filter: blur(0.01em);
+        -webkit-backdrop-filter: blur(0.01em);
+        -moz-backdrop-filter: blur(0.01em);
+        -ms-backdrop-filter: blur(0.01em);
+      }
+
+      /* Mouse-following Shine Effect - Additive Layer */
+      .shine-layer {
+        position: absolute;
+        inset: 0;
+        border-radius: 999vw;
+        overflow: hidden;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 200ms ease;
+        /* Add smooth transition for mouse position variables */
+        transition: --mouse-x 300ms ease-out, --mouse-y 300ms ease-out,
+          opacity 200ms ease;
+      }
+
+      button:hover .shine-layer {
+        opacity: 1;
+      }
+
+      .shine-layer::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: radial-gradient(
+          circle 200px at var(--mouse-x) var(--mouse-y),
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0.25) 25%,
+          rgba(255, 255, 255, 0.1) 50%,
+          transparent 100%
+        );
+        mix-blend-mode: screen;
+      }
+
+      /* Button Text */
+      button span {
+        position: relative;
+        display: block;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        font-family: "Inter", sans-serif;
+        letter-spacing: -0.05em;
+        font-weight: 500;
+        font-size: 1em;
+        color: rgba(50, 50, 50, 1);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transition: all var(--anim--hover-time) var(--anim--hover-ease);
+        padding-inline: 1.5em;
+        padding-block: 0.875em;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* ========== BUTTON OUTLINE ========== */
+
+      /* Outline */
+      .border-layer {
+        content: "";
+        position: absolute;
+        z-index: 3;
+        inset: 0;
+        border-radius: 999vw;
+        width: calc(100% + var(--border-width));
+        height: calc(100% + var(--border-width));
+        top: calc(0% - var(--border-width) / 2);
+        left: calc(0% - var(--border-width) / 2);
+        padding: var(--border-width);
+        box-sizing: border-box;
+        background: conic-gradient(
+            from var(--angle-1) at 50% 50%,
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0) 5% 40%,
+            rgba(0, 0, 0, 0.5) 50%,
+            rgba(0, 0, 0, 0) 60% 95%,
+            rgba(0, 0, 0, 0.5)
+          ),
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.5),
+            rgba(255, 255, 255, 0.5)
+          );
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        transition: --angle-1 600ms cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+      }
+
+      button:hover .border-layer {
+        --angle-1: 105deg; /* Xoay 180 độ từ -75deg */
+      }
+
+      button:active .border-layer {
+        --angle-1: 105deg;
+      }
+
+      @media (hover: none) and (pointer: coarse) {
+        .border-layer,
+        button:hover .border-layer,
+        button:active .border-layer {
+          --angle-1: -75deg;
+        }
+      }
+
+      /* Rotation */
+      .button-wrap:has(button:active) {
+        transform: rotate3d(1, 0, 0, 25deg);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Button -->
+    <div class="button-wrap">
+      <button id="shinyButton">
+        <div class="glass-layer"></div>
+        <div class="shine-layer"></div>
+        <span>Generate</span>
+        <div class="border-layer"></div>
+      </button>
+    </div>
+    <!-- Background -->
+    <svg
+      style="position: absolute; width: 100%; height: 100%; z-index: 0"
+      width="100%"
+      height="100%"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <pattern
+          id="dottedGrid"
+          width="30"
+          height="30"
+          patternUnits="userSpaceOnUse"
+        >
+          <circle cx="2" cy="2" r="1" fill="rgba(0,0,0,0.15)" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#dottedGrid)" />
+    </svg>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const button = document.getElementById("shinyButton");
+        const shineLayer = button.querySelector(".shine-layer");
+
+        // Variables for smooth interpolation
+        let currentX = 50;
+        let currentY = 50;
+        let targetX = 50;
+        let targetY = 50;
+        let animationFrame = null;
+
+        // Lerp function for smooth interpolation
+        function lerp(start, end, factor) {
+          return start + (end - start) * factor;
+        }
+
+        // Animation loop
+        function updateShinePosition() {
+          // Interpolate towards target position (0.15 = 15% per frame for smooth lag)
+          currentX = lerp(currentX, targetX, 0.15);
+          currentY = lerp(currentY, targetY, 0.15);
+
+          // Update CSS variables
+          shineLayer.style.setProperty("--mouse-x", currentX + "%");
+          shineLayer.style.setProperty("--mouse-y", currentY + "%");
+
+          // Continue animation if button is being hovered
+          if (
+            Math.abs(currentX - targetX) > 0.1 ||
+            Math.abs(currentY - targetY) > 0.1
+          ) {
+            animationFrame = requestAnimationFrame(updateShinePosition);
+          }
+        }
+
+        button.addEventListener("mousemove", function (e) {
+          const rect = button.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          // Update target position
+          targetX = (x / rect.width) * 100;
+          targetY = (y / rect.height) * 100;
+
+          // Start animation if not already running
+          if (!animationFrame) {
+            animationFrame = requestAnimationFrame(updateShinePosition);
+          }
+        });
+
+        button.addEventListener("mouseenter", function (e) {
+          const rect = button.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          // Set initial position
+          targetX = (x / rect.width) * 100;
+          targetY = (y / rect.height) * 100;
+          currentX = targetX;
+          currentY = targetY;
+
+          // Set initial position immediately
+          shineLayer.style.setProperty("--mouse-x", currentX + "%");
+          shineLayer.style.setProperty("--mouse-y", currentY + "%");
+        });
+
+        button.addEventListener("mouseleave", function () {
+          // Smoothly return to center
+          targetX = 50;
+          targetY = 50;
+
+          // Continue animation to return to center
+          if (!animationFrame) {
+            animationFrame = requestAnimationFrame(updateShinePosition);
+          }
+
+          // Clean up animation after returning to center
+          setTimeout(() => {
+            if (animationFrame) {
+              cancelAnimationFrame(animationFrame);
+              animationFrame = null;
+            }
+          }, 500);
+        });
+      });
+    </script>
+  </body>
+</html>

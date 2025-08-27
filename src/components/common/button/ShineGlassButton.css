@@ -1,0 +1,331 @@
+/* CSS Custom Properties for ShineGlassButton */
+@property --angle-1 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 75deg;
+}
+
+:root {
+  --shine-anim--hover-time: 600ms;
+  --shine-anim--hover-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+}
+
+/* ========== SHINE BUTTON WRAP ========== */
+
+.shine-button-wrap {
+  position: relative;
+  z-index: 2;
+  border-radius: 999vw;
+  background: transparent;
+  pointer-events: none;
+  transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
+}
+
+/* ========== SHINE GLASS BUTTON BASE STYLES ========== */
+
+.shine-glass-button {
+  /* Basic Styling */
+  --border-width: clamp(1px, 0.0625em, 4px);
+  all: unset;
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  pointer-events: auto;
+  z-index: 3;
+  border-radius: 999vw;
+  transition: transform var(--shine-anim--hover-time)
+    var(--shine-anim--hover-ease);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Isolate stacking context */
+  isolation: isolate;
+}
+
+.shine-glass-button:hover {
+  transform: scale(1);
+}
+
+.shine-glass-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.shine-glass-button:disabled:hover {
+  transform: none;
+}
+
+/* ========== GLASS BACKGROUND LAYER ========== */
+
+.glass-layer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.05)
+  );
+  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  -moz-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  -ms-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  border-radius: 999vw;
+  z-index: 0;
+  transition: backdrop-filter var(--shine-anim--hover-time)
+    var(--shine-anim--hover-ease);
+}
+
+.shine-glass-button:hover .glass-layer {
+  backdrop-filter: blur(0.01em);
+  -webkit-backdrop-filter: blur(0.01em);
+  -moz-backdrop-filter: blur(0.01em);
+  -ms-backdrop-filter: blur(0.01em);
+}
+
+/* ========== MOUSE-FOLLOWING SHINE EFFECT ========== */
+
+.shine-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: 999vw;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  /* Add smooth transition for mouse position variables */
+  transition: --mouse-x 300ms ease-out, --mouse-y 300ms ease-out,
+    opacity 200ms ease;
+}
+
+.shine-glass-button:hover .shine-layer {
+  opacity: 1;
+}
+
+.shine-layer::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: radial-gradient(
+    circle 200px at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.25) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+}
+
+/* ========== BUTTON TEXT ========== */
+
+.shine-glass-button .button-text {
+  position: relative;
+  display: block;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  color: rgba(50, 50, 50, 1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
+  padding-inline: 1.5em;
+  padding-block: 0.875em;
+  pointer-events: none;
+  z-index: 2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ========== ROTATING BORDER OUTLINE ========== */
+
+.border-layer {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border-radius: 999vw;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0) 60% 95%,
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  transition: --angle-1 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.shine-glass-button:hover .border-layer {
+  --angle-1: 180deg;
+}
+
+.shine-glass-button:active .border-layer {
+  --angle-1: 90deg;
+}
+
+/* ========== THEME VARIANTS ========== */
+
+/* Light theme */
+.shine-glass-button--light .glass-layer {
+  background: linear-gradient(
+      -75deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05)
+    ),
+    rgba(0, 0, 0, 0.05);
+  transition: background var(--shine-anim--hover-time)
+    var(--shine-anim--hover-ease);
+}
+
+.shine-glass-button--light .button-text {
+  color: rgba(0, 0, 0, 0.75);
+  transition: color var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
+}
+
+/* Hover effect for light theme - text turns white and background turns black */
+.shine-glass-button--light:hover .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.95),
+    rgba(0, 0, 0, 0.98),
+    rgba(0, 0, 0, 0.95)
+  );
+}
+
+.shine-glass-button--light:hover .button-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.shine-glass-button--light .border-layer {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0) 25%,
+      rgba(0, 0, 0, 1) 50%,
+      rgba(0, 0, 0, 0) 75%,
+      rgba(0, 0, 0, 1) 100%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+}
+
+/* Footer theme - Gray background on hover with white shine */
+.shine-glass-button--footer .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.05)
+  );
+  transition: background 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shine-glass-button--footer:hover .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(140, 140, 140, 0.95),
+    rgba(160, 160, 160, 0.95),
+    rgba(140, 140, 140, 0.95)
+  );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.shine-glass-button--footer .button-text {
+  color: rgba(255, 255, 255, 0.9);
+  transition: color var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
+}
+
+.shine-glass-button--footer:hover .button-text {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+/* Footer theme - Enhanced white shine on hover */
+.shine-glass-button--footer .shine-layer {
+  mix-blend-mode: normal;
+}
+
+.shine-glass-button--footer .shine-layer::before {
+  background: radial-gradient(
+    circle 150px at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.9) 20%,
+    rgba(255, 255, 255, 0.6) 40%,
+    rgba(255, 255, 255, 0.3) 60%,
+    transparent 100%
+  );
+  mix-blend-mode: overlay;
+}
+
+.shine-glass-button--footer .border-layer {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0) 60% 95%,
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+}
+
+/* ========== RESPONSIVE BEHAVIOR ========== */
+
+@media (hover: none) and (pointer: coarse) {
+  .border-layer,
+  .shine-glass-button:hover .border-layer,
+  .shine-glass-button:active .border-layer {
+    --angle-1: 0deg;
+  }
+
+  .shine-layer {
+    opacity: 0 !important;
+  }
+}
+
+/* ========== ACTIVE STATE ROTATION ========== */
+
+.shine-button-wrap:has(.shine-glass-button:active) {
+  transform: rotate3d(1, 0, 0, 25deg);
+}
+
+/* ========== SIZE VARIANTS ========== */
+
+.shine-glass-button--small {
+  --border-width: 1px;
+}
+
+.shine-glass-button--small .button-text {
+  padding-inline: 1em;
+  padding-block: 0.5em;
+  font-size: 0.875em;
+}
+
+.shine-glass-button--large {
+  --border-width: 2px;
+}
+
+.shine-glass-button--large .button-text {
+  padding-inline: 2em;
+  padding-block: 1em;
+  font-size: 1.125em;
+}

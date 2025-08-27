@@ -1,7 +1,7 @@
 import React from "react";
 import "./AllNewsPage.css";
-import NewsHero from "../components/news/NewsHero";
-import NewsGrid from "../components/news/NewsGrid";
+import NewsHero from "@components/news/NewsHero";
+import NewsGrid from "@components/news/NewsGrid";
 
 const AllNewsPage = () => {
   return (

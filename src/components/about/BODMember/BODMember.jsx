@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import "./BODMember.css";
+import "../../../styles/grid-system.css";
 
 const BODMember = () => {
   const teamMembers = [
@@ -259,25 +260,29 @@ const BODMember = () => {
           ))}
         </div>
 
-        {/* Leader Quote - Fixed position based on 4th member initial position */}
-        <div className="leader-quote-fixed">
-          <p className="bodytext-3--no-margin">
-            "As intelligence becomes abundant through technology, what remains
-            rare is genuine emotion. Mirror exists to preserve that emotion — to
-            cherish every loving moment and transform each gift you give into an
-            extension of your heart. Because we believe the most precious gift
-            isn't its value — it's the feeling of being truly understood. In a
-            world chasing perfection, we choose what's real."
-          </p>
+        {/* Grid-based Leader Quote - Better responsive positioning */}
+        <div className="grid-container leader-quote-grid">
+          <div className="leader-quote-fixed col-start-9 col-sm-start-6 col-xs-start-1">
+            <p className="bodytext-3--no-margin">
+              "As intelligence becomes abundant through technology, what remains
+              rare is genuine emotion. Mirror exists to preserve that emotion —
+              to cherish every loving moment and transform each gift you give
+              into an extension of your heart. Because we believe the most
+              precious gift isn't its value — it's the feeling of being truly
+              understood. In a world chasing perfection, we choose what's real."
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Leader Details */}
-      <div className="leader-details">
-        <h3 className="heading-3--no-margin">
-          {getHighlightedMember().position}
-        </h3>
-        <h2 className="leader-name">{getHighlightedMember().name}</h2>
+      {/* Grid-based Leader Details */}
+      <div className="grid-container leader-details-grid">
+        <div className="leader-details col-start-7 col-sm-start-5 col-xs-start-1">
+          <h3 className="heading-3--no-margin">
+            {getHighlightedMember().position}
+          </h3>
+          <h2 className="leader-name">{getHighlightedMember().name}</h2>
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 .bod-member-section {
   width: 100%;
   height: 100vh;
-  background: #F6F6F6;
+  background: #f6f6f6;
   padding: 0;
   box-sizing: border-box;
   display: flex;
@@ -21,7 +21,7 @@
   height: 100%;
   overflow: hidden;
   padding: 0 2.5%;
-  background: #F6F6F6;
+  background: #f6f6f6;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,7 +35,7 @@
   width: 100%;
   height: 100%;
   max-width: none;
-  margin: 15px 0 0 0;
+  margin: 48px 0 0 0;
   padding: 0;
 }
 
@@ -177,19 +177,52 @@
   opacity: 0.7;
 }
 
-/* Leader Quote Fixed - positioned based on 4th member initial position */
-.leader-quote-fixed {
+/* Grid-based Leader Quote Container */
+.leader-quote-grid {
   position: absolute;
-  bottom: 32vh;
-  left: calc(
-    2.5% + 294px + 0.625% + 294px + 0.625% + 294px + 0.625% + 294px + 0.625%
-  );
-  max-width: min(455px, 35vw); /* Responsive max-width */
+  bottom: 45%;
+  left: 0;
+  right: 0;
   z-index: 1;
-  background: rgba(253, 253, 253, 0.95);
+  pointer-events: none; /* Allow clicks to pass through */
+  overflow: visible; /* Allow content to overflow */
+}
+
+.leader-quote-fixed {
+  pointer-events: auto; /* Re-enable interactions for the quote itself */
+  position: absolute; /* Take out of grid flow */
+  width: 455px; /* Fixed width independent of grid */
+  top: 0;
+  left: 0; /* Start at grid column position */
   /* padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+}
+
+/* Responsive max-width adjustments */
+@media (max-width: 1200px) {
+  .leader-quote-fixed {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 992px) {
+  .leader-quote-fixed {
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .leader-quote-fixed {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .leader-quote-fixed {
+    max-width: 100%;
+    padding: 0 15px;
+  }
 }
 
 .quote-text {
@@ -202,19 +235,41 @@
   text-align: left;
 }
 
-/* Leader Details - positioned at member thứ 3 */
-.leader-details {
+/* Grid-based Leader Details Container */
+.leader-details-grid {
   position: absolute;
-  bottom: 14.5vh; /* 155px responsive */
-  left: calc(
-    2.5% + 294px + 0.625% + 294px + 0.625% + 294px + 0.625%
-  ); /* Position thứ 3: padding + 3 members + 3 gaps */
+  bottom: 21.5%; /* 155px responsive */
+  left: 0;
+  right: 0;
+  z-index: 1;
+  pointer-events: none; /* Allow clicks to pass through */
+  overflow: visible; /* Allow content to overflow */
+}
+
+.leader-details {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 1.6vh; /* 16px responsive */
-  min-width: min(200px, 20vw); /* Responsive min-width */
-  z-index: 1;
+  pointer-events: auto; /* Re-enable interactions for the details */
+  position: absolute; /* Take out of grid flow */
+  width: max-content; /* Content determines width */
+  top: 0;
+  left: 0; /* Start at grid column position */
+}
+
+/* Responsive width adjustments */
+@media (max-width: 768px) {
+  .leader-details {
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .leader-details {
+    min-width: auto;
+    padding: 0 15px;
+  }
 }
 
 .leader-position {
@@ -369,6 +424,7 @@
 
   .team-carousel-track {
     gap: 15px;
+    margin: 40px 0 0 0; /* Giảm margin cho màn hình 1200px */
   }
 
   .member-photo {
@@ -387,6 +443,22 @@
   .cso-name {
     font-size: 48px;
   }
+
+  /* Fix responsive positioning for leader elements */
+  .leader-quote-fixed {
+    left: calc(3% + 240px + 15px + 240px + 15px + 240px + 15px + 240px + 15px);
+    max-width: calc(100vw - 6% - 480px - 60px);
+    bottom: 31vh;
+  }
+
+  .leader-details {
+    left: calc(3% + 240px + 15px + 240px + 15px + 240px + 15px);
+    bottom: 14.5vh;
+  }
+
+  .leader-name {
+    font-size: 36px;
+  }
 }
 
 @media (max-width: 992px) {
@@ -396,6 +468,7 @@
 
   .team-carousel-track {
     gap: 12px;
+    margin: 35px 0 0 0; /* Giảm margin cho màn hình 992px */
   }
 
   .member-photo {
@@ -424,6 +497,24 @@
   .cso-name {
     font-size: 40px;
   }
+
+  /* Fix responsive positioning for leader elements */
+  .leader-quote-fixed {
+    left: calc(
+      3.5% + 180px + 12px + 180px + 12px + 180px + 12px + 180px + 12px
+    );
+    max-width: calc(100vw - 7% - 360px - 48px);
+    bottom: 30vh;
+  }
+
+  .leader-details {
+    left: calc(3.5% + 180px + 12px + 180px + 12px + 180px + 12px);
+    bottom: 14vh;
+  }
+
+  .leader-name {
+    font-size: 32px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -433,6 +524,7 @@
 
   .team-carousel-track {
     gap: 10px;
+    margin: 30px 0 0 0; /* Giảm margin cho màn hình 768px */
   }
 
   .member-photo {
@@ -464,6 +556,22 @@
     font-size: 14px;
   }
 
+  /* Fix responsive positioning for leader elements */
+  .leader-quote-fixed {
+    left: calc(4% + 140px + 10px + 140px + 10px + 140px + 10px + 140px + 10px);
+    max-width: calc(100vw - 8% - 280px - 40px);
+    bottom: 28vh;
+  }
+
+  .leader-details {
+    left: calc(4% + 140px + 10px + 140px + 10px + 140px + 10px);
+    bottom: 13vh;
+  }
+
+  .leader-name {
+    font-size: 24px;
+  }
+
   .cso-section {
     padding: 60px 20px;
   }
@@ -492,6 +600,7 @@
 
   .team-carousel-track {
     gap: 8px;
+    margin: 25px 0 0 0; /* Giảm margin cho màn hình mobile 480px */
   }
 
   .member-photo {
@@ -550,5 +659,21 @@
 
   .cso-label {
     font-size: 12px;
+  }
+
+  /* Fix responsive positioning for leader elements */
+  .leader-quote-fixed {
+    left: calc(5% + 110px + 8px + 110px + 8px + 110px + 8px + 110px + 8px);
+    max-width: calc(100vw - 10% - 220px - 32px);
+    bottom: 25vh;
+  }
+
+  .leader-details {
+    left: calc(5% + 110px + 8px + 110px + 8px + 110px + 8px);
+    bottom: 12vh;
+  }
+
+  .leader-name {
+    font-size: 20px;
   }
 }

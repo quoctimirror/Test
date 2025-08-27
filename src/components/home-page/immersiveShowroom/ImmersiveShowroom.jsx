@@ -1,4 +1,5 @@
 import "./ImmersiveShowroom.css";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const ImmersiveShowroom = () => {
   return (
@@ -24,7 +25,15 @@ const ImmersiveShowroom = () => {
           <br />
           feel the future of luxury before you wear it.
         </p>
-        <button className="explore-button bodytext-4">Explore</button>
+        <ShineGlassButton
+          width={123}
+          height={57}
+          fontSize={14}
+          theme="footer"
+          className="explore-button"
+        >
+          Explore
+        </ShineGlassButton>
       </div>
     </div>
   );

@@ -43,16 +43,25 @@
   justify-content: center;
   text-align: center;
   font-family: "Saol Display", serif;
-  font-size: 300px;
+  
+  /* SỬA Ở ĐÂY: Dùng clamp() để font-size tự co giãn - tăng responsive */
+  font-size: clamp(32px, 25vw, 300px);
+  
   font-style: normal;
   font-weight: 300;
   line-height: 90%;
-  letter-spacing: -9px;
+  
+  /* SỬA Ở ĐÂY: Dùng đơn vị 'em' để letter-spacing tỉ lệ với font-size */
+  letter-spacing: -0.03em; /* Tương đương -9px ở font-size 300px */
+  
   text-transform: none;
   white-space: nowrap;
   margin: 23vh 0 20vh 0;
+  
+  width: 100%; /* Đảm bảo nó không bị thu hẹp */
+  overflow: hidden; /* Ngăn chặn bất kỳ lỗi tràn nhỏ nào */
 
-  /* Gradient effect với màu mới */
+  /* Giữ nguyên hiệu ứng gradient */
   background: linear-gradient(
     90deg,
     #000000 0%,
@@ -99,12 +108,13 @@
 }
 
 /* Responsive Design */
-/* Large Desktop - 1600px and above optimized for 1920x1080 */
+/* Ultra Wide Screens - clamp() tự động xử lý */
+/* Large Desktop - clamp() tự động xử lý */
+
+/* Medium Desktop - 1600px */
 @media (max-width: 1600px) {
   .future-diamond-title {
-    font-size: 280px;
-    letter-spacing: -8.4px;
-    margin: 21vh 0 18vh 0;
+    /* Responsive được xử lý bởi clamp() trong base class */
   }
 
   .future-diamond-logo {
@@ -121,9 +131,7 @@
 /* Standard Desktop - 1440px */
 @media (max-width: 1440px) {
   .future-diamond-title {
-    font-size: 240px;
-    letter-spacing: -7.2px;
-    margin: 19vh 0 16vh 0;
+    /* Responsive được xử lý bởi clamp() trong base class */
   }
 
   .future-diamond-logo {
@@ -148,9 +156,7 @@
   }
 
   .future-diamond-title {
-    font-size: 200px;
-    letter-spacing: -6px;
-    margin: 17vh 0 14vh 0;
+    /* Responsive được xử lý bởi clamp() trong base class */
   }
 
   .future-diamond-logo {
@@ -172,6 +178,13 @@
   }
 }
 
+/* Small Laptop - 1024px */
+@media (max-width: 1024px) {
+  .future-diamond-title {
+    /* Responsive được xử lý bởi clamp() trong base class */
+  }
+}
+
 /* Standard Laptop - 992px */
 @media (max-width: 992px) {
   .future-diamond {
@@ -179,9 +192,7 @@
   }
 
   .future-diamond-title {
-    font-size: 160px;
-    letter-spacing: -4.8px;
-    margin: 15vh 0 12vh 0;
+    /* Responsive được xử lý bởi clamp() trong base class */
   }
 
   .future-diamond-logo {
@@ -211,8 +222,7 @@
   }
 
   .future-diamond-title {
-    font-size: 120px;
-    letter-spacing: -3.6px;
+    /* Responsive được xử lý bởi clamp() trong base class */
     margin: 13vh 0 10vh 0;
   }
 
@@ -239,6 +249,14 @@
   }
 }
 
+/* Phablet - 600px */
+@media (max-width: 600px) {
+  .future-diamond-title {
+    /* Responsive được xử lý bởi clamp() trong base class */
+    margin: 12vh 0 9vh 0;
+  }
+}
+
 /* Large Mobile - 480px */
 @media (max-width: 480px) {
   .future-diamond {
@@ -247,8 +265,7 @@
   }
 
   .future-diamond-title {
-    font-size: 90px;
-    letter-spacing: -2.7px;
+    /* Responsive được xử lý bởi clamp() trong base class */
     margin: 11vh 0 8vh 0;
   }
 
@@ -275,15 +292,30 @@
   }
 }
 
-/* Small Mobile - 360px */
+/* Medium Mobile - 414px */
+@media (max-width: 414px) {
+  .future-diamond-title {
+    /* Responsive được xử lý bởi clamp() trong base class */
+    margin: 10vh 0 7vh 0;
+  }
+}
+
+/* Small Mobile - 375px */
+@media (max-width: 375px) {
+  .future-diamond-title {
+    /* Responsive được xử lý bởi clamp() trong base class */
+    margin: 9vh 0 6vh 0;
+  }
+}
+
+/* Extra Small Mobile - 360px */
 @media (max-width: 360px) {
   .future-diamond {
     min-height: 200vh;
   }
 
   .future-diamond-title {
-    font-size: 70px;
-    letter-spacing: -2.1px;
+    /* Responsive được xử lý bởi clamp() trong base class */
     margin: 9vh 0 6vh 0;
   }
 
@@ -307,6 +339,20 @@
 
   .future-diamond-sticky-wrapper {
     padding-top: 15px;
+  }
+}
+
+/* Very Small Mobile - 320px */
+@media (max-width: 320px) {
+  .future-diamond-title {
+    /* Responsive được xử lý bởi clamp() trong base class */
+  }
+}
+
+/* Ultra Small Mobile - handle extreme cases */
+@media (max-width: 280px) {
+  .future-diamond-title {
+    /* Responsive được xử lý bởi clamp() trong base class */
   }
 }
 

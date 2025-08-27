@@ -1,8 +1,9 @@
 // Thêm 'useState', 'useRef' từ React
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import CollectionHeroSection from "./CollectionHeroSection";
-import GlassButton from "../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import "./Collections.css";
 
 const products = [
@@ -53,8 +54,11 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
 
   const currentProduct = products[currentIndex];
 
-  const handleExploreCollection = () => {
-    navigate(`/collections/${collectionId}`);
+  const handleExploreCollection = async () => {
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      `/collections/${collectionId}`
+    );
   };
 
   return (
@@ -77,15 +81,15 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
             <br />
             heritage, vibrant artistry, and timeless mystique of the East.
           </div>
-          <GlassButton
+          <ShineGlassButton
             width={221}
             height={57}
-            theme="white"
+            theme="footer"
             onClick={handleExploreCollection}
             className="collection-hero-explore-button"
           >
             Explore this collection
-          </GlassButton>
+          </ShineGlassButton>
         </div>
 
         <div className="collection-content-panel full-width">

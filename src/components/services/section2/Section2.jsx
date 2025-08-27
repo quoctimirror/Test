@@ -1,21 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import "./Section2.css";
-import GlassButton from "../../common/button/GlassButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const Section2 = () => {
   const navigate = useNavigate();
   const sectionRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  const handleProductCareClick = () => {
-    window.scrollTo(0, 0);
-    navigate("/services/detail?tab=product-care-repair");
+  const handleProductCareClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/services/detail?tab=product-care-repair"
+    );
   };
 
-  const handleTradeInClick = () => {
-    window.scrollTo(0, 0);
-    navigate("/services/detail?tab=trade-in-upgrade");
+  const handleTradeInClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      "/services/detail?tab=trade-in-upgrade"
+    );
   };
 
   useEffect(() => {
@@ -88,9 +93,10 @@ const Section2 = () => {
             style={{
               opacity: scrollProgress < 0.5 ? 1 - scrollProgress * 2 : 0,
               transform: `translateY(${
-                scrollProgress < 0.5 ? (1 - scrollProgress * 2) * 50 : 0
+                scrollProgress < 0.5 ? scrollProgress * -20 : -20
               }px)`,
               pointerEvents: scrollProgress < 0.5 ? "auto" : "none",
+              zIndex: scrollProgress < 0.5 ? 100 : 10,
             }}
           >
             <div className="section2-content">
@@ -111,16 +117,16 @@ const Section2 = () => {
                     <br /> you received it.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section2-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleProductCareClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>
@@ -135,6 +141,7 @@ const Section2 = () => {
                   : 50
               }px)`,
               pointerEvents: scrollProgress > 0.5 ? "auto" : "none",
+              zIndex: scrollProgress > 0.5 ? 100 : 10,
             }}
           >
             <div className="section2-content">
@@ -158,16 +165,16 @@ const Section2 = () => {
                     evolution in your jewelry journey.
                   </p>
                 </div>
-                <GlassButton
+                <ShineGlassButton
                   className="section2-cta"
-                  theme="default"
+                  theme="light"
                   width={137}
                   height={57}
                   fontSize={14}
                   onClick={handleTradeInClick}
                 >
                   See more
-                </GlassButton>
+                </ShineGlassButton>
               </div>
             </div>
           </div>

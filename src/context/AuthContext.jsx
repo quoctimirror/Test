@@ -6,8 +6,8 @@ import {
   useEffect,
   useCallback,
 } from "react";
-import { remoteApi } from "../api/axiosConfig"; // Use remoteApi for authentication
-import requestThrottle from "../utils/requestThrottle";
+import { remoteApi } from "@api/axiosConfig"; // Use remoteApi for authentication
+import requestThrottle from "@utils/transitionUtil/requestThrottle";
 
 const AuthContext = createContext(null);
 
