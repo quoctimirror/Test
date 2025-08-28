@@ -406,36 +406,6 @@ select.form-input,
     margin-top: 60px;
 }
 
-.save-profile-button {
-    background: white;
-    color: #BC224C;
-    border: 2px solid #BC224C;
-    border-radius: 30px;
-    padding: 16px 50px;
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 200px;
-    box-shadow: 0 4px 15px rgba(188, 34, 76, 0.2);
-}
-
-.save-profile-button:hover:not(:disabled) {
-    background: #BC224C;
-    color: white;
-    border-color: #BC224C;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(188, 34, 76, 0.4);
-}
-
-.save-profile-button:disabled {
-    cursor: not-allowed;
-    background: #ccc;
-    color: #888;
-    border-color: #ccc;
-    opacity: 0.7;
-    box-shadow: none;
-}
 
 /* Change Password button - override GlassButton colors to keep original dark theme */
 .change-password-button {

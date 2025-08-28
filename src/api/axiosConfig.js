@@ -148,24 +148,21 @@ const getBackendURL = async () => {
       return url;
     }
 
-    // Auto-detect port trong development
-    console.log("🚀 Auto-detecting backend port...");
-    const detectedPort = await detectBackendPort();
-    const url = `http://localhost:${detectedPort}`;
-    console.log("✅ Using Auto-detected Backend URL:", url);
+    // Default to production gateway in development
+    const url = "https://xpxr4xbvim.ap-southeast-1.awsapprunner.com";
+    console.log("✅ Using Production Gateway URL in development:", url);
     return url;
   }
 
-  // Fallback: dùng local backend với port được chỉ định
-  const fallbackPort = import.meta.env.VITE_LOCAL_BACKEND_PORT || "8090";
+  // Fallback: dùng production gateway
   const url =
-    import.meta.env.VITE_API_BASE_URL || `http://localhost:${fallbackPort}`;
+    import.meta.env.VITE_API_BASE_URL || "https://xpxr4xbvim.ap-southeast-1.awsapprunner.com";
   console.log("✅ Using Fallback Backend URL:", url);
   return url;
 };
 
 // Khởi tạo instance của axios với async baseURL
-let baseURL = "http://localhost:8090"; // default fallback to 8090
+let baseURL = "https://xpxr4xbvim.ap-southeast-1.awsapprunner.com"; // default fallback to production gateway
 
 // Async function để set baseURL
 const initializeAPI = async () => {
