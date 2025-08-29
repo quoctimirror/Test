@@ -51,175 +51,175 @@ api.interceptors.response.use(
 // ===== LOCATIONS API =====
 export const locationsAPI = {
   // Get all active locations
-  getAll: () => api.get("/locations"),
+  getAll: () => api.get("/api/locations"),
 
   // Get location by ID
-  getById: (id) => api.get(`/locations/${id}`),
+  getById: (id) => api.get(`/api/locations/${id}`),
 
   // Filter locations by city
-  getByCity: (city) => api.get(`/locations/city/${encodeURIComponent(city)}`),
+  getByCity: (city) => api.get(`/api/locations/city/${encodeURIComponent(city)}`),
 
   // Filter locations by type
-  getByType: (type) => api.get(`/locations/type/${type}`),
+  getByType: (type) => api.get(`/api/locations/type/${type}`),
 
   // Filter locations by both city and type
-  getFiltered: (params) => api.get("/locations/filter", { params }),
+  getFiltered: (params) => api.get("/api/locations/filter", { params }),
 
   // Search locations
   search: (searchTerm) =>
-    api.get(`/locations/search?q=${encodeURIComponent(searchTerm)}`),
+    api.get(`/api/locations/search?q=${encodeURIComponent(searchTerm)}`),
 
   // Get filter options (cities, types)
-  getFilterOptions: () => api.get("/locations/filters"),
+  getFilterOptions: () => api.get("/api/locations/filters"),
 
   // Get location statistics
-  getStatistics: () => api.get("/locations/statistics"),
+  getStatistics: () => api.get("/api/locations/statistics"),
 
   // Health check
-  health: () => api.get("/locations/health"),
+  health: () => api.get("/api/locations/health"),
 
   // CRUD operations
-  create: (locationData) => api.post("/locations", locationData),
-  update: (id, locationData) => api.put(`/locations/${id}`, locationData),
-  delete: (id) => api.delete(`/locations/${id}`),
+  create: (locationData) => api.post("/api/locations", locationData),
+  update: (id, locationData) => api.put(`/api/locations/${id}`, locationData),
+  delete: (id) => api.delete(`/api/locations/${id}`),
 };
 
 // ===== PRODUCTS API =====
 export const productsAPI = {
   // Get all active products
-  getAll: (params = {}) => api.get("/products", { params }),
+  getAll: (params = {}) => api.get("/api/products", { params }),
 
   // Get product by ID
-  getById: (id) => api.get(`/products/${id}`),
+  getById: (id) => api.get(`/api/products/${id}`),
 
   // Get product by SKU
-  getBySku: (sku) => api.get(`/products/sku/${sku}`),
+  getBySku: (sku) => api.get(`/api/products/sku/${sku}`),
 
   // Get featured products
-  getFeatured: () => api.get("/products/featured"),
+  getFeatured: () => api.get("/api/products/featured"),
 
   // Get available products (in stock)
-  getAvailable: (params = {}) => api.get("/products/available", { params }),
+  getAvailable: (params = {}) => api.get("/api/products/available", { params }),
 
   // Get products by category
   getByCategory: (categoryId, params = {}) =>
-    api.get(`/products/category/${categoryId}`, { params }),
+    api.get(`/api/products/category/${categoryId}`, { params }),
 
   // Get products by metal type
-  getByMetalType: (metalType) => api.get(`/products/metal/${metalType}`),
+  getByMetalType: (metalType) => api.get(`/api/products/metal/${metalType}`),
 
   // Search products
   search: (searchTerm, params = {}) =>
-    api.get(`/products/search?q=${encodeURIComponent(searchTerm)}`, { params }),
+    api.get(`/api/products/search?q=${encodeURIComponent(searchTerm)}`, { params }),
 
   // Advanced filtering
-  getFiltered: (params = {}) => api.get("/products/filter", { params }),
+  getFiltered: (params = {}) => api.get("/api/products/filter", { params }),
 
   // Get products by price range
   getByPriceRange: (min, max) =>
-    api.get(`/products/price-range?min=${min}&max=${max}`),
+    api.get(`/api/products/price-range?min=${min}&max=${max}`),
 
   // Get filter options
-  getFilterOptions: () => api.get("/products/filters"),
+  getFilterOptions: () => api.get("/api/products/filters"),
 
   // Get product statistics
-  getStatistics: () => api.get("/products/statistics"),
+  getStatistics: () => api.get("/api/products/statistics"),
 
   // Health check
-  health: () => api.get("/products/health"),
+  health: () => api.get("/api/products/health"),
 
   // CRUD operations
-  create: (productData) => api.post("/products", productData),
-  update: (id, productData) => api.put(`/products/${id}`, productData),
-  delete: (id) => api.delete(`/products/${id}`),
-  toggleFeatured: (id) => api.patch(`/products/${id}/featured`),
+  create: (productData) => api.post("/api/products", productData),
+  update: (id, productData) => api.put(`/api/products/${id}`, productData),
+  delete: (id) => api.delete(`/api/products/${id}`),
+  toggleFeatured: (id) => api.patch(`/api/products/${id}/featured`),
 };
 
 // ===== COLLECTIONS API =====
 export const collectionsAPI = {
   // Get all active collections
-  getAll: () => api.get("/collections"),
+  getAll: () => api.get("/api/collections"),
 
   // Get collection by ID
-  getById: (id) => api.get(`/collections/${id}`),
+  getById: (id) => api.get(`/api/collections/${id}`),
 
   // Get collection by name
-  getByName: (name) => api.get(`/collections/name/${encodeURIComponent(name)}`),
+  getByName: (name) => api.get(`/api/collections/name/${encodeURIComponent(name)}`),
 
   // Get collection with products
-  getWithProducts: (id) => api.get(`/collections/${id}/products`),
+  getWithProducts: (id) => api.get(`/api/collections/${id}/products`),
 
   // Get featured collections
-  getFeatured: () => api.get("/collections/featured"),
+  getFeatured: () => api.get("/api/collections/featured"),
 
   // Get collections by year
-  getByYear: (year) => api.get(`/collections/year/${year}`),
+  getByYear: (year) => api.get(`/api/collections/year/${year}`),
 
   // Get collections by season and year
   getBySeasonAndYear: (season, year) =>
-    api.get(`/collections/season/${season}/year/${year}`),
+    api.get(`/api/collections/season/${season}/year/${year}`),
 
   // Search collections
   search: (searchTerm) =>
-    api.get(`/collections/search?q=${encodeURIComponent(searchTerm)}`),
+    api.get(`/api/collections/search?q=${encodeURIComponent(searchTerm)}`),
 
   // Get filter options
-  getFilterOptions: () => api.get("/collections/filters"),
+  getFilterOptions: () => api.get("/api/collections/filters"),
 
   // Get collection statistics
-  getStatistics: () => api.get("/collections/statistics"),
+  getStatistics: () => api.get("/api/collections/statistics"),
 
   // Health check
-  health: () => api.get("/collections/health"),
+  health: () => api.get("/api/collections/health"),
 
   // CRUD operations
-  create: (collectionData) => api.post("/collections", collectionData),
-  update: (id, collectionData) => api.put(`/collections/${id}`, collectionData),
-  delete: (id) => api.delete(`/collections/${id}`),
-  toggleFeatured: (id) => api.patch(`/collections/${id}/featured`),
+  create: (collectionData) => api.post("/api/collections", collectionData),
+  update: (id, collectionData) => api.put(`/api/collections/${id}`, collectionData),
+  delete: (id) => api.delete(`/api/collections/${id}`),
+  toggleFeatured: (id) => api.patch(`/api/collections/${id}/featured`),
 };
 
 // ===== CATEGORIES API =====
 export const categoriesAPI = {
   // Get all categories
-  getAll: () => api.get("/categories"),
+  getAll: () => api.get("/api/categories"),
 
   // Get category by ID
-  getById: (id) => api.get(`/categories/${id}`),
+  getById: (id) => api.get(`/api/categories/${id}`),
 
   // Health check
-  health: () => api.get("/categories/health"),
+  health: () => api.get("/api/categories/health"),
 
   // CRUD operations
-  create: (categoryData) => api.post("/categories", categoryData),
-  update: (id, categoryData) => api.put(`/categories/${id}`, categoryData),
-  delete: (id) => api.delete(`/categories/${id}`),
+  create: (categoryData) => api.post("/api/categories", categoryData),
+  update: (id, categoryData) => api.put(`/api/categories/${id}`, categoryData),
+  delete: (id) => api.delete(`/api/categories/${id}`),
 };
 
 // ===== COMPONENTS API =====
 export const componentsAPI = {
   // Get all components
-  getAll: () => api.get("/components"),
+  getAll: () => api.get("/api/components"),
 
   // Get component by ID
-  getById: (id) => api.get(`/components/${id}`),
+  getById: (id) => api.get(`/api/components/${id}`),
 
   // Get components by type
-  getByType: (type) => api.get(`/components/type/${type}`),
+  getByType: (type) => api.get(`/api/components/type/${type}`),
 
   // Get customizable components
-  getCustomizable: () => api.get("/components/customizable"),
+  getCustomizable: () => api.get("/api/components/customizable"),
 
   // Get required components
-  getRequired: () => api.get("/components/required"),
+  getRequired: () => api.get("/api/components/required"),
 
   // Health check
-  health: () => api.get("/components/health"),
+  health: () => api.get("/api/components/health"),
 
   // CRUD operations
-  create: (componentData) => api.post("/components", componentData),
-  update: (id, componentData) => api.put(`/components/${id}`, componentData),
-  delete: (id) => api.delete(`/components/${id}`),
+  create: (componentData) => api.post("/api/components", componentData),
+  update: (id, componentData) => api.put(`/api/components/${id}`, componentData),
+  delete: (id) => api.delete(`/api/components/${id}`),
 };
 
 // ===== USERS API =====
