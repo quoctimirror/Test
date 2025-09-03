@@ -12,7 +12,7 @@ const LocationsManager = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    type: "STORE",
+    type: "SHOWROOM",
     address: "",
     city: "",
     phone: "",
@@ -41,7 +41,7 @@ const LocationsManager = () => {
   const resetForm = () => {
     setFormData({
       name: "",
-      type: "STORE",
+      type: "SHOWROOM",
       address: "",
       city: "",
       phone: "",
@@ -60,7 +60,7 @@ const LocationsManager = () => {
   const handleEdit = (location) => {
     setFormData({
       name: location.name || "",
-      type: location.type || "STORE",
+      type: location.type || "SHOWROOM",
       address: location.address || "",
       city: location.city || "",
       phone: location.phone || "",
@@ -127,20 +127,18 @@ const LocationsManager = () => {
 
   const getTypeIcon = (type) => {
     switch (type) {
-      case 'FLAGSHIP': return '🏢';
-      case 'BOUTIQUE': return '🏪';
-      case 'OUTLET': return '🏬';
       case 'SHOWROOM': return '🪟';
+      case 'BOUTIQUE': return '🏪';
+      case 'POD': return '📦';
       default: return '📍';
     }
   };
 
   const getTypeColor = (type) => {
     switch (type) {
-      case 'FLAGSHIP': return '#bc224c';
-      case 'BOUTIQUE': return '#17a2b8';
-      case 'OUTLET': return '#28a745';
       case 'SHOWROOM': return '#ffc107';
+      case 'BOUTIQUE': return '#17a2b8';
+      case 'POD': return '#28a745';
       default: return '#6c757d';
     }
   };
@@ -180,11 +178,9 @@ const LocationsManager = () => {
               style={{ width: '150px' }}
             >
               <option value="all">All Types</option>
-              <option value="STORE">Store</option>
-              <option value="FLAGSHIP">Flagship</option>
-              <option value="BOUTIQUE">Boutique</option>
-              <option value="OUTLET">Outlet</option>
               <option value="SHOWROOM">Showroom</option>
+              <option value="BOUTIQUE">Boutique</option>
+              <option value="POD">Pod</option>
             </select>
           </div>
           <button onClick={handleAdd} className="admin-button admin-button-primary">
@@ -229,7 +225,7 @@ const LocationsManager = () => {
                   textTransform: 'uppercase',
                   marginBottom: '0.5rem'
                 }}>
-                  {location.type || 'STORE'}
+                  {location.type || 'SHOWROOM'}
                 </div>
                 <div style={{ fontSize: '12px', color: '#6c757d' }}>
                   ID: <code style={{ background: '#f8f9fa', padding: '2px 4px', borderRadius: '4px' }}>{location.id}</code>
@@ -361,11 +357,9 @@ const LocationsManager = () => {
                         onChange={(e) => setFormData({...formData, type: e.target.value})}
                         className="admin-input"
                       >
-                        <option value="STORE">Store</option>
-                        <option value="FLAGSHIP">Flagship</option>
-                        <option value="BOUTIQUE">Boutique</option>
-                        <option value="OUTLET">Outlet</option>
                         <option value="SHOWROOM">Showroom</option>
+                        <option value="BOUTIQUE">Boutique</option>
+                        <option value="POD">Pod</option>
                       </select>
                     </div>
                   </div>
