@@ -153,6 +153,8 @@ export const productsAPI = {
 export const collectionsAPI = {
   // Get all active collections
   getAll: () => api.get("/api/collections"),
+  // Get all collections including inactive (admin)
+  getAllIncludingInactive: () => api.get("/api/collections/all"),
 
   // Get collection by ID
   getById: (id) => api.get(`/api/collections/${id}`),
@@ -190,6 +192,7 @@ export const collectionsAPI = {
   create: (collectionData) => api.post("/api/collections", collectionData),
   update: (id, collectionData) => api.put(`/api/collections/${id}`, collectionData),
   delete: (id) => api.delete(`/api/collections/${id}`),
+  hardDelete: (id) => api.delete(`/api/collections/${id}/permanent`),
   toggleFeatured: (id) => api.patch(`/api/collections/${id}/featured`),
 };
 

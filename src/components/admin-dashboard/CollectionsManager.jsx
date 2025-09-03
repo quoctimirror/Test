@@ -11,11 +11,19 @@ const CollectionsManager = () => {
 
   const [formData, setFormData] = useState({
     name: "",
+    title: "",
     description: "",
     season: "",
     year: new Date().getFullYear().toString(),
+    theme: "",
     imageUrl: "",
-    featured: false
+    bannerImageUrl: "",
+    imageUrls: "",
+    status: "ACTIVE",
+    featured: false,
+    sortOrder: 0,
+    startDate: "",
+    endDate: ""
   });
 
   useEffect(() => {
@@ -38,11 +46,19 @@ const CollectionsManager = () => {
   const resetForm = () => {
     setFormData({
       name: "",
+      title: "",
       description: "",
       season: "",
       year: new Date().getFullYear().toString(),
+      theme: "",
       imageUrl: "",
-      featured: false
+      bannerImageUrl: "",
+      imageUrls: "",
+      status: "ACTIVE",
+      featured: false,
+      sortOrder: 0,
+      startDate: "",
+      endDate: ""
     });
     setEditingCollection(null);
   };
@@ -55,11 +71,19 @@ const CollectionsManager = () => {
   const handleEdit = (collection) => {
     setFormData({
       name: collection.name || "",
+      title: collection.title || "",
       description: collection.description || "",
       season: collection.season || "",
       year: collection.year?.toString() || new Date().getFullYear().toString(),
+      theme: collection.theme || "",
       imageUrl: collection.imageUrl || "",
-      featured: collection.featured || false
+      bannerImageUrl: collection.bannerImageUrl || "",
+      imageUrls: Array.isArray(collection.imageUrls) ? collection.imageUrls.join(", ") : "",
+      status: collection.status || "ACTIVE",
+      featured: collection.featured || false,
+      sortOrder: collection.sortOrder?.toString() || "0",
+      startDate: collection.startDate || "",
+      endDate: collection.endDate || ""
     });
     setEditingCollection(collection);
     setIsModalOpen(true);
@@ -71,8 +95,20 @@ const CollectionsManager = () => {
 
     try {
       const submitData = {
-        ...formData,
-        year: parseInt(formData.year) || new Date().getFullYear()
+        name: formData.name,
+        title: formData.title,
+        description: formData.description,
+        season: formData.season || null,
+        year: parseInt(formData.year) || null,
+        theme: formData.theme || null,
+        imageUrl: formData.imageUrl || null,
+        bannerImageUrl: formData.bannerImageUrl || null,
+        imageUrls: formData.imageUrls ? JSON.stringify(formData.imageUrls.split(",").map(url => url.trim()).filter(url => url)) : null,
+        status: formData.status,
+        featured: formData.featured,
+        sortOrder: parseInt(formData.sortOrder) || 0,
+        startDate: formData.startDate || null,
+        endDate: formData.endDate || null
       };
 
       if (editingCollection) {
@@ -106,7 +142,22 @@ const CollectionsManager = () => {
 
   const toggleFeatured = async (collection) => {
     try {
-      await collectionsAPI.toggleFeatured(collection.id);
+      const updateData = {
+        name: collection.name,
+        title: collection.title,
+        description: collection.description,
+        season: collection.season,
+        year: collection.year,
+        theme: collection.theme,
+        imageUrl: collection.imageUrl,
+        bannerImageUrl: collection.bannerImageUrl,
+        status: collection.status,
+        featured: !collection.featured,
+        sortOrder: collection.sortOrder,
+        startDate: collection.startDate,
+        endDate: collection.endDate
+      };
+      await collectionsAPI.update(collection.id, updateData);
       await fetchCollections();
     } catch (err) {
       const errorInfo = handleAPIError(err, 'Failed to update featured status');
@@ -291,18 +342,33 @@ const CollectionsManager = () => {
 
               <form onSubmit={handleSubmit}>
                 <div style={{ display: 'grid', gap: '1rem' }}>
-                  <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-                      Collection Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="admin-input"
-                      placeholder="e.g., Spring Elegance, Holiday Glamour"
-                      required
-                    />
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Collection Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        className="admin-input"
+                        placeholder="e.g., Spring Elegance"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Title *
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData({...formData, title: e.target.value})}
+                        className="admin-input"
+                        placeholder="e.g., Elegant Spring Jewelry Collection"
+                        required
+                      />
+                    </div>
                   </div>
 
                   <div>
@@ -318,7 +384,7 @@ const CollectionsManager = () => {
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                     <div>
                       <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
                         Season
@@ -350,30 +416,123 @@ const CollectionsManager = () => {
                         ))}
                       </select>
                     </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Sort Order
+                      </label>
+                      <input
+                        type="number"
+                        value={formData.sortOrder}
+                        onChange={(e) => setFormData({...formData, sortOrder: e.target.value})}
+                        className="admin-input"
+                        min="0"
+                        placeholder="0"
+                      />
+                    </div>
                   </div>
 
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-                      Collection Image URL
+                      Theme
                     </label>
                     <input
-                      type="url"
-                      value={formData.imageUrl}
-                      onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                      type="text"
+                      value={formData.theme}
+                      onChange={(e) => setFormData({...formData, theme: e.target.value})}
                       className="admin-input"
-                      placeholder="https://example.com/collection-image.jpg"
+                      placeholder="e.g., Floral, Vintage, Modern"
                     />
                   </div>
 
-                  <div>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Collection Image URL
+                      </label>
                       <input
-                        type="checkbox"
-                        checked={formData.featured}
-                        onChange={(e) => setFormData({...formData, featured: e.target.checked})}
+                        type="url"
+                        value={formData.imageUrl}
+                        onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                        className="admin-input"
+                        placeholder="https://example.com/collection-image.jpg"
                       />
-                      <span style={{ fontWeight: '500' }}>Featured Collection</span>
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Banner Image URL
+                      </label>
+                      <input
+                        type="url"
+                        value={formData.bannerImageUrl}
+                        onChange={(e) => setFormData({...formData, bannerImageUrl: e.target.value})}
+                        className="admin-input"
+                        placeholder="https://example.com/banner-image.jpg"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                      Additional Images (comma-separated URLs)
                     </label>
+                    <input
+                      type="text"
+                      value={formData.imageUrls}
+                      onChange={(e) => setFormData({...formData, imageUrls: e.target.value})}
+                      className="admin-input"
+                      placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg"
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Start Date
+                      </label>
+                      <input
+                        type="date"
+                        value={formData.startDate}
+                        onChange={(e) => setFormData({...formData, startDate: e.target.value})}
+                        className="admin-input"
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        End Date
+                      </label>
+                      <input
+                        type="date"
+                        value={formData.endDate}
+                        onChange={(e) => setFormData({...formData, endDate: e.target.value})}
+                        className="admin-input"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', alignItems: 'end' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                        Status
+                      </label>
+                      <select
+                        value={formData.status}
+                        onChange={(e) => setFormData({...formData, status: e.target.value})}
+                        className="admin-input"
+                      >
+                        <option value="ACTIVE">Active</option>
+                        <option value="DRAFT">Draft</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={formData.featured}
+                          onChange={(e) => setFormData({...formData, featured: e.target.checked})}
+                        />
+                        <span style={{ fontWeight: '500' }}>Featured Collection</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
 
