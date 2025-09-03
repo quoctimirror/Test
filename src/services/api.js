@@ -89,6 +89,9 @@ export const productsAPI = {
   // Get all active products
   getAll: (params = {}) => api.get("/api/products", { params }),
 
+  // Get all products including inactive (admin)
+  getAllIncludingInactive: () => api.get("/api/products/all"),
+
   // Get product by ID
   getById: (id) => api.get(`/api/products/${id}`),
 
@@ -119,6 +122,12 @@ export const productsAPI = {
   getByPriceRange: (min, max) =>
     api.get(`/api/products/price-range?min=${min}&max=${max}`),
 
+  // Get low stock products
+  getLowStock: () => api.get("/api/products/low-stock"),
+
+  // Get out of stock products
+  getOutOfStock: () => api.get("/api/products/out-of-stock"),
+
   // Get filter options
   getFilterOptions: () => api.get("/api/products/filters"),
 
@@ -132,7 +141,9 @@ export const productsAPI = {
   create: (productData) => api.post("/api/products", productData),
   update: (id, productData) => api.put(`/api/products/${id}`, productData),
   delete: (id) => api.delete(`/api/products/${id}`),
-  toggleFeatured: (id) => api.patch(`/api/products/${id}/featured`),
+  hardDelete: (id) => api.delete(`/api/products/${id}/permanent`),
+  toggleFeatured: (id) => api.post(`/api/products/${id}/toggle-featured`),
+  updateStock: (id, quantity) => api.put(`/api/products/${id}/stock`, { quantity }),
 };
 
 // ===== COLLECTIONS API =====
@@ -225,40 +236,40 @@ export const componentsAPI = {
 // ===== USERS API =====
 export const usersAPI = {
   // Get all users
-  getAll: () => api.get("/users"),
+  getAll: () => api.get("/api/users"),
 
   // Get user by ID
-  getById: (id) => api.get(`/users/${id}`),
+  getById: (id) => api.get(`/api/users/${id}`),
 
   // Get user by username
-  getByUsername: (username) => api.get(`/users/username/${username}`),
+  getByUsername: (username) => api.get(`/api/users/username/${username}`),
 
   // Get user by email
-  getByEmail: (email) => api.get(`/users/email/${encodeURIComponent(email)}`),
+  getByEmail: (email) => api.get(`/api/users/email/${encodeURIComponent(email)}`),
 
   // Get users by role
-  getByRole: (role) => api.get(`/users/role/${role}`),
+  getByRole: (role) => api.get(`/api/users/role/${role}`),
 
   // Get users by status
-  getByStatus: (status) => api.get(`/users/status/${status}`),
+  getByStatus: (status) => api.get(`/api/users/status/${status}`),
 
   // Search users
   search: (searchTerm) =>
-    api.get(`/users/search?q=${encodeURIComponent(searchTerm)}`),
+    api.get(`/api/users/search?q=${encodeURIComponent(searchTerm)}`),
 
   // Get user statistics
-  getStatistics: () => api.get("/users/statistics"),
+  getStatistics: () => api.get("/api/users/statistics"),
 
   // Health check
-  health: () => api.get("/users/health"),
+  health: () => api.get("/api/users/health"),
 
   // CRUD operations
-  create: (userData) => api.post("/users", userData),
-  createByAdmin: (userData) => api.post("/users/admin/create", userData),
-  update: (id, userData) => api.put(`/users/${id}`, userData),
-  delete: (id) => api.delete(`/users/${id}`),
-  updateStatus: (id, status) => api.patch(`/users/${id}/status`, { status }),
-  updateRole: (id, role) => api.patch(`/users/${id}/role`, { role }),
+  create: (userData) => api.post("/api/users", userData),
+  createByAdmin: (userData) => api.post("/api/users/admin/create", userData),
+  update: (id, userData) => api.put(`/api/users/${id}`, userData),
+  delete: (id) => api.delete(`/api/users/${id}`),
+  updateStatus: (id, status) => api.patch(`/api/users/${id}/status`, { status }),
+  updateRole: (id, role) => api.patch(`/api/users/${id}/role`, { role }),
 };
 
 // ===== UTILITY FUNCTIONS =====
