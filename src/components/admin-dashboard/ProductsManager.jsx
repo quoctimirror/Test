@@ -22,8 +22,11 @@ const ProductsManager = () => {
     metalPurity: "",
     stoneType: "",
     weightGrams: "",
+    dimensions: "",
     imageUrl: "",
+    imageUrls: "",
     tags: "",
+    status: "ACTIVE",
     featured: false,
     stockQuantity: "",
     minStockLevel: ""
@@ -62,8 +65,11 @@ const ProductsManager = () => {
       metalPurity: "",
       stoneType: "",
       weightGrams: "",
+      dimensions: "",
       imageUrl: "",
+      imageUrls: "",
       tags: "",
+      status: "ACTIVE",
       featured: false,
       stockQuantity: "",
       minStockLevel: ""
@@ -88,8 +94,11 @@ const ProductsManager = () => {
       metalPurity: product.metalPurity || "",
       stoneType: product.stoneType || "",
       weightGrams: product.weightGrams?.toString() || "",
+      dimensions: product.dimensions ? JSON.stringify(product.dimensions) : "",
       imageUrl: product.imageUrl || "",
+      imageUrls: Array.isArray(product.imageUrls) ? product.imageUrls.join(", ") : "",
       tags: Array.isArray(product.tags) ? product.tags.join(", ") : "",
+      status: product.status || "ACTIVE",
       featured: product.featured || false,
       stockQuantity: product.stockQuantity?.toString() || "",
       minStockLevel: product.minStockLevel?.toString() || ""
@@ -106,10 +115,12 @@ const ProductsManager = () => {
       const submitData = {
         ...formData,
         price: parseFloat(formData.price) || 0,
-        weightGrams: parseFloat(formData.weightGrams) || 0,
+        weightGrams: formData.weightGrams ? parseFloat(formData.weightGrams) : null,
         stockQuantity: parseInt(formData.stockQuantity) || 0,
-        minStockLevel: parseInt(formData.minStockLevel) || 0,
-        tags: formData.tags.split(",").map(tag => tag.trim()).filter(tag => tag)
+        minStockLevel: parseInt(formData.minStockLevel) || 1,
+        tags: formData.tags ? formData.tags.split(",").map(tag => tag.trim()).filter(tag => tag) : [],
+        imageUrls: formData.imageUrls ? formData.imageUrls.split(",").map(url => url.trim()).filter(url => url) : [],
+        dimensions: formData.dimensions || null
       };
 
       if (editingProduct) {
@@ -361,11 +372,12 @@ const ProductsManager = () => {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Category</label>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Category *</label>
                       <select
                         value={formData.categoryId}
                         onChange={(e) => setFormData({...formData, categoryId: e.target.value})}
                         className="admin-input"
+                        required
                       >
                         <option value="">Select Category</option>
                         {categories.map(category => (
@@ -453,7 +465,7 @@ const ProductsManager = () => {
                   <div>
                     <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Image URL</label>
                     <input
-                      type="url"
+                      type="text"
                       value={formData.imageUrl}
                       onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
                       className="admin-input"
