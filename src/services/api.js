@@ -82,6 +82,9 @@ export const locationsAPI = {
   create: (locationData) => api.post("/api/locations", locationData),
   update: (id, locationData) => api.put(`/api/locations/${id}`, locationData),
   delete: (id) => api.delete(`/api/locations/${id}`),
+  hardDelete: (id) => api.delete(`/api/locations/${id}/permanent`),
+  activate: (id) => api.post(`/api/locations/${id}/activate`),
+  deactivate: (id) => api.post(`/api/locations/${id}/deactivate`),
 };
 
 // ===== PRODUCTS API =====

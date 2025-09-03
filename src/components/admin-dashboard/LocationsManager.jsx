@@ -16,7 +16,6 @@ const LocationsManager = () => {
     address: "",
     city: "",
     phone: "",
-    email: "",
     hours: "",
     latitude: "",
     longitude: ""
@@ -46,7 +45,6 @@ const LocationsManager = () => {
       address: "",
       city: "",
       phone: "",
-      email: "",
       hours: "",
       latitude: "",
       longitude: ""
@@ -66,10 +64,9 @@ const LocationsManager = () => {
       address: location.address || "",
       city: location.city || "",
       phone: location.phone || "",
-      email: location.email || "",
       hours: location.hours || "",
-      latitude: location.latitude?.toString() || "",
-      longitude: location.longitude?.toString() || ""
+      latitude: location.coordinates?.lat?.toString() || location.latitude?.toString() || "",
+      longitude: location.coordinates?.lng?.toString() || location.longitude?.toString() || ""
     });
     setEditingLocation(location);
     setIsModalOpen(true);
@@ -81,9 +78,14 @@ const LocationsManager = () => {
 
     try {
       const submitData = {
-        ...formData,
-        latitude: formData.latitude ? parseFloat(formData.latitude) : null,
-        longitude: formData.longitude ? parseFloat(formData.longitude) : null
+        name: formData.name,
+        type: formData.type,
+        address: formData.address,
+        city: formData.city,
+        phone: formData.phone,
+        hours: formData.hours,
+        latitude: formData.latitude ? parseFloat(formData.latitude) : 0,
+        longitude: formData.longitude ? parseFloat(formData.longitude) : 0
       };
 
       if (editingLocation) {
