@@ -18,12 +18,48 @@
   transform-origin: center center;
 }
 
+/* Hero Content với isolation và specificity cao */
+.new-cut-page .new-cut-hero .hero-content {
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  align-items: center !important;
+  height: 100% !important;
+  
+  /* CSS Containment - ngăn chặn side effects */
+  contain: layout style;
+  
+  /* Isolation - tạo stacking context riêng */
+  isolation: isolate;
+  
+  /* Transform 3D để tạo layer riêng */
+  transform: translateZ(0);
+  will-change: contents;
+  
+  /* Đảm bảo không bị override */
+  position: relative !important;
+  box-sizing: border-box !important;
+}
+
+/* Fallback cho browsers cũ */
 .hero-content {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
   height: 100%;
+}
+
+/* Bảo vệ hero-text với specificity cao */
+.new-cut-page .hero-content .hero-text {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  text-align: center !important;
+  height: 100% !important;
+  contain: layout;
+  isolation: isolate;
 }
 
 .hero-text {
@@ -33,6 +69,15 @@
   align-items: center;
   text-align: center;
   height: 100%;
+}
+
+/* Bảo vệ hero-text-main */
+.new-cut-page .hero-content .hero-text-main {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .hero-text-main {
@@ -68,6 +113,18 @@
   color: rgba(0, 0, 0, 0.7);
 }
 
+/* Bảo vệ hero-image với specificity cao */
+.new-cut-page .hero-content .hero-image {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  contain: layout style;
+  isolation: isolate;
+}
+
 .hero-image {
   width: 100%;
   height: 100%;
@@ -75,6 +132,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Bảo vệ hero-image img */
+.new-cut-page .hero-content .hero-image img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  max-width: none !important;
 }
 
 .hero-image img {
