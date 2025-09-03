@@ -99,7 +99,10 @@ const NewsGrid = () => {
 
   const handleNewsItemClick = async (item) => {
     if (item.id === 1) {
-      await optimizedTransitionUtils.transitionToRoute(navigate, "/news/new-cut");
+      await optimizedTransitionUtils.transitionToRoute(
+        navigate,
+        "/news/new-cut"
+      );
     }
   };
 
@@ -139,7 +142,7 @@ const NewsGrid = () => {
           <div className="view-more-section">
             <ShineGlassButton
               className="view-more-btn"
-              theme="shine"
+              theme="light"
               width={137}
               height={57}
               fontSize={14}
