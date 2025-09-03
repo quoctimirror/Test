@@ -44,10 +44,14 @@
 /* Fallback cho browsers cũ */
 .hero-content {
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  height: 100%;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  align-items: center !important;
+  height: 100% !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
 
 /* Bảo vệ hero-text với specificity cao */
