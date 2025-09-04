@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
@@ -14,49 +14,21 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const scrollContainerRef = useRef(null);
-  
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // Fetch products from API
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      // Fetch featured products or available products
-      const response = await productsAPI.getFeatured();
-      const productsData = response.data || [];
-      
-      // If no featured products, fallback to available products
-      if (productsData.length === 0) {
-        const availableResponse = await productsAPI.getAvailable({ paginated: false });
-        setProducts(availableResponse.data?.slice(0, 8) || []);
-      } else {
-        setProducts(productsData.slice(0, 8)); // Limit to 8 products
-      }
-      
-    } catch (err) {
-      const errorInfo = handleAPIError(err, 'Failed to load products');
-      setError(errorInfo.message);
-      console.error('Error fetching products:', errorInfo);
-      
-      // Fallback to empty array
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const products = [
+    { id: 1, name: "Lumina", image: "/products/more_r.png" },
+    { id: 2, name: "Lumina", image: "/products/more_r.png" },
+    { id: 3, name: "Lumina", image: "/products/more_r.png" },
+    { id: 4, name: "Lumina", image: "/products/more_r.png" },
+    { id: 5, name: "Lumina", image: "/products/more_r.png" },
+    { id: 6, name: "Lumina", image: "/products/more_r.png" },
+    { id: 7, name: "Lumina", image: "/products/more_r.png" },
+    { id: 8, name: "Lumina", image: "/products/more_r.png" },
+  ];
 
   useEffect(() => {
-    // Wait for products to load and DOM to be ready
-    if (!loading && products.length > 0) {
-      const initScrollTrigger = () => {
+    // Wait for DOM to be ready
+    const initScrollTrigger = () => {
       if (!scrollContainerRef.current) return;
 
       // Kill any existing ScrollTriggers for this component
@@ -130,8 +102,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
         .filter((trigger) => trigger.trigger === sectionRef.current)
         .forEach((trigger) => trigger.kill());
     };
-    }
-  }, [loading, products]);
+  }, []);
 
   const handleViewAllProducts = async () => {
     await optimizedTransitionUtils.transitionToRoute(navigate, "/all-gems");
@@ -153,93 +124,18 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
         </div>
 
         <div className="horizontal-scroll-wrapper">
-          {loading ? (
-            <div className="loading-products" style={{ 
-              textAlign: 'center', 
-              padding: '4rem 2rem',
-              color: 'white'
-            }}>
-              <div style={{
-                border: '4px solid rgba(255,255,255,0.3)',
-                borderTop: '4px solid white',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                animation: 'spin 1s linear infinite',
-                margin: '0 auto 1rem'
-              }}></div>
-              <p>Loading our finest jewelry...</p>
-            </div>
-          ) : error ? (
-            <div className="error-products" style={{
-              textAlign: 'center',
-              padding: '4rem 2rem',
-              color: '#ff6b6b'
-            }}>
-              <p>⚠️ {error}</p>
-              <button
-                onClick={fetchProducts}
-                style={{
-                  background: 'rgba(255,255,255,0.2)',
-                  color: 'white',
-                  border: '1px solid white',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '4px',
-                  marginTop: '1rem',
-                  cursor: 'pointer'
-                }}
-              >
-                Try Again
-              </button>
-            </div>
-          ) : products.length === 0 ? (
-            <div className="no-products" style={{
-              textAlign: 'center',
-              padding: '4rem 2rem',
-              color: 'rgba(255,255,255,0.7)'
-            }}>
-              <p>No products available at the moment.</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>
-                Please check back soon for our latest jewelry collections.
-              </p>
-            </div>
-          ) : (
-            <div 
-              className="same-collection-grid-gsap"
-              ref={scrollContainerRef}
-            >
-              {products.map((product) => (
-                <div key={product.id} className="product-card">
-                  <img
-                    src={product.imageUrl || product.image || "/products/more_r.png"}
-                    alt={`${product.name} Jewelry`}
-                    className="product-image"
-                    draggable={false}
-                    onError={(e) => {
-                      // Fallback to default image if product image fails to load
-                      e.target.src = "/products/more_r.png";
-                    }}
-                  />
-                  {product.name && (
-                    <div className="product-name" style={{
-                      position: 'absolute',
-                      bottom: '10px',
-                      left: '10px',
-                      right: '10px',
-                      background: 'rgba(0,0,0,0.7)',
-                      color: 'white',
-                      padding: '0.5rem',
-                      borderRadius: '4px',
-                      fontSize: '0.9rem',
-                      textAlign: 'center'
-                    }}>
-                      {product.name}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="same-collection-grid-gsap" ref={scrollContainerRef}>
+            {products.map((product) => (
+              <div key={product.id} className="product-card">
+                <img
+                  src={product.image}
+                  alt={`${product.name} Ring`}
+                  className="product-image"
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {showViewProductButton && (

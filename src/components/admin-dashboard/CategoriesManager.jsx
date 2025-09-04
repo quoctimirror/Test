@@ -10,7 +10,7 @@ const CategoriesManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [formData, setFormData] = useState({
-    name: "",
+    categoryName: "",
     description: ""
   });
 
@@ -33,7 +33,7 @@ const CategoriesManager = () => {
 
   const resetForm = () => {
     setFormData({
-      name: "",
+      categoryName: "",
       description: ""
     });
     setEditingCategory(null);
@@ -46,7 +46,7 @@ const CategoriesManager = () => {
 
   const handleEdit = (category) => {
     setFormData({
-      name: category.name || "",
+      categoryName: category.categoryName || category.name || "",
       description: category.description || ""
     });
     setEditingCategory(category);
@@ -88,7 +88,7 @@ const CategoriesManager = () => {
   };
 
   const filteredCategories = categories.filter(category =>
-    category.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (category.categoryName || category.name)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     category.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -132,7 +132,7 @@ const CategoriesManager = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
               <div style={{ flex: 1 }}>
                 <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '18px', fontWeight: '600', color: '#212529' }}>
-                  {category.name}
+                  {category.categoryName || category.name}
                 </h3>
                 <div style={{ fontSize: '12px', color: '#6c757d', marginBottom: '0.5rem' }}>
                   ID: <code style={{ background: '#f8f9fa', padding: '2px 4px', borderRadius: '4px' }}>{category.id}</code>
@@ -215,8 +215,8 @@ const CategoriesManager = () => {
                     </label>
                     <input
                       type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      value={formData.categoryName}
+                      onChange={(e) => setFormData({...formData, categoryName: e.target.value})}
                       className="admin-input"
                       placeholder="e.g., Rings, Necklaces, Earrings"
                       required

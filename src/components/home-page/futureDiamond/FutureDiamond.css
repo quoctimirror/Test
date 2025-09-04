@@ -358,24 +358,24 @@
 
 /* Animation on scroll (optional) */
 @media (prefers-reduced-motion: no-preference) {
-  .future-diamond-logo,
-  .future-diamond-title,
-  .heading-1--no-margin {
+  .future-diamond .future-diamond-logo,
+  .future-diamond .future-diamond-title,
+  .future-diamond .heading-1--no-margin {
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.8s ease-out forwards;
   }
 
-  .future-diamond-logo {
+  .future-diamond .future-diamond-logo {
     animation-delay: 0.2s;
   }
 
-  .future-diamond-title {
+  .future-diamond .future-diamond-title {
     animation: fadeInUp 0.8s ease-out 0.4s forwards,
       gradientMove 5s ease-in-out infinite;
   }
 
-  .heading-1--no-margin {
+  .future-diamond .heading-1--no-margin {
     animation-delay: 0.6s;
   }
 }

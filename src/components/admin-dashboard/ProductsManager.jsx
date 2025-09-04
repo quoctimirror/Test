@@ -22,8 +22,11 @@ const ProductsManager = () => {
     metalPurity: "",
     stoneType: "",
     weightGrams: "",
+    dimensions: "",
     imageUrl: "",
+    imageUrls: "",
     tags: "",
+    status: "ACTIVE",
     featured: false,
     stockQuantity: "",
     minStockLevel: ""
@@ -62,8 +65,11 @@ const ProductsManager = () => {
       metalPurity: "",
       stoneType: "",
       weightGrams: "",
+      dimensions: "",
       imageUrl: "",
+      imageUrls: "",
       tags: "",
+      status: "ACTIVE",
       featured: false,
       stockQuantity: "",
       minStockLevel: ""
@@ -88,8 +94,13 @@ const ProductsManager = () => {
       metalPurity: product.metalPurity || "",
       stoneType: product.stoneType || "",
       weightGrams: product.weightGrams?.toString() || "",
+      dimensions: typeof product.dimensions === 'object' ? 
+                  Object.entries(product.dimensions).map(([key, value]) => `${key}: ${value}`).join(', ') :
+                  product.dimensions || "",
       imageUrl: product.imageUrl || "",
+      imageUrls: Array.isArray(product.imageUrls) ? product.imageUrls.join(", ") : "",
       tags: Array.isArray(product.tags) ? product.tags.join(", ") : "",
+      status: product.status || "ACTIVE",
       featured: product.featured || false,
       stockQuantity: product.stockQuantity?.toString() || "",
       minStockLevel: product.minStockLevel?.toString() || ""
@@ -106,10 +117,26 @@ const ProductsManager = () => {
       const submitData = {
         ...formData,
         price: parseFloat(formData.price) || 0,
-        weightGrams: parseFloat(formData.weightGrams) || 0,
+        weightGrams: formData.weightGrams ? parseFloat(formData.weightGrams) : null,
         stockQuantity: parseInt(formData.stockQuantity) || 0,
-        minStockLevel: parseInt(formData.minStockLevel) || 0,
-        tags: formData.tags.split(",").map(tag => tag.trim()).filter(tag => tag)
+        minStockLevel: parseInt(formData.minStockLevel) || 1,
+        tags: formData.tags ? formData.tags.split(",").map(tag => tag.trim()).filter(tag => tag) : [],
+        imageUrls: formData.imageUrls ? formData.imageUrls.split(",").map(url => url.trim()).filter(url => url) : [],
+        dimensions: formData.dimensions ? (() => {
+          // Parse text thành JSON object
+          // "Diameter: 17mm, Band width: 2.5mm" -> {diameter: "17mm", bandWidth: "2.5mm"}
+          const dimensionsObj = {};
+          const pairs = formData.dimensions.split(',');
+          pairs.forEach(pair => {
+            const [key, value] = pair.split(':').map(s => s.trim());
+            if (key && value) {
+              // Convert key thành camelCase
+              const camelKey = key.toLowerCase().replace(/\s+(.)/g, (_, letter) => letter.toUpperCase());
+              dimensionsObj[camelKey] = value;
+            }
+          });
+          return JSON.stringify(dimensionsObj);
+        })() : null
       };
 
       if (editingProduct) {
@@ -202,7 +229,7 @@ const ProductsManager = () => {
               <option value="all">All Categories</option>
               {categories.map(category => (
                 <option key={category.id} value={category.id}>
-                  {category.name}
+                  {category.name || category.categoryName || 'Unnamed Category'}
                 </option>
               ))}
             </select>
@@ -361,16 +388,17 @@ const ProductsManager = () => {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Category</label>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Category *</label>
                       <select
                         value={formData.categoryId}
                         onChange={(e) => setFormData({...formData, categoryId: e.target.value})}
                         className="admin-input"
+                        required
                       >
                         <option value="">Select Category</option>
                         {categories.map(category => (
                           <option key={category.id} value={category.id}>
-                            {category.name}
+                            {category.name || category.categoryName || 'Unnamed Category'}
                           </option>
                         ))}
                       </select>
@@ -400,8 +428,10 @@ const ProductsManager = () => {
                         <option value="GOLD">Gold</option>
                         <option value="SILVER">Silver</option>
                         <option value="PLATINUM">Platinum</option>
-                        <option value="ROSE_GOLD">Rose Gold</option>
-                        <option value="WHITE_GOLD">White Gold</option>
+                        <option value="PALLADIUM">Palladium</option>
+                        <option value="TITANIUM">Titanium</option>
+                        <option value="STAINLESS_STEEL">Stainless Steel</option>
+                        <option value="MIXED">Mixed Metals</option>
                       </select>
                     </div>
                     <div>
@@ -451,13 +481,35 @@ const ProductsManager = () => {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Image URL</label>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Main Image URL</label>
                     <input
-                      type="url"
+                      type="text"
                       value={formData.imageUrl}
                       onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
                       className="admin-input"
                       placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Additional Image URLs (comma-separated)</label>
+                    <input
+                      type="text"
+                      value={formData.imageUrls}
+                      onChange={(e) => setFormData({...formData, imageUrls: e.target.value})}
+                      className="admin-input"
+                      placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg"
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Dimensions</label>
+                    <input
+                      type="text"
+                      value={formData.dimensions}
+                      onChange={(e) => setFormData({...formData, dimensions: e.target.value})}
+                      className="admin-input"
+                      placeholder="e.g., 20mm x 15mm x 10mm or Diameter: 17mm, Band width: 2.5mm"
                     />
                   </div>
 
@@ -472,15 +524,29 @@ const ProductsManager = () => {
                     />
                   </div>
 
-                  <div>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                      <input
-                        type="checkbox"
-                        checked={formData.featured}
-                        onChange={(e) => setFormData({...formData, featured: e.target.checked})}
-                      />
-                      <span style={{ fontWeight: '500' }}>Featured Product</span>
-                    </label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Status</label>
+                      <select
+                        value={formData.status}
+                        onChange={(e) => setFormData({...formData, status: e.target.value})}
+                        className="admin-input"
+                      >
+                        <option value="ACTIVE">Active</option>
+                        <option value="DISCONTINUED">Discontinued</option>
+                        <option value="OUT_OF_STOCK">Out of Stock</option>
+                      </select>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={formData.featured}
+                          onChange={(e) => setFormData({...formData, featured: e.target.checked})}
+                        />
+                        <span style={{ fontWeight: '500' }}>Featured Product</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
 

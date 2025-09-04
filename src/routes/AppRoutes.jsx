@@ -41,6 +41,7 @@ const NewCutPage = lazy(() => import("@pages/NewCutPage"));
 const ContactPage = lazy(() => import("@pages/ContactPage"));
 const AboutPage = lazy(() => import("@pages/AboutPage"));
 const LocationsPage = lazy(() => import("@pages/LocationsPage"));
+const WelcomePage = lazy(() => import("@pages/WelcomePage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -48,13 +49,17 @@ export default function AppRoutes() {
     location.pathname.startsWith("/universe-final") ||
     location.pathname.startsWith("/hover-expand") ||
     location.pathname.startsWith("/ar/rings") ||
-    location.pathname.startsWith("/dashboard/admin");
+    location.pathname.startsWith("/dashboard/admin") ||
+    location.pathname === "/welcome" ||
+    location.pathname === "/";
 
   const staticRoutesToHideFooter =
     location.pathname.startsWith("/universe-final") ||
     location.pathname.startsWith("/hover-expand") ||
     location.pathname.startsWith("/ar/rings") ||
-    location.pathname.startsWith("/dashboard/admin");
+    location.pathname.startsWith("/dashboard/admin") ||
+    location.pathname === "/welcome" ||
+    location.pathname === "/";
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -71,7 +76,10 @@ export default function AppRoutes() {
         }
       >
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<WelcomePage />} />
+          
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/welcome" element={<WelcomePage />} />
 
           <Route path="/auth" element={<AuthPage />}>
             <Route path="login" element={<Login />} />
