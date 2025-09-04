@@ -262,8 +262,8 @@ const ComponentsManager = () => {
     <div className="manager-container">
       <div className="manager-header">
         <h2>Components Management</h2>
-        <button className="add-button" onClick={openModal}>
-          Add New Component
+        <button className="add-button" onClick={openModal} title="Add Component">
+          +
         </button>
       </div>
 

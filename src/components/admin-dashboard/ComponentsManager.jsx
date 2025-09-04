@@ -249,8 +249,8 @@ const ComponentsManager = () => {
               <option value="ACCESSORY">Accessory</option>
             </select>
           </div>
-          <button onClick={handleAdd} className="admin-button admin-button-primary">
-            ⚙️ Add Component
+          <button onClick={handleAdd} className="admin-button admin-button-primary" title="Add Component">
+            +
           </button>
         </div>
       </div>

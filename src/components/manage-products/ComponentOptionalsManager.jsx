@@ -300,8 +300,8 @@ const ComponentOptionalsManager = () => {
     <div className="manager-container">
       <div className="manager-header">
         <h2>Component Options Management</h2>
-        <button className="add-button" onClick={openModal}>
-          Add New Option
+        <button className="add-button" onClick={openModal} title="Add Option">
+          +
         </button>
       </div>
 

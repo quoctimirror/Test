@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CategoriesManager from "./CategoriesManager";
+import CategoriesManagerEnhanced from "./CategoriesManagerEnhanced";
 import ComponentsManager from "./ComponentsManager";
 import ComponentOptionalsManager from "./ComponentOptionalsManager";
 import ItemVariantsManager from "./ItemVariantsManager";
@@ -12,7 +12,7 @@ const ManageProducts = () => {
   const renderActiveTab = () => {
     switch (activeTab) {
       case "categories":
-        return <CategoriesManager />;
+        return <CategoriesManagerEnhanced />;
       case "components":
         return <ComponentsManager />;
       case "component-optionals":
@@ -22,7 +22,7 @@ const ManageProducts = () => {
       case "item-variant-configs":
         return <ItemVariantConfigsManager />;
       default:
-        return <CategoriesManager />;
+        return <CategoriesManagerEnhanced />;
     }
   };
 
