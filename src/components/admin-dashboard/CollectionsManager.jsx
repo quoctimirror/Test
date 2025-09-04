@@ -201,8 +201,8 @@ const CollectionsManager = () => {
             className="admin-input"
             style={{ flex: 1, maxWidth: '400px' }}
           />
-          <button onClick={handleAdd} className="admin-button admin-button-primary">
-            📦 Add Collection
+          <button onClick={handleAdd} className="admin-button admin-button-primary" title="Add Collection">
+            +
           </button>
         </div>
       </div>

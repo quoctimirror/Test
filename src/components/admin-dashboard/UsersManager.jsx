@@ -334,8 +334,8 @@ const UsersManager = () => {
               <option value="INACTIVE">Inactive</option>
             </select>
           </div>
-          <button onClick={handleAdd} className="admin-button admin-button-primary">
-            👤 Add User
+          <button onClick={handleAdd} className="admin-button admin-button-primary" title="Add User">
+            +
           </button>
         </div>
       </div>

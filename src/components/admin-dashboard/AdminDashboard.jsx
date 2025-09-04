@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ProductsManager from "./ProductsManager";
-import CategoriesManager from "./CategoriesManager";
+import CategoriesManagerEnhanced from "../manage-products/CategoriesManagerEnhanced";
 import CollectionsManager from "./CollectionsManager";
 import LocationsManager from "./LocationsManager";
 import ComponentsManager from "./ComponentsManager";
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
       case "products":
         return <ProductsManager />;
       case "categories":
-        return <CategoriesManager />;
+        return <CategoriesManagerEnhanced />;
       case "collections":
         return <CollectionsManager />;
       case "locations":

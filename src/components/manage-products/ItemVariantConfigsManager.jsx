@@ -279,8 +279,8 @@ const ItemVariantConfigsManager = () => {
     <div className="manager-container">
       <div className="manager-header">
         <h2>Item Variant Configs Management</h2>
-        <button className="add-button" onClick={openModal}>
-          Add New Config
+        <button className="add-button" onClick={openModal} title="Add Config">
+          +
         </button>
       </div>
 

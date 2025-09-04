@@ -183,8 +183,8 @@ const LocationsManager = () => {
               <option value="POD">Pod</option>
             </select>
           </div>
-          <button onClick={handleAdd} className="admin-button admin-button-primary">
-            📍 Add Location
+          <button onClick={handleAdd} className="admin-button admin-button-primary" title="Add Location">
+            +
           </button>
         </div>
       </div>

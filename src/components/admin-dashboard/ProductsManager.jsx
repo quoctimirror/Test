@@ -234,8 +234,8 @@ const ProductsManager = () => {
               ))}
             </select>
           </div>
-          <button onClick={handleAdd} className="admin-button admin-button-primary">
-            ✨ Add Product
+          <button onClick={handleAdd} className="admin-button admin-button-primary" title="Add Product">
+            +
           </button>
         </div>
       </div>
