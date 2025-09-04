@@ -23,14 +23,14 @@ export default function Navbar() {
   };
 
   const handleLogoClick = async () => {
-    if (window.location.pathname === "/") {
+    if (window.location.pathname === "/home") {
       window.scrollTo(0, 0);
       setTimeout(() => {
         window.location.reload();
       }, 0);
     } else {
       sessionStorage.setItem("scrollToTop", "true");
-      await performTransition("/");
+      await performTransition("/home");
     }
   };
 

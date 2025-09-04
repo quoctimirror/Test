@@ -1,0 +1,398 @@
+/* Welcome Page Styles */
+.welcome-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.welcome-page.loaded {
+  opacity: 1;
+}
+
+/* Main content */
+.welcome-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  width: 90%;
+  text-align: center;
+  color: white;
+  padding: 2rem;
+  animation: fadeInUp 1s ease-out 0.5s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.welcome-header {
+  margin-bottom: 2.5rem;
+  animation: fadeInUp 1s ease-out 0.7s both;
+}
+
+.welcome-title {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.title-line-1 {
+  display: block;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
+.title-line-2 {
+  display: block;
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 100;
+  letter-spacing: 0.2em;
+  background: linear-gradient(135deg, #fff 0%, #ec3667 50%, #fff 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 5s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.welcome-subtitle {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-top: 1rem;
+}
+
+/* Description */
+.welcome-description {
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  animation: fadeInUp 1s ease-out 0.9s both;
+}
+
+.welcome-description p {
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  line-height: 1.8;
+  opacity: 0.8;
+  font-weight: 300;
+}
+
+/* Features */
+.welcome-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+  animation: fadeInUp 1s ease-out 1.1s both;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(236, 54, 103, 0.5);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(236, 54, 103, 0.2);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.feature-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+.feature-card p {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  font-weight: 300;
+}
+
+/* Actions */
+.welcome-actions {
+  margin-bottom: 3rem;
+  animation: fadeInUp 1s ease-out 1.3s both;
+}
+
+.welcome-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+.welcome-btn.primary {
+  background: linear-gradient(135deg, #ec3667 0%, #c06c84 100%);
+  border: none;
+  font-size: 1.1rem;
+  padding: 1.2rem 3rem;
+  font-weight: 400;
+  box-shadow: 0 4px 20px rgba(236, 54, 103, 0.3);
+}
+
+.welcome-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(236, 54, 103, 0.5);
+}
+
+.btn-arrow {
+  display: inline-block;
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.welcome-btn.primary:hover .btn-arrow {
+  transform: translateX(5px);
+}
+
+.welcome-btn.secondary {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.welcome-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(236, 54, 103, 0.5);
+  transform: translateY(-2px);
+}
+
+.secondary-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Footer */
+.welcome-footer {
+  animation: fadeInUp 1s ease-out 1.5s both;
+}
+
+.footer-text {
+  font-size: 0.9rem;
+  opacity: 0.6;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+.sparkle {
+  display: inline-block;
+  margin: 0 1rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Floating diamonds */
+.floating-diamonds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.diamond {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.1);
+  animation: float 20s infinite ease-in-out;
+}
+
+.diamond-1 {
+  font-size: 2rem;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.diamond-2 {
+  font-size: 1.5rem;
+  top: 70%;
+  right: 10%;
+  animation-delay: 3s;
+  animation-duration: 22s;
+}
+
+.diamond-3 {
+  font-size: 1rem;
+  top: 30%;
+  right: 30%;
+  animation-delay: 6s;
+  animation-duration: 20s;
+}
+
+.diamond-4 {
+  font-size: 1.8rem;
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 9s;
+  animation-duration: 25s;
+}
+
+.diamond-5 {
+  font-size: 1.2rem;
+  top: 50%;
+  left: 50%;
+  animation-delay: 12s;
+  animation-duration: 19s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(30px, -30px) rotate(90deg);
+  }
+  50% {
+    transform: translate(-20px, 20px) rotate(180deg);
+  }
+  75% {
+    transform: translate(40px, 10px) rotate(270deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .welcome-content {
+    padding: 1rem;
+  }
+
+  .title-line-2 {
+    font-size: clamp(3rem, 15vw, 6rem);
+  }
+
+  .welcome-features {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+
+  .welcome-btn {
+    padding: 0.8rem 2rem;
+    font-size: 0.9rem;
+  }
+
+  .welcome-btn.primary {
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+  }
+
+  .secondary-actions {
+    flex-direction: column;
+  }
+
+  .welcome-btn.secondary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .title-line-1 {
+    font-size: 1.2rem;
+  }
+
+  .title-line-2 {
+    font-size: 3rem;
+    letter-spacing: 0.1em;
+  }
+
+  .welcome-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .welcome-description p {
+    font-size: 0.85rem;
+  }
+
+  .feature-icon {
+    font-size: 2rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1rem;
+  }
+
+  .feature-card p {
+    font-size: 0.8rem;
+  }
+}
