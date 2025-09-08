@@ -49,6 +49,26 @@ const MyPlayground = () => {
         
         // Test message
         window.vrLog('🚀 VR Console Debug Overlay Active!');
+        
+        // Debug controller detection
+        setTimeout(() => {
+          const rightController = document.querySelector('#rightController');
+          const leftController = document.querySelector('#leftController');
+          
+          if (rightController) {
+            window.vrLog('✅ Right controller found');
+            window.vrLog(`🎮 Right raycaster: ${!!rightController.components.raycaster}`);
+          } else {
+            window.vrLog('❌ Right controller NOT found');
+          }
+          
+          if (leftController) {
+            window.vrLog('✅ Left controller found');
+            window.vrLog(`🎮 Left raycaster: ${!!leftController.components.raycaster}`);
+          } else {
+            window.vrLog('❌ Left controller NOT found');
+          }
+        }, 2000);
       }
     }, 1000);
 
@@ -89,7 +109,7 @@ const MyPlayground = () => {
             }
           } else {
             // No intersection
-            if (debugStatus && this.el.id === 'rightTouchPlus') {
+            if (debugStatus && this.el.id === 'rightController') {
               debugStatus.setAttribute('value', 'No target detected');
               debugStatus.setAttribute('color', '#ff6666');
             }
@@ -131,7 +151,7 @@ const MyPlayground = () => {
             const controller = evt.detail.el;
             console.log('🎯 HOVER START:', this.el.id, 'by controller:', controller.id);
             
-            if (controller.id === 'rightTouchPlus' || controller.id === 'leftTouchPlus') {
+            if (controller.id === 'rightController' || controller.id === 'leftController') {
               console.log('✨ Applying hover effect...');
               
               // VR Log
@@ -674,35 +694,23 @@ const MyPlayground = () => {
         </a-entity>
         
         
-        {/* Touch Plus Controllers - Single green laser */}
+        {/* Real Oculus Touch Controllers for Meta Quest 3 */}
         <a-entity
-          id="rightTouchPlus" 
-          touch-plus-controls="hand: right"
+          id="rightController" 
+          oculus-touch-controls="hand: right"
+          laser-controls
           touch-plus-controller
           raycaster="objects: .interactive; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
         >
-          {/* Controller tip indicator */}
-          <a-sphere 
-            radius="0.01" 
-            color="#00ff00"
-            position="0 0 -0.02"
-            material="emissive: #00ff00; emissiveIntensity: 0.8"
-          ></a-sphere>
         </a-entity>
         
         <a-entity
-          id="leftTouchPlus" 
-          touch-plus-controls="hand: left"
+          id="leftController" 
+          oculus-touch-controls="hand: left"
+          laser-controls
           touch-plus-controller
           raycaster="objects: .interactive; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
         >
-          {/* Controller tip indicator */}
-          <a-sphere 
-            radius="0.01" 
-            color="#00ff00"
-            position="0 0 -0.02"
-            material="emissive: #00ff00; emissiveIntensity: 0.8"
-          ></a-sphere>
         </a-entity>
 
         {/* VR Debug Panel - Fixed position */}
