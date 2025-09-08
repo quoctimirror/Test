@@ -6,7 +6,366 @@ const MyPlayground = () => {
 
   useEffect(() => {
 
-    // Component để chọn và tương tác với entity bằng VR controllers và Desktop
+    // Touch Plus Controller component cho VR với tất cả buttons
+    if (window.AFRAME && !window.AFRAME.components['touch-plus-controller']) {
+      window.AFRAME.registerComponent('touch-plus-controller', {
+        init: function() {
+          this.isGrabbing = false;
+          this.grabbedEntity = null;
+          this.initialDistance = null;
+          
+          // Bind all button events cho Touch Plus
+          this.onTriggerDown = this.onTriggerDown.bind(this);
+          this.onTriggerUp = this.onTriggerUp.bind(this);
+          this.onGripDown = this.onGripDown.bind(this);
+          this.onGripUp = this.onGripUp.bind(this);
+          this.onAButtonDown = this.onAButtonDown.bind(this);
+          this.onBButtonDown = this.onBButtonDown.bind(this);
+          this.onXButtonDown = this.onXButtonDown.bind(this);
+          this.onYButtonDown = this.onYButtonDown.bind(this);
+          this.onMetaButtonDown = this.onMetaButtonDown.bind(this);
+          this.onMenuButtonDown = this.onMenuButtonDown.bind(this);
+          this.onThumbstickDown = this.onThumbstickDown.bind(this);
+          this.onThumbstickChanged = this.onThumbstickChanged.bind(this);
+          
+          // Listen for all Touch Plus controller events
+          this.el.addEventListener('triggerdown', this.onTriggerDown);
+          this.el.addEventListener('triggerup', this.onTriggerUp);
+          this.el.addEventListener('gripdown', this.onGripDown);           // Nút bên hông
+          this.el.addEventListener('gripup', this.onGripUp);
+          this.el.addEventListener('abuttondown', this.onAButtonDown);     // A button (tay phải)
+          this.el.addEventListener('bbuttondown', this.onBButtonDown);     // B button (tay phải)
+          this.el.addEventListener('xbuttondown', this.onXButtonDown);     // X button (tay trái)
+          this.el.addEventListener('ybuttondown', this.onYButtonDown);     // Y button (tay trái)
+          this.el.addEventListener('surfacedown', this.onMetaButtonDown);  // Meta logo button
+          this.el.addEventListener('menudown', this.onMenuButtonDown);     // Menu/hamburger button (tay trái)
+          this.el.addEventListener('thumbstickdown', this.onThumbstickDown);  // Thumbstick click
+          this.el.addEventListener('thumbstickmoved', this.onThumbstickChanged); // Thumbstick move
+          
+          console.log(`👆 Touch Plus Controller initialized: ${this.el.id}`);
+        },
+        
+        getIntersectedEntity: function() {
+          const raycaster = this.el.components.raycaster;
+          return raycaster && raycaster.intersectedEls[0];
+        },
+        
+        onTriggerDown: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          const hand = this.el.id === 'rightTouchPlus' ? 'RIGHT' : 'LEFT';
+          
+          if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            console.log(`👆 ${hand} Touch Plus TRIGGER on:`, intersectedEl.id);
+            
+            // Nếu chưa grab entity nào thì start grab
+            if (!this.isGrabbing) {
+              this.startGrab(intersectedEl);
+            }
+          } else {
+            console.log(`👆 ${hand} Touch Plus TRIGGER (no target)`);
+          }
+        },
+        
+        onTriggerUp: function(evt) {
+          if (this.isGrabbing && this.grabbedEntity) {
+            this.endGrab();
+          }
+        },
+        
+        // === GRIP BUTTON (NÚT BÊN HÔNG) ===
+        onGripDown: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          const hand = this.el.id === 'rightTouchPlus' ? 'RIGHT' : 'LEFT';
+          
+          if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            console.log(`✊ ${hand} GRIP: Force grab ${intersectedEl.id}`);
+            
+            if (intersectedEl.id === 'test-box') {
+              // Box: Scale up dramatically khi grip
+              const currentScale = intersectedEl.getAttribute('scale');
+              intersectedEl.setAttribute('scale', {
+                x: currentScale.x * 2,
+                y: currentScale.y * 2,
+                z: currentScale.z * 2
+              });
+            } else if (intersectedEl.id === 'ring-entity') {
+              // Ring: Spin nhanh khi grip
+              intersectedEl.setAttribute('animation__spin', {
+                property: 'rotation',
+                to: '0 720 0',
+                dur: 2000,
+                loop: true,
+                easing: 'linear'
+              });
+            }
+          } else {
+            console.log(`✊ ${hand} GRIP pressed (no target)`);
+          }
+        },
+        
+        onGripUp: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          const hand = this.el.id === 'rightTouchPlus' ? 'RIGHT' : 'LEFT';
+          console.log(`✋ ${hand} GRIP released`);
+          
+          if (intersectedEl) {
+            if (intersectedEl.id === 'ring-entity') {
+              // Stop spinning
+              intersectedEl.removeAttribute('animation__spin');
+            }
+          }
+        },
+        
+        // === A BUTTON (TAY PHẢI) ===
+        onAButtonDown: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          console.log('🅰️ A Button: Reset/Restore');
+          
+          if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            if (intersectedEl.id === 'test-box') {
+              // Box: Reset position và scale
+              intersectedEl.setAttribute('position', '0 1.6 -3');
+              intersectedEl.setAttribute('scale', '0.5 0.5 0.5');
+              intersectedEl.setAttribute('rotation', '0 45 0');
+              intersectedEl.setAttribute('color', '#FF0000');
+            } else if (intersectedEl.id === 'ring-entity') {
+              // Ring: Reset position và rotation
+              intersectedEl.setAttribute('position', '0 1.6 -1');
+              intersectedEl.setAttribute('scale', '0.01 0.01 0.01');
+              intersectedEl.setAttribute('rotation', '0 0 0');
+              intersectedEl.removeAttribute('animation__spin');
+            }
+            
+            // Flash effect
+            intersectedEl.setAttribute('animation__flash', {
+              property: 'material.emissiveIntensity',
+              from: 1.0,
+              to: 0,
+              dur: 500,
+              easing: 'easeOutQuad'
+            });
+          }
+        },
+        
+        // === B BUTTON (TAY PHẢI) ===
+        onBButtonDown: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          console.log('🅱️ B Button: Color/Material change');
+          
+          if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            if (intersectedEl.id === 'test-box') {
+              // Box: Random color
+              const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff', '#ffa500'];
+              const randomColor = colors[Math.floor(Math.random() * colors.length)];
+              intersectedEl.setAttribute('color', randomColor);
+            } else if (intersectedEl.id === 'ring-entity') {
+              // Ring: Toggle wireframe
+              const currentMaterial = intersectedEl.getAttribute('material') || {};
+              intersectedEl.setAttribute('material', {
+                ...currentMaterial,
+                wireframe: !currentMaterial.wireframe
+              });
+            }
+          }
+        },
+        
+        // === X BUTTON (TAY TRÁI) ===
+        onXButtonDown: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          console.log('❌ X Button: Scale up/Duplicate');
+          
+          if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            if (intersectedEl.id === 'test-box') {
+              // Box: Scale up
+              const currentScale = intersectedEl.getAttribute('scale');
+              intersectedEl.setAttribute('scale', {
+                x: Math.min(currentScale.x * 1.3, 3),  // Max scale 3
+                y: Math.min(currentScale.y * 1.3, 3),
+                z: Math.min(currentScale.z * 1.3, 3)
+              });
+            } else if (intersectedEl.id === 'ring-entity') {
+              // Ring: Scale up
+              const currentScale = intersectedEl.getAttribute('scale');
+              intersectedEl.setAttribute('scale', {
+                x: Math.min(currentScale.x * 1.5, 0.1),  // Max 0.1 cho ring
+                y: Math.min(currentScale.y * 1.5, 0.1),
+                z: Math.min(currentScale.z * 1.5, 0.1)
+              });
+            }
+          }
+        },
+        
+        // === Y BUTTON (TAY TRÁI) ===
+        onYButtonDown: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          console.log('🇾 Y Button: Scale down/Delete');
+          
+          if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            if (intersectedEl.id === 'test-box') {
+              // Box: Scale down
+              const currentScale = intersectedEl.getAttribute('scale');
+              intersectedEl.setAttribute('scale', {
+                x: Math.max(currentScale.x * 0.7, 0.1),  // Min scale 0.1
+                y: Math.max(currentScale.y * 0.7, 0.1),
+                z: Math.max(currentScale.z * 0.7, 0.1)
+              });
+            } else if (intersectedEl.id === 'ring-entity') {
+              // Ring: Scale down
+              const currentScale = intersectedEl.getAttribute('scale');
+              intersectedEl.setAttribute('scale', {
+                x: Math.max(currentScale.x * 0.5, 0.001), // Min 0.001 cho ring
+                y: Math.max(currentScale.y * 0.5, 0.001),
+                z: Math.max(currentScale.z * 0.5, 0.001)
+              });
+            }
+          }
+        },
+        
+        // === META LOGO BUTTON ===
+        onMetaButtonDown: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          const hand = this.el.id === 'rightTouchPlus' ? 'RIGHT' : 'LEFT';
+          console.log(`🔘 ${hand} META BUTTON: Special action`);
+          
+          if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            if (intersectedEl.id === 'test-box') {
+              // Box: Teleport to random position
+              const randomX = (Math.random() - 0.5) * 10;
+              const randomZ = (Math.random() - 0.5) * 10;
+              const randomY = Math.random() * 3 + 1;
+              
+              intersectedEl.setAttribute('animation__teleport', {
+                property: 'position',
+                to: `${randomX} ${randomY} ${randomZ}`,
+                dur: 1000,
+                easing: 'easeInOutQuad'
+              });
+            } else if (intersectedEl.id === 'ring-entity') {
+              // Ring: Orbit around center
+              intersectedEl.setAttribute('animation__orbit', {
+                property: 'rotation',
+                to: '0 360 0',
+                dur: 3000,
+                loop: true,
+                easing: 'linear'
+              });
+            }
+          }
+        },
+        
+        // === MENU/HAMBURGER BUTTON (TAY TRÁI) ===
+        onMenuButtonDown: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          console.log('☰ MENU BUTTON: Toggle visibility/info');
+          
+          if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            // Toggle visibility
+            const isVisible = intersectedEl.getAttribute('visible') !== false;
+            intersectedEl.setAttribute('visible', !isVisible);
+            
+            // Log entity info
+            const position = intersectedEl.getAttribute('position');
+            const rotation = intersectedEl.getAttribute('rotation');
+            const scale = intersectedEl.getAttribute('scale');
+            
+            console.log(`📊 Entity ${intersectedEl.id} info:`, {
+              position, rotation, scale, visible: !isVisible
+            });
+          }
+        },
+        
+        // === THUMBSTICK CLICK ===
+        onThumbstickDown: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          const hand = this.el.id === 'rightTouchPlus' ? 'RIGHT' : 'LEFT';
+          console.log(`🕹️ ${hand} THUMBSTICK CLICK: Select/Deselect`);
+          
+          if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+            // Toggle selection
+            intersectedEl.emit('click');
+          }
+        },
+        
+        // === THUMBSTICK MOVEMENT ===
+        onThumbstickChanged: function(evt) {
+          const intersectedEl = this.getIntersectedEntity();
+          const hand = this.el.id === 'rightTouchPlus' ? 'RIGHT' : 'LEFT';
+          const x = evt.detail.x; // -1 to 1
+          const y = evt.detail.y; // -1 to 1
+          
+          // Only process significant movements
+          if (Math.abs(x) > 0.2 || Math.abs(y) > 0.2) {
+            if (intersectedEl && intersectedEl.classList.contains('interactive')) {
+              const position = intersectedEl.getAttribute('position');
+              const moveSpeed = 0.05;
+              
+              // Move entity based on thumbstick
+              intersectedEl.setAttribute('position', {
+                x: position.x + (x * moveSpeed),
+                y: position.y,
+                z: position.z + (y * moveSpeed) // Forward/backward
+              });
+              
+              console.log(`🕹️ ${hand} THUMBSTICK: Moving ${intersectedEl.id} x=${x.toFixed(2)}, y=${y.toFixed(2)}`);
+            }
+          }
+        },
+        
+        startGrab: function(entity) {
+          console.log('✊ Touch Plus grab started on:', entity.id);
+          this.isGrabbing = true;
+          this.grabbedEntity = entity;
+          
+          // Visual feedback
+          const tagName = entity.tagName.toLowerCase();
+          if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
+            entity.setAttribute('material', 'emissive', '#ff0000');
+            entity.setAttribute('material', 'emissiveIntensity', 0.8);
+          }
+          
+          // Store initial distance for movement
+          const controllerPos = this.el.getAttribute('position');
+          const entityPos = entity.getAttribute('position');
+          this.initialDistance = {
+            x: entityPos.x - controllerPos.x,
+            y: entityPos.y - controllerPos.y,
+            z: entityPos.z - controllerPos.z
+          };
+        },
+        
+        endGrab: function() {
+          if (this.grabbedEntity) {
+            console.log('✋ Touch Plus grab ended on:', this.grabbedEntity.id);
+            
+            // Reset visual
+            const tagName = this.grabbedEntity.tagName.toLowerCase();
+            if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
+              this.grabbedEntity.setAttribute('material', 'emissive', '#000000');
+              this.grabbedEntity.setAttribute('material', 'emissiveIntensity', 0);
+            }
+            
+            this.grabbedEntity = null;
+          }
+          this.isGrabbing = false;
+          this.initialDistance = null;
+        },
+        
+        tick: function() {
+          // Move grabbed entity to follow controller
+          if (this.isGrabbing && this.grabbedEntity && this.initialDistance) {
+            const controllerPos = this.el.getAttribute('position');
+            
+            this.grabbedEntity.setAttribute('position', {
+              x: controllerPos.x + this.initialDistance.x,
+              y: controllerPos.y + this.initialDistance.y,
+              z: controllerPos.z + this.initialDistance.z
+            });
+          }
+        }
+      });
+    }
+
+    // Component để chọn và tương tác với entity - Desktop + Touch Plus
     if (window.AFRAME && !window.AFRAME.components['vr-selectable']) {
       window.AFRAME.registerComponent('vr-selectable', {
         init: function() {
@@ -34,36 +393,37 @@ const MyPlayground = () => {
             }
           });
           
-          // === VR INTERACTIONS ===
-          // Khi controller chỉ vào (hover)
+          // === VR INTERACTIONS - Touch Plus Only ===
+          // VR hover với Touch Plus controllers
           this.el.addEventListener('raycaster-intersected', (evt) => {
             const controller = evt.detail.el;
-            if (controller.id === 'rightController' || controller.id === 'leftController') {
+            console.log('🎯 Raycaster intersected:', this.el.id, 'by:', controller.id);
+            
+            // Chỉ xử lý cho Touch Plus controllers
+            if (controller.id === 'rightTouchPlus' || controller.id === 'leftTouchPlus') {
               this.highlight();
               
-              // Haptic feedback khi hover
-              if (controller.components.haptics) {
-                controller.components.haptics.pulse(0.1, 50); // Rung nhẹ 50ms
+              // Hiển thị tooltip hover
+              const existingTooltip = this.el.querySelector(`#tooltip-${this.el.id}`);
+              if (!existingTooltip) {
+                const tooltipEl = document.createElement('a-text');
+                tooltipEl.setAttribute('id', `tooltip-${this.el.id}`);
+                tooltipEl.setAttribute('value', this.el.id || 'Object');
+                tooltipEl.setAttribute('align', 'center');
+                tooltipEl.setAttribute('color', '#ffffff');
+                tooltipEl.setAttribute('scale', '0.5 0.5 0.5');
+                tooltipEl.setAttribute('position', '0 0.6 0');
+                tooltipEl.setAttribute('look-at', '[camera]');
+                this.el.appendChild(tooltipEl);
               }
               
-              // Hiển thị tooltip hover
-              const tooltipEl = document.createElement('a-text');
-              tooltipEl.setAttribute('id', `tooltip-${this.el.id}`);
-              tooltipEl.setAttribute('value', this.el.id || 'Object');
-              tooltipEl.setAttribute('align', 'center');
-              tooltipEl.setAttribute('color', '#ffffff');
-              tooltipEl.setAttribute('scale', '0.3 0.3 0.3');
-              tooltipEl.setAttribute('position', '0 0.5 0');
-              tooltipEl.setAttribute('look-at', '[camera]');
-              this.el.appendChild(tooltipEl);
-              
-              console.log('VR Hover on:', this.el.id);
+              console.log('✨ Touch Plus Hover on:', this.el.id);
             }
           });
           
-          // Khi controller không chỉ vào nữa
+          // Khi không hover nữa
           this.el.addEventListener('raycaster-intersected-cleared', (evt) => {
-            if (!this.isSelected) {
+            if (!this.isSelected && !this.isGrabbed) {
               this.unhighlight();
               
               // Xóa tooltip
@@ -111,6 +471,7 @@ const MyPlayground = () => {
             }
           });
           
+
           // Desktop keyboard controls khi đã select
           this.handleKeyboard = (evt) => {
             if (!this.isSelected) return;
@@ -261,7 +622,7 @@ const MyPlayground = () => {
             this.el.setAttribute('material', 'emissiveIntensity', 0);
             
             // Animation scale về ban đầu
-            const originalScale = this.el.components['vr-selectable'].originalScale || {x: 1, y: 1, z: 1};
+            const originalScale = this.originalScale || {x: 1, y: 1, z: 1};
             this.el.setAttribute('animation__scaledown', {
               property: 'scale',
               to: `${originalScale.x} ${originalScale.y} ${originalScale.z}`,
@@ -279,7 +640,7 @@ const MyPlayground = () => {
             });
             
             // Animation scale về ban đầu cho model
-            const originalScale = this.el.components['vr-selectable'].originalScale || {x: 0.01, y: 0.01, z: 0.01};
+            const originalScale = this.originalScale || {x: 0.01, y: 0.01, z: 0.01};
             this.el.setAttribute('animation__scaledown', {
               property: 'scale',
               to: `${originalScale.x} ${originalScale.y} ${originalScale.z}`,
@@ -569,36 +930,46 @@ const MyPlayground = () => {
         </a-entity>
         
         
-        {/* VR Controllers cho Quest 3 với laser pointer */}
+        {/* Touch Plus Controllers cho VR */}
         <a-entity
-          id="rightController" 
-          oculus-touch-controls="hand: right"
+          id="rightTouchPlus" 
+          touch-plus-controls="hand: right"
           laser-controls="hand: right"
-          raycaster="objects: .interactive; lineColor: #00ff00; lineOpacity: 0.7"
-          haptics="events: raycaster-intersected; dur: 50; force: 0.1"
-          line="color: #00ff00; opacity: 0.7"
+          touch-plus-controller
+          raycaster="objects: .interactive; showLine: true; lineColor: #00ff88; lineOpacity: 0.9; far: 20"
         >
-          {/* Visual indicator cho controller */}
+          {/* Laser pointer cho Touch Plus */}
+          <a-entity
+            line="start: 0 0 0; end: 0 0 -3; color: #00ff88; opacity: 0.8"
+          ></a-entity>
+          
+          {/* Touch indicator */}
           <a-sphere 
-            radius="0.02" 
-            color="#00ff00"
-            position="0 0 -0.05"
+            radius="0.015" 
+            color="#00ff88"
+            position="0 0 -0.03"
+            material="emissive: #00ff88; emissiveIntensity: 0.5"
           ></a-sphere>
         </a-entity>
         
         <a-entity
-          id="leftController" 
-          oculus-touch-controls="hand: left"
+          id="leftTouchPlus" 
+          touch-plus-controls="hand: left"
           laser-controls="hand: left"
-          raycaster="objects: .interactive; lineColor: #0099ff; lineOpacity: 0.7"
-          haptics="events: raycaster-intersected; dur: 50; force: 0.1"
-          line="color: #0099ff; opacity: 0.7"
+          touch-plus-controller
+          raycaster="objects: .interactive; showLine: true; lineColor: #ff8800; lineOpacity: 0.9; far: 20"
         >
-          {/* Visual indicator cho controller */}
+          {/* Laser pointer cho Touch Plus */}
+          <a-entity
+            line="start: 0 0 0; end: 0 0 -3; color: #ff8800; opacity: 0.8"
+          ></a-entity>
+          
+          {/* Touch indicator */}
           <a-sphere 
-            radius="0.02" 
-            color="#0099ff"
-            position="0 0 -0.05"
+            radius="0.015" 
+            color="#ff8800"
+            position="0 0 -0.03"
+            material="emissive: #ff8800; emissiveIntensity: 0.5"
           ></a-sphere>
         </a-entity>
 
