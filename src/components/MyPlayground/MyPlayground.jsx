@@ -1,78 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './MyPlayground.css';
-// Import utils GLB loader để load model 3D
-import { loadModel } from '../../utils/glbLoader';
 
 const MyPlayground = () => {
   const sceneRef = useRef(null);
-  const [ringModel, setRingModel] = useState(null);
 
   useEffect(() => {
-    // Load model nhẫn khi component mount
-    const loadRingModel = async () => {
-      try {
-        // Sử dụng glbLoader.js để load file nhẫn
-        const model = await loadModel('nhanAnhKhanhLam'); // Load file nhanAnhKhanhLam.glb từ public/models/
-        
-        // Đăng ký model với window để A-Frame component có thể truy cập
-        if (model && model.scene) {
-          window.ringModelScene = model.scene;
-          setRingModel(true); // Chỉ set true để trigger re-render
-          console.log('✅ Đã load xong model nhẫn:', model);
-          
-          // Debug: Xem cấu trúc của model
-          console.log('Model scene:', model.scene);
-          console.log('Model animations:', model.animations);
-        }
-      } catch (error) {
-        console.error('❌ Lỗi khi load model nhẫn:', error);
-      }
-    };
-
-    loadRingModel();
-
-    // Register component để load GLB model vào A-Frame
-    if (window.AFRAME && !window.AFRAME.components['ring-model-loader']) {
-      window.AFRAME.registerComponent('ring-model-loader', {
-        init: function() {
-          console.log('🔄 Initializing ring-model-loader component...');
-          
-          const tryLoadModel = () => {
-            if (window.ringModelScene) {
-              console.log('✅ Model found, adding to scene...');
-              
-              // Clone và thêm Three.js model vào A-Frame entity
-              const clonedScene = window.ringModelScene.clone();
-              
-              // Đảm bảo model visible
-              clonedScene.traverse((child) => {
-                if (child.isMesh) {
-                  child.visible = true;
-                  // Log mesh info để debug
-                  console.log('Mesh found:', child.name, child.geometry, child.material);
-                }
-              });
-              
-              this.el.setObject3D('mesh', clonedScene);
-              console.log('✅ Đã thêm nhẫn vào A-Frame scene');
-              
-              // Force update
-              this.el.emit('model-loaded');
-            } else {
-              console.log('⏳ Model chưa sẵn sàng, retry sau 500ms...');
-              setTimeout(tryLoadModel, 500);
-            }
-          };
-          
-          tryLoadModel();
-        },
-        
-        remove: function() {
-          // Cleanup khi component bị remove
-          this.el.removeObject3D('mesh');
-        }
-      });
-    }
 
     // Component để chọn và tương tác với entity bằng VR controllers và Desktop
     if (window.AFRAME && !window.AFRAME.components['vr-selectable']) {
@@ -556,19 +488,6 @@ const MyPlayground = () => {
         >
         </a-entity>
         
-        {/* Phương án 2: Load bằng custom component (backup) */}
-        {ringModel && (
-          <a-entity
-            id="ring-entity-custom"
-            vr-selectable
-            ring-model-loader
-            position="0 1.6 -2"
-            scale="0.01 0.01 0.01"
-            rotation="0 0 0"
-            class="interactive"
-          >
-          </a-entity>
-        )}
         
         {/* VR Controllers cho Quest 3 */}
         <a-entity
