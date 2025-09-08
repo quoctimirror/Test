@@ -134,19 +134,54 @@ const MyPlayground = () => {
       }
     }, 1000);
 
-    // Touch Plus Controller - ONLY hover for testing
+    // VR Controller - ONLY trigger selection
     if (window.AFRAME && !window.AFRAME.components['touch-plus-controller']) {
       window.AFRAME.registerComponent('touch-plus-controller', {
         init: function() {
-          console.log(`👆 Touch Plus Controller initialized: ${this.el.id}`);
-          console.log(`🎯 Raycaster component:`, this.el.components.raycaster);
+          console.log(`🎮 VR Controller initialized: ${this.el.id}`);
+          
+          // Bind trigger events
+          this.onTriggerDown = this.onTriggerDown.bind(this);
+          this.el.addEventListener('triggerdown', this.onTriggerDown);
           
           // Use VR log after a delay to ensure it's available
           setTimeout(() => {
             if (window.vrLog) {
-              window.vrLog(`👆 Controller: ${this.el.id} ready`);
+              window.vrLog(`🎮 Controller: ${this.el.id} ready`);
             }
           }, 500);
+        },
+        
+        onTriggerDown: function(evt) {
+          const raycaster = this.el.components.raycaster;
+          const hand = this.el.id === 'rightController' ? 'RIGHT' : 'LEFT';
+          
+          if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
+            const intersectedEl = raycaster.intersectedEls[0];
+            if (intersectedEl.classList.contains('interactive')) {
+              console.log(`🔫 ${hand} TRIGGER: Selected ${intersectedEl.id}`);
+              
+              // VR Debug
+              if (window.vrLog) {
+                window.vrLog(`🔫 ${hand} → ${intersectedEl.id} SELECTED`);
+              }
+              
+              // Emit click event to entity
+              intersectedEl.emit('click');
+              
+              // Update debug panel
+              const debugStatus = document.querySelector('#debug-status');
+              if (debugStatus) {
+                debugStatus.setAttribute('value', `${hand} SELECTED: ${intersectedEl.id}`);
+                debugStatus.setAttribute('color', '#ff00ff'); // Magenta for selection
+              }
+            }
+          } else {
+            console.log(`🔫 ${hand} TRIGGER: No target`);
+            if (window.vrLog) {
+              window.vrLog(`🔫 ${hand} TRIGGER: No target`);
+            }
+          }
         },
         
         
@@ -245,57 +280,7 @@ const MyPlayground = () => {
             }
           });
           
-          // === VR HOVER EFFECTS - Touch Plus Only ===
-          this.el.addEventListener('raycaster-intersected', (evt) => {
-            const controller = evt.detail.el;
-            console.log('🎯 HOVER START:', this.el.id, 'by controller:', controller.id);
-            
-            if (controller.id === 'rightController' || controller.id === 'leftController') {
-              console.log('✨ Applying hover effect...');
-              
-              // VR Log
-              if (window.vrLog) {
-                window.vrLog(`✨ HOVER START: ${this.el.id}`);
-              }
-              
-              this.highlight();
-              
-              // Tooltip
-              const existingTooltip = this.el.querySelector(`#tooltip-${this.el.id}`);
-              if (!existingTooltip) {
-                const tooltipEl = document.createElement('a-text');
-                tooltipEl.setAttribute('id', `tooltip-${this.el.id}`);
-                tooltipEl.setAttribute('value', `HOVER: ${this.el.id}`);
-                tooltipEl.setAttribute('align', 'center');
-                tooltipEl.setAttribute('color', '#ffff00');
-                tooltipEl.setAttribute('scale', '1 1 1');
-                tooltipEl.setAttribute('position', '0 1 0');
-                tooltipEl.setAttribute('look-at', '[camera]');
-                this.el.appendChild(tooltipEl);
-                console.log('📝 Tooltip created for:', this.el.id);
-              }
-            }
-          });
-          
-          this.el.addEventListener('raycaster-intersected-cleared', () => {
-            console.log('🎯 HOVER END:', this.el.id);
-            
-            // VR Log
-            if (window.vrLog) {
-              window.vrLog(`🎯 HOVER END: ${this.el.id}`);
-            }
-            
-            if (!this.isSelected) {
-              this.unhighlight();
-              
-              // Remove tooltip
-              const tooltip = this.el.querySelector(`#tooltip-${this.el.id}`);
-              if (tooltip) {
-                tooltip.remove();
-                console.log('🗑️ Tooltip removed for:', this.el.id);
-              }
-            }
-          });
+          // === VR SELECTION ONLY - No hover effects ===
           
           // === DESKTOP INTERACTIONS ===
           // Mouse hover
@@ -313,13 +298,19 @@ const MyPlayground = () => {
             }
           });
           
-          // Click để chọn (cả VR và Desktop)
+          // Click để chọn (từ VR trigger hoặc Desktop mouse)
           this.el.addEventListener('click', (evt) => {
             // Prevent click khi đang drag
             if (this.isDragging) {
               evt.stopPropagation();
               return;
             }
+            
+            console.log('🖱️ CLICK EVENT:', this.el.id);
+            if (window.vrLog) {
+              window.vrLog(`🖱️ SELECTED: ${this.el.id}`);
+            }
+            
             this.toggleSelection();
           });
           
