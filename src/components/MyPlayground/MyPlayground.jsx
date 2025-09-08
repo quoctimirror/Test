@@ -152,7 +152,7 @@ const MyPlayground = () => {
           }, 500);
         },
         
-        onTriggerDown: function(evt) {
+        onTriggerDown: function() {
           const raycaster = this.el.components.raycaster;
           const hand = this.el.id === 'rightController' ? 'RIGHT' : 'LEFT';
           
@@ -523,27 +523,50 @@ const MyPlayground = () => {
         
         toggleSelection: function() {
           this.isSelected = !this.isSelected;
+          const tagName = this.el.tagName.toLowerCase();
           
           if (this.isSelected) {
             console.log('✅ Entity đã được chọn:', this.el.id);
-            // Kích hoạt orbit controls
-            this.el.setAttribute('vr-orbit-controls', '');
             
-            // Thêm outline
-            const mesh = this.el.getObject3D('mesh');
-            if (mesh) {
-              mesh.traverse(child => {
-                if (child.material) {
-                  child.material.emissive = new window.THREE.Color(0x00FF00);
-                  child.material.emissiveIntensity = 0.5;
-                }
-              });
+            // Đổi màu test-box thành vàng khi select
+            if (this.el.id === 'test-box' && tagName === 'a-box') {
+              this.el.setAttribute('color', '#FFFF00'); // Màu vàng
+              this.el.setAttribute('material', 'emissive', '#FFFF00');
+              this.el.setAttribute('material', 'emissiveIntensity', 0.3);
+              console.log('🟡 test-box chuyển màu VÀNG');
+              
+              if (window.vrLog) {
+                window.vrLog('🟡 test-box → YELLOW');
+              }
+            } else {
+              // Các entity khác (như ring) - dùng outline xanh lá
+              const mesh = this.el.getObject3D('mesh');
+              if (mesh) {
+                mesh.traverse(child => {
+                  if (child.material) {
+                    child.material.emissive = new window.THREE.Color(0x00FF00);
+                    child.material.emissiveIntensity = 0.5;
+                  }
+                });
+              }
             }
           } else {
             console.log('❌ Bỏ chọn entity:', this.el.id);
-            // Tắt orbit controls
-            this.el.removeAttribute('vr-orbit-controls');
-            this.unhighlight();
+            
+            // Reset test-box về màu đỏ
+            if (this.el.id === 'test-box' && tagName === 'a-box') {
+              this.el.setAttribute('color', '#FF0000'); // Màu đỏ ban đầu
+              this.el.setAttribute('material', 'emissive', '#000000');
+              this.el.setAttribute('material', 'emissiveIntensity', 0);
+              console.log('🔴 test-box trở về màu ĐỎ');
+              
+              if (window.vrLog) {
+                window.vrLog('🔴 test-box → RED');
+              }
+            } else {
+              // Reset các entity khác
+              this.unhighlight();
+            }
           }
         },
         
