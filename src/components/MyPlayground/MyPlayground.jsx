@@ -50,56 +50,62 @@ const MyPlayground = () => {
         // Test message
         window.vrLog('🚀 VR Console Debug Overlay Active!');
         
-        // Enhanced controller debugging
+        // Controller debugging - only Oculus Touch
         setTimeout(() => {
-          const rightController = document.querySelector('#rightController');
-          const leftController = document.querySelector('#leftController');
+          const controllers = [
+            { id: 'rightController', name: 'RIGHT' },
+            { id: 'leftController', name: 'LEFT' }
+          ];
           
-          window.vrLog('🔍 CONTROLLER DEBUG:');
+          window.vrLog('🔍 OCULUS CONTROLLER DEBUG:');
           
-          if (rightController) {
-            const hasOculus = !!rightController.components['oculus-touch-controls'];
-            const hasLaser = !!rightController.components['laser-controls'];
-            const hasRaycaster = !!rightController.components.raycaster;
-            
-            window.vrLog(`✅ RIGHT: oculus:${hasOculus} laser:${hasLaser} ray:${hasRaycaster}`);
-          } else {
-            window.vrLog('❌ Right controller NOT found');
-          }
+          let activeControllers = 0;
           
-          if (leftController) {
-            const hasHand = !!leftController.components['hand-controls'];
-            const hasLaser = !!leftController.components['laser-controls'];
-            const hasRaycaster = !!leftController.components.raycaster;
-            
-            window.vrLog(`✅ LEFT: hand:${hasHand} laser:${hasLaser} ray:${hasRaycaster}`);
-          } else {
-            window.vrLog('❌ Left controller NOT found');
-          }
+          controllers.forEach(ctrl => {
+            const element = document.querySelector(`#${ctrl.id}`);
+            if (element) {
+              const hasOculus = !!element.components['oculus-touch-controls'];
+              const hasLaser = !!element.components['laser-controls'];
+              const hasRaycaster = !!element.components.raycaster;
+              const connected = hasOculus ? element.components['oculus-touch-controls']?.connected : false;
+              
+              if (connected) activeControllers++;
+              
+              window.vrLog(`${connected ? '✅' : '❌'} ${ctrl.name}: oculus:${hasOculus} laser:${hasLaser} ray:${hasRaycaster} conn:${connected}`);
+            }
+          });
           
-          // Check if in VR mode
+          window.vrLog(`🎮 Active Controllers: ${activeControllers}/2`);
+          
+          // Check VR mode
           const scene = document.querySelector('a-scene');
           if (scene) {
             const inVR = scene.is('vr-mode');
             window.vrLog(`🥽 VR Mode: ${inVR}`);
           }
           
-          // Auto-fallback for left controller
-          setTimeout(() => {
-            const leftMain = document.querySelector('#leftController');
-            const leftFallback = document.querySelector('#leftControllerFallback');
+          // Real-time debug updates
+          const updateDebugStatus = () => {
+            const debugStatus = document.querySelector('#debug-status');
+            const rightController = document.querySelector('#rightController');
+            const leftController = document.querySelector('#leftController');
             
-            if (leftMain && !leftMain.components['oculus-touch-controls']?.connected) {
-              window.vrLog('🔄 Switching to fallback left controller');
-              leftMain.setAttribute('visible', false);
-              if (leftFallback) {
-                leftFallback.setAttribute('visible', true);
-                leftFallback.setAttribute('id', 'leftController'); // Rename for event handling
-              }
+            let rightActive = rightController?.components['oculus-touch-controls']?.connected || false;
+            let leftActive = leftController?.components['oculus-touch-controls']?.connected || false;
+            
+            const statusText = `R:${rightActive ? '✅' : '❌'} L:${leftActive ? '✅' : '❌'} (${rightActive && leftActive ? 'DUAL' : rightActive || leftActive ? 'SINGLE' : 'NONE'})`;
+            
+            if (debugStatus) {
+              debugStatus.setAttribute('value', statusText);
+              debugStatus.setAttribute('color', rightActive && leftActive ? '#00ff00' : '#ffff00');
             }
-          }, 2000);
+          };
           
-        }, 3000);
+          // Update every 2 seconds
+          setInterval(updateDebugStatus, 2000);
+          updateDebugStatus(); // Initial update
+          
+        }, 4000);
       }
     }, 1000);
 
@@ -725,36 +731,44 @@ const MyPlayground = () => {
         </a-entity>
         
         
-        {/* VR Controllers - Try both approaches */}
+        {/* Dual VR Controllers - Both hands simultaneously */}
         <a-entity
           id="rightController" 
-          oculus-touch-controls="hand: right"
+          oculus-touch-controls="hand: right; model: true"
           laser-controls="hand: right"
           touch-plus-controller
           raycaster="objects: .interactive; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
         >
+          {/* Visual indicator for right hand */}
+          <a-text
+            value="R"
+            position="0 0.1 0"
+            align="center"
+            color="#00ff00"
+            scale="0.3 0.3 0.3"
+            look-at="[camera]"
+          ></a-text>
         </a-entity>
         
-        {/* Try multiple left controller approaches */}
         <a-entity
           id="leftController" 
-          oculus-touch-controls="hand: left"
+          oculus-touch-controls="hand: left; model: true"
           laser-controls="hand: left" 
           touch-plus-controller
           raycaster="objects: .interactive; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 10"
         >
+          {/* Visual indicator for left hand */}
+          <a-text
+            value="L"
+            position="0 0.1 0"
+            align="center"
+            color="#ff0000"
+            scale="0.3 0.3 0.3"
+            look-at="[camera]"
+          ></a-text>
         </a-entity>
         
-        {/* Fallback left controller */}
-        <a-entity
-          id="leftControllerFallback"
-          hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"
-          laser-controls="hand: left"
-          touch-plus-controller
-          raycaster="objects: .interactive; showLine: true; lineColor: #ffff00; lineOpacity: 1.0; far: 10"
-          visible="false"
-        >
-        </a-entity>
+        {/* Removed generic controllers - they were causing yellow lasers */}
 
         {/* VR Debug Panel - Fixed position */}
         <a-entity
