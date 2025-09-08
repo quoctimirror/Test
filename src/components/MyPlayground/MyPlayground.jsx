@@ -5,6 +5,52 @@ const MyPlayground = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
+    
+    // Wait for A-Frame to initialize first
+    setTimeout(() => {
+      // === VR CONSOLE DEBUG OVERLAY ===
+      if (typeof window !== 'undefined' && window.AFRAME) {
+        let logCount = 0;
+        
+        // Custom VR log function (don't override console.log)
+        window.vrLog = function(...args) {
+          console.log(...args); // Still log to browser console
+          
+          // Create visible text in VR scene
+          const logText = args.join(' ');
+          showLogInVR(logText, logCount++);
+        };
+        
+        function showLogInVR(text, count) {
+          const scene = document.querySelector('a-scene');
+          if (scene && scene.hasLoaded) {
+            // Position logs vertically
+            const yPosition = 4 - (count % 10) * 0.3; // Stack 10 logs, then loop
+            
+            const logEl = document.createElement('a-text');
+            logEl.setAttribute('id', `vr-log-${count}`);
+            logEl.setAttribute('value', `[${count}] ${text}`);
+            logEl.setAttribute('position', `-3 ${yPosition} -2`);
+            logEl.setAttribute('color', '#00ff00');
+            logEl.setAttribute('scale', '0.8 0.8 0.8');
+            logEl.setAttribute('align', 'left');
+            logEl.setAttribute('look-at', '[camera]');
+            scene.appendChild(logEl);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+              const existingLog = document.querySelector(`#vr-log-${count}`);
+              if (existingLog) {
+                existingLog.remove();
+              }
+            }, 5000);
+          }
+        }
+        
+        // Test message
+        window.vrLog('🚀 VR Console Debug Overlay Active!');
+      }
+    }, 1000);
 
     // Touch Plus Controller - ONLY hover for testing
     if (window.AFRAME && !window.AFRAME.components['touch-plus-controller']) {
@@ -12,16 +58,40 @@ const MyPlayground = () => {
         init: function() {
           console.log(`👆 Touch Plus Controller initialized: ${this.el.id}`);
           console.log(`🎯 Raycaster component:`, this.el.components.raycaster);
+          
+          // Use VR log after a delay to ensure it's available
+          setTimeout(() => {
+            if (window.vrLog) {
+              window.vrLog(`👆 Controller: ${this.el.id} ready`);
+            }
+          }, 500);
         },
         
         
         tick: function() {
           // Debug raycaster intersections
           const raycaster = this.el.components.raycaster;
+          const debugStatus = document.querySelector('#debug-status');
+          
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
             if (intersectedEl.classList.contains('interactive')) {
-              console.log(`🎯 ${this.el.id} pointing at:`, intersectedEl.id);
+              // Use vrLog for VR display
+              if (window.vrLog && Math.random() < 0.01) { // Only 1% of frames to avoid spam
+                window.vrLog(`🎯 ${this.el.id} → ${intersectedEl.id}`);
+              }
+              
+              // Update debug panel
+              if (debugStatus) {
+                debugStatus.setAttribute('value', `${this.el.id} → ${intersectedEl.id}`);
+                debugStatus.setAttribute('color', '#00ff00');
+              }
+            }
+          } else {
+            // No intersection
+            if (debugStatus && this.el.id === 'rightTouchPlus') {
+              debugStatus.setAttribute('value', 'No target detected');
+              debugStatus.setAttribute('color', '#ff6666');
             }
           }
         }
@@ -63,6 +133,12 @@ const MyPlayground = () => {
             
             if (controller.id === 'rightTouchPlus' || controller.id === 'leftTouchPlus') {
               console.log('✨ Applying hover effect...');
+              
+              // VR Log
+              if (window.vrLog) {
+                window.vrLog(`✨ HOVER START: ${this.el.id}`);
+              }
+              
               this.highlight();
               
               // Tooltip
@@ -84,6 +160,11 @@ const MyPlayground = () => {
           
           this.el.addEventListener('raycaster-intersected-cleared', (evt) => {
             console.log('🎯 HOVER END:', this.el.id);
+            
+            // VR Log
+            if (window.vrLog) {
+              window.vrLog(`🎯 HOVER END: ${this.el.id}`);
+            }
             
             if (!this.isSelected) {
               this.unhighlight();
@@ -622,6 +703,50 @@ const MyPlayground = () => {
             position="0 0 -0.02"
             material="emissive: #00ff00; emissiveIntensity: 0.8"
           ></a-sphere>
+        </a-entity>
+
+        {/* VR Debug Panel - Fixed position */}
+        <a-entity
+          id="debug-panel"
+          position="-4 3 -3"
+          rotation="0 15 0"
+        >
+          {/* Background panel */}
+          <a-plane
+            width="6"
+            height="4"
+            color="#000000"
+            opacity="0.7"
+            material="transparent: true"
+          ></a-plane>
+          
+          {/* Debug title */}
+          <a-text
+            value="🚀 VR DEBUG CONSOLE"
+            position="0 1.8 0.01"
+            align="center"
+            color="#00ff00"
+            scale="0.6 0.6 0.6"
+          ></a-text>
+          
+          {/* Instructions */}
+          <a-text
+            value="Point controllers at objects to see hover logs"
+            position="0 1.4 0.01"
+            align="center"
+            color="#ffff00"
+            scale="0.4 0.4 0.4"
+          ></a-text>
+          
+          {/* Status display */}
+          <a-text
+            id="debug-status"
+            value="Waiting for interactions..."
+            position="0 1.0 0.01"
+            align="center"
+            color="#ffffff"
+            scale="0.4 0.4 0.4"
+          ></a-text>
         </a-entity>
 
       </a-scene>
