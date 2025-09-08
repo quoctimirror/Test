@@ -90,14 +90,39 @@ const MyPlayground = () => {
             const rightController = document.querySelector('#rightController');
             const leftController = document.querySelector('#leftController');
             
-            let rightActive = rightController?.components['oculus-touch-controls']?.connected || false;
-            let leftActive = leftController?.components['oculus-touch-controls']?.connected || false;
+            // Better controller detection
+            let rightActive = false;
+            let leftActive = false;
+            
+            if (rightController?.components) {
+              const oculusRight = rightController.components['oculus-touch-controls'];
+              const laserRight = rightController.components['laser-controls'];
+              rightActive = !!(oculusRight && laserRight);
+            }
+            
+            if (leftController?.components) {
+              const oculusLeft = leftController.components['oculus-touch-controls'];
+              const laserLeft = leftController.components['laser-controls'];
+              leftActive = !!(oculusLeft && laserLeft);
+            }
             
             const statusText = `R:${rightActive ? '✅' : '❌'} L:${leftActive ? '✅' : '❌'} (${rightActive && leftActive ? 'DUAL' : rightActive || leftActive ? 'SINGLE' : 'NONE'})`;
             
+            // Debug why NONE - log to VR occasionally
+            if (!rightActive && !leftActive && window.vrLog && Math.random() < 0.1) {
+              window.vrLog(`🔍 DEBUG: Right exists:${!!rightController} Left exists:${!!leftController}`);
+              if (rightController) {
+                window.vrLog(`🔍 Right components: ${Object.keys(rightController.components || {}).join(',')}`);
+              }
+              if (leftController) {
+                window.vrLog(`🔍 Left components: ${Object.keys(leftController.components || {}).join(',')}`);
+              }
+            }
+            
             if (debugStatus) {
               debugStatus.setAttribute('value', statusText);
-              debugStatus.setAttribute('color', rightActive && leftActive ? '#00ff00' : '#ffff00');
+              const color = rightActive && leftActive ? '#00ff00' : (rightActive || leftActive) ? '#ffff00' : '#ff0000';
+              debugStatus.setAttribute('color', color);
             }
           };
           
@@ -126,29 +151,38 @@ const MyPlayground = () => {
         
         
         tick: function() {
-          // Debug raycaster intersections
+          // Update debug panel with what this controller is pointing at
           const raycaster = this.el.components.raycaster;
           const debugStatus = document.querySelector('#debug-status');
           
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
             if (intersectedEl.classList.contains('interactive')) {
-              // Use vrLog for VR display
-              if (window.vrLog && Math.random() < 0.01) { // Only 1% of frames to avoid spam
-                window.vrLog(`🎯 ${this.el.id} → ${intersectedEl.id}`);
+              // Update debug panel to show targeting
+              if (debugStatus) {
+                const hand = this.el.id === 'rightController' ? 'R' : 'L';
+                debugStatus.setAttribute('value', `${hand} → ${intersectedEl.id}`);
+                debugStatus.setAttribute('color', '#00ffff'); // Cyan when targeting
               }
               
-              // Update debug panel
-              if (debugStatus) {
-                debugStatus.setAttribute('value', `${this.el.id} → ${intersectedEl.id}`);
-                debugStatus.setAttribute('color', '#00ff00');
+              // Rare VR log to avoid spam
+              if (window.vrLog && Math.random() < 0.01) { // 1% of frames
+                window.vrLog(`🎯 ${this.el.id} → ${intersectedEl.id}`);
               }
             }
           } else {
-            // No intersection
-            if (debugStatus && this.el.id === 'rightController') {
-              debugStatus.setAttribute('value', 'No target detected');
-              debugStatus.setAttribute('color', '#ff6666');
+            // Not pointing at anything - show controller status
+            if (debugStatus && Math.random() < 0.1) { // Update 10% of frames
+              const rightController = document.querySelector('#rightController');
+              const leftController = document.querySelector('#leftController');
+              
+              let rightActive = rightController?.components?.['oculus-touch-controls'] && rightController?.components?.['laser-controls'];
+              let leftActive = leftController?.components?.['oculus-touch-controls'] && leftController?.components?.['laser-controls'];
+              
+              const statusText = `R:${rightActive ? '✅' : '❌'} L:${leftActive ? '✅' : '❌'} (${rightActive && leftActive ? 'DUAL' : rightActive || leftActive ? 'SINGLE' : 'NONE'})`;
+              debugStatus.setAttribute('value', statusText);
+              const color = rightActive && leftActive ? '#00ff00' : (rightActive || leftActive) ? '#ffff00' : '#ff0000';
+              debugStatus.setAttribute('color', color);
             }
           }
         }
@@ -374,56 +408,71 @@ const MyPlayground = () => {
         },
         
         highlight: function() {
-          // Hiệu ứng highlight khác nhau cho từng loại object
+          // Hiệu ứng highlight rõ ràng khi được controller trỏ tới
           const mesh = this.el.getObject3D('mesh');
           const tagName = this.el.tagName.toLowerCase();
           
+          // Store original color for restoration
+          if (!this.originalColor) {
+            if (tagName === 'a-box') {
+              this.originalColor = this.el.getAttribute('color') || '#FF0000';
+            }
+          }
+          
           if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
-            // Cho primitive shapes của A-Frame
+            // Primitive shapes - change main color dramatically
+            this.el.setAttribute('color', '#00FFFF'); // Bright cyan
             this.el.setAttribute('material', 'emissive', '#00ff00');
-            this.el.setAttribute('material', 'emissiveIntensity', 0.4);
+            this.el.setAttribute('material', 'emissiveIntensity', 0.8); // Very bright
             
-            // Animation scale khi hover
-            const currentScale = this.el.getAttribute('scale');
-            this.el.setAttribute('animation__scaleup', {
-              property: 'scale',
-              to: `${currentScale.x * 1.1} ${currentScale.y * 1.1} ${currentScale.z * 1.1}`,
-              dur: 200,
-              easing: 'easeOutElastic'
-            });
-          } else if (mesh) {
-            // Cho GLB models như nhẫn
-            mesh.traverse(child => {
-              if (child.material) {
-                child.material.emissive = new window.THREE.Color(0x00ff00);
-                child.material.emissiveIntensity = 0.4;
-                child.material.needsUpdate = true;
-              }
-            });
-            
-            // Animation scale cho model
+            // Scale animation
             const currentScale = this.el.getAttribute('scale');
             this.el.setAttribute('animation__scaleup', {
               property: 'scale',
               to: `${currentScale.x * 1.2} ${currentScale.y * 1.2} ${currentScale.z * 1.2}`,
-              dur: 200,
+              dur: 300,
+              easing: 'easeOutElastic'
+            });
+          } else if (mesh) {
+            // GLB models như nhẫn
+            mesh.traverse(child => {
+              if (child.material) {
+                child.material.emissive = new window.THREE.Color(0x00ffff); // Cyan emissive
+                child.material.emissiveIntensity = 0.8;
+                child.material.needsUpdate = true;
+              }
+            });
+            
+            // Scale animation cho model
+            const currentScale = this.el.getAttribute('scale');
+            this.el.setAttribute('animation__scaleup', {
+              property: 'scale',
+              to: `${currentScale.x * 1.5} ${currentScale.y * 1.5} ${currentScale.z * 1.5}`,
+              dur: 300,
               easing: 'easeOutElastic'
             });
           }
+          
+          console.log('🌟 HIGHLIGHTED:', this.el.id);
         },
         
         unhighlight: function() {
-          // Xóa hiệu ứng highlight
+          // Reset về trạng thái ban đầu
           const mesh = this.el.getObject3D('mesh');
           const tagName = this.el.tagName.toLowerCase();
           
           if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
-            // Reset primitive shapes
+            // Reset color về ban đầu
+            if (this.originalColor) {
+              this.el.setAttribute('color', this.originalColor);
+            }
+            
+            // Reset emissive
             this.el.setAttribute('material', 'emissive', '#000000');
             this.el.setAttribute('material', 'emissiveIntensity', 0);
             
-            // Animation scale về ban đầu
-            const originalScale = this.originalScale || {x: 1, y: 1, z: 1};
+            // Scale về ban đầu
+            const originalScale = this.originalScale || {x: 0.5, y: 0.5, z: 0.5}; // Box default scale
             this.el.setAttribute('animation__scaledown', {
               property: 'scale',
               to: `${originalScale.x} ${originalScale.y} ${originalScale.z}`,
@@ -440,7 +489,7 @@ const MyPlayground = () => {
               }
             });
             
-            // Animation scale về ban đầu cho model
+            // Scale về ban đầu cho model
             const originalScale = this.originalScale || {x: 0.01, y: 0.01, z: 0.01};
             this.el.setAttribute('animation__scaledown', {
               property: 'scale',
@@ -449,6 +498,8 @@ const MyPlayground = () => {
               easing: 'easeOutQuad'
             });
           }
+          
+          console.log('🔄 UNHIGHLIGHTED:', this.el.id);
         },
         
         toggleSelection: function() {
