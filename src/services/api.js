@@ -57,7 +57,8 @@ export const locationsAPI = {
   getById: (id) => api.get(`/api/locations/${id}`),
 
   // Filter locations by city
-  getByCity: (city) => api.get(`/api/locations/city/${encodeURIComponent(city)}`),
+  getByCity: (city) =>
+    api.get(`/api/locations/city/${encodeURIComponent(city)}`),
 
   // Filter locations by type
   getByType: (type) => api.get(`/api/locations/type/${type}`),
@@ -116,7 +117,9 @@ export const productsAPI = {
 
   // Search products
   search: (searchTerm, params = {}) =>
-    api.get(`/api/products/search?q=${encodeURIComponent(searchTerm)}`, { params }),
+    api.get(`/api/products/search?q=${encodeURIComponent(searchTerm)}`, {
+      params,
+    }),
 
   // Advanced filtering
   getFiltered: (params = {}) => api.get("/api/products/filter", { params }),
@@ -146,7 +149,8 @@ export const productsAPI = {
   delete: (id) => api.delete(`/api/products/${id}`),
   hardDelete: (id) => api.delete(`/api/products/${id}/permanent`),
   toggleFeatured: (id) => api.post(`/api/products/${id}/toggle-featured`),
-  updateStock: (id, quantity) => api.put(`/api/products/${id}/stock`, { quantity }),
+  updateStock: (id, quantity) =>
+    api.put(`/api/products/${id}/stock`, { quantity }),
 };
 
 // ===== COLLECTIONS API =====
@@ -160,10 +164,18 @@ export const collectionsAPI = {
   getById: (id) => api.get(`/api/collections/${id}`),
 
   // Get collection by name
-  getByName: (name) => api.get(`/api/collections/name/${encodeURIComponent(name)}`),
+  getByName: (name) =>
+    api.get(`/api/collections/name/${encodeURIComponent(name)}`),
+
+  // Get all collections with their products
+  getAllWithProducts: () => api.get("/api/collections/with-products"),
 
   // Get collection with products
   getWithProducts: (id) => api.get(`/api/collections/${id}/products`),
+
+  // Get products in collection (products list only)
+  getProductsInCollection: (id) =>
+    api.get(`/api/collections/${id}/products-list`),
 
   // Get featured collections
   getFeatured: () => api.get("/api/collections/featured"),
@@ -190,53 +202,121 @@ export const collectionsAPI = {
 
   // CRUD operations
   create: (collectionData) => api.post("/api/collections", collectionData),
-  update: (id, collectionData) => api.put(`/api/collections/${id}`, collectionData),
+  update: (id, collectionData) =>
+    api.put(`/api/collections/${id}`, collectionData),
   delete: (id) => api.delete(`/api/collections/${id}`),
   hardDelete: (id) => api.delete(`/api/collections/${id}/permanent`),
+
+  // Collection-Product management
+  addProductToCollection: (collectionId, productData) =>
+    api.post(`/api/collections/${collectionId}/products`, productData),
+  removeProductFromCollection: (collectionId, productId) =>
+    api.delete(`/api/collections/${collectionId}/products/${productId}`),
+  updateProductSortOrder: (collectionId, productId, sortOrder) =>
+    api.put(
+      `/api/collections/${collectionId}/products/${productId}/sort-order`,
+      { sortOrder }
+    ),
+  toggleHeroProduct: (collectionId, productId) =>
+    api.post(
+      `/api/collections/${collectionId}/products/${productId}/toggle-hero`
+    ),
   toggleFeatured: (id) => api.patch(`/api/collections/${id}/featured`),
 };
 
 // ===== CATEGORIES API =====
 export const categoriesAPI = {
-  // Get all categories
+  // Get all active categories
   getAll: () => api.get("/api/categories"),
 
   // Get category by ID
   getById: (id) => api.get(`/api/categories/${id}`),
 
-  // Health check
-  health: () => api.get("/api/categories/health"),
+  // Get category by name
+  getByName: (name) =>
+    api.get(`/api/categories/name/${encodeURIComponent(name)}`),
+
+  // Check if category exists by name
+  checkExists: (name) =>
+    api.get(`/api/categories/exists/${encodeURIComponent(name)}`),
+
+  // Get active count
+  getActiveCount: () => api.get("/api/categories/count"),
 
   // CRUD operations
   create: (categoryData) => api.post("/api/categories", categoryData),
   update: (id, categoryData) => api.put(`/api/categories/${id}`, categoryData),
   delete: (id) => api.delete(`/api/categories/${id}`),
+  deactivate: (id) => api.patch(`/api/categories/${id}/deactivate`),
 };
 
 // ===== COMPONENTS API =====
 export const componentsAPI = {
-  // Get all components
+  // Get all active components
   getAll: () => api.get("/api/components"),
 
   // Get component by ID
   getById: (id) => api.get(`/api/components/${id}`),
 
-  // Get components by type
-  getByType: (type) => api.get(`/api/components/type/${type}`),
+  // Get components by category ID
+  getByCategoryId: (categoryId) =>
+    api.get(`/api/components/category/${categoryId}`),
 
-  // Get customizable components
-  getCustomizable: () => api.get("/api/components/customizable"),
+  // Get component by name
+  getByName: (name) =>
+    api.get(`/api/components/name/${encodeURIComponent(name)}`),
 
-  // Get required components
-  getRequired: () => api.get("/api/components/required"),
+  // Check if component exists
+  checkExists: (name, categoryId) =>
+    api.get(
+      `/api/components/exists/${encodeURIComponent(
+        name
+      )}/category/${categoryId}`
+    ),
 
-  // Health check
-  health: () => api.get("/api/components/health"),
+  // Get active count
+  getActiveCount: () => api.get("/api/components/count"),
 
   // CRUD operations
   create: (componentData) => api.post("/api/components", componentData),
-  update: (id, componentData) => api.put(`/api/components/${id}`, componentData),
+  update: (id, componentData) =>
+    api.put(`/api/components/${id}`, componentData),
   delete: (id) => api.delete(`/api/components/${id}`),
+  deactivate: (id) => api.patch(`/api/components/${id}/deactivate`),
+};
+
+// ===== COMPONENT OPTIONALS API =====
+export const componentOptionalsAPI = {
+  // Get all active component optionals
+  getAll: () => api.get("/api/component-optionals"),
+
+  // Get component optional by ID
+  getById: (id) => api.get(`/api/component-optionals/${id}`),
+
+  // Get component optionals by component ID
+  getByComponentId: (componentId) =>
+    api.get(`/api/component-optionals/component/${componentId}`),
+
+  // Get component optional by name
+  getByName: (name) =>
+    api.get(`/api/component-optionals/name/${encodeURIComponent(name)}`),
+
+  // Check if component optional exists
+  checkExists: (name, componentId) =>
+    api.get(
+      `/api/component-optionals/exists/${encodeURIComponent(
+        name
+      )}/component/${componentId}`
+    ),
+
+  // Get active count
+  getActiveCount: () => api.get("/api/component-optionals/count"),
+
+  // CRUD operations
+  create: (data) => api.post("/api/component-optionals", data),
+  update: (id, data) => api.put(`/api/component-optionals/${id}`, data),
+  delete: (id) => api.delete(`/api/component-optionals/${id}`),
+  deactivate: (id) => api.patch(`/api/component-optionals/${id}/deactivate`),
 };
 
 // ===== USERS API =====
@@ -251,7 +331,8 @@ export const usersAPI = {
   getByUsername: (username) => api.get(`/api/users/username/${username}`),
 
   // Get user by email
-  getByEmail: (email) => api.get(`/api/users/email/${encodeURIComponent(email)}`),
+  getByEmail: (email) =>
+    api.get(`/api/users/email/${encodeURIComponent(email)}`),
 
   // Get users by role
   getByRole: (role) => api.get(`/api/users/role/${role}`),
@@ -274,7 +355,8 @@ export const usersAPI = {
   createByAdmin: (userData) => api.post("/api/users/admin/create", userData),
   update: (id, userData) => api.put(`/api/users/${id}`, userData),
   delete: (id) => api.delete(`/api/users/${id}`),
-  updateStatus: (id, status) => api.patch(`/api/users/${id}/status`, { status }),
+  updateStatus: (id, status) =>
+    api.patch(`/api/users/${id}/status`, { status }),
   updateRole: (id, role) => api.patch(`/api/users/${id}/role`, { role }),
 };
 
@@ -320,6 +402,29 @@ export const createApiHook = (apiCall) => {
       return { data: null, error: errorInfo, loading: false };
     }
   };
+};
+
+// ===== FILE UPLOAD API =====
+export const fileUploadAPI = {
+  // Upload file
+  upload: (
+    file,
+    description = "",
+    bucketName = "mirror-storage",
+    folderPath = "public"
+  ) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("description", description);
+    formData.append("bucketName", bucketName);
+    formData.append("folderPath", folderPath);
+
+    return api.post("/api/files/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
 };
 
 // Export the axios instance for custom calls

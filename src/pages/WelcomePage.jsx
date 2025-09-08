@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import MetaballBackground from '@components/specialEffect/MetaballBackground/MetaballBackground';
-import './WelcomePage.css';
+import React, { useEffect, useState } from "react";
+import "./WelcomePage.css";
 
 const WelcomePage = () => {
-  const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -12,30 +9,18 @@ const WelcomePage = () => {
     setTimeout(() => setIsLoaded(true), 100);
   }, []);
 
-  const handleExplore = () => {
-    navigate('/home');
-  };
-
-  const handleCollections = () => {
-    navigate('/collections');
-  };
-
-  const handleAbout = () => {
-    navigate('/about');
-  };
-
   return (
-    <div className={`welcome-page ${isLoaded ? 'loaded' : ''}`}>
-      {/* Metaball Background */}
-      <MetaballBackground />
+    <div className={`welcome-page ${isLoaded ? "loaded" : ""}`}>
+      {/* Background Image */}
+      <div className="welcome-background-image"></div>
 
       {/* Main content */}
-      <div className="welcome-content">
+      {/* <div className="welcome-content">
         <h1 className="welcome-title">
           <span className="title-line-1">Welcome to</span>
           <span className="title-line-2">MIRROR</span>
         </h1>
-      </div>
+      </div> */}
     </div>
   );
 };

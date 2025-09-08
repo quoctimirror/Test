@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { collectionsAPI, handleAPIError } from "../../services/api";
+import { collectionsAPI, productsAPI, handleAPIError } from "../../services/api";
 
 const CollectionsManager = () => {
   const [collections, setCollections] = useState([]);
+  const [collectionProducts, setCollectionProducts] = useState({});
   const [loading, setLoading] = useState(true);
+  const [loadingProducts, setLoadingProducts] = useState({});
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCollection, setEditingCollection] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [expandedCollections, setExpandedCollections] = useState({});
+  
+  // New state for product management
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [currentCollectionId, setCurrentCollectionId] = useState(null);
+  const [availableProducts, setAvailableProducts] = useState([]);
+  const [productSearchTerm, setProductSearchTerm] = useState("");
+  const [loadingAvailableProducts, setLoadingAvailableProducts] = useState(false);
+  
 
   const [formData, setFormData] = useState({
     name: "",
@@ -34,12 +45,154 @@ const CollectionsManager = () => {
     setLoading(true);
     try {
       const response = await collectionsAPI.getAll();
-      setCollections(response.data || []);
+      const collectionsData = response.data || [];
+      setCollections(collectionsData);
+      
+      // Debug: Let's check what the backend actually returns
+      console.log('🔍 Collections data:', collectionsData);
+      
+      // Fetch products for each collection to get the full product data
+      const productsMap = {};
+      
+      for (const collection of collectionsData) {
+        try {
+          // Use getWithProducts endpoint to get products with full metadata
+          const withProductsRes = await collectionsAPI.getWithProducts(collection.id);
+          console.log(`🔍 Collection ${collection.id} - getWithProducts response:`, withProductsRes.data);
+          
+          // Extract products array from the CollectionResponse
+          const collectionData = withProductsRes.data;
+          const productsWithMeta = collectionData?.products || [];
+          
+          console.log(`🔍 Collection ${collection.id} - products with metadata:`, productsWithMeta);
+          
+          // Convert CollectionProductResponse to ProductResponse format for display
+          const products = productsWithMeta.map(cp => {
+            const product = cp.product;
+            if (product) {
+              // Add metadata fields directly to product for easier access
+              product.isHeroProduct = cp.isHeroProduct;
+              product.sortOrder = cp.sortOrder;
+              product.collectionProductId = cp.id;
+            }
+            return product;
+          }).filter(product => product != null);
+          
+          productsMap[collection.id] = products;
+          
+          console.log(`🔍 Collection ${collection.id} - final products:`, products);
+          if (products.length > 0) {
+            console.log(`🔍 First product with metadata:`, products[0]);
+            console.log(`🔍 Has isHeroProduct:`, 'isHeroProduct' in products[0]);
+            console.log(`🔍 isHeroProduct value:`, products[0].isHeroProduct);
+          }
+        } catch (err) {
+          console.warn(`Failed to fetch products for collection ${collection.id}:`, err);
+          productsMap[collection.id] = [];
+        }
+      }
+      
+      setCollectionProducts(productsMap);
+      setLoadingProducts({});
     } catch (err) {
       const errorInfo = handleAPIError(err, 'Failed to load collections');
       setError(errorInfo.message);
     } finally {
       setLoading(false);
+    }
+  };
+  
+  const toggleExpandCollection = (collectionId) => {
+    setExpandedCollections(prev => ({
+      ...prev,
+      [collectionId]: !prev[collectionId]
+    }));
+  };
+
+  // Helper functions for collection-product metadata
+  const isHeroProduct = (collectionId, productId) => {
+    const products = collectionProducts[collectionId] || [];
+    const product = products.find(p => p.id === productId);
+    return product?.isHeroProduct || false;
+  };
+
+
+  // Product Management Functions
+  const handleManageProducts = async (collectionId) => {
+    setCurrentCollectionId(collectionId);
+    setIsProductModalOpen(true);
+    await fetchAvailableProducts();
+  };
+
+  const fetchAvailableProducts = async () => {
+    setLoadingAvailableProducts(true);
+    try {
+      const response = await productsAPI.getAll();
+      setAvailableProducts(response.data || []);
+    } catch (err) {
+      const errorInfo = handleAPIError(err, 'Failed to load available products');
+      setError(errorInfo.message);
+    } finally {
+      setLoadingAvailableProducts(false);
+    }
+  };
+
+  const addProductToCollection = async (productId) => {
+    if (!currentCollectionId) return;
+    
+    try {
+      const requestData = {
+        collectionId: currentCollectionId,
+        productId: productId,
+        sortOrder: 0,
+        isHeroProduct: false
+      };
+      
+      await collectionsAPI.addProductToCollection(currentCollectionId, requestData);
+      
+      // Refresh the collection data to get updated products with metadata from backend
+      await fetchCollections();
+      
+      setError(null);
+    } catch (err) {
+      const errorInfo = handleAPIError(err, 'Failed to add product to collection');
+      setError(errorInfo.message);
+    }
+  };
+
+  const removeProductFromCollection = async (productId) => {
+    if (!currentCollectionId) return;
+    
+    if (!window.confirm('Are you sure you want to remove this product from the collection?')) {
+      return;
+    }
+    
+    try {
+      await collectionsAPI.removeProductFromCollection(currentCollectionId, productId);
+      
+      // Refresh the collection data to get updated products from backend
+      await fetchCollections();
+      
+      setError(null);
+    } catch (err) {
+      const errorInfo = handleAPIError(err, 'Failed to remove product from collection');
+      setError(errorInfo.message);
+    }
+  };
+
+  const toggleHeroProduct = async (productId, collectionId = currentCollectionId) => {
+    if (!collectionId) return;
+    
+    try {
+      await collectionsAPI.toggleHeroProduct(collectionId, productId);
+      
+      // Refresh the collection data to get updated hero status from backend
+      await fetchCollections();
+      
+      setError(null);
+    } catch (err) {
+      const errorInfo = handleAPIError(err, 'Failed to toggle hero product status');
+      setError(errorInfo.message);
     }
   };
 
@@ -276,7 +429,7 @@ const CollectionsManager = () => {
                   <div>
                     <span style={{ color: '#6c757d' }}>Products:</span>
                     <span style={{ marginLeft: '0.5rem', fontWeight: '500' }}>
-                      {collection.productCount || 0}
+                      {collectionProducts[collection.id]?.length || 0}
                     </span>
                   </div>
                   <div>
@@ -292,13 +445,205 @@ const CollectionsManager = () => {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+              {/* Products List Section */}
+              {collectionProducts[collection.id] && collectionProducts[collection.id].length > 0 && (
+                <div style={{ marginTop: '1rem' }}>
+                  <div 
+                    style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      marginBottom: '0.5rem',
+                      padding: '0.5rem',
+                      backgroundColor: '#f8f9fa',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      border: '1px solid transparent'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#e9ecef';
+                      e.currentTarget.style.borderColor = '#dee2e6';
+                      e.currentTarget.style.transform = 'translateX(2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#f8f9fa';
+                      e.currentTarget.style.borderColor = 'transparent';
+                      e.currentTarget.style.transform = 'translateX(0)';
+                    }}
+                    onClick={() => toggleExpandCollection(collection.id)}
+                  >
+                    <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#495057' }}>
+                      📦 Products in Collection
+                    </h4>
+                    <span style={{ 
+                      fontSize: '16px', 
+                      color: '#6c757d',
+                      transition: 'transform 0.2s ease',
+                      transform: expandedCollections[collection.id] ? 'rotate(90deg)' : 'rotate(0deg)'
+                    }}>
+                      ▶
+                    </span>
+                  </div>
+                  
+                  {expandedCollections[collection.id] && (
+                    <div style={{
+                      maxHeight: '200px',
+                      overflowY: 'auto',
+                      border: '2px solid #e9ecef',
+                      borderRadius: '8px',
+                      padding: '0.75rem',
+                      backgroundColor: '#ffffff',
+                      boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)',
+                      marginTop: '0.5rem'
+                    }}>
+                      {loadingProducts[collection.id] ? (
+                        <div style={{ textAlign: 'center', color: '#6c757d', fontSize: '14px' }}>
+                          Loading products...
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          {collectionProducts[collection.id].map((product, index) => (
+                            <div 
+                              key={product.id} 
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '0.5rem',
+                                backgroundColor: index % 2 === 0 ? '#f8f9fa' : 'white',
+                                borderRadius: '4px',
+                                fontSize: '13px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease',
+                                border: '1px solid transparent'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = '#e3f2fd';
+                                e.currentTarget.style.borderColor = '#90caf9';
+                                e.currentTarget.style.transform = 'translateX(4px)';
+                                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = index % 2 === 0 ? '#f8f9fa' : 'white';
+                                e.currentTarget.style.borderColor = 'transparent';
+                                e.currentTarget.style.transform = 'translateX(0)';
+                                e.currentTarget.style.boxShadow = 'none';
+                              }}
+                            >
+                              {product.imageUrl && (
+                                <img 
+                                  src={product.imageUrl} 
+                                  alt={product.name}
+                                  style={{
+                                    width: '30px',
+                                    height: '30px',
+                                    objectFit: 'cover',
+                                    borderRadius: '4px',
+                                    marginRight: '0.75rem'
+                                  }}
+                                />
+                              )}
+                              <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: '500', color: '#212529' }}>
+                                  {product.name}
+                                </div>
+                                <div style={{ fontSize: '11px', color: '#6c757d' }}>
+                                  SKU: {product.sku} | Price: {new Intl.NumberFormat('vi-VN', {
+                                    style: 'currency',
+                                    currency: product.currency || 'VND'
+                                  }).format(product.price || 0)}
+                                </div>
+                              </div>
+                              {product.featured && (
+                                <span style={{ 
+                                  fontSize: '10px', 
+                                  color: '#bc224c', 
+                                  fontWeight: '500',
+                                  marginLeft: '0.5rem'
+                                }}>
+                                  ⭐
+                                </span>
+                              )}
+                              {isHeroProduct(collection.id, product.id) && (
+                                <span style={{ 
+                                  fontSize: '10px', 
+                                  color: '#ffc107', 
+                                  fontWeight: '500',
+                                  marginLeft: '0.25rem'
+                                }}>
+                                  ★
+                                </span>
+                              )}
+                              <div style={{ 
+                                display: 'flex', 
+                                gap: '0.25rem',
+                                marginLeft: '0.5rem',
+                                flexShrink: 0
+                              }}>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleHeroProduct(product.id, collection.id);
+                                  }}
+                                  className="admin-button"
+                                  style={{
+                                    padding: '0.125rem 0.375rem',
+                                    fontSize: '10px',
+                                    backgroundColor: isHeroProduct(collection.id, product.id) ? '#ffc107' : '#6c757d',
+                                    color: 'white',
+                                    border: 'none'
+                                  }}
+                                  title={isHeroProduct(collection.id, product.id) ? 'Remove as Hero' : 'Set as Hero'}
+                                >
+                                  {isHeroProduct(collection.id, product.id) ? '★' : '☆'}
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeProductFromCollection(product.id);
+                                  }}
+                                  className="admin-button"
+                                  style={{
+                                    padding: '0.125rem 0.375rem',
+                                    fontSize: '10px',
+                                    backgroundColor: '#dc3545',
+                                    color: 'white',
+                                    border: 'none'
+                                  }}
+                                  title="Remove from Collection"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
                 <button
                   onClick={() => handleEdit(collection)}
                   className="admin-button admin-button-outline"
-                  style={{ flex: 1, padding: '0.5rem', fontSize: '14px' }}
+                  style={{ flex: 1, minWidth: '80px', padding: '0.5rem', fontSize: '14px' }}
                 >
                   Edit
+                </button>
+                <button
+                  onClick={() => handleManageProducts(collection.id)}
+                  className="admin-button"
+                  style={{ 
+                    padding: '0.5rem', 
+                    fontSize: '14px',
+                    backgroundColor: '#17a2b8',
+                    color: 'white',
+                    border: 'none'
+                  }}
+                >
+                  Manage Products
                 </button>
                 <button
                   onClick={() => toggleFeatured(collection)}
@@ -552,6 +897,263 @@ const CollectionsManager = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Product Management Modal */}
+      {isProductModalOpen && (
+        <div className="admin-modal-overlay" onClick={() => setIsProductModalOpen(false)}>
+          <div 
+            className="admin-modal" 
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '800px', maxHeight: '80vh', overflow: 'hidden' }}
+          >
+            <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <h2 style={{ margin: '0', fontSize: '24px', fontWeight: '600' }}>
+                  Manage Products in Collection
+                </h2>
+                <button
+                  onClick={() => setIsProductModalOpen(false)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                    color: '#6c757d'
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Current Collection Products */}
+              <div style={{ marginBottom: '2rem' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem', color: '#495057' }}>
+                  Current Products in Collection ({collectionProducts[currentCollectionId]?.length || 0})
+                </h3>
+                
+                <div style={{
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                  border: '1px solid #dee2e6',
+                  borderRadius: '8px',
+                  padding: '0.75rem',
+                  backgroundColor: '#f8f9fa'
+                }}>
+                  {collectionProducts[currentCollectionId]?.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {collectionProducts[currentCollectionId].map((product) => (
+                        <div 
+                          key={product.id}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '0.75rem',
+                            backgroundColor: 'white',
+                            borderRadius: '6px',
+                            border: '1px solid #dee2e6'
+                          }}
+                        >
+                          {product.imageUrl && (
+                            <img 
+                              src={product.imageUrl} 
+                              alt={product.name}
+                              style={{
+                                width: '40px',
+                                height: '40px',
+                                objectFit: 'cover',
+                                borderRadius: '4px',
+                                marginRight: '1rem'
+                              }}
+                            />
+                          )}
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: '600', color: '#212529', marginBottom: '0.25rem' }}>
+                              {product.name}
+                            </div>
+                            <div style={{ fontSize: '13px', color: '#6c757d' }}>
+                              SKU: {product.sku} | {new Intl.NumberFormat('vi-VN', {
+                                style: 'currency',
+                                currency: product.currency || 'VND'
+                              }).format(product.price || 0)}
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            {isHeroProduct(currentCollectionId, product.id) && (
+                              <span style={{ 
+                                fontSize: '12px', 
+                                color: '#ffc107', 
+                                fontWeight: '500',
+                                marginRight: '0.5rem'
+                              }}>
+                                ★ Hero
+                              </span>
+                            )}
+                            <button
+                              onClick={() => toggleHeroProduct(product.id)}
+                              className="admin-button"
+                              style={{
+                                padding: '0.375rem 0.75rem',
+                                fontSize: '12px',
+                                backgroundColor: isHeroProduct(currentCollectionId, product.id) ? '#ffc107' : '#6c757d',
+                                color: 'white',
+                                border: 'none'
+                              }}
+                            >
+                              {isHeroProduct(currentCollectionId, product.id) ? 'Remove Hero' : 'Set Hero'}
+                            </button>
+                            <button
+                              onClick={() => removeProductFromCollection(product.id)}
+                              className="admin-button"
+                              style={{
+                                padding: '0.375rem 0.75rem',
+                                fontSize: '12px',
+                                backgroundColor: '#dc3545',
+                                color: 'white',
+                                border: 'none'
+                              }}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ textAlign: 'center', color: '#6c757d', padding: '2rem' }}>
+                      No products in this collection yet.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Available Products to Add */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <h3 style={{ fontSize: '18px', fontWeight: '600', margin: '0', color: '#495057' }}>
+                    Available Products
+                  </h3>
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={productSearchTerm}
+                    onChange={(e) => setProductSearchTerm(e.target.value)}
+                    className="admin-input"
+                    style={{ width: '250px' }}
+                  />
+                </div>
+
+                <div style={{
+                  flex: 1,
+                  maxHeight: '300px',
+                  overflowY: 'auto',
+                  border: '1px solid #dee2e6',
+                  borderRadius: '8px',
+                  padding: '0.75rem',
+                  backgroundColor: '#ffffff'
+                }}>
+                  {loadingAvailableProducts ? (
+                    <div style={{ textAlign: 'center', padding: '2rem', color: '#6c757d' }}>
+                      Loading products...
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {availableProducts
+                        .filter(product => {
+                          // Filter out products already in collection
+                          const alreadyInCollection = collectionProducts[currentCollectionId]?.some(cp => cp.id === product.id);
+                          // Filter by search term
+                          const matchesSearch = !productSearchTerm || 
+                            product.name.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
+                            product.sku.toLowerCase().includes(productSearchTerm.toLowerCase());
+                          return !alreadyInCollection && matchesSearch;
+                        })
+                        .map((product) => (
+                          <div 
+                            key={product.id}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              padding: '0.75rem',
+                              backgroundColor: '#f8f9fa',
+                              borderRadius: '6px',
+                              border: '1px solid #dee2e6',
+                              transition: 'all 0.2s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#e9ecef';
+                              e.currentTarget.style.transform = 'translateX(2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#f8f9fa';
+                              e.currentTarget.style.transform = 'translateX(0)';
+                            }}
+                          >
+                            {product.imageUrl && (
+                              <img 
+                                src={product.imageUrl} 
+                                alt={product.name}
+                                style={{
+                                  width: '40px',
+                                  height: '40px',
+                                  objectFit: 'cover',
+                                  borderRadius: '4px',
+                                  marginRight: '1rem'
+                                }}
+                              />
+                            )}
+                            <div style={{ flex: 1 }}>
+                              <div style={{ fontWeight: '600', color: '#212529', marginBottom: '0.25rem' }}>
+                                {product.name}
+                              </div>
+                              <div style={{ fontSize: '13px', color: '#6c757d' }}>
+                                SKU: {product.sku} | {new Intl.NumberFormat('vi-VN', {
+                                  style: 'currency',
+                                  currency: product.currency || 'VND'
+                                }).format(product.price || 0)}
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => addProductToCollection(product.id)}
+                              className="admin-button admin-button-primary"
+                              style={{
+                                padding: '0.5rem 1rem',
+                                fontSize: '14px'
+                              }}
+                            >
+                              Add to Collection
+                            </button>
+                          </div>
+                        ))}
+                      
+                      {availableProducts.filter(product => {
+                        const alreadyInCollection = collectionProducts[currentCollectionId]?.some(cp => cp.id === product.id);
+                        const matchesSearch = !productSearchTerm || 
+                          product.name.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
+                          product.sku.toLowerCase().includes(productSearchTerm.toLowerCase());
+                        return !alreadyInCollection && matchesSearch;
+                      }).length === 0 && (
+                        <div style={{ textAlign: 'center', color: '#6c757d', padding: '2rem' }}>
+                          {productSearchTerm ? 'No products found matching your search.' : 'No more products available to add.'}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ marginTop: '1.5rem', textAlign: 'right' }}>
+                <button
+                  onClick={() => setIsProductModalOpen(false)}
+                  className="admin-button admin-button-primary"
+                >
+                  Done
+                </button>
+              </div>
             </div>
           </div>
         </div>

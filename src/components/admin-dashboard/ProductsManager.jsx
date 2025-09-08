@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { productsAPI, categoriesAPI, handleAPIError } from "../../services/api";
+import { productsAPI, categoriesAPI, fileUploadAPI, handleAPIError } from "../../services/api";
 
 const ProductsManager = () => {
   const [products, setProducts] = useState([]);
@@ -10,6 +10,9 @@ const ProductsManager = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -43,6 +46,7 @@ const ProductsManager = () => {
         productsAPI.getAll(),
         categoriesAPI.getAll()
       ]);
+      
       setProducts(productsRes.data || []);
       setCategories(categoriesRes.data || []);
     } catch (err) {
@@ -52,6 +56,7 @@ const ProductsManager = () => {
       setLoading(false);
     }
   };
+
 
   const resetForm = () => {
     setFormData({
@@ -75,6 +80,71 @@ const ProductsManager = () => {
       minStockLevel: ""
     });
     setEditingProduct(null);
+    setSelectedFile(null);
+    // Cleanup preview URL to prevent memory leak
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setPreviewUrl(null);
+  };
+
+  // File upload functions
+  const handleFileSelect = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        setError('Please select an image file');
+        return;
+      }
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('File size must be less than 5MB');
+        return;
+      }
+      
+      setSelectedFile(file);
+      setError(null);
+      
+      // Cleanup previous preview URL
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      
+      // Create preview URL for local display
+      const preview = URL.createObjectURL(file);
+      setPreviewUrl(preview);
+    }
+  };
+
+  const uploadImage = async (file = selectedFile) => {
+    if (!file) return null;
+    
+    setUploading(true);
+    try {
+      const response = await fileUploadAPI.upload(
+        file,
+        `Product image: ${formData.name || 'New product'}`,
+        'mirror-storage',
+        'public'
+      );
+      
+      const publicUrl = response.data.publicUrl;
+      if (publicUrl) {
+        setFormData(prev => ({ ...prev, imageUrl: publicUrl }));
+        setSelectedFile(null);
+        setError(null);
+        return publicUrl;
+      }
+      
+      throw new Error('No public URL returned from upload');
+    } catch (err) {
+      const errorInfo = handleAPIError(err, 'Failed to upload image');
+      setError(errorInfo.message);
+      throw err;
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleAdd = () => {
@@ -112,10 +182,19 @@ const ProductsManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setUploading(true);
 
     try {
+      // Upload image first if new file is selected
+      let imageUrl = formData.imageUrl; // Keep existing URL
+      if (selectedFile) {
+        const uploadedUrl = await uploadImage(selectedFile);
+        imageUrl = uploadedUrl || formData.imageUrl;
+      }
+
       const submitData = {
         ...formData,
+        imageUrl: imageUrl,
         price: parseFloat(formData.price) || 0,
         weightGrams: formData.weightGrams ? parseFloat(formData.weightGrams) : null,
         stockQuantity: parseInt(formData.stockQuantity) || 0,
@@ -139,6 +218,7 @@ const ProductsManager = () => {
         })() : null
       };
 
+
       if (editingProduct) {
         await productsAPI.update(editingProduct.id, submitData);
       } else {
@@ -151,6 +231,8 @@ const ProductsManager = () => {
     } catch (err) {
       const errorInfo = handleAPIError(err, 'Failed to save product');
       setError(errorInfo.message);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -386,35 +468,34 @@ const ProductsManager = () => {
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Category *</label>
-                      <select
-                        value={formData.categoryId}
-                        onChange={(e) => setFormData({...formData, categoryId: e.target.value})}
-                        className="admin-input"
-                        required
-                      >
-                        <option value="">Select Category</option>
-                        {categories.map(category => (
-                          <option key={category.id} value={category.id}>
-                            {category.name || category.categoryName || 'Unnamed Category'}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Price *</label>
-                      <input
-                        type="number"
-                        value={formData.price}
-                        onChange={(e) => setFormData({...formData, price: e.target.value})}
-                        className="admin-input"
-                        required
-                        min="0"
-                        step="0.01"
-                      />
-                    </div>
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Category *</label>
+                    <select
+                      value={formData.categoryId}
+                      onChange={(e) => setFormData({...formData, categoryId: e.target.value})}
+                      className="admin-input"
+                      required
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map(category => (
+                        <option key={category.id} value={category.id}>
+                          {category.name || category.categoryName || 'Unnamed Category'}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Price *</label>
+                    <input
+                      type="number"
+                      value={formData.price}
+                      onChange={(e) => setFormData({...formData, price: e.target.value})}
+                      className="admin-input"
+                      required
+                      min="0"
+                      step="0.01"
+                    />
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
@@ -481,14 +562,50 @@ const ProductsManager = () => {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Main Image URL</label>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Main Image</label>
                     <input
-                      type="text"
-                      value={formData.imageUrl}
-                      onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
-                      className="admin-input"
-                      placeholder="https://example.com/image.jpg"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      disabled={uploading}
+                      style={{
+                        padding: '0.5rem',
+                        border: '2px dashed #ddd',
+                        borderRadius: '4px',
+                        width: '100%',
+                        cursor: uploading ? 'not-allowed' : 'pointer',
+                        opacity: uploading ? 0.6 : 1
+                      }}
                     />
+                    {selectedFile && (
+                      <div style={{ 
+                        marginTop: '0.5rem', 
+                        fontSize: '14px', 
+                        color: '#666' 
+                      }}>
+                        📁 Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                      </div>
+                    )}
+                    {(previewUrl || formData.imageUrl) && (
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <img 
+                          src={previewUrl || formData.imageUrl} 
+                          alt={previewUrl ? "Preview" : "Current image"}
+                          style={{ 
+                            width: '120px', 
+                            height: '120px', 
+                            objectFit: 'cover', 
+                            borderRadius: '8px',
+                            border: previewUrl ? '2px dashed #ffc107' : '2px solid #28a745'
+                          }}
+                        />
+                        {!previewUrl && formData.imageUrl && (
+                          <div style={{ fontSize: '12px', color: '#666', marginTop: '0.25rem' }}>
+                            <a href={formData.imageUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#007bff' }}>View full size</a>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <div>

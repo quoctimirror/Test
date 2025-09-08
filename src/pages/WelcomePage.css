@@ -18,6 +18,20 @@
   opacity: 1;
 }
 
+/* Background Image */
+.welcome-background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/welcome/Coming_soon.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
 /* Main content */
 .welcome-content {
   position: relative;

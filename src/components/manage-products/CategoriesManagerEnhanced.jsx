@@ -107,7 +107,9 @@ const CategoriesManagerEnhanced = () => {
         
         // Fetch options for each component
         transformedData.forEach(component => {
-          fetchOptionsForComponent(component.id);
+          if (component.id && component.id.trim()) {
+            fetchOptionsForComponent(component.id);
+          }
         });
       }
     } catch (error) {
@@ -119,7 +121,8 @@ const CategoriesManagerEnhanced = () => {
     try {
       const response = await api.get(`/api/component-optionals/component/${componentId}`);
       if (response.status === 200) {
-        const transformedData = response.data.map((item) => ({
+        const data = Array.isArray(response.data) ? response.data : [];
+        const transformedData = data.map((item) => ({
           id: item.componentOptionalId || item.id,
           componentOptionalName: item.componentOptionalName || item.name,
           description: item.description || "",
@@ -133,7 +136,11 @@ const CategoriesManagerEnhanced = () => {
         setComponentOptions(prev => ({ ...prev, [componentId]: transformedData }));
       }
     } catch (error) {
-      console.error(`Error fetching options for component ${componentId}:`, error);
+      // Handle both 404 (component not found) and other errors gracefully
+      setComponentOptions(prev => ({ ...prev, [componentId]: [] }));
+      if (error.response?.status !== 404) {
+        console.error(`Error fetching options for component ${componentId}:`, error);
+      }
     }
   };
 

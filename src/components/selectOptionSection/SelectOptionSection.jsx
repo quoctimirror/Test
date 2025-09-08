@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SelectOptionSection.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
-import api from "@api/axiosConfig";
+import { categoriesAPI, componentsAPI, componentOptionalsAPI, handleAPIError } from "../../services/api";
 
 const SelectOptionSection = () => {
   const navigate = useNavigate();
@@ -71,27 +71,33 @@ const SelectOptionSection = () => {
     // If Overview tab is selected, return empty array (no options to display)
     if (activeTab === "Overview") return [];
 
-    // Find the component that matches the active tab
+    // Find the component that matches the active tab - handle different field names
     const currentComponent = components.find(
-      (comp) => comp.componentName === activeTab
+      (comp) => (comp.componentName || comp.name) === activeTab
     );
-    if (!currentComponent) return [];
+    
+    if (!currentComponent) {
+      return [];
+    }
 
-    // Filter options by componentId and reverse the order
-    return componentOptions
-      .filter((option) => option.componentId === currentComponent.componentId)
+    // Filter options by componentId - handle different field names
+    const componentId = currentComponent.componentId || currentComponent.id;
+    const filteredOptions = componentOptions
+      .filter((option) => option.componentId === componentId)
       .reverse();
+    
+    return filteredOptions;
   };
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
 
-    // Update user selections with current tab and option
+    // Update user selections with current tab and option - handle different field names
     const updatedSelections = {
       ...userSelections,
       [activeTab]: {
-        componentOptionalId: option.componentOptionalId,
-        componentOptionalName: option.componentOptionalName,
+        componentOptionalId: option.componentOptionalId || option.id,
+        componentOptionalName: option.componentOptionalName || option.name,
         componentId: option.componentId,
       },
     };
@@ -121,31 +127,35 @@ const SelectOptionSection = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch categories
-        const categoriesResponse = await api.get("/api/categories");
+        // Fetch categories using API Gateway
+        const categoriesResponse = await categoriesAPI.getAll();
         const categoriesData = categoriesResponse.data;
         setCategories(categoriesData);
 
-        // Find and set the Ring category (CAT0001) as selected
+        // Find and set the Ring category - backend uses 'CAT000001' format
         const ringCategory = categoriesData.find(
-          (cat) => cat.categoryId === "CAT0001"
+          (cat) => cat.id === "CAT000001" || cat.categoryName === "Rings"
         );
+        
         if (ringCategory) {
           setSelectedCategory(ringCategory);
         }
 
-        // Fetch components
-        const componentsResponse = await api.get("/api/components");
+        // Fetch components using API Gateway
+        const componentsResponse = await componentsAPI.getAll();
         const componentsData = componentsResponse.data;
 
-        // Filter components by categoryId CAT0001 and reverse the order
+        // Filter components by categoryId - backend uses 'CAT000001' format
         const ringComponents = componentsData
-          .filter((comp) => comp.categoryId === "CAT0001")
+          .filter((comp) => comp.categoryId === "CAT000001" || comp.categoryId === ringCategory?.id)
           .reverse();
+        
         setComponents(ringComponents);
 
-        // Create tabs from component names and add Overview tab at the end
-        const componentTabs = ringComponents.map((comp) => comp.componentName);
+        // Create tabs from component names - handle different possible field names
+        const componentTabs = ringComponents.map((comp) => 
+          comp.componentName || comp.name || 'Unnamed Component'
+        );
         const allTabs = [...componentTabs, "Overview"];
         setTabs(allTabs);
 
@@ -154,12 +164,13 @@ const SelectOptionSection = () => {
           setActiveTab(componentTabs[0]);
         }
 
-        // Fetch component options
-        const optionsResponse = await api.get("/api/component-optionals");
+        // Fetch component options using API Gateway
+        const optionsResponse = await componentOptionalsAPI.getAll();
         const optionsData = optionsResponse.data;
         setComponentOptions(optionsData);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        const errorInfo = handleAPIError(error, 'Failed to load configuration data');
+        console.error("Error fetching data:", errorInfo.message);
 
         // Fallback data khi API thất bại
 
@@ -480,10 +491,10 @@ const SelectOptionSection = () => {
           ) : (
             getCurrentTabOptions().map((option) => (
               <div
-                key={option.componentOptionalId}
+                key={option.componentOptionalId || option.id}
                 className={`option ${
-                  selectedOption?.componentOptionalId ===
-                  option.componentOptionalId
+                  (selectedOption?.componentOptionalId || selectedOption?.id) ===
+                  (option.componentOptionalId || option.id)
                     ? "selected"
                     : ""
                 }`}
@@ -491,7 +502,7 @@ const SelectOptionSection = () => {
               >
                 <div className="circle"></div>
                 <div className="label bodytext-3--no-margin">
-                  {option.componentOptionalName}
+                  {option.componentOptionalName || option.name || 'Unnamed Option'}
                 </div>
               </div>
             ))
@@ -502,7 +513,7 @@ const SelectOptionSection = () => {
         <div className="summary">
           <h2 className="bodytext-1--no-margin">From {currentPrice}</h2>
           <ShineGlassButton
-            theme="shine"
+            theme="footer"
             width={274}
             height={57}
             fontSize={14}
@@ -512,7 +523,7 @@ const SelectOptionSection = () => {
             Book An Appointment
           </ShineGlassButton>
           <ShineGlassButton
-            theme="shine"
+            theme="light"
             width={274}
             height={57}
             fontSize={14}

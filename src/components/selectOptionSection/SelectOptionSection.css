@@ -257,9 +257,9 @@
   margin-top: auto;
 }
 
-.summary > div + div {
+/* .summary > div + div {
   margin-top: 15px;
-}
+} */
 
 .summary > div:first-child {
   margin-top: 15px;
@@ -283,17 +283,6 @@
 /* Order Now Button Custom Styling */
 .order-now-button {
   margin-top: 6px;
-  background: white !important;
-  color: rgba(0, 0, 0, 0.75) !important;
-  border: 1px solid rgba(0, 0, 0, 0.2) !important;
-  backdrop-filter: none !important;
-  transition: all 0.3s ease !important;
-}
-
-.order-now-button:hover {
-  background: rgba(0, 0, 0, 1) !important;
-  color: white !important;
-  border: 1px solid rgba(0, 0, 0, 1) !important;
 }
 
 /* More Detail Link */
@@ -609,7 +598,7 @@
   }
 
   .ring-image {
-    transform: scale(2.0);
+    transform: scale(2);
   }
 
   .tabs {
@@ -625,7 +614,8 @@
     width: 700px;
   }
 
-  .help, .summary {
+  .help,
+  .summary {
     width: 250px;
     height: 180px;
     padding: 10px;
@@ -667,7 +657,9 @@
     height: auto;
   }
 
-  .help, .summary, .content {
+  .help,
+  .summary,
+  .content {
     width: 100%;
     max-width: 500px;
     flex-basis: auto;
@@ -677,7 +669,8 @@
     height: 150px;
   }
 
-  .help, .summary {
+  .help,
+  .summary {
     height: 150px;
   }
 
@@ -754,7 +747,8 @@
     padding: 10px;
   }
 
-  .help, .summary {
+  .help,
+  .summary {
     height: 120px;
     padding: 8px;
   }
