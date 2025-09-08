@@ -151,39 +151,67 @@ const MyPlayground = () => {
         
         
         tick: function() {
-          // Update debug panel with what this controller is pointing at
-          const raycaster = this.el.components.raycaster;
-          const debugStatus = document.querySelector('#debug-status');
+          // Update global debug status to show both controllers' targets
+          this.updateGlobalDebugStatus();
           
+          // VR log occasionally
+          const raycaster = this.el.components.raycaster;
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
             if (intersectedEl.classList.contains('interactive')) {
-              // Update debug panel to show targeting
-              if (debugStatus) {
-                const hand = this.el.id === 'rightController' ? 'R' : 'L';
-                debugStatus.setAttribute('value', `${hand} → ${intersectedEl.id}`);
-                debugStatus.setAttribute('color', '#00ffff'); // Cyan when targeting
-              }
-              
-              // Rare VR log to avoid spam
-              if (window.vrLog && Math.random() < 0.01) { // 1% of frames
+              if (window.vrLog && Math.random() < 0.005) { // 0.5% of frames
                 window.vrLog(`🎯 ${this.el.id} → ${intersectedEl.id}`);
               }
             }
-          } else {
-            // Not pointing at anything - show controller status
-            if (debugStatus && Math.random() < 0.1) { // Update 10% of frames
-              const rightController = document.querySelector('#rightController');
-              const leftController = document.querySelector('#leftController');
-              
-              let rightActive = rightController?.components?.['oculus-touch-controls'] && rightController?.components?.['laser-controls'];
-              let leftActive = leftController?.components?.['oculus-touch-controls'] && leftController?.components?.['laser-controls'];
-              
-              const statusText = `R:${rightActive ? '✅' : '❌'} L:${leftActive ? '✅' : '❌'} (${rightActive && leftActive ? 'DUAL' : rightActive || leftActive ? 'SINGLE' : 'NONE'})`;
-              debugStatus.setAttribute('value', statusText);
-              const color = rightActive && leftActive ? '#00ff00' : (rightActive || leftActive) ? '#ffff00' : '#ff0000';
-              debugStatus.setAttribute('color', color);
+          }
+        },
+        
+        updateGlobalDebugStatus: function() {
+          // Only update from right controller to avoid conflicts
+          if (this.el.id !== 'rightController') return;
+          
+          const debugStatus = document.querySelector('#debug-status');
+          if (!debugStatus) return;
+          
+          const rightController = document.querySelector('#rightController');
+          const leftController = document.querySelector('#leftController');
+          
+          // Check what each controller is pointing at
+          let rightTarget = 'none';
+          let leftTarget = 'none';
+          
+          if (rightController?.components?.raycaster) {
+            const rightRay = rightController.components.raycaster;
+            if (rightRay.intersectedEls && rightRay.intersectedEls.length > 0) {
+              const target = rightRay.intersectedEls[0];
+              if (target.classList.contains('interactive')) {
+                rightTarget = target.id;
+              }
             }
+          }
+          
+          if (leftController?.components?.raycaster) {
+            const leftRay = leftController.components.raycaster;
+            if (leftRay.intersectedEls && leftRay.intersectedEls.length > 0) {
+              const target = leftRay.intersectedEls[0];
+              if (target.classList.contains('interactive')) {
+                leftTarget = target.id;
+              }
+            }
+          }
+          
+          // Build debug message
+          const rightStatus = rightTarget === 'none' ? '❌' : `→${rightTarget}`;
+          const leftStatus = leftTarget === 'none' ? '❌' : `→${leftTarget}`;
+          
+          const statusText = `R:${rightStatus} | L:${leftStatus}`;
+          debugStatus.setAttribute('value', statusText);
+          
+          // Color based on activity
+          if (rightTarget !== 'none' || leftTarget !== 'none') {
+            debugStatus.setAttribute('color', '#00ffff'); // Cyan when targeting
+          } else {
+            debugStatus.setAttribute('color', '#ffff00'); // Yellow when idle
           }
         }
       });
@@ -249,7 +277,7 @@ const MyPlayground = () => {
             }
           });
           
-          this.el.addEventListener('raycaster-intersected-cleared', (evt) => {
+          this.el.addEventListener('raycaster-intersected-cleared', () => {
             console.log('🎯 HOVER END:', this.el.id);
             
             // VR Log
