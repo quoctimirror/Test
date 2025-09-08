@@ -14,6 +14,9 @@ const MyPlayground = () => {
           this.originalColor = null;
           this.isSelected = false;
           
+          // Lưu scale ban đầu
+          this.originalScale = this.el.getAttribute('scale') || {x: 1, y: 1, z: 1};
+          
           // Desktop interaction
           this.isDragging = false;
           this.mouseX = 0;
@@ -34,15 +37,40 @@ const MyPlayground = () => {
           // === VR INTERACTIONS ===
           // Khi controller chỉ vào (hover)
           this.el.addEventListener('raycaster-intersected', (evt) => {
-            if (evt.detail.el.id === 'rightController' || evt.detail.el.id === 'leftController') {
+            const controller = evt.detail.el;
+            if (controller.id === 'rightController' || controller.id === 'leftController') {
               this.highlight();
+              
+              // Haptic feedback khi hover
+              if (controller.components.haptics) {
+                controller.components.haptics.pulse(0.1, 50); // Rung nhẹ 50ms
+              }
+              
+              // Hiển thị tooltip hover
+              const tooltipEl = document.createElement('a-text');
+              tooltipEl.setAttribute('id', `tooltip-${this.el.id}`);
+              tooltipEl.setAttribute('value', this.el.id || 'Object');
+              tooltipEl.setAttribute('align', 'center');
+              tooltipEl.setAttribute('color', '#ffffff');
+              tooltipEl.setAttribute('scale', '0.3 0.3 0.3');
+              tooltipEl.setAttribute('position', '0 0.5 0');
+              tooltipEl.setAttribute('look-at', '[camera]');
+              this.el.appendChild(tooltipEl);
+              
+              console.log('VR Hover on:', this.el.id);
             }
           });
           
           // Khi controller không chỉ vào nữa
-          this.el.addEventListener('raycaster-intersected-cleared', () => {
+          this.el.addEventListener('raycaster-intersected-cleared', (evt) => {
             if (!this.isSelected) {
               this.unhighlight();
+              
+              // Xóa tooltip
+              const tooltip = this.el.querySelector(`#tooltip-${this.el.id}`);
+              if (tooltip) {
+                tooltip.remove();
+              }
             }
           });
           
@@ -184,14 +212,40 @@ const MyPlayground = () => {
         },
         
         highlight: function() {
-          // Tạo hiệu ứng highlight màu vàng
+          // Hiệu ứng highlight khác nhau cho từng loại object
           const mesh = this.el.getObject3D('mesh');
-          if (mesh) {
+          const tagName = this.el.tagName.toLowerCase();
+          
+          if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
+            // Cho primitive shapes của A-Frame
+            this.el.setAttribute('material', 'emissive', '#00ff00');
+            this.el.setAttribute('material', 'emissiveIntensity', 0.4);
+            
+            // Animation scale khi hover
+            const currentScale = this.el.getAttribute('scale');
+            this.el.setAttribute('animation__scaleup', {
+              property: 'scale',
+              to: `${currentScale.x * 1.1} ${currentScale.y * 1.1} ${currentScale.z * 1.1}`,
+              dur: 200,
+              easing: 'easeOutElastic'
+            });
+          } else if (mesh) {
+            // Cho GLB models như nhẫn
             mesh.traverse(child => {
               if (child.material) {
-                child.material.emissive = new window.THREE.Color(0xFFFF00);
-                child.material.emissiveIntensity = 0.3;
+                child.material.emissive = new window.THREE.Color(0x00ff00);
+                child.material.emissiveIntensity = 0.4;
+                child.material.needsUpdate = true;
               }
+            });
+            
+            // Animation scale cho model
+            const currentScale = this.el.getAttribute('scale');
+            this.el.setAttribute('animation__scaleup', {
+              property: 'scale',
+              to: `${currentScale.x * 1.2} ${currentScale.y * 1.2} ${currentScale.z * 1.2}`,
+              dur: 200,
+              easing: 'easeOutElastic'
             });
           }
         },
@@ -199,12 +253,38 @@ const MyPlayground = () => {
         unhighlight: function() {
           // Xóa hiệu ứng highlight
           const mesh = this.el.getObject3D('mesh');
-          if (mesh) {
+          const tagName = this.el.tagName.toLowerCase();
+          
+          if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
+            // Reset primitive shapes
+            this.el.setAttribute('material', 'emissive', '#000000');
+            this.el.setAttribute('material', 'emissiveIntensity', 0);
+            
+            // Animation scale về ban đầu
+            const originalScale = this.el.components['vr-selectable'].originalScale || {x: 1, y: 1, z: 1};
+            this.el.setAttribute('animation__scaledown', {
+              property: 'scale',
+              to: `${originalScale.x} ${originalScale.y} ${originalScale.z}`,
+              dur: 200,
+              easing: 'easeOutQuad'
+            });
+          } else if (mesh) {
+            // Reset GLB models
             mesh.traverse(child => {
               if (child.material) {
                 child.material.emissive = new window.THREE.Color(0x000000);
                 child.material.emissiveIntensity = 0;
+                child.material.needsUpdate = true;
               }
+            });
+            
+            // Animation scale về ban đầu cho model
+            const originalScale = this.el.components['vr-selectable'].originalScale || {x: 0.01, y: 0.01, z: 0.01};
+            this.el.setAttribute('animation__scaledown', {
+              property: 'scale',
+              to: `${originalScale.x} ${originalScale.y} ${originalScale.z}`,
+              dur: 200,
+              easing: 'easeOutQuad'
             });
           }
         },
@@ -489,18 +569,37 @@ const MyPlayground = () => {
         </a-entity>
         
         
-        {/* VR Controllers cho Quest 3 */}
+        {/* VR Controllers cho Quest 3 với laser pointer */}
         <a-entity
           id="rightController" 
           oculus-touch-controls="hand: right"
-          laser-controls
-          raycaster="objects: .interactive">
+          laser-controls="hand: right"
+          raycaster="objects: .interactive; lineColor: #00ff00; lineOpacity: 0.7"
+          haptics="events: raycaster-intersected; dur: 50; force: 0.1"
+          line="color: #00ff00; opacity: 0.7"
+        >
+          {/* Visual indicator cho controller */}
+          <a-sphere 
+            radius="0.02" 
+            color="#00ff00"
+            position="0 0 -0.05"
+          ></a-sphere>
         </a-entity>
+        
         <a-entity
           id="leftController" 
           oculus-touch-controls="hand: left"
-          laser-controls
-          raycaster="objects: .interactive">
+          laser-controls="hand: left"
+          raycaster="objects: .interactive; lineColor: #0099ff; lineOpacity: 0.7"
+          haptics="events: raycaster-intersected; dur: 50; force: 0.1"
+          line="color: #0099ff; opacity: 0.7"
+        >
+          {/* Visual indicator cho controller */}
+          <a-sphere 
+            radius="0.02" 
+            color="#0099ff"
+            position="0 0 -0.05"
+          ></a-sphere>
         </a-entity>
 
       </a-scene>
