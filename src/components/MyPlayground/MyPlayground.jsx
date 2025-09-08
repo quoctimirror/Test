@@ -50,25 +50,56 @@ const MyPlayground = () => {
         // Test message
         window.vrLog('🚀 VR Console Debug Overlay Active!');
         
-        // Debug controller detection
+        // Enhanced controller debugging
         setTimeout(() => {
           const rightController = document.querySelector('#rightController');
           const leftController = document.querySelector('#leftController');
           
+          window.vrLog('🔍 CONTROLLER DEBUG:');
+          
           if (rightController) {
-            window.vrLog('✅ Right controller found');
-            window.vrLog(`🎮 Right raycaster: ${!!rightController.components.raycaster}`);
+            const hasOculus = !!rightController.components['oculus-touch-controls'];
+            const hasLaser = !!rightController.components['laser-controls'];
+            const hasRaycaster = !!rightController.components.raycaster;
+            
+            window.vrLog(`✅ RIGHT: oculus:${hasOculus} laser:${hasLaser} ray:${hasRaycaster}`);
           } else {
             window.vrLog('❌ Right controller NOT found');
           }
           
           if (leftController) {
-            window.vrLog('✅ Left controller found');
-            window.vrLog(`🎮 Left raycaster: ${!!leftController.components.raycaster}`);
+            const hasHand = !!leftController.components['hand-controls'];
+            const hasLaser = !!leftController.components['laser-controls'];
+            const hasRaycaster = !!leftController.components.raycaster;
+            
+            window.vrLog(`✅ LEFT: hand:${hasHand} laser:${hasLaser} ray:${hasRaycaster}`);
           } else {
             window.vrLog('❌ Left controller NOT found');
           }
-        }, 2000);
+          
+          // Check if in VR mode
+          const scene = document.querySelector('a-scene');
+          if (scene) {
+            const inVR = scene.is('vr-mode');
+            window.vrLog(`🥽 VR Mode: ${inVR}`);
+          }
+          
+          // Auto-fallback for left controller
+          setTimeout(() => {
+            const leftMain = document.querySelector('#leftController');
+            const leftFallback = document.querySelector('#leftControllerFallback');
+            
+            if (leftMain && !leftMain.components['oculus-touch-controls']?.connected) {
+              window.vrLog('🔄 Switching to fallback left controller');
+              leftMain.setAttribute('visible', false);
+              if (leftFallback) {
+                leftFallback.setAttribute('visible', true);
+                leftFallback.setAttribute('id', 'leftController'); // Rename for event handling
+              }
+            }
+          }, 2000);
+          
+        }, 3000);
       }
     }, 1000);
 
@@ -694,22 +725,34 @@ const MyPlayground = () => {
         </a-entity>
         
         
-        {/* Real Oculus Touch Controllers for Meta Quest 3 */}
+        {/* VR Controllers - Try both approaches */}
         <a-entity
           id="rightController" 
           oculus-touch-controls="hand: right"
-          laser-controls
+          laser-controls="hand: right"
           touch-plus-controller
           raycaster="objects: .interactive; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
         >
         </a-entity>
         
+        {/* Try multiple left controller approaches */}
         <a-entity
           id="leftController" 
           oculus-touch-controls="hand: left"
-          laser-controls
+          laser-controls="hand: left" 
           touch-plus-controller
-          raycaster="objects: .interactive; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
+          raycaster="objects: .interactive; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 10"
+        >
+        </a-entity>
+        
+        {/* Fallback left controller */}
+        <a-entity
+          id="leftControllerFallback"
+          hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"
+          laser-controls="hand: left"
+          touch-plus-controller
+          raycaster="objects: .interactive; showLine: true; lineColor: #ffff00; lineOpacity: 1.0; far: 10"
+          visible="false"
         >
         </a-entity>
 
