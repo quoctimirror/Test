@@ -82,6 +82,20 @@ const MyPlayground = () => {
         if (scene) {
           scene.addEventListener('enter-vr', () => {
             window.vrDebug('🥽 Entered VR mode');
+            
+            // Test controller detection after entering VR
+            setTimeout(() => {
+              const rightController = document.querySelector('#rightController');
+              const leftController = document.querySelector('#leftController');
+              window.vrDebug(`Controllers: R:${!!rightController} L:${!!leftController}`);
+              
+              if (rightController) {
+                window.vrDebug('✅ Right controller found');
+              }
+              if (leftController) {
+                window.vrDebug('✅ Left controller found');
+              }
+            }, 2000);
           });
           
           scene.addEventListener('exit-vr', () => {
@@ -694,6 +708,13 @@ const MyPlayground = () => {
             scale="0.3 0.3 0.3"
             look-at="[camera]"
           ></a-text>
+          
+          {/* Debug sphere to show controller position */}
+          <a-sphere
+            radius="0.02"
+            color="#00ff00"
+            position="0 0 -0.1"
+          ></a-sphere>
         </a-entity>
         
         <a-entity
@@ -713,6 +734,13 @@ const MyPlayground = () => {
             scale="0.3 0.3 0.3"
             look-at="[camera]"
           ></a-text>
+          
+          {/* Debug sphere to show controller position */}
+          <a-sphere
+            radius="0.02"
+            color="#ff0000"
+            position="0 0 -0.1"
+          ></a-sphere>
         </a-entity>
         
         {/* VR Debug Display */}
@@ -784,6 +812,26 @@ const MyPlayground = () => {
             color="#ffffff"
             scale="0.3 0.3 0.3"
           ></a-text>
+          
+          {/* Test button */}
+          <a-box
+            id="test-trigger-button"
+            width="1"
+            height="0.3"
+            depth="0.1"
+            position="0 -0.8 0.01"
+            color="#ff9900"
+            class="interactive grabbable"
+            vr-selectable
+          >
+            <a-text
+              value="TRIGGER TEST"
+              position="0 0 0.06"
+              align="center"
+              color="#000000"
+              scale="0.8 0.8 0.8"
+            ></a-text>
+          </a-box>
         </a-entity>
 
       </a-scene>
