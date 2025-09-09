@@ -489,6 +489,7 @@ const MyPlayground = () => {
         {/* Sky - Wireframe sphere */}
         <a-entity
           hide-on-enter-ar
+          hide-on-enter-vr
           geometry="primitive: sphere; radius: 500"
           material="color: #ffffff; wireframe: true; transparent: true; opacity: 0.1; side: back">
         </a-entity>
@@ -496,6 +497,7 @@ const MyPlayground = () => {
         {/* Ground base - nền đen */}
         <a-entity
           hide-on-enter-ar
+          hide-on-enter-vr
           rotation="-90 0 0"
           position="0 0 0"
           geometry="primitive: plane; width: 100; height: 100;"
@@ -510,6 +512,7 @@ const MyPlayground = () => {
               {/* Đường dọc */}
               <a-entity
                 hide-on-enter-ar
+                hide-on-enter-vr
                 position={`${pos} 0.01 0`}
                 geometry="primitive: plane; width: 0.1; height: 100;"
                 rotation="-90 0 0"
@@ -518,6 +521,7 @@ const MyPlayground = () => {
               {/* Đường ngang */}
               <a-entity
                 hide-on-enter-ar
+                hide-on-enter-vr
                 position={`0 0.01 ${pos}`}
                 geometry="primitive: plane; width: 100; height: 0.1;"
                 rotation="-90 0 0"
