@@ -116,30 +116,76 @@ const MyPlayground = () => {
     if (window.AFRAME && !window.AFRAME.components['touch-plus-controller']) {
       window.AFRAME.registerComponent('touch-plus-controller', {
         init: function() {
-          // Bind trigger events
+          // Bind trigger events for grab and move
           this.onTriggerDown = this.onTriggerDown.bind(this);
+          this.onTriggerUp = this.onTriggerUp.bind(this);
           this.el.addEventListener('triggerdown', this.onTriggerDown);
+          this.el.addEventListener('triggerup', this.onTriggerUp);
+          
+          this.grabbedObject = null;
+          this.grabOffset = new window.THREE.Vector3();
         },
         
         onTriggerDown: function() {
           const raycaster = this.el.components.raycaster;
           
-          window.vrDebug(`🔫 TRIGGER: ${this.el.id}`);
+          window.vrDebug(`🔫 TRIGGER DOWN: ${this.el.id}`);
           
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
             window.vrDebug(`🎯 Hit: ${intersectedEl.id}`);
             
-            // Check if object has interactive classes
-            if (intersectedEl.classList.contains('interactive') || intersectedEl.classList.contains('grabbable')) {
-              window.vrDebug(`✅ Clicking: ${intersectedEl.id}`);
-              // Emit click event to entity
-              intersectedEl.emit('click');
+            // Check if object can be grabbed
+            if (intersectedEl.classList.contains('grabbable') || intersectedEl.classList.contains('interactive')) {
+              this.grabbedObject = intersectedEl;
+              
+              // Calculate grab offset
+              const controllerPos = new window.THREE.Vector3();
+              const objectPos = new window.THREE.Vector3();
+              
+              this.el.object3D.getWorldPosition(controllerPos);
+              intersectedEl.object3D.getWorldPosition(objectPos);
+              
+              this.grabOffset.subVectors(objectPos, controllerPos);
+              
+              window.vrDebug(`✅ GRABBED: ${intersectedEl.id}`);
+              
+              // Visual feedback
+              intersectedEl.setAttribute('material', 'emissive', '#ffff00');
+              intersectedEl.setAttribute('material', 'emissiveIntensity', 0.5);
             } else {
-              window.vrDebug(`❌ No interactive class: ${intersectedEl.id}`);
+              window.vrDebug(`❌ Cannot grab: ${intersectedEl.id}`);
             }
           } else {
             window.vrDebug('❌ No objects hit');
+          }
+        },
+        
+        onTriggerUp: function() {
+          if (this.grabbedObject) {
+            window.vrDebug(`✋ RELEASED: ${this.grabbedObject.id}`);
+            
+            // Reset visual feedback
+            this.grabbedObject.setAttribute('material', 'emissive', '#000000');
+            this.grabbedObject.setAttribute('material', 'emissiveIntensity', 0);
+            
+            this.grabbedObject = null;
+          }
+        },
+        
+        tick: function() {
+          // Move grabbed object with controller
+          if (this.grabbedObject) {
+            const controllerPos = new window.THREE.Vector3();
+            this.el.object3D.getWorldPosition(controllerPos);
+            
+            const newPos = controllerPos.add(this.grabOffset);
+            
+            this.grabbedObject.setAttribute('position', {
+              x: newPos.x,
+              y: newPos.y,
+              z: newPos.z
+            });
           }
         },
         
@@ -694,7 +740,6 @@ const MyPlayground = () => {
         <a-entity
           id="rightController" 
           meta-touch-controls="hand: right; model: true"
-          grab
           laser-controls="hand: right"
           touch-plus-controller
           raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 50; lineHeight: 0.005"
@@ -720,7 +765,6 @@ const MyPlayground = () => {
         <a-entity
           id="leftController" 
           meta-touch-controls="hand: left; model: true"
-          grab
           laser-controls="hand: left" 
           touch-plus-controller
           raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 50; lineHeight: 0.005"
