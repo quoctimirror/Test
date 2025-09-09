@@ -24,172 +24,7 @@ const MyPlayground = () => {
     
     // Wait for A-Frame to initialize first
     setTimeout(() => {
-      // === VR CONSOLE DEBUG OVERLAY ===
       if (typeof window !== 'undefined' && window.AFRAME) {
-        let logCount = 0;
-        
-        // Custom VR log function (don't override console.log)
-        window.vrLog = function(...args) {
-          console.log(...args); // Still log to browser console
-          
-          // Create visible text in VR scene
-          const logText = args.join(' ');
-          showLogInVR(logText, logCount++);
-        };
-        
-        function showLogInVR(text, count) {
-          const scene = document.querySelector('a-scene');
-          if (scene && scene.hasLoaded) {
-            // Position logs vertically
-            const yPosition = 4 - (count % 10) * 0.3; // Stack 10 logs, then loop
-            
-            const logEl = document.createElement('a-text');
-            logEl.setAttribute('id', `vr-log-${count}`);
-            logEl.setAttribute('value', `[${count}] ${text}`);
-            logEl.setAttribute('position', `-3 ${yPosition} -2`);
-            logEl.setAttribute('color', '#00ff00');
-            logEl.setAttribute('scale', '0.8 0.8 0.8');
-            logEl.setAttribute('align', 'left');
-            logEl.setAttribute('look-at', '[camera]');
-            scene.appendChild(logEl);
-            
-            // Remove after 5 seconds
-            setTimeout(() => {
-              const existingLog = document.querySelector(`#vr-log-${count}`);
-              if (existingLog) {
-                existingLog.remove();
-              }
-            }, 5000);
-          }
-        }
-        
-        // Test message
-        window.vrLog('🚀 VR Console Debug Overlay Active!');
-        
-        // Listen for grab events
-        setTimeout(() => {
-          const scene = document.querySelector('a-scene');
-          if (scene) {
-            // Track grab start events
-            scene.addEventListener('child-attached', (evt) => {
-              if (evt.detail.el.hasAttribute('grabbable')) {
-                evt.detail.el.addEventListener('grabstart', (grabEvt) => {
-                  const grabbedObj = grabEvt.target.id;
-                  const grabStatus = document.querySelector('#grab-status');
-                  if (grabStatus) {
-                    grabStatus.setAttribute('value', `🤏 GRABBED: ${grabbedObj}`);
-                    grabStatus.setAttribute('color', '#00ff00');
-                  }
-                  if (window.vrLog) {
-                    window.vrLog(`🤏 GRABBED: ${grabbedObj}`);
-                  }
-                });
-                
-                evt.detail.el.addEventListener('grabend', (grabEvt) => {
-                  const releasedObj = grabEvt.target.id;
-                  const grabStatus = document.querySelector('#grab-status');
-                  if (grabStatus) {
-                    grabStatus.setAttribute('value', `✋ RELEASED: ${releasedObj}`);
-                    grabStatus.setAttribute('color', '#ffaa00');
-                  }
-                  if (window.vrLog) {
-                    window.vrLog(`✋ RELEASED: ${releasedObj}`);
-                  }
-                  
-                  // Reset after 2 seconds
-                  setTimeout(() => {
-                    if (grabStatus) {
-                      grabStatus.setAttribute('value', 'No objects grabbed');
-                      grabStatus.setAttribute('color', '#ff9900');
-                    }
-                  }, 2000);
-                });
-              }
-            });
-          }
-        }, 3000);
-        
-        // Controller debugging - only Oculus Touch
-        setTimeout(() => {
-          const controllers = [
-            { id: 'rightController', name: 'RIGHT' },
-            { id: 'leftController', name: 'LEFT' }
-          ];
-          
-          window.vrLog('🔍 OCULUS CONTROLLER DEBUG:');
-          
-          let activeControllers = 0;
-          
-          controllers.forEach(ctrl => {
-            const element = document.querySelector(`#${ctrl.id}`);
-            if (element) {
-              const hasOculus = !!element.components['oculus-touch-controls'];
-              const hasLaser = !!element.components['laser-controls'];
-              const hasRaycaster = !!element.components.raycaster;
-              const connected = hasOculus ? element.components['oculus-touch-controls']?.connected : false;
-              
-              if (connected) activeControllers++;
-              
-              window.vrLog(`${connected ? '✅' : '❌'} ${ctrl.name}: oculus:${hasOculus} laser:${hasLaser} ray:${hasRaycaster} conn:${connected}`);
-            }
-          });
-          
-          window.vrLog(`🎮 Active Controllers: ${activeControllers}/2`);
-          
-          // Check VR mode
-          const scene = document.querySelector('a-scene');
-          if (scene) {
-            const inVR = scene.is('vr-mode');
-            window.vrLog(`🥽 VR Mode: ${inVR}`);
-          }
-          
-          // Real-time debug updates
-          const updateDebugStatus = () => {
-            const debugStatus = document.querySelector('#debug-status');
-            const rightController = document.querySelector('#rightController');
-            const leftController = document.querySelector('#leftController');
-            
-            // Better controller detection
-            let rightActive = false;
-            let leftActive = false;
-            
-            if (rightController?.components) {
-              const oculusRight = rightController.components['oculus-touch-controls'];
-              const laserRight = rightController.components['laser-controls'];
-              rightActive = !!(oculusRight && laserRight);
-            }
-            
-            if (leftController?.components) {
-              const oculusLeft = leftController.components['oculus-touch-controls'];
-              const laserLeft = leftController.components['laser-controls'];
-              leftActive = !!(oculusLeft && laserLeft);
-            }
-            
-            const statusText = `R:${rightActive ? '✅' : '❌'} L:${leftActive ? '✅' : '❌'} (${rightActive && leftActive ? 'DUAL' : rightActive || leftActive ? 'SINGLE' : 'NONE'})`;
-            
-            // Debug why NONE - log to VR occasionally
-            if (!rightActive && !leftActive && window.vrLog && Math.random() < 0.1) {
-              window.vrLog(`🔍 DEBUG: Right exists:${!!rightController} Left exists:${!!leftController}`);
-              if (rightController) {
-                window.vrLog(`🔍 Right components: ${Object.keys(rightController.components || {}).join(',')}`);
-              }
-              if (leftController) {
-                window.vrLog(`🔍 Left components: ${Object.keys(leftController.components || {}).join(',')}`);
-              }
-            }
-            
-            if (debugStatus) {
-              debugStatus.setAttribute('value', statusText);
-              const color = rightActive && leftActive ? '#00ff00' : (rightActive || leftActive) ? '#ffff00' : '#ff0000';
-              debugStatus.setAttribute('color', color);
-            }
-          };
-          
-          // Update every 2 seconds
-          setInterval(updateDebugStatus, 2000);
-          updateDebugStatus(); // Initial update
-          
-        }, 4000);
       }
     }, 1000);
 
@@ -197,117 +32,23 @@ const MyPlayground = () => {
     if (window.AFRAME && !window.AFRAME.components['touch-plus-controller']) {
       window.AFRAME.registerComponent('touch-plus-controller', {
         init: function() {
-          console.log(`🎮 VR Controller initialized: ${this.el.id}`);
-          
           // Bind trigger events
           this.onTriggerDown = this.onTriggerDown.bind(this);
           this.el.addEventListener('triggerdown', this.onTriggerDown);
-          
-          // Use VR log after a delay to ensure it's available
-          setTimeout(() => {
-            if (window.vrLog) {
-              window.vrLog(`🎮 Controller: ${this.el.id} ready`);
-            }
-          }, 500);
         },
         
         onTriggerDown: function() {
           const raycaster = this.el.components.raycaster;
-          const hand = this.el.id === 'rightController' ? 'RIGHT' : 'LEFT';
           
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
             if (intersectedEl.classList.contains('interactive')) {
-              console.log(`🔫 ${hand} TRIGGER: Selected ${intersectedEl.id}`);
-              
-              // VR Debug
-              if (window.vrLog) {
-                window.vrLog(`🔫 ${hand} → ${intersectedEl.id} SELECTED`);
-              }
-              
               // Emit click event to entity
               intersectedEl.emit('click');
-              
-              // Update debug panel
-              const debugStatus = document.querySelector('#debug-status');
-              if (debugStatus) {
-                debugStatus.setAttribute('value', `${hand} SELECTED: ${intersectedEl.id}`);
-                debugStatus.setAttribute('color', '#ff00ff'); // Magenta for selection
-              }
-            }
-          } else {
-            console.log(`🔫 ${hand} TRIGGER: No target`);
-            if (window.vrLog) {
-              window.vrLog(`🔫 ${hand} TRIGGER: No target`);
             }
           }
         },
         
-        
-        tick: function() {
-          // Update global debug status to show both controllers' targets
-          this.updateGlobalDebugStatus();
-          
-          // VR log occasionally
-          const raycaster = this.el.components.raycaster;
-          if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
-            const intersectedEl = raycaster.intersectedEls[0];
-            if (intersectedEl.classList.contains('interactive')) {
-              if (window.vrLog && Math.random() < 0.005) { // 0.5% of frames
-                window.vrLog(`🎯 ${this.el.id} → ${intersectedEl.id}`);
-              }
-            }
-          }
-        },
-        
-        updateGlobalDebugStatus: function() {
-          // Only update from right controller to avoid conflicts
-          if (this.el.id !== 'rightController') return;
-          
-          const debugStatus = document.querySelector('#debug-status');
-          if (!debugStatus) return;
-          
-          const rightController = document.querySelector('#rightController');
-          const leftController = document.querySelector('#leftController');
-          
-          // Check what each controller is pointing at
-          let rightTarget = 'none';
-          let leftTarget = 'none';
-          
-          if (rightController?.components?.raycaster) {
-            const rightRay = rightController.components.raycaster;
-            if (rightRay.intersectedEls && rightRay.intersectedEls.length > 0) {
-              const target = rightRay.intersectedEls[0];
-              if (target.classList.contains('interactive')) {
-                rightTarget = target.id;
-              }
-            }
-          }
-          
-          if (leftController?.components?.raycaster) {
-            const leftRay = leftController.components.raycaster;
-            if (leftRay.intersectedEls && leftRay.intersectedEls.length > 0) {
-              const target = leftRay.intersectedEls[0];
-              if (target.classList.contains('interactive')) {
-                leftTarget = target.id;
-              }
-            }
-          }
-          
-          // Build debug message
-          const rightStatus = rightTarget === 'none' ? '❌' : `→${rightTarget}`;
-          const leftStatus = leftTarget === 'none' ? '❌' : `→${leftTarget}`;
-          
-          const statusText = `R:${rightStatus} | L:${leftStatus}`;
-          debugStatus.setAttribute('value', statusText);
-          
-          // Color based on activity
-          if (rightTarget !== 'none' || leftTarget !== 'none') {
-            debugStatus.setAttribute('color', '#00ffff'); // Cyan when targeting
-          } else {
-            debugStatus.setAttribute('color', '#ffff00'); // Yellow when idle
-          }
-        }
       });
     }
 
@@ -363,11 +104,6 @@ const MyPlayground = () => {
             if (this.isDragging) {
               evt.stopPropagation();
               return;
-            }
-            
-            console.log('🖱️ CLICK EVENT:', this.el.id);
-            if (window.vrLog) {
-              window.vrLog(`🖱️ SELECTED: ${this.el.id}`);
             }
             
             this.toggleSelection();
@@ -486,7 +222,7 @@ const MyPlayground = () => {
         },
         
         highlight: function() {
-          // Hiệu ứng highlight rõ ràng khi được controller trỏ tới
+          // Simple highlight without scaling
           const mesh = this.el.getObject3D('mesh');
           const tagName = this.el.tagName.toLowerCase();
           
@@ -501,37 +237,17 @@ const MyPlayground = () => {
             // Primitive shapes - change main color dramatically
             this.el.setAttribute('color', '#00FFFF'); // Bright cyan
             this.el.setAttribute('material', 'emissive', '#00ff00');
-            this.el.setAttribute('material', 'emissiveIntensity', 0.8); // Very bright
-            
-            // Scale animation
-            const currentScale = this.el.getAttribute('scale');
-            this.el.setAttribute('animation__scaleup', {
-              property: 'scale',
-              to: `${currentScale.x * 1.2} ${currentScale.y * 1.2} ${currentScale.z * 1.2}`,
-              dur: 300,
-              easing: 'easeOutElastic'
-            });
+            this.el.setAttribute('material', 'emissiveIntensity', 0.5);
           } else if (mesh) {
             // GLB models như nhẫn
             mesh.traverse(child => {
               if (child.material) {
                 child.material.emissive = new window.THREE.Color(0x00ffff); // Cyan emissive
-                child.material.emissiveIntensity = 0.8;
+                child.material.emissiveIntensity = 0.5;
                 child.material.needsUpdate = true;
               }
             });
-            
-            // Scale animation cho model
-            const currentScale = this.el.getAttribute('scale');
-            this.el.setAttribute('animation__scaleup', {
-              property: 'scale',
-              to: `${currentScale.x * 1.5} ${currentScale.y * 1.5} ${currentScale.z * 1.5}`,
-              dur: 300,
-              easing: 'easeOutElastic'
-            });
           }
-          
-          console.log('🌟 HIGHLIGHTED:', this.el.id);
         },
         
         unhighlight: function() {
@@ -548,15 +264,6 @@ const MyPlayground = () => {
             // Reset emissive
             this.el.setAttribute('material', 'emissive', '#000000');
             this.el.setAttribute('material', 'emissiveIntensity', 0);
-            
-            // Scale về ban đầu
-            const originalScale = this.originalScale || {x: 0.5, y: 0.5, z: 0.5}; // Box default scale
-            this.el.setAttribute('animation__scaledown', {
-              property: 'scale',
-              to: `${originalScale.x} ${originalScale.y} ${originalScale.z}`,
-              dur: 200,
-              easing: 'easeOutQuad'
-            });
           } else if (mesh) {
             // Reset GLB models
             mesh.traverse(child => {
@@ -566,18 +273,7 @@ const MyPlayground = () => {
                 child.material.needsUpdate = true;
               }
             });
-            
-            // Scale về ban đầu cho model
-            const originalScale = this.originalScale || {x: 0.01, y: 0.01, z: 0.01};
-            this.el.setAttribute('animation__scaledown', {
-              property: 'scale',
-              to: `${originalScale.x} ${originalScale.y} ${originalScale.z}`,
-              dur: 200,
-              easing: 'easeOutQuad'
-            });
           }
-          
-          console.log('🔄 UNHIGHLIGHTED:', this.el.id);
         },
         
         toggleSelection: function() {
@@ -585,18 +281,11 @@ const MyPlayground = () => {
           const tagName = this.el.tagName.toLowerCase();
           
           if (this.isSelected) {
-            console.log('✅ Entity đã được chọn:', this.el.id);
-            
             // Đổi màu test-box thành vàng khi select
             if (this.el.id === 'test-box' && tagName === 'a-box') {
               this.el.setAttribute('color', '#FFFF00'); // Màu vàng
               this.el.setAttribute('material', 'emissive', '#FFFF00');
               this.el.setAttribute('material', 'emissiveIntensity', 0.3);
-              console.log('🟡 test-box chuyển màu VÀNG');
-              
-              if (window.vrLog) {
-                window.vrLog('🟡 test-box → YELLOW');
-              }
             } else {
               // Các entity khác (như ring) - dùng outline xanh lá
               const mesh = this.el.getObject3D('mesh');
@@ -610,18 +299,11 @@ const MyPlayground = () => {
               }
             }
           } else {
-            console.log('❌ Bỏ chọn entity:', this.el.id);
-            
             // Reset test-box về màu đỏ
             if (this.el.id === 'test-box' && tagName === 'a-box') {
               this.el.setAttribute('color', '#FF0000'); // Màu đỏ ban đầu
               this.el.setAttribute('material', 'emissive', '#000000');
               this.el.setAttribute('material', 'emissiveIntensity', 0);
-              console.log('🔴 test-box trở về màu ĐỎ');
-              
-              if (window.vrLog) {
-                window.vrLog('🔴 test-box → RED');
-              }
             } else {
               // Reset các entity khác
               this.unhighlight();
