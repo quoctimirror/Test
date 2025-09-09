@@ -23,7 +23,7 @@ const MyPlayground = () => {
     loadVRComponents();
     
     // VR Debug function
-    let debugLines = [];
+    let debugLines = ['🌐 Vercel HTTPS deployment', '🔍 Initializing...'];
     window.vrDebug = function(message) {
       console.log(message); // Still log to console
       
@@ -33,31 +33,68 @@ const MyPlayground = () => {
         debugLines.shift(); // Keep only last 5 messages
       }
       
-      // Update VR debug panel
-      for (let i = 0; i < 5; i++) {
-        const debugEl = document.querySelector(`#debug-line-${i + 1}`);
-        if (debugEl) {
-          const text = debugLines[i] || '';
-          debugEl.setAttribute('value', text);
-          
-          // Color based on message type
-          if (text.includes('✅')) {
-            debugEl.setAttribute('color', '#00ff00');
-          } else if (text.includes('❌')) {
-            debugEl.setAttribute('color', '#ff0000');
-          } else if (text.includes('🎯')) {
-            debugEl.setAttribute('color', '#ffff00');
-          } else {
-            debugEl.setAttribute('color', '#ffffff');
+      // Update VR debug panel immediately if elements exist
+      setTimeout(() => {
+        for (let i = 0; i < 5; i++) {
+          const debugEl = document.querySelector(`#debug-line-${i + 1}`);
+          if (debugEl) {
+            const text = debugLines[i] || '';
+            debugEl.setAttribute('value', text);
+            
+            // Color based on message type
+            if (text.includes('✅')) {
+              debugEl.setAttribute('color', '#00ff00');
+            } else if (text.includes('❌')) {
+              debugEl.setAttribute('color', '#ff0000');
+            } else if (text.includes('🎯')) {
+              debugEl.setAttribute('color', '#ffff00');
+            } else {
+              debugEl.setAttribute('color', '#ffffff');
+            }
           }
         }
-      }
+      }, 100);
     };
+    
+    // Initial debug message
+    setTimeout(() => {
+      window.vrDebug('🎮 VR System loading...');
+      window.vrDebug(`🌍 URL: ${window.location.hostname}`);
+    }, 500);
     
     // Wait for A-Frame to initialize first
     setTimeout(() => {
       if (typeof window !== 'undefined' && window.AFRAME) {
         window.vrDebug('🚀 VR Debug System Active');
+        
+        // Check VR capabilities
+        if (navigator.xr) {
+          window.vrDebug('✅ WebXR supported');
+          navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+            window.vrDebug(supported ? '✅ VR session supported' : '❌ VR session not supported');
+          });
+        } else {
+          window.vrDebug('❌ WebXR not supported');
+        }
+        
+        // Check if in VR mode
+        const scene = document.querySelector('a-scene');
+        if (scene) {
+          scene.addEventListener('enter-vr', () => {
+            window.vrDebug('🥽 Entered VR mode');
+          });
+          
+          scene.addEventListener('exit-vr', () => {
+            window.vrDebug('🚪 Exited VR mode');
+          });
+        }
+        
+        // Check HTTPS
+        if (location.protocol === 'https:') {
+          window.vrDebug('🔒 HTTPS active');
+        } else {
+          window.vrDebug('⚠️ Need HTTPS for VR');
+        }
       }
     }, 1000);
 
@@ -705,19 +742,19 @@ const MyPlayground = () => {
           {/* Debug messages */}
           <a-text
             id="debug-line-1"
-            value="Ready..."
+            value="🌐 Vercel HTTPS deployment"
             position="0 0.8 0.01"
             align="center"
-            color="#ffffff"
+            color="#00ff00"
             scale="0.3 0.3 0.3"
           ></a-text>
           
           <a-text
             id="debug-line-2"
-            value=""
+            value="🔍 Initializing..."
             position="0 0.5 0.01"
             align="center"
-            color="#ffffff"
+            color="#ffff00"
             scale="0.3 0.3 0.3"
           ></a-text>
           
