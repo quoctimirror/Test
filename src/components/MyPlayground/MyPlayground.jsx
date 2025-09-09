@@ -22,9 +22,42 @@ const MyPlayground = () => {
     
     loadVRComponents();
     
+    // VR Debug function
+    let debugLines = [];
+    window.vrDebug = function(message) {
+      console.log(message); // Still log to console
+      
+      // Add to VR display
+      debugLines.push(message);
+      if (debugLines.length > 5) {
+        debugLines.shift(); // Keep only last 5 messages
+      }
+      
+      // Update VR debug panel
+      for (let i = 0; i < 5; i++) {
+        const debugEl = document.querySelector(`#debug-line-${i + 1}`);
+        if (debugEl) {
+          const text = debugLines[i] || '';
+          debugEl.setAttribute('value', text);
+          
+          // Color based on message type
+          if (text.includes('✅')) {
+            debugEl.setAttribute('color', '#00ff00');
+          } else if (text.includes('❌')) {
+            debugEl.setAttribute('color', '#ff0000');
+          } else if (text.includes('🎯')) {
+            debugEl.setAttribute('color', '#ffff00');
+          } else {
+            debugEl.setAttribute('color', '#ffffff');
+          }
+        }
+      }
+    };
+    
     // Wait for A-Frame to initialize first
     setTimeout(() => {
       if (typeof window !== 'undefined' && window.AFRAME) {
+        window.vrDebug('🚀 VR Debug System Active');
       }
     }, 1000);
 
@@ -40,18 +73,22 @@ const MyPlayground = () => {
         onTriggerDown: function() {
           const raycaster = this.el.components.raycaster;
           
+          window.vrDebug(`🔫 TRIGGER: ${this.el.id}`);
+          
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
-            console.log('🎯 TRIGGER detected:', intersectedEl.id, 'classes:', intersectedEl.className);
+            window.vrDebug(`🎯 Hit: ${intersectedEl.id}`);
             
             // Check if object has interactive classes
             if (intersectedEl.classList.contains('interactive') || intersectedEl.classList.contains('grabbable')) {
-              console.log('✅ TRIGGERING click event on:', intersectedEl.id);
+              window.vrDebug(`✅ Clicking: ${intersectedEl.id}`);
               // Emit click event to entity
               intersectedEl.emit('click');
+            } else {
+              window.vrDebug(`❌ No interactive class: ${intersectedEl.id}`);
             }
           } else {
-            console.log('❌ No intersected elements found');
+            window.vrDebug('❌ No objects hit');
           }
         },
         
@@ -106,7 +143,7 @@ const MyPlayground = () => {
           
           // Click để chọn (từ VR trigger hoặc Desktop mouse)
           this.el.addEventListener('click', (evt) => {
-            console.log('🖱️ CLICK received on:', this.el.id);
+            window.vrDebug(`🖱️ CLICK: ${this.el.id}`);
             
             // Prevent click khi đang drag
             if (this.isDragging) {
@@ -114,7 +151,7 @@ const MyPlayground = () => {
               return;
             }
             
-            console.log('🎯 Toggling selection for:', this.el.id);
+            window.vrDebug(`🎯 Selecting: ${this.el.id}`);
             this.toggleSelection();
           });
           
@@ -574,6 +611,9 @@ const MyPlayground = () => {
           scale="0.01 0.01 0.01"
           // Rotation để nhẫn quay đúng hướng
           rotation="0 0 0"
+          // Thêm collision box để raycaster detect được tốt hơn
+          geometry="primitive: box; width: 2; height: 2; depth: 2"
+          material="opacity: 0; transparent: true"
           // Thêm class interactive và grabbable để có thể tương tác với controllers
           class="interactive grabbable"
         >
@@ -606,7 +646,7 @@ const MyPlayground = () => {
           grab
           laser-controls="hand: right"
           touch-plus-controller
-          raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
+          raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 50; lineHeight: 0.005"
         >
           {/* Visual indicator for right hand */}
           <a-text
@@ -625,7 +665,7 @@ const MyPlayground = () => {
           grab
           laser-controls="hand: left" 
           touch-plus-controller
-          raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 10"
+          raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 50; lineHeight: 0.005"
         >
           {/* Visual indicator for left hand */}
           <a-text
@@ -638,8 +678,76 @@ const MyPlayground = () => {
           ></a-text>
         </a-entity>
         
-        {/* Removed generic controllers - they were causing yellow lasers */}
-
+        {/* VR Debug Display */}
+        <a-entity
+          id="vr-debug-panel"
+          position="2 2 -2"
+          rotation="0 -30 0"
+        >
+          {/* Background */}
+          <a-plane
+            width="4"
+            height="3"
+            color="#000000"
+            opacity="0.8"
+            material="transparent: true"
+          ></a-plane>
+          
+          {/* Title */}
+          <a-text
+            value="🔧 VR DEBUG"
+            position="0 1.2 0.01"
+            align="center"
+            color="#00ff00"
+            scale="0.5 0.5 0.5"
+          ></a-text>
+          
+          {/* Debug messages */}
+          <a-text
+            id="debug-line-1"
+            value="Ready..."
+            position="0 0.8 0.01"
+            align="center"
+            color="#ffffff"
+            scale="0.3 0.3 0.3"
+          ></a-text>
+          
+          <a-text
+            id="debug-line-2"
+            value=""
+            position="0 0.5 0.01"
+            align="center"
+            color="#ffffff"
+            scale="0.3 0.3 0.3"
+          ></a-text>
+          
+          <a-text
+            id="debug-line-3"
+            value=""
+            position="0 0.2 0.01"
+            align="center"
+            color="#ffffff"
+            scale="0.3 0.3 0.3"
+          ></a-text>
+          
+          <a-text
+            id="debug-line-4"
+            value=""
+            position="0 -0.1 0.01"
+            align="center"
+            color="#ffffff"
+            scale="0.3 0.3 0.3"
+          ></a-text>
+          
+          <a-text
+            id="debug-line-5"
+            value=""
+            position="0 -0.4 0.01"
+            align="center"
+            color="#ffffff"
+            scale="0.3 0.3 0.3"
+          ></a-text>
+        </a-entity>
 
       </a-scene>
     </div>
