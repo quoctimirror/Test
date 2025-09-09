@@ -34,17 +34,24 @@ if (!AFRAME.components.grab) {
   },
 
   onGripClose: function (evt) {
+    console.log('🤏 GRIP DOWN detected, button:', evt.detail.id);
     if (this.grabbing) { return; }
     this.grabbing = true;
     this.pressedButtonId = evt.detail.id;
     delete this.previousPosition;
+    console.log('🤏 Started grabbing mode');
   },
 
   onGripOpen: function (evt) {
+    console.log('✋ GRIP UP detected, button:', evt.detail.id);
     var hitEl = this.hitEl;
     if (this.pressedButtonId !== evt.detail.id) { return; }
     this.grabbing = false;
-    if (!hitEl) { return; }
+    if (!hitEl) { 
+      console.log('✋ No hitEl to release');
+      return; 
+    }
+    console.log('✋ Releasing object:', hitEl.id);
     hitEl.removeState(this.GRABBED_STATE);
     hitEl.emit('grabend');
     this.hitEl = undefined;
@@ -52,10 +59,22 @@ if (!AFRAME.components.grab) {
 
   onHit: function (evt) {
     var hitEl = evt.detail.el;
+    console.log('🎯 HIT detected on:', hitEl?.id, 'grabbing mode:', this.grabbing);
+    
     // If the element is already grabbed (it could be grabbed by another controller).
     // If the hand is not grabbing the element does not stick.
     // If we're already grabbing something you can't grab again.
-    if (!hitEl || hitEl.is(this.GRABBED_STATE) || !this.grabbing || this.hitEl) { return; }
+    if (!hitEl || hitEl.is(this.GRABBED_STATE) || !this.grabbing || this.hitEl) { 
+      console.log('🚫 Cannot grab:', {
+        noHitEl: !hitEl,
+        alreadyGrabbed: hitEl?.is(this.GRABBED_STATE),
+        notGrabbing: !this.grabbing,
+        alreadyHasHitEl: !!this.hitEl
+      });
+      return; 
+    }
+    
+    console.log('✅ GRABBED object:', hitEl.id);
     hitEl.addState(this.GRABBED_STATE);
     this.hitEl = hitEl;
   },

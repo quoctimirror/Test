@@ -42,10 +42,16 @@ const MyPlayground = () => {
           
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
-            if (intersectedEl.classList.contains('interactive')) {
+            console.log('🎯 TRIGGER detected:', intersectedEl.id, 'classes:', intersectedEl.className);
+            
+            // Check if object has interactive classes
+            if (intersectedEl.classList.contains('interactive') || intersectedEl.classList.contains('grabbable')) {
+              console.log('✅ TRIGGERING click event on:', intersectedEl.id);
               // Emit click event to entity
               intersectedEl.emit('click');
             }
+          } else {
+            console.log('❌ No intersected elements found');
           }
         },
         
@@ -100,12 +106,15 @@ const MyPlayground = () => {
           
           // Click để chọn (từ VR trigger hoặc Desktop mouse)
           this.el.addEventListener('click', (evt) => {
+            console.log('🖱️ CLICK received on:', this.el.id);
+            
             // Prevent click khi đang drag
             if (this.isDragging) {
               evt.stopPropagation();
               return;
             }
             
+            console.log('🎯 Toggling selection for:', this.el.id);
             this.toggleSelection();
           });
           
@@ -593,7 +602,7 @@ const MyPlayground = () => {
           grab
           laser-controls="hand: right"
           touch-plus-controller
-          raycaster="objects: .grabbable; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
+          raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
         >
           {/* Visual indicator for right hand */}
           <a-text
@@ -612,7 +621,7 @@ const MyPlayground = () => {
           grab
           laser-controls="hand: left" 
           touch-plus-controller
-          raycaster="objects: .grabbable; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 10"
+          raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 10"
         >
           {/* Visual indicator for left hand */}
           <a-text
