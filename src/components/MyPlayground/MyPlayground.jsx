@@ -1,10 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import './MyPlayground.css';
 
+// Import VR interaction components will be loaded in useEffect
+
 const MyPlayground = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
+    
+    // Import VR components after A-Frame is ready
+    const loadVRComponents = async () => {
+      try {
+        await import('../../utils/meta-touch-controls.js');
+        await import('../../utils/grabbable.js'); 
+        await import('../../utils/tracked-controls/components/grab.js');
+        console.log('✅ VR interaction components loaded');
+      } catch (error) {
+        console.error('❌ Failed to load VR components:', error);
+      }
+    };
+    
+    loadVRComponents();
     
     // Wait for A-Frame to initialize first
     setTimeout(() => {
@@ -49,6 +65,49 @@ const MyPlayground = () => {
         
         // Test message
         window.vrLog('🚀 VR Console Debug Overlay Active!');
+        
+        // Listen for grab events
+        setTimeout(() => {
+          const scene = document.querySelector('a-scene');
+          if (scene) {
+            // Track grab start events
+            scene.addEventListener('child-attached', (evt) => {
+              if (evt.detail.el.hasAttribute('grabbable')) {
+                evt.detail.el.addEventListener('grabstart', (grabEvt) => {
+                  const grabbedObj = grabEvt.target.id;
+                  const grabStatus = document.querySelector('#grab-status');
+                  if (grabStatus) {
+                    grabStatus.setAttribute('value', `🤏 GRABBED: ${grabbedObj}`);
+                    grabStatus.setAttribute('color', '#00ff00');
+                  }
+                  if (window.vrLog) {
+                    window.vrLog(`🤏 GRABBED: ${grabbedObj}`);
+                  }
+                });
+                
+                evt.detail.el.addEventListener('grabend', (grabEvt) => {
+                  const releasedObj = grabEvt.target.id;
+                  const grabStatus = document.querySelector('#grab-status');
+                  if (grabStatus) {
+                    grabStatus.setAttribute('value', `✋ RELEASED: ${releasedObj}`);
+                    grabStatus.setAttribute('color', '#ffaa00');
+                  }
+                  if (window.vrLog) {
+                    window.vrLog(`✋ RELEASED: ${releasedObj}`);
+                  }
+                  
+                  // Reset after 2 seconds
+                  setTimeout(() => {
+                    if (grabStatus) {
+                      grabStatus.setAttribute('value', 'No objects grabbed');
+                      grabStatus.setAttribute('color', '#ff9900');
+                    }
+                  }, 2000);
+                });
+              }
+            });
+          }
+        }, 3000);
         
         // Controller debugging - only Oculus Touch
         setTimeout(() => {
@@ -792,21 +851,23 @@ const MyPlayground = () => {
           </a-entity>
         </a-entity>
 
-        {/* Test Box - để kiểm tra A-Frame hoạt động */}
+        {/* Test Box - có thể grab và manipulate */}
         <a-box
           id="test-box"
           vr-selectable
+          grabbable
           position="0 1.6 -3"
           rotation="0 45 0"
           color="#FF0000"
           scale="0.5 0.5 0.5"
-          class="interactive"
+          class="interactive grabbable"
         ></a-box>
         
-        {/* NHẪN 3D - Sử dụng A-Frame's gltf-model trực tiếp */}
+        {/* NHẪN 3D - Có thể grab và manipulate */}
         <a-entity
           id="ring-entity"
           vr-selectable
+          grabbable
           gltf-model="/models/nhanAnhKhanhLam.glb"
           // VỊ TRÍ NHẪN CHO VR META QUEST 3:
           // - Y = 1.6: Đặt ở độ cao tầm mắt người dùng VR (eye level)
@@ -818,19 +879,39 @@ const MyPlayground = () => {
           scale="0.01 0.01 0.01"
           // Rotation để nhẫn quay đúng hướng
           rotation="0 0 0"
-          // Thêm class interactive để có thể tương tác với controllers
-          class="interactive"
+          // Thêm class interactive và grabbable để có thể tương tác với controllers
+          class="interactive grabbable"
         >
         </a-entity>
         
+        {/* Additional grabbable objects for testing */}
+        <a-sphere
+          id="test-sphere"
+          grabbable
+          position="2 1.6 -2"
+          color="#00FF00"
+          radius="0.3"
+          class="grabbable"
+        ></a-sphere>
         
-        {/* Dual VR Controllers - Both hands simultaneously */}
+        <a-cylinder
+          id="test-cylinder"
+          grabbable
+          position="-2 1.6 -2"
+          color="#0000FF" 
+          height="0.6"
+          radius="0.2"
+          class="grabbable"
+        ></a-cylinder>
+        
+        {/* VR Controllers with grab functionality */}
         <a-entity
           id="rightController" 
-          oculus-touch-controls="hand: right; model: true"
+          meta-touch-controls="hand: right; model: true"
+          grab
           laser-controls="hand: right"
           touch-plus-controller
-          raycaster="objects: .interactive; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
+          raycaster="objects: .grabbable; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 10"
         >
           {/* Visual indicator for right hand */}
           <a-text
@@ -845,10 +926,11 @@ const MyPlayground = () => {
         
         <a-entity
           id="leftController" 
-          oculus-touch-controls="hand: left; model: true"
+          meta-touch-controls="hand: left; model: true"
+          grab
           laser-controls="hand: left" 
           touch-plus-controller
-          raycaster="objects: .interactive; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 10"
+          raycaster="objects: .grabbable; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 10"
         >
           {/* Visual indicator for left hand */}
           <a-text
@@ -863,49 +945,6 @@ const MyPlayground = () => {
         
         {/* Removed generic controllers - they were causing yellow lasers */}
 
-        {/* VR Debug Panel - Fixed position */}
-        <a-entity
-          id="debug-panel"
-          position="-4 3 -3"
-          rotation="0 15 0"
-        >
-          {/* Background panel */}
-          <a-plane
-            width="6"
-            height="4"
-            color="#000000"
-            opacity="0.7"
-            material="transparent: true"
-          ></a-plane>
-          
-          {/* Debug title */}
-          <a-text
-            value="🚀 VR DEBUG CONSOLE"
-            position="0 1.8 0.01"
-            align="center"
-            color="#00ff00"
-            scale="0.6 0.6 0.6"
-          ></a-text>
-          
-          {/* Instructions */}
-          <a-text
-            value="Point controllers at objects to see hover logs"
-            position="0 1.4 0.01"
-            align="center"
-            color="#ffff00"
-            scale="0.4 0.4 0.4"
-          ></a-text>
-          
-          {/* Status display */}
-          <a-text
-            id="debug-status"
-            value="Waiting for interactions..."
-            position="0 1.0 0.01"
-            align="center"
-            color="#ffffff"
-            scale="0.4 0.4 0.4"
-          ></a-text>
-        </a-entity>
 
       </a-scene>
     </div>
