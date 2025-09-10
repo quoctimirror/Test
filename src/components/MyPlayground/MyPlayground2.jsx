@@ -14,6 +14,23 @@ const MyPlayground2 = () => {
     // Initial debug message
     setTimeout(() => {
       window.vrDebug('🎮 VR Environment Loading...');
+      
+      // Check VR capabilities
+      if (navigator.xr) {
+        window.vrDebug('✅ WebXR supported');
+        navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+          window.vrDebug(supported ? '✅ VR session supported' : '❌ VR session not supported');
+        });
+      } else {
+        window.vrDebug('❌ WebXR not supported');
+      }
+      
+      // Check HTTPS
+      if (location.protocol === 'https:') {
+        window.vrDebug('🔒 HTTPS active');
+      } else {
+        window.vrDebug('⚠️ Need HTTPS for VR - VR button won\'t appear');
+      }
     }, 500);
 
     // Register HDR environment component
@@ -26,7 +43,7 @@ const MyPlayground2 = () => {
           // Load HDR environment using Three.js
           if (window.THREE) {
             const loader = new RGBELoader();
-            loader.load('/src/components/MyPlayground/rustig_koppie_puresky_4k.hdr', 
+            loader.load('/rustig_koppie_puresky_4k.hdr', 
               (texture) => {
                 texture.mapping = window.THREE.EquirectangularReflectionMapping;
                 
@@ -180,10 +197,38 @@ const MyPlayground2 = () => {
 
   return (
     <div className="myplayground2-container">
+      {/* Custom VR Enter Button */}
+      <button 
+        id="enterVRButton"
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          padding: '12px 20px',
+          backgroundColor: '#1976d2',
+          color: 'white',
+          border: 'none',
+          borderRadius: '25px',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          zIndex: 999,
+          boxShadow: '0 4px 8px rgba(0,0,0,0.3)'
+        }}
+        onClick={() => {
+          const scene = document.querySelector('a-scene');
+          if (scene) {
+            scene.enterVR();
+          }
+        }}
+      >
+        🥽 Enter VR
+      </button>
       <a-scene
         ref={sceneRef}
         renderer="colorManagement: true; sortTransparentObjects: true"
-        xr-mode-ui="XRMode: xr"
+        vr-mode-ui="enabled: true; enterVRButton: #enterVRButton"
+        webxr="requiredFeatures: hit-test,local-floor; optionalFeatures: hand-tracking,layers"
         className="myplayground2-scene"
       >
         {/* HDR Environment - using custom HDR loader */}
