@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import './MyPlayground2.css';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { ringEnhancer } from '../../utils/ringEnhancer.js';
+import { glbAnalyzer } from '../../utils/glbAnalyzer.js';
 
 const MyPlayground2 = () => {
   const sceneRef = useRef(null);
@@ -109,6 +111,9 @@ const MyPlayground2 = () => {
                 // Set as scene environment
                 scene.object3D.environment = texture;
                 scene.object3D.background = texture;
+                
+                // Store environment texture for ring materials
+                window.environmentTexture = texture;
                 
                 console.log('✅ HDR Environment loaded successfully');
               },
@@ -465,6 +470,73 @@ const MyPlayground2 = () => {
       });
     }
 
+    // Ring enhancer component
+    if (window.AFRAME && !window.AFRAME.components['ring-enhancer']) {
+      window.AFRAME.registerComponent('ring-enhancer', {
+        init: function() {
+          this.enhanced = false;
+          
+          // Listen for model load
+          this.el.addEventListener('model-loaded', () => {
+            if (!this.enhanced) {
+              this.enhanceRing();
+            }
+          });
+          
+          // If model already loaded
+          if (this.el.getObject3D('mesh')) {
+            setTimeout(() => {
+              if (!this.enhanced) {
+                this.enhanceRing();
+              }
+            }, 100);
+          }
+        },
+        
+        enhanceRing: function() {
+          const mesh = this.el.getObject3D('mesh');
+          console.log('🔍 Checking mesh:', mesh);
+          console.log('🌍 Environment texture:', window.environmentTexture);
+          
+          if (mesh) {
+            // Analyze GLB structure first
+            console.log('📊 Analyzing GLB structure...');
+            const analysis = glbAnalyzer.analyzeGLB(mesh, 'nhanAnhKhanhLam.glb');
+            
+            // Store analysis globally for inspection
+            window.ringAnalysis = analysis;
+            
+            console.log('💍 Enhancing ring with materials...');
+            
+            // Apply diamond and gold materials based on analysis
+            ringEnhancer.applyRingMaterials(mesh, window.environmentTexture);
+            this.enhanced = true;
+            
+            console.log('✨ Ring enhancement complete!');
+            console.log('🔗 Access full analysis with: window.ringAnalysis');
+          } else {
+            console.log('❌ No mesh found yet, will retry...');
+            // Retry after delay
+            setTimeout(() => {
+              const retryMesh = this.el.getObject3D('mesh');
+              if (retryMesh && !this.enhanced) {
+                console.log('🔄 Retrying enhancement...');
+                this.enhanceRing();
+              }
+            }, 1000);
+          }
+        },
+        
+        tick: function() {
+          // Update animation cho kim cương lấp lánh
+          const camera = this.el.sceneEl.camera;
+          if (camera && this.enhanced) {
+            ringEnhancer.updateAnimation(camera);
+          }
+        }
+      });
+    }
+
     return () => {
       // Cleanup if needed
     };
@@ -540,11 +612,12 @@ const MyPlayground2 = () => {
           </a-entity>
         </a-entity>
 
-        {/* NHẪN 3D - Có thể grab và manipulate */}
+        {/* NHẪN 3D - Enhanced với kim cương lấp lánh và vàng bóng */}
         <a-entity
           id="ring-entity"
           vr-selectable
           grabbable
+          ring-enhancer
           gltf-model="/models/nhanAnhKhanhLam.glb"
           position="0 1.6 -1"
           scale="0.01 0.01 0.01"
