@@ -6,32 +6,6 @@ const MyPlayground2 = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
-    // Initialize VR debug system
-    window.vrDebug = function(message) {
-      console.log(message);
-    };
-    
-    // Initial debug message
-    setTimeout(() => {
-      window.vrDebug('🎮 VR Environment Loading...');
-      
-      // Check VR capabilities
-      if (navigator.xr) {
-        window.vrDebug('✅ WebXR supported');
-        navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
-          window.vrDebug(supported ? '✅ VR session supported' : '❌ VR session not supported');
-        });
-      } else {
-        window.vrDebug('❌ WebXR not supported');
-      }
-      
-      // Check HTTPS
-      if (location.protocol === 'https:') {
-        window.vrDebug('🔒 HTTPS active');
-      } else {
-        window.vrDebug('⚠️ Need HTTPS for VR - VR button won\'t appear');
-      }
-    }, 500);
 
     // Register HDR environment component
     if (window.AFRAME && !window.AFRAME.components['hdr-environment']) {
@@ -51,14 +25,13 @@ const MyPlayground2 = () => {
                 scene.object3D.environment = texture;
                 scene.object3D.background = texture;
                 
-                window.vrDebug('✅ HDR Environment loaded successfully');
+                console.log('✅ HDR Environment loaded successfully');
               },
               (progress) => {
-                window.vrDebug(`📦 Loading HDR: ${Math.round(progress.loaded / progress.total * 100)}%`);
+                console.log(`📦 Loading HDR: ${Math.round(progress.loaded / progress.total * 100)}%`);
               },
               (error) => {
-                window.vrDebug('❌ Failed to load HDR environment');
-                console.error('HDR loading error:', error);
+                console.error('❌ Failed to load HDR environment:', error);
               }
             );
           }
@@ -82,11 +55,8 @@ const MyPlayground2 = () => {
         onTriggerDown: function() {
           const raycaster = this.el.components.raycaster;
           
-          window.vrDebug(`🔫 TRIGGER DOWN: ${this.el.id}`);
-          
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
-            window.vrDebug(`🎯 Hit: ${intersectedEl.id}`);
             
             if (intersectedEl.classList.contains('grabbable') || intersectedEl.classList.contains('interactive')) {
               this.grabbedObject = intersectedEl;
@@ -99,8 +69,6 @@ const MyPlayground2 = () => {
               
               this.grabOffset.subVectors(objectPos, controllerPos);
               
-              window.vrDebug(`✅ GRABBED: ${intersectedEl.id}`);
-              
               intersectedEl.setAttribute('material', 'emissive', '#ffff00');
               intersectedEl.setAttribute('material', 'emissiveIntensity', 0.5);
             }
@@ -109,8 +77,6 @@ const MyPlayground2 = () => {
         
         onTriggerUp: function() {
           if (this.grabbedObject) {
-            window.vrDebug(`✋ RELEASED: ${this.grabbedObject.id}`);
-            
             this.grabbedObject.setAttribute('material', 'emissive', '#000000');
             this.grabbedObject.setAttribute('material', 'emissiveIntensity', 0);
             
@@ -155,7 +121,6 @@ const MyPlayground2 = () => {
           });
           
           this.el.addEventListener('click', (evt) => {
-            window.vrDebug(`🎯 Selecting: ${this.el.id}`);
             this.toggleSelection();
           });
         },
@@ -305,6 +270,7 @@ const MyPlayground2 = () => {
             position="0 0 -0.1"
           ></a-sphere>
         </a-entity>
+
 
       </a-scene>
     </div>
