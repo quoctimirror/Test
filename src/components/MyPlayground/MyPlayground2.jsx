@@ -6,6 +6,35 @@ const MyPlayground2 = () => {
   const sceneRef = useRef(null);
 
   useEffect(() => {
+    // Import VR components after A-Frame is ready
+    const loadVRComponents = async () => {
+      try {
+        await import('../../utils/meta-touch-controls.js');
+        await import('../../utils/grabbable.js'); 
+        await import('../../utils/tracked-controls/components/grab.js');
+        console.log('✅ VR interaction components loaded');
+      } catch (error) {
+        console.error('❌ Failed to load VR components:', error);
+      }
+    };
+    
+    loadVRComponents();
+    
+    // Check WebXR support
+    setTimeout(() => {
+      if (navigator.xr) {
+        console.log('✅ WebXR supported');
+        navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+          console.log(supported ? '✅ VR session supported' : '❌ VR session not supported');
+        });
+      } else {
+        console.log('❌ WebXR not supported');
+      }
+      
+      if (location.protocol !== 'https:') {
+        console.log('⚠️ Need HTTPS for VR');
+      }
+    }, 1000);
 
     // Register HDR environment component
     if (window.AFRAME && !window.AFRAME.components['hdr-environment']) {
@@ -101,7 +130,7 @@ const MyPlayground2 = () => {
       });
     }
 
-    // VR Selectable component for ring interaction
+    // Component để chọn và tương tác với entity - Desktop + Touch Plus
     if (window.AFRAME && !window.AFRAME.components['vr-selectable']) {
       window.AFRAME.registerComponent('vr-selectable', {
         init: function() {
@@ -109,6 +138,15 @@ const MyPlayground2 = () => {
           this.originalColor = null;
           this.isSelected = false;
           
+          // Lưu scale ban đầu
+          this.originalScale = this.el.getAttribute('scale') || {x: 1, y: 1, z: 1};
+          
+          // Desktop interaction
+          this.isDragging = false;
+          this.mouseX = 0;
+          this.mouseY = 0;
+          
+          // Lưu màu gốc
           this.el.addEventListener('model-loaded', () => {
             const mesh = this.el.getObject3D('mesh');
             if (mesh) {
@@ -120,37 +158,253 @@ const MyPlayground2 = () => {
             }
           });
           
+          // === DESKTOP INTERACTIONS ===
+          // Mouse hover
+          this.el.addEventListener('mouseenter', () => {
+            this.highlight();
+            document.body.style.cursor = 'pointer';
+          });
+          
+          this.el.addEventListener('mouseleave', () => {
+            if (!this.isSelected) {
+              this.unhighlight();
+            }
+            if (!this.isDragging) {
+              document.body.style.cursor = 'default';
+            }
+          });
+          
+          // Click để chọn (từ VR trigger hoặc Desktop mouse)
           this.el.addEventListener('click', (evt) => {
+            // Prevent click khi đang drag
+            if (this.isDragging) {
+              evt.stopPropagation();
+              return;
+            }
+            
             this.toggleSelection();
           });
+          
+          // Desktop drag với chuột
+          this.el.addEventListener('mousedown', (evt) => {
+            if (this.isSelected) {
+              this.isDragging = true;
+              this.mouseX = evt.clientX;
+              this.mouseY = evt.clientY;
+              document.body.style.cursor = 'grabbing';
+              evt.stopPropagation();
+            }
+          });
+
+          // Desktop keyboard controls khi đã select
+          this.handleKeyboard = (evt) => {
+            if (!this.isSelected) return;
+            
+            const position = this.el.getAttribute('position');
+            const rotation = this.el.getAttribute('rotation');
+            const moveSpeed = 0.1;
+            const rotateSpeed = 5;
+            
+            switch(evt.key) {
+              // Di chuyển với Arrow Keys
+              case 'ArrowUp':
+                this.el.setAttribute('position', {x: position.x, y: position.y, z: position.z - moveSpeed});
+                break;
+              case 'ArrowDown':
+                this.el.setAttribute('position', {x: position.x, y: position.y, z: position.z + moveSpeed});
+                break;
+              case 'ArrowLeft':
+                this.el.setAttribute('position', {x: position.x - moveSpeed, y: position.y, z: position.z});
+                break;
+              case 'ArrowRight':
+                this.el.setAttribute('position', {x: position.x + moveSpeed, y: position.y, z: position.z});
+                break;
+              
+              // Di chuyển lên/xuống với Q/E
+              case 'q':
+              case 'Q':
+                this.el.setAttribute('position', {x: position.x, y: position.y - moveSpeed, z: position.z});
+                break;
+              case 'e':
+              case 'E':
+                this.el.setAttribute('position', {x: position.x, y: position.y + moveSpeed, z: position.z});
+                break;
+              
+              // Xoay với A/D (trục Y) và W/S (trục X)
+              case 'a':
+              case 'A':
+                this.el.setAttribute('rotation', {x: rotation.x, y: rotation.y - rotateSpeed, z: rotation.z});
+                break;
+              case 'd':
+              case 'D':
+                this.el.setAttribute('rotation', {x: rotation.x, y: rotation.y + rotateSpeed, z: rotation.z});
+                break;
+              case 'w':
+              case 'W':
+                this.el.setAttribute('rotation', {x: rotation.x - rotateSpeed, y: rotation.y, z: rotation.z});
+                break;
+              case 's':
+              case 'S':
+                this.el.setAttribute('rotation', {x: rotation.x + rotateSpeed, y: rotation.y, z: rotation.z});
+                break;
+              
+              // Reset position với R
+              case 'r':
+              case 'R':
+                this.el.setAttribute('position', '0 1.6 -1');
+                this.el.setAttribute('rotation', '0 0 0');
+                break;
+              
+              // Deselect với ESC
+              case 'Escape':
+                this.toggleSelection();
+                break;
+            }
+          };
+          
+          // Mouse move handler
+          this.handleMouseMove = (evt) => {
+            if (this.isDragging && this.isSelected) {
+              const deltaX = evt.clientX - this.mouseX;
+              const deltaY = evt.clientY - this.mouseY;
+              
+              const rotation = this.el.getAttribute('rotation');
+              
+              // Xoay entity khi drag chuột
+              this.el.setAttribute('rotation', {
+                x: rotation.x - deltaY * 0.5,
+                y: rotation.y + deltaX * 0.5,
+                z: rotation.z
+              });
+              
+              this.mouseX = evt.clientX;
+              this.mouseY = evt.clientY;
+            }
+          };
+          
+          // Mouse up handler
+          this.handleMouseUp = () => {
+            if (this.isDragging) {
+              this.isDragging = false;
+              document.body.style.cursor = 'pointer';
+            }
+          };
+          
+          // Add document-level event listeners
+          document.addEventListener('keydown', this.handleKeyboard);
+          document.addEventListener('mousemove', this.handleMouseMove);
+          document.addEventListener('mouseup', this.handleMouseUp);
+        },
+        
+        highlight: function() {
+          // Simple highlight without scaling
+          const mesh = this.el.getObject3D('mesh');
+          const tagName = this.el.tagName.toLowerCase();
+          
+          // Store original color for restoration
+          if (!this.originalColor) {
+            if (tagName === 'a-box') {
+              this.originalColor = this.el.getAttribute('color') || '#FF0000';
+            }
+          }
+          
+          if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
+            // Primitive shapes - change main color dramatically
+            this.el.setAttribute('color', '#00FFFF'); // Bright cyan
+            this.el.setAttribute('material', 'emissive', '#00ff00');
+            this.el.setAttribute('material', 'emissiveIntensity', 0.5);
+          } else if (mesh) {
+            // GLB models như nhẫn
+            mesh.traverse(child => {
+              if (child.material) {
+                child.material.emissive = new window.THREE.Color(0x00ffff); // Cyan emissive
+                child.material.emissiveIntensity = 0.5;
+                child.material.needsUpdate = true;
+              }
+            });
+          }
+        },
+        
+        unhighlight: function() {
+          // Reset về trạng thái ban đầu
+          const mesh = this.el.getObject3D('mesh');
+          const tagName = this.el.tagName.toLowerCase();
+          
+          if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
+            // Reset color về ban đầu
+            if (this.originalColor) {
+              this.el.setAttribute('color', this.originalColor);
+            }
+            
+            // Reset emissive
+            this.el.setAttribute('material', 'emissive', '#000000');
+            this.el.setAttribute('material', 'emissiveIntensity', 0);
+          } else if (mesh) {
+            // Reset GLB models
+            mesh.traverse(child => {
+              if (child.material) {
+                child.material.emissive = new window.THREE.Color(0x000000);
+                child.material.emissiveIntensity = 0;
+                child.material.needsUpdate = true;
+              }
+            });
+          }
         },
         
         toggleSelection: function() {
           this.isSelected = !this.isSelected;
+          const tagName = this.el.tagName.toLowerCase();
           
           if (this.isSelected) {
+            // Ring - dùng outline xanh lá
             const mesh = this.el.getObject3D('mesh');
             if (mesh) {
               mesh.traverse(child => {
                 if (child.material) {
                   child.material.emissive = new window.THREE.Color(0x00FF00);
                   child.material.emissiveIntensity = 0.5;
-                  child.material.needsUpdate = true;
                 }
               });
             }
           } else {
-            const mesh = this.el.getObject3D('mesh');
-            if (mesh) {
-              mesh.traverse(child => {
-                if (child.material) {
-                  child.material.emissive = new window.THREE.Color(0x000000);
-                  child.material.emissiveIntensity = 0;
-                  child.material.needsUpdate = true;
-                }
-              });
-            }
+            // Reset ring
+            this.unhighlight();
           }
+        },
+        
+        remove: function() {
+          // Cleanup desktop event listeners
+          document.removeEventListener('keydown', this.handleKeyboard);
+          document.removeEventListener('mousemove', this.handleMouseMove);
+          document.removeEventListener('mouseup', this.handleMouseUp);
+        }
+      });
+    }
+
+    // Hide on enter AR component
+    if (window.AFRAME && !window.AFRAME.components['hide-on-enter-ar']) {
+      window.AFRAME.registerComponent('hide-on-enter-ar', {
+        init: function () {
+          this.el.addEventListener('enter-ar', () => {
+            this.el.object3D.visible = false;
+          });
+          this.el.addEventListener('exit-ar', () => {
+            this.el.object3D.visible = true;
+          });
+        }
+      });
+    }
+
+    // Hide on enter VR component  
+    if (window.AFRAME && !window.AFRAME.components['hide-on-enter-vr']) {
+      window.AFRAME.registerComponent('hide-on-enter-vr', {
+        init: function () {
+          this.el.addEventListener('enter-vr', () => {
+            this.el.object3D.visible = false;
+          });
+          this.el.addEventListener('exit-vr', () => {
+            this.el.object3D.visible = true;
+          });
         }
       });
     }
@@ -162,38 +416,11 @@ const MyPlayground2 = () => {
 
   return (
     <div className="myplayground2-container">
-      {/* Custom VR Enter Button */}
-      <button 
-        id="enterVRButton"
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          padding: '12px 20px',
-          backgroundColor: '#1976d2',
-          color: 'white',
-          border: 'none',
-          borderRadius: '25px',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          zIndex: 999,
-          boxShadow: '0 4px 8px rgba(0,0,0,0.3)'
-        }}
-        onClick={() => {
-          const scene = document.querySelector('a-scene');
-          if (scene) {
-            scene.enterVR();
-          }
-        }}
-      >
-        🥽 Enter VR
-      </button>
       <a-scene
         ref={sceneRef}
+        obb-collider="showColliders: false"
         renderer="colorManagement: true; sortTransparentObjects: true"
-        vr-mode-ui="enabled: true; enterVRButton: #enterVRButton"
-        webxr="requiredFeatures: hit-test,local-floor; optionalFeatures: hand-tracking,layers"
+        xr-mode-ui="XRMode: xr"
         className="myplayground2-scene"
       >
         {/* HDR Environment - using custom HDR loader */}
@@ -201,12 +428,19 @@ const MyPlayground2 = () => {
           hdr-environment
         ></a-entity>
 
-        {/* Camera */}
+        {/* Camera với boundary checking */}
         <a-entity 
           id="cameraRig"
           look-controls
-          position="0 1.6 0"
+          position="0 2.0 0"
         >
+          {/* Mouse cursor cho desktop - chỉ hiện khi không trong VR */}
+          <a-entity 
+            cursor="rayOrigin: mouse; fuse: false"
+            raycaster="objects: .interactive"
+            hide-on-enter-vr
+          >
+          </a-entity>
         </a-entity>
 
         {/* NHẪN 3D - Có thể grab và manipulate */}
