@@ -472,11 +472,52 @@ const MyPlayground2 = () => {
 
   return (
     <div className="myplayground2-container">
+      {/* Force VR Button - always visible */}
+      <button 
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          padding: '12px 20px',
+          backgroundColor: '#1976d2',
+          color: 'white',
+          border: 'none',
+          borderRadius: '25px',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          zIndex: 999,
+          boxShadow: '0 4px 8px rgba(0,0,0,0.3)'
+        }}
+        onClick={async () => {
+          try {
+            const scene = document.querySelector('a-scene');
+            console.log('🔄 Attempting to enter VR...');
+            
+            if (scene && scene.is && scene.is('vr-mode')) {
+              console.log('🚪 Exiting VR...');
+              scene.exitVR();
+            } else if (scene) {
+              console.log('🥽 Entering VR...');
+              await scene.enterVR();
+              console.log('✅ VR entered successfully');
+            }
+          } catch (error) {
+            console.error('❌ VR Error:', error);
+            console.log('Browser:', navigator.userAgent);
+            console.log('WebXR available:', !!navigator.xr);
+            alert('VR Error: ' + error.message);
+          }
+        }}
+      >
+        🥽 Enter VR
+      </button>
       <a-scene
         ref={sceneRef}
         obb-collider="showColliders: false"
         renderer="colorManagement: true; sortTransparentObjects: true"
-        xr-mode-ui="XRMode: xr"
+        vr-mode-ui="enabled: true"
+        webxr="referenceSpaceType: local-floor"
         className="myplayground2-scene"
       >
         {/* HDR Environment - using custom HDR loader */}
