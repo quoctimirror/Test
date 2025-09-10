@@ -20,12 +20,28 @@ const MyPlayground2 = () => {
     
     loadVRComponents();
     
-    // Check WebXR support
+    // Check WebXR support and force VR button
     setTimeout(() => {
       if (navigator.xr) {
         console.log('✅ WebXR supported');
         navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
           console.log(supported ? '✅ VR session supported' : '❌ VR session not supported');
+          
+          // Force show VR button even if detection fails
+          const vrButton = document.querySelector('.a-enter-vr-button');
+          if (vrButton) {
+            vrButton.style.display = 'block';
+            console.log('🥽 VR button found and shown');
+          } else {
+            console.log('❌ VR button not found');
+            // Create custom VR button if A-Frame doesn't show one
+            setTimeout(() => {
+              if (!document.querySelector('.a-enter-vr-button')) {
+                console.log('🔧 Creating custom VR button');
+                createCustomVRButton();
+              }
+            }, 2000);
+          }
         });
       } else {
         console.log('❌ WebXR not supported');
@@ -35,6 +51,46 @@ const MyPlayground2 = () => {
         console.log('⚠️ Need HTTPS for VR');
       }
     }, 1000);
+
+    // Custom VR button creator
+    function createCustomVRButton() {
+      const vrButton = document.createElement('button');
+      vrButton.innerHTML = '🥽 Enter VR';
+      vrButton.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        background: #1976d2;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 999;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      `;
+      
+      vrButton.onclick = async () => {
+        try {
+          const scene = document.querySelector('a-scene');
+          if (scene && scene.is && scene.is('vr-mode')) {
+            scene.exitVR();
+            vrButton.innerHTML = '🥽 Enter VR';
+          } else if (scene) {
+            await scene.enterVR();
+            vrButton.innerHTML = '🚪 Exit VR';
+          }
+        } catch (error) {
+          console.error('VR Error:', error);
+          alert('VR not available: ' + error.message);
+        }
+      };
+      
+      document.body.appendChild(vrButton);
+      console.log('✅ Custom VR button created');
+    }
 
     // Register HDR environment component
     if (window.AFRAME && !window.AFRAME.components['hdr-environment']) {
