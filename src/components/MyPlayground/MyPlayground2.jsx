@@ -187,14 +187,26 @@ const MyPlayground2 = () => {
               
               // Add direct test event listeners
               this.el.addEventListener('thumbstickmoved', (evt) => {
-                console.log(`🧪 DIRECT thumbstickmoved test on ${this.el.id}:`, evt.detail);
+                const debugText = document.getElementById('debug-text');
+                if (debugText) {
+                  const msg = `🧪 thumbstick: ${this.el.id}`;
+                  const currentValue = debugText.getAttribute('value') || '';
+                  const lines = currentValue.split('\n').slice(-8);
+                  lines.push(msg);
+                  debugText.setAttribute('value', lines.join('\n'));
+                }
               });
               
               this.el.addEventListener('axismove', (evt) => {
-                console.log(`🧪 DIRECT axismove test on ${this.el.id}:`, evt.detail);
+                const debugText = document.getElementById('debug-text');
+                if (debugText) {
+                  const msg = `🧪 axis: ${this.el.id}`;
+                  const currentValue = debugText.getAttribute('value') || '';
+                  const lines = currentValue.split('\n').slice(-8);
+                  lines.push(msg);
+                  debugText.setAttribute('value', lines.join('\n'));
+                }
               });
-              
-              console.log('🧪 Added direct test event listeners to:', this.el.id);
             }, 1000);
           } else {
             console.error('❌ ThumbstickRotation not available!');
@@ -554,8 +566,15 @@ const MyPlayground2 = () => {
               console.error('❌ ThumbstickRotation not available during target setting!');
             }
             
-            // Log để debug
-            console.log('🎯 Ring selected - thumbstick rotation enabled');
+            // Update debug display
+            const debugText = document.getElementById('debug-text');
+            if (debugText) {
+              const msg = '🎯 RING SELECTED - Thumbstick Ready';
+              const currentValue = debugText.getAttribute('value') || '';
+              const lines = currentValue.split('\n').slice(-8);
+              lines.push(msg);
+              debugText.setAttribute('value', lines.join('\n'));
+            }
           } else {
             // Remove selected state
             this.el.removeAttribute('data-selected');
@@ -814,6 +833,25 @@ const MyPlayground2 = () => {
             hide-on-enter-vr
           >
           </a-entity>
+        </a-entity>
+
+        {/* Debug Display Panel */}
+        <a-entity
+          id="debug-panel"
+          geometry="primitive: plane; width: 2; height: 1.5"
+          material="color: #000000; opacity: 0.8"
+          position="-2 2 -2"
+          rotation="0 30 0"
+        >
+          <a-text
+            id="debug-text"
+            value="DEBUG INFO:\n- Initializing...\n- Waiting for controllers..."
+            color="#00ff00"
+            position="0 0 0.01"
+            align="center"
+            width="4"
+            font="monoid"
+          ></a-text>
         </a-entity>
 
         {/* NHẪN 3D - Enhanced với kim cương lấp lánh và vàng bóng */}

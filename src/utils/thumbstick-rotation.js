@@ -5,6 +5,21 @@
  * Xử lý việc xoay đối tượng 360° bằng thumbstick của Meta Quest controllers
  */
 
+// Debug display helper
+const updateDebugDisplay = (message) => {
+  if (typeof document !== 'undefined') {
+    const debugText = document.getElementById('debug-text');
+    if (debugText) {
+      const currentTime = new Date().toLocaleTimeString();
+      const currentValue = debugText.getAttribute('value') || '';
+      const lines = currentValue.split('\n').slice(-8); // Keep last 8 lines
+      lines.push(`[${currentTime}] ${message}`);
+      debugText.setAttribute('value', lines.join('\n'));
+    }
+  }
+  console.log(message);
+};
+
 export const ThumbstickRotation = {
   // Configuration
   config: {
@@ -26,11 +41,7 @@ export const ThumbstickRotation = {
   init(controllerEl, targetEl = null) {
     const controllerId = controllerEl.id;
     
-    console.log(`🎮 ThumbstickRotation.init() called for controller: ${controllerId}`, {
-      controllerEl,
-      targetEl,
-      hasMetaTouchControls: !!controllerEl.getAttribute('meta-touch-controls')
-    });
+    updateDebugDisplay(`🎮 Init: ${controllerId}`);
     
     // Store rotation state
     this.activeRotations.set(controllerId, {
@@ -45,10 +56,7 @@ export const ThumbstickRotation = {
     // Add event listeners
     this.addEventListeners(controllerEl);
 
-    console.log(`✅ ThumbstickRotation initialized for controller: ${controllerId}`, {
-      stateSet: this.activeRotations.has(controllerId),
-      eventListenersAdded: true
-    });
+    updateDebugDisplay(`✅ Ready: ${controllerId}`);
   },
 
   /**
@@ -75,20 +83,14 @@ export const ThumbstickRotation = {
    * @param {Element} targetEl - Target element
    */
   setTarget(controllerId, targetEl) {
-    console.log(`🎯 setTarget() called for controller ${controllerId}`, {
-      targetEl: targetEl?.id || 'null',
-      hasState: this.activeRotations.has(controllerId)
-    });
+    updateDebugDisplay(`🎯 Target: ${targetEl?.id || 'null'}`);
     
     const state = this.activeRotations.get(controllerId);
     if (state) {
       state.target = targetEl;
-      console.log(`✅ Target set for controller ${controllerId}:`, {
-        targetId: targetEl?.id || 'null',
-        targetSet: !!state.target
-      });
+      updateDebugDisplay(`✅ ${controllerId} → ${targetEl?.id}`);
     } else {
-      console.error(`❌ No state found for controller ${controllerId} - did you call init()?`);
+      updateDebugDisplay(`❌ No state: ${controllerId}`);
     }
   },
 
@@ -114,20 +116,13 @@ export const ThumbstickRotation = {
     const controllerId = evt.target.id;
     const state = this.activeRotations.get(controllerId);
     
-    console.log(`🕹️ onThumbstickMoved event for ${controllerId}:`, {
-      detail: evt.detail,
-      hasState: !!state,
-      hasTarget: !!state?.target,
-      targetId: state?.target?.id || 'null'
-    });
+    const { x, y } = evt.detail;
+    updateDebugDisplay(`🕹️ Stick: X=${x.toFixed(2)} Y=${y.toFixed(2)}`);
     
     if (!state || !state.target) {
-      console.log(`⚠️ Skipping thumbstick input - no state or target for ${controllerId}`);
       return;
     }
 
-    const { x, y } = evt.detail;
-    console.log(`🎮 Processing thumbstick input: x=${x.toFixed(2)}, y=${y.toFixed(2)}`);
     this.processThumbstickInput(controllerId, x, y);
   },
 
@@ -170,25 +165,16 @@ export const ThumbstickRotation = {
   processThumbstickInput(controllerId, thumbstickX, thumbstickY) {
     const state = this.activeRotations.get(controllerId);
     if (!state || !state.target) {
-      console.log(`❌ processThumbstickInput: No state or target for ${controllerId}`);
       return;
     }
-
-    console.log(`🔄 processThumbstickInput for ${controllerId}:`, {
-      input: { x: thumbstickX.toFixed(2), y: thumbstickY.toFixed(2) },
-      deadzone: this.config.deadzone,
-      target: state.target.id
-    });
 
     // Apply deadzone
     if (Math.abs(thumbstickX) < this.config.deadzone && 
         Math.abs(thumbstickY) < this.config.deadzone) {
       
-      console.log(`🚫 Input below deadzone threshold`);
       if (state.isRotating) {
         state.isRotating = false;
         this.stopRotationFeedback(state.target);
-        console.log(`⏹️ Stopped rotation feedback`);
       }
       return;
     }
@@ -197,7 +183,7 @@ export const ThumbstickRotation = {
     if (!state.isRotating) {
       state.isRotating = true;
       this.startRotationFeedback(state.target);
-      console.log(`▶️ Started rotation feedback`);
+      updateDebugDisplay(`▶️ Rotating ${state.target.id}`);
     }
 
     // Calculate rotation delta
@@ -206,8 +192,6 @@ export const ThumbstickRotation = {
 
     // Apply rotation with smoothing
     const targetRotation = state.target.getAttribute('rotation');
-    
-    console.log(`📐 Current rotation:`, targetRotation);
     
     const deltaX = -thumbstickY * rotationAmount; // Pitch (up/down)
     const deltaY = thumbstickX * rotationAmount;  // Yaw (left/right)
@@ -224,16 +208,15 @@ export const ThumbstickRotation = {
       z: targetRotation.z
     };
 
-    console.log(`🎯 Applying new rotation:`, newRotation);
-
     // Apply rotation
     state.target.setAttribute('rotation', newRotation);
+    
+    // Update debug display with rotation values
+    updateDebugDisplay(`📐 Rot: Y=${newRotation.y.toFixed(0)}°`);
 
     // Store for debugging
     state.lastThumbstick = { x: thumbstickX, y: thumbstickY };
     state.accumulatedRotation = newRotation;
-
-    console.log(`✅ Rotation applied successfully`);
   },
 
   /**
