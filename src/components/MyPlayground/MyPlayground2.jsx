@@ -104,52 +104,58 @@ const MyPlayground2 = () => {
           // Load HDR environment using Three.js
           if (window.THREE) {
             const loader = new RGBELoader();
-            // Chỉ load HDR nếu KHÔNG phải VR mode để tối ưu performance
-            const isVR = navigator.userAgent.includes('Quest') || navigator.userAgent.includes('VR');
+            // Load HDR cho cả desktop và VR nhưng với optimizations khác nhau
+            const isQuest = navigator.userAgent.includes('Quest');
             
-            if (!isVR) {
-              loader.load('/rustig_koppie_puresky_4k.hdr', 
-                (texture) => {
-                  texture.mapping = window.THREE.EquirectangularReflectionMapping;
-                  
-                  // Giảm resolution cho performance
+            loader.load('/rustig_koppie_puresky_4k.hdr', 
+              (texture) => {
+                texture.mapping = window.THREE.EquirectangularReflectionMapping;
+                
+                // VR optimizations - giảm quality nhưng vẫn giữ HDR
+                if (isQuest) {
+                  console.log('🥽 Quest detected - optimizing HDR for VR');
                   texture.minFilter = window.THREE.LinearFilter;
                   texture.magFilter = window.THREE.LinearFilter;
                   texture.generateMipmaps = false;
-                  
-                  // Set as scene environment
-                  scene.object3D.environment = texture;
-                  scene.object3D.background = texture;
-                  
-                  // Store environment texture for ring materials
-                  window.environmentTexture = texture;
-                  
-                  console.log('✅ HDR Environment loaded successfully');
-                },
-                (progress) => {
-                  console.log(`📦 Loading HDR: ${Math.round(progress.loaded / progress.total * 100)}%`);
-                },
-                (error) => {
-                  console.error('❌ Failed to load HDR environment:', error);
+                  // Giảm intensity cho VR để tăng performance
+                  texture.intensity = 0.6; 
+                } else {
+                  // Desktop - full quality
+                  texture.generateMipmaps = true;
+                  texture.intensity = 1.0;
                 }
-              );
-            } else {
-              // VR Mode: Dùng simple background thay vì HDR
-              console.log('🥽 VR detected - using simple environment for performance');
-              scene.object3D.background = new window.THREE.Color(0x87CEEB); // Sky blue
-              
-              // Tạo basic environment map
-              const pmremGenerator = new window.THREE.PMREMGenerator(scene.renderer);
-              const envTexture = pmremGenerator.fromScene(new window.THREE.Scene()).texture;
-              scene.object3D.environment = envTexture;
-              window.environmentTexture = envTexture;
-            }
+                
+                // Set as scene environment
+                scene.object3D.environment = texture;
+                scene.object3D.background = texture;
+                
+                // Store environment texture for ring materials
+                window.environmentTexture = texture;
+                window.isVROptimized = isQuest;
+                
+                console.log('✅ HDR Environment loaded successfully' + (isQuest ? ' (VR optimized)' : ''));
+              },
+              (progress) => {
+                console.log(`📦 Loading HDR: ${Math.round(progress.loaded / progress.total * 100)}%`);
+              },
+              (error) => {
+                console.error('❌ Failed to load HDR environment:', error);
+                // Fallback cho VR nếu HDR load fail
+                if (isQuest) {
+                  scene.object3D.background = new window.THREE.Color(0x87CEEB);
+                  const pmremGenerator = new window.THREE.PMREMGenerator(scene.renderer);
+                  const envTexture = pmremGenerator.fromScene(new window.THREE.Scene()).texture;
+                  scene.object3D.environment = envTexture;
+                  window.environmentTexture = envTexture;
+                }
+              }
+            );
           }
         }
       });
     }
 
-    // VR Controller - grab functionality
+    // VR Controller - grab functionality + thumbstick rotation
     if (window.AFRAME && !window.AFRAME.components['touch-plus-controller']) {
       window.AFRAME.registerComponent('touch-plus-controller', {
         init: function() {
@@ -160,6 +166,10 @@ const MyPlayground2 = () => {
           
           this.grabbedObject = null;
           this.grabOffset = new window.THREE.Vector3();
+          
+          // Thumbstick rotation variables
+          this.lastThumbstick = {x: 0, y: 0};
+          this.rotationSpeed = 180; // degrees per second
         },
         
         onTriggerDown: function() {
@@ -194,7 +204,8 @@ const MyPlayground2 = () => {
           }
         },
         
-        tick: function() {
+        tick: function(time, timeDelta) {
+          // Handle grabbed object movement
           if (this.grabbedObject) {
             const controllerPos = new window.THREE.Vector3();
             this.el.object3D.getWorldPosition(controllerPos);
@@ -206,6 +217,111 @@ const MyPlayground2 = () => {
               y: newPos.y,
               z: newPos.z
             });
+          }
+          
+          // Handle thumbstick rotation cho selected object
+          this.handleThumbstickRotation(timeDelta);
+        },
+        
+        handleThumbstickRotation: function(timeDelta) {
+          // Tìm selected ring entity
+          const selectedRing = document.querySelector('#ring-entity[data-selected="true"]') || 
+                              document.querySelector('#ring-entity.selected');
+          
+          if (!selectedRing) return;
+          
+          // Get thumbstick input từ controller - support cả left và right
+          const handedness = this.el.getAttribute('meta-touch-controls')?.hand || 'right';
+          let thumbstickX = 0, thumbstickY = 0;
+          
+          // Try multiple ways to get gamepad input
+          const gamepad = this.el.components['meta-touch-controls'];
+          if (gamepad && gamepad.controller && gamepad.controller.gamepad) {
+            const axes = gamepad.controller.gamepad.axes;
+            if (axes && axes.length >= 4) {
+              // Standard WebXR gamepad mapping
+              if (handedness === 'right') {
+                thumbstickX = axes[2] || 0; // Right thumbstick X
+                thumbstickY = axes[3] || 0; // Right thumbstick Y
+              } else {
+                thumbstickX = axes[0] || 0; // Left thumbstick X  
+                thumbstickY = axes[1] || 0; // Left thumbstick Y
+              }
+            }
+          }
+          
+          // Fallback: Try direct gamepad API
+          if (thumbstickX === 0 && thumbstickY === 0) {
+            const gamepads = navigator.getGamepads();
+            for (let i = 0; i < gamepads.length; i++) {
+              const gp = gamepads[i];
+              if (gp && gp.axes && gp.axes.length >= 4) {
+                if (handedness === 'right' && gp.hand === 'right') {
+                  thumbstickX = gp.axes[2] || 0;
+                  thumbstickY = gp.axes[3] || 0;
+                  break;
+                } else if (handedness === 'left' && gp.hand === 'left') {
+                  thumbstickX = gp.axes[0] || 0;
+                  thumbstickY = gp.axes[1] || 0;
+                  break;
+                }
+              }
+            }
+          }
+          
+          // Deadzone để tránh drift
+          const deadzone = 0.15;
+          if (Math.abs(thumbstickX) < deadzone && Math.abs(thumbstickY) < deadzone) return;
+          
+          // Tính toán rotation delta
+          const deltaTime = timeDelta / 1000; // Convert to seconds
+          const rotationAmount = this.rotationSpeed * deltaTime;
+          
+          // Get current rotation
+          const currentRotation = selectedRing.getAttribute('rotation');
+          
+          // Apply rotation based on thumbstick direction
+          const newRotation = {
+            x: currentRotation.x - (thumbstickY * rotationAmount), // Pitch (up/down)
+            y: currentRotation.y + (thumbstickX * rotationAmount), // Yaw (left/right) 
+            z: currentRotation.z
+          };
+          
+          // Clamp rotations để tránh overflow
+          newRotation.x = newRotation.x % 360;
+          newRotation.y = newRotation.y % 360;
+          newRotation.z = newRotation.z % 360;
+          
+          // Apply new rotation
+          selectedRing.setAttribute('rotation', newRotation);
+          
+          // Visual feedback - slight emissive pulse khi rotate
+          const mesh = selectedRing.getObject3D('mesh');
+          if (mesh && !this.isPulsing) {
+            this.isPulsing = true;
+            
+            mesh.traverse(child => {
+              if (child.material && child.material.emissiveIntensity !== undefined) {
+                child.material.emissiveIntensity = 0.6; // Pulse when rotating
+                child.material.needsUpdate = true;
+              }
+            });
+            
+            // Reset emissive sau 100ms
+            setTimeout(() => {
+              mesh.traverse(child => {
+                if (child.material && child.material.emissiveIntensity !== undefined) {
+                  child.material.emissiveIntensity = 0.5; // Back to selected state
+                  child.material.needsUpdate = true;
+                }
+              });
+              this.isPulsing = false;
+            }, 100);
+          }
+          
+          // Debug log (chỉ khi có movement)
+          if (Math.abs(thumbstickX) > 0.3 || Math.abs(thumbstickY) > 0.3) {
+            console.log(`🕹️ Thumbstick (${handedness}): X=${thumbstickX.toFixed(2)}, Y=${thumbstickY.toFixed(2)} | Rotation: ${newRotation.x.toFixed(1)}, ${newRotation.y.toFixed(1)}`);
           }
         }
       });
@@ -437,6 +553,10 @@ const MyPlayground2 = () => {
           const tagName = this.el.tagName.toLowerCase();
           
           if (this.isSelected) {
+            // Đánh dấu selected state cho thumbstick rotation
+            this.el.setAttribute('data-selected', 'true');
+            this.el.classList.add('selected');
+            
             // Ring - dùng outline xanh lá
             const mesh = this.el.getObject3D('mesh');
             if (mesh) {
@@ -447,9 +567,18 @@ const MyPlayground2 = () => {
                 }
               });
             }
+            
+            // Log để debug
+            console.log('🎯 Ring selected - thumbstick rotation enabled');
           } else {
+            // Remove selected state
+            this.el.removeAttribute('data-selected');
+            this.el.classList.remove('selected');
+            
             // Reset ring
             this.unhighlight();
+            
+            console.log('🎯 Ring deselected - thumbstick rotation disabled');
           }
         },
         
@@ -514,13 +643,19 @@ const MyPlayground2 = () => {
           // Disable expensive renderer features
           const renderer = this.el.sceneEl.renderer;
           if (renderer) {
-            renderer.setPixelRatio(1); // Lock to 1x pixel ratio
+            renderer.setPixelRatio(0.8); // Quest optimized pixel ratio
             renderer.antialias = false;
             renderer.shadowMap.enabled = false;
+            // Quest specific optimizations
+            renderer.physicallyCorrectLights = false;
+            renderer.outputEncoding = window.THREE.sRGBEncoding;
           }
           
-          // Reduce animation frequency
+          // Optimize scene settings for VR
+          this.el.sceneEl.setAttribute('stats', 'false');
           this.el.sceneEl.setAttribute('vr-mode-ui', 'enabled: false');
+          
+          console.log('✅ VR optimizations applied');
         },
         
         restoreQuality: function() {

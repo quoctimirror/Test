@@ -132,44 +132,106 @@ export class RingEnhancer {
     return this.emeraldMaterial;
   }
 
-  // Simple materials cho VR để tối ưu performance
-  createSimpleDiamondMaterial() {
+  // VR Materials - balanced performance và quality
+  createVRDiamondMaterial() {
     if (!window.THREE) return null;
     
-    return new window.THREE.MeshStandardMaterial({
+    // MeshPhysicalMaterial nhưng giảm effects
+    return new window.THREE.MeshPhysicalMaterial({
       color: 0xFF2222,
       metalness: 0.0,
-      roughness: 0.1,
-      transparent: true,
-      opacity: 0.8,
+      roughness: 0.08,
+      
+      // Giữ transmission nhưng giảm
+      transmission: 0.2,  // Giảm từ 0.4
+      thickness: 1.0,     // Giảm từ 1.5
+      
+      // Giữ clearcoat
+      clearcoat: 0.8,     // Giảm từ 1.0
+      clearcoatRoughness: 0.1,
+      
+      ior: 1.76,
+      reflectivity: 0.7,  // Giảm từ 0.9
+      
+      envMapIntensity: 8.0, // Giảm từ 12.0
+      
       emissive: new window.THREE.Color(0xFF0000),
-      emissiveIntensity: 0.2
+      emissiveIntensity: 0.2, // Giảm từ 0.3
+      
+      transparent: true,
+      opacity: 0.75,     // Tăng từ 0.7
+      
+      // Giảm iridescence
+      iridescence: 0.5,   // Giảm từ 1.0
+      iridescenceIOR: 1.3,
+      iridescenceThicknessRange: [100, 500],
+      
+      fog: true
     });
   }
 
-  createSimpleEmeraldMaterial() {
+  createVREmeraldMaterial() {
     if (!window.THREE) return null;
     
-    return new window.THREE.MeshStandardMaterial({
+    return new window.THREE.MeshPhysicalMaterial({
       color: 0xCC1122,
       metalness: 0.0,
       roughness: 0.1,
-      transparent: true,
-      opacity: 0.9,
+      
+      transmission: 0.05,  // Giảm từ 0.1
+      thickness: 1.5,      // Giảm từ 2.0
+      
+      clearcoat: 0.8,      // Giảm từ 1.0
+      clearcoatRoughness: 0.08,
+      
+      ior: 1.76,
+      reflectivity: 0.6,   // Giảm từ 0.8
+      
+      envMapIntensity: 6.0, // Giảm từ 8.0
+      
       emissive: new window.THREE.Color(0x440011),
-      emissiveIntensity: 0.3
+      emissiveIntensity: 0.3,
+      
+      transparent: true,
+      opacity: 0.92,      // Tăng từ 0.9
+      
+      side: window.THREE.DoubleSide,
+      
+      attenuationDistance: 0.25,
+      attenuationColor: new window.THREE.Color(0.8, 0.1, 0.2),
+      
+      iridescence: 0.2,    // Giảm từ 0.3
+      iridescenceIOR: 1.25,
+      iridescenceThicknessRange: [150, 300],
+      
+      fog: true
     });
   }
 
-  createSimpleGoldMaterial() {
+  createVRGoldMaterial() {
     if (!window.THREE) return null;
     
-    return new window.THREE.MeshStandardMaterial({
+    return new window.THREE.MeshPhysicalMaterial({
       color: 0xFFB000,
       metalness: 1.0,
-      roughness: 0.05,
+      roughness: 0.03,     // Tăng từ 0.02
+      
+      clearcoat: 0.8,      // Giảm từ 1.0
+      clearcoatRoughness: 0.02,
+      
+      reflectivity: 0.9,   // Giảm từ 1.0
+      envMapIntensity: 4.0, // Giảm từ 6.0
+      
       emissive: new window.THREE.Color(0x331100),
-      emissiveIntensity: 0.1
+      emissiveIntensity: 0.1, // Giảm từ 0.15
+      
+      transparent: false,
+      side: window.THREE.FrontSide,
+      depthWrite: true,
+      
+      sheen: 0.7,          // Giảm từ 1.0
+      sheenRoughness: 0.08,
+      sheenColor: new window.THREE.Color(0xFFC040)
     });
   }
 
@@ -216,14 +278,14 @@ export class RingEnhancer {
   applyRingMaterials(gltfScene, environmentTexture = null) {
     if (!gltfScene || !window.THREE) return;
 
-    // Detect VR mode để tối ưu materials
-    const isVR = navigator.userAgent.includes('Quest') || navigator.userAgent.includes('VR');
-    console.log('🥽 VR Mode detected:', isVR);
+    // Detect VR mode để balance materials
+    const isQuest = navigator.userAgent.includes('Quest');
+    console.log('🥽 Quest Mode detected:', isQuest);
 
-    // Tạo materials - simplified cho VR
-    const diamondMat = isVR ? this.createSimpleDiamondMaterial() : this.createDiamondMaterial();
-    const emeraldMat = isVR ? this.createSimpleEmeraldMaterial() : this.createEmeraldMaterial();
-    const goldMat = isVR ? this.createSimpleGoldMaterial() : this.createGoldMaterial();
+    // Tạo materials - VR optimized nhưng vẫn đẹp
+    const diamondMat = isQuest ? this.createVRDiamondMaterial() : this.createDiamondMaterial();
+    const emeraldMat = isQuest ? this.createVREmeraldMaterial() : this.createEmeraldMaterial();
+    const goldMat = isQuest ? this.createVRGoldMaterial() : this.createGoldMaterial();
 
     // Set environment map cho vàng nếu có
     if (environmentTexture && goldMat) {
@@ -399,72 +461,64 @@ export class RingEnhancer {
   updateAnimation(camera, deltaTime = 0.016) {
     this.sparkleTime += deltaTime;
     
-    // Animate diamond sparkle với nhiều frequency khác nhau
+    // Detect VR mode
+    const isQuest = navigator.userAgent.includes('Quest');
+    
+    // Animate diamond sparkle 
     this.diamondMeshes.forEach((diamondMesh, index) => {
       if (diamondMesh && diamondMesh.material) {
         const material = diamondMesh.material;
         
-        // Tạo hiệu ứng lấp lánh phức tạp với multiple sine waves
-        const sparkle1 = Math.sin(this.sparkleTime * 4.0 + index * 1.5) * 0.4;
-        const sparkle2 = Math.sin(this.sparkleTime * 7.0 + index * 0.7) * 0.3;
-        const sparkle3 = Math.sin(this.sparkleTime * 11.0 + index * 2.1) * 0.2;
-        const sparkle4 = Math.sin(this.sparkleTime * 13.0 + index * 1.8) * 0.1;
+        // VR: Giảm complexity, Desktop: Full effects
+        if (isQuest) {
+          // VR - simplified animation
+          const sparkle = Math.sin(this.sparkleTime * 2.0 + index * 1.0) * 0.3 + 0.7;
+          
+          material.envMapIntensity = 8.0 + sparkle * 4.0;
+          material.emissiveIntensity = 0.2 + sparkle * 0.1;
+          
+          if (material.iridescence !== undefined) {
+            material.iridescence = 0.5 + sparkle * 0.2;
+          }
+        } else {
+          // Desktop - full animation
+          const sparkle1 = Math.sin(this.sparkleTime * 4.0 + index * 1.5) * 0.4;
+          const sparkle2 = Math.sin(this.sparkleTime * 7.0 + index * 0.7) * 0.3;
+          const sparkle3 = Math.sin(this.sparkleTime * 11.0 + index * 2.1) * 0.2;
+          const sparkle4 = Math.sin(this.sparkleTime * 13.0 + index * 1.8) * 0.1;
+          
+          const sparkleIntensity = (sparkle1 + sparkle2 + sparkle3 + sparkle4) * 0.5 + 0.5;
+          
+          material.envMapIntensity = 12.0 + sparkleIntensity * 10.0;
+          material.iridescence = 0.8 + sparkleIntensity * 0.2;
+          material.sheen = 0.9 + sparkleIntensity * 0.1;
+          material.clearcoat = 0.95 + sparkleIntensity * 0.05;
+          material.opacity = 0.7 + sparkleIntensity * 0.04;
+          material.thickness = 2.5 + sparkleIntensity * 1.0;
+          material.ior = 2.40 + sparkleIntensity * 0.04;
+        }
         
-        const sparkleIntensity = (sparkle1 + sparkle2 + sparkle3 + sparkle4) * 0.5 + 0.5;
-        
-        // Animate environment map intensity với range lớn hơn
-        material.envMapIntensity = 12.0 + sparkleIntensity * 10.0;
-        
-        // Animate iridescence cực mạnh cho rainbow effect
-        material.iridescence = 0.8 + sparkleIntensity * 0.2;
-        
-        // Animate sheen intensity
-        material.sheen = 0.9 + sparkleIntensity * 0.1;
-        
-        // Animate clearcoat với subtle changes
-        material.clearcoat = 0.95 + sparkleIntensity * 0.05;
-        
-        // Animate opacity với breathing effect nhẹ
-        material.opacity = 0.06 + sparkleIntensity * 0.04;
-        
-        // Animate thickness cho dispersion effect
-        material.thickness = 2.5 + sparkleIntensity * 1.0;
-        
-        // Animate IOR subtly cho refractive changes
-        material.ior = 2.40 + sparkleIntensity * 0.04;
-        
-        // Mark material for update
         material.needsUpdate = true;
       }
     });
     
-    // Animate emerald với hiệu ứng nhẹ nhàng hơn (emerald đặc ruột)
+    // Animate emerald với hiệu ứng nhẹ nhàng hơn
     this.emeraldMeshes.forEach((emeraldMesh, index) => {
       if (emeraldMesh && emeraldMesh.material) {
         const material = emeraldMesh.material;
         
-        // Hiệu ứng subtle hơn cho emerald đặc ruột
-        const glow1 = Math.sin(this.sparkleTime * 2.0 + index * 0.8) * 0.2;
-        const glow2 = Math.sin(this.sparkleTime * 3.5 + index * 1.2) * 0.15;
+        // VR và Desktop đều dùng animation nhẹ cho emerald
+        const glow = Math.sin(this.sparkleTime * 1.5 + index * 0.8) * 0.15 + 0.85;
         
-        const glowIntensity = (glow1 + glow2) * 0.5 + 0.5;
+        if (isQuest) {
+          material.envMapIntensity = 6.0 + glow * 2.0;
+          material.emissiveIntensity = 0.3 + glow * 0.1;
+        } else {
+          material.envMapIntensity = 8.0 + glow * 4.0;
+          material.emissiveIntensity = 0.4 + glow * 0.2;
+          material.sheen = 0.8 + glow * 0.1;
+        }
         
-        // Animate environment map intensity nhẹ hơn
-        material.envMapIntensity = 8.0 + glowIntensity * 4.0;
-        
-        // Animate emissive intensity cho inner glow
-        material.emissiveIntensity = 0.4 + glowIntensity * 0.2;
-        
-        // Animate sheen subtly
-        material.sheen = 0.8 + glowIntensity * 0.1;
-        
-        // Giữ opacity cao để đặc ruột
-        material.opacity = 0.9 + glowIntensity * 0.05;
-        
-        // Subtle iridescence changes
-        material.iridescence = 0.3 + glowIntensity * 0.1;
-        
-        // Mark material for update
         material.needsUpdate = true;
       }
     });
