@@ -186,51 +186,73 @@ const MyPlayground2 = () => {
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
             
-            if (intersectedEl.classList.contains('interactive')) {
-              // Check if this is a selectable object like ring
-              const selectableComponent = intersectedEl.components['vr-selectable'];
-              if (selectableComponent) {
-                // Toggle selection
-                selectableComponent.toggleSelection();
+            if (intersectedEl.classList.contains('interactive') || intersectedEl.classList.contains('grabbable')) {
+              
+              // Primary function: GRAB and MOVE object
+              if (!this.grabbedObject) {
+                this.grabbedObject = intersectedEl;
                 
-                // Set or clear as rotation target
-                if (selectableComponent.isSelected) {
-                  // Set as target for thumbstick rotation
-                  if (window.ThumbstickRotation) {
-                    window.ThumbstickRotation.setTarget(this.el.id, intersectedEl);
-                    console.log('🎯 Ring set as thumbstick rotation target');
-                  }
+                // Calculate grab offset for smooth movement
+                const controllerPos = new window.THREE.Vector3();
+                const objectPos = new window.THREE.Vector3();
+                
+                this.el.object3D.getWorldPosition(controllerPos);
+                intersectedEl.object3D.getWorldPosition(objectPos);
+                
+                this.grabOffset.subVectors(objectPos, controllerPos);
+                
+                // Visual feedback for grabbed state
+                const mesh = intersectedEl.getObject3D('mesh');
+                if (mesh) {
+                  mesh.traverse(child => {
+                    if (child.material && child.material.emissiveIntensity !== undefined) {
+                      child.material.originalEmissiveIntensity = child.material.emissiveIntensity;
+                      child.material.emissiveIntensity = 0.4; // Grabbed glow
+                      child.material.needsUpdate = true;
+                    }
+                  });
                 } else {
-                  // Clear rotation target
-                  if (window.ThumbstickRotation) {
-                    window.ThumbstickRotation.clearTarget(this.el.id);
-                    console.log('🎯 Ring cleared as thumbstick rotation target');
-                  }
+                  // Fallback for simple materials
+                  intersectedEl.setAttribute('material', 'emissive', '#ffff00');
+                  intersectedEl.setAttribute('material', 'emissiveIntensity', 0.5);
                 }
-                return;
+                
+                console.log('🤏 Grabbed object:', intersectedEl.id);
+                
+                // Also set as rotation target for thumbstick
+                if (window.ThumbstickRotation) {
+                  window.ThumbstickRotation.setTarget(this.el.id, intersectedEl);
+                  console.log('🎯 Object set as thumbstick rotation target');
+                }
               }
-              
-              // Fallback grab functionality
-              this.grabbedObject = intersectedEl;
-              
-              const controllerPos = new window.THREE.Vector3();
-              const objectPos = new window.THREE.Vector3();
-              
-              this.el.object3D.getWorldPosition(controllerPos);
-              intersectedEl.object3D.getWorldPosition(objectPos);
-              
-              this.grabOffset.subVectors(objectPos, controllerPos);
-              
-              intersectedEl.setAttribute('material', 'emissive', '#ffff00');
-              intersectedEl.setAttribute('material', 'emissiveIntensity', 0.5);
             }
           }
         },
         
         onTriggerUp: function() {
           if (this.grabbedObject) {
-            this.grabbedObject.setAttribute('material', 'emissive', '#000000');
-            this.grabbedObject.setAttribute('material', 'emissiveIntensity', 0);
+            console.log('✋ Releasing object:', this.grabbedObject.id);
+            
+            // Reset visual feedback
+            const mesh = this.grabbedObject.getObject3D('mesh');
+            if (mesh) {
+              mesh.traverse(child => {
+                if (child.material && child.material.originalEmissiveIntensity !== undefined) {
+                  child.material.emissiveIntensity = child.material.originalEmissiveIntensity;
+                  child.material.needsUpdate = true;
+                }
+              });
+            } else {
+              // Fallback reset
+              this.grabbedObject.setAttribute('material', 'emissive', '#000000');
+              this.grabbedObject.setAttribute('material', 'emissiveIntensity', 0);
+            }
+            
+            // Clear rotation target
+            if (window.ThumbstickRotation) {
+              window.ThumbstickRotation.clearTarget(this.el.id);
+              console.log('🎯 Object cleared as rotation target');
+            }
             
             this.grabbedObject = null;
           }
@@ -755,12 +777,13 @@ const MyPlayground2 = () => {
         <a-entity
           id="ring-entity"
           vr-selectable
+          grabbable
           ring-enhancer
           gltf-model="/models/nhanAnhKhanhLam.glb"
           position="0 1.6 -1"
           scale="0.01 0.01 0.01"
           rotation="0 0 0"
-          class="interactive"
+          class="interactive grabbable"
         >
         </a-entity>
 
