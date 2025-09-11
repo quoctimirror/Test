@@ -553,15 +553,43 @@ const MyPlayground2 = () => {
             
             // Set as thumbstick rotation target for both controllers
             if (window.ThumbstickRotation) {
-              console.log('🎯 Setting ring as thumbstick rotation target...', {
-                ringId: this.el.id,
-                rightControllerExists: !!document.getElementById('rightController'),
-                leftControllerExists: !!document.getElementById('leftController')
-              });
+              // Ensure controllers are initialized first
+              const rightController = document.getElementById('rightController');
+              const leftController = document.getElementById('leftController');
               
-              window.ThumbstickRotation.setTarget('rightController', this.el);
-              window.ThumbstickRotation.setTarget('leftController', this.el);
-              console.log('✅ Ring set as thumbstick rotation target for both controllers');
+              if (rightController) {
+                // Force init if not already done
+                if (!window.ThumbstickRotation.activeRotations.has('rightController')) {
+                  window.ThumbstickRotation.init(rightController);
+                }
+                window.ThumbstickRotation.setTarget('rightController', this.el);
+                
+                const debugText = document.getElementById('debug-text');
+                if (debugText) {
+                  const msg = '✅ RIGHT Controller Ready';
+                  const currentValue = debugText.getAttribute('value') || '';
+                  const lines = currentValue.split('\n').slice(-8);
+                  lines.push(msg);
+                  debugText.setAttribute('value', lines.join('\n'));
+                }
+              }
+              
+              if (leftController) {
+                // Force init if not already done
+                if (!window.ThumbstickRotation.activeRotations.has('leftController')) {
+                  window.ThumbstickRotation.init(leftController);
+                }
+                window.ThumbstickRotation.setTarget('leftController', this.el);
+                
+                const debugText = document.getElementById('debug-text');
+                if (debugText) {
+                  const msg = '✅ LEFT Controller Ready';
+                  const currentValue = debugText.getAttribute('value') || '';
+                  const lines = currentValue.split('\n').slice(-8);
+                  lines.push(msg);
+                  debugText.setAttribute('value', lines.join('\n'));
+                }
+              }
             } else {
               console.error('❌ ThumbstickRotation not available during target setting!');
             }

@@ -353,14 +353,34 @@ if (typeof AFRAME !== 'undefined') {
       }
       
       if (gamepad && gamepad.axes && gamepad.axes.length >= 2) {
-        // Get thumbstick axes - usually 2,3 for right, 0,1 for left
-        const isRight = this.el.id.includes('right');
-        const thumbstickX = isRight ? (gamepad.axes[2] || 0) : (gamepad.axes[0] || 0);
-        const thumbstickY = isRight ? (gamepad.axes[3] || 0) : (gamepad.axes[1] || 0);
+        // Get thumbstick axes - try all possible mappings
+        let thumbstickX = 0, thumbstickY = 0;
+        
+        // Try different axis mappings for Meta Quest
+        if (gamepad.axes.length >= 4) {
+          // Standard mapping: right hand uses axes 2,3, left uses 0,1
+          const isRight = this.el.id.includes('right');
+          if (isRight) {
+            thumbstickX = gamepad.axes[2] || 0;
+            thumbstickY = gamepad.axes[3] || 0;
+          } else {
+            thumbstickX = gamepad.axes[0] || 0;
+            thumbstickY = gamepad.axes[1] || 0;
+          }
+        } else {
+          // Fallback to first available axes
+          thumbstickX = gamepad.axes[0] || 0;
+          thumbstickY = gamepad.axes[1] || 0;
+        }
         
         if (Math.abs(thumbstickX) > 0.01 || Math.abs(thumbstickY) > 0.01) {
-          updateDebugDisplay(`🎮 Poll: X=${thumbstickX.toFixed(2)} Y=${thumbstickY.toFixed(2)}`);
+          updateDebugDisplay(`🎮 ${controllerId.slice(-5)}: X=${thumbstickX.toFixed(2)} Y=${thumbstickY.toFixed(2)}`);
           ThumbstickRotation.processThumbstickInput(controllerId, thumbstickX, thumbstickY);
+        }
+      } else {
+        // Show gamepad status periodically for debugging
+        if (Math.floor(Date.now() / 2000) % 2 === 0 && Date.now() % 1000 < 50) {
+          updateDebugDisplay(`🎮 ${controllerId.slice(-5)}: No gamepad axes (${gamepad ? gamepad.axes?.length || 0 : 'no gamepad'})`);
         }
       }
     },
