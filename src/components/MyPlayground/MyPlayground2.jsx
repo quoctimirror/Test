@@ -1028,7 +1028,7 @@ const MyPlayground2 = () => {
           if (mesh) {
             // Analyze GLB structure first
             console.log('📊 Analyzing GLB structure...');
-            const analysis = glbAnalyzer.analyzeGLB(mesh, 'nhanPremium.glb');
+            const analysis = glbAnalyzer.analyzeGLB(mesh, 'nhanBac.glb');
             
             // Store analysis globally for inspection
             window.ringAnalysis = analysis;
@@ -1174,7 +1174,7 @@ const MyPlayground2 = () => {
           vr-selectable
           grabbable
           ring-enhancer
-          gltf-model="/models/nhanPremium.glb"
+          gltf-model="/models/nhanBac.glb"
           position="0 1.6 -1"
           scale="0.01 0.01 0.01"
           rotation="0 0 0"
