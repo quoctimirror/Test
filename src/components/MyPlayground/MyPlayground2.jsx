@@ -110,7 +110,7 @@ const MyPlayground2 = () => {
             // Load HDR cho cả desktop và VR nhưng với optimizations khác nhau
             const isQuest = navigator.userAgent.includes('Quest');
             
-            loader.load('/studio_small_03_4k.hdr', 
+            loader.load('/rustig_koppie_puresky_4k.hdr', 
               (texture) => {
                 texture.mapping = window.THREE.EquirectangularReflectionMapping;
                 
