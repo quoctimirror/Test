@@ -621,7 +621,7 @@ const MyPlayground2 = () => {
           gltf-model="/models/ti2.glb"
           position="0 1.6 -1"
           scale="0.01 0.01 0.01"
-          rotation="0 0 0"
+          rotation="180 0 0"
           geometry="primitive: box; width: 2; height: 2; depth: 2"
           material="opacity: 0; transparent: true"
           class="interactive grabbable"
