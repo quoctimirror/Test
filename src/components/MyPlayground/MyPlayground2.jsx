@@ -104,26 +104,46 @@ const MyPlayground2 = () => {
           // Load HDR environment using Three.js
           if (window.THREE) {
             const loader = new RGBELoader();
-            loader.load('/rustig_koppie_puresky_4k.hdr', 
-              (texture) => {
-                texture.mapping = window.THREE.EquirectangularReflectionMapping;
-                
-                // Set as scene environment
-                scene.object3D.environment = texture;
-                scene.object3D.background = texture;
-                
-                // Store environment texture for ring materials
-                window.environmentTexture = texture;
-                
-                console.log('✅ HDR Environment loaded successfully');
-              },
-              (progress) => {
-                console.log(`📦 Loading HDR: ${Math.round(progress.loaded / progress.total * 100)}%`);
-              },
-              (error) => {
-                console.error('❌ Failed to load HDR environment:', error);
-              }
-            );
+            // Chỉ load HDR nếu KHÔNG phải VR mode để tối ưu performance
+            const isVR = navigator.userAgent.includes('Quest') || navigator.userAgent.includes('VR');
+            
+            if (!isVR) {
+              loader.load('/rustig_koppie_puresky_4k.hdr', 
+                (texture) => {
+                  texture.mapping = window.THREE.EquirectangularReflectionMapping;
+                  
+                  // Giảm resolution cho performance
+                  texture.minFilter = window.THREE.LinearFilter;
+                  texture.magFilter = window.THREE.LinearFilter;
+                  texture.generateMipmaps = false;
+                  
+                  // Set as scene environment
+                  scene.object3D.environment = texture;
+                  scene.object3D.background = texture;
+                  
+                  // Store environment texture for ring materials
+                  window.environmentTexture = texture;
+                  
+                  console.log('✅ HDR Environment loaded successfully');
+                },
+                (progress) => {
+                  console.log(`📦 Loading HDR: ${Math.round(progress.loaded / progress.total * 100)}%`);
+                },
+                (error) => {
+                  console.error('❌ Failed to load HDR environment:', error);
+                }
+              );
+            } else {
+              // VR Mode: Dùng simple background thay vì HDR
+              console.log('🥽 VR detected - using simple environment for performance');
+              scene.object3D.background = new window.THREE.Color(0x87CEEB); // Sky blue
+              
+              // Tạo basic environment map
+              const pmremGenerator = new window.THREE.PMREMGenerator(scene.renderer);
+              const envTexture = pmremGenerator.fromScene(new window.THREE.Scene()).texture;
+              scene.object3D.environment = envTexture;
+              window.environmentTexture = envTexture;
+            }
           }
         }
       });
@@ -470,6 +490,52 @@ const MyPlayground2 = () => {
       });
     }
 
+    // VR Performance Optimizer Component
+    if (window.AFRAME && !window.AFRAME.components['vr-performance']) {
+      window.AFRAME.registerComponent('vr-performance', {
+        init: function() {
+          this.isVR = false;
+          
+          // Listen for VR mode changes
+          this.el.sceneEl.addEventListener('enter-vr', () => {
+            this.isVR = true;
+            this.optimizeForVR();
+          });
+          
+          this.el.sceneEl.addEventListener('exit-vr', () => {
+            this.isVR = false;
+            this.restoreQuality();
+          });
+        },
+        
+        optimizeForVR: function() {
+          console.log('🚀 Optimizing for VR performance...');
+          
+          // Disable expensive renderer features
+          const renderer = this.el.sceneEl.renderer;
+          if (renderer) {
+            renderer.setPixelRatio(1); // Lock to 1x pixel ratio
+            renderer.antialias = false;
+            renderer.shadowMap.enabled = false;
+          }
+          
+          // Reduce animation frequency
+          this.el.sceneEl.setAttribute('vr-mode-ui', 'enabled: false');
+        },
+        
+        restoreQuality: function() {
+          console.log('📈 Restoring desktop quality...');
+          
+          const renderer = this.el.sceneEl.renderer;
+          if (renderer) {
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.antialias = true;
+            renderer.shadowMap.enabled = true;
+          }
+        }
+      });
+    }
+
     // Ring enhancer component
     if (window.AFRAME && !window.AFRAME.components['ring-enhancer']) {
       window.AFRAME.registerComponent('ring-enhancer', {
@@ -527,11 +593,20 @@ const MyPlayground2 = () => {
           }
         },
         
-        tick: function() {
-          // Update animation cho kim cương lấp lánh
-          const camera = this.el.sceneEl.camera;
-          if (camera && this.enhanced) {
-            ringEnhancer.updateAnimation(camera);
+        tick: function(time) {
+          // Tối ưu: chỉ update animation mỗi 100ms thay vì mọi frame
+          if (!this.lastUpdate) this.lastUpdate = 0;
+          
+          if (time - this.lastUpdate > 100) { // 100ms = 10 FPS cho animation
+            const camera = this.el.sceneEl.camera;
+            const isVR = this.el.sceneEl.is('vr-mode');
+            
+            // Giảm animation effects trong VR để tăng performance
+            if (camera && this.enhanced && (!isVR || time % 200 < 100)) {
+              ringEnhancer.updateAnimation(camera, (time - this.lastUpdate) / 1000);
+            }
+            
+            this.lastUpdate = time;
           }
         }
       });
@@ -587,9 +662,10 @@ const MyPlayground2 = () => {
       <a-scene
         ref={sceneRef}
         obb-collider="showColliders: false"
-        renderer="colorManagement: true; sortTransparentObjects: true"
+        renderer="colorManagement: true; sortTransparentObjects: false; antialias: false; powerPreference: high-performance; precision: lowp; logarithmicDepthBuffer: false"
         vr-mode-ui="enabled: true"
         webxr="referenceSpaceType: local-floor"
+        vr-performance
         className="myplayground2-scene"
       >
         {/* HDR Environment - using custom HDR loader */}
@@ -616,15 +692,12 @@ const MyPlayground2 = () => {
         <a-entity
           id="ring-entity"
           vr-selectable
-          grabbable
           ring-enhancer
           gltf-model="/models/ti2.glb"
           position="0 1.6 -1"
           scale="0.01 0.01 0.01"
           rotation="180 0 0"
-          geometry="primitive: box; width: 2; height: 2; depth: 2"
-          material="opacity: 0; transparent: true"
-          class="interactive grabbable"
+          class="interactive"
         >
         </a-entity>
 
@@ -634,22 +707,8 @@ const MyPlayground2 = () => {
           meta-touch-controls="hand: right; model: true"
           laser-controls="hand: right"
           touch-plus-controller
-          raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #00ff00; lineOpacity: 1.0; far: 50; lineHeight: 0.005"
+          raycaster="objects: .interactive; showLine: false; far: 3; interval: 100"
         >
-          <a-text
-            value="R"
-            position="0 0.1 0"
-            align="center"
-            color="#00ff00"
-            scale="0.3 0.3 0.3"
-            look-at="[camera]"
-          ></a-text>
-          
-          <a-sphere
-            radius="0.02"
-            color="#00ff00"
-            position="0 0 -0.1"
-          ></a-sphere>
         </a-entity>
         
         <a-entity
@@ -657,22 +716,8 @@ const MyPlayground2 = () => {
           meta-touch-controls="hand: left; model: true"
           laser-controls="hand: left" 
           touch-plus-controller
-          raycaster="objects: .interactive,.grabbable; showLine: true; lineColor: #ff0000; lineOpacity: 1.0; far: 50; lineHeight: 0.005"
+          raycaster="objects: .interactive; showLine: false; far: 3; interval: 100"
         >
-          <a-text
-            value="L"
-            position="0 0.1 0"
-            align="center"
-            color="#ff0000"
-            scale="0.3 0.3 0.3"
-            look-at="[camera]"
-          ></a-text>
-          
-          <a-sphere
-            radius="0.02"
-            color="#ff0000"
-            position="0 0 -0.1"
-          ></a-sphere>
         </a-entity>
 
 

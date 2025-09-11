@@ -4,9 +4,11 @@
 export class RingEnhancer {
   constructor() {
     this.diamondMaterial = null;
+    this.emeraldMaterial = null;
     this.goldMaterial = null;
     this.animationMixer = null;
     this.diamondMeshes = [];
+    this.emeraldMeshes = [];
     this.sparkleTime = 0;
   }
 
@@ -70,6 +72,107 @@ export class RingEnhancer {
     return this.diamondMaterial;
   }
 
+  // Tạo material emerald đặc ruột với màu ruby đỏ
+  createEmeraldMaterial() {
+    if (!window.THREE) return null;
+
+    // Emerald material đặc ruột với màu ruby đỏ đậm
+    this.emeraldMaterial = new window.THREE.MeshPhysicalMaterial({
+      // Màu ruby đỏ đậm đà
+      color: 0xCC1122,            // Ruby đỏ đậm
+      
+      // Không phải kim loại - ruby là dielectric
+      metalness: 0.0,             
+      roughness: 0.08,            // Hơi rough để có màu đậm
+      
+      // Giảm transmission để đặc ruột hơn
+      transmission: 0.1,          // Rất ít transmission - gần như đặc
+      thickness: 2.0,             
+      
+      // Lớp phủ cho độ bóng ruby
+      clearcoat: 1.0,             
+      clearcoatRoughness: 0.05,   
+      
+      // Ruby properties
+      ior: 1.76,                  // IOR của ruby thật
+      reflectivity: 0.8,          
+      
+      // Environment reflection
+      envMapIntensity: 8.0,       // Vừa phải cho ruby đặc
+      
+      // Emissive cho inner glow đỏ
+      emissive: new window.THREE.Color(0x440011), // Đỏ đậm phát sáng
+      emissiveIntensity: 0.4,     // Tăng độ sáng để thấy ruột
+      
+      // Opacity cao để đặc ruột
+      transparent: true,
+      opacity: 0.9,               // Gần như đặc hoàn toàn
+      
+      // Render both sides
+      side: window.THREE.DoubleSide,
+      
+      // Ruby dispersion effect
+      attenuationDistance: 0.2,   // Ngắn để màu đậm
+      attenuationColor: new window.THREE.Color(0.8, 0.1, 0.2),  // Tint đỏ đậm
+      
+      // Sheen effect cho ruby
+      sheen: 0.8,
+      sheenRoughness: 0.1,
+      sheenColor: new window.THREE.Color(0xAA4444),
+      
+      // Giảm iridescence cho ruby tự nhiên hơn
+      iridescence: 0.3,           // Ít iridescence hơn ruby chính
+      iridescenceIOR: 1.3,        
+      iridescenceThicknessRange: [100, 400],  // Range nhỏ hơn
+      
+      // Enable fog
+      fog: true
+    });
+
+    return this.emeraldMaterial;
+  }
+
+  // Simple materials cho VR để tối ưu performance
+  createSimpleDiamondMaterial() {
+    if (!window.THREE) return null;
+    
+    return new window.THREE.MeshStandardMaterial({
+      color: 0xFF2222,
+      metalness: 0.0,
+      roughness: 0.1,
+      transparent: true,
+      opacity: 0.8,
+      emissive: new window.THREE.Color(0xFF0000),
+      emissiveIntensity: 0.2
+    });
+  }
+
+  createSimpleEmeraldMaterial() {
+    if (!window.THREE) return null;
+    
+    return new window.THREE.MeshStandardMaterial({
+      color: 0xCC1122,
+      metalness: 0.0,
+      roughness: 0.1,
+      transparent: true,
+      opacity: 0.9,
+      emissive: new window.THREE.Color(0x440011),
+      emissiveIntensity: 0.3
+    });
+  }
+
+  createSimpleGoldMaterial() {
+    if (!window.THREE) return null;
+    
+    return new window.THREE.MeshStandardMaterial({
+      color: 0xFFB000,
+      metalness: 1.0,
+      roughness: 0.05,
+      emissive: new window.THREE.Color(0x331100),
+      emissiveIntensity: 0.1
+    });
+  }
+
   // Tạo material vàng bóng mịn cho đai nhẫn
   createGoldMaterial() {
     if (!window.THREE) return null;
@@ -113,9 +216,14 @@ export class RingEnhancer {
   applyRingMaterials(gltfScene, environmentTexture = null) {
     if (!gltfScene || !window.THREE) return;
 
-    // Tạo materials
-    const diamondMat = this.createDiamondMaterial();
-    const goldMat = this.createGoldMaterial();
+    // Detect VR mode để tối ưu materials
+    const isVR = navigator.userAgent.includes('Quest') || navigator.userAgent.includes('VR');
+    console.log('🥽 VR Mode detected:', isVR);
+
+    // Tạo materials - simplified cho VR
+    const diamondMat = isVR ? this.createSimpleDiamondMaterial() : this.createDiamondMaterial();
+    const emeraldMat = isVR ? this.createSimpleEmeraldMaterial() : this.createEmeraldMaterial();
+    const goldMat = isVR ? this.createSimpleGoldMaterial() : this.createGoldMaterial();
 
     // Set environment map cho vàng nếu có
     if (environmentTexture && goldMat) {
@@ -123,6 +231,7 @@ export class RingEnhancer {
     }
 
     let appliedDiamond = false;
+    let appliedEmerald = false;
     let appliedGold = false;
 
     // Duyệt qua tất cả mesh trong scene
@@ -134,21 +243,32 @@ export class RingEnhancer {
         console.log('🔍 Checking mesh:', meshName, 'Material:', materialName);
 
         // CHÍNH XÁC theo analysis:
-        // Round, Round_2 = Kim cương  
+        // Round, Round_2 = Kim cương ruby
         // Object_2 = Vàng
-        // Emerald_Custom = Kim cương trắng (như yêu cầu)
+        // Emerald_Custom = Emerald đặc ruột
         
-        if (meshName === 'round' || meshName === 'round_2' || meshName === 'emerald_custom') {
-          // Apply diamond material cho Round, Round_2 và Emerald_Custom
+        if (meshName === 'round' || meshName === 'round_2') {
+          // Apply diamond material cho Round, Round_2
           if (diamondMat) {
             child.material = diamondMat.clone();
             this.optimizeDiamondGeometry(child);
             // Lưu diamond meshes để animate
             this.diamondMeshes.push(child);
             
-            
             console.log('💎 Applied RUBY material with outline to:', child.name, '(Ruby đỏ với viền)');
             appliedDiamond = true;
+          }
+          
+        } else if (meshName === 'emerald_custom') {
+          // Apply emerald material riêng cho Emerald_Custom
+          if (emeraldMat) {
+            child.material = emeraldMat.clone();
+            this.optimizeDiamondGeometry(child);
+            // Lưu emerald meshes để animate
+            this.emeraldMeshes.push(child);
+            
+            console.log('🔴 Applied RUBY material (đặc ruột) to:', child.name, '(Ruby đỏ đặc ruột)');
+            appliedEmerald = true;
           }
           
         } else if (meshName === 'object_2') {
@@ -178,7 +298,7 @@ export class RingEnhancer {
     });
 
     // Fallback: nếu chưa apply được gì, apply gold cho tất cả
-    if (!appliedDiamond && !appliedGold) {
+    if (!appliedDiamond && !appliedEmerald && !appliedGold) {
       console.log('⚠️ Applying fallback gold material to all meshes');
       gltfScene.traverse((child) => {
         if (child.isMesh && goldMat) {
@@ -275,7 +395,7 @@ export class RingEnhancer {
     }
   }
 
-  // Update animation cho kim cương lấp lánh cực mạnh
+  // Update animation cho kim cương và emerald lấp lánh
   updateAnimation(camera, deltaTime = 0.016) {
     this.sparkleTime += deltaTime;
     
@@ -317,12 +437,46 @@ export class RingEnhancer {
         material.needsUpdate = true;
       }
     });
+    
+    // Animate emerald với hiệu ứng nhẹ nhàng hơn (emerald đặc ruột)
+    this.emeraldMeshes.forEach((emeraldMesh, index) => {
+      if (emeraldMesh && emeraldMesh.material) {
+        const material = emeraldMesh.material;
+        
+        // Hiệu ứng subtle hơn cho emerald đặc ruột
+        const glow1 = Math.sin(this.sparkleTime * 2.0 + index * 0.8) * 0.2;
+        const glow2 = Math.sin(this.sparkleTime * 3.5 + index * 1.2) * 0.15;
+        
+        const glowIntensity = (glow1 + glow2) * 0.5 + 0.5;
+        
+        // Animate environment map intensity nhẹ hơn
+        material.envMapIntensity = 8.0 + glowIntensity * 4.0;
+        
+        // Animate emissive intensity cho inner glow
+        material.emissiveIntensity = 0.4 + glowIntensity * 0.2;
+        
+        // Animate sheen subtly
+        material.sheen = 0.8 + glowIntensity * 0.1;
+        
+        // Giữ opacity cao để đặc ruột
+        material.opacity = 0.9 + glowIntensity * 0.05;
+        
+        // Subtle iridescence changes
+        material.iridescence = 0.3 + glowIntensity * 0.1;
+        
+        // Mark material for update
+        material.needsUpdate = true;
+      }
+    });
   }
 
   // Cleanup resources
   dispose() {
     if (this.diamondMaterial) {
       this.diamondMaterial.dispose();
+    }
+    if (this.emeraldMaterial) {
+      this.emeraldMaterial.dispose();
     }
     if (this.goldMaterial) {
       this.goldMaterial.dispose();
