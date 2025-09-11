@@ -1,3 +1,6 @@
+/* global THREE */
+/* eslint-disable-next-line no-unused-vars */
+/* global AFRAME */
 import React, { useEffect, useRef } from 'react';
 import './MyPlayground2.css';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
@@ -107,7 +110,7 @@ const MyPlayground2 = () => {
             // Load HDR cho cả desktop và VR nhưng với optimizations khác nhau
             const isQuest = navigator.userAgent.includes('Quest');
             
-            loader.load('/rustig_koppie_puresky_4k.hdr', 
+            loader.load('/studio_small_03_4k.hdr', 
               (texture) => {
                 texture.mapping = window.THREE.EquirectangularReflectionMapping;
                 
@@ -201,7 +204,7 @@ const MyPlayground2 = () => {
           }
         },
 
-        onTriggerDown: function(evt) {
+        onTriggerDown: function(/* evt */) {
           const debugText = document.getElementById('debug-text');
           if (debugText) {
             const msg = `🔴 TRIGGER DOWN: ${this.el.id}`;
@@ -224,7 +227,7 @@ const MyPlayground2 = () => {
           }
         },
 
-        onTriggerUp: function(evt) {
+        onTriggerUp: function(/* evt */) {
           const debugText = document.getElementById('debug-text');
           if (debugText) {
             const msg = `🟢 TRIGGER UP: ${this.el.id}`;
@@ -505,7 +508,7 @@ const MyPlayground2 = () => {
                 }
               });
               
-              this.el.addEventListener('axismove', (evt) => {
+              this.el.addEventListener('axismove', (/* evt */) => {
                 const debugText = document.getElementById('debug-text');
                 if (debugText) {
                   const msg = `🧪 axis: ${this.el.id}`;
@@ -1025,7 +1028,7 @@ const MyPlayground2 = () => {
           if (mesh) {
             // Analyze GLB structure first
             console.log('📊 Analyzing GLB structure...');
-            const analysis = glbAnalyzer.analyzeGLB(mesh, 'nhanAnhKhanhLam.glb');
+            const analysis = glbAnalyzer.analyzeGLB(mesh, 'nhanPremium.glb');
             
             // Store analysis globally for inspection
             window.ringAnalysis = analysis;
@@ -1171,7 +1174,7 @@ const MyPlayground2 = () => {
           vr-selectable
           grabbable
           ring-enhancer
-          gltf-model="/models/nhanAnhKhanhLam.glb"
+          gltf-model="/models/nhanPremium.glb"
           position="0 1.6 -1"
           scale="0.01 0.01 0.01"
           rotation="0 0 0"
