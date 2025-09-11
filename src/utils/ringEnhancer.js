@@ -12,60 +12,60 @@ export class RingEnhancer {
     this.sparkleTime = 0;
   }
 
-  // Tạo material kim cương với hiệu ứng cầu vồng lấp lánh
+  // Tạo material kim cương trắng chân thực
   createDiamondMaterial() {
     if (!window.THREE) return null;
 
-    // Enhanced diamond material với custom properties
+    // Kim cương trắng chân thực với các thuộc tính vật lý chính xác
     this.diamondMaterial = new window.THREE.MeshPhysicalMaterial({
-      // Màu đỏ ruby/sapphire đỏ rực
-      color: 0xFF2222,            // Đỏ ruby sáng hơn
+      // Kim cương trắng tinh khiết
+      color: 0xFFFFFF,            // Trắng tinh khiết
       
-      // Không phải kim loại - ruby là dielectric
+      // Kim cương không phải kim loại
       metalness: 0.0,             
-      roughness: 0.05,            // Hơi rough để có màu rõ hơn
+      roughness: 0.0,             // Kim cương cực kỳ mượt
       
-      // Vừa trong suốt vừa có màu
-      transmission: 0.4,          // Giảm transmission để thấy màu rõ hơn
-      thickness: 1.5,             
+      // Transmission cao - kim cương trong suốt
+      transmission: 0.95,         // Gần như hoàn toàn trong suốt
+      thickness: 2.0,             // Độ dày để có dispersion
       
-      // Lớp phủ cho độ bóng ruby
+      // Clearcoat cho độ bóng hoàn hảo
       clearcoat: 1.0,             
-      clearcoatRoughness: 0.0,    
+      clearcoatRoughness: 0.0,    // Hoàn toàn mịn
       
-      // Ruby properties
-      ior: 1.76,                  // IOR của ruby thật
-      reflectivity: 0.9,          
+      // IOR chính xác của kim cương thật
+      ior: 2.42,                  // IOR thật của kim cương
+      reflectivity: 0.96,         // Phản chiếu cao
       
-      // Environment reflection
-      envMapIntensity: 12.0,      // Tăng để lấp lánh
+      // Environment reflection mạnh
+      envMapIntensity: 15.0,      // Kim cương phản chiếu môi trường mạnh
       
-      // Emissive cho inner glow - tạo viền sáng từ bên trong
-      emissive: new window.THREE.Color(0xFF0000), // Đỏ phát sáng
-      emissiveIntensity: 0.3,     // Độ sáng vừa phải
+      // Không có emissive - kim cương tự nhiên không phát sáng
+      emissive: new window.THREE.Color(0x000000),
+      emissiveIntensity: 0.0,
       
-      // Opacity vừa phải để vừa trong suốt vừa thấy rõ
+      // Trong suốt hoàn toàn
       transparent: true,
-      opacity: 0.7,               // Vừa trong suốt vừa thấy được
+      opacity: 0.15,              // Rất trong suốt để thấy dispersion
       
-      // Render both sides cho inner reflections
+      // Render both sides
       side: window.THREE.DoubleSide,
       
-      // Ruby dispersion effect
-      attenuationDistance: 0.3,   // Tăng để có màu đỏ đậm hơn
-      attenuationColor: new window.THREE.Color(0.9, 0.1, 0.1),  // Tint đỏ
+      // Dispersion effect chân thực
+      attenuationDistance: 0.1,   // Ngắn để có light dispersion
+      attenuationColor: new window.THREE.Color(1.0, 1.0, 1.0), // Trắng tinh khiết
       
-      // Thêm sheen cho sparkle effect cực mạnh với màu đỏ
-      sheen: 1.0,
+      // Sheen nhẹ cho sparkle tự nhiên
+      sheen: 0.8,
       sheenRoughness: 0.0,
-      sheenColor: new window.THREE.Color(0xFF4444),
+      sheenColor: new window.THREE.Color(0xFFFFFF),
       
-      // Thêm iridescence cho rainbow effect mạnh hơn
-      iridescence: 1.0,           // Maximum iridescence
-      iridescenceIOR: 1.5,        // Tăng IOR cho hiệu ứng mạnh hơn
-      iridescenceThicknessRange: [50, 1000],  // Range rộng hơn cho màu cầu vồng đẹp
+      // Iridescence nhẹ cho fire effect
+      iridescence: 0.6,           // Vừa đủ để có rainbow fire
+      iridescenceIOR: 1.3,        
+      iridescenceThicknessRange: [100, 400], // Thin film interference
       
-      // Enable fog để có depth
+      // Enable fog
       fog: true
     });
 
@@ -132,39 +132,43 @@ export class RingEnhancer {
     return this.emeraldMaterial;
   }
 
-  // VR Materials - balanced performance và quality
+  // VR Materials - Kim cương trắng VR optimized
   createVRDiamondMaterial() {
     if (!window.THREE) return null;
     
-    // MeshPhysicalMaterial nhưng giảm effects
+    // Kim cương trắng VR optimized nhưng vẫn chân thực
     return new window.THREE.MeshPhysicalMaterial({
-      color: 0xFF2222,
+      color: 0xFFFFFF,        // Trắng tinh khiết
       metalness: 0.0,
-      roughness: 0.08,
+      roughness: 0.02,        // Vẫn rất mịn
       
-      // Giữ transmission nhưng giảm
-      transmission: 0.2,  // Giảm từ 0.4
-      thickness: 1.0,     // Giảm từ 1.5
+      // Transmission giảm cho VR performance
+      transmission: 0.7,      // Giảm từ 0.95
+      thickness: 1.5,         // Giảm từ 2.0
       
       // Giữ clearcoat
-      clearcoat: 0.8,     // Giảm từ 1.0
-      clearcoatRoughness: 0.1,
+      clearcoat: 0.9,         // Giảm từ 1.0
+      clearcoatRoughness: 0.02,
       
-      ior: 1.76,
-      reflectivity: 0.7,  // Giảm từ 0.9
+      ior: 2.42,              // Giữ IOR chính xác
+      reflectivity: 0.8,      // Giảm từ 0.96
       
-      envMapIntensity: 8.0, // Giảm từ 12.0
+      envMapIntensity: 10.0,  // Giảm từ 15.0
       
-      emissive: new window.THREE.Color(0xFF0000),
-      emissiveIntensity: 0.2, // Giảm từ 0.3
+      emissive: new window.THREE.Color(0x000000),
+      emissiveIntensity: 0.0,
       
       transparent: true,
-      opacity: 0.75,     // Tăng từ 0.7
+      opacity: 0.25,         // Tăng từ 0.15 cho VR
       
       // Giảm iridescence
-      iridescence: 0.5,   // Giảm từ 1.0
+      iridescence: 0.4,       // Giảm từ 0.6
       iridescenceIOR: 1.3,
-      iridescenceThicknessRange: [100, 500],
+      iridescenceThicknessRange: [150, 300],
+      
+      sheen: 0.6,
+      sheenRoughness: 0.0,
+      sheenColor: new window.THREE.Color(0xFFFFFF),
       
       fog: true
     });
@@ -211,64 +215,75 @@ export class RingEnhancer {
   createVRGoldMaterial() {
     if (!window.THREE) return null;
     
+    // Vàng 18k VR optimized nhưng vẫn ấm áp sang trọng
     return new window.THREE.MeshPhysicalMaterial({
-      color: 0xFFB000,
+      color: 0xFFD700,     // Giữ màu vàng 18k chân thực
       metalness: 1.0,
-      roughness: 0.03,     // Tăng từ 0.02
+      roughness: 0.04,     // Tăng một chút cho VR
       
-      clearcoat: 0.8,      // Giảm từ 1.0
-      clearcoatRoughness: 0.02,
+      clearcoat: 0.9,      // Giảm từ 1.0
+      clearcoatRoughness: 0.03,
       
-      reflectivity: 0.9,   // Giảm từ 1.0
-      envMapIntensity: 4.0, // Giảm từ 6.0
+      reflectivity: 0.9,   // Giảm từ 0.98
+      envMapIntensity: 6.0, // Giảm từ 8.0
       
-      emissive: new window.THREE.Color(0x331100),
-      emissiveIntensity: 0.1, // Giảm từ 0.15
+      emissive: new window.THREE.Color(0x332200), // Giữ warm emissive
+      emissiveIntensity: 0.06, // Giảm từ 0.08
       
       transparent: false,
       side: window.THREE.FrontSide,
       depthWrite: true,
       
-      sheen: 0.7,          // Giảm từ 1.0
-      sheenRoughness: 0.08,
-      sheenColor: new window.THREE.Color(0xFFC040)
+      sheen: 0.7,          // Giảm từ 0.9
+      sheenRoughness: 0.03,
+      sheenColor: new window.THREE.Color(0xFFE55C), // Giữ bright gold sheen
+      
+      ior: 0.47,           // Giữ IOR chính xác của vàng
+      
+      fog: true
     });
   }
 
-  // Tạo material vàng bóng mịn cho đai nhẫn
+  // Tạo material vàng ấm áp sang trọng chân thực
   createGoldMaterial() {
     if (!window.THREE) return null;
 
-    // Vàng sang trọng giống hệt như trong hình tham khảo
+    // Vàng 18k chân thực với màu ấm áp sang trọng
     this.goldMaterial = new window.THREE.MeshPhysicalMaterial({
-      // Màu vàng ấm áp như trong hình - rich gold tone
-      color: 0xFFB000,        // Vàng đậm ấm áp như reference image
+      // Màu vàng 18k ấm áp chân thực - Yellow Gold 18k
+      color: 0xFFD700,        // Classic 18k gold color
       
-      // Kim loại properties
-      metalness: 1.0,         // 100% kim loại
-      roughness: 0.02,        // Cực kỳ mịn = mirror finish
+      // Kim loại properties hoàn hảo
+      metalness: 1.0,         // 100% metallic
+      roughness: 0.03,        // Slight roughness cho realistic look
       
-      // Clearcoat cho độ bóng jewelry premium như trong hình
-      clearcoat: 1.0,         // Lớp phủ hoàn hảo
-      clearcoatRoughness: 0.01, // Gần như không có grain
+      // Clearcoat cho độ bóng jewelry premium 
+      clearcoat: 1.0,         // Perfect clear coating
+      clearcoatRoughness: 0.02, // Very smooth with slight texture
       
-      // Reflection properties tăng mạnh
-      reflectivity: 1.0,      // Phản chiếu hoàn hảo
-      envMapIntensity: 6.0,   // Tăng mạnh hơn environment reflection
+      // Reflection properties cho luxury feel
+      reflectivity: 0.98,     // High reflectivity như vàng thật
+      envMapIntensity: 8.0,   // Strong environment reflection
       
-      // Thêm warmth như vàng thật
-      emissive: new window.THREE.Color(0x331100), // Emissive vàng ấm hơn
-      emissiveIntensity: 0.15, // Tăng inner glow
+      // Warm glow tự nhiên của vàng
+      emissive: new window.THREE.Color(0x332200), // Warm golden emissive
+      emissiveIntensity: 0.08, // Subtle inner warmth
       
-      // Performance optimized
+      // Solid gold properties
       transparent: false,
       side: window.THREE.FrontSide,
       depthWrite: true,
       
-      // Thêm sheen cho luxury feel
-      sheen: 1.0,             // Maximum sheen effect
-      sheenRoughness: 0.05,   // Sheen rất mịn
-      sheenColor: new window.THREE.Color(0xFFC040) // Sheen màu vàng tươi
+      // Sheen cho premium jewelry finish
+      sheen: 0.9,             // High sheen
+      sheenRoughness: 0.02,   // Very smooth sheen
+      sheenColor: new window.THREE.Color(0xFFE55C), // Bright gold sheen
+      
+      // IOR của vàng thật
+      ior: 0.47,              // Gold's actual IOR (complex number, using real part)
+      
+      // Enable fog để có depth realism
+      fog: true
     });
 
     return this.goldMaterial;
@@ -284,7 +299,7 @@ export class RingEnhancer {
 
     // Tạo materials - VR optimized nhưng vẫn đẹp
     const diamondMat = isQuest ? this.createVRDiamondMaterial() : this.createDiamondMaterial();
-    const emeraldMat = isQuest ? this.createVREmeraldMaterial() : this.createEmeraldMaterial();
+    // const emeraldMat = isQuest ? this.createVREmeraldMaterial() : this.createEmeraldMaterial();
     const goldMat = isQuest ? this.createVRGoldMaterial() : this.createGoldMaterial();
 
     // Set environment map cho vàng nếu có
@@ -293,7 +308,6 @@ export class RingEnhancer {
     }
 
     let appliedDiamond = false;
-    let appliedEmerald = false;
     let appliedGold = false;
 
     // Duyệt qua tất cả mesh trong scene
@@ -304,52 +318,55 @@ export class RingEnhancer {
 
         console.log('🔍 Checking mesh:', meshName, 'Material:', materialName);
 
-        // CHÍNH XÁC theo analysis:
-        // Round, Round_2 = Kim cương ruby
-        // Object_2 = Vàng
-        // Emerald_Custom = Emerald đặc ruột
+        // Material mapping cho nhanAnhKhanhLam.glb
+        // Sẽ được phân tích bởi GLB analyzer để xác định chính xác
+        // Nhưng dùng pattern matching thông minh
         
-        if (meshName === 'round' || meshName === 'round_2') {
-          // Apply diamond material cho Round, Round_2
+        // Check for diamond/gem patterns
+        if (this.isDiamond(meshName, materialName)) {
+          // Apply diamond material cho các gem
           if (diamondMat) {
             child.material = diamondMat.clone();
             this.optimizeDiamondGeometry(child);
             // Lưu diamond meshes để animate
             this.diamondMeshes.push(child);
             
-            console.log('💎 Applied RUBY material with outline to:', child.name, '(Ruby đỏ với viền)');
+            console.log('💎 Applied WHITE DIAMOND material to:', child.name, '(Kim cương trắng chân thực)');
             appliedDiamond = true;
           }
           
-        } else if (meshName === 'emerald_custom') {
-          // Apply emerald material riêng cho Emerald_Custom
-          if (emeraldMat) {
-            child.material = emeraldMat.clone();
-            this.optimizeDiamondGeometry(child);
-            // Lưu emerald meshes để animate
-            this.emeraldMeshes.push(child);
-            
-            console.log('🔴 Applied RUBY material (đặc ruột) to:', child.name, '(Ruby đỏ đặc ruột)');
-            appliedEmerald = true;
-          }
-          
-        } else if (meshName === 'object_2') {
-          // Apply gold material cho Object_2
+        // Check for gold/metal patterns  
+        } else if (this.isGold(meshName, materialName)) {
+          // Apply gold material cho band
           if (goldMat) {
             child.material = goldMat.clone();
             this.optimizeGoldGeometry(child);
-            console.log('🥇 Applied GOLD material to:', child.name, '(Vàng sang trọng sáng bóng)');
+            console.log('🥇 Applied 18K GOLD material to:', child.name, '(Vàng 18K ấm áp sang trọng)');
             appliedGold = true;
           }
-          
+        
+        // Fallback cho các mesh không xác định được
         } else {
-          // Fallback cho các mesh khác
-          console.log('❓ Unknown mesh:', meshName, '- applying gold as fallback');
-          if (goldMat) {
-            child.material = goldMat.clone();
-            this.optimizeGoldGeometry(child);
-            console.log('🥇 Applied fallback gold to:', child.name);
-            appliedGold = true;
+          // Try to guess based on geometry complexity và position
+          const vertices = child.geometry?.attributes?.position?.count || 0;
+          
+          if (vertices < 500) {
+            // Low poly likely = diamond
+            if (diamondMat) {
+              child.material = diamondMat.clone();
+              this.optimizeDiamondGeometry(child);
+              this.diamondMeshes.push(child);
+              console.log('💎 Applied WHITE DIAMOND (guessed) to:', child.name, '(Kim cương - đoán từ geometry)');
+              appliedDiamond = true;
+            }
+          } else {
+            // High poly likely = gold band
+            if (goldMat) {
+              child.material = goldMat.clone();
+              this.optimizeGoldGeometry(child);
+              console.log('🥇 Applied 18K GOLD (guessed) to:', child.name, '(Vàng - đoán từ geometry)');
+              appliedGold = true;
+            }
           }
         }
 
@@ -360,7 +377,7 @@ export class RingEnhancer {
     });
 
     // Fallback: nếu chưa apply được gì, apply gold cho tất cả
-    if (!appliedDiamond && !appliedEmerald && !appliedGold) {
+    if (!appliedDiamond && !appliedGold) {
       console.log('⚠️ Applying fallback gold material to all meshes');
       gltfScene.traverse((child) => {
         if (child.isMesh && goldMat) {
@@ -481,21 +498,33 @@ export class RingEnhancer {
             material.iridescence = 0.5 + sparkle * 0.2;
           }
         } else {
-          // Desktop - full animation
-          const sparkle1 = Math.sin(this.sparkleTime * 4.0 + index * 1.5) * 0.4;
-          const sparkle2 = Math.sin(this.sparkleTime * 7.0 + index * 0.7) * 0.3;
-          const sparkle3 = Math.sin(this.sparkleTime * 11.0 + index * 2.1) * 0.2;
-          const sparkle4 = Math.sin(this.sparkleTime * 13.0 + index * 1.8) * 0.1;
+          // Desktop - full animation cho kim cương trắng
+          const sparkle1 = Math.sin(this.sparkleTime * 3.0 + index * 1.2) * 0.3;
+          const sparkle2 = Math.sin(this.sparkleTime * 6.0 + index * 0.8) * 0.25;
+          const sparkle3 = Math.sin(this.sparkleTime * 9.0 + index * 1.8) * 0.2;
+          const sparkle4 = Math.sin(this.sparkleTime * 12.0 + index * 1.5) * 0.15;
           
           const sparkleIntensity = (sparkle1 + sparkle2 + sparkle3 + sparkle4) * 0.5 + 0.5;
           
-          material.envMapIntensity = 12.0 + sparkleIntensity * 10.0;
-          material.iridescence = 0.8 + sparkleIntensity * 0.2;
-          material.sheen = 0.9 + sparkleIntensity * 0.1;
-          material.clearcoat = 0.95 + sparkleIntensity * 0.05;
-          material.opacity = 0.7 + sparkleIntensity * 0.04;
-          material.thickness = 2.5 + sparkleIntensity * 1.0;
-          material.ior = 2.40 + sparkleIntensity * 0.04;
+          // Kim cương trắng animation - tập trung vào fire và brilliance
+          material.envMapIntensity = 15.0 + sparkleIntensity * 8.0;  // Strong reflection
+          
+          if (material.iridescence !== undefined) {
+            material.iridescence = 0.6 + sparkleIntensity * 0.2;     // Rainbow fire
+          }
+          if (material.sheen !== undefined) {
+            material.sheen = 0.8 + sparkleIntensity * 0.15;          // Surface sparkle  
+          }
+          if (material.clearcoat !== undefined) {
+            material.clearcoat = 1.0;                                // Always perfect
+          }
+          if (material.opacity !== undefined) {
+            material.opacity = 0.15 + sparkleIntensity * 0.05;      // Breathing transparency
+          }
+          if (material.thickness !== undefined) {
+            material.thickness = 2.0 + sparkleIntensity * 0.5;      // Subtle dispersion
+          }
+          // IOR remains constant cho kim cương - không thay đổi
         }
         
         material.needsUpdate = true;

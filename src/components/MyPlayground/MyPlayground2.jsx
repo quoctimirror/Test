@@ -14,6 +14,7 @@ const MyPlayground2 = () => {
         await import('../../utils/meta-touch-controls.js');
         await import('../../utils/grabbable.js'); 
         await import('../../utils/tracked-controls/components/grab.js');
+        await import('../../utils/thumbstick-rotation.js');
         console.log('✅ VR interaction components loaded');
       } catch (error) {
         console.error('❌ Failed to load VR components:', error);
@@ -99,7 +100,6 @@ const MyPlayground2 = () => {
       window.AFRAME.registerComponent('hdr-environment', {
         init: function() {
           const scene = this.el.sceneEl;
-          const renderer = scene.renderer;
           
           // Load HDR environment using Three.js
           if (window.THREE) {
@@ -155,21 +155,29 @@ const MyPlayground2 = () => {
       });
     }
 
-    // VR Controller - grab functionality + thumbstick rotation
-    if (window.AFRAME && !window.AFRAME.components['touch-plus-controller']) {
-      window.AFRAME.registerComponent('touch-plus-controller', {
+    // Enhanced VR Controller với thumbstick rotation utility
+    if (window.AFRAME && !window.AFRAME.components['quest-controller']) {
+      window.AFRAME.registerComponent('quest-controller', {
         init: function() {
           this.onTriggerDown = this.onTriggerDown.bind(this);
           this.onTriggerUp = this.onTriggerUp.bind(this);
           this.el.addEventListener('triggerdown', this.onTriggerDown);
           this.el.addEventListener('triggerup', this.onTriggerUp);
           
+          // Grab functionality
           this.grabbedObject = null;
           this.grabOffset = new window.THREE.Vector3();
           
-          // Thumbstick rotation variables
-          this.lastThumbstick = {x: 0, y: 0};
-          this.rotationSpeed = 180; // degrees per second
+          // Initialize thumbstick rotation utility
+          if (window.ThumbstickRotation) {
+            window.ThumbstickRotation.configure({
+              rotationSpeed: 200,
+              deadzone: 0.15,
+              debugMode: true,
+              smoothing: 0.1
+            });
+            window.ThumbstickRotation.init(this.el);
+          }
         },
         
         onTriggerDown: function() {
@@ -178,7 +186,31 @@ const MyPlayground2 = () => {
           if (raycaster && raycaster.intersectedEls && raycaster.intersectedEls.length > 0) {
             const intersectedEl = raycaster.intersectedEls[0];
             
-            if (intersectedEl.classList.contains('grabbable') || intersectedEl.classList.contains('interactive')) {
+            if (intersectedEl.classList.contains('interactive')) {
+              // Check if this is a selectable object like ring
+              const selectableComponent = intersectedEl.components['vr-selectable'];
+              if (selectableComponent) {
+                // Toggle selection
+                selectableComponent.toggleSelection();
+                
+                // Set or clear as rotation target
+                if (selectableComponent.isSelected) {
+                  // Set as target for thumbstick rotation
+                  if (window.ThumbstickRotation) {
+                    window.ThumbstickRotation.setTarget(this.el.id, intersectedEl);
+                    console.log('🎯 Ring set as thumbstick rotation target');
+                  }
+                } else {
+                  // Clear rotation target
+                  if (window.ThumbstickRotation) {
+                    window.ThumbstickRotation.clearTarget(this.el.id);
+                    console.log('🎯 Ring cleared as thumbstick rotation target');
+                  }
+                }
+                return;
+              }
+              
+              // Fallback grab functionality
               this.grabbedObject = intersectedEl;
               
               const controllerPos = new window.THREE.Vector3();
@@ -219,110 +251,7 @@ const MyPlayground2 = () => {
             });
           }
           
-          // Handle thumbstick rotation cho selected object
-          this.handleThumbstickRotation(timeDelta);
-        },
-        
-        handleThumbstickRotation: function(timeDelta) {
-          // Tìm selected ring entity
-          const selectedRing = document.querySelector('#ring-entity[data-selected="true"]') || 
-                              document.querySelector('#ring-entity.selected');
-          
-          if (!selectedRing) return;
-          
-          // Get thumbstick input từ controller - support cả left và right
-          const handedness = this.el.getAttribute('meta-touch-controls')?.hand || 'right';
-          let thumbstickX = 0, thumbstickY = 0;
-          
-          // Try multiple ways to get gamepad input
-          const gamepad = this.el.components['meta-touch-controls'];
-          if (gamepad && gamepad.controller && gamepad.controller.gamepad) {
-            const axes = gamepad.controller.gamepad.axes;
-            if (axes && axes.length >= 4) {
-              // Standard WebXR gamepad mapping
-              if (handedness === 'right') {
-                thumbstickX = axes[2] || 0; // Right thumbstick X
-                thumbstickY = axes[3] || 0; // Right thumbstick Y
-              } else {
-                thumbstickX = axes[0] || 0; // Left thumbstick X  
-                thumbstickY = axes[1] || 0; // Left thumbstick Y
-              }
-            }
-          }
-          
-          // Fallback: Try direct gamepad API
-          if (thumbstickX === 0 && thumbstickY === 0) {
-            const gamepads = navigator.getGamepads();
-            for (let i = 0; i < gamepads.length; i++) {
-              const gp = gamepads[i];
-              if (gp && gp.axes && gp.axes.length >= 4) {
-                if (handedness === 'right' && gp.hand === 'right') {
-                  thumbstickX = gp.axes[2] || 0;
-                  thumbstickY = gp.axes[3] || 0;
-                  break;
-                } else if (handedness === 'left' && gp.hand === 'left') {
-                  thumbstickX = gp.axes[0] || 0;
-                  thumbstickY = gp.axes[1] || 0;
-                  break;
-                }
-              }
-            }
-          }
-          
-          // Deadzone để tránh drift
-          const deadzone = 0.15;
-          if (Math.abs(thumbstickX) < deadzone && Math.abs(thumbstickY) < deadzone) return;
-          
-          // Tính toán rotation delta
-          const deltaTime = timeDelta / 1000; // Convert to seconds
-          const rotationAmount = this.rotationSpeed * deltaTime;
-          
-          // Get current rotation
-          const currentRotation = selectedRing.getAttribute('rotation');
-          
-          // Apply rotation based on thumbstick direction
-          const newRotation = {
-            x: currentRotation.x - (thumbstickY * rotationAmount), // Pitch (up/down)
-            y: currentRotation.y + (thumbstickX * rotationAmount), // Yaw (left/right) 
-            z: currentRotation.z
-          };
-          
-          // Clamp rotations để tránh overflow
-          newRotation.x = newRotation.x % 360;
-          newRotation.y = newRotation.y % 360;
-          newRotation.z = newRotation.z % 360;
-          
-          // Apply new rotation
-          selectedRing.setAttribute('rotation', newRotation);
-          
-          // Visual feedback - slight emissive pulse khi rotate
-          const mesh = selectedRing.getObject3D('mesh');
-          if (mesh && !this.isPulsing) {
-            this.isPulsing = true;
-            
-            mesh.traverse(child => {
-              if (child.material && child.material.emissiveIntensity !== undefined) {
-                child.material.emissiveIntensity = 0.6; // Pulse when rotating
-                child.material.needsUpdate = true;
-              }
-            });
-            
-            // Reset emissive sau 100ms
-            setTimeout(() => {
-              mesh.traverse(child => {
-                if (child.material && child.material.emissiveIntensity !== undefined) {
-                  child.material.emissiveIntensity = 0.5; // Back to selected state
-                  child.material.needsUpdate = true;
-                }
-              });
-              this.isPulsing = false;
-            }, 100);
-          }
-          
-          // Debug log (chỉ khi có movement)
-          if (Math.abs(thumbstickX) > 0.3 || Math.abs(thumbstickY) > 0.3) {
-            console.log(`🕹️ Thumbstick (${handedness}): X=${thumbstickX.toFixed(2)}, Y=${thumbstickY.toFixed(2)} | Rotation: ${newRotation.x.toFixed(1)}, ${newRotation.y.toFixed(1)}`);
-          }
+          // Thumbstick rotation is handled automatically by ThumbstickRotation utility
         }
       });
     }
@@ -550,7 +479,6 @@ const MyPlayground2 = () => {
         
         toggleSelection: function() {
           this.isSelected = !this.isSelected;
-          const tagName = this.el.tagName.toLowerCase();
           
           if (this.isSelected) {
             // Đánh dấu selected state cho thumbstick rotation
@@ -641,14 +569,14 @@ const MyPlayground2 = () => {
           console.log('🚀 Optimizing for VR performance...');
           
           // Disable expensive renderer features
-          const renderer = this.el.sceneEl.renderer;
-          if (renderer) {
-            renderer.setPixelRatio(0.8); // Quest optimized pixel ratio
-            renderer.antialias = false;
-            renderer.shadowMap.enabled = false;
+          const RENDERER = this.el.sceneEl.renderer;
+          if (RENDERER) {
+            RENDERER.setPixelRatio(0.8); // Quest optimized pixel ratio
+            RENDERER.antialias = false;
+            RENDERER.shadowMap.enabled = false;
             // Quest specific optimizations
-            renderer.physicallyCorrectLights = false;
-            renderer.outputEncoding = window.THREE.sRGBEncoding;
+            RENDERER.physicallyCorrectLights = false;
+            RENDERER.outputEncoding = window.THREE.sRGBEncoding;
           }
           
           // Optimize scene settings for VR
@@ -661,11 +589,11 @@ const MyPlayground2 = () => {
         restoreQuality: function() {
           console.log('📈 Restoring desktop quality...');
           
-          const renderer = this.el.sceneEl.renderer;
-          if (renderer) {
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.antialias = true;
-            renderer.shadowMap.enabled = true;
+          const RENDERER = this.el.sceneEl.renderer;
+          if (RENDERER) {
+            RENDERER.setPixelRatio(window.devicePixelRatio);
+            RENDERER.antialias = true;
+            RENDERER.shadowMap.enabled = true;
           }
         }
       });
@@ -702,7 +630,7 @@ const MyPlayground2 = () => {
           if (mesh) {
             // Analyze GLB structure first
             console.log('📊 Analyzing GLB structure...');
-            const analysis = glbAnalyzer.analyzeGLB(mesh, 'ti2.glb');
+            const analysis = glbAnalyzer.analyzeGLB(mesh, 'nhanAnhKhanhLam.glb');
             
             // Store analysis globally for inspection
             window.ringAnalysis = analysis;
@@ -828,10 +756,10 @@ const MyPlayground2 = () => {
           id="ring-entity"
           vr-selectable
           ring-enhancer
-          gltf-model="/models/ti2.glb"
+          gltf-model="/models/nhanAnhKhanhLam.glb"
           position="0 1.6 -1"
           scale="0.01 0.01 0.01"
-          rotation="180 0 0"
+          rotation="0 0 0"
           class="interactive"
         >
         </a-entity>
@@ -841,7 +769,8 @@ const MyPlayground2 = () => {
           id="rightController" 
           meta-touch-controls="hand: right; model: true"
           laser-controls="hand: right"
-          touch-plus-controller
+          quest-controller
+          thumbstick-rotation
           raycaster="objects: .interactive; showLine: false; far: 3; interval: 100"
         >
         </a-entity>
@@ -850,7 +779,8 @@ const MyPlayground2 = () => {
           id="leftController" 
           meta-touch-controls="hand: left; model: true"
           laser-controls="hand: left" 
-          touch-plus-controller
+          quest-controller
+          thumbstick-rotation
           raycaster="objects: .interactive; showLine: false; far: 3; interval: 100"
         >
         </a-entity>
