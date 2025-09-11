@@ -258,7 +258,7 @@ const MyPlayground2 = () => {
           }
         },
         
-        tick: function(time, timeDelta) {
+        tick: function(/* time, timeDelta */) {
           // Handle grabbed object movement
           if (this.grabbedObject) {
             const controllerPos = new window.THREE.Vector3();

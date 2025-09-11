@@ -81,8 +81,8 @@ export class RingEnhancer {
       roughness: 0.08,            // Hơi rough để có màu đậm
       
       // Giảm transmission để đặc ruột hơn
-      transmission: 0.1,          // Rất ít transmission - gần như đặc
-      thickness: 2.0,             
+      transmission: 0.0,          // Không transmission - hoàn toàn đặc
+      thickness: 0.5,             // Giảm thickness             
       
       // Lớp phủ cho độ bóng ruby
       clearcoat: 1.0,             
@@ -100,8 +100,8 @@ export class RingEnhancer {
       emissiveIntensity: 0.4,     // Tăng độ sáng để thấy ruột
       
       // Opacity cao để đặc ruột
-      transparent: true,
-      opacity: 0.9,               // Gần như đặc hoàn toàn
+      transparent: false,         // Không trong suốt
+      opacity: 1.0,               // Hoàn toàn đặc
       
       // Render both sides
       side: window.THREE.DoubleSide,
@@ -176,8 +176,8 @@ export class RingEnhancer {
       metalness: 0.0,
       roughness: 0.15,     // Tăng rough cho VR
       
-      transmission: 0.02,  // Rất ít transmission cho VR performance
-      thickness: 1.0,      // Giảm cho VR
+      transmission: 0.0,   // Không transmission - hoàn toàn đặc
+      thickness: 0.3,      // Giảm cho VR
       
       clearcoat: 0.7,      // Giảm cho VR
       clearcoatRoughness: 0.1,
@@ -190,8 +190,8 @@ export class RingEnhancer {
       emissive: new window.THREE.Color(0x330011), // Giảm emissive cho VR
       emissiveIntensity: 0.2,
       
-      transparent: true,
-      opacity: 0.95,      // Gần như đặc cho VR
+      transparent: false,  // Không trong suốt
+      opacity: 1.0,       // Hoàn toàn đặc cho VR
       
       side: window.THREE.DoubleSide,
       
@@ -293,7 +293,7 @@ export class RingEnhancer {
 
     // Tạo materials - VR optimized nhưng vẫn đẹp
     const diamondMat = isQuest ? this.createVRDiamondMaterial() : this.createDiamondMaterial();
-    // const emeraldMat = isQuest ? this.createVREmeraldMaterial() : this.createEmeraldMaterial();
+    const emeraldMat = isQuest ? this.createVREmeraldMaterial() : this.createEmeraldMaterial();
     const goldMat = isQuest ? this.createVRGoldMaterial() : this.createGoldMaterial();
 
     // Set environment map cho vàng nếu có
@@ -310,14 +310,15 @@ export class RingEnhancer {
         const meshName = child.name.toLowerCase();
         const materialName = child.material.name?.toLowerCase() || '';
 
-        console.log('🔍 Checking mesh:', meshName, 'Material:', materialName);
+        console.log('🔍 Checking mesh:', `"${child.name}"`, 'lowercase:', `"${meshName}"`, 'Material:', `"${materialName}"`);
 
         // Material mapping cho nhanAnhKhanhLam.glb
         // Sẽ được phân tích bởi GLB analyzer để xác định chính xác
         // Nhưng dùng pattern matching thông minh
         
         // Check for ruby patterns FIRST (Round và Round_2)
-        if (this.isRuby(meshName, materialName)) {
+        if (this.isRuby(meshName)) {
+          console.log('✅ RUBY DETECTED for:', child.name);
           // Apply ruby material cho Round và Round_2 meshes
           if (emeraldMat) {
             child.material = emeraldMat.clone();
@@ -331,6 +332,7 @@ export class RingEnhancer {
           
         // Check for diamond/gem patterns
         } else if (this.isDiamond(meshName, materialName)) {
+          console.log('✅ DIAMOND DETECTED for:', child.name);
           // Apply diamond material cho các gem
           if (diamondMat) {
             child.material = diamondMat.clone();
@@ -344,6 +346,7 @@ export class RingEnhancer {
           
         // Check for gold/metal patterns  
         } else if (this.isGold(meshName, materialName)) {
+          console.log('✅ GOLD DETECTED for:', child.name);
           // Apply gold material cho band
           if (goldMat) {
             child.material = goldMat.clone();
@@ -354,26 +357,16 @@ export class RingEnhancer {
         
         // Fallback cho các mesh không xác định được
         } else {
+          console.log('⚠️ UNKNOWN MESH - applying fallback gold for:', child.name);
           // Try to guess based on geometry complexity và position
           const vertices = child.geometry?.attributes?.position?.count || 0;
           
-          if (vertices < 500) {
-            // Low poly likely = diamond
-            if (diamondMat) {
-              child.material = diamondMat.clone();
-              this.optimizeDiamondGeometry(child);
-              this.diamondMeshes.push(child);
-              console.log('💎 Applied PINK RUBY (guessed) to:', child.name, '(Ruby hồng - đoán từ geometry)');
-              appliedDiamond = true;
-            }
-          } else {
-            // High poly likely = gold band
-            if (goldMat) {
-              child.material = goldMat.clone();
-              this.optimizeGoldGeometry(child);
-              console.log('🥇 Applied 18K GOLD (guessed) to:', child.name, '(Vàng - đoán từ geometry)');
-              appliedGold = true;
-            }
+          // Default to gold for unknown meshes (likely band parts)
+          if (goldMat) {
+            child.material = goldMat.clone();
+            this.optimizeGoldGeometry(child);
+            console.log('🥇 Applied 18K GOLD (fallback) to:', child.name, `(Vertices: ${vertices})`);
+            appliedGold = true;
           }
         }
 
@@ -404,19 +397,27 @@ export class RingEnhancer {
   }
 
   // Xác định mesh ruby - đặc biệt cho Round và Round_2
-  isRuby(meshName, materialName) {
+  isRuby(meshName) {
     const rubyKeywords = ['round', 'round_2'];
-    return rubyKeywords.some(keyword => 
+    const isMatch = rubyKeywords.some(keyword => 
       meshName.includes(keyword)
     );
+    if (isMatch) {
+      console.log('🔍 Ruby keyword matched:', meshName, 'with keywords:', rubyKeywords);
+    }
+    return isMatch;
   }
 
-  // Xác định mesh vàng
+  // Xác định mesh vàng - bao gồm đai nhẫn
   isGold(meshName, materialName) {
-    const goldKeywords = ['gold', 'band', 'ring', 'metal', 'vang', 'dai'];
-    return goldKeywords.some(keyword => 
+    const goldKeywords = ['gold', 'band', 'ring', 'metal', 'vang', 'dai', 'object', 'layer'];
+    const isMatch = goldKeywords.some(keyword => 
       meshName.includes(keyword) || materialName.includes(keyword)
     );
+    if (isMatch) {
+      console.log('🔍 Gold keyword matched:', meshName, 'material:', materialName, 'with keywords:', goldKeywords);
+    }
+    return isMatch;
   }
 
   // Tối ưu geometry kim cương

@@ -1,3 +1,5 @@
+/* global AFRAME */
+
 /**
  * Thumbstick Rotation Utility
  * Xử lý việc xoay đối tượng 360° bằng thumbstick của Meta Quest controllers
