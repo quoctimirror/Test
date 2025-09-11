@@ -201,6 +201,12 @@ const MyPlayground2 = () => {
                 
                 // Simple direct rotation like the working HTML example
                 this.rotateSelectedObject(evt.detail.x, evt.detail.y);
+                
+                // Also try direct rotation on ring if selected
+                const ringEntity = document.getElementById('ring-entity');
+                if (ringEntity && ringEntity.hasAttribute('data-selected')) {
+                  this.directRotateRing(ringEntity, evt.detail.x, evt.detail.y);
+                }
               });
               
               this.el.addEventListener('axismove', (evt) => {
@@ -639,6 +645,52 @@ const MyPlayground2 = () => {
               lines.push(msg);
               debugText.setAttribute('value', lines.join('\n'));
             }
+          }
+        },
+        
+        directRotateRing: function(ringEntity, thumbstickX, thumbstickY) {
+          // Skip if thumbstick barely moved
+          if (Math.abs(thumbstickX) < 0.1 && Math.abs(thumbstickY) < 0.1) {
+            return;
+          }
+          
+          const debugText = document.getElementById('debug-text');
+          if (debugText) {
+            const msg = `🔄 DIRECT Ring Rotate: X=${thumbstickX.toFixed(2)} Y=${thumbstickY.toFixed(2)}`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
+          
+          // Get current rotation
+          const currentRotation = ringEntity.getAttribute('rotation');
+          
+          // Enhanced rotation with Z-axis support
+          const rotationSpeed = 3.0;
+          
+          // X thumbstick = Y rotation (left/right turn)
+          // Y thumbstick = X rotation (up/down tilt)  
+          // For Z rotation, we can use both axes together
+          const deltaY = thumbstickX * rotationSpeed;  // Yaw (left/right)
+          const deltaX = -thumbstickY * rotationSpeed; // Pitch (up/down, inverted)
+          
+          // Z rotation: combine both axes for roll effect
+          const deltaZ = (thumbstickX * thumbstickY) * rotationSpeed * 0.5; // Roll (diagonal movement)
+          
+          // Apply rotation
+          ringEntity.setAttribute('rotation', {
+            x: currentRotation.x + deltaX,
+            y: currentRotation.y + deltaY,
+            z: currentRotation.z + deltaZ
+          });
+          
+          if (debugText) {
+            const msg = `📐 Ring Rot: X=${(currentRotation.x + deltaX).toFixed(0)}° Y=${(currentRotation.y + deltaY).toFixed(0)}° Z=${(currentRotation.z + deltaZ).toFixed(0)}°`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
           }
         },
         
