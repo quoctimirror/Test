@@ -26,6 +26,12 @@ export const ThumbstickRotation = {
   init(controllerEl, targetEl = null) {
     const controllerId = controllerEl.id;
     
+    console.log(`🎮 ThumbstickRotation.init() called for controller: ${controllerId}`, {
+      controllerEl,
+      targetEl,
+      hasMetaTouchControls: !!controllerEl.getAttribute('meta-touch-controls')
+    });
+    
     // Store rotation state
     this.activeRotations.set(controllerId, {
       controller: controllerEl,
@@ -39,18 +45,28 @@ export const ThumbstickRotation = {
     // Add event listeners
     this.addEventListeners(controllerEl);
 
-    if (this.config.debugMode) {
-      console.log(`🎮 ThumbstickRotation initialized for controller: ${controllerId}`);
-    }
+    console.log(`✅ ThumbstickRotation initialized for controller: ${controllerId}`, {
+      stateSet: this.activeRotations.has(controllerId),
+      eventListenersAdded: true
+    });
   },
 
   /**
    * Add event listeners to controller
    */
   addEventListeners(controllerEl) {
+    console.log(`🔌 Adding event listeners to controller: ${controllerEl.id}`);
+    
     // Listen for thumbstick events
     controllerEl.addEventListener('thumbstickmoved', this.onThumbstickMoved.bind(this));
     controllerEl.addEventListener('axismove', this.onAxisMove.bind(this));
+    
+    // Add test event listener to verify events are firing
+    controllerEl.addEventListener('buttondown', (evt) => {
+      console.log(`🎮 Button down event on ${controllerEl.id}:`, evt.detail);
+    });
+    
+    console.log(`✅ Event listeners added to controller: ${controllerEl.id}`);
   },
 
   /**
@@ -59,12 +75,20 @@ export const ThumbstickRotation = {
    * @param {Element} targetEl - Target element
    */
   setTarget(controllerId, targetEl) {
+    console.log(`🎯 setTarget() called for controller ${controllerId}`, {
+      targetEl: targetEl?.id || 'null',
+      hasState: this.activeRotations.has(controllerId)
+    });
+    
     const state = this.activeRotations.get(controllerId);
     if (state) {
       state.target = targetEl;
-      if (this.config.debugMode) {
-        console.log(`🎯 Target set for controller ${controllerId}:`, targetEl.id);
-      }
+      console.log(`✅ Target set for controller ${controllerId}:`, {
+        targetId: targetEl?.id || 'null',
+        targetSet: !!state.target
+      });
+    } else {
+      console.error(`❌ No state found for controller ${controllerId} - did you call init()?`);
     }
   },
 
@@ -90,9 +114,20 @@ export const ThumbstickRotation = {
     const controllerId = evt.target.id;
     const state = this.activeRotations.get(controllerId);
     
-    if (!state || !state.target) return;
+    console.log(`🕹️ onThumbstickMoved event for ${controllerId}:`, {
+      detail: evt.detail,
+      hasState: !!state,
+      hasTarget: !!state?.target,
+      targetId: state?.target?.id || 'null'
+    });
+    
+    if (!state || !state.target) {
+      console.log(`⚠️ Skipping thumbstick input - no state or target for ${controllerId}`);
+      return;
+    }
 
     const { x, y } = evt.detail;
+    console.log(`🎮 Processing thumbstick input: x=${x.toFixed(2)}, y=${y.toFixed(2)}`);
     this.processThumbstickInput(controllerId, x, y);
   },
 
@@ -134,15 +169,26 @@ export const ThumbstickRotation = {
    */
   processThumbstickInput(controllerId, thumbstickX, thumbstickY) {
     const state = this.activeRotations.get(controllerId);
-    if (!state || !state.target) return;
+    if (!state || !state.target) {
+      console.log(`❌ processThumbstickInput: No state or target for ${controllerId}`);
+      return;
+    }
+
+    console.log(`🔄 processThumbstickInput for ${controllerId}:`, {
+      input: { x: thumbstickX.toFixed(2), y: thumbstickY.toFixed(2) },
+      deadzone: this.config.deadzone,
+      target: state.target.id
+    });
 
     // Apply deadzone
     if (Math.abs(thumbstickX) < this.config.deadzone && 
         Math.abs(thumbstickY) < this.config.deadzone) {
       
+      console.log(`🚫 Input below deadzone threshold`);
       if (state.isRotating) {
         state.isRotating = false;
         this.stopRotationFeedback(state.target);
+        console.log(`⏹️ Stopped rotation feedback`);
       }
       return;
     }
@@ -151,6 +197,7 @@ export const ThumbstickRotation = {
     if (!state.isRotating) {
       state.isRotating = true;
       this.startRotationFeedback(state.target);
+      console.log(`▶️ Started rotation feedback`);
     }
 
     // Calculate rotation delta
@@ -159,6 +206,8 @@ export const ThumbstickRotation = {
 
     // Apply rotation with smoothing
     const targetRotation = state.target.getAttribute('rotation');
+    
+    console.log(`📐 Current rotation:`, targetRotation);
     
     const deltaX = -thumbstickY * rotationAmount; // Pitch (up/down)
     const deltaY = thumbstickX * rotationAmount;  // Yaw (left/right)
@@ -175,6 +224,8 @@ export const ThumbstickRotation = {
       z: targetRotation.z
     };
 
+    console.log(`🎯 Applying new rotation:`, newRotation);
+
     // Apply rotation
     state.target.setAttribute('rotation', newRotation);
 
@@ -182,14 +233,7 @@ export const ThumbstickRotation = {
     state.lastThumbstick = { x: thumbstickX, y: thumbstickY };
     state.accumulatedRotation = newRotation;
 
-    // Debug logging
-    if (this.config.debugMode && (Math.abs(thumbstickX) > 0.3 || Math.abs(thumbstickY) > 0.3)) {
-      console.log(`🕹️ Thumbstick Rotation (${state.handedness}):`, {
-        thumbstick: { x: thumbstickX.toFixed(2), y: thumbstickY.toFixed(2) },
-        rotation: { x: newRotation.x.toFixed(1), y: newRotation.y.toFixed(1) },
-        target: state.target.id
-      });
-    }
+    console.log(`✅ Rotation applied successfully`);
   },
 
   /**
@@ -292,6 +336,7 @@ if (typeof window !== 'undefined') {
 
 // Auto-register as A-Frame component
 if (typeof AFRAME !== 'undefined') {
+  console.log('🔧 Registering thumbstick-rotation A-Frame component...');
   AFRAME.registerComponent('thumbstick-rotation', {
     schema: {
       rotationSpeed: { default: 180 },
@@ -301,11 +346,15 @@ if (typeof AFRAME !== 'undefined') {
     },
 
     init: function() {
+      console.log(`🔧 thumbstick-rotation A-Frame component init for: ${this.el.id}`, this.data);
+      
       // Configure ThumbstickRotation with schema values
       ThumbstickRotation.configure(this.data);
       
       // Initialize for this controller
       ThumbstickRotation.init(this.el);
+      
+      console.log(`✅ thumbstick-rotation A-Frame component initialized for: ${this.el.id}`);
     },
 
     remove: function() {

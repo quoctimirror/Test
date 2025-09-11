@@ -169,14 +169,35 @@ const MyPlayground2 = () => {
           this.grabOffset = new window.THREE.Vector3();
           
           // Initialize thumbstick rotation utility
+          console.log('🎮 quest-controller init for:', this.el.id);
+          
           if (window.ThumbstickRotation) {
+            console.log('✅ ThumbstickRotation available, configuring...');
             window.ThumbstickRotation.configure({
               rotationSpeed: 200,
               deadzone: 0.15,
               debugMode: true,
               smoothing: 0.1
             });
-            window.ThumbstickRotation.init(this.el);
+            
+            // Wait for meta-touch-controls to fully initialize
+            setTimeout(() => {
+              console.log('⏰ Delayed init of ThumbstickRotation for:', this.el.id);
+              window.ThumbstickRotation.init(this.el);
+              
+              // Add direct test event listeners
+              this.el.addEventListener('thumbstickmoved', (evt) => {
+                console.log(`🧪 DIRECT thumbstickmoved test on ${this.el.id}:`, evt.detail);
+              });
+              
+              this.el.addEventListener('axismove', (evt) => {
+                console.log(`🧪 DIRECT axismove test on ${this.el.id}:`, evt.detail);
+              });
+              
+              console.log('🧪 Added direct test event listeners to:', this.el.id);
+            }, 1000);
+          } else {
+            console.error('❌ ThumbstickRotation not available!');
           }
         },
         
@@ -520,9 +541,17 @@ const MyPlayground2 = () => {
             
             // Set as thumbstick rotation target for both controllers
             if (window.ThumbstickRotation) {
+              console.log('🎯 Setting ring as thumbstick rotation target...', {
+                ringId: this.el.id,
+                rightControllerExists: !!document.getElementById('rightController'),
+                leftControllerExists: !!document.getElementById('leftController')
+              });
+              
               window.ThumbstickRotation.setTarget('rightController', this.el);
               window.ThumbstickRotation.setTarget('leftController', this.el);
-              console.log('🎯 Ring set as thumbstick rotation target for both controllers');
+              console.log('✅ Ring set as thumbstick rotation target for both controllers');
+            } else {
+              console.error('❌ ThumbstickRotation not available during target setting!');
             }
             
             // Log để debug
