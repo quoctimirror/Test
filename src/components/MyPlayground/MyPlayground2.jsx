@@ -518,6 +518,13 @@ const MyPlayground2 = () => {
               });
             }
             
+            // Set as thumbstick rotation target for both controllers
+            if (window.ThumbstickRotation) {
+              window.ThumbstickRotation.setTarget('rightController', this.el);
+              window.ThumbstickRotation.setTarget('leftController', this.el);
+              console.log('🎯 Ring set as thumbstick rotation target for both controllers');
+            }
+            
             // Log để debug
             console.log('🎯 Ring selected - thumbstick rotation enabled');
           } else {
@@ -527,6 +534,13 @@ const MyPlayground2 = () => {
             
             // Reset ring
             this.unhighlight();
+            
+            // Clear thumbstick rotation target for both controllers
+            if (window.ThumbstickRotation) {
+              window.ThumbstickRotation.clearTarget('rightController');
+              window.ThumbstickRotation.clearTarget('leftController');
+              console.log('🎯 Ring cleared as thumbstick rotation target for both controllers');
+            }
             
             console.log('🎯 Ring deselected - thumbstick rotation disabled');
           }
