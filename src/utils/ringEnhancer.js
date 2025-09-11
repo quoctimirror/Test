@@ -170,36 +170,37 @@ export class RingEnhancer {
   createVREmeraldMaterial() {
     if (!window.THREE) return null;
     
+    // VR Ruby material - đơn giản và optimized cho Quest 3
     return new window.THREE.MeshPhysicalMaterial({
-      color: 0xCC1122,
+      color: 0xCC1122,     // Ruby đỏ đậm
       metalness: 0.0,
-      roughness: 0.1,
+      roughness: 0.15,     // Tăng rough cho VR
       
-      transmission: 0.05,  // Giảm từ 0.1
-      thickness: 1.5,      // Giảm từ 2.0
+      transmission: 0.02,  // Rất ít transmission cho VR performance
+      thickness: 1.0,      // Giảm cho VR
       
-      clearcoat: 0.8,      // Giảm từ 1.0
-      clearcoatRoughness: 0.08,
+      clearcoat: 0.7,      // Giảm cho VR
+      clearcoatRoughness: 0.1,
       
-      ior: 1.76,
-      reflectivity: 0.6,   // Giảm từ 0.8
+      ior: 1.76,           // Giữ IOR ruby
+      reflectivity: 0.5,   // Giảm cho VR
       
-      envMapIntensity: 6.0, // Giảm từ 8.0
+      envMapIntensity: 4.0, // Giảm cho VR
       
-      emissive: new window.THREE.Color(0x440011),
-      emissiveIntensity: 0.3,
+      emissive: new window.THREE.Color(0x330011), // Giảm emissive cho VR
+      emissiveIntensity: 0.2,
       
       transparent: true,
-      opacity: 0.92,      // Tăng từ 0.9
+      opacity: 0.95,      // Gần như đặc cho VR
       
       side: window.THREE.DoubleSide,
       
-      attenuationDistance: 0.25,
-      attenuationColor: new window.THREE.Color(0.8, 0.1, 0.2),
+      attenuationDistance: 0.3,
+      attenuationColor: new window.THREE.Color(0.7, 0.1, 0.2),
       
-      iridescence: 0.2,    // Giảm từ 0.3
+      iridescence: 0.1,    // Giảm cho VR
       iridescenceIOR: 1.25,
-      iridescenceThicknessRange: [150, 300],
+      iridescenceThicknessRange: [100, 200],
       
       fog: true
     });
@@ -315,8 +316,21 @@ export class RingEnhancer {
         // Sẽ được phân tích bởi GLB analyzer để xác định chính xác
         // Nhưng dùng pattern matching thông minh
         
+        // Check for ruby patterns FIRST (Round và Round_2)
+        if (this.isRuby(meshName, materialName)) {
+          // Apply ruby material cho Round và Round_2 meshes
+          if (emeraldMat) {
+            child.material = emeraldMat.clone();
+            this.optimizeDiamondGeometry(child);
+            // Lưu ruby meshes để animate
+            this.diamondMeshes.push(child);
+            
+            console.log('💎 Applied RUBY material to:', child.name, '(Ruby đỏ đặc ruột)');
+            appliedDiamond = true;
+          }
+          
         // Check for diamond/gem patterns
-        if (this.isDiamond(meshName, materialName)) {
+        } else if (this.isDiamond(meshName, materialName)) {
           // Apply diamond material cho các gem
           if (diamondMat) {
             child.material = diamondMat.clone();
@@ -386,6 +400,14 @@ export class RingEnhancer {
     const diamondKeywords = ['diamond', 'gem', 'stone', 'crystal', 'jewel', 'kim_cuong'];
     return diamondKeywords.some(keyword => 
       meshName.includes(keyword) || materialName.includes(keyword)
+    );
+  }
+
+  // Xác định mesh ruby - đặc biệt cho Round và Round_2
+  isRuby(meshName, materialName) {
+    const rubyKeywords = ['round', 'round_2'];
+    return rubyKeywords.some(keyword => 
+      meshName.includes(keyword)
     );
   }
 
