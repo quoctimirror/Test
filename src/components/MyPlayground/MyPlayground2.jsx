@@ -165,12 +165,12 @@ const MyPlayground2 = () => {
         init: function() {
           this.GRABBED_STATE = 'grabbed';
           this.MOVING_STATE = 'moving';
-          this.grabbing = false;
-          this.movingObject = false;
           this.selectedObject = null;
           this.rotationSpeed = this.data.rotationSpeed;
           this.triggerDownTime = 0;
-          this.HOLD_THRESHOLD = 300; // milliseconds
+          this.HOLD_THRESHOLD = 300; // milliseconds to detect hold vs click
+          this.isHoldingTrigger = false;
+          this.movingObject = false;
           
           // Bind event handlers
           this.onTriggerDown = this.onTriggerDown.bind(this);
@@ -207,14 +207,19 @@ const MyPlayground2 = () => {
           }
           
           this.triggerDownTime = Date.now();
-          this.grabbing = true;
+          this.isHoldingTrigger = true;
           
-          if (this.selectedObject) {
-            // Object already selected, start moving
-            this.startMoving();
-          } else {
-            // Select object
+          if (!this.selectedObject) {
+            // No object selected, try to select one
             this.selectObject();
+          } else {
+            // Object already selected, start a timer to detect hold vs click
+            setTimeout(() => {
+              if (this.isHoldingTrigger && this.selectedObject) {
+                // Still holding after threshold, start moving
+                this.startMoving();
+              }
+            }, this.HOLD_THRESHOLD);
           }
         },
 
@@ -228,13 +233,14 @@ const MyPlayground2 = () => {
             debugText.setAttribute('value', lines.join('\n'));
           }
           
-          var holdDuration = Date.now() - this.triggerDownTime;
-          this.grabbing = false;
+          const holdDuration = Date.now() - this.triggerDownTime;
+          this.isHoldingTrigger = false;
           
           if (this.movingObject) {
+            // Was moving, stop moving
             this.stopMoving();
           } else if (holdDuration < this.HOLD_THRESHOLD && this.selectedObject) {
-            // Quick click = deselect
+            // Quick click on selected object = deselect
             this.deselectObject();
           }
         },
@@ -303,18 +309,40 @@ const MyPlayground2 = () => {
 
         startMoving: function() {
           if (!this.selectedObject) return;
+          
           this.movingObject = true;
           this.selectedObject.addState(this.MOVING_STATE);
+          
           // Green color for moving
           this.setObjectColor(this.selectedObject, '#44ff44');
+          
+          const debugText = document.getElementById('debug-text');
+          if (debugText) {
+            const msg = `🟢 MOVING: ${this.selectedObject.id}`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
         },
 
         stopMoving: function() {
           if (!this.selectedObject || !this.movingObject) return;
+          
           this.movingObject = false;
           this.selectedObject.removeState(this.MOVING_STATE);
+          
           // Back to red for selected
           this.setObjectColor(this.selectedObject, '#ff4444');
+          
+          const debugText = document.getElementById('debug-text');
+          if (debugText) {
+            const msg = `🔴 STOP MOVING: ${this.selectedObject.id}`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
         },
 
         setObjectColor: function(el, color) {
@@ -330,7 +358,8 @@ const MyPlayground2 = () => {
         },
 
         onThumbstickMoved: function(evt) {
-          if (!this.selectedObject) return;
+          // Only rotate if object is selected and not moving
+          if (!this.selectedObject || this.movingObject) return;
           
           var thumbstickX = evt.detail.x;
           var thumbstickY = evt.detail.y;
@@ -347,11 +376,6 @@ const MyPlayground2 = () => {
             const lines = currentValue.split('\n').slice(-8);
             lines.push(msg);
             debugText.setAttribute('value', lines.join('\n'));
-          }
-          
-          // If moving object, don't rotate
-          if (this.movingObject) {
-            return;
           }
           
           // ROTATE OBJECT - EXACT COPY FROM WORKING HTML
