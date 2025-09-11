@@ -871,6 +871,7 @@ const MyPlayground2 = () => {
         {/* VR Controllers with grab functionality */}
         <a-entity
           id="rightController" 
+          tracked-controls="hand: right; idPrefix: meta-quest"
           meta-touch-controls="hand: right; model: true"
           laser-controls="hand: right"
           quest-controller
@@ -881,6 +882,7 @@ const MyPlayground2 = () => {
         
         <a-entity
           id="leftController" 
+          tracked-controls="hand: left; idPrefix: meta-quest"
           meta-touch-controls="hand: left; model: true"
           laser-controls="hand: left" 
           quest-controller

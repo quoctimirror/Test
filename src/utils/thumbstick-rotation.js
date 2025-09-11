@@ -135,25 +135,19 @@ export const ThumbstickRotation = {
     
     if (!state || !state.target) return;
 
-    // Try to get thumbstick axes
-    const gamepad = evt.target.components['meta-touch-controls'];
-    if (!gamepad?.controller?.gamepad) return;
-
-    const axes = gamepad.controller.gamepad.axes;
-    if (!axes || axes.length < 4) return;
-
-    let thumbstickX = 0, thumbstickY = 0;
-    
-    // Get correct axes based on handedness
-    if (state.handedness === 'right') {
-      thumbstickX = axes[2] || 0;
-      thumbstickY = axes[3] || 0;
-    } else {
-      thumbstickX = axes[0] || 0;
-      thumbstickY = axes[1] || 0;
+    // Get axes directly from event
+    if (evt.detail && evt.detail.axis) {
+      const axes = evt.detail.axis;
+      
+      // For Meta Quest, axes 2 and 3 are thumbstick for both hands
+      const thumbstickX = axes[2] || axes[0] || 0;
+      const thumbstickY = axes[3] || axes[1] || 0;
+      
+      if (Math.abs(thumbstickX) > 0.01 || Math.abs(thumbstickY) > 0.01) {
+        updateDebugDisplay(`📊 Axis: X=${thumbstickX.toFixed(2)} Y=${thumbstickY.toFixed(2)}`);
+        this.processThumbstickInput(controllerId, thumbstickX, thumbstickY);
+      }
     }
-
-    this.processThumbstickInput(controllerId, thumbstickX, thumbstickY);
   },
 
   /**
@@ -338,6 +332,37 @@ if (typeof AFRAME !== 'undefined') {
       ThumbstickRotation.init(this.el);
       
       console.log(`✅ thumbstick-rotation A-Frame component initialized for: ${this.el.id}`);
+    },
+    
+    tick: function() {
+      // Direct gamepad polling as backup
+      const controllerId = this.el.id;
+      const state = ThumbstickRotation.activeRotations.get(controllerId);
+      
+      if (!state || !state.target) return;
+      
+      // Try to get gamepad directly
+      const trackedControls = this.el.components['tracked-controls'];
+      const metaTouch = this.el.components['meta-touch-controls'];
+      
+      let gamepad = null;
+      if (trackedControls && trackedControls.controller) {
+        gamepad = trackedControls.controller.gamepad;
+      } else if (metaTouch && metaTouch.controller) {
+        gamepad = metaTouch.controller.gamepad;
+      }
+      
+      if (gamepad && gamepad.axes && gamepad.axes.length >= 2) {
+        // Get thumbstick axes - usually 2,3 for right, 0,1 for left
+        const isRight = this.el.id.includes('right');
+        const thumbstickX = isRight ? (gamepad.axes[2] || 0) : (gamepad.axes[0] || 0);
+        const thumbstickY = isRight ? (gamepad.axes[3] || 0) : (gamepad.axes[1] || 0);
+        
+        if (Math.abs(thumbstickX) > 0.01 || Math.abs(thumbstickY) > 0.01) {
+          updateDebugDisplay(`🎮 Poll: X=${thumbstickX.toFixed(2)} Y=${thumbstickY.toFixed(2)}`);
+          ThumbstickRotation.processThumbstickInput(controllerId, thumbstickX, thumbstickY);
+        }
+      }
     },
 
     remove: function() {
