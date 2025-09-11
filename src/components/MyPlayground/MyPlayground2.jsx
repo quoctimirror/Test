@@ -14,7 +14,7 @@ const MyPlayground2 = () => {
         await import('../../utils/meta-touch-controls.js');
         await import('../../utils/grabbable.js'); 
         await import('../../utils/tracked-controls/components/grab.js');
-        await import('../../utils/thumbstick-rotation.js');
+        // thumbstick rotation now handled by working-thumbstick component
         console.log('✅ VR interaction components loaded');
       } catch (error) {
         console.error('❌ Failed to load VR components:', error);
@@ -155,7 +155,230 @@ const MyPlayground2 = () => {
       });
     }
 
-    // Enhanced VR Controller với thumbstick rotation utility
+    // Working Thumbstick Rotation Component - Copy from HTML example
+    if (window.AFRAME && !window.AFRAME.components['working-thumbstick']) {
+      window.AFRAME.registerComponent('working-thumbstick', {
+        schema: {
+          rotationSpeed: {default: 3.0}
+        },
+        
+        init: function() {
+          this.GRABBED_STATE = 'grabbed';
+          this.MOVING_STATE = 'moving';
+          this.grabbing = false;
+          this.movingObject = false;
+          this.selectedObject = null;
+          this.rotationSpeed = this.data.rotationSpeed;
+          this.triggerDownTime = 0;
+          this.HOLD_THRESHOLD = 300; // milliseconds
+          
+          // Bind event handlers
+          this.onTriggerDown = this.onTriggerDown.bind(this);
+          this.onTriggerUp = this.onTriggerUp.bind(this);
+          this.onThumbstickMoved = this.onThumbstickMoved.bind(this);
+          this.selectObject = this.selectObject.bind(this);
+          
+          console.log('Working thumbstick component initialized for', this.el.id);
+        },
+
+        play: function() {
+          this.el.addEventListener('triggerdown', this.onTriggerDown);
+          this.el.addEventListener('triggerup', this.onTriggerUp);
+          this.el.addEventListener('thumbstickmoved', this.onThumbstickMoved);
+          
+          const debugText = document.getElementById('debug-text');
+          if (debugText) {
+            const msg = `🎮 Working Controller: ${this.el.id}`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
+        },
+
+        onTriggerDown: function(evt) {
+          const debugText = document.getElementById('debug-text');
+          if (debugText) {
+            const msg = `🔴 TRIGGER DOWN: ${this.el.id}`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
+          
+          this.triggerDownTime = Date.now();
+          this.grabbing = true;
+          
+          if (this.selectedObject) {
+            // Object already selected, start moving
+            this.startMoving();
+          } else {
+            // Select object
+            this.selectObject();
+          }
+        },
+
+        onTriggerUp: function(evt) {
+          const debugText = document.getElementById('debug-text');
+          if (debugText) {
+            const msg = `🟢 TRIGGER UP: ${this.el.id}`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
+          
+          var holdDuration = Date.now() - this.triggerDownTime;
+          this.grabbing = false;
+          
+          if (this.movingObject) {
+            this.stopMoving();
+          } else if (holdDuration < this.HOLD_THRESHOLD && this.selectedObject) {
+            // Quick click = deselect
+            this.deselectObject();
+          }
+        },
+
+        selectObject: function() {
+          var raycaster = this.el.components.raycaster;
+          if (!raycaster) {
+            console.log('No raycaster found!');
+            return;
+          }
+          
+          var intersectedEls = raycaster.intersectedEls;
+          
+          const debugText = document.getElementById('debug-text');
+          if (debugText) {
+            const msg = `🔍 Found ${intersectedEls.length} objects`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
+          
+          if (intersectedEls.length > 0) {
+            var hitEl = intersectedEls[0];
+            
+            // Check if it's the ring or rotatable
+            if (hitEl.id === 'ring-entity' || hitEl.classList.contains('rotatable') || hitEl.classList.contains('interactive')) {
+              this.selectedObject = hitEl;
+              hitEl.addState(this.GRABBED_STATE);
+              
+              // Visual feedback - red color
+              this.setObjectColor(hitEl, '#ff4444');
+              
+              if (debugText) {
+                const msg = `✅ SELECTED: ${hitEl.id}`;
+                const currentValue = debugText.getAttribute('value') || '';
+                const lines = currentValue.split('\n').slice(-8);
+                lines.push(msg);
+                debugText.setAttribute('value', lines.join('\n'));
+              }
+            }
+          }
+        },
+
+        deselectObject: function() {
+          if (!this.selectedObject) return;
+          
+          this.selectedObject.removeState(this.GRABBED_STATE);
+          this.selectedObject.removeState(this.MOVING_STATE);
+          
+          // Reset color
+          this.resetObjectColor(this.selectedObject);
+          
+          const debugText = document.getElementById('debug-text');
+          if (debugText) {
+            const msg = `❌ DESELECTED: ${this.selectedObject.id}`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
+          
+          this.selectedObject = null;
+          this.movingObject = false;
+        },
+
+        startMoving: function() {
+          if (!this.selectedObject) return;
+          this.movingObject = true;
+          this.selectedObject.addState(this.MOVING_STATE);
+          // Green color for moving
+          this.setObjectColor(this.selectedObject, '#44ff44');
+        },
+
+        stopMoving: function() {
+          if (!this.selectedObject || !this.movingObject) return;
+          this.movingObject = false;
+          this.selectedObject.removeState(this.MOVING_STATE);
+          // Back to red for selected
+          this.setObjectColor(this.selectedObject, '#ff4444');
+        },
+
+        setObjectColor: function(el, color) {
+          if (el.setAttribute) {
+            el.setAttribute('material', 'color', color);
+          }
+        },
+
+        resetObjectColor: function(el) {
+          if (el.setAttribute) {
+            el.setAttribute('material', 'color', '#ffffff');
+          }
+        },
+
+        onThumbstickMoved: function(evt) {
+          if (!this.selectedObject) return;
+          
+          var thumbstickX = evt.detail.x;
+          var thumbstickY = evt.detail.y;
+          
+          // Skip if barely moved
+          if (Math.abs(thumbstickX) < 0.1 && Math.abs(thumbstickY) < 0.1) {
+            return;
+          }
+          
+          const debugText = document.getElementById('debug-text');
+          if (debugText) {
+            const msg = `🕹️ THUMBSTICK: X=${thumbstickX.toFixed(2)} Y=${thumbstickY.toFixed(2)}`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
+          
+          // If moving object, don't rotate
+          if (this.movingObject) {
+            return;
+          }
+          
+          // ROTATE OBJECT - EXACT COPY FROM WORKING HTML
+          var currentRotation = this.selectedObject.getAttribute('rotation');
+          
+          var deltaY = thumbstickX * this.rotationSpeed;  // Left/right rotation
+          var deltaX = -thumbstickY * this.rotationSpeed; // Up/down rotation (inverted)
+          
+          // Apply rotation - SAME AS WORKING HTML
+          this.selectedObject.setAttribute('rotation', {
+            x: currentRotation.x + deltaX,
+            y: currentRotation.y + deltaY,
+            z: currentRotation.z
+          });
+          
+          if (debugText) {
+            const msg = `🔄 ROTATING: X=${(currentRotation.x + deltaX).toFixed(0)}° Y=${(currentRotation.y + deltaY).toFixed(0)}°`;
+            const currentValue = debugText.getAttribute('value') || '';
+            const lines = currentValue.split('\n').slice(-8);
+            lines.push(msg);
+            debugText.setAttribute('value', lines.join('\n'));
+          }
+        }
+      });
+    }
+
+    // Original quest-controller
     if (window.AFRAME && !window.AFRAME.components['quest-controller']) {
       window.AFRAME.registerComponent('quest-controller', {
         init: function() {
@@ -548,8 +771,8 @@ const MyPlayground2 = () => {
           this.isSelected = !this.isSelected;
           
           // Get the controller that triggered this (from both controllers)
-          const rightController = document.getElementById('rightController')?.components?.['quest-controller'];
-          const leftController = document.getElementById('leftController')?.components?.['quest-controller'];
+          const rightController = document.getElementById('rightController')?.components?.['working-thumbstick'];
+          const leftController = document.getElementById('leftController')?.components?.['working-thumbstick'];
           
           if (this.isSelected) {
             // Set as selected object for both controllers
@@ -570,48 +793,7 @@ const MyPlayground2 = () => {
               });
             }
             
-            // Set as thumbstick rotation target for both controllers
-            if (window.ThumbstickRotation) {
-              // Ensure controllers are initialized first
-              const rightController = document.getElementById('rightController');
-              const leftController = document.getElementById('leftController');
-              
-              if (rightController) {
-                // Force init if not already done
-                if (!window.ThumbstickRotation.activeRotations.has('rightController')) {
-                  window.ThumbstickRotation.init(rightController);
-                }
-                window.ThumbstickRotation.setTarget('rightController', this.el);
-                
-                const debugText = document.getElementById('debug-text');
-                if (debugText) {
-                  const msg = '✅ RIGHT Controller Ready';
-                  const currentValue = debugText.getAttribute('value') || '';
-                  const lines = currentValue.split('\n').slice(-8);
-                  lines.push(msg);
-                  debugText.setAttribute('value', lines.join('\n'));
-                }
-              }
-              
-              if (leftController) {
-                // Force init if not already done
-                if (!window.ThumbstickRotation.activeRotations.has('leftController')) {
-                  window.ThumbstickRotation.init(leftController);
-                }
-                window.ThumbstickRotation.setTarget('leftController', this.el);
-                
-                const debugText = document.getElementById('debug-text');
-                if (debugText) {
-                  const msg = '✅ LEFT Controller Ready';
-                  const currentValue = debugText.getAttribute('value') || '';
-                  const lines = currentValue.split('\n').slice(-8);
-                  lines.push(msg);
-                  debugText.setAttribute('value', lines.join('\n'));
-                }
-              }
-            } else {
-              console.error('❌ ThumbstickRotation not available during target setting!');
-            }
+            // Selection is now handled automatically by working-thumbstick component
             
             // Update debug display
             const debugText = document.getElementById('debug-text');
@@ -624,8 +806,8 @@ const MyPlayground2 = () => {
             }
           } else {
             // Clear selected object for both controllers
-            const rightController = document.getElementById('rightController')?.components?.['quest-controller'];
-            const leftController = document.getElementById('leftController')?.components?.['quest-controller'];
+            const rightController = document.getElementById('rightController')?.components?.['working-thumbstick'];
+            const leftController = document.getElementById('leftController')?.components?.['working-thumbstick'];
             if (rightController) rightController.selectedObject = null;
             if (leftController) leftController.selectedObject = null;
             
@@ -648,118 +830,7 @@ const MyPlayground2 = () => {
           }
         },
         
-        directRotateRing: function(ringEntity, thumbstickX, thumbstickY) {
-          // Skip if thumbstick barely moved
-          if (Math.abs(thumbstickX) < 0.1 && Math.abs(thumbstickY) < 0.1) {
-            return;
-          }
-          
-          const debugText = document.getElementById('debug-text');
-          if (debugText) {
-            const msg = `🔄 DIRECT Ring Rotate: X=${thumbstickX.toFixed(2)} Y=${thumbstickY.toFixed(2)}`;
-            const currentValue = debugText.getAttribute('value') || '';
-            const lines = currentValue.split('\n').slice(-8);
-            lines.push(msg);
-            debugText.setAttribute('value', lines.join('\n'));
-          }
-          
-          // Get current rotation
-          const currentRotation = ringEntity.getAttribute('rotation');
-          
-          // Enhanced rotation with Z-axis support
-          const rotationSpeed = 3.0;
-          
-          // X thumbstick = Y rotation (left/right turn)
-          // Y thumbstick = X rotation (up/down tilt)  
-          // For Z rotation, we can use both axes together
-          const deltaY = thumbstickX * rotationSpeed;  // Yaw (left/right)
-          const deltaX = -thumbstickY * rotationSpeed; // Pitch (up/down, inverted)
-          
-          // Z rotation: combine both axes for roll effect
-          const deltaZ = (thumbstickX * thumbstickY) * rotationSpeed * 0.5; // Roll (diagonal movement)
-          
-          // Apply rotation using A-Frame methods
-          const newRotation = {
-            x: currentRotation.x + deltaX,
-            y: currentRotation.y + deltaY,
-            z: currentRotation.z + deltaZ
-          };
-          
-          // Method 1: A-Frame setAttribute
-          ringEntity.setAttribute('rotation', `${newRotation.x} ${newRotation.y} ${newRotation.z}`);
-          
-          // Method 2: Direct Object3D update for VR
-          if (ringEntity.object3D) {
-            ringEntity.object3D.rotation.set(
-              newRotation.x * Math.PI / 180,
-              newRotation.y * Math.PI / 180, 
-              newRotation.z * Math.PI / 180
-            );
-          }
-          
-          // Method 3: Force update matrix
-          if (ringEntity.object3D) {
-            ringEntity.object3D.updateMatrixWorld(true);
-          }
-          
-          if (debugText) {
-            // Verify rotation was applied
-            const appliedRotation = ringEntity.getAttribute('rotation');
-            const msg = `📐 Applied: X=${appliedRotation.x.toFixed(0)}° Y=${appliedRotation.y.toFixed(0)}° Z=${appliedRotation.z.toFixed(0)}°`;
-            const currentValue = debugText.getAttribute('value') || '';
-            const lines = currentValue.split('\n').slice(-8);
-            lines.push(msg);
-            debugText.setAttribute('value', lines.join('\n'));
-            
-            // Also check Object3D rotation
-            if (ringEntity.object3D) {
-              const obj3dRot = ringEntity.object3D.rotation;
-              const msg2 = `🎯 Object3D: X=${(obj3dRot.x * 180/Math.PI).toFixed(0)}° Y=${(obj3dRot.y * 180/Math.PI).toFixed(0)}°`;
-              const lines2 = debugText.getAttribute('value').split('\n').slice(-8);
-              lines2.push(msg2);
-              debugText.setAttribute('value', lines2.join('\n'));
-            }
-          }
-        },
-        
-        rotateSelectedObject: function(thumbstickX, thumbstickY) {
-          // Skip if no object selected or thumbstick barely moved
-          if (!this.selectedObject || (Math.abs(thumbstickX) < 0.1 && Math.abs(thumbstickY) < 0.1)) {
-            return;
-          }
-          
-          const debugText = document.getElementById('debug-text');
-          if (debugText) {
-            const msg = `🔄 Rotating: X=${thumbstickX.toFixed(2)} Y=${thumbstickY.toFixed(2)}`;
-            const currentValue = debugText.getAttribute('value') || '';
-            const lines = currentValue.split('\n').slice(-8);
-            lines.push(msg);
-            debugText.setAttribute('value', lines.join('\n'));
-          }
-          
-          // Get current rotation
-          const currentRotation = this.selectedObject.getAttribute('rotation');
-          
-          // Calculate rotation deltas (same as working HTML)
-          const rotationSpeed = 3.0;
-          const deltaY = thumbstickX * rotationSpeed;  // Left/right rotation
-          const deltaX = -thumbstickY * rotationSpeed; // Up/down rotation (inverted)
-          
-          // Apply rotation directly
-          this.selectedObject.setAttribute('rotation', {
-            x: currentRotation.x + deltaX,
-            y: currentRotation.y + deltaY,
-            z: currentRotation.z
-          });
-          
-          if (debugText) {
-            const msg = `📐 New Rotation: Y=${(currentRotation.y + deltaY).toFixed(0)}°`;
-            const currentValue = debugText.getAttribute('value') || '';
-            const lines = currentValue.split('\n').slice(-8);
-            lines.push(msg);
-            debugText.setAttribute('value', lines.join('\n'));
-          }
-        },
+        // Rotation is now handled automatically by working-thumbstick component
         
         remove: function() {
           // Cleanup desktop event listeners
@@ -1041,8 +1112,7 @@ const MyPlayground2 = () => {
           tracked-controls="hand: right; idPrefix: meta-quest"
           meta-touch-controls="hand: right; model: true"
           laser-controls="hand: right"
-          quest-controller
-          thumbstick-rotation
+          working-thumbstick
           raycaster="objects: .interactive; showLine: false; far: 3; interval: 100"
         >
         </a-entity>
@@ -1052,8 +1122,7 @@ const MyPlayground2 = () => {
           tracked-controls="hand: left; idPrefix: meta-quest"
           meta-touch-controls="hand: left; model: true"
           laser-controls="hand: left" 
-          quest-controller
-          thumbstick-rotation
+          working-thumbstick
           raycaster="objects: .interactive; showLine: false; far: 3; interval: 100"
         >
         </a-entity>
