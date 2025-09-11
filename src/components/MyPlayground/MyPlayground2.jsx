@@ -678,19 +678,47 @@ const MyPlayground2 = () => {
           // Z rotation: combine both axes for roll effect
           const deltaZ = (thumbstickX * thumbstickY) * rotationSpeed * 0.5; // Roll (diagonal movement)
           
-          // Apply rotation
-          ringEntity.setAttribute('rotation', {
+          // Apply rotation using A-Frame methods
+          const newRotation = {
             x: currentRotation.x + deltaX,
             y: currentRotation.y + deltaY,
             z: currentRotation.z + deltaZ
-          });
+          };
+          
+          // Method 1: A-Frame setAttribute
+          ringEntity.setAttribute('rotation', `${newRotation.x} ${newRotation.y} ${newRotation.z}`);
+          
+          // Method 2: Direct Object3D update for VR
+          if (ringEntity.object3D) {
+            ringEntity.object3D.rotation.set(
+              newRotation.x * Math.PI / 180,
+              newRotation.y * Math.PI / 180, 
+              newRotation.z * Math.PI / 180
+            );
+          }
+          
+          // Method 3: Force update matrix
+          if (ringEntity.object3D) {
+            ringEntity.object3D.updateMatrixWorld(true);
+          }
           
           if (debugText) {
-            const msg = `📐 Ring Rot: X=${(currentRotation.x + deltaX).toFixed(0)}° Y=${(currentRotation.y + deltaY).toFixed(0)}° Z=${(currentRotation.z + deltaZ).toFixed(0)}°`;
+            // Verify rotation was applied
+            const appliedRotation = ringEntity.getAttribute('rotation');
+            const msg = `📐 Applied: X=${appliedRotation.x.toFixed(0)}° Y=${appliedRotation.y.toFixed(0)}° Z=${appliedRotation.z.toFixed(0)}°`;
             const currentValue = debugText.getAttribute('value') || '';
             const lines = currentValue.split('\n').slice(-8);
             lines.push(msg);
             debugText.setAttribute('value', lines.join('\n'));
+            
+            // Also check Object3D rotation
+            if (ringEntity.object3D) {
+              const obj3dRot = ringEntity.object3D.rotation;
+              const msg2 = `🎯 Object3D: X=${(obj3dRot.x * 180/Math.PI).toFixed(0)}° Y=${(obj3dRot.y * 180/Math.PI).toFixed(0)}°`;
+              const lines2 = debugText.getAttribute('value').split('\n').slice(-8);
+              lines2.push(msg2);
+              debugText.setAttribute('value', lines2.join('\n'));
+            }
           }
         },
         
