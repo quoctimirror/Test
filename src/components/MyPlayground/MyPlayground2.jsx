@@ -165,12 +165,17 @@ const MyPlayground2 = () => {
         init: function() {
           this.GRABBED_STATE = 'grabbed';
           this.MOVING_STATE = 'moving';
+          this.grabbing = false;
+          this.movingObject = false;
           this.selectedObject = null;
           this.rotationSpeed = this.data.rotationSpeed;
           this.triggerDownTime = 0;
           this.HOLD_THRESHOLD = 300; // milliseconds to detect hold vs click
-          this.isHoldingTrigger = false;
-          this.movingObject = false;
+          
+          // For object movement - EXACT COPY FROM HTML
+          this.previousPosition = new THREE.Vector3();
+          this.currentPosition = new THREE.Vector3();
+          this.deltaPosition = new THREE.Vector3();
           
           // Bind event handlers
           this.onTriggerDown = this.onTriggerDown.bind(this);
@@ -206,20 +211,16 @@ const MyPlayground2 = () => {
             debugText.setAttribute('value', lines.join('\n'));
           }
           
+          console.log('Trigger pressed!');
           this.triggerDownTime = Date.now();
-          this.isHoldingTrigger = true;
+          this.grabbing = true;
           
-          if (!this.selectedObject) {
-            // No object selected, try to select one
-            this.selectObject();
+          if (this.selectedObject) {
+            // Start moving the selected object - EXACT COPY FROM HTML
+            this.startMoving();
           } else {
-            // Object already selected, start a timer to detect hold vs click
-            setTimeout(() => {
-              if (this.isHoldingTrigger && this.selectedObject) {
-                // Still holding after threshold, start moving
-                this.startMoving();
-              }
-            }, this.HOLD_THRESHOLD);
+            // Try to select an object - EXACT COPY FROM HTML
+            this.selectObject();
           }
         },
 
@@ -233,14 +234,15 @@ const MyPlayground2 = () => {
             debugText.setAttribute('value', lines.join('\n'));
           }
           
-          const holdDuration = Date.now() - this.triggerDownTime;
-          this.isHoldingTrigger = false;
+          console.log('Trigger released!');
+          var holdDuration = Date.now() - this.triggerDownTime;
+          this.grabbing = false;
           
           if (this.movingObject) {
-            // Was moving, stop moving
+            // Stop moving - EXACT COPY FROM HTML
             this.stopMoving();
           } else if (holdDuration < this.HOLD_THRESHOLD && this.selectedObject) {
-            // Quick click on selected object = deselect
+            // Quick click on selected object = deselect - EXACT COPY FROM HTML
             this.deselectObject();
           }
         },
@@ -253,6 +255,7 @@ const MyPlayground2 = () => {
           }
           
           var intersectedEls = raycaster.intersectedEls;
+          console.log('Intersected elements:', intersectedEls);
           
           const debugText = document.getElementById('debug-text');
           if (debugText) {
@@ -266,32 +269,43 @@ const MyPlayground2 = () => {
           if (intersectedEls.length > 0) {
             var hitEl = intersectedEls[0];
             
-            // Check if it's the ring or rotatable
-            if (hitEl.id === 'ring-entity' || hitEl.classList.contains('rotatable') || hitEl.classList.contains('interactive')) {
-              this.selectedObject = hitEl;
-              hitEl.addState(this.GRABBED_STATE);
-              
-              // Visual feedback - red color
-              this.setObjectColor(hitEl, '#ff4444');
-              
-              if (debugText) {
-                const msg = `✅ SELECTED: ${hitEl.id}`;
-                const currentValue = debugText.getAttribute('value') || '';
-                const lines = currentValue.split('\n').slice(-8);
-                lines.push(msg);
-                debugText.setAttribute('value', lines.join('\n'));
-              }
+            // Check if it's rotatable - EXACT COPY FROM HTML
+            if (!hitEl.classList.contains('rotatable')) {
+              console.log('Object is not rotatable');
+              return;
             }
+            
+            // Select new object - EXACT COPY FROM HTML
+            this.selectedObject = hitEl;
+            hitEl.addState(this.GRABBED_STATE);
+            hitEl.emit('rotationstart');
+            console.log('Object selected for rotation:', hitEl.tagName);
+            
+            // Visual feedback - red color for our debug
+            this.setObjectColor(hitEl, '#ff4444');
+            
+            if (debugText) {
+              const msg = `✅ SELECTED: ${hitEl.id}`;
+              const currentValue = debugText.getAttribute('value') || '';
+              const lines = currentValue.split('\n').slice(-8);
+              lines.push(msg);
+              debugText.setAttribute('value', lines.join('\n'));
+            }
+          } else {
+            console.log('No objects intersected by raycaster');
           }
         },
 
         deselectObject: function() {
           if (!this.selectedObject) return;
           
+          // EXACT COPY FROM HTML
           this.selectedObject.removeState(this.GRABBED_STATE);
           this.selectedObject.removeState(this.MOVING_STATE);
+          this.selectedObject.emit('rotationend');
+          console.log('Object deselected');
           
-          // Reset color
+          // Reset color for our debug
           this.resetObjectColor(this.selectedObject);
           
           const debugText = document.getElementById('debug-text');
@@ -310,10 +324,17 @@ const MyPlayground2 = () => {
         startMoving: function() {
           if (!this.selectedObject) return;
           
+          // EXACT COPY FROM HTML
           this.movingObject = true;
           this.selectedObject.addState(this.MOVING_STATE);
+          this.selectedObject.emit('movestart');
+          console.log('Started moving object');
           
-          // Green color for moving
+          // Initialize controller position - EXACT COPY FROM HTML
+          this.el.object3D.updateMatrixWorld();
+          this.previousPosition.setFromMatrixPosition(this.el.object3D.matrixWorld);
+          
+          // Green color for moving (our debug)
           this.setObjectColor(this.selectedObject, '#44ff44');
           
           const debugText = document.getElementById('debug-text');
@@ -329,10 +350,13 @@ const MyPlayground2 = () => {
         stopMoving: function() {
           if (!this.selectedObject || !this.movingObject) return;
           
+          // EXACT COPY FROM HTML
           this.movingObject = false;
           this.selectedObject.removeState(this.MOVING_STATE);
+          this.selectedObject.emit('moveend');
+          console.log('Stopped moving object');
           
-          // Back to red for selected
+          // Back to red for selected (our debug)
           this.setObjectColor(this.selectedObject, '#ff4444');
           
           const debugText = document.getElementById('debug-text');
@@ -398,6 +422,31 @@ const MyPlayground2 = () => {
             lines.push(msg);
             debugText.setAttribute('value', lines.join('\n'));
           }
+        },
+
+        tick: function() {
+          // EXACT COPY FROM HTML - Update object position to follow controller movement
+          if (!this.selectedObject || !this.movingObject) {
+            return;
+          }
+          
+          // Update object position to follow controller movement
+          this.el.object3D.updateMatrixWorld();
+          this.currentPosition.setFromMatrixPosition(this.el.object3D.matrixWorld);
+          
+          // Calculate position delta
+          this.deltaPosition.subVectors(this.currentPosition, this.previousPosition);
+          
+          // Apply position change to selected object
+          var currentPos = this.selectedObject.getAttribute('position');
+          this.selectedObject.setAttribute('position', {
+            x: currentPos.x + this.deltaPosition.x,
+            y: currentPos.y + this.deltaPosition.y,
+            z: currentPos.z + this.deltaPosition.z
+          });
+          
+          // Update previous position for next frame
+          this.previousPosition.copy(this.currentPosition);
         }
       });
     }
@@ -1091,7 +1140,7 @@ const MyPlayground2 = () => {
           {/* Mouse cursor cho desktop - chỉ hiện khi không trong VR */}
           <a-entity 
             cursor="rayOrigin: mouse; fuse: false"
-            raycaster="objects: .interactive"
+            raycaster="objects: .rotatable"
             hide-on-enter-vr
           >
           </a-entity>
@@ -1126,7 +1175,7 @@ const MyPlayground2 = () => {
           position="0 1.6 -1"
           scale="0.01 0.01 0.01"
           rotation="0 0 0"
-          class="interactive grabbable"
+          class="interactive grabbable rotatable"
         >
         </a-entity>
 
@@ -1137,7 +1186,7 @@ const MyPlayground2 = () => {
           meta-touch-controls="hand: right; model: true"
           laser-controls="hand: right"
           working-thumbstick
-          raycaster="objects: .interactive; showLine: false; far: 3; interval: 100"
+          raycaster="objects: .rotatable; showLine: false; far: 3; interval: 100"
         >
         </a-entity>
         
@@ -1147,7 +1196,7 @@ const MyPlayground2 = () => {
           meta-touch-controls="hand: left; model: true"
           laser-controls="hand: left" 
           working-thumbstick
-          raycaster="objects: .interactive; showLine: false; far: 3; interval: 100"
+          raycaster="objects: .rotatable; showLine: false; far: 3; interval: 100"
         >
         </a-entity>
 
