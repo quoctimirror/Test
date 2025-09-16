@@ -254,11 +254,11 @@ const ChangePassword = ({ onClose }) => {
               Cancel
             </button>
             <ShineGlassButton
-              width={150}
+              width={170}
               height={50}
               fontSize={14}
               theme="light"
-              onClick={() => {}}
+              type="submit"
               className="submit-button"
             >
               {isLoading ? "Saving..." : "Save Changes"}

@@ -14,13 +14,33 @@ const WelcomePage = () => {
       {/* Background Image */}
       <div className="welcome-background-image"></div>
 
+      {/* Logo */}
+      <div className="welcome-logo">
+        <img src="/welcome/welcome_logo.svg" alt="Welcome Logo" />
+      </div>
+
       {/* Main content */}
-      {/* <div className="welcome-content">
-        <h1 className="welcome-title">
-          <span className="title-line-1">Welcome to</span>
-          <span className="title-line-2">MIRROR</span>
-        </h1>
-      </div> */}
+      <div className="welcome-content">
+        <div className="welcome-title-section">
+          <h1 className="welcome-title heading-1--no-margin">Future Diamond</h1>
+        </div>
+
+        <div className="welcome-subtitle-section">
+          <h2 className="welcome-subtitle bodytext-1--no-margin">
+            Is Coming Soon
+          </h2>
+        </div>
+      </div>
+
+      {/* Bottom text content */}
+      <div className="welcome-bottom-text">
+        <h2 className="bottom-text-line1 heading-3--no-margin">
+          Awakening Luxury through Your Senses,
+        </h2>
+        <h2 className="bottom-text-line2 heading-3--no-margin">
+          in Every Time, Space, and Presence.
+        </h2>
+      </div>
     </div>
   );
 };

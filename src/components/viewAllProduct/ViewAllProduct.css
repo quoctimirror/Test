@@ -2,8 +2,7 @@
 .collection-section-4 {
   width: 100%;
   min-height: 100vh;
-  padding: 200px 0;
-  background: #f8f9fa;
+  background: rgba(246, 246, 246, 1);
   box-sizing: border-box;
 }
 
@@ -11,8 +10,8 @@
 .collection-section-4-gsap {
   width: 100%;
   min-height: 100vh;
-  padding: 200px 0;
-  background: #f8f9fa;
+  padding: 200px 0 24px !important;
+  background: rgba(246, 246, 246, 1);
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
@@ -39,7 +38,7 @@
 
 .same-collection-header {
   text-align: center;
-  margin-bottom: 120px;
+  margin-bottom: 60px;
 }
 
 .same-collection-title {
@@ -48,7 +47,7 @@
   text-align: center;
   color: #333;
   /* Ghi đè margin mặc định của heading-1 */
-  margin: 0 0 30px 0 !important;
+  margin: 0 0 12px 0 !important;
 }
 
 .same-collection-description {
@@ -171,7 +170,7 @@
   }
 
   .same-collection-header {
-    margin-bottom: 60px;
+    margin-bottom: 30px;
   }
 
   .same-collection-title {
@@ -200,12 +199,12 @@
   }
 
   .same-collection-header {
-    margin-bottom: 50px;
+    margin-bottom: 25px;
   }
 
   .same-collection-title {
     font-size: 45px;
-    margin-bottom: 20px !important;
+    margin-bottom: 8px !important;
   }
 
   .same-collection-description {
@@ -234,12 +233,12 @@
   }
 
   .same-collection-header {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
 
   .same-collection-title {
     font-size: 32px;
-    margin-bottom: 15px !important;
+    margin-bottom: 6px !important;
   }
 
   .same-collection-description {
@@ -291,7 +290,31 @@
 .view-product-button-container {
   display: flex;
   justify-content: center;
-  margin-top: 60px;
+  background: rgba(246, 246, 246, 1);
+  padding-top: 36px;
+  padding-bottom: 120px;
+}
+
+/* Responsive for button container */
+@media (max-width: 992px) {
+  .view-product-button-container {
+    padding-top: 30px;
+    padding-bottom: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .view-product-button-container {
+    padding-top: 24px;
+    padding-bottom: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .view-product-button-container {
+    padding-top: 20px;
+    padding-bottom: 60px;
+  }
 }
 
 /* Button styles moved to common Button component */

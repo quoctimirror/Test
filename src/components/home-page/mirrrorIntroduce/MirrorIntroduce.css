@@ -1,0 +1,162 @@
+.mirror-introduce-section {
+  position: relative;
+  /* Height should be based on video duration and desired scroll length */
+  height: 800vh;
+  margin: 0;
+  padding: 0;
+}
+
+.mirror-introduce-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+}
+
+.canvas-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sequence-canvas {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.loading-spinner {
+  color: white;
+  font-size: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Remove old video styles - now using canvas */
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.text-slides-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: rgba(0, 0, 0, 1);
+}
+
+.slide-content {
+  max-width: 900px;
+  padding: 2rem;
+  position: absolute;
+  top: 15.5%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.slide-title {
+  color: rgba(0, 0, 0, 1);
+  margin-bottom: 12px;
+}
+
+.slide-highlight {
+  color: rgba(0, 0, 0, 1);
+  font-style: italic;
+}
+
+.slide-subtitle {
+  color: rgba(0, 0, 0, 1);
+}
+
+.fade-in-text {
+  /* Container for fade-in words */
+}
+
+.fade-word {
+  /* Individual words that fade in */
+  transition: opacity 0.3s ease;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .mirror-introduce-section {
+    height: 600vh;
+  }
+
+  .introduce-content {
+    padding: 1rem;
+  }
+
+  .scroll-progress {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .progress-bar {
+    width: 150px;
+  }
+}

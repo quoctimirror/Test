@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { componentsAPI, handleAPIError } from "../../services/api";
+import { componentsAPI, handleAPIError } from "@services/api";
 
 const ComponentsManager = () => {
   const [components, setComponents] = useState([]);
@@ -36,7 +36,7 @@ const ComponentsManager = () => {
         setComponents(response.data || []);
         return;
       } catch (apiError) {
-        console.warn('Components API not available, using mock data:', apiError.message);
+        // Components API not available, using mock data
       }
       
       // Mock data fallback

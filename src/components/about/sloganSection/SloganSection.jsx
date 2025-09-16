@@ -12,7 +12,7 @@ const SloganSection = () => {
           loop
           playsInline
         >
-          <source src="/about/section1/1.mp4" type="video/mp4" />
+          <source src="/about/section1/Top_video.mp4" type="video/mp4" />
         </video>
         
         <div className="slogan-content">

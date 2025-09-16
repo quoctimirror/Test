@@ -1,5 +1,5 @@
-/* Collection Page Styles */
-.collection-page {
+/* Products Page Styles */
+.products-page {
   width: 100%;
   min-height: 100vh;
   margin: 0;
@@ -8,7 +8,7 @@
 }
 
 /* Section 1: View360 Component - Full Screen */
-.collection-section-1 {
+.products-section-1 {
   width: 100%;
   height: 100vh;
   position: relative;
@@ -17,7 +17,7 @@
 }
 
 /* Section 2: SelectOptionSection */
-.collection-section-2 {
+.products-section-2 {
   width: 100%;
   min-height: 100vh;
   padding: 0;
@@ -27,21 +27,21 @@
 
 
 /* Footer */
-.collection-footer {
+.products-footer {
   width: 100%;
   background: #2c3e50;
   padding: 40px 20px;
   box-sizing: border-box;
 }
 
-.collection-footer .footer-content {
+.products-footer .footer-content {
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
   color: #ecf0f1;
 }
 
-.collection-footer p {
+.products-footer p {
   margin: 0;
   font-size: 14px;
   opacity: 0.8;
@@ -49,45 +49,45 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .collection-section-2 h2 {
+  .products-section-2 h2 {
     font-size: 2rem;
   }
 
-  .collection-section-2 p {
+  .products-section-2 p {
     font-size: 1rem;
   }
 
-  .collection-section-2 {
+  .products-section-2 {
     padding: 40px 15px;
     min-height: 40vh;
   }
 
 
-  .collection-footer {
+  .products-footer {
     padding: 30px 15px;
   }
 }
 
 @media (max-width: 480px) {
-  .collection-section-2 h2 {
+  .products-section-2 h2 {
     font-size: 1.8rem;
   }
 
-  .collection-section-2 p {
+  .products-section-2 p {
     font-size: 0.9rem;
   }
 
-  .collection-section-2 {
+  .products-section-2 {
     padding: 30px 10px;
     min-height: 35vh;
   }
 
 
-  .collection-footer {
+  .products-footer {
     padding: 20px 10px;
   }
 
-  .collection-footer p {
+  .products-footer p {
     font-size: 12px;
   }
 }

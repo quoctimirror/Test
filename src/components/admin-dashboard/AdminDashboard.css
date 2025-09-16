@@ -319,6 +319,14 @@
   letter-spacing: 0.5px;
 }
 
+.admin-table thead tr th {
+  text-align: left !important;
+}
+
+.admin-table th {
+  text-align: left !important;
+}
+
 .admin-table tbody tr:hover {
   background: #f8f9fa;
 }

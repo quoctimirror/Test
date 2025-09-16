@@ -30,6 +30,9 @@ const ManageProducts = lazy(() =>
 const AdminDashboard = lazy(() =>
   import("@components/admin-dashboard/AdminDashboard.jsx")
 );
+const VendorDashboard = lazy(() =>
+  import("@components/vendor-dashboard/VendorDashboard.jsx")
+);
 const AuthPage = lazy(() => import("@pages/AuthPage"));
 const Login = lazy(() => import("@components/login/Login"));
 const Register = lazy(() => import("@components/register/Register"));
@@ -42,6 +45,7 @@ const ContactPage = lazy(() => import("@pages/ContactPage"));
 const AboutPage = lazy(() => import("@pages/AboutPage"));
 const LocationsPage = lazy(() => import("@pages/LocationsPage"));
 const WelcomePage = lazy(() => import("@pages/WelcomePage"));
+const ImmersiveShowroomPage = lazy(() => import("@pages/ImmersiveShowroomPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -50,16 +54,20 @@ export default function AppRoutes() {
     location.pathname.startsWith("/hover-expand") ||
     location.pathname.startsWith("/ar/rings") ||
     location.pathname.startsWith("/dashboard/admin") ||
+    location.pathname.startsWith("/dashboard/vendor") ||
     location.pathname === "/welcome" ||
-    location.pathname === "/";
+    location.pathname === "/" ||
+    location.pathname === "/immersive-showroom";
 
   const staticRoutesToHideFooter =
     location.pathname.startsWith("/universe-final") ||
     location.pathname.startsWith("/hover-expand") ||
     location.pathname.startsWith("/ar/rings") ||
     location.pathname.startsWith("/dashboard/admin") ||
+    location.pathname.startsWith("/dashboard/vendor") ||
     location.pathname === "/welcome" ||
-    location.pathname === "/";
+    location.pathname === "/" ||
+    location.pathname === "/immersive-showroom";
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -77,7 +85,7 @@ export default function AppRoutes() {
       >
         <Routes>
           <Route path="/" element={<WelcomePage />} />
-          
+
           <Route path="/home" element={<HomePage />} />
           <Route path="/welcome" element={<WelcomePage />} />
 
@@ -113,6 +121,8 @@ export default function AppRoutes() {
 
           <Route path="/news/:slug" element={<NewCutPage />} />
 
+          <Route path="/immersive-showroom" element={<ImmersiveShowroomPage />} />
+
           {/* for observing UI universe-section final */}
           {/* <Route path="/universe-section" element={<UniverseSection />} /> */}
 
@@ -140,6 +150,15 @@ export default function AppRoutes() {
             element={
               <ProtectedRoute requiredRole="ADMIN">
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="dashboard/vendor"
+            element={
+              <ProtectedRoute requiredRole="VENDOR">
+                <VendorDashboard />
               </ProtectedRoute>
             }
           />

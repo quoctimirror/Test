@@ -16,14 +16,14 @@ const ProductsPage = () => {
   }, []);
 
   return (
-    <div className="collection-page">
+    <div className="products-page">
       {/* Section 1: View360 Component */}
-      {/* <section className="collection-section-1">
+      <section className="products-section-1">
         <View360 />
-      </section> */}
+      </section>
 
       {/* Section 2: SelectOptionSection */}
-      <section className="collection-section-2">
+      <section className="products-section-2">
         <SelectOptionSection />
       </section>
       {/* Section 3 */}

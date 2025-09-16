@@ -93,6 +93,74 @@
   }
 }
 
+/* Breakpoint cho 1728x1080 và similar resolutions */
+@media (min-width: 1201px) and (max-width: 1800px) {
+  .team-carousel {
+    padding: 0 2%;
+  }
+
+  .team-carousel-track {
+    gap: 12px;
+    margin: 45px 0 0 0;
+    justify-content: flex-start; /* Ensure proper alignment */
+  }
+
+  .team-member:not(.highlighted) .member-photo {
+    width: 265px;
+    height: 398px;
+  }
+
+  .team-member.highlighted .member-photo {
+    width: 545px;
+    height: 818px;
+  }
+
+  .member-photo {
+    width: 265px;
+    height: 398px;
+  }
+
+  .cso-content {
+    height: 550px;
+  }
+
+  .cso-info {
+    padding: 45px;
+  }
+
+  .cso-name {
+    font-size: 50px;
+  }
+
+  /* Fix responsive positioning for leader elements */
+  .leader-quote-fixed {
+    left: calc(2% + 265px + 12px + 265px + 12px + 265px + 12px + 265px + 12px);
+    max-width: calc(100vw - 4% - 545px - 48px);
+  }
+  
+  /* Override quote container position for this breakpoint */
+  .bod-member-section .leader-quote-grid {
+    bottom: 50% !important; /* Move up from 45% */
+  }
+
+  .leader-details {
+    left: calc(2% + 265px + 12px + 265px + 12px + 265px + 12px);
+  }
+
+  /* Override container position for this breakpoint */
+  .bod-member-section .leader-details-grid {
+    bottom: 29.5% !important; /* Move up from 21.5% */
+  }
+
+  .bod-member-section .leader-details {
+    bottom: auto !important; /* Clear any bottom positioning */
+  }
+
+  .leader-name {
+    font-size: 40px;
+  }
+}
+
 .member-photo {
   border-radius: 0;
   overflow: hidden;
@@ -139,6 +207,13 @@
   .team-member.hidden-member .member-photo {
     width: 240px;
     height: 340px;
+  }
+}
+
+@media (min-width: 1201px) and (max-width: 1800px) {
+  .team-member.hidden-member .member-photo {
+    width: 265px;
+    height: 398px;
   }
 }
 

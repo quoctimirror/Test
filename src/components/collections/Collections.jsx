@@ -1,9 +1,10 @@
-// Thêm 'useState', 'useRef' từ React
-import React, { useState, useRef } from "react";
+// Thêm 'useState', 'useRef', 'useEffect' từ React
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import CollectionHeroSection from "./CollectionHeroSection";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import { collectionsAPI } from "@services/api";
 import "./Collections.css";
 
 const products = [
@@ -30,11 +31,82 @@ const products = [
   },
 ];
 
-function Collection({ collectionId = "treasure-of-the-orient" }) {
+function Collection() {
   const section2Ref = useRef(null);
   const navigate = useNavigate();
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [featuredCollection, setFeaturedCollection] = useState(null);
+  const [otherCollections, setOtherCollections] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [slideDirection, setSlideDirection] = useState('right');
+
+  // Fetch collections data from API
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        setLoading(true);
+        // Get all collections
+        const response = await collectionsAPI.getAll();
+        const collections = response.data.data || response.data;
+
+        // Find "Treasure of the Orient" collection for featured section
+        const treasureCollection = collections.find(
+          (col) =>
+            col.name.toLowerCase() === "treasure of the orient".toLowerCase()
+        );
+
+        if (treasureCollection) {
+          setFeaturedCollection(treasureCollection);
+          // Set other collections (excluding the featured one)
+          setOtherCollections(
+            collections.filter((col) => col.id !== treasureCollection.id)
+          );
+        } else {
+          // If not found, use the first collection as featured
+          setFeaturedCollection(collections[0]);
+          setOtherCollections(collections.slice(1));
+        }
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching collections:", err);
+        setError("Failed to load collection data");
+        // Set default values for fallback
+        setFeaturedCollection({
+          id: "treasure-of-the-orient",
+          name: "Treasure of the Orient",
+          description:
+            "Step into a world where ancient splendor meets modern elegance.",
+        });
+        // Set default other collections
+        setOtherCollections([
+          { id: "whispers-of-kyoto", name: "Whispers of Kyoto" },
+          { id: "oceans-embrace", name: "Ocean's Embrace" },
+          { id: "nile-reverie", name: "Nile Reverie" },
+          { id: "byzantine-bloom", name: "Byzantine Bloom" },
+          { id: "sands-of-samarkand", name: "Sands of Samarkand" },
+          { id: "echoes-of-eternity", name: "Echoes of Eternity" },
+          { id: "the-alchemists-touch", name: "The Alchemist's Touch" },
+          { id: "lunar-veil", name: "Lunar Veil" },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCollections();
+  }, []);
+
+  // Auto-rotate images every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSlideDirection('right');
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleScrollToSection2 = () => {
     section2Ref.current?.scrollIntoView({ behavior: "smooth" });
@@ -42,11 +114,13 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
 
   // MỚI: Hàm handleNext được đơn giản hóa tối đa
   const handleNext = () => {
+    setSlideDirection('right');
     setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
   };
 
   // MỚI: Hàm handlePrevious được đơn giản hóa tối đa
   const handlePrevious = () => {
+    setSlideDirection('left');
     setCurrentIndex(
       (prevIndex) => (prevIndex - 1 + products.length) % products.length
     );
@@ -54,11 +128,33 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
 
   const currentProduct = products[currentIndex];
 
+  // Helper function to convert collection name to URL slug
+  const nameToSlug = (name) => {
+    return name
+      .toLowerCase()
+      .replace(/['']/g, "") // Remove apostrophes
+      .replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric with hyphens
+      .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+  };
+
   const handleExploreCollection = async () => {
-    await optimizedTransitionUtils.transitionToRoute(
-      navigate,
-      `/collections/${collectionId}`
-    );
+    if (featuredCollection && featuredCollection.name) {
+      const slug = nameToSlug(featuredCollection.name);
+      await optimizedTransitionUtils.transitionToRoute(
+        navigate,
+        `/collections/${slug}`
+      );
+    }
+  };
+
+  const handleNavigateToCollection = async (collectionName) => {
+    if (collectionName) {
+      const slug = nameToSlug(collectionName);
+      await optimizedTransitionUtils.transitionToRoute(
+        navigate,
+        `/collections/${slug}`
+      );
+    }
   };
 
   return (
@@ -71,15 +167,29 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
         <div className="collection-hero-content">
           <div className="collection-hero-subtitle">THE NEWEST COLLECTION</div>
           <div className="collection-hero-title">
-            <div className="text-treasure">TREASURE OF THE ORIENT</div>
+            <div className="text-treasure">
+              {loading
+                ? "Loading..."
+                : featuredCollection?.title || "TREASURE OF THE ORIENT"}
+            </div>
           </div>
           <div className="collection-hero-description">
-            Step into a world where ancient splendor meets modern elegance. The
-            <br />
-            <strong>TREASURE OF THE ORIENT</strong> collection draws inspiration
-            from the rich cultural
-            <br />
-            heritage, vibrant artistry, and timeless mystique of the East.
+            {loading
+              ? "Loading collection details..."
+              : featuredCollection?.description || (
+                  <>
+                    Step into a world where ancient splendor meets modern
+                    elegance. The
+                    <br />
+                    <strong>
+                      {featuredCollection?.name || "TREASURE OF THE ORIENT"}
+                    </strong>{" "}
+                    collection draws inspiration from the rich cultural
+                    <br />
+                    heritage, vibrant artistry, and timeless mystique of the
+                    East.
+                  </>
+                )}
           </div>
           <ShineGlassButton
             width={221}
@@ -116,10 +226,10 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
                 </svg>
               </button>
 
-              {/* MỚI: Áp dụng class 'slide-effect' và quan trọng nhất là 'key' */}
+              {/* MỚI: Áp dụng class động dựa trên slideDirection */}
               <div
-                className="product-image-container slide-effect"
-                key={currentProduct.id}
+                className={`product-image-container slide-effect-${slideDirection}`}
+                key={`${currentProduct.id}-${slideDirection}`}
               >
                 <img
                   src={currentProduct.image}
@@ -152,8 +262,8 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
 
             {/* MỚI: Áp dụng tương tự cho phần thông tin sản phẩm */}
             <div
-              className="product-info slide-effect"
-              key={currentProduct.id + "-info"}
+              className={`product-info slide-effect-${slideDirection}`}
+              key={`${currentProduct.id}-info-${slideDirection}`}
             >
               <h2 className="product-title">{currentProduct.title}</h2>
               <button className="shop-now-button">
@@ -167,16 +277,16 @@ function Collection({ collectionId = "treasure-of-the-orient" }) {
       {/* --- SECTION 3 --- */}
       <div className="section-3">
         <div className="other-collections-content">
-          <div className="other-collections-subtitle">OTHER COLLECTION</div>
+          <div className="other-collections-subtitle bodytext-3--no-margin">OTHER COLLECTION</div>
           <div className="collection-names">
-            <div className="collection-name">Whispers of Kyoto</div>
-            <div className="collection-name">Ocean's Embrace</div>
-            <div className="collection-name">Nile Reverie</div>
-            <div className="collection-name">Byzantine Bloom</div>
-            <div className="collection-name">Sands of Samarkand</div>
-            <div className="collection-name">Echoes of Eternity</div>
-            <div className="collection-name">The Alchemist's Touch</div>
-            <div className="collection-name">Lunar Veil</div>
+            <div className="collection-name heading-1--no-margin">Whispers of Kyoto</div>
+            <div className="collection-name heading-1--no-margin">Ocean's Embrace</div>
+            <div className="collection-name heading-1--no-margin">Nile Reverie</div>
+            <div className="collection-name heading-1--no-margin">Byzantine Bloom</div>
+            <div className="collection-name heading-1--no-margin">Sands of Samarkand</div>
+            <div className="collection-name heading-1--no-margin">Echoes of Eternity</div>
+            <div className="collection-name heading-1--no-margin">The Alchemist's Touch</div>
+            <div className="collection-name heading-1--no-margin">Lunar Veil</div>
           </div>
         </div>
       </div>

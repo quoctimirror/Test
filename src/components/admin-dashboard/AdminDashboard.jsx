@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import ProductsManager from "./ProductsManager";
-import CategoriesManagerEnhanced from "../manage-products/CategoriesManagerEnhanced";
+import CategoriesManagerEnhanced from "@components/manage-products/CategoriesManagerEnhanced";
 import CollectionsManager from "./CollectionsManager";
 import LocationsManager from "./LocationsManager";
 import ComponentsManager from "./ComponentsManager";
 import UsersManager from "./UsersManager";
+import VendorsManager from "./VendorsManager";
 import DashboardHome from "./DashboardHome";
 import "./AdminDashboard.css";
 
@@ -17,14 +18,15 @@ const AdminDashboard = () => {
     { id: "categories", label: "Categories", icon: "📂" },
     { id: "collections", label: "Collections", icon: "📦" },
     { id: "locations", label: "Locations", icon: "📍" },
-    { id: "components", label: "Components", icon: "🔧" },
+    { id: "vendors", label: "Vendors", icon: "🏭" },
+    // { id: "components", label: "Components", icon: "🔧" },
     { id: "users", label: "Users", icon: "👥" },
   ];
 
   const renderActiveTab = () => {
     switch (activeTab) {
       case "dashboard":
-        return <DashboardHome />;
+        return <DashboardHome setActiveTab={setActiveTab} />;
       case "products":
         return <ProductsManager />;
       case "categories":
@@ -33,6 +35,8 @@ const AdminDashboard = () => {
         return <CollectionsManager />;
       case "locations":
         return <LocationsManager />;
+      case "vendors":
+        return <VendorsManager />;
       case "components":
         return <ComponentsManager />;
       case "users":
@@ -46,32 +50,39 @@ const AdminDashboard = () => {
     const pageMap = {
       dashboard: {
         title: "Admin Dashboard",
-        description: "Overview of your Mirror Diamond management system"
+        description: "Overview of your Mirror Diamond management system",
       },
       products: {
         title: "Products Management",
-        description: "Manage your diamond products, rings, necklaces, and jewelry items"
+        description:
+          "Manage your diamond products, rings, necklaces, and jewelry items",
       },
       categories: {
         title: "Categories Management",
-        description: "Organize products into categories like rings, necklaces, earrings"
+        description:
+          "Organize products into categories like rings, necklaces, earrings",
       },
       collections: {
         title: "Collections Management",
-        description: "Manage seasonal collections and product groupings"
+        description: "Manage seasonal collections and product groupings",
       },
       locations: {
         title: "Store Locations",
-        description: "Manage store locations, addresses, and contact information"
+        description:
+          "Manage store locations, addresses, and contact information",
+      },
+      vendors: {
+        title: "Vendors Management",
+        description: "Manage vendor information, contracts, and supplier details",
       },
       components: {
         title: "Components Management",
-        description: "Manage product components and customizable options"
+        description: "Manage product components and customizable options",
       },
       users: {
         title: "Users Management",
-        description: "Manage user accounts, permissions, and access control"
-      }
+        description: "Manage user accounts, permissions, and access control",
+      },
     };
     return pageMap[activeTab] || pageMap.dashboard;
   };
@@ -123,9 +134,7 @@ const AdminDashboard = () => {
           <p className="admin-page-description">{getPageInfo().description}</p>
         </div>
 
-        <div className="admin-content-body">
-          {renderActiveTab()}
-        </div>
+        <div className="admin-content-body">{renderActiveTab()}</div>
       </div>
     </div>
   );

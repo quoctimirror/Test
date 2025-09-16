@@ -1,5 +1,5 @@
-/* Section 4: Same Collection */
-.collection-section-4-detail {
+/* Collection Detail Section */
+.collection-detail-section {
   width: 100%;
   min-height: 100vh;
   padding: 120px 0;
@@ -8,21 +8,46 @@
   position: relative;
 }
 
-.collection-section-4-detail.is-sticky {
+/* Loading state styles */
+.collection-detail-product-image-loading {
+  width: 427px;
+  height: 500px;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #797979;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 16px;
+  border-radius: 4px;
+}
+
+/* No products message */
+.collection-detail-no-products-message {
+  width: 100%;
+  padding: 60px 20px;
+  text-align: center;
+  color: #797979;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 18px;
+}
+
+.collection-detail-section.is-sticky {
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
 /* GSAP Horizontal Scroll Layout */
-.collection-section-4-detail-gsap {
+.collection-detail-section-gsap {
   width: 100%;
   min-height: 100vh;
-  padding: 120px 0;
-  background: #f8f9fa;
+  padding: 120px 0 0 0;
+  background: #f6f6f6;
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+  margin-bottom: 0;
 }
 
 .horizontal-scroll-wrapper {
@@ -30,35 +55,35 @@
   overflow: hidden;
 }
 
-.same-collection-grid-gsap {
+.collection-detail-grid-gsap {
   display: flex;
   gap: 10px;
   flex-wrap: nowrap;
   width: fit-content;
 }
 
-.same-collection-container {
+.collection-detail-container {
   width: 100%;
   margin: 0;
   padding: 0 30px;
   box-sizing: border-box;
 }
 
-.same-collection-header {
+.collection-detail-header {
   text-align: center;
   margin-bottom: 120px;
 }
 
-.same-collection-title {
+.collection-detail-title {
   /* Sử dụng class heading-1 từ typography.css */
   /* Các thuộc tính font đã được xác định trong heading-1 */
   text-align: center;
   color: #333;
   /* Ghi đè margin mặc định của heading-1 */
-  margin: 0 0 30px 0 !important;
+  margin: 0 0 12px 0 !important;
 }
 
-.same-collection-description {
+.collection-detail-description {
   font-family: "BT Beau Sans", sans-serif;
   font-weight: 400;
   font-style: normal;
@@ -70,7 +95,7 @@
   margin: 0;
 }
 
-.same-collection-grid {
+.collection-detail-grid {
   display: flex;
   gap: 10px;
   overflow-x: auto;
@@ -84,19 +109,19 @@
   scroll-behavior: smooth;
 }
 
-.same-collection-grid:active {
+.collection-detail-grid:active {
   cursor: grabbing;
 }
 
-.same-collection-grid.dragging .product-card:hover {
+.collection-detail-grid.dragging .collection-detail-product-card:hover {
   transform: none;
 }
 
-.same-collection-grid::-webkit-scrollbar {
+.collection-detail-grid::-webkit-scrollbar {
   display: none;
 }
 
-.product-card {
+.collection-detail-product-card {
   flex: 0 0 456px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -105,7 +130,7 @@
   height: fit-content;
 }
 
-.product-image {
+.collection-detail-product-image {
   width: 456px;
   height: 570px;
   object-fit: cover;
@@ -115,17 +140,17 @@
   transition: transform 0.3s ease;
 }
 
-.product-card:hover .product-image {
+.collection-detail-product-card:hover .collection-detail-product-image {
   transform: scale(1.1);
 }
 
 /* Desktop 1920x1080 */
 @media (min-width: 1920px) and (min-height: 1080px) {
-  .product-card {
+  .collection-detail-product-card {
     flex: 0 0 447px;
   }
 
-  .product-image {
+  .collection-detail-product-image {
     width: 447px;
     height: 559px;
   }
@@ -133,11 +158,11 @@
 
 /* Large desktop */
 @media (min-width: 1440px) and (max-width: 1919px) {
-  .product-card {
+  .collection-detail-product-card {
     flex: 0 0 380px;
   }
 
-  .product-image {
+  .collection-detail-product-image {
     width: 380px;
     height: 475px;
   }
@@ -145,11 +170,11 @@
 
 /* Medium desktop */
 @media (min-width: 1024px) and (max-width: 1439px) {
-  .product-card {
+  .collection-detail-product-card {
     flex: 0 0 350px;
   }
 
-  .product-image {
+  .collection-detail-product-image {
     width: 350px;
     height: 438px;
   }
@@ -157,83 +182,109 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .collection-section-4-detail,
-  .collection-section-4-detail-gsap {
-    padding: 80px 0;
+  .collection-detail-section,
+  .collection-detail-section-gsap {
+    padding: 80px 0 0 0;
   }
 
-  .same-collection-container {
+  .collection-detail-container {
     padding: 0 20px;
   }
 
-  .same-collection-header {
+  .collection-detail-header {
     margin-bottom: 60px;
   }
 
-  .same-collection-title {
+  .collection-detail-title {
     /* Responsive cho heading-1 đã được xử lý trong typography.css */
-    margin: 0 0 20px 0 !important;
+    margin: 0 0 8px 0 !important;
   }
 
-  .same-collection-description {
+  .collection-detail-description {
     font-size: 15px;
   }
 
-  .product-card {
+  .collection-detail-product-card {
     flex: 0 0 300px;
     line-height: 0;
     height: fit-content;
     margin: 0;
   }
 
-  .product-image {
+  .collection-detail-product-image {
     width: 300px;
     height: 375px;
   }
 }
 
 @media (max-width: 480px) {
-  .collection-section-4-detail,
-  .collection-section-4-detail-gsap {
-    padding: 60px 0;
+  .collection-detail-section,
+  .collection-detail-section-gsap {
+    padding: 60px 0 0 0;
   }
 
-  .same-collection-container {
+  .collection-detail-container {
     padding: 0 15px;
   }
 
-  .same-collection-header {
+  .collection-detail-header {
     margin-bottom: 40px;
   }
 
-  .same-collection-title {
+  .collection-detail-title {
     /* Responsive cho heading-1 đã được xử lý trong typography.css */
     font-size: 36px !important;
-    margin: 0 0 15px 0 !important;
+    margin: 0 0 6px 0 !important;
   }
 
-  .same-collection-description {
+  .collection-detail-description {
     font-size: 14px;
   }
 
-  .product-card {
+  .collection-detail-product-card {
     flex: 0 0 250px;
     line-height: 0;
     height: fit-content;
     margin: 0;
   }
 
-  .product-image {
+  .collection-detail-product-image {
     width: 250px;
     height: 312px;
   }
 }
 
-/* View Product Button */
-.view-product-button-container {
+/* Collection Detail Button */
+.collection-detail-button-container {
   display: flex;
   justify-content: center;
-  margin-top: 60px;
+  background: #f6f6f6;
+  padding-top: 36px;
+  padding-bottom: 120px;
+  margin-top: 0;
+  border: none;
+}
+
+/* Responsive for button container */
+@media (max-width: 992px) {
+  .collection-detail-button-container {
+    padding-top: 30px;
+    padding-bottom: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .collection-detail-button-container {
+    padding-top: 24px;
+    padding-bottom: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .collection-detail-button-container {
+    padding-top: 20px;
+    padding-bottom: 60px;
+  }
 }
 
 .view-product-button {

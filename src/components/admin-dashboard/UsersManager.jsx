@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { usersAPI, handleAPIError } from "../../services/api";
+import { usersAPI, handleAPIError } from "@services/api";
 
 const UsersManager = () => {
   const [users, setUsers] = useState([]);
@@ -42,7 +42,7 @@ const UsersManager = () => {
         setUsers(usersData);
         return;
       } catch (apiError) {
-        console.warn('Users API not available, using mock data:', apiError.message);
+        // Users API not available, using mock data
       }
       
       // Mock data fallback
@@ -197,7 +197,6 @@ const UsersManager = () => {
           return;
         }
         
-        console.log('Submitting user data:', submitData); // Debug log
         await usersAPI.createByAdmin(submitData);
       }
 
@@ -250,6 +249,7 @@ const UsersManager = () => {
   const getRoleIcon = (roles) => {
     if (!roles || !Array.isArray(roles)) return '👤';
     if (roles.includes('ADMIN')) return '👑';
+    if (roles.includes('VENDOR')) return '🏪';
     if (roles.includes('STAFF')) return '👥';
     if (roles.includes('USER')) return '👤';
     return '👤';
@@ -258,6 +258,7 @@ const UsersManager = () => {
   const getRoleColor = (roles) => {
     if (!roles || !Array.isArray(roles)) return '#6c757d';
     if (roles.includes('ADMIN')) return '#dc3545';
+    if (roles.includes('VENDOR')) return '#007bff';
     if (roles.includes('STAFF')) return '#ffc107';
     if (roles.includes('USER')) return '#28a745';
     return '#6c757d';
@@ -266,6 +267,7 @@ const UsersManager = () => {
   const getPrimaryRole = (roles) => {
     if (!roles || !Array.isArray(roles) || roles.length === 0) return 'USER';
     if (roles.includes('ADMIN')) return 'ADMIN';
+    if (roles.includes('VENDOR')) return 'VENDOR';
     if (roles.includes('STAFF')) return 'STAFF';
     if (roles.includes('USER')) return 'USER';
     return roles[0];
@@ -321,6 +323,7 @@ const UsersManager = () => {
             >
               <option value="all">All Roles</option>
               <option value="ADMIN">Admin</option>
+              <option value="VENDOR">Vendor</option>
               <option value="USER">User</option>
             </select>
             <select
@@ -577,6 +580,7 @@ const UsersManager = () => {
                         required
                       >
                         <option value="USER">User</option>
+                        <option value="VENDOR">Vendor</option>
                         <option value="ADMIN">Admin</option>
                       </select>
                     </div>

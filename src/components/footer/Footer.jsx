@@ -91,7 +91,7 @@ const Footer = () => {
         <div className="footer-content">
           <div className="footer-left">
             <div className="footer-section">
-              <h3 className="heading-3 footer-title">DISCOVER</h3>
+              {/* <h3 className="heading-3 footer-title">DISCOVER</h3> */}
               <ul className="footer-links">
                 <li>
                   <a className="bodytext-3" href="/" onClick={handleHomeClick}>
@@ -170,7 +170,7 @@ const Footer = () => {
 
           <div className="footer-right">
             <div className="footer-section">
-              <h3 className="heading-3 footer-title">CONTACT</h3>
+              {/* <h3 className="heading-3 footer-title">CONTACT</h3> */}
               <ul className="contact-info">
                 <li>
                   <a

@@ -2,16 +2,15 @@
 .services-detail-hero-section {
   width: 100%;
   height: 600px;
-  background-image: url("/public/services/service_detail_img.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  filter: grayscale(100%);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   color: white;
+  transition: background-image 0.3s ease;
 }
 
 .services-detail-hero-section::before {
@@ -45,7 +44,12 @@
 /* Services Detail Tabs */
 .services-detail-wrapper {
   margin: 0 auto;
-  padding: 30px 499px 120px 499px;
+  /* RESPONSIVE HORIZONTAL: Auto-scaling pattern như support-wrapper */
+  padding: 30px clamp(40px, calc((100vw - 900px) / 2), 499px) 120px
+    clamp(40px, calc((100vw - 900px) / 2), 499px);
+  max-width: 1920px;
+  margin-left: auto;
+  margin-right: auto;
   background: white;
 }
 
@@ -411,9 +415,38 @@
 /* Button styles now handled by ShineGlassButton component */
 
 /* Responsive Design */
+
+/* MacBook 13" – 14" height (1440x900) */
+@media (max-width: 1440px) and (max-height: 900px) {
+  .services-detail-wrapper {
+    /* AUTO SCALE: Responsive padding cho 1440x900 */
+    padding: 30px clamp(30px, calc((100vw - 780px) / 2), 350px) 100px
+      clamp(30px, calc((100vw - 780px) / 2), 350px);
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .services-detail-tabs {
+    margin-bottom: 100px;
+    gap: 60px;
+  }
+
+  .return-exchange,
+  .sizing-guide,
+  .warranty-info {
+    padding: 50px;
+  }
+}
+
 @media (max-width: 1200px) {
   .services-detail-wrapper {
-    padding: 30px 400px 80px 400px;
+    /* AUTO SCALE: Responsive padding cho 1200px */
+    padding: 30px clamp(25px, calc((100vw - 750px) / 2), 400px) 80px
+      clamp(25px, calc((100vw - 750px) / 2), 400px);
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .services-detail-tabs {
@@ -443,7 +476,12 @@
   }
 
   .services-detail-wrapper {
-    padding: 30px 250px 60px 250px;
+    /* AUTO SCALE: Responsive padding cho 992px */
+    padding: 30px clamp(20px, calc((100vw - 500px) / 2), 250px) 60px
+      clamp(20px, calc((100vw - 500px) / 2), 250px);
+    max-width: 992px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .services-detail-tabs {
@@ -485,7 +523,12 @@
   }
 
   .services-detail-wrapper {
-    padding: 30px 100px 50px 100px;
+    /* AUTO SCALE: Responsive padding cho 768px */
+    padding: 30px clamp(15px, calc((100vw - 400px) / 2), 100px) 50px
+      clamp(15px, calc((100vw - 400px) / 2), 100px);
+    max-width: 768px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .services-detail-tabs {
@@ -561,7 +604,6 @@
     font-size: 15px;
     line-height: 1.5;
   }
-
 }
 
 @media (max-width: 480px) {
@@ -575,7 +617,12 @@
   }
 
   .services-detail-wrapper {
-    padding: 20px 40px 40px 40px;
+    /* AUTO SCALE: Responsive padding cho 480px */
+    padding: 20px clamp(10px, calc((100vw - 300px) / 2), 40px) 40px
+      clamp(10px, calc((100vw - 300px) / 2), 40px);
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .services-detail-tabs {
@@ -647,7 +694,6 @@
     line-height: 1.5;
   }
 
-
   .service-item {
     margin-bottom: 28px;
   }
@@ -675,7 +721,12 @@
   }
 
   .services-detail-wrapper {
-    padding: 15px 20px 30px 20px;
+    /* AUTO SCALE: Responsive padding cho 360px */
+    padding: 15px clamp(8px, calc((100vw - 280px) / 2), 20px) 30px
+      clamp(8px, calc((100vw - 280px) / 2), 20px);
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .services-detail-tabs {
@@ -733,5 +784,4 @@
   .availability-note {
     font-size: 12px;
   }
-
 }

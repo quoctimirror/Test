@@ -228,7 +228,8 @@ const CategoriesManagerEnhanced = () => {
   const handleComponentSubmit = async (e) => {
     e.preventDefault();
     const requestData = {
-      ...componentFormData,
+      componentName: componentFormData.componentName,
+      description: componentFormData.description,
       categoryId: selectedCategoryForComponent,
     };
 
@@ -263,7 +264,8 @@ const CategoriesManagerEnhanced = () => {
       closeComponentModal();
     } catch (error) {
       console.error("Error submitting component:", error);
-      setErrorMessage("Failed to save component");
+      console.error("Error response:", error.response?.data);
+      setErrorMessage(error.response?.data || "Failed to save component");
     }
   };
 
@@ -272,8 +274,7 @@ const CategoriesManagerEnhanced = () => {
     setSelectedCategoryForComponent(categoryId);
     setComponentFormData({
       componentName: component.componentName,
-      description: component.description,
-      isActive: component.isActive,
+      description: component.description || "",
     });
     setIsComponentModalOpen(true);
   };
@@ -313,7 +314,8 @@ const CategoriesManagerEnhanced = () => {
   const handleOptionSubmit = async (e) => {
     e.preventDefault();
     const requestData = {
-      ...optionFormData,
+      componentOptionalName: optionFormData.componentOptionalName,
+      description: optionFormData.description,
       componentId: selectedComponentForOption,
     };
 
@@ -348,7 +350,8 @@ const CategoriesManagerEnhanced = () => {
       closeOptionModal();
     } catch (error) {
       console.error("Error submitting option:", error);
-      setErrorMessage("Failed to save option");
+      console.error("Error response:", error.response?.data);
+      setErrorMessage(error.response?.data || "Failed to save option");
     }
   };
 
@@ -357,8 +360,7 @@ const CategoriesManagerEnhanced = () => {
     setSelectedComponentForOption(componentId);
     setOptionFormData({
       componentOptionalName: option.componentOptionalName,
-      description: option.description,
-      isActive: option.isActive,
+      description: option.description || "",
     });
     setIsOptionModalOpen(true);
   };
@@ -430,7 +432,10 @@ const CategoriesManagerEnhanced = () => {
                 </div>
                 <div className="category-actions">
                   <button className="edit-btn" onClick={() => handleCategoryEdit(category)} title="Edit Category">
-                    ✏️
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
                   </button>
                   <button className="delete-btn" onClick={() => handleCategoryDelete(category.id)} title="Delete Category">
                     ×
@@ -455,13 +460,10 @@ const CategoriesManagerEnhanced = () => {
                 <div className="components-list">
                   {components[category.id] && components[category.id].length > 0 ? (
                     components[category.id].map((component) => (
-                      <div key={component.id} className="component-item">
+                      <div key={component.id} className="component-container">
+                        <div className="component-item">
                         <div className="component-info">
                           <h4>{component.componentName}</h4>
-                          <p className="component-description">{component.description}</p>
-                          <span className={`status-badge small ${component.isActive ? "active" : "inactive"}`}>
-                            {component.isActive ? "Active" : "Inactive"}
-                          </span>
                         </div>
                         <div className="component-actions">
                           <button 
@@ -469,7 +471,10 @@ const CategoriesManagerEnhanced = () => {
                             onClick={() => handleComponentEdit(component, category.id)}
                             title="Edit Component"
                           >
-                            ✏️
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
                           </button>
                           <button 
                             className="delete-btn small"
@@ -486,6 +491,7 @@ const CategoriesManagerEnhanced = () => {
                             +
                           </button>
                         </div>
+                        </div>
 
                         {componentOptions[component.id] && componentOptions[component.id].length > 0 && (
                           <div className="options-list">
@@ -494,10 +500,6 @@ const CategoriesManagerEnhanced = () => {
                               <div key={option.id} className="option-item">
                                 <div className="option-info">
                                   <span className="option-name">{option.componentOptionalName}</span>
-                                  <span className="option-description">{option.description}</span>
-                                  <span className={`status-badge mini ${option.isActive ? "active" : "inactive"}`}>
-                                    {option.isActive ? "Active" : "Inactive"}
-                                  </span>
                                 </div>
                                 <div className="option-actions">
                                   <button 
@@ -505,7 +507,10 @@ const CategoriesManagerEnhanced = () => {
                                     onClick={() => handleOptionEdit(option, component.id)}
                                     title="Edit Option"
                                   >
-                                    ✏️
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
                                   </button>
                                   <button 
                                     className="delete-btn mini"
@@ -611,17 +616,6 @@ const CategoriesManagerEnhanced = () => {
                   rows="3"
                 />
               </div>
-              <div className="form-group">
-                <label htmlFor="componentIsActive">Status:</label>
-                <select
-                  id="componentIsActive"
-                  value={componentFormData.isActive.toString()}
-                  onChange={(e) => setComponentFormData({ ...componentFormData, isActive: e.target.value === 'true' })}
-                >
-                  <option value="true">Active</option>
-                  <option value="false">Inactive</option>
-                </select>
-              </div>
               <div className="form-actions">
                 <button type="button" onClick={closeComponentModal} className="cancel-button">
                   Cancel
@@ -662,17 +656,6 @@ const CategoriesManagerEnhanced = () => {
                   onChange={(e) => setOptionFormData({ ...optionFormData, description: e.target.value })}
                   rows="3"
                 />
-              </div>
-              <div className="form-group">
-                <label htmlFor="optionIsActive">Status:</label>
-                <select
-                  id="optionIsActive"
-                  value={optionFormData.isActive.toString()}
-                  onChange={(e) => setOptionFormData({ ...optionFormData, isActive: e.target.value === 'true' })}
-                >
-                  <option value="true">Active</option>
-                  <option value="false">Inactive</option>
-                </select>
               </div>
               <div className="form-actions">
                 <button type="button" onClick={closeOptionModal} className="cancel-button">

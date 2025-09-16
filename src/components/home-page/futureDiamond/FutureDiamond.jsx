@@ -19,9 +19,9 @@ const FutureDiamond = () => {
       const scrollHeight = container.offsetHeight - window.innerHeight;
       const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
 
-      // Text reveal progress (starts at 50% of scroll)
-      if (progress > 0.5) {
-        const revealProgress = (progress - 0.5) / 0.5;
+      // Text reveal progress (starts at 30% of scroll, ends at 80%)
+      if (progress > 0.3) {
+        const revealProgress = (progress - 0.3) / 0.5;
         setTextRevealProgress(Math.min(1, revealProgress));
       } else {
         setTextRevealProgress(0);

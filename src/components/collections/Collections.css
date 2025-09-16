@@ -30,24 +30,44 @@
 /*    MỚI: CSS ĐƠN GIẢN CHO HIỆU ỨNG SLIDER                      */
 /* ============================================================ */
 
-/* 1. Định nghĩa một keyframe duy nhất cho hiệu ứng xuất hiện */
-@keyframes fadeIn {
+/* 1. Định nghĩa keyframe cho hiệu ứng fade in từ phải sang trái */
+@keyframes slideInFromRight {
   from {
     opacity: 0;
-    transform: translateY(10px);
-    /* Hiệu ứng trượt nhẹ từ dưới lên */
+    transform: translateX(50px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
-/* 2. Tạo một class để áp dụng animation này */
-/* 'forwards' để giữ lại trạng thái cuối cùng của animation (opacity: 1) */
+/* 2. Định nghĩa keyframe cho hiệu ứng fade in từ trái sang phải */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 3. Tạo các class để áp dụng animation */
+.slide-effect-right {
+  animation: slideInFromRight 0.5s ease-out forwards;
+}
+
+.slide-effect-left {
+  animation: slideInFromLeft 0.5s ease-out forwards;
+}
+
+/* Legacy class for backward compatibility */
 .slide-effect {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: slideInFromRight 0.5s ease-out forwards;
 }
 
 /* Định nghĩa animation nhún nhảy cho mũi tên */
@@ -117,7 +137,7 @@
 .hero-text-container div {
   font-size: 50px;
   line-height: 105%;
-  background: linear-gradient(180deg, #2a7786 0%, #134e5c 100%);
+  background: linear-gradient(180deg, #AFAFAF 0%, #3B4A4D 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -126,7 +146,10 @@
 /* Style riêng cho "TREASURE" */
 .text-treasure {
   font-family: "Saol Display";
-  background: linear-gradient(180deg, #2a7786 0%, #134e5c 100%);
+  background: linear-gradient(180deg, #AFAFAF 0%, #3B4A4D 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-size: 50px;
   line-height: 105%;
   font-weight: 400;
@@ -140,7 +163,7 @@
   font-weight: 300;
   line-height: 105%;
   /* 52.5px */
-  background: linear-gradient(180deg, #2a7786 0%, #134e5c 100%);
+  background: linear-gradient(180deg, #AFAFAF 0%, #3B4A4D 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -153,7 +176,10 @@
   text-align: right;
   padding-left: 4em;
   font-family: "Saol Display";
-  background: linear-gradient(180deg, #2a7786 0%, #134e5c 100%);
+  background: linear-gradient(180deg, #AFAFAF 0%, #3B4A4D 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-size: 50px;
   line-height: 105%;
   font-weight: 400;
@@ -687,13 +713,9 @@
   }
 
   .other-collections-subtitle {
-    font-size: 15px;
     margin-bottom: 2.5rem;
   }
 
-  .collection-name {
-    font-size: 52px;
-  }
 }
 
 /* Mobile landscape (640px và xuống) */
@@ -765,9 +787,6 @@
     max-width: 320px;
   }
 
-  .collection-name {
-    font-size: 42px;
-  }
 }
 
 /* Mobile portrait (480px và xuống) */
@@ -871,13 +890,9 @@
   }
 
   .other-collections-subtitle {
-    font-size: 13px;
     margin-bottom: 2rem;
   }
 
-  .collection-name {
-    font-size: 36px;
-  }
 
   .section-3 {
     padding: 0;
@@ -983,13 +998,9 @@
   }
 
   .other-collections-subtitle {
-    font-size: 12px;
     margin-bottom: 1.5rem;
   }
 
-  .collection-name {
-    font-size: 28px;
-  }
 
   .section-3 {
     padding: 0;
@@ -1062,16 +1073,11 @@
 }
 
 .other-collections-subtitle {
-  font-family: "BT Beau Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 120%;
-  letter-spacing: 0%;
-  text-align: center;
   color: #797979;
   text-transform: uppercase;
   margin-bottom: 3rem;
+  isolation: auto;
+  transform: none;
 }
 
 .collection-names {
@@ -1082,12 +1088,5 @@
 }
 
 .collection-name {
-  font-family: "Saol Display", serif;
-  font-weight: 300;
-  font-style: normal;
-  font-size: 64px;
-  line-height: 90%;
-  letter-spacing: -3%;
-  text-align: center;
   color: #000000;
 }

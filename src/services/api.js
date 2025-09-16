@@ -5,11 +5,11 @@ import axios from "axios";
 const API_BASE_URL = "https://xpxr4xbvim.ap-southeast-1.awsapprunner.com";
 
 // Debug logging
-console.log("🔧 API Configuration Debug:", {
-  "import.meta.env.VITE_API_BASE_URL": import.meta.env.VITE_API_BASE_URL,
-  "Final API_BASE_URL": API_BASE_URL,
-  "All env vars": import.meta.env,
-});
+// console.log("🔧 API Configuration Debug:", {
+//   "import.meta.env.VITE_API_BASE_URL": import.meta.env.VITE_API_BASE_URL,
+//   "Final API_BASE_URL": API_BASE_URL,
+//   "All env vars": import.meta.env,
+// });
 
 // Create axios instance with default config
 const api = axios.create({
@@ -29,6 +29,17 @@ api.interceptors.request.use(
     const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      
+      // Add X-User-Id header from JWT token
+      try {
+        const base64Payload = token.split('.')[1];
+        const payload = JSON.parse(atob(base64Payload));
+        if (payload.userId) {
+          config.headers['X-User-Id'] = payload.userId.toString();
+        }
+      } catch (decodeError) {
+        console.error("❌ Error decoding JWT for X-User-Id:", decodeError);
+      }
     }
     return config;
   },
@@ -127,6 +138,12 @@ export const productsAPI = {
   // Get products by price range
   getByPriceRange: (min, max) =>
     api.get(`/api/products/price-range?min=${min}&max=${max}`),
+    
+  // Get products by vendor ID
+  getByVendorId: (vendorId) => api.get(`/api/products?vendorId=${vendorId}`),
+  
+  // Get current user's vendor products (authenticated endpoint)
+  getCurrentUserProducts: () => api.get("/api/products"),
 
   // Get low stock products
   getLowStock: () => api.get("/api/products/low-stock"),
@@ -402,6 +419,72 @@ export const createApiHook = (apiCall) => {
       return { data: null, error: errorInfo, loading: false };
     }
   };
+};
+
+// ===== VENDORS API =====
+export const vendorsAPI = {
+  // Get all active vendors (filtered by current user if authenticated)
+  getAll: () => api.get("/api/vendors"),
+  
+  // Get current user's vendors (authenticated endpoint)
+  getCurrentUserVendors: () => api.get("/api/vendors?filter=current-user"),
+  
+  // Get current user's vendor info for dashboard
+  getCurrentVendorInfo: () => api.get("/api/vendors?filter=current-user")
+    .then(response => {
+      const vendors = response.data;
+      
+      return { 
+        data: vendors && vendors.length > 0 ? vendors[0] : null,
+        hasVendor: vendors && vendors.length > 0
+      };
+    }),
+
+  // Get vendor by ID
+  getById: (id) => api.get(`/api/vendors/${id}`),
+
+  // Get vendor by code
+  getByCode: (code) => api.get(`/api/vendors/code/${code}`),
+
+  // Get vendors by country
+  getByCountry: (country) => api.get(`/api/vendors/country/${country}`),
+
+  // Get vendors by type
+  getByType: (vendorType) => api.get(`/api/vendors/type/${vendorType}`),
+
+  // Search vendors with pagination
+  search: (searchTerm, params = {}) => {
+    const { page = 0, size = 20 } = params;
+    return api.get(`/api/vendors/search`, {
+      params: { search: searchTerm, page, size },
+    });
+  },
+
+  // Check if vendor exists by code
+  checkExists: (code) => api.get(`/api/vendors/exists/${code}`),
+
+  // Get active count
+  getActiveCount: () => api.get("/api/vendors/count"),
+
+  // CRUD operations
+  create: (vendorData) => api.post("/api/vendors", vendorData),
+  update: (id, vendorData) => api.put(`/api/vendors/${id}`, vendorData),
+  delete: (id) => api.delete(`/api/vendors/${id}`),
+  deactivate: (id) => api.patch(`/api/vendors/${id}/deactivate`),
+  
+  // Get products for a specific vendor
+  getProducts: (vendorId) => api.get(`/api/vendors/${vendorId}/products`),
+  
+  // Get products for current user's vendor
+  getCurrentVendorProducts: () => 
+    vendorsAPI.getCurrentVendorInfo()
+      .then(vendorInfo => {
+        if (vendorInfo.hasVendor && vendorInfo.data) {
+          return vendorsAPI.getProducts(vendorInfo.data.id);
+        } else {
+          return { data: [] };
+        }
+      }),
 };
 
 // ===== FILE UPLOAD API =====

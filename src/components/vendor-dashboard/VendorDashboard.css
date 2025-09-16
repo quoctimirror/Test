@@ -1,0 +1,382 @@
+/* Vendor Dashboard Styles */
+.vendor-dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: "BT Beau Sans", sans-serif;
+}
+
+/* Sidebar */
+.vendor-sidebar {
+  width: 280px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  height: 100vh;
+  z-index: 1000;
+}
+
+.vendor-sidebar-header {
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.vendor-sidebar-title {
+  font-family: "Saol Display", serif;
+  font-size: 24px;
+  font-weight: 300;
+  color: white;
+  margin: 0 0 0.5rem 0;
+}
+
+.vendor-sidebar-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.vendor-sidebar-nav {
+  flex: 1;
+  padding: 1rem 0;
+}
+
+.vendor-nav-button {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.vendor-nav-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-left-color: rgba(255, 255, 255, 0.3);
+}
+
+.vendor-nav-button.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-left-color: #ffd700;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.vendor-nav-icon {
+  font-size: 18px;
+}
+
+.vendor-nav-label {
+  font-size: 16px;
+}
+
+.vendor-sidebar-footer {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.vendor-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.vendor-user-avatar {
+  width: 40px;
+  height: 40px;
+  background: #ffd700;
+  color: #333;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.vendor-user-details {
+  flex: 1;
+}
+
+.vendor-user-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.vendor-user-role {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Main Content */
+.vendor-main-content {
+  flex: 1;
+  margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+}
+
+.vendor-content-header {
+  background: white;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid #e9ecef;
+}
+
+.vendor-breadcrumb {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breadcrumb-separator {
+  color: #adb5bd;
+}
+
+.vendor-page-title {
+  font-family: "Saol Display", serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.vendor-page-description {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Content Body */
+.vendor-content-body {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Cards */
+.vendor-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.vendor-card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+  background: #f8f9fa;
+}
+
+.vendor-card-title {
+  font-family: "Saol Display", serif;
+  font-size: 20px;
+  font-weight: 300;
+  color: #333;
+  margin: 0;
+}
+
+.vendor-card-body {
+  padding: 1.5rem;
+}
+
+/* Loading and No Access States */
+.vendor-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.vendor-no-access {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.no-access-content {
+  max-width: 400px;
+}
+
+.no-access-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  color: #6c757d;
+}
+
+.no-access-content h3 {
+  font-family: "Saol Display", serif;
+  font-size: 24px;
+  font-weight: 300;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.no-access-content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+/* Statistics Cards */
+.vendor-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.vendor-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vendor-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
+}
+
+.vendor-stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.vendor-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.vendor-stat-label {
+  font-size: 14px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .vendor-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  
+  .vendor-main-content {
+    margin-left: 0;
+  }
+  
+  .vendor-sidebar-nav {
+    display: flex;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+  }
+  
+  .vendor-nav-button {
+    flex-shrink: 0;
+    min-width: fit-content;
+    padding: 0.75rem 1rem;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+  }
+  
+  .vendor-nav-button.active {
+    border-left: none;
+    border-bottom-color: #ffd700;
+  }
+  
+  .vendor-content-header {
+    padding: 1rem;
+  }
+  
+  .vendor-page-title {
+    font-size: 24px;
+  }
+  
+  .vendor-content-body {
+    padding: 1rem;
+  }
+  
+  .vendor-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .vendor-sidebar-header {
+    padding: 1rem;
+  }
+  
+  .vendor-sidebar-title {
+    font-size: 20px;
+  }
+  
+  .vendor-nav-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 14px;
+  }
+  
+  .vendor-nav-icon {
+    font-size: 16px;
+  }
+  
+  .vendor-page-title {
+    font-size: 20px;
+  }
+  
+  .vendor-stat-card {
+    padding: 1rem;
+  }
+  
+  .vendor-stat-value {
+    font-size: 1.5rem;
+  }
+}

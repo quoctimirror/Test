@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { categoriesAPI, handleAPIError } from "../../services/api";
+import { categoriesAPI, handleAPIError } from "@services/api";
 
 const CategoriesManager = () => {
   const [categories, setCategories] = useState([]);

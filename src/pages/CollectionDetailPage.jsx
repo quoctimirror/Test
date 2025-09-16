@@ -15,13 +15,13 @@ const CollectionDetailPage = () => {
       <CollectionVideoSection />
 
       {/* Section 2: Collection Detail Information */}
-      <Section2CollectionDetail />
+      <Section2CollectionDetail collectionId={collectionId} />
 
       {/* Section 3: Auto-Slider Gallery */}
       <Section3CollectionDetail />
 
       {/* Section 4: Same Collection */}
-      <Section4CollectionDetail showViewProductButton={true} />
+      <Section4CollectionDetail collectionId={collectionId} showViewProductButton={true} />
 
       {/* Section 5: Contact Us */}
       <ContactUs />

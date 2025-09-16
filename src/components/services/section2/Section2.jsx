@@ -73,7 +73,7 @@ const Section2 = () => {
               opacity: 1 - scrollProgress * 0.5,
             }}
           >
-            <img src="/services/img_section_2.jpg" alt="Product Care" />
+            <img src="/services/Product care & Repair_960x1080.jpg" alt="Product Care" />
           </div>
           <div
             className="section2-image-layer section2-image-2"
@@ -82,7 +82,7 @@ const Section2 = () => {
               opacity: scrollProgress,
             }}
           >
-            <img src="/services/img_3_section_2.jpg" alt="Trade In" />
+            <img src="/services/Trade in_960x1080.jpg" alt="Trade In" />
           </div>
         </div>
 

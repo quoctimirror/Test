@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   font-family: "BT Beau Sans", sans-serif;
-  /* filter: grayscale(100%); */
+  filter: grayscale(100%);
 }
 
 .section3-background-overlay {

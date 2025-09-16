@@ -2,19 +2,78 @@ import "./Navbar.css";
 import { useState, useRef, useEffect } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
 import { useAuth } from "@/context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+  const [isInScrollContainer, setIsInScrollContainer] = useState(false);
   const logoRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
+
+  // Check if current page is home or welcome
+  const isHomePage = location.pathname === "/home" || location.pathname === "/" || location.pathname === "/welcome";
 
   useEffect(() => {
     // Initialize optimized transition system
     optimizedTransitionUtils.init();
   }, []);
+
+  // Set initial state for homepage on mount
+  useEffect(() => {
+    if (isHomePage) {
+      // On homepage, when at top of page, we should be in scroll-container
+      setIsInScrollContainer(true);
+    } else {
+      setIsInScrollContainer(false);
+    }
+  }, [isHomePage]);
+
+  // Add scroll detection to properly detect when user is within scroll-container section
+  useEffect(() => {
+    if (!isHomePage) return;
+
+    const handleScroll = () => {
+      const scrollContainer = document.querySelector('.scroll-container');
+      if (!scrollContainer) return;
+
+      const rect = scrollContainer.getBoundingClientRect();
+      // Check if we're within the scroll-container bounds:
+      // - At top of page: rect.top = 0, should be true
+      // - Scrolling within: rect.top < 0 but rect.bottom > 0, should be true
+      // - Past scroll-container: rect.bottom < 0, should be false
+      const isViewportInScrollContainer = rect.top <= 50 && rect.bottom >= 0;
+
+      // Debug log
+      if (isViewportInScrollContainer !== isInScrollContainer) {
+        console.log('Scroll container state changed:', isViewportInScrollContainer);
+      }
+
+      setIsInScrollContainer(isViewportInScrollContainer);
+    };
+
+    // Initial check with delay to ensure DOM is ready
+    const initialCheck = () => {
+      setTimeout(() => {
+        handleScroll();
+      }, 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    // Run multiple times to catch initial state
+    handleScroll();
+    initialCheck();
+
+    // Also check on window load
+    window.addEventListener('load', handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('load', handleScroll);
+    };
+  }, [isHomePage]);
 
 
   const performTransition = async (route, options = {}) => {
@@ -103,6 +162,11 @@ export default function Navbar() {
     return user && user.roles && user.roles.includes("ADMIN");
   };
 
+  // Helper function to check if user is vendor
+  const isUserVendor = () => {
+    return user && user.roles && user.roles.includes("VENDOR");
+  };
+
   const handleAccountClick = async () => {
     // Enhanced check: also verify token exists as fallback
     const hasToken = localStorage.getItem("accessToken");
@@ -125,6 +189,11 @@ export default function Navbar() {
   const handleAdminDashboardClick = async () => {
     setIsAccountMenuOpen(false);
     await performTransition("/dashboard/admin");
+  };
+
+  const handleVendorDashboardClick = async () => {
+    setIsAccountMenuOpen(false);
+    await performTransition("/dashboard/vendor");
   };
 
   const handleLogoutClick = () => {
@@ -157,7 +226,7 @@ export default function Navbar() {
   return (
     <>
       {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
-      <div className="logo-fixed-container" onClick={handleLogoClick}>
+      <div className={`logo-fixed-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`} onClick={handleLogoClick}>
         <img
           ref={logoRef}
           src={MirrorLogo}
@@ -167,7 +236,7 @@ export default function Navbar() {
       </div>
 
       {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
-      <div className="menu-fixed-container">
+      <div className={`menu-fixed-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`}>
         <div className="menu-container">
           <div
             className="menu-button"
@@ -235,7 +304,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="account-fixed-container">
+      <div className={`account-fixed-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`}>
         <div className="account-container">
           <div
             className="account-button"
@@ -277,6 +346,15 @@ export default function Navbar() {
                       </li>
                     )}
                     
+                    {isUserVendor() && (
+                      <li
+                        className="bodytext-3--no-margin"
+                        onClick={handleVendorDashboardClick}
+                      >
+                        Vendor Dashboard
+                      </li>
+                    )}
+                    
                     <li
                       className="bodytext-3--no-margin logout-item"
                       onClick={handleLogoutClick}
@@ -306,12 +384,12 @@ export default function Navbar() {
       </div>
 
       {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
-      <div className="immersive-border-container">
+      <div className={`immersive-border-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`}>
         <div className="immersive-border"></div>
       </div>
 
       {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
-      <div className="immersive-text-container">
+      <div className={`immersive-text-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`}>
         <span className="immersive-text bodytext-4--no-margin">
           Immersive Showroom
         </span>

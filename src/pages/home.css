@@ -11,7 +11,7 @@ html {
 
 /* Container for entire scroll effect */
 .scroll-container {
-  height: 200vh;
+  height: 250vh;
   position: relative;
 }
 
@@ -148,6 +148,7 @@ html {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
+  transition: opacity 0.1s linear;
 }
 
 .main-logo {
@@ -156,7 +157,29 @@ html {
   opacity: 1;
 }
 
-/* Tagline Section */
+/* Future Diamond Text - Initially hidden, positioned at logo center */
+.future-diamond-text {
+  position: absolute;
+  top: 50.25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.1s linear;
+}
+
+/* Tagline Section - Center positioned like logo */
+.future-diamond-text .tagline-section {
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: none;
+  z-index: 5;
+  text-align: center;
+  color: rgba(188, 34, 76, 1);
+}
+
+/* Original Tagline Section */
 .tagline-section {
   position: absolute;
   top: calc(80%);
@@ -167,15 +190,6 @@ html {
   color: white;
 }
 
-.tagline-top {
-  font-family: "BT Beau Sans", serif;
-  font-size: clamp(6px, 1.2vw, 12px);
-  font-weight: 400;
-  margin-bottom: 8px;
-  letter-spacing: 1.5px;
-  opacity: 0.9;
-  white-space: nowrap;
-}
 
 .tagline-bottom {
   display: flex;
@@ -183,23 +197,6 @@ html {
   align-items: center;
   justify-content: center;
   gap: 12px;
-}
-
-.future-text {
-  font-family: "Saol Display", serif;
-  font-size: clamp(38px, 5vw, 60px);
-  font-weight: 400;
-  letter-spacing: 1px;
-  line-height: 1;
-}
-
-.diamond-text {
-  font-family: "Saol Display", serif;
-  font-size: clamp(38px, 5vw, 60px);
-  font-weight: 400;
-  letter-spacing: 1px;
-  line-height: 1;
-  font-style: italic;
 }
 
 /* Logo Reflection */
@@ -412,10 +409,6 @@ html {
     top: calc(82%);
   }
 
-  .future-text,
-  .diamond-text {
-    font-size: 72px;
-  }
 }
 
 /* Full HD Desktop */
@@ -438,10 +431,6 @@ html {
     top: calc(78%);
   }
 
-  .future-text,
-  .diamond-text {
-    font-size: 52px;
-  }
 }
 
 /* Standard Laptop (1200px) */
@@ -455,10 +444,6 @@ html {
     height: 190px;
   }
 
-  .future-text,
-  .diamond-text {
-    font-size: 48px;
-  }
 
   .scroll-down {
     bottom: 60px;
@@ -481,10 +466,6 @@ html {
     top: calc(76%);
   }
 
-  .future-text,
-  .diamond-text {
-    font-size: 44px;
-  }
 
   .tagline-top {
     font-size: 11px;
@@ -521,10 +502,6 @@ html {
     letter-spacing: 1px;
   }
 
-  .future-text,
-  .diamond-text {
-    font-size: 32px;
-  }
 
   .tagline-bottom {
     gap: 8px;
@@ -616,11 +593,6 @@ html {
     letter-spacing: 0.8px;
   }
 
-  .future-text,
-  .diamond-text {
-    font-size: 26px;
-    letter-spacing: 0.5px;
-  }
 
   .tagline-bottom {
     gap: 6px;
@@ -698,10 +670,6 @@ html {
     letter-spacing: 0.6px;
   }
 
-  .future-text,
-  .diamond-text {
-    font-size: 22px;
-  }
 
   /* Even smaller buttons */
   .scroll-down,

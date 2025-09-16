@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { productsAPI, categoriesAPI, collectionsAPI, locationsAPI } from "../../services/api";
+import {
+  productsAPI,
+  categoriesAPI,
+  collectionsAPI,
+  locationsAPI,
+} from "@services/api";
 
-const DashboardHome = () => {
+const DashboardHome = ({ setActiveTab }) => {
   const [stats, setStats] = useState({
     products: 0,
     categories: 0,
     collections: 0,
     locations: 0,
-    loading: true
+    loading: true,
   });
 
   useEffect(() => {
@@ -16,23 +21,23 @@ const DashboardHome = () => {
 
   const fetchDashboardStats = async () => {
     try {
-      const [productsRes, categoriesRes, collectionsRes, locationsRes] = await Promise.all([
-        productsAPI.getAll().catch(() => ({ data: [] })),
-        categoriesAPI.getAll().catch(() => ({ data: [] })),
-        collectionsAPI.getAll().catch(() => ({ data: [] })),
-        locationsAPI.getAll().catch(() => ({ data: [] }))
-      ]);
+      const [productsRes, categoriesRes, collectionsRes, locationsRes] =
+        await Promise.all([
+          productsAPI.getAll().catch(() => ({ data: [] })),
+          categoriesAPI.getAll().catch(() => ({ data: [] })),
+          collectionsAPI.getAll().catch(() => ({ data: [] })),
+          locationsAPI.getAll().catch(() => ({ data: [] })),
+        ]);
 
       setStats({
         products: productsRes.data?.length || 0,
         categories: categoriesRes.data?.length || 0,
         collections: collectionsRes.data?.length || 0,
         locations: locationsRes.data?.length || 0,
-        loading: false
+        loading: false,
       });
     } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
-      setStats(prev => ({ ...prev, loading: false }));
+      setStats((prev) => ({ ...prev, loading: false }));
     }
   };
 
@@ -44,14 +49,10 @@ const DashboardHome = () => {
         </div>
         <div className="stat-card-info">
           <h3 className="stat-card-title">{title}</h3>
-          <div className="stat-card-value">
-            {stats.loading ? '...' : value}
-          </div>
+          <div className="stat-card-value">{stats.loading ? "..." : value}</div>
         </div>
       </div>
-      <div className="stat-card-description">
-        {description}
-      </div>
+      <div className="stat-card-description">{description}</div>
     </div>
   );
 
@@ -74,8 +75,9 @@ const DashboardHome = () => {
       <div className="admin-card welcome-card">
         <h2 className="welcome-title">Welcome to Mirror Admin Dashboard</h2>
         <p className="welcome-description">
-          Manage your diamond jewelry business with ease. Monitor your inventory, 
-          update product catalogs, and oversee store operations all in one place.
+          Manage your diamond jewelry business with ease. Monitor your
+          inventory, update product catalogs, and oversee store operations all
+          in one place.
         </p>
       </div>
 
@@ -120,34 +122,34 @@ const DashboardHome = () => {
             description="Create a new jewelry product with specifications"
             icon="✨"
             color="#bc224c"
-            onClick={() => console.log('Navigate to add product')}
+            onClick={() => setActiveTab("products")}
           />
           <QuickAction
             title="Manage Categories"
             description="Organize products into categories"
             icon="🏷️"
             color="#17a2b8"
-            onClick={() => console.log('Navigate to categories')}
+            onClick={() => setActiveTab("categories")}
           />
           <QuickAction
             title="Create Collection"
             description="Group products into seasonal collections"
             icon="🎨"
             color="#28a745"
-            onClick={() => console.log('Navigate to collections')}
+            onClick={() => setActiveTab("collections")}
           />
           <QuickAction
             title="Add Store Location"
             description="Register a new store or outlet"
             icon="🏪"
             color="#ffc107"
-            onClick={() => console.log('Navigate to locations')}
+            onClick={() => setActiveTab("locations")}
           />
         </div>
       </div>
 
       {/* Recent Activity */}
-      <div className="admin-card recent-activity-card">
+      {/* <div className="admin-card recent-activity-card">
         <h3 className="section-title">Recent Activity</h3>
         <div className="activity-list">
           <div className="activity-item">
@@ -172,7 +174,7 @@ const DashboardHome = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -82,7 +82,10 @@ const Section4 = () => {
               opacity: scrollProgress < 0.35 ? 1 - scrollProgress * 2.86 : 0,
             }}
           >
-            <img src="/services/img_1_section_3.jpg" alt="Return & Exchange" />
+            <img
+              src="/services/b2f5b664-7235-4fe3-b721-c19450d3518a.png"
+              alt="Return & Exchange"
+            />
           </div>
           <div
             className="section4-image-layer section4-image-2"
@@ -177,8 +180,7 @@ const Section4 = () => {
               }px)`,
               pointerEvents:
                 scrollProgress > 0.3 && scrollProgress < 0.75 ? "auto" : "none",
-              zIndex:
-                scrollProgress > 0.3 && scrollProgress < 0.75 ? 100 : 10,
+              zIndex: scrollProgress > 0.3 && scrollProgress < 0.75 ? 100 : 10,
             }}
           >
             <div className="section4-content">
@@ -217,9 +219,7 @@ const Section4 = () => {
             style={{
               opacity: scrollProgress > 0.75 ? (scrollProgress - 0.75) * 4 : 0,
               transform: `translateY(${
-                scrollProgress > 0.75
-                  ? (1 - scrollProgress) * 20
-                  : 20
+                scrollProgress > 0.75 ? (1 - scrollProgress) * 20 : 20
               }px)`,
               pointerEvents: scrollProgress > 0.75 ? "auto" : "none",
               zIndex: scrollProgress > 0.75 ? 100 : 10,

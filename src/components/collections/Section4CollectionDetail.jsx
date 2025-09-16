@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import { collectionsAPI } from "@services/api";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Section4CollectionDetail.css";
@@ -9,54 +10,185 @@ import "./Section4CollectionDetail.css";
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
-const Section4CollectionDetail = ({ showViewProductButton = false }) => {
+const Section4CollectionDetail = ({
+  collectionId,
+  showViewProductButton = false,
+}) => {
   const navigate = useNavigate();
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const scrollContainerRef = useRef(null);
 
-  const collections = [
-    {
-      id: 1,
-      name: "Lumina",
-      image: "/collections/collectionDetail/collectionDetail_more.png",
-    },
-    {
-      id: 2,
-      name: "Lumina",
-      image: "/collections/collectionDetail/collectionDetail_more.png",
-    },
-    {
-      id: 3,
-      name: "Lumina",
-      image: "/collections/collectionDetail/collectionDetail_more.png",
-    },
-    {
-      id: 4,
-      name: "Lumina",
-      image: "/collections/collectionDetail/collectionDetail_more.png",
-    },
-    {
-      id: 5,
-      name: "Lumina",
-      image: "/collections/collectionDetail/collectionDetail_more.png",
-    },
-    {
-      id: 6,
-      name: "Lumina",
-      image: "/collections/collectionDetail/collectionDetail_more.png",
-    },
-    {
-      id: 7,
-      name: "Lumina",
-      image: "/collections/collectionDetail/collectionDetail_more.png",
-    },
-    {
-      id: 8,
-      name: "Lumina",
-      image: "/collections/collectionDetail/collectionDetail_more.png",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Helper function to convert slug back to name for API lookup
+  const slugToName = (slug) => {
+    return slug
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  // Fetch products from collection
+  useEffect(() => {
+    // Add abort controller to prevent duplicate requests
+    const abortController = new AbortController();
+
+    if (!collectionId) {
+      setLoading(false);
+      setProducts(getDefaultProducts());
+      return;
+    }
+
+    const fetchCollectionProducts = async () => {
+      try {
+        setLoading(true);
+
+        // First, get all collections to find the one matching our slug
+        const collectionsResponse = await collectionsAPI.getAll();
+        const collections =
+          collectionsResponse.data.data || collectionsResponse.data || [];
+
+        // Convert slug back to name and find matching collection
+        const collectionName = slugToName(collectionId);
+        // Try multiple matching strategies
+        const matchingCollection = collections.find((col) => {
+          const matches =
+            col.slug === collectionId || // Direct slug match
+            col.name === collectionId || // Direct name match (for case where name IS the slug)
+            col.name.toLowerCase() === collectionId.toLowerCase() || // Case-insensitive match
+            col.name.toLowerCase() === collectionName.toLowerCase() ||
+            col.name.toLowerCase() ===
+              collectionId.replace(/-/g, " ").toLowerCase() ||
+            col.name.toLowerCase().replace(/\s+/g, "-") === collectionId; // Name to slug
+
+          return matches;
+        });
+
+        if (matchingCollection) {
+          // Try different API endpoints
+          let collectionProducts = [];
+
+          try {
+            // Try getWithProducts first (gets collection with its products)
+            const withProductsResponse = await collectionsAPI.getWithProducts(
+              matchingCollection.id
+            );
+            // The response structure is: data.products where each item has a 'product' object
+            const collectionData = withProductsResponse.data;
+            // Check different possible structures
+            if (
+              collectionData?.products &&
+              Array.isArray(collectionData.products)
+            ) {
+              if (collectionData.products.length > 0) {
+                // Check if each item has a 'product' property
+                if (collectionData.products[0].product) {
+                  collectionProducts = collectionData.products
+                    .map((cp) => cp.product)
+                    .filter((p) => p);
+                } else {
+                  collectionProducts = collectionData.products;
+                }
+              }
+            } else if (Array.isArray(collectionData)) {
+              // Maybe the response is directly an array
+              collectionProducts = collectionData;
+            } else {
+              // Fallback structure if different
+              collectionProducts = withProductsResponse.data?.products || [];
+            }
+          } catch (err1) {
+            try {
+              // Fallback to getProductsInCollection
+              const productsResponse =
+                await collectionsAPI.getProductsInCollection(
+                  matchingCollection.id
+                );
+              collectionProducts =
+                productsResponse.data?.data || productsResponse.data || [];
+            } catch (err2) {}
+          }
+
+          // Check if request was aborted
+          if (abortController.signal.aborted) {
+            return;
+          }
+
+          // Check if we have products
+          if (!collectionProducts || collectionProducts.length === 0) {
+            setProducts(getDefaultProducts());
+            return;
+          }
+
+          // Map products to the format needed for display
+          const formattedProducts = collectionProducts.map((product) => {
+            // Use imageUrl as primary field (matching admin dashboard)
+            const imageUrl =
+              product.imageUrl ||
+              product.image ||
+              (product.images && product.images.length > 0
+                ? product.images[0]
+                : null) ||
+              product.mainImage ||
+              product.primaryImage ||
+              product.thumbnail ||
+              product.featuredImage ||
+              "/collections/collectionDetail/collectionDetail_more.png";
+
+            return {
+              id: product.id,
+              name:
+                product.name ||
+                product.title ||
+                product.productName ||
+                "Product",
+              image: imageUrl,
+            };
+          });
+
+          setProducts(formattedProducts);
+        } else {
+          setProducts(getDefaultProducts());
+        }
+
+        setError(null);
+      } catch (err) {
+        // Check if error is due to abort
+        if (err.name === "AbortError") {
+          return;
+        }
+        setError("Failed to load products");
+        // Use default products as fallback
+        setProducts(getDefaultProducts());
+      } finally {
+        // Only set loading to false if not aborted
+        if (!abortController.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchCollectionProducts();
+
+    // Cleanup function to abort request if component unmounts or effect reruns
+    return () => {
+      abortController.abort();
+    };
+  }, [collectionId]);
+
+  // Default products for fallback
+  const getDefaultProducts = () => {
+    return Array(8)
+      .fill(null)
+      .map((_, index) => ({
+        id: index + 1,
+        name: "Lumina",
+        image: "/collections/collectionDetail/collectionDetail_more.png",
+      }));
+  };
 
   useEffect(() => {
     // Wait for DOM to be ready
@@ -69,8 +201,9 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
         .forEach((trigger) => trigger.kill());
 
       // Get all product cards
-      const cards =
-        scrollContainerRef.current.querySelectorAll(".product-card");
+      const cards = scrollContainerRef.current.querySelectorAll(
+        ".collection-detail-product-card"
+      );
       if (cards.length === 0) return;
 
       // Calculate dimensions
@@ -86,7 +219,7 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
             trigger: sectionRef.current,
             pin: true,
             scrub: 1,
-            start: "center center", // Start when section reaches center
+            start: "top top", // Start when section reaches center
             end: () => `+=${scrollAmount * 1.5}`, // Extra scroll distance to see last image fully
             invalidateOnRefresh: true,
           },
@@ -134,51 +267,94 @@ const Section4CollectionDetail = ({ showViewProductButton = false }) => {
         .filter((trigger) => trigger.trigger === sectionRef.current)
         .forEach((trigger) => trigger.kill());
     };
-  }, []);
+  }, [products, loading]); // Depend on products and loading state
+
+  // Refresh ScrollTrigger when products change
+  useEffect(() => {
+    if (!loading && products.length > 0) {
+      const refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 300);
+
+      return () => clearTimeout(refreshTimer);
+    }
+  }, [products, loading]);
 
   const handleViewAllProducts = async () => {
     await optimizedTransitionUtils.transitionToRoute(navigate, "/all-gems");
   };
 
   return (
-    <section className="collection-section-4-detail-gsap" ref={sectionRef}>
-      <div className="same-collection-container" ref={containerRef}>
-        <div className="same-collection-header">
-          <h2 className="same-collection-title heading-1">
-            EXPLORE THIS COLLECTION GEMS
-          </h2>
-        </div>
+    <>
+      <section className="collection-detail-section-gsap" ref={sectionRef}>
+        <div className="collection-detail-container" ref={containerRef}>
+          <div className="collection-detail-header">
+            <h2 className="collection-detail-title heading-1">
+              EXPLORE THIS COLLECTION GEMS
+            </h2>
+          </div>
 
-        <div className="horizontal-scroll-wrapper">
-          <div className="same-collection-grid-gsap" ref={scrollContainerRef}>
-            {collections.map((collection) => (
-              <div key={collection.id} className="product-card">
-                <img
-                  src={collection.image}
-                  alt={`${collection.name} Ring`}
-                  className="product-image"
-                  draggable={false}
-                />
-              </div>
-            ))}
+          <div className="horizontal-scroll-wrapper">
+            <div className="collection-detail-grid-gsap" ref={scrollContainerRef}>
+              {loading ? (
+                // Show loading state
+                Array(4)
+                  .fill(null)
+                  .map((_, index) => (
+                    <div
+                      key={`loading-${index}`}
+                      className="collection-detail-product-card"
+                    >
+                      <div className="collection-detail-product-image-loading">
+                        Loading...
+                      </div>
+                    </div>
+                  ))
+              ) : products.length > 0 ? (
+                // Show products from API
+                products.map((product) => (
+                  <div
+                    key={product.id}
+                    className="collection-detail-product-card"
+                  >
+                    <img
+                      src={product.image}
+                      alt={`${product.name}`}
+                      className="collection-detail-product-image"
+                      draggable={false}
+                      onError={(e) => {
+                        // Fallback image if API image fails to load
+                        e.target.src =
+                          "/collections/collectionDetail/collectionDetail_more.png";
+                      }}
+                    />
+                  </div>
+                ))
+              ) : (
+                // Show message when no products found
+                <div className="collection-detail-no-products-message">
+                  No products found in this collection
+                </div>
+              )}
+            </div>
           </div>
         </div>
+      </section>
 
-        {showViewProductButton && (
-          <div className="view-product-button-container">
-            <ShineGlassButton
-              width={189}
-              height={57}
-              fontSize={14}
-              theme="light"
-              onClick={handleViewAllProducts}
-            >
-              View all products
-            </ShineGlassButton>
-          </div>
-        )}
-      </div>
-    </section>
+      {showViewProductButton && (
+        <div className="collection-detail-button-container">
+          <ShineGlassButton
+            width={189}
+            height={57}
+            fontSize={14}
+            theme="light"
+            onClick={handleViewAllProducts}
+          >
+            View all products
+          </ShineGlassButton>
+        </div>
+      )}
+    </>
   );
 };
 

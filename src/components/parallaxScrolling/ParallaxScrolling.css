@@ -83,7 +83,7 @@
   justify-content: center;
   align-items: center;
   padding: 5rem;
-  background-color: #f8f8f8; /* Màu nền hơi khác để tạo chiều sâu */
+  background-color: rgba(246, 246, 246, 1); /* Màu nền hơi khác để tạo chiều sâu */
 }
 
 .text-content {

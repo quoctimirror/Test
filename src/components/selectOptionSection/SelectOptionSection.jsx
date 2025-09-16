@@ -2,7 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SelectOptionSection.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
-import { categoriesAPI, componentsAPI, componentOptionalsAPI, handleAPIError } from "../../services/api";
+import {
+  categoriesAPI,
+  componentsAPI,
+  componentOptionalsAPI,
+  handleAPIError,
+} from "@services/api";
 
 const SelectOptionSection = () => {
   const navigate = useNavigate();
@@ -75,7 +80,7 @@ const SelectOptionSection = () => {
     const currentComponent = components.find(
       (comp) => (comp.componentName || comp.name) === activeTab
     );
-    
+
     if (!currentComponent) {
       return [];
     }
@@ -85,7 +90,7 @@ const SelectOptionSection = () => {
     const filteredOptions = componentOptions
       .filter((option) => option.componentId === componentId)
       .reverse();
-    
+
     return filteredOptions;
   };
 
@@ -136,7 +141,7 @@ const SelectOptionSection = () => {
         const ringCategory = categoriesData.find(
           (cat) => cat.id === "CAT000001" || cat.categoryName === "Rings"
         );
-        
+
         if (ringCategory) {
           setSelectedCategory(ringCategory);
         }
@@ -147,14 +152,18 @@ const SelectOptionSection = () => {
 
         // Filter components by categoryId - backend uses 'CAT000001' format
         const ringComponents = componentsData
-          .filter((comp) => comp.categoryId === "CAT000001" || comp.categoryId === ringCategory?.id)
+          .filter(
+            (comp) =>
+              comp.categoryId === "CAT000001" ||
+              comp.categoryId === ringCategory?.id
+          )
           .reverse();
-        
+
         setComponents(ringComponents);
 
         // Create tabs from component names - handle different possible field names
-        const componentTabs = ringComponents.map((comp) => 
-          comp.componentName || comp.name || 'Unnamed Component'
+        const componentTabs = ringComponents.map(
+          (comp) => comp.componentName || comp.name || "Unnamed Component"
         );
         const allTabs = [...componentTabs, "Overview"];
         setTabs(allTabs);
@@ -169,7 +178,10 @@ const SelectOptionSection = () => {
         const optionsData = optionsResponse.data;
         setComponentOptions(optionsData);
       } catch (error) {
-        const errorInfo = handleAPIError(error, 'Failed to load configuration data');
+        const errorInfo = handleAPIError(
+          error,
+          "Failed to load configuration data"
+        );
         console.error("Error fetching data:", errorInfo.message);
 
         // Fallback data khi API thất bại
@@ -493,7 +505,8 @@ const SelectOptionSection = () => {
               <div
                 key={option.componentOptionalId || option.id}
                 className={`option ${
-                  (selectedOption?.componentOptionalId || selectedOption?.id) ===
+                  (selectedOption?.componentOptionalId ||
+                    selectedOption?.id) ===
                   (option.componentOptionalId || option.id)
                     ? "selected"
                     : ""
@@ -502,7 +515,9 @@ const SelectOptionSection = () => {
               >
                 <div className="circle"></div>
                 <div className="label bodytext-3--no-margin">
-                  {option.componentOptionalName || option.name || 'Unnamed Option'}
+                  {option.componentOptionalName ||
+                    option.name ||
+                    "Unnamed Option"}
                 </div>
               </div>
             ))

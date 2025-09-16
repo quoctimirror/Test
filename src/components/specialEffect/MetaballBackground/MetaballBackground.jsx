@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import './MetaballBackground.css';
+import { useEffect, useRef } from "react";
+import "./MetaballBackground.css";
 
 const MetaballBackground = ({ className }) => {
   const canvasRef = useRef(null);
@@ -82,20 +82,22 @@ const MetaballBackground = ({ className }) => {
     spread: 500,
     steps: 500,
     blurStrength: 0.5,
-    background: { r: 196, g: 27, b: 89 },  // #C41B59
-    color1: { r: 96, g: 4, b: 30 },        // #60041E
-    color2: { r: 29, g: 0, b: 7 },         // #1D0007
-    foreground: { r: 176, g: 22, b: 78 },  // #B0164E
+    background: { r: 196, g: 27, b: 89 }, // #C41B59
+    color1: { r: 96, g: 4, b: 30 }, // #60041E
+    color2: { r: 29, g: 0, b: 7 }, // #1D0007
+    foreground: { r: 176, g: 22, b: 78 }, // #B0164E
     speed: 100, // Use original speed to match exact behavior
   };
 
   // Metaball class
   class Metaball {
     constructor() {
-      this.size = 100 + Math.random() * 50; // Match original size: 100-150
+      this.size = (100 + Math.random() * 50) * 2; // 2x the size: 200-300
+      // Extended height for brand-pillars (150vh)
+      const extendedHeight = window.innerHeight * 1.5;
       this.position = {
         x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
+        y: Math.random() * extendedHeight,
       };
       this.velocity = {
         x: Math.random() * 2 - 1,
@@ -108,6 +110,8 @@ const MetaballBackground = ({ className }) => {
       this.position.y += this.velocity.y * delta * CONFIGURATION.speed;
 
       const radius = (this.size + CONFIGURATION.spread) / 2;
+      const extendedHeight = window.innerHeight * 1.5;
+
       if (this.position.x < -radius) {
         this.position.x = -radius;
         this.velocity.x *= -1;
@@ -119,44 +123,39 @@ const MetaballBackground = ({ className }) => {
       if (this.position.y < -radius) {
         this.position.y = -radius;
         this.velocity.y *= -1;
-      } else if (this.position.y > window.innerHeight + radius) {
-        this.position.y = window.innerHeight + radius;
+      } else if (this.position.y > extendedHeight + radius) {
+        this.position.y = extendedHeight + radius;
         this.velocity.y *= -1;
       }
     }
 
     toArray() {
-      return [
-        this.position.x,
-        window.innerHeight - this.position.y,
-        this.size,
-      ];
+      return [this.position.x, this.position.y, this.size];
     }
   }
 
   // Mouse metaball
   class MouseMetaball {
     constructor() {
-      this.size = 120; // Match original size
+      this.size = 120 * 2; // 2x the size: 240
+      const extendedHeight = window.innerHeight * 1.5;
       this.position = {
         x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
+        y: extendedHeight / 2,
       };
       this.lerpFactor = 0.05; // Match original lerp factor
     }
 
     update(delta) {
       // Smoothly interpolate towards mouse position
-      this.position.x += (mouseRef.current.x - this.position.x) * this.lerpFactor;
-      this.position.y += (mouseRef.current.y - this.position.y) * this.lerpFactor;
+      this.position.x +=
+        (mouseRef.current.x - this.position.x) * this.lerpFactor;
+      this.position.y +=
+        (mouseRef.current.y - this.position.y) * this.lerpFactor;
     }
 
     toArray() {
-      return [
-        this.position.x,
-        window.innerHeight - this.position.y,
-        this.size,
-      ];
+      return [this.position.x, this.position.y, this.size];
     }
   }
 
@@ -167,7 +166,10 @@ const MetaballBackground = ({ className }) => {
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      console.error('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+      console.error(
+        "An error occurred compiling the shaders: " +
+          gl.getShaderInfoLog(shader)
+      );
       gl.deleteShader(shader);
       return null;
     }
@@ -185,7 +187,10 @@ const MetaballBackground = ({ className }) => {
     gl.linkProgram(shaderProgram);
 
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-      console.error('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
+      console.error(
+        "Unable to initialize the shader program: " +
+          gl.getProgramInfoLog(shaderProgram)
+      );
       return null;
     }
 
@@ -207,8 +212,18 @@ const MetaballBackground = ({ className }) => {
     const gl = glRef.current;
     if (!canvas || !gl) return;
 
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    // Use device pixel ratio for sharp rendering
+    const dpr = window.devicePixelRatio || 1;
+    const displayWidth = canvas.offsetWidth;
+    const displayHeight = canvas.offsetHeight;
+
+    canvas.width = displayWidth * dpr;
+    canvas.height = displayHeight * dpr;
+
+    // Scale canvas back down using CSS
+    canvas.style.width = displayWidth + "px";
+    canvas.style.height = displayHeight + "px";
+
     gl.viewport(0, 0, canvas.width, canvas.height);
   };
 
@@ -216,9 +231,9 @@ const MetaballBackground = ({ className }) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl = canvas.getContext('webgl');
+    const gl = canvas.getContext("webgl");
     if (!gl) {
-      console.error('WebGL not supported');
+      console.error("WebGL not supported");
       return;
     }
 
@@ -226,25 +241,45 @@ const MetaballBackground = ({ className }) => {
     updateCanvasSize();
 
     // Initialize shaders and buffers
-    const shaderProgram = initShaderProgram(gl, vertexShaderSource, fragmentShaderSource);
+    const shaderProgram = initShaderProgram(
+      gl,
+      vertexShaderSource,
+      fragmentShaderSource
+    );
     const rectanglePosition = initRectangleBuffer(gl);
     shaderProgramRef.current = shaderProgram;
 
     // Get uniform locations
-    const vertexPositionAttribute = gl.getAttribLocation(shaderProgram, 'aVertexPosition');
-    const metaballsLocation = gl.getUniformLocation(shaderProgram, 'metaballs');
-    const metaballsAmountLocation = gl.getUniformLocation(shaderProgram, 'metaballsAmount');
-    const spreadLocation = gl.getUniformLocation(shaderProgram, 'spread');
-    const stepsLocation = gl.getUniformLocation(shaderProgram, 'steps');
-    const blurStrengthLocation = gl.getUniformLocation(shaderProgram, 'blurStrength');
-    const foregroundColorLocation = gl.getUniformLocation(shaderProgram, 'foreground');
-    const color2Location = gl.getUniformLocation(shaderProgram, 'color2');
-    const color1Location = gl.getUniformLocation(shaderProgram, 'color1');
-    const backgroundColorLocation = gl.getUniformLocation(shaderProgram, 'background');
+    const vertexPositionAttribute = gl.getAttribLocation(
+      shaderProgram,
+      "aVertexPosition"
+    );
+    const metaballsLocation = gl.getUniformLocation(shaderProgram, "metaballs");
+    const metaballsAmountLocation = gl.getUniformLocation(
+      shaderProgram,
+      "metaballsAmount"
+    );
+    const spreadLocation = gl.getUniformLocation(shaderProgram, "spread");
+    const stepsLocation = gl.getUniformLocation(shaderProgram, "steps");
+    const blurStrengthLocation = gl.getUniformLocation(
+      shaderProgram,
+      "blurStrength"
+    );
+    const foregroundColorLocation = gl.getUniformLocation(
+      shaderProgram,
+      "foreground"
+    );
+    const color2Location = gl.getUniformLocation(shaderProgram, "color2");
+    const color1Location = gl.getUniformLocation(shaderProgram, "color1");
+    const backgroundColorLocation = gl.getUniformLocation(
+      shaderProgram,
+      "background"
+    );
 
     // Initialize metaballs
     const metaballs = [];
-    for (let i = 0; i < 8; i++) { // Fewer metaballs for performance
+    for (let i = 0; i < 8; i++) {
+      // Fewer metaballs for performance
       metaballs.push(new Metaball());
     }
 
@@ -317,56 +352,71 @@ const MetaballBackground = ({ className }) => {
     // Start animation
     animationRef.current = requestAnimationFrame(render);
 
-    // Initialize mouse position
-    mouseRef.current.x = canvas.width / 2;
-    mouseRef.current.y = canvas.height / 2;
+    // Initialize mouse position with DPR scaling
+    const dpr = window.devicePixelRatio || 1;
+    mouseRef.current.x = (canvas.offsetWidth / 2) * dpr;
+    mouseRef.current.y = (canvas.offsetHeight / 2) * dpr;
 
     // Mouse event listener that works with absolute positioning
     const handleMouseMove = (event) => {
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current.x = event.clientX - rect.left;
-      mouseRef.current.y = event.clientY - rect.top;
+      const dpr = window.devicePixelRatio || 1;
+
+      // Convert to canvas internal coordinates with DPR scaling
+      const x = (event.clientX - rect.left) * dpr;
+      const y = (rect.height - (event.clientY - rect.top)) * dpr; // Flip Y to match WebGL coordinate system
+
+      mouseRef.current.x = x;
+      mouseRef.current.y = y;
     };
 
     // Add mouse event to the canvas
-    canvas.addEventListener('mousemove', handleMouseMove);
-    
+    canvas.addEventListener("mousemove", handleMouseMove);
+
     // Add to the document to catch all mouse movements over the canvas area
     const handleDocumentMouseMove = (event) => {
       const rect = canvas.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      
-      // Only update if mouse is within canvas bounds
-      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-        mouseRef.current.x = x;
-        mouseRef.current.y = y;
+      const dpr = window.devicePixelRatio || 1;
+
+      const x = (event.clientX - rect.left) * dpr;
+      const y = (rect.height - (event.clientY - rect.top)) * dpr; // Flip Y to match WebGL coordinate system
+
+      // Extended hover area - expand bounds by 100px on all sides
+      const hoverMargin = 100;
+      if (
+        event.clientX - rect.left >= -hoverMargin &&
+        event.clientX - rect.left <= rect.width + hoverMargin &&
+        event.clientY - rect.top >= -hoverMargin &&
+        event.clientY - rect.top <= rect.height + hoverMargin
+      ) {
+        mouseRef.current.x = Math.max(0, Math.min(canvas.width, x));
+        mouseRef.current.y = Math.max(0, Math.min(canvas.height, y));
       }
     };
-    
-    document.addEventListener('mousemove', handleDocumentMouseMove);
+
+    document.addEventListener("mousemove", handleDocumentMouseMove);
 
     // Resize event listener
     const handleResize = () => {
       updateCanvasSize();
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Cleanup
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mousemove', handleDocumentMouseMove);
-      window.removeEventListener('resize', handleResize);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mousemove", handleDocumentMouseMove);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className={`metaball-background ${className || ''}`}
+      className={`metaball-background ${className || ""}`}
     />
   );
 };

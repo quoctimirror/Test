@@ -35,9 +35,23 @@ const ServicesDetailPage = () => {
     },
   ];
 
+  const getHeroImage = () => {
+    switch (activeTab) {
+      case "product-care-repair":
+        return "/services/Product care & Repair_1920x600.jpg";
+      case "trade-in-upgrade":
+        return "/services/Trade in_1920x600.jpg";
+      default:
+        return "/services/service_detail_img.jpg";
+    }
+  };
+
   return (
     <>
-      <div className="services-detail-hero-section">
+      <div
+        className="services-detail-hero-section"
+        style={{ backgroundImage: `url("${getHeroImage()}")` }}
+      >
         <div className="hero-content">
           <h1>Services</h1>
         </div>

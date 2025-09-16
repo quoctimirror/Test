@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { locationsAPI, handleAPIError } from "../../services/api";
+import { locationsAPI, handleAPIError } from "@services/api";
 
 const LocationsManager = () => {
   const [locations, setLocations] = useState([]);

@@ -1,7 +1,7 @@
 /* BrandPillars Component Styles */
 .brand-pillars {
   width: 100%;
-  min-height: 100vh;
+  min-height: 150vh;
   background-color: #000000;
   display: flex;
   align-items: center;
@@ -17,7 +17,7 @@
   max-width: 1920px;
   position: relative;
   z-index: 10; /* Higher z-index to be above metaball background */
-  pointer-events: auto; /* Enable mouse events for text selection and hover */
+  pointer-events: auto; /* Don't block metaball mouse tracking */
   box-sizing: border-box;
 }
 
@@ -29,6 +29,29 @@
   height: 100%;
   z-index: 1;
   /* Remove opacity override - let MetaballBackground handle its own opacity */
+}
+
+.brand-pillars-gradient-overlay-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh; /* 1/6 của 150vh */
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, #000 100%);
+  z-index: 2; /* Above background but below content */
+  pointer-events: none; /* Don't block interactions */
+  opacity: 1;
+}
+
+.brand-pillars-gradient-overlay-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh; /* 1/6 của 150vh */
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 100%);
+  z-index: 2; /* Above background but below content */
+  pointer-events: none; /* Don't block interactions */
 }
 
 .brand-pillars-text {
@@ -64,28 +87,57 @@
 .brand-pillars .brand-expand-text .bodytext-3--no-margin {
   color: rgba(255, 255, 255, 0.75);
   white-space: normal;
+
+  /* AUTO SCALE: Font-size tự động scale theo viewport */
+  font-size: clamp(10px, min(1vw, calc((100vw - 5vw) / 90)), 16px);
+  transform-origin: left center;
+  transform: scale(min(1, calc((100vw - 5vw) / 1400px)));
+  transition: font-size 0.3s ease, transform 0.3s ease;
+
+  /* Overflow protection */
+  max-width: 100%;
+  word-wrap: break-word;
+  contain: layout style;
 }
 
-.brand-pillars .brand-group:nth-child(1) .brand-expand-text .bodytext-3--no-margin {
+.brand-pillars
+  .brand-group:nth-child(1)
+  .brand-expand-text
+  .bodytext-3--no-margin {
   max-width: none;
   white-space: nowrap;
+
+  /* Override auto-scale cho group 1 - aggressive hơn cho nowrap */
+  font-size: clamp(8px, min(0.9vw, calc((100vw - 10vw) / 100)), 16px);
+  transform: scale(min(1, calc((100vw - 10vw) / 1500px)));
 }
 
-.brand-pillars .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+.brand-pillars
+  .brand-group:nth-child(2)
+  .brand-expand-text
+  .bodytext-3--no-margin {
   max-width: 453px;
   white-space: normal;
   text-align: right;
 }
 
-.brand-pillars .brand-group:nth-child(3) .brand-expand-text .bodytext-3--no-margin {
+.brand-pillars
+  .brand-group:nth-child(3)
+  .brand-expand-text
+  .bodytext-3--no-margin {
   max-width: none;
   white-space: nowrap;
+
+  /* Override auto-scale cho group 3 - aggressive hơn cho nowrap */
+  font-size: clamp(8px, min(0.9vw, calc((100vw - 10vw) / 100)), 16px);
+  transform: scale(min(1, calc((100vw - 10vw) / 1500px)));
 }
 
 /* Specific sizes and positions for each group */
 .brand-group:nth-child(1) {
-  width: 898px;
-  height: 214px;
+  max-width: 898px;
+  /* AUTO HEIGHT: Height scales với viewport */
+  max-height: clamp(150px, 11vh, 214px);
   margin-left: 22.5%;
 }
 
@@ -131,7 +183,8 @@
 
 .brand-group:nth-child(3) {
   width: 749px;
-  height: 214px;
+  /* AUTO HEIGHT: Height scales với viewport */
+  height: clamp(150px, 11vh, 214px);
   margin-left: 15.7%;
 }
 
@@ -182,7 +235,12 @@
 .brand-line {
   display: block;
   font-family: "Saol Display", serif;
-  font-size: clamp(48px, 8vw, 128px);
+
+  /* AUTO SCALE: Comprehensive auto-scaling system */
+  font-size: clamp(32px, min(6.5vw, calc((100vw - 5vw) / 15)), 128px);
+  transform-origin: left center;
+  transform: scale(min(1, calc((100vw - 5vw) / 1500px)));
+
   font-style: normal;
   font-weight: 300;
   line-height: 80%;
@@ -190,23 +248,147 @@
   text-transform: uppercase;
   color: var(--Pink, #bc224c);
   margin: 0;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  /* Overflow protection */
+  white-space: nowrap;
+  contain: layout style;
+  max-width: 100%;
+  word-wrap: break-word;
 }
 
 /* Responsive Design */
+
+/* 16:10 Aspect Ratio - 1728x1080 */
+@media (min-width: 1600px) and (max-width: 1800px) and (min-aspect-ratio: 16/10) and (max-aspect-ratio: 16/10) {
+  .brand-line {
+    /* Auto-scaling cho 16:10 aspect ratio */
+    font-size: clamp(36px, min(6vw, calc((100vw - 8vw) / 16)), 112px);
+    transform: scale(min(1, calc((100vw - 8vw) / 1400px)));
+    letter-spacing: clamp(-1.44px, -0.26vw, -3.36px);
+  }
+
+  .brand-group:nth-child(1) {
+    width: 750px;
+    /* AUTO HEIGHT: Height scales cho 16:10 aspect ratio */
+    height: clamp(140px, 10vh, 180px);
+    margin-left: 20%;
+  }
+
+  .brand-group:nth-child(1) .brand-expand-text {
+    width: 500px;
+  }
+
+  .brand-group:nth-child(2) {
+    margin-right: 11%;
+  }
+
+  .brand-group:nth-child(2) .brand-expand-text {
+    width: 380px;
+  }
+
+  .brand-pillars
+    .brand-group:nth-child(2)
+    .brand-expand-text
+    .bodytext-3--no-margin {
+    max-width: 380px;
+  }
+
+  .brand-group:nth-child(3) {
+    width: 630px;
+    /* AUTO HEIGHT: Height scales cho 16:10 aspect ratio */
+    height: clamp(140px, 10vh, 180px);
+    margin-left: 14%;
+  }
+
+  .brand-group:nth-child(3) .brand-expand-text {
+    width: 500px;
+  }
+}
+
+/* MacBook 13" – 14" height (1440x900) */
+@media (max-width: 1440px) and (max-height: 900px) {
+  .brand-line {
+    /* Auto-scaling cho 1440x900 */
+    font-size: clamp(35px, min(5.5vw, calc((100vw - 10vw) / 17)), 95px);
+    transform: scale(min(1, calc((100vw - 10vw) / 1300px)));
+    letter-spacing: clamp(-1.44px, -0.24vw, -2.85px);
+  }
+
+  .brand-group:nth-child(1) {
+    width: 720px;
+    /* AUTO HEIGHT: Height scales cho 1440x900 */
+    height: clamp(130px, 9.5vh, 170px);
+    margin-left: 19%;
+  }
+
+  .brand-group:nth-child(1) .brand-expand-text {
+    width: 480px;
+  }
+
+  .brand-group:nth-child(2) {
+    margin-right: 11.5%;
+  }
+
+  .brand-group:nth-child(2) .brand-expand-text {
+    width: 360px;
+  }
+
+  .brand-pillars
+    .brand-group:nth-child(2)
+    .brand-expand-text
+    .bodytext-3--no-margin {
+    max-width: 360px;
+  }
+
+  .brand-group:nth-child(3) {
+    width: 600px;
+    /* AUTO HEIGHT: Height scales cho 1440x900 */
+    height: clamp(130px, 9.5vh, 170px);
+    margin-left: 14%;
+  }
+
+  .brand-group:nth-child(3) .brand-expand-text {
+    width: 480px;
+  }
+
+  .brand-pillars .brand-expand-text .bodytext-3--no-margin {
+    /* Auto-scaling cho 1440x900 */
+    font-size: clamp(9px, min(0.95vw, calc((100vw - 8vw) / 95)), 14px);
+    transform: scale(min(1, calc((100vw - 8vw) / 1300px)));
+  }
+
+  /* Tăng width cho brand-expand-text của group 2 để tránh line break không mong muốn */
+  .brand-group:nth-child(2) .brand-expand-text {
+    width: 480px; /* Tăng width để text có đủ chỗ */
+  }
+
+  .brand-pillars
+    .brand-group:nth-child(2)
+    .brand-expand-text
+    .bodytext-3--no-margin {
+    max-width: 480px;
+    line-height: 1.4;
+    word-spacing: normal; /* Đảm bảo khoảng cách từ bình thường */
+  }
+}
+
 @media (max-width: 1440px) {
   .brand-pillars {
     padding: 60px 30px;
   }
 
   .brand-line {
-    font-size: clamp(80px, 7vw, 100px);
+    /* Auto-scaling cho desktop 1440px - tăng font size lên */
+    font-size: clamp(60px, min(6.5vw, calc((100vw - 5vw) / 18)), 100px);
+    transform: scale(min(1, calc((100vw - 5vw) / 1200px)));
     letter-spacing: clamp(-2.4px, -0.21vw, -3px);
   }
 
   .brand-group:nth-child(1) {
     width: clamp(600px, 70vw, 700px);
-    height: 167px;
+    /* AUTO HEIGHT: Height scales cho desktop 1440px */
+    max-height: clamp(120px, 9vh, 167px);
     margin-left: clamp(15%, 18vw, 22.5%);
   }
 
@@ -222,13 +404,31 @@
     width: clamp(300px, 35vw, 354px);
   }
 
-  .brand-pillars .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+  /* Override cho màn hình 1440x900 */
+  @media (max-height: 900px) {
+    .brand-group:nth-child(2) .brand-expand-text {
+      width: 480px !important; /* Tăng width cho màn 1440x900 */
+    }
+
+    .brand-pillars
+      .brand-group:nth-child(2)
+      .brand-expand-text
+      .bodytext-3--no-margin {
+      max-width: 480px !important;
+    }
+  }
+
+  .brand-pillars
+    .brand-group:nth-child(2)
+    .brand-expand-text
+    .bodytext-3--no-margin {
     max-width: clamp(300px, 35vw, 354px);
   }
 
   .brand-group:nth-child(3) {
     width: clamp(500px, 60vw, 585px);
-    height: 167px;
+    /* AUTO HEIGHT: Height scales cho desktop 1440px */
+    height: clamp(120px, 9vh, 167px);
     margin-left: clamp(10%, 12vw, 15.7%);
   }
 
@@ -243,13 +443,16 @@
   }
 
   .brand-line {
-    font-size: 80px;
+    /* Auto-scaling cho laptop 1200px */
+    font-size: clamp(42px, min(5vw, calc((100vw - 10vw) / 22)), 80px);
+    transform: scale(min(1, calc((100vw - 10vw) / 1000px)));
     letter-spacing: -2.4px;
   }
 
   .brand-group:nth-child(1) {
     width: 560px;
-    height: 134px;
+    /* AUTO HEIGHT: Height scales cho laptop 1200px */
+    height: clamp(100px, 8vh, 134px);
     margin-left: 20%;
   }
 
@@ -265,13 +468,17 @@
     width: 283px;
   }
 
-  .brand-pillars .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+  .brand-pillars
+    .brand-group:nth-child(2)
+    .brand-expand-text
+    .bodytext-3--no-margin {
     max-width: 283px;
   }
 
   .brand-group:nth-child(3) {
     width: 468px;
-    height: 134px;
+    /* AUTO HEIGHT: Height scales cho laptop 1200px */
+    height: clamp(100px, 8vh, 134px);
     margin-left: 18%;
   }
 
@@ -282,13 +489,16 @@
 
 @media (max-width: 992px) {
   .brand-line {
-    font-size: 64px;
+    /* Auto-scaling cho tablet 992px */
+    font-size: clamp(36px, min(4.5vw, calc((100vw - 8vw) / 25)), 64px);
+    transform: scale(min(1, calc((100vw - 8vw) / 900px)));
     letter-spacing: -1.92px;
   }
 
   .brand-group:nth-child(1) {
     width: 448px;
-    height: 107px;
+    /* AUTO HEIGHT: Height scales cho tablet 992px */
+    height: clamp(80px, 7vh, 107px);
     margin-left: 15%;
   }
 
@@ -307,13 +517,17 @@
     margin-right: 10px;
   }
 
-  .brand-pillars .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+  .brand-pillars
+    .brand-group:nth-child(2)
+    .brand-expand-text
+    .bodytext-3--no-margin {
     max-width: 226px;
   }
 
   .brand-group:nth-child(3) {
     width: 374px;
-    height: 107px;
+    /* AUTO HEIGHT: Height scales cho tablet 992px */
+    height: clamp(80px, 7vh, 107px);
     margin-left: 15%;
   }
 
@@ -335,7 +549,9 @@
   }
 
   .brand-line {
-    font-size: clamp(36px, 8vw, 48px);
+    /* Auto-scaling cho tablet 768px */
+    font-size: clamp(28px, min(6vw, calc((100vw - 10vw) / 15)), 48px);
+    transform: scale(min(1, calc((100vw - 10vw) / 650px)));
     letter-spacing: clamp(-1.44px, -0.24vw, -1.08px);
     line-height: 85%;
   }
@@ -391,7 +607,10 @@
     opacity: 1;
   }
 
-  .brand-pillars .brand-group:nth-child(2) .brand-expand-text .bodytext-3--no-margin {
+  .brand-pillars
+    .brand-group:nth-child(2)
+    .brand-expand-text
+    .bodytext-3--no-margin {
     max-width: 100%;
     text-align: center;
   }
@@ -435,7 +654,9 @@
   }
 
   .brand-pillars .brand-expand-text .bodytext-3--no-margin {
-    font-size: clamp(12px, 3.5vw, 16px);
+    /* Auto-scaling cho tablet */
+    font-size: clamp(10px, min(2.8vw, calc((100vw - 8vw) / 35)), 16px);
+    transform: scale(min(1, calc((100vw - 8vw) / 700px)));
     line-height: 140%;
   }
 
@@ -452,7 +673,9 @@
   }
 
   .brand-line {
-    font-size: clamp(28px, 7vw, 36px);
+    /* Auto-scaling cho mobile 480px */
+    font-size: clamp(24px, min(5.5vw, calc((100vw - 6vw) / 12)), 36px);
+    transform: scale(min(1, calc((100vw - 6vw) / 450px)));
     letter-spacing: clamp(-1.08px, -0.21vw, -0.84px);
     line-height: 80%;
   }
@@ -462,7 +685,9 @@
   }
 
   .brand-pillars .brand-expand-text .bodytext-3--no-margin {
-    font-size: clamp(11px, 3vw, 14px);
+    /* Auto-scaling cho mobile 480px */
+    font-size: clamp(9px, min(2.5vw, calc((100vw - 6vw) / 40)), 14px);
+    transform: scale(min(1, calc((100vw - 6vw) / 450px)));
     line-height: 135%;
     padding: 0 5px;
   }
@@ -474,7 +699,9 @@
   }
 
   .brand-line {
-    font-size: clamp(24px, 6.5vw, 28px);
+    /* Auto-scaling cho small mobile 360px */
+    font-size: clamp(20px, min(5vw, calc((100vw - 6vw) / 14)), 28px);
+    transform: scale(min(1, calc((100vw - 6vw) / 340px)));
     letter-spacing: clamp(-0.84px, -0.195vw, -0.72px);
     line-height: 75%;
   }
@@ -484,7 +711,9 @@
   }
 
   .brand-pillars .brand-expand-text .bodytext-3--no-margin {
-    font-size: clamp(10px, 2.8vw, 12px);
+    /* Auto-scaling cho mobile 360px */
+    font-size: clamp(8px, min(2.2vw, calc((100vw - 6vw) / 45)), 12px);
+    transform: scale(min(1, calc((100vw - 6vw) / 340px)));
     line-height: 130%;
     padding: 0 3px;
   }

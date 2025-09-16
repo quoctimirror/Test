@@ -54,7 +54,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
             trigger: sectionRef.current,
             pin: true,
             scrub: 1,
-            start: "center center", // Start when section reaches center
+            start: "bottom bottom", // Start when section reaches top
             end: () => `+=${scrollAmount * 1.5}`, // Extra scroll distance to see last image fully
             invalidateOnRefresh: true,
           },
@@ -109,50 +109,52 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
   };
 
   return (
-    <section className="collection-section-4-gsap" ref={sectionRef}>
-      <div className="same-collection-container" ref={containerRef}>
-        <div className="same-collection-header">
-          <h2 className="heading-1 same-collection-title">MORE GEMS</h2>
-          <p className="bodytext-4 same-collection-description">
-            Mirror's curation of visionary designs - where each piece embodies
-            the essence of future
-            <br />
-            luxury. From bold signatures to refined silhouettes, these are the
-            diamonds reimagined for
-            <br />a new era.
-          </p>
-        </div>
+    <>
+      <section className="collection-section-4-gsap" ref={sectionRef}>
+        <div className="same-collection-container" ref={containerRef}>
+          <div className="same-collection-header">
+            <h2 className="heading-1 same-collection-title">MORE GEMS</h2>
+            <p className="bodytext-4 same-collection-description">
+              Mirror's curation of visionary designs - where each piece embodies
+              the essence of future
+              <br />
+              luxury. From bold signatures to refined silhouettes, these are the
+              diamonds reimagined for
+              <br />a new era.
+            </p>
+          </div>
 
-        <div className="horizontal-scroll-wrapper">
-          <div className="same-collection-grid-gsap" ref={scrollContainerRef}>
-            {products.map((product) => (
-              <div key={product.id} className="product-card">
-                <img
-                  src={product.image}
-                  alt={`${product.name} Ring`}
-                  className="product-image"
-                  draggable={false}
-                />
-              </div>
-            ))}
+          <div className="horizontal-scroll-wrapper">
+            <div className="same-collection-grid-gsap" ref={scrollContainerRef}>
+              {products.map((product) => (
+                <div key={product.id} className="product-card">
+                  <img
+                    src={product.image}
+                    alt={`${product.name} Ring`}
+                    className="product-image"
+                    draggable={false}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+      </section>
 
-        {showViewProductButton && (
-          <div className="view-product-button-container">
-            <ShineGlassButton
-              width={189}
-              height={57}
-              fontSize={14}
-              theme="light"
-              onClick={handleViewAllProducts}
-            >
-              View all products
-            </ShineGlassButton>
-          </div>
-        )}
-      </div>
-    </section>
+      {showViewProductButton && (
+        <div className="view-product-button-container">
+          <ShineGlassButton
+            width={189}
+            height={57}
+            fontSize={14}
+            theme="light"
+            onClick={handleViewAllProducts}
+          >
+            View all products
+          </ShineGlassButton>
+        </div>
+      )}
+    </>
   );
 };
 

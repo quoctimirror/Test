@@ -12,6 +12,7 @@
   background: #000;
   opacity: 0;
   transition: opacity 0.8s ease-in-out;
+  box-sizing: border-box;
 }
 
 .welcome-page.loaded {
@@ -25,23 +26,42 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/welcome/Coming_soon.png');
+  background-image: url("/welcome/Coming_soon.svg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   z-index: 1;
 }
 
-/* Main content */
+/* Logo */
+.welcome-logo {
+  position: absolute;
+  top: 60px;
+  z-index: 3;
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.welcome-logo img {
+  height: 100px;
+  width: auto;
+}
+
+/* Main content container */
 .welcome-content {
-  position: relative;
+  position: absolute;
+  top: 51%;
   z-index: 2;
-  max-width: 1200px;
-  width: 90%;
   text-align: center;
-  color: white;
-  padding: 2rem;
+}
+
+/* Title section */
+.welcome-title-section {
   animation: fadeInUp 1s ease-out 0.5s both;
+}
+
+/* Subtitle section */
+.welcome-subtitle-section {
+  animation: fadeInUp 1s ease-out 0.7s both;
 }
 
 @keyframes fadeInUp {
@@ -62,30 +82,15 @@
 }
 
 .welcome-title {
-  margin: 0;
-  line-height: 1.2;
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
 }
 
-.title-line-1 {
-  display: block;
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  font-weight: 300;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-  opacity: 0.8;
-}
-
-.title-line-2 {
-  display: block;
-  font-size: clamp(4rem, 10vw, 8rem);
-  font-weight: 100;
-  letter-spacing: 0.2em;
-  background: linear-gradient(135deg, #fff 0%, #ec3667 50%, #fff 100%);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientShift 5s ease infinite;
+.welcome-subtitle {
+  color: rgba(255, 255, 255, 1);
+  text-align: center;
+  font-size: 32px;
+  line-height: 1.2; /* 120% */
 }
 
 @keyframes gradientShift {
@@ -98,14 +103,6 @@
   100% {
     background-position: 0% 50%;
   }
-}
-
-.welcome-subtitle {
-  font-size: clamp(1rem, 2vw, 1.3rem);
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  opacity: 0.7;
-  margin-top: 1rem;
 }
 
 /* Description */
@@ -154,7 +151,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -260,7 +258,8 @@
 }
 
 @keyframes sparkle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
     transform: scale(1);
   }
@@ -328,7 +327,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) rotate(0deg);
   }
   25% {
@@ -342,12 +342,28 @@
   }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .welcome-content {
-    padding: 1rem;
-  }
+/* Bottom text content */
+.welcome-bottom-text {
+  position: absolute;
+  bottom: 60px;
+  z-index: 3;
+  text-align: center;
+  animation: fadeInUp 1s ease-out 1.7s both;
+}
 
+.bottom-text-line1,
+.bottom-text-line2 {
+  /* Override heading-3--no-margin properties */
+  font-size: 24px;
+  line-height: 130%;
+  text-align: center;
+  color: rgba(188, 34, 76, 1);
+}
+
+/* Responsive */
+
+/* Tablet - 481px to 767px */
+@media (max-width: 767px) {
   .title-line-2 {
     font-size: clamp(3rem, 15vw, 6rem);
   }
@@ -378,17 +394,18 @@
   .welcome-btn.secondary {
     width: 100%;
   }
+
+  /* .bottom-text-line1,
+  .bottom-text-line2 {
+    font-size: 36px;
+  } */
 }
 
+/* Large Mobile - 361px to 480px */
 @media (max-width: 480px) {
-  .title-line-1 {
+  /* .title-line-1 {
     font-size: 1.2rem;
-  }
-
-  .title-line-2 {
-    font-size: 3rem;
-    letter-spacing: 0.1em;
-  }
+  } */
 
   .welcome-subtitle {
     font-size: 0.9rem;
@@ -409,4 +426,22 @@
   .feature-card p {
     font-size: 0.8rem;
   }
+
+  .bottom-text-line1,
+  .bottom-text-line2 {
+    font-size: 24px;
+    letter-spacing: -0.72px;
+  }
+
+  .welcome-bottom-text {
+    bottom: 40px;
+  }
+}
+
+/* Small Mobile - 320px to 360px */
+@media (max-width: 360px) {
+}
+
+/* Very Small Mobile - below 320px */
+@media (max-width: 319px) {
 }

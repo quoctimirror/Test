@@ -1,6 +1,6 @@
 .all-gems-page {
   min-height: 100vh;
-  background: #f5f5f5;
+  background: #f6f6f6;
   padding-top: 240px;
 }
 
@@ -139,7 +139,7 @@
     margin-left: 42px;
     margin-right: 42px;
   }
-  
+
   .gem-grid-2x2 {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
@@ -152,7 +152,7 @@
     margin-left: 36px;
     margin-right: 36px;
   }
-  
+
   /* Ensure gem-grid-2x2 stays consistent at this breakpoint */
   .gem-grid-2x2 {
     grid-template-columns: 1fr 1fr;
@@ -226,7 +226,7 @@
     margin-right: 48px;
     --gap: 12px;
   }
-  
+
   /* Ensure gem-grid-2x2 maintains 2x2 layout on large screens */
   .gem-grid-2x2 {
     grid-template-columns: 1fr 1fr;

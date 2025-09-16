@@ -29,6 +29,36 @@
   cursor: pointer;
 }
 
+.logo-fixed-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.logo-fixed-container.no-blend .navbar-logo-svg path {
+  fill: rgba(255, 255, 255, 1);
+}
+
+/* Scrolled state - black color during scroll-container section */
+.logo-fixed-container.scrolled .navbar-logo-svg {
+  filter: invert(1) brightness(0) !important;
+}
+
+.logo-fixed-container.scrolled .navbar-logo-svg path,
+.logo-fixed-container.scrolled .navbar-logo-svg g path,
+.logo-fixed-container.scrolled .navbar-logo-svg * {
+  fill: rgba(0, 0, 0, 1) !important;
+}
+
+/* Override the default white fill for scrolled state */
+.logo-fixed-container.no-blend.scrolled .navbar-logo-svg {
+  filter: invert(1) brightness(0) !important;
+}
+
+.logo-fixed-container.no-blend.scrolled .navbar-logo-svg path,
+.logo-fixed-container.no-blend.scrolled .navbar-logo-svg g path,
+.logo-fixed-container.no-blend.scrolled .navbar-logo-svg * {
+  fill: rgba(0, 0, 0, 1) !important;
+}
+
 .logo-fixed-container .navbar-logo-svg {
   width: 151.98065185546875px;
   height: 29.999998092651367px;
@@ -61,6 +91,22 @@
   color: rgba(255, 255, 255, 1); /* Full brightness */
 }
 
+.menu-fixed-container.scrolled:hover {
+  color: rgba(0, 0, 0, 1) !important; /* Black color when scrolled */
+}
+
+.menu-fixed-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.menu-fixed-container.no-blend .menu-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.menu-fixed-container.scrolled .menu-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
 /* Account link container với blend mode */
 .account-fixed-container {
   position: fixed;
@@ -80,6 +126,18 @@
 
 .account-fixed-container:hover {
   opacity: 1;
+}
+
+.account-fixed-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.account-fixed-container.no-blend .account-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.account-fixed-container.scrolled .account-text {
+  color: rgba(0, 0, 0, 1) !important;
 }
 
 /* Immersive button container KHÔNG có blend mode cho background */
@@ -200,6 +258,18 @@
   color: white;
 }
 
+.menu-fixed-container.scrolled .menu-container:hover .menu-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.scrolled .menu-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.scrolled .menu-container:hover .menu-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
 .menu-container:hover .menu-text::after {
   transform: scaleX(1);
   transform-origin: left;
@@ -253,6 +323,18 @@
   transition: opacity 0.3s ease;
 }
 
+.immersive-text-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.immersive-text-container.no-blend .immersive-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.immersive-text-container.scrolled .immersive-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
 /* Border hover - rotating animation when hovering button */
 .immersive-fixed-container:hover
   ~ .immersive-border-container
@@ -300,6 +382,32 @@
   transition: opacity 0.3s ease;
 }
 
+.immersive-border-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.immersive-border-container.no-blend .immersive-border::after {
+  background: conic-gradient(
+    from var(--angle-1) at 50% 50%,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.3) 5% 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.3) 60% 95%,
+    rgba(255, 255, 255, 0.8)
+  );
+}
+
+.immersive-border-container.scrolled .immersive-border::after {
+  background: conic-gradient(
+    from var(--angle-1) at 50% 50%,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.3) 5% 40%,
+    rgba(0, 0, 0, 0.8) 50%,
+    rgba(0, 0, 0, 0.3) 60% 95%,
+    rgba(0, 0, 0, 0.8)
+  ) !important;
+}
+
 /* Border element with rotating effect */
 .immersive-border {
   position: relative;
@@ -327,9 +435,9 @@
   background: conic-gradient(
       from var(--angle-1) at 50% 50%,
       rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0) 5% 40%,
+      rgba(255, 255, 255, 0.3) 5% 40%,
       rgba(255, 255, 255, 0.8) 50%,
-      rgba(255, 255, 255, 0) 60% 95%,
+      rgba(255, 255, 255, 0.3) 60% 95%,
       rgba(255, 255, 255, 0.8)
     ),
     linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
@@ -397,8 +505,6 @@
   opacity: 1;
   display: inline-block;
   width: fit-content;
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 0, 0, 0.6);
-  font-weight: 500;
 }
 
 .menu-popup .menu-list li:hover {
@@ -420,7 +526,22 @@
 
 .menu-popup .menu-list li:hover {
   color: white;
-  text-shadow: 0 0 12px rgba(0, 0, 0, 1), 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.menu-fixed-container.scrolled .menu-popup .menu-list li {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.scrolled .menu-popup .menu-list li:hover {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.scrolled .menu-popup .menu-list li::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.scrolled .menu-popup.active .menu-list li::after {
+  background: rgba(0, 0, 0, 1) !important;
 }
 
 .menu-popup.active .menu-list li:hover::after {
@@ -697,6 +818,20 @@
   color: white;
 }
 
+.account-fixed-container.scrolled .account-container:hover .account-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.account-fixed-container.scrolled .account-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+.account-fixed-container.scrolled
+  .account-container:hover
+  .account-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
 .account-container:hover .account-text::after {
   transform: scaleX(1);
   transform-origin: left;
@@ -744,7 +879,14 @@
 .account-user-info span {
   color: white;
   font-weight: 500;
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 0, 0, 0.6);
+}
+
+.account-fixed-container.scrolled .account-user-info {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
+}
+
+.account-fixed-container.scrolled .account-user-info span {
+  color: rgba(0, 0, 0, 1) !important;
 }
 
 .admin-badge {
@@ -776,8 +918,6 @@
   opacity: 1;
   display: inline-block;
   width: fit-content;
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 0, 0, 0.6);
-  font-weight: 500;
 }
 
 .account-popup .account-list li:hover {
@@ -799,7 +939,25 @@
 
 .account-popup .account-list li:hover {
   color: white;
-  text-shadow: 0 0 12px rgba(0, 0, 0, 1), 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.account-fixed-container.scrolled .account-popup .account-list li {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.account-fixed-container.scrolled .account-popup .account-list li:hover {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.account-fixed-container.scrolled .account-popup .account-list li::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+.account-fixed-container.scrolled
+  .account-popup.active
+  .account-list
+  li::after {
+  background: rgba(0, 0, 0, 1) !important;
 }
 
 .account-popup.active .account-list li:hover::after {

@@ -72,7 +72,6 @@ const Login = () => {
       // Sử dụng login function từ AuthContext
       await login(payload.username, payload.password);
 
-      console.log("Login successful, redirecting to profile...");
       navigate("/user-profile");
     } catch (error) {
       // --- XỬ LÝ KHI THẤT BẠI ---

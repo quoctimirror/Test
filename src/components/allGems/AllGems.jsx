@@ -91,7 +91,7 @@ const AllGems = () => {
       </div>
 
       <div className="gems-footer">
-        <ShineGlassButton theme="shine" width={190} height={57} fontSize={14}>
+        <ShineGlassButton theme="light" width={190} height={57} fontSize={14}>
           View more
         </ShineGlassButton>
       </div>

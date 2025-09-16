@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { locationsAPI, handleAPIError } from "../../services/api";
+import { locationsAPI, handleAPIError } from "@services/api";
 import "./locations.css";
 
 const LocationsPage = () => {

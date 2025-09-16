@@ -207,6 +207,9 @@
 
 .components-section {
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 400px;
 }
 
 .components-header {
@@ -216,6 +219,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .components-title {
@@ -227,23 +231,53 @@
 
 .components-list {
   padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.components-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.components-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.components-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.components-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .component-item {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: none;
   background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.component-item:last-child {
+.component-container {
+  border-bottom: 1px solid #f1f5f9;
+  background: white;
+  display: block;
+  width: 100%;
+}
+
+.component-container:last-child {
   border-bottom: none;
 }
+
 
 .component-info {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 0.75rem;
+  flex: 1;
 }
 
 .component-info h4 {
@@ -264,14 +298,17 @@
 .component-actions {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  flex-shrink: 0;
 }
 
 .options-list {
   background: #f8fafc;
   border-radius: 6px;
   padding: 0.75rem;
-  margin-top: 0.75rem;
+  margin: 0 1.5rem 1rem 1.5rem;
+  display: block;
+  width: calc(100% - 3rem);
+  clear: both;
 }
 
 .options-list h5 {

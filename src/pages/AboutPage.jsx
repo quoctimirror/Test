@@ -38,11 +38,17 @@ const AboutPage = () => {
       }, 150);
     };
 
-    window.addEventListener("pageTransitionComplete", handlePageTransitionComplete);
+    window.addEventListener(
+      "pageTransitionComplete",
+      handlePageTransitionComplete
+    );
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      window.removeEventListener("pageTransitionComplete", handlePageTransitionComplete);
+      window.removeEventListener(
+        "pageTransitionComplete",
+        handlePageTransitionComplete
+      );
     };
   }, []);
 
@@ -56,13 +62,13 @@ const AboutPage = () => {
         <StartingPlaceSection />
       </section>
 
-      <section className="panel">
-        <IntroBOD />
-      </section>
+      {/* <section className="panel"> */}
+      <IntroBOD />
+      {/* </section> */}
 
-      <section className="panel">
-        <BODMember />
-      </section>
+      {/* <section className="panel"> */}
+      <BODMember />
+      {/* </section> */}
 
       <section className="panel">
         <AtMirror />
