@@ -42,7 +42,7 @@
 .collection-detail-section-gsap {
   width: 100%;
   min-height: 100vh;
-  padding: 120px 0 0 0;
+  padding: 240px 0 0 0 !important;
   background: #f6f6f6;
   box-sizing: border-box;
   position: relative;
@@ -71,16 +71,15 @@
 
 .collection-detail-header {
   text-align: center;
-  margin-bottom: 120px;
+  margin-bottom: 60px;
 }
 
-.collection-detail-title {
+.section4-collection-title {
   /* Sử dụng class heading-1 từ typography.css */
   /* Các thuộc tính font đã được xác định trong heading-1 */
   text-align: center;
   color: #333;
   /* Ghi đè margin mặc định của heading-1 */
-  margin: 0 0 12px 0 !important;
 }
 
 .collection-detail-description {
@@ -181,10 +180,10 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .collection-detail-section,
   .collection-detail-section-gsap {
-    padding: 80px 0 0 0;
+    padding: 120px 0 0 0 !important;
   }
 
   .collection-detail-container {
@@ -193,11 +192,6 @@
 
   .collection-detail-header {
     margin-bottom: 60px;
-  }
-
-  .collection-detail-title {
-    /* Responsive cho heading-1 đã được xử lý trong typography.css */
-    margin: 0 0 8px 0 !important;
   }
 
   .collection-detail-description {
@@ -217,24 +211,9 @@
   }
 }
 
-@media (max-width: 480px) {
-  .collection-detail-section,
-  .collection-detail-section-gsap {
-    padding: 60px 0 0 0;
-  }
-
+@media (max-width: 425px) {
   .collection-detail-container {
     padding: 0 15px;
-  }
-
-  .collection-detail-header {
-    margin-bottom: 40px;
-  }
-
-  .collection-detail-title {
-    /* Responsive cho heading-1 đã được xử lý trong typography.css */
-    font-size: 36px !important;
-    margin: 0 0 6px 0 !important;
   }
 
   .collection-detail-description {

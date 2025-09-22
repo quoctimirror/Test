@@ -1,0 +1,694 @@
+@import url("@styles/fonts.css");
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  /* height: 100%; */
+  font-family: "Georgia", serif;
+  /* overflow-x: hidden; */
+}
+
+/* Container for entire scroll effect */
+.scroll-container {
+  height: 250vh;
+  position: relative;
+}
+
+/* Layer containing initial gradient */
+.gradient-initial {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Final gradient (light pink) will be on top */
+.gradient-final {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* background: linear-gradient(to right, #ffc3d4, #ffe8ef, white); */
+  background: white;
+  z-index: 2;
+
+  --wipe-progress: 400%;
+  --feather-amount: 15%;
+
+  mask-image: radial-gradient(
+    ellipse 150vw 150vh at var(--wipe-progress) 50%,
+    black 10%,
+    transparent 20%
+  );
+
+  -webkit-mask-image: radial-gradient(
+    ellipse 700vw 700vh at var(--wipe-progress) 50%,
+    black 10%,
+    transparent 50%
+  );
+
+  /* mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    transparent calc(var(--wipe-progress) - var(--feather-amount)),
+    black calc(var(--wipe-progress) + var(--feather-amount)),
+    black 100%
+  );
+
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(var(--wipe-progress) - var(--feather-amount)),
+    black calc(var(--wipe-progress) + var(--feather-amount)),
+    black 100%
+  ); */
+}
+
+/* Wrapper div for elements that need to fade */
+.elements-to-fade {
+  /* Make it an absolute layer, covering the full screen */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* Set highest z-index so it and its children are on top */
+  z-index: 4;
+
+  /* Keep transition for smoothness */
+  transition: opacity 0.1s linear;
+
+  /* VERY IMPORTANT: This layer will block mouse events.
+     This property makes this layer "transparent" to clicks,
+     allowing you to interact with buttons below when needed. */
+  pointer-events: none;
+}
+
+.homepage {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: white;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.gradient-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  transform: rotate(-180deg);
+  opacity: 1;
+  background: linear-gradient(
+    83.46deg,
+    #ffffff -0.46%,
+    #ec3667 51.6%,
+    #000000 115.98%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.gradient-bottom {
+  position: absolute;
+  top: calc(50vh - 1px); /* Overlap by 1px to avoid gap */
+  left: 0;
+  width: 100%;
+  height: calc(50vh + 1px); /* Add 1px to height */
+  transform: rotate(0deg);
+  opacity: 1;
+  background: linear-gradient(
+    95.54deg,
+    #000000 0.98%,
+    #ec3667 63.43%,
+    #ffffff 98.65%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Logo Center */
+.logo-center {
+  position: absolute;
+  top: 50.25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  transition: opacity 0.1s linear;
+}
+
+.main-logo {
+  width: 111.78px;
+  height: 224.18px;
+  opacity: 1;
+}
+
+/* Future Diamond Text - Initially hidden, positioned at logo center */
+.future-diamond-text {
+  position: absolute;
+  top: 50.25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.1s linear;
+}
+
+/* Tagline Section - Center positioned like logo */
+.future-diamond-text .tagline-section {
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: none;
+  z-index: 5;
+  text-align: center;
+  color: rgba(188, 34, 76, 1);
+}
+
+/* Original Tagline Section */
+.tagline-section {
+  position: absolute;
+  top: calc(80%);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  text-align: center;
+  color: white;
+}
+
+.tagline-bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Logo Reflection */
+.logo-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.logo-top {
+  font-size: clamp(80px, 15vw, 200px);
+  line-height: 0.8;
+  font-weight: 100;
+  letter-spacing: clamp(3px, 1vw, 8px);
+  font-family: "Georgia", serif;
+  color: white;
+  margin-bottom: auto;
+  transform: scaleX(-1);
+}
+
+.logo-bottom {
+  font-size: clamp(80px, 15vw, 200px);
+  line-height: 0.8;
+  font-weight: 100;
+  letter-spacing: clamp(3px, 1vw, 8px);
+  font-family: "Georgia", serif;
+  color: white;
+  margin-bottom: auto;
+}
+
+/* Scroll down */
+.scroll-down {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 58px;
+  height: 58px;
+}
+
+.scroll-down button {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  width: 57px;
+  height: 57px;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  opacity: 0.5;
+}
+
+.scroll-down button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.scroll-down button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.scroll-down button:hover {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+}
+
+/* Vetor Button */
+.vetor-button {
+  position: absolute;
+  bottom: 48px;
+  right: 50px;
+  z-index: 10;
+  width: 58px;
+  height: 58px;
+}
+
+.vetor-button button {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
+  width: 57px;
+  height: 57px;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  opacity: 0.5;
+}
+
+.vetor-button button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.vetor-button button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.vetor-button button:hover {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 16px 8px rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+}
+
+.vetor-button button img {
+  width: 57px;
+  height: 57px;
+}
+
+/* Re-enable mouse events for interactive areas */
+.tagline-section,
+.scroll-down,
+.vetor-button {
+  pointer-events: auto;
+}
+
+/* ============= RESPONSIVE DESIGN ============= */
+
+/* Ultra Wide Screens */
+@media (min-width: 2560px) {
+  .main-logo {
+    width: 140px;
+    height: 280px;
+  }
+
+  .tagline-section {
+    top: calc(82%);
+  }
+}
+
+/* Full HD Desktop */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .scroll-down button,
+  .vetor-button button {
+    width: 57px;
+    height: 57px;
+  }
+}
+
+/* Large Laptop (1440px) */
+@media (max-width: 1440px) {
+  .main-logo {
+    width: 100px;
+    height: 200px;
+  }
+
+  .tagline-section {
+    top: calc(78%);
+  }
+}
+
+/* Standard Laptop (1200px) */
+@media (max-width: 1200px) {
+  .main-logo {
+    width: 95px;
+    height: 190px;
+  }
+}
+
+/* Small Laptop (1023px) */
+@media (max-width: 1023px) {
+  .main-logo {
+    width: 90px;
+    height: 180px;
+  }
+
+  .tagline-section {
+    top: calc(76%);
+  }
+
+  .tagline-top {
+    font-size: 11px;
+  }
+
+  .scroll-down {
+    bottom: 24px;
+  }
+  .vetor-button {
+    bottom: 24px;
+  }
+}
+
+/* Tablet (768px) */
+@media (max-width: 768px) {
+  .scroll-container {
+    height: 150vh;
+  }
+
+  .main-logo {
+    width: 70px;
+    height: 140px;
+  }
+
+  /* .logo-center {
+    top: 50.5%;
+  } */
+
+  .tagline-section {
+    top: 72vh;
+    width: 90%;
+  }
+
+  .tagline-top {
+    font-size: 10px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .tagline-bottom {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Gradient adjustments */
+  .gradient-top,
+  .gradient-bottom {
+    height: 50vh;
+  }
+
+  /* Buttons */
+  .scroll-down {
+    width: 48px;
+    height: 48px;
+  }
+
+  .scroll-down button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .vetor-button {
+    right: 25px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .vetor-button button {
+    width: 46px;
+    height: 46px;
+  }
+  /*
+  .vetor-button button img {
+    width: 22px;
+    height: 22px;
+  } */
+
+  /* Next section */
+  .next-section {
+    padding: 60px 4%;
+  }
+
+  .next-section h1 {
+    font-size: 2.2rem;
+  }
+
+  .next-section p {
+    font-size: 1rem;
+  }
+}
+
+/* Large Mobile (480px) */
+@media (max-width: 480px) {
+  .scroll-container {
+    height: 120vh;
+  }
+
+  .main-logo {
+    width: 60px;
+    height: 120px;
+  }
+
+  /* .logo-center {
+    top: 50.5%;
+  } */
+
+  .tagline-section {
+    top: 68vh;
+    width: 95%;
+  }
+
+  .tagline-top {
+    font-size: 9px;
+    margin-bottom: 5px;
+    letter-spacing: 0.8px;
+  }
+
+  .tagline-bottom {
+    gap: 6px;
+  }
+
+  /* Buttons smaller */
+  .scroll-down {
+    width: 42px;
+    height: 42px;
+  }
+
+  .scroll-down button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .vetor-button {
+    right: 20px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .vetor-button button {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* .vetor-button button img {
+    width: 18px;
+    height: 18px;
+  } */
+
+  /* Next section mobile */
+  .next-section {
+    padding: 40px 3%;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .next-section h1 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+  }
+
+  .next-section p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+}
+
+/* Small Mobile (360px) */
+@media (max-width: 360px) {
+  .scroll-container {
+    height: 100vh;
+  }
+
+  .main-logo {
+    width: 50px;
+    height: 100px;
+  }
+
+  .tagline-section {
+    top: 65vh;
+  }
+
+  .tagline-top {
+    font-size: 8px;
+    letter-spacing: 0.6px;
+  }
+
+  /* Even smaller buttons */
+  .scroll-down,
+  .vetor-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .scroll-down button,
+  .vetor-button button {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* .scroll-down button img,
+  .vetor-button button img {
+    width: 16px;
+    height: 16px;
+  } */
+
+  .vetor-button {
+    right: 15px;
+  }
+
+  .next-section h1 {
+    font-size: 1.5rem;
+  }
+
+  .next-section p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Added to the end of home.css file */
+.next-section {
+  background-color: white;
+  color: #333;
+  height: 100vh;
+  padding: 100px 5%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+.next-section h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.next-section p {
+  font-size: 1.2rem;
+  max-width: 600px;
+}

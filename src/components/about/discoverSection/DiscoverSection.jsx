@@ -19,7 +19,7 @@ const DiscoverSection = () => {
 
       {/* Button */}
       <div className="discover-button-container">
-        <ShineGlassButton theme="light" width={260} height={57} fontSize={14}>
+        <ShineGlassButton theme="light">
           Discover the Mirror Network
         </ShineGlassButton>
       </div>

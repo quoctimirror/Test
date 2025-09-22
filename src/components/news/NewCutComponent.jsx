@@ -115,7 +115,7 @@ const NewCutComponent = () => {
             </p>
           </div>
           <div className="hero-image">
-            <img src="/news/new-cut.svg" alt="Lumex-9 Ring" />
+            <img src="/news/lumex_91.png" alt="Lumex-9 Ring" />
           </div>
         </div>
       </section>

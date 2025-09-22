@@ -45,7 +45,9 @@ const ContactPage = lazy(() => import("@pages/ContactPage"));
 const AboutPage = lazy(() => import("@pages/AboutPage"));
 const LocationsPage = lazy(() => import("@pages/LocationsPage"));
 const WelcomePage = lazy(() => import("@pages/WelcomePage"));
-const ImmersiveShowroomPage = lazy(() => import("@pages/ImmersiveShowroomPage"));
+const ImmersiveShowroomPage = lazy(() =>
+  import("@pages/ImmersiveShowroomPage")
+);
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -121,7 +123,10 @@ export default function AppRoutes() {
 
           <Route path="/news/:slug" element={<NewCutPage />} />
 
-          <Route path="/immersive-showroom" element={<ImmersiveShowroomPage />} />
+          <Route
+            path="/immersive-showroom"
+            element={<ImmersiveShowroomPage />}
+          />
 
           {/* for observing UI universe-section final */}
           {/* <Route path="/universe-section" element={<UniverseSection />} /> */}

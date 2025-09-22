@@ -103,9 +103,6 @@ const Section5 = () => {
             <ShineGlassButton
               className="view-all-btn"
               theme="light"
-              width={125}
-              height={57}
-              fontSize={14}
               onClick={handleViewAllFAQs}
             >
               View all

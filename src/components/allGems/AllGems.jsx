@@ -9,8 +9,8 @@ const AllGems = () => {
   return (
     <div className="all-gems-page">
       <div className="gems-header">
-        <h1 className="gems-title heading-1">OUR GEMS</h1>
-        <p className="gems-subtitle bodytext-3">
+        <h1 className="gems-title heading-1--no-margin">OUR GEMS</h1>
+        <p className="gems-subtitle bodytext-3--no-margin">
           Mirror invites you to step into the era of personalized luxury. Each
           piece is a reflection of your unique style and a signpost to endless
           possibilities. Every gem has a story, and that story awaits your
@@ -24,7 +24,7 @@ const AllGems = () => {
           {productCards.slice(0, 4).map((src, index) => (
             <div key={`row1-${index}`} className="gem-item">
               <img src={src} alt={`Gem ${index + 1}`} />
-              <span className="gem-label heading-3">Lumina</span>
+              <span className="gem-label heading-3--no-margin">Lumina</span>
             </div>
           ))}
         </div>
@@ -35,7 +35,7 @@ const AllGems = () => {
             {productCards.slice(4, 8).map((src, index) => (
               <div key={`row2-${index}`} className="gem-item">
                 <img src={src} alt={`Gem ${index + 5}`} />
-                <span className="gem-label heading-3">Lumina</span>
+                <span className="gem-label heading-3--no-margin">Lumina</span>
               </div>
             ))}
           </div>
@@ -49,7 +49,7 @@ const AllGems = () => {
           {productCards.slice(8, 12).map((src, index) => (
             <div key={`row3-${index}`} className="gem-item">
               <img src={src} alt={`Gem ${index + 9}`} />
-              <span className="gem-label heading-3">Lumina</span>
+              <span className="gem-label heading-3--no-margin">Lumina</span>
             </div>
           ))}
         </div>
@@ -63,7 +63,7 @@ const AllGems = () => {
             {productCards.slice(12, 16).map((src, index) => (
               <div key={`row4-${index}`} className="gem-item">
                 <img src={src} alt={`Gem ${index + 13}`} />
-                <span className="gem-label heading-3">Lumina</span>
+                <span className="gem-label heading-3--no-margin">Lumina</span>
               </div>
             ))}
           </div>
@@ -74,7 +74,7 @@ const AllGems = () => {
           {productCards.slice(16, 20).map((src, index) => (
             <div key={`row5-${index}`} className="gem-item">
               <img src={src} alt={`Gem ${index + 17}`} />
-              <span className="gem-label heading-3">Lumina</span>
+              <span className="gem-label heading-3--no-margin">Lumina</span>
             </div>
           ))}
         </div>
@@ -84,14 +84,14 @@ const AllGems = () => {
           {productCards.slice(20, 24).map((src, index) => (
             <div key={`row6-${index}`} className="gem-item">
               <img src={src} alt={`Gem ${index + 21}`} />
-              <span className="gem-label heading-3">Lumina</span>
+              <span className="gem-label heading-3--no-margin">Lumina</span>
             </div>
           ))}
         </div>
       </div>
 
       <div className="gems-footer">
-        <ShineGlassButton theme="light" width={190} height={57} fontSize={14}>
+        <ShineGlassButton theme="light">
           View more
         </ShineGlassButton>
       </div>

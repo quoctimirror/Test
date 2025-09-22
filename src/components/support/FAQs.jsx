@@ -105,9 +105,6 @@ const FAQs = () => {
               <ShineGlassButton
                 className="search-button"
                 theme="light"
-                width={119}
-                height={57}
-                fontSize={14}
               >
                 Search
               </ShineGlassButton>

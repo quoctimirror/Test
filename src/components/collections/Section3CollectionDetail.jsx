@@ -22,11 +22,38 @@ const Section3CollectionDetail = () => {
   const isAnimating = useRef(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      updateCarousel();
-    }, 5000);
+    let interval;
 
-    return () => clearInterval(interval);
+    const checkAndSetInterval = () => {
+      // Clear existing interval if any
+      if (interval) {
+        clearInterval(interval);
+      }
+
+      // Check if viewport is desktop (> 1023px)
+      const isDesktop = window.innerWidth > 1023;
+
+      // Only set interval for auto-slide on desktop
+      if (isDesktop) {
+        interval = setInterval(() => {
+          updateCarousel();
+        }, 5000);
+      }
+    };
+
+    // Initial check
+    checkAndSetInterval();
+
+    // Add resize listener
+    window.addEventListener('resize', checkAndSetInterval);
+
+    // Cleanup
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+      window.removeEventListener('resize', checkAndSetInterval);
+    };
   }, [currentIndex]);
 
   const updateCarousel = () => {

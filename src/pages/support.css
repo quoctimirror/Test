@@ -40,7 +40,7 @@
 .support-hero-section {
   width: 100%;
   height: 600px;
-  background-image: url("/public/support/section_1.jpg");
+  background-image: url("/support/section_1.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -97,11 +97,12 @@
 
 .support-wrapper {
   /* RESPONSIVE HORIZONTAL: Dựa theo pattern của faqs-main-section */
-  padding: 30px clamp(40px, calc((100vw - 900px) / 2), 499px) 120px clamp(40px, calc((100vw - 900px) / 2), 499px);
+  padding: 30px clamp(40px, calc((100vw - 900px) / 2), 499px) 120px
+    clamp(40px, calc((100vw - 900px) / 2), 499px);
   margin: 0;
   /* Thêm background để mix-blend-mode hoạt động */
   background: white;
-  
+
   /* Center content với max-width như FAQs pattern */
   max-width: 1920px;
   margin-left: auto;
@@ -413,11 +414,27 @@
 
 /* Responsive Design */
 
+/* Tablet - 426px to 1023px */
+@media (min-width: 426px) and (max-width: 1023px) {
+  .support-tab::after {
+    bottom: -1px; /* Slightly closer for tablet */
+  }
+}
+
+/* Mobile - up to 425px */
+@media (max-width: 425px) {
+  .support-tab::after {
+    bottom: -3px; /* 3px gap from text on mobile */
+    height: 1.5px; /* Thinner on mobile */
+  }
+}
+
 /* MacBook 13" – 14" height (1440x900) */
 @media (max-width: 1440px) and (max-height: 900px) {
   .support-wrapper {
     /* AUTO SCALE: Responsive padding cho 1440x900 */
-    padding: 30px clamp(30px, calc((100vw - 780px) / 2), 350px) 100px clamp(30px, calc((100vw - 780px) / 2), 350px);
+    padding: 30px clamp(30px, calc((100vw - 780px) / 2), 350px) 100px
+      clamp(30px, calc((100vw - 780px) / 2), 350px);
     max-width: 1440px;
     margin-left: auto;
     margin-right: auto;
@@ -437,7 +454,8 @@
 @media (max-width: 1200px) {
   .support-wrapper {
     /* AUTO SCALE: Responsive padding cho 1200px */
-    padding: 30px clamp(25px, calc((100vw - 750px) / 2), 400px) 80px clamp(25px, calc((100vw - 750px) / 2), 400px);
+    padding: 30px clamp(25px, calc((100vw - 750px) / 2), 400px) 80px
+      clamp(25px, calc((100vw - 750px) / 2), 400px);
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
@@ -473,7 +491,8 @@
 @media (max-width: 992px) {
   .support-wrapper {
     /* AUTO SCALE: Responsive padding cho 992px */
-    padding: 30px clamp(20px, calc((100vw - 500px) / 2), 250px) 60px clamp(20px, calc((100vw - 500px) / 2), 250px);
+    padding: 30px clamp(20px, calc((100vw - 500px) / 2), 250px) 60px
+      clamp(20px, calc((100vw - 500px) / 2), 250px);
     max-width: 992px;
     margin-left: auto;
     margin-right: auto;
@@ -517,7 +536,8 @@
 @media (max-width: 768px) {
   .support-wrapper {
     /* AUTO SCALE: Responsive padding cho 768px */
-    padding: 30px clamp(15px, calc((100vw - 400px) / 2), 100px) 50px clamp(15px, calc((100vw - 400px) / 2), 100px);
+    padding: 30px clamp(15px, calc((100vw - 400px) / 2), 100px) 50px
+      clamp(15px, calc((100vw - 400px) / 2), 100px);
     max-width: 768px;
     margin-left: auto;
     margin-right: auto;
@@ -621,7 +641,8 @@
 @media (max-width: 480px) {
   .support-wrapper {
     /* AUTO SCALE: Responsive padding cho 480px */
-    padding: 20px clamp(10px, calc((100vw - 300px) / 2), 40px) 40px clamp(10px, calc((100vw - 300px) / 2), 40px);
+    padding: 20px clamp(10px, calc((100vw - 300px) / 2), 40px) 40px
+      clamp(10px, calc((100vw - 300px) / 2), 40px);
     max-width: 480px;
     margin-left: auto;
     margin-right: auto;
@@ -738,7 +759,8 @@
 @media (max-width: 360px) {
   .support-wrapper {
     /* AUTO SCALE: Responsive padding cho 360px */
-    padding: 15px clamp(8px, calc((100vw - 280px) / 2), 20px) 30px clamp(8px, calc((100vw - 280px) / 2), 20px);
+    padding: 15px clamp(8px, calc((100vw - 280px) / 2), 20px) 30px
+      clamp(8px, calc((100vw - 280px) / 2), 20px);
     max-width: 360px;
     margin-left: auto;
     margin-right: auto;

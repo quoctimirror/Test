@@ -21,7 +21,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f6f6f6;
+  background: #000;
   padding: 0 0.3125% 0 2.5%;
   box-sizing: border-box;
 }
@@ -42,21 +42,23 @@
   padding: 0 0.3125% 0;
   box-sizing: border-box;
   overflow: hidden;
+  background: #000;
 }
 
 .carousel {
   width: 100%;
   max-width: none;
   height: 100%;
-  overflow: visible;
-  scroll-snap-type: x mandatory;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  position: relative;
-}
-
-.carousel::-webkit-scrollbar {
-  display: none;
+  scroll-behavior: smooth;
 }
 
 .carousel-track {
@@ -71,58 +73,44 @@
   top: 50%;
   transform: translateY(-50%);
   will-change: transform;
+  pointer-events: none;
+  user-select: none;
 }
 
 .carousel img {
   max-width: 140px;
   max-height: 195px;
-  opacity: 0.7;
-  transition: opacity 0.3s, transform 0.3s, filter 0.3s;
   object-fit: contain;
   flex-shrink: 0;
+  cursor: default;
+  user-select: none;
+  pointer-events: none;
   image-rendering: auto;
   image-rendering: -webkit-optimize-contrast;
   filter: grayscale(100%);
-  scroll-snap-align: start;
+  transition: filter 0.3s ease;
 }
 
 .carousel img.active {
-  opacity: 1;
-  border: 2px solid white;
-  transform: scale(1.1);
+  border: 2px solid #fff;
   filter: grayscale(0%);
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
-  .gallery-container {
-    flex-direction: column;
-    height: auto;
-  }
-
-  .main-display,
-  .carousel-wrapper {
-    width: 100%;
-  }
-
-  .main-display {
-    height: 60vh;
-    padding: 30px;
-  }
-
-  .carousel-wrapper {
-    padding: 20px;
-  }
-
-  .carousel {
-    height: 120px;
-  }
+.carousel::-webkit-scrollbar {
+  display: none;
 }
 
-@media (max-width: 768px) {
+/*
+============================================================
+    RESPONSIVE DESIGN - 3 BREAKPOINTS
+============================================================
+*/
+
+/* Tablet (426px - 1023px) */
+@media screen and (min-width: 426px) and (max-width: 1023px) {
   .section3-collection-detail {
     min-height: auto;
-    padding: 40px 0;
+    padding: 0;
   }
 
   .gallery-container {
@@ -130,82 +118,98 @@
     height: auto;
   }
 
+  /* Hide main display on tablet */
   .main-display {
-    width: 100%;
-    height: 50vh;
-    padding: 20px;
+    display: none;
   }
 
+  /* Show all images in a vertical layout */
   .carousel-wrapper {
     width: 100%;
-    padding: 15px;
+    padding: 0;
+    background: #f6f6f6;
+    height: auto;
   }
 
   .carousel {
-    height: 100px;
+    height: auto;
+    overflow: visible;
+    position: static;
+  }
+
+  .carousel-track {
+    position: static;
+    transform: none;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    pointer-events: auto;
+  }
+
+  .carousel img {
+    width: 100%;
     max-width: 100%;
+    height: auto;
+    max-height: none;
+    filter: none;
+    pointer-events: auto;
   }
 
-  .carousel-track {
-    gap: 8px;
-  }
-
-  .carousel img {
-    max-width: 85px;
-    max-height: 120px;
+  .carousel img.active {
+    border: none;
   }
 }
 
-@media (max-width: 480px) {
+/* Mobile (425px và xuống) */
+@media screen and (max-width: 425px) {
   .section3-collection-detail {
-    padding: 30px 0;
+    min-height: auto;
+    padding: 0;
   }
 
+  .gallery-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  /* Hide main display on mobile */
   .main-display {
-    height: 40vh;
-    min-height: 300px;
-    padding: 15px;
+    display: none;
   }
 
+  /* Show all images in a vertical layout */
   .carousel-wrapper {
-    padding: 10px;
+    width: 100%;
+    padding: 0;
+    background: #f6f6f6;
+    height: auto;
   }
 
   .carousel {
-    height: 80px;
-  }
-
-  .carousel img {
-    max-width: 70px;
-    max-height: 100px;
+    height: auto;
+    overflow: visible;
+    position: static;
   }
 
   .carousel-track {
-    gap: 6px;
-  }
-}
-
-@media (max-width: 360px) {
-  .section3-collection-detail {
-    padding: 20px 0;
-  }
-
-  .main-display {
-    height: 35vh;
-    min-height: 250px;
-    padding: 10px;
-  }
-
-  .carousel {
-    height: 70px;
+    position: static;
+    transform: none;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    pointer-events: auto;
   }
 
   .carousel img {
-    max-width: 60px;
-    max-height: 80px;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: none;
+    filter: none;
+    pointer-events: auto;
   }
 
-  .carousel-track {
-    gap: 5px;
+  .carousel img.active {
+    border: none;
   }
 }

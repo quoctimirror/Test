@@ -91,7 +91,6 @@ const Footer = () => {
         <div className="footer-content">
           <div className="footer-left">
             <div className="footer-section">
-              {/* <h3 className="heading-3 footer-title">DISCOVER</h3> */}
               <ul className="footer-links">
                 <li>
                   <a className="bodytext-3" href="/" onClick={handleHomeClick}>
@@ -138,43 +137,12 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="footer-center">
-            <div className="newsletter-section">
-              <h2 className="heading-1 newsletter-title">
-                ENTER <br />
-                THE UNIVERSE
-              </h2>
-              <p className="bodytext-6 newsletter-subtitle">
-                For a more personalized experience and exclusive news.
-              </p>
-              <div className="newsletter-form">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="email-input"
-                />
-                <ShineGlassButton
-                  onClick={handleSignUp}
-                  className="signup-button"
-                  width={123}
-                  height={57}
-                  theme="footer"
-                >
-                  Sign up
-                </ShineGlassButton>
-              </div>
-            </div>
-          </div>
-
           <div className="footer-right">
             <div className="footer-section">
-              {/* <h3 className="heading-3 footer-title">CONTACT</h3> */}
               <ul className="contact-info">
                 <li>
                   <a
-                    className="bodytext-3"
+                    className="bodytext-3--no-margin"
                     href="/contact"
                     onClick={handleContactClick}
                   >
@@ -183,25 +151,25 @@ const Footer = () => {
                 </li>
                 <li>
                   <a
-                    className="bodytext-3"
+                    className="bodytext-3--no-margin"
                     href="mailto:support@mirrorfuturediamond.com"
                   >
                     support@mirrorfuturediamond.com
                   </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="tel:+97.130.0938">
+                  <a className="bodytext-3--no-margin" href="tel:+97.130.0938">
                     +97.130.0938
                   </a>
                 </li>
                 <li>
-                  <a className="bodytext-3" href="#">
+                  <a className="bodytext-3--no-margin" href="#">
                     Book an appointment
                   </a>
                 </li>
                 <li>
                   <a
-                    className="bodytext-3"
+                    className="bodytext-3--no-margin"
                     href="/locations"
                     onClick={handleLocationClick}
                   >
@@ -209,6 +177,34 @@ const Footer = () => {
                   </a>
                 </li>
               </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="footer-center">
+          <div className="newsletter-section">
+            <h2 className="heading-1--no-margin newsletter-title">
+              ENTER <br />
+              THE UNIVERSE
+            </h2>
+            <p className="bodytext-6--no-margin newsletter-subtitle">
+              For a more personalized experience and exclusive news.
+            </p>
+            <div className="newsletter-form">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="email-input"
+              />
+              <ShineGlassButton
+                onClick={handleSignUp}
+                className="signup-button"
+                theme="footer"
+              >
+                Sign up
+              </ShineGlassButton>
             </div>
           </div>
         </div>
@@ -237,11 +233,11 @@ const Footer = () => {
           {/* Footer Bottom Left & Right - Inside footer-bottom */}
           <div className="footer-bottom-row">
             <div className="footer-bottom-left">
-              <p>All rights reserved © 2025</p>
+              <p className="bodytext-3--no-margin">All rights reserved © 2025</p>
             </div>
 
             <div className="footer-bottom-right">
-              <a className="legal-link">Legal mentions</a>
+              <a className="bodytext-3--no-margin legal-link">Legal mentions</a>
             </div>
           </div>
         </div>

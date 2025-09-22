@@ -190,7 +190,6 @@ html {
   color: white;
 }
 
-
 .tagline-bottom {
   display: flex;
   flex-direction: row;
@@ -232,7 +231,7 @@ html {
 /* Scroll down */
 .scroll-down {
   position: absolute;
-  bottom: 84px;
+  bottom: 48px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -310,7 +309,7 @@ html {
 /* Vetor Button */
 .vetor-button {
   position: absolute;
-  bottom: 84px;
+  bottom: 48px;
   right: 50px;
   z-index: 10;
   width: 58px;
@@ -408,7 +407,6 @@ html {
   .tagline-section {
     top: calc(82%);
   }
-
 }
 
 /* Full HD Desktop */
@@ -430,7 +428,6 @@ html {
   .tagline-section {
     top: calc(78%);
   }
-
 }
 
 /* Standard Laptop (1200px) */
@@ -443,20 +440,10 @@ html {
     width: 95px;
     height: 190px;
   }
-
-
-  .scroll-down {
-    bottom: 60px;
-  }
-
-  .vetor-button {
-    bottom: 60px;
-    right: 40px;
-  }
 }
 
-/* Small Laptop (1024px) */
-@media (max-width: 1024px) {
+/* Small Laptop (1023px) */
+@media (max-width: 1023px) {
   .main-logo {
     width: 90px;
     height: 180px;
@@ -466,9 +453,15 @@ html {
     top: calc(76%);
   }
 
-
   .tagline-top {
     font-size: 11px;
+  }
+
+  .scroll-down {
+    bottom: 24px;
+  }
+  .vetor-button {
+    bottom: 24px;
   }
 }
 
@@ -487,9 +480,9 @@ html {
     height: 140px;
   }
 
-  .logo-center {
-    top: 48%;
-  }
+  /* .logo-center {
+    top: 50.5%;
+  } */
 
   .tagline-section {
     top: 72vh;
@@ -501,7 +494,6 @@ html {
     margin-bottom: 6px;
     letter-spacing: 1px;
   }
-
 
   .tagline-bottom {
     gap: 8px;
@@ -517,7 +509,6 @@ html {
 
   /* Buttons */
   .scroll-down {
-    bottom: 40px;
     width: 48px;
     height: 48px;
   }
@@ -527,13 +518,7 @@ html {
     height: 46px;
   }
 
-  .scroll-down button img {
-    width: 24px;
-    height: 24px;
-  }
-
   .vetor-button {
-    bottom: 40px;
     right: 25px;
     width: 48px;
     height: 48px;
@@ -543,11 +528,11 @@ html {
     width: 46px;
     height: 46px;
   }
-
+  /* 
   .vetor-button button img {
     width: 22px;
     height: 22px;
-  }
+  } */
 
   /* Next section */
   .next-section {
@@ -578,9 +563,9 @@ html {
     height: 120px;
   }
 
-  .logo-center {
-    top: 45%;
-  }
+  /* .logo-center {
+    top: 50.5%;
+  } */
 
   .tagline-section {
     top: 68vh;
@@ -593,14 +578,12 @@ html {
     letter-spacing: 0.8px;
   }
 
-
   .tagline-bottom {
     gap: 6px;
   }
 
   /* Buttons smaller */
   .scroll-down {
-    bottom: 30px;
     width: 42px;
     height: 42px;
   }
@@ -610,13 +593,7 @@ html {
     height: 40px;
   }
 
-  .scroll-down button img {
-    width: 20px;
-    height: 20px;
-  }
-
   .vetor-button {
-    bottom: 30px;
     right: 20px;
     width: 42px;
     height: 42px;
@@ -627,10 +604,10 @@ html {
     height: 40px;
   }
 
-  .vetor-button button img {
+  /* .vetor-button button img {
     width: 18px;
     height: 18px;
-  }
+  } */
 
   /* Next section mobile */
   .next-section {
@@ -670,7 +647,6 @@ html {
     letter-spacing: 0.6px;
   }
 
-
   /* Even smaller buttons */
   .scroll-down,
   .vetor-button {
@@ -684,11 +660,11 @@ html {
     height: 36px;
   }
 
-  .scroll-down button img,
+  /* .scroll-down button img,
   .vetor-button button img {
     width: 16px;
     height: 16px;
-  }
+  } */
 
   .vetor-button {
     right: 15px;

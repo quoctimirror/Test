@@ -30,44 +30,64 @@
 /*    MỚI: CSS ĐƠN GIẢN CHO HIỆU ỨNG SLIDER                      */
 /* ============================================================ */
 
-/* 1. Định nghĩa keyframe cho hiệu ứng fade in từ phải sang trái */
+/* 1. Định nghĩa keyframe cho hiệu ứng fade in từ phải, dừng, rồi fade out sang trái */
 @keyframes slideInFromRight {
-  from {
+  0% {
     opacity: 0;
     transform: translateX(50px);
   }
 
-  to {
+  40% {
     opacity: 1;
     transform: translateX(0);
   }
+
+  60% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
 }
 
-/* 2. Định nghĩa keyframe cho hiệu ứng fade in từ trái sang phải */
+/* 2. Định nghĩa keyframe cho hiệu ứng fade in từ trái, dừng, rồi fade out sang phải */
 @keyframes slideInFromLeft {
-  from {
+  0% {
     opacity: 0;
     transform: translateX(-50px);
   }
 
-  to {
+  40% {
     opacity: 1;
     transform: translateX(0);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(50px);
   }
 }
 
 /* 3. Tạo các class để áp dụng animation */
 .slide-effect-right {
-  animation: slideInFromRight 0.5s ease-out forwards;
+  animation: slideInFromRight 2.5s ease-in-out forwards;
 }
 
 .slide-effect-left {
-  animation: slideInFromLeft 0.5s ease-out forwards;
+  animation: slideInFromLeft 2.5s ease-in-out forwards;
 }
 
 /* Legacy class for backward compatibility */
 .slide-effect {
-  animation: slideInFromRight 0.5s ease-out forwards;
+  animation: slideInFromRight 2.5s ease-in-out forwards;
 }
 
 /* Định nghĩa animation nhún nhảy cho mũi tên */
@@ -106,7 +126,6 @@
 .hero-section-wrapper {
   position: relative;
   width: 100%;
-  height: 100vh;
   overflow: hidden;
 }
 
@@ -137,7 +156,7 @@
 .hero-text-container div {
   font-size: 50px;
   line-height: 105%;
-  background: linear-gradient(180deg, #AFAFAF 0%, #3B4A4D 100%);
+  background: linear-gradient(180deg, #afafaf 0%, #3b4a4d 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -146,7 +165,7 @@
 /* Style riêng cho "TREASURE" */
 .text-treasure {
   font-family: "Saol Display";
-  background: linear-gradient(180deg, #AFAFAF 0%, #3B4A4D 100%);
+  background: linear-gradient(180deg, #afafaf 0%, #3b4a4d 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -163,7 +182,7 @@
   font-weight: 300;
   line-height: 105%;
   /* 52.5px */
-  background: linear-gradient(180deg, #AFAFAF 0%, #3B4A4D 100%);
+  background: linear-gradient(180deg, #afafaf 0%, #3b4a4d 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -176,7 +195,7 @@
   text-align: right;
   padding-left: 4em;
   font-family: "Saol Display";
-  background: linear-gradient(180deg, #AFAFAF 0%, #3B4A4D 100%);
+  background: linear-gradient(180deg, #afafaf 0%, #3b4a4d 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -301,23 +320,6 @@
   text-align: center;
 }
 
-/* Tiêu đề "AURORA" */
-.product-title {
-  letter-spacing: 0.01rem;
-  /* Giảm khoảng cách chữ */
-  margin: 0 0 0 0;
-
-  /* Saol_24pt_light */
-  font-family: "Saol Display";
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 300;
-  line-height: normal;
-  text-transform: uppercase;
-  color: #ffffff;
-  text-align: center;
-}
-
 /* Đoạn mô tả sản phẩm */
 .product-description {
   font-family: "BT Beau Sans";
@@ -360,29 +362,17 @@
 }
 
 .collection-page .section-2 .collection-hero-subtitle {
-  font-family: "BT Beau Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 1;
-  letter-spacing: 0%;
-  text-align: center;
   color: #797979;
+  text-align: center;
   text-transform: uppercase;
   margin: 0 0 12px 0;
-  padding: 0;
 }
 
 .collection-page .section-2 .collection-hero-description {
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
   color: #797979;
-  line-height: 1.4;
   max-width: 600px;
   text-align: center;
   margin: 0 0 36px 0;
-  padding: 0;
 }
 
 .collection-page .section-2 .collection-hero-description strong {
@@ -397,21 +387,9 @@
   line-height: 1;
 }
 
-.collection-page .section-2 .collection-hero-title .text-treasure {
-  font-family: "Saol Display", serif;
-  font-weight: 300;
-  font-style: normal;
-  font-size: 64px;
-  line-height: 1;
-  letter-spacing: -3%;
-  text-align: center;
+.collection-page .section-2 .collection-hero-title .collection-title-text {
   color: #ffffff;
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  background-clip: initial;
-  -webkit-background-clip: initial;
-  -webkit-text-fill-color: initial;
+  text-align: center;
 }
 
 /* Button styles moved to common Button component */
@@ -421,39 +399,31 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  margin-top: 36px;
-  color: #797979;
-  font-family: "BT Beau Sans", sans-serif;
+  margin-top: 12px;
 }
 
 .hover-underline {
-  font-family: "BT Beau Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 120%;
-  letter-spacing: 0%;
-  text-align: left;
-  color: #ffffff80;
+  color: rgba(255, 255, 255, 0.7);
   position: relative;
   display: inline-block;
+  transition: color 0.3s ease;
 }
 
 .hover-underline::after {
   content: "";
   position: absolute;
   width: 100%;
-  height: 1px;
-  background: #ffffff;
-  bottom: -5px;
+  height: 2px;
+  background: white;
+  bottom: -2px;
   left: 0;
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.4s ease-out;
+  transition: transform 0.6s ease-out;
 }
 
 .hover-underline:hover {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 1);
 }
 
 .hover-underline:hover::after {
@@ -468,7 +438,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-x: hidden; /* Ngăn overflow ngang */
+  /* overflow-x: hidden; Ngăn overflow ngang */
   padding: 0;
   box-sizing: border-box;
   background: transparent;
@@ -530,50 +500,33 @@
   .hero-text-container div {
     font-size: 48px;
   }
+}
 
-  .collection-page .section-2 .collection-hero-title .text-treasure {
-    font-size: 60px;
+/* Tablet - 426px to 1023px */
+@media screen and (min-width: 426px) and (max-width: 1023px) {
+  .hover-underline::after {
+    bottom: -1px; /* Slightly closer for tablet */
+  }
+  .shop-now-button {
+    margin-top: 24px;
   }
 }
 
-/* Desktop - 1200px */
-@media screen and (max-width: 1200px) {
-  .slider-main-row {
-    width: 100%;
-    max-width: 650px;
+/* Mobile - up to 425px */
+@media screen and (max-width: 425px) {
+  .hover-underline::after {
+    bottom: -3px; /* 3px gap from text on mobile */
+    height: 1.5px; /* Thinner on mobile */
   }
-
-  .hero-text-container {
-    top: 22vh;
-    left: 8.5vw;
-  }
-
-  .hero-text-container div {
-    font-size: 45px;
-  }
-
-  .collection-page .section-2 .collection-hero-title .text-treasure {
-    font-size: 56px;
-  }
-
-  .product-slider {
-    width: 380px;
-    height: 420px;
-    max-width: 380px;
-  }
-
-  .collection-content-panel.full-width .product-slider {
-    width: 380px;
-    height: 420px;
-    max-width: 380px;
+  .shop-now-button {
+    margin-top: 12px;
   }
 }
 
-/* Tablet landscape (1024px và xuống) */
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1023px) {
   .slider-main-row {
+    margin: 0 auto 120px auto;
     width: 100%;
-    max-width: 550px;
   }
 
   .hero-text-container {
@@ -585,10 +538,6 @@
     font-size: 42px;
   }
 
-  .collection-page .section-2 .collection-hero-title .text-treasure {
-    font-size: 52px;
-  }
-
   .product-slider {
     width: 360px;
     height: 400px;
@@ -596,9 +545,8 @@
   }
 
   .collection-content-panel.full-width .product-slider {
-    width: 360px;
+    max-width: 62%;
     height: 400px;
-    max-width: 360px;
   }
 
   .collection-page .product-image {
@@ -615,12 +563,12 @@
   }
 }
 
-/* Tablet portrait (768px và xuống) */
-@media screen and (max-width: 768px) {
+/* Tablet (426px - 1023px) */
+@media screen and (min-width: 426px) and (max-width: 1023px) {
   .section-2 {
     flex-direction: column;
     min-height: auto;
-    padding: 3rem 0;
+    padding: 0;
   }
 
   .collection-image-panel,
@@ -637,9 +585,26 @@
     padding: 1.5rem;
   }
 
+  /* Each panel takes full viewport height and centers content */
+  .collection-page .section-2 .collection-hero-content {
+    min-height: 100vh;
+    width: 62%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
   .collection-content-panel.full-width {
-    margin-top: 0;
-    margin-bottom: 180px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 2rem;
   }
 
   .hero-text-container {
@@ -659,31 +624,13 @@
     padding-left: 3.5em;
   }
 
-  .collection-page .section-2 .collection-hero-title .text-treasure {
-    font-size: 45px;
-  }
-
-  .collection-page .section-2 .collection-hero-content {
-    margin: 180px auto 180px auto;
-    padding: 0;
-  }
-
   .product-slider {
     width: 320px;
-    height: 380px;
-    max-width: 320px;
-  }
-
-  .collection-content-panel.full-width .product-slider {
-    width: 320px;
-    height: 380px;
     max-width: 320px;
   }
 
   .slider-main-row {
     width: 100%;
-    max-width: 600px;
-    margin-bottom: 1.5rem;
   }
 
   .collection-page .product-image {
@@ -701,11 +648,6 @@
     height: 45px;
   }
 
-  .product-title {
-    font-size: 22px;
-    margin-bottom: 1rem;
-  }
-
   .product-description {
     font-size: 15px;
     max-width: 380px;
@@ -715,84 +657,12 @@
   .other-collections-subtitle {
     margin-bottom: 2.5rem;
   }
-
 }
 
-/* Mobile landscape (640px và xuống) */
-@media screen and (max-width: 640px) {
-  .slider-main-row {
-    width: 100%;
-    max-width: 480px;
-  }
-
-  .hero-text-container {
-    top: 12vh;
-    left: 5vw;
-  }
-
-  .hero-text-container div {
-    font-size: 28px;
-  }
-
-  .text-of-the {
-    padding-left: 2em;
-  }
-
-  .text-orient {
-    padding-left: 3em;
-  }
-
-  .collection-page .section-2 .collection-hero-title .text-treasure {
-    font-size: 38px;
-  }
-
-  .collection-content-panel {
-    padding: 1rem;
-  }
-
-  .product-slider {
-    width: 280px;
-    height: 350px;
-    max-width: 280px;
-  }
-
-  .collection-content-panel.full-width .product-slider {
-    width: 280px;
-    height: 350px;
-    max-width: 280px;
-  }
-
-  .collection-page .product-image {
-    width: 150px !important;
-    height: 230px !important;
-  }
-
-  .product-image-container {
-    margin-top: 0;
-    padding: 0 0.5rem;
-  }
-
-  .slider-arrow {
-    width: 42px;
-    height: 42px;
-    margin-top: 0;
-  }
-
-  .product-title {
-    font-size: 20px;
-  }
-
-  .product-description {
-    font-size: 14px;
-    max-width: 320px;
-  }
-
-}
-
-/* Mobile portrait (480px và xuống) */
-@media screen and (max-width: 480px) {
+/* Mobile (425px và xuống) */
+@media screen and (max-width: 425px) {
   .section-2 {
-    padding: 2rem 0;
+    padding: 0;
   }
 
   .hero-text-container {
@@ -812,21 +682,16 @@
     padding-left: 2.5em;
   }
 
-  .collection-page .section-2 .collection-hero-title .text-treasure {
-    font-size: 32px;
-  }
-
+  /* Each panel takes full viewport height and centers content */
   .collection-page .section-2 .collection-hero-content {
-    margin: 120px auto 120px auto;
-    padding: 0;
-  }
-
-  .collection-page .section-2 .collection-hero-subtitle {
-    font-size: 14px;
-  }
-
-  .collection-page .section-2 .collection-hero-description {
-    font-size: 14px;
+    min-height: 100vh;
+    width: 77%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 1.5rem;
   }
 
   .collection-image-panel {
@@ -839,8 +704,13 @@
   }
 
   .collection-content-panel.full-width {
-    margin-top: 0;
-    margin-bottom: 120px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 1.5rem;
   }
 
   .product-slider {
@@ -850,15 +720,13 @@
   }
 
   .collection-content-panel.full-width .product-slider {
-    width: 260px;
     height: 320px;
-    max-width: 260px;
+    max-width: 77%;
   }
 
   .slider-main-row {
     width: 100%;
-    max-width: 400px;
-    margin-bottom: 1rem;
+    margin: 0 auto 1.5rem auto;
   }
 
   .collection-page .product-image {
@@ -877,11 +745,6 @@
     margin-top: 0;
   }
 
-  .product-title {
-    font-size: 18px;
-    margin-bottom: 0.8rem;
-  }
-
   .product-description {
     font-size: 13px;
     max-width: 280px;
@@ -893,7 +756,6 @@
     margin-bottom: 2rem;
   }
 
-
   .section-3 {
     padding: 0;
     min-height: auto;
@@ -904,119 +766,12 @@
   }
 }
 
-/* Mobile nhỏ (360px và xuống) */
-@media screen and (max-width: 360px) {
-  .slider-main-row {
-    width: 100%;
-    max-width: 320px;
-  }
-
-  .section-2 {
-    padding: 1.5rem 0;
-  }
-
-  .hero-text-container {
-    top: 8vh;
-    left: 3vw;
-  }
-
-  .hero-text-container div {
-    font-size: 20px;
-  }
-
-  .text-of-the {
-    padding-left: 1.2em;
-  }
-
-  .text-orient {
-    padding-left: 2em;
-  }
-
-  .collection-page .section-2 .collection-hero-title .text-treasure {
-    font-size: 28px;
-  }
-
-  .collection-page .section-2 .collection-hero-content {
-    margin: 80px auto 80px auto;
-    padding: 0;
-  }
-
-  .collection-page .section-2 .collection-hero-subtitle {
-    font-size: 12px;
-  }
-
-  .collection-page .section-2 .collection-hero-description {
-    font-size: 12px;
-  }
-
-  .collection-content-panel {
-    padding: 0.8rem 0.4rem;
-  }
-
-  .product-slider {
-    width: 240px;
-    height: 300px;
-    max-width: 240px;
-  }
-
-  .collection-content-panel.full-width .product-slider {
-    width: 240px;
-    height: 300px;
-    max-width: 240px;
-  }
-
-  .collection-page .product-image {
-    width: 100px !important;
-    height: 155px !important;
-  }
-
-  .product-image-container {
-    margin-top: 0;
-    padding: 0 0.2rem;
-  }
-
-  .slider-arrow {
-    width: 35px;
-    height: 35px;
-    margin-top: 0;
-  }
-
-  .product-title {
-    font-size: 16px;
-  }
-
-  .product-description {
-    font-size: 12px;
-    max-width: 250px;
-    line-height: 1.4;
-  }
-
-  .scroll-down-arrow {
-    width: 45px;
-    height: 45px;
-    bottom: 30px;
-  }
-
-  .other-collections-subtitle {
-    margin-bottom: 1.5rem;
-  }
-
-
-  .section-3 {
-    padding: 0;
-  }
-
-  .other-collections-content {
-    padding: 120px 1rem;
-  }
-}
-
 /* Nút mũi tên của slider */
 .slider-arrow {
-  background-color: transparent;
-  backdrop-filter: blur(2.5px);
-  -webkit-backdrop-filter: blur(2.5px);
-  border: 1px solid #797979;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -1027,7 +782,7 @@
   color: #797979;
   /* Màu mũi tên */
   flex-shrink: 0;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: all 0.3s ease;
   /* Đẩy arrow xuống dưới */
   margin-top: 0;
   /* Thêm khoảng cách từ trên xuống */
@@ -1035,7 +790,9 @@
 
 .slider-arrow:hover {
   background: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
   color: #000000;
+  transform: translateY(-1px);
 }
 
 .slider-arrow:hover path {

@@ -136,8 +136,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
-  padding-inline: 1.5em;
-  padding-block: 0.875em;
+  padding: 20px 36px; /* Fixed padding like in the image */
   pointer-events: none;
   z-index: 2;
   text-align: center;
@@ -290,6 +289,13 @@
 
 /* ========== RESPONSIVE BEHAVIOR ========== */
 
+/* Mobile - up to 425px */
+@media (max-width: 425px) {
+  .shine-glass-button .button-text {
+    padding: 18px 24px; /* Smaller padding for mobile as shown in image */
+  }
+}
+
 @media (hover: none) and (pointer: coarse) {
   .border-layer,
   .shine-glass-button:hover .border-layer,
@@ -304,9 +310,9 @@
 
 /* ========== ACTIVE STATE ROTATION ========== */
 
-.shine-button-wrap:has(.shine-glass-button:active) {
+/* .shine-button-wrap:has(.shine-glass-button:active) {
   transform: rotate3d(1, 0, 0, 25deg);
-}
+} */
 
 /* ========== SIZE VARIANTS ========== */
 

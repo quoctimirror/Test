@@ -1,6 +1,6 @@
 .services-section3 {
   height: 100vh;
-  background-image: url("/public/services/section_3.jpg");
+  background-image: url("/services/section_3.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -8,7 +8,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "BT Beau Sans", sans-serif;
   filter: grayscale(100%);
 }
 
@@ -40,56 +39,39 @@
   gap: 12px;
 }
 
-.section3-title {
-  font-family: "Saol Display", serif;
-  font-size: 64px;
-  font-weight: 300;
-  line-height: 90%;
-  letter-spacing: -3%;
-  text-align: center;
-  color: #ffffff;
-  margin: 0;
-  text-transform: uppercase;
-}
 
-.section3-description {
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  font-style: normal;
-  color: #ffffff;
-  line-height: 110%;
-  letter-spacing: 0%;
-  text-align: center;
-  margin: 0;
-  opacity: 1;
-}
 
-@media (max-width: 768px) {
-  .section3-title {
-    font-size: 36px;
-    letter-spacing: 0%;
-  }
+/*
+============================================================
+    RESPONSIVE DESIGN - 3 BREAKPOINTS
+============================================================
+*/
 
-  .section3-description {
-    font-size: 14px;
-    padding: 0 1rem;
-    br {
-      display: none;
-    }
-  }
-
+/* Tablet (426px - 1023px) */
+@media screen and (min-width: 426px) and (max-width: 1023px) {
   .section3-container {
-    padding: 0 1rem;
+    padding: 0 2rem;
+  }
+
+  .section3-content {
+    width: 62%;
+    gap: 15px;
   }
 }
 
-@media (max-width: 480px) {
-  .section3-title {
-    font-size: 28px;
+/* Mobile (425px và xuống) */
+@media screen and (max-width: 425px) {
+  .section3-container {
+    padding: 0 1.5rem;
   }
 
-  .section3-description {
-    font-size: 12px;
+  .section3-content {
+    width: 77%;
+    gap: 12px;
+  }
+
+  /* Hide line breaks on mobile */
+  .bodytext-3--no-margin br {
+    display: none;
   }
 }

@@ -116,11 +116,8 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
             <h2 className="heading-1 same-collection-title">MORE GEMS</h2>
             <p className="bodytext-4 same-collection-description">
               Mirror's curation of visionary designs - where each piece embodies
-              the essence of future
-              <br />
-              luxury. From bold signatures to refined silhouettes, these are the
-              diamonds reimagined for
-              <br />a new era.
+              the essence of future luxury. From bold signatures to refined
+              silhouettes, these are the diamonds reimagined for a new era.
             </p>
           </div>
 
@@ -143,13 +140,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
 
       {showViewProductButton && (
         <div className="view-product-button-container">
-          <ShineGlassButton
-            width={189}
-            height={57}
-            fontSize={14}
-            theme="light"
-            onClick={handleViewAllProducts}
-          >
+          <ShineGlassButton theme="light" onClick={handleViewAllProducts}>
             View all products
           </ShineGlassButton>
         </div>

@@ -289,13 +289,16 @@ const Section4CollectionDetail = ({
       <section className="collection-detail-section-gsap" ref={sectionRef}>
         <div className="collection-detail-container" ref={containerRef}>
           <div className="collection-detail-header">
-            <h2 className="collection-detail-title heading-1">
+            <h2 className="section4-collection-title heading-1--no-margin">
               EXPLORE THIS COLLECTION GEMS
             </h2>
           </div>
 
           <div className="horizontal-scroll-wrapper">
-            <div className="collection-detail-grid-gsap" ref={scrollContainerRef}>
+            <div
+              className="collection-detail-grid-gsap"
+              ref={scrollContainerRef}
+            >
               {loading ? (
                 // Show loading state
                 Array(4)
@@ -344,9 +347,6 @@ const Section4CollectionDetail = ({
       {showViewProductButton && (
         <div className="collection-detail-button-container">
           <ShineGlassButton
-            width={189}
-            height={57}
-            fontSize={14}
             theme="light"
             onClick={handleViewAllProducts}
           >

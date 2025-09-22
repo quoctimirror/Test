@@ -104,9 +104,6 @@ const TradeInUpgrade = () => {
         <ShineGlassButton
           className="services-cta"
           theme="light"
-          width={220}
-          height={57}
-          fontSize={14}
         >
           Book an Appointment
         </ShineGlassButton>

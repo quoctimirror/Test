@@ -25,17 +25,17 @@
   grid-template-columns: 1fr 1fr !important;
   align-items: center !important;
   height: 100% !important;
-  
+
   /* CSS Containment - ngăn chặn side effects */
   contain: layout style;
-  
+
   /* Isolation - tạo stacking context riêng */
   isolation: isolate;
-  
+
   /* Transform 3D để tạo layer riêng */
   transform: translateZ(0);
   will-change: contents;
-  
+
   /* Đảm bảo không bị override */
   position: relative !important;
   box-sizing: border-box !important;
@@ -107,11 +107,11 @@
 
 .hero-title {
   color: #000000 !important;
-  font-family: var(--font-saol) !important;
-  font-size: 64px !important;
-  font-weight: 300 !important;
-  line-height: 110% !important;
-  letter-spacing: -1.28px !important;
+  /* font-family: var(--font-saol) !important; */
+  /* font-size: 64px !important; */
+  /* font-weight: 300 !important;
+  line-height: 110% !important; */
+  /* letter-spacing: -1.28px !important; */
   text-transform: uppercase !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -121,9 +121,9 @@
 
 .hero-description {
   font-family: "BT Beau Sans", sans-serif !important;
-  font-size: 16px !important;
+  /* font-size: 16px !important;
   font-weight: 400 !important;
-  line-height: 150% !important;
+  line-height: 150% !important; */
   color: rgba(0, 0, 0, 0.7) !important;
   margin: 0 0 24px 0 !important;
   padding: 0 !important;
@@ -529,7 +529,7 @@
   font-size: 64px !important;
   font-weight: 300 !important;
   line-height: 110% !important;
-  letter-spacing: -1.28px !important;
+  /* letter-spacing: -1.28px !important; */
   text-transform: uppercase !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -565,10 +565,7 @@
 .hero-content .hero-date.bodytext-4--no-margin {
   color: rgba(0, 0, 0, 0.6) !important;
   text-transform: uppercase !important;
-  letter-spacing: 1px !important;
   margin-bottom: 36px !important;
   display: block !important;
-  font-size: 14px !important;
-  font-weight: 400 !important;
   text-align: center !important;
 }

@@ -143,7 +143,9 @@ const Register = () => {
   return (
     <div className="register-container">
       <div className="register-form-wrapper">
-        <h1 className="heading-1 register-title">CREATE YOUR ACCOUNT</h1>
+        <h1 className="heading-1--no-margin register-title">
+          CREATE YOUR ACCOUNT
+        </h1>
         <form className="register-form" onSubmit={handleSubmit} noValidate>
           {/* Hiển thị lỗi chung của form */}
           {errors.form && (
@@ -337,9 +339,6 @@ const Register = () => {
           </p>
           <div className="create-account-button-wrapper">
             <ShineGlassButton
-              width={300}
-              height={50}
-              fontSize={14}
               theme="shine"
               onClick={() => {}}
               className="create-account-button"

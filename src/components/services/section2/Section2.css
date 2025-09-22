@@ -3,7 +3,6 @@
   position: relative;
   height: 400vh; /* Quadruple height for buffer zones */
   background: white;
-  font-family: "BT Beau Sans", sans-serif;
 }
 
 .section2-sticky-container {
@@ -57,7 +56,6 @@
 }
 
 .section2-content {
-  padding: 4rem;
   max-width: 700px;
   width: 100%;
   display: flex;
@@ -78,6 +76,7 @@
   flex-direction: column;
   align-items: center;
   gap: 36px;
+  width: 62.5%;
 }
 
 .section2-header {
@@ -113,155 +112,187 @@
   pointer-events: auto;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .section2-content {
-    padding: 3rem;
-    max-width: 600px;
-  }
+/*
+============================================================
+    RESPONSIVE DESIGN - 3 BREAKPOINTS
+============================================================
+*/
 
-  .section2-title {
-    font-size: 56px;
-    letter-spacing: -2.5%;
-  }
-
-  .section2-subtitle {
-    font-size: 15px;
-  }
-
-  .section2-description {
-    font-size: 14px;
-    max-width: 350px;
-  }
-}
-
-@media (max-width: 992px) {
-  .section2-wrapper {
-    height: 300vh;
-  }
-
-  .section2-content {
-    padding: 2.5rem;
-    max-width: 550px;
-  }
-
-  .section2-title {
-    font-size: 48px;
-    letter-spacing: -2%;
-  }
-
-  .section2-subtitle {
-    font-size: 15px;
-  }
-
-  .section2-description {
-    font-size: 13px;
-    max-width: 320px;
-  }
-
-}
-
-@media (max-width: 768px) {
+/* Tablet (426px - 1023px) */
+@media screen and (min-width: 426px) and (max-width: 1023px) {
   .section2-wrapper {
     height: auto;
-    min-height: 100vh;
   }
 
   .section2-sticky-container {
     position: relative;
-    grid-template-columns: 1fr;
     height: auto;
+    display: block;
   }
 
+  /* Hide the original containers */
   .section2-sticky-images {
-    height: 50vh;
-    min-height: 400px;
-    order: 1;
+    display: none;
   }
 
   .section2-sticky-content {
-    height: auto;
-    order: 2;
-    position: relative;
-    min-height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200vh;
+    pointer-events: none;
   }
 
-  .section2-content-layer {
+  /* Create two separate screens with overlays applied directly to background images */
+  .section2-sticky-container::before {
+    content: "";
+    display: block;
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url("/services/Product care & Repair_960x1080.jpg");
+    background-size: cover;
+    background-position: center;
     position: relative;
-    height: auto;
-    padding: 3rem 0;
+  }
+
+  .section2-sticky-container::after {
+    content: "";
+    display: block;
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url("/services/Trade in_960x1080.jpg");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+
+  /* Show content layers positioned absolutely */
+  .section2-content-1 {
+    display: flex !important;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    transform: none !important;
+    opacity: 1 !important;
+    z-index: 20;
+    pointer-events: auto !important;
   }
 
   .section2-content-2 {
-    display: none;
+    display: flex !important;
+    position: absolute !important;
+    top: 100vh;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    transform: none !important;
+    opacity: 1 !important;
+    z-index: 20;
+    pointer-events: auto !important;
   }
 
   .section2-content {
-    padding: 2rem;
-    max-width: 100%;
-  }
-
-  .section2-title {
-    font-size: 40px;
-    letter-spacing: -1.5%;
-    white-space: normal;
-  }
-
-  .section2-subtitle {
-    font-size: 14px;
-  }
-
-  .section2-description {
-    font-size: 13px;
-    max-width: 350px;
-  }
-
-
-  /* Disable transforms on mobile */
-  .section2-image-layer {
-    transform: none !important;
-    opacity: 1 !important;
-  }
-
-  .section2-image-2 {
-    display: none;
-  }
-
-  .section2-content-layer {
-    opacity: 1 !important;
-    transform: none !important;
+    padding: 2.5rem;
+    max-width: 62%;
   }
 }
 
-@media (max-width: 480px) {
-  .section2-sticky-images {
-    height: 45vh;
-    min-height: 300px;
+/* Mobile (425px và xuống) */
+@media screen and (max-width: 425px) {
+  .section2-wrapper {
+    height: auto;
+    display: flex;
+    flex-direction: column;
   }
 
-  .section2-content-layer {
-    padding: 2rem 0;
+  .section2-sticky-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+
+  /* Hide the original containers and create new layout */
+  .section2-sticky-images {
+    display: none;
+  }
+
+  .section2-sticky-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200vh;
+    pointer-events: none;
+  }
+
+  /* Create new screen structure with black overlay */
+  .section2-sticky-container::before {
+    content: "";
+    display: block;
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url("/services/Product care & Repair_960x1080.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .section2-sticky-container::after {
+    content: "";
+    display: block;
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url("/services/Trade in_960x1080.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* Position content on top of images */
+  .section2-content-1 {
+    display: flex !important;
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    transform: none !important;
+    opacity: 1 !important;
+    z-index: 20;
+    pointer-events: auto !important;
+  }
+
+  .section2-content-2 {
+    display: flex !important;
+    position: absolute !important;
+    top: 100vh;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    transform: none !important;
+    opacity: 1 !important;
+    z-index: 20;
+    pointer-events: auto !important;
   }
 
   .section2-content {
     padding: 1.5rem;
+    max-width: 77%;
   }
-
-  .section2-title {
-    font-size: 32px;
-    letter-spacing: -1%;
-  }
-
-  .section2-subtitle {
-    font-size: 13px;
-  }
-
-  .section2-description {
-    font-size: 12px;
-    max-width: 300px;
-    line-height: 1.5;
-  }
-
 
   .section2-header-description {
     gap: 20px;
@@ -273,37 +304,5 @@
 
   .section2-header {
     gap: 12px;
-  }
-}
-
-@media (max-width: 360px) {
-  .section2-sticky-images {
-    height: 40vh;
-    min-height: 280px;
-  }
-
-  .section2-content {
-    padding: 1rem;
-  }
-
-  .section2-title {
-    font-size: 28px;
-    letter-spacing: -0.5%;
-  }
-
-  .section2-subtitle {
-    font-size: 12px;
-  }
-
-  .section2-description {
-    font-size: 11px;
-    max-width: 250px;
-  }
-}
-
-/* Override cho màn hình 1440x900 - giảm font size của section2-title heading-1--no-margin */
-@media (max-width: 1440px) and (max-height: 900px) {
-  .section2-title.heading-1--no-margin {
-    font-size: clamp(32px, 5.5vw, 58px) !important;
   }
 }

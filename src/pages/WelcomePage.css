@@ -5,6 +5,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -349,6 +350,8 @@
   z-index: 3;
   text-align: center;
   animation: fadeInUp 1s ease-out 1.7s both;
+  /* Ensure text is visible on mobile browsers */
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .bottom-text-line1,
@@ -434,7 +437,14 @@
   }
 
   .welcome-bottom-text {
-    bottom: 40px;
+    bottom: 40px; /* Increased from 40px to avoid browser UI */
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+
+  /* Ensure page uses dynamic viewport height */
+  .welcome-page {
+    height: 100dvh;
+    min-height: 100dvh;
   }
 }
 
@@ -443,5 +453,8 @@
 }
 
 /* Very Small Mobile - below 320px */
-@media (max-width: 319px) {
+@media (min-width: 426px) and (max-width: 1023px) {
+  .welcome-subtitle {
+    font-size: 20px;
+  }
 }

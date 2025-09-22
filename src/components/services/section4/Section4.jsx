@@ -153,9 +153,6 @@ const Section4 = () => {
                 <ShineGlassButton
                   className="section4-cta"
                   theme="light"
-                  width={137}
-                  height={57}
-                  fontSize={14}
                   onClick={handleReturnExchangeClick}
                 >
                   See more
@@ -203,9 +200,6 @@ const Section4 = () => {
                 <ShineGlassButton
                   className="section4-cta"
                   theme="light"
-                  width={137}
-                  height={57}
-                  fontSize={14}
                   onClick={handleSizingGuideClick}
                 >
                   See more
@@ -244,9 +238,6 @@ const Section4 = () => {
                 <ShineGlassButton
                   className="section4-cta"
                   theme="light"
-                  width={137}
-                  height={57}
-                  fontSize={14}
                   onClick={handleWarrantyInfoClick}
                 >
                   See more
@@ -255,6 +246,9 @@ const Section4 = () => {
             </div>
           </div>
         </div>
+
+        {/* Third screen div for mobile/tablet responsive */}
+        <div className="section4-screen-3"></div>
       </div>
     </div>
   );

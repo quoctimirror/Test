@@ -10,7 +10,7 @@
 .collection-section-4-gsap {
   width: 100%;
   min-height: 100vh;
-  padding: 200px 0 24px !important;
+  padding: 240px 0 24px !important;
   background: rgba(246, 246, 246, 1);
   box-sizing: border-box;
   position: relative;
@@ -37,8 +37,9 @@
 }
 
 .same-collection-header {
+  max-width: 905px;
   text-align: center;
-  margin-bottom: 60px;
+  margin: 0 auto 60px auto;
 }
 
 .same-collection-title {
@@ -103,95 +104,26 @@
   transform: scale(1.1);
 }
 
-/* Desktop 1920x1080 */
-@media (min-width: 1920px) and (min-height: 1080px) {
-  .product-card {
-    flex: 0 0 447px;
-  }
-
-  .product-image {
-    width: 447px;
-    height: 559px;
-  }
+/* View Product Button Container */
+.view-product-button-container {
+  display: flex;
+  justify-content: center;
+  background: rgba(246, 246, 246, 1);
+  padding-top: 36px;
+  padding-bottom: 120px;
 }
 
-/* Large desktop */
-@media (min-width: 1440px) and (max-width: 1919px) {
-  .product-card {
-    flex: 0 0 380px;
-  }
+/*
+============================================================
+    RESPONSIVE DESIGN - 3 BREAKPOINTS
+============================================================
+*/
 
-  .product-image {
-    width: 380px;
-    height: 475px;
-  }
-}
-
-/* Medium desktop */
-@media (min-width: 1024px) and (max-width: 1439px) {
-  .product-card {
-    flex: 0 0 350px;
-  }
-
-  .product-image {
-    width: 350px;
-    height: 438px;
-  }
-}
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .same-collection-title {
-    /* Font-size responsive cho heading-1 */
-    font-size: 56px;
-  }
-
-  .same-collection-description {
-    /* Body-text-4 giữ nguyên font-size 14px */
-  }
-}
-
-@media (max-width: 1023px) {
-  .product-card {
-    flex: 0 0 380px;
-    height: fit-content;
-  }
-
-  .product-image {
-    width: 380px;
-    height: 475px;
-  }
-}
-
-@media (max-width: 992px) {
+/* Tablet (426px - 1023px) */
+@media screen and (min-width: 426px) and (max-width: 1023px) {
   .collection-section-4,
   .collection-section-4-gsap {
-    padding: 70px 0;
-  }
-
-  .same-collection-header {
-    margin-bottom: 30px;
-  }
-
-  .same-collection-title {
-    font-size: 52px;
-  }
-
-  .product-card {
-    flex: 0 0 350px;
-    height: fit-content;
-  }
-
-  .product-image {
-    width: 350px;
-    height: 438px;
-  }
-}
-
-@media (max-width: 768px) {
-  .collection-section-4,
-  .collection-section-4-gsap {
-    padding: 60px 0;
+    padding: 120px 0;
   }
 
   .same-collection-container {
@@ -199,33 +131,35 @@
   }
 
   .same-collection-header {
-    margin-bottom: 25px;
+    width: 62%;
+    margin: 0 auto 120px auto;
   }
 
   .same-collection-title {
     font-size: 45px;
-    margin-bottom: 8px !important;
-  }
-
-  .same-collection-description {
-    /* Body-text-4 giữ nguyên font-size 14px */
   }
 
   .product-card {
-    flex: 0 0 300px;
+    flex: 0 0 350px;
     height: fit-content;
   }
 
   .product-image {
-    width: 300px;
-    height: 375px;
+    width: 350px;
+    height: 438px;
+  }
+
+  .view-product-button-container {
+    padding-top: 30px;
+    padding-bottom: 60px;
   }
 }
 
-@media (max-width: 480px) {
+/* Mobile (425px và xuống) */
+@media screen and (max-width: 425px) {
   .collection-section-4,
   .collection-section-4-gsap {
-    padding: 50px 0;
+    padding: 120px 0 0 !important;
   }
 
   .same-collection-container {
@@ -233,7 +167,8 @@
   }
 
   .same-collection-header {
-    margin-bottom: 20px;
+    width: 77%;
+    margin: 0 auto 60px auto;
   }
 
   .same-collection-title {
@@ -242,7 +177,6 @@
   }
 
   .same-collection-description {
-    /* Body-text-4 đã có font-size 14px */
     line-height: 1.5;
   }
 
@@ -255,62 +189,7 @@
     width: 280px;
     height: 350px;
   }
-}
 
-@media (max-width: 360px) {
-  .collection-section-4,
-  .collection-section-4-gsap {
-    padding: 40px 0;
-  }
-
-  .same-collection-container {
-    padding: 0 10px;
-  }
-
-  .same-collection-title {
-    font-size: 28px;
-  }
-
-  .same-collection-description {
-    font-size: 13px;
-  }
-
-  .product-card {
-    flex: 0 0 240px;
-    height: fit-content;
-  }
-
-  .product-image {
-    width: 240px;
-    height: 300px;
-  }
-}
-
-/* View Product Button Container */
-.view-product-button-container {
-  display: flex;
-  justify-content: center;
-  background: rgba(246, 246, 246, 1);
-  padding-top: 36px;
-  padding-bottom: 120px;
-}
-
-/* Responsive for button container */
-@media (max-width: 992px) {
-  .view-product-button-container {
-    padding-top: 30px;
-    padding-bottom: 100px;
-  }
-}
-
-@media (max-width: 768px) {
-  .view-product-button-container {
-    padding-top: 24px;
-    padding-bottom: 80px;
-  }
-}
-
-@media (max-width: 480px) {
   .view-product-button-container {
     padding-top: 20px;
     padding-bottom: 60px;

@@ -1,4 +1,5 @@
 import MetaballBackground from "@components/specialEffect/MetaballBackground/MetaballBackground";
+import StarlightEffect from "../universeSection/StarlightEffect";
 import "./BrandPillars.css";
 
 const BrandPillars = () => {
@@ -14,6 +15,9 @@ const BrandPillars = () => {
               <span className="brand-line">PRECISION</span>
               <div className="brand-line-with-expand">
                 <span className="brand-line">TECHNOLOGY</span>
+                <div className="starlight-6-oclock-wrapper">
+                  <StarlightEffect direction="falling" height={60} />
+                </div>
                 <div className="brand-expand-text">
                   <p className="bodytext-3--no-margin">
                     Where human craft meets cutting-edge technology.
@@ -29,12 +33,15 @@ const BrandPillars = () => {
             </div>
           </div>
           <div className="brand-group">
+            <div className="starlight-6-oclock-wrapper">
+              <StarlightEffect direction="falling" height={60} />
+            </div>
             <div className="brand-expand-text">
               <p className="bodytext-3--no-margin">
                 Made for the planet, not taken from it.
                 <br />
-                We create with the future in mind —<br />
-                lab-grown brilliance that honors our
+                We create with the future in mind —
+                <br /> lab-grown brilliance that honors our
                 <br />
                 planet, not extracts from it.
               </p>
@@ -47,12 +54,15 @@ const BrandPillars = () => {
             <div className="brand-main-text">
               <div className="brand-line-with-expand">
                 <span className="brand-line">REDEFINING</span>
+                <div className="starlight-6-oclock-wrapper">
+                  <StarlightEffect direction="falling" height={60} />
+                </div>
                 <div className="brand-expand-text">
                   <p className="bodytext-3--no-margin">
                     True modern luxury is not in price tags.
                     <br />
                     You're not just buying a product — you're entering
-                    <br />a space of mindful beauty, crafted to awaken
+                    <br /> a space of mindful beauty, crafted to awaken
                     <br />
                     your senses and reflect your story.
                   </p>

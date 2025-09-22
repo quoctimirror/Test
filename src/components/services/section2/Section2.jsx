@@ -73,7 +73,10 @@ const Section2 = () => {
               opacity: 1 - scrollProgress * 0.5,
             }}
           >
-            <img src="/services/Product care & Repair_960x1080.jpg" alt="Product Care" />
+            <img
+              src="/services/Product care & Repair_960x1080.jpg"
+              alt="Product Care"
+            />
           </div>
           <div
             className="section2-image-layer section2-image-2"
@@ -111,18 +114,14 @@ const Section2 = () => {
                     </h2>
                   </div>
                   <p className="section2-description bodytext-6--no-margin">
-                    Extend the life and brilliance of your jewelry with
-                    <br /> Mirror's professional care and repair services,
-                    <br /> tailored to keep each piece as radiant as the day
-                    <br /> you received it.
+                    Extend the life and brilliance of your jewelry with Mirror's
+                    professional care and repair services, tailored to keep each
+                    piece as radiant as the day you received it.
                   </p>
                 </div>
                 <ShineGlassButton
                   className="section2-cta"
                   theme="light"
-                  width={137}
-                  height={57}
-                  fontSize={14}
                   onClick={handleProductCareClick}
                 >
                   See more
@@ -156,21 +155,14 @@ const Section2 = () => {
                     </h2>
                   </div>
                   <p className="section2-description bodytext-6--no-margin">
-                    Mirror’s “Reclaim & Renew” program allows you to
-                    <br />
-                    trade in eligible pieces in the future toward
-                    <br />
-                    upgraded designs— a promise of continuous
-                    <br />
-                    evolution in your jewelry journey.
+                    Mirror’s “Reclaim & Renew” program allows you to trade in
+                    eligible pieces in the future toward upgraded designs— a
+                    promise of continuous evolution in your jewelry journey.
                   </p>
                 </div>
                 <ShineGlassButton
                   className="section2-cta"
                   theme="light"
-                  width={137}
-                  height={57}
-                  fontSize={14}
                   onClick={handleTradeInClick}
                 >
                   See more

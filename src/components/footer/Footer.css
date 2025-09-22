@@ -3,55 +3,47 @@
 ======================================== */
 .footer {
   width: 100%;
-  height: 800px;
   background: linear-gradient(180deg, #000000 0%, #bb234c 100%);
   color: white;
   position: relative;
   display: flex;
   flex-direction: column;
   opacity: 1;
-  padding: 2.5% 2.5%;
+  padding: 48px 2.5% 30px;
   box-sizing: border-box;
 }
 
 .footer-container {
-  max-width: 1920px;
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* ========================================
    FOOTER CONTENT (TOP SECTION)
 ======================================== */
 .footer-content {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  gap: 15px;
-  align-items: start;
-  padding-top: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  padding-top: 0;
 }
 
 /* LEFT SECTION - Discover Menu */
 .footer-left {
   width: 298px;
-  height: 140px;
-  position: absolute;
-  left: 2.5%;
-  top: 60px;
+  min-height: 140px;
   box-sizing: border-box;
 }
 
 /* RIGHT SECTION - Contact Info */
 .footer-right {
   width: 298px;
-  height: 140px;
-  position: absolute;
-  right: 2.5%;
-  top: 60px;
+  min-height: 140px;
   text-align: right;
   box-sizing: border-box;
 }
@@ -59,23 +51,16 @@
 /* CENTER SECTION - Newsletter */
 .footer-center {
   width: 550px;
-  height: 235px;
-  position: absolute;
-  top: 283px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 1;
+  margin: 50px auto 236px;
 }
 
 /* ========================================
    FOOTER SECTIONS CONTENT
 ======================================== */
-.footer-section {
-  margin-bottom: 40px;
-}
 
 .footer-title {
   margin-top: 0 !important;
@@ -85,8 +70,7 @@
 
 .footer-links {
   width: 121px;
-  height: 100px;
-  gap: 5px;
+  height: auto;
   opacity: 1;
   list-style: none;
   padding: 0;
@@ -142,7 +126,6 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 5px;
   align-items: flex-end;
 }
 
@@ -209,7 +192,7 @@
 
 .newsletter-subtitle {
   color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 48px !important;
+  margin-bottom: 24px !important;
   margin-top: 0 !important;
   line-height: 1.5;
   text-align: center;
@@ -257,7 +240,6 @@
 ======================================== */
 .footer-bottom {
   position: relative;
-  height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -279,10 +261,7 @@
 }
 
 .footer-bottom-left p {
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
-  margin: 0;
 }
 
 /* Footer Bottom Center - Social Icons */
@@ -327,8 +306,6 @@
 }
 
 .legal-link {
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
 }
@@ -337,122 +314,28 @@
    RESPONSIVE DESIGN
 ======================================== */
 
-/* Large Desktop - 1600px */
-@media (max-width: 1600px) {
+/* Tablet - 426px to 1023px */
+@media (min-width: 426px) and (max-width: 1023px) {
   .footer {
-    height: 750px;
-    padding: 0 25px;
-  }
-
-  .footer-left,
-  .footer-right {
-    width: 280px;
-  }
-
-  .footer-center {
-    width: 520px;
-    top: 270px;
-  }
-
-  .newsletter-title {
-    margin-bottom: 10px !important;
-  }
-}
-
-/* Tablet Large - 1440px */
-@media (max-width: 1440px) {
-  .footer {
-    height: 720px;
-    padding: 0 2.5%;
-  }
-
-  .footer-center {
-    width: 480px;
-    height: 200px;
-    top: 250px;
-  }
-
-  .newsletter-section {
-    gap: 40px;
-  }
-
-  .newsletter-title {
-    margin-bottom: 8px !important;
-  }
-
-  .newsletter-subtitle {
-    margin-bottom: 40px !important;
-  }
-
-  .footer-content {
-    padding-top: 90px;
-  }
-
-  .footer-title {
-    font-size: 22px;
-    margin-bottom: 30px;
-  }
-}
-
-/* Desktop - 1200px */
-@media (max-width: 1200px) {
-  .footer {
-    height: 700px;
-    padding: 0 25px;
-  }
-
-  .footer-left,
-  .footer-right {
-    width: 250px;
-    left: 25px;
-    right: 25px;
-  }
-
-  .footer-center {
-    width: 420px;
-    height: 180px;
-    top: 240px;
-  }
-
-  .newsletter-title {
-    margin-bottom: 8px !important;
-  }
-
-  .newsletter-subtitle {
-    margin-bottom: 35px !important;
-  }
-
-  .footer-content {
-    padding-top: 70px;
-  }
-
-  .footer-title {
-    margin-bottom: 25px;
-  }
-
-  /* Use bodytext-3 styles */
-}
-
-/* Tablet - 992px */
-@media (max-width: 992px) {
-  .footer {
-    height: auto;
-    min-height: 650px;
-    padding: 40px 20px;
+    min-height: 100vh;
+    padding: 120px 12px 24px;
   }
 
   .footer-container {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    justify-content: space-between;
+    flex: 1;
   }
 
   .footer-content {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding-top: 0;
-    gap: 40px;
+    gap: 48px;
   }
 
   .footer-left,
@@ -465,24 +348,48 @@
   .footer-center {
     position: static;
     width: 100%;
-    max-width: 450px;
+    max-width: 391px;
+    min-height: 100px;
     height: auto;
     transform: none;
     margin: 0 auto;
     order: -1;
+    padding: 0;
   }
 
   .newsletter-title {
-    margin-bottom: 8px !important;
+    margin-bottom: 0px !important;
+    font-size: 28px;
   }
 
   .newsletter-subtitle {
-    margin-bottom: 30px !important;
+    margin-bottom: 12px !important;
+    font-size: 14px;
+  }
+
+  .newsletter-form {
+    flex-direction: row;
+    gap: 12px;
+    max-width: 100%;
+    margin: 0 auto;
+    align-items: flex-end;
+  }
+
+  .email-input {
+    flex: 1;
+    padding: 10px 0;
+    font-size: 14px;
+  }
+
+  .signup-button {
+    width: 90px;
+    height: 44px;
+    font-size: 12px;
   }
 
   .footer-title {
     font-size: 18px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
 
   .footer-links,
@@ -491,12 +398,23 @@
     align-items: center;
   }
 
+  .footer-links a::after,
+  .contact-info a::after {
+    bottom: -3px;
+    height: 1.5px;
+  }
+
   .footer-bottom {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 30px 0 20px;
+    gap: 36px;
+  }
+
+  .footer-bottom-row {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
   }
 
   .footer-bottom-left,
@@ -510,182 +428,133 @@
   .social-icons {
     order: -1;
   }
-}
-
-/* Mobile Large - 768px */
-@media (max-width: 768px) {
-  .footer {
-    min-height: 580px;
-    padding: 35px 20px;
-  }
-
-  .footer-center {
-    max-width: 380px;
-  }
-
-  .newsletter-title {
-    margin-bottom: 6px !important;
-  }
-
-  .newsletter-subtitle {
-    margin-bottom: 25px !important;
-  }
-
-  .newsletter-form {
-    max-width: 340px;
-  }
-
-  .email-input {
-    font-size: 15px;
-    padding: 0;
-  }
-
-  .signup-button {
-    width: 110px;
-    height: 48px;
-    font-size: 13px;
-  }
-
-  .footer-title {
-    margin-bottom: 18px;
-  }
-
-  /* Use bodytext-3 styles */
-
-  .footer-bottom {
-    gap: 18px;
-    padding: 25px 0 20px;
-  }
-
-  .social-icon {
-    width: 36px;
-    height: 36px;
-    font-size: 16px;
-  }
-
-  .footer-bottom-left p,
-  .legal-link {
-    font-size: 13px;
-  }
-}
-
-/* Mobile Medium - 480px */
-@media (max-width: 480px) {
-  .footer {
-    min-height: 520px;
-    padding: 30px 15px;
-  }
-
-  .footer-container {
-    gap: 30px;
-  }
-
-  .footer-center {
-    max-width: 100%;
-    padding: 0 10px;
-  }
-
-  .newsletter-title {
-    margin-bottom: 6px !important;
-  }
-
-  .newsletter-subtitle {
-    margin-bottom: 20px !important;
-  }
-
-  .newsletter-form {
-    flex-direction: column;
-    gap: 15px;
-    max-width: 280px;
-    margin: 0 auto;
-  }
-
-  .email-input {
-    width: 100%;
-    padding: 10px 0;
-    font-size: 14px;
-  }
-
-  .signup-button {
-    width: 100%;
-    height: 44px;
-    font-size: 13px;
-  }
-
-  .footer-content {
-    gap: 30px;
-  }
-
-  .footer-title {
-    margin-bottom: 15px;
-  }
-
-  /* Use bodytext-3 styles */
-
-  .footer-section {
-    margin-bottom: 20px;
-  }
-
-  .footer-bottom {
-    gap: 15px;
-    padding: 20px 0 15px;
-  }
 
   .social-icon {
     width: 32px;
     height: 32px;
     font-size: 14px;
   }
-
-  .footer-bottom-left p,
-  .legal-link {
-    font-size: 12px;
-  }
 }
 
-/* Mobile Small - 360px */
-@media (max-width: 360px) {
+/* Mobile - 425px and below */
+@media (max-width: 425px) {
   .footer {
-    min-height: 500px;
-    padding: 25px 12px;
+    min-height: 100vh;
+    padding: 120px 12px 24px;
+  }
+
+  .footer-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+    gap: 36px;
+  }
+
+  .footer-left,
+  .footer-right {
+    position: static;
+    width: 100%;
+    text-align: center;
+  }
+
+  .footer-center {
+    position: static;
+    width: 100%;
+    max-width: 304px;
+    min-height: 100px;
+    height: auto;
+    transform: none;
+    margin: 0 auto;
+    order: -1;
+    padding: 0;
   }
 
   .newsletter-title {
-    margin-bottom: 4px !important;
+    margin-bottom: 0px !important;
+    font-size: 28px;
   }
 
   .newsletter-subtitle {
-    margin-bottom: 16px !important;
+    margin-bottom: 12px !important;
+    font-size: 14px;
   }
 
   .newsletter-form {
-    max-width: 240px;
+    flex-direction: row;
+    gap: 12px;
+    max-width: 100%;
+    margin: 0 auto;
+    align-items: flex-end;
   }
 
   .email-input {
-    font-size: 13px;
-    padding: 8px 0;
+    flex: 1;
+    padding: 10px 0;
+    font-size: 14px;
   }
 
   .signup-button {
-    height: 40px;
+    width: 90px;
+    height: 44px;
     font-size: 12px;
   }
 
   .footer-title {
-    margin-bottom: 12px;
+    font-size: 18px;
+    margin-bottom: 15px;
   }
 
-  /* Use bodytext-3 styles */
+  .footer-links,
+  .contact-info {
+    width: auto;
+    align-items: center;
+  }
+
+  .footer-links a::after,
+  .contact-info a::after {
+    bottom: -3px;
+    height: 1.5px;
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footer-bottom-row {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-bottom-left,
+  .footer-bottom-center,
+  .footer-bottom-right {
+    position: static;
+    transform: none;
+    text-align: center;
+  }
+
+  .social-icons {
+    order: -1;
+    margin-bottom: 10px;
+  }
 
   .social-icon {
-    width: 30px;
-    height: 30px;
-    font-size: 13px;
-  }
-
-  .footer-bottom-left p,
-  .legal-link {
-    font-size: 11px;
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
   }
 }

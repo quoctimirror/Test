@@ -40,7 +40,7 @@ function Collection() {
   const [otherCollections, setOtherCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [slideDirection, setSlideDirection] = useState('right');
+  const [slideDirection, setSlideDirection] = useState("right");
 
   // Fetch collections data from API
   useEffect(() => {
@@ -101,7 +101,7 @@ function Collection() {
   // Auto-rotate images every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setSlideDirection('right');
+      setSlideDirection("right");
       setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
     }, 3000);
 
@@ -114,13 +114,13 @@ function Collection() {
 
   // MỚI: Hàm handleNext được đơn giản hóa tối đa
   const handleNext = () => {
-    setSlideDirection('right');
+    setSlideDirection("right");
     setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
   };
 
   // MỚI: Hàm handlePrevious được đơn giản hóa tối đa
   const handlePrevious = () => {
-    setSlideDirection('left');
+    setSlideDirection("left");
     setCurrentIndex(
       (prevIndex) => (prevIndex - 1 + products.length) % products.length
     );
@@ -165,15 +165,17 @@ function Collection() {
       {/* --- SECTION 2 --- */}
       <div className="section-2" ref={section2Ref}>
         <div className="collection-hero-content">
-          <div className="collection-hero-subtitle">THE NEWEST COLLECTION</div>
+          <div className="collection-hero-subtitle bodytext-3--no-margin">
+            THE NEWEST COLLECTION
+          </div>
           <div className="collection-hero-title">
-            <div className="text-treasure">
+            <div className="collection-title-text heading-1--no-margin">
               {loading
                 ? "Loading..."
                 : featuredCollection?.title || "TREASURE OF THE ORIENT"}
             </div>
           </div>
-          <div className="collection-hero-description">
+          <div className="collection-hero-description bodytext-3--no-margin">
             {loading
               ? "Loading collection details..."
               : featuredCollection?.description || (
@@ -192,8 +194,6 @@ function Collection() {
                 )}
           </div>
           <ShineGlassButton
-            width={221}
-            height={57}
             theme="footer"
             onClick={handleExploreCollection}
             className="collection-hero-explore-button"
@@ -265,9 +265,11 @@ function Collection() {
               className={`product-info slide-effect-${slideDirection}`}
               key={`${currentProduct.id}-info-${slideDirection}`}
             >
-              <h2 className="product-title">{currentProduct.title}</h2>
+              <h3 className="heading-3--no-margin">{currentProduct.title}</h3>
               <button className="shop-now-button">
-                <span className="hover-underline">Shop now</span>
+                <span className="hover-underline bodytext-4--no-margin">
+                  Shop now
+                </span>
               </button>
             </div>
           </div>
@@ -277,16 +279,34 @@ function Collection() {
       {/* --- SECTION 3 --- */}
       <div className="section-3">
         <div className="other-collections-content">
-          <div className="other-collections-subtitle bodytext-3--no-margin">OTHER COLLECTION</div>
+          <div className="other-collections-subtitle bodytext-3--no-margin">
+            OTHER COLLECTION
+          </div>
           <div className="collection-names">
-            <div className="collection-name heading-1--no-margin">Whispers of Kyoto</div>
-            <div className="collection-name heading-1--no-margin">Ocean's Embrace</div>
-            <div className="collection-name heading-1--no-margin">Nile Reverie</div>
-            <div className="collection-name heading-1--no-margin">Byzantine Bloom</div>
-            <div className="collection-name heading-1--no-margin">Sands of Samarkand</div>
-            <div className="collection-name heading-1--no-margin">Echoes of Eternity</div>
-            <div className="collection-name heading-1--no-margin">The Alchemist's Touch</div>
-            <div className="collection-name heading-1--no-margin">Lunar Veil</div>
+            <div className="collection-name heading-1--no-margin">
+              Whispers of Kyoto
+            </div>
+            <div className="collection-name heading-1--no-margin">
+              Ocean's Embrace
+            </div>
+            <div className="collection-name heading-1--no-margin">
+              Nile Reverie
+            </div>
+            <div className="collection-name heading-1--no-margin">
+              Byzantine Bloom
+            </div>
+            <div className="collection-name heading-1--no-margin">
+              Sands of Samarkand
+            </div>
+            <div className="collection-name heading-1--no-margin">
+              Echoes of Eternity
+            </div>
+            <div className="collection-name heading-1--no-margin">
+              The Alchemist's Touch
+            </div>
+            <div className="collection-name heading-1--no-margin">
+              Lunar Veil
+            </div>
           </div>
         </div>
       </div>

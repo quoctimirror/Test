@@ -31,7 +31,6 @@
 .contact-us-hero-content {
   position: relative;
   z-index: 2;
-  width: 405px;
   height: 305px;
   padding: 0;
   background: transparent;
@@ -77,177 +76,21 @@
 /* Button styles moved to common Button component */
 
 /* Responsive Design */
-@media (max-width: 1200px) {
-  .contact-us-hero {
-    height: 700px;
-  }
-  
-  .contact-us-hero-content {
-    width: 385px;
-    height: 290px;
-  }
-  
-  .contact-us-hero-content h1 {
-    font-size: 58px;
-    margin: 10px 0 22px 0;
-  }
-  
-  .contact-us-hero-content h4 {
-    font-size: 15px;
-  }
-  
-  .contact-us-hero-content p {
-    font-size: 15px;
-  }
 
-  .contact-us-button {
-    width: 135px;
-    height: 54px;
-    font-size: 13px;
-  }
-  
-  .contact-us-button-wrapper {
-    margin-top: 32px;
+/* Tablet - 426px to 1023px */
+@media (min-width: 426px) and (max-width: 1023px) {
+  .contact-us-hero-content {
+    width: 49%;
   }
 }
 
-@media (max-width: 992px) {
-  .contact-us-hero {
-    height: 650px;
-  }
-  
-  .contact-us-hero-content {
-    width: 365px;
-    height: 275px;
-  }
-  
-  .contact-us-hero-content h1 {
-    font-size: 54px;
-    margin: 8px 0 20px 0;
-  }
-  
-  .contact-us-hero-content h4 {
-    font-size: 15px;
-  }
-  
-  .contact-us-hero-content p {
-    font-size: 15px;
-  }
-
-  .contact-us-button {
-    width: 130px;
-    height: 52px;
-    font-size: 13px;
-  }
-  
-  .contact-us-button-wrapper {
-    margin-top: 30px;
-  }
-}
-
-@media (max-width: 768px) {
-  .contact-us-hero {
-    height: 600px;
-  }
-  
-  .contact-us-hero-content {
-    width: 340px;
-    height: 260px;
-  }
-
-  .contact-us-hero-content h1 {
-    font-size: 48px;
-    margin: 6px 0 18px 0;
-  }
-
-  .contact-us-hero-content h4 {
-    font-size: 14px;
-  }
-
-  .contact-us-hero-content p {
-    font-size: 14px;
-    line-height: 1.3;
-  }
-
-  .contact-us-button {
-    width: 125px;
-    height: 50px;
-    font-size: 13px;
-  }
-  
-  .contact-us-button-wrapper {
-    margin-top: 28px;
-  }
-}
-
-@media (max-width: 480px) {
+/* Mobile - 425px and below */
+@media (max-width: 425px) {
   .contact-us-hero {
     height: 500px;
   }
 
   .contact-us-hero-content {
-    width: 90%;
-    max-width: 320px;
-    height: 240px;
-  }
-
-  .contact-us-hero-content h1 {
-    font-size: 36px;
-    margin: 4px 0 16px 0;
-  }
-
-  .contact-us-hero-content h4 {
-    font-size: 13px;
-  }
-
-  .contact-us-hero-content p {
-    font-size: 13px;
-    line-height: 1.3;
-  }
-
-  .contact-us-button {
-    width: 110px;
-    height: 44px;
-    font-size: 12px;
-  }
-  
-  .contact-us-button-wrapper {
-    margin-top: 24px;
-  }
-}
-
-@media (max-width: 360px) {
-  .contact-us-hero {
-    height: 480px;
-  }
-
-  .contact-us-hero-content {
-    width: 95%;
-    max-width: 300px;
-    height: 220px;
-  }
-
-  .contact-us-hero-content h1 {
-    font-size: 32px;
-    margin: 2px 0 14px 0;
-  }
-
-  .contact-us-hero-content h4 {
-    font-size: 12px;
-  }
-
-  .contact-us-hero-content p {
-    font-size: 12px;
-    line-height: 1.3;
-  }
-
-  .contact-us-button {
-    width: 100px;
-    height: 42px;
-    font-size: 11px;
-  }
-  
-  .contact-us-button-wrapper {
-    margin-top: 20px;
+    width: 93%;
   }
 }

@@ -1,6 +1,7 @@
 import "./Navbar.css";
 import { useState, useRef, useEffect } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
+import MenuIcon from "@assets/images/icons/3gach.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
@@ -8,13 +9,21 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuHovered, setIsMenuHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
+  const [isTablet, setIsTablet] = useState(
+    window.innerWidth > 425 && window.innerWidth <= 1023
+  );
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isInScrollContainer, setIsInScrollContainer] = useState(false);
   const logoRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
 
   // Check if current page is home or welcome
-  const isHomePage = location.pathname === "/home" || location.pathname === "/" || location.pathname === "/welcome";
+  const isHomePage =
+    location.pathname === "/home" ||
+    location.pathname === "/" ||
+    location.pathname === "/welcome";
 
   useEffect(() => {
     // Initialize optimized transition system
@@ -32,11 +41,40 @@ export default function Navbar() {
   }, [isHomePage]);
 
   // Add scroll detection to properly detect when user is within scroll-container section
+  // Track mobile and tablet state
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 425);
+      setIsTablet(window.innerWidth > 425 && window.innerWidth <= 1024);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".menu-container")) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  // Reset menu state when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+    setIsMenuHovered(false);
+  }, [location.pathname]);
+
   useEffect(() => {
     if (!isHomePage) return;
 
     const handleScroll = () => {
-      const scrollContainer = document.querySelector('.scroll-container');
+      const scrollContainer = document.querySelector(".scroll-container");
       if (!scrollContainer) return;
 
       const rect = scrollContainer.getBoundingClientRect();
@@ -47,9 +85,6 @@ export default function Navbar() {
       const isViewportInScrollContainer = rect.top <= 50 && rect.bottom >= 0;
 
       // Debug log
-      if (isViewportInScrollContainer !== isInScrollContainer) {
-        console.log('Scroll container state changed:', isViewportInScrollContainer);
-      }
 
       setIsInScrollContainer(isViewportInScrollContainer);
     };
@@ -67,14 +102,13 @@ export default function Navbar() {
     initialCheck();
 
     // Also check on window load
-    window.addEventListener('load', handleScroll);
+    window.addEventListener("load", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener('load', handleScroll);
+      window.removeEventListener("load", handleScroll);
     };
   }, [isHomePage]);
-
 
   const performTransition = async (route, options = {}) => {
     // Sử dụng optimized transition system
@@ -101,8 +135,8 @@ export default function Navbar() {
 
     sessionStorage.setItem("scrollToTop", "true");
     await performTransition("/collections", {
-      onStart: () => console.log('Starting transition to collections...'),
-      onComplete: () => console.log('Collections page transition completed!')
+      onStart: () => console.log("Starting transition to collections..."),
+      onComplete: () => console.log("Collections page transition completed!"),
     });
   };
 
@@ -116,10 +150,9 @@ export default function Navbar() {
     await performTransition("/services");
   };
 
-
   const handleSupportClick = async () => {
     if (window.location.pathname === "/support") {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
@@ -215,18 +248,33 @@ export default function Navbar() {
 
   const handleLocationClick = async () => {
     if (window.location.pathname === "/locations") {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
-    sessionStorage.setItem('scrollToTop', 'true');
+    sessionStorage.setItem("scrollToTop", "true");
     await performTransition("/locations");
   };
 
   return (
     <>
+      {/* Mobile/Tablet menu overlay */}
+      {(isMobile || isTablet) && isMenuOpen && (
+        <div
+          className="mobile-menu-overlay"
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
+
       {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
-      <div className={`logo-fixed-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`} onClick={handleLogoClick}>
+      <div
+        className={`logo-fixed-container ${
+          isHomePage && !isMenuOpen ? "no-blend" : ""
+        } ${
+          isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
+        }`}
+        onClick={handleLogoClick}
+      >
         <img
           ref={logoRef}
           src={MirrorLogo}
@@ -236,75 +284,145 @@ export default function Navbar() {
       </div>
 
       {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
-      <div className={`menu-fixed-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`}>
-        <div className="menu-container">
+      <div
+        className={`menu-fixed-container ${
+          isHomePage && !isMenuOpen ? "no-blend" : ""
+        } ${
+          isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
+        }`}
+      >
+        <div
+          className={`menu-container ${
+            isMenuOpen || isMenuHovered ? "menu-open" : ""
+          }`}
+        >
           <div
             className="menu-button"
-            onMouseEnter={() => setIsMenuOpen(true)}
-            onMouseLeave={() => setIsMenuOpen(false)}
+            onMouseEnter={() =>
+              !isMobile && !isTablet && setIsMenuHovered(true)
+            }
+            onMouseLeave={() =>
+              !isMobile && !isTablet && setIsMenuHovered(false)
+            }
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMenuOpen(!isMenuOpen);
+            }}
           >
+            <div className="menu-icon-container">
+              <img className="menu-icon" src={MenuIcon} alt="Menu" />
+              <svg
+                className="menu-icon-close"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </div>
             <span className="menu-text bodytext-3--no-margin">Menu</span>
           </div>
           <div
-            className={`menu-popup ${isMenuOpen ? "active" : ""}`}
-            onMouseEnter={() => setIsMenuOpen(true)}
-            onMouseLeave={() => setIsMenuOpen(false)}
+            className={`menu-popup ${
+              isMenuOpen || isMenuHovered ? "active" : ""
+            }`}
+            onMouseEnter={() =>
+              !isMobile && !isTablet && setIsMenuHovered(true)
+            }
+            onMouseLeave={() =>
+              !isMobile && !isTablet && setIsMenuHovered(false)
+            }
           >
             <div className="menu-groups">
               <ul className="menu-list">
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleProductsClick}
-                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/collections')}
+                  onMouseEnter={() =>
+                    optimizedTransitionUtils.prefetch("/collections")
+                  }
                 >
                   Products
                 </li>
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleServicesClick}
-                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/services')}
+                  onMouseEnter={() =>
+                    optimizedTransitionUtils.prefetch("/services")
+                  }
                 >
-                  Services</li>
-                <li 
-                  className="bodytext-3--no-margin" 
-                  onClick={handleSupportClick}
-                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/support')}
-                >Support
+                  Services
                 </li>
-                <li 
-                  className="bodytext-3--no-margin" 
+                <li
+                  className="bodytext-3--no-margin"
+                  onClick={handleSupportClick}
+                  onMouseEnter={() =>
+                    optimizedTransitionUtils.prefetch("/support")
+                  }
+                >
+                  Support
+                </li>
+                <li
+                  className="bodytext-3--no-margin"
                   onClick={handleAboutClick}
-                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/about')}
-                >About Mirror</li>
-                <li 
-                  className="bodytext-3--no-margin" 
+                  onMouseEnter={() =>
+                    optimizedTransitionUtils.prefetch("/about")
+                  }
+                >
+                  About Mirror
+                </li>
+                <li
+                  className="bodytext-3--no-margin"
                   onClick={handleNewsClick}
-                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/news')}
+                  onMouseEnter={() =>
+                    optimizedTransitionUtils.prefetch("/news")
+                  }
                 >
                   News
                 </li>
+                <li className="immersive-menu-item bodytext-3--no-margin">
+                  Immersive Showroom
+                </li>
               </ul>
               <ul className="menu-list">
-                <li 
-                  className="bodytext-3--no-margin" 
+                <li
+                  className="bodytext-3--no-margin"
                   onClick={handleLocationClick}
-                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/locations')}
-                >Location</li>
+                  onMouseEnter={() =>
+                    optimizedTransitionUtils.prefetch("/locations")
+                  }
+                >
+                  Location
+                </li>
                 <li
                   className="bodytext-3--no-margin"
                   onClick={handleContactClick}
-                  onMouseEnter={() =>  optimizedTransitionUtils.prefetch('/contact')}
+                  onMouseEnter={() =>
+                    optimizedTransitionUtils.prefetch("/contact")
+                  }
                 >
                   Contact us
                 </li>
-                <li className="bodytext-3--no-margin" onClick={handleAccountClick}>Account</li>
+                <li
+                  className="bodytext-3--no-margin"
+                  onClick={handleAccountClick}
+                >
+                  Account
+                </li>
               </ul>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={`account-fixed-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`}>
+      <div
+        className={`account-fixed-container ${
+          isHomePage && !isMenuOpen ? "no-blend" : ""
+        } ${
+          isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
+        }`}
+      >
         <div className="account-container">
           <div
             className="account-button"
@@ -313,7 +431,7 @@ export default function Navbar() {
           >
             <span className="account-text bodytext-3--no-margin">Account</span>
           </div>
-          
+
           {/* Account Dropdown Menu - Shows for both authenticated and non-authenticated users */}
           <div
             className={`account-popup ${isAccountMenuOpen ? "active" : ""}`}
@@ -328,7 +446,7 @@ export default function Navbar() {
                       {user?.username || "User"}
                     </span>
                   </div>
-                  
+
                   <ul className="account-list">
                     <li
                       className="bodytext-3--no-margin"
@@ -336,7 +454,7 @@ export default function Navbar() {
                     >
                       My Profile
                     </li>
-                    
+
                     {isUserAdmin() && (
                       <li
                         className="bodytext-3--no-margin"
@@ -345,7 +463,7 @@ export default function Navbar() {
                         Admin Dashboard
                       </li>
                     )}
-                    
+
                     {isUserVendor() && (
                       <li
                         className="bodytext-3--no-margin"
@@ -354,7 +472,7 @@ export default function Navbar() {
                         Vendor Dashboard
                       </li>
                     )}
-                    
+
                     <li
                       className="bodytext-3--no-margin logout-item"
                       onClick={handleLogoutClick}
@@ -384,12 +502,24 @@ export default function Navbar() {
       </div>
 
       {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
-      <div className={`immersive-border-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`}>
+      <div
+        className={`immersive-border-container ${
+          isHomePage && !isMenuOpen ? "no-blend" : ""
+        } ${
+          isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
+        }`}
+      >
         <div className="immersive-border"></div>
       </div>
 
       {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
-      <div className={`immersive-text-container ${isHomePage ? 'no-blend' : ''} ${isHomePage && isInScrollContainer ? 'scrolled' : ''}`}>
+      <div
+        className={`immersive-text-container ${
+          isHomePage && !isMenuOpen ? "no-blend" : ""
+        } ${
+          isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
+        }`}
+      >
         <span className="immersive-text bodytext-4--no-margin">
           Immersive Showroom
         </span>

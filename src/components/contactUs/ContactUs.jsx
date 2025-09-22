@@ -18,17 +18,14 @@ const ContactUs = () => {
         className="contact-us-hero-background"
       />
       <div className="contact-us-hero-content">
-        <h4 className="bodytext-3">NEED HELP?</h4>
-        <h1 className="heading-1">REACH OUT</h1>
-        <p className="bodytext-3">We would love to hear from you.</p>
-        <p className="bodytext-3">
+        <h4 className="bodytext-3--no-margin">NEED HELP?</h4>
+        <h1 className="heading-1--no-margin">REACH OUT</h1>
+        <p className="bodytext-3--no-margin">We would love to hear from you.</p>
+        <p className="bodytext-3--no-margin">
           Our client care experts are always here to help.
         </p>
         <div className="contact-us-button-wrapper">
           <ShineGlassButton
-            width={150}
-            height={57}
-            fontSize={14}
             theme="footer"
             onClick={handleContactUsClick}
             className="contact-us-button"

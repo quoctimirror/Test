@@ -425,9 +425,6 @@ const SelectOptionSection = () => {
           </p>
           <ShineGlassButton
             theme="light"
-            width={274}
-            height={57}
-            fontSize={14}
             onClick={handleContactUs}
           >
             Contact Us
@@ -529,9 +526,6 @@ const SelectOptionSection = () => {
           <h2 className="bodytext-1--no-margin">From {currentPrice}</h2>
           <ShineGlassButton
             theme="footer"
-            width={274}
-            height={57}
-            fontSize={14}
             onClick={handleBookAppointment}
             className="book-appointment-button"
           >
@@ -539,9 +533,6 @@ const SelectOptionSection = () => {
           </ShineGlassButton>
           <ShineGlassButton
             theme="light"
-            width={274}
-            height={57}
-            fontSize={14}
             onClick={handleOrderNow}
             className="order-now-button"
           >

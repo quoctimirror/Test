@@ -110,7 +110,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-form-wrapper">
-        <h1 className="heading-1 login-title">WELCOME BACK!</h1>
+        <h1 className="heading-1--no-margin login-title">WELCOME BACK!</h1>
 
         <form className="login-form" onSubmit={handleSubmit} noValidate>
           {/* === THAY ĐỔI BẮT ĐẦU TỪ ĐÂY === */}

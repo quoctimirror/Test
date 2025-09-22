@@ -1,6 +1,6 @@
 .services-section1 {
   height: 100vh;
-  background-image: url("/public/services/section_1.jpg");
+  background-image: url("/services/section_1.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -8,7 +8,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "BT Beau Sans", sans-serif;
 }
 
 .section1-background-overlay {
@@ -63,47 +62,17 @@
   opacity: 1;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .section1-title {
-    width: auto;
-  }
+/*
+============================================================
+    RESPONSIVE DESIGN - 3 BREAKPOINTS
+============================================================
+*/
 
-  .section1-description {
-    width: 540px;
-    height: auto;
-  }
-
-  .section1-content {
-    width: 540px;
-  }
-}
-
-@media (max-width: 992px) {
+/* Tablet (426px - 1023px) */
+@media screen and (min-width: 426px) and (max-width: 1023px) {
   .services-section1 {
     height: 80vh;
     min-height: 600px;
-  }
-
-  .section1-title {
-    width: auto;
-  }
-
-  .section1-description {
-    width: 500px;
-    height: auto;
-  }
-
-  .section1-content {
-    width: 500px;
-    gap: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .services-section1 {
-    height: 70vh;
-    min-height: 500px;
   }
 
   .section1-container {
@@ -111,15 +80,13 @@
   }
 
   .section1-content {
-    width: 100%;
-    max-width: 500px;
-    gap: 18px;
+    width: 62%;
+    gap: 20px;
   }
 
   .section1-title {
     width: 100%;
     max-width: 400px;
-    height: auto;
   }
 
   .section1-description {
@@ -129,10 +96,11 @@
   }
 }
 
-@media (max-width: 480px) {
+/* Mobile (425px và xuống) */
+@media screen and (max-width: 425px) {
   .services-section1 {
-    height: 60vh;
-    min-height: 450px;
+    height: 70vh;
+    min-height: 500px;
   }
 
   .section1-container {
@@ -140,49 +108,18 @@
   }
 
   .section1-content {
-    width: 100%;
-    max-width: 350px;
+    width: 77%;
     gap: 15px;
   }
 
   .section1-title {
     width: 100%;
-    max-width: 280px;
-    height: auto;
+    max-width: 300px;
   }
 
   .section1-description {
     width: 100%;
     max-width: 320px;
-    height: auto;
-  }
-}
-
-@media (max-width: 360px) {
-  .services-section1 {
-    height: 55vh;
-    min-height: 400px;
-  }
-
-  .section1-container {
-    padding: 0 12px;
-  }
-
-  .section1-content {
-    width: 100%;
-    max-width: 300px;
-    gap: 12px;
-  }
-
-  .section1-title {
-    width: 100%;
-    max-width: 250px;
-    height: auto;
-  }
-
-  .section1-description {
-    width: 100%;
-    max-width: 280px;
     height: auto;
   }
 }

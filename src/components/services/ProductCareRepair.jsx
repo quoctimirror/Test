@@ -165,9 +165,6 @@ const ProductCareRepair = () => {
         <ShineGlassButton
           className="services-cta"
           theme="light"
-          width={171}
-          height={57}
-          fontSize={14}
         >
           Book a Service
         </ShineGlassButton>

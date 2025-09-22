@@ -152,17 +152,11 @@ const MirrorverseSection = () => {
           <div className="mirrorverse-buttons">
             <ShineGlassButton
               theme="footer"
-              width={136}
-              height={57}
-              fontSize={14}
             >
               AR Try on
             </ShineGlassButton>
             <ShineGlassButton
               theme="footer"
-              width={221}
-              height={57}
-              fontSize={14}
             >
               Immersive Showroom
             </ShineGlassButton>

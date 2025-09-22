@@ -5,11 +5,11 @@ const Section2CollectionDetail = () => {
   return (
     <div className="section2-collection-detail">
       <div className="collection-detail-content">
-        <div className="collection-detail-subtitle">THE FIRST COLLECTION</div>
+        <div className="collection-detail-subtitle bodytext-3--no-margin">THE FIRST COLLECTION</div>
 
-        <div className="collection-detail-title">TREASURE OF THE ORIENT</div>
+        <div className="collection-detail-title heading-1--no-margin">TREASURE OF THE ORIENT</div>
 
-        <div className="collection-detail-description">
+        <div className="collection-detail-description bodytext-3--no-margin">
           <p>
             Step into a world where ancient splendor meets modern elegance. The
             TREASURE OF THE ORIENT collection draws inspiration from the rich

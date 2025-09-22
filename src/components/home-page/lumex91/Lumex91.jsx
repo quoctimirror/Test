@@ -22,7 +22,7 @@ const Lumex91 = () => {
 
         <div className="lumex91-content">
           <h1 className="heading-1--no-margin">Lumex-91</h1>
-          <ShineGlassButton theme="footer">Discover</ShineGlassButton>
+          <ShineGlassButton theme="footer">Explore more</ShineGlassButton>
         </div>
       </div>
     </section>

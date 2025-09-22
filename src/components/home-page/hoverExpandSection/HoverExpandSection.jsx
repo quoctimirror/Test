@@ -18,14 +18,13 @@ const HoverExpandSection = () => {
   return (
     <div className="hover-expand-section">
       <div className="hover-expand-header">
-        <h2 className="heading-1 hover-expand-title">EXPLORE THE GEMS</h2>
-        <p className="bodytext-3 hover-expand-subtitle">
+        <h2 className="heading-1--no-margin hover-expand-title">
+          EXPLORE THE GEMS
+        </h2>
+        <p className="bodytext-3--no-margin hover-expand-subtitle">
           Discover a variety of our pieces.
         </p>
         <ShineGlassButton
-          width={163}
-          height={57}
-          fontSize={14}
           theme="footer"
           className="explore-more-button"
           onClick={handleExploreMoreClick}
@@ -37,15 +36,19 @@ const HoverExpandSection = () => {
       <div className="hover-expand-gallery">
         <div className="gallery-item">
           <img src={image1} alt="Jewelry piece 1" />
+          <p className="bodytext-1--no-margin gallery-item-text">Premium Collection</p>
         </div>
         <div className="gallery-item">
           <img src={image2} alt="Jewelry piece 2" />
+          <p className="bodytext-1--no-margin gallery-item-text">Luxury Rings</p>
         </div>
         <div className="gallery-item">
           <img src={image3} alt="Jewelry piece 3" />
+          <p className="bodytext-1--no-margin gallery-item-text">Diamond Series</p>
         </div>
         <div className="gallery-item">
           <img src={image4} alt="Jewelry piece 4" />
+          <p className="bodytext-1--no-margin gallery-item-text">Signature Pieces</p>
         </div>
       </div>
     </div>

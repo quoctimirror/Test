@@ -1,14 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import './ShineGlassButton.css';
 
-const ShineGlassButton = ({ 
-  children, 
-  onClick, 
+const ShineGlassButton = ({
+  children,
+  onClick,
   className = '',
   disabled = false,
-  width = 189,
-  height = 57,
-  fontSize = 14,
+  width, // Optional - only use if explicitly needed
+  height, // Optional - only use if explicitly needed
+  fontSize, // Optional - only use if explicitly needed
   theme = 'shine', // 'shine' | 'light' | 'footer'
   variant = 'default' // 'default' | 'custom'
 }) => {
@@ -115,15 +115,15 @@ const ShineGlassButton = ({
 
   return (
     <div className="shine-button-wrap">
-      <button 
+      <button
         ref={buttonRef}
         onClick={onClick}
         disabled={disabled}
         className={`shine-glass-button shine-glass-button--${theme} shine-glass-button--variant-${variant} bodytext-4--no-margin ${className}`}
         style={{
-          width: `${width}px`,
-          height: `${height}px`,
-          fontSize: `${fontSize}px`
+          ...(width && { width: `${width}px` }),
+          ...(height && { height: `${height}px` }),
+          ...(fontSize && { fontSize: `${fontSize}px` })
         }}
       >
         <div className="glass-layer"></div>

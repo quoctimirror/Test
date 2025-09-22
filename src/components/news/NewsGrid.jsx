@@ -143,9 +143,6 @@ const NewsGrid = () => {
             <ShineGlassButton
               className="view-more-btn"
               theme="light"
-              width={137}
-              height={57}
-              fontSize={14}
               onClick={handleViewMore}
             >
               View more

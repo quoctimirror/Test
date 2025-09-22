@@ -23,7 +23,7 @@
   top: 30px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 101;
+  z-index: 201;
   mix-blend-mode: difference;
   pointer-events: auto;
   cursor: pointer;
@@ -75,7 +75,7 @@
   top: 20px;
   left: 2.5%;
   right: 2.5%;
-  z-index: 101;
+  z-index: 201;
   mix-blend-mode: difference;
   pointer-events: none;
   /* opacity: 1; */
@@ -114,7 +114,7 @@
   right: calc(
     2.5% + 221px + 1.875%
   ); /* 2.5% (immersive margin) + 221px (button width) + 1.875% (gap) */
-  z-index: 101;
+  z-index: 201;
   mix-blend-mode: difference;
   pointer-events: none;
   height: 57px;
@@ -145,7 +145,7 @@
   position: fixed;
   top: 20px;
   right: 2.5%;
-  z-index: 101;
+  z-index: 201;
   pointer-events: auto;
   height: 57px;
   display: flex;
@@ -184,47 +184,79 @@
   transition: all 0.3s;
   margin-left: 0;
   opacity: 1;
+  gap: 10px;
 }
 
-.icon-container {
+.menu-icon-container {
   position: relative;
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 }
 
 .menu-icon {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 20px;
   transition: all 0.3s ease;
   position: absolute;
   top: 0;
   left: 0;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   opacity: 1;
-  stroke-width: 1.5px;
+  filter: brightness(0) invert(1);
 }
 
 .menu-icon-close {
-  color: black;
-  font-size: 20px;
+  color: white;
   position: absolute;
   left: 0;
   top: 0;
   opacity: 0;
   transition: all 0.3s ease;
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5px;
 }
 
-.menu-container:hover .menu-icon {
+/* Show close icon when menu is open */
+.menu-container.menu-open .menu-icon {
   opacity: 0;
   transform: rotate(90deg);
 }
 
-.menu-container:hover .menu-icon-close {
+.menu-container.menu-open .menu-icon-close {
   opacity: 1;
   transform: rotate(0deg);
-  color: black;
+  color: white;
+}
+
+/* Show close icon on hover (desktop only) */
+@media (min-width: 426px) {
+  .menu-container:hover .menu-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  .menu-container:hover .menu-icon-close {
+    opacity: 1;
+    transform: rotate(0deg);
+    color: white;
+  }
+}
+
+.menu-fixed-container.scrolled .menu-icon {
+  filter: brightness(0) !important;
+}
+
+.menu-fixed-container.scrolled .menu-icon-close {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.scrolled .menu-container:hover .menu-icon-close {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.scrolled .menu-container.menu-open .menu-icon-close {
+  color: rgba(0, 0, 0, 1) !important;
 }
 
 .menu-text {
@@ -287,8 +319,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.5),
     inset 0 -1px 0 rgba(255, 255, 255, 0.1),
     inset 0 0 12px 6px rgba(255, 255, 255, 0.05); */
-  font-size: 14px;
-  font-weight: 500;
   color: transparent;
   cursor: pointer;
   transition: all 0.5s ease;
@@ -313,7 +343,7 @@
   right: 2.5%;
   width: 221px;
   height: 57px;
-  z-index: 103; /* Cao nhất để ở trên cùng */
+  z-index: 203; /* Cao nhất để ở trên cùng */
   mix-blend-mode: difference;
   pointer-events: none;
   display: flex;
@@ -372,7 +402,7 @@
   right: 2.5%;
   width: 221px;
   height: 57px;
-  z-index: 102; /* Cao hơn button nhưng thấp hơn text */
+  z-index: 202; /* Cao hơn button nhưng thấp hơn text */
   mix-blend-mode: difference;
   pointer-events: none;
   display: flex;
@@ -613,10 +643,12 @@
 }
 
 /* Media Queries for Responsive Design */
-@media (max-width: 1200px) {
+@media (max-width: 1023px) {
   /* Adjust immersive button position */
   .immersive-fixed-container {
-    right: 20px;
+    top: 18px;
+    right: 19px;
+    height: 45px;
   }
 
   .immersive-text-container,
@@ -664,12 +696,11 @@
 
   .logo-fixed-container .navbar-logo-svg {
     width: 120px;
-    height: 24px;
+    height: 50px;
   }
 
   .menu-fixed-container {
     top: 20px;
-    left: 15px;
     height: 45px;
   }
 
@@ -699,12 +730,10 @@
   .menu-popup {
     width: 90vw;
     max-width: 400px;
-    padding: 40px 25px;
-    left: -15px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 425px) {
   /* Small mobile adjustments */
   .logo-fixed-container {
     top: 15px;
@@ -712,7 +741,7 @@
 
   .logo-fixed-container .navbar-logo-svg {
     width: 100px;
-    height: 20px;
+    height: 40px;
   }
 
   .menu-fixed-container {
@@ -743,26 +772,6 @@
   .menu-popup {
     width: 95vw;
     max-width: 350px;
-    padding: 30px 20px;
-  }
-}
-
-@media (max-width: 360px) {
-  /* Extra small mobile */
-  .immersive-button {
-    width: 100px;
-    height: 38px;
-  }
-
-  .immersive-text-container,
-  .immersive-border-container {
-    width: 100px;
-    height: 38px;
-  }
-
-  .logo-fixed-container .navbar-logo-svg {
-    width: 90px;
-    height: 18px;
   }
 }
 
@@ -976,4 +985,316 @@
 
 .account-popup .account-list li.logout-item:hover {
   color: #ff3b3b;
+}
+
+/* Immersive showroom in menu - only show on mobile */
+.immersive-menu-item {
+  display: none; /* Hidden by default */
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s ease, opacity 0.3s ease;
+  position: relative;
+  white-space: nowrap;
+  opacity: 1;
+  width: fit-content;
+}
+
+.immersive-menu-item:hover {
+  opacity: 1;
+  color: white;
+}
+
+.immersive-menu-item::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
+}
+
+.immersive-menu-item:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.menu-fixed-container.scrolled .immersive-menu-item {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.scrolled .immersive-menu-item:hover {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.scrolled .immersive-menu-item::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+/* Mobile menu overlay */
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(
+    --Gradient-5,
+    linear-gradient(180deg, #000 17.79%, #ec3667 55.29%, #f6f6f6 100%)
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Mobile specific styles */
+@media (max-width: 600px) {
+  /* Hide immersive showroom button when width <= 600px */
+  .immersive-fixed-container,
+  .immersive-text-container,
+  .immersive-border-container {
+    display: none;
+  }
+
+  /* Show immersive button in menu only when main button is hidden */
+  .immersive-menu-item {
+    display: block;
+  }
+}
+
+@media (max-width: 425px) {
+  /* Move menu container to right on mobile */
+  .menu-fixed-container {
+    left: auto;
+    right: 2.5%;
+    justify-content: flex-end;
+  }
+
+  /* Center align menu list text on mobile */
+  .menu-popup .menu-groups {
+    gap: 72px;
+  }
+
+  .menu-popup .menu-list {
+    text-align: center;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .menu-popup .menu-list li {
+    text-align: center;
+    display: block;
+    width: 100%;
+  }
+
+  /* Adjust underline for menu text on mobile if shown */
+  .menu-text::after {
+    bottom: -3px; /* 3px gap from text on mobile */
+    height: 1.5px; /* Thinner on mobile */
+  }
+  /* Show overlay only on mobile */
+  .mobile-menu-overlay {
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Adjust menu popup for mobile with overlay */
+  .menu-container.menu-open .menu-popup {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    max-width: none;
+    background: transparent;
+    z-index: 202;
+    padding: 32px 0 20px 0;
+    transform: translateY(-50%);
+  }
+
+  .menu-container.menu-open .menu-popup .menu-list li {
+    color: white !important;
+  }
+
+  .menu-container.menu-open .menu-popup .menu-list li::after {
+    background: white !important;
+    bottom: -3px; /* 3px gap from text on mobile */
+    height: 1.5px; /* Thinner on mobile */
+  }
+
+  /* Ensure menu button stays visible above overlay */
+  .menu-fixed-container {
+    z-index: 203;
+  }
+
+  .menu-text {
+    display: none;
+  }
+
+  .menu-icon-container {
+    display: block;
+  }
+
+  .immersive-fixed-container {
+    display: none;
+  }
+
+  .immersive-text-container,
+  .immersive-border-container {
+    display: none;
+  }
+
+  /* Show immersive button in menu only on mobile */
+  .immersive-menu-item {
+    display: block;
+  }
+
+  /* Glassmorphism menu button for mobile */
+  .menu-button {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    padding: 3px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .menu-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+  }
+
+  /* Scrolled state for mobile menu button */
+  .menu-fixed-container.scrolled .menu-button {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .menu-fixed-container.scrolled .menu-button:hover {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  /* When menu is open on mobile */
+  .menu-container.menu-open .menu-button {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .menu-container.menu-open .menu-icon-close {
+    color: white !important;
+  }
+}
+
+@media (min-width: 426px) and (max-width: 1023px) {
+  /* Tablet specific styles */
+
+  /* Center align menu list text on tablet */
+  .menu-popup .menu-groups {
+    gap: 72px;
+  }
+
+  .menu-popup .menu-list {
+    text-align: center;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .menu-popup .menu-list li {
+    text-align: center;
+    display: block;
+    width: 100%;
+  }
+
+  /* Adjust underline for menu text on tablet */
+  .menu-text::after {
+    bottom: -1px; /* Slightly closer for tablet */
+  }
+
+  /* Show overlay on tablet */
+  .mobile-menu-overlay {
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  /* Adjust menu popup for tablet with overlay */
+  .menu-container.menu-open .menu-popup {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    max-width: none;
+    background: transparent;
+    z-index: 202;
+    padding: 32px 0 20px 0;
+    transform: translateY(-50%);
+  }
+
+  .menu-container.menu-open .menu-popup .menu-list li {
+    color: white !important;
+  }
+
+  .menu-container.menu-open .menu-popup .menu-list li::after {
+    background: white !important;
+    bottom: -1px; /* Slightly closer for tablet */
+  }
+
+  /* Ensure menu button stays visible above overlay */
+  .menu-container.menu-open .menu-fixed-container {
+    z-index: 203;
+  }
+
+  .immersive-button {
+    width: 176px;
+    height: 42px;
+  }
+
+  .immersive-text-container,
+  .immersive-border-container {
+    width: 176px;
+    height: 42px;
+  }
+
+  /* Hide account button on tablet */
+  .account-fixed-container {
+    display: none;
+  }
+}
+
+@media (min-width: 426px) {
+  .menu-icon-container {
+    display: none;
+  }
+
+  .menu-text {
+    display: inline-block;
+  }
+
+  /* Hide immersive button in menu on desktop */
+  .immersive-menu-item {
+    display: none !important;
+  }
 }

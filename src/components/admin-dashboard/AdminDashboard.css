@@ -184,19 +184,19 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .admin-sidebar {
     width: 250px;
   }
-  
+
   .admin-main-content {
     margin-left: 250px;
   }
-  
+
   .admin-content-header {
     padding: 1.5rem 2rem;
   }
-  
+
   .admin-content-body {
     padding: 2rem;
   }
@@ -208,19 +208,19 @@
     position: relative;
     min-height: auto;
   }
-  
+
   .admin-main-content {
     margin-left: 0;
   }
-  
+
   .admin-page-title {
     font-size: 28px;
   }
-  
+
   .admin-content-header {
     padding: 1.5rem;
   }
-  
+
   .admin-content-body {
     padding: 1.5rem;
   }

@@ -585,8 +585,8 @@
 
 /* ============= RESPONSIVE DESIGN ============= */
 
-/* Tablet (1024px and down) */
-@media (max-width: 1024px) {
+/* Tablet (1023px and down) */
+@media (max-width: 1023px) {
   .select-option-section {
     padding: 30px 40px;
   }

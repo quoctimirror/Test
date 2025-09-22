@@ -1,7 +1,7 @@
 /* FutureDiamond Component Styles */
 .future-diamond {
   width: 100%;
-  min-height: 100vh; /* Increased for sticky scroll effect */
+  min-height: 100vh;
   background: linear-gradient(
     180deg,
     #000 0%,
@@ -41,36 +41,21 @@
   justify-content: center;
   text-align: center;
   font-family: "Saol Display", serif;
-
-  /* AUTO SCALE: Dùng available width sau khi trừ padding để tính font-size */
-  padding: 0 5vw; /* Thêm padding trái phải */
-  font-size: clamp(32px, min(20vw, calc((100vw - 10vw) / 6)), 300px);
-
-  /* Backup scaling nếu vẫn overflow */
-  transform-origin: center;
-  transform: scale(min(1, calc((100vw - 10vw) / 1400px)));
-
+  font-size: clamp(32px, 15vw, 300px);
   font-style: normal;
   font-weight: 300;
   line-height: 90%;
-
-  /* SỬA Ở ĐÂY: Dùng đơn vị 'em' để letter-spacing tỉ lệ với font-size */
-  letter-spacing: -0.03em; /* Tương đương -9px ở font-size 300px */
-
+  letter-spacing: -0.03em;
   text-transform: none;
-  white-space: nowrap;
   margin: 23vh 0 20vh 0;
-
-  /* AUTO FIT: Tự động điều chỉnh để không tràn */
   width: 100%;
   max-width: 100vw;
-  overflow: hidden;
+  padding: 0 2.5%;
   box-sizing: border-box;
+  overflow-wrap: break-word;
+  hyphens: auto;
 
-  /* Thêm containment để tối ưu performance */
-  contain: layout style;
-
-  /* Giữ nguyên hiệu ứng gradient */
+  /* Gradient effect */
   background: linear-gradient(
     90deg,
     #000000 0%,
@@ -87,13 +72,11 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-
-  /* Animation */
   animation: gradientMove 5s ease-in-out infinite;
 }
 
 .future-diamond-description-container {
-  height: 400vh; /* Extended height for text to fully fade-in before scroll continues */
+  height: 400vh;
   position: relative;
 }
 
@@ -116,221 +99,29 @@
   padding: 0 40px;
 }
 
-/* Responsive Design */
-/* Ultra Wide Screens - clamp() tự động xử lý */
-/* Large Desktop - clamp() tự động xử lý */
-
-/* 16:10 Aspect Ratio - 1728x1080 */
-@media (min-width: 1600px) and (max-width: 1800px) and (min-aspect-ratio: 16/10) and (max-aspect-ratio: 16/10) {
-  .future-diamond-title {
-    font-size: clamp(32px, 15vw, 260px); /* Giảm font-size cho màn 16:10 */
-    margin: 20vh 0 18vh 0;
-  }
-
-  .future-diamond-logo {
-    width: 115px;
-  }
-
-  .future-diamond-logo-container {
-    /* margin-top: 12%; */
-  }
-
-  .future-diamond-description {
-    max-width: 1150px;
-    padding: 0 38px;
-  }
-}
-
-/* Large Desktop - 1601px to 1800px */
-@media (min-width: 1601px) and (max-width: 1800px) {
-  .future-diamond-logo-container {
-    /* margin-top: 12%; */
-  }
-}
-
-/* Medium Desktop - 1600px */
-@media (max-width: 1600px) {
-  .future-diamond-title {
-    /* Responsive được xử lý bởi clamp() trong base class */
-  }
-
-  .future-diamond-logo {
-    width: 110px;
-    margin-top: 55vh;
-  }
-
-  .future-diamond-logo-container {
-    /* margin-top: 15%; */
-  }
-
-  .future-diamond-description {
-    max-width: 1100px;
-    padding: 0 35px;
-  }
-}
-
-/* MacBook Air 13" height (1280x800) */
-@media (max-width: 1280px) and (max-height: 800px) {
-  .future-diamond-title {
-    font-size: clamp(
-      32px,
-      16vw,
-      190px
-    ); /* Bỏ !important để test auto-scaling */
-    margin: 16vh 0 14vh 0;
-  }
-
-  .future-diamond-logo {
-    width: 90px;
-  }
-
-  .future-diamond-description {
-    max-width: 900px;
-    padding: 0 26px;
-  }
-}
-
-/* MacBook 13" – 14" height (1440x900) */
-@media (max-width: 1440px) and (max-height: 900px) {
-  .future-diamond-title {
-    font-size: clamp(32px, 18vw, 220px); /* Giảm font-size cho màn 1440x900 */
-    margin: 18vh 0 16vh 0;
-  }
-
-  .future-diamond-logo {
-    width: 95px;
-  }
-
-  .future-diamond-description {
-    max-width: 950px;
-    padding: 0 28px;
-  }
-}
-
-/* Standard Desktop - 1440px */
-@media (max-width: 1440px) {
-  .future-diamond-title {
-    /* Sử dụng auto-scaling system thay vì override */
-    padding: 0 4vw; /* Giảm padding cho desktop */
-    font-size: clamp(32px, min(18vw, calc((100vw - 8vw) / 6.5)), 240px);
-    transform: scale(min(1, calc((100vw - 8vw) / 1200px)));
-    margin: 20vh 0 18vh 0;
-  }
-
-  .future-diamond-logo {
-    width: 100px;
-    margin-top: 47vh;
-  }
-
-  .future-diamond-logo-container {
-    /* margin-top: 23%; */
-  }
-
-  .future-diamond-description {
-    max-width: 1000px;
-    padding: 0 30px;
-  }
-}
-
-/* Large Laptop - 1200px */
-@media (max-width: 1200px) {
-  .future-diamond {
-    min-height: 280vh;
-  }
-
-  .future-diamond-title {
-    /* Sử dụng auto-scaling system */
-    padding: 0 3.5vw; /* Giảm padding cho laptop */
-    font-size: clamp(32px, min(16vw, calc((100vw - 7vw) / 7)), 200px);
-    transform: scale(min(1, calc((100vw - 7vw) / 1000px)));
-    margin: 18vh 0 16vh 0;
-  }
-
-  .future-diamond-logo {
-    width: 90px;
-    margin-top: 20vh;
-  }
-
-  .future-diamond-logo-container {
-    /* margin-top: 18%; */
-  }
-
-  .future-diamond-description {
-    max-width: 900px;
-    padding: 0 25px;
-  }
-
-  .future-diamond-description-container {
-    height: 180vh;
-  }
-}
-
-/* Small Laptop - 1024px */
-@media (max-width: 1024px) {
-  .future-diamond-title {
-    font-size: clamp(32px, 16vw, 160px);
-    margin: 16vh 0 14vh 0;
-  }
-}
-
-/* Standard Laptop - 992px */
-@media (max-width: 992px) {
-  .future-diamond {
-    min-height: 260vh;
-  }
-
-  .future-diamond-title {
-    font-size: clamp(32px, 14vw, 140px);
-    margin: 15vh 0 13vh 0;
-  }
-
-  .future-diamond-logo {
-    width: 80px;
-    margin-top: 18vh;
-  }
-
-  .future-diamond-logo-container {
-    /* margin-top: 8%; */
-  }
-
-  .future-diamond-description {
-    max-width: 800px;
-    padding: 0 20px;
-  }
-
-  .future-diamond-description-container {
-    height: 160vh;
-  }
-}
-
-/* Tablet - 768px */
-@media (max-width: 768px) {
+/* Medium screens (tablets) - 426px to 1023px */
+@media (min-width: 426px) and (max-width: 1023px) {
   .future-diamond {
     min-height: 240vh;
-    padding: 4vh 0;
-  }
-
-  .future-diamond-title {
-    font-size: clamp(32px, 12vw, 92px);
-    margin: 13vh 0 10vh 0;
   }
 
   .future-diamond-logo {
-    width: 70px;
-    margin-top: 14vh;
+    width: 90px;
+    margin-top: 25vh;
   }
 
-  .future-diamond-logo-container {
-    /* margin-top: 7%; */
+  .future-diamond-title {
+    font-size: clamp(32px, 17.5vw, 180px);
+    margin: 16vh 0 14vh 0;
+    padding: 0 2.5%;
   }
 
   .future-diamond-description {
-    max-width: 700px;
-    padding: 0 15px;
+    max-width: 62%;
   }
 
   .future-diamond-description-container {
-    height: 140vh;
+    height: 250vh;
   }
 
   .future-diamond-sticky-wrapper {
@@ -338,42 +129,34 @@
   }
 }
 
-/* Phablet - 600px */
-@media (max-width: 600px) {
-  .future-diamond-title {
-    font-size: clamp(28px, 10vw, 60px);
-    margin: 12vh 0 9vh 0;
-  }
-}
-
-/* Large Mobile - 480px */
-@media (max-width: 480px) {
+/* Small screens (mobile) - less than 425px */
+@media (max-width: 425px) {
   .future-diamond {
-    min-height: 220vh;
+    min-height: 200vh;
     padding: 3vh 0;
-  }
-
-  .future-diamond-title {
-    font-size: clamp(24px, 9vw, 43px);
-    margin: 11vh 0 8vh 0;
   }
 
   .future-diamond-logo {
     width: 60px;
-    margin-top: 15vh;
+    margin-top: 20vh;
   }
 
-  .future-diamond-logo-container {
-    /* margin-top: 6%; */
+  .future-diamond-title {
+    font-size: clamp(20px, 24vw, 101px);
+    margin: 10vh 0 8vh 0;
+    padding: 0 2.5%;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 95%;
   }
 
   .future-diamond-description {
-    max-width: 600px;
-    padding: 0 10px;
+    max-width: 77%;
+    padding: 0 15px;
   }
 
   .future-diamond-description-container {
-    height: 120vh;
+    height: 200vh;
   }
 
   .future-diamond-sticky-wrapper {
@@ -381,70 +164,7 @@
   }
 }
 
-/* Medium Mobile - 414px */
-@media (max-width: 414px) {
-  .future-diamond-title {
-    font-size: clamp(22px, 8.5vw, 35px);
-    margin: 10vh 0 7vh 0;
-  }
-}
-
-/* Small Mobile - 375px */
-@media (max-width: 375px) {
-  .future-diamond-title {
-    font-size: clamp(20px, 8vw, 30px);
-    margin: 9vh 0 6vh 0;
-  }
-}
-
-/* Extra Small Mobile - 360px */
-@media (max-width: 360px) {
-  .future-diamond {
-    min-height: 200vh;
-  }
-
-  .future-diamond-title {
-    /* Responsive được xử lý bởi clamp() trong base class */
-    margin: 9vh 0 6vh 0;
-  }
-
-  .future-diamond-logo {
-    width: 50px;
-  }
-
-  .future-diamond-logo-container {
-    /* margin-top: 5%; */
-  }
-
-  .future-diamond-description {
-    max-width: 500px;
-    padding: 0 8px;
-  }
-
-  .future-diamond-description-container {
-    height: 100vh;
-  }
-
-  .future-diamond-sticky-wrapper {
-    padding-top: 15px;
-  }
-}
-
-/* Very Small Mobile - 320px */
-@media (max-width: 320px) {
-  .future-diamond-title {
-    /* Responsive được xử lý bởi clamp() trong base class */
-  }
-}
-
-/* Ultra Small Mobile - handle extreme cases */
-@media (max-width: 280px) {
-  .future-diamond-title {
-    /* Responsive được xử lý bởi clamp() trong base class */
-  }
-}
-
-/* Animation on scroll (optional) */
+/* Animations */
 @media (prefers-reduced-motion: no-preference) {
   .future-diamond .future-diamond-logo,
   .future-diamond .future-diamond-title,

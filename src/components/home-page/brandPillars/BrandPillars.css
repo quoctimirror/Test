@@ -31,6 +31,15 @@
   /* Remove opacity override - let MetaballBackground handle its own opacity */
 }
 
+/* Hide metaball and gradients on mobile and tablet */
+@media (max-width: 1023px) {
+  .brand-pillars-background,
+  .brand-pillars-gradient-overlay-top,
+  .brand-pillars-gradient-overlay-bottom {
+    display: none;
+  }
+}
+
 .brand-pillars-gradient-overlay-top {
   position: absolute;
   top: 0;
@@ -87,15 +96,6 @@
 .brand-pillars .brand-expand-text .bodytext-3--no-margin {
   color: rgba(255, 255, 255, 0.75);
   white-space: normal;
-
-  /* AUTO SCALE: Font-size tự động scale theo viewport */
-  font-size: clamp(10px, min(1vw, calc((100vw - 5vw) / 90)), 16px);
-  transform-origin: left center;
-  transform: scale(min(1, calc((100vw - 5vw) / 1400px)));
-  transition: font-size 0.3s ease, transform 0.3s ease;
-
-  /* Overflow protection */
-  max-width: 100%;
   word-wrap: break-word;
   contain: layout style;
 }
@@ -106,10 +106,6 @@
   .bodytext-3--no-margin {
   max-width: none;
   white-space: nowrap;
-
-  /* Override auto-scale cho group 1 - aggressive hơn cho nowrap */
-  font-size: clamp(8px, min(0.9vw, calc((100vw - 10vw) / 100)), 16px);
-  transform: scale(min(1, calc((100vw - 10vw) / 1500px)));
 }
 
 .brand-pillars
@@ -127,15 +123,11 @@
   .bodytext-3--no-margin {
   max-width: none;
   white-space: nowrap;
-
-  /* Override auto-scale cho group 3 - aggressive hơn cho nowrap */
-  font-size: clamp(8px, min(0.9vw, calc((100vw - 10vw) / 100)), 16px);
-  transform: scale(min(1, calc((100vw - 10vw) / 1500px)));
 }
 
 /* Specific sizes and positions for each group */
 .brand-group:nth-child(1) {
-  max-width: 898px;
+  max-width: 50%;
   /* AUTO HEIGHT: Height scales với viewport */
   max-height: clamp(150px, 11vh, 214px);
   margin-left: 22.5%;
@@ -182,7 +174,7 @@
 }
 
 .brand-group:nth-child(3) {
-  width: 749px;
+  width: 50%;
   /* AUTO HEIGHT: Height scales với viewport */
   height: clamp(150px, 11vh, 214px);
   margin-left: 15.7%;
@@ -259,311 +251,62 @@
 
 /* Responsive Design */
 
-/* 16:10 Aspect Ratio - 1728x1080 */
-@media (min-width: 1600px) and (max-width: 1800px) and (min-aspect-ratio: 16/10) and (max-aspect-ratio: 16/10) {
-  .brand-line {
-    /* Auto-scaling cho 16:10 aspect ratio */
-    font-size: clamp(36px, min(6vw, calc((100vw - 8vw) / 16)), 112px);
-    transform: scale(min(1, calc((100vw - 8vw) / 1400px)));
-    letter-spacing: clamp(-1.44px, -0.26vw, -3.36px);
+/* Tablet (426px - 1023px) */
+@media (min-width: 426px) and (max-width: 1023px) {
+  .star-container-center {
+    left: 0%;
+    top: 0%;
   }
 
-  .brand-group:nth-child(1) {
-    width: 750px;
-    /* AUTO HEIGHT: Height scales cho 16:10 aspect ratio */
-    height: clamp(140px, 10vh, 180px);
-    margin-left: 20%;
-  }
-
-  .brand-group:nth-child(1) .brand-expand-text {
-    width: 500px;
-  }
-
-  .brand-group:nth-child(2) {
-    margin-right: 11%;
-  }
-
-  .brand-group:nth-child(2) .brand-expand-text {
-    width: 380px;
-  }
-
-  .brand-pillars
-    .brand-group:nth-child(2)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    max-width: 380px;
-  }
-
-  .brand-group:nth-child(3) {
-    width: 630px;
-    /* AUTO HEIGHT: Height scales cho 16:10 aspect ratio */
-    height: clamp(140px, 10vh, 180px);
-    margin-left: 14%;
-  }
-
-  .brand-group:nth-child(3) .brand-expand-text {
-    width: 500px;
-  }
-}
-
-/* MacBook 13" – 14" height (1440x900) */
-@media (max-width: 1440px) and (max-height: 900px) {
-  .brand-line {
-    /* Auto-scaling cho 1440x900 */
-    font-size: clamp(35px, min(5.5vw, calc((100vw - 10vw) / 17)), 95px);
-    transform: scale(min(1, calc((100vw - 10vw) / 1300px)));
-    letter-spacing: clamp(-1.44px, -0.24vw, -2.85px);
-  }
-
-  .brand-group:nth-child(1) {
-    width: 720px;
-    /* AUTO HEIGHT: Height scales cho 1440x900 */
-    height: clamp(130px, 9.5vh, 170px);
-    margin-left: 19%;
-  }
-
-  .brand-group:nth-child(1) .brand-expand-text {
-    width: 480px;
-  }
-
-  .brand-group:nth-child(2) {
-    margin-right: 11.5%;
-  }
-
-  .brand-group:nth-child(2) .brand-expand-text {
-    width: 360px;
-  }
-
-  .brand-pillars
-    .brand-group:nth-child(2)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    max-width: 360px;
-  }
-
-  .brand-group:nth-child(3) {
-    width: 600px;
-    /* AUTO HEIGHT: Height scales cho 1440x900 */
-    height: clamp(130px, 9.5vh, 170px);
-    margin-left: 14%;
-  }
-
-  .brand-group:nth-child(3) .brand-expand-text {
-    width: 480px;
-  }
-
-  .brand-pillars .brand-expand-text .bodytext-3--no-margin {
-    /* Auto-scaling cho 1440x900 */
-    font-size: clamp(9px, min(0.95vw, calc((100vw - 8vw) / 95)), 14px);
-    transform: scale(min(1, calc((100vw - 8vw) / 1300px)));
-  }
-
-  /* Tăng width cho brand-expand-text của group 2 để tránh line break không mong muốn */
-  .brand-group:nth-child(2) .brand-expand-text {
-    width: 480px; /* Tăng width để text có đủ chỗ */
-  }
-
-  .brand-pillars
-    .brand-group:nth-child(2)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    max-width: 480px;
-    line-height: 1.4;
-    word-spacing: normal; /* Đảm bảo khoảng cách từ bình thường */
-  }
-}
-
-@media (max-width: 1440px) {
   .brand-pillars {
-    padding: 60px 30px;
+    padding: 0;
+    min-height: 300vh; /* 3 sections x 100vh */
+    background-color: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .brand-pillars-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .brand-pillars-text {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0;
   }
 
   .brand-line {
-    /* Auto-scaling cho desktop 1440px - tăng font size lên */
-    font-size: clamp(60px, min(6.5vw, calc((100vw - 5vw) / 18)), 100px);
-    transform: scale(min(1, calc((100vw - 5vw) / 1200px)));
-    letter-spacing: clamp(-2.4px, -0.21vw, -3px);
-  }
-
-  .brand-group:nth-child(1) {
-    width: clamp(600px, 70vw, 700px);
-    /* AUTO HEIGHT: Height scales cho desktop 1440px */
-    max-height: clamp(120px, 9vh, 167px);
-    margin-left: clamp(15%, 18vw, 22.5%);
-  }
-
-  .brand-group:nth-child(1) .brand-expand-text {
-    width: clamp(350px, 40vw, 476px);
-  }
-
-  .brand-group:nth-child(2) {
-    margin-right: clamp(8%, 10vw, 13.4%);
-  }
-
-  .brand-group:nth-child(2) .brand-expand-text {
-    width: clamp(300px, 35vw, 354px);
-  }
-
-  /* Override cho màn hình 1440x900 */
-  @media (max-height: 900px) {
-    .brand-group:nth-child(2) .brand-expand-text {
-      width: 480px !important; /* Tăng width cho màn 1440x900 */
-    }
-
-    .brand-pillars
-      .brand-group:nth-child(2)
-      .brand-expand-text
-      .bodytext-3--no-margin {
-      max-width: 480px !important;
-    }
-  }
-
-  .brand-pillars
-    .brand-group:nth-child(2)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    max-width: clamp(300px, 35vw, 354px);
-  }
-
-  .brand-group:nth-child(3) {
-    width: clamp(500px, 60vw, 585px);
-    /* AUTO HEIGHT: Height scales cho desktop 1440px */
-    height: clamp(120px, 9vh, 167px);
-    margin-left: clamp(10%, 12vw, 15.7%);
-  }
-
-  .brand-group:nth-child(3) .brand-expand-text {
-    width: clamp(350px, 40vw, 476px);
-  }
-}
-
-@media (max-width: 1200px) {
-  .brand-pillars {
-    padding: 60px 30px;
-  }
-
-  .brand-line {
-    /* Auto-scaling cho laptop 1200px */
-    font-size: clamp(42px, min(5vw, calc((100vw - 10vw) / 22)), 80px);
-    transform: scale(min(1, calc((100vw - 10vw) / 1000px)));
-    letter-spacing: -2.4px;
-  }
-
-  .brand-group:nth-child(1) {
-    width: 560px;
-    /* AUTO HEIGHT: Height scales cho laptop 1200px */
-    height: clamp(100px, 8vh, 134px);
-    margin-left: 20%;
-  }
-
-  .brand-group:nth-child(1) .brand-expand-text {
-    width: 381px;
-  }
-
-  .brand-group:nth-child(2) {
-    margin-right: 15%;
-  }
-
-  .brand-group:nth-child(2) .brand-expand-text {
-    width: 283px;
-  }
-
-  .brand-pillars
-    .brand-group:nth-child(2)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    max-width: 283px;
-  }
-
-  .brand-group:nth-child(3) {
-    width: 468px;
-    /* AUTO HEIGHT: Height scales cho laptop 1200px */
-    height: clamp(100px, 8vh, 134px);
-    margin-left: 18%;
-  }
-
-  .brand-group:nth-child(3) .brand-expand-text {
-    width: 381px;
-  }
-}
-
-@media (max-width: 992px) {
-  .brand-line {
-    /* Auto-scaling cho tablet 992px */
-    font-size: clamp(36px, min(4.5vw, calc((100vw - 8vw) / 25)), 64px);
-    transform: scale(min(1, calc((100vw - 8vw) / 900px)));
-    letter-spacing: -1.92px;
-  }
-
-  .brand-group:nth-child(1) {
-    width: 448px;
-    /* AUTO HEIGHT: Height scales cho tablet 992px */
-    height: clamp(80px, 7vh, 107px);
-    margin-left: 15%;
-  }
-
-  .brand-group:nth-child(1) .brand-expand-text {
-    width: 305px;
-    margin-left: 10px;
-    bottom: 10px;
-  }
-
-  .brand-group:nth-child(2) {
-    margin-right: 12%;
-  }
-
-  .brand-group:nth-child(2) .brand-expand-text {
-    width: 226px;
-    margin-right: 10px;
-  }
-
-  .brand-pillars
-    .brand-group:nth-child(2)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    max-width: 226px;
-  }
-
-  .brand-group:nth-child(3) {
-    width: 374px;
-    /* AUTO HEIGHT: Height scales cho tablet 992px */
-    height: clamp(80px, 7vh, 107px);
-    margin-left: 15%;
-  }
-
-  .brand-group:nth-child(3) .brand-expand-text {
-    width: 305px;
-    margin-left: 10px;
-    bottom: 10px;
-  }
-
-  .brand-line-with-expand {
-    align-items: center !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .brand-pillars {
-    padding: 40px 15px;
-    min-height: 80vh;
-  }
-
-  .brand-line {
-    /* Auto-scaling cho tablet 768px */
-    font-size: clamp(28px, min(6vw, calc((100vw - 10vw) / 15)), 48px);
-    transform: scale(min(1, calc((100vw - 10vw) / 650px)));
-    letter-spacing: clamp(-1.44px, -0.24vw, -1.08px);
-    line-height: 85%;
+    /* Fixed font size for tablet */
+    font-size: 64px;
+    transform: none;
+    letter-spacing: -0.02em;
+    line-height: 90%;
   }
 
   .brand-group {
-    margin-bottom: 1.2em;
+    margin-bottom: 0;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    box-sizing: border-box;
   }
 
   .brand-group:nth-child(1) {
-    width: 100%;
-    height: auto;
-    margin-left: 0;
+    width: 62%;
+    height: 100vh;
+    margin: 0 auto;
     text-align: center;
   }
 
@@ -572,11 +315,29 @@
     text-align: center;
   }
 
+  .brand-group:nth-child(1) .brand-main-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .brand-group:nth-child(1) .brand-line {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
   .brand-group:nth-child(1) .brand-line-with-expand {
+    display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 40px;
+    width: 100%;
+  }
+
+  .brand-group:nth-child(1) .brand-line-with-expand .brand-line {
+    order: -1;
   }
 
   .brand-group:nth-child(1) .brand-expand-text {
@@ -590,19 +351,22 @@
   }
 
   .brand-group:nth-child(2) {
+    height: 100vh;
+    display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     margin-right: 0;
     text-align: center;
-    gap: 15px;
+    gap: 36px;
   }
 
   .brand-group:nth-child(2) .brand-expand-text {
-    width: 100%;
+    width: 62%;
     margin-right: 0;
     margin-bottom: 0;
     text-align: center;
-    order: 2;
+    order: 3;
     transform: none;
     opacity: 1;
   }
@@ -619,10 +383,15 @@
     order: 1;
   }
 
+  .brand-group:nth-child(2) .starlight-6-oclock-wrapper {
+    order: 2;
+    margin: 0;
+  }
+
   .brand-group:nth-child(3) {
-    width: 100%;
-    height: auto;
-    margin-left: 0;
+    width: 62%;
+    height: 100vh;
+    margin: 0 auto;
     text-align: center;
   }
 
@@ -631,11 +400,256 @@
     text-align: center;
   }
 
+  .brand-group:nth-child(3) .brand-main-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .brand-group:nth-child(3) .brand-line {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Move all brand-lines to top */
+  .brand-group:nth-child(3) .brand-main-text > span.brand-line {
+    order: -2;
+  }
+
   .brand-group:nth-child(3) .brand-line-with-expand {
+    display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 36px;
+    width: 100%;
+    order: 1;
+  }
+
+  .brand-group:nth-child(3) .brand-line-with-expand .brand-line {
+    order: -3;
+  }
+
+  .brand-group:nth-child(3) .brand-expand-text {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0;
+    bottom: auto;
+    text-align: center;
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Make expand text always visible on tablet */
+  .brand-expand-text {
+    pointer-events: auto;
+  }
+
+  .brand-pillars .brand-expand-text .bodytext-3--no-margin {
+    /* Use default bodytext-3--no-margin responsive typography */
+    transform: none;
+    line-height: 150%;
+    padding: 0 20px;
+  }
+
+  /* Override nowrap for group 1 and 3 on tablet */
+  .brand-pillars
+    .brand-group:nth-child(1)
+    .brand-expand-text
+    .bodytext-3--no-margin,
+  .brand-pillars
+    .brand-group:nth-child(3)
+    .brand-expand-text
+    .bodytext-3--no-margin {
+    white-space: normal;
+  }
+
+  /* Remove line breaks on tablet */
+  .brand-expand-text br {
+    display: none;
+  }
+}
+
+/* Mobile (<=425px) */
+@media (max-width: 425px) {
+  .star-container-center {
+    left: 0%;
+    top: 0%;
+  }
+  .brand-pillars {
+    padding: 0;
+    min-height: 300vh; /* 3 sections x 100vh */
+    background-color: #000000;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .brand-pillars-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .brand-pillars-text {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0;
+  }
+
+  .brand-line {
+    /* Fixed font size for mobile */
+    font-size: 40px;
+    transform: none;
+    letter-spacing: -0.02em;
+    line-height: 90%;
+  }
+
+  .brand-group {
+    margin-bottom: 0;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+  }
+
+  .brand-group:nth-child(1) {
+    width: 77%;
+    height: 100vh;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .brand-group:nth-child(1) .brand-line:nth-child(1),
+  .brand-group:nth-child(1) .brand-line:nth-child(2) {
+    text-align: center;
+  }
+
+  .brand-group:nth-child(1) .brand-main-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .brand-group:nth-child(1) .brand-line {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .brand-group:nth-child(1) .brand-line-with-expand {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
+  }
+
+  .brand-group:nth-child(1) .brand-line-with-expand .brand-line {
+    order: -1;
+  }
+
+  .brand-group:nth-child(1) .brand-expand-text {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0;
+    bottom: auto;
+    text-align: center;
+    transform: none;
+    opacity: 1;
+  }
+
+  .brand-group:nth-child(2) {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0;
+    text-align: center;
+    gap: 36px;
+  }
+
+  .brand-group:nth-child(2) .brand-expand-text {
+    width: 77%;
+    margin-right: 0;
+    margin-bottom: 0;
+    text-align: center;
+    order: 3;
+    transform: none;
+    opacity: 1;
+  }
+
+  .brand-pillars
+    .brand-group:nth-child(2)
+    .brand-expand-text
+    .bodytext-3--no-margin {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .brand-group:nth-child(2) .brand-main-text {
+    order: 1;
+  }
+
+  .brand-group:nth-child(2) .starlight-6-oclock-wrapper {
+    order: 2;
+    margin: 0;
+  }
+
+  .brand-group:nth-child(3) {
+    width: 77%;
+    height: 100vh;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .brand-group:nth-child(3) .brand-line:nth-child(1),
+  .brand-group:nth-child(3) .brand-line:nth-child(2) {
+    text-align: center;
+  }
+
+  .brand-group:nth-child(3) .brand-main-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .brand-group:nth-child(3) .brand-line {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Move all brand-lines to top */
+  .brand-group:nth-child(3) .brand-main-text > span.brand-line {
+    order: -2;
+  }
+
+  .brand-group:nth-child(3) .brand-line-with-expand {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    width: 100%;
+    order: 1;
+  }
+
+  .brand-group:nth-child(3) .brand-line-with-expand .brand-line {
+    order: -3;
   }
 
   .brand-group:nth-child(3) .brand-expand-text {
@@ -654,10 +668,22 @@
   }
 
   .brand-pillars .brand-expand-text .bodytext-3--no-margin {
-    /* Auto-scaling cho tablet */
-    font-size: clamp(10px, min(2.8vw, calc((100vw - 8vw) / 35)), 16px);
-    transform: scale(min(1, calc((100vw - 8vw) / 700px)));
-    line-height: 140%;
+    /* Use default bodytext-3--no-margin responsive typography */
+    transform: none;
+    line-height: 150%;
+    padding: 0 10px;
+  }
+
+  /* Override nowrap for group 1 and 3 on mobile */
+  .brand-pillars
+    .brand-group:nth-child(1)
+    .brand-expand-text
+    .bodytext-3--no-margin,
+  .brand-pillars
+    .brand-group:nth-child(3)
+    .brand-expand-text
+    .bodytext-3--no-margin {
+    white-space: normal !important;
   }
 
   /* Remove line breaks on mobile */
@@ -666,56 +692,36 @@
   }
 }
 
-@media (max-width: 480px) {
-  .brand-pillars {
-    padding: 25px 12px;
-    min-height: 70vh;
-  }
-
-  .brand-line {
-    /* Auto-scaling cho mobile 480px */
-    font-size: clamp(24px, min(5.5vw, calc((100vw - 6vw) / 12)), 36px);
-    transform: scale(min(1, calc((100vw - 6vw) / 450px)));
-    letter-spacing: clamp(-1.08px, -0.21vw, -0.84px);
-    line-height: 80%;
-  }
-
-  .brand-group {
-    margin-bottom: 2em;
-  }
-
-  .brand-pillars .brand-expand-text .bodytext-3--no-margin {
-    /* Auto-scaling cho mobile 480px */
-    font-size: clamp(9px, min(2.5vw, calc((100vw - 6vw) / 40)), 14px);
-    transform: scale(min(1, calc((100vw - 6vw) / 450px)));
-    line-height: 135%;
-    padding: 0 5px;
-  }
+/* Starlight effect - hidden by default, only show on mobile/tablet */
+.starlight-6-oclock-wrapper {
+  display: none;
 }
 
-@media (max-width: 360px) {
-  .brand-pillars {
-    padding: 20px 10px;
+/* Override star-container-center styles from other sections */
+.brand-pillars .starlight-6-oclock-wrapper .star-container-center {
+  margin-top: 0 !important;
+  position: relative !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+@media (max-width: 1023px) {
+  .starlight-6-oclock-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    opacity: 0.8;
   }
 
-  .brand-line {
-    /* Auto-scaling cho small mobile 360px */
-    font-size: clamp(20px, min(5vw, calc((100vw - 6vw) / 14)), 28px);
-    transform: scale(min(1, calc((100vw - 6vw) / 340px)));
-    letter-spacing: clamp(-0.84px, -0.195vw, -0.72px);
-    line-height: 75%;
+  /* Ensure star-container-center has no external margin */
+  .brand-pillars .starlight-6-oclock-wrapper .star-container-center {
+    margin: 0 !important;
   }
 
-  .brand-group {
-    margin-bottom: 2.5em;
-  }
-
-  .brand-pillars .brand-expand-text .bodytext-3--no-margin {
-    /* Auto-scaling cho mobile 360px */
-    font-size: clamp(8px, min(2.2vw, calc((100vw - 6vw) / 45)), 12px);
-    transform: scale(min(1, calc((100vw - 6vw) / 340px)));
-    line-height: 130%;
-    padding: 0 3px;
+  /* Make starlight longer on mobile and tablet */
+  .brand-pillars .starlight-6-oclock-wrapper svg {
+    transform: scaleY(2) !important;
   }
 }
 

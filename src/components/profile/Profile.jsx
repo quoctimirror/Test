@@ -264,7 +264,7 @@ const Profile = () => {
         {/* Profile Header */}
         <div className="profile-header">
           <div className="profile-info">
-            <h1 className="heading-1 profile-name">
+            <h1 className="heading-1--no-margin profile-name">
               {formData.firstName}
               <br />
               {formData.lastName}
@@ -432,9 +432,6 @@ const Profile = () => {
 
             <div className="action-buttons-container">
               <ShineGlassButton
-                width={200}
-                height={50}
-                fontSize={14}
                 theme="light"
                 onClick={() => setShowChangePassword(true)}
                 className="change-password-button"
@@ -442,9 +439,6 @@ const Profile = () => {
                 Change Password
               </ShineGlassButton>
               <ShineGlassButton
-                width={200}
-                height={50}
-                fontSize={14}
                 theme="light"
                 onClick={() => {}}
                 className="save-profile-button"

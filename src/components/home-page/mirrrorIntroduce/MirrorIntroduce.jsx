@@ -16,26 +16,25 @@ const MirrorIntroduce = () => {
   // Text slides data
   const textSlides = [
     {
-      title: "The Universe is built upon a single,",
-      secondLine: "powerful element:",
-      highlight: "reflection",
+      title: "The Universe is built upon a single, powerful element: ",
+      highlight: "reflection.",
       subtitle:
-        "It begins with the way light dances\nacross a diamond's surface\n- but goes far beyond...",
+        "It begins with the way light dances across a diamond's surface - but goes far beyond...",
     },
     {
-      title: "The Reflection of\nBeauty",
+      title: "The Reflection of Beauty",
       subtitle:
-        "From the sparkle on the surface to the brilliance within,\nMirror celebrates the harmony between outer elegance\nand inner light.",
+        "From the sparkle on the surface to the brilliance within, Mirror celebrates the harmony between outer elegance and inner light.",
     },
     {
       title: "The Reflection of Self",
       subtitle:
-        "A moment of stillness where you meet\nyourself - past, present, and becoming.",
+        "A moment of stillness where you meet yourself - past, present, and becoming.",
     },
     {
       title: "The Reflection of\nArtistry and Innovation",
       subtitle:
-        "Each piece is crafted with the precision of technology and\nthe soul of human touch — a seamless harmony between\nmachine intelligence and human intuition.",
+        "Each piece is crafted with the precision of technology and the soul of human touch — a seamless harmony between machine intelligence and human intuition.",
     },
   ];
 
@@ -253,42 +252,12 @@ const MirrorIntroduce = () => {
                                   transition: "color 0.1s ease",
                                 }}
                               >
-                                {char === " " ? "\u00A0" : char}
+                                {char}
                               </span>
                             );
                           })}
-                          <br />
-                          {slide.secondLine &&
-                            slide.secondLine.split("").map((char, index) => {
-                              const secondLineLength = slide.secondLine.length;
-                              const charProgress =
-                                (index + 1) / secondLineLength;
-                              const secondLineRevealProgress =
-                                currentSlide === 0 && slideProgress > 0.25
-                                  ? Math.min(1, (slideProgress - 0.25) / 0.15)
-                                  : 0;
-                              const isRevealed =
-                                secondLineRevealProgress >= charProgress;
-
-                              return (
-                                <span
-                                  key={`secondLine-${index}`}
-                                  style={{
-                                    color: isRevealed
-                                      ? "rgba(0, 0, 0, 1)"
-                                      : "rgba(0, 0, 0, 0.3)",
-                                    transition: "color 0.1s ease",
-                                  }}
-                                >
-                                  {char === " " ? "\u00A0" : char}
-                                </span>
-                              );
-                            })}
                           {slide.highlight && (
                             <>
-                              <span style={{ color: "rgba(0, 0, 0, 1)" }}>
-                                {"\u00A0"}
-                              </span>
                               {slide.highlight.split("").map((char, index) => {
                                 const highlightLength = slide.highlight.length;
                                 const charProgress =
@@ -311,23 +280,12 @@ const MirrorIntroduce = () => {
                                       transition: "color 0.1s ease",
                                     }}
                                   >
-                                    {char === " " ? "\u00A0" : char}
+                                    {char}
                                   </span>
                                 );
                               })}
                             </>
                           )}
-                          <span
-                            style={{
-                              color:
-                                currentSlide === 0 && slideProgress > 0.6
-                                  ? "rgba(0, 0, 0, 1)"
-                                  : "rgba(0, 0, 0, 0.3)",
-                              transition: "color 0.1s ease",
-                            }}
-                          >
-                            .
-                          </span>
                         </h1>
                         <h1 className="heading-1--no-margin slide-subtitle">
                           {(() => {
@@ -361,7 +319,7 @@ const MirrorIntroduce = () => {
                                         transition: "color 0.05s ease",
                                       }}
                                     >
-                                      {char === " " ? "\u00A0" : char}
+                                      {char}
                                     </span>
                                   );
                                 })}
@@ -445,7 +403,7 @@ const MirrorIntroduce = () => {
                                       transition: "color 0.1s ease",
                                     }}
                                   >
-                                    {char === " " ? "\u00A0" : char}
+                                    {char}
                                   </span>
                                 );
                               })}
@@ -454,9 +412,7 @@ const MirrorIntroduce = () => {
                         })()}
                         {slide.highlight && (
                           <>
-                            <span style={{ color: "rgba(0, 0, 0, 1)" }}>
-                              {"\u00A0"}
-                            </span>
+                            <span style={{ color: "rgba(0, 0, 0, 1)" }}> </span>
                             {slide.highlight
                               .split("")
                               .map((char, charIndex) => {
@@ -481,7 +437,7 @@ const MirrorIntroduce = () => {
                                       transition: "color 0.1s ease",
                                     }}
                                   >
-                                    {char === " " ? "\u00A0" : char}
+                                    {char}
                                   </span>
                                 );
                               })}
@@ -540,7 +496,7 @@ const MirrorIntroduce = () => {
                                       transition: "color 0.05s ease",
                                     }}
                                   >
-                                    {char === " " ? "\u00A0" : char}
+                                    {char}
                                   </span>
                                 );
                               })}
