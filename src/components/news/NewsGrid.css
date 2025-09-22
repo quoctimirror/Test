@@ -90,7 +90,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media screen and (max-width: 1200px) {
   .news-grid-container {
     max-width: 1000px;
     padding: 0 1.5rem;
@@ -109,7 +109,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media screen and (max-width: 992px) {
   .news-grid {
     padding: 0 0 100px 0;
   }
@@ -132,7 +132,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .news-grid {
     padding: 0 0 80px 0;
   }
@@ -167,7 +167,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .news-grid {
     padding: 0 0 60px 0;
   }

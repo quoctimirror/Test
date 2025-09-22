@@ -459,7 +459,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .view-360-navbar {
     padding: 15px 20px;
   }
@@ -508,7 +508,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .view-360-viewer {
     width: 100vw;
     height: 100vh;
@@ -563,7 +563,7 @@
 }
 
 /* Enhanced Responsive Design */
-@media (max-width: 1200px) {
+@media screen and (max-width: 1200px) {
   .view-360-section {
     min-height: 100vh;
   }
@@ -601,7 +601,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media screen and (max-width: 992px) {
   .view-360-section {
     min-height: 100vh;
   }
@@ -666,7 +666,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .view-360-section {
     min-height: 100vh;
   }
@@ -729,7 +729,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .view-360-section {
     min-height: 100vh;
   }
@@ -802,7 +802,7 @@
   }
 }
 
-@media (max-width: 360px) {
+@media screen and (max-width: 360px) {
   .view-360-section {
     min-height: 100vh;
   }
@@ -889,7 +889,7 @@
 }
 
 /* Touch-friendly improvements for mobile */
-@media (hover: none) and (pointer: coarse) {
+@media screen and (hover: none) and (pointer: coarse) {
   .color-btn:hover,
   .ar-try-btn:hover,
   .color-controls-btn:hover {

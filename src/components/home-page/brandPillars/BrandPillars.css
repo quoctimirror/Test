@@ -252,7 +252,7 @@
 /* Responsive Design */
 
 /* Tablet (426px - 1023px) */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .star-container-center {
     left: 0%;
     top: 0%;

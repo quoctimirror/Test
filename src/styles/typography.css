@@ -463,7 +463,7 @@
   }
 } */
 
-@media (min-width: 481px) and (max-width: 1279px) {
+@media screen and (min-width: 481px) and (max-width: 1279px) {
   .heading-1 {
     font-size: 36px;
   }
@@ -537,7 +537,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .heading-1 {
     font-size: 32px;
   }

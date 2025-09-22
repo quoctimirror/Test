@@ -241,7 +241,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
+@media screen and (max-width: 1200px) {
   .not-found-content {
     padding: 3.5rem 1.8rem;
   }
@@ -266,7 +266,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media screen and (max-width: 992px) {
   .not-found-content {
     padding: 3rem 1.5rem;
   }
@@ -302,7 +302,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .not-found-page {
     padding: 15px;
   }
@@ -354,7 +354,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .not-found-content {
     padding: 2rem 1rem;
   }
@@ -400,7 +400,7 @@
   }
 }
 
-@media (max-width: 360px) {
+@media screen and (max-width: 360px) {
   .not-found-content {
     padding: 1.5rem 0.8rem;
   }

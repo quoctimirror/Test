@@ -119,7 +119,7 @@
 */
 
 /* Tablet (426px - 1023px) */
-@media screen and (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .section2-wrapper {
     height: auto;
   }

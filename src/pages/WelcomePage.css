@@ -366,7 +366,7 @@
 /* Responsive */
 
 /* Tablet - 481px to 767px */
-@media (max-width: 767px) {
+@media screen and (max-width: 767px) {
   .title-line-2 {
     font-size: clamp(3rem, 15vw, 6rem);
   }
@@ -405,7 +405,7 @@
 }
 
 /* Large Mobile - 361px to 480px */
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   /* .title-line-1 {
     font-size: 1.2rem;
   } */
@@ -449,11 +449,11 @@
 }
 
 /* Small Mobile - 320px to 360px */
-@media (max-width: 360px) {
+@media screen and (max-width: 360px) {
 }
 
 /* Very Small Mobile - below 320px */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .welcome-subtitle {
     font-size: 20px;
   }

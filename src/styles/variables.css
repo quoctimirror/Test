@@ -660,13 +660,13 @@
   letter-spacing: 0em;
 }
 
-@media (max-width: 991px) {
+@media screen and (max-width: 991px) {
   .thq-grid-4 {
     grid-template-columns: 1fr 1fr 1fr;
   }
 }
 
-@media (max-width: 767px) {
+@media screen and (max-width: 767px) {
   .thq-section-padding {
     padding: var(--dl-layout-space-threeunits);
   }
@@ -705,7 +705,7 @@
   }
 }
 
-@media (max-width: 479px) {
+@media screen and (max-width: 479px) {
   .thq-section-padding {
     padding: var(--dl-layout-space-oneandhalfunits);
   }

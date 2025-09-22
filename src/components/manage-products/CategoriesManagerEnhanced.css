@@ -565,7 +565,7 @@
   background: #2563eb;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .categories-grid {
     grid-template-columns: 1fr;
   }

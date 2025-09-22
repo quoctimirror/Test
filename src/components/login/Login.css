@@ -297,7 +297,7 @@
 }
 
 /* --- Enhanced Responsive Design --- */
-@media (max-width: 1200px) {
+@media screen and (max-width: 1200px) {
     .login-container {
         padding: 18px;
     }
@@ -326,7 +326,7 @@
     }
 }
 
-@media (max-width: 992px) {
+@media screen and (max-width: 992px) {
     .login-container {
         padding: 16px;
     }
@@ -380,7 +380,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     .login-container {
         padding: 15px;
     }
@@ -454,7 +454,7 @@
 }
 
 /* --- Original Mobile Styles --- */
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
     .login-title {
         margin-bottom: 40px;
         margin-left: 0;

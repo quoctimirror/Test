@@ -151,7 +151,7 @@
 /* Responsive Design */
 
 /* Tablet - 426px to 1023px */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .slide-content {
     width: 62%;
   }

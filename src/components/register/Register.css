@@ -246,7 +246,7 @@
 
 
 /* --- Enhanced Responsive Design --- */
-@media (max-width: 1200px) {
+@media screen and (max-width: 1200px) {
     .register-container {
         padding: 18px;
     }
@@ -309,7 +309,7 @@
     }
 }
 
-@media (max-width: 992px) {
+@media screen and (max-width: 992px) {
     .register-container {
         padding: 16px;
     }
@@ -398,7 +398,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
     .register-container {
         padding: 15px;
     }
@@ -507,7 +507,7 @@
     }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
     .register-container {
         padding: 12px;
         min-height: 100vh;
@@ -648,7 +648,7 @@
     }
 }
 
-@media (max-width: 360px) {
+@media screen and (max-width: 360px) {
     .register-container {
         padding: 10px;
     }

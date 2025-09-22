@@ -290,13 +290,13 @@
 /* ========== RESPONSIVE BEHAVIOR ========== */
 
 /* Mobile - up to 425px */
-@media (max-width: 425px) {
+@media screen and (max-width: 425px) {
   .shine-glass-button .button-text {
     padding: 18px 24px; /* Smaller padding for mobile as shown in image */
   }
 }
 
-@media (hover: none) and (pointer: coarse) {
+@media screen and (hover: none) and (pointer: coarse) {
   .border-layer,
   .shine-glass-button:hover .border-layer,
   .shine-glass-button:active .border-layer {

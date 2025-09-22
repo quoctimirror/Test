@@ -43,7 +43,7 @@
 .col-start-12 { grid-column-start: 12; }
 
 /* Responsive Breakpoints */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .col-sm-1 { grid-column: span 1; }
   .col-sm-2 { grid-column: span 2; }
   .col-sm-3 { grid-column: span 3; }
@@ -65,7 +65,7 @@
   .col-sm-start-6 { grid-column-start: 6; }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .col-xs-12 { grid-column: span 12; }
   .col-xs-start-1 { grid-column-start: 1; }
 }

@@ -419,7 +419,7 @@ html {
 }
 
 /* Large Laptop (1440px) */
-@media (max-width: 1440px) {
+@media screen and (max-width: 1440px) {
   .main-logo {
     width: 100px;
     height: 200px;
@@ -431,7 +431,7 @@ html {
 }
 
 /* Standard Laptop (1200px) */
-@media (max-width: 1200px) {
+@media screen and (max-width: 1200px) {
   .homepage {
     padding: 0 20px;
   }
@@ -443,7 +443,7 @@ html {
 }
 
 /* Small Laptop (1023px) */
-@media (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .main-logo {
     width: 90px;
     height: 180px;
@@ -466,7 +466,7 @@ html {
 }
 
 /* Tablet (768px) */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .scroll-container {
     height: 150vh;
   }
@@ -549,7 +549,7 @@ html {
 }
 
 /* Large Mobile (480px) */
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .scroll-container {
     height: 120vh;
   }
@@ -628,7 +628,7 @@ html {
 }
 
 /* Small Mobile (360px) */
-@media (max-width: 360px) {
+@media screen and (max-width: 360px) {
   .scroll-container {
     height: 100vh;
   }

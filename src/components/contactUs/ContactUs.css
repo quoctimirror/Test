@@ -78,14 +78,14 @@
 /* Responsive Design */
 
 /* Tablet - 426px to 1023px */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .contact-us-hero-content {
     width: 49%;
   }
 }
 
 /* Mobile - 425px and below */
-@media (max-width: 425px) {
+@media screen and (max-width: 425px) {
   .contact-us-hero {
     height: 500px;
   }

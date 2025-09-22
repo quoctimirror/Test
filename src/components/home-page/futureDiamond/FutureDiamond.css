@@ -100,7 +100,7 @@
 }
 
 /* Medium screens (tablets) - 426px to 1023px */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .future-diamond {
     min-height: 240vh;
   }

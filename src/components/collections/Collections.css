@@ -503,7 +503,7 @@
 }
 
 /* Tablet - 426px to 1023px */
-@media screen and (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .hover-underline::after {
     bottom: -1px; /* Slightly closer for tablet */
   }
@@ -564,7 +564,7 @@
 }
 
 /* Tablet (426px - 1023px) */
-@media screen and (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .section-2 {
     flex-direction: column;
     min-height: auto;

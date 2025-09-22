@@ -82,7 +82,7 @@
   }
 } */
 
-@media (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .showroom-content {
     max-width: 62%;
     padding: 0 25px;
@@ -103,7 +103,7 @@
   }
 }
 
-@media (max-width: 425px) {
+@media screen and (max-width: 425px) {
   .showroom-content {
     max-width: 77%;
     padding: 0 20px;

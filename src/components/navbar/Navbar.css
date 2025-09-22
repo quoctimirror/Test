@@ -230,7 +230,7 @@
 }
 
 /* Show close icon on hover (desktop only) */
-@media (min-width: 426px) {
+@media screen and (min-width: 426px) {
   .menu-container:hover .menu-icon {
     opacity: 0;
     transform: rotate(90deg);
@@ -643,7 +643,7 @@
 }
 
 /* Media Queries for Responsive Design */
-@media (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   /* Adjust immersive button position */
   .immersive-fixed-container {
     top: 18px;
@@ -665,7 +665,7 @@
   }
 }
 
-@media (max-width: 992px) {
+@media screen and (max-width: 992px) {
   /* Adjust button sizes and positions */
   .immersive-button {
     width: 180px;
@@ -688,7 +688,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   /* Mobile layout adjustments */
   .logo-fixed-container {
     top: 20px;
@@ -733,7 +733,7 @@
   }
 }
 
-@media (max-width: 425px) {
+@media screen and (max-width: 425px) {
   /* Small mobile adjustments */
   .logo-fixed-container {
     top: 15px;
@@ -1054,7 +1054,7 @@
 }
 
 /* Mobile specific styles */
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
   /* Hide immersive showroom button when width <= 600px */
   .immersive-fixed-container,
   .immersive-text-container,
@@ -1068,7 +1068,7 @@
   }
 }
 
-@media (max-width: 425px) {
+@media screen and (max-width: 425px) {
   /* Move menu container to right on mobile */
   .menu-fixed-container {
     left: auto;
@@ -1208,7 +1208,7 @@
   }
 }
 
-@media (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   /* Tablet specific styles */
 
   /* Center align menu list text on tablet */
@@ -1284,7 +1284,7 @@
   }
 }
 
-@media (min-width: 426px) {
+@media screen and (min-width: 426px) {
   .menu-icon-container {
     display: none;
   }

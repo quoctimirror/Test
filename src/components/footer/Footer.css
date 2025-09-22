@@ -315,7 +315,7 @@
 ======================================== */
 
 /* Tablet - 426px to 1023px */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .footer {
     min-height: 100vh;
     padding: 120px 12px 24px;
@@ -437,7 +437,7 @@
 }
 
 /* Mobile - 425px and below */
-@media (max-width: 425px) {
+@media screen and (max-width: 425px) {
   .footer {
     min-height: 100vh;
     padding: 120px 12px 24px;
