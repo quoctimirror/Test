@@ -65,7 +65,7 @@ const ServicesDetailPage = () => {
               className={`services-detail-tab ${activeTab === tab.id ? "active" : ""}`}
               onClick={() => handleTabClick(tab.id)}
             >
-              {tab.label}
+              <span className="bodytext-4--no-margin">{tab.label}</span>
             </button>
           ))}
         </div>

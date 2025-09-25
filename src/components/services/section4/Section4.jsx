@@ -71,7 +71,100 @@ const Section4 = () => {
   return (
     <div ref={sectionRef} className="section4-wrapper">
       <div className="section4-sticky-container">
-        {/* Sticky Image Area */}
+        {/* Mobile Layout - only visible on mobile */}
+        <div className="section4-mobile-screen-1">
+          <div className="section4-content-layer">
+            <div className="section4-content">
+              <div className="section4-full-content">
+                <div className="section4-header-description">
+                  <div className="section4-header">
+                    <span className="section4-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section4-title heading-1--no-margin">
+                      RETURN & EXCHANGE
+                    </h2>
+                  </div>
+                  <p className="section4-description bodytext-6--no-margin">
+                    Extend the life and brilliance of your jewelry with Mirror's
+                    professional care and repair services, tailored to keep each
+                    piece as radiant as the day you received it.
+                  </p>
+                </div>
+                <ShineGlassButton
+                  className="section4-cta"
+                  theme="dark"
+                  onClick={handleReturnExchangeClick}
+                >
+                  See more
+                </ShineGlassButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="section4-mobile-screen-2">
+          <div className="section4-content-layer">
+            <div className="section4-content">
+              <div className="section4-full-content">
+                <div className="section4-header-description">
+                  <div className="section4-header">
+                    <span className="section4-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section4-title heading-1--no-margin">
+                      SIZING GUIDE
+                    </h2>
+                  </div>
+                  <p className="section4-description bodytext-6--no-margin">
+                    Elevate your gift with our signature wrapping — a carefully
+                    crafted presentation that captures the essence of refined
+                    giving.
+                  </p>
+                </div>
+                <ShineGlassButton
+                  className="section4-cta"
+                  theme="dark"
+                  onClick={handleSizingGuideClick}
+                >
+                  See more
+                </ShineGlassButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="section4-mobile-screen-3">
+          <div className="section4-content-layer">
+            <div className="section4-content">
+              <div className="section4-full-content">
+                <div className="section4-header-description">
+                  <div className="section4-header">
+                    <span className="section4-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section4-title heading-1--no-margin">
+                      WARRANTY & INFO
+                    </h2>
+                  </div>
+                  <p className="section4-description bodytext-6--no-margin">
+                    Activate your warranty to ensure your Future Diamond is
+                    protected under our care.
+                  </p>
+                </div>
+                <ShineGlassButton
+                  className="section4-cta"
+                  theme="dark"
+                  onClick={handleWarrantyInfoClick}
+                >
+                  See more
+                </ShineGlassButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop/Tablet Layout - Sticky Image Area */}
         <div className="section4-sticky-images">
           <div
             className="section4-image-layer section4-image-1"
@@ -231,8 +324,8 @@ const Section4 = () => {
                     </h2>
                   </div>
                   <p className="section4-description bodytext-6--no-margin">
-                    Activate your warranty to ensure your Future <br /> Diamond
-                    is protected under our care.
+                    Activate your warranty to ensure your Future Diamond is
+                    protected under our care.
                   </p>
                 </div>
                 <ShineGlassButton
@@ -247,7 +340,7 @@ const Section4 = () => {
           </div>
         </div>
 
-        {/* Third screen div for mobile/tablet responsive */}
+        {/* Third screen div for tablet responsive only */}
         <div className="section4-screen-3"></div>
       </div>
     </div>

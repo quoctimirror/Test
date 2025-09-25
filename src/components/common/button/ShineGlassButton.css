@@ -289,10 +289,16 @@
 
 /* ========== RESPONSIVE BEHAVIOR ========== */
 
-/* Mobile - up to 425px */
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 1279px) {
   .shine-glass-button .button-text {
-    padding: 18px 24px; /* Smaller padding for mobile as shown in image */
+    padding: 16px 24px; /* Smaller padding for mobile as shown in image */
+  }
+}
+
+/* Mobile - up to 480px */
+@media screen and (max-width: 480px) {
+  .shine-glass-button .button-text {
+    padding: 16px 20px; /* Smaller padding for mobile as shown in image */
   }
 }
 

@@ -12,6 +12,8 @@ const Contact = () => {
       </div>
 
       <div className="contact-cards-grid">
+        {/* Top gradient box */}
+        <div className="cards-gradient-top"></div>
         <div className="contact-card">
           <img
             src="/services/img_1_section_6.jpg"
@@ -71,6 +73,9 @@ const Contact = () => {
             </p>
           </div>
         </div>
+
+        {/* Bottom gradient box */}
+        <div className="cards-gradient-bottom"></div>
       </div>
     </section>
   );

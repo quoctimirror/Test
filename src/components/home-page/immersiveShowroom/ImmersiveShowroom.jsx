@@ -4,6 +4,9 @@ import ShineGlassButton from "@components/common/button/ShineGlassButton";
 const ImmersiveShowroom = () => {
   return (
     <div className="immersive-showroom">
+      {/* Top gradient box */}
+      <div className="showroom-gradient-top"></div>
+
       <video
         src="/immersiveShowroom/ImmersiveShowroom.mp4"
         className="showroom-background"
@@ -29,6 +32,9 @@ const ImmersiveShowroom = () => {
           Explore
         </ShineGlassButton>
       </div>
+
+      {/* Bottom gradient box */}
+      <div className="showroom-gradient-bottom"></div>
     </div>
   );
 };

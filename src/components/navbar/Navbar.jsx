@@ -45,7 +45,7 @@ export default function Navbar() {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 425);
-      setIsTablet(window.innerWidth > 425 && window.innerWidth <= 1024);
+      setIsTablet(window.innerWidth > 425 && window.innerWidth <= 1023);
     };
 
     window.addEventListener("resize", handleResize);

@@ -68,7 +68,7 @@ const Section5 = () => {
     <section className="services-section5">
       <div className="section5-container">
         <div className="section5-content">
-          <h1 className="section5-title">FAQs</h1>
+          <h1 className="heading-1--no-margin">FAQs</h1>
 
           <div className="faq-list">
             {faqs.map((faq) => (
@@ -81,7 +81,7 @@ const Section5 = () => {
                   onClick={() => toggleFaq(faq.id)}
                   aria-expanded={openFaq === faq.id}
                 >
-                  <span>{faq.question}</span>
+                  <span className="bodytext-3--no-margin">{faq.question}</span>
                   <span
                     className={`faq-icon ${
                       openFaq === faq.id ? "expanded" : ""
@@ -89,7 +89,7 @@ const Section5 = () => {
                   ></span>
                 </button>
                 <div className="faq-answer" data-faq-id={faq.id}>
-                  <p>
+                  <p className="bodytext-3--no-margin">
                     This is the answer content for "{faq.question}". Lorem ipsum
                     dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                     tempor incididunt ut labore et dolore magna aliqua.

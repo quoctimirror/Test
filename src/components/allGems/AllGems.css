@@ -133,41 +133,15 @@
 /* Button styles moved to common Button component */
 
 /* Responsive adjustments */
-@media (min-width: 1441px) and (max-width: 1919px) {
-  .gems-grid-container {
-    --gap: 11px;
-    margin-left: 42px;
-    margin-right: 42px;
-  }
-
-  .gem-grid-2x2 {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-  }
-}
-
-@media screen and (max-width: 1440px) {
-  .gems-grid-container {
-    --gap: 10px;
-    margin-left: 36px;
-    margin-right: 36px;
-  }
-
-  /* Ensure gem-grid-2x2 stays consistent at this breakpoint */
-  .gem-grid-2x2 {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-  }
-}
-
 @media screen and (max-width: 1023px) {
+  .gems-header {
+    max-width: 62%;
+  }
   .gems-grid-container {
     --gap: 8px;
     margin-left: 24px;
     margin-right: 24px;
   }
-
-  /* heading-1 already has responsive font-size in typography.css */
 
   /* Convert to 2 columns on tablet */
   .gems-row-4 {
@@ -186,50 +160,17 @@
     grid-template-rows: 1fr 1fr;
   }
 
+  .gems-row-3-special .gem-grid-2x2,
+  .gems-row-3-reverse-special .gem-grid-2x2 {
+    grid-column: span 2;
+  }
+
   .gem-item-large {
     grid-column: span 2;
   }
 }
-
-@media screen and (max-width: 768px) {
-  .gems-grid-container {
-    --gap: 6px;
-    margin-left: 16px;
-    margin-right: 16px;
-  }
-
-  /* heading-1 and bodytext-3 already have responsive styles */
-
-  /* Single column on mobile */
-  .gems-row-4,
-  .gems-row-3,
-  .gems-row-3-reverse,
-  .gems-row-3-special,
-  .gems-row-3-reverse-special {
-    grid-template-columns: 1fr;
-  }
-
-  .gem-grid-2x2 {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-  }
-
-  .gem-item-large {
-    grid-column: span 1;
-  }
-}
-
-/* For 1920px and larger screens */
-@media (min-width: 1920px) {
-  .gems-grid-container {
-    margin-left: 48px;
-    margin-right: 48px;
-    --gap: 12px;
-  }
-
-  /* Ensure gem-grid-2x2 maintains 2x2 layout on large screens */
-  .gem-grid-2x2 {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+@media screen and (max-width: 425px) {
+  .gems-header {
+    max-width: 77%;
   }
 }

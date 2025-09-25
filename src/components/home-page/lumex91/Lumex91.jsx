@@ -6,17 +6,11 @@ const Lumex91 = () => {
     <section className="lumex91">
       <div className="lumex91-container">
         <div className="lumex91-video-box">
-          <video
+          <img
             className="lumex91-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-          >
-            <source src="/home-page/lumex91.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+            src="/home-page/Mirror-Lumex 91.png"
+            alt="Mirror-Lumex 91"
+          />
           <div className="lumex91-circle-overlay"></div>
         </div>
 

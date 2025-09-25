@@ -70,56 +70,73 @@
 
 /* Tablet (426px - 1023px) */
 @media screen and (max-width: 1023px) {
-  .services-section1 {
-    height: 80vh;
-    min-height: 600px;
-  }
-
-  .section1-container {
-    padding: 0 20px;
-  }
-
   .section1-content {
     width: 62%;
-    gap: 20px;
   }
 
   .section1-title {
     width: 100%;
-    max-width: 400px;
   }
 
   .section1-description {
     width: 100%;
-    max-width: 450px;
     height: auto;
   }
 }
 
 /* Mobile (425px và xuống) */
 @media screen and (max-width: 425px) {
+  /* Reset the main section */
   .services-section1 {
-    height: 70vh;
-    min-height: 500px;
+    height: auto;
+    background-image: none;
+    display: block;
+    position: relative;
   }
 
+  /* Hide the overlay on mobile */
+  .section1-background-overlay {
+    display: none;
+  }
+
+  /* Create image section - 50vh */
+  .services-section1::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 50vh;
+    background-image: url("/services/section_1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  /* Content section - 50vh with white background */
   .section1-container {
-    padding: 0 15px;
+    width: 100%;
+    height: 50vh;
+    margin-left: 0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .section1-content {
     width: 77%;
-    gap: 15px;
+    color: #000000;
   }
 
   .section1-title {
     width: 100%;
-    max-width: 300px;
+    white-space: normal;
+    color: #000000;
+    text-transform: uppercase;
   }
 
   .section1-description {
     width: 100%;
-    max-width: 320px;
     height: auto;
+    color: #797979;
   }
 }

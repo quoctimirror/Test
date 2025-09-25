@@ -27,8 +27,7 @@
   background: #111;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8),
-    0 10px 30px rgba(0, 0, 0, 0.6),
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.6),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
@@ -125,7 +124,6 @@
 @media (max-width: 991px) {
   .lumex91 {
     padding: 40px 25px;
-    min-height: 80vh;
   }
 
   .lumex91-container {
@@ -145,7 +143,6 @@
 @media (max-width: 767px) {
   .lumex91 {
     padding: 30px 20px;
-    min-height: 70vh;
   }
 
   .lumex91-container {
@@ -165,7 +162,6 @@
 @media (max-width: 480px) {
   .lumex91 {
     padding: 25px 15px;
-    min-height: 60vh;
   }
 
   .lumex91-container {
@@ -174,9 +170,7 @@
 
   .lumex91-video-box {
     max-width: 280px;
-    box-shadow: 
-      0 20px 50px rgba(0, 0, 0, 0.7),
-      0 8px 20px rgba(0, 0, 0, 0.5),
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 8px 20px rgba(0, 0, 0, 0.5),
       inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
@@ -189,7 +183,6 @@
 @media (max-width: 360px) {
   .lumex91 {
     padding: 20px 10px;
-    min-height: 50vh;
   }
 
   .lumex91-container {
@@ -198,9 +191,7 @@
 
   .lumex91-video-box {
     max-width: 250px;
-    box-shadow: 
-      0 15px 40px rgba(0, 0, 0, 0.6),
-      0 6px 15px rgba(0, 0, 0, 0.4),
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 6px 15px rgba(0, 0, 0, 0.4),
       inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
@@ -213,7 +204,6 @@
 @media (max-width: 319px) {
   .lumex91 {
     padding: 15px 8px;
-    min-height: 45vh;
   }
 
   .lumex91-container {
@@ -222,9 +212,7 @@
 
   .lumex91-video-box {
     max-width: 220px;
-    box-shadow: 
-      0 10px 30px rgba(0, 0, 0, 0.5),
-      0 4px 10px rgba(0, 0, 0, 0.3),
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.3),
       inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 

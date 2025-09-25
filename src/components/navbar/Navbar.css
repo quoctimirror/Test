@@ -37,26 +37,26 @@
   fill: rgba(255, 255, 255, 1);
 }
 
-/* Scrolled state - black color during scroll-container section */
+/* Scrolled state - white color during scroll-container section */
 .logo-fixed-container.scrolled .navbar-logo-svg {
-  filter: invert(1) brightness(0) !important;
+  filter: none !important;
 }
 
 .logo-fixed-container.scrolled .navbar-logo-svg path,
 .logo-fixed-container.scrolled .navbar-logo-svg g path,
 .logo-fixed-container.scrolled .navbar-logo-svg * {
-  fill: rgba(0, 0, 0, 1) !important;
+  fill: rgba(255, 255, 255, 1) !important;
 }
 
 /* Override the default white fill for scrolled state */
 .logo-fixed-container.no-blend.scrolled .navbar-logo-svg {
-  filter: invert(1) brightness(0) !important;
+  filter: none !important;
 }
 
 .logo-fixed-container.no-blend.scrolled .navbar-logo-svg path,
 .logo-fixed-container.no-blend.scrolled .navbar-logo-svg g path,
 .logo-fixed-container.no-blend.scrolled .navbar-logo-svg * {
-  fill: rgba(0, 0, 0, 1) !important;
+  fill: rgba(255, 255, 255, 1) !important;
 }
 
 .logo-fixed-container .navbar-logo-svg {
@@ -92,7 +92,7 @@
 }
 
 .menu-fixed-container.scrolled:hover {
-  color: rgba(0, 0, 0, 1) !important; /* Black color when scrolled */
+  color: rgba(255, 255, 255, 1) !important; /* White color when scrolled */
 }
 
 .menu-fixed-container.no-blend {
@@ -104,7 +104,7 @@
 }
 
 .menu-fixed-container.scrolled .menu-text {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 /* Account link container với blend mode */
@@ -137,7 +137,7 @@
 }
 
 .account-fixed-container.scrolled .account-text {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 /* Immersive button container KHÔNG có blend mode cho background */
@@ -230,7 +230,7 @@
 }
 
 /* Show close icon on hover (desktop only) */
-@media screen and (min-width: 426px) {
+@media screen and (min-width: 1024px) {
   .menu-container:hover .menu-icon {
     opacity: 0;
     transform: rotate(90deg);
@@ -248,15 +248,15 @@
 }
 
 .menu-fixed-container.scrolled .menu-icon-close {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-fixed-container.scrolled .menu-container:hover .menu-icon-close {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-fixed-container.scrolled .menu-container.menu-open .menu-icon-close {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-text {
@@ -291,15 +291,15 @@
 }
 
 .menu-fixed-container.scrolled .menu-container:hover .menu-text {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-fixed-container.scrolled .menu-text::after {
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-fixed-container.scrolled .menu-container:hover .menu-text::after {
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-container:hover .menu-text::after {
@@ -362,7 +362,7 @@
 }
 
 .immersive-text-container.scrolled .immersive-text {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 /* Border hover - rotating animation when hovering button */
@@ -430,11 +430,11 @@
 .immersive-border-container.scrolled .immersive-border::after {
   background: conic-gradient(
     from var(--angle-1) at 50% 50%,
-    rgba(0, 0, 0, 0.8),
-    rgba(0, 0, 0, 0.3) 5% 40%,
-    rgba(0, 0, 0, 0.8) 50%,
-    rgba(0, 0, 0, 0.3) 60% 95%,
-    rgba(0, 0, 0, 0.8)
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.3) 5% 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.3) 60% 95%,
+    rgba(255, 255, 255, 0.8)
   ) !important;
 }
 
@@ -559,19 +559,19 @@
 }
 
 .menu-fixed-container.scrolled .menu-popup .menu-list li {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-fixed-container.scrolled .menu-popup .menu-list li:hover {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-fixed-container.scrolled .menu-popup .menu-list li::after {
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-fixed-container.scrolled .menu-popup.active .menu-list li::after {
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-popup.active .menu-list li:hover::after {
@@ -643,6 +643,55 @@
 }
 
 /* Media Queries for Responsive Design */
+
+/* Tablet (426px-1023px) - Icon menu but keep immersive button */
+@media screen and (max-width: 1023px) {
+  /* Glassmorphism menu button for tablet */
+  .menu-button {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    padding: 3px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .menu-text {
+    display: none;
+  }
+
+  /* Hide immersive button in menu since main button is visible */
+  .immersive-menu-item {
+    display: none !important;
+  }
+
+  /* Scrolled state for tablet menu button */
+  .menu-fixed-container.scrolled .menu-button {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  .menu-fixed-container.scrolled .menu-button:hover {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  /* When menu is open on tablet */
+  .menu-container.menu-open .menu-button {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  .menu-container.menu-open .menu-icon-close {
+    color: white !important;
+  }
+}
+
 @media screen and (max-width: 1023px) {
   /* Adjust immersive button position */
   .immersive-fixed-container {
@@ -828,17 +877,17 @@
 }
 
 .account-fixed-container.scrolled .account-container:hover .account-text {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .account-fixed-container.scrolled .account-text::after {
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .account-fixed-container.scrolled
   .account-container:hover
   .account-text::after {
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .account-container:hover .account-text::after {
@@ -895,7 +944,7 @@
 }
 
 .account-fixed-container.scrolled .account-user-info span {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .admin-badge {
@@ -951,22 +1000,22 @@
 }
 
 .account-fixed-container.scrolled .account-popup .account-list li {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .account-fixed-container.scrolled .account-popup .account-list li:hover {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .account-fixed-container.scrolled .account-popup .account-list li::after {
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .account-fixed-container.scrolled
   .account-popup.active
   .account-list
   li::after {
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 .account-popup.active .account-list li:hover::after {
@@ -1023,15 +1072,15 @@
 }
 
 .menu-fixed-container.scrolled .immersive-menu-item {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-fixed-container.scrolled .immersive-menu-item:hover {
-  color: rgba(0, 0, 0, 1) !important;
+  color: rgba(255, 255, 255, 1) !important;
 }
 
 .menu-fixed-container.scrolled .immersive-menu-item::after {
-  background: rgba(0, 0, 0, 1) !important;
+  background: rgba(255, 255, 255, 1) !important;
 }
 
 /* Mobile menu overlay */
@@ -1064,7 +1113,7 @@
 
   /* Show immersive button in menu only when main button is hidden */
   .immersive-menu-item {
-    display: block;
+    display: block !important;
   }
 }
 
@@ -1089,8 +1138,8 @@
 
   .menu-popup .menu-list li {
     text-align: center;
-    display: block;
-    width: 100%;
+    display: inline-block;
+    width: fit-content;
   }
 
   /* Adjust underline for menu text on mobile if shown */
@@ -1117,14 +1166,13 @@
   .menu-container.menu-open .menu-popup {
     position: fixed;
     top: 50%;
-    left: 0;
-    right: 0;
-    width: 100vw;
+    left: 50%;
+    width: auto;
     max-width: none;
     background: transparent;
     z-index: 202;
     padding: 32px 0 20px 0;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
   }
 
   .menu-container.menu-open .menu-popup .menu-list li {
@@ -1159,10 +1207,6 @@
     display: none;
   }
 
-  /* Show immersive button in menu only on mobile */
-  .immersive-menu-item {
-    display: block;
-  }
 
   /* Glassmorphism menu button for mobile */
   .menu-button {
@@ -1224,8 +1268,8 @@
 
   .menu-popup .menu-list li {
     text-align: center;
-    display: block;
-    width: 100%;
+    display: inline-block;
+    width: fit-content;
   }
 
   /* Adjust underline for menu text on tablet */
@@ -1243,14 +1287,13 @@
   .menu-container.menu-open .menu-popup {
     position: fixed;
     top: 50%;
-    left: 0;
-    right: 0;
-    width: 100vw;
+    left: 50%;
+    width: auto;
     max-width: none;
     background: transparent;
     z-index: 202;
     padding: 32px 0 20px 0;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
   }
 
   .menu-container.menu-open .menu-popup .menu-list li {
@@ -1284,7 +1327,7 @@
   }
 }
 
-@media screen and (min-width: 426px) {
+@media screen and (min-width: 1024px) {
   .menu-icon-container {
     display: none;
   }

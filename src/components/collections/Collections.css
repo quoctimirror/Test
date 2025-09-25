@@ -484,6 +484,39 @@
   /* Đổi chữ thành màu trắng */
 }
 
+/* Nút mũi tên của slider */
+.slider-arrow {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 57px;
+  height: 57px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #797979;
+  /* Màu mũi tên */
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  /* Đẩy arrow xuống dưới */
+  margin-top: 0;
+  /* Thêm khoảng cách từ trên xuống */
+}
+
+.slider-arrow:hover {
+  background: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #000000;
+  transform: translateY(-1px);
+}
+
+.slider-arrow:hover path {
+  stroke: #000000;
+}
+
 /*
 ============================================================
     RESPONSIVE DESIGN
@@ -513,7 +546,7 @@
 }
 
 /* Mobile - up to 425px */
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 480px) {
   .hover-underline::after {
     bottom: -3px; /* 3px gap from text on mobile */
     height: 1.5px; /* Thinner on mobile */
@@ -560,6 +593,13 @@
 
   .slider-arrow {
     margin-top: 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .slider-arrow {
+    width: 40px;
+    height: 40px;
   }
 }
 
@@ -642,12 +682,6 @@
     margin-top: 0;
   }
 
-  .slider-arrow {
-    margin-top: 0;
-    width: 45px;
-    height: 45px;
-  }
-
   .product-description {
     font-size: 15px;
     max-width: 380px;
@@ -660,7 +694,7 @@
 }
 
 /* Mobile (425px và xuống) */
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 480px) {
   .section-2 {
     padding: 0;
   }
@@ -736,7 +770,6 @@
 
   .product-image-container {
     margin-top: 0;
-    padding: 0 0.3rem;
   }
 
   .slider-arrow {
@@ -764,39 +797,6 @@
   .other-collections-content {
     padding: 180px 1.5rem;
   }
-}
-
-/* Nút mũi tên của slider */
-.slider-arrow {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: #797979;
-  /* Màu mũi tên */
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-  /* Đẩy arrow xuống dưới */
-  margin-top: 0;
-  /* Thêm khoảng cách từ trên xuống */
-}
-
-.slider-arrow:hover {
-  background: #ffffff;
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #000000;
-  transform: translateY(-1px);
-}
-
-.slider-arrow:hover path {
-  stroke: #000000;
 }
 
 /* Nút scroll down trong section 2 */

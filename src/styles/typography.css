@@ -389,29 +389,29 @@
 }
 
 /* Responsive adjustments */
-/* @media (min-width: 1025px) and (max-width: 1550px) {
+@media screen and (max-width: 1550px) {
   .heading-1 {
-    font-size: 60px;
+    font-size: 48px;
   }
 
   .heading-2 {
-    font-size: 60px;
+    font-size: 48px;
   }
 
   .heading-3 {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .bodytext-1 {
-    font-size: 20px;
+    font-size: 19px;
   }
 
   .bodytext-2 {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .bodytext-3 {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .bodytext-4 {
@@ -427,27 +427,27 @@
   }
 
   .heading-1--no-margin {
-    font-size: 60px;
+    font-size: 48px;
   }
 
   .heading-2--no-margin {
-    font-size: 60px;
+    font-size: 48px;
   }
 
   .heading-3--no-margin {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .bodytext-1--no-margin {
-    font-size: 20px;
+    font-size: 19px;
   }
 
   .bodytext-2--no-margin {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .bodytext-3--no-margin {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .bodytext-4--no-margin {
@@ -461,9 +461,9 @@
   .bodytext-6--no-margin {
     font-size: 13px;
   }
-} */
+}
 
-@media screen and (min-width: 481px) and (max-width: 1279px) {
+@media screen and (max-width: 1300px) {
   .heading-1 {
     font-size: 36px;
   }
@@ -473,7 +473,7 @@
   }
 
   .heading-3 {
-    font-size: 20px;
+    font-size: 26px;
   }
 
   .bodytext-1 {
@@ -509,7 +509,7 @@
   }
 
   .heading-3--no-margin {
-    font-size: 20px;
+    font-size: 26px;
   }
 
   .bodytext-1--no-margin {
@@ -547,7 +547,7 @@
   }
 
   .heading-3 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .bodytext-1 {
@@ -583,7 +583,7 @@
   }
 
   .heading-3--no-margin {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .bodytext-1--no-margin {

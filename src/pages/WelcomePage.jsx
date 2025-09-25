@@ -20,7 +20,7 @@ const WelcomePage = () => {
       </div>
 
       {/* Main content */}
-      <div className="welcome-content">
+      {/* <div className="welcome-content">
         <div className="welcome-title-section">
           <h1 className="welcome-title heading-1--no-margin">Future Diamond</h1>
         </div>
@@ -30,7 +30,7 @@ const WelcomePage = () => {
             Is Coming Soon
           </h2>
         </div>
-      </div>
+      </div> */}
 
       {/* Bottom text content */}
       <div className="welcome-bottom-text">

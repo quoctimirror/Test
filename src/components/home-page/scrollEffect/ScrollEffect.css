@@ -9,10 +9,45 @@ html {
   /* overflow-x: hidden; */
 }
 
+/* Unified container for both scroll effect and mirror introduce */
+.unified-scroll-container {
+  position: relative;
+  /* Height will be set dynamically via inline style */
+}
+
 /* Container for entire scroll effect */
 .scroll-container {
-  height: 250vh;
+  height: 750vh;
   position: relative;
+}
+
+/* Scroll effect section wrapper */
+.scroll-effect-section {
+  position: relative;
+  height: 230vh;
+  z-index: 10;
+}
+
+/* Split sections for animation */
+.split-section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  z-index: 1;
+  transition: transform 1s ease-out;
+  display: none; /* Initially hidden */
+}
+
+.split-top {
+  top: 0;
+  height: 50vh;
+}
+
+.split-bottom {
+  top: 50vh;
+  height: 50vh;
 }
 
 /* Layer containing initial gradient */
@@ -34,7 +69,12 @@ html {
   height: 100%;
 
   /* background: linear-gradient(to right, #ffc3d4, #ffe8ef, white); */
-  background: white;
+  background: linear-gradient(
+    80deg,
+    #bc224c -0.64%,
+    #bc224c 107.79%,
+    #000 223.41%
+  );
   z-index: 2;
 
   --wipe-progress: 400%;
@@ -109,12 +149,7 @@ html {
   height: 50vh;
   transform: rotate(-180deg);
   opacity: 1;
-  background: linear-gradient(
-    83.46deg,
-    #ffffff -0.46%,
-    #ec3667 51.6%,
-    #000000 115.98%
-  );
+  background: linear-gradient(83deg, #bc224c 37.61%, #000 115.98%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -129,12 +164,7 @@ html {
   height: calc(50vh + 1px); /* Add 1px to height */
   transform: rotate(0deg);
   opacity: 1;
-  background: linear-gradient(
-    95.54deg,
-    #000000 0.98%,
-    #ec3667 63.43%,
-    #ffffff 98.65%
-  );
+  background: linear-gradient(96deg, #000 0.98%, #bc224c 98.65%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -176,7 +206,7 @@ html {
   transform: none;
   z-index: 5;
   text-align: center;
-  color: rgba(188, 34, 76, 1);
+  color: rgba(255, 255, 255, 1);
 }
 
 /* Original Tagline Section */
@@ -463,10 +493,6 @@ html {
 
 /* Tablet (768px) */
 @media (max-width: 768px) {
-  .scroll-container {
-    height: 150vh;
-  }
-
   .main-logo {
     width: 70px;
     height: 140px;
@@ -542,10 +568,6 @@ html {
 
 /* Large Mobile (480px) */
 @media (max-width: 480px) {
-  .scroll-container {
-    height: 120vh;
-  }
-
   .main-logo {
     width: 60px;
     height: 120px;
@@ -617,10 +639,6 @@ html {
 
 /* Small Mobile (360px) */
 @media (max-width: 360px) {
-  .scroll-container {
-    height: 100vh;
-  }
-
   .main-logo {
     width: 50px;
     height: 100px;
@@ -691,4 +709,161 @@ html {
 .next-section p {
   font-size: 1.2rem;
   max-width: 600px;
+}
+
+/* ============= MIRROR INTRODUCE STYLES ============= */
+
+.mirror-introduce-section {
+  position: relative;
+  height: 800vh;
+  margin: 0;
+  padding: 0;
+}
+
+.mirror-introduce-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 5;
+}
+
+.canvas-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sequence-canvas {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.loading-spinner {
+  color: white;
+  font-size: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.text-slides-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.text-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: rgba(0, 0, 0, 1);
+}
+
+.slide-content {
+  width: 905px;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.slide-title {
+  word-spacing: normal;
+  letter-spacing: normal;
+  color: rgba(0, 0, 0, 1);
+}
+
+.slide-highlight {
+  color: rgba(0, 0, 0, 1);
+  font-style: italic;
+}
+
+.slide-subtitle {
+  word-spacing: normal;
+  letter-spacing: normal;
+  color: rgba(0, 0, 0, 1);
+}
+
+.fade-word {
+  transition: opacity 0.3s ease;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design for Mirror Introduce */
+
+/* Tablet - 426px to 1023px */
+@media screen and (max-width: 1023px) {
+  .slide-content {
+    width: 62%;
+  }
+}
+
+/* Mobile - 425px and below */
+@media (max-width: 425px) {
+  .slide-content {
+    width: 77%;
+  }
 }

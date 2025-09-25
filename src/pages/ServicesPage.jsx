@@ -10,9 +10,9 @@ import "./services.css";
 const ServicesPage = () => {
   useEffect(() => {
     // Check if we need to scroll to top
-    if (sessionStorage.getItem('scrollToTop') === 'true') {
+    if (sessionStorage.getItem("scrollToTop") === "true") {
       window.scrollTo(0, 0);
-      sessionStorage.removeItem('scrollToTop');
+      sessionStorage.removeItem("scrollToTop");
     }
   }, []);
 

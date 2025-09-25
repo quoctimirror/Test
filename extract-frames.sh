@@ -2,9 +2,9 @@
 
 # Script to extract frames from video for smooth canvas sequence animation
 
-INPUT_VIDEO="public/home-page/v2Vid.mp4"
+INPUT_VIDEO="public/home-page/Landscape_3D.mp4"
 OUTPUT_DIR="public/home-page/frames"
-FRAME_RATE=20  # Extract 20 frames per second for smooth animation (10s video = 200 frames)
+FRAME_RATE=30  # Extract 30 frames per second for smooth animation (10s video = 300 frames)
 
 echo "=== Video Frame Extraction ==="
 echo ""

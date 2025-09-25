@@ -83,6 +83,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .text-slide {
@@ -100,21 +101,18 @@
 
 .slide-content {
   width: 905px;
-  padding: 2rem;
   position: absolute;
-  top: 15.5%;
+  top: 20%;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .slide-title {
-  line-height: 1.2;
   word-spacing: normal;
   letter-spacing: normal;
 }
 
 .slide-subtitle {
-  line-height: 1.4;
   word-spacing: normal;
   letter-spacing: normal;
 }
@@ -161,18 +159,6 @@
 @media (max-width: 425px) {
   .slide-content {
     width: 77%;
-  }
-
-  .mirror-introduce-section {
-    height: 600vh;
-  }
-
-  .introduce-content {
-    padding: 1rem;
-  }
-
-  .scroll-progress {
-    padding: 0.75rem 1.5rem;
   }
 
   .progress-bar {

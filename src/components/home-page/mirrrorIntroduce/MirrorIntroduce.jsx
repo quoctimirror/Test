@@ -10,7 +10,7 @@ const MirrorIntroduce = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slideProgress, setSlideProgress] = useState(0);
 
-  const numFrames = 200;
+  const numFrames = 300;
   const scrollHeight = 800; // vh units
 
   // Text slides data
@@ -67,7 +67,8 @@ const MirrorIntroduce = () => {
       });
   }
 
-  // Handle scroll for frame calculation
+
+  // Handle scroll for frame calculation - simple natural scrolling
   const handleScroll = () => {
     if (!containerRef.current) return;
 
@@ -106,21 +107,6 @@ const MirrorIntroduce = () => {
     }
   };
 
-  // Render canvas
-  const renderCanvas = () => {
-    if (!canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-
-    // Set canvas size to match viewport
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-
-    // Clear canvas
-    context.clearRect(0, 0, canvas.width, canvas.height);
-  };
 
   // Update canvas when frame changes
   useEffect(() => {
@@ -131,10 +117,12 @@ const MirrorIntroduce = () => {
     const image = images[frameIndex];
 
     if (image) {
-      // Set canvas size to match viewport
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+      // Simple full screen canvas rendering
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Clear and draw image to cover entire screen
+      context.clearRect(0, 0, canvas.width, canvas.height);
 
       // Calculate scaling to cover entire canvas (like object-fit: cover)
       const scaleX = canvas.width / image.width;
@@ -147,8 +135,6 @@ const MirrorIntroduce = () => {
       const offsetX = (canvas.width - scaledWidth) / 2;
       const offsetY = (canvas.height - scaledHeight) / 2;
 
-      // Clear and draw scaled image
-      context.clearRect(0, 0, canvas.width, canvas.height);
       context.drawImage(image, offsetX, offsetY, scaledWidth, scaledHeight);
     }
   }, [frameIndex, images, isLoaded]);
@@ -156,28 +142,15 @@ const MirrorIntroduce = () => {
   // Initialize
   useEffect(() => {
     preloadImages();
-    renderCanvas();
 
     // Add scroll listener
     window.addEventListener("scroll", handleScroll, { passive: true });
-
-    // Add resize listener to update canvas size
-    const handleResize = () => {
-      renderCanvas();
-      // Redraw current frame after resize
-      if (isLoaded && images.length > 0) {
-        // This will trigger the canvas redraw with new size
-        setFrameIndex((prev) => prev);
-      }
-    };
-    window.addEventListener("resize", handleResize);
 
     // Initial call
     handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -208,156 +181,96 @@ const MirrorIntroduce = () => {
           <div className="video-overlay">
             <div className="text-slides-container">
               {textSlides.map((slide, index) => {
-                // Special handling for first slide
-                if (index === 0) {
-                  // First slide - always visible, uses fade-in text effect
-                  let transform = "translateY(0%)";
-                  let opacity = 1;
-
-                  // When moving to next slide
-                  if (currentSlide > 0) {
-                    transform = "translateY(-100%)";
-                    opacity = 0;
-                  }
-
-                  return (
-                    <div
-                      key={index}
-                      className="text-slide"
-                      style={{
-                        transform,
-                        opacity,
-                        transition: "none",
-                      }}
-                    >
-                      <div className="slide-content">
-                        <h1 className="heading-1--no-margin slide-title fade-in-text">
-                          {slide.title.split("").map((char, index) => {
-                            const titleLength = slide.title.length;
-                            const charProgress = (index + 1) / titleLength;
-                            const titleRevealProgress =
-                              currentSlide === 0 && slideProgress > 0.1
-                                ? Math.min(1, (slideProgress - 0.1) / 0.2)
-                                : 0;
-                            const isRevealed =
-                              titleRevealProgress >= charProgress;
-
-                            return (
-                              <span
-                                key={index}
-                                style={{
-                                  color: isRevealed
-                                    ? "rgba(0, 0, 0, 1)"
-                                    : "rgba(0, 0, 0, 0.3)",
-                                  transition: "color 0.1s ease",
-                                }}
-                              >
-                                {char}
-                              </span>
-                            );
-                          })}
-                          {slide.highlight && (
-                            <>
-                              {slide.highlight.split("").map((char, index) => {
-                                const highlightLength = slide.highlight.length;
-                                const charProgress =
-                                  (index + 1) / highlightLength;
-                                const highlightRevealProgress =
-                                  currentSlide === 0 && slideProgress > 0.4
-                                    ? Math.min(1, (slideProgress - 0.4) / 0.2)
-                                    : 0;
-                                const isRevealed =
-                                  highlightRevealProgress >= charProgress;
-
-                                return (
-                                  <span
-                                    key={`highlight-${index}`}
-                                    className="slide-highlight"
-                                    style={{
-                                      color: isRevealed
-                                        ? "rgba(0, 0, 0, 1)"
-                                        : "rgba(0, 0, 0, 0.3)",
-                                      transition: "color 0.1s ease",
-                                    }}
-                                  >
-                                    {char}
-                                  </span>
-                                );
-                              })}
-                            </>
-                          )}
-                        </h1>
-                        <h1 className="heading-1--no-margin slide-subtitle">
-                          {(() => {
-                            const lines = slide.subtitle.split("\n");
-                            const totalLength = slide.subtitle.replace(
-                              /\n/g,
-                              ""
-                            ).length;
-                            let charCount = 0;
-
-                            return lines.map((line, lineIndex) => (
-                              <React.Fragment key={lineIndex}>
-                                {lineIndex > 0 && <br />}
-                                {line.split("").map((char, charIndex) => {
-                                  charCount++;
-                                  const charProgress = charCount / totalLength;
-                                  const subtitleRevealProgress =
-                                    currentSlide === 0 && slideProgress > 0.7
-                                      ? Math.min(1, (slideProgress - 0.7) / 0.3)
-                                      : 0;
-                                  const isRevealed =
-                                    subtitleRevealProgress >= charProgress;
-
-                                  return (
-                                    <span
-                                      key={`${lineIndex}-${charIndex}`}
-                                      style={{
-                                        color: isRevealed
-                                          ? "rgba(0, 0, 0, 1)"
-                                          : "rgba(0, 0, 0, 0.3)",
-                                        transition: "color 0.05s ease",
-                                      }}
-                                    >
-                                      {char}
-                                    </span>
-                                  );
-                                })}
-                              </React.Fragment>
-                            ));
-                          })()}
-                        </h1>
-                      </div>
-                    </div>
-                  );
-                }
-
-                // Other slides - normal slide behavior
                 let transform = "translateY(100%)"; // Start below
                 let opacity = 0;
 
-                if (index === currentSlide) {
-                  // Current slide - animate in from bottom, then stay for fade-in
-                  let progress = slideProgress;
+                // Calculate scroll progress (0 to 1)
+                const rect = containerRef.current?.getBoundingClientRect();
+                const containerHeight = containerRef.current?.offsetHeight || 1;
+                const windowHeight = window.innerHeight;
+                const scrollRange = containerHeight - windowHeight;
+                const scrolled = rect ? Math.abs(Math.min(rect.top, 0)) : 0;
+                const scrollProgress = Math.min(Math.max(scrolled / scrollRange, 0), 1);
 
-                  // First 50% of slideProgress: move to position
-                  if (progress <= 0.5) {
-                    const moveProgress = progress / 0.5;
-                    transform = `translateY(${(1 - moveProgress) * 100}%)`;
-                    opacity = moveProgress;
+                // Text 1: pause (0-15%), fade out (15-25%)
+                if (index === 0) {
+                  if (scrollProgress <= 0.15) {
+                    // Fully visible from 0% to 15% (pause)
+                    transform = `translateY(0%)`;
+                    opacity = 1;
+                  } else if (scrollProgress <= 0.25) {
+                    // Fade out from 15% to 25%
+                    const fadeProgress = (scrollProgress - 0.15) / 0.10;
+                    transform = `translateY(${-fadeProgress * 100}%)`;
+                    opacity = 1 - fadeProgress * 0.5;
                   } else {
-                    // After 50%: stay in position for fade-in effects
+                    transform = "translateY(-100%)";
+                    opacity = 0;
+                  }
+                }
+                // Text 2: fade in (15-25%), pause (25-35%), fade out (35-45%)
+                else if (index === 1) {
+                  if (scrollProgress < 0.15) {
+                    transform = "translateY(100%)";
+                    opacity = 0;
+                  } else if (scrollProgress <= 0.25) {
+                    // Fade in from 15% to 25%
+                    const fadeProgress = (scrollProgress - 0.15) / 0.10;
+                    transform = `translateY(${(1 - fadeProgress) * 100}%)`;
+                    opacity = fadeProgress;
+                  } else if (scrollProgress <= 0.35) {
+                    // Fully visible from 25% to 35% (pause 10%)
+                    transform = `translateY(0%)`;
+                    opacity = 1;
+                  } else if (scrollProgress <= 0.45) {
+                    // Fade out from 35% to 45%
+                    const fadeProgress = (scrollProgress - 0.35) / 0.10;
+                    transform = `translateY(${-fadeProgress * 100}%)`;
+                    opacity = 1 - fadeProgress * 0.5;
+                  } else {
+                    transform = "translateY(-100%)";
+                    opacity = 0;
+                  }
+                }
+                // Text 3: fade in (35-40%), pause (40-75%), fade out (75-80%)
+                else if (index === 2) {
+                  if (scrollProgress < 0.35) {
+                    transform = "translateY(100%)";
+                    opacity = 0;
+                  } else if (scrollProgress <= 0.40) {
+                    // Fade in from 35% to 40%
+                    const fadeProgress = (scrollProgress - 0.35) / 0.05;
+                    transform = `translateY(${(1 - fadeProgress) * 100}%)`;
+                    opacity = fadeProgress;
+                  } else if (scrollProgress <= 0.75) {
+                    // Fully visible from 40% to 75% (pause 35%)
+                    transform = `translateY(0%)`;
+                    opacity = 1;
+                  } else if (scrollProgress <= 0.80) {
+                    // Fade out from 75% to 80%
+                    const fadeProgress = (scrollProgress - 0.75) / 0.05;
+                    transform = `translateY(${-fadeProgress * 100}%)`;
+                    opacity = 1 - fadeProgress * 0.5;
+                  } else {
+                    transform = "translateY(-100%)";
+                    opacity = 0;
+                  }
+                }
+                // Text 4: fade in (80-85%), pause (85-100%) - no fade out
+                else if (index === 3) {
+                  if (scrollProgress < 0.80) {
+                    transform = "translateY(100%)";
+                    opacity = 0;
+                  } else if (scrollProgress <= 0.85) {
+                    // Fade in from 80% to 85%
+                    const fadeProgress = (scrollProgress - 0.80) / 0.05;
+                    transform = `translateY(${(1 - fadeProgress) * 100}%)`;
+                    opacity = fadeProgress;
+                  } else {
+                    // Fully visible from 85% to 100% (pause 15% - no fade out)
                     transform = `translateY(0%)`;
                     opacity = 1;
                   }
-                } else if (index < currentSlide) {
-                  // Previous slides - move up and out
-                  transform = "translateY(-100%)";
-                  opacity = 0;
-                } else {
-                  // Future slides - stay below
-                  transform = "translateY(100%)";
-                  opacity = 0;
                 }
 
                 return (
@@ -372,138 +285,22 @@ const MirrorIntroduce = () => {
                   >
                     <div className="slide-content">
                       <h1 className="heading-1--no-margin slide-title">
-                        {(() => {
-                          const lines = slide.title.split("\n");
-                          const totalLength = slide.title.replace(
-                            /\n/g,
-                            ""
-                          ).length;
-                          let charCount = 0;
-
-                          return lines.map((line, lineIndex) => (
-                            <React.Fragment key={lineIndex}>
-                              {lineIndex > 0 && <br />}
-                              {line.split("").map((char, charIndex) => {
-                                charCount++;
-                                const charProgress = charCount / totalLength;
-                                const titleRevealProgress =
-                                  index === currentSlide && slideProgress > 0.5
-                                    ? Math.min(1, (slideProgress - 0.5) / 0.15)
-                                    : 0;
-                                const isRevealed =
-                                  titleRevealProgress >= charProgress;
-
-                                return (
-                                  <span
-                                    key={`${lineIndex}-${charIndex}`}
-                                    style={{
-                                      color: isRevealed
-                                        ? "rgba(0, 0, 0, 1)"
-                                        : "rgba(0, 0, 0, 0.3)",
-                                      transition: "color 0.1s ease",
-                                    }}
-                                  >
-                                    {char}
-                                  </span>
-                                );
-                              })}
-                            </React.Fragment>
-                          ));
-                        })()}
+                        {slide.title}
                         {slide.highlight && (
-                          <>
-                            <span style={{ color: "rgba(0, 0, 0, 1)" }}> </span>
-                            {slide.highlight
-                              .split("")
-                              .map((char, charIndex) => {
-                                const highlightLength = slide.highlight.length;
-                                const charProgress =
-                                  (charIndex + 1) / highlightLength;
-                                const highlightRevealProgress =
-                                  index === currentSlide && slideProgress > 0.65
-                                    ? Math.min(1, (slideProgress - 0.65) / 0.15)
-                                    : 0;
-                                const isRevealed =
-                                  highlightRevealProgress >= charProgress;
-
-                                return (
-                                  <span
-                                    key={`highlight-${charIndex}`}
-                                    className="slide-highlight"
-                                    style={{
-                                      color: isRevealed
-                                        ? "rgba(0, 0, 0, 1)"
-                                        : "rgba(0, 0, 0, 0.3)",
-                                      transition: "color 0.1s ease",
-                                    }}
-                                  >
-                                    {char}
-                                  </span>
-                                );
-                              })}
-                          </>
+                          <span className="slide-highlight">
+                            {slide.highlight}
+                          </span>
                         )}
-                        {slide.title.includes(":") &&
-                          slide.title.split(":")[1] === "" && (
-                            <span
-                              style={{
-                                color:
-                                  index === currentSlide && slideProgress > 0.8
-                                    ? "rgba(0, 0, 0, 1)"
-                                    : "rgba(0, 0, 0, 0.3)",
-                                transition: "color 0.1s ease",
-                              }}
-                            >
-                              .
-                            </span>
-                          )}
                       </h1>
-                      <h1
+                      <p
                         className={
                           index === 0
                             ? "heading-1--no-margin slide-subtitle"
                             : "bodytext-3--no-margin slide-subtitle"
                         }
                       >
-                        {(() => {
-                          const lines = slide.subtitle.split("\n");
-                          const totalLength = slide.subtitle.replace(
-                            /\n/g,
-                            ""
-                          ).length;
-                          let charCount = 0;
-
-                          return lines.map((line, lineIndex) => (
-                            <React.Fragment key={lineIndex}>
-                              {lineIndex > 0 && <br />}
-                              {line.split("").map((char, charIndex) => {
-                                charCount++;
-                                const charProgress = charCount / totalLength;
-                                const subtitleRevealProgress =
-                                  index === currentSlide && slideProgress > 0.85
-                                    ? Math.min(1, (slideProgress - 0.85) / 0.15)
-                                    : 0;
-                                const isRevealed =
-                                  subtitleRevealProgress >= charProgress;
-
-                                return (
-                                  <span
-                                    key={`${lineIndex}-${charIndex}`}
-                                    style={{
-                                      color: isRevealed
-                                        ? "rgba(0, 0, 0, 1)"
-                                        : "rgba(0, 0, 0, 0.3)",
-                                      transition: "color 0.05s ease",
-                                    }}
-                                  >
-                                    {char}
-                                  </span>
-                                );
-                              })}
-                            </React.Fragment>
-                          ));
-                        })()}
-                      </h1>
+                        {slide.subtitle}
+                      </p>
                     </div>
                   </div>
                 );

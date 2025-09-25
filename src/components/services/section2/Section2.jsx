@@ -64,7 +64,70 @@ const Section2 = () => {
   return (
     <div ref={sectionRef} className="section2-wrapper">
       <div className="section2-sticky-container">
-        {/* Sticky Image Area */}
+        {/* Mobile Layout - only visible on mobile */}
+        <div className="section2-mobile-screen-1">
+          <div className="section2-content-layer">
+            <div className="section2-content">
+              <div className="section2-full-content">
+                <div className="section2-header-description">
+                  <div className="section2-header">
+                    <span className="section2-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section2-title heading-1--no-margin">
+                      PRODUCT CARE & REPAIR
+                    </h2>
+                  </div>
+                  <p className="section2-description bodytext-6--no-margin">
+                    Extend the life and brilliance of your jewelry with Mirror's
+                    professional care and repair services, tailored to keep each
+                    piece as radiant as the day you received it.
+                  </p>
+                </div>
+                <ShineGlassButton
+                  className="section2-cta"
+                  theme="dark"
+                  onClick={handleProductCareClick}
+                >
+                  See more
+                </ShineGlassButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="section2-mobile-screen-2">
+          <div className="section2-content-layer">
+            <div className="section2-content">
+              <div className="section2-full-content">
+                <div className="section2-header-description">
+                  <div className="section2-header">
+                    <span className="section2-subtitle bodytext-3--no-margin">
+                      EXPLORE OUR
+                    </span>
+                    <h2 className="section2-title heading-1--no-margin">
+                      TRADE IN
+                    </h2>
+                  </div>
+                  <p className="section2-description bodytext-6--no-margin">
+                    Mirror's "Reclaim & Renew" program allows you to trade in
+                    eligible pieces in the future toward upgraded designs— a
+                    promise of continuous evolution in your jewelry journey.
+                  </p>
+                </div>
+                <ShineGlassButton
+                  className="section2-cta"
+                  theme="dark"
+                  onClick={handleTradeInClick}
+                >
+                  See more
+                </ShineGlassButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop/Tablet Layout - Sticky Image Area */}
         <div className="section2-sticky-images">
           <div
             className="section2-image-layer section2-image-1"
