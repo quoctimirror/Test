@@ -1,0 +1,41 @@
+/* ===== PRODUCTS LAYOUT - MAIN CONTAINER ===== */
+
+/* Products Main Wrapper - Contains both main content and parallax */
+.products-main-wrapper {
+    width: 100%;
+    position: relative;
+}
+
+/* Products Main Container */
+.products-container {
+    width: 100%;
+    min-height: 150vh;
+    display: flex;
+    position: relative;
+}
+
+/* ===== RIGHT SIDE - CONFIGURATION CONTAINER - Desktop only (1024px+) ===== */
+.products-right {
+    width: 33.75%;
+    min-height: 150vh;
+    position: relative;
+}
+
+/*
+💡 HƯỚNG DẪN SỬ DỤNG - DESKTOP ONLY (1024px+):
+
+✅ STRUCTURE LAYOUT:
+├── Products.jsx (import Products.css)
+├── Products.css (file này - chỉ quản lý layout chung)
+├── LeftContainer.jsx + LeftContainer.css (width: 66.25%, chứa Section1 và Section2)
+└── RightConfiguration.jsx + RightConfiguration.css (width: 100% trong products-right)
+
+📐 LAYOUT BREAKDOWN:
+- Desktop: LeftContainer 66.25% | RightConfiguration 33.75%
+- Không hỗ trợ responsive (chỉ desktop 1024px+)
+
+🎯 COMPONENT CON:
+- LeftContainer quản lý Section1 và Section2
+- Layout tổng quát được handle ở Products.css này
+- Tối ưu cho desktop experience
+*/

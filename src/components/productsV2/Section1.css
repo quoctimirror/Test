@@ -1,0 +1,77 @@
+/* Base styles - always show border for debugging */
+.section1-container {
+    border: 3px solid #FF0000 !important;
+    background: #F0F8FF !important;
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+    height: 100vh;
+}
+
+/* Desktop styles for 1024px and above */
+@media (min-width: 1024px) {
+    .section1 {
+        width: 100%;
+        /* Full width trong products-left container */
+        background-color: transparent;
+        position: relative;
+        padding: 40px;
+        box-sizing: border-box;
+        border: 2px solid #FF0000;
+        /* Red border để dễ nhìn layout */
+    }
+
+    .section1-container {
+        max-width: 800px;
+        margin: 77px auto 0 auto;
+        /* 77px = navbar height (20px top + 57px height) */
+        padding: 60px 20px;
+        text-align: center;
+        border: 2px solid #0000FF;
+        /* Blue border để thấy container */
+        background-color: #F8F9FA;
+        border-radius: 8px;
+    }
+
+    .section1-container h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 32px;
+        font-weight: 400;
+        color: #333333;
+        margin: 0 0 24px 0;
+    }
+
+    .section1-container p {
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        color: #666666;
+        line-height: 1.6;
+        margin: 0 0 16px 0;
+    }
+
+    .section1-container p:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Hide on smaller screens */
+@media (max-width: 1023px) {
+    .section1 {
+        display: none;
+    }
+}
+
+/* Debug info - remove when satisfied with layout */
+.section1::before {
+    content: "Section1 - 66.25% width";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    z-index: 1000;
+}

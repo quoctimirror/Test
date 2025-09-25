@@ -1,0 +1,6 @@
+/* LeftContainer - Chứa Section1 và Section2 - Desktop only (1024px+) */
+.left-container {
+    width: 66.25%;
+    min-height: 100vh;
+    position: relative;
+}
