@@ -5,7 +5,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
     if (direction === "falling") {
         // Chỉ 1 vạch duy nhất ở giữa, rơi thẳng xuống với chiều cao tùy chỉnh
         return (
-            <div className="star-container-center">
+            <div className="universe-star-container-center">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="2"
@@ -38,7 +38,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
     if (direction === "rising") {
         // Vạch bay từ dưới lên trên
         return (
-            <div className="star-container-center">
+            <div className="universe-star-container-center">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="2"

@@ -178,11 +178,11 @@
         top: calc(50% - 100px);
     }
 
-    .presence-overlay__starlight .star-container-center {
+    .presence-overlay__starlight .universe-star-container-center {
         margin-top: 0;
     }
 
-    .presence-overlay__starlight .star-container-center svg {
+    .presence-overlay__starlight .universe-star-container-center svg {
         height: 120px !important;
     }
 
