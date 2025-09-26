@@ -1,160 +1,268 @@
-/* Desktop: 1024px+ */
-@media (min-width: 1024px) {
+/* Desktop First: 1024px+ (Default) */
+.space-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #000000;
+    background-image: url('/universeSection/tbl-dk-space-overlay.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.space-overlay__content {
+    position: relative;
+    cursor: default;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Top text section */
+.space-overlay__top-text {
+    position: fixed;
+    top: calc(50% - 250px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180.42px;
+    z-index: 1002;
+    pointer-events: none;
+    text-align: justify;
+}
+
+.space-overlay__top-line {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.space-overlay__top-line span {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    font-family: "BT Beau Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+}
+
+/* Đồng bộ hóa tất cả StarlightEffect */
+.space-overlay__starlight-up,
+.space-overlay__starlight-down {
+    animation: syncStarlight 1.5s infinite;
+}
+
+/* StarlightEffect pointing up */
+.space-overlay__starlight-up {
+    position: fixed;
+    top: calc(50% + 30px);
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Space title */
+.space-overlay__title {
+    position: fixed;
+    top: calc(50% - 60px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 36px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -0.72px;
+    z-index: 1002;
+}
+
+/* StarlightEffect pointing down */
+.space-overlay__starlight-down {
+    position: fixed;
+    top: calc(50% - 80px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Bottom text section */
+.space-overlay__bottom-text {
+    position: fixed;
+    top: calc(50% + 140px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    width: 179.424px;
+    height: 67.537px;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    z-index: 1002;
+    pointer-events: none;
+}
+
+.space-overlay__bottom-line {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.space-overlay__bottom-line span {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    font-family: "BT Beau Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+}
+
+/* Close Button - Hidden by default on Desktop */
+.space-overlay__close-button {
+    position: fixed;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1003;
+    pointer-events: auto;
+    display: none;
+}
+
+.space-overlay__close-btn .button-text {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.space-overlay__close-btn .border-layer {
+    background: conic-gradient(from 0deg at 50% 50%,
+            rgba(255, 255, 255, 0.8) 0%,
+            rgba(255, 255, 255, 0.8) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+}
+
+.space-overlay__close-btn:hover .border-layer {
+    background: conic-gradient(from 0deg at 50% 50%,
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 1) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)) !important;
+}
+
+/* Animations */
+@keyframes syncStarlight {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Tablet: 426-1023px */
+@media (max-width: 1023px) and (min-width: 426px) {
     .space-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background-color: #000000;
-        background-image: url('/universeSection/tbl-dk-space-overlay.png');
-        background-size: auto 1000px !important;
-        background-position: center;
-        background-repeat: no-repeat;
-        z-index: 1000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        animation: fadeIn 0.3s ease-in-out;
+        background-size: contain;
     }
 
-    .space-overlay__content {
-        position: relative;
-        cursor: default;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    /* Top text section */
+    /* Top text section - same as desktop positioning */
     .space-overlay__top-text {
-        position: fixed;
         top: calc(50% - 250px);
-        left: 50%;
-        transform: translateX(-50%);
         width: 180.42px;
-        z-index: 1002;
-        pointer-events: none;
-        text-align: justify;
     }
 
-    .space-overlay__top-line {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 2px;
-    }
-
-    .space-overlay__top-line span {
-        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
-        /* TL_Bodytext 6 (BT_12px_regular) */
-        font-family: "BT Beau Sans";
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%;
-        /* 12px */
-    }
-
-    /* Đồng bộ hóa tất cả StarlightEffect */
-    .space-overlay__starlight-up,
-    .space-overlay__starlight-down {
-        animation: syncStarlight 1.5s infinite;
-    }
-
-    @keyframes syncStarlight {
-        0% {
-            opacity: 1;
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
-
-    /* StarlightEffect pointing up */
+    /* StarlightEffect pointing up - same as desktop positioning */
     .space-overlay__starlight-up {
-        position: fixed;
         top: calc(50% + 30px);
-        left: 50%;
-        transform: translateX(-50%) rotate(180deg);
-        z-index: 1000;
-        pointer-events: none;
     }
 
-    /* Space title */
+    /* Space title - same as desktop positioning */
     .space-overlay__title {
-        position: fixed;
         top: calc(50% - 60px);
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: var(--White, #FFF);
-        text-align: center;
-        font-family: "Saol Display";
         font-size: 36px;
-        font-style: italic;
-        font-weight: 300;
-        line-height: 90%;
         letter-spacing: -0.72px;
-        z-index: 1002;
     }
 
-    /* StarlightEffect pointing down */
+    /* StarlightEffect pointing down - same as desktop positioning */
     .space-overlay__starlight-down {
-        position: fixed;
         top: calc(50% - 80px);
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
-        pointer-events: none;
     }
 
-    /* Bottom text section */
+    /* Bottom text section - same as desktop positioning */
     .space-overlay__bottom-text {
-        position: fixed;
         top: calc(50% + 140px);
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
         width: 179.424px;
         height: 67.537px;
-        flex-direction: column;
-        justify-content: flex-end;
-        flex-shrink: 0;
-        z-index: 1002;
-        pointer-events: none;
     }
 
-    .space-overlay__bottom-line {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 2px;
+    .space-overlay__close-button {
+        display: block;
+    }
+}
+
+/* Mobile: 0-425px */
+@media (max-width: 425px) {
+    .space-overlay {
+        background-image: url('/universeSection/mb-space-overlay.png');
+        background-size: cover;
     }
 
-    .space-overlay__bottom-line span {
-        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
-        /* TL_Bodytext 6 (BT_12px_regular) */
-        font-family: "BT Beau Sans";
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%;
-        /* 12px */
+    .space-overlay__title {
+        font-size: 32px;
+        letter-spacing: -0.64px;
     }
 
-    /* Animation for overlay appearance */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
+    /* Top text section - mobile positioning */
+    .space-overlay__top-text {
+        top: calc(50% - 240px);
+        width: 90%;
+        max-width: 180px;
+    }
 
-        to {
-            opacity: 1;
-        }
+    /* StarlightEffect pointing up - mobile positioning */
+    .space-overlay__starlight-up {
+        top: calc(50% + 40px);
+    }
+
+    /* StarlightEffect pointing down - mobile positioning */
+    .space-overlay__starlight-down {
+        top: calc(50% - 70px);
+    }
+
+    /* Bottom text section - mobile positioning */
+    .space-overlay__bottom-text {
+        top: calc(50% + 150px);
+        width: 90%;
+        max-width: 180px;
+    }
+
+    .space-overlay__close-button {
+        display: block;
     }
 }

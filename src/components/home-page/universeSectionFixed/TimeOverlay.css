@@ -1,103 +1,186 @@
-/* Desktop: 1024px+ */
-@media (min-width: 1024px) {
+/* Desktop First: 1024px+ (Default) */
+.time-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #000000;
+    background-image: url('/universeSection/tbl-dk-time-overlay.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.time-overlay__content {
+    position: relative;
+    cursor: default;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Time title */
+.time-overlay__title {
+    position: fixed;
+    top: calc(50% - 100px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 36px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -0.72px;
+    z-index: 1002;
+}
+
+/* StarlightEffect pointing down */
+.time-overlay__starlight-down {
+    position: fixed;
+    top: calc(50% - 110px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+    animation: syncStarlight 1.5s infinite;
+}
+
+/* Bottom text section */
+.time-overlay__bottom-text {
+    position: fixed;
+    top: calc(50% + 120px);
+    left: 50%;
+    transform: translateX(-50%);
+    height: 72px;
+    flex-shrink: 0;
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    z-index: 1002;
+    pointer-events: none;
+}
+
+/* Close Button - Hidden by default on Desktop */
+.time-overlay__close-button {
+    position: fixed;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1003;
+    pointer-events: auto;
+    display: none;
+}
+
+.time-overlay__close-btn .button-text {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.time-overlay__close-btn .border-layer {
+    background: conic-gradient(
+        from 0deg at 50% 50%,
+        rgba(255, 255, 255, 0.8) 0%,
+        rgba(255, 255, 255, 0.8) 100%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+}
+
+.time-overlay__close-btn:hover .border-layer {
+    background: conic-gradient(
+        from 0deg at 50% 50%,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 1) 100%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)) !important;
+}
+
+/* Animations */
+@keyframes syncStarlight {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Tablet: 426-1023px */
+@media (max-width: 1023px) and (min-width: 426px) {
     .time-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background-color: #000000;
-        background-image: url('/universeSection/tbl-dk-time-overlay.png');
-        background-size: auto 1000px !important;
-        background-position: center;
-        background-repeat: no-repeat;
-        z-index: 1000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        animation: fadeIn 0.3s ease-in-out;
+        background-size: contain;
     }
 
-    .time-overlay__content {
-        position: relative;
-        cursor: default;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    /* Time title */
+    /* Same positioning as desktop */
     .time-overlay__title {
-        position: fixed;
         top: calc(50% - 100px);
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: var(--White, #FFF);
-        text-align: center;
-        font-family: "Saol Display";
         font-size: 36px;
-        font-style: italic;
-        font-weight: 300;
-        line-height: 90%;
         letter-spacing: -0.72px;
-        z-index: 1002;
     }
 
     .time-overlay__starlight-down {
-        animation: syncStarlight 1.5s infinite;
-    }
-
-    @keyframes syncStarlight {
-        0% {
-            opacity: 1;
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
-
-    /* StarlightEffect pointing down */
-    .time-overlay__starlight-down {
-        position: fixed;
         top: calc(50% - 110px);
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
-        pointer-events: none;
     }
 
-    /* Bottom text section */
     .time-overlay__bottom-text {
-        position: fixed;
         top: calc(50% + 120px);
-        left: 50%;
-        transform: translateX(-50%);
-        height: 72px;
-        flex-shrink: 0;
-        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
-        text-align: center;
-        font-family: "BT Beau Sans";
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%;
-        z-index: 1002;
-        pointer-events: none;
     }
 
-    /* Animation for overlay appearance */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
+    .time-overlay__close-button {
+        display: block;
+    }
+}
 
-        to {
-            opacity: 1;
-        }
+/* Mobile: 0-425px */
+@media (max-width: 425px) {
+    .time-overlay {
+        background-image: url('/universeSection/mb-time-overlay.png');
+        background-size: cover;
+    }
+
+    .time-overlay__title {
+        top: calc(50% - 80px);
+        font-size: 32px;
+        letter-spacing: -0.64px;
+    }
+
+    .time-overlay__starlight-down {
+        top: calc(50% - 90px);
+    }
+
+    .time-overlay__bottom-text {
+        top: calc(50% + 140px);
+        width: 90%;
+        max-width: 300px;
+    }
+
+    .time-overlay__close-button {
+        display: block;
     }
 }

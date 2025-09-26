@@ -12,9 +12,9 @@ const PresenceOverlay = ({ isVisible, onClose }) => {
             if (screenWidth <= 425) {
                 setStarlightHeight(300); // Mobile
             } else if (screenWidth <= 1023) {
-                setStarlightHeight(10); // Tablet
+                setStarlightHeight(120); // Tablet
             } else {
-                setStarlightHeight(300); // Desktop
+                setStarlightHeight(200); // Desktop
             }
         };
 
