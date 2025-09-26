@@ -1,0 +1,103 @@
+/* Desktop: 1024px+ */
+@media (min-width: 1024px) {
+    .time-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: #000000;
+        background-image: url('/universeSection/tbl-dk-time-overlay.png');
+        background-size: auto 1000px !important;
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .time-overlay__content {
+        position: relative;
+        cursor: default;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Time title */
+    .time-overlay__title {
+        position: fixed;
+        top: calc(50% - 100px);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--White, #FFF);
+        text-align: center;
+        font-family: "Saol Display";
+        font-size: 36px;
+        font-style: italic;
+        font-weight: 300;
+        line-height: 90%;
+        letter-spacing: -0.72px;
+        z-index: 1002;
+    }
+
+    .time-overlay__starlight-down {
+        animation: syncStarlight 1.5s infinite;
+    }
+
+    @keyframes syncStarlight {
+        0% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* StarlightEffect pointing down */
+    .time-overlay__starlight-down {
+        position: fixed;
+        top: calc(50% - 110px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        pointer-events: none;
+    }
+
+    /* Bottom text section */
+    .time-overlay__bottom-text {
+        position: fixed;
+        top: calc(50% + 120px);
+        left: 50%;
+        transform: translateX(-50%);
+        height: 72px;
+        flex-shrink: 0;
+        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+        text-align: center;
+        font-family: "BT Beau Sans";
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        z-index: 1002;
+        pointer-events: none;
+    }
+
+    /* Animation for overlay appearance */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+}

@@ -1,0 +1,709 @@
+/* Keyframe animation for rotation */
+@keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Keyframe animation for counter-rotation */
+@keyframes rotate-reverse {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+/* Prevent horizontal scroll white space */
+body {
+  overflow-x: hidden;
+}
+
+/* Mobile First: 0-425px */
+.mirror-exp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  background-color: #000000;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.mirror-exp::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 132px;
+  height: 132px;
+  background-image: url('/universeSection/layer0.png');
+  background-size: 132px 132px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate 8s linear infinite;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.mirror-exp::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 192px;
+  height: 192px;
+  background-image: url('/universeSection/layer1.png');
+  background-size: 192px 192px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate-reverse 8.8s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Layer5 - counter-clockwise, lớn nhất */
+.mirror-exp__layer5 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 432px;
+  height: 432px;
+  background-image: url('/universeSection/layer5.png');
+  background-size: 432px 432px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate-reverse 12s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Layer4 - clockwise */
+.mirror-exp__layer4 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 372px;
+  height: 372px;
+  background-image: url('/universeSection/layer4.png');
+  background-size: 372px 372px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate 11.2s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Layer3 - counter-clockwise */
+.mirror-exp__layer3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 312px;
+  height: 312px;
+  background-image: url('/universeSection/layer3.png');
+  background-size: 312px 312px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate-reverse 10.4s linear infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Layer2 - clockwise */
+.mirror-exp__layer2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 252px;
+  height: 252px;
+  background-image: url('/universeSection/layer2.png');
+  background-size: 252px 252px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate 9.6s linear infinite;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Meteoroid orbit container - rotates to move meteoroids around circle */
+.mirror-exp__meteoroid-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 192px;
+  /* diameter of layer1 circle */
+  height: 192px;
+  transform: translate(-50%, -50%);
+  animation: rotate-reverse 8.8s linear infinite;
+  /* same as layer1 */
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Meteoroid at 3 o'clock position on layer1 circle */
+.mirror-exp__meteoroid-3h {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  /* at edge of orbit container (3 o'clock) */
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(50%, -50%);
+  pointer-events: none;
+}
+
+/* Meteoroid orbit container for layer2 - rotates clockwise */
+.mirror-exp__meteoroid-orbit-layer2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 252px;
+  /* diameter of layer2 circle */
+  height: 252px;
+  transform: translate(-50%, -50%);
+  animation: rotate 9.6s linear infinite;
+  /* same as layer2 - clockwise */
+  pointer-events: none;
+  z-index: 14;
+}
+
+/* Meteoroid at 12 o'clock position on layer2 circle */
+.mirror-exp__meteoroid-layer2-12h {
+  position: absolute;
+  top: 0;
+  /* at top edge of orbit container (12 o'clock) */
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Meteoroid orbit container for layer4 - rotates clockwise */
+.mirror-exp__meteoroid-orbit-layer4 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 372px;
+  /* diameter of layer4 circle */
+  height: 372px;
+  transform: translate(-50%, -50%);
+  animation: rotate 11.2s linear infinite;
+  /* same as layer4 - clockwise */
+  pointer-events: none;
+  z-index: 11;
+}
+
+/* Meteoroid at 0° (3 o'clock) on layer4 circle */
+.mirror-exp__meteoroid-layer4-0deg {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  /* cos(0°) = 1, sin(0°) = 0 */
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(50%, -50%);
+  pointer-events: none;
+}
+
+/* Meteoroid at 120° on layer4 circle - radius 186px */
+.mirror-exp__meteoroid-layer4-120deg {
+  position: absolute;
+  top: calc(50% - 161px);
+  /* 50% + radius * sin(120°) = 50% - 161px */
+  left: calc(50% - 93px);
+  /* 50% + radius * cos(120°) = 50% - 93px */
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Meteoroid at 240° on layer4 circle - radius 186px */
+.mirror-exp__meteoroid-layer4-240deg {
+  position: absolute;
+  top: calc(50% + 161px);
+  /* 50% + radius * sin(240°) = 50% + 161px */
+  left: calc(50% - 93px);
+  /* 50% + radius * cos(240°) = 50% - 93px */
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Heart-senses at 45° on layer4 circle - stationary */
+.mirror-exp__heart-senses {
+  position: absolute;
+  top: calc(50% - 132px);
+  /* 50% - radius * sin(45°) = 50% - 132px */
+  left: calc(50% + 142px);
+  /* 50% + radius * cos(45°) = 50% + 132px + 10px adjustment */
+  width: 36px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  z-index: 13;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mirror-exp__heart-senses::after {
+  content: '';
+  width: 36px;
+  height: 36px;
+  background-image: url('/universeSection/heart-senses.png');
+  background-size: 36px 36px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mirror-exp__sense-text {
+  font-family: "BT Beau Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Circle-presence at 135° (between 9-10 o'clock) on layer3 circle - stationary */
+.mirror-exp__circle-presence {
+  position: absolute;
+  top: calc(50% - 110px);
+  /* 50% - radius * sin(135°) = 50% - 110px */
+  left: calc(50% - 110px - 10px);
+  /* 50% + radius * cos(135°) = 50% - 110px */
+  width: 36px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mirror-exp__circle-presence::after {
+  content: '';
+  width: 36px;
+  height: 36px;
+  background-image: url('/universeSection/circle-presence.png');
+  background-size: 36px 36px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mirror-exp__presence-text {
+  font-family: "BT Beau Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Droplet-time at 225° on layer2 circle - stationary */
+.mirror-exp__droplet-time {
+  position: absolute;
+  top: calc(50% + 79px);
+  /* 50% - radius * sin(225°) = 50% + 126 * 0.707 = 50% + 89px - 10px adjustment */
+  left: calc(50% - 89px);
+  /* 50% + radius * cos(225°) = 50% + 126 * (-0.707) = 50% - 89px */
+  width: 28px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mirror-exp__droplet-time::after {
+  content: '';
+  width: 28px;
+  height: 42px;
+  background-image: url('/universeSection/droplet-time.png');
+  background-size: 28px 42px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mirror-exp__time-text {
+  font-family: "BT Beau Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Rect-space at 40° on layer3 circle - stationary */
+.mirror-exp__rect-space {
+  position: absolute;
+  top: calc(50% + 90px);
+  /* 50% - radius * sin(40°) = 50% + 100px - 10px adjustment */
+  left: calc(50% + 119px);
+  /* 50% + radius * cos(40°) = 50% + 119px */
+  width: 42px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mirror-exp__rect-space::after {
+  content: '';
+  width: 42px;
+  height: 42px;
+  background-image: url('/universeSection/rect-space.png');
+  background-size: 42px 42px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mirror-exp__space-text {
+  font-family: "BT Beau Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Center dot - điểm đỏ ở giữa */
+/* .mirror-exp__center-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 20;
+} */
+
+.mirror-exp__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+.mirror-exp__mirror,
+.mirror-exp__experience {
+  font-family: "BT Beau Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  /* 19.2px */
+  text-align: center;
+  background: linear-gradient(227deg, #000 -14.38%, #EC3667 25.96%, #F6F6F6 74.05%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Tablet: 426px-1023px */
+@media (min-width: 426px) and (max-width: 1023px) {
+  .mirror-exp__text {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .mirror-exp__mirror,
+  .mirror-exp__experience {
+    font-family: "BT Beau Sans";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    background: linear-gradient(227deg, #000 -14.38%, #EC3667 25.96%, #F6F6F6 74.05%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Update rotating layer0 size for tablet */
+  .mirror-exp::before {
+    width: 192px;
+    height: 192px;
+    background-size: 192px 192px;
+  }
+}
+
+/* Desktop: 1024px+ */
+@media (min-width: 1024px) {
+
+  /* Layer 0 - updated size for desktop (180x180px) */
+  .mirror-exp::before {
+    width: 180px;
+    height: 180px;
+    background-size: 180px 180px;
+  }
+
+  /* Layer 1 - updated size for desktop (290x290px) */
+  .mirror-exp::after {
+    width: 290px;
+    height: 290px;
+    background-size: 290px 290px;
+  }
+
+  /* Layer 2 - updated size for desktop (400x400px) */
+  .mirror-exp__layer2 {
+    width: 400px;
+    height: 400px;
+    background-size: 400px 400px;
+  }
+
+  /* Layer 3 - updated size for desktop (510x510px) */
+  .mirror-exp__layer3 {
+    width: 510px;
+    height: 510px;
+    background-size: 510px 510px;
+  }
+
+  /* Layer 4 - updated size for desktop (620x620px) */
+  .mirror-exp__layer4 {
+    width: 620px;
+    height: 620px;
+    background-size: 620px 620px;
+  }
+
+  /* Layer 5 - updated size for desktop (730x730px) */
+  .mirror-exp__layer5 {
+    width: 730px;
+    height: 730px;
+    background-size: 730px 730px;
+  }
+
+  /* Meteoroid orbit containers - updated for desktop */
+  /* Layer 1 meteoroid orbit - 290px diameter */
+  .mirror-exp__meteoroid-orbit {
+    width: 290px;
+    height: 290px;
+  }
+
+  /* Layer 2 meteoroid orbit - 400px diameter */
+  .mirror-exp__meteoroid-orbit-layer2 {
+    width: 400px;
+    height: 400px;
+  }
+
+  /* Layer 4 meteoroid orbit - 620px diameter */
+  .mirror-exp__meteoroid-orbit-layer4 {
+    width: 620px;
+    height: 620px;
+  }
+
+  /* Update meteoroid positions on layer4 for desktop (radius 310px) */
+  /* Meteoroid at 120° - radius 310px */
+  .mirror-exp__meteoroid-layer4-120deg {
+    top: calc(50% - 268px);
+    /* 50% - radius * sin(120°) = 50% - 310 * 0.866 = 50% - 268px */
+    left: calc(50% - 155px);
+    /* 50% + radius * cos(120°) = 50% + 310 * (-0.5) = 50% - 155px */
+  }
+
+  /* Meteoroid at 240° - radius 310px */
+  .mirror-exp__meteoroid-layer4-240deg {
+    top: calc(50% + 268px);
+    /* 50% + radius * sin(240°) = 50% + 310 * (-0.866) = 50% + 268px */
+    left: calc(50% - 155px);
+    /* 50% + radius * cos(240°) = 50% + 310 * (-0.5) = 50% - 155px */
+  }
+
+  /* Update planet positions for desktop */
+  /* Heart-senses at 45° on layer2 - radius 200px */
+  .mirror-exp__heart-senses {
+    top: calc(50% - 141px);
+    /* 50% - radius * sin(45°) = 50% - 200 * 0.707 = 50% - 141px */
+    left: calc(50% + 150px);
+    /* 50% + radius * cos(45°) = 50% + 200 * 0.707 = 50% + 141px */
+  }
+
+  /* Circle-presence at 135° on layer3 - radius 255px */
+  .mirror-exp__circle-presence {
+    top: calc(50% - 180px);
+    /* 50% - radius * sin(135°) = 50% - 255 * 0.707 = 50% - 180px */
+    left: calc(50% - 190px);
+    /* 50% + radius * cos(135°) = 50% + 255 * (-0.707) = 50% - 180px */
+  }
+
+  /* Droplet-time at 225° on layer2 - radius 200px */
+  .mirror-exp__droplet-time {
+    top: calc(50% + 130px);
+    /* 50% + radius * sin(225°) = 50% + 200 * (-0.707) = 50% + 141px */
+    left: calc(50% - 141px);
+    /* 50% + radius * cos(225°) = 50% + 200 * (-0.707) = 50% - 141px */
+  }
+
+  /* Rect-space at 4 o'clock (120°) on layer4 - radius 310px */
+  .mirror-exp__rect-space {
+    top: calc(50% + 155px);
+    /* 50% + radius * sin(120°) = 50% + 310 * 0.5 = 50% + 155px */
+    left: calc(50% + 264px);
+    /* 50% + radius * cos(120°) = 50% + 310 * 0.866 = 50% + 268px */
+  }
+
+  /* Update planet icon sizes for desktop */
+  /* Heart-senses and Circle-presence - 60x60px */
+  .mirror-exp__heart-senses,
+  .mirror-exp__circle-presence {
+    width: 60px;
+    height: auto;
+  }
+
+  .mirror-exp__heart-senses::after,
+  .mirror-exp__circle-presence::after {
+    width: 60px;
+    height: 60px;
+    background-size: 60px 60px;
+  }
+
+  /* Rect-space - 70x70px */
+  .mirror-exp__rect-space {
+    width: 70px;
+    height: auto;
+  }
+
+  .mirror-exp__rect-space::after {
+    width: 70px;
+    height: 70px;
+    background-size: 70px 70px;
+  }
+
+  /* Droplet-time slightly different ratio */
+  .mirror-exp__droplet-time {
+    width: 45px;
+    height: auto;
+  }
+
+  .mirror-exp__droplet-time::after {
+    width: 45px;
+    height: 67px;
+    background-size: 45px 67px;
+  }
+
+  /* Update all meteoroid sizes for desktop - 24x24px */
+  .mirror-exp__meteoroid-3h,
+  .mirror-exp__meteoroid-layer2-12h,
+  .mirror-exp__meteoroid-layer4-0deg,
+  .mirror-exp__meteoroid-layer4-120deg,
+  .mirror-exp__meteoroid-layer4-240deg {
+    width: 24px;
+    height: 24px;
+    background-size: 24px 24px;
+  }
+
+  .mirror-exp__text {
+    flex-direction: column;
+    gap: 0px;
+    text-align: center;
+  }
+
+  .mirror-exp__mirror,
+  .mirror-exp__experience {
+    font-family: "BT Beau Sans";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    text-align: center;
+    background: linear-gradient(227deg, #000 -14.38%, #EC3667 25.96%, #F6F6F6 74.05%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Enable pointer events for planet elements */
+  .mirror-exp__heart-senses,
+  .mirror-exp__circle-presence,
+  .mirror-exp__droplet-time,
+  .mirror-exp__rect-space {
+    pointer-events: auto;
+  }
+
+  /* Hide text elements by default on desktop - use typography.css bodytext-4--no-margin */
+  .mirror-exp__sense-text,
+  .mirror-exp__presence-text,
+  .mirror-exp__time-text,
+  .mirror-exp__space-text {
+    color: var(--Pink, #BC224C);
+    font-size: 16px;
+    /* Override typography.css for desktop */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  /* Show text on hover of parent elements */
+  .mirror-exp__heart-senses:hover .mirror-exp__sense-text,
+  .mirror-exp__circle-presence:hover .mirror-exp__presence-text,
+  .mirror-exp__droplet-time:hover .mirror-exp__time-text,
+  .mirror-exp__rect-space:hover .mirror-exp__space-text {
+    opacity: 1;
+  }
+}

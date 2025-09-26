@@ -13,22 +13,21 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
                     viewBox={`0 0 2 ${height}`}
                     fill="none"
                 >
-                    <path d={`M1 0V${height}`} stroke="url(#gradient-falling)" strokeWidth="1" />
+                    <path d={`M1 0V0`} stroke="url(#gradient-falling)" strokeWidth="1">
+                        <animate
+                            attributeName="d"
+                            from={`M1 0V0`}
+                            to={`M1 0V${height}`}
+                            dur="1.5s"
+                            repeatCount="indefinite"
+                        />
+                    </path>
                     <defs>
                         <linearGradient id="gradient-falling" x1="1.5" y1="0" x2="1.5" y2={height} gradientUnits="userSpaceOnUse">
-                            <stop stopColor="#F6F6F6" stopOpacity="0" />
-                            <stop offset="0.3" stopColor="#EC3667" stopOpacity="0.8" />
-                            <stop offset="0.5" stopColor="#EC3667" />
-                            <stop offset="0.7" stopColor="#EC3667" stopOpacity="0.8" />
-                            <stop offset="1" stopColor="#320606" stopOpacity="0.1" />
-                            <animateTransform
-                                attributeName="gradientTransform"
-                                type="translate"
-                                from={`0 -${height}`}
-                                to={`0 ${height}`}
-                                dur="1.5s"
-                                repeatCount="indefinite"
-                            />
+                            <stop offset="0" stopColor="#000000" />
+                            <stop offset="0.13" stopColor="#000000" />
+                            <stop offset="0.75" stopColor="#EC3667" />
+                            <stop offset="1" stopColor="#F6F6F6" />
                         </linearGradient>
                     </defs>
                 </svg>

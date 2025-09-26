@@ -1,0 +1,323 @@
+/* Mobile First: 0-425px */
+.sense-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #000000;
+    background-image: url('/universeSection/sense-overlay.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.sense-overlay__content {
+    position: relative;
+    cursor: default;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sense-overlay__title {
+    position: fixed;
+    top: calc(50% - 40px);
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 32px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -0.64px;
+    z-index: 1002;
+}
+
+/* Center dot - điểm đỏ ở giữa màn hình */
+/* .sense-overlay__center-dot {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1001;
+} */
+
+/* Đồng bộ hóa tất cả StarlightEffect */
+.sense-overlay__starlight,
+.sense-overlay__starlight-2h,
+.sense-overlay__starlight-4h,
+.sense-overlay__starlight-8h,
+.sense-overlay__starlight-10h {
+    animation: syncStarlight 1.5s infinite;
+}
+
+@keyframes syncStarlight {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Starlight effect - hiệu ứng ánh sáng từ tâm điểm xuống dưới */
+.sense-overlay__starlight {
+    position: fixed;
+    top: calc(50% - 30px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Starlight effect hướng 10 giờ */
+.sense-overlay__starlight-10h {
+    position: fixed;
+    top: calc(50% + 30px);
+    left: calc(50% + 5px);
+    transform: translateX(-50%) rotate(150deg);
+    transform-origin: center top;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.sense-overlay__starlight-8h {
+    position: fixed;
+    top: calc(50% - 5px);
+    left: 50%;
+    transform: translateX(-50%) rotate(70deg);
+    transform-origin: center top;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Starlight effect hướng 2 giờ */
+.sense-overlay__starlight-2h {
+    position: fixed;
+    top: calc(50% + 20px);
+    left: 50%;
+    transform: translateX(-50%) rotate(220deg);
+    transform-origin: center top;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.sense-overlay__starlight-4h {
+    position: fixed;
+    top: calc(50% + 5px);
+    left: calc(50% - 5px);
+    transform: translateX(-50%) rotate(280deg);
+    transform-origin: center top;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Sound text - text Sound dưới StarlightEffect */
+.sense-overlay__sound-text {
+    position: fixed;
+    top: calc(50% + 84px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.sense-overlay__sound-text span {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+}
+
+/* Taste text - text Taste dưới StarlightEffect 4h */
+.sense-overlay__taste-text {
+    position: fixed;
+    top: calc(50% + 20px);
+    left: calc(50% + 140px);
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.sense-overlay__taste-text span {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+}
+
+/* Scent text - text Scent dưới StarlightEffect 8h */
+.sense-overlay__scent-text {
+    position: fixed;
+    top: calc(50% + 20px);
+    left: calc(50% - 140px);
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.sense-overlay__scent-text span {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+}
+
+/* Sight text - text Sight dưới StarlightEffect 10h */
+.sense-overlay__sight-text {
+    position: fixed;
+    top: calc(50% - 100px);
+    left: calc(50% - 80px);
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.sense-overlay__sight-text span {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+}
+
+/* Touch text - text Touch dưới StarlightEffect 2h */
+.sense-overlay__touch-text {
+    position: fixed;
+    top: calc(50% - 100px);
+    left: calc(50% + 100px);
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.sense-overlay__touch-text span {
+    color: var(--Pink, #BC224C);
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+}
+
+/* Animation cho overlay xuất hiện */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Desktop: 1024px+ */
+@media (min-width: 1024px) {
+    .sense-overlay {
+        background-image: url('/universeSection/tbl-dk-sense-overlay.png');
+        background-size: auto 1000px !important;
+        /* Override mobile cover - contain để vừa khít màn hình */
+        background-position: center;
+    }
+
+    .sense-overlay__title {
+        top: calc(50% - 60px);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--White, #FFF);
+        text-align: center;
+        font-family: "Saol Display";
+        font-size: 36px;
+        font-style: italic;
+        font-weight: 300;
+        line-height: 90%;
+        /* 32.4px */
+        letter-spacing: -0.72px;
+    }
+
+    /* Điều chỉnh vị trí center dot */
+    /* .sense-overlay__center-dot {
+        top: calc(50% - 20px);
+    } */
+
+    /* Điều chỉnh vị trí các StarlightEffect */
+    .sense-overlay__starlight {
+        top: calc(50% - 50px);
+        /* Dịch lên 20px từ vị trí mobile */
+    }
+
+    .sense-overlay__starlight-10h {
+        top: calc(50% - 5px);
+        /* Dịch lên 20px */
+    }
+
+    .sense-overlay__starlight-8h {
+        top: calc(50% - 25px);
+        /* Dịch lên 20px */
+    }
+
+    .sense-overlay__starlight-2h {
+        top: calc(50% - 10px);
+        /* Dịch lên 20px */
+    }
+
+    .sense-overlay__starlight-4h {
+        top: calc(50% - 15px);
+        /* Dịch lên 20px */
+    }
+
+    /* Điều chỉnh vị trí các text elements */
+    .sense-overlay__sound-text {
+        top: calc(50% + 64px);
+        /* Dịch lên 20px */
+    }
+
+    .sense-overlay__taste-text {
+        top: calc(50% + 0px);
+        /* Dịch lên 20px */
+    }
+
+    .sense-overlay__scent-text {
+        top: calc(50% + 0px);
+        /* Dịch lên 20px */
+    }
+
+    .sense-overlay__sight-text {
+        top: calc(50% - 135px);
+        /* Dịch lên 20px */
+    }
+
+    .sense-overlay__touch-text {
+        top: calc(50% - 135px);
+        /* Dịch lên 20px */
+    }
+}
