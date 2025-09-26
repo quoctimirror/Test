@@ -25,6 +25,23 @@ body {
   overflow-x: hidden;
 }
 
+/* Luxury text styling */
+.mirror-exp__luxury-text {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 345px;
+  color: #797979;
+  text-align: center;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  z-index: 20;
+  margin-bottom: 100px;
+}
+
 /* Mobile First: 0-425px */
 .mirror-exp {
   display: flex;
@@ -467,11 +484,15 @@ body {
 }
 
 /* Tablet: 426px-1023px */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media screen and (max-width: 1023px) {
   .mirror-exp__text {
     flex-direction: column;
     gap: 8px;
     text-align: center;
+  }
+
+  .mirror-exp__luxury-text {
+    width: 62%;
   }
 
   .mirror-exp__mirror,
@@ -497,6 +518,18 @@ body {
 
 /* Desktop: 1024px+ */
 @media (min-width: 1024px) {
+  .mirror-exp {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Update luxury text for desktop */
+  .mirror-exp__luxury-text {
+    top: 80px;
+    width: 47%;
+    font-size: 20px;
+    white-space: nowrap;
+  }
 
   /* Layer 0 - updated size for desktop (180x180px) */
   .mirror-exp::before {
@@ -705,5 +738,17 @@ body {
   .mirror-exp__droplet-time:hover .mirror-exp__time-text,
   .mirror-exp__rect-space:hover .mirror-exp__space-text {
     opacity: 1;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .mirror-exp__text {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .mirror-exp__luxury-text {
+    width: 77%;
   }
 }
