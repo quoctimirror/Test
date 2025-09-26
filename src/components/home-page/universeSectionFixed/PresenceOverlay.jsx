@@ -1,8 +1,31 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './PresenceOverlay.css';
 import StarlightEffect from '../universeSection/StarlightEffect';
+import ShineGlassButton from '../../common/button/ShineGlassButton';
 
 const PresenceOverlay = ({ isVisible, onClose }) => {
+    const [starlightHeight, setStarlightHeight] = useState(200);
+
+    useEffect(() => {
+        const updateStarlightHeight = () => {
+            const screenWidth = window.innerWidth;
+            if (screenWidth <= 425) {
+                setStarlightHeight(300); // Mobile
+            } else if (screenWidth <= 1023) {
+                setStarlightHeight(10); // Tablet
+            } else {
+                setStarlightHeight(300); // Desktop
+            }
+        };
+
+        updateStarlightHeight();
+        window.addEventListener('resize', updateStarlightHeight);
+
+        return () => {
+            window.removeEventListener('resize', updateStarlightHeight);
+        };
+    }, []);
+
     useEffect(() => {
         if (isVisible) {
             const handleEscKey = (event) => {
@@ -23,9 +46,27 @@ const PresenceOverlay = ({ isVisible, onClose }) => {
     return (
         <div className="presence-overlay" onClick={onClose}>
             <div className="presence-overlay__content" onClick={(e) => e.stopPropagation()}>
+                {/* Close Button */}
+                <div className="presence-overlay__close-button">
+                    <ShineGlassButton
+                        onClick={onClose}
+                        theme="footer"
+                        width={44}
+                        height={44}
+                        className="presence-overlay__close-btn"
+                    >
+                        <img
+                            src="/src/assets/images/close-x-icon.svg"
+                            alt="Close"
+                            width="20"
+                            height="20"
+                        />
+                    </ShineGlassButton>
+                </div>
+
                 <h2 className="presence-overlay__title heading2--no-margin">Presence</h2>
                 <div className="presence-overlay__starlight">
-                    <StarlightEffect direction="falling" height={200} />
+                    <StarlightEffect direction="falling" height={starlightHeight} />
                 </div>
                 <div className="presence-overlay__milestone-text">
                     <span className="bodytext-6--no-margin">We</span>

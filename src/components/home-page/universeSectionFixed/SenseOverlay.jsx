@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import './SenseOverlay.css';
 import StarlightEffect from '../universeSection/StarlightEffect';
+import ShineGlassButton from '../../common/button/ShineGlassButton';
 
 const SenseOverlay = ({ isVisible, onClose }) => {
     useEffect(() => {
@@ -23,6 +24,24 @@ const SenseOverlay = ({ isVisible, onClose }) => {
     return (
         <div className="sense-overlay" onClick={onClose}>
             <div className="sense-overlay__content" onClick={(e) => e.stopPropagation()}>
+                {/* Close Button */}
+                <div className="sense-overlay__close-button">
+                    <ShineGlassButton
+                        onClick={onClose}
+                        theme="footer"
+                        width={44}
+                        height={44}
+                        className="sense-overlay__close-btn"
+                    >
+                        <img
+                            src="/src/assets/images/close-x-icon.svg"
+                            alt="Close"
+                            width="20"
+                            height="20"
+                        />
+                    </ShineGlassButton>
+                </div>
+
                 <h2 className="sense-overlay__title heading2--no-margin">Senses</h2>
                 {/* <div className="sense-overlay__center-dot"></div> */}
                 <div className="sense-overlay__starlight">

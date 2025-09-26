@@ -1,142 +1,250 @@
-/* Desktop: 1024px+ */
-@media (min-width: 1024px) {
-    .presence-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background-color: #000000;
-        background-image: url('/universeSection/tbl-dk-presence-overlay.png');
-        background-size: auto 1000px !important;
-        background-position: center;
-        background-repeat: no-repeat;
-        z-index: 1000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        animation: fadeIn 0.3s ease-in-out;
+/* Desktop First: 1024px+ (Default) */
+.presence-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #000000;
+    background-image: url('/universeSection/tbl-dk-presence-overlay.png');
+    background-size: auto 1000px;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.presence-overlay__content {
+    position: relative;
+    cursor: default;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.presence-overlay__title {
+    position: fixed;
+    top: calc(50% - 180px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 36px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -0.72px;
+    z-index: 1002;
+}
+
+.presence-overlay__starlight {
+    position: fixed;
+    top: calc(50% - 200px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.presence-overlay__milestone-text {
+    position: fixed;
+    top: calc(50% + 70px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 335px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1002;
+    pointer-events: none;
+}
+
+.presence-overlay__milestone-text span {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    text-align: justify;
+    font-family: "BT Beau Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+}
+
+.presence-overlay__journey-text {
+    position: fixed;
+    top: calc(50% + 80px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 305px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1002;
+    pointer-events: none;
+}
+
+.presence-overlay__journey-text span {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    text-align: justify;
+    font-family: "BT Beau Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+}
+
+.presence-overlay__story-text {
+    position: fixed;
+    top: calc(50% + 110px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1002;
+    pointer-events: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.presence-overlay__story-text div {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    margin-bottom: 2px;
+}
+
+/* Close Button - Hidden by default on Desktop */
+.presence-overlay__close-button {
+    position: fixed;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1003;
+    pointer-events: auto;
+    display: none;
+}
+
+.presence-overlay__close-btn .button-text {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.presence-overlay__close-btn .border-layer {
+    background: conic-gradient(from 0deg at 50% 50%,
+            rgba(255, 255, 255, 0.8) 0%,
+            rgba(255, 255, 255, 0.8) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+}
+
+.presence-overlay__close-btn:hover .border-layer {
+    background: conic-gradient(from 0deg at 50% 50%,
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 1) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)) !important;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
 
-    .presence-overlay__content {
-        position: relative;
-        cursor: default;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    to {
+        opacity: 1;
+    }
+}
+
+/* Tablet: 426-1023px */
+@media (max-width: 1023px) and (min-width: 426px) {
+    .presence-overlay {
+        background-size: 792px 792px;
     }
 
     .presence-overlay__title {
-        position: fixed;
-        top: calc(50% - 180px);
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: var(--White, #FFF);
-        text-align: center;
-        font-family: "Saol Display";
-        font-size: 36px;
-        font-style: italic;
-        font-weight: 300;
-        line-height: 90%;
-        letter-spacing: -0.72px;
-        z-index: 1002;
+        top: calc(50% - 140px);
     }
 
-    /* StarlightEffect positioned below title */
     .presence-overlay__starlight {
-        position: fixed;
-        top: calc(50% - 200px);
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
-        pointer-events: none;
+        top: calc(50% - 100px);
     }
 
-    /* Milestone text with space-between layout */
+    .presence-overlay__starlight .star-container-center {
+        margin-top: 0;
+    }
+
+    .presence-overlay__starlight .star-container-center svg {
+        height: 120px !important;
+    }
+
     .presence-overlay__milestone-text {
-        position: fixed;
-        top: calc(50% + 70px);
-        left: 50%;
-        transform: translateX(-50%);
-        width: 335px;
-        display: flex;
-        justify-content: space-between;
-        z-index: 1002;
-        pointer-events: none;
+        top: calc(50% + 40px);
+        width: 90%;
+        max-width: 300px;
     }
 
-    .presence-overlay__milestone-text span {
-        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
-        text-align: justify;
-        /* Use bodytext-6--no-margin from typography.css */
-        font-family: "BT Beau Sans";
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%;
-    }
-
-    /* Journey text with space-between layout */
     .presence-overlay__journey-text {
-        position: fixed;
-        top: calc(50% + 80px);
-        left: 50%;
-        transform: translateX(-50%);
-        width: 305px;
-        display: flex;
-        justify-content: space-between;
-        z-index: 1002;
-        pointer-events: none;
+        top: calc(50% + 52px);
+        width: 90%;
+        max-width: 280px;
     }
 
-    .presence-overlay__journey-text span {
-        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
-        text-align: justify;
-        /* Use bodytext-6--no-margin from typography.css */
-        font-family: "BT Beau Sans";
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%;
-    }
-
-    /* Story text in triangle shape */
     .presence-overlay__story-text {
-        position: fixed;
-        top: calc(50% + 110px);
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1002;
-        pointer-events: none;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        top: calc(50% + 82px);
+        width: 90%;
+        max-width: 320px;
     }
 
-    .presence-overlay__story-text div {
-        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
-        text-align: center;
-        /* Use bodytext-6--no-margin from typography.css */
-        font-family: "BT Beau Sans";
-        font-size: 12px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%;
-        margin-bottom: 2px;
+    .presence-overlay__close-button {
+        display: block;
+    }
+}
+
+/* Mobile: 0-425px */
+@media (max-width: 425px) {
+    .presence-overlay {
+        background-image: url('/universeSection/mb-presence-overlay.png');
+        background-size: cover;
     }
 
-    /* Animation cho overlay xuất hiện */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-        }
+    .presence-overlay__title {
+        top: calc(50% - 240px);
+        font-size: 32px;
+        letter-spacing: -0.64px;
+    }
 
-        to {
-            opacity: 1;
-        }
+    .presence-overlay__starlight {
+        top: calc(50% - 260px);
+    }
+
+    .presence-overlay__milestone-text {
+        top: calc(50% + 130px);
+        width: 90%;
+        max-width: 300px;
+    }
+
+    .presence-overlay__journey-text {
+        top: calc(50% + 145px);
+        width: 90%;
+        max-width: 280px;
+    }
+
+    .presence-overlay__story-text {
+        top: calc(50% + 170px);
+        width: 90%;
+        max-width: 320px;
+    }
+
+    .presence-overlay__close-button {
+        display: block;
     }
 }
