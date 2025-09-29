@@ -1,23 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import './SenseOverlay.css';
-import StarlightEffect from '../universeSection/StarlightEffect';
+import StarlightEffect from './StarlightEffect';
 import ShineGlassButton from '../../common/button/ShineGlassButton';
 
 const SenseOverlay = ({ isVisible, onClose }) => {
+    const handleEscKey = useCallback((event) => {
+        if (event.key === 'Escape') {
+            onClose();
+        }
+    }, [onClose]);
+
     useEffect(() => {
         if (isVisible) {
-            const handleEscKey = (event) => {
-                if (event.key === 'Escape') {
-                    onClose();
-                }
-            };
-
+            // Prevent body scroll when overlay is open
+            document.body.style.overflow = 'hidden';
             document.addEventListener('keydown', handleEscKey);
+
             return () => {
                 document.removeEventListener('keydown', handleEscKey);
+                // Restore body scroll when overlay is closed
+                document.body.style.overflow = '';
             };
         }
-    }, [isVisible, onClose]);
+    }, [isVisible, handleEscKey]);
 
     if (!isVisible) return null;
 

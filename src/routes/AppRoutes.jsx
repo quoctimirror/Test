@@ -16,7 +16,7 @@ const SupportPage = lazy(() => import("@pages/SupportPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 const UniverseSection = lazy(() =>
-  import("@components/home-page/universeSectionFixed/MirrorExp.jsx")
+  import("@components/home-page/universeSection/MirrorExp.jsx")
 );
 const HoverExpandSection = lazy(() =>
   import("@components/home-page/hoverExpandSection/HoverExpandSection.jsx")

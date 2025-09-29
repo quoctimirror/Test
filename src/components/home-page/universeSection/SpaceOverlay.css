@@ -1,264 +1,273 @@
-/* Rect overlay uses base classes from MirrorExp.css */
-
-.rect-overlay .star {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background-color: white;
-    border-radius: 50%;
-    opacity: 0;
-    animation: sparkle 5s infinite ease-in-out;
-    pointer-events: none;
-    z-index: 1002;
-}
-
-.rect-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Desktop First: 1024px+ (Default) */
+.space-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
-    background-image: url('/universeSection/rec-space-planet.svg');
+    height: 100vh;
+    background-color: #000000;
+    background-image: url('/universeSection/tbl-dk-space-overlay.png');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
+    z-index: 1000;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    padding: 1.5rem;
-    box-sizing: border-box;
+    align-items: center;
+    cursor: pointer;
+    animation: fadeIn 0.3s ease-in-out;
     overflow: hidden;
 }
 
-.space-title {
-    color: var(--Pink, #BC224C);
-    text-align: center;
-    font-family: "Saol Display";
-    font-size: 64px;
+.space-overlay__content {
+    position: relative;
+    cursor: default;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Top text section */
+.space-overlay__top-text {
+    position: fixed;
+    top: calc(50% - 200px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180.42px;
+    z-index: 1002;
+    pointer-events: none;
+    text-align: justify;
+}
+
+.space-overlay__top-line {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.space-overlay__top-line span {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    font-family: "BT Beau Sans";
+    font-size: 12px;
     font-style: normal;
-    font-weight: 300;
-    line-height: 90%;
-    letter-spacing: -1.28px;
-    position: absolute;
-    top: 50%;
+    font-weight: 400;
+    line-height: 100%;
+}
+
+/* Đồng bộ hóa tất cả StarlightEffect */
+.space-overlay__starlight-up,
+.space-overlay__starlight-down {
+    animation: syncStarlight 1.5s infinite;
+}
+
+/* StarlightEffect pointing up */
+.space-overlay__starlight-up {
+    position: fixed;
+    top: calc(50% + 30px);
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Space title */
+.space-overlay__title {
+    position: fixed;
+    top: calc(50% - 60px);
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 20;
-    margin: 0;
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: "Saol Display";
+    font-size: 36px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 90%;
+    letter-spacing: -0.72px;
+    z-index: 1002;
 }
 
-/* Thanh sáng hướng 12 giờ (lên trên) */
-.starlight-12-oclock {
-    position: absolute;
-    top: 50%;
+/* StarlightEffect pointing down */
+.space-overlay__starlight-down {
+    position: fixed;
+    top: calc(50% - 80px);
     left: 50%;
-    transform: translate(-50%, -50%) rotate(180deg);
-    transform-origin: center top;
-    z-index: 15;
+    transform: translateX(-50%);
+    z-index: 1000;
+    pointer-events: none;
 }
 
-/* Thanh sáng hướng 6 giờ (xuống dưới) */
-.starlight-6-oclock {
-    position: absolute;
-    top: 48%;
+/* Bottom text section */
+.space-overlay__bottom-text {
+    position: fixed;
+    top: calc(50% + 100px);
     left: 50%;
-    transform: translate(-50%, -50%) rotate(0deg);
-    transform-origin: center top;
-    z-index: 15;
+    transform: translateX(-50%);
+    display: flex;
+    width: 179.424px;
+    height: 67.537px;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    z-index: 1002;
+    pointer-events: none;
 }
 
-@keyframes sparkle {
+.space-overlay__bottom-line {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 2px;
+}
 
-    0%,
-    100% {
-        opacity: 0;
-        transform: scale(0.5);
+.space-overlay__bottom-line span {
+    color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    font-family: "BT Beau Sans";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+}
+
+/* Close Button - Visible on mobile/tablet, hidden on desktop */
+.space-overlay__close-button {
+    position: fixed;
+    bottom: calc(20% - 120px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1003;
+    pointer-events: auto;
+    display: block;
+    /* Show by default for mobile first */
+}
+
+/* Desktop: Hide close button */
+@media (min-width: 1024px) {
+    .space-overlay__close-button {
+        display: none;
     }
+}
 
-    50% {
+.space-overlay__close-btn .button-text {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.space-overlay__close-btn .border-layer {
+    background: conic-gradient(from 0deg at 50% 50%,
+            rgba(255, 255, 255, 0.8) 0%,
+            rgba(255, 255, 255, 0.8) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+}
+
+.space-overlay__close-btn:hover .border-layer {
+    background: conic-gradient(from 0deg at 50% 50%,
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 1) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)) !important;
+}
+
+/* Animations */
+@keyframes syncStarlight {
+    0% {
         opacity: 1;
-        transform: scale(1.2);
+    }
+
+    100% {
+        opacity: 1;
     }
 }
 
-/* ===== RESPONSIVE DESIGN CHO TẤT CẢ KÍCH THƯỚC ===== */
-
-/* Desktop lớn (1920x1080 và trên) */
-@media (min-width: 1920px) {
-    .space-title {
-        font-size: clamp(64px, 4vw, 80px);
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
 
-    .starlight-12-oclock {
-        top: 50%;
-        left: 50%;
-    }
-
-    .starlight-6-oclock {
-        top: 46%;
-        left: 50%;
+    to {
+        opacity: 1;
     }
 }
 
-/* Desktop trung bình (1366x768 - 1919px) */
-@media (min-width: 1200px) and (max-width: 1919px) {
-    .space-title {
-        font-size: clamp(56px, 3.5vw, 64px);
+/* Tablet: 426-1023px */
+@media (max-width: 1023px) {
+    .space-overlay {
+        background-size: contain;
     }
 
-    .starlight-12-oclock {
-        top: 50%;
-        left: 50%;
+    /* Top text section - same as desktop positioning */
+    .space-overlay__top-text {
+        top: calc(50% - 200px);
+        width: 180.42px;
     }
 
-    .starlight-6-oclock {
-        top: 46%;
-        left: 50%;
+    /* StarlightEffect pointing up - same as desktop positioning */
+    .space-overlay__starlight-up {
+        top: calc(50% + 30px);
     }
+
+    /* Space title - same as desktop positioning */
+    .space-overlay__title {
+        top: calc(50% - 60px);
+        font-size: 36px;
+        letter-spacing: -0.72px;
+    }
+
+    /* StarlightEffect pointing down - same as desktop positioning */
+    .space-overlay__starlight-down {
+        top: calc(50% - 80px);
+    }
+
+    /* Bottom text section - same as desktop positioning */
+    .space-overlay__bottom-text {
+        top: calc(50% + 100px);
+        width: 179.424px;
+        height: 67.537px;
+    }
+
+    /* Close button already visible from mobile first approach */
 }
 
-/* Desktop nhỏ và laptop (1024px - 1199px) */
-@media (min-width: 1024px) and (max-width: 1199px) {
-    .space-title {
-        font-size: clamp(48px, 3vw, 56px);
+/* Mobile: 0-425px */
+@media (max-width: 425px) {
+    .space-overlay {
+        background-image: url('/universeSection/mb-space-overlay.png');
+        background-size: cover;
     }
 
-    .starlight-12-oclock {
-        top: 50%;
-        left: 50%;
+    .space-overlay__title {
+        font-size: 32px;
+        letter-spacing: -0.64px;
     }
 
-    .starlight-6-oclock {
-        top: 46%;
-        left: 50%;
-    }
-}
-
-/* Tablet landscape (768px - 1023px) */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .rect-container {
-        padding: 1.2rem;
-        width: 95%;
-        height: 95%;
+    /* Top text section - mobile positioning */
+    .space-overlay__top-text {
+        top: calc(50% - 200px);
+        width: 90%;
+        max-width: 180px;
     }
 
-    .space-title {
-        font-size: clamp(40px, 2.8vw, 48px);
+    /* StarlightEffect pointing up - mobile positioning */
+    .space-overlay__starlight-up {
+        top: calc(50% + 20px);
     }
 
-    .starlight-12-oclock {
-        top: 50%;
-        left: 50%;
+    /* StarlightEffect pointing down - mobile positioning */
+    .space-overlay__starlight-down {
+        top: calc(50% - 70px);
     }
 
-    .starlight-6-oclock {
-        top: 46%;
-        left: 50%;
-    }
-}
-
-/* Tablet portrait (481px - 767px) */
-@media (min-width: 481px) and (max-width: 767px) {
-    .rect-container {
-        padding: 1rem;
-        width: 100%;
-        height: 100%;
+    /* Bottom text section - mobile positioning */
+    .space-overlay__bottom-text {
+        top: calc(50% + 100px);
+        width: 90%;
+        max-width: 180px;
     }
 
-    .space-title {
-        font-size: clamp(32px, 2.5vw, 40px);
-    }
-
-    .starlight-12-oclock {
-        top: 50%;
-        left: 50%;
-    }
-
-    .starlight-6-oclock {
-        top: 46%;
-        left: 50%;
-    }
-}
-
-/* Mobile landscape (376px - 480px) */
-@media (min-width: 376px) and (max-width: 480px) {
-    .rect-container {
-        padding: 0.8rem;
-        width: 95%;
-        height: 95%;
-    }
-
-    .space-title {
-        font-size: clamp(28px, 2.2vw, 32px);
-    }
-
-    .starlight-12-oclock {
-        top: 50%;
-        left: 50%;
-    }
-
-    .starlight-6-oclock {
-        top: 46%;
-        left: 50%;
-    }
-}
-
-/* Mobile portrait (320px - 375px) */
-@media (min-width: 320px) and (max-width: 375px) {
-    .rect-container {
-        padding: 0.6rem;
-        width: 85%;
-        height: 85%;
-    }
-
-    .space-title {
-        font-size: clamp(24px, 2vw, 28px);
-    }
-
-    .starlight-12-oclock {
-        top: 50%;
-        left: 50%;
-    }
-
-    .starlight-6-oclock {
-        top: 40%;
-        left: 50%;
-    }
-}
-
-/* Mobile rất nhỏ (dưới 320px) */
-@media (max-width: 319px) {
-    .rect-container {
-        padding: 0.5rem;
-        width: 75%;
-        height: 75%;
-    }
-
-    .space-title {
-        font-size: clamp(20px, 1.8vw, 24px);
-    }
-
-    .starlight-12-oclock {
-        top: 50%;
-        left: 50%;
-    }
-
-    .starlight-6-oclock {
-        top: 40%;
-        left: 50%;
-    }
-}
-
-/* Responsive cho chiều cao màn hình */
-@media (max-height: 600px) {
-
-    .starlight-12-oclock {
-        top: 50%;
-    }
-
-    .starlight-6-oclock {
-        top: 50%;
-    }
+    /* Close button already visible from mobile first approach */
 }
