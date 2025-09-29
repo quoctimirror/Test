@@ -20,30 +20,6 @@
   }
 }
 
-/* Simple smooth overlay zoom in animation - từ từ và đều đều */
-@keyframes overlayZoomIn {
-  from {
-    transform: scale(0);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Simple smooth overlay zoom out animation - từ từ và đều đều */
-@keyframes overlayZoomOut {
-  from {
-    transform: scale(1);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0);
-    opacity: 0;
-  }
-}
-
 /* Prevent horizontal scroll white space */
 body {
   overflow-x: hidden;
@@ -660,37 +636,9 @@ body {
 
   /* Update luxury text for desktop */
   .mirror-exp__luxury-text {
-    top: -5px;
+    top: 0px;
     width: 47%;
     font-size: 20px;
-    margin-bottom: 80px;
-  }
-
-  /* Dịch chuyển universe xuống để tránh đè lên text - không bao gồm text chính giữa */
-  .mirror-exp-title,
-  .mirror-exp::before,
-  .mirror-exp::after,
-  .mirror-exp__layer2,
-  .mirror-exp__layer3,
-  .mirror-exp__layer4,
-  .mirror-exp__layer5,
-  .mirror-exp__meteoroid-orbit,
-  .mirror-exp__meteoroid-orbit-layer2,
-  .mirror-exp__meteoroid-orbit-layer4,
-  .mirror-exp__heart-senses,
-  .mirror-exp__circle-presence,
-  .mirror-exp__droplet-time,
-  .mirror-exp__rect-space,
-  .mirror-exp__center-dot {
-    top: calc(50% + 40px);
-  }
-
-  /* MIRROR EXPERIENCE text luôn nằm chính giữa layer0 - di chuyển cùng universe */
-  .mirror-exp__text {
-    position: absolute;
-    top: calc(50% + 40px);
-    left: 50%;
-    transform: translate(-50%, -50%);
   }
 
   /* Layer 0 - updated size for desktop (180x180px) */
@@ -774,9 +722,9 @@ body {
   /* Update planet positions for desktop */
   /* Heart-senses at 45° on layer2 - radius 200px */
   .mirror-exp__heart-senses {
-    top: calc(50% - 100px);
+    top: calc(50% - 141px);
     /* 50% - radius * sin(45°) = 50% - 200 * 0.707 = 50% - 141px */
-    left: calc(50% + 160px);
+    left: calc(50% + 150px);
     /* 50% + radius * cos(45°) = 50% + 200 * 0.707 = 50% + 141px */
   }
 
@@ -784,13 +732,13 @@ body {
   .mirror-exp__circle-presence {
     top: calc(50% - 180px);
     /* 50% - radius * sin(135°) = 50% - 255 * 0.707 = 50% - 180px */
-    left: calc(50% - 140px);
+    left: calc(50% - 190px);
     /* 50% + radius * cos(135°) = 50% + 255 * (-0.707) = 50% - 180px */
   }
 
   /* Droplet-time at 225° on layer2 - radius 200px */
   .mirror-exp__droplet-time {
-    top: calc(50% + 160px);
+    top: calc(50% + 130px);
     /* 50% + radius * sin(225°) = 50% + 200 * (-0.707) = 50% + 141px */
     left: calc(50% - 141px);
     /* 50% + radius * cos(225°) = 50% + 200 * (-0.707) = 50% - 141px */
@@ -798,9 +746,9 @@ body {
 
   /* Rect-space at 4 o'clock (120°) on layer4 - radius 310px */
   .mirror-exp__rect-space {
-    top: calc(50% + 200px);
+    top: calc(50% + 155px);
     /* 50% + radius * sin(120°) = 50% + 310 * 0.5 = 50% + 155px */
-    left: calc(50% + 260px);
+    left: calc(50% + 264px);
     /* 50% + radius * cos(120°) = 50% + 310 * 0.866 = 50% + 268px */
   }
 
@@ -927,126 +875,5 @@ body {
     width: 132px;
     height: 132px;
     background-size: 132px 132px;
-  }
-}
-
-/* ========================================
-   OVERLAY ZOOM ANIMATIONS
-   ======================================== */
-
-/* Simple smooth overlay animation classes - từ từ và đều đều */
-.overlay-zoom-in {
-  animation: overlayZoomIn 0.8s ease-out forwards;
-}
-
-.overlay-zoom-out {
-  animation: overlayZoomOut 0.6s ease-in forwards;
-}
-
-/* Transform origins based on planet positions for different screen sizes */
-
-/* Mobile & Tablet: heart-senses position (right side) */
-@media screen and (max-width: 1023px) {
-  .overlay-from-sense {
-    transform-origin: 70% 40%;
-  }
-
-  .overlay-from-presence {
-    transform-origin: 30% 30%;
-  }
-
-  .overlay-from-time {
-    transform-origin: 30% 70%;
-  }
-
-  .overlay-from-space {
-    transform-origin: 70% 70%;
-  }
-}
-
-/* Desktop: updated planet positions */
-@media (min-width: 1024px) {
-  .overlay-from-sense {
-    /* Heart-senses: top-right của universe center + offset 40px down */
-    transform-origin: calc(50% + 160px) calc(50% - 60px);
-  }
-
-  .overlay-from-presence {
-    /* Circle-presence: top-left của universe center + offset 40px down */
-    transform-origin: calc(50% - 140px) calc(50% - 140px);
-  }
-
-  .overlay-from-time {
-    /* Droplet-time: bottom-left của universe center + offset 40px down */
-    transform-origin: calc(50% - 141px) calc(50% + 200px);
-  }
-
-  .overlay-from-space {
-    /* Rect-space: bottom-right của universe center + offset 40px down */
-    transform-origin: calc(50% + 260px) calc(50% + 240px);
-  }
-}
-
-/* ========================================
-   CLOSE BUTTON HOVER EFFECTS
-   ======================================== */
-
-/* Close button hover effect giống glass button signup */
-.overlay-close-button {
-  transition: all 0.5s ease;
-}
-
-/* Desktop hover effects */
-@media (min-width: 1024px) {
-  .overlay-close-button:hover {
-    background: rgba(255, 255, 255, 0.75) !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 0 16px 8px rgba(255, 255, 255, 0.8) !important;
-  }
-
-  /* X icon màu đen khi hover - target img element */
-  .overlay-close-button:hover img {
-    filter: brightness(0) invert(1) !important;
-  }
-
-  .overlay-close-button:hover .button-text,
-  .overlay-close-button:hover svg,
-  .overlay-close-button:hover path {
-    color: black !important;
-    fill: black !important;
-    stroke: black !important;
-  }
-}
-
-/* Tablet/Mobile touch effects */
-@media (max-width: 1023px) {
-  .overlay-close-button:active,
-  .overlay-close-button:focus {
-    background: rgba(255, 255, 255, 0.75) !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 0 16px 8px rgba(255, 255, 255, 0.8) !important;
-  }
-
-  /* X icon màu đen khi active/focus - target img element */
-  .overlay-close-button:active img,
-  .overlay-close-button:focus img {
-    filter: brightness(0) invert(1) !important;
-  }
-
-  .overlay-close-button:active .button-text,
-  .overlay-close-button:active svg,
-  .overlay-close-button:active path,
-  .overlay-close-button:focus .button-text,
-  .overlay-close-button:focus svg,
-  .overlay-close-button:focus path {
-    color: black !important;
-    fill: black !important;
-    stroke: black !important;
   }
 }
