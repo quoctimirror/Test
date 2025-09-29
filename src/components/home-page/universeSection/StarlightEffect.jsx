@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './StarlightEffect.css';
 
 const StarlightEffect = ({ direction = "default", height = 170 }) => {
+    // Generate unique ID for each instance to avoid gradient conflicts
+    const uniqueId = useMemo(() => Math.random().toString(36).substr(2, 9), []);
+
     if (direction === "falling") {
+        const gradientId = `gradient-falling-${uniqueId}`;
         // Chỉ 1 vạch duy nhất ở giữa, rơi thẳng xuống với chiều cao tùy chỉnh
         return (
             <div className="universe-star-container-center">
@@ -13,7 +17,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
                     viewBox={`0 0 2 ${height}`}
                     fill="none"
                 >
-                    <path d={`M1 0V0`} stroke="url(#gradient-falling)" strokeWidth="1">
+                    <path d={`M1 0V0`} stroke={`url(#${gradientId})`} strokeWidth="1">
                         <animate
                             attributeName="d"
                             from={`M1 0V0`}
@@ -23,7 +27,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
                         />
                     </path>
                     <defs>
-                        <linearGradient id="gradient-falling" x1="1.5" y1="0" x2="1.5" y2={height} gradientUnits="userSpaceOnUse">
+                        <linearGradient id={gradientId} x1="1.5" y1="0" x2="1.5" y2={height} gradientUnits="userSpaceOnUse">
                             <stop offset="0" stopColor="#000000" />
                             <stop offset="0.13" stopColor="#000000" />
                             <stop offset="0.75" stopColor="#EC3667" />
@@ -36,6 +40,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
     }
 
     if (direction === "rising") {
+        const gradientId = `gradient-rising-${uniqueId}`;
         // Vạch bay từ dưới lên trên
         return (
             <div className="universe-star-container-center">
@@ -46,9 +51,9 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
                     viewBox={`0 0 2 ${height}`}
                     fill="none"
                 >
-                    <path d={`M1 0V${height}`} stroke="url(#gradient-rising)" strokeWidth="1" />
+                    <path d={`M1 0V${height}`} stroke={`url(#${gradientId})`} strokeWidth="1" />
                     <defs>
-                        <linearGradient id="gradient-rising" x1="1.5" y1="0" x2="1.5" y2={height} gradientUnits="userSpaceOnUse">
+                        <linearGradient id={gradientId} x1="1.5" y1="0" x2="1.5" y2={height} gradientUnits="userSpaceOnUse">
                             <stop stopColor="#320606" stopOpacity="0.1" />
                             <stop offset="0.3" stopColor="#EC3667" stopOpacity="0.8" />
                             <stop offset="0.5" stopColor="#EC3667" />
@@ -70,12 +75,13 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
     }
 
     // Default behavior
+    const gradientId = `gradient-original-${uniqueId}`;
     return (
         <div className="star-container">
             <svg xmlns="http://www.w3.org/2000/svg" width="4" height="170" viewBox="0 0 2 170" fill="none">
-                <path d="M1 0V169.5" stroke="url(#gradient-original)" strokeWidth="2" />
+                <path d="M1 0V169.5" stroke={`url(#${gradientId})`} strokeWidth="2" />
                 <defs>
-                    <linearGradient id="gradient-original" x1="1.5" y1="0" x2="1.5" y2="169.5" gradientUnits="userSpaceOnUse">
+                    <linearGradient id={gradientId} x1="1.5" y1="0" x2="1.5" y2="169.5" gradientUnits="userSpaceOnUse">
                         <stop stopColor="#320606" />
                         <stop offset="0.552885" stopColor="#EC3667" />
                         <stop offset="1" stopColor="#F6F6F6" />

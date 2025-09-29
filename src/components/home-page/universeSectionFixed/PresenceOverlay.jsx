@@ -7,26 +7,6 @@ const PresenceOverlay = ({ isVisible, onClose }) => {
     const [starlightHeight, setStarlightHeight] = useState(200);
 
     useEffect(() => {
-        const updateStarlightHeight = () => {
-            const screenWidth = window.innerWidth;
-            if (screenWidth <= 425) {
-                setStarlightHeight(300); // Mobile
-            } else if (screenWidth <= 1023) {
-                setStarlightHeight(120); // Tablet
-            } else {
-                setStarlightHeight(200); // Desktop
-            }
-        };
-
-        updateStarlightHeight();
-        window.addEventListener('resize', updateStarlightHeight);
-
-        return () => {
-            window.removeEventListener('resize', updateStarlightHeight);
-        };
-    }, []);
-
-    useEffect(() => {
         if (isVisible) {
             const handleEscKey = (event) => {
                 if (event.key === 'Escape') {
@@ -66,7 +46,11 @@ const PresenceOverlay = ({ isVisible, onClose }) => {
 
                 <h2 className="presence-overlay__title heading2--no-margin">Presence</h2>
                 <div className="presence-overlay__starlight">
-                    <StarlightEffect direction="falling" height={starlightHeight} />
+                    <StarlightEffect
+                        key={`starlight-${starlightHeight}`}
+                        direction="falling"
+                        height={starlightHeight}
+                    />
                 </div>
                 <div className="presence-overlay__milestone-text">
                     <span className="bodytext-6--no-margin">We</span>

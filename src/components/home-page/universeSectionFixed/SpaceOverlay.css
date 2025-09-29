@@ -32,7 +32,7 @@
 /* Top text section */
 .space-overlay__top-text {
     position: fixed;
-    top: calc(50% - 250px);
+    top: calc(50% - 200px);
     left: 50%;
     transform: translateX(-50%);
     width: 180.42px;
@@ -103,7 +103,7 @@
 /* Bottom text section */
 .space-overlay__bottom-text {
     position: fixed;
-    top: calc(50% + 140px);
+    top: calc(50% + 100px);
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -132,15 +132,23 @@
     line-height: 100%;
 }
 
-/* Close Button - Hidden by default on Desktop */
+/* Close Button - Visible on mobile/tablet, hidden on desktop */
 .space-overlay__close-button {
     position: fixed;
-    bottom: 20%;
+    bottom: calc(20% - 120px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 1003;
     pointer-events: auto;
-    display: none;
+    display: block;
+    /* Show by default for mobile first */
+}
+
+/* Desktop: Hide close button */
+@media (min-width: 1024px) {
+    .space-overlay__close-button {
+        display: none;
+    }
 }
 
 .space-overlay__close-btn .button-text {
@@ -186,14 +194,14 @@
 }
 
 /* Tablet: 426-1023px */
-@media (max-width: 1023px) and (min-width: 426px) {
+@media (max-width: 1023px) {
     .space-overlay {
         background-size: contain;
     }
 
     /* Top text section - same as desktop positioning */
     .space-overlay__top-text {
-        top: calc(50% - 250px);
+        top: calc(50% - 200px);
         width: 180.42px;
     }
 
@@ -216,14 +224,12 @@
 
     /* Bottom text section - same as desktop positioning */
     .space-overlay__bottom-text {
-        top: calc(50% + 140px);
+        top: calc(50% + 100px);
         width: 179.424px;
         height: 67.537px;
     }
 
-    .space-overlay__close-button {
-        display: block;
-    }
+    /* Close button already visible from mobile first approach */
 }
 
 /* Mobile: 0-425px */
@@ -240,14 +246,14 @@
 
     /* Top text section - mobile positioning */
     .space-overlay__top-text {
-        top: calc(50% - 240px);
+        top: calc(50% - 200px);
         width: 90%;
         max-width: 180px;
     }
 
     /* StarlightEffect pointing up - mobile positioning */
     .space-overlay__starlight-up {
-        top: calc(50% + 40px);
+        top: calc(50% + 20px);
     }
 
     /* StarlightEffect pointing down - mobile positioning */
@@ -257,12 +263,10 @@
 
     /* Bottom text section - mobile positioning */
     .space-overlay__bottom-text {
-        top: calc(50% + 150px);
+        top: calc(50% + 100px);
         width: 90%;
         max-width: 180px;
     }
 
-    .space-overlay__close-button {
-        display: block;
-    }
+    /* Close button already visible from mobile first approach */
 }

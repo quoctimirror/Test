@@ -410,7 +410,8 @@
   display: none;
 }
 
-.brand-pillars .starlight-6-oclock-wrapper .star-container-center {
+.brand-pillars .starlight-6-oclock-wrapper .star-container,
+.brand-pillars .starlight-6-oclock-wrapper .universe-star-container-center {
   margin-top: 0 !important;
   position: relative !important;
   width: auto !important;
@@ -426,7 +427,8 @@
     opacity: 0.8;
   }
 
-  .brand-pillars .starlight-6-oclock-wrapper .star-container-center {
+  .brand-pillars .starlight-6-oclock-wrapper .star-container,
+  .brand-pillars .starlight-6-oclock-wrapper .universe-star-container-center {
     margin: 0 !important;
   }
 

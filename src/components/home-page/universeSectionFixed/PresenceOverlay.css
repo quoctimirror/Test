@@ -121,15 +121,28 @@
     margin-bottom: 2px;
 }
 
-/* Close Button - Hidden by default on Desktop */
+/* Close Button - Visible on mobile/tablet, hidden on desktop */
 .presence-overlay__close-button {
     position: fixed;
-    bottom: 20%;
+    bottom: calc(20% - 50px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 1003;
     pointer-events: auto;
-    display: none;
+    display: block;
+    /* Show by default for mobile first */
+}
+
+/* Desktop: Hide close button */
+@media (min-width: 1024px) {
+    .presence-overlay__close-button {
+        display: none;
+    }
+
+    /* StarlightEffect height for desktop */
+    .presence-overlay__starlight .universe-star-container-center svg {
+        height: 250px !important;
+    }
 }
 
 .presence-overlay__close-btn .button-text {
@@ -165,7 +178,7 @@
 }
 
 /* Tablet: 426-1023px */
-@media (max-width: 1023px) and (min-width: 426px) {
+@media (min-width: 426px) {
     .presence-overlay {
         background-size: 792px 792px;
     }
@@ -182,6 +195,7 @@
         margin-top: 0;
     }
 
+    /* StarlightEffect height for tablet */
     .presence-overlay__starlight .universe-star-container-center svg {
         height: 120px !important;
     }
@@ -204,47 +218,48 @@
         max-width: 320px;
     }
 
+    /* Close button position for tablet */
     .presence-overlay__close-button {
-        display: block;
+        bottom: calc(20% - 100px);
     }
 }
 
 /* Mobile: 0-425px */
-@media (max-width: 425px) {
+@media (max-width: 425.98px) {
     .presence-overlay {
         background-image: url('/universeSection/mb-presence-overlay.png');
         background-size: cover;
     }
 
     .presence-overlay__title {
-        top: calc(50% - 240px);
+        top: calc(50% - 180px);
         font-size: 32px;
         letter-spacing: -0.64px;
     }
 
     .presence-overlay__starlight {
-        top: calc(50% - 260px);
+        top: calc(50% - 200px);
     }
 
+    /* StarlightEffect height controlled by React state */
+
     .presence-overlay__milestone-text {
-        top: calc(50% + 130px);
+        top: calc(50% + 80px);
         width: 90%;
         max-width: 300px;
     }
 
     .presence-overlay__journey-text {
-        top: calc(50% + 145px);
+        top: calc(50% + 92px);
         width: 90%;
         max-width: 280px;
     }
 
     .presence-overlay__story-text {
-        top: calc(50% + 170px);
-        width: 90%;
-        max-width: 320px;
+        top: calc(50% + 120px);
+        width: 100%;
+        max-width: 425px;
     }
 
-    .presence-overlay__close-button {
-        display: block;
-    }
+    /* Close button already visible from mobile first approach */
 }

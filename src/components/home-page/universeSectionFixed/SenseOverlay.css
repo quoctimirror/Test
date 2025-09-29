@@ -198,7 +198,7 @@
     line-height: 120%;
 }
 
-/* Close Button - Hidden by default on Desktop */
+/* Close Button - Visible on mobile/tablet, hidden on desktop */
 .sense-overlay__close-button {
     position: fixed;
     bottom: 20%;
@@ -206,7 +206,14 @@
     transform: translateX(-50%);
     z-index: 1003;
     pointer-events: auto;
-    display: none;
+    display: block; /* Show by default for mobile first */
+}
+
+/* Desktop: Hide close button */
+@media (min-width: 1024px) {
+    .sense-overlay__close-button {
+        display: none;
+    }
 }
 
 .sense-overlay__close-btn .button-text {
@@ -258,10 +265,7 @@
     .sense-overlay {
         background-size: 780px 780px;
     }
-
-    .sense-overlay__close-button {
-        display: block;
-    }
+    /* Close button already visible from mobile first approach */
 }
 
 /* Mobile: 0-425px */
@@ -319,7 +323,5 @@
         top: calc(50% - 120px);
     }
 
-    .sense-overlay__close-button {
-        display: block;
-    }
+    /* Close button already visible from mobile first approach */
 }
