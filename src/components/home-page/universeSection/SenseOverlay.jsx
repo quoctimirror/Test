@@ -39,7 +39,7 @@ const SenseOverlay = ({ isVisible, onClose }) => {
                         className="sense-overlay__close-btn"
                     >
                         <img
-                            src="/src/assets/images/close-x-icon.svg"
+                            src="/universeSection/close-x-icon.svg"
                             alt="Close"
                             width="20"
                             height="20"
