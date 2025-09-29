@@ -1,6 +1,6 @@
 /* Contact Us - Reach Out */
 .contact-us-hero {
-  height: 800px;
+  min-height: 94vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,9 +12,6 @@
 
 /* For screens larger than 1920x1080, maintain 800px */
 @media (min-width: 1920px) and (min-height: 1080px) {
-  .contact-us-hero {
-    height: 800px;
-  }
 }
 
 .contact-us-hero-background {
@@ -84,12 +81,28 @@
   }
 }
 
+/* Gradient box at bottom of background */
+.contact-us-gradient-box {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 15vh;
+  width: 100%;
+  background: linear-gradient(
+    0deg,
+    #000 0%,
+    rgba(0, 0, 0, 0.9) 20%,
+    rgba(0, 0, 0, 0.7) 40%,
+    rgba(0, 0, 0, 0.4) 60%,
+    rgba(0, 0, 0, 0.15) 80%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
 /* Mobile - 425px and below */
 @media screen and (max-width: 425px) {
-  .contact-us-hero {
-    height: 500px;
-  }
-
   .contact-us-hero-content {
     width: 93%;
   }

@@ -17,6 +17,7 @@ const ContactUs = () => {
         alt="Contact Us Background"
         className="contact-us-hero-background"
       />
+      <div className="contact-us-gradient-box"></div>
       <div className="contact-us-hero-content">
         <h4 className="bodytext-3--no-margin">NEED HELP?</h4>
         <h1 className="heading-1--no-margin">REACH OUT</h1>

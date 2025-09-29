@@ -3,6 +3,7 @@
 ======================================== */
 .footer {
   width: 100%;
+  min-height: 74vh;
   background: linear-gradient(180deg, #000000 0%, #bb234c 100%);
   color: white;
   position: relative;
@@ -16,6 +17,7 @@
 .footer-container {
   width: 100%;
   height: 100%;
+  min-height: calc(74vh - 78px); /* Subtract padding */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -55,7 +57,7 @@
   justify-content: center;
   align-items: center;
   opacity: 1;
-  margin: 50px auto 236px;
+  margin: 0px auto 0px;
 }
 
 /* ========================================

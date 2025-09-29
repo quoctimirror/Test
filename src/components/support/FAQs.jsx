@@ -87,7 +87,7 @@ const FAQs = () => {
                     activeSection === section.id ? "active" : ""
                   }`}
                 >
-                  <a href={`#${section.id}`}>{section.title}</a>
+                  <a href={`#${section.id}`} className="bodytext-4--no-margin">{section.title}</a>
                 </li>
               ))}
             </ul>
@@ -100,7 +100,7 @@ const FAQs = () => {
               <input
                 type="text"
                 placeholder="Search"
-                className="search-input"
+                className="search-input bodytext-3--no-margin"
               />
               <ShineGlassButton
                 className="search-button"
@@ -117,7 +117,7 @@ const FAQs = () => {
               {sectionsInfo.map((section) => (
                 <div key={section.id} id={section.id} className="faq-section">
                   <div className="faq-image-placeholder">
-                    <div className="placeholder-box">{section.title}</div>
+                    <h3 className="heading-3--no-margin placeholder-box">{section.title}</h3>
                   </div>
 
                   <div className="faq-list">

@@ -44,9 +44,7 @@
 /* Services Detail Tabs */
 .services-detail-wrapper {
   margin: 0 auto;
-  /* RESPONSIVE HORIZONTAL: Auto-scaling pattern như support-wrapper */
-  padding: 30px clamp(40px, calc((100vw - 900px) / 2), 499px) 120px
-    clamp(40px, calc((100vw - 900px) / 2), 499px);
+  padding: 60px 0px 120px 0px;
   max-width: 1920px;
   margin-left: auto;
   margin-right: auto;
@@ -122,6 +120,17 @@
   width: 100%;
 }
 
+/* Tablet centering and width adjustment */
+@media screen and (max-width: 1023px) {
+  .services-detail-wrapper {
+    padding: 36px 0px 120px 0px;
+  }
+  .services-detail-content {
+    width: 62%;
+    margin: 0 auto;
+  }
+}
+
 .tab-content {
   display: none;
 }
@@ -147,32 +156,7 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.intro-section h2 {
-  font-family: "Saol Display", serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 90%;
-  letter-spacing: 0%;
-  color: #000000;
-  margin-bottom: 24px;
-}
-
-.intro-section p {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 120%;
-  letter-spacing: 0%;
-  color: #000000;
-  /* margin: 0 0 24px 0; */
-  text-align: left;
-}
-
 .intro-section p.availability-note {
-  margin: 0 !important;
   margin-bottom: 0 !important;
 }
 
@@ -186,29 +170,6 @@
 .service-section.last-section {
   border-bottom: none;
   padding-bottom: 0;
-}
-
-.service-section h2 {
-  font-family: "Saol Display", serif;
-  font-weight: 400;
-  font-size: 28px;
-  line-height: 120%;
-  color: #000000;
-  margin-bottom: 24px;
-}
-
-.service-section > p {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 140%;
-  color: #000000;
-  margin-bottom: 24px;
-}
-
-.service-item {
-  margin-bottom: 32px;
 }
 
 /* Indent nested service items */
@@ -232,11 +193,6 @@
 }
 
 .service-item ul {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 140%;
   margin: 16px 0;
   padding-left: 20px;
   list-style: none;
@@ -246,7 +202,6 @@
   margin-bottom: 12px;
   position: relative;
   padding-left: 0px;
-  color: #000000;
 }
 
 .service-item ul li::before {
@@ -254,16 +209,10 @@
   position: absolute;
   left: -13px;
   top: 0;
-  color: #000000;
 }
 
 /* Style for ul directly in service-section (like Jewelry Care Tips) */
 .service-section > ul {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 140%;
   margin: 16px 0;
   padding-left: 20px;
   list-style: none;
@@ -273,7 +222,6 @@
   margin-bottom: 12px;
   position: relative;
   padding-left: 0px;
-  color: #000000;
 }
 
 .service-section > ul li::before {
@@ -281,70 +229,33 @@
   position: absolute;
   left: -13px;
   top: 0;
-  color: #000000;
-}
-
-.service-section > ul li p {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 140%;
-  color: #000000;
-  margin: 0;
-}
-
-.service-item ul li p {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 140%;
-  color: #000000;
-  margin: 0;
 }
 
 .note-section {
   margin-top: 24px;
 }
 
+.availability-note {
+  margin: 24px 0 0 0;
+  text-align: left;
+}
+
 .note-text {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-style: italic;
-  font-size: 14px;
-  line-height: 140%;
-  color: #bc224c;
+  color: rgba(188, 34, 76, 1);
   margin: 0;
 }
 
-.availability-note {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-style: italic;
-  font-size: 14px;
-  line-height: 120%;
-  letter-spacing: 0%;
-  color: #bc224c;
-  margin: 0;
-  margin-bottom: 0;
-  text-align: left;
+.availability-note em {
+  color: rgba(188, 34, 76, 1);
+}
+
+.services-detail-content h3 {
+  margin-bottom: 24px;
 }
 
 /* Trade-In & Upgrade Specific Styles */
 .how-it-works-section {
   margin-bottom: 60px;
-}
-
-.how-it-works-section h2 {
-  font-family: "Saol Display", serif;
-  font-weight: 400;
-  font-size: 28px;
-  line-height: 120%;
-  color: #000000;
-  margin-bottom: 24px;
 }
 
 .process-item {
@@ -362,11 +273,6 @@
 }
 
 .process-item ul {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 140%;
   margin: 16px 0;
   padding-left: 20px;
   list-style: none;
@@ -376,7 +282,6 @@
   margin-bottom: 12px;
   position: relative;
   padding-left: 0px;
-  color: #000000;
 }
 
 .process-item ul li::before {
@@ -384,17 +289,6 @@
   position: absolute;
   left: -13px;
   top: 0;
-  color: #000000;
-}
-
-.process-item ul li p {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 140%;
-  color: #000000;
-  margin: 0;
 }
 
 /* CTA Section */
@@ -425,7 +319,11 @@
     bottom: -3px; /* 3px gap from text on mobile */
     height: 1.5px; /* Thinner on mobile */
   }
+  .services-detail-content {
+    width: 77%;
+  }
+  .services-detail-tabs {
+    gap: 24px;
+    margin-bottom: 60px;
+  }
 }
-
-
-

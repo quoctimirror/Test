@@ -170,8 +170,8 @@
   }
 
   .faq-icon {
-    width: 25px;
-    height: 25px;
+    min-width: 20px;
+    /* height: 25px; */
   }
 
   .faq-answer p {

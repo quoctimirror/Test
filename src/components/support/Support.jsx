@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import "@pages/support.css";
 import ReturnExchange from "./ReturnExchange";
@@ -11,6 +11,7 @@ const Support = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("return-exchange");
+  const tabsRef = useRef(null);
 
   useEffect(() => {
     const tabFromUrl = searchParams.get('tab');
@@ -40,6 +41,13 @@ const Support = () => {
     navigate(`/support?tab=${tabId}`, { replace: true });
   };
 
+  const handleScrollRight = () => {
+    if (tabsRef.current) {
+      const scrollAmount = tabsRef.current.clientWidth * 0.7; // Scroll 70% của width
+      tabsRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       <div className="support-hero-section">
@@ -49,16 +57,23 @@ const Support = () => {
       </div>
 
       <div className="support-wrapper">
-        <div className="support-tabs">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              className={`support-tab ${activeTab === tab.id ? "active" : ""}`}
-              onClick={() => handleTabClick(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="support-tabs-container">
+          <div className="support-tabs" ref={tabsRef}>
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                className={`support-tab ${activeTab === tab.id ? "active" : ""}`}
+                onClick={() => handleTabClick(tab.id)}
+              >
+                <span className="bodytext-4--no-margin">{tab.label}</span>
+              </button>
+            ))}
+          </div>
+          <button className="tabs-scroll-arrow" onClick={handleScrollRight}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
         <div className="support-container">
           <div className="support-content">

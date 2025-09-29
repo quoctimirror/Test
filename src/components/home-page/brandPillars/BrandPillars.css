@@ -1,21 +1,30 @@
 /* BrandPillars Component Styles */
+.brand-pillars-wrapper {
+  position: relative;
+  height: 150vh;
+  background-color: #000000;
+  font-family: "BT Beau Sans", sans-serif;
+}
+
 .brand-pillars {
   width: 100%;
-  min-height: 150vh;
+  min-height: calc(150vh + 1px); /* Add 1px to prevent gap */
+  margin-top: -1px; /* Overlap previous section by 1px */
   background-color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Keep for desktop */
   box-sizing: border-box;
 }
 
 .brand-pillars-content {
   width: 100%;
+  max-width: 1920px;
   position: relative;
-  z-index: 10; /* Higher z-index to be above metaball background */
-  pointer-events: auto; /* Don't block metaball mouse tracking */
+  z-index: 10;
+  pointer-events: auto;
   box-sizing: border-box;
 }
 
@@ -26,16 +35,6 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-  /* Remove opacity override - let MetaballBackground handle its own opacity */
-}
-
-/* Hide metaball and gradients on mobile and tablet */
-@media (max-width: 1023px) {
-  .brand-pillars-background,
-  .brand-pillars-gradient-overlay-top,
-  .brand-pillars-gradient-overlay-bottom {
-    display: none;
-  }
 }
 
 .brand-pillars-gradient-overlay-top {
@@ -43,10 +42,18 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 50vh; /* 1/6 của 150vh */
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, #000 100%);
-  z-index: 2; /* Above background but below content */
-  pointer-events: none; /* Don't block interactions */
+  height: 50vh;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.15) 20%,
+    rgba(0, 0, 0, 0.4) 40%,
+    rgba(0, 0, 0, 0.7) 60%,
+    rgba(0, 0, 0, 0.9) 80%,
+    #000 100%
+  );
+  z-index: 2;
+  pointer-events: none;
   opacity: 1;
 }
 
@@ -55,10 +62,18 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 50vh; /* 1/6 của 150vh */
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 100%);
-  z-index: 2; /* Above background but below content */
-  pointer-events: none; /* Don't block interactions */
+  height: 50vh;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.15) 20%,
+    rgba(0, 0, 0, 0.4) 40%,
+    rgba(0, 0, 0, 0.7) 60%,
+    rgba(0, 0, 0, 0.9) 80%,
+    #000 100%
+  );
+  z-index: 2;
+  pointer-events: none;
 }
 
 .brand-pillars-text {
@@ -126,7 +141,6 @@
 /* Specific sizes and positions for each group */
 .brand-group:nth-child(1) {
   width: 55.5%;
-  /* AUTO HEIGHT: Height scales với viewport */
   max-height: clamp(150px, 11vh, 214px);
   margin-left: 17%;
 }
@@ -173,7 +187,6 @@
 
 .brand-group:nth-child(3) {
   width: 43.4%;
-  /* AUTO HEIGHT: Height scales với viewport */
   height: clamp(150px, 11vh, 214px);
   margin-left: 14.1%;
 }
@@ -225,12 +238,9 @@
 .brand-line {
   display: block;
   font-family: "Saol Display", serif;
-
-  /* AUTO SCALE: Comprehensive auto-scaling system */
   font-size: clamp(80px, min(6.5vw, calc((100vw - 5vw) / 15)), 128px);
   transform-origin: left center;
   transform: scale(min(1, calc((100vw - 5vw) / 1500px)));
-
   font-style: normal;
   font-weight: 300;
   line-height: 80%;
@@ -239,15 +249,75 @@
   color: var(--Pink, #bc224c);
   margin: 0;
   transition: color 0.3s ease, transform 0.3s ease;
-
-  /* Overflow protection */
   white-space: nowrap;
   contain: layout style;
   max-width: 100%;
   word-wrap: break-word;
 }
 
-/* Responsive Design */
+/* Mobile/Tablet Sticky Scroll Overlay - Hidden on Desktop */
+.brand-pillars-sticky-overlay {
+  display: none;
+}
+
+.brand-pillars-sticky-content {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.brand-pillars-sticky-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity, transform;
+}
+
+.brand-sticky-group {
+  width: 62%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 36px;
+  box-sizing: border-box;
+}
+
+.brand-sticky-line {
+  font-family: "Saol Display", serif;
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 80%;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--Pink, #bc224c);
+  margin: 0;
+}
+
+.brand-sticky-expand {
+  max-width: 600px;
+}
+
+.brand-sticky-expand .bodytext-3--no-margin {
+  color: rgba(255, 255, 255, 0.75);
+  text-align: center;
+}
+
+.brand-sticky-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
 
 /* Small Desktop (1024px - 1279px) */
 @media screen and (max-width: 1279px) {
@@ -256,444 +326,82 @@
   }
 }
 
-/* Tablet (426px - 1023px) */
-@media screen and (max-width: 1023px) {
-  .star-container-center {
-    left: 0%;
-    top: 0%;
+/* Mobile and Tablet Styles */
+@media (max-width: 1023px) {
+  .brand-pillars-wrapper {
+    height: 500vh; /* Extended for scroll */
   }
 
   .brand-pillars {
-    padding: 0;
-    min-height: 300vh; /* 3 sections x 100vh */
-    background-color: #000000;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: stretch;
+    height: 500vh; /* Match wrapper height */
+    overflow: visible !important; /* Allow sticky to work */
+    align-items: flex-start; /* Align to top for sticky */
+    justify-content: flex-start;
   }
 
-  .brand-pillars-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  /* Hide metaball and gradients on mobile and tablet */
+  .brand-pillars-background,
+  .brand-pillars-gradient-overlay-top,
+  .brand-pillars-gradient-overlay-bottom {
+    display: none;
+  }
+
+  /* Show sticky scroll overlay - NOT absolute, just regular flow */
+  .brand-pillars-sticky-overlay {
+    display: block !important;
+    position: relative;
     width: 100%;
-    max-width: 100%;
+    height: 100%;
+  }
+
+  /* Make sticky content actually sticky */
+  .brand-pillars-sticky-content {
+    position: sticky !important;
+    top: 0;
+    height: 100vh;
+    background: #000000;
+  }
+
+  /* Hide desktop content */
+  .brand-pillars-content {
+    display: none !important;
   }
 
   .brand-pillars-text {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    margin: 0;
-  }
-
-  .brand-line {
-    /* Fixed font size for tablet */
-    font-size: 64px;
-    transform: none;
-    letter-spacing: -0.02em;
-    line-height: 90%;
+    display: none !important;
   }
 
   .brand-group {
-    margin-bottom: 0;
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 60px 40px;
-    box-sizing: border-box;
+    display: none !important;
   }
 
-  .brand-group:nth-child(1) {
-    width: 100%;
-    height: 100vh;
-    margin: 0 auto;
-    text-align: center;
+  /* Disable hover and click interactions on mobile/tablet */
+  .brand-pillars * {
+    pointer-events: none !important;
+    user-select: none !important;
   }
 
-  .brand-group:nth-child(1) .brand-line:nth-child(1),
-  .brand-group:nth-child(1) .brand-line:nth-child(2) {
-    text-align: center;
-  }
-
-  .brand-group:nth-child(1) .brand-main-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .brand-group:nth-child(1) .brand-line {
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-
-  .brand-group:nth-child(1) .brand-line-with-expand {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    width: 100%;
-  }
-
-  .brand-group:nth-child(1) .brand-line-with-expand .brand-line {
-    order: -1;
-  }
-
-  .brand-group:nth-child(1) .brand-expand-text {
-    width: 62%;
-    margin-left: 0;
-    margin-top: 0;
-    bottom: auto;
-    text-align: center;
-    transform: none;
-    opacity: 1;
-  }
-
-  .brand-group:nth-child(2) {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-right: 0;
-    text-align: center;
-    gap: 36px;
-  }
-
-  .brand-group:nth-child(2) .brand-expand-text {
-    width: 62%;
-    margin-right: 0;
-    margin-bottom: 0;
-    text-align: center;
-    order: 3;
-    transform: none;
-    opacity: 1;
-  }
-
-  .brand-pillars
-    .brand-group:nth-child(2)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    max-width: 100%;
-    text-align: center;
-  }
-
-  .brand-group:nth-child(2) .brand-main-text {
-    order: 1;
-  }
-
-  .brand-group:nth-child(2) .starlight-6-oclock-wrapper {
-    order: 2;
-    margin: 0;
-  }
-
-  .brand-group:nth-child(3) {
-    width: 100%;
-    height: 100vh;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .brand-group:nth-child(3) .brand-line:nth-child(1),
-  .brand-group:nth-child(3) .brand-line:nth-child(2) {
-    text-align: center;
-  }
-
-  .brand-group:nth-child(3) .brand-main-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  .brand-group:nth-child(3) .brand-line {
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-
-  /* Move all brand-lines to top */
-  .brand-group:nth-child(3) .brand-main-text > span.brand-line {
-    order: -2;
-  }
-
-  .brand-group:nth-child(3) .brand-line-with-expand {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    gap: 36px;
-    width: 100%;
-    order: 1;
-  }
-
-  .brand-group:nth-child(3) .brand-line-with-expand .brand-line {
-    order: -3;
-  }
-
-  .brand-group:nth-child(3) .brand-expand-text {
-    width: 62%;
-    margin-left: 0;
-    margin-top: 0;
-    bottom: auto;
-    text-align: center;
-    transform: none;
-    opacity: 1;
-  }
-
-  /* Make expand text always visible on tablet */
-  .brand-expand-text {
-    pointer-events: auto;
-  }
-
-  .brand-pillars .brand-expand-text .bodytext-3--no-margin {
-    /* Use default bodytext-3--no-margin responsive typography */
-    transform: none;
-    line-height: 150%;
-    padding: 0 20px;
-  }
-
-  /* Override nowrap for group 1 and 3 on tablet */
-  .brand-pillars
-    .brand-group:nth-child(1)
-    .brand-expand-text
-    .bodytext-3--no-margin,
-  .brand-pillars
-    .brand-group:nth-child(3)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    white-space: normal;
-  }
-
-  /* Remove line breaks on tablet */
-  .brand-expand-text br {
-    display: none;
+  .brand-pillars {
+    pointer-events: auto !important;
   }
 }
 
 /* Mobile (<=425px) */
 @media (max-width: 480px) {
-  .star-container-center {
-    left: 0%;
-    top: 0%;
+  .brand-pillars-wrapper {
+    height: 500vh;
   }
+
   .brand-pillars {
-    padding: 0;
-    min-height: 300vh; /* 3 sections x 100vh */
-    background-color: #000000;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: stretch;
+    height: 500vh;
   }
 
-  .brand-pillars-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    max-width: 100%;
+  .brand-sticky-group {
+    width: 77%;
   }
 
-  .brand-pillars-text {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    margin: 0;
-  }
-
-  .brand-line {
-    /* Fixed font size for mobile */
+  .brand-sticky-line {
     font-size: 40px;
-    transform: none;
-    letter-spacing: -0.02em;
-    line-height: 90%;
-  }
-
-  .brand-group {
-    margin-bottom: 0;
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
-    box-sizing: border-box;
-  }
-
-  .brand-group:nth-child(1) {
-    width: 100%;
-    height: 100vh;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .brand-group:nth-child(1) .brand-line:nth-child(1),
-  .brand-group:nth-child(1) .brand-line:nth-child(2) {
-    text-align: center;
-  }
-
-  .brand-group:nth-child(1) .brand-main-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .brand-group:nth-child(1) .brand-line {
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-
-  .brand-group:nth-child(1) .brand-line-with-expand {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    width: 100%;
-  }
-
-  .brand-group:nth-child(1) .brand-line-with-expand .brand-line {
-    order: -1;
-  }
-
-  .brand-group:nth-child(1) .brand-expand-text {
-    width: 77%;
-    margin-left: 0;
-    margin-top: 0;
-    bottom: auto;
-    text-align: center;
-    transform: none;
-    opacity: 1;
-  }
-
-  .brand-group:nth-child(2) {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-right: 0;
-    text-align: center;
-    gap: 36px;
-  }
-
-  .brand-group:nth-child(2) .brand-expand-text {
-    width: 77%;
-    margin-right: 0;
-    margin-bottom: 0;
-    text-align: center;
-    order: 3;
-    transform: none;
-    opacity: 1;
-  }
-
-  .brand-pillars
-    .brand-group:nth-child(2)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    max-width: 100%;
-    text-align: center;
-  }
-
-  .brand-group:nth-child(2) .brand-main-text {
-    order: 1;
-  }
-
-  .brand-group:nth-child(2) .starlight-6-oclock-wrapper {
-    order: 2;
-    margin: 0;
-  }
-
-  .brand-group:nth-child(3) {
-    width: 100%;
-    height: 100vh;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .brand-group:nth-child(3) .brand-line:nth-child(1),
-  .brand-group:nth-child(3) .brand-line:nth-child(2) {
-    text-align: center;
-  }
-
-  .brand-group:nth-child(3) .brand-main-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  .brand-group:nth-child(3) .brand-line {
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-
-  /* Move all brand-lines to top */
-  .brand-group:nth-child(3) .brand-main-text > span.brand-line {
-    order: -2;
-  }
-
-  .brand-group:nth-child(3) .brand-line-with-expand {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    gap: 36px;
-    width: 100%;
-    order: 1;
-  }
-
-  .brand-group:nth-child(3) .brand-line-with-expand .brand-line {
-    order: -3;
-  }
-
-  .brand-group:nth-child(3) .brand-expand-text {
-    width: 77%;
-    margin-left: 0;
-    margin-top: 0;
-    bottom: auto;
-    text-align: center;
-    transform: none;
-    opacity: 1;
-  }
-
-  /* Make expand text always visible on mobile */
-  .brand-expand-text {
-    pointer-events: auto;
-  }
-
-  .brand-pillars .brand-expand-text .bodytext-3--no-margin {
-    /* Use default bodytext-3--no-margin responsive typography */
-    transform: none;
-    line-height: 150%;
-    padding: 0 10px;
-  }
-
-  /* Override nowrap for group 1 and 3 on mobile */
-  .brand-pillars
-    .brand-group:nth-child(1)
-    .brand-expand-text
-    .bodytext-3--no-margin,
-  .brand-pillars
-    .brand-group:nth-child(3)
-    .brand-expand-text
-    .bodytext-3--no-margin {
-    white-space: normal !important;
-  }
-
-  /* Remove line breaks on mobile */
-  .brand-expand-text br {
-    display: none;
   }
 }
 
@@ -702,7 +410,6 @@
   display: none;
 }
 
-/* Override star-container-center styles from other sections */
 .brand-pillars .starlight-6-oclock-wrapper .star-container-center {
   margin-top: 0 !important;
   position: relative !important;
@@ -719,12 +426,10 @@
     opacity: 0.8;
   }
 
-  /* Ensure star-container-center has no external margin */
   .brand-pillars .starlight-6-oclock-wrapper .star-container-center {
     margin: 0 !important;
   }
 
-  /* Make starlight longer on mobile and tablet */
   .brand-pillars .starlight-6-oclock-wrapper svg {
     transform: scaleY(2) !important;
   }

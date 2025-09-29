@@ -56,13 +56,6 @@ html {
 }
 
 .faq-nav .nav-item a {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 120%;
-  letter-spacing: 0%;
   text-decoration: none;
   color: #999;
   display: inline-block;
@@ -106,7 +99,7 @@ html {
 /* --- Main content căn giữa toàn trang --- */
 .faqs-main-section {
   width: 100%;
-  max-width: 906px;
+  max-width: 47%;
   margin: 0 auto;
 }
 
@@ -130,15 +123,12 @@ html {
 }
 
 .search-input {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
   flex: 1;
   max-width: 660px;
   border: none;
   border-bottom: 1px solid #ddd;
   background: transparent;
   color: #000;
-  font-size: 16px;
   outline: none;
   border-radius: 0;
   text-align: left;
@@ -146,9 +136,6 @@ html {
 
 .search-input::placeholder {
   color: #999;
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
 }
 
 /* Button styles now handled by ShineGlassButton component */
@@ -182,13 +169,7 @@ html {
   margin-bottom: 60px;
 }
 
-.placeholder-box {
-  /* Bỏ width, height để linh hoạt */
-  background: transparent;
-  color: #555;
-  font-size: 2rem;
-  font-weight: bold;
-}
+/* .placeholder-box - Typography handled by heading-3--no-margin class */
 
 .faq-list {
   padding: 0;
@@ -326,12 +307,9 @@ html {
     left: 2.3%;
   }
 
-  .faq-nav .nav-item a {
-    font-size: 15px;
-  }
+  /* .faq-nav .nav-item a - Typography handled by bodytext-4--no-margin class */
 
   .search-input {
-    font-size: 15px;
     padding: 13px 18px;
   }
 
@@ -347,9 +325,7 @@ html {
     height: 450px;
   }
 
-  .placeholder-box {
-    font-size: 1.8rem;
-  }
+  /* .placeholder-box - Typography handled by heading-3--no-margin class */
 }
 
 @media (max-width: 992px) {
@@ -363,9 +339,7 @@ html {
     top: 300px;
   }
 
-  .faq-nav .nav-item a {
-    font-size: 14px;
-  }
+  /* .faq-nav .nav-item a - Typography handled by bodytext-4--no-margin class */
 
   .faq-nav ul {
     gap: 20px;
@@ -375,12 +349,7 @@ html {
     margin-bottom: 120px;
   }
 
-  .search-container {
-    gap: 10px;
-  }
-
   .search-input {
-    font-size: 14px;
     padding: 12px 16px;
   }
 
@@ -399,18 +368,11 @@ html {
     padding: 30px 0;
   }
 
-  .faq-section {
-    padding-bottom: 100px;
-  }
-
   .faq-image-placeholder {
     height: 400px;
-    margin-bottom: 30px;
   }
 
-  .placeholder-box {
-    font-size: 1.6rem;
-  }
+  /* .placeholder-box - Typography handled by heading-3--no-margin class */
 
   .faq-icon {
     width: 30px;
@@ -425,7 +387,7 @@ html {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .faqs-sticky-container {
     padding: 0 0 80px 0;
     width: 100vw;
@@ -435,61 +397,12 @@ html {
   .faqs-wrapper {
     flex-direction: column;
     gap: 20px;
-    padding: 0 15px;
-  }
-
-  .faq-sidebar-section {
-    position: relative;
-    top: auto;
-    left: 0;
-    width: 100%;
-    margin-left: 0;
-    margin-bottom: 20px;
-    order: 1;
-  }
-
-  .faq-nav {
-    position: static;
-    width: 100%;
-  }
-
-  .faq-nav ul {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-  }
-
-  .faq-nav .nav-item a {
-    font-size: 13px;
-    white-space: nowrap;
-    padding: 8px 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 20px;
-    background: #f8f8f8;
-    transition: all 0.3s ease;
-  }
-
-  .faq-nav .nav-item.active a {
-    background: #000;
-    color: #fff;
-    border-color: #000;
-  }
-
-  .faq-nav .nav-item:hover a {
-    background: #000;
-    color: #fff;
-    border-color: #000;
-  }
-
-  .faq-nav .nav-item a::after {
-    display: none;
   }
 
   .faqs-main-section {
     order: 2;
     padding: 0;
-    max-width: 100%;
+    max-width: 62%;
   }
 
   .search-section {
@@ -497,14 +410,10 @@ html {
   }
 
   .search-container {
-    flex-direction: column;
-    gap: 15px;
     max-width: 100%;
-    padding: 0 20px;
   }
 
   .search-input {
-    font-size: 13px;
     padding: 12px 15px;
     text-align: center;
   }
@@ -531,12 +440,9 @@ html {
 
   .faq-image-placeholder {
     height: 300px;
-    margin-bottom: 20px;
   }
 
-  .placeholder-box {
-    font-size: 1.4rem;
-  }
+  /* .placeholder-box - Typography handled by heading-3--no-margin class */
 
   .faq-icon {
     width: 28px;
@@ -544,35 +450,81 @@ html {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 425px) {
   .faqs-sticky-container {
     padding: 0 0 60px 0;
   }
 
+  .faq-sidebar-section {
+    position: relative;
+    top: auto;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-bottom: 20px;
+    order: 1;
+  }
+
+  .faq-nav {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
   .faq-nav ul {
-    gap: 10px;
+    flex-direction: column;
+    gap: 0;
+    width: 77%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .faq-nav .nav-item {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 36px 0;
+    transition: border-color 0.3s ease;
+    width: 100%;
+    list-style: none;
   }
 
   .faq-nav .nav-item a {
-    font-size: 12px;
-    padding: 6px 10px;
+    text-align: center;
+    width: 100%;
+    display: block;
+    padding: 0;
+    text-decoration: none !important;
+  }
+
+  .faq-nav .nav-item:hover,
+  .faq-nav .nav-item.active {
+    border-top-color: #bc224c;
+    border-bottom-color: #bc224c;
+  }
+
+  .faq-nav .nav-item.active a,
+  .faq-nav .nav-item:hover a {
+    color: #bc224c;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .faq-nav .nav-item a::after,
+  .faq-nav .nav-item.active a::after,
+  .faq-nav .nav-item:hover a::after {
+    display: none !important;
   }
 
   .faqs-main-section {
     padding: 0;
+    max-width: 77%;
   }
 
   .search-section {
     margin-bottom: 40px;
   }
 
-  .search-container {
-    gap: 12px;
-    padding: 0 15px;
-  }
-
   .search-input {
-    font-size: 12px;
     padding: 10px 12px;
   }
 
@@ -581,32 +533,19 @@ html {
     line-height: 160%;
   }
 
-  .faq-answer p {
-    font-size: 12px;
-    line-height: 160%;
-    padding: 6px 0 0 0;
-  }
-
   .faq-item {
-    padding: 20px 0;
-  }
-
-  .faq-section {
-    padding-bottom: 40px;
+    padding: 17px 0;
   }
 
   .faq-image-placeholder {
     height: 250px;
-    margin-bottom: 15px;
   }
 
-  .placeholder-box {
-    font-size: 1.2rem;
-  }
+  /* .placeholder-box - Typography handled by heading-3--no-margin class */
 
   .faq-icon {
-    width: 25px;
-    height: 25px;
+    min-width: 20px;
+    /* height: 25px; */
   }
 
   .faq-icon::before {
@@ -614,77 +553,5 @@ html {
     height: 8px;
     top: 5px;
     left: 6px;
-  }
-}
-
-@media (max-width: 360px) {
-  .faqs-sticky-container {
-    padding: 0 0 40px 0;
-  }
-
-  .faq-nav ul {
-    gap: 8px;
-  }
-
-  .faq-nav .nav-item a {
-    font-size: 11px;
-    padding: 5px 8px;
-  }
-
-  .faqs-main-section {
-    padding: 0;
-  }
-
-  .search-section {
-    margin-bottom: 30px;
-  }
-
-  .search-container {
-    gap: 10px;
-  }
-
-  .search-input {
-    font-size: 11px;
-    padding: 8px 10px;
-  }
-
-  .faq-question {
-    font-size: 13px;
-    line-height: 170%;
-  }
-
-  .faq-answer p {
-    font-size: 11px;
-    line-height: 170%;
-    padding: 4px 0 0 0;
-  }
-
-  .faq-item {
-    padding: 16px 0;
-  }
-
-  .faq-section {
-    padding-bottom: 30px;
-  }
-
-  .faq-image-placeholder {
-    height: 200px;
-    margin-bottom: 12px;
-  }
-
-  .placeholder-box {
-    font-size: 1rem;
-  }
-
-  .faq-icon {
-    width: 22px;
-    height: 22px;
-  }
-
-  .faq-icon::before {
-    width: 7px;
-    height: 7px;
-    top: 4px;
-    left: 5px;
   }
 }

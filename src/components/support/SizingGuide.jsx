@@ -5,8 +5,8 @@ const SizingGuide = () => {
   return (
     <div className="sizing-guide">
       <section className="section ring-size-section">
-        <h3>1. Ring size</h3>
-        <p>
+        <h3 className="heading-3--no-margin">1. Ring size</h3>
+        <p className="bodytext-3--no-margin">
           You can easily measure your ring size at home using just a string,
           thread, or ribbon and a ruler. Here's how:
         </p>
@@ -20,8 +20,10 @@ const SizingGuide = () => {
             </h5>
             <ul>
               <li>
-                Gently wrap the string around the base of your finger, close to
-                your knuckle (where a ring would sit comfortably).
+                <p className="bodytext-3--no-margin">
+                  Gently wrap the string around the base of your finger, close to
+                  your knuckle (where a ring would sit comfortably).
+                </p>
               </li>
             </ul>
           </div>
@@ -31,7 +33,9 @@ const SizingGuide = () => {
               <span className="bodytext-2">2. Mark</span>
             </h5>
             <ul>
-              <li>Mark the exact point where the string overlaps.</li>
+              <li>
+                <p className="bodytext-3--no-margin">Mark the exact point where the string overlaps.</p>
+              </li>
             </ul>
           </div>
 
@@ -41,8 +45,10 @@ const SizingGuide = () => {
             </h5>
             <ul>
               <li>
-                Lay the string flat next to a ruler and measure the length in
-                millimeters (mm). This number is your finger's circumference.
+                <p className="bodytext-3--no-margin">
+                  Lay the string flat next to a ruler and measure the length in
+                  millimeters (mm). This number is your finger's circumference.
+                </p>
               </li>
             </ul>
           </div>
@@ -53,15 +59,17 @@ const SizingGuide = () => {
             </h5>
             <ul>
               <li>
-                Enter the measured length into our Ring Sizer tool to discover
-                your ideal Mirror ring size.
+                <p className="bodytext-3--no-margin">
+                  Enter the measured length into our Ring Sizer tool to discover
+                  your ideal Mirror ring size.
+                </p>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="tip-section">
-          <p className="tip-text">
+          <p className="tip-text bodytext-5--no-margin">
             Tip: For the most accurate results, measure your finger at the end
             of the day when it's at its largest, and avoid measuring when your
             hands are cold.
@@ -78,29 +86,29 @@ const SizingGuide = () => {
       </section>
 
       <section className="section necklace-section">
-        <h3>2. Necklace</h3>
-        <p>
+        <h3 className="heading-3--no-margin">2. Necklace</h3>
+        <p className="bodytext-3--no-margin">
           Choose the perfect necklace length for your style:
         </p>
         <ul>
-          <li>14-16 inches: Choker length, sits close to the neck</li>
-          <li>18 inches: Princess length, sits at the collarbone</li>
-          <li>20-24 inches: Matinee length, sits between collarbone and bust</li>
-          <li>28-36 inches: Opera length, sits at the bust or below</li>
-          <li>Over 36 inches: Rope length, can be doubled or tripled</li>
+          <li><p className="bodytext-3--no-margin">14-16 inches: Choker length, sits close to the neck</p></li>
+          <li><p className="bodytext-3--no-margin">18 inches: Princess length, sits at the collarbone</p></li>
+          <li><p className="bodytext-3--no-margin">20-24 inches: Matinee length, sits between collarbone and bust</p></li>
+          <li><p className="bodytext-3--no-margin">28-36 inches: Opera length, sits at the bust or below</p></li>
+          <li><p className="bodytext-3--no-margin">Over 36 inches: Rope length, can be doubled or tripled</p></li>
         </ul>
       </section>
 
       <section className="section bracelet-section">
-        <h3>3. Bracelet</h3>
-        <p>
+        <h3 className="heading-3--no-margin">3. Bracelet</h3>
+        <p className="bodytext-3--no-margin">
           To measure your bracelet size:
         </p>
         <ul>
-          <li>Measure your wrist with a flexible tape measure</li>
-          <li>Add 0.5-1 inch for a comfortable fit</li>
-          <li>Standard sizes range from 6.5 to 8 inches</li>
-          <li>Consider the bracelet style - bangles need more room</li>
+          <li><p className="bodytext-3--no-margin">Measure your wrist with a flexible tape measure</p></li>
+          <li><p className="bodytext-3--no-margin">Add 0.5-1 inch for a comfortable fit</p></li>
+          <li><p className="bodytext-3--no-margin">Standard sizes range from 6.5 to 8 inches</p></li>
+          <li><p className="bodytext-3--no-margin">Consider the bracelet style - bangles need more room</p></li>
         </ul>
       </section>
     </div>

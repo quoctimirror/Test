@@ -2,10 +2,10 @@ import "./HoverExpand.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
-import image1 from "@assets/images/hover-expand/img_1.jpg";
-import image2 from "@assets/images/hover-expand/img_2.jpg";
-import image3 from "@assets/images/hover-expand/img_3.jpg";
-import image4 from "@assets/images/hover-expand/img_4.jpg";
+import image1 from "/home-page/hover-expand/Ring.png";
+import image2 from "/home-page/hover-expand/Earring.png";
+import image3 from "/home-page/hover-expand/Necklace.png";
+import image4 from "/home-page/hover-expand/Bracelet.png";
 
 const HoverExpandSection = () => {
   const navigate = useNavigate();
@@ -34,21 +34,30 @@ const HoverExpandSection = () => {
       </div>
 
       <div className="hover-expand-gallery">
+        <div className="hover-expand-gradient-top"></div>
         <div className="gallery-item">
           <img src={image1} alt="Jewelry piece 1" />
-          <p className="bodytext-1--no-margin gallery-item-text">Premium Collection</p>
+          <p className="bodytext-1--no-margin gallery-item-text">
+            Premium Collection
+          </p>
         </div>
         <div className="gallery-item">
           <img src={image2} alt="Jewelry piece 2" />
-          <p className="bodytext-1--no-margin gallery-item-text">Luxury Rings</p>
+          <p className="bodytext-1--no-margin gallery-item-text">
+            Luxury Rings
+          </p>
         </div>
         <div className="gallery-item">
           <img src={image3} alt="Jewelry piece 3" />
-          <p className="bodytext-1--no-margin gallery-item-text">Diamond Series</p>
+          <p className="bodytext-1--no-margin gallery-item-text">
+            Diamond Series
+          </p>
         </div>
         <div className="gallery-item">
           <img src={image4} alt="Jewelry piece 4" />
-          <p className="bodytext-1--no-margin gallery-item-text">Signature Pieces</p>
+          <p className="bodytext-1--no-margin gallery-item-text">
+            Signature Pieces
+          </p>
         </div>
       </div>
     </div>

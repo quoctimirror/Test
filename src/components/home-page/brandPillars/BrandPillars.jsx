@@ -1,14 +1,152 @@
+import { useEffect, useRef, useState } from "react";
 import MetaballBackground from "@components/specialEffect/MetaballBackground/MetaballBackground";
 import StarlightEffect from "../universeSection/StarlightEffect";
 import "./BrandPillars.css";
 
 const BrandPillars = () => {
+  const sectionRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+
+      const section = sectionRef.current;
+      const rect = section.getBoundingClientRect();
+      const sectionHeight = section.offsetHeight;
+      const windowHeight = window.innerHeight;
+
+      // Calculate scroll progress within this section
+      const scrollTop = -rect.top;
+      const scrollHeight = sectionHeight - windowHeight;
+      const progress = Math.max(0, Math.min(1, scrollTop / scrollHeight));
+
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <section className="brand-pillars">
-      <MetaballBackground className="brand-pillars-background" />
-      <div className="brand-pillars-gradient-overlay-top" />
-      <div className="brand-pillars-gradient-overlay-bottom" />
-      <div className="brand-pillars-content">
+    <section ref={sectionRef} className="brand-pillars-wrapper">
+      <div className="brand-pillars">
+        <MetaballBackground className="brand-pillars-background" />
+        <div className="brand-pillars-gradient-overlay-top" />
+        <div className="brand-pillars-gradient-overlay-bottom" />
+
+        {/* Mobile/Tablet Sticky Scroll Overlay */}
+        <div className="brand-pillars-sticky-overlay">
+          <div className="brand-pillars-sticky-content">
+            {/* Content 1: PRECISION TECHNOLOGY */}
+            <div
+              className="brand-pillars-sticky-item"
+              style={{
+                opacity: scrollProgress <= 0.25
+                  ? Math.min(1, scrollProgress * 4)
+                  : scrollProgress <= 0.4
+                  ? 1
+                  : scrollProgress <= 0.5
+                  ? 1 - (scrollProgress - 0.4) * 10
+                  : 0,
+                transform: `translateY(${
+                  scrollProgress <= 0.4
+                    ? 0
+                    : scrollProgress <= 0.5
+                    ? -(scrollProgress - 0.4) * 200
+                    : -20
+                }px)`,
+              }}
+            >
+              <div className="brand-sticky-group">
+                <div className="brand-sticky-lines">
+                  <span className="brand-sticky-line">PRECISION</span>
+                  <span className="brand-sticky-line">TECHNOLOGY</span>
+                </div>
+                <div className="starlight-6-oclock-wrapper">
+                  <StarlightEffect direction="falling" height={60} />
+                </div>
+                <div className="brand-sticky-expand">
+                  <p className="bodytext-3--no-margin">
+                    Where human craft meets cutting-edge technology.
+                    We shape diamonds with the world's most advanced cutting techniques.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Content 2: SUSTAINABILITY */}
+            <div
+              className="brand-pillars-sticky-item"
+              style={{
+                opacity: scrollProgress <= 0.45
+                  ? 0
+                  : scrollProgress <= 0.7
+                  ? Math.min(1, (scrollProgress - 0.45) * 4)
+                  : scrollProgress <= 0.85
+                  ? 1
+                  : scrollProgress <= 0.95
+                  ? 1 - (scrollProgress - 0.85) * 10
+                  : 0,
+                transform: `translateY(${
+                  scrollProgress <= 0.85
+                    ? 0
+                    : scrollProgress <= 0.95
+                    ? -(scrollProgress - 0.85) * 200
+                    : -20
+                }px)`,
+              }}
+            >
+              <div className="brand-sticky-group">
+                <span className="brand-sticky-line">SUSTAINABILITY</span>
+                <div className="starlight-6-oclock-wrapper">
+                  <StarlightEffect direction="falling" height={60} />
+                </div>
+                <div className="brand-sticky-expand">
+                  <p className="bodytext-3--no-margin">
+                    Made for the planet, not taken from it.
+                    Lab-grown brilliance that honors our planet.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Content 3: REDEFINING LUXURY */}
+            <div
+              className="brand-pillars-sticky-item"
+              style={{
+                opacity: scrollProgress <= 0.9
+                  ? 0
+                  : Math.min(1, (scrollProgress - 0.9) * 10),
+                transform: `translateY(${
+                  scrollProgress <= 0.9
+                    ? 20
+                    : 0
+                }px)`,
+              }}
+            >
+              <div className="brand-sticky-group">
+                <div className="brand-sticky-lines">
+                  <span className="brand-sticky-line">REDEFINING</span>
+                  <span className="brand-sticky-line">LUXURY</span>
+                </div>
+                <div className="starlight-6-oclock-wrapper">
+                  <StarlightEffect direction="falling" height={60} />
+                </div>
+                <div className="brand-sticky-expand">
+                  <p className="bodytext-3--no-margin">
+                    True modern luxury is not in price tags.
+                    A space of mindful beauty, crafted to awaken your senses.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="brand-pillars-content">
         <h1 className="brand-pillars-text">
           <div className="brand-group">
             <div className="brand-main-text">
@@ -72,6 +210,7 @@ const BrandPillars = () => {
             </div>
           </div>
         </h1>
+        </div>
       </div>
     </section>
   );

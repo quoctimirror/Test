@@ -8,10 +8,9 @@ const Lumex91 = () => {
         <div className="lumex91-video-box">
           <img
             className="lumex91-video"
-            src="/home-page/Mirror-Lumex 91.png"
+            src="/home-page/Mirror-Lumex 91.jpg"
             alt="Mirror-Lumex 91"
           />
-          <div className="lumex91-circle-overlay"></div>
         </div>
 
         <div className="lumex91-content">

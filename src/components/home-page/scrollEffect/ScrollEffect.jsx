@@ -25,6 +25,8 @@ export default function ScrollEffect() {
   const [images, setImages] = useState([]);
   const [frameIndex, setFrameIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [text1AutoProgress, setText1AutoProgress] = useState(0);
+  const [hasStartedScrolling, setHasStartedScrolling] = useState(false);
 
   const numFrames = 249; // Actual frames from Landscape_3D.mp4 (8.3s * 30fps)
   const scrollEffectHeight = 250; // vh for scroll effect - reduced to make mirror introduce start earlier
@@ -195,9 +197,11 @@ export default function ScrollEffect() {
             splitTopRef.current.style.transform = `translateY(-${splitAmount}vh)`;
             splitBottomRef.current.style.transform = `translateY(${splitAmount}vh)`;
 
-            // Sync mirror introduce fade in with split animation
+            // Much slower mirror introduce fade in - very gradual
             if (mirrorIntroduceSectionRef.current) {
-              mirrorIntroduceSectionRef.current.style.opacity = splitProgress;
+              // Use stronger easing function to make opacity fade much slower
+              const easedOpacity = Math.pow(splitProgress, 4); // Higher power = much slower start
+              mirrorIntroduceSectionRef.current.style.opacity = easedOpacity;
             }
 
             // Show split sections, hide combined sections
@@ -296,6 +300,41 @@ export default function ScrollEffect() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Auto-animation for Text 1 when user starts scrolling
+  useEffect(() => {
+    const handleScrollStart = () => {
+      const scrollY = window.scrollY;
+      const scrollEffectEnd = (scrollEffectHeight / 100) * window.innerHeight;
+
+      // Check if user has scrolled into mirror introduce section
+      if (scrollY > scrollEffectEnd && !hasStartedScrolling) {
+        setHasStartedScrolling(true);
+
+        // Start auto animation - only fade in and pause (not move up)
+        let startTime = null;
+        const duration = 400; // 0.4 second to reach pause state
+
+        const animate = (timestamp) => {
+          if (!startTime) startTime = timestamp;
+          const elapsed = timestamp - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+
+          // Only animate to pause state (0.5 = shorter pause phase)
+          setText1AutoProgress(Math.min(progress * 0.5, 0.5));
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+
+        requestAnimationFrame(animate);
+      }
+    };
+
+    window.addEventListener("scroll", handleScrollStart);
+    return () => window.removeEventListener("scroll", handleScrollStart);
+  }, [hasStartedScrolling, scrollEffectHeight]);
+
   // Update canvas when frame changes
   useEffect(() => {
     if (!canvasRef.current || !images.length || !isLoaded) return;
@@ -339,85 +378,95 @@ export default function ScrollEffect() {
     );
 
     return textSlides.map((slide, index) => {
-      let transform = "translateY(100%)";
+      let transform = "translateY(30%)";
       let opacity = 0;
 
       // Text timing logic with new animation schedule
       if (index === 0) {
-        // Text 1: fade in (0-5%), pause (5-15%), fade out (15-36%)
-        if (scrollProgress <= 0.05) {
-          // Fade in phase
-          const fadeProgress = scrollProgress / 0.05;
-          transform = `translateY(${(1 - fadeProgress) * 100}%)`;
-          opacity = fadeProgress;
-        } else if (scrollProgress <= 0.15) {
-          // Pause phase
-          transform = `translateY(0%)`;
-          opacity = 1;
-        } else if (scrollProgress <= 0.36) {
-          // Fade out phase
-          const fadeProgress = (scrollProgress - 0.15) / 0.21;
-          transform = `translateY(${-fadeProgress * 100}%)`;
-          opacity = 1 - fadeProgress;
+        // Text 1: Hybrid animation - auto fade in + scroll-controlled move up
+        if (hasStartedScrolling) {
+          if (text1AutoProgress <= 0.375) {
+            // Auto fade in phase (0-37.5% of auto animation) - back to longer fade in
+            const fadeProgress = text1AutoProgress / 0.375;
+            transform = `translateY(${(1 - fadeProgress) * 30}%)`;
+            opacity = fadeProgress;
+          } else if (text1AutoProgress < 0.5) {
+            // Auto pause phase (25-50% of auto animation) - shorter pause
+            transform = `translateY(0%)`;
+            opacity = 1;
+          } else {
+            // Auto animation complete, now use scroll progress for move up
+            if (scrollProgress <= 0.15) {
+              // Stay in pause state until user scrolls more - earlier trigger
+              transform = `translateY(0%)`;
+              opacity = 1;
+            } else {
+              // Move up phase controlled by scroll (15%+) - earlier move up
+              const moveProgress = Math.min((scrollProgress - 0.15) / 0.1, 1);
+              transform = `translateY(${-moveProgress * 60}%)`;
+              opacity = 1; // Keep full opacity, no fade
+            }
+          }
         } else {
-          transform = "translateY(-100%)";
+          // Not started scrolling yet, hide text
+          transform = `translateY(30%)`;
           opacity = 0;
         }
       } else if (index === 1) {
-        // Text 2: fade in 3s (15-36%), pause (36-46%), fade out (46-64%)
-        if (scrollProgress < 0.15) {
-          transform = "translateY(100%)";
+        // Text 2: fade in after Text 1 fade out complete (25-35%), pause (35-42%), fade out (42-52%)
+        if (scrollProgress < 0.25) {
+          transform = "translateY(30%)";
           opacity = 0;
-        } else if (scrollProgress <= 0.36) {
-          // Fade in phase
-          const fadeProgress = (scrollProgress - 0.15) / 0.21;
-          transform = `translateY(${(1 - fadeProgress) * 100}%)`;
+        } else if (scrollProgress <= 0.35) {
+          // Fade in phase (starts after Text 1 fade out completes)
+          const fadeProgress = (scrollProgress - 0.25) / 0.1;
+          transform = `translateY(${(1 - fadeProgress) * 30}%)`;
           opacity = fadeProgress;
-        } else if (scrollProgress <= 0.46) {
+        } else if (scrollProgress <= 0.42) {
           // Pause phase
           transform = `translateY(0%)`;
           opacity = 1;
-        } else if (scrollProgress <= 0.64) {
+        } else if (scrollProgress <= 0.52) {
           // Fade out phase
-          const fadeProgress = (scrollProgress - 0.46) / 0.18;
-          transform = `translateY(${-fadeProgress * 100}%)`;
+          const fadeProgress = (scrollProgress - 0.42) / 0.1;
+          transform = `translateY(${-fadeProgress * 60}%)`;
           opacity = 1 - fadeProgress;
         } else {
-          transform = "translateY(-100%)";
+          transform = "translateY(-60%)";
           opacity = 0;
         }
       } else if (index === 2) {
-        // Text 3: fade in 5.3s (35-64%), pause (64-74%), fade out (74-90%)
-        if (scrollProgress < 0.35) {
-          transform = "translateY(100%)";
+        // Text 3: fade in after Text 2 fade out complete (52-62%), pause (62-69%), fade out (69-79%)
+        if (scrollProgress < 0.52) {
+          transform = "translateY(30%)";
           opacity = 0;
-        } else if (scrollProgress <= 0.64) {
-          // Fade in phase
-          const fadeProgress = (scrollProgress - 0.35) / 0.29;
-          transform = `translateY(${(1 - fadeProgress) * 100}%)`;
+        } else if (scrollProgress <= 0.62) {
+          // Fade in phase (starts after Text 2 fade out completes)
+          const fadeProgress = (scrollProgress - 0.52) / 0.1;
+          transform = `translateY(${(1 - fadeProgress) * 30}%)`;
           opacity = fadeProgress;
-        } else if (scrollProgress <= 0.74) {
+        } else if (scrollProgress <= 0.69) {
           // Pause phase
           transform = `translateY(0%)`;
           opacity = 1;
-        } else if (scrollProgress <= 0.90) {
+        } else if (scrollProgress <= 0.79) {
           // Fade out phase
-          const fadeProgress = (scrollProgress - 0.74) / 0.16;
-          transform = `translateY(${-fadeProgress * 100}%)`;
+          const fadeProgress = (scrollProgress - 0.69) / 0.1;
+          transform = `translateY(${-fadeProgress * 60}%)`;
           opacity = 1 - fadeProgress;
         } else {
-          transform = "translateY(-100%)";
+          transform = "translateY(-60%)";
           opacity = 0;
         }
       } else if (index === 3) {
-        // Text 4: fade in 8.3s (74-90%), pause (90-100%)
-        if (scrollProgress < 0.74) {
-          transform = "translateY(100%)";
+        // Text 4: fade in after Text 3 fade out complete (79-89%), pause (89-100%)
+        if (scrollProgress < 0.79) {
+          transform = "translateY(30%)";
           opacity = 0;
-        } else if (scrollProgress <= 0.90) {
-          // Fade in phase
-          const fadeProgress = (scrollProgress - 0.74) / 0.16;
-          transform = `translateY(${(1 - fadeProgress) * 100}%)`;
+        } else if (scrollProgress <= 0.89) {
+          // Fade in phase (starts after Text 3 fade out completes)
+          const fadeProgress = (scrollProgress - 0.79) / 0.1;
+          transform = `translateY(${(1 - fadeProgress) * 30}%)`;
           opacity = fadeProgress;
         } else {
           // Pause phase (no fade out, stays visible)
@@ -426,18 +475,71 @@ export default function ScrollEffect() {
         }
       }
 
+      // Staggered fade for title and subtitle
+      let titleOpacity = 0;
+      let titleTransform = "translateY(30%)";
+      let subtitleOpacity = 0;
+      let subtitleTransform = "translateY(30%)";
+
+      // Title appears first (starts 0.02 earlier than container fade in)
+      const titleProgress = Math.min(
+        Math.max(
+          (scrollProgress -
+            (index === 0
+              ? 0
+              : index === 1
+              ? 0.23  // Text 2 container starts at 25%, title at 23%
+              : index === 2
+              ? 0.50  // Text 3 container starts at 52%, title at 50%
+              : 0.77)) /  // Text 4 container starts at 79%, title at 77%
+            0.03,
+          0
+        ),
+        1
+      );
+      titleOpacity = titleProgress;
+      titleTransform = `translateY(${(1 - titleProgress) * 30}%)`;
+
+      // Subtitle appears after title (starts 0.02 later)
+      const subtitleProgress = Math.min(
+        Math.max(
+          (scrollProgress -
+            (index === 0
+              ? 0.02
+              : index === 1
+              ? 0.27  // Text 2 title at 23%, subtitle at 27%
+              : index === 2
+              ? 0.54  // Text 3 title at 50%, subtitle at 54%
+              : 0.81)) /  // Text 4 title at 77%, subtitle at 81%
+            0.03,
+          0
+        ),
+        1
+      );
+      subtitleOpacity = subtitleProgress;
+      subtitleTransform = `translateY(${(1 - subtitleProgress) * 30}%)`;
+
       return (
         <div
           key={index}
           className="text-slide"
           style={{
             transform,
-            opacity,
+            opacity: index === 0
+              ? opacity // Text 1: Use container opacity (whole text fade out together)
+              : Math.max(titleOpacity, subtitleOpacity) > 0 ? 1 : 0, // Other texts: Use staggered
             transition: "none",
           }}
         >
           <div className="slide-content">
-            <h1 className="heading-1--no-margin slide-title">
+            <h1
+              className="heading-1--no-margin slide-title"
+              style={{
+                opacity: index === 0 ? 1 : titleOpacity, // Text 1: No individual fade, Others: Staggered
+                transform: index === 0 ? "translateY(0%)" : titleTransform,
+                transition: "none",
+              }}
+            >
               {slide.title}
               {slide.highlight && (
                 <span className="slide-highlight">{slide.highlight}</span>
@@ -449,6 +551,11 @@ export default function ScrollEffect() {
                   ? "heading-1--no-margin slide-subtitle"
                   : "bodytext-3--no-margin slide-subtitle"
               }
+              style={{
+                opacity: index === 0 ? 1 : subtitleOpacity, // Text 1: No individual fade, Others: Staggered
+                transform: index === 0 ? "translateY(0%)" : subtitleTransform,
+                transition: "none",
+              }}
             >
               {slide.subtitle}
             </p>

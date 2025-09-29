@@ -5,8 +5,8 @@ const Contact = () => {
   return (
     <section className="contact">
       <div className="contact-header">
-        <h2 className="contact-title">CONTACT US</h2>
-        <p className="contact-subtitle">
+        <h2 className="contact-title heading-3--no-margin">CONTACT US</h2>
+        <p className="contact-subtitle bodytext-4--no-margin">
           Have a question or concern? Our team is standing by to assist
         </p>
       </div>
@@ -21,7 +21,7 @@ const Contact = () => {
             className="contact-image"
           />
           <div className="contact-overlay">
-            <h3 className="contact-method">LIVE CHAT</h3>
+            <h3 className="contact-method bodytext-1--no-margin">LIVE CHAT</h3>
             <p className="contact-details">Available Mon - Fri 09:00-21:00</p>
           </div>
         </div>
@@ -33,7 +33,7 @@ const Contact = () => {
             className="contact-image"
           />
           <div className="contact-overlay">
-            <h3 className="contact-method">PHONE CALL</h3>
+            <h3 className="contact-method bodytext-1--no-margin">PHONE CALL</h3>
             <p className="contact-details">
               TEL: +44 (0) 207 758 9780
               <br />
@@ -49,7 +49,7 @@ const Contact = () => {
             className="contact-image"
           />
           <div className="contact-overlay">
-            <h3 className="contact-method">EMAIL</h3>
+            <h3 className="contact-method bodytext-1--no-margin">EMAIL</h3>
             <p className="contact-details">
               support@mirrorfuturadiamond.com
               <br />
@@ -65,7 +65,7 @@ const Contact = () => {
             className="contact-image"
           />
           <div className="contact-overlay">
-            <h3 className="contact-method">APPOINTMENT</h3>
+            <h3 className="contact-method bodytext-1--no-margin">APPOINTMENT</h3>
             <p className="contact-details">
               In-store Appointments or Virtual Consultation
               <br />

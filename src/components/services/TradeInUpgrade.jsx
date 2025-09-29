@@ -5,29 +5,29 @@ const TradeInUpgrade = () => {
   return (
     <div className="trade-in-upgrade">
       <div className="intro-section">
-        <h2>Trade-In & Upgrade Programs</h2>
-        <p>
+        <h3 className="heading-3--no-margin">Trade-In & Upgrade Programs</h3>
+        <p className="bodytext-3--no-margin">
           Mirror's "Reclaim & Renew" program allows you to trade in eligible
           pieces in the future toward upgraded designs— a promise of continuous
           evolution in your jewelry journey.
         </p>
         <p className="availability-note">
-          <em>Details available in showroom or by inquiry.</em>
+          <em className="bodytext-5--no-margin">Details available in showroom or by inquiry.</em>
         </p>
       </div>
 
       <div className="how-it-works-section">
-        <h2>How it works</h2>
+        <h3 className="heading-3--no-margin">How it works</h3>
 
         <div className="process-item">
           <ul>
             <li>
-              <p>
-                <strong>Trade-In Value:</strong>
+              <p className="bodytext-3--no-margin">
+                <strong className="bodytext-2--no-margin">Trade-In Value:</strong>
               </p>
               <ul>
                 <li>
-                  <p>
+                  <p className="bodytext-3--no-margin">
                     When you're ready for a new design, bring in your eligible
                     Mirror jewelry. We will assess its condition and provide a
                     trade-in value, which can be applied as credit toward your
@@ -37,21 +37,21 @@ const TradeInUpgrade = () => {
               </ul>
             </li>
             <li>
-              <p>
-                <strong>Eligibility Criteria</strong>
+              <p className="bodytext-3--no-margin">
+                <strong className="bodytext-2--no-margin">Eligibility Criteria</strong>
               </p>
               <ul>
                 <li>
-                  <p>Must be a piece originally purchased from Mirror</p>
+                  <p className="bodytext-3--no-margin">Must be a piece originally purchased from Mirror</p>
                 </li>
                 <li>
-                  <p>
+                  <p className="bodytext-3--no-margin">
                     Jewelry must pass a quality and authenticity inspection by
                     our specialists
                   </p>
                 </li>
                 <li>
-                  <p>
+                  <p className="bodytext-3--no-margin">
                     Trade-in is only applicable toward the purchase of a new
                     piece of greater or equal value
                   </p>
@@ -59,12 +59,12 @@ const TradeInUpgrade = () => {
               </ul>
             </li>
             <li>
-              <p>
-                <strong>Upgrade Opportunities</strong>
+              <p className="bodytext-3--no-margin">
+                <strong className="bodytext-2--no-margin">Upgrade Opportunities</strong>
               </p>
               <ul>
                 <li>
-                  <p>
+                  <p className="bodytext-3--no-margin">
                     Choose from our latest collections or create a custom piece.
                     The program allows you to evolve your style while retaining
                     the value of your original piece.
@@ -73,12 +73,12 @@ const TradeInUpgrade = () => {
               </ul>
             </li>
             <li>
-              <p>
-                <strong>Sustainable Luxury</strong>
+              <p className="bodytext-3--no-margin">
+                <strong className="bodytext-2--no-margin">Sustainable Luxury</strong>
               </p>
               <ul>
                 <li>
-                  <p>
+                  <p className="bodytext-3--no-margin">
                     Reclaim & Renew is also a commitment to
                     sustainability—giving your existing jewelry a second life
                     and reducing waste while enhancing your collection.
@@ -91,7 +91,7 @@ const TradeInUpgrade = () => {
 
         <div className="note-section">
           <p className="note-text">
-            <em>
+            <em className="bodytext-5--no-margin">
               Full program details, eligibility assessments, and upgrade
               consultations are available at our showroom or by direct inquiry.
               Appointments are recommended.
