@@ -55,6 +55,103 @@ body {
   overflow-x: hidden;
 }
 
+/* Layer0 - rotating background layer - 192x192px */
+.mirror-exp::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 192px;
+  height: 192px;
+  background-image: url('/universeSection/layer0.png');
+  background-size: 192px 192px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  animation: rotateClockwise 8s linear infinite;
+}
+
+/* Layer1 - rotating background layer - 288x288px */
+.mirror-exp__layer1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 288px;
+  height: 288px;
+  background-image: url('/universeSection/layer1.png');
+  background-size: 288px 288px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  animation: rotateCounterClockwise 8.8s linear infinite;
+}
+
+/* Layer2 - rotating background layer - 384x384px */
+.mirror-exp__layer2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 384px;
+  height: 384px;
+  background-image: url('/universeSection/layer2.png');
+  background-size: 384px 384px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  animation: rotateClockwise 9.6s linear infinite;
+}
+
+/* Layer3 - rotating background layer - 480x480px */
+.mirror-exp__layer3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 480px;
+  height: 480px;
+  background-image: url('/universeSection/layer3.png');
+  background-size: 480px 480px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  animation: rotateCounterClockwise 10.4s linear infinite;
+}
+
+/* Layer4 - rotating background layer - 576x576px */
+.mirror-exp__layer4 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 576px;
+  height: 576px;
+  background-image: url('/universeSection/layer4.png');
+  background-size: 576px 576px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  animation: rotateClockwise 11.2s linear infinite;
+}
+
+/* Layer5 - rotating background layer - 672x672px */
+.mirror-exp__layer5 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 672px;
+  height: 672px;
+  background-image: url('/universeSection/layer5.png');
+  background-size: 672px 672px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  animation: rotateCounterClockwise 12s linear infinite;
+}
+
 .mirror-exp::before {
   content: '';
   position: absolute;
@@ -186,6 +283,7 @@ body {
   background-repeat: no-repeat;
   transform: translate(50%, -50%);
   pointer-events: none;
+  z-index: 9;
 }
 
 /* Meteoroid orbit container for layer2 - rotates clockwise */
@@ -217,6 +315,7 @@ body {
   background-repeat: no-repeat;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  z-index: 9;
 }
 
 /* Meteoroid orbit container for layer4 - rotates clockwise */
@@ -248,6 +347,7 @@ body {
   background-repeat: no-repeat;
   transform: translate(50%, -50%);
   pointer-events: none;
+  z-index: 9;
 }
 
 /* Meteoroid at 120° on layer4 circle - radius 186px */
@@ -265,6 +365,7 @@ body {
   background-repeat: no-repeat;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  z-index: 9;
 }
 
 /* Meteoroid at 240° on layer4 circle - radius 186px */
@@ -282,6 +383,7 @@ body {
   background-repeat: no-repeat;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  z-index: 9;
 }
 
 /* Heart-senses at 45° on layer4 circle - stationary */
@@ -295,7 +397,7 @@ body {
   height: auto;
   transform: translate(-50%, -50%);
   pointer-events: auto;
-  z-index: 13;
+  z-index: 17;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -334,7 +436,7 @@ body {
   width: 36px;
   height: auto;
   transform: translate(-50%, -50%);
-  pointer-events: none;
+  pointer-events: auto;
   z-index: 12;
   display: flex;
   flex-direction: column;
@@ -375,7 +477,7 @@ body {
   height: auto;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  z-index: 11;
+  z-index: 17;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -470,6 +572,7 @@ body {
 
 .mirror-exp__mirror,
 .mirror-exp__experience {
+  line-height: 1 !important;
   font-family: "BT Beau Sans";
   font-size: 16px;
   font-style: normal;
@@ -487,12 +590,20 @@ body {
 @media screen and (max-width: 1023px) {
   .mirror-exp__text {
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
     text-align: center;
   }
 
   .mirror-exp__luxury-text {
     width: 62%;
+  }
+
+  /* Enable clicking on interactive elements for tablet */
+  .mirror-exp__heart-senses,
+  .mirror-exp__circle-presence,
+  .mirror-exp__droplet-time,
+  .mirror-exp__rect-space {
+    pointer-events: auto;
   }
 
   .mirror-exp__mirror,
@@ -510,9 +621,9 @@ body {
 
   /* Update rotating layer0 size for tablet */
   .mirror-exp::before {
-    width: 192px;
-    height: 192px;
-    background-size: 192px 192px;
+    width: 132px;
+    height: 132px;
+    background-size: 132px 132px;
   }
 }
 
@@ -525,10 +636,9 @@ body {
 
   /* Update luxury text for desktop */
   .mirror-exp__luxury-text {
-    top: 80px;
+    top: 0px;
     width: 47%;
     font-size: 20px;
-    white-space: nowrap;
   }
 
   /* Layer 0 - updated size for desktop (180x180px) */
@@ -750,5 +860,20 @@ body {
 
   .mirror-exp__luxury-text {
     width: 77%;
+  }
+
+  /* Enable clicking on interactive elements for mobile */
+  .mirror-exp__heart-senses,
+  .mirror-exp__circle-presence,
+  .mirror-exp__droplet-time,
+  .mirror-exp__rect-space {
+    pointer-events: auto;
+  }
+
+  /* Override tablet layer0 size back to mobile size */
+  .mirror-exp::before {
+    width: 132px;
+    height: 132px;
+    background-size: 132px 132px;
   }
 }

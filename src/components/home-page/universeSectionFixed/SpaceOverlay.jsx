@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import './SpaceOverlay.css';
 import StarlightEffect from '../universeSection/StarlightEffect';
+import ShineGlassButton from '../../common/button/ShineGlassButton';
 
 const SpaceOverlay = ({ isVisible, onClose }) => {
     useEffect(() => {
@@ -23,6 +24,24 @@ const SpaceOverlay = ({ isVisible, onClose }) => {
     return (
         <div className="space-overlay" onClick={onClose}>
             <div className="space-overlay__content" onClick={(e) => e.stopPropagation()}>
+                {/* Close Button */}
+                <div className="space-overlay__close-button">
+                    <ShineGlassButton
+                        onClick={onClose}
+                        theme="footer"
+                        width={44}
+                        height={44}
+                        className="space-overlay__close-btn"
+                    >
+                        <img
+                            src="/src/assets/images/close-x-icon.svg"
+                            alt="Close"
+                            width="20"
+                            height="20"
+                        />
+                    </ShineGlassButton>
+                </div>
+
                 <div className="space-overlay__top-text">
                     <div className="space-overlay__top-line">
                         <span className="bodytext-6--no-margin">With</span>
@@ -44,11 +63,11 @@ const SpaceOverlay = ({ isVisible, onClose }) => {
                     </div>
                 </div>
                 <div className="space-overlay__starlight-up">
-                    <StarlightEffect direction="falling" height={150} />
+                    <StarlightEffect direction="falling" height={120} />
                 </div>
                 <h2 className="space-overlay__title heading2--no-margin">Space</h2>
                 <div className="space-overlay__starlight-down">
-                    <StarlightEffect direction="falling" height={150} />
+                    <StarlightEffect direction="falling" height={120} />
                 </div>
                 <div className="space-overlay__bottom-text">
                     <div className="space-overlay__bottom-line">
