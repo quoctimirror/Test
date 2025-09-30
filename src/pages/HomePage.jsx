@@ -4,7 +4,7 @@ import ImmersiveShowroom from "@components/home-page/immersiveShowroom/Immersive
 import BrandPillars from "@components/home-page/brandPillars/BrandPillars";
 import Lumex91 from "@components/home-page/lumex91/Lumex91";
 // import UniverseSection from "@components/home-page/universeSection/MirrorExp";
-import UniverseSection from "@components/home-page/universeSectionFixed/MirrorExp";
+import UniverseSection from "@components/home-page/universeSection/MirrorExp";
 import FutureDiamond from "@components/home-page/futureDiamond/FutureDiamond";
 import HoverExpandSection from "@components/home-page/hoverExpandSection/HoverExpandSection";
 import ContactUs from "@components/contactUs/ContactUs";

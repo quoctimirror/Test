@@ -15,9 +15,9 @@ const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
 const SupportPage = lazy(() => import("@pages/SupportPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
-const UniverseSection = lazy(() =>
-  import("@components/home-page/universeSectionFixed/MirrorExp.jsx")
-);
+// const UniverseSection = lazy(() =>
+//   import("@components/home-page/universeSection/MirrorExp.jsx")
+// );
 const HoverExpandSection = lazy(() =>
   import("@components/home-page/hoverExpandSection/HoverExpandSection.jsx")
 );
@@ -129,7 +129,7 @@ export default function AppRoutes() {
           />
 
           {/* for observing UI universe-section final */}
-          <Route path="/universe-section" element={<UniverseSection />} />
+          {/* <Route path="/universe-section" element={<UniverseSection />} /> */}
 
           <Route path="/hover-expand" element={<HoverExpandSection />} />
 

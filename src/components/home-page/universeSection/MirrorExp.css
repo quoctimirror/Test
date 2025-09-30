@@ -1,744 +1,885 @@
-/* MirrorExp.css */
+/* Keyframe animation for rotation */
+@keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
 
-/* Bodytext1 section styling */
-.bodytext1-section {
-    position: absolute;
-    top: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    text-align: center;
-    width: 100%;
-    margin-bottom: 30px;
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
-.bodytext1 {
-    color: var(--gray-3, #797979);
+/* Keyframe animation for counter-rotation */
+@keyframes rotate-reverse {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+/* Remove global scroll prevention - handle locally in component */
+
+/* Luxury text styling */
+.mirror-exp__luxury-text {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 345px;
+  color: #797979;
+  text-align: center;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  z-index: 20;
+}
+
+/* Mobile First: 0-425px */
+.mirror-exp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  text-align: center;
+  background-color: #000000;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Layer0 - rotating background layer - 192x192px */
+.mirror-exp::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 192px;
+  height: 192px;
+  background-image: url('/universeSection/layer0.png');
+  background-size: 192px 192px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  animation: rotateClockwise 8s linear infinite;
+}
+
+/* Layer1 - rotating background layer - 288x288px */
+.mirror-exp__layer1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 288px;
+  height: 288px;
+  background-image: url('/universeSection/layer1.png');
+  background-size: 288px 288px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  animation: rotateCounterClockwise 8.8s linear infinite;
+}
+
+/* Layer2 - rotating background layer - 384x384px */
+.mirror-exp__layer2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 384px;
+  height: 384px;
+  background-image: url('/universeSection/layer2.png');
+  background-size: 384px 384px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  animation: rotateClockwise 9.6s linear infinite;
+}
+
+/* Layer3 - rotating background layer - 480x480px */
+.mirror-exp__layer3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 480px;
+  height: 480px;
+  background-image: url('/universeSection/layer3.png');
+  background-size: 480px 480px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  animation: rotateCounterClockwise 10.4s linear infinite;
+}
+
+/* Layer4 - rotating background layer - 576x576px */
+.mirror-exp__layer4 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 576px;
+  height: 576px;
+  background-image: url('/universeSection/layer4.png');
+  background-size: 576px 576px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  animation: rotateClockwise 11.2s linear infinite;
+}
+
+/* Layer5 - rotating background layer - 672x672px */
+.mirror-exp__layer5 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 672px;
+  height: 672px;
+  background-image: url('/universeSection/layer5.png');
+  background-size: 672px 672px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  animation: rotateCounterClockwise 12s linear infinite;
+}
+
+.mirror-exp::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 132px;
+  height: 132px;
+  background-image: url('/universeSection/layer0.png');
+  background-size: 132px 132px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate 8s linear infinite;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.mirror-exp::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 192px;
+  height: 192px;
+  background-image: url('/universeSection/layer1.png');
+  background-size: 192px 192px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate-reverse 8.8s linear infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Layer5 - counter-clockwise, lớn nhất */
+.mirror-exp__layer5 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 432px;
+  height: 432px;
+  background-image: url('/universeSection/layer5.png');
+  background-size: 432px 432px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate-reverse 12s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Layer4 - clockwise */
+.mirror-exp__layer4 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 372px;
+  height: 372px;
+  background-image: url('/universeSection/layer4.png');
+  background-size: 372px 372px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate 11.2s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Layer3 - counter-clockwise */
+.mirror-exp__layer3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 312px;
+  height: 312px;
+  background-image: url('/universeSection/layer3.png');
+  background-size: 312px 312px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate-reverse 10.4s linear infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Layer2 - clockwise */
+.mirror-exp__layer2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 252px;
+  height: 252px;
+  background-image: url('/universeSection/layer2.png');
+  background-size: 252px 252px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  animation: rotate 9.6s linear infinite;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Meteoroid orbit container - rotates to move meteoroids around circle */
+.mirror-exp__meteoroid-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 192px;
+  /* diameter of layer1 circle */
+  height: 192px;
+  transform: translate(-50%, -50%);
+  animation: rotate-reverse 8.8s linear infinite;
+  /* same as layer1 */
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Meteoroid at 3 o'clock position on layer1 circle */
+.mirror-exp__meteoroid-3h {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  /* at edge of orbit container (3 o'clock) */
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(50%, -50%);
+  pointer-events: none;
+  z-index: 9;
+}
+
+/* Meteoroid orbit container for layer2 - rotates clockwise */
+.mirror-exp__meteoroid-orbit-layer2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 252px;
+  /* diameter of layer2 circle */
+  height: 252px;
+  transform: translate(-50%, -50%);
+  animation: rotate 9.6s linear infinite;
+  /* same as layer2 - clockwise */
+  pointer-events: none;
+  z-index: 14;
+}
+
+/* Meteoroid at 12 o'clock position on layer2 circle */
+.mirror-exp__meteoroid-layer2-12h {
+  position: absolute;
+  top: 0;
+  /* at top edge of orbit container (12 o'clock) */
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9;
+}
+
+/* Meteoroid orbit container for layer4 - rotates clockwise */
+.mirror-exp__meteoroid-orbit-layer4 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 372px;
+  /* diameter of layer4 circle */
+  height: 372px;
+  transform: translate(-50%, -50%);
+  animation: rotate 11.2s linear infinite;
+  /* same as layer4 - clockwise */
+  pointer-events: none;
+  z-index: 11;
+}
+
+/* Meteoroid at 0° (3 o'clock) on layer4 circle */
+.mirror-exp__meteoroid-layer4-0deg {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  /* cos(0°) = 1, sin(0°) = 0 */
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(50%, -50%);
+  pointer-events: none;
+  z-index: 9;
+}
+
+/* Meteoroid at 120° on layer4 circle - radius 186px */
+.mirror-exp__meteoroid-layer4-120deg {
+  position: absolute;
+  top: calc(50% - 161px);
+  /* 50% + radius * sin(120°) = 50% - 161px */
+  left: calc(50% - 93px);
+  /* 50% + radius * cos(120°) = 50% - 93px */
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9;
+}
+
+/* Meteoroid at 240° on layer4 circle - radius 186px */
+.mirror-exp__meteoroid-layer4-240deg {
+  position: absolute;
+  top: calc(50% + 161px);
+  /* 50% + radius * sin(240°) = 50% + 161px */
+  left: calc(50% - 93px);
+  /* 50% + radius * cos(240°) = 50% - 93px */
+  width: 20px;
+  height: 20px;
+  background-image: url('/universeSection/meteoroid.svg');
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9;
+}
+
+/* Heart-senses at 45° on layer4 circle - stationary */
+.mirror-exp__heart-senses {
+  position: absolute;
+  top: calc(50% - 160px);
+  /* 50% - radius * sin(45°) = 50% - 132px */
+  left: calc(50% + 120px);
+  /* 50% + radius * cos(45°) = 50% + 132px + 10px adjustment */
+  width: 36px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  z-index: 17;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mirror-exp__heart-senses::after {
+  content: '';
+  width: 36px;
+  height: 36px;
+  background-image: url('/universeSection/heart-senses.png');
+  background-size: 36px 36px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mirror-exp__sense-text {
+  font-family: "BT Beau Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Circle-presence at 135° (between 9-10 o'clock) on layer3 circle - stationary */
+.mirror-exp__circle-presence {
+  position: absolute;
+  top: calc(50% - 110px);
+  /* 50% - radius * sin(135°) = 50% - 110px */
+  left: calc(50% - 110px - 10px);
+  /* 50% + radius * cos(135°) = 50% - 110px */
+  width: 36px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mirror-exp__circle-presence::after {
+  content: '';
+  width: 36px;
+  height: 36px;
+  background-image: url('/universeSection/circle-presence.png');
+  background-size: 36px 36px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mirror-exp__presence-text {
+  font-family: "BT Beau Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Droplet-time at 225° on layer2 circle - stationary */
+.mirror-exp__droplet-time {
+  position: absolute;
+  top: calc(50% + 79px);
+  /* 50% - radius * sin(225°) = 50% + 126 * 0.707 = 50% + 89px - 10px adjustment */
+  left: calc(50% - 89px);
+  /* 50% + radius * cos(225°) = 50% + 126 * (-0.707) = 50% - 89px */
+  width: 28px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 17;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mirror-exp__droplet-time::after {
+  content: '';
+  width: 28px;
+  height: 42px;
+  background-image: url('/universeSection/droplet-time.png');
+  background-size: 28px 42px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mirror-exp__time-text {
+  font-family: "BT Beau Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Rect-space at 40° on layer3 circle - stationary */
+.mirror-exp__rect-space {
+  position: absolute;
+  top: calc(50% + 90px);
+  /* 50% - radius * sin(40°) = 50% + 100px - 10px adjustment */
+  left: calc(50% + 119px);
+  /* 50% + radius * cos(40°) = 50% + 119px */
+  width: 42px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mirror-exp__rect-space::after {
+  content: '';
+  width: 42px;
+  height: 42px;
+  background-image: url('/universeSection/rect-space.png');
+  background-size: 42px 42px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mirror-exp__space-text {
+  font-family: "BT Beau Sans";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+  align-self: center;
+  white-space: nowrap;
+}
+
+/* Center dot - điểm đỏ ở giữa */
+/* .mirror-exp__center-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 20;
+} */
+
+.mirror-exp__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
+  position: relative;
+  z-index: 10;
+  text-align: center;
+}
+
+.mirror-exp__mirror,
+.mirror-exp__experience {
+  line-height: 1 !important;
+  font-family: "BT Beau Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  /* 19.2px */
+  text-align: center;
+  background: linear-gradient(227deg, #000 -14.38%, #EC3667 25.96%, #F6F6F6 74.05%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Tablet: 426px-1023px */
+@media screen and (max-width: 1023px) {
+  .mirror-exp {
+    overflow: hidden;
+  }
+
+  .mirror-exp__text {
+    flex-direction: column;
+    gap: 4px;
     text-align: center;
+  }
+
+  .mirror-exp__luxury-text {
+    width: 62%;
+  }
+
+  /* Enable clicking on interactive elements for tablet */
+  .mirror-exp__heart-senses,
+  .mirror-exp__circle-presence,
+  .mirror-exp__droplet-time,
+  .mirror-exp__rect-space {
+    pointer-events: auto;
+  }
+
+  .mirror-exp__mirror,
+  .mirror-exp__experience {
     font-family: "BT Beau Sans";
-    font-size: 20px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 400;
-    line-height: 120%; /* 24px */
+    line-height: 120%;
+    background: linear-gradient(227deg, #000 -14.38%, #EC3667 25.96%, #F6F6F6 74.05%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Update rotating layer0 size for tablet */
+  .mirror-exp::before {
+    width: 132px;
+    height: 132px;
+    background-size: 132px 132px;
+  }
 }
 
-/* ===== UNIFIED OVERLAY ANIMATIONS ===== */
-
-/* Base overlay styles */
-.base-overlay {
-    position: fixed;
-    width: 100vw;
+/* Desktop: 1024px+ */
+@media (min-width: 1024px) {
+  .mirror-exp {
     height: 100vh;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    cursor: pointer;
     overflow: hidden;
-    border: none;
-    background-color: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(8px);
-    opacity: 0;
-    transform: scale(0);
-    transform-origin: var(--origin-x, 50%) var(--origin-y, 50%);
-    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
+  }
 
-/* Overlay opening animation */
-.base-overlay.overlay-open {
-    opacity: 1 !important;
-    transform: scale(1) !important;
-}
+  /* Update luxury text for desktop */
+  .mirror-exp__luxury-text {
+    top: 0px;
+    width: 47%;
+    font-size: 20px;
+  }
 
-/* Overlay closing animation */
-.base-overlay.overlay-closing {
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.8s cubic-bezier(0.55, 0.055, 0.675, 0.19);
-}
+  /* Layer 0 - updated size for desktop (180x180px) */
+  .mirror-exp::before {
+    width: 180px;
+    height: 180px;
+    background-size: 180px 180px;
+  }
 
-@keyframes rotateClockwise {
-    from {
-        transform: rotate(0deg);
-    }
+  /* Layer 1 - updated size for desktop (290x290px) */
+  .mirror-exp::after {
+    width: 290px;
+    height: 290px;
+    background-size: 290px 290px;
+  }
 
-    to {
-        transform: rotate(360deg);
-    }
-}
+  /* Layer 2 - updated size for desktop (400x400px) */
+  .mirror-exp__layer2 {
+    width: 400px;
+    height: 400px;
+    background-size: 400px 400px;
+  }
 
-@keyframes rotateCounterClockwise {
-    from {
-        transform: rotate(0deg);
-    }
+  /* Layer 3 - updated size for desktop (510x510px) */
+  .mirror-exp__layer3 {
+    width: 510px;
+    height: 510px;
+    background-size: 510px 510px;
+  }
 
-    to {
-        transform: rotate(-360deg);
-    }
-}
+  /* Layer 4 - updated size for desktop (620x620px) */
+  .mirror-exp__layer4 {
+    width: 620px;
+    height: 620px;
+    background-size: 620px 620px;
+  }
 
-.mirror-exp-container {
-    background-color: #000000;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
+  /* Layer 5 - updated size for desktop (730x730px) */
+  .mirror-exp__layer5 {
+    width: 730px;
+    height: 730px;
+    background-size: 730px 730px;
+  }
 
-.layer {
-    position: absolute;
-    width: auto;
-    transform-origin: center center;
-}
+  /* Meteoroid orbit containers - updated for desktop */
+  /* Layer 1 meteoroid orbit - 290px diameter */
+  .mirror-exp__meteoroid-orbit {
+    width: 290px;
+    height: 290px;
+  }
 
-.layer0 {
-    z-index: 6;
-    animation: rotateClockwise 3.5s linear infinite;
-}
+  /* Layer 2 meteoroid orbit - 400px diameter */
+  .mirror-exp__meteoroid-orbit-layer2 {
+    width: 400px;
+    height: 400px;
+  }
 
-.layer1 {
-    position: absolute;
-    width: auto;
-    transform-origin: center center;
-    z-index: 5;
-    animation: rotateClockwise 10s linear infinite;
-}
+  /* Layer 4 meteoroid orbit - 620px diameter */
+  .mirror-exp__meteoroid-orbit-layer4 {
+    width: 620px;
+    height: 620px;
+  }
 
-.layer2 {
-    position: absolute;
-    width: auto;
-    transform-origin: center center;
-    z-index: 4;
-    animation: rotateCounterClockwise 20s linear infinite;
-}
+  /* Update meteoroid positions on layer4 for desktop (radius 310px) */
+  /* Meteoroid at 120° - radius 310px */
+  .mirror-exp__meteoroid-layer4-120deg {
+    top: calc(50% - 268px);
+    /* 50% - radius * sin(120°) = 50% - 310 * 0.866 = 50% - 268px */
+    left: calc(50% - 155px);
+    /* 50% + radius * cos(120°) = 50% + 310 * (-0.5) = 50% - 155px */
+  }
 
-.layer3 {
-    z-index: 3;
-    animation: rotateClockwise 2s linear infinite;
-}
+  /* Meteoroid at 240° - radius 310px */
+  .mirror-exp__meteoroid-layer4-240deg {
+    top: calc(50% + 268px);
+    /* 50% + radius * sin(240°) = 50% + 310 * (-0.866) = 50% + 268px */
+    left: calc(50% - 155px);
+    /* 50% + radius * cos(240°) = 50% + 310 * (-0.5) = 50% - 155px */
+  }
 
-.layer4 {
-    z-index: 2;
-    animation: rotateCounterClockwise 4s linear infinite;
-}
+  /* Update planet positions for desktop */
+  /* Heart-senses at 45° on layer2 - radius 200px */
+  .mirror-exp__heart-senses {
+    top: calc(50% - 141px);
+    /* 50% - radius * sin(45°) = 50% - 200 * 0.707 = 50% - 141px */
+    left: calc(50% + 150px);
+    /* 50% + radius * cos(45°) = 50% + 200 * 0.707 = 50% + 141px */
+  }
 
-.layer5 {
-    position: absolute;
-    width: auto;
-    transform-origin: center center;
-    z-index: 1;
-    animation: rotateClockwise 30s linear infinite;
-}
+  /* Circle-presence at 135° on layer3 - radius 255px */
+  .mirror-exp__circle-presence {
+    top: calc(50% - 180px);
+    /* 50% - radius * sin(135°) = 50% - 255 * 0.707 = 50% - 180px */
+    left: calc(50% - 190px);
+    /* 50% + radius * cos(135°) = 50% + 255 * (-0.707) = 50% - 180px */
+  }
 
-.layer5>img:first-child {
-    width: auto;
+  /* Droplet-time at 225° on layer2 - radius 200px */
+  .mirror-exp__droplet-time {
+    top: calc(50% + 130px);
+    /* 50% + radius * sin(225°) = 50% + 200 * (-0.707) = 50% + 141px */
+    left: calc(50% - 141px);
+    /* 50% + radius * cos(225°) = 50% + 200 * (-0.707) = 50% - 141px */
+  }
+
+  /* Rect-space at 4 o'clock (120°) on layer4 - radius 310px */
+  .mirror-exp__rect-space {
+    top: calc(50% + 155px);
+    /* 50% + radius * sin(120°) = 50% + 310 * 0.5 = 50% + 155px */
+    left: calc(50% + 264px);
+    /* 50% + radius * cos(120°) = 50% + 310 * 0.866 = 50% + 268px */
+  }
+
+  /* Update planet icon sizes for desktop */
+  /* Heart-senses and Circle-presence - 60x60px */
+  .mirror-exp__heart-senses,
+  .mirror-exp__circle-presence {
+    width: 60px;
     height: auto;
-}
+  }
 
-.mirror-experience-text {
-    position: absolute;
-    z-index: 7;
-}
+  .mirror-exp__heart-senses::after,
+  .mirror-exp__circle-presence::after {
+    width: 60px;
+    height: 60px;
+    background-size: 60px 60px;
+  }
 
-.circle-presence {
-    position: absolute;
-    width: auto;
-    left: calc(50% + min(18vh, 18vw));
-    top: calc(50% - min(6.5vh, 6.5vw));
-    transform: translate(-50%, -50%);
-    z-index: 8;
-}
+  /* Rect-space - 70x70px */
+  .mirror-exp__rect-space {
+    width: 70px;
+    height: auto;
+  }
 
+  .mirror-exp__rect-space::after {
+    width: 70px;
+    height: 70px;
+    background-size: 70px 70px;
+  }
 
-.heart-senses {
-    position: absolute;
-    width: auto;
-    left: calc(50% - min(15vh, 15vw));
-    top: calc(50% - min(30vh, 30vw));
-    transform: translate(-50%, -50%);
-    z-index: 8;
-}
+  /* Droplet-time slightly different ratio */
+  .mirror-exp__droplet-time {
+    width: 45px;
+    height: auto;
+  }
 
-.droplet-time {
-    position: absolute;
-    width: auto;
-    left: calc(50% - min(25vh, 25vw));
-    top: calc(50% + min(13.5vh, 13.5vw));
-    transform: translate(-50%, -50%);
-    z-index: 8;
-}
+  .mirror-exp__droplet-time::after {
+    width: 45px;
+    height: 67px;
+    background-size: 45px 67px;
+  }
 
-.rect-space {
-    position: absolute;
-    width: auto;
-    left: calc(50% + min(22vh, 22vw));
-    top: calc(50% + min(25vh, 25vw));
-    transform: translate(-50%, -50%);
-    z-index: 8;
-}
+  /* Update all meteoroid sizes for desktop - 24x24px */
+  .mirror-exp__meteoroid-3h,
+  .mirror-exp__meteoroid-layer2-12h,
+  .mirror-exp__meteoroid-layer4-0deg,
+  .mirror-exp__meteoroid-layer4-120deg,
+  .mirror-exp__meteoroid-layer4-240deg {
+    width: 24px;
+    height: 24px;
+    background-size: 24px 24px;
+  }
 
-.meteoroid-layer-1 {
-    position: absolute;
-    width: auto;
-}
-
-
-.meteoroid-1 {
-    position: absolute;
-    left: calc(50% - min(13vh, 13vw));
-    top: calc(50%);
-    transform: translate(-50%, -50%);
-    height: 20px;
-}
-
-.meteoroid-2 {
-    position: absolute;
-    left: calc(50% + min(13vh, 13vw));
-    top: calc(51%);
-    transform: translate(-50%, -50%);
-    height: 20px;
-}
-
-.meteoroid-layer-2 {
-    position: absolute;
-    width: auto;
-}
-
-.meteoroid-layer2-1 {
-    position: absolute;
-    left: calc(50% + min(17.3vh, 17.3vw));
-    top: calc(52%);
-    transform: translate(-50%, -50%);
-}
-
-.meteoroid-layer2-2 {
-    position: absolute;
-    left: calc(50% - min(17.3vh, 17.3vw));
-    top: calc(52%);
-    transform: translate(-50%, -50%);
-}
-
-.meteoroid-layer-5 {
-    position: absolute;
-    width: auto;
-    z-index: 2;
-}
-
-.meteoroid-layer5-1 {
-    position: absolute;
-    left: calc(50% + min(30vh, 30vw));
-    top: calc(50%);
-    transform: translate(-50%, -50%);
-}
-
-.meteoroid-layer5-2 {
-    position: absolute;
-    left: calc(50% - min(18vh, 18vw));
-    top: calc(50% + min(26vh, 26vw));
-    transform: translate(-50%, -50%);
-}
-
-.meteoroid-layer5-3 {
-    position: absolute;
-    left: calc(50% - min(18vh, 18vw));
-    top: calc(50% - min(26vh, 26vw));
-    transform: translate(-50%, -50%);
-}
-
-/* Hover wrapper styling */
-.hover-wrapper {
-    position: absolute;
-}
-
-.hover-wrapper .hover-text {
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    color: var(--White, #FFF);
+  .mirror-exp__text {
+    flex-direction: column;
+    gap: 0px;
     text-align: center;
+  }
+
+  .mirror-exp__mirror,
+  .mirror-exp__experience {
     font-family: "BT Beau Sans";
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     line-height: 120%;
+    text-align: center;
+    background: linear-gradient(227deg, #000 -14.38%, #EC3667 25.96%, #F6F6F6 74.05%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Enable pointer events for planet elements */
+  .mirror-exp__heart-senses,
+  .mirror-exp__circle-presence,
+  .mirror-exp__droplet-time,
+  .mirror-exp__rect-space {
+    pointer-events: auto;
+  }
+
+  /* Hide text elements by default on desktop - use typography.css bodytext-4--no-margin */
+  .mirror-exp__sense-text,
+  .mirror-exp__presence-text,
+  .mirror-exp__time-text,
+  .mirror-exp__space-text {
+    color: var(--Pink, #BC224C);
+    font-size: 16px;
+    /* Override typography.css for desktop */
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-    pointer-events: none;
-    white-space: nowrap;
-    padding-bottom: 10px;
-    z-index: 10;
-}
+  }
 
-.hover-wrapper:hover .hover-text {
+  /* Show text on hover of parent elements */
+  .mirror-exp__heart-senses:hover .mirror-exp__sense-text,
+  .mirror-exp__circle-presence:hover .mirror-exp__presence-text,
+  .mirror-exp__droplet-time:hover .mirror-exp__time-text,
+  .mirror-exp__rect-space:hover .mirror-exp__space-text {
     opacity: 1;
+  }
 }
 
-/* Position wrappers to match original image positions */
-.circle-presence-wrapper {
-    left: calc(50% + min(18vh, 18vw));
-    top: calc(50% - min(2vh, 2vw));
-    transform: translate(-50%, -50%);
-    z-index: 8;
-}
-
-.heart-senses-wrapper {
-    left: calc(50% - min(12vh, 12vw));
-    top: calc(50% - min(20vh, 10vw));
-    transform: translate(-50%, -50%);
-    z-index: 8;
-}
-
-.droplet-time-wrapper {
-    left: calc(50% - min(18vh, 18vw));
-    top: calc(50% + min(13.5vh, 13.5vw));
-    transform: translate(-50%, -50%);
-    z-index: 8;
-}
-
-.rect-space-wrapper {
-    left: calc(50% + min(22vh, 22vw));
-    top: calc(50% + min(25vh, 25vw));
-    transform: translate(-50%, -50%);
-    z-index: 8;
-}
-
-/* Reset img positions since they're now inside wrappers */
-.hover-wrapper img {
-    position: relative;
-    transform: none;
-    left: auto;
-    top: auto;
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.hover-wrapper:hover img {
-    transform: scale(1.05);
-}
-
-.hover-wrapper:active img {
-    transform: scale(0.95);
-    transition: transform 0.1s ease-out;
-}
-
-/* ===== RESPONSIVE DESIGN CHO TẤT CẢ KÍCH THƯỚC MÀNG HÌNH ===== */
-
-/* Desktop lớn (1920px+) */
-@media (min-width: 1920px) {
-    .mirror-experience-text {
-        width: clamp(100px, 8vw, 150px);
-        height: auto;
-    }
-
-    .hover-wrapper .hover-text {
-        font-size: 24px;
-        padding-bottom: 15px;
-    }
-
-    .meteoroid-1,
-    .meteoroid-2 {
-        height: 25px;
-    }
-}
-
-/* Desktop trung bình (1200px - 1919px) */
-@media (min-width: 1200px) and (max-width: 1919px) {
-    .mirror-experience-text {
-        width: clamp(90px, 7vw, 140px);
-        height: auto;
-    }
-
-    .hover-wrapper .hover-text {
-        font-size: 22px;
-        padding-bottom: 12px;
-    }
-
-    .meteoroid-1,
-    .meteoroid-2 {
-        height: 22px;
-    }
-}
-
-/* Laptop (1024px - 1199px) */
-@media (min-width: 1024px) and (max-width: 1199px) {
-    .mirror-experience-text {
-        width: clamp(80px, 6vw, 125px);
-        height: auto;
-    }
-
-    .hover-wrapper .hover-text {
-        font-size: 20px;
-        padding-bottom: 10px;
-    }
-
-    .meteoroid-1,
-    .meteoroid-2 {
-        height: 20px;
-    }
-
-    .circle-presence,
-    .heart-senses,
-    .droplet-time,
-    .rect-space {
-        width: clamp(40px, 8vw, 80px);
-        height: auto;
-    }
-}
-
-/* Tablet landscape (768px - 1023px) */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .mirror-experience-text {
-        width: clamp(70px, 5vw, 100px);
-        height: auto;
-    }
-
-    .hover-wrapper .hover-text {
-        font-size: 18px;
-        padding-bottom: 8px;
-    }
-
-    .meteoroid-1,
-    .meteoroid-2 {
-        height: 18px;
-    }
-
-    .circle-presence,
-    .heart-senses,
-    .droplet-time,
-    .rect-space {
-        width: clamp(35px, 7vw, 70px);
-        height: auto;
-    }
-
-    /* Điều chỉnh vị trí các clickable elements */
-    .circle-presence-wrapper {
-        left: calc(50% + min(15vh, 15vw));
-        top: calc(50% - min(5vh, 5vw));
-    }
-
-    .heart-senses-wrapper {
-        left: calc(50% - min(10vh, 10vw));
-        top: calc(50% - min(8vh, 8vw));
-    }
-
-    .droplet-time-wrapper {
-        left: calc(50% - min(20vh, 20vw));
-        top: calc(50% + min(11vh, 11vw));
-    }
-
-    .rect-space-wrapper {
-        left: calc(50% + min(18vh, 18vw));
-        top: calc(50% + min(20vh, 20vw));
-    }
-}
-
-/* Tablet portrait (481px - 767px) */
-@media (min-width: 481px) and (max-width: 767px) {
-    .mirror-experience-text {
-        width: clamp(60px, 4.5vw, 90px);
-        height: auto;
-    }
-
-    .hover-wrapper .hover-text {
-        font-size: 16px;
-        padding-bottom: 6px;
-    }
-
-    .meteoroid-1,
-    .meteoroid-2 {
-        height: 16px;
-    }
-
-    .circle-presence,
-    .heart-senses,
-    .droplet-time,
-    .rect-space {
-        width: clamp(30px, 6vw, 60px);
-        height: auto;
-    }
-
-    /* Điều chỉnh vị trí các clickable elements */
-    .circle-presence-wrapper {
-        left: calc(50% + min(12vh, 12vw));
-        top: calc(50% - min(4vh, 4vw));
-    }
-
-    .heart-senses-wrapper {
-        left: calc(50% - min(8vh, 8vw));
-        top: calc(50% - min(6vh, 6vw));
-    }
-
-    .droplet-time-wrapper {
-        left: calc(50% - min(16vh, 16vw));
-        top: calc(50% + min(9vh, 9vw));
-    }
-
-    .rect-space-wrapper {
-        left: calc(50% + min(15vh, 15vw));
-        top: calc(50% + min(16vh, 16vw));
-    }
-
-    /* Điều chỉnh meteoroids */
-    .meteoroid-1 {
-        left: calc(50% - min(11vh, 11vw));
-    }
-
-    .meteoroid-2 {
-        left: calc(50% + min(11vh, 11vw));
-    }
-}
-
-/* Mobile landscape (376px - 480px) */
-@media (min-width: 376px) and (max-width: 480px) {
-    .mirror-experience-text {
-        width: clamp(50px, 4vw, 75px);
-        height: auto;
-    }
-
-    .hover-wrapper .hover-text {
-        font-size: 14px;
-        padding-bottom: 5px;
-    }
-
-    .meteoroid-1,
-    .meteoroid-2 {
-        height: 14px;
-    }
-
-    .circle-presence,
-    .heart-senses,
-    .droplet-time,
-    .rect-space {
-        width: clamp(25px, 5vw, 50px);
-        height: auto;
-    }
-
-    /* Điều chỉnh vị trí các clickable elements */
-    .circle-presence-wrapper {
-        left: calc(50% + min(10vh, 10vw));
-        top: calc(50% - min(3vh, 3vw));
-    }
-
-    .heart-senses-wrapper {
-        left: calc(50% - min(6vh, 6vw));
-        top: calc(50% - min(4vh, 4vw));
-    }
-
-    .droplet-time-wrapper {
-        left: calc(50% - min(12vh, 12vw));
-        top: calc(50% + min(7vh, 7vw));
-    }
-
-    .rect-space-wrapper {
-        left: calc(50% + min(12vh, 12vw));
-        top: calc(50% + min(12vh, 12vw));
-    }
-
-    /* Điều chỉnh meteoroids */
-    .meteoroid-1 {
-        left: calc(50% - min(9vh, 9vw));
-    }
-
-    .meteoroid-2 {
-        left: calc(50% + min(9vh, 9vw));
-    }
-
-    .meteoroid-layer2-1 {
-        left: calc(50% + min(14vh, 14vw));
-    }
-
-    .meteoroid-layer2-2 {
-        left: calc(50% - min(14vh, 14vw));
-    }
-}
-
-/* Mobile portrait (320px - 375px) */
-@media (min-width: 320px) and (max-width: 375px) {
-    .mirror-experience-text {
-        width: clamp(40px, 3.5vw, 60px);
-        height: auto;
-    }
-
-    .hover-wrapper .hover-text {
-        font-size: 12px;
-        padding-bottom: 4px;
-    }
-
-    .meteoroid-1,
-    .meteoroid-2 {
-        height: 12px;
-    }
-
-    .circle-presence,
-    .heart-senses,
-    .droplet-time,
-    .rect-space {
-        width: clamp(20px, 4vw, 40px);
-        height: auto;
-    }
-
-    /* Điều chỉnh vị trí các clickable elements - gần tâm hơn */
-    .circle-presence-wrapper {
-        left: calc(50% + min(8vh, 8vw));
-        top: calc(50% - min(2vh, 2vw));
-    }
-
-    .heart-senses-wrapper {
-        left: calc(50% - min(5vh, 5vw));
-        top: calc(50% - min(3vh, 3vw));
-    }
-
-    .droplet-time-wrapper {
-        left: calc(50% - min(10vh, 10vw));
-        top: calc(50% + min(5vh, 5vw));
-    }
-
-    .rect-space-wrapper {
-        left: calc(50% + min(10vh, 10vw));
-        top: calc(50% + min(10vh, 10vw));
-    }
-
-    /* Điều chỉnh meteoroids */
-    .meteoroid-1 {
-        left: calc(50% - min(7vh, 7vw));
-    }
-
-    .meteoroid-2 {
-        left: calc(50% + min(7vh, 7vw));
-    }
-
-    .meteoroid-layer2-1 {
-        left: calc(50% + min(12vh, 12vw));
-    }
-
-    .meteoroid-layer2-2 {
-        left: calc(50% - min(12vh, 12vw));
-    }
-
-    .meteoroid-layer5-1 {
-        left: calc(50% + min(28vh, 28vw));
-    }
-
-    .meteoroid-layer5-2 {
-        left: calc(50% - min(12vh, 12vw));
-        top: calc(50% - min(25vh, 25vw));
-    }
-
-    .meteoroid-layer5-3 {
-        left: calc(50% - min(12vh, 12vw));
-        top: calc(50% + min(25vh, 25vw));
-    }
-}
-
-/* Mobile rất nhỏ (dưới 320px) */
-@media (max-width: 319px) {
-    .mirror-experience-text {
-        width: clamp(30px, 3vw, 50px);
-        height: auto;
-    }
-
-    .hover-wrapper .hover-text {
-        font-size: 10px;
-        padding-bottom: 3px;
-    }
-
-    .meteoroid-1,
-    .meteoroid-2 {
-        height: 10px;
-    }
-
-    .circle-presence,
-    .heart-senses,
-    .droplet-time,
-    .rect-space {
-        width: clamp(15px, 3vw, 30px);
-        height: auto;
-    }
-
-    /* Điều chỉnh vị trí các clickable elements - rất gần tâm */
-    .circle-presence-wrapper {
-        left: calc(50% + min(6vh, 6vw));
-        top: calc(50% - min(1vh, 1vw));
-    }
-
-    .heart-senses-wrapper {
-        left: calc(50% - min(4vh, 4vw));
-        top: calc(50% - min(2vh, 2vw));
-    }
-
-    .droplet-time-wrapper {
-        left: calc(50% - min(8vh, 8vw));
-        top: calc(50% + min(4vh, 4vw));
-    }
-
-    .rect-space-wrapper {
-        left: calc(50% + min(8vh, 8vw));
-        top: calc(50% + min(8vh, 8vw));
-    }
-
-    /* Điều chỉnh meteoroids */
-    .meteoroid-1 {
-        left: calc(50% - min(6vh, 6vw));
-    }
-
-    .meteoroid-2 {
-        left: calc(50% + min(6vh, 6vw));
-    }
-
-    .meteoroid-layer2-1 {
-        left: calc(50% + min(10vh, 10vw));
-    }
-
-    .meteoroid-layer2-2 {
-        left: calc(50% - min(10vh, 10vw));
-    }
-
-    .meteoroid-layer5-1 {
-        left: calc(50% + min(25vh, 25vw));
-    }
-
-    .meteoroid-layer5-2 {
-        left: calc(50% - min(10vh, 10vw));
-        top: calc(50% - min(22vh, 22vw));
-    }
-
-    .meteoroid-layer5-3 {
-        left: calc(50% - min(10vh, 10vw));
-        top: calc(50% + min(22vh, 22vw));
-    }
-}
-
-/* Responsive cho chiều cao màn hình thấp */
-@media (max-height: 600px) {
-    .mirror-experience-text {
-        width: clamp(40px, 5vw, 80px);
-    }
-
-    .hover-wrapper .hover-text {
-        font-size: 14px;
-        padding-bottom: 5px;
-    }
-
-    /* Điều chỉnh vị trí các clickable elements cho màn hình thấp */
-    .circle-presence-wrapper {
-        left: calc(50% + min(12vw, 12vh));
-        top: calc(50% - min(4vw, 4vh));
-    }
-
-    .heart-senses-wrapper {
-        left: calc(50% - min(8vw, 8vh));
-        top: calc(50% - min(6vw, 6vh));
-    }
-
-    .droplet-time-wrapper {
-        left: calc(50% - min(18vw, 18vh));
-        top: calc(50% + min(8vw, 8vh));
-    }
-
-    .rect-space-wrapper {
-        left: calc(50% + min(16vw, 16vh));
-        top: calc(50% + min(15vw, 15vh));
-    }
+@media screen and (max-width: 425px) {
+  .mirror-exp {
+    overflow: hidden;
+  }
+
+  .mirror-exp__text {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .mirror-exp__luxury-text {
+    width: 77%;
+  }
+
+  /* Enable clicking on interactive elements for mobile */
+  .mirror-exp__heart-senses,
+  .mirror-exp__circle-presence,
+  .mirror-exp__droplet-time,
+  .mirror-exp__rect-space {
+    pointer-events: auto;
+  }
+
+  /* Override tablet layer0 size back to mobile size */
+  .mirror-exp::before {
+    width: 132px;
+    height: 132px;
+    background-size: 132px 132px;
+  }
 }
