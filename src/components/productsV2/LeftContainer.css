@@ -10,3 +10,10 @@
     /* Below navbar */
     overflow-y: auto;
 }
+
+/* Mobile & Tablet - LeftContainer chiếm full width khi RightConfiguration ẩn */
+@media (max-width: 1023px) {
+    .left-container {
+        width: 100%;
+    }
+}

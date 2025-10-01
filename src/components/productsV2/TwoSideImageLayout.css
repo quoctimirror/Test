@@ -28,8 +28,8 @@
     object-fit: cover;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
+/* Mobile only - max-width: 425px */
+@media (max-width: 425px) {
     .two-side-image-layout-grid {
         grid-template-columns: 1fr;
         height: auto;
@@ -38,5 +38,19 @@
     .two-side-image-layout-left,
     .two-side-image-layout-right {
         height: 50vh;
+    }
+}
+
+/* Tablet - 426px to 1023px - Same as desktop (2 columns) */
+@media (min-width: 426px) and (max-width: 1023px) {
+    .two-side-image-layout-grid {
+        grid-template-columns: 1fr 1fr;
+        height: 100vh;
+    }
+
+    .two-side-image-layout-left,
+    .two-side-image-layout-right {
+        position: relative;
+        overflow: hidden;
     }
 }

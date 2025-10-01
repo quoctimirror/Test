@@ -5,7 +5,7 @@ import whiteIcon from '../../assets/images/white_gts.svg';
 import ShineGlassButton from '../common/button/ShineGlassButton';
 import SizeSelector from './SizeSelector';
 
-const RightConfiguration = () => {
+const RightConfiguration = ({ hideButtons = false }) => {
     const [quantity, setQuantity] = useState(1);
     const [size, setSize] = useState('6.0');
     const [showSizeSelector, setShowSizeSelector] = useState(false);
@@ -93,29 +93,34 @@ const RightConfiguration = () => {
                     <span className="price heading-3--no-margin">$15,600</span>
                 </div>
 
-                <div className="action-buttons">
-                    <ShineGlassButton
-                        className="wishlist-btn-glass"
-                        width={56}
-                        height={56}
-                        theme="footer"
-                    >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </ShineGlassButton>
+                {!hideButtons && (
+                    <>
+                        <div className="action-buttons">
+                            <ShineGlassButton
+                                className="wishlist-btn-glass"
+                                width={56}
+                                height={56}
+                                theme="footer"
+                            >
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </ShineGlassButton>
 
-                    <ShineGlassButton
-                        className="appointment-btn-glass"
-                        theme="footer"
-                    >
-                        Book An Appointment
-                    </ShineGlassButton>
-                </div>
+                            <div className="appointment-btn-glass">
+                                <ShineGlassButton
+                                    theme="footer"
+                                >
+                                    Book An Appointment
+                                </ShineGlassButton>
+                            </div>
+                        </div>
 
-                <button className="order-btn bodytext-4--no-margin">
-                    Order Now
-                </button>
+                        <button className="order-btn bodytext-4--no-margin">
+                            Order Now
+                        </button>
+                    </>
+                )}
             </div>
 
             {/* Size Selector Modal */}

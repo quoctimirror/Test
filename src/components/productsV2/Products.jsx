@@ -17,6 +17,7 @@ import {
 import './Products.css';
 import LeftContainer from './LeftContainer';
 import RightConfiguration from './RightConfiguration';
+import MobileProductBar from './MobileProductBar';
 import ViewAllProduct from '../viewAllProduct/ViewAllProduct';
 import Contact from '../contactUs/ContactUs';
 
@@ -27,6 +28,7 @@ const Products = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentModelIndex, setCurrentModelIndex] = useState(0);
+    const [showMobileBar, setShowMobileBar] = useState(true);
     const [models] = useState([
         { name: 'Ring WebGi', path: '/models/ring_webgi.glb' },
         { name: 'Ring WebGi 2', path: '/models/ring2_webgi.glb' },
@@ -178,6 +180,37 @@ const Products = () => {
         };
     }, []); // Only run once on mount
 
+    // Handle scroll to show/hide MobileProductBar
+    useEffect(() => {
+        const handleScroll = () => {
+            // Get products-container position
+            const productsContainer = document.querySelector('.products-container');
+            if (productsContainer) {
+                const rect = productsContainer.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+
+                // Show mobile bar if we're within products-container area
+                // Hide mobile bar if we scrolled past products-container
+                if (rect.bottom > 0 && rect.top < windowHeight) {
+                    // We're within products-container viewport
+                    setShowMobileBar(true);
+                } else if (rect.bottom <= 0) {
+                    // We've scrolled past products-container (into More Gems)
+                    setShowMobileBar(false);
+                } else {
+                    // We're above products-container
+                    setShowMobileBar(true);
+                }
+            }
+        };
+
+        // Call once on mount to check initial position
+        handleScroll();
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     // Function to switch models
     const switchModel = async (newModelIndex) => {
         if (newModelIndex === currentModelIndex || !viewerRef.current) return;
@@ -261,6 +294,9 @@ const Products = () => {
 
                 {/* Contact Section */}
                 <Contact />
+
+                {/* Mobile Product Bar - Only visible on mobile */}
+                <MobileProductBar isVisible={showMobileBar} />
             </div>
         </>
     );
