@@ -49,6 +49,9 @@ const ImmersiveShowroomPage = lazy(() =>
   import("@pages/ImmersiveShowroomPage")
 );
 const SubmitPage = lazy(() => import("@pages/SubmitPage"));
+const ProductsV2 = lazy(() =>
+  import("@components/productsV2/Products.jsx")
+);
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -98,6 +101,8 @@ export default function AppRoutes() {
           </Route>
 
           <Route path="/products" element={<ProductsPage />} />
+
+          <Route path="/products-v2" element={<ProductsV2 />} />
 
           <Route path="/all-gems" element={<AllGemsPage />} />
 

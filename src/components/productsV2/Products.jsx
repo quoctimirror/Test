@@ -17,7 +17,6 @@ import {
 import './Products.css';
 import LeftContainer from './LeftContainer';
 import RightConfiguration from './RightConfiguration';
-import Navbar from '../navbar/Navbar';
 import ViewAllProduct from '../viewAllProduct/ViewAllProduct';
 
 
@@ -245,7 +244,6 @@ const Products = () => {
 
     return (
         <>
-            <Navbar />
             <div className="products-main-wrapper">
                 <div className="products-container">
                     {/* Left side - LeftContainer chứa Section1 và Section2 */}
