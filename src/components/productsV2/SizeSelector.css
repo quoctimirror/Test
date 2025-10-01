@@ -78,6 +78,56 @@
     position: relative;
     transition: all 0.3s ease;
     border-bottom: none;
+    overflow: visible;
+}
+
+/* Tab text - normal text */
+.tab-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* Tab ghost - sliding text clone */
+.tab-ghost {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    color: rgba(0, 0, 0, 0.50);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Left tab (Select your size) - when inactive, ghost slides to right */
+.size-tab-left:not(.active) .tab-ghost {
+    animation: slideGhostRight 0.8s ease forwards;
+}
+
+/* Right tab (Find your size) - when inactive, ghost slides to left */
+.size-tab-right:not(.active) .tab-ghost {
+    animation: slideGhostLeft 0.8s ease forwards;
+}
+
+@keyframes slideGhostRight {
+    0% {
+        opacity: 0.8;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(calc(100% + 24px));
+    }
+}
+
+@keyframes slideGhostLeft {
+    0% {
+        opacity: 0.8;
+        transform: translateX(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(calc(-100% - 24px));
+    }
 }
 
 .size-tab::after {
@@ -110,40 +160,61 @@
     gap: 16px;
     padding: 0 0 20px 0;
     background: var(--Gray-1, #F6F6F6);
+    justify-content: center;
 }
 
 .filter-group {
-    flex: 1;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
+/* Filter select styles removed - now using CustomDropdown */
+
+/* Custom styling for select dropdown */
 .filter-select {
-    padding: 0;
-    background: transparent;
-    border: none;
+    color-scheme: light;
+}
+
+/* Style for dropdown options */
+.filter-select option {
+    background-color: #FFFFFF;
+    color: #000000;
+    padding: 8px 12px;
     font-family: "BT Beau Sans";
     font-size: 14px;
+}
+
+/* Hover state for options - Chrome/Edge */
+.filter-select option:hover {
+    background-color: transparent !important;
+    background-image: none !important;
+    color: #BC224C !important;
+    box-shadow: none !important;
+}
+
+/* Focus/Active state */
+.filter-select option:focus,
+.filter-select option:active {
+    background-color: transparent !important;
+    color: #BC224C !important;
+}
+
+/* Selected option */
+.filter-select option:checked {
+    background-color: transparent;
+    color: #BC224C;
     font-weight: 400;
-    color: #000000;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23000000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: calc(100% - 2px) center;
-    /* Đặt arrow sát bên phải */
-    padding-right: 20px;
-    text-align: center;
 }
 
-.filter-select:hover {
-    opacity: 0.7;
-}
-
-.filter-select:focus {
-    outline: none;
+/* Firefox specific */
+@-moz-document url-prefix() {
+    .filter-select option:hover {
+        background-color: transparent !important;
+        color: #BC224C !important;
+    }
 }
 
 /* Country/Region select - arrow sát text hơn và canh giữa */
@@ -260,9 +331,8 @@
 
 .find-size-tip {
     margin: 12px 0 24px 0;
-    width: 554px;
-    height: 57px;
     color: #BC224C;
+    max-width: 554px;
 }
 
 .find-size-footer {

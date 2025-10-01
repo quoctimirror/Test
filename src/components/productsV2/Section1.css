@@ -1,36 +1,88 @@
-/* Base styles - always show border for debugging */
-.section1-container {
-    border: 3px solid #FF0000 !important;
-    background: #F0F8FF !important;
-    margin: 20px;
-    padding: 20px;
-    text-align: center;
-    height: 100vh;
-}
-
-/* Desktop styles for 1024px and above */
+/* Desktop only - 1024px and above */
 @media (min-width: 1024px) {
     .section1 {
         width: 100%;
-        /* Full width trong products-left container */
+        height: 100vh;
         background-color: transparent;
-        position: relative;
-        padding: 40px;
         box-sizing: border-box;
-        border: 2px solid #FF0000;
-        /* Red border để dễ nhìn layout */
+        margin-bottom: 0;
     }
 
     .section1-container {
-        max-width: 800px;
-        margin: 77px auto 0 auto;
-        /* 77px = navbar height (20px top + 57px height) */
-        padding: 60px 20px;
+        max-width: inherit;
+        margin: 0 auto;
+        padding-top: 7vh;
+        height: 100%;
         text-align: center;
-        border: 2px solid #0000FF;
-        /* Blue border để thấy container */
-        background-color: #F8F9FA;
         border-radius: 8px;
+        border: 2px solid red;
+        /* background-color: cyan; */
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    /* Arrow navigation buttons - centered vertically in section1-container */
+    .section1-arrow-btn {
+        position: absolute;
+        top: calc(50% + 50vh);
+        transform: translateY(-50%);
+        z-index: 10;
+        margin: 0;
+        padding: 0;
+    }
+
+    .section1-arrow-left {
+        left: 20px;
+    }
+
+    .section1-arrow-right {
+        right: 20px;
+    }
+
+    .section1-arrow-btn img {
+        display: block;
+    }
+
+    /* Disable ALL hover effects for arrow buttons */
+    .section1-arrow-btn,
+    .section1-arrow-btn *,
+    .section1-arrow-btn .shine-glass-button,
+    .section1-arrow-btn .shine-button-wrap,
+    .section1-arrow-btn .glass-layer,
+    .section1-arrow-btn .border-layer,
+    .section1-arrow-btn .shine-layer {
+        transition: none !important;
+        transform: none !important;
+    }
+
+    .section1-arrow-btn:hover,
+    .section1-arrow-btn *:hover,
+    .section1-arrow-btn .shine-glass-button:hover,
+    .section1-arrow-btn .shine-button-wrap:hover {
+        transition: none !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+    /* Model loading area */
+    .model-area {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 100%;
+        border: 2px solid blue;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .model-area p {
+        font-family: 'Inter', sans-serif;
+        font-size: 18px;
+        color: blue;
+        margin: 0;
     }
 
     .section1-container h2 {
@@ -55,23 +107,9 @@
     }
 }
 
-/* Hide on smaller screens */
+/* Hide on mobile/tablet */
 @media (max-width: 1023px) {
     .section1 {
         display: none;
     }
-}
-
-/* Debug info - remove when satisfied with layout */
-.section1::before {
-    content: "Section1 - 66.25% width";
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(255, 0, 0, 0.8);
-    color: white;
-    padding: 4px 8px;
-    font-size: 12px;
-    border-radius: 4px;
-    z-index: 1000;
 }

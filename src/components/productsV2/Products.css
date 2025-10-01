@@ -9,16 +9,24 @@
 /* Products Main Container */
 .products-container {
     width: 100%;
-    min-height: 150vh;
+    min-height: 100vh;
     display: flex;
     position: relative;
+    align-items: flex-start;
+    z-index: 1; /* Below navbar (navbar is 201) */
+    overflow-x: hidden;
 }
 
 /* ===== RIGHT SIDE - CONFIGURATION CONTAINER - Desktop only (1024px+) ===== */
 .products-right {
-    width: 33.75%;
-    min-height: 150vh;
-    position: relative;
+    width: calc(100% - 66.25%);
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    z-index: 50; /* Below navbar (201) */
 }
 
 /*

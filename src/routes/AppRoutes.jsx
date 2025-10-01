@@ -144,6 +144,9 @@ export default function AppRoutes() {
 
           <Route path="/hover-expand" element={<HoverExpandSection />} />
 
+          {/* Test route for ProductsV2 */}
+          <Route path="/products-v2" element={<ProductsV2 />} />
+
           <Route path="/view-360" element={<View360 />} />
 
           <Route path="/user-profile" element={<Profile />} />

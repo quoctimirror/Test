@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './SizeSelector.css';
 import sizeConversionData from '../../assets/sizeConversionBoard.json';
+import CustomDropdown from './CustomDropdown';
 
 const SizeSelector = ({ onClose, onSelectSize }) => {
     const [activeTab, setActiveTab] = useState('select'); // 'select' or 'find'
@@ -56,6 +57,11 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
         handleClose();
     };
 
+    const handleTabChange = (newTab) => {
+        if (newTab === activeTab) return;
+        setActiveTab(newTab);
+    };
+
     return (
         <div
             className={`size-selector-overlay ${isClosing ? 'closing' : ''}`}
@@ -65,16 +71,18 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
                 {/* Header Tabs */}
                 <div className="size-selector-header">
                     <button
-                        className={`size-tab bodytext-4--no-margin ${activeTab === 'select' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('select')}
+                        className={`size-tab size-tab-left bodytext-4--no-margin ${activeTab === 'select' ? 'active' : ''}`}
+                        onClick={() => handleTabChange('select')}
                     >
-                        Select your size
+                        <span className="tab-text">Select your size</span>
+                        <span className="tab-ghost">Select your size</span>
                     </button>
                     <button
-                        className={`size-tab bodytext-4--no-margin ${activeTab === 'find' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('find')}
+                        className={`size-tab size-tab-right bodytext-4--no-margin ${activeTab === 'find' ? 'active' : ''}`}
+                        onClick={() => handleTabChange('find')}
                     >
-                        Find your size
+                        <span className="tab-text">Find your size</span>
+                        <span className="tab-ghost">Find your size</span>
                     </button>
                 </div>
 
@@ -83,28 +91,27 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
                         {/* Filters */}
                         <div className="size-selector-filters">
                             <div className="filter-group">
-                                <select
+                                <CustomDropdown
                                     value={measurementUnit}
-                                    onChange={(e) => setMeasurementUnit(e.target.value)}
+                                    onChange={setMeasurementUnit}
+                                    options={[
+                                        { value: 'mm', label: 'Inside Circumference (mm)' },
+                                        { value: 'inch', label: 'Inside Circumference (inch)' }
+                                    ]}
                                     className="filter-select"
-                                >
-                                    <option value="mm">Inside Circumference (mm)</option>
-                                    <option value="inch">Inside Circumference (inch)</option>
-                                </select>
+                                />
                             </div>
 
                             <div className="filter-group">
-                                <select
+                                <CustomDropdown
                                     value={selectedCountryId}
-                                    onChange={(e) => setSelectedCountryId(e.target.value)}
+                                    onChange={setSelectedCountryId}
+                                    options={countries.map(country => ({
+                                        value: country.id,
+                                        label: `${country.flag} ${country.name}`
+                                    }))}
                                     className="filter-select filter-select-country"
-                                >
-                                    {countries.map((country) => (
-                                        <option key={country.id} value={country.id}>
-                                            {country.flag} {country.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                />
                             </div>
                         </div>
 
@@ -151,11 +158,15 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
                             </ol>
 
                             <p className="find-size-tip bodytext-5--no-margin">
-                                Tips: For the most accurate results, measure your finger at the end of the <br />
-                                day when it's at its largest, and avoid measuring when your hands are <br /> cold.
+                                Tips: For the most accurate results, measure your finger at the end of the day when it's at its largest, and avoid measuring when your hands are cold.
                             </p>
 
-                            <p className="find-size-footer bodytext-4--no-margin">Have your result? Select your size</p>
+                            <p
+                                className="find-size-footer bodytext-4--no-margin"
+                                onClick={() => handleTabChange('select')}
+                            >
+                                Have your result? Select your size
+                            </p>
                         </div>
                     </div>
                 )}

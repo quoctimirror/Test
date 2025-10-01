@@ -18,6 +18,7 @@ import './Products.css';
 import LeftContainer from './LeftContainer';
 import RightConfiguration from './RightConfiguration';
 import ViewAllProduct from '../viewAllProduct/ViewAllProduct';
+import Contact from '../contactUs/ContactUs';
 
 
 const Products = () => {
@@ -257,6 +258,9 @@ const Products = () => {
 
                 {/* View All Products Section */}
                 <ViewAllProduct showViewProductButton={true} />
+
+                {/* Contact Section */}
+                <Contact />
             </div>
         </>
     );

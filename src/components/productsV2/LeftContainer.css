@@ -1,6 +1,12 @@
 /* LeftContainer - Chứa Section1 và Section2 - Desktop only (1024px+) */
 .left-container {
     width: 66.25%;
-    min-height: 100vh;
+    height: 100vh;
     position: relative;
+    background: #FFFFFF;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    z-index: 1;
+    /* Below navbar */
+    overflow-y: auto;
 }

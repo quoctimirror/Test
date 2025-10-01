@@ -3,13 +3,20 @@ import './RightConfiguration.css';
 import opaqueIcon from '../../assets/images/opaque_gts.svg';
 import whiteIcon from '../../assets/images/white_gts.svg';
 import ShineGlassButton from '../common/button/ShineGlassButton';
+import SizeSelector from './SizeSelector';
 
 const RightConfiguration = () => {
     const [quantity, setQuantity] = useState(1);
     const [size, setSize] = useState('6.0');
+    const [showSizeSelector, setShowSizeSelector] = useState(false);
 
     const handleQuantityChange = (increment) => {
         setQuantity(prev => Math.max(1, prev + increment));
+    };
+
+    const handleSizeSelect = (sizeItem) => {
+        setSize(sizeItem.size.toString());
+        setShowSizeSelector(false);
     };
 
     return (
@@ -44,7 +51,7 @@ const RightConfiguration = () => {
 
                     <div className="option-row size-row">
                         <span className="option-label bodytext-3--no-margin">Size</span>
-                        <div className="size-selector">
+                        <div className="size-selector" onClick={() => setShowSizeSelector(true)}>
                             <span className="size-value bodytext-1--no-margin">{size}</span>
                             <img src={whiteIcon} alt="" className="size-arrow-icon" />
                         </div>
@@ -100,17 +107,24 @@ const RightConfiguration = () => {
 
                     <ShineGlassButton
                         className="appointment-btn-glass"
-                        theme="light"
-                        width={330}
+                        theme="footer"
                     >
                         Book An Appointment
                     </ShineGlassButton>
                 </div>
 
-                <button className="order-btn">
+                <button className="order-btn bodytext-4--no-margin">
                     Order Now
                 </button>
             </div>
+
+            {/* Size Selector Modal */}
+            {showSizeSelector && (
+                <SizeSelector
+                    onClose={() => setShowSizeSelector(false)}
+                    onSelectSize={handleSizeSelect}
+                />
+            )}
         </div>
     );
 };
