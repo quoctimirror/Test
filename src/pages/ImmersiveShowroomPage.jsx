@@ -3,11 +3,13 @@ import Logo from "@assets/images/Logo.svg";
 import SoundIcon from "@assets/images/button/sound.svg";
 import ArrowButton from "@assets/images/button/arrow-button.svg";
 import MirrorIntroduce from "@components/home-page/mirrrorIntroduce/MirrorIntroduce";
+import ScrollEffect from "@components/home-page/scrollEffect/ScrollEffect";
 import BrandPillars from "@components/home-page/brandPillars/BrandPillars";
 import Lumex91 from "@components/home-page/lumex91/Lumex91";
 import UniverseSection from "@components/home-page/universeSection/MirrorExp";
 import FutureDiamond from "@components/home-page/futureDiamond/FutureDiamond";
-import "./home.css";
+import IntroSubmit from "@components/submit/intro-submit/IntroSubmit";
+import ImmersiveShowroom from "@components/home-page/immersiveShowroom/ImmersiveShowroom";
 
 const ImmersiveShowroomPage = () => {
   const finalGradientRef = useRef(null);
@@ -55,7 +57,7 @@ const ImmersiveShowroomPage = () => {
 
   return (
     <>
-      <div className="scroll-container">
+      {/* <div className="scroll-container">
         <div className="homepage">
           <div className="gradient-initial">
             <div className="gradient-top"></div>
@@ -81,9 +83,11 @@ const ImmersiveShowroomPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <MirrorIntroduce />
+      {/* <MirrorIntroduce /> */}
+
+      <ScrollEffect />
 
       <FutureDiamond />
 
@@ -92,6 +96,10 @@ const ImmersiveShowroomPage = () => {
       <BrandPillars />
 
       <UniverseSection />
+
+      <ImmersiveShowroom />
+
+      <IntroSubmit />
     </>
   );
 };

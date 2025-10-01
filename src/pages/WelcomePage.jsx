@@ -34,11 +34,9 @@ const WelcomePage = () => {
 
       {/* Bottom text content */}
       <div className="welcome-bottom-text">
-        <h2 className="bottom-text-line1 heading-3--no-margin">
-          Awakening Luxury through Your Senses,
-        </h2>
-        <h2 className="bottom-text-line2 heading-3--no-margin">
-          in Every Time, Space, and Presence.
+        <h2 className="bottom-text-line1 bodytext-1--no-margin">
+          Awakening Luxury through Your Senses, in Every Time, Space, and
+          Presence.
         </h2>
       </div>
     </div>

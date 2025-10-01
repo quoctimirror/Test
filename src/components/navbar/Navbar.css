@@ -29,6 +29,11 @@
   cursor: pointer;
 }
 
+.logo-fixed-container.no-click {
+  cursor: default;
+  pointer-events: none;
+}
+
 .logo-fixed-container.no-blend {
   mix-blend-mode: normal;
 }

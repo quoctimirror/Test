@@ -9,31 +9,34 @@ html {
   /* overflow-x: hidden; */
 }
 
+/* ==================== UNUSED HERO SECTION CSS ==================== */
+/* These styles are for the commented-out hero section in ImmersiveShowroomPage.jsx (line 61-87) */
+/* Commented out to prevent conflicts with ScrollEffect.css */
+
 /* Container for entire scroll effect */
-.scroll-container {
+/* .scroll-container {
   height: 250vh;
   position: relative;
-}
+} */
 
 /* Layer containing initial gradient */
-.gradient-initial {
+/* .gradient-initial {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
-}
+} */
 
 /* Final gradient (light pink) will be on top */
-.gradient-final {
+/* .gradient-final {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
 
-  /* background: linear-gradient(to right, #ffc3d4, #ffe8ef, white); */
   background: linear-gradient(80deg, #BC224C -0.64%, #BC224C 107.79%, #000 223.41%);
   z-index: 2;
 
@@ -51,46 +54,21 @@ html {
     black 10%,
     transparent 50%
   );
-
-  /* mask-image: linear-gradient(
-    to left,
-    transparent 0,
-    transparent calc(var(--wipe-progress) - var(--feather-amount)),
-    black calc(var(--wipe-progress) + var(--feather-amount)),
-    black 100%
-  );
-
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    transparent calc(var(--wipe-progress) - var(--feather-amount)),
-    black calc(var(--wipe-progress) + var(--feather-amount)),
-    black 100%
-  ); */
-}
+} */
 
 /* Wrapper div for elements that need to fade */
-.elements-to-fade {
-  /* Make it an absolute layer, covering the full screen */
+/* .elements-to-fade {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-
-  /* Set highest z-index so it and its children are on top */
   z-index: 4;
-
-  /* Keep transition for smoothness */
   transition: opacity 0.1s linear;
-
-  /* VERY IMPORTANT: This layer will block mouse events. 
-     This property makes this layer "transparent" to clicks,
-     allowing you to interact with buttons below when needed. */
   pointer-events: none;
-}
+} */
 
-.homepage {
+/* .homepage {
   height: 100vh;
   position: sticky;
   top: 0;
@@ -99,9 +77,9 @@ html {
   color: white;
   z-index: 1;
   overflow: hidden;
-}
+} */
 
-.gradient-top {
+/* .gradient-top {
   position: absolute;
   top: 0;
   left: 0;
@@ -114,9 +92,9 @@ html {
   align-items: center;
   justify-content: center;
   z-index: 1;
-}
+} */
 
-.gradient-bottom {
+/* .gradient-bottom {
   position: absolute;
   top: 50vh;
   left: 0;
@@ -129,26 +107,26 @@ html {
   align-items: center;
   justify-content: center;
   z-index: 1;
-}
+} */
 
 /* Logo Center */
-.logo-center {
+/* .logo-center {
   position: absolute;
   top: 50.25%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
   transition: opacity 0.1s linear;
-}
+} */
 
-.main-logo {
+/* .main-logo {
   width: 111.78px;
   height: 224.18px;
   opacity: 1;
-}
+} */
 
 /* Future Diamond Text - Initially hidden, positioned at logo center */
-.future-diamond-text {
+/* .future-diamond-text {
   position: absolute;
   top: 50.25%;
   left: 50%;
@@ -156,10 +134,10 @@ html {
   z-index: 4;
   opacity: 0;
   transition: opacity 0.1s linear;
-}
+} */
 
 /* Tagline Section - Center positioned like logo */
-.future-diamond-text .tagline-section {
+/* .future-diamond-text .tagline-section {
   position: relative;
   top: 0;
   left: 0;
@@ -167,10 +145,10 @@ html {
   z-index: 5;
   text-align: center;
   color: rgba(188, 34, 76, 1);
-}
+} */
 
 /* Original Tagline Section */
-.tagline-section {
+/* .tagline-section {
   position: absolute;
   top: calc(80%);
   left: 50%;
@@ -178,26 +156,26 @@ html {
   z-index: 5;
   text-align: center;
   color: white;
-}
+} */
 
-.tagline-bottom {
+/* .tagline-bottom {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 12px;
-}
+} */
 
 /* Logo Reflection */
-.logo-container {
+/* .logo-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-}
+} */
 
-.logo-top {
+/* .logo-top {
   font-size: clamp(80px, 15vw, 200px);
   line-height: 0.8;
   font-weight: 100;
@@ -206,9 +184,9 @@ html {
   color: white;
   margin-bottom: auto;
   transform: scaleX(-1);
-}
+} */
 
-.logo-bottom {
+/* .logo-bottom {
   font-size: clamp(80px, 15vw, 200px);
   line-height: 0.8;
   font-weight: 100;
@@ -216,10 +194,10 @@ html {
   font-family: "Georgia", serif;
   color: white;
   margin-bottom: auto;
-}
+} */
 
 /* Scroll down */
-.scroll-down {
+/* .scroll-down {
   position: absolute;
   bottom: 48px;
   left: 50%;
@@ -227,9 +205,9 @@ html {
   z-index: 10;
   width: 58px;
   height: 58px;
-}
+} */
 
-.scroll-down button {
+/* .scroll-down button {
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -251,9 +229,9 @@ html {
   position: relative;
   overflow: hidden;
   opacity: 0.5;
-}
+} */
 
-.scroll-down button::before {
+/* .scroll-down button::before {
   content: "";
   position: absolute;
   top: 0;
@@ -266,9 +244,9 @@ html {
     rgba(255, 255, 255, 0.8),
     transparent
   );
-}
+} */
 
-.scroll-down button::after {
+/* .scroll-down button::after {
   content: "";
   position: absolute;
   top: 0;
@@ -281,9 +259,9 @@ html {
     transparent,
     rgba(255, 255, 255, 0.3)
   );
-}
+} */
 
-.scroll-down button:hover {
+/* .scroll-down button:hover {
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -294,19 +272,19 @@ html {
     inset 0 0 16px 8px rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 1);
   opacity: 1;
-}
+} */
 
 /* Vetor Button */
-.vetor-button {
+/* .vetor-button {
   position: absolute;
   bottom: 48px;
   right: 50px;
   z-index: 10;
   width: 58px;
   height: 58px;
-}
+} */
 
-.vetor-button button {
+/* .vetor-button button {
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -328,9 +306,9 @@ html {
   position: relative;
   overflow: hidden;
   opacity: 0.5;
-}
+} */
 
-.vetor-button button::before {
+/* .vetor-button button::before {
   content: "";
   position: absolute;
   top: 0;
@@ -343,9 +321,9 @@ html {
     rgba(255, 255, 255, 0.8),
     transparent
   );
-}
+} */
 
-.vetor-button button::after {
+/* .vetor-button button::after {
   content: "";
   position: absolute;
   top: 0;
@@ -358,9 +336,9 @@ html {
     transparent,
     rgba(255, 255, 255, 0.3)
   );
-}
+} */
 
-.vetor-button button:hover {
+/* .vetor-button button:hover {
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -371,19 +349,21 @@ html {
     inset 0 0 16px 8px rgba(255, 255, 255, 0.1);
   color: rgba(255, 255, 255, 1);
   opacity: 1;
-}
+} */
 
-.vetor-button button img {
+/* .vetor-button button img {
   width: 57px;
   height: 57px;
-}
+} */
 
 /* Re-enable mouse events for interactive areas */
-.tagline-section,
+/* .tagline-section,
 .scroll-down,
 .vetor-button {
   pointer-events: auto;
-}
+} */
+
+/* ==================== END UNUSED HERO SECTION CSS ==================== */
 
 /* ============= RESPONSIVE DESIGN ============= */
 

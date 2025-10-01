@@ -6,6 +6,7 @@ import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const NewsGrid = () => {
   const [visibleItems, setVisibleItems] = useState(12);
+  const [imageErrors, setImageErrors] = useState({});
   const navigate = useNavigate();
 
   // Sample news data - replace with actual data
@@ -106,6 +107,10 @@ const NewsGrid = () => {
     }
   };
 
+  const handleImageError = (itemId) => {
+    setImageErrors((prev) => ({ ...prev, [itemId]: true }));
+  };
+
   // Group items into rows of 4
   const groupedData = [];
   for (let i = 0; i < Math.min(visibleItems, newsData.length); i += 4) {
@@ -124,8 +129,18 @@ const NewsGrid = () => {
                   className={`news-item ${item.id === 1 ? "clickable" : ""}`}
                   onClick={() => handleNewsItemClick(item)}
                 >
-                  <div className="news-item-image">
-                    <img src={item.image} alt="" />
+                  <div
+                    className={`news-item-image ${
+                      !item.image || imageErrors[item.id] ? "no-image" : ""
+                    }`}
+                  >
+                    {item.image && !imageErrors[item.id] && (
+                      <img
+                        src={item.image}
+                        alt=""
+                        onError={() => handleImageError(item.id)}
+                      />
+                    )}
                   </div>
                   <div className="news-item-content">
                     <h3 className="news-item-title heading-3--no-margin">

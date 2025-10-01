@@ -1,0 +1,13 @@
+.decorative-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.decorative-line svg {
+  margin-left: -6px;
+}
+
+.decorative-line svg.first-svg {
+  margin-left: 0;
+}

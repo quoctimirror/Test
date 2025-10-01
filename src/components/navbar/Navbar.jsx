@@ -25,6 +25,9 @@ export default function Navbar() {
     location.pathname === "/" ||
     location.pathname === "/welcome";
 
+  // Check if current page is Milan submission page or Immersive Showroom page
+  const isMilanPage = location.pathname === "/mirror-in-milan-digital-jewelry-week" || location.pathname === "/immersive-showroom";
+
   useEffect(() => {
     // Initialize optimized transition system
     optimizedTransitionUtils.init();
@@ -116,6 +119,11 @@ export default function Navbar() {
   };
 
   const handleLogoClick = async () => {
+    // Disable logo click on Milan and Immersive Showroom pages
+    if (isMilanPage) {
+      return;
+    }
+
     if (window.location.pathname === "/home") {
       window.scrollTo(0, 0);
       setTimeout(() => {
@@ -272,7 +280,7 @@ export default function Navbar() {
           isHomePage && !isMenuOpen ? "no-blend" : ""
         } ${
           isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
-        }`}
+        } ${isMilanPage ? "no-click" : ""}`}
         onClick={handleLogoClick}
       >
         <img
@@ -284,19 +292,20 @@ export default function Navbar() {
       </div>
 
       {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
-      <div
-        className={`menu-fixed-container ${
-          isHomePage && !isMenuOpen ? "no-blend" : ""
-        } ${
-          isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
-        }`}
-      >
+      {!isMilanPage && (
         <div
-          className={`menu-container ${
-            isMenuOpen || isMenuHovered ? "menu-open" : ""
+          className={`menu-fixed-container ${
+            isHomePage && !isMenuOpen ? "no-blend" : ""
+          } ${
+            isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
           }`}
         >
           <div
+            className={`menu-container ${
+              isMenuOpen || isMenuHovered ? "menu-open" : ""
+            }`}
+          >
+            <div
             className="menu-button"
             onMouseEnter={() =>
               !isMobile && !isTablet && setIsMenuHovered(true)
@@ -413,17 +422,19 @@ export default function Navbar() {
               </ul>
             </div>
           </div>
+          </div>
         </div>
-      </div>
+      )}
 
-      <div
-        className={`account-fixed-container ${
-          isHomePage && !isMenuOpen ? "no-blend" : ""
-        } ${
-          isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
-        }`}
-      >
-        <div className="account-container">
+      {!isMilanPage && (
+        <div
+          className={`account-fixed-container ${
+            isHomePage && !isMenuOpen ? "no-blend" : ""
+          } ${
+            isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
+          }`}
+        >
+          <div className="account-container">
           <div
             className="account-button"
             onMouseEnter={() => setIsAccountMenuOpen(true)}
@@ -493,37 +504,42 @@ export default function Navbar() {
               )}
             </div>
           </div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* IMMERSIVE BUTTON - chỉ glassmorphism */}
-      <div className="immersive-fixed-container">
-        <button className="immersive-button"></button>
-      </div>
+      {!isMilanPage && (
+        <>
+          <div className="immersive-fixed-container">
+            <button className="immersive-button"></button>
+          </div>
 
-      {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
-      <div
-        className={`immersive-border-container ${
-          isHomePage && !isMenuOpen ? "no-blend" : ""
-        } ${
-          isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
-        }`}
-      >
-        <div className="immersive-border"></div>
-      </div>
+          {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
+          <div
+            className={`immersive-border-container ${
+              isHomePage && !isMenuOpen ? "no-blend" : ""
+            } ${
+              isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
+            }`}
+          >
+            <div className="immersive-border"></div>
+          </div>
 
-      {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
-      <div
-        className={`immersive-text-container ${
-          isHomePage && !isMenuOpen ? "no-blend" : ""
-        } ${
-          isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
-        }`}
-      >
-        <span className="immersive-text bodytext-4--no-margin">
-          Immersive Showroom
-        </span>
-      </div>
+          {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
+          <div
+            className={`immersive-text-container ${
+              isHomePage && !isMenuOpen ? "no-blend" : ""
+            } ${
+              isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
+            }`}
+          >
+            <span className="immersive-text bodytext-4--no-margin">
+              Immersive Showroom
+            </span>
+          </div>
+        </>
+      )}
     </>
   );
 }

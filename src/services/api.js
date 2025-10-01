@@ -510,5 +510,23 @@ export const fileUploadAPI = {
   },
 };
 
+// ===== NOTIFICATIONS API =====
+export const notificationsAPI = {
+  // Send email notification (public endpoint - no auth required)
+  sendEmail: (recipients, emailType, model) => {
+    // Use raw axios without interceptors to bypass Authorization header
+    return axios.post(`${API_BASE_URL}/api/notifications/email`, {
+      recipients,
+      emailType,
+      model,
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      timeout: 30000,
+    });
+  },
+};
+
 // Export the axios instance for custom calls
 export default api;

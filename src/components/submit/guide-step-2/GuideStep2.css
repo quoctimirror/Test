@@ -1,0 +1,156 @@
+.guide-step-2-wrapper {
+  width: 100%;
+  background: linear-gradient(180deg, #ec3667 0%, #000000 100%);
+  position: relative;
+  z-index: 1100;
+}
+
+.guide-step-2-section {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ec3667 0%, #000000 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1100;
+}
+
+.guide-step-2-container {
+  max-width: 62.5%;
+  margin: 0 auto;
+  padding: 180px 0;
+  text-align: center;
+  color: white;
+}
+
+/* Header Line */
+.guide-step-2-header-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 48px auto;
+}
+
+.guide-step-2-header-line svg {
+  margin-left: -6px;
+}
+
+.guide-step-2-header-line svg:first-child {
+  margin-left: 0;
+}
+
+.guide-step-2-header-line svg path {
+  fill: black;
+}
+
+/* Header Text */
+.guide-step-2-header {
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* Main Title */
+.guide-step-2-title {
+  color: #fff;
+  margin-bottom: 96px;
+}
+
+/* Process Steps */
+.guide-step-2-process {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.guide-step-2-step {
+  text-align: center;
+  max-width: 400px;
+}
+
+.guide-step-2-step .step-title {
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.guide-step-2-step .step-description {
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 24px;
+}
+
+.guide-step-2-step .step-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.guide-step-2-step .step-line svg path {
+  fill: white;
+}
+
+/* Constrain StarlightEffect within step-line */
+.guide-step-2-step .step-line .universe-star-container-center {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin-top: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Remove line from last step */
+.guide-step-2-step:last-child .step-line {
+  display: none;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1023px) {
+  .guide-step-2-container {
+    max-width: 62%;
+  }
+
+  .guide-step-2-process {
+    gap: 18px;
+  }
+
+  .guide-step-2-step .step-description br {
+    display: none;
+  }
+  .guide-step-2-header-line {
+    margin-bottom: 120px;
+  }
+  .guide-step-2-title {
+    margin-bottom: 120px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .guide-step-2-container {
+    max-width: 78%;
+    padding: 120px 0;
+  }
+
+  .guide-step-2-title {
+    margin-bottom: 60px;
+  }
+
+  .guide-step-2-step .step-description {
+    margin-bottom: 36px;
+  }
+  .guide-step-2-process {
+    gap: 36px;
+  }
+
+  .guide-step-2-header-line {
+    margin-bottom: 60px;
+  }
+}

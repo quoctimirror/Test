@@ -1,0 +1,133 @@
+.guide-step-1-wrapper {
+  width: 100%;
+  background: linear-gradient(180deg, rgba(246, 246, 246, 0) 90%, #ec3667 100%),
+    #f6f6f6;
+  position: relative;
+  z-index: 1100;
+}
+
+.guide-step-1-section {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgba(246, 246, 246, 0) 90%, #ec3667 100%),
+    #f6f6f6;
+  position: relative;
+  z-index: 1100;
+}
+
+.guide-step-1-container {
+  max-width: 47%;
+  margin: 0 auto;
+  padding: 180px 0;
+  text-align: center;
+}
+
+/* Header Line */
+.guide-step-1-header-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 96px auto;
+}
+
+.guide-step-1-header-line svg {
+  margin-left: -6px;
+}
+
+.guide-step-1-header-line svg:first-child {
+  margin-left: 0;
+}
+
+/* Header Text */
+.guide-step-1-header {
+  color: rgba(121, 121, 121, 1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+/* Main Title */
+.guide-step-1-title {
+  color: rgba(188, 34, 76, 1);
+  margin-bottom: 24px;
+}
+
+/* Description */
+.guide-step-1-description {
+  color: rgba(121, 121, 121, 1);
+  margin-bottom: 96px;
+}
+
+/* Opportunities Section */
+.guide-step-1-opportunities {
+  margin-top: 80px;
+}
+
+.guide-step-1-opportunities-title {
+  color: rgba(188, 34, 76, 1);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* Grid Layout */
+.guide-step-1-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.guide-step-1-column {
+  text-align: center;
+  background: linear-gradient(180deg, #e0e0e0 0%, #f6f6f6 15%);
+  padding: 30px 12px 24px;
+}
+
+.guide-step-1-column .column-title {
+  color: rgba(0, 0, 0, 1);
+  margin-bottom: 12px;
+}
+
+.guide-step-1-column .column-description {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1023px) {
+  .guide-step-1-container {
+    max-width: 62%;
+    padding: 180px 0;
+  }
+
+  .guide-step-1-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .guide-step-1-header-line {
+    margin: 0 auto 120px auto;
+  }
+  .guide-step-1-description {
+    margin-bottom: 120px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .guide-step-1-container {
+    max-width: 78%;
+    padding: 120px 0;
+  }
+
+  .guide-step-1-grid {
+    gap: 6px;
+  }
+
+  .guide-step-1-description {
+    margin-bottom: 60px;
+  }
+
+  .guide-step-1-opportunities {
+    margin-top: 60px;
+  }
+  .guide-step-1-header-line {
+    margin: 0 auto 60px auto;
+  }
+}

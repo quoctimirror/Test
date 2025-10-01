@@ -48,6 +48,7 @@ const WelcomePage = lazy(() => import("@pages/WelcomePage"));
 const ImmersiveShowroomPage = lazy(() =>
   import("@pages/ImmersiveShowroomPage")
 );
+const SubmitPage = lazy(() => import("@pages/SubmitPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -58,8 +59,7 @@ export default function AppRoutes() {
     location.pathname.startsWith("/dashboard/admin") ||
     location.pathname.startsWith("/dashboard/vendor") ||
     location.pathname === "/welcome" ||
-    location.pathname === "/" ||
-    location.pathname === "/immersive-showroom";
+    location.pathname === "/";
 
   const staticRoutesToHideFooter =
     location.pathname.startsWith("/universe-final") ||
@@ -69,7 +69,8 @@ export default function AppRoutes() {
     location.pathname.startsWith("/dashboard/vendor") ||
     location.pathname === "/welcome" ||
     location.pathname === "/" ||
-    location.pathname === "/immersive-showroom";
+    location.pathname === "/immersive-showroom" ||
+    location.pathname === "/mirror-in-milan-digital-jewelry-week";
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -126,6 +127,11 @@ export default function AppRoutes() {
           <Route
             path="/immersive-showroom"
             element={<ImmersiveShowroomPage />}
+          />
+
+          <Route
+            path="/mirror-in-milan-digital-jewelry-week"
+            element={<SubmitPage />}
           />
 
           {/* for observing UI universe-section final */}

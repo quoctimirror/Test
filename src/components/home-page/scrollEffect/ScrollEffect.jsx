@@ -1,10 +1,14 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import Logo from "@assets/images/Logo.svg";
 import SoundIcon from "@assets/images/button/sound.svg";
 import ArrowButton from "@assets/images/button/arrow-button.svg";
 import "./ScrollEffect.css";
 
 export default function ScrollEffect() {
+  const location = useLocation();
+  const isImmersiveShowroomPage = location.pathname === "/immersive-showroom";
+
   // Original ScrollEffect refs
   const finalGradientRef = useRef(null);
   const finalGradientTopRef = useRef(null);
@@ -528,7 +532,7 @@ export default function ScrollEffect() {
             opacity: index === 0
               ? opacity // Text 1: Use container opacity (whole text fade out together)
               : Math.max(titleOpacity, subtitleOpacity) > 0 ? 1 : 0, // Other texts: Use staggered
-            transition: "none",
+            transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
           }}
         >
           <div className="slide-content">
@@ -537,7 +541,7 @@ export default function ScrollEffect() {
               style={{
                 opacity: index === 0 ? 1 : titleOpacity, // Text 1: No individual fade, Others: Staggered
                 transform: index === 0 ? "translateY(0%)" : titleTransform,
-                transition: "none",
+                transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
               }}
             >
               {slide.title}
@@ -554,7 +558,7 @@ export default function ScrollEffect() {
               style={{
                 opacity: index === 0 ? 1 : subtitleOpacity, // Text 1: No individual fade, Others: Staggered
                 transform: index === 0 ? "translateY(0%)" : subtitleTransform,
-                transition: "none",
+                transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
               }}
             >
               {slide.subtitle}
@@ -611,18 +615,20 @@ export default function ScrollEffect() {
               </div>
             </div>
 
-            <div className="elements-to-fade" ref={elementsToFadeRef}>
-              <div className="scroll-down">
-                <button>
-                  <img src={ArrowButton} alt="Arrow Button" />
-                </button>
+            {!isImmersiveShowroomPage && (
+              <div className="elements-to-fade" ref={elementsToFadeRef}>
+                <div className="scroll-down">
+                  <button>
+                    <img src={ArrowButton} alt="Arrow Button" />
+                  </button>
+                </div>
+                <div className="vetor-button">
+                  <button>
+                    <img src={SoundIcon} alt="Sound" />
+                  </button>
+                </div>
               </div>
-              <div className="vetor-button">
-                <button>
-                  <img src={SoundIcon} alt="Sound" />
-                </button>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -27,7 +27,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("/welcome/Coming_soon.svg");
+  background-image: url("/welcome/landing-page-phygital-withoutlogo.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -37,7 +37,7 @@
 /* Logo */
 .welcome-logo {
   position: absolute;
-  top: 60px;
+  top: 5.5%;
   z-index: 3;
   animation: fadeInUp 1s ease-out 0.3s both;
 }
@@ -346,98 +346,45 @@
 /* Bottom text content */
 .welcome-bottom-text {
   position: absolute;
-  bottom: 60px;
+  bottom: 7.78%;
   z-index: 3;
   text-align: center;
   animation: fadeInUp 1s ease-out 1.7s both;
   /* Ensure text is visible on mobile browsers */
   padding-bottom: env(safe-area-inset-bottom, 0);
+  max-width: 423px;
 }
 
-.bottom-text-line1,
-.bottom-text-line2 {
+.bottom-text-line1 {
   /* Override heading-3--no-margin properties */
-  font-size: 24px;
-  line-height: 130%;
+  font-size: 22px;
+  line-height: 120%;
   text-align: center;
   color: rgba(188, 34, 76, 1);
 }
 
 /* Responsive */
-
-/* Tablet - 481px to 767px */
-@media screen and (max-width: 767px) {
-  .title-line-2 {
-    font-size: clamp(3rem, 15vw, 6rem);
-  }
-
-  .welcome-features {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .feature-card {
-    padding: 1.5rem;
-  }
-
-  .welcome-btn {
-    padding: 0.8rem 2rem;
-    font-size: 0.9rem;
-  }
-
-  .welcome-btn.primary {
-    padding: 1rem 2.5rem;
-    font-size: 1rem;
-  }
-
-  .secondary-actions {
-    flex-direction: column;
-  }
-
-  .welcome-btn.secondary {
-    width: 100%;
-  }
-
-  /* .bottom-text-line1,
-  .bottom-text-line2 {
-    font-size: 36px;
-  } */
-}
-
-/* Large Mobile - 361px to 480px */
 @media screen and (max-width: 480px) {
-  /* .title-line-1 {
-    font-size: 1.2rem;
-  } */
+  /* Change background to mobile version */
+  .welcome-background-image {
+    background-image: url("/welcome/landing-page-phygital-mobile-without-logo.jpg");
+  }
 
   .welcome-subtitle {
-    font-size: 0.9rem;
-  }
-
-  .welcome-description p {
-    font-size: 0.85rem;
-  }
-
-  .feature-icon {
-    font-size: 2rem;
-  }
-
-  .feature-card h3 {
-    font-size: 1rem;
-  }
-
-  .feature-card p {
-    font-size: 0.8rem;
+    font-size: 20px;
   }
 
   .bottom-text-line1,
   .bottom-text-line2 {
-    font-size: 24px;
-    letter-spacing: -0.72px;
+    font-size: 10px;
   }
 
   .welcome-bottom-text {
-    bottom: 40px; /* Increased from 40px to avoid browser UI */
+    max-width: 47%;
+  }
+
+  .welcome-bottom-text {
+    bottom: 40px;
     padding-bottom: env(safe-area-inset-bottom, 20px);
   }
 
@@ -445,16 +392,5 @@
   .welcome-page {
     height: 100dvh;
     min-height: 100dvh;
-  }
-}
-
-/* Small Mobile - 320px to 360px */
-@media screen and (max-width: 360px) {
-}
-
-/* Very Small Mobile - below 320px */
-@media screen and (max-width: 1023px) {
-  .welcome-subtitle {
-    font-size: 20px;
   }
 }

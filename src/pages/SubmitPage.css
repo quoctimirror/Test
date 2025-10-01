@@ -1,0 +1,26 @@
+/* SubmitPage Styles */
+.submit-page {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Scroll Progress Bar */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 0;
+  background: linear-gradient(90deg, #bc224c 0%, #d63566 50%, #bc224c 100%);
+  border-radius: 0 10px 10px 0;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(188, 34, 76, 0.4), 0 0 12px rgba(188, 34, 76, 0.2);
+  will-change: width;
+}
+
+/* Panel wrapper for pinning effect */
+.panel {
+  width: 100%;
+  min-height: 100vh;
+}

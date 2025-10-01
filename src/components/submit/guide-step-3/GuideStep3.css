@@ -1,0 +1,160 @@
+.guide-step-3-wrapper {
+  width: 100%;
+  background: rgba(0, 0, 0, 1);
+  position: relative;
+  z-index: 1100;
+}
+
+.guide-step-3-section {
+  width: 100%;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 1);
+  position: relative;
+  z-index: 1100;
+}
+
+.guide-step-3-container {
+  max-width: 47%;
+  margin: 0 auto;
+  padding-top: 180px;
+  padding-bottom: 180px;
+  text-align: center;
+  color: white;
+}
+
+/* Header Line */
+.guide-step-3-header-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 96px auto;
+}
+
+.guide-step-3-header-line svg {
+  margin-left: -6px;
+}
+
+.guide-step-3-header-line svg:first-child {
+  margin-left: 0;
+}
+
+.guide-step-3-header-line svg path {
+  fill: white;
+}
+
+/* Main Title */
+.guide-step-3-title {
+  color: #bc224c;
+  margin-bottom: 12px;
+}
+
+/* Description */
+.guide-step-3-description {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 60px;
+}
+
+/* We Value Section */
+.guide-step-3-values {
+  margin-bottom: 96px;
+}
+
+.guide-step-3-values .values-title {
+  color: #bc224c;
+  margin-bottom: 12px;
+}
+
+.guide-step-3-values .values-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.guide-step-3-values .value-item {
+  text-align: center;
+  padding: 30px 12px 24px;
+  background: linear-gradient(180deg, #797979 0%, #000 15%);
+}
+
+.guide-step-3-values .value-description {
+  color: rgba(224, 224, 224, 1);
+  line-height: 1.4;
+}
+
+/* Eligibility Section */
+.guide-step-3-eligibility .eligibility-title {
+  color: #bc224c;
+  margin-bottom: 24px;
+}
+
+.guide-step-3-eligibility .eligibility-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.guide-step-3-eligibility .eligibility-item {
+  text-align: center;
+  padding: 30px 12px 24px;
+  background: linear-gradient(180deg, #797979 0%, #000 15%);
+}
+
+.guide-step-3-eligibility .eligibility-description {
+  color: rgba(224, 224, 224, 1);
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1023px) {
+  .guide-step-3-container {
+    max-width: 62%;
+  }
+
+  .guide-step-3-values .values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .guide-step-3-eligibility .eligibility-grid {
+    gap: 12px;
+  }
+  .guide-step-3-header-line {
+    margin-bottom: 120px;
+  }
+
+  .guide-step-3-description br,
+  .guide-step-3-values .value-description br,
+  .guide-step-3-eligibility .eligibility-description br {
+    display: none;
+  }
+  .guide-step-3-values {
+    margin-bottom: 120px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .guide-step-3-container {
+    max-width: 78%;
+    padding: 120px 0;
+  }
+
+  .guide-step-3-description {
+    margin-bottom: 60px;
+  }
+
+  .guide-step-3-values {
+    margin-bottom: 60px;
+  }
+
+  .guide-step-3-values .values-grid {
+    gap: 6px;
+  }
+
+  .guide-step-3-header-line {
+    margin-bottom: 60px;
+  }
+  .guide-step-3-eligibility .eligibility-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
