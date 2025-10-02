@@ -29,7 +29,8 @@
     "react-phone-input-2": "^2.15.1",
     "react-qr-code": "^2.0.18",
     "react-router-dom": "^7.6.3",
-    "three": "^0.178.0"
+    "three": "^0.178.0",
+    "webgi": "^0.4.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
