@@ -189,7 +189,7 @@ const VendorProducts = ({ vendorInfo }) => {
                       </td>
                       <td>
                         {product.featured ? (
-                          <span style={{ color: "#bc224c", fontWeight: "500" }}>⭐ Yes</span>
+                          <span style={{ color: "#bc224c", fontWeight: "500" }}> Yes</span>
                         ) : (
                           <span style={{ color: "#666" }}>No</span>
                         )}

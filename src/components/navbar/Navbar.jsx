@@ -208,6 +208,11 @@ export default function Navbar() {
     return user && user.roles && user.roles.includes("VENDOR");
   };
 
+  // Helper function to check if user is designer
+  const isUserDesigner = () => {
+    return user && user.roles && user.roles.includes("DESIGNER");
+  };
+
   const handleAccountClick = async () => {
     // Enhanced check: also verify token exists as fallback
     const hasToken = localStorage.getItem("accessToken");
@@ -235,6 +240,11 @@ export default function Navbar() {
   const handleVendorDashboardClick = async () => {
     setIsAccountMenuOpen(false);
     await performTransition("/dashboard/vendor");
+  };
+
+  const handleDesignerDashboardClick = async () => {
+    setIsAccountMenuOpen(false);
+    await performTransition("/dashboard/designer");
   };
 
   const handleLogoutClick = () => {
@@ -481,6 +491,15 @@ export default function Navbar() {
                         onClick={handleVendorDashboardClick}
                       >
                         Vendor Dashboard
+                      </li>
+                    )}
+
+                    {isUserDesigner() && (
+                      <li
+                        className="bodytext-3--no-margin"
+                        onClick={handleDesignerDashboardClick}
+                      >
+                        Designer Dashboard
                       </li>
                     )}
 

@@ -86,28 +86,28 @@ const DashboardHome = ({ setActiveTab }) => {
         <StatCard
           title="Products"
           value={stats.products}
-          icon="💎"
+          icon=""
           color="#bc224c"
           description="Total jewelry products in inventory"
         />
         <StatCard
           title="Categories"
           value={stats.categories}
-          icon="📂"
+          icon=""
           color="#17a2b8"
           description="Product categories and types"
         />
         <StatCard
           title="Collections"
           value={stats.collections}
-          icon="📦"
+          icon=""
           color="#28a745"
           description="Seasonal and themed collections"
         />
         <StatCard
           title="Locations"
           value={stats.locations}
-          icon="📍"
+          icon=""
           color="#ffc107"
           description="Store locations and outlets"
         />
@@ -120,28 +120,28 @@ const DashboardHome = ({ setActiveTab }) => {
           <QuickAction
             title="Add New Product"
             description="Create a new jewelry product with specifications"
-            icon="✨"
+            icon=""
             color="#bc224c"
             onClick={() => setActiveTab("products")}
           />
           <QuickAction
             title="Manage Categories"
             description="Organize products into categories"
-            icon="🏷️"
+            icon=""
             color="#17a2b8"
             onClick={() => setActiveTab("categories")}
           />
           <QuickAction
             title="Create Collection"
             description="Group products into seasonal collections"
-            icon="🎨"
+            icon=""
             color="#28a745"
             onClick={() => setActiveTab("collections")}
           />
           <QuickAction
             title="Add Store Location"
             description="Register a new store or outlet"
-            icon="🏪"
+            icon=""
             color="#ffc107"
             onClick={() => setActiveTab("locations")}
           />
@@ -153,21 +153,21 @@ const DashboardHome = ({ setActiveTab }) => {
         <h3 className="section-title">Recent Activity</h3>
         <div className="activity-list">
           <div className="activity-item">
-            <div className="activity-icon">💎</div>
+            <div className="activity-icon"></div>
             <div className="activity-content">
               <div className="activity-title">Product "Lumina Diamond Ring" updated</div>
               <div className="activity-time">2 hours ago</div>
             </div>
           </div>
           <div className="activity-item">
-            <div className="activity-icon">📂</div>
+            <div className="activity-icon"></div>
             <div className="activity-content">
               <div className="activity-title">New category "Bracelets" created</div>
               <div className="activity-time">1 day ago</div>
             </div>
           </div>
           <div className="activity-item">
-            <div className="activity-icon">📍</div>
+            <div className="activity-icon"></div>
             <div className="activity-content">
               <div className="activity-title">Store location "District 1 Flagship" added</div>
               <div className="activity-time">3 days ago</div>

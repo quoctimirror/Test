@@ -48,11 +48,15 @@ const VendorDashboard = () => {
   }, [user]);
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: "📊" },
-    { id: "products", label: "My Products", icon: "💎" },
-    { id: "orders", label: "Orders", icon: "📋" },
-    { id: "profile", label: "Vendor Profile", icon: "🏢" },
+    { id: "dashboard", label: "Dashboard" },
+    { id: "products", label: "My Products" },
+    { id: "orders", label: "Orders" },
+    { id: "profile", label: "Vendor Profile" },
   ];
+
+  const handleHomeNavigation = () => {
+    window.location.href = '/home';
+  };
 
   const renderActiveTab = () => {
     if (loading) {
@@ -68,7 +72,7 @@ const VendorDashboard = () => {
       return (
         <div className="vendor-no-access">
           <div className="no-access-content">
-            <div className="no-access-icon">🏢</div>
+            <div className="no-access-icon">V</div>
             <h3>No Vendor Account</h3>
             <p>
               You don't have a vendor account associated with your user profile.
@@ -133,13 +137,15 @@ const VendorDashboard = () => {
               }`}
               onClick={() => setActiveTab(item.id)}
             >
-              <span className="vendor-nav-icon">{item.icon}</span>
               <span className="vendor-nav-label">{item.label}</span>
             </button>
           ))}
         </nav>
 
         <div className="vendor-sidebar-footer">
+          <button className="home-nav-button" onClick={handleHomeNavigation}>
+            <span className="home-nav-label">← Back to Home</span>
+          </button>
           <div className="vendor-user-info">
             <div className="vendor-user-avatar">
               {vendorInfo?.name ? vendorInfo.name.charAt(0).toUpperCase() : "V"}

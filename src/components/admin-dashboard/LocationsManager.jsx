@@ -128,9 +128,9 @@ const LocationsManager = () => {
   const getTypeIcon = (type) => {
     switch (type) {
       case 'SHOWROOM': return '🪟';
-      case 'BOUTIQUE': return '🏪';
-      case 'POD': return '📦';
-      default: return '📍';
+      case 'BOUTIQUE': return '';
+      case 'POD': return '';
+      default: return '';
     }
   };
 
@@ -237,7 +237,7 @@ const LocationsManager = () => {
             <div style={{ marginBottom: '1rem', lineHeight: '1.5' }}>
               {location.address && (
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '14px' }}>📍</span>
+                  <span style={{ fontSize: '14px' }}></span>
                   <div style={{ fontSize: '14px', color: '#495057' }}>
                     {location.address}
                     {location.city && <div style={{ color: '#6c757d', fontSize: '13px' }}>{location.city}</div>}

@@ -247,12 +247,12 @@ const UsersManager = () => {
   });
 
   const getRoleIcon = (roles) => {
-    if (!roles || !Array.isArray(roles)) return '👤';
+    if (!roles || !Array.isArray(roles)) return '';
     if (roles.includes('ADMIN')) return '👑';
-    if (roles.includes('VENDOR')) return '🏪';
-    if (roles.includes('STAFF')) return '👥';
-    if (roles.includes('USER')) return '👤';
-    return '👤';
+    if (roles.includes('VENDOR')) return '';
+    if (roles.includes('STAFF')) return '';
+    if (roles.includes('USER')) return '';
+    return '';
   };
 
   const getRoleColor = (roles) => {

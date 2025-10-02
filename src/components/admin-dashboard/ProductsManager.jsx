@@ -432,7 +432,7 @@ const ProductsManager = () => {
                             fontWeight: "500",
                           }}
                         >
-                          ⭐ Featured
+                           Featured
                         </span>
                       )}
                     </div>

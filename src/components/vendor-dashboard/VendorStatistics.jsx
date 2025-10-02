@@ -53,7 +53,7 @@ const VendorStatistics = ({ vendorInfo }) => {
     return (
       <div className="vendor-card">
         <div className="vendor-card-body" style={{ textAlign: "center", padding: "3rem", color: "#666" }}>
-          <div style={{ fontSize: "48px", marginBottom: "1rem" }}>📊</div>
+          <div style={{ fontSize: "48px", marginBottom: "1rem" }}></div>
           <h3>No Vendor Data</h3>
           <p>Unable to load statistics without vendor information.</p>
         </div>
@@ -128,7 +128,7 @@ const VendorStatistics = ({ vendorInfo }) => {
       
       <div className="vendor-stats-grid">
         <div className="vendor-stat-card">
-          <span className="vendor-stat-icon">📦</span>
+          <span className="vendor-stat-icon"></span>
           <div className="vendor-stat-value">{stats.totalProducts}</div>
           <div className="vendor-stat-label">Total Products</div>
         </div>
@@ -140,19 +140,19 @@ const VendorStatistics = ({ vendorInfo }) => {
         </div>
 
         <div className="vendor-stat-card">
-          <span className="vendor-stat-icon">⭐</span>
+          <span className="vendor-stat-icon"></span>
           <div className="vendor-stat-value">{stats.featuredProducts}</div>
           <div className="vendor-stat-label">Featured Products</div>
         </div>
 
         <div className="vendor-stat-card">
-          <span className="vendor-stat-icon">📋</span>
+          <span className="vendor-stat-icon"></span>
           <div className="vendor-stat-value">{stats.totalOrders}</div>
           <div className="vendor-stat-label">Total Orders</div>
         </div>
 
         <div className="vendor-stat-card">
-          <span className="vendor-stat-icon">💰</span>
+          <span className="vendor-stat-icon"></span>
           <div className="vendor-stat-value" style={{ fontSize: "1.5rem" }}>
             {formatCurrency(stats.totalRevenue)}
           </div>
@@ -185,7 +185,7 @@ const VendorStatistics = ({ vendorInfo }) => {
               className="admin-button admin-button-outline"
               style={{ padding: "1rem", fontSize: "16px" }}
             >
-              📊 View Reports
+               View Reports
             </button>
             <button 
               className="admin-button admin-button-outline"

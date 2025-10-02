@@ -380,3 +380,28 @@
     font-size: 1.5rem;
   }
 }
+
+/* Home Navigation Button */
+.home-nav-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+}
+
+.home-nav-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.home-nav-label {
+  font-weight: 500;
+}

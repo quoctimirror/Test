@@ -449,7 +449,7 @@ const CollectionsManager = () => {
                       fontWeight: "500",
                     }}
                   >
-                    ⭐ Featured
+                     Featured
                   </div>
                 )}
               </div>
@@ -594,7 +594,7 @@ const CollectionsManager = () => {
                           color: "#495057",
                         }}
                       >
-                        📦 Products in Collection
+                         Products in Collection
                       </h4>
                       <span
                         style={{
@@ -721,7 +721,7 @@ const CollectionsManager = () => {
                                         marginLeft: "0.5rem",
                                       }}
                                     >
-                                      ⭐
+                                      
                                     </span>
                                   )}
                                   {isHeroProduct(collection.id, product.id) && (

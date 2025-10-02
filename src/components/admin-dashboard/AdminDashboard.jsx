@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ProductsManager from "./ProductsManager";
+import OrdersManager from "./OrdersManager";
+import PaymentSchedulesManager from "./PaymentSchedulesManager";
 import CategoriesManagerEnhanced from "@components/manage-products/CategoriesManagerEnhanced";
 import CollectionsManager from "./CollectionsManager";
 import LocationsManager from "./LocationsManager";
@@ -13,15 +15,21 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: "📊" },
-    { id: "products", label: "Products", icon: "💎" },
-    { id: "categories", label: "Categories", icon: "📂" },
-    { id: "collections", label: "Collections", icon: "📦" },
-    { id: "locations", label: "Locations", icon: "📍" },
-    { id: "vendors", label: "Vendors", icon: "🏭" },
-    // { id: "components", label: "Components", icon: "🔧" },
-    { id: "users", label: "Users", icon: "👥" },
+    { id: "dashboard", label: "Dashboard" },
+    { id: "products", label: "Products" },
+    { id: "orders", label: "Orders" },
+    { id: "payments", label: "Payment schedules" },
+    { id: "categories", label: "Categories" },
+    { id: "collections", label: "Collections" },
+    { id: "locations", label: "Locations" },
+    { id: "vendors", label: "Vendors" },
+    // { id: "components", label: "Components" },
+    { id: "users", label: "Users" },
   ];
+
+  const handleHomeNavigation = () => {
+    window.location.href = '/home';
+  };
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -29,6 +37,10 @@ const AdminDashboard = () => {
         return <DashboardHome setActiveTab={setActiveTab} />;
       case "products":
         return <ProductsManager />;
+      case "orders":
+        return <OrdersManager />;
+      case "payments":
+        return <PaymentSchedulesManager />;
       case "categories":
         return <CategoriesManagerEnhanced />;
       case "collections":
@@ -61,6 +73,14 @@ const AdminDashboard = () => {
         title: "Categories Management",
         description:
           "Organize products into categories like rings, necklaces, earrings",
+      },
+      orders: {
+        title: "Orders Management",
+        description: "Review new customer orders and coordinate follow-up",
+      },
+      payments: {
+        title: "Payment Schedules",
+        description: "Monitor installments across orders and record payments",
       },
       collections: {
         title: "Collections Management",
@@ -105,13 +125,15 @@ const AdminDashboard = () => {
               }`}
               onClick={() => setActiveTab(item.id)}
             >
-              <span className="admin-nav-icon">{item.icon}</span>
               <span className="admin-nav-label">{item.label}</span>
             </button>
           ))}
         </nav>
 
         <div className="admin-sidebar-footer">
+          <button className="home-nav-button" onClick={handleHomeNavigation}>
+            <span className="home-nav-label">← Back to Home</span>
+          </button>
           <div className="admin-user-info">
             <div className="admin-user-avatar">A</div>
             <div className="admin-user-details">

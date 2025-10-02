@@ -120,7 +120,7 @@ const CategoriesManager = () => {
             style={{ flex: 1, maxWidth: '400px' }}
           />
           <button onClick={handleAdd} className="admin-button admin-button-primary">
-            📂 Add Category
+             Add Category
           </button>
         </div>
       </div>

@@ -1,8 +1,16 @@
 import axios from "axios";
 
-// Base API URL - now pointing to Gateway Service
-// Gateway Service routes to all microservices
-const API_BASE_URL = "https://xpxr4xbvim.ap-southeast-1.awsapprunner.com";
+// Base URLs are driven by Vite environment variables to support local/dev/prod
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://xpxr4xbvim.ap-southeast-1.awsapprunner.com";
+
+const AUTH_BASE_URL =
+  import.meta.env.VITE_AUTH_BASE_URL ||
+  API_BASE_URL ||
+  "https://nwkg3ymv2p.ap-southeast-1.awsapprunner.com";
+
+const REFRESH_TOKEN_ENDPOINT = `${AUTH_BASE_URL}/api/v1/auth/refresh-token`;
 
 // Debug logging
 // console.log("🔧 API Configuration Debug:", {
@@ -50,10 +58,53 @@ api.interceptors.request.use(
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
+  (response) => response,
+  async (error) => {
+    const status = error.response?.status;
+    const originalRequest = error.config || {};
+    const requestUrl = originalRequest.url || "";
+
+    const isAuthEndpoint =
+      requestUrl.includes("/auth/authenticate") ||
+      requestUrl.includes("/auth/refresh-token");
+
+    const requiresAuth = ["/users/", "/orders/", "/me/"]
+      .some((path) => requestUrl.includes(path));
+
+    if (
+      status === 401 &&
+      requiresAuth &&
+      !isAuthEndpoint &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) {
+        localStorage.removeItem("accessToken");
+        return Promise.reject(error);
+      }
+
+      try {
+        const refreshResponse = await axios.post(REFRESH_TOKEN_ENDPOINT, {
+          refreshToken,
+        });
+        const { accessToken: newAccessToken } = refreshResponse.data || {};
+
+        if (newAccessToken) {
+          localStorage.setItem("accessToken", newAccessToken);
+          originalRequest.headers = originalRequest.headers || {};
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return api(originalRequest);
+        }
+      } catch (refreshError) {
+        console.error("Token refresh failed", refreshError);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        return Promise.reject(refreshError);
+      }
+    }
+
     console.error("API Error:", error.response?.data || error.message);
     return Promise.reject(error);
   }
@@ -168,6 +219,29 @@ export const productsAPI = {
   toggleFeatured: (id) => api.post(`/api/products/${id}/toggle-featured`),
   updateStock: (id, quantity) =>
     api.put(`/api/products/${id}/stock`, { quantity }),
+};
+
+// ===== ORDERS API =====
+export const ordersAPI = {
+  create: (orderData) => api.post("/api/orders", orderData),
+  getAll: (params = {}) => api.get("/api/orders", { params }),
+  getById: (id) => api.get(`/api/orders/${id}`),
+  getPaymentSchedule: (id) => api.get(`/api/orders/${id}/payment-schedule`),
+  getPaymentSchedules: (params = {}) =>
+    api.get(`/api/orders/payment-schedule`, { params }),
+  updateStatus: (id, payload) => api.post(`/api/orders/${id}/status`, payload),
+  updatePaymentTerms: (id, payload) =>
+    api.put(`/api/orders/${id}/payment-terms`, payload),
+  recordPayment: (orderId, scheduleId, payload) =>
+    api.post(
+      `/api/orders/${orderId}/payment-schedule/${scheduleId}/payments`,
+      payload
+    ),
+  markSchedulePaid: (orderId, scheduleId, payload) =>
+    api.post(
+      `/api/orders/${orderId}/payment-schedule/${scheduleId}/payments`,
+      payload
+    ),
 };
 
 // ===== COLLECTIONS API =====
@@ -419,6 +493,87 @@ export const createApiHook = (apiCall) => {
       return { data: null, error: errorInfo, loading: false };
     }
   };
+};
+
+// ===== DESIGNERS API =====
+export const designersAPI = {
+  // Get all active designers (filtered by current user if authenticated)
+  getAll: () => api.get("/api/designers"),
+
+  // Get current user's designers (authenticated endpoint)
+  getCurrentUserDesigners: () => api.get("/api/designers?filter=current-user"),
+
+  // Get current user's designer info for dashboard
+  getCurrentDesignerInfo: () => api.get("/api/designers?filter=current-user")
+    .then(response => {
+      const designers = response.data;
+
+      return {
+        data: designers && designers.length > 0 ? designers[0] : null,
+        hasDesigner: designers && designers.length > 0
+      };
+    }),
+
+  // Get designer by ID
+  getById: (id) => api.get(`/api/designers/${id}`),
+
+  // Get designer by code
+  getByCode: (code) => api.get(`/api/designers/code/${code}`),
+
+  // Get designers by specialty
+  getBySpecialty: (specialty) => api.get(`/api/designers/specialty/${specialty}`),
+
+  // Get verified designers
+  getVerified: () => api.get("/api/designers/verified"),
+
+  // Get featured designers
+  getFeatured: () => api.get("/api/designers/featured"),
+
+  // Search designers with pagination
+  search: (searchTerm, params = {}) => {
+    const { page = 0, size = 20 } = params;
+    return api.get(`/api/designers/search`, {
+      params: { search: searchTerm, page, size },
+    });
+  },
+
+  // Check if designer exists by code
+  checkExists: (code) => api.get(`/api/designers/exists/${code}`),
+
+  // Get active count
+  getActiveCount: () => api.get("/api/designers/count"),
+
+  // CRUD operations
+  create: (designerData) => api.post("/api/designers", designerData),
+  update: (id, designerData) => api.put(`/api/designers/${id}`, designerData),
+  delete: (id) => api.delete(`/api/designers/${id}`),
+  deactivate: (id) => api.patch(`/api/designers/${id}/deactivate`),
+
+  // Get design products for a specific designer
+  getDesigns: (designerId) => api.get(`/api/designers/${designerId}/designs`),
+
+  // Get design products for current user's designer
+  getCurrentDesignerDesigns: () =>
+    designersAPI.getCurrentDesignerInfo()
+      .then(designerInfo => {
+        if (designerInfo.hasDesigner && designerInfo.data) {
+          return designersAPI.getDesigns(designerInfo.data.id);
+        } else {
+          return { data: [] };
+        }
+      }),
+
+  // Get designer dashboard data by designer ID
+  getDashboard: (designerId) => api.get(`/api/designers/${designerId}/dashboard`),
+
+  // Get designer dashboard data for current user
+  getCurrentUserDashboard: () => api.get("/api/designers/dashboard"),
+};
+
+// Keep the old designerAPI for backward compatibility but mark as deprecated
+export const designerAPI = {
+  // Get designer dashboard data - DEPRECATED: Use designersAPI.getCurrentUserDashboard()
+  getDashboard: () => designersAPI.getCurrentUserDashboard(),
 };
 
 // ===== VENDORS API =====

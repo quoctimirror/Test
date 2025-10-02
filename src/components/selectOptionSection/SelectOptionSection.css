@@ -285,6 +285,12 @@
   margin-top: 6px;
 }
 
+.order-feedback {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.4;
+}
+
 /* More Detail Link */
 .more-detail-wrapper {
   display: flex;

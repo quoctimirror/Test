@@ -6,7 +6,7 @@ const VendorOrders = () => {
       </div>
       <div className="vendor-card-body">
         <div style={{ textAlign: "center", padding: "3rem", color: "#666" }}>
-          <div style={{ fontSize: "48px", marginBottom: "1rem" }}>📋</div>
+          <div style={{ fontSize: "48px", marginBottom: "1rem" }}></div>
           <h3>Orders Coming Soon</h3>
           <p>Order management functionality will be available in the next update.</p>
         </div>

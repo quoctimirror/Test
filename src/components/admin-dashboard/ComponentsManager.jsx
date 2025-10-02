@@ -181,10 +181,10 @@ const ComponentsManager = () => {
   const getTypeIcon = (type) => {
     switch (type) {
       case 'MATERIAL': return '🏗️';
-      case 'STONE': return '💎';
+      case 'STONE': return '';
       case 'SIZING': return '📏';
-      case 'FINISH': return '✨';
-      case 'ACCESSORY': return '🔧';
+      case 'FINISH': return '';
+      case 'ACCESSORY': return '';
       default: return '⚙️';
     }
   };
@@ -307,7 +307,7 @@ const ComponentsManager = () => {
               
               {component.category && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '14px' }}>📂</span>
+                  <span style={{ fontSize: '14px' }}></span>
                   <span style={{ fontSize: '14px', color: '#495057' }}>
                     Category: <strong>{component.category.replace(/_/g, ' ')}</strong>
                   </span>
@@ -316,7 +316,7 @@ const ComponentsManager = () => {
               
               {component.priceModifier !== 0 && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '14px' }}>💰</span>
+                  <span style={{ fontSize: '14px' }}></span>
                   <span style={{ fontSize: '14px', color: '#495057' }}>
                     Price Modifier: <strong style={{ color: component.priceModifier > 0 ? '#28a745' : '#dc3545' }}>
                       {component.priceModifier > 0 ? '+' : ''}{formatPrice(component.priceModifier)}

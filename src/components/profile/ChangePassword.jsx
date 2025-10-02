@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import api from "@api/axiosConfig";
+import api from "@services/api";
 import "./ChangePassword.css";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";

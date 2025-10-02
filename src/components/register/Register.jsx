@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "@api/axiosConfig";
+import api from "@services/api";
 import "./Register.css";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";

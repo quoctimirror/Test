@@ -33,6 +33,9 @@ const AdminDashboard = lazy(() =>
 const VendorDashboard = lazy(() =>
   import("@components/vendor-dashboard/VendorDashboard.jsx")
 );
+const DesignerDashboard = lazy(() =>
+  import("@components/designer-dashboard/DesignerDashboard.jsx")
+);
 const AuthPage = lazy(() => import("@pages/AuthPage"));
 const Login = lazy(() => import("@components/login/Login"));
 const Register = lazy(() => import("@components/register/Register"));
@@ -58,6 +61,7 @@ export default function AppRoutes() {
     location.pathname.startsWith("/ar/rings") ||
     location.pathname.startsWith("/dashboard/admin") ||
     location.pathname.startsWith("/dashboard/vendor") ||
+    location.pathname.startsWith("/dashboard/designer") ||
     location.pathname === "/welcome" ||
     location.pathname === "/";
 
@@ -67,6 +71,7 @@ export default function AppRoutes() {
     location.pathname.startsWith("/ar/rings") ||
     location.pathname.startsWith("/dashboard/admin") ||
     location.pathname.startsWith("/dashboard/vendor") ||
+    location.pathname.startsWith("/dashboard/designer") ||
     location.pathname === "/welcome" ||
     location.pathname === "/" ||
     location.pathname === "/immersive-showroom" ||
@@ -170,6 +175,15 @@ export default function AppRoutes() {
             element={
               <ProtectedRoute requiredRole="VENDOR">
                 <VendorDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="dashboard/designer"
+            element={
+              <ProtectedRoute requiredRole="DESIGNER">
+                <DesignerDashboard />
               </ProtectedRoute>
             }
           />

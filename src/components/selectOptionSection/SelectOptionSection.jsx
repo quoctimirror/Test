@@ -6,6 +6,8 @@ import {
   categoriesAPI,
   componentsAPI,
   componentOptionalsAPI,
+  productsAPI,
+  ordersAPI,
   handleAPIError,
 } from "@services/api";
 
@@ -22,6 +24,45 @@ const SelectOptionSection = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [userSelections, setUserSelections] = useState({});
   const [sizeValue, setSizeValue] = useState(6); // State for size slider
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+  const [orderFeedback, setOrderFeedback] = useState(null);
+
+  const decodeTokenPayload = () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return null;
+    try {
+      const [, payload] = token.split(".");
+      return JSON.parse(atob(payload));
+    } catch (error) {
+      console.warn("Unable to decode access token", error);
+      return null;
+    }
+  };
+
+  const parsePriceToNumber = (priceString) => {
+    if (!priceString) return 0;
+    const numeric = priceString.toString().replace(/[^0-9]/g, "");
+    return numeric ? Number(numeric) : 0;
+  };
+
+  const formatCurrency = (amount, currency = "USD") => {
+    try {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency,
+        minimumFractionDigits: 0,
+      }).format(Number(amount || 0));
+    } catch (error) {
+      return `$${Number(amount || 0)}`;
+    }
+  };
+
+  const resolveQuantity = () => {
+    const selectedQty = userSelections?.Quantity?.componentOptionalName;
+    const parsed = selectedQty ? parseInt(selectedQty, 10) : NaN;
+    return Number.isNaN(parsed) ? 1 : parsed;
+  };
 
   // Default values for overview when no selection is made
   const defaultValues = {
@@ -61,8 +102,72 @@ const SelectOptionSection = () => {
     // Book appointment clicked
   };
 
-  const handleOrderNow = () => {
-    // Order now clicked
+  const handleOrderNow = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      sessionStorage.setItem("redirectAfterLogin", window.location.pathname);
+      navigate("/auth/login");
+      return;
+    }
+
+    if (!selectedProduct) {
+      setOrderFeedback("Product selection is unavailable. Please try again later.");
+      return;
+    }
+
+    const quantity = resolveQuantity();
+    const totalAmount = parsePriceToNumber(currentPrice);
+    const identity = decodeTokenPayload();
+    const configurationSnapshot = {
+      product: {
+        id: selectedProduct.id,
+        name: selectedProduct.name,
+        sku: selectedProduct.sku,
+        price: selectedProduct.price,
+        currency: selectedProduct.currency,
+      },
+      selections: userSelections,
+      size: sizeValue,
+      categoryId: selectedCategory?.id,
+      overviewDefaults: defaultValues,
+      displayedPrice: currentPrice,
+      user: identity
+        ? {
+            id: identity.userId || identity.sub,
+            email: identity.email,
+          }
+        : undefined,
+    };
+
+    const payload = {
+      productId: selectedProduct.id,
+      subtotalAmount: totalAmount,
+      totalAmount,
+      paymentTermsType: "FIXED_SCHEDULE",
+      configuration: JSON.stringify(configurationSnapshot),
+      quantity,
+      sourceChannel: "WEB_PRODUCT_PAGE",
+      customerName:
+        identity?.name ||
+        `${identity?.firstName ?? ""} ${identity?.lastName ?? ""}`.trim() ||
+        undefined,
+      customerEmail: identity?.email,
+      customerPhone: identity?.phone || identity?.phoneNumber,
+    };
+
+    try {
+      setIsSubmittingOrder(true);
+      setOrderFeedback(null);
+      await ordersAPI.create(payload);
+      setOrderFeedback(
+        "Thank you! Your order request has been received. Our team will reach out shortly to finalize payment arrangements."
+      );
+    } catch (error) {
+      const apiError = handleAPIError(error, "Unable to create order");
+      setOrderFeedback(apiError.message);
+    } finally {
+      setIsSubmittingOrder(false);
+    }
   };
 
   const handleMoreDetails = () => {
@@ -177,6 +282,19 @@ const SelectOptionSection = () => {
         const optionsResponse = await componentOptionalsAPI.getAll();
         const optionsData = optionsResponse.data;
         setComponentOptions(optionsData);
+
+        // Fetch default product for ordering context
+        const productsResponse = await productsAPI.getAll({ paginated: false });
+        const productData = productsResponse.data;
+        if (Array.isArray(productData) && productData.length > 0) {
+          setSelectedProduct(productData[0]);
+          setCurrentPrice(
+            formatCurrency(
+              productData[0].price,
+              productData[0].currency || "USD"
+            )
+          );
+        }
       } catch (error) {
         const errorInfo = handleAPIError(
           error,
@@ -372,6 +490,14 @@ const SelectOptionSection = () => {
           },
         ];
         setComponentOptions(fallbackOptions);
+        setSelectedProduct({
+          id: "PRD-PLACEHOLDER",
+          name: "Custom Ring",
+          price: 15600,
+          currency: "USD",
+          sku: "WEB-CUSTOM",
+        });
+        setCurrentPrice(formatCurrency(15600, "USD"));
       }
     };
 
@@ -535,9 +661,13 @@ const SelectOptionSection = () => {
             theme="light"
             onClick={handleOrderNow}
             className="order-now-button"
+            disabled={isSubmittingOrder}
           >
-            Order Now
+            {isSubmittingOrder ? "Processing…" : "Order Now"}
           </ShineGlassButton>
+          {orderFeedback && (
+            <p className="order-feedback bodytext-6--no-margin">{orderFeedback}</p>
+          )}
         </div>
       </div>
 

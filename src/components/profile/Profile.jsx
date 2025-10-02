@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "@api/axiosConfig"; // Use local API through gateway
+import api from "@services/api"; // Use centralized API client
 import "./Profile.css";
 import "@styles/typography.css";
 import PhoneInput from "react-phone-input-2";

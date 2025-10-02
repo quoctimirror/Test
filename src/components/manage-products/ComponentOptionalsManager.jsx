@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "@api/axiosConfig";
+import api from "@services/api";
 
 const ComponentOptionalsManager = () => {
   const [componentOptionals, setComponentOptionals] = useState([]);
