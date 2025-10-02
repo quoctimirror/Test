@@ -28,7 +28,7 @@ const TimeOverlay = ({ isVisible, onClose }) => {
 
     return (
         <div className="time-overlay" onClick={onClose}>
-            <div className="time-overlay__content" onClick={(e) => e.stopPropagation()}>
+            <div className="time-overlay__content">
                 {/* Close Button */}
                 <div className="time-overlay__close-button">
                     <ShineGlassButton
