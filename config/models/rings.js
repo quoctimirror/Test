@@ -36,6 +36,12 @@ export const ringModels = {
     description: "",
     modelPath: "/arTryOn/nhanDario.glb",
   },
+  nhanMirror: {
+    id: "nhanMirror",
+    name: "",
+    description: "",
+    modelPath: "/models/refine-mirror-ring-1.glb",
+  },
 };
 
 // Helper function to get ring by ID

@@ -17,12 +17,7 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.VITE_NODE_ENV': JSON.stringify(env.VITE_NODE_ENV || mode),
     },
     server: {
-      allowedHosts: [
-        "localhost",
-        /\.ngrok-free\.app$/,
-        /\.ngrok\.io$/,
-        /\.ngrok\.app$/,
-      ],
+      allowedHosts: true, // Allow all hosts (required for ngrok)
       host: "0.0.0.0",
       port: 5173,
       proxy: {

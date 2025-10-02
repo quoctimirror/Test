@@ -15,7 +15,7 @@
         height: 100%;
         text-align: center;
         border-radius: 8px;
-        border: 2px solid red;
+        /* border: 2px solid red; */
         /* background-color: cyan; */
         box-sizing: border-box;
         position: relative;
@@ -24,11 +24,9 @@
     /* Arrow navigation buttons - centered vertically in section1-container */
     .section1-arrow-btn {
         position: absolute;
-        top: calc(50% + 50vh);
+        top: 50%;
         transform: translateY(-50%);
         z-index: 10;
-        margin: 0;
-        padding: 0;
     }
 
     .section1-arrow-left {
@@ -39,40 +37,87 @@
         right: 20px;
     }
 
-    .section1-arrow-btn img {
-        display: block;
-    }
-
-    /* Disable ALL hover effects for arrow buttons */
-    .section1-arrow-btn,
-    .section1-arrow-btn *,
-    .section1-arrow-btn .shine-glass-button,
+    /* Completely disable transform transitions and animations with highest specificity */
+    .section1-arrow-btn.section1-arrow-left .shine-glass-button,
+    .section1-arrow-btn.section1-arrow-right .shine-glass-button,
+    .section1-arrow-btn .shine-glass-button.shine-glass-button--footer,
     .section1-arrow-btn .shine-button-wrap,
-    .section1-arrow-btn .glass-layer,
-    .section1-arrow-btn .border-layer,
-    .section1-arrow-btn .shine-layer {
-        transition: none !important;
+    .section1-arrow-btn .button-text,
+    .section1-arrow-btn * {
         transform: none !important;
+        transition: none !important;
+        will-change: auto !important;
     }
 
-    .section1-arrow-btn:hover,
-    .section1-arrow-btn *:hover,
+    .section1-arrow-btn:hover .shine-glass-button,
+    .section1-arrow-btn.section1-arrow-left:hover .shine-glass-button,
+    .section1-arrow-btn.section1-arrow-right:hover .shine-glass-button,
     .section1-arrow-btn .shine-glass-button:hover,
-    .section1-arrow-btn .shine-button-wrap:hover {
-        transition: none !important;
+    .section1-arrow-btn .shine-glass-button--footer:hover,
+    .section1-arrow-btn:hover .shine-button-wrap,
+    .section1-arrow-btn:hover .button-text,
+    .section1-arrow-btn:hover * {
         transform: none !important;
+        transition: none !important;
         animation: none !important;
+        will-change: auto !important;
+    }
+
+    /* Disable shine mouse tracking effect */
+    .section1-arrow-btn .shine-layer {
+        display: none !important;
+    }
+
+    /* Border color same as SVG - gray */
+    .section1-arrow-btn .border-layer {
+        background: conic-gradient(from 0deg at 50% 50%,
+                rgba(128, 128, 128, 0.6),
+                rgba(128, 128, 128, 0.6)) !important;
+    }
+
+    /* Hover: dark gray background */
+    .section1-arrow-btn .shine-glass-button:hover .glass-layer {
+        background: linear-gradient(-75deg,
+                rgba(80, 80, 80, 0.8),
+                rgba(100, 100, 100, 0.9),
+                rgba(80, 80, 80, 0.8)) !important;
+    }
+
+    /* SVG styling - keep on top */
+    .section1-arrow-btn svg {
+        display: block;
+        width: 24px;
+        height: 24px;
+        position: relative;
+        z-index: 999;
+        transition: all 0.3s ease;
+    }
+
+    .section1-arrow-btn svg path {
+        transition: stroke 0.3s ease;
+    }
+
+    /* Hover: white SVG */
+    .section1-arrow-btn:hover svg path {
+        stroke: white;
+        stroke-opacity: 1;
+    }
+
+    /* Ensure button text/content stays on top */
+    .section1-arrow-btn .button-text {
+        position: relative;
+        z-index: 999;
     }
 
     /* Model loading area */
     .model-area {
         position: absolute;
-        top: 0;
+        top: 50%;
         left: 50%;
-        transform: translateX(-50%);
-        width: 60%;
-        height: 100%;
-        border: 2px solid blue;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 60%;
+        /* border: 2px solid red; */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -158,7 +203,7 @@
     }
 
     .model-area {
-        width: 70%;
-        height: 70%;
+        width: 80%;
+        height: 80%;
     }
 }
