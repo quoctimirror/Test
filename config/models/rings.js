@@ -60,6 +60,6 @@ export const isValidRingId = (id) => {
 };
 
 // Default ring ID for fallback
-export const DEFAULT_RING_ID = "nhanDario";
+export const DEFAULT_RING_ID = "nhanMirror"; // Hoặc thử: "nhanVang", "nhanXam", "nhanBase"
 
 export default ringModels;

@@ -192,7 +192,7 @@ const Occluder = () => {
                 threeState.scene.add(dirLight);
 
                 setLoadingMessage(`Đang tải mô hình ${currentRingConfig.name}...`);
-                // const ringContainer = await modelLoader('/models/nhanDario.glb');
+                // const ringContainer = await modelLoader('/models/ring_webgi.glb');
                 const ringContainer = await modelLoader(currentRingConfig.modelPath);
 
                 if (typeof SimpleRingEnhancer1 !== 'undefined') {
