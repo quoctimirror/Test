@@ -644,7 +644,7 @@ export const vendorsAPI = {
 
 // ===== FILE UPLOAD API =====
 export const fileUploadAPI = {
-  // Upload file
+  // Upload file (public endpoint - no auth required)
   upload: (
     file,
     description = "",
@@ -657,10 +657,12 @@ export const fileUploadAPI = {
     formData.append("bucketName", bucketName);
     formData.append("folderPath", folderPath);
 
-    return api.post("/api/files/upload", formData, {
+    // Use raw axios without interceptors to bypass Authorization header
+    return axios.post(`${API_BASE_URL}/api/files/upload`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      timeout: 60000, // 60 seconds for file upload
     });
   },
 };

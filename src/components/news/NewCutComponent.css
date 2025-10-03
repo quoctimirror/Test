@@ -279,8 +279,6 @@
 @media screen and (max-width: 1200px) {
   .hero-content {
     max-width: 1000px;
-    gap: 60px;
-    padding: 0 1.5rem;
   }
 
   .hero-text {
@@ -312,8 +310,6 @@
 
   .hero-content {
     grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 0 1.5rem;
   }
 
   .hero-text {
@@ -371,7 +367,6 @@
   }
 
   .hero-content {
-    padding: 0 1rem;
     gap: 30px;
   }
 
@@ -418,7 +413,6 @@
   }
 
   .hero-content {
-    padding: 0 0.75rem;
     gap: 25px;
   }
 
@@ -472,7 +466,6 @@
   }
 
   .hero-content {
-    padding: 0 0.5rem;
     gap: 20px;
   }
 

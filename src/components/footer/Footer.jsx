@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import UnderlineButton from "@components/common/button/UnderlineButton";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 
 const Footer = () => {
@@ -93,45 +94,44 @@ const Footer = () => {
             <div className="footer-section">
               <ul className="footer-links">
                 <li>
-                  <a className="bodytext-3" href="/" onClick={handleHomeClick}>
+                  <UnderlineButton
+                    onClick={handleHomeClick}
+                    className="footer-link-button"
+                  >
                     Homepage
-                  </a>
+                  </UnderlineButton>
                 </li>
                 <li>
-                  <a
-                    className="bodytext-3"
-                    href="/collections"
+                  <UnderlineButton
                     onClick={handleProductsClick}
+                    className="footer-link-button"
                   >
                     Product
-                  </a>
+                  </UnderlineButton>
                 </li>
                 <li>
-                  <a
-                    className="bodytext-3"
-                    href="/services"
+                  <UnderlineButton
                     onClick={handleServicesClick}
+                    className="footer-link-button"
                   >
                     Service & Support
-                  </a>
+                  </UnderlineButton>
                 </li>
                 <li>
-                  <a
-                    className="bodytext-3"
-                    href="/about"
+                  <UnderlineButton
                     onClick={handleAboutClick}
+                    className="footer-link-button"
                   >
                     About Mirror
-                  </a>
+                  </UnderlineButton>
                 </li>
                 <li>
-                  <a
-                    className="bodytext-3"
-                    href="/news"
+                  <UnderlineButton
                     onClick={handleNewsClick}
+                    className="footer-link-button"
                   >
                     News
-                  </a>
+                  </UnderlineButton>
                 </li>
               </ul>
             </div>
@@ -141,40 +141,50 @@ const Footer = () => {
             <div className="footer-section">
               <ul className="contact-info">
                 <li>
-                  <a
-                    className="bodytext-3--no-margin"
-                    href="/contact"
+                  <UnderlineButton
                     onClick={handleContactClick}
+                    className="contact-link-button"
+                    textClassName="bodytext-3--no-margin"
                   >
                     Contact us
+                  </UnderlineButton>
+                </li>
+                <li>
+                  <a href="mailto:support@mirrorfuturediamond.com">
+                    <UnderlineButton
+                      className="contact-link-button"
+                      textClassName="bodytext-3--no-margin"
+                    >
+                      support@mirrorfuturediamond.com
+                    </UnderlineButton>
                   </a>
                 </li>
                 <li>
-                  <a
-                    className="bodytext-3--no-margin"
-                    href="mailto:support@mirrorfuturediamond.com"
+                  <a href="tel:+97.130.0938">
+                    <UnderlineButton
+                      className="contact-link-button"
+                      textClassName="bodytext-3--no-margin"
+                    >
+                      +97.130.0938
+                    </UnderlineButton>
+                  </a>
+                </li>
+                <li>
+                  <UnderlineButton
+                    className="contact-link-button"
+                    textClassName="bodytext-3--no-margin"
                   >
-                    support@mirrorfuturediamond.com
-                  </a>
-                </li>
-                <li>
-                  <a className="bodytext-3--no-margin" href="tel:+97.130.0938">
-                    +97.130.0938
-                  </a>
-                </li>
-                <li>
-                  <a className="bodytext-3--no-margin" href="#">
                     Book an appointment
-                  </a>
+                  </UnderlineButton>
                 </li>
                 <li>
-                  <a
-                    className="bodytext-3--no-margin"
-                    href="/locations"
+                  <UnderlineButton
                     onClick={handleLocationClick}
+                    className="contact-link-button"
+                    textClassName="bodytext-3--no-margin"
                   >
                     Location
-                  </a>
+                  </UnderlineButton>
                 </li>
               </ul>
             </div>

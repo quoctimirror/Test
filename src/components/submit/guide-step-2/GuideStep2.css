@@ -7,7 +7,8 @@
 
 .guide-step-2-section {
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh + 1px); /* Add 1px to prevent gap */
+  margin-top: -1px; /* Overlap previous section by 1px */
   background: linear-gradient(180deg, #ec3667 0%, #000000 100%);
   display: flex;
   align-items: center;
@@ -116,6 +117,7 @@
 @media screen and (max-width: 1023px) {
   .guide-step-2-container {
     max-width: 62%;
+    padding: 144px 0;
   }
 
   .guide-step-2-process {
@@ -136,7 +138,7 @@
 @media screen and (max-width: 480px) {
   .guide-step-2-container {
     max-width: 78%;
-    padding: 120px 0;
+    padding: 96px 0;
   }
 
   .guide-step-2-title {

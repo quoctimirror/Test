@@ -117,7 +117,7 @@
 .submit-form-checkbox-label,
 .submit-form-radio-label {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   color: rgba(0, 0, 0, 0.5);
   cursor: pointer;
@@ -133,9 +133,9 @@
   background: rgba(0, 0, 0, 1);
   bottom: -2px;
   left: 20px;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
 }
 
 .submit-form-checkbox-label:hover {
@@ -144,8 +144,8 @@
 
 .submit-form-checkbox-label:hover::after,
 .submit-form-checkbox-label:has(input[type="checkbox"]:checked)::after {
-  transform: scaleX(1);
-  transform-origin: left;
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
 }
 
 .submit-form-checkbox-label:has(input[type="checkbox"]:checked) {
@@ -162,7 +162,7 @@
 }
 
 .submit-form-checkbox-label input[type="checkbox"] {
-  margin: 0;
+  margin: 3px 0;
   /* width: 12px;
   height: 12px; */
   min-width: 12px;
@@ -188,9 +188,9 @@
   background: rgba(0, 0, 0, 1);
   bottom: -2px;
   left: 20px;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
 }
 
 .submit-form-radio-label:hover {
@@ -199,8 +199,8 @@
 
 .submit-form-radio-label:hover::after,
 .submit-form-radio-label:has(input[type="radio"]:checked)::after {
-  transform: scaleX(1);
-  transform-origin: left;
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
 }
 
 .submit-form-radio-label:has(input[type="radio"]:checked) {
@@ -258,9 +258,9 @@
   background: rgba(0, 0, 0, 1);
   bottom: -2px;
   left: 0;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
 }
 
 .submit-form-file-input-placeholder:hover {
@@ -268,8 +268,8 @@
 }
 
 .submit-form-file-input-placeholder:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
 }
 
 .submit-form-note {
@@ -365,6 +365,7 @@
 @media screen and (max-width: 1023px) {
   .submit-form-container {
     max-width: 62%;
+    padding: 144px 0;
   }
 
   .submit-form-row {
@@ -401,7 +402,7 @@
   .submit-form-input,
   .submit-form-select,
   .submit-form-textarea {
-    padding: 0;
+    padding: 6px;
   }
   .submit-form-group {
     margin-bottom: 24px;
@@ -427,12 +428,15 @@
   .submit-note {
     margin-top: 12px;
   }
+  .submit-form-checkbox-label input[type="checkbox"] {
+    margin: 2px 0;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .submit-form-container {
     max-width: 78%;
-    padding: 120px 0;
+    padding: 96px 0;
   }
 
   .submit-form-title {
@@ -464,5 +468,8 @@
   .submit-form-radio-label::after {
     width: calc(100% - 20px);
     right: 0;
+  }
+  .submit-form-checkbox-label input[type="checkbox"] {
+    margin: 1px 0;
   }
 }

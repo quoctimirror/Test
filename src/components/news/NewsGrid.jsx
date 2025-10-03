@@ -14,7 +14,7 @@ const NewsGrid = () => {
     {
       id: 1,
       title: "Lumex-91™: The Next Star Has Arrived",
-      image: "/news/new-cut.svg",
+      image: "/news/lumex_91.png",
     },
     {
       id: 2,

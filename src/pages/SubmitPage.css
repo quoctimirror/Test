@@ -15,12 +15,42 @@
   background: linear-gradient(90deg, #bc224c 0%, #d63566 50%, #bc224c 100%);
   border-radius: 0 10px 10px 0;
   z-index: 9999;
-  box-shadow: 0 2px 8px rgba(188, 34, 76, 0.4), 0 0 12px rgba(188, 34, 76, 0.2);
   will-change: width;
 }
 
-/* Panel wrapper for pinning effect */
-.panel {
-  width: 100%;
-  min-height: 100vh;
+/* Smooth scroll wrapper - desktop only */
+@media screen and (min-width: 1024px) {
+  /* Navbar not fixed on SubmitPage - stays at top */
+  body:has(.submit-page) .logo-fixed-container,
+  body:has(.submit-page) .menu-fixed-container,
+  body:has(.submit-page) .account-fixed-container {
+    position: absolute !important;
+  }
+
+  [data-smooth-wrapper] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    will-change: transform;
+  }
+
+  [data-smooth-content] {
+    position: relative;
+  }
+
+  [data-parallax] {
+    position: relative;
+  }
+}
+
+/* Override logo blend mode on mobile and tablet for SubmitPage */
+@media screen and (max-width: 1023px) {
+  body:has(.submit-page) .logo-fixed-container {
+    mix-blend-mode: normal !important;
+  }
+
+  body:has(.submit-page) .logo-fixed-container .navbar-logo-svg path {
+    fill: #fff !important;
+  }
 }

@@ -5,6 +5,7 @@ import MenuIcon from "@assets/images/icons/3gach.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import UnderlineButton from "@/components/common/button/UnderlineButton";
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,8 +26,10 @@ export default function Navbar() {
     location.pathname === "/" ||
     location.pathname === "/welcome";
 
-  // Check if current page is Milan submission page or Immersive Showroom page
-  const isMilanPage = location.pathname === "/mirror-in-milan-digital-jewelry-week" || location.pathname === "/immersive-showroom";
+  // Check if current page is Milan submission page or Immersive Showroom page or Submit Success page
+  const isMilanPage =
+    location.pathname.startsWith("/mirror-in-milan-digital-jewelry-week") ||
+    location.pathname === "/immersive-showroom";
 
   useEffect(() => {
     // Initialize optimized transition system
@@ -316,122 +319,123 @@ export default function Navbar() {
             }`}
           >
             <div
-            className="menu-button"
-            onMouseEnter={() =>
-              !isMobile && !isTablet && setIsMenuHovered(true)
-            }
-            onMouseLeave={() =>
-              !isMobile && !isTablet && setIsMenuHovered(false)
-            }
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsMenuOpen(!isMenuOpen);
-            }}
-          >
-            <div className="menu-icon-container">
-              <img className="menu-icon" src={MenuIcon} alt="Menu" />
-              <svg
-                className="menu-icon-close"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
+              className="menu-button"
+              onMouseEnter={() =>
+                !isMobile && !isTablet && setIsMenuHovered(true)
+              }
+              onMouseLeave={() =>
+                !isMobile && !isTablet && setIsMenuHovered(false)
+              }
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMenuOpen(!isMenuOpen);
+              }}
+            >
+              <div className="menu-icon-container">
+                <img className="menu-icon" src={MenuIcon} alt="Menu" />
+                <svg
+                  className="menu-icon-close"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </div>
+              <span className="menu-text">
+                <UnderlineButton>Menu</UnderlineButton>
+              </span>
             </div>
-            <span className="menu-text bodytext-3--no-margin">Menu</span>
-          </div>
-          <div
-            className={`menu-popup ${
-              isMenuOpen || isMenuHovered ? "active" : ""
-            }`}
-            onMouseEnter={() =>
-              !isMobile && !isTablet && setIsMenuHovered(true)
-            }
-            onMouseLeave={() =>
-              !isMobile && !isTablet && setIsMenuHovered(false)
-            }
-          >
-            <div className="menu-groups">
-              <ul className="menu-list">
-                <li
-                  className="bodytext-3--no-margin"
-                  onClick={handleProductsClick}
-                  onMouseEnter={() =>
-                    optimizedTransitionUtils.prefetch("/collections")
-                  }
-                >
-                  Products
-                </li>
-                <li
-                  className="bodytext-3--no-margin"
-                  onClick={handleServicesClick}
-                  onMouseEnter={() =>
-                    optimizedTransitionUtils.prefetch("/services")
-                  }
-                >
-                  Services
-                </li>
-                <li
-                  className="bodytext-3--no-margin"
-                  onClick={handleSupportClick}
-                  onMouseEnter={() =>
-                    optimizedTransitionUtils.prefetch("/support")
-                  }
-                >
-                  Support
-                </li>
-                <li
-                  className="bodytext-3--no-margin"
-                  onClick={handleAboutClick}
-                  onMouseEnter={() =>
-                    optimizedTransitionUtils.prefetch("/about")
-                  }
-                >
-                  About Mirror
-                </li>
-                <li
-                  className="bodytext-3--no-margin"
-                  onClick={handleNewsClick}
-                  onMouseEnter={() =>
-                    optimizedTransitionUtils.prefetch("/news")
-                  }
-                >
-                  News
-                </li>
-                <li className="immersive-menu-item bodytext-3--no-margin">
-                  Immersive Showroom
-                </li>
-              </ul>
-              <ul className="menu-list">
-                <li
-                  className="bodytext-3--no-margin"
-                  onClick={handleLocationClick}
-                  onMouseEnter={() =>
-                    optimizedTransitionUtils.prefetch("/locations")
-                  }
-                >
-                  Location
-                </li>
-                <li
-                  className="bodytext-3--no-margin"
-                  onClick={handleContactClick}
-                  onMouseEnter={() =>
-                    optimizedTransitionUtils.prefetch("/contact")
-                  }
-                >
-                  Contact us
-                </li>
-                <li
-                  className="bodytext-3--no-margin"
-                  onClick={handleAccountClick}
-                >
-                  Account
-                </li>
-              </ul>
+            <div
+              className={`menu-popup ${
+                isMenuOpen || isMenuHovered ? "active" : ""
+              }`}
+              onMouseEnter={() =>
+                !isMobile && !isTablet && setIsMenuHovered(true)
+              }
+              onMouseLeave={() =>
+                !isMobile && !isTablet && setIsMenuHovered(false)
+              }
+            >
+              <div className="menu-groups">
+                <ul className="menu-list">
+                  <li
+                    onMouseEnter={() =>
+                      optimizedTransitionUtils.prefetch("/collections")
+                    }
+                  >
+                    <UnderlineButton onClick={handleProductsClick}>
+                      Products
+                    </UnderlineButton>
+                  </li>
+                  <li
+                    onMouseEnter={() =>
+                      optimizedTransitionUtils.prefetch("/services")
+                    }
+                  >
+                    <UnderlineButton onClick={handleServicesClick}>
+                      Services
+                    </UnderlineButton>
+                  </li>
+                  <li
+                    onMouseEnter={() =>
+                      optimizedTransitionUtils.prefetch("/support")
+                    }
+                  >
+                    <UnderlineButton onClick={handleSupportClick}>
+                      Support
+                    </UnderlineButton>
+                  </li>
+                  <li
+                    onMouseEnter={() =>
+                      optimizedTransitionUtils.prefetch("/about")
+                    }
+                  >
+                    <UnderlineButton onClick={handleAboutClick}>
+                      About Mirror
+                    </UnderlineButton>
+                  </li>
+                  <li
+                    onMouseEnter={() =>
+                      optimizedTransitionUtils.prefetch("/news")
+                    }
+                  >
+                    <UnderlineButton onClick={handleNewsClick}>
+                      News
+                    </UnderlineButton>
+                  </li>
+                  <li className="immersive-menu-item">
+                    <UnderlineButton>Immersive Showroom</UnderlineButton>
+                  </li>
+                </ul>
+                <ul className="menu-list">
+                  <li
+                    onMouseEnter={() =>
+                      optimizedTransitionUtils.prefetch("/locations")
+                    }
+                  >
+                    <UnderlineButton onClick={handleLocationClick}>
+                      Location
+                    </UnderlineButton>
+                  </li>
+                  <li
+                    onMouseEnter={() =>
+                      optimizedTransitionUtils.prefetch("/contact")
+                    }
+                  >
+                    <UnderlineButton onClick={handleContactClick}>
+                      Contact us
+                    </UnderlineButton>
+                  </li>
+                  <li>
+                    <UnderlineButton onClick={handleAccountClick}>
+                      Account
+                    </UnderlineButton>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
           </div>
         </div>
       )}
@@ -445,84 +449,70 @@ export default function Navbar() {
           }`}
         >
           <div className="account-container">
-          <div
-            className="account-button"
-            onMouseEnter={() => setIsAccountMenuOpen(true)}
-            onMouseLeave={() => setIsAccountMenuOpen(false)}
-          >
-            <span className="account-text bodytext-3--no-margin">Account</span>
-          </div>
+            <div
+              className="account-button-wrapper"
+              onMouseEnter={() => setIsAccountMenuOpen(true)}
+              onMouseLeave={() => setIsAccountMenuOpen(false)}
+            >
+              <UnderlineButton>Account</UnderlineButton>
+            </div>
 
-          {/* Account Dropdown Menu - Shows for both authenticated and non-authenticated users */}
-          <div
-            className={`account-popup ${isAccountMenuOpen ? "active" : ""}`}
-            onMouseEnter={() => setIsAccountMenuOpen(true)}
-            onMouseLeave={() => setIsAccountMenuOpen(false)}
-          >
-            <div className="account-groups">
-              {isAuthenticated ? (
-                <>
-                  <div className="account-user-info">
-                    <span className="bodytext-4--no-margin">
-                      {user?.username || "User"}
-                    </span>
-                  </div>
+            {/* Account Dropdown Menu - Shows for both authenticated and non-authenticated users */}
+            <div
+              className={`account-popup ${isAccountMenuOpen ? "active" : ""}`}
+              onMouseEnter={() => setIsAccountMenuOpen(true)}
+              onMouseLeave={() => setIsAccountMenuOpen(false)}
+            >
+              <div className="account-groups">
+                {isAuthenticated ? (
+                  <>
+                    <div className="account-user-info">
+                      <span className="bodytext-4--no-margin">
+                        {user?.username || "User"}
+                      </span>
+                    </div>
 
+                    <ul className="account-list">
+                      <li>
+                        <UnderlineButton onClick={handleProfileClick}>
+                          My Profile
+                        </UnderlineButton>
+                      </li>
+
+                      {isUserAdmin() && (
+                        <li>
+                          <UnderlineButton onClick={handleAdminDashboardClick}>
+                            Admin Dashboard
+                          </UnderlineButton>
+                        </li>
+                      )}
+
+                      {isUserVendor() && (
+                        <li>
+                          <UnderlineButton onClick={handleVendorDashboardClick}>
+                            Vendor Dashboard
+                          </UnderlineButton>
+                        </li>
+                      )}
+
+                      <li className="logout-item">
+                        <UnderlineButton onClick={handleLogoutClick}>
+                          Logout
+                        </UnderlineButton>
+                      </li>
+                    </ul>
+                  </>
+                ) : (
                   <ul className="account-list">
-                    <li
-                      className="bodytext-3--no-margin"
-                      onClick={handleProfileClick}
-                    >
-                      My Profile
-                    </li>
-
-                    {isUserAdmin() && (
-                      <li
-                        className="bodytext-3--no-margin"
-                        onClick={handleAdminDashboardClick}
-                      >
-                        Admin Dashboard
-                      </li>
-                    )}
-
-                    {isUserVendor() && (
-                      <li
-                        className="bodytext-3--no-margin"
-                        onClick={handleVendorDashboardClick}
-                      >
-                        Vendor Dashboard
-                      </li>
-                    )}
-
-                    {isUserDesigner() && (
-                      <li
-                        className="bodytext-3--no-margin"
-                        onClick={handleDesignerDashboardClick}
-                      >
-                        Designer Dashboard
-                      </li>
-                    )}
-
-                    <li
-                      className="bodytext-3--no-margin logout-item"
-                      onClick={handleLogoutClick}
-                    >
-                      Logout
+                    <li>
+                      <UnderlineButton onClick={handleLoginClick}>
+                        Login
+                      </UnderlineButton>
                     </li>
                   </ul>
-                </>
-              ) : (
-                <ul className="account-list">
-                  <li
-                    className="bodytext-3--no-margin"
-                    onClick={handleLoginClick}
-                  >
-                    Login
-                  </li>
-                </ul>
-              )}
+                )}
+              </div>
             </div>
-          </div>
           </div>
         </div>
       )}

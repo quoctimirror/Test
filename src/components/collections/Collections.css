@@ -395,40 +395,7 @@
 /* Button styles moved to common Button component */
 
 .shop-now-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
   margin-top: 12px;
-}
-
-.hover-underline {
-  color: rgba(255, 255, 255, 0.7);
-  position: relative;
-  display: inline-block;
-  transition: color 0.3s ease;
-}
-
-.hover-underline::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background: white;
-  bottom: -2px;
-  left: 0;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
-}
-
-.hover-underline:hover {
-  color: rgba(255, 255, 255, 1);
-}
-
-.hover-underline:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
 }
 
 /* Full width style for collection content panel */
@@ -537,9 +504,6 @@
 
 /* Tablet - 426px to 1023px */
 @media screen and (max-width: 1023px) {
-  .hover-underline::after {
-    bottom: -1px; /* Slightly closer for tablet */
-  }
   .shop-now-button {
     margin-top: 24px;
   }
@@ -547,10 +511,6 @@
 
 /* Mobile - up to 425px */
 @media screen and (max-width: 480px) {
-  .hover-underline::after {
-    bottom: -3px; /* 3px gap from text on mobile */
-    height: 1.5px; /* Thinner on mobile */
-  }
   .shop-now-button {
     margin-top: 12px;
   }

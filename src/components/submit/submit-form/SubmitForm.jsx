@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./SubmitForm.css";
-import DecorativeLine from "@components/common/decorative/DecorativeLine";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { fileUploadAPI, notificationsAPI } from "@services/api";
 
 const SubmitForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     designerName: "",
     contactEmail: "",
@@ -461,37 +462,8 @@ const SubmitForm = () => {
         }
       }
 
-      alert(
-        "Form submitted successfully! You'll receive an email confirmation with your submission summary."
-      );
-
-      // Reset form
-      setFormData({
-        designerName: "",
-        contactEmail: "",
-        phone: "",
-        location: "",
-        website: "",
-        instagram: "",
-        tiktok: "",
-        portfolioLink: "",
-        categories: [],
-        priceRange: "",
-        productionCapacity: "",
-        readiness: "",
-        portfolioFile: null,
-        portfolioFileUrl: "",
-        heroImages: [],
-        heroImagesUrls: [],
-        videoLookbook: "",
-        collaborationInterests: [],
-        brandStory: "",
-        agreeToContact: false,
-      });
-
-      // Clear file errors and validation errors
-      setFileErrors({});
-      setValidationErrors({});
+      // Navigate to success page
+      navigate("/mirror-in-milan-digital-jewelry-week/submit-success");
     } catch (error) {
       alert(error.message || "Failed to submit form. Please try again.");
     } finally {
@@ -503,21 +475,13 @@ const SubmitForm = () => {
     <div className="submit-form-wrapper">
       <section className="submit-form-section">
         <div className="submit-form-container">
-          {/* Header Line */}
-          <div className="submit-form-header-line">
-            <DecorativeLine fillOpacity="0.75" />
-            <DecorativeLine fillOpacity="0.75" />
-            <DecorativeLine fillOpacity="0.75" />
-            <DecorativeLine fillOpacity="0.75" />
-          </div>
-
           {/* Header Text */}
           <p className="submit-form-header bodytext-3--no-margin">
             LET'S BEGIN THE CONVERSATION
           </p>
 
           {/* Main Title */}
-          <h2 className="submit-form-title heading-1--no-margin">
+          <h2 className="submit-form-title heading-2--no-margin">
             Share Your Vision
           </h2>
 
@@ -895,15 +859,49 @@ const SubmitForm = () => {
             {/* Brand Story */}
             <div className="submit-form-group">
               <label className="submit-form-label bodytext-3--no-margin">
-                If you'd like, share a few words about your inspirations (optional)
+                If you'd like, share a few words about your inspirations
+                (optional)
               </label>
               <textarea
                 name="brandStory"
                 placeholder="What inspires your work? What materials do you love?"
                 className="submit-form-textarea bodytext-6--no-margin"
-                rows="4"
+                rows="1"
                 value={formData.brandStory}
                 onChange={handleInputChange}
+                style={{
+                  overflow: "hidden",
+                  resize: "none",
+                  whiteSpace: "pre-wrap",
+                  wordWrap: "break-word",
+                }}
+                onInput={(e) => {
+                  const maxRows = 5;
+
+                  // Reset to 1 row to get accurate scrollHeight
+                  e.target.rows = 1;
+
+                  // Calculate how many rows are actually needed based on scroll height
+                  const style = getComputedStyle(e.target);
+                  const lineHeight = parseFloat(style.lineHeight);
+                  const paddingTop = parseFloat(style.paddingTop);
+                  const paddingBottom = parseFloat(style.paddingBottom);
+
+                  const contentHeight =
+                    e.target.scrollHeight - paddingTop - paddingBottom;
+                  const neededRows = Math.round(contentHeight / lineHeight);
+
+                  // Only expand if content actually needs more rows
+                  if (neededRows > 1) {
+                    e.target.rows = Math.min(neededRows, maxRows);
+                  }
+
+                  if (neededRows > maxRows) {
+                    e.target.style.overflow = "auto";
+                  } else {
+                    e.target.style.overflow = "hidden";
+                  }
+                }}
               />
             </div>
 
@@ -937,7 +935,7 @@ const SubmitForm = () => {
                 }}
                 disabled={isUploading}
               >
-                {isUploading ? "Uploading..." : "Share Your Vision"}
+                {isUploading ? "Uploading..." : "Share your vision"}
               </ShineGlassButton>
               <p className="submit-note bodytext-6--no-margin">
                 You'll receive an email confirmation with you submission

@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SmoothScroll from "@utils/smoothScroll";
 import IntroSubmit from "@components/submit/intro-submit/IntroSubmit";
 import GuideStep1 from "@components/submit/guide-step-1/GuideStep1";
 import GuideStep2 from "@components/submit/guide-step-2/GuideStep2";
@@ -8,52 +7,29 @@ import GuideStep3 from "@components/submit/guide-step-3/GuideStep3";
 import SubmitForm from "@components/submit/submit-form/SubmitForm";
 import "./SubmitPage.css";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const SubmitPage = () => {
   const progressBarRef = useRef(null);
-  const setupScrollTriggers = () => {
-    // Disable scroll snap on mobile and tablet
-    const isMobileOrTablet = window.innerWidth <= 1023;
-
-    if (isMobileOrTablet) {
-      return; // Don't setup scroll triggers on mobile/tablet
-    }
-
-    let panels = gsap.utils.toArray(".panel");
-
-    panels.forEach((panel) => {
-      ScrollTrigger.create({
-        trigger: panel,
-        start: () =>
-          panel.offsetHeight < window.innerHeight ? "top top" : "bottom bottom",
-        pin: true,
-        pinSpacing: false,
-      });
-    });
-  };
+  const smoothScrollRef = useRef(null);
 
   useEffect(() => {
-    setupScrollTriggers();
+    // Initialize smooth scroll only on desktop
+    const isMobileOrTablet = window.innerWidth <= 1023;
 
-    const handlePageTransitionComplete = () => {
-      setTimeout(() => {
-        setupScrollTriggers();
-      }, 150);
-    };
-
-    const handleResize = () => {
-      // Kill all triggers and re-setup on resize
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      setupScrollTriggers();
-    };
+    if (!isMobileOrTablet) {
+      smoothScrollRef.current = new SmoothScroll({
+        wrapper: document.querySelector("[data-smooth-wrapper]"),
+        content: document.querySelector("[data-smooth-content]"),
+        ease: 0.08, // Adjust smoothness (0.05-0.1 recommended)
+      });
+    }
 
     let ticking = false;
 
     const updateProgressBar = () => {
       if (progressBarRef.current) {
         const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
         const scrollPercent = (scrollTop / docHeight) * 100;
         progressBarRef.current.style.width = `${scrollPercent}%`;
       }
@@ -67,23 +43,16 @@ const SubmitPage = () => {
       }
     };
 
-    window.addEventListener(
-      "pageTransitionComplete",
-      handlePageTransitionComplete
-    );
-    window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     // Initial update
     updateProgressBar();
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-      window.removeEventListener(
-        "pageTransitionComplete",
-        handlePageTransitionComplete
-      );
-      window.removeEventListener("resize", handleResize);
+      // Cleanup smooth scroll
+      if (smoothScrollRef.current) {
+        smoothScrollRef.current.destroy();
+      }
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
@@ -92,17 +61,21 @@ const SubmitPage = () => {
     <div className="submit-page">
       <div className="scroll-progress-bar" ref={progressBarRef}></div>
 
-      <section className="panel">
-        <IntroSubmit />
-      </section>
+      <div data-smooth-wrapper>
+        <div data-smooth-content>
+          <section data-parallax="0.5">
+            <IntroSubmit />
+          </section>
 
-      <GuideStep1 />
+          <GuideStep1 />
 
-      <GuideStep2 />
+          <GuideStep2 />
 
-      <GuideStep3 />
+          <GuideStep3 />
 
-      <SubmitForm />
+          <SubmitForm />
+        </div>
+      </div>
     </div>
   );
 };

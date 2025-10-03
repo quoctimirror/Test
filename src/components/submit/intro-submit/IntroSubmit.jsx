@@ -1,6 +1,7 @@
 import "./IntroSubmit.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import UnderlineButton from "@components/common/button/UnderlineButton";
 import ArrowDown from "@components/common/decorative/ArrowDown";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -8,15 +9,43 @@ const IntroSubmit = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const arrowRef = useRef(null);
+  const [heroImage, setHeroImage] = useState(
+    "/submit/kv-milan-on-website-Desktop.jpg"
+  );
+
+  // Update hero image based on screen size
+  useEffect(() => {
+    const updateHeroImage = () => {
+      const isMobile = window.innerWidth <= 480;
+      setHeroImage(
+        isMobile
+          ? "/submit/kv-milan-on-website-mobile2.png"
+          : "/submit/kv MILAN.png"
+      );
+    };
+
+    // Set initial image
+    updateHeroImage();
+
+    // Listen to resize
+    window.addEventListener("resize", updateHeroImage);
+
+    return () => {
+      window.removeEventListener("resize", updateHeroImage);
+    };
+  }, []);
 
   const handleSubmitPortfolioClick = () => {
     // Check if we're already on the submit page
     if (location.pathname === "/mirror-in-milan-digital-jewelry-week") {
       const submitFormSection = document.querySelector(".submit-form-section");
       if (submitFormSection) {
-        submitFormSection.scrollIntoView({
+        const rect = submitFormSection.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const targetPosition = rect.top + scrollTop;
+        window.scrollTo({
+          top: targetPosition,
           behavior: "smooth",
-          block: "start",
         });
       }
     } else {
@@ -28,9 +57,13 @@ const IntroSubmit = () => {
           ".submit-form-section"
         );
         if (submitFormSection) {
-          submitFormSection.scrollIntoView({
+          const rect = submitFormSection.getBoundingClientRect();
+          const scrollTop =
+            window.scrollY || document.documentElement.scrollTop;
+          const targetPosition = rect.top + scrollTop;
+          window.scrollTo({
+            top: targetPosition,
             behavior: "smooth",
-            block: "start",
           });
         }
       }, 100);
@@ -42,9 +75,12 @@ const IntroSubmit = () => {
     if (location.pathname === "/mirror-in-milan-digital-jewelry-week") {
       const guideStep1Section = document.querySelector(".guide-step-1-section");
       if (guideStep1Section) {
-        guideStep1Section.scrollIntoView({
+        const rect = guideStep1Section.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const targetPosition = rect.top + scrollTop + 20; // Offset for better positioning
+        window.scrollTo({
+          top: targetPosition,
           behavior: "smooth",
-          block: "start",
         });
       }
     } else {
@@ -56,50 +92,18 @@ const IntroSubmit = () => {
           ".guide-step-1-section"
         );
         if (guideStep1Section) {
-          guideStep1Section.scrollIntoView({
+          const rect = guideStep1Section.getBoundingClientRect();
+          const scrollTop =
+            window.scrollY || document.documentElement.scrollTop;
+          const targetPosition = rect.top + scrollTop - 100; // Offset for better positioning
+          window.scrollTo({
+            top: targetPosition,
             behavior: "smooth",
-            block: "start",
           });
         }
       }, 100);
     }
   };
-
-  // Handle arrow movement on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      // Disable arrow movement on mobile and tablet
-      if (window.innerWidth <= 1023) return;
-
-      const arrow = arrowRef.current;
-      const guideStep1 = document.querySelector(".guide-step-1-section");
-
-      if (!arrow || !guideStep1) return;
-
-      const guideRect = guideStep1.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      // Distance from bottom of guide-step-1 to arrow (fixed gap)
-      const gapFromGuide = 24;
-
-      // When guide-step-1 starts overlapping intro
-      if (guideRect.top < windowHeight) {
-        // Calculate position: guide top - gap
-        const newBottom = windowHeight - guideRect.top + gapFromGuide;
-        arrow.style.bottom = `${newBottom}px`;
-      } else {
-        // Reset to original position when guide is below viewport
-        arrow.style.bottom = "24px";
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial check
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   return (
     <div className="intro-submit-wrapper">
@@ -122,28 +126,26 @@ const IntroSubmit = () => {
                   theme="light"
                   onClick={handleSubmitPortfolioClick}
                 >
-                  Share Your Vision
+                  Share your vision
                 </ShineGlassButton>
-                <button
-                  className="intro-submit-btn-secondary bodytext-4--no-margin"
+                <UnderlineButton
+                  className="intro-submit-btn-secondary"
+                  textClassName="bodytext-4--no-margin"
                   onClick={handleViewGuidelinesClick}
                 >
                   Learn More
-                </button>
+                </UnderlineButton>
               </div>
             </div>
             <p className="intro-submit-hero-description bodytext-5--no-margin">
-              Your art deserves to shine in Milan. Mirror exists to amplify your
+              Your art deserves to shine in Milan. MIRROR exists to amplify your
               artistry and reflect it to the world. We'd love to see your
               creations and explore how we can shape the future of luxury
               together.
             </p>
           </div>
           <div className="intro-submit-hero-image">
-            <img
-              src="/submit/kv-website-final@5000x-100.jpg"
-              alt="Submit Hero"
-            />
+            <img src={heroImage} alt="Submit Hero" />
             <h3 className="intro-submit-hero-image-caption heading-3--no-margin">
               Collaborate, Innovate, Awaken luxury
             </h3>

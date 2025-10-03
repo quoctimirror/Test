@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import CollectionHeroSection from "./CollectionHeroSection";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import UnderlineButton from "@components/common/button/UnderlineButton";
 import { collectionsAPI } from "@services/api";
 import "./Collections.css";
 
@@ -266,11 +267,9 @@ function Collection() {
               key={`${currentProduct.id}-info-${slideDirection}`}
             >
               <h3 className="heading-3--no-margin">{currentProduct.title}</h3>
-              <button className="shop-now-button">
-                <span className="hover-underline bodytext-4--no-margin">
-                  Shop now
-                </span>
-              </button>
+              <UnderlineButton className="shop-now-button" textClassName="bodytext-4--no-margin">
+                Shop now
+              </UnderlineButton>
             </div>
           </div>
         </div>

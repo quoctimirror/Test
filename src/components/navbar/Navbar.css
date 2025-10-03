@@ -29,6 +29,18 @@
   cursor: pointer;
 }
 
+/* Submit page: absolute on mobile/tablet (no sticky), fixed on desktop (prevent pin) */
+@media screen and (max-width: 1023px) {
+  body:has(.submit-page) .logo-fixed-container,
+  body:has(.submit-page) .menu-fixed-container,
+  body:has(.submit-page) .account-fixed-container,
+  body:has(.submit-page) .immersive-fixed-container,
+  body:has(.submit-page) .immersive-border-container,
+  body:has(.submit-page) .immersive-text-container {
+    position: absolute !important;
+  }
+}
+
 .logo-fixed-container.no-click {
   cursor: default;
   pointer-events: none;
@@ -66,7 +78,7 @@
 
 .logo-fixed-container .navbar-logo-svg {
   width: 151.98065185546875px;
-  height: 29.999998092651367px;
+  height: 40px;
   display: block;
 }
 
@@ -249,19 +261,19 @@
 }
 
 .menu-fixed-container.scrolled .menu-icon {
-  filter: brightness(0) !important;
+  filter: brightness(0) invert(1) !important;
 }
 
 .menu-fixed-container.scrolled .menu-icon-close {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #fff !important;
 }
 
 .menu-fixed-container.scrolled .menu-container:hover .menu-icon-close {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #fff !important;
 }
 
 .menu-fixed-container.scrolled .menu-container.menu-open .menu-icon-close {
-  color: rgba(255, 255, 255, 1) !important;
+  color: #fff !important;
 }
 
 .menu-text {
@@ -269,47 +281,7 @@
   letter-spacing: 1px;
   text-align: center;
   pointer-events: auto;
-  position: relative;
   display: inline-block;
-}
-
-.menu-text::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background: white;
-  bottom: -2px;
-  left: 0;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
-}
-
-.menu-button::after {
-  display: none !important;
-  opacity: 1;
-}
-
-.menu-container:hover .menu-text {
-  color: white;
-}
-
-.menu-fixed-container.scrolled .menu-container:hover .menu-text {
-  color: rgba(255, 255, 255, 1) !important;
-}
-
-.menu-fixed-container.scrolled .menu-text::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
-
-.menu-fixed-container.scrolled .menu-container:hover .menu-text::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
-
-.menu-container:hover .menu-text::after {
-  transform: scaleX(1);
-  transform-origin: left;
 }
 
 .immersive-button {
@@ -532,56 +504,9 @@
 }
 
 .menu-popup .menu-list li {
-  color: white;
-  cursor: pointer;
-  transition: color 0.3s ease, opacity 0.3s ease;
-  position: relative;
-  white-space: nowrap;
-  opacity: 1;
   display: inline-block;
   width: fit-content;
-}
-
-.menu-popup .menu-list li:hover {
-  opacity: 1;
-}
-
-.menu-popup.active .menu-list li::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background: white;
-  bottom: -2px;
-  left: 0;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
-}
-
-.menu-popup .menu-list li:hover {
-  color: white;
-}
-
-.menu-fixed-container.scrolled .menu-popup .menu-list li {
-  color: rgba(255, 255, 255, 1) !important;
-}
-
-.menu-fixed-container.scrolled .menu-popup .menu-list li:hover {
-  color: rgba(255, 255, 255, 1) !important;
-}
-
-.menu-fixed-container.scrolled .menu-popup .menu-list li::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
-
-.menu-fixed-container.scrolled .menu-popup.active .menu-list li::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
-
-.menu-popup.active .menu-list li:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
+  white-space: nowrap;
 }
 
 .menu-divider {
@@ -677,14 +602,23 @@
     display: none !important;
   }
 
+  /* Icon color white for tablet */
+  .menu-icon {
+    filter: brightness(0) invert(1) !important;
+  }
+
+  .menu-icon-close {
+    color: #fff !important;
+  }
+
   /* Scrolled state for tablet menu button */
   .menu-fixed-container.scrolled .menu-button {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.25);
   }
   .menu-fixed-container.scrolled .menu-button:hover {
-    background: rgba(0, 0, 0, 0.1);
-    border-color: rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
   }
 
   /* When menu is open on tablet */
@@ -693,7 +627,7 @@
     border-color: rgba(255, 255, 255, 0.4);
   }
   .menu-container.menu-open .menu-icon-close {
-    color: white !important;
+    color: #fff !important;
   }
 }
 
@@ -749,7 +683,7 @@
   }
 
   .logo-fixed-container .navbar-logo-svg {
-    width: 120px;
+    width: 130px;
     height: 50px;
   }
 
@@ -790,12 +724,12 @@
 @media screen and (max-width: 425px) {
   /* Small mobile adjustments */
   .logo-fixed-container {
-    top: 15px;
+    top: 30px;
   }
 
   .logo-fixed-container .navbar-logo-svg {
-    width: 100px;
-    height: 40px;
+    width: 90px;
+    height: 20px;
   }
 
   .menu-fixed-container {
@@ -840,64 +774,9 @@
   z-index: 2;
 }
 
-.account-button {
-  background: none;
-  border: none;
-  padding: 0;
+.account-button-wrapper {
   pointer-events: auto;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
   z-index: 2;
-  transition: all 0.3s;
-  margin-left: 0;
-  opacity: 1;
-}
-
-.account-text {
-  color: white;
-  letter-spacing: 1px;
-  text-align: center;
-  pointer-events: auto;
-  position: relative;
-  display: inline-block;
-}
-
-.account-text::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background: white;
-  bottom: -2px;
-  left: 0;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
-}
-
-.account-container:hover .account-text {
-  color: white;
-}
-
-.account-fixed-container.scrolled .account-container:hover .account-text {
-  color: rgba(255, 255, 255, 1) !important;
-}
-
-.account-fixed-container.scrolled .account-text::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
-
-.account-fixed-container.scrolled
-  .account-container:hover
-  .account-text::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
-
-.account-container:hover .account-text::after {
-  transform: scaleX(1);
-  transform-origin: left;
 }
 
 /* Account Popup - Exact same style as menu-popup */
@@ -973,119 +852,15 @@
 }
 
 .account-popup .account-list li {
-  color: white;
-  cursor: pointer;
-  transition: color 0.3s ease, opacity 0.3s ease;
-  position: relative;
-  white-space: nowrap;
-  opacity: 1;
   display: inline-block;
   width: fit-content;
-}
-
-.account-popup .account-list li:hover {
-  opacity: 1;
-}
-
-.account-popup.active .account-list li::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background: white;
-  bottom: -2px;
-  left: 0;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
-}
-
-.account-popup .account-list li:hover {
-  color: white;
-}
-
-.account-fixed-container.scrolled .account-popup .account-list li {
-  color: rgba(255, 255, 255, 1) !important;
-}
-
-.account-fixed-container.scrolled .account-popup .account-list li:hover {
-  color: rgba(255, 255, 255, 1) !important;
-}
-
-.account-fixed-container.scrolled .account-popup .account-list li::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
-
-.account-fixed-container.scrolled
-  .account-popup.active
-  .account-list
-  li::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
-
-.account-popup.active .account-list li:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* Special styling for admin and logout items */
-.account-popup .account-list li.admin-item {
-  color: #ff8e8e;
-}
-
-.account-popup .account-list li.admin-item:hover {
-  color: #ff6b6b;
-}
-
-.account-popup .account-list li.logout-item:hover {
-  color: #ff3b3b;
+  white-space: nowrap;
 }
 
 /* Immersive showroom in menu - only show on mobile */
 .immersive-menu-item {
   display: none; /* Hidden by default */
-  color: white;
-  cursor: pointer;
-  transition: color 0.3s ease, opacity 0.3s ease;
-  position: relative;
-  white-space: nowrap;
-  opacity: 1;
   width: fit-content;
-}
-
-.immersive-menu-item:hover {
-  opacity: 1;
-  color: white;
-}
-
-.immersive-menu-item::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  background: white;
-  bottom: -2px;
-  left: 0;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
-}
-
-.immersive-menu-item:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-.menu-fixed-container.scrolled .immersive-menu-item {
-  color: rgba(255, 255, 255, 1) !important;
-}
-
-.menu-fixed-container.scrolled .immersive-menu-item:hover {
-  color: rgba(255, 255, 255, 1) !important;
-}
-
-.menu-fixed-container.scrolled .immersive-menu-item::after {
-  background: rgba(255, 255, 255, 1) !important;
 }
 
 /* Mobile menu overlay */
@@ -1180,16 +955,6 @@
     transform: translate(-50%, -50%);
   }
 
-  .menu-container.menu-open .menu-popup .menu-list li {
-    color: white !important;
-  }
-
-  .menu-container.menu-open .menu-popup .menu-list li::after {
-    background: white !important;
-    bottom: -3px; /* 3px gap from text on mobile */
-    height: 1.5px; /* Thinner on mobile */
-  }
-
   /* Ensure menu button stays visible above overlay */
   .menu-fixed-container {
     z-index: 203;
@@ -1211,7 +976,6 @@
   .immersive-border-container {
     display: none;
   }
-
 
   /* Glassmorphism menu button for mobile */
   .menu-button {
@@ -1237,13 +1001,13 @@
 
   /* Scrolled state for mobile menu button */
   .menu-fixed-container.scrolled .menu-button {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.25);
   }
 
   .menu-fixed-container.scrolled .menu-button:hover {
-    background: rgba(0, 0, 0, 0.1);
-    border-color: rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
   }
 
   /* When menu is open on mobile */
@@ -1299,15 +1063,6 @@
     z-index: 202;
     padding: 32px 0 20px 0;
     transform: translate(-50%, -50%);
-  }
-
-  .menu-container.menu-open .menu-popup .menu-list li {
-    color: white !important;
-  }
-
-  .menu-container.menu-open .menu-popup .menu-list li::after {
-    background: white !important;
-    bottom: -1px; /* Slightly closer for tablet */
   }
 
   /* Ensure menu button stays visible above overlay */

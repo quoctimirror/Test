@@ -1,16 +1,16 @@
-import React, { useRef, useEffect } from 'react';
-import './ShineGlassButton.css';
+import React, { useRef, useEffect } from "react";
+import "./ShineGlassButton.css";
 
 const ShineGlassButton = ({
   children,
   onClick,
-  className = '',
+  className = "",
   disabled = false,
   width, // Optional - only use if explicitly needed
   height, // Optional - only use if explicitly needed
   fontSize, // Optional - only use if explicitly needed
-  theme = 'shine', // 'shine' | 'light' | 'footer'
-  variant = 'default' // 'default' | 'custom'
+  theme = "shine", // 'shine' | 'light' | 'footer'
+  variant = "default", // 'default' | 'custom'
 }) => {
   const buttonRef = useRef(null);
 
@@ -18,7 +18,7 @@ const ShineGlassButton = ({
     const button = buttonRef.current;
     if (!button) return;
 
-    const shineLayer = button.querySelector('.shine-layer');
+    const shineLayer = button.querySelector(".shine-layer");
     if (!shineLayer) return;
 
     // Variables for smooth interpolation
@@ -42,7 +42,10 @@ const ShineGlassButton = ({
       shineLayer.style.setProperty("--mouse-y", currentY + "%");
 
       // Continue animation if there's still movement needed
-      if (Math.abs(currentX - targetX) > 0.1 || Math.abs(currentY - targetY) > 0.1) {
+      if (
+        Math.abs(currentX - targetX) > 0.1 ||
+        Math.abs(currentY - targetY) > 0.1
+      ) {
         animationFrame = requestAnimationFrame(updateShinePosition);
       } else {
         animationFrame = null;
@@ -123,7 +126,7 @@ const ShineGlassButton = ({
         style={{
           ...(width && { width: `${width}px` }),
           ...(height && { height: `${height}px` }),
-          ...(fontSize && { fontSize: `${fontSize}px` })
+          ...(fontSize && { fontSize: `${fontSize}px` }),
         }}
       >
         <div className="glass-layer"></div>

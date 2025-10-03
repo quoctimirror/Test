@@ -1,5 +1,4 @@
 import "./GuideStep2.css";
-import DecorativeLine from "@components/common/decorative/DecorativeLine";
 import StarlightEffect from "@components/home-page/universeSection/StarlightEffect";
 
 const GuideStep2 = () => {
@@ -7,14 +6,6 @@ const GuideStep2 = () => {
     <div className="guide-step-2-wrapper">
       <section className="guide-step-2-section">
         <div className="guide-step-2-container">
-          {/* Header Line */}
-          <div className="guide-step-2-header-line">
-            <DecorativeLine fillOpacity="0.75" />
-            <DecorativeLine fillOpacity="0.75" />
-            <DecorativeLine fillOpacity="0.1" />
-            <DecorativeLine fillOpacity="0.1" />
-          </div>
-
           {/* Header Text */}
           <p className="guide-step-2-header bodytext-3--no-margin">
             THE JOURNEY
@@ -59,7 +50,9 @@ const GuideStep2 = () => {
 
             {/* Collaborate Step */}
             <div className="guide-step-2-step">
-              <h3 className="step-title bodytext-1--no-margin">Create Together</h3>
+              <h3 className="step-title bodytext-1--no-margin">
+                Create Together
+              </h3>
               <p className="step-description bodytext-4--no-margin">
                 We'll follow up to discuss opportunities
                 <br />
