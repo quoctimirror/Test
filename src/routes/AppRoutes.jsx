@@ -54,7 +54,9 @@ const ImmersiveShowroomPage = lazy(() =>
 const SubmitPage = lazy(() => import("@pages/SubmitPage"));
 const SubmitSuccessPage = lazy(() => import("@pages/SubmitSuccessPage"));
 const ProductsV2 = lazy(() => import("@components/productsV2/Products.jsx"));
-
+const ProductsLeft = lazy(() =>
+  import("@components/productsV2/ProductsLeft.jsx")
+);
 export default function AppRoutes() {
   const location = useLocation();
   const staticRoutesToHideNavBar =
@@ -150,6 +152,9 @@ export default function AppRoutes() {
 
           {/* Test route for ProductsV2 */}
           <Route path="/products-v2" element={<ProductsV2 />} />
+
+          {/* Test route for ProductsLeft */}
+          <Route path="/products-left" element={<ProductsLeft />} />
 
           <Route path="/view-360" element={<View360 />} />
 
