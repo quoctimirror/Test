@@ -1,19 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-// import {
-//     ViewerApp,
-//     AssetManagerPlugin,
-//     GBufferPlugin,
-//     ProgressivePlugin,
-//     TonemapPlugin,
-//     SSAOPlugin,
-//     GroundPlugin,
-//     FrameFadePlugin,
-//     DiamondPlugin,
-//     BloomPlugin,
-//     TemporalAAPlugin,
-//     RandomizedDirectionalLightPlugin,
-//     Color
-// } from 'webgi';
 import './Products.css';
 import LeftContainer from './LeftContainer';
 import RightConfiguration from './RightConfiguration';
