@@ -1,0 +1,412 @@
+/* Mobile Config Modal */
+.mobile-config-modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, #FFF 0%, #BB234C 100%);
+    z-index: 300;
+    box-sizing: border-box;
+    transition: transform 0.5s ease-in-out;
+}
+
+.mobile-config-modal.open {
+    transform: translateY(0);
+}
+
+.mobile-config-modal.closed {
+    transform: translateY(100%);
+}
+
+.mobile-config-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 24px 24px 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    justify-content: center;
+}
+
+.mobile-config-title {
+    text-align: center;
+    color: #BC224C !important;
+    -webkit-text-fill-color: #BC224C !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    letter-spacing: -0.02em !important;
+    margin: 0 0 24px 0 !important;
+}
+
+.mobile-configuration-options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.mobile-option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.mobile-option-label {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.mobile-option-value-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mobile-option-value {
+    color: #FFFFFF !important;
+    text-align: right;
+}
+
+.mobile-option-icon {
+    width: auto;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.mobile-size-row {
+    cursor: pointer;
+}
+
+.mobile-size-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 12px;
+}
+
+.mobile-size-value {
+    color: #FFFFFF !important;
+    text-align: right;
+}
+
+.mobile-size-arrow-icon {
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.mobile-size-arrow-icon:hover {
+    opacity: 1;
+}
+
+.mobile-quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-self: flex-end;
+    margin-left: auto;
+}
+
+.mobile-quantity-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-quantity-btn:hover:not(:disabled) {
+    border-color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mobile-quantity-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.mobile-quantity-value {
+    color: #FFFFFF !important;
+    width: 30px;
+    text-align: center;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    font-family: var(--font-bt-beau-sans) !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+}
+
+.mobile-quantity-value::-webkit-outer-spin-button,
+.mobile-quantity-value::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.mobile-quantity-value[type=number] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.mobile-additional-info {
+    margin-bottom: 24px;
+}
+
+.mobile-shipping-info {
+    color: rgba(255, 255, 255, 0.5) !important;
+    text-align: left;
+    margin: 0 0 8px 0;
+    line-height: 1.2 !important;
+}
+
+.mobile-contact-link {
+    color: rgba(255, 255, 255, 0.5) !important;
+    text-align: left;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    line-height: 1.2 !important;
+    display: block;
+}
+
+.mobile-contact-link:hover {
+    opacity: 0.8;
+}
+
+.mobile-price-section {
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-price {
+    color: #FFFFFF !important;
+    text-align: center;
+    align-self: stretch;
+}
+
+/* Action Buttons */
+.mobile-modal-action-buttons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    width: 100%;
+    align-items: center;
+}
+
+.mobile-modal-wishlist-btn {
+    flex-shrink: 0;
+    width: 44px;
+}
+
+.mobile-modal-wishlist-btn .shine-button-wrap {
+    width: 44px !important;
+    height: 44px !important;
+}
+
+.mobile-modal-wishlist-btn .shine-glass-button {
+    width: 44px !important;
+    height: 44px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+}
+
+.mobile-modal-wishlist-btn .glass-layer {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    box-sizing: border-box !important;
+    transition: background var(--shine-anim--hover-time) var(--shine-anim--hover-ease) !important;
+}
+
+.mobile-modal-wishlist-btn .shine-glass-button:hover .glass-layer {
+    background: linear-gradient(-75deg,
+            rgba(0, 0, 0, 0.95),
+            rgba(0, 0, 0, 0.98),
+            rgba(0, 0, 0, 0.95)) !important;
+}
+
+.mobile-modal-wishlist-btn .border-layer {
+    display: none !important;
+}
+
+.mobile-modal-wishlist-btn svg {
+    color: rgba(255, 255, 255, 0.8);
+    stroke: rgba(255, 255, 255, 0.8);
+    transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
+}
+
+.mobile-modal-wishlist-btn .shine-glass-button:hover svg {
+    color: rgba(255, 255, 255, 1);
+    stroke: rgba(255, 255, 255, 1);
+}
+
+.mobile-modal-wishlist-btn .shine-layer::before {
+    background: radial-gradient(circle 200px at var(--mouse-x) var(--mouse-y),
+            rgba(255, 255, 255, 0.5) 0%,
+            rgba(255, 255, 255, 0.25) 25%,
+            rgba(255, 255, 255, 0.15) 50%,
+            transparent 100%) !important;
+}
+
+.mobile-modal-appointment-btn {
+    flex: 1 1 auto;
+    height: 44px !important;
+    min-width: 0;
+    width: 100%;
+    display: flex;
+}
+
+.mobile-modal-appointment-btn .shine-button-wrap {
+    width: 100% !important;
+    height: 44px !important;
+    max-width: none !important;
+    flex: 1 !important;
+}
+
+.mobile-modal-appointment-btn .shine-glass-button {
+    width: 100% !important;
+    height: 44px !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    min-width: 0 !important;
+    text-align: center !important;
+}
+
+.mobile-modal-appointment-btn .button-text {
+    text-align: center !important;
+    padding: 0 4px !important;
+    font-size: 13px !important;
+}
+
+.mobile-modal-appointment-btn .glass-layer {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    box-sizing: border-box !important;
+}
+
+.mobile-modal-appointment-btn .border-layer {
+    display: none !important;
+}
+
+.mobile-modal-order-btn {
+    width: 100%;
+    height: 44px;
+    background: #FFFFFF;
+    border: none;
+    color: black;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 22px;
+}
+
+.mobile-modal-order-btn:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-config-caret-down {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    z-index: 310;
+}
+
+.mobile-config-caret-down:hover {
+    opacity: 0.8;
+}
+
+/* Tablet - 426px to 1023px - Same as mobile with slightly larger sizing */
+@media (min-width: 426px) and (max-width: 1023px) {
+    .mobile-config-content {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 30px 30px 24px 30px;
+    }
+
+    .mobile-config-title {
+        font-size: 28px;
+        margin: 0 0 28px 0 !important;
+    }
+
+    .mobile-configuration-options {
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .mobile-option-row {
+        padding-bottom: 14px;
+    }
+
+    .mobile-additional-info {
+        margin-bottom: 28px;
+    }
+
+    .mobile-price-section {
+        margin-bottom: 16px;
+    }
+
+    .mobile-modal-action-buttons {
+        margin-bottom: 16px;
+    }
+
+    .mobile-modal-wishlist-btn {
+        width: 48px;
+    }
+
+    .mobile-modal-wishlist-btn .shine-button-wrap {
+        width: 48px !important;
+        height: 48px !important;
+    }
+
+    .mobile-modal-wishlist-btn .shine-glass-button {
+        width: 48px !important;
+        height: 48px !important;
+    }
+
+    .mobile-modal-appointment-btn {
+        height: 48px !important;
+    }
+
+    .mobile-modal-appointment-btn .shine-button-wrap {
+        height: 48px !important;
+    }
+
+    .mobile-modal-appointment-btn .shine-glass-button {
+        height: 48px !important;
+    }
+
+    .mobile-modal-order-btn {
+        height: 48px;
+        border-radius: 24px;
+    }
+
+    .mobile-config-caret-down {
+        width: 28px;
+        height: 28px;
+        bottom: 12px;
+    }
+}

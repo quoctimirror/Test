@@ -29,7 +29,7 @@ const PresenceOverlay = ({ isVisible, onClose }) => {
 
     return (
         <div className="presence-overlay" onClick={onClose}>
-            <div className="presence-overlay__content" onClick={(e) => e.stopPropagation()}>
+            <div className="presence-overlay__content">
                 {/* Close Button */}
                 <div className="presence-overlay__close-button">
                     <ShineGlassButton

@@ -28,7 +28,7 @@ const SpaceOverlay = ({ isVisible, onClose }) => {
 
     return (
         <div className="space-overlay" onClick={onClose}>
-            <div className="space-overlay__content" onClick={(e) => e.stopPropagation()}>
+            <div className="space-overlay__content">
                 {/* Close Button */}
                 <div className="space-overlay__close-button">
                     <ShineGlassButton

@@ -1,0 +1,29 @@
+.one-image-layout-container {
+    width: 100%;
+    padding: 0;
+}
+
+.one-image-layout-wrapper {
+    max-width: 100%;
+    width: 100%;
+}
+
+.one-image-layout-image {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.one-image-layout-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .one-image-layout-image {
+        height: 60vh;
+    }
+}

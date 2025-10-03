@@ -1,0 +1,736 @@
+{
+    "metadata": {
+        "title": "International Ring Size Conversion Data",
+        "description": "Complete ring size conversion between different measurement systems worldwide",
+        "version": "1.0",
+        "last_updated": "2025-01-25",
+        "total_sizes": 41,
+        "total_countries": 22,
+        "total_regions": 2,
+        "total_entities": 24,
+        "total_systems": 6
+    },
+    "countries": [
+        {
+            "id": "US",
+            "name": "United States",
+            "system": "us_numeric",
+            "flag": "🇺🇸",
+            "currency": "USD",
+            "measurement_preference": "imperial"
+        },
+        {
+            "id": "CA",
+            "name": "Canada",
+            "system": "us_numeric",
+            "flag": "🇨🇦",
+            "currency": "CAD",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "MX",
+            "name": "Mexico",
+            "system": "us_numeric",
+            "flag": "🇲🇽",
+            "currency": "MXN",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "UK",
+            "name": "United Kingdom",
+            "system": "uk_alphabetic",
+            "flag": "🇬🇧",
+            "currency": "GBP",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "AU",
+            "name": "Australia",
+            "system": "uk_alphabetic",
+            "flag": "🇦🇺",
+            "currency": "AUD",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "IE",
+            "name": "Ireland",
+            "system": "uk_alphabetic",
+            "flag": "🇮🇪",
+            "currency": "EUR",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "NZ",
+            "name": "New Zealand",
+            "system": "uk_alphabetic",
+            "flag": "🇳🇿",
+            "currency": "NZD",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "ZA",
+            "name": "South Africa",
+            "system": "uk_alphabetic",
+            "flag": "🇿🇦",
+            "currency": "ZAR",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "FR",
+            "name": "France",
+            "system": "french_numeric",
+            "flag": "🇫🇷",
+            "currency": "EUR",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "DE",
+            "name": "Germany",
+            "system": "german_numeric",
+            "flag": "🇩🇪",
+            "currency": "EUR",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "RU",
+            "name": "Russia",
+            "system": "german_numeric",
+            "flag": "🇷🇺",
+            "currency": "RUB",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "UA",
+            "name": "Ukraine",
+            "system": "german_numeric",
+            "flag": "🇺🇦",
+            "currency": "UAH",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "ASIA",
+            "name": "Asia (General)",
+            "system": "german_numeric",
+            "flag": "🌏",
+            "currency": "varies",
+            "measurement_preference": "metric",
+            "type": "region"
+        },
+        {
+            "id": "IN",
+            "name": "India",
+            "system": "asian_numeric",
+            "flag": "🇮🇳",
+            "currency": "INR",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "CN",
+            "name": "China",
+            "system": "asian_numeric",
+            "flag": "🇨🇳",
+            "currency": "CNY",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "JP",
+            "name": "Japan",
+            "system": "asian_numeric",
+            "flag": "🇯🇵",
+            "currency": "JPY",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "TR",
+            "name": "Turkey",
+            "system": "asian_numeric",
+            "flag": "🇹🇷",
+            "currency": "TRY",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "IL",
+            "name": "Israel",
+            "system": "asian_numeric",
+            "flag": "🇮🇱",
+            "currency": "ILS",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "VN",
+            "name": "Vietnam",
+            "system": "asian_numeric",
+            "flag": "🇻🇳",
+            "currency": "VND",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "SA",
+            "name": "South America (General)",
+            "system": "asian_numeric",
+            "flag": "🌎",
+            "currency": "varies",
+            "measurement_preference": "metric",
+            "type": "region"
+        },
+        {
+            "id": "IT",
+            "name": "Italy",
+            "system": "italian_numeric",
+            "flag": "🇮🇹",
+            "currency": "EUR",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "ES",
+            "name": "Spain",
+            "system": "italian_numeric",
+            "flag": "🇪🇸",
+            "currency": "EUR",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "NL",
+            "name": "Netherlands",
+            "system": "italian_numeric",
+            "flag": "🇳🇱",
+            "currency": "EUR",
+            "measurement_preference": "metric"
+        },
+        {
+            "id": "CH",
+            "name": "Switzerland",
+            "system": "italian_numeric",
+            "flag": "🇨🇭",
+            "currency": "CHF",
+            "measurement_preference": "metric"
+        }
+    ],
+    "sizing_systems": {
+        "us_numeric": {
+            "name": "US/Canada/Mexico Numeric System",
+            "type": "numeric",
+            "range": "3.0 - 13.0",
+            "increment": "0.25",
+            "countries": [
+                "US",
+                "CA",
+                "MX"
+            ]
+        },
+        "uk_alphabetic": {
+            "name": "UK/Commonwealth Letter System",
+            "type": "alphabetic_with_fractions",
+            "range": "F - Z 1/2",
+            "increment": "0.5 (1/2)",
+            "countries": [
+                "UK",
+                "AU",
+                "IE",
+                "NZ",
+                "ZA"
+            ]
+        },
+        "french_numeric": {
+            "name": "French Numeric System",
+            "type": "numeric",
+            "range": "44 - 70",
+            "increment": "0.5",
+            "countries": [
+                "FR"
+            ]
+        },
+        "german_numeric": {
+            "name": "German/Russian/Eastern European System",
+            "type": "numeric_with_fractions",
+            "range": "14 - 22",
+            "increment": "0.25 (1/4)",
+            "countries": [
+                "DE",
+                "RU",
+                "UA",
+                "ASIA"
+            ]
+        },
+        "asian_numeric": {
+            "name": "Asian/South American System",
+            "type": "numeric",
+            "range": "4 - 27",
+            "increment": "1.0",
+            "countries": [
+                "IN",
+                "CN",
+                "JP",
+                "TR",
+                "IL",
+                "VN",
+                "SA"
+            ]
+        },
+        "italian_numeric": {
+            "name": "Italian/Mediterranean System",
+            "type": "numeric_with_fractions",
+            "range": "4 - 29",
+            "increment": "0.125 (1/8)",
+            "countries": [
+                "IT",
+                "ES",
+                "NL",
+                "CH"
+            ]
+        }
+    },
+    "conversion_data": [
+        {
+            "id": 1,
+            "inside_circumference_mm": 44.2,
+            "inside_circumference_in": 1.74,
+            "us_numeric": 3.0,
+            "uk_alphabetic": "F",
+            "french_numeric": 44,
+            "german_numeric": 14,
+            "asian_numeric": 4,
+            "italian_numeric": 4
+        },
+        {
+            "id": 2,
+            "inside_circumference_mm": 44.8,
+            "inside_circumference_in": 1.77,
+            "us_numeric": 3.25,
+            "uk_alphabetic": "F 1/2",
+            "french_numeric": 45,
+            "german_numeric": "14 1/4",
+            "asian_numeric": null,
+            "italian_numeric": "4 5/8"
+        },
+        {
+            "id": 3,
+            "inside_circumference_mm": 45.5,
+            "inside_circumference_in": 1.79,
+            "us_numeric": 3.5,
+            "uk_alphabetic": "G",
+            "french_numeric": 45.5,
+            "german_numeric": "14 1/2",
+            "asian_numeric": 5,
+            "italian_numeric": "5 1/4"
+        },
+        {
+            "id": 4,
+            "inside_circumference_mm": 46.1,
+            "inside_circumference_in": 1.82,
+            "us_numeric": 3.75,
+            "uk_alphabetic": "G 1/2",
+            "french_numeric": 46,
+            "german_numeric": "14 3/4",
+            "asian_numeric": 6,
+            "italian_numeric": "5 7/8"
+        },
+        {
+            "id": 5,
+            "inside_circumference_mm": 46.8,
+            "inside_circumference_in": 1.84,
+            "us_numeric": 4.0,
+            "uk_alphabetic": "H",
+            "french_numeric": 47,
+            "german_numeric": 15,
+            "asian_numeric": 7,
+            "italian_numeric": "6 1/2"
+        },
+        {
+            "id": 6,
+            "inside_circumference_mm": 47.4,
+            "inside_circumference_in": 1.87,
+            "us_numeric": 4.25,
+            "uk_alphabetic": "H 1/2",
+            "french_numeric": 47.5,
+            "german_numeric": null,
+            "asian_numeric": null,
+            "italian_numeric": "7 1/8"
+        },
+        {
+            "id": 7,
+            "inside_circumference_mm": 48.0,
+            "inside_circumference_in": 1.89,
+            "us_numeric": 4.5,
+            "uk_alphabetic": "I",
+            "french_numeric": 48,
+            "german_numeric": "15 1/4",
+            "asian_numeric": 8,
+            "italian_numeric": "7 3/4"
+        },
+        {
+            "id": 8,
+            "inside_circumference_mm": 48.7,
+            "inside_circumference_in": 1.92,
+            "us_numeric": 4.75,
+            "uk_alphabetic": "I 1/2",
+            "french_numeric": 48.5,
+            "german_numeric": "15 1/2",
+            "asian_numeric": null,
+            "italian_numeric": "8 3/8"
+        },
+        {
+            "id": 9,
+            "inside_circumference_mm": 49.3,
+            "inside_circumference_in": 1.94,
+            "us_numeric": 5.0,
+            "uk_alphabetic": "J 1/2",
+            "french_numeric": 49,
+            "german_numeric": "15 3/4",
+            "asian_numeric": 9,
+            "italian_numeric": 9
+        },
+        {
+            "id": 10,
+            "inside_circumference_mm": 50.0,
+            "inside_circumference_in": 1.97,
+            "us_numeric": 5.25,
+            "uk_alphabetic": "K",
+            "french_numeric": 50,
+            "german_numeric": 16,
+            "asian_numeric": null,
+            "italian_numeric": "9 5/8"
+        },
+        {
+            "id": 11,
+            "inside_circumference_mm": 50.6,
+            "inside_circumference_in": 1.99,
+            "us_numeric": 5.5,
+            "uk_alphabetic": "K 1/2",
+            "french_numeric": 50.5,
+            "german_numeric": "16 1/4",
+            "asian_numeric": 10,
+            "italian_numeric": "10 1/4"
+        },
+        {
+            "id": 12,
+            "inside_circumference_mm": 51.2,
+            "inside_circumference_in": 2.02,
+            "us_numeric": 5.75,
+            "uk_alphabetic": "L",
+            "french_numeric": 51,
+            "german_numeric": null,
+            "asian_numeric": 11,
+            "italian_numeric": "10 7/8"
+        },
+        {
+            "id": 13,
+            "inside_circumference_mm": 51.9,
+            "inside_circumference_in": 2.04,
+            "us_numeric": 6.0,
+            "uk_alphabetic": "L 1/2",
+            "french_numeric": 52,
+            "german_numeric": "16 1/2",
+            "asian_numeric": 12,
+            "italian_numeric": "11 1/2"
+        },
+        {
+            "id": 14,
+            "inside_circumference_mm": 52.9,
+            "inside_circumference_in": 2.07,
+            "us_numeric": 6.25,
+            "uk_alphabetic": "M",
+            "french_numeric": 52.5,
+            "german_numeric": "16 3/4",
+            "asian_numeric": null,
+            "italian_numeric": "12 1/8"
+        },
+        {
+            "id": 15,
+            "inside_circumference_mm": 53.1,
+            "inside_circumference_in": 2.09,
+            "us_numeric": 6.5,
+            "uk_alphabetic": "M 1/2",
+            "french_numeric": 53,
+            "german_numeric": 17,
+            "asian_numeric": 13,
+            "italian_numeric": "12 3/4"
+        },
+        {
+            "id": 16,
+            "inside_circumference_mm": 53.8,
+            "inside_circumference_in": 2.12,
+            "us_numeric": 6.75,
+            "uk_alphabetic": "N",
+            "french_numeric": 54,
+            "german_numeric": null,
+            "asian_numeric": null,
+            "italian_numeric": "13 3/8"
+        },
+        {
+            "id": 17,
+            "inside_circumference_mm": 54.4,
+            "inside_circumference_in": 2.14,
+            "us_numeric": 7.0,
+            "uk_alphabetic": "N 1/2",
+            "french_numeric": 54.5,
+            "german_numeric": "17 1/4",
+            "asian_numeric": 14,
+            "italian_numeric": 14
+        },
+        {
+            "id": 18,
+            "inside_circumference_mm": 55.1,
+            "inside_circumference_in": 2.17,
+            "us_numeric": 7.25,
+            "uk_alphabetic": "O",
+            "french_numeric": 55,
+            "german_numeric": "17 1/2",
+            "asian_numeric": null,
+            "italian_numeric": "14 5/8"
+        },
+        {
+            "id": 19,
+            "inside_circumference_mm": 55.7,
+            "inside_circumference_in": 2.19,
+            "us_numeric": 7.5,
+            "uk_alphabetic": "O 1/2",
+            "french_numeric": 56,
+            "german_numeric": "17 3/4",
+            "asian_numeric": 15,
+            "italian_numeric": "15 1/4"
+        },
+        {
+            "id": 20,
+            "inside_circumference_mm": 56.3,
+            "inside_circumference_in": 2.22,
+            "us_numeric": 7.75,
+            "uk_alphabetic": "P",
+            "french_numeric": 56.5,
+            "german_numeric": 18,
+            "asian_numeric": null,
+            "italian_numeric": "15 7/8"
+        },
+        {
+            "id": 21,
+            "inside_circumference_mm": 57.0,
+            "inside_circumference_in": 2.24,
+            "us_numeric": 8.0,
+            "uk_alphabetic": "P 1/2",
+            "french_numeric": 57,
+            "german_numeric": null,
+            "asian_numeric": 16,
+            "italian_numeric": "16 1/2"
+        },
+        {
+            "id": 22,
+            "inside_circumference_mm": 57.6,
+            "inside_circumference_in": 2.27,
+            "us_numeric": 8.25,
+            "uk_alphabetic": "Q",
+            "french_numeric": 58,
+            "german_numeric": "18 1/4",
+            "asian_numeric": null,
+            "italian_numeric": "17 1/8"
+        },
+        {
+            "id": 23,
+            "inside_circumference_mm": 58.3,
+            "inside_circumference_in": 2.29,
+            "us_numeric": 8.5,
+            "uk_alphabetic": "Q 1/2",
+            "french_numeric": 58.5,
+            "german_numeric": "18 1/2",
+            "asian_numeric": 17,
+            "italian_numeric": "17 3/4"
+        },
+        {
+            "id": 24,
+            "inside_circumference_mm": 58.9,
+            "inside_circumference_in": 2.32,
+            "us_numeric": 8.75,
+            "uk_alphabetic": "R",
+            "french_numeric": 59,
+            "german_numeric": "18 3/4",
+            "asian_numeric": null,
+            "italian_numeric": "18 3/8"
+        },
+        {
+            "id": 25,
+            "inside_circumference_mm": 59.5,
+            "inside_circumference_in": 2.34,
+            "us_numeric": 9.0,
+            "uk_alphabetic": "R 1/2",
+            "french_numeric": 60,
+            "german_numeric": 19,
+            "asian_numeric": 18,
+            "italian_numeric": 19
+        },
+        {
+            "id": 26,
+            "inside_circumference_mm": 60.2,
+            "inside_circumference_in": 2.37,
+            "us_numeric": 9.25,
+            "uk_alphabetic": "S",
+            "french_numeric": 60.5,
+            "german_numeric": "19 1/4",
+            "asian_numeric": null,
+            "italian_numeric": "19 5/8"
+        },
+        {
+            "id": 27,
+            "inside_circumference_mm": 60.8,
+            "inside_circumference_in": 2.39,
+            "us_numeric": 9.5,
+            "uk_alphabetic": "S 1/2",
+            "french_numeric": 61,
+            "german_numeric": "19 1/2",
+            "asian_numeric": 19,
+            "italian_numeric": "20 1/4"
+        },
+        {
+            "id": 28,
+            "inside_circumference_mm": 61.4,
+            "inside_circumference_in": 2.42,
+            "us_numeric": 9.75,
+            "uk_alphabetic": "T",
+            "french_numeric": 61.5,
+            "german_numeric": null,
+            "asian_numeric": null,
+            "italian_numeric": "20 7/8"
+        },
+        {
+            "id": 29,
+            "inside_circumference_mm": 62.1,
+            "inside_circumference_in": 2.44,
+            "us_numeric": 10.0,
+            "uk_alphabetic": "T 1/2",
+            "french_numeric": 62,
+            "german_numeric": "19 3/4",
+            "asian_numeric": 20,
+            "italian_numeric": "21 1/2"
+        },
+        {
+            "id": 30,
+            "inside_circumference_mm": 62.7,
+            "inside_circumference_in": 2.47,
+            "us_numeric": 10.25,
+            "uk_alphabetic": "U",
+            "french_numeric": 63,
+            "german_numeric": 20,
+            "asian_numeric": 21,
+            "italian_numeric": "22 1/8"
+        },
+        {
+            "id": 31,
+            "inside_circumference_mm": 63.4,
+            "inside_circumference_in": 2.49,
+            "us_numeric": 10.5,
+            "uk_alphabetic": "U 1/2",
+            "french_numeric": 63.5,
+            "german_numeric": null,
+            "asian_numeric": 22,
+            "italian_numeric": "22 3/4"
+        },
+        {
+            "id": 32,
+            "inside_circumference_mm": 64.0,
+            "inside_circumference_in": 2.52,
+            "us_numeric": 10.75,
+            "uk_alphabetic": "V",
+            "french_numeric": 64,
+            "german_numeric": "20 1/2",
+            "asian_numeric": null,
+            "italian_numeric": "23 3/8"
+        },
+        {
+            "id": 33,
+            "inside_circumference_mm": 64.6,
+            "inside_circumference_in": 2.54,
+            "us_numeric": 11.0,
+            "uk_alphabetic": "V 1/2",
+            "french_numeric": 65,
+            "german_numeric": "20 3/4",
+            "asian_numeric": 23,
+            "italian_numeric": 24
+        },
+        {
+            "id": 34,
+            "inside_circumference_mm": 65.3,
+            "inside_circumference_in": 2.57,
+            "us_numeric": 11.25,
+            "uk_alphabetic": "W",
+            "french_numeric": 65.5,
+            "german_numeric": null,
+            "asian_numeric": null,
+            "italian_numeric": "24 5/8"
+        },
+        {
+            "id": 35,
+            "inside_circumference_mm": 65.9,
+            "inside_circumference_in": 2.59,
+            "us_numeric": 11.5,
+            "uk_alphabetic": "W 1/2",
+            "french_numeric": 66,
+            "german_numeric": 21,
+            "asian_numeric": 24,
+            "italian_numeric": "25 1/4"
+        },
+        {
+            "id": 36,
+            "inside_circumference_mm": 66.6,
+            "inside_circumference_in": 2.62,
+            "us_numeric": 11.75,
+            "uk_alphabetic": "X",
+            "french_numeric": 67,
+            "german_numeric": "21 1/4",
+            "asian_numeric": null,
+            "italian_numeric": "25 7/8"
+        },
+        {
+            "id": 37,
+            "inside_circumference_mm": 67.2,
+            "inside_circumference_in": 2.65,
+            "us_numeric": 12.0,
+            "uk_alphabetic": "X 1/2",
+            "french_numeric": 67.5,
+            "german_numeric": "21 1/2",
+            "asian_numeric": 25,
+            "italian_numeric": "26 1/2"
+        },
+        {
+            "id": 38,
+            "inside_circumference_mm": 68.1,
+            "inside_circumference_in": 2.68,
+            "us_numeric": 12.25,
+            "uk_alphabetic": "Y",
+            "french_numeric": 68,
+            "german_numeric": null,
+            "asian_numeric": null,
+            "italian_numeric": "27 1/8"
+        },
+        {
+            "id": 39,
+            "inside_circumference_mm": 68.5,
+            "inside_circumference_in": 2.71,
+            "us_numeric": 12.5,
+            "uk_alphabetic": "Z",
+            "french_numeric": 69,
+            "german_numeric": "21 3/4",
+            "asian_numeric": 26,
+            "italian_numeric": "27 3/4"
+        },
+        {
+            "id": 40,
+            "inside_circumference_mm": 69.1,
+            "inside_circumference_in": 2.72,
+            "us_numeric": 12.75,
+            "uk_alphabetic": "Z 1/2",
+            "french_numeric": 69.5,
+            "german_numeric": null,
+            "asian_numeric": null,
+            "italian_numeric": "28 3/8"
+        },
+        {
+            "id": 41,
+            "inside_circumference_mm": 69.7,
+            "inside_circumference_in": 2.75,
+            "us_numeric": 13.0,
+            "uk_alphabetic": null,
+            "french_numeric": 70,
+            "german_numeric": 22,
+            "asian_numeric": 27,
+            "italian_numeric": 29
+        }
+    ]
+}

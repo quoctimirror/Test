@@ -1,0 +1,437 @@
+/* Size Selector Overlay */
+.size-selector-overlay {
+    position: absolute;
+    top: 0;
+    /* Same as RightConfiguration */
+    right: 0;
+    width: 100%;
+    /* Full width of parent */
+    height: 100%;
+    /* Full height of parent */
+    background: transparent;
+    z-index: 100;
+    /* Below navbar (201) but above RightConfiguration (50) */
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+/* Closing state */
+.size-selector-overlay.closing {
+    animation: slideOut 0.3s ease-out forwards;
+}
+
+/* Size Selector Modal */
+.size-selector-modal {
+    width: 100%;
+    height: 100%;
+    /* Full height of overlay */
+    background: var(--Gray-1, #F6F6F6);
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    padding: 120px 40px 20px;
+    /* Same as RightConfiguration */
+    box-sizing: border-box;
+}
+
+/* Header Tabs */
+.size-selector-header {
+    display: flex;
+    gap: 24px;
+    /* Khoảng cách giữa 2 tabs */
+    padding: 0 0 20px 0;
+    background: var(--Gray-1, #F6F6F6);
+    justify-content: center;
+}
+
+.size-tab {
+    flex: none;
+    background: none;
+    border: none;
+    padding: 0 0 1px 0;
+    /* Khoảng cách giữa text và underline - giảm từ 8px xuống 4px */
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
+    /* Inactive color */
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    border-bottom: none;
+    overflow: visible;
+}
+
+/* Tab text - normal text */
+.tab-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* Tab ghost - sliding text clone */
+.tab-ghost {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    color: rgba(0, 0, 0, 0.50);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Left tab (Select your size) - when inactive, ghost slides to right */
+.size-tab-left:not(.active) .tab-ghost {
+    animation: slideGhostRight 0.8s ease forwards;
+}
+
+/* Right tab (Find your size) - when inactive, ghost slides to left */
+.size-tab-right:not(.active) .tab-ghost {
+    animation: slideGhostLeft 0.8s ease forwards;
+}
+
+@keyframes slideGhostRight {
+    0% {
+        opacity: 0.8;
+        transform: translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(calc(100% + 24px));
+    }
+}
+
+@keyframes slideGhostLeft {
+    0% {
+        opacity: 0.8;
+        transform: translateX(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(calc(-100% - 24px));
+    }
+}
+
+.size-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+
+.size-tab.active {
+    color: var(--Black, #000);
+    /* Active color */
+}
+
+.size-tab.active::after {
+    background-color: #000000;
+}
+
+.size-tab:hover {
+    color: var(--Black, #000);
+}
+
+/* Filters */
+.size-selector-filters {
+    display: flex;
+    padding: 0 0 20px 0;
+    background: var(--Gray-1, #F6F6F6);
+    justify-content: space-around;
+}
+
+.filter-group {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Filter select styles removed - now using CustomDropdown */
+
+/* Custom styling for select dropdown */
+.filter-select {
+    color-scheme: light;
+}
+
+/* Style for dropdown options */
+.filter-select option {
+    background-color: #FFFFFF;
+    color: #000000;
+    padding: 8px 12px;
+    font-family: "BT Beau Sans";
+    font-size: 14px;
+}
+
+/* Hover state for options - Chrome/Edge */
+.filter-select option:hover {
+    background-color: transparent !important;
+    background-image: none !important;
+    color: #BC224C !important;
+    box-shadow: none !important;
+}
+
+/* Focus/Active state */
+.filter-select option:focus,
+.filter-select option:active {
+    background-color: transparent !important;
+    color: #BC224C !important;
+}
+
+/* Selected option */
+.filter-select option:checked {
+    background-color: transparent;
+    color: #BC224C;
+    font-weight: 400;
+}
+
+/* Firefox specific */
+@-moz-document url-prefix() {
+    .filter-select option:hover {
+        background-color: transparent !important;
+        color: #BC224C !important;
+    }
+}
+
+/* Country/Region select - arrow sát text hơn và canh giữa */
+.filter-select-country {
+    /* Padding trái để cân bằng và canh giữa */
+    background-position: calc(50% + 60px) center;
+    /* Arrow canh giữa, offset để sát text */
+}
+
+/* Size Table Container */
+.size-table-container {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--Gray-1, #F6F6F6);
+    padding: 0;
+}
+
+/* Custom Scrollbar */
+.size-table-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.size-table-container::-webkit-scrollbar-track {
+    background: #E0E0E0;
+}
+
+.size-table-container::-webkit-scrollbar-thumb {
+    background: #999999;
+    border-radius: 3px;
+}
+
+.size-table-container::-webkit-scrollbar-thumb:hover {
+    background: #666666;
+}
+
+/* Size Table */
+.size-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--Gray-1, #F6F6F6);
+}
+
+.size-row {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.size-row .size-cell {
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.size-row:first-child .size-cell {
+    border-top: 1px solid #E0E0E0;
+}
+
+.size-row:hover .size-cell {
+    border-top: 1px solid #BC224C;
+    border-bottom: 1px solid #BC224C;
+    background: #F9F9F9;
+    color: #BC224C;
+}
+
+.size-row:first-child:hover .size-cell {
+    border-top: 1px solid #BC224C;
+}
+
+.size-cell {
+    padding: 16px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666666;
+    text-align: center;
+    border: none;
+}
+
+/* Footer Gradient Bar */
+.size-selector-footer {
+    height: 8px;
+    background: linear-gradient(90deg, #BB234C 0%, #9B4F96 100%);
+}
+
+/* Find Your Size Content */
+.find-size-content {
+    flex: 1;
+    overflow-y: auto;
+    color: #000000;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.find-size-content>div {
+    max-width: 552px;
+    width: 100%;
+    height: 232px;
+    text-align: left;
+}
+
+.find-size-intro {
+    margin: 0 0 20px 0;
+}
+
+.find-size-steps {
+    margin: 0 0 20px 0;
+    padding-left: 20px;
+}
+
+.find-size-steps li {
+    margin-bottom: 12px;
+}
+
+.find-size-tip {
+    margin: 12px 0 24px 0;
+    color: #BC224C;
+    max-width: 554px;
+}
+
+.find-size-footer {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.50);
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.find-size-content>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.find-size-footer::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #000000;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.find-size-footer:hover {
+    color: #000000;
+}
+
+.find-size-footer:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Mobile & Tablet - max-width: 1023px */
+@media (max-width: 1023px) {
+    .size-selector-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 400;
+    }
+
+    .size-selector-modal {
+        width: 100%;
+        height: 100%;
+        padding: 60px 24px 24px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .size-selector-header {
+        gap: 20px;
+        padding: 0 0 16px 0;
+    }
+
+    .size-tab {
+        font-size: 14px;
+    }
+
+    .size-selector-filters {
+        gap: 16px;
+        padding: 0 0 16px 0;
+    }
+
+    .filter-group {
+        flex: 1;
+    }
+}
+
+/* Tablet specific - 426px to 1023px */
+@media (min-width: 426px) and (max-width: 1023px) {
+    .size-selector-modal {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 80px 40px 40px;
+    }
+
+    .size-selector-header {
+        gap: 24px;
+        padding: 0 0 20px 0;
+    }
+
+    .size-tab {
+        font-size: 16px;
+    }
+
+    .size-selector-filters {
+        gap: 20px;
+        padding: 0 0 20px 0;
+    }
+}

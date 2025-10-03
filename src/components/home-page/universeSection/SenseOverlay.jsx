@@ -28,7 +28,7 @@ const SenseOverlay = ({ isVisible, onClose }) => {
 
     return (
         <div className="sense-overlay" onClick={onClose}>
-            <div className="sense-overlay__content" onClick={(e) => e.stopPropagation()}>
+            <div className="sense-overlay__content">
                 {/* Close Button */}
                 <div className="sense-overlay__close-button">
                     <ShineGlassButton

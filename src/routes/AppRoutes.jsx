@@ -52,6 +52,9 @@ const ImmersiveShowroomPage = lazy(() =>
   import("@pages/ImmersiveShowroomPage")
 );
 const SubmitPage = lazy(() => import("@pages/SubmitPage"));
+const ProductsV2 = lazy(() =>
+  import("@components/productsV2/Products.jsx")
+);
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -104,6 +107,8 @@ export default function AppRoutes() {
 
           <Route path="/products" element={<ProductsPage />} />
 
+          <Route path="/products-v2" element={<ProductsV2 />} />
+
           <Route path="/all-gems" element={<AllGemsPage />} />
 
           <Route path="/collections" element={<CollectionPage />} />
@@ -143,6 +148,9 @@ export default function AppRoutes() {
           {/* <Route path="/universe-section" element={<UniverseSection />} /> */}
 
           <Route path="/hover-expand" element={<HoverExpandSection />} />
+
+          {/* Test route for ProductsV2 */}
+          <Route path="/products-v2" element={<ProductsV2 />} />
 
           <Route path="/view-360" element={<View360 />} />
 

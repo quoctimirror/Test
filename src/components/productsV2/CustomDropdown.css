@@ -1,0 +1,104 @@
+/* Custom Dropdown Container */
+.custom-dropdown {
+    position: relative;
+    width: auto;
+    min-width: 100%;
+}
+
+/* Dropdown Header */
+.custom-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: "BT Beau Sans";
+    font-size: 13px;
+    font-weight: 400;
+    color: #000000;
+    text-align: center;
+}
+
+.custom-dropdown-header:hover {
+    opacity: 0.7;
+}
+
+/* Selected Value Text */
+.custom-dropdown-selected {
+    white-space: nowrap;
+}
+
+/* Arrow Icon */
+.custom-dropdown-arrow {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.custom-dropdown-arrow.open {
+    transform: rotate(180deg);
+}
+
+/* Dropdown List */
+.custom-dropdown-list {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10000;
+    width: fit-content;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Dropdown Option */
+.custom-dropdown-option {
+    padding: 10px 14px;
+    font-family: "BT Beau Sans";
+    font-size: 12px;
+    font-weight: 400;
+    color: #000000;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* Hover State - THIS IS WHAT YOU WANTED */
+.custom-dropdown-option:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #BC224C !important;
+}
+
+/* Selected Option */
+.custom-dropdown-option.selected {
+    color: #BC224C;
+    background: transparent;
+}
+
+/* Scrollbar styling */
+.custom-dropdown-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-dropdown-list::-webkit-scrollbar-track {
+    background: #F0F0F0;
+}
+
+.custom-dropdown-list::-webkit-scrollbar-thumb {
+    background: #CCCCCC;
+    border-radius: 3px;
+}
+
+.custom-dropdown-list::-webkit-scrollbar-thumb:hover {
+    background: #999999;
+}
