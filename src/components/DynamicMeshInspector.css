@@ -1,0 +1,143 @@
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #1a1a1a;
+  color: white;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.sidebarTitle {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.sceneModeButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.modeButton {
+  flex: 1;
+  padding: 8px;
+  background: #2a2a2a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+
+.modeButton:hover {
+  background: #3a3a3a;
+}
+
+.modeButton.active {
+  background: #4CAF50;
+}
+
+.nodeTitle {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.nodeInfo {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 15px;
+}
+
+.nodeItem {
+  padding: 10px 15px;
+  margin: 5px 0;
+  background: #2a2a2a;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+.nodeItem:hover {
+  background: #3a3a3a;
+}
+
+.nodeItem.selected {
+  background: #ff0000;
+}
+
+.nodeItem.dimmed {
+  opacity: 0.6;
+}
+
+.nodeName {
+  font-size: 14px;
+}
+
+.nodeType {
+  font-size: 11px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.canvasContainer {
+  flex: 1;
+}
+
+.fileUpload {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.fileUpload::-webkit-file-upload-button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.fileUpload::-webkit-file-upload-button:hover {
+  background: #45a049;
+}
+
+.materialsPanel {
+  margin-top: 25px;
+  padding: 15px;
+  background: #2a2a2a;
+  border-radius: 5px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.materialsTitle {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #4CAF50;
+}
+
+.materialsContent {
+  font-size: 11px;
+  color: #ccc;
+}
+
+.materialsContent pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
