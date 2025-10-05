@@ -103,7 +103,7 @@ export function DynamicMeshInspector() {
           shadows
           dpr={[1, 1.5]}
           gl={{ antialias: false }}
-          camera={{ position: [-5, 5, 14], fov: 20 }}
+          camera={{ position: [0, 2, 20], fov: 20 }} // -5 5 14
         >
           {sceneMode === 'smooth' ? (
             <DynamicSceneSmooth

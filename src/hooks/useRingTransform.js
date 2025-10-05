@@ -59,12 +59,26 @@ export function useRingTransform() {
       max: 1,
       step: 0.01,
       label: 'Scale'
+    },
+
+    // Debug mode - hiển thị bounding box
+    debugMode: {
+      value: false,
+      label: 'Debug Box'
+    },
+
+    // Auto rotate 360° quanh trục Y
+    autoRotateY: {
+      value: false,
+      label: 'Auto Rotate Y'
     }
   })
 
   return {
     rotation: [transform.rotationX, transform.rotationY, transform.rotationZ],
     position: [transform.positionX, transform.positionY, transform.positionZ],
-    scale: transform.scale
+    scale: transform.scale,
+    debugMode: transform.debugMode,
+    autoRotateY: transform.autoRotateY
   }
 }

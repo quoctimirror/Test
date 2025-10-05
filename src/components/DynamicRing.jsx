@@ -1,10 +1,13 @@
 import * as THREE from 'three'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useGLTF, MeshRefractionMaterial } from '@react-three/drei'
 
-export function DynamicRing({ selectedMesh, onMaterialsLoad, onMeshListLoad, modelPath, env, ...props }) {
+export function DynamicRing({ selectedMesh, onMaterialsLoad, onMeshListLoad, modelPath, env, meshColors = {}, debugMode = false, ...props }) {
   // Load file GLTF và lấy ra nodes (các mesh) và materials (chất liệu)
   const { nodes, materials } = useGLTF(modelPath || '/myfav.glb')
+
+  // State để lưu bounding box
+  const [boundingBox, setBoundingBox] = useState(null)
 
   // console.log('DynamicRing - env:', env)
   console.log('DynamicRing - nodes:', Object.keys(nodes))
@@ -69,6 +72,34 @@ export function DynamicRing({ selectedMesh, onMaterialsLoad, onMeshListLoad, mod
     }
   }, [nodes, onMeshListLoad, onMaterialsLoad])
 
+  // Tính bounding box sau khi model được load
+  useEffect(() => {
+    if (nodes) {
+      // Tính bounding box từ tất cả các mesh
+      const box = new THREE.Box3()
+
+      Object.keys(nodes).forEach(key => {
+        const node = nodes[key]
+        if (node.isMesh || node.isInstancedMesh) {
+          const mesh = node
+          if (mesh.geometry) {
+            mesh.geometry.computeBoundingBox()
+            const meshBox = mesh.geometry.boundingBox.clone()
+
+            // Áp dụng position, rotation, scale của mesh
+            const matrix = new THREE.Matrix4()
+            matrix.compose(mesh.position, mesh.quaternion, mesh.scale)
+            meshBox.applyMatrix4(matrix)
+
+            box.union(meshBox)
+          }
+        }
+      })
+
+      setBoundingBox(box)
+    }
+  }, [nodes])
+
   // Render tất cả meshes từ GLTF
   return (
     <group {...props} dispose={null}>
@@ -102,7 +133,7 @@ export function DynamicRing({ selectedMesh, onMaterialsLoad, onMeshListLoad, mod
                 />
               ) : env ? (
                 <MeshRefractionMaterial
-                  color={material?.color || '#ffffff'}
+                  color={meshColors[key] || material?.color || '#'}
                   side={THREE.DoubleSide}
                   envMap={env}
                   aberrationStrength={0.02}
@@ -110,7 +141,7 @@ export function DynamicRing({ selectedMesh, onMaterialsLoad, onMeshListLoad, mod
                 />
               ) : (
                 <meshStandardMaterial
-                  color={material?.color || '#ffffff'}
+                  color={meshColors[key] || material?.color || '#b5cbdd'}
                   roughness={0.15}
                   metalness={1}
                   envMapIntensity={2}
@@ -151,7 +182,7 @@ export function DynamicRing({ selectedMesh, onMaterialsLoad, onMeshListLoad, mod
               ) : isGemMesh && env ? (
                 // Nếu là gem/diamond và có env → dùng MeshRefractionMaterial
                 <MeshRefractionMaterial
-                  color={material?.color || '#ffffff'}
+                  color={meshColors[key] || material?.color || '#b5cbdd'}
                   envMap={env}
                   aberrationStrength={0.02}
                   toneMapped={false}
@@ -159,7 +190,7 @@ export function DynamicRing({ selectedMesh, onMaterialsLoad, onMeshListLoad, mod
               ) : (
                 // Render material đẹp - LUÔN override roughness/metalness (giống code mẫu)
                 <meshStandardMaterial
-                  color={material?.color ? material.color : '#f0f0f0'}
+                  color={meshColors[key] || material?.color || '#ffaf83'}
                   roughness={0.15}        // Giống code mẫu: roughness={0.15}
                   metalness={1}           // Kim loại 100%
                   envMapIntensity={1.5}   // Giống code mẫu: envMapIntensity={1.5}
@@ -172,6 +203,18 @@ export function DynamicRing({ selectedMesh, onMaterialsLoad, onMeshListLoad, mod
         }
         return null;
       })}
+
+      {/* Bounding box màu đỏ - chỉ hiện khi debug mode */}
+      {debugMode && boundingBox && (
+        <mesh position={boundingBox.getCenter(new THREE.Vector3())}>
+          <boxGeometry args={[
+            boundingBox.max.x - boundingBox.min.x,
+            boundingBox.max.y - boundingBox.min.y,
+            boundingBox.max.z - boundingBox.min.z
+          ]} />
+          <meshBasicMaterial color="red" wireframe />
+        </mesh>
+      )}
     </group>
   )
 }
