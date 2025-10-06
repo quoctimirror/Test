@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import "./SubmitForm.css";
+import "react-phone-input-2/lib/style.css";
+import PhoneInput from "react-phone-input-2";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { fileUploadAPI, notificationsAPI } from "@services/api";
 
@@ -27,11 +30,81 @@ const SubmitForm = () => {
     collaborationInterests: [],
     brandStory: "",
     agreeToContact: false,
+    eventExperienceRating: "",
+    brandSentiment: "",
+    collaborationLikelihood: "",
+    feedbackNotes: "",
   });
 
   const [isUploading, setIsUploading] = useState(false);
   const [fileErrors, setFileErrors] = useState({});
   const [validationErrors, setValidationErrors] = useState({});
+  const [showPrivacyPopup, setShowPrivacyPopup] = useState(false);
+  const [shouldPreventRadioChange, setShouldPreventRadioChange] =
+    useState(false);
+  const [phoneInputHeight, setPhoneInputHeight] = useState("42px");
+  const [phoneInputFontSize, setPhoneInputFontSize] = useState("14px");
+
+  // Update phone input height and font size based on screen size
+  useEffect(() => {
+    const updatePhoneInputStyles = () => {
+      const width = window.innerWidth;
+
+      if (width <= 480) {
+        setPhoneInputHeight("30px");
+        setPhoneInputFontSize("10px");
+      } else if (width <= 1024) {
+        setPhoneInputHeight("35px");
+        setPhoneInputFontSize("13px");
+      } else if (width <= 1300) {
+        setPhoneInputHeight("35px");
+        setPhoneInputFontSize("12px");
+      } else {
+        setPhoneInputHeight("44px");
+        setPhoneInputFontSize("14px");
+      }
+    };
+
+    updatePhoneInputStyles();
+    window.addEventListener("resize", updatePhoneInputStyles);
+
+    return () => {
+      window.removeEventListener("resize", updatePhoneInputStyles);
+    };
+  }, []);
+
+  // Feedback options
+  const EXPERIENCE_RATINGS = [
+    "Exceptional – I was fully immersed",
+    "Great – memorable and inspiring",
+    "Good – engaging overall",
+    "Fair – room for improvement",
+    "Needs work",
+  ];
+
+  const BRAND_SENTIMENT_OPTIONS = [
+    "Deeply inspired by MIRROR's vision",
+    "Curious to continue the conversation",
+    "Appreciate the innovation",
+    "Still discovering the brand",
+  ];
+
+  const COLLABORATION_LIKELIHOOD_OPTIONS = [
+    "Ready to explore collaborations soon",
+    "Interested—let's explore possibilities",
+    "Would like to learn more first",
+  ];
+
+  // Disable body scroll when popup is open
+  const openPrivacyPopup = () => {
+    setShowPrivacyPopup(true);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closePrivacyPopup = () => {
+    setShowPrivacyPopup(false);
+    document.body.style.overflow = "unset";
+  };
 
   // File size limits (in bytes)
   const FILE_SIZE_LIMITS = {
@@ -85,8 +158,37 @@ const SubmitForm = () => {
     }
   };
 
+  // Handle radio button click to allow unselecting
+  const handleRadioClick = (e) => {
+    const { name, value } = e.target;
+
+    // If clicking on already selected radio, mark to prevent change and unselect it
+    if (formData[name] === value) {
+      setShouldPreventRadioChange(true);
+
+      setTimeout(() => {
+        setFormData((prev) => ({ ...prev, [name]: "" }));
+        setShouldPreventRadioChange(false);
+
+        // Clear validation error
+        if (validationErrors[name]) {
+          setValidationErrors((prev) => {
+            const newErrors = { ...prev };
+            delete newErrors[name];
+            return newErrors;
+          });
+        }
+      }, 0);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    // Skip radio change if we're in the process of unchecking
+    if (type === "radio" && shouldPreventRadioChange) {
+      return;
+    }
 
     // Clear validation error for this field when user starts typing/selecting
     if (validationErrors[name]) {
@@ -287,6 +389,14 @@ const SubmitForm = () => {
       { field: "location", label: "Location is required" },
       // { field: "categories", label: "Please select at least one category" }, // Commented out for Milan
       {
+        field: "eventExperienceRating",
+        label: "Please share how the immersive showroom felt",
+      },
+      {
+        field: "collaborationLikelihood",
+        label: "Please share your interest in collaborating",
+      },
+      {
         field: "agreeToContact",
         label: "You must agree to the Privacy Policy",
       },
@@ -340,6 +450,8 @@ const SubmitForm = () => {
       "contactEmail",
       "location",
       // "categories", // Commented out for Milan
+      "eventExperienceRating",
+      "collaborationLikelihood",
       "agreeToContact",
     ];
 
@@ -352,17 +464,41 @@ const SubmitForm = () => {
           element = document.querySelector(".submit-form-checkbox-group");
         } else if (field === "agreeToContact") {
           element = document.querySelector('input[name="agreeToContact"]');
+        } else if (field === "eventExperienceRating") {
+          // Scroll to the radio group container instead of first input
+          const radioGroup = document.querySelector(
+            'input[name="eventExperienceRating"]'
+          );
+          element = radioGroup?.closest(".submit-form-group");
+        } else if (field === "collaborationLikelihood") {
+          // Scroll to the radio group container instead of first input
+          const radioGroup = document.querySelector(
+            'input[name="collaborationLikelihood"]'
+          );
+          element = radioGroup?.closest(".submit-form-group");
         } else {
           element = document.querySelector(`input[name="${field}"]`);
         }
 
         if (element) {
-          element.scrollIntoView({
+          // Get element position
+          const elementRect = element.getBoundingClientRect();
+          const absoluteElementTop = elementRect.top + window.pageYOffset;
+          const navbarHeight = 100; // Approximate navbar height
+          const offset = 120; // Extra offset for better visibility
+
+          // Scroll to element with offset for fixed navbar
+          window.scrollTo({
+            top: absoluteElementTop - navbarHeight - offset,
             behavior: "smooth",
-            block: "center",
           });
+
           // Focus the element if it's a focusable input
-          if (element.focus && element.type !== "checkbox") {
+          if (
+            element.focus &&
+            element.type !== "checkbox" &&
+            element.type !== "radio"
+          ) {
             setTimeout(() => element.focus(), 500);
           }
           break;
@@ -404,7 +540,7 @@ const SubmitForm = () => {
         uploadedFiles = await uploadFiles();
       }
 
-      // Prepare data for Google Sheets (matching your HTML form structure exactly)
+      // Prepare data for Google Sheets (matching HTML form structure)
       const googleSheetsData = {
         designerName: formData.designerName,
         email: formData.contactEmail,
@@ -416,22 +552,25 @@ const SubmitForm = () => {
         portfolioLink: formData.portfolioLink,
         categories: Array.isArray(formData.categories)
           ? formData.categories.join(", ")
-          : formData.categories,
-        priceRange: formData.priceRange,
-        capacity: formData.productionCapacity,
-        readiness: formData.readiness,
-        pdfLink: uploadedFiles.portfolioFileUrl || "", // Ensure not null
+          : formData.categories || "",
+        priceRange: formData.priceRange || "",
+        capacity: formData.productionCapacity || "",
+        readiness: formData.readiness || "",
+        pdfLink: uploadedFiles.portfolioFileUrl || "",
         imageLinks:
           uploadedFiles.heroImagesUrls.length > 0
             ? uploadedFiles.heroImagesUrls.join(", ")
-            : "", // Ensure not empty array
-        videoLink: formData.videoLookbook,
+            : "",
+        videoLink: formData.videoLookbook || "",
         collabInterest: Array.isArray(formData.collaborationInterests)
           ? formData.collaborationInterests.join(", ")
-          : formData.collaborationInterests,
-        brandStory: formData.brandStory,
-        agreeToContact: formData.agreeToContact ? "Yes" : "No",
-        submissionDate: new Date().toISOString(),
+          : formData.collaborationInterests || "",
+        brandStory: formData.brandStory || "",
+        showroomRate: formData.eventExperienceRating || "",
+        showcaseRate: formData.brandSentiment || "",
+        eventExperienceRating: formData.collaborationLikelihood || "",
+        feedbackNote: formData.feedbackNotes || "",
+        inspirationNote: "",
       };
 
       // Submit to Google Sheets
@@ -534,13 +673,55 @@ const SubmitForm = () => {
                 <label className="submit-form-label bodytext-3--no-margin">
                   Phone / WhatsApp
                 </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="+84..."
-                  className="submit-form-input bodytext-6--no-margin"
+                <PhoneInput
+                  country={"it"}
                   value={formData.phone}
-                  onChange={handleInputChange}
+                  onChange={(phone, country) => {
+                    // Format: add space after country code
+                    const formattedPhone = phone.replace(
+                      new RegExp(`^(${country.dialCode})`),
+                      `$1 `
+                    );
+                    setFormData((prev) => ({
+                      ...prev,
+                      phone: formattedPhone.trim(),
+                    }));
+                  }}
+                  containerClass="phone-input-container"
+                  inputClass="submit-form-input bodytext-6--no-margin"
+                  buttonClass="phone-input-button"
+                  dropdownClass="phone-input-dropdown"
+                  enableSearch={true}
+                  searchPlaceholder="Search country..."
+                  disableCountryCode={false}
+                  countryCodeEditable={false}
+                  enableAreaCodes={true}
+                  containerStyle={{
+                    width: "100%",
+                    maxWidth: "100%",
+                    border: "none",
+                    boxShadow: "none",
+                  }}
+                  inputStyle={{
+                    width: "100%",
+                    maxWidth: "100%",
+                    border: "none",
+                    borderBottom: "1px solid #e0e0e0",
+                    borderRadius: "0",
+                    boxShadow: "none",
+                    height: phoneInputHeight,
+                    fontFamily: '"BT Beau Sans", sans-serif',
+                    fontSize: phoneInputFontSize,
+                    fontWeight: "400",
+                    lineHeight: "1",
+                    letterSpacing: "1.3px",
+                  }}
+                  buttonStyle={{
+                    border: "none",
+                    borderRadius: "0",
+                    background: "transparent",
+                    height: phoneInputHeight,
+                  }}
                 />
               </div>
 
@@ -825,10 +1006,117 @@ const SubmitForm = () => {
               />
             </div>
 
+            {/* Feedback Section */}
+            <div className="submit-form-feedback">
+              <h3 className="submit-form-subtitle heading-3--no-margin">
+                Your experience at Mirror in Milan
+              </h3>
+              <p className="submit-form-description bodytext-5--no-margin">
+                Help us understand how the immersive showroom resonated with you
+                so we can shape meaningful collaborations.
+              </p>
+
+              <div className="submit-form-group">
+                <label className="submit-form-label bodytext-3--no-margin">
+                  How would you rate the immersive showroom experience? *
+                </label>
+                <div className="submit-form-radio-group submit-form-radio-group--stacked">
+                  {EXPERIENCE_RATINGS.map((option) => (
+                    <label
+                      key={option}
+                      className="submit-form-radio-label bodytext-4--no-margin"
+                    >
+                      <input
+                        type="radio"
+                        name="eventExperienceRating"
+                        value={option}
+                        checked={formData.eventExperienceRating === option}
+                        onChange={handleInputChange}
+                        onClick={handleRadioClick}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+                {validationErrors.eventExperienceRating && (
+                  <p className="submit-form-error bodytext-6--no-margin">
+                    {validationErrors.eventExperienceRating}
+                  </p>
+                )}
+              </div>
+
+              <div className="submit-form-group">
+                <label className="submit-form-label bodytext-3--no-margin">
+                  How are you feeling about MIRROR after the showcase?
+                </label>
+                <div className="submit-form-radio-group submit-form-radio-group--stacked">
+                  {BRAND_SENTIMENT_OPTIONS.map((option) => (
+                    <label
+                      key={option}
+                      className="submit-form-radio-label bodytext-4--no-margin"
+                    >
+                      <input
+                        type="radio"
+                        name="brandSentiment"
+                        value={option}
+                        checked={formData.brandSentiment === option}
+                        onChange={handleInputChange}
+                        onClick={handleRadioClick}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="submit-form-group">
+                <label className="submit-form-label bodytext-3--no-margin">
+                  How ready are you to explore a collaboration with MIRROR? *
+                </label>
+                <div className="submit-form-radio-group submit-form-radio-group--stacked">
+                  {COLLABORATION_LIKELIHOOD_OPTIONS.map((option) => (
+                    <label
+                      key={option}
+                      className="submit-form-radio-label bodytext-4--no-margin"
+                    >
+                      <input
+                        type="radio"
+                        name="collaborationLikelihood"
+                        value={option}
+                        checked={formData.collaborationLikelihood === option}
+                        onChange={handleInputChange}
+                        onClick={handleRadioClick}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+                {validationErrors.collaborationLikelihood && (
+                  <p className="submit-form-error bodytext-6--no-margin">
+                    {validationErrors.collaborationLikelihood}
+                  </p>
+                )}
+              </div>
+
+              <div className="submit-form-group">
+                <label className="submit-form-label bodytext-3--no-margin">
+                  Anything we can refine or co-create next time? (optional)
+                </label>
+                <textarea
+                  name="feedbackNotes"
+                  placeholder="Share thoughts about the showcase, the brand, or collaboration ideas."
+                  className="submit-form-textarea bodytext-6--no-margin"
+                  rows="4"
+                  value={formData.feedbackNotes}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+
             {/* Collaboration Interests */}
             <div className="submit-form-group">
               <label className="submit-form-label bodytext-3--no-margin">
-                Collaboration interests
+                Collaboration interests (can choose more than one)
               </label>
               <div className="submit-form-checkbox-group">
                 {[
@@ -859,49 +1147,16 @@ const SubmitForm = () => {
             {/* Brand Story */}
             <div className="submit-form-group">
               <label className="submit-form-label bodytext-3--no-margin">
-                If you'd like, share a few words about your inspirations
+                If you would like, share a few words about your inspirations
                 (optional)
               </label>
               <textarea
                 name="brandStory"
                 placeholder="What inspires your work? What materials do you love?"
-                className="submit-form-textarea bodytext-6--no-margin"
-                rows="1"
+                className="submit-form-textarea submit-form-textarea--white bodytext-6--no-margin"
+                rows="4"
                 value={formData.brandStory}
                 onChange={handleInputChange}
-                style={{
-                  overflow: "hidden",
-                  resize: "none",
-                  whiteSpace: "pre-wrap",
-                  wordWrap: "break-word",
-                }}
-                onInput={(e) => {
-                  const maxRows = 5;
-
-                  // Reset to 1 row to get accurate scrollHeight
-                  e.target.rows = 1;
-
-                  // Calculate how many rows are actually needed based on scroll height
-                  const style = getComputedStyle(e.target);
-                  const lineHeight = parseFloat(style.lineHeight);
-                  const paddingTop = parseFloat(style.paddingTop);
-                  const paddingBottom = parseFloat(style.paddingBottom);
-
-                  const contentHeight =
-                    e.target.scrollHeight - paddingTop - paddingBottom;
-                  const neededRows = Math.round(contentHeight / lineHeight);
-
-                  // Only expand if content actually needs more rows
-                  if (neededRows > 1) {
-                    e.target.rows = Math.min(neededRows, maxRows);
-                  }
-
-                  if (neededRows > maxRows) {
-                    e.target.style.overflow = "auto";
-                  } else {
-                    e.target.style.overflow = "hidden";
-                  }
-                }}
               />
             </div>
 
@@ -915,8 +1170,19 @@ const SubmitForm = () => {
                   onChange={handleInputChange}
                   required
                 />
-                I agree to be contacted regarding my submission and accept the
-                Privacy Policy
+                <span className="privacy-policy-wrapper">
+                  I agree to be contacted regarding my submission and accept the{" "}
+                  <span
+                    className="privacy-policy-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      openPrivacyPopup();
+                    }}
+                  >
+                    Privacy Policy
+                  </span>
+                </span>
               </label>
               {validationErrors.agreeToContact && (
                 <p className="submit-form-error bodytext-6--no-margin">
@@ -938,13 +1204,157 @@ const SubmitForm = () => {
                 {isUploading ? "Uploading..." : "Share your vision"}
               </ShineGlassButton>
               <p className="submit-note bodytext-6--no-margin">
-                You'll receive an email confirmation with you submission
+                You'll receive an email confirmation with your submission
                 summary.
               </p>
             </div>
           </form>
         </div>
       </section>
+
+      {/* Privacy Policy Popup - Using Portal to render at document root */}
+      {showPrivacyPopup &&
+        createPortal(
+          <div className="privacy-popup-overlay" onClick={closePrivacyPopup}>
+            <div
+              className="privacy-popup-content"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="privacy-popup-header">
+                <div className="privacy-popup-close">
+                  <ShineGlassButton
+                    width={40}
+                    height={40}
+                    theme="light"
+                    onClick={closePrivacyPopup}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path
+                        d="M16.8623 5.06054L11.4355 10.4883L16.8623 15.916L15.8018 16.9766L10.375 11.5488L5.06055 16.8652L4 15.8037L9.31445 10.4873L4 5.17188L5.06055 4.11133L10.375 9.42676L15.8018 4L16.8623 5.06054Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </ShineGlassButton>
+                </div>
+              </div>
+              <div className="privacy-popup-inner">
+                <h2 className="heading-2--no-margin">Privacy Policy</h2>
+                <div className="privacy-popup-body">
+                  <h3 className="heading-3--no-margin">
+                    1. Information We Collect
+                  </h3>
+                  <p className="bodytext-3--no-margin">
+                    When you submit this form, we collect the following
+                    information:
+                  </p>
+                  <ul>
+                    <li className="bodytext-3--no-margin">
+                      Contact details (name, email, phone/WhatsApp, location).
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      Public links you choose to share (website, Instagram,
+                      TikTok, Behance/Portfolio, video lookbook).
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      Uploaded files (PDF portfolios, hero images, and other
+                      attachments).
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      Optional information you provide (inspirations, materials
+                      you love).
+                    </li>
+                  </ul>
+
+                  <h3 className="heading-3--no-margin">
+                    2. How We Use Your Information
+                  </h3>
+                  <ul>
+                    <li className="bodytext-3--no-margin">
+                      To review your submission and evaluate potential
+                      collaborations.
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      To contact you regarding opportunities, events, or next
+                      steps.
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      To feature selected images or content (with credit) on our
+                      communication channels.
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      For internal analysis and future improvements of our
+                      programs.
+                    </li>
+                  </ul>
+
+                  <h3 className="heading-3--no-margin">
+                    3. How We Store Your Information
+                  </h3>
+                  <ul>
+                    <li className="bodytext-3--no-margin">
+                      Form inputs are stored securely in our internal Google
+                      Workspace.
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      Uploaded files are stored in Amazon Web Services (AWS)
+                      storage.
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      Access to your data is limited to our internal team and
+                      collaborators directly involved in the review process.
+                    </li>
+                  </ul>
+
+                  <h3 className="heading-3--no-margin">4. Data Retention</h3>
+                  <p className="bodytext-3--no-margin">
+                    We keep your information for as long as needed for
+                    collaboration purposes. You may request deletion of your
+                    data at any time by contacting us at{" "}
+                    <a href="mailto:info@mirrorfuturediamond.com">
+                      info@mirrorfuturediamond.com
+                    </a>
+                    .
+                  </p>
+
+                  <h3 className="heading-3--no-margin">
+                    5. Sharing of Information
+                  </h3>
+                  <p className="bodytext-3--no-margin">
+                    We do not sell or rent your personal data. Information may
+                    only be shared with trusted partners when directly relevant
+                    to a collaboration opportunity.
+                  </p>
+
+                  <h3 className="heading-3--no-margin">6. Your Rights</h3>
+                  <p className="bodytext-3--no-margin">
+                    You have the right to:
+                  </p>
+                  <ul>
+                    <li className="bodytext-3--no-margin">
+                      Request a copy of the information we hold about you.
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      Request corrections or updates to your data.
+                    </li>
+                    <li className="bodytext-3--no-margin">
+                      Request deletion of your data from our systems.
+                    </li>
+                  </ul>
+
+                  <h3 className="heading-3--no-margin">7. Contact Us</h3>
+                  <p className="bodytext-3--no-margin">
+                    If you have any questions about this Privacy Policy or how
+                    your data is handled, please contact us at:{" "}
+                    <a href="mailto:info@mirrorfuturediamond.com">
+                      info@mirrorfuturediamond.com
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

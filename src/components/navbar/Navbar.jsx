@@ -20,16 +20,23 @@ export default function Navbar() {
   const logoRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
 
-  // Check if current page is home or welcome
+  // Check if current page is home, welcome, or immersive showroom (pages with white navbar)
   const isHomePage =
     location.pathname === "/home" ||
     location.pathname === "/" ||
-    location.pathname === "/welcome";
-
-  // Check if current page is Milan submission page or Immersive Showroom page or Submit Success page
-  const isMilanPage =
-    location.pathname.startsWith("/mirror-in-milan-digital-jewelry-week") ||
+    location.pathname === "/welcome" ||
     location.pathname === "/immersive-showroom";
+
+  // Check if current page is Milan submission page or Submit Success page
+  const isMilanPage =
+    location.pathname.startsWith("/mirror-in-milan-digital-jewelry-week");
+
+  // Check if should hide menu, account, and immersive button (Milan and Immersive Showroom)
+  const shouldHideButtons =
+    isMilanPage || location.pathname === "/immersive-showroom";
+
+  // Check if logo click should be disabled (Milan and Immersive Showroom)
+  const shouldDisableLogoClick = shouldHideButtons;
 
   useEffect(() => {
     // Initialize optimized transition system
@@ -123,7 +130,7 @@ export default function Navbar() {
 
   const handleLogoClick = async () => {
     // Disable logo click on Milan and Immersive Showroom pages
-    if (isMilanPage) {
+    if (shouldDisableLogoClick) {
       return;
     }
 
@@ -293,7 +300,7 @@ export default function Navbar() {
           isHomePage && !isMenuOpen ? "no-blend" : ""
         } ${
           isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
-        } ${isMilanPage ? "no-click" : ""}`}
+        } ${shouldDisableLogoClick ? "no-click" : ""}`}
         onClick={handleLogoClick}
       >
         <img
@@ -305,7 +312,7 @@ export default function Navbar() {
       </div>
 
       {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
-      {!isMilanPage && (
+      {!shouldHideButtons && (
         <div
           className={`menu-fixed-container ${
             isHomePage && !isMenuOpen ? "no-blend" : ""
@@ -440,7 +447,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {!isMilanPage && (
+      {!shouldHideButtons && (
         <div
           className={`account-fixed-container ${
             isHomePage && !isMenuOpen ? "no-blend" : ""
@@ -518,7 +525,7 @@ export default function Navbar() {
       )}
 
       {/* IMMERSIVE BUTTON - chỉ glassmorphism */}
-      {!isMilanPage && (
+      {!shouldHideButtons && (
         <>
           <div className="immersive-fixed-container">
             <button className="immersive-button"></button>

@@ -93,7 +93,7 @@ export class SmoothScroll {
 
   applyParallax() {
     // Skip parallax on mobile/tablet - all sections scroll at same speed
-    const isMobileOrTablet = window.innerWidth <= 1023;
+    const isMobileOrTablet = window.innerWidth <= 1024;
     if (isMobileOrTablet) return;
 
     const parallaxElements = document.querySelectorAll("[data-parallax]");

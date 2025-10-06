@@ -364,6 +364,26 @@
 }
 
 /* Responsive */
+@media screen and (max-width: 1023px) {
+  /* Change background to tablet version */
+  .welcome-background-image {
+    background-image: url("/welcome/tablet_version.png");
+  }
+
+  .welcome-logo {
+    top: 3.5%;
+  }
+
+  .welcome-bottom-text {
+    bottom: 5%;
+    max-width: 288px;
+  }
+
+  .bottom-text-line1 {
+    font-size: 15px;
+  }
+}
+
 @media screen and (max-width: 480px) {
   /* Change background to mobile version */
   .welcome-background-image {
@@ -380,7 +400,7 @@
   }
 
   .welcome-bottom-text {
-    max-width: 47%;
+    max-width: 200px;
   }
 
   .welcome-bottom-text {

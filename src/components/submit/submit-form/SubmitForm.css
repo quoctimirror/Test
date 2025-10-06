@@ -72,6 +72,32 @@
   margin-bottom: 36px;
 }
 
+/* Feedback Section */
+.submit-form-feedback {
+  margin: 48px 0;
+  padding: 48px 36px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.submit-form-subtitle {
+  color: rgba(0, 0, 0, 1);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.submit-form-description {
+  color: rgba(0, 0, 0, 0.65);
+  margin-bottom: 36px;
+}
+
+.submit-form-feedback .submit-form-group {
+  margin-bottom: 32px;
+}
+
+.submit-form-feedback .submit-form-group:last-child {
+  margin-bottom: 0;
+}
+
 .submit-form-label {
   color: rgba(0, 0, 0, 1);
   margin-bottom: 6px;
@@ -83,7 +109,7 @@
   padding: 12px 0px;
   border: none;
   border-bottom: 1px solid var(--Gray-2, #e0e0e0);
-  background: #f6f6f6;
+  background: rgba(246, 246, 246, 1);
   color: rgba(0, 0, 0, 0.5);
   border-radius: 0;
   font-family: inherit;
@@ -106,23 +132,52 @@
   resize: none;
 }
 
+.submit-form-textarea--white {
+  background: rgba(255, 255, 255, 0.6);
+}
+
 /* Checkbox and Radio Groups */
 .submit-form-checkbox-group,
 .submit-form-radio-group {
   display: flex;
   gap: 36px;
   flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* Radio group variants for feedback section */
+.submit-form-radio-group--compact {
+  gap: 18px;
+}
+
+.submit-form-radio-group--stacked {
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
 }
 
 .submit-form-checkbox-label,
 .submit-form-radio-label {
-  display: flex;
-  align-items: flex-start;
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
   color: rgba(0, 0, 0, 0.5);
   cursor: pointer;
   position: relative;
   transition: color 0.3s ease;
+  line-height: 1.5;
+}
+
+/* Agreement text wrapper */
+.submit-form-agree-text {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.submit-form-agree-copy {
+  display: inline;
 }
 
 .submit-form-checkbox-label::after {
@@ -152,13 +207,174 @@
   color: rgba(0, 0, 0, 1);
 }
 
-/* Remove underline effect for agreement checkbox */
+/* Remove underline and hover effects for agreement checkbox */
 .submit-form-checkbox-label:has(input[name="agreeToContact"])::after {
   display: none;
 }
 
+.submit-form-checkbox-label:has(input[name="agreeToContact"]):hover {
+  color: rgba(0, 0, 0, 0.5);
+}
+
 .submit-form-checkbox-label:has(input[name="agreeToContact"]):hover::after {
   display: none;
+}
+
+/* Privacy Policy Wrapper - Keep entire text together on one line */
+.privacy-policy-wrapper {
+  display: inline-block;
+}
+
+/* Privacy Policy Link */
+.privacy-policy-link {
+  color: rgba(188, 34, 76, 1);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.3s ease;
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
+}
+
+.privacy-policy-link:hover {
+  color: rgba(236, 54, 103, 1);
+}
+
+/* Privacy Popup Overlay */
+.privacy-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.privacy-popup-content {
+  background: white;
+  max-width: 1212px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 0;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  margin: auto;
+}
+
+.privacy-popup-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 0;
+  z-index: 11;
+}
+
+.privacy-popup-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+}
+
+.privacy-popup-inner {
+  padding: 120px 120px;
+}
+
+.privacy-popup-content h2 {
+  color: rgba(188, 34, 76, 1);
+  margin-bottom: 120px;
+  text-align: center;
+}
+
+.privacy-popup-body {
+  color: rgba(0, 0, 0, 1);
+}
+
+.privacy-popup-body h3 {
+  color: rgba(0, 0, 0, 1);
+  margin-top: 60px;
+  margin-bottom: 24px;
+  padding-top: 60px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.privacy-popup-body h3:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.privacy-popup-body p {
+  margin-bottom: 12px;
+}
+
+.privacy-popup-body ul {
+  margin-left: 24px;
+  margin-bottom: 12px;
+  list-style-type: disc;
+}
+
+.privacy-popup-body li {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  list-style: none;
+}
+
+.privacy-popup-body li::before {
+  content: "•";
+  color: rgba(0, 0, 0, 1);
+  font-size: 0.6em;
+  margin-right: 12px;
+  margin-top: 0.3em;
+  flex-shrink: 0;
+}
+
+.privacy-popup-body a {
+  color: rgba(188, 34, 76, 1);
+  text-decoration: none;
+}
+
+.privacy-popup-body a:hover {
+  text-decoration: underline;
+}
+
+/* Privacy Popup Responsive */
+@media screen and (max-width: 1024px) {
+  .privacy-popup-inner {
+    padding: 60px 48px;
+  }
+  .privacy-popup-content h2 {
+    margin-bottom: 60px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .privacy-popup-inner {
+    padding: 48px 24px;
+  }
+
+  .privacy-popup-close button {
+    width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+  }
+
+  .privacy-popup-close svg {
+    width: 16px;
+    height: 16px;
+  }
+  .privacy-popup-content h2 {
+    margin-bottom: 60px;
+  }
 }
 
 .submit-form-checkbox-label input[type="checkbox"] {
@@ -242,7 +458,7 @@
 }
 
 .submit-form-file-input-placeholder {
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(188, 34, 76, 1);
   cursor: pointer;
   margin-top: 6px;
   position: relative;
@@ -255,7 +471,7 @@
   position: absolute;
   width: 100%;
   height: 2px;
-  background: rgba(0, 0, 0, 1);
+  background: rgba(188, 34, 76, 1);
   bottom: -2px;
   left: 0;
   transform: scaleX(0) scaleY(0.75);
@@ -264,7 +480,7 @@
 }
 
 .submit-form-file-input-placeholder:hover {
-  color: rgba(0, 0, 0, 1);
+  color: rgba(236, 54, 103, 1);
 }
 
 .submit-form-file-input-placeholder:hover::after {
@@ -273,7 +489,7 @@
 }
 
 .submit-form-note {
-  color: rgba(188, 34, 76, 1);
+  color: rgba(0, 0, 0, 0.5);
   margin-top: 12px;
 }
 
@@ -362,7 +578,7 @@
 }
 
 /* Responsive Design */
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 1024px) {
   .submit-form-container {
     max-width: 62%;
     padding: 144px 0;
@@ -390,6 +606,20 @@
     width: calc(100% - 20px);
     right: 0;
   }
+
+  .submit-form-radio-group--compact {
+    gap: 12px;
+  }
+
+  .submit-form-feedback {
+    padding: 24px 20px;
+  }
+
+  .submit-form-modal {
+    max-width: 92%;
+    padding: 28px;
+  }
+
   .submit-form-header-line {
     margin-bottom: 120px;
   }
@@ -471,5 +701,292 @@
   }
   .submit-form-checkbox-label input[type="checkbox"] {
     margin: 1px 0;
+  }
+  .privacy-popup-close {
+    top: 8px;
+    right: 8px;
+  }
+
+  .submit-form-feedback {
+    padding: 24px 20px;
+  }
+
+  .submit-form-modal {
+    max-width: 92%;
+    padding: 28px;
+  }
+}
+
+/* Privacy Policy Link */
+.submit-form-privacy-link {
+  border: none;
+  background: none;
+  color: rgba(188, 34, 76, 1);
+  cursor: pointer;
+  display: inline;
+  margin-left: 0;
+  padding: 0;
+  position: relative;
+  transition: color 0.3s ease;
+  font: inherit;
+  line-height: inherit;
+}
+
+.submit-form-privacy-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: rgba(188, 34, 76, 1);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.submit-form-privacy-link:hover,
+.submit-form-privacy-link:focus {
+  color: rgba(188, 34, 76, 0.8);
+}
+
+.submit-form-privacy-link:hover::after,
+.submit-form-privacy-link:focus::after {
+  transform: scaleX(1);
+}
+
+/* Privacy Policy Modal */
+.submit-form-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  z-index: 2000;
+}
+
+.submit-form-modal {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  max-width: 640px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 36px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.submit-form-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.submit-form-modal-close {
+  border: none;
+  background: none;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.6);
+  transition: color 0.2s ease;
+}
+
+.submit-form-modal-close:hover,
+.submit-form-modal-close:focus {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.submit-form-modal-body ul {
+  padding-left: 20px;
+  margin: 8px 0 16px;
+}
+
+.submit-form-modal-body li {
+  margin-bottom: 6px;
+}
+
+/* Phone Input Styles */
+.submit-form-group .phone-input-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.submit-form-group .phone-input-container .react-tel-input {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.phone-input-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.phone-input-container .react-tel-input {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.phone-input-container .react-tel-input .form-control {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 12px 0px 12px 72px !important;
+  border: none !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: 1px solid var(--Gray-2, #e0e0e0) !important;
+  border-radius: 0 !important;
+  background: rgba(246, 246, 246, 1) !important;
+  color: rgba(0, 0, 0, 0.5) !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  backdrop-filter: blur(2.5px);
+  height: 42px !important;
+  box-sizing: border-box !important;
+  display: block !important;
+  flex: 1 1 auto !important;
+}
+
+.phone-input-container .react-tel-input .form-control:focus {
+  outline: none !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5) !important;
+  box-shadow: none !important;
+}
+
+.phone-input-container .react-tel-input .flag-dropdown {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.phone-input-container .react-tel-input .flag-dropdown:hover {
+  background: transparent !important;
+}
+
+.phone-input-container .react-tel-input .flag-dropdown.open {
+  background: transparent !important;
+}
+
+.phone-input-container .react-tel-input .selected-flag {
+  padding: 0 8px 0 0 !important;
+  background: transparent !important;
+  width: auto !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.phone-input-container .react-tel-input .selected-flag .flag {
+  margin-right: 6px !important;
+}
+
+.phone-input-container .react-tel-input .selected-flag .arrow {
+  margin-left: 4px !important;
+  border: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-left: 4px solid transparent !important;
+  border-right: 4px solid transparent !important;
+  border-top: 5px solid rgba(0, 0, 0, 0.5) !important;
+}
+
+.phone-input-container .react-tel-input .selected-flag:hover,
+.phone-input-container .react-tel-input .selected-flag:focus {
+  background: transparent !important;
+}
+
+.phone-input-container .react-tel-input .country-list {
+  background: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  max-height: 200px !important;
+  margin-top: 0 !important;
+}
+
+.phone-input-container .react-tel-input .country-list .country {
+  padding: 10px 16px !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+  display: flex !important;
+  align-items: center !important;
+  font-family: inherit !important;
+  transition: background 0.2s ease !important;
+}
+
+.phone-input-container .react-tel-input .country-list .country .flag {
+  margin-right: 12px !important;
+}
+
+.phone-input-container .react-tel-input .country-list .country .country-name {
+  flex: 1 !important;
+  text-align: left !important;
+}
+
+.phone-input-container .react-tel-input .country-list .country .dial-code {
+  color: rgba(0, 0, 0, 0.5) !important;
+  margin-left: auto !important;
+}
+
+.phone-input-container .react-tel-input .country-list .country:hover {
+  background: rgba(246, 246, 246, 1) !important;
+}
+
+.phone-input-container .react-tel-input .country-list .country.highlight {
+  background: rgba(46, 204, 113, 1) !important;
+  color: white !important;
+}
+
+.phone-input-container .react-tel-input .country-list .country.highlight .dial-code {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.phone-input-container .react-tel-input .country-list .search {
+  padding: 8px 12px !important;
+  background: white !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1 !important;
+}
+
+.phone-input-container .react-tel-input .country-list .search-box {
+  width: 100% !important;
+  padding: 6px 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  border-radius: 4px !important;
+  font-family: inherit !important;
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.phone-input-container .react-tel-input .country-list .search-box:focus {
+  outline: none !important;
+  border-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Responsive */
+@media screen and (max-width: 1024px) {
+  .phone-input-container .react-tel-input .form-control {
+    padding: 6px 0px 6px 52px !important;
+    height: 35px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .phone-input-container .react-tel-input .form-control {
+    height: 30px !important;
   }
 }

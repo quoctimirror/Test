@@ -22,11 +22,9 @@ const GuideStep2 = () => {
             <div className="guide-step-2-step">
               <h3 className="step-title bodytext-1--no-margin">Share</h3>
               <p className="step-description bodytext-4--no-margin">
-                Send us your portfolio and if you'd like,
-                <br />
-                share a few words about your inspirations.
-                <br />
-                This is a conversation, not an interrogation.
+                Send us your portfolio — and if you would like, a few words
+                about your inspirations. This is an open dialogue, meant to
+                reflect your creative voice.
               </p>
               <div className="step-line">
                 <StarlightEffect direction="falling" height={36} />
@@ -37,11 +35,8 @@ const GuideStep2 = () => {
             <div className="guide-step-2-step">
               <h3 className="step-title bodytext-1--no-margin">Connect</h3>
               <p className="step-description bodytext-4--no-margin">
-                Our team will review your work with care
-                <br />
-                and reach out to explore collaborations
-                <br />
-                that honor your vision.
+                Our team will review your work with care and reach out to
+                explore collaborations that truly honor your vision.
               </p>
               <div className="step-line">
                 <StarlightEffect direction="falling" height={36} />
@@ -54,9 +49,8 @@ const GuideStep2 = () => {
                 Create Together
               </h3>
               <p className="step-description bodytext-4--no-margin">
-                We'll follow up to discuss opportunities
-                <br />
-                in more depth — on your terms, at your pace.
+                We will follow up to discuss opportunities in more depth — on
+                your terms, at your pace.
               </p>
             </div>
           </div>

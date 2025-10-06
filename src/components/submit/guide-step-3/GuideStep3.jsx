@@ -12,9 +12,10 @@ const GuideStep3 = () => {
 
           {/* Description */}
           <p className="guide-step-3-description bodytext-3--no-margin">
-            We're drawn to artistry that reflects light, emotion, and
-            craftsmanship. Your work doesn't need to be perfect — it needs to be
-            yours.
+            We are moved by creations that bend light into brilliance, weave
+            emotion into form, and embody the highest artistry of craft.
+            Perfection is not the measure — authenticity is. What is truly yours
+            is what shines.
           </p>
 
           {/* We Value Section */}
@@ -47,7 +48,7 @@ const GuideStep3 = () => {
 
               <div className="value-item">
                 <p className="value-description bodytext-6--no-margin">
-                  If you'd like, a few words about what inspires you and the
+                  If you would like, a few words about what inspires you and the
                   story behind your creations.
                 </p>
               </div>

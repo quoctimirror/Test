@@ -10,6 +10,9 @@
   min-height: calc(100vh + 1px); /* Add 1px to prevent gap */
   margin-top: -1px; /* Overlap previous section by 1px */
   background: rgba(0, 0, 0, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 1100;
 }
@@ -106,7 +109,7 @@
 }
 
 /* Responsive Design */
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 1024px) {
   .guide-step-3-container {
     max-width: 62%;
     padding-top: 144px;

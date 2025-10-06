@@ -19,7 +19,7 @@ const GuideStep1 = () => {
           <p className="guide-step-1-description bodytext-3--no-margin">
             Your creativity is sacred. Your work remains yours, your name is
             always credited, and we exist to amplify your artistry. MIRROR is
-            not a gatekeeper — we're a luxury stage designed to reflect your
+            not a gatekeeper — we are a luxury stage designed to reflect your
             vision to the world.
           </p>
 

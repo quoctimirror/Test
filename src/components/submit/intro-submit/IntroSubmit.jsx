@@ -1,5 +1,5 @@
 import "./IntroSubmit.css";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import ArrowDown from "@components/common/decorative/ArrowDown";
@@ -9,31 +9,9 @@ const IntroSubmit = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const arrowRef = useRef(null);
-  const [heroImage, setHeroImage] = useState(
-    "/submit/kv-milan-on-website-Desktop.jpg"
-  );
 
-  // Update hero image based on screen size
-  useEffect(() => {
-    const updateHeroImage = () => {
-      const isMobile = window.innerWidth <= 480;
-      setHeroImage(
-        isMobile
-          ? "/submit/kv-milan-on-website-mobile2.png"
-          : "/submit/kv MILAN.png"
-      );
-    };
-
-    // Set initial image
-    updateHeroImage();
-
-    // Listen to resize
-    window.addEventListener("resize", updateHeroImage);
-
-    return () => {
-      window.removeEventListener("resize", updateHeroImage);
-    };
-  }, []);
+  // Check if current page is Immersive Showroom
+  const isImmersiveShowroomPage = location.pathname === "/immersive-showroom";
 
   const handleSubmitPortfolioClick = () => {
     // Check if we're already on the submit page
@@ -113,7 +91,7 @@ const IntroSubmit = () => {
           <div className="intro-submit-hero-text">
             <div className="intro-submit-hero-text-main">
               <span className="intro-submit-hero-subtitle bodytext-4--no-margin">
-                Milan Digital Jewelry Week | October 11
+                Milan Digital Jewelry Week | October 6-12, 2025
               </span>
               <h1 className="intro-submit-hero-title heading-1--no-margin">
                 We're Here to Celebrate Creativity
@@ -139,23 +117,31 @@ const IntroSubmit = () => {
             </div>
             <p className="intro-submit-hero-description bodytext-5--no-margin">
               Your art deserves to shine in Milan. MIRROR exists to amplify your
-              artistry and reflect it to the world. We'd love to see your
+              artistry and reflect it to the world. We would love to see your
               creations and explore how we can shape the future of luxury
               together.
             </p>
           </div>
           <div className="intro-submit-hero-image">
-            <img src={heroImage} alt="Submit Hero" />
-            <h3 className="intro-submit-hero-image-caption heading-3--no-margin">
+            <picture>
+              <source
+                media="(max-width: 1024px)"
+                srcSet="/submit/kv-milan-on-website-mobile2.png"
+              />
+              <img src="/submit/kv MILAN.png" alt="Submit Hero" />
+            </picture>
+            {/* <h3 className="intro-submit-hero-image-caption heading-3--no-margin">
               Collaborate, Innovate, Awaken luxury
-            </h3>
+            </h3> */}
           </div>
         </div>
 
-        {/* Arrow Down */}
-        <div className="intro-submit-arrow-down" ref={arrowRef}>
-          <ArrowDown width={20} height={20} fill="black" />
-        </div>
+        {/* Arrow Down - Hidden on Immersive Showroom page */}
+        {/* {!isImmersiveShowroomPage && (
+          <div className="intro-submit-arrow-down" ref={arrowRef}>
+            <ArrowDown width={20} height={20} fill="black" />
+          </div>
+        )} */}
       </section>
     </div>
   );
