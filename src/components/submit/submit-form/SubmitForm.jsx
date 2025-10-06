@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import "./SubmitForm.css";
@@ -6,6 +6,10 @@ import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { fileUploadAPI, notificationsAPI } from "@services/api";
+
+const TURNSTILE_SITE_KEY = "0x4AAAAAAB5BOMtJV6dfw_JE";
+const TURNSTILE_SCRIPT_URL =
+  "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 
 const SubmitForm = () => {
   const navigate = useNavigate();
@@ -105,6 +109,78 @@ const SubmitForm = () => {
     setShowPrivacyPopup(false);
     document.body.style.overflow = "unset";
   };
+  const [captchaToken, setCaptchaToken] = useState("");
+
+  const turnstileContainerRef = useRef(null);
+  const turnstileWidgetIdRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return () => {};
+    }
+
+    const renderWidget = () => {
+      if (!window.turnstile || !turnstileContainerRef.current) {
+        return;
+      }
+
+      if (turnstileWidgetIdRef.current !== null) {
+        window.turnstile.reset(turnstileWidgetIdRef.current);
+        return;
+      }
+
+      turnstileWidgetIdRef.current = window.turnstile.render(
+        turnstileContainerRef.current,
+        {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token) => setCaptchaToken(token || ""),
+          "expired-callback": () => setCaptchaToken(""),
+          "error-callback": () => setCaptchaToken(""),
+        }
+      );
+    };
+
+    const script = document.querySelector(
+      `script[src="${TURNSTILE_SCRIPT_URL}"]`
+    );
+
+    if (script) {
+      if (window.turnstile) {
+        renderWidget();
+      } else {
+        script.addEventListener("load", renderWidget, { once: true });
+      }
+    } else {
+      const newScript = document.createElement("script");
+      newScript.src = TURNSTILE_SCRIPT_URL;
+      newScript.async = true;
+      newScript.defer = true;
+      newScript.addEventListener("load", renderWidget, { once: true });
+      document.body.appendChild(newScript);
+    }
+
+    return () => {
+      const existingScript = document.querySelector(
+        `script[src="${TURNSTILE_SCRIPT_URL}"]`
+      );
+      if (existingScript) {
+        existingScript.removeEventListener("load", renderWidget);
+      }
+      if (window.turnstile && turnstileWidgetIdRef.current !== null) {
+        window.turnstile.remove(turnstileWidgetIdRef.current);
+      }
+      turnstileWidgetIdRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (captchaToken && validationErrors.captchaToken) {
+      setValidationErrors((prev) => {
+        const { captchaToken: _removed, ...rest } = prev;
+        return rest;
+      });
+    }
+  }, [captchaToken, validationErrors.captchaToken]);
 
   // File size limits (in bytes)
   const FILE_SIZE_LIMITS = {
@@ -453,6 +529,7 @@ const SubmitForm = () => {
       "eventExperienceRating",
       "collaborationLikelihood",
       "agreeToContact",
+      "captchaToken",
     ];
 
     // Find first field with error
@@ -476,6 +553,8 @@ const SubmitForm = () => {
             'input[name="collaborationLikelihood"]'
           );
           element = radioGroup?.closest(".submit-form-group");
+        } else if (field === "captchaToken") {
+          element = document.querySelector("#submit-form-turnstile");
         } else {
           element = document.querySelector(`input[name="${field}"]`);
         }
@@ -519,6 +598,10 @@ const SubmitForm = () => {
     // Check file errors as well
     if (Object.keys(fileErrors).length > 0) {
       errors.fileErrors = "Please fix file size/type errors before submitting";
+    }
+
+    if (!captchaToken) {
+      errors.captchaToken = "Please verify you are human";
     }
 
     if (Object.keys(errors).length > 0) {
@@ -583,7 +666,8 @@ const SubmitForm = () => {
           "milan-form",
           {
             name: formData.designerName,
-          }
+          },
+          captchaToken
         );
       } catch (emailError) {
         // Retry once after 2 seconds (in case of cold start)
@@ -594,7 +678,8 @@ const SubmitForm = () => {
             "milan-form",
             {
               name: formData.designerName,
-            }
+            },
+            captchaToken
           );
         } catch (retryError) {
           // Don't throw error - form submission was successful
@@ -606,6 +691,12 @@ const SubmitForm = () => {
     } catch (error) {
       alert(error.message || "Failed to submit form. Please try again.");
     } finally {
+      if (typeof window !== "undefined" && window.turnstile) {
+        if (turnstileWidgetIdRef.current !== null) {
+          window.turnstile.reset(turnstileWidgetIdRef.current);
+        }
+      }
+      setCaptchaToken("");
       setIsUploading(false);
     }
   };
@@ -1191,8 +1282,22 @@ const SubmitForm = () => {
               )}
             </div>
 
+            {/* Captcha */}
+            <div className="submit-form-group">
+              <div
+                id="submit-form-turnstile"
+                ref={turnstileContainerRef}
+                className="submit-form-turnstile"
+              />
+              {validationErrors.captchaToken && (
+                <p className="submit-form-error bodytext-6--no-margin">
+                  {validationErrors.captchaToken}
+                </p>
+              )}
+            </div>
+
             {/* Submit Button */}
-            <div className="form-submit">
+            <div className="submit-form-group form-submit">
               <ShineGlassButton
                 theme="light"
                 onClick={(e) => {
