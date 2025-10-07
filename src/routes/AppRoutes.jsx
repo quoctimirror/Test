@@ -25,6 +25,7 @@ const HoverExpandSection = lazy(() =>
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
 // const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
 const TryOnRing = lazy(() => import("@components/arTryOn/Occluder.jsx"));
+const QuocTiar = lazy(() => import("@components/arTryOn/QuocTiar.jsx"));
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
@@ -134,6 +135,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+    location.pathname.startsWith("/ar/quoc-ti") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -146,6 +148,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+    location.pathname.startsWith("/ar/quoc-ti") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -237,6 +240,8 @@ export default function AppRoutes() {
           <Route element={<TryOnRingLayout />}>
             <Route path={ROUTES.AR_RINGS} element={<TryOnRing />} />
           </Route>
+
+          <Route path="/ar/quoc-ti" element={<QuocTiar />} />
 
           <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
 
