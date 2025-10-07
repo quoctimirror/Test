@@ -242,7 +242,7 @@ export default function AppRoutes() {
             <Route path={ROUTES.AR_RINGS} element={<TryOnRing />} />
           </Route>
 
-          <Route path="/ar/quoc-ti" element={<QuocTiar modelPath="/myfav.glb" />} />
+          <Route path="/ar/quoc-ti" element={<QuocTiar modelPath="/models/myfav.glb" />} />
 
 
 

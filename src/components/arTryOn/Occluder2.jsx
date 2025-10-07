@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo, Suspense } fr
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, MeshRefractionMaterial, useEnvironment } from '@react-three/drei';
 import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+import { useControls } from 'leva';
 import * as THREE from 'three';
 import { useParams } from 'react-router-dom';
 
@@ -44,8 +45,11 @@ const FINGER_GEOMETRY_DATA = {
     }
 };
 
+// Detect mobile device
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 const SMOOTHING_FACTOR = 0.25;
-const TARGET_FPS = 30;
+const TARGET_FPS = isMobile ? 20 : 30;  // Mobile: 20fps, Desktop: 30fps
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 // ==================== RING WITH OCCLUDER (R3F - CHỈ LÀM ĐẸP) ====================
@@ -54,7 +58,10 @@ function RingWithOccluder({
     ringTransform,
     occluderTransform,
     isVisible,
-    cameraAspect
+    cameraAspect,
+    isMobile,
+    meshColors = {},
+    onMeshListLoad
 }) {
     const { nodes, materials } = useGLTF(modelPath);
     const ringGroupRef = useRef();
@@ -74,6 +81,23 @@ function RingWithOccluder({
             camera.updateProjectionMatrix();
         }
     }, [cameraAspect, camera]);
+
+    // Đọc danh sách meshes từ GLTF
+    useEffect(() => {
+        if (nodes && onMeshListLoad) {
+            const meshList = [];
+            Object.keys(nodes).forEach(key => {
+                const node = nodes[key];
+                if (node.isMesh || node.isInstancedMesh) {
+                    meshList.push({
+                        name: key,
+                        type: node.type
+                    });
+                }
+            });
+            onMeshListLoad(meshList);
+        }
+    }, [nodes, onMeshListLoad]);
 
     // Load environment map - TỪ QUOCTIAR.JSX (KHÔNG ĐƯỢC WRAP TRONG TRY-CATCH)
     const env = useEnvironment({ files: '/studio_env/env_metal_1.exr' });
@@ -154,7 +178,7 @@ function RingWithOccluder({
                             >
                                 {env ? (
                                     <MeshRefractionMaterial
-                                        color='#b5cbdd'
+                                        color={meshColors[key] || material?.color || '#b5cbdd'}
                                         side={THREE.DoubleSide}
                                         envMap={env}
                                         envMapIntensity={10.0}
@@ -163,7 +187,7 @@ function RingWithOccluder({
                                     />
                                 ) : (
                                     <meshStandardMaterial
-                                        color='#b5cbdd'
+                                        color={meshColors[key] || material?.color || '#b5cbdd'}
                                         roughness={0.15}
                                         metalness={1}
                                         envMap={env}
@@ -190,7 +214,7 @@ function RingWithOccluder({
                             >
                                 {isGemMesh && env ? (
                                     <MeshRefractionMaterial
-                                        color='#b5cbdd'
+                                        color={meshColors[key] || material?.color || '#b5cbdd'}
                                         envMap={env}
                                         envMapIntensity={10.0}
                                         aberrationStrength={0.02}
@@ -198,7 +222,7 @@ function RingWithOccluder({
                                     />
                                 ) : (
                                     <meshStandardMaterial
-                                        color='#ffaf83'
+                                        color={meshColors[key] || material?.color || '#ffaf83'}
                                         roughness={0.15}
                                         metalness={1}
                                         envMap={env}
@@ -232,6 +256,7 @@ const Occluder2 = () => {
     const [occluderTransform, setOccluderTransform] = useState(null);
     const [isHandVisible, setIsHandVisible] = useState(false);
     const [cameraAspect, setCameraAspect] = useState(16 / 9);
+    const [meshList, setMeshList] = useState([]);
 
     const videoRef = useRef(null);
     const debugCanvasRef = useRef(null);
@@ -253,6 +278,28 @@ const Occluder2 = () => {
     // Determine ring config
     const selectedRingId = ringId || DEFAULT_RING_ID;
     const ringConfig = getRingById(selectedRingId);
+
+    // Tạo color schema cho từng mesh với màu mặc định
+    const colorSchema = useMemo(() => {
+        const schema = {};
+        meshList.forEach(mesh => {
+            const name = mesh.name.toLowerCase();
+            let defaultColor = '#ffffff';
+
+            // Set màu mặc định theo tên mesh
+            if (name.includes('ring')) {
+                defaultColor = '#ffaf83'; // ring band color
+            } else if (name.includes('diamond') || name.includes('gem') || name.includes('stone')) {
+                defaultColor = '#b5cbdd'; // diamond color
+            }
+
+            schema[mesh.name] = { value: defaultColor, label: mesh.name };
+        });
+        return schema;
+    }, [meshList]);
+
+    // Tạo color controls động cho từng mesh
+    const colorControls = useControls('Mesh Colors', colorSchema, [colorSchema]);
 
     useEffect(() => { selectedFingerRef.current = selectedFinger; }, [selectedFinger]);
 
@@ -318,7 +365,10 @@ const Occluder2 = () => {
                         delegate: "GPU",
                     },
                     runningMode: "VIDEO",
-                    numHands: 1
+                    numHands: 1,
+                    minHandDetectionConfidence: isMobile ? 0.7 : 0.5,  // Mobile: cao hơn để giảm tính toán
+                    minHandPresenceConfidence: isMobile ? 0.7 : 0.5,   // Mobile: cao hơn
+                    minTrackingConfidence: isMobile ? 0.6 : 0.5        // Mobile: tracking chặt hơn
                 });
                 console.log("✅ MediaPipe loaded");
             } catch (error) {
@@ -334,9 +384,9 @@ const Occluder2 = () => {
                 const constraints = {
                     video: {
                         facingMode: 'environment',
-                        width: { ideal: 1280, max: 1280 },
-                        height: { ideal: 720, max: 720 },
-                        frameRate: { ideal: 30, max: 30 },
+                        width: { ideal: isMobile ? 640 : 1280, max: isMobile ? 640 : 1280 },
+                        height: { ideal: isMobile ? 480 : 720, max: isMobile ? 480 : 720 },
+                        frameRate: { ideal: isMobile ? 20 : 30, max: isMobile ? 20 : 30 },
                         resizeMode: 'crop-and-scale'
                     }
                 };
@@ -533,7 +583,7 @@ const Occluder2 = () => {
             // Layer 3: Debug canvas
             ctx.drawImage(debugCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
 
-            setCapturedImage(tempCanvas.toDataURL('image/jpeg', 0.9));
+            setCapturedImage(tempCanvas.toDataURL('image/jpeg', 1.0));
             console.log("📸 Photo captured with all layers");
 
         } catch (error) {
@@ -604,23 +654,26 @@ const Occluder2 = () => {
                                         gl={{
                                             alpha: true,
                                             preserveDrawingBuffer: true,
-                                            antialias: true,
+                                            antialias: true,  // Luôn bật antialias
                                             powerPreference: 'high-performance'
                                         }}
                                         camera={{ fov: 50, position: [0, 0, 5] }}
                                         frameloop="always"
-                                        dpr={window.devicePixelRatio}
+                                        dpr={isMobile ? 1 : Math.min(window.devicePixelRatio, 2)}
                                         performance={{ min: 0.5 }}
                                     >
-                                        <ambientLight intensity={6.0} />
-                                        <directionalLight position={[0, 5, 0]} intensity={12.0} castShadow={false} />
-                                        <pointLight position={[0, 1, 0]} intensity={8.0} distance={10} decay={2} />
+                                        <ambientLight intensity={isMobile ? 3.0 : 6.0} />
+                                        <directionalLight position={[0, 5, 0]} intensity={isMobile ? 6.0 : 12.0} castShadow={false} />
+                                        <pointLight position={[0, 1, 0]} intensity={isMobile ? 4.0 : 8.0} distance={10} decay={2} />
                                         <RingWithOccluder
                                             modelPath={ringConfig.modelPath}
                                             ringTransform={ringTransform}
                                             occluderTransform={occluderTransform}
                                             isVisible={isHandVisible}
                                             cameraAspect={cameraAspect}
+                                            isMobile={isMobile}
+                                            meshColors={colorControls}
+                                            onMeshListLoad={setMeshList}
                                         />
                                     </Canvas>
                                 </Suspense>
