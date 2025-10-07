@@ -44,8 +44,8 @@ const FINGER_GEOMETRY_DATA = {
     }
 };
 
-const SMOOTHING_FACTOR = 0.25;
-const TARGET_FPS = 30;
+const SMOOTHING_FACTOR = 0.35;
+const TARGET_FPS = 20;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 // ==================== RING WITH OCCLUDER (R3F - CHỈ LÀM ĐẸP) ====================
@@ -72,7 +72,6 @@ function RingWithOccluder({
                 camera.aspect = cameraAspect;
             }
             camera.updateProjectionMatrix();
-            console.log('📷 R3F Camera synced - pos:', camera.position.z, 'aspect:', camera.aspect);
         }
     }, [cameraAspect, camera]);
 
@@ -119,14 +118,6 @@ function RingWithOccluder({
 
             ringGroupRef.current.visible = true;
             occluderRef.current.visible = true;
-
-            // Debug: Log position để check
-            if (Math.random() < 0.02) { // Log 2% frames
-                console.log('🔍 Ring visible:', ringGroupRef.current.visible);
-                console.log('   Position:', ringGroupRef.current.position.x.toFixed(2), ringGroupRef.current.position.y.toFixed(2), ringGroupRef.current.position.z.toFixed(2));
-                console.log('   Target:', ringTransform.position.x.toFixed(2), ringTransform.position.y.toFixed(2), ringTransform.position.z.toFixed(2));
-                console.log('   Scale:', ringGroupRef.current.scale.x.toFixed(3));
-            }
         } else {
             ringGroupRef.current.visible = false;
             occluderRef.current.visible = false;
@@ -166,6 +157,7 @@ function RingWithOccluder({
                                         color='#b5cbdd'
                                         side={THREE.DoubleSide}
                                         envMap={env}
+                                        envMapIntensity={10.0}
                                         aberrationStrength={0.02}
                                         toneMapped={false}
                                     />
@@ -200,6 +192,7 @@ function RingWithOccluder({
                                     <MeshRefractionMaterial
                                         color='#b5cbdd'
                                         envMap={env}
+                                        envMapIntensity={10.0}
                                         aberrationStrength={0.02}
                                         toneMapped={false}
                                     />
@@ -249,6 +242,7 @@ const Occluder2 = () => {
     const lastFrameTimeRef = useRef(0);
     const isInitializedRef = useRef(false);
     const streamRef = useRef(null);
+    const frameCounterRef = useRef(0);
 
     // Camera ref để tính toán positioning
     const virtualCameraRef = useRef({
@@ -383,10 +377,8 @@ const Occluder2 = () => {
         };
 
         const startAnimationLoop = () => {
-            console.log("🎬 Bắt đầu animation loop");
             const animate = (currentTime) => {
                 if (isCancelled || !isInitializedRef.current) {
-                    console.log("🛑 Animation loop stopped");
                     return;
                 }
                 if (currentTime - lastFrameTimeRef.current < FRAME_INTERVAL) {
@@ -411,6 +403,13 @@ const Occluder2 = () => {
             if (!handLandmarkerRef.current || !videoRef.current) {
                 return;
             }
+
+            // Skip frames để tăng performance
+            frameCounterRef.current++;
+            if (frameCounterRef.current % 2 !== 0) {
+                return; // Chỉ chạy mỗi 2 frames
+            }
+
             try {
                 const results = handLandmarkerRef.current.detectForVideo(
                     videoRef.current,
@@ -426,8 +425,6 @@ const Occluder2 = () => {
                     const landmarks = results.landmarks[0];
                     const handedness = results.handedness[0][0].categoryName;
                     const camera = virtualCameraRef.current;
-
-                    console.log('✋ Hand detected:', handedness);
 
                     const RING_PLANE_Z = 0;
                     const distance = camera.position.z - RING_PLANE_Z;
@@ -615,16 +612,17 @@ const Occluder2 = () => {
                                         gl={{
                                             alpha: true,
                                             preserveDrawingBuffer: true,
-                                            antialias: false,
+                                            antialias: true,
                                             powerPreference: 'high-performance'
                                         }}
                                         camera={{ fov: 50, position: [0, 0, 5] }}
                                         frameloop="always"
-                                        dpr={[1, 1.5]}
+                                        dpr={[1, 2]}
                                         performance={{ min: 0.5 }}
                                     >
-                                        <ambientLight intensity={1.5} />
-                                        <directionalLight position={[3, 10, 7]} intensity={2.0} castShadow={false} />
+                                        <ambientLight intensity={6.0} />
+                                        <directionalLight position={[0, 5, 0]} intensity={12.0} castShadow={false} />
+                                        <pointLight position={[0, 1, 0]} intensity={8.0} distance={10} decay={2} />
                                         <RingWithOccluder
                                             modelPath={ringConfig.modelPath}
                                             ringTransform={ringTransform}
