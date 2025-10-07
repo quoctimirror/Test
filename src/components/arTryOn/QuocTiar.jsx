@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback, useMemo, Suspense } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { useGLTF, MeshRefractionMaterial, useEnvironment, Text } from '@react-three/drei'
+import { useGLTF, MeshRefractionMaterial, useEnvironment } from '@react-three/drei'
 import { HandLandmarker, FilesetResolver } from '@mediapipe/tasks-vision'
 import { useControls } from 'leva'
 import * as THREE from 'three'
@@ -29,14 +29,15 @@ const FINGER_GEOMETRY_DATA = {
   }
 }
 
-const SMOOTHING_FACTOR = 0.25
-const TARGET_FPS = 30
+const SMOOTHING_FACTOR = 0.3  // Tăng smoothing để giảm jitter
+const TARGET_FPS = 15  // Giảm xuống 15 FPS để tối ưu mạnh
 const FRAME_INTERVAL = 1000 / TARGET_FPS
+const MEDIAPIPE_SKIP_FRAMES = 2  // Chỉ chạy MediaPipe mỗi 2 frames
 
-// ==================== RING AXES DEBUG ====================
+// ==================== RING AXES DEBUG (TẮTT TEXT ĐỂ TĂNG FPS) ====================
 function RingAxesDebug({ ringPosition, ringRotation, ringScale }) {
   const arrowGroupRef = useRef()
-  const [axesData, setAxesData] = useState(null)
+  const arrowsRef = useRef([])  // Cache arrows để không tạo mới
 
   useFrame(() => {
     if (!arrowGroupRef.current) return
@@ -45,69 +46,52 @@ function RingAxesDebug({ ringPosition, ringRotation, ringScale }) {
     arrowGroupRef.current.position.copy(ringPosition)
     arrowGroupRef.current.rotation.copy(ringRotation)
 
-    // Clear children và tạo mới
-    arrowGroupRef.current.children = []
+    // Chỉ tạo arrows 1 lần
+    if (arrowsRef.current.length === 0) {
+      const arrowLength = 0.5
+      const axisX = new THREE.Vector3(1, 0, 0)
+      const axisY = new THREE.Vector3(0, 1, 0)
+      const axisZ = new THREE.Vector3(0, 0, 1)
 
-    // Tạo 3 trục tọa độ của nhẫn (local coordinate system)
-    const arrowLength = 0.5
-    const axisX = new THREE.Vector3(1, 0, 0) // Rx - đỏ
-    const axisY = new THREE.Vector3(0, 1, 0) // Ry - xanh lá
-    const axisZ = new THREE.Vector3(0, 0, 1) // Rz - xanh dương
+      const arrowX = new THREE.ArrowHelper(axisX, new THREE.Vector3(), arrowLength, 0xff0000)
+      const arrowY = new THREE.ArrowHelper(axisY, new THREE.Vector3(), arrowLength, 0x00ff00)
+      const arrowZ = new THREE.ArrowHelper(axisZ, new THREE.Vector3(), arrowLength, 0x0000ff)
 
-    const arrowX = new THREE.ArrowHelper(axisX, new THREE.Vector3(), arrowLength, 0xff0000)
-    const arrowY = new THREE.ArrowHelper(axisY, new THREE.Vector3(), arrowLength, 0x00ff00)
-    const arrowZ = new THREE.ArrowHelper(axisZ, new THREE.Vector3(), arrowLength, 0x0000ff)
+      arrowGroupRef.current.add(arrowX)
+      arrowGroupRef.current.add(arrowY)
+      arrowGroupRef.current.add(arrowZ)
 
-    arrowGroupRef.current.add(arrowX)
-    arrowGroupRef.current.add(arrowY)
-    arrowGroupRef.current.add(arrowZ)
-
-    // Lưu data để render text labels
-    setAxesData({
-      position: ringPosition,
-      rx: axisX.clone().multiplyScalar(arrowLength + 0.1),
-      ry: axisY.clone().multiplyScalar(arrowLength + 0.1),
-      rz: axisZ.clone().multiplyScalar(arrowLength + 0.1)
-    })
+      arrowsRef.current = [arrowX, arrowY, arrowZ]
+    }
   })
 
-  return (
-    <>
-      <group ref={arrowGroupRef} />
-      {axesData && (
-        <group position={axesData.position} rotation={ringRotation}>
-          <Text position={axesData.rx} fontSize={0.1} color="red" anchorX="center" anchorY="middle">
-            Rx
-          </Text>
-          <Text position={axesData.ry} fontSize={0.1} color="lime" anchorX="center" anchorY="middle">
-            Ry
-          </Text>
-          <Text position={axesData.rz} fontSize={0.1} color="blue" anchorX="center" anchorY="middle">
-            Rz
-          </Text>
-        </group>
-      )}
-    </>
-  )
+  return <group ref={arrowGroupRef} />
+  // Text bị XÓA để tăng FPS - Text rendering rất nặng!
 }
 
-// ==================== FINGER AXES DEBUG ====================
-function FingerAxesDebug({ landmarks, selectedFinger, camera, flipLogic }) {
+// ==================== FINGER AXES DEBUG (TỐI ƯU TỐI ĐA) ====================
+function FingerAxesDebug({ landmarks, selectedFinger, camera }) {
   const arrowGroupRef = useRef()
-  const [axesData, setAxesData] = useState(null)
+  const arrowsRef = useRef([])  // Cache arrows
+  const dotRef = useRef()  // Cache dot
+  const frameCount = useRef(0)
 
   useFrame(() => {
     if (!landmarks || !arrowGroupRef.current) {
-      // Ẩn axes khi không có landmarks
-      setAxesData(null)
-      arrowGroupRef.current.children = []
+      // Ẩn arrows
+      if (arrowsRef.current.length > 0) {
+        arrowsRef.current.forEach(arrow => arrow.visible = false)
+      }
+      if (dotRef.current) dotRef.current.visible = false
       return
     }
 
     const fingerData = FINGER_GEOMETRY_DATA[selectedFinger]
     if (!fingerData) {
-      setAxesData(null)
-      arrowGroupRef.current.children = []
+      if (arrowsRef.current.length > 0) {
+        arrowsRef.current.forEach(arrow => arrow.visible = false)
+      }
+      if (dotRef.current) dotRef.current.visible = false
       return
     }
 
@@ -117,8 +101,10 @@ function FingerAxesDebug({ landmarks, selectedFinger, camera, flipLogic }) {
     const widthLm2 = landmarks[fingerData.widthLandmarks[1]]
 
     if (!posLm1 || !posLm2 || !widthLm1 || !widthLm2) {
-      setAxesData(null)
-      arrowGroupRef.current.children = []
+      if (arrowsRef.current.length > 0) {
+        arrowsRef.current.forEach(arrow => arrow.visible = false)
+      }
+      if (dotRef.current) dotRef.current.visible = false
       return
     }
 
@@ -159,12 +145,12 @@ function FingerAxesDebug({ landmarks, selectedFinger, camera, flipLogic }) {
       const middleMCPWorld = landmarkToWorld(middleMCP)
       const thumbTip = landmarks[4] // Thumb tip
 
-      // 1. Phát hiện PALM vs BACK: dùng fyBeforeNegate (handUp.z gốc)
-      // Nếu flipLogic (front cam) thì đảo logic
-      isPalm = flipLogic ? (fyBeforeNegate < 0) : (fyBeforeNegate > 0)
+      // 1. Phát hiện PALM vs BACK (chỉ cho BACK CAMERA + TAY TRÁI)
+      // BACK CAMERA: fyBeforeNegate > 0 = PALM (lòng), < 0 = BACK (mu)
+      isPalm = fyBeforeNegate > 0
       palmOrBack = isPalm ? 'PALM (lòng)' : 'BACK (mu)'
 
-      // 2. Phát hiện TAY TRÁI: thumb detection cũng phải flip khi front cam
+      // 2. Phát hiện TAY TRÁI
       let thumbRight = false
       if (thumbTip) {
         const thumbWorld = landmarkToWorld(thumbTip)
@@ -172,13 +158,32 @@ function FingerAxesDebug({ landmarks, selectedFinger, camera, flipLogic }) {
       }
       handType = 'LEFT'
 
+      // Xác định hướng của Fy
+      const fyDirectionBefore = fyBeforeNegate > 0 ? 'RA NGOÀI (+Z)' : 'VÀO NGƯỜI (-Z)'
+      const willNegate = !isPalm
+
+      // Tính Fz direction (TRƯỚC KHI negate Fy)
+      const fzBeforeNegate = new THREE.Vector3().crossVectors(fingerDirection, handUp)
+      const fzDirectionX = fzBeforeNegate.x > 0 ? 'PHẢI (+X)' : 'TRÁI (-X)'
+      const fzDirectionY = fzBeforeNegate.y > 0 ? 'TRÊN (+Y)' : 'DƯỚI (-Y)'
+      const fzDirectionZ = fzBeforeNegate.z > 0 ? 'RA NGOÀI (+Z)' : 'VÀO NGƯỜI (-Z)'
+
       // Debug info
       debugInfo = {
-        fyBefore: fyBeforeNegate.toFixed(2),
-        thumbRight: thumbRight ? 'YES' : 'NO',
-        thumbX: thumbTip ? landmarkToWorld(thumbTip).x.toFixed(2) : 'N/A',
-        mcpX: middleMCPWorld.x.toFixed(2)
+        fyBefore: fyBeforeNegate.toFixed(3),
+        fyDirectionBefore: fyDirectionBefore,
+        willNegate: willNegate ? 'YES' : 'NO',
+        fyAfterNegate: willNegate ? (-fyBeforeNegate).toFixed(3) : fyBeforeNegate.toFixed(3),
+        fzX: fzBeforeNegate.x.toFixed(3),
+        fzY: fzBeforeNegate.y.toFixed(3),
+        fzZ: fzBeforeNegate.z.toFixed(3),
+        fzDirectionX: fzDirectionX,
+        fzDirectionY: fzDirectionY,
+        fzDirectionZ: fzDirectionZ
       }
+
+      // Log chi tiết trong console - BỎ để tối ưu hiệu suất
+      // console.log chạy mỗi frame (20-60fps) gây lag!
 
       // 3. Đảm bảo Fy LUÔN chỉ từ lòng bàn tay → mu bàn tay (móng)
       // PALM (lòng) trước camera: handUp tự nhiên chỉ ra xa (lòng→mu) → GIỮ NGUYÊN
@@ -194,110 +199,39 @@ function FingerAxesDebug({ landmarks, selectedFinger, camera, flipLogic }) {
     // Update position của group
     arrowGroupRef.current.position.copy(fingerPosition)
 
-    // Clear children và tạo mới
-    arrowGroupRef.current.children = []
+    // Chỉ tạo arrows + dot 1 LẦN
+    if (arrowsRef.current.length === 0) {
+      const arrowLength = 0.3
+      const arrowX = new THREE.ArrowHelper(fingerDirection, new THREE.Vector3(), arrowLength, 0xff0000)
+      const arrowY = new THREE.ArrowHelper(handUp, new THREE.Vector3(), arrowLength, 0x00ff00)
+      const arrowZ = new THREE.ArrowHelper(sideDirection, new THREE.Vector3(), arrowLength, 0x0000ff)
 
-    // Tạo 3 arrow helpers
-    const arrowLength = 0.3
-    const arrowX = new THREE.ArrowHelper(fingerDirection, new THREE.Vector3(), arrowLength, 0xff0000) // Fx - đỏ
-    const arrowY = new THREE.ArrowHelper(handUp, new THREE.Vector3(), arrowLength, 0x00ff00) // Fy - xanh lá
-    const arrowZ = new THREE.ArrowHelper(sideDirection, new THREE.Vector3(), arrowLength, 0x0000ff) // Fz - xanh dương
+      arrowGroupRef.current.add(arrowX)
+      arrowGroupRef.current.add(arrowY)
+      arrowGroupRef.current.add(arrowZ)
 
-    arrowGroupRef.current.add(arrowX)
-    arrowGroupRef.current.add(arrowY)
-    arrowGroupRef.current.add(arrowZ)
+      // Dot đỏ
+      const dotGeometry = new THREE.SphereGeometry(0.02, 8, 8)  // Giảm segments
+      const dotMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+      const dot = new THREE.Mesh(dotGeometry, dotMaterial)
+      arrowGroupRef.current.add(dot)
 
-    // Lưu data để render text labels
-    setAxesData({
-      position: fingerPosition,
-      fx: fingerDirection.clone().multiplyScalar(arrowLength + 0.1),
-      fy: handUp.clone().multiplyScalar(arrowLength + 0.1),
-      fz: sideDirection.clone().multiplyScalar(arrowLength + 0.1),
-      fyDirection: handUp.clone(), // Lưu vector gốc để kiểm tra hướng Z
-      handType: handType,
-      palmOrBack: palmOrBack,
-      fyBeforeNegate: fyBeforeNegate,
-      debugInfo: debugInfo
-    })
+      arrowsRef.current = [arrowX, arrowY, arrowZ]
+      dotRef.current = dot
+    } else {
+      // Update hướng của arrows (không tạo mới)
+      arrowsRef.current[0].setDirection(fingerDirection)
+      arrowsRef.current[1].setDirection(handUp)
+      arrowsRef.current[2].setDirection(sideDirection)
+
+      arrowsRef.current.forEach(arrow => arrow.visible = true)
+      if (dotRef.current) dotRef.current.visible = true
+    }
   })
 
-  return (
-    <>
-      <group ref={arrowGroupRef} />
-      {axesData && (
-        <>
-          {/* Chấm đỏ đánh dấu vị trí đeo nhẫn */}
-          <mesh position={axesData.position}>
-            <sphereGeometry args={[0.02, 16, 16]} />
-            <meshBasicMaterial color="red" />
-          </mesh>
-
-          <group position={axesData.position}>
-            <Text position={axesData.fx} fontSize={0.08} color="red" anchorX="center" anchorY="middle">
-              Fx
-            </Text>
-            <Text position={axesData.fy} fontSize={0.08} color="lime" anchorX="center" anchorY="middle">
-              Fy
-            </Text>
-            <Text position={axesData.fz} fontSize={0.08} color="blue" anchorX="center" anchorY="middle">
-              Fz
-            </Text>
-
-            {/* Hiển thị debug info */}
-            <Text
-              position={[0, -0.35, 0]}
-              fontSize={0.09}
-              color="cyan"
-              anchorX="center"
-              anchorY="middle"
-              outlineWidth={0.01}
-              outlineColor="black"
-            >
-              {`${axesData.handType} | ${axesData.palmOrBack}`}
-            </Text>
-            <Text
-              position={[0, -0.50, 0]}
-              fontSize={0.09}
-              color="yellow"
-              anchorX="center"
-              anchorY="middle"
-              outlineWidth={0.01}
-              outlineColor="black"
-            >
-              {`Fy: lòng→mu (Z=${axesData.fyDirection.z.toFixed(2)})`}
-            </Text>
-            {axesData.debugInfo && Object.keys(axesData.debugInfo).length > 0 && (
-              <>
-                <Text
-                  position={[0, -0.65, 0]}
-                  fontSize={0.07}
-                  color="orange"
-                  anchorX="center"
-                  anchorY="middle"
-                  outlineWidth={0.01}
-                  outlineColor="black"
-                >
-                  {`Fy Before: ${axesData.debugInfo.fyBefore} | Thumb Right: ${axesData.debugInfo.thumbRight}`}
-                </Text>
-                <Text
-                  position={[0, -0.75, 0]}
-                  fontSize={0.07}
-                  color="orange"
-                  anchorX="center"
-                  anchorY="middle"
-                  outlineWidth={0.01}
-                  outlineColor="black"
-                >
-                  {`ThumbX: ${axesData.debugInfo.thumbX} | McpX: ${axesData.debugInfo.mcpX}`}
-                </Text>
-              </>
-            )}
-
-          </group>
-        </>
-      )}
-    </>
-  )
+  return <group ref={arrowGroupRef} />
+  // TẤT CẢ Text đã bị XÓA để tăng FPS tối đa!
+  // Text rendering là nguyên nhân chính gây lag!
 }
 
 // ==================== RING WITH OCCLUDER (R3F) ====================
@@ -315,12 +249,9 @@ function RingWithOccluder({
   alignRingToFinger = false,
   correctionX = 0,
   correctionY = 0,
-  correctionZ = 0,
-  flipLogic = false
+  correctionZ = 0
 }) {
-  console.log('🔵 RingWithOccluder render, loading model:', modelPath)
   const { nodes, materials } = useGLTF(modelPath)
-  console.log('✅ Model loaded! Nodes:', Object.keys(nodes).length, 'Materials:', Object.keys(materials || {}).length)
   const ringGroupRef = useRef()
   const occluderRef = useRef()
   const { camera } = useThree()
@@ -329,9 +260,7 @@ function RingWithOccluder({
   let env
   try {
     env = useEnvironment({ files: '/studio_env/env_metal_1.exr' })
-    console.log('✅ Environment map loaded successfully!')
   } catch (error) {
-    console.error('❌ Failed to load environment map:', error)
     env = null
   }
 
@@ -378,8 +307,8 @@ function RingWithOccluder({
       autoRotationY.current += delta * rotationSpeed
     }
 
-    // Vị trí nhẫn ở góc trái
-    const ringPosX = -2.5
+    // Vị trí nhẫn ở GIỮA màn hình
+    const ringPosX = 0
     const ringPosY = 0
     const ringPosZ = 0
 
@@ -422,10 +351,9 @@ function RingWithOccluder({
           // Orthogonalize: loại bỏ component của fingerDirection khỏi sideDirection
           let handUp = new THREE.Vector3().crossVectors(sideDirectionRaw, fingerDirection).normalize() // Fy
 
-          // Phát hiện PALM vs BACK
+          // Phát hiện PALM vs BACK (BACK CAMERA + TAY TRÁI)
           const handUpInitialZ = handUp.z
-          // Nếu flipLogic (front cam) thì đảo logic
-          const isPalm = flipLogic ? (handUpInitialZ < 0) : (handUpInitialZ > 0)
+          const isPalm = handUpInitialZ > 0
 
           // Đảm bảo Fy LUÔN chỉ từ lòng bàn tay → mu bàn tay (móng)
           // PALM (lòng) trước camera: handUp chỉ ra xa (lòng→mu) → GIỮ NGUYÊN
@@ -456,26 +384,28 @@ function RingWithOccluder({
         }
       }
     } else {
-      // Rotation bình thường
-      const angleY = Math.atan2(ringPosX - 0, ringPosZ - 5)
-      const totalAngleY = angleY + autoRotationY.current
+      // Rotation bình thường - GÓC CỐ ĐỊNH (không phụ thuộc vị trí)
+      // Chỉ cộng thêm autoRotation nếu bật
+      const totalAngleY = 0 + autoRotationY.current
       ringGroupRef.current.rotation.set(0, totalAngleY, 0)
     }
 
     occluderRef.current.visible = false
 
-    // Update ring transform cho debug
-    setRingTransform({
-      position: ringGroupRef.current.position.clone(),
-      rotation: ringGroupRef.current.rotation.clone(),
-      scale: ringGroupRef.current.scale.clone()
-    })
+    // Update ring transform cho debug - CHỈ KHI CẦN (debug mode ON)
+    if (debugRingAxes) {
+      setRingTransform({
+        position: ringGroupRef.current.position.clone(),
+        rotation: ringGroupRef.current.rotation.clone(),
+        scale: ringGroupRef.current.scale.clone()
+      })
+    }
   })
 
   return (
     <>
       {/* Debug Finger Axes */}
-      {debugFingerAxes && <FingerAxesDebug landmarks={landmarks} selectedFinger={selectedFinger} camera={camera} flipLogic={flipLogic} />}
+      {debugFingerAxes && <FingerAxesDebug landmarks={landmarks} selectedFinger={selectedFinger} camera={camera} />}
 
       {/* Debug Ring Axes */}
       {debugRingAxes && <RingAxesDebug ringPosition={ringTransform.position} ringRotation={ringTransform.rotation} ringScale={ringTransform.scale} />}
@@ -499,8 +429,8 @@ function RingWithOccluder({
             return (
               <instancedMesh
                 key={key}
-                castShadow
-                receiveShadow
+                castShadow={false}
+                receiveShadow={false}
                 args={[node.geometry, null, node.count]}
                 instanceMatrix={node.instanceMatrix}
                 position={node.position}
@@ -537,8 +467,8 @@ function RingWithOccluder({
             return (
               <mesh
                 key={key}
-                castShadow
-                receiveShadow
+                castShadow={false}
+                receiveShadow={false}
                 geometry={node.geometry}
                 position={node.position}
                 rotation={node.rotation}
@@ -573,20 +503,20 @@ function RingWithOccluder({
 }
 
 // ==================== SCENE SETUP ====================
-function Scene({ landmarks, selectedFinger, modelPath, isHandVisible, meshColors, onMeshListLoad, debugFingerAxes, debugRingAxes, autoRotate, rotationSpeed, alignRingToFinger, correctionX, correctionY, correctionZ, flipLogic }) {
+const Scene = React.memo(function Scene({ landmarks, selectedFinger, modelPath, isHandVisible, meshColors, onMeshListLoad, debugFingerAxes, debugRingAxes, autoRotate, rotationSpeed, alignRingToFinger, correctionX, correctionY, correctionZ }) {
   const { camera } = useThree()
 
-  // Đặt camera về vị trí gốc để finger tracking hoạt động đúng
-  useFrame(() => {
+  // Đặt camera về vị trí gốc - CHỈ SETUP 1 LẦN
+  useEffect(() => {
     camera.position.set(0, 0, 5)
     camera.lookAt(0, 0, 0)
     camera.updateProjectionMatrix()
-  })
+  }, [camera])
 
   return (
     <>
       <ambientLight intensity={1.5} />
-      <directionalLight position={[3, 10, 7]} intensity={2.0} />
+      <directionalLight position={[3, 10, 7]} intensity={2.0} castShadow={false} />
       <RingWithOccluder
         landmarks={landmarks}
         selectedFinger={selectedFinger}
@@ -602,11 +532,10 @@ function Scene({ landmarks, selectedFinger, modelPath, isHandVisible, meshColors
         correctionX={correctionX}
         correctionY={correctionY}
         correctionZ={correctionZ}
-        flipLogic={flipLogic}
       />
     </>
   )
-}
+})
 
 // ==================== PRELOAD MODEL ====================
 // Preload the model to avoid loading delays
@@ -614,7 +543,6 @@ useGLTF.preload('/myfav.glb')
 
 // ==================== MAIN COMPONENT ====================
 export default function QuocTiar({ modelPath = '/myfav.glb' }) {
-  console.log('🎯 QuocTiar mounted! modelPath:', modelPath)
 
   const [landmarks, setLandmarks] = useState(null)
   const [isHandVisible, setIsHandVisible] = useState(false)
@@ -624,12 +552,11 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
   const [stream, setStream] = useState(null)
   const [meshList, setMeshList] = useState([])
 
-  // Debug controls
-  const { debugFingerAxes, debugRingAxes, alignRingToFinger, flipLogic } = useControls('Debug', {
-    debugFingerAxes: { value: false, label: 'Show Finger Axes' },
-    debugRingAxes: { value: false, label: 'Show Ring Axes' },
-    alignRingToFinger: { value: false, label: 'Align Ring to Finger' },
-    flipLogic: { value: false, label: 'Flip Logic for Front Cam (default: Back Cam)' }
+  // Debug controls - MẶC ĐỊNH TẮT HẾT để tối ưu
+  const { debugFingerAxes, debugRingAxes, alignRingToFinger } = useControls('Debug', {
+    debugFingerAxes: { value: false, label: 'Show Finger Axes (LAG!)' },
+    debugRingAxes: { value: false, label: 'Show Ring Axes (LAG!)' },
+    alignRingToFinger: { value: false, label: 'Align Ring to Finger' }
   })
 
   const videoRef = useRef(null)
@@ -637,6 +564,7 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
   const handLandmarkerRef = useRef(null)
   const animationFrameIdRef = useRef(null)
   const lastFrameTimeRef = useRef(0)
+  const frameSkipCounter = useRef(0)  // Đếm frames để skip
 
   // Ring controls
   const { autoRotate, rotationSpeed, correctionX, correctionY, correctionZ } = useControls('Ring', {
@@ -695,9 +623,9 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
         const mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
             facingMode: 'environment',
-            width: { ideal: 1280, max: 1280 },
-            height: { ideal: 720, max: 720 },
-            frameRate: { ideal: 30, max: 30 }
+            width: { ideal: 640, max: 960 },    // Giảm thêm: 640x360
+            height: { ideal: 360, max: 540 },
+            frameRate: { ideal: 15, max: 20 }   // Giảm xuống 15 FPS
           }
         })
 
@@ -730,7 +658,11 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
         if (currentTime - lastFrameTimeRef.current >= FRAME_INTERVAL) {
           lastFrameTimeRef.current = currentTime
 
-          if (videoRef.current?.readyState >= 4 && handLandmarkerRef.current) {
+          // Skip frames cho MediaPipe - CHỈ CHẠY mỗi N frames
+          frameSkipCounter.current++
+          const shouldProcessFrame = frameSkipCounter.current % MEDIAPIPE_SKIP_FRAMES === 0
+
+          if (shouldProcessFrame && videoRef.current?.readyState >= 4 && handLandmarkerRef.current) {
             const results = handLandmarkerRef.current.detectForVideo(
               videoRef.current,
               performance.now()
@@ -848,12 +780,13 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
             gl={{
               alpha: true,
               preserveDrawingBuffer: true,
-              antialias: true
+              antialias: false,  // Tắt antialiasing để tăng FPS
+              powerPreference: 'high-performance'  // Dùng GPU mạnh hơn
             }}
             camera={{ fov: 50, position: [0, 0, 5] }}
-            onCreated={(state) => {
-              console.log('✅ Canvas created successfully!', state)
-            }}
+            frameloop="always"  // Cần render liên tục cho AR
+            dpr={[1, 1.5]}  // Giới hạn pixel ratio để tăng FPS
+            performance={{ min: 0.5 }}  // Giảm chất lượng nếu FPS thấp
           >
             <Scene
               landmarks={landmarks}
@@ -870,7 +803,6 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
               correctionX={correctionX}
               correctionY={correctionY}
               correctionZ={correctionZ}
-              flipLogic={flipLogic}
             />
           </Canvas>
         </Suspense>
@@ -908,7 +840,7 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
           onClick={handleCapture}
           style={{
             position: 'absolute',
-            bottom: 40,
+            bottom: 20,
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 10,

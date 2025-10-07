@@ -24,7 +24,7 @@ const HoverExpandSection = lazy(() =>
 );
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
 // const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
-const TryOnRing = lazy(() => import("@components/arTryOn/Occluder.jsx"));
+const TryOnRing = lazy(() => import("@components/arTryOn/Occluder2.jsx"));
 // KHÔNG lazy load QuocTiar vì nó cần khởi tạo camera/Canvas ngay lập tức
 import QuocTiar from "@components/arTryOn/QuocTiar.jsx";
 const ManageProducts = lazy(() =>
@@ -242,7 +242,9 @@ export default function AppRoutes() {
             <Route path={ROUTES.AR_RINGS} element={<TryOnRing />} />
           </Route>
 
-          <Route path="/ar/quoc-ti" element={<QuocTiar modelPath="/myfav.glb"/>} />
+          <Route path="/ar/quoc-ti" element={<QuocTiar modelPath="/myfav.glb" />} />
+
+
 
           <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
 
