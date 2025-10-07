@@ -44,8 +44,8 @@ const FINGER_GEOMETRY_DATA = {
     }
 };
 
-const SMOOTHING_FACTOR = 0.35;
-const TARGET_FPS = 20;
+const SMOOTHING_FACTOR = 0.25;
+const TARGET_FPS = 30;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
 // ==================== RING WITH OCCLUDER (R3F - CHỈ LÀM ĐẸP) ====================
@@ -242,7 +242,6 @@ const Occluder2 = () => {
     const lastFrameTimeRef = useRef(0);
     const isInitializedRef = useRef(false);
     const streamRef = useRef(null);
-    const frameCounterRef = useRef(0);
 
     // Camera ref để tính toán positioning
     const virtualCameraRef = useRef({
@@ -403,13 +402,6 @@ const Occluder2 = () => {
             if (!handLandmarkerRef.current || !videoRef.current) {
                 return;
             }
-
-            // Skip frames để tăng performance
-            frameCounterRef.current++;
-            if (frameCounterRef.current % 2 !== 0) {
-                return; // Chỉ chạy mỗi 2 frames
-            }
-
             try {
                 const results = handLandmarkerRef.current.detectForVideo(
                     videoRef.current,
@@ -617,7 +609,7 @@ const Occluder2 = () => {
                                         }}
                                         camera={{ fov: 50, position: [0, 0, 5] }}
                                         frameloop="always"
-                                        dpr={[1, 2]}
+                                        dpr={window.devicePixelRatio}
                                         performance={{ min: 0.5 }}
                                     >
                                         <ambientLight intensity={6.0} />
