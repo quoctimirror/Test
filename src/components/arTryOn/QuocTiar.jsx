@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useRef, useEffect, useState, useCallback, useMemo, Suspense } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, MeshRefractionMaterial, useEnvironment, Text } from '@react-three/drei'
 import { HandLandmarker, FilesetResolver } from '@mediapipe/tasks-vision'
@@ -318,11 +318,22 @@ function RingWithOccluder({
   correctionZ = 0,
   flipLogic = false
 }) {
+  console.log('🔵 RingWithOccluder render, loading model:', modelPath)
   const { nodes, materials } = useGLTF(modelPath)
+  console.log('✅ Model loaded! Nodes:', Object.keys(nodes).length, 'Materials:', Object.keys(materials || {}).length)
   const ringGroupRef = useRef()
   const occluderRef = useRef()
   const { camera } = useThree()
-  const env = useEnvironment({ files: '/studio_env/env_metal_1.exr' })
+
+  // Load environment map with error handling
+  let env
+  try {
+    env = useEnvironment({ files: '/studio_env/env_metal_1.exr' })
+    console.log('✅ Environment map loaded successfully!')
+  } catch (error) {
+    console.error('❌ Failed to load environment map:', error)
+    env = null
+  }
 
   // State để lưu ring transform cho debug
   const [ringTransform, setRingTransform] = useState({
@@ -597,8 +608,14 @@ function Scene({ landmarks, selectedFinger, modelPath, isHandVisible, meshColors
   )
 }
 
+// ==================== PRELOAD MODEL ====================
+// Preload the model to avoid loading delays
+useGLTF.preload('/myfav.glb')
+
 // ==================== MAIN COMPONENT ====================
 export default function QuocTiar({ modelPath = '/myfav.glb' }) {
+  console.log('🎯 QuocTiar mounted! modelPath:', modelPath)
+
   const [landmarks, setLandmarks] = useState(null)
   const [isHandVisible, setIsHandVisible] = useState(false)
   const [selectedFinger, setSelectedFinger] = useState('Ring')
@@ -811,33 +828,52 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
 
       {/* R3F Canvas overlay */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none' }}>
-        <Canvas
-          ref={canvasRef}
-          gl={{
-            alpha: true,
-            preserveDrawingBuffer: true,
-            antialias: true
-          }}
-          camera={{ fov: 50, position: [0, 0, 5] }}
-        >
-          <Scene
-            landmarks={landmarks}
-            selectedFinger={selectedFinger}
-            modelPath={modelPath}
-            isHandVisible={isHandVisible}
-            meshColors={colorControls}
-            onMeshListLoad={setMeshList}
-            debugFingerAxes={debugFingerAxes}
-            debugRingAxes={debugRingAxes}
-            autoRotate={autoRotate}
-            rotationSpeed={rotationSpeed}
-            alignRingToFinger={alignRingToFinger}
-            correctionX={correctionX}
-            correctionY={correctionY}
-            correctionZ={correctionZ}
-            flipLogic={flipLogic}
-          />
-        </Canvas>
+        <Suspense fallback={
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
+            fontSize: '18px',
+            background: 'rgba(0,0,0,0.7)',
+            padding: '20px',
+            borderRadius: '10px'
+          }}>
+            Đang tải mô hình 3D...
+          </div>
+        }>
+          <Canvas
+            ref={canvasRef}
+            gl={{
+              alpha: true,
+              preserveDrawingBuffer: true,
+              antialias: true
+            }}
+            camera={{ fov: 50, position: [0, 0, 5] }}
+            onCreated={(state) => {
+              console.log('✅ Canvas created successfully!', state)
+            }}
+          >
+            <Scene
+              landmarks={landmarks}
+              selectedFinger={selectedFinger}
+              modelPath={modelPath}
+              isHandVisible={isHandVisible}
+              meshColors={colorControls}
+              onMeshListLoad={setMeshList}
+              debugFingerAxes={debugFingerAxes}
+              debugRingAxes={debugRingAxes}
+              autoRotate={autoRotate}
+              rotationSpeed={rotationSpeed}
+              alignRingToFinger={alignRingToFinger}
+              correctionX={correctionX}
+              correctionY={correctionY}
+              correctionZ={correctionZ}
+              flipLogic={flipLogic}
+            />
+          </Canvas>
+        </Suspense>
       </div>
 
       {/* UI Controls */}
