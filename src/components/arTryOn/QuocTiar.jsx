@@ -117,7 +117,7 @@ function FingerAxesDebug({ landmarks, selectedFinger, camera }) {
 
     const landmarkToWorld = (lm) => {
       const worldX = (lm.x - 0.5) * viewWidth
-      const worldY = -(lm.y - 0.5) * viewHeight + 0.1
+      const worldY = -(lm.y - 0.5) * viewHeight - 0.1
       const worldZ = lm.z * viewWidth * -1.3
       return new THREE.Vector3(worldX, worldY, worldZ)
     }
@@ -461,8 +461,8 @@ function RingWithOccluder({
 
           if (node.isMesh) {
             const isGemMesh = key.toLowerCase().includes('gem') ||
-                             key.toLowerCase().includes('diamond') ||
-                             key.toLowerCase().includes('stone')
+              key.toLowerCase().includes('diamond') ||
+              key.toLowerCase().includes('stone')
 
             return (
               <mesh
@@ -772,7 +772,7 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
             padding: '20px',
             borderRadius: '10px'
           }}>
-            Đang tải mô hình 3D...
+            Loading 3D model...
           </div>
         }>
           <Canvas
@@ -824,11 +824,11 @@ export default function QuocTiar({ modelPath = '/myfav.glb' }) {
         >
           {Object.keys(FINGER_GEOMETRY_DATA).map(finger => (
             <option key={finger} value={finger}>
-              {finger === 'Thumb' ? 'Ngón cái' :
-               finger === 'Index' ? 'Ngón trỏ' :
-               finger === 'Middle' ? 'Ngón giữa' :
-               finger === 'Ring' ? 'Ngón áp út' :
-               finger === 'Pinky' ? 'Ngón út' : finger}
+              {finger === 'Thumb' ? 'Thumb' :
+                finger === 'Index' ? 'Index' :
+                  finger === 'Middle' ? 'Middle' :
+                    finger === 'Ring' ? 'Ring' :
+                      finger === 'Pinky' ? 'Pinky' : finger}
             </option>
           ))}
         </select>
