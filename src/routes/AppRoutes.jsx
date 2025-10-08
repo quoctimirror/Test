@@ -27,6 +27,9 @@ const View360 = lazy(() => import("@components/view360/View360.jsx"));
 const TryOnRing = lazy(() => import("@components/arTryOn/Occluder3.jsx"));
 // KHÔNG lazy load QuocTiar vì nó cần khởi tạo camera/Canvas ngay lập tức
 import QuocTiar from "@components/arTryOn/QuocTiar.jsx";
+const SimpleMeshInspector = lazy(() =>
+  import("@components/arTryOn/quocti_dancefloor/SimpleMeshInspector.jsx")
+);
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
@@ -137,6 +140,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
     location.pathname.startsWith("/ar/quoc-ti") ||
+    location.pathname.startsWith("/ar/mesh-inspector") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -150,6 +154,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
     location.pathname.startsWith("/ar/quoc-ti") ||
+    location.pathname.startsWith("/ar/mesh-inspector") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -244,7 +249,7 @@ export default function AppRoutes() {
 
           <Route path="/ar/quoc-ti" element={<QuocTiar modelPath="/models/myfav.glb" />} />
 
-
+          <Route path="/ar/mesh-inspector" element={<SimpleMeshInspector />} />
 
           <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
 

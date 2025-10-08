@@ -3,8 +3,8 @@
 // OPTIMIZED FOR MOBILE & LOW-END DEVICES
 import { useState, useRef, useEffect, useCallback, useMemo, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, MeshRefractionMaterial, useEnvironment, Environment } from '@react-three/drei';
-import { EffectComposer, N8AO, ToneMapping, SMAA } from '@react-three/postprocessing';
+import { useGLTF, useEnvironment, Environment, MeshRefractionMaterial } from '@react-three/drei';
+import { EffectComposer, ToneMapping, SMAA } from '@react-three/postprocessing';
 import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import { useControls } from 'leva';
 import * as THREE from 'three';
@@ -73,7 +73,9 @@ function RingWithOccluder({
     isVisible,
     cameraAspect,
     meshColors = {},
-    onMeshListLoad
+    onMeshListLoad,
+    isMobile,
+    isLowEnd
 }) {
     const { nodes } = useGLTF(modelPath);
     const ringGroupRef = useRef();
@@ -111,7 +113,7 @@ function RingWithOccluder({
         }
     }, [nodes, onMeshListLoad]);
 
-    // Load environment map - TỪ QUOCTIAR.JSX (KHÔNG ĐƯỢC WRAP TRONG TRY-CATCH)
+    // Load environment map - dùng file nhẹ
     const env = useEnvironment({ files: '/studio_env/env_metal_1.exr' });
 
     // Geometry cho occluder - tạo một lần
@@ -200,19 +202,18 @@ function RingWithOccluder({
                                 {isGemInstance && env ? (
                                     <MeshRefractionMaterial
                                         color={meshColors[key] || material?.color || '#ffffff'}
-                                        side={THREE.DoubleSide}
                                         envMap={env}
-                                        envMapIntensity={30.0}  // TĂNG CAO CHO KIM CƯƠNG
-                                        aberrationStrength={0.08}  // Tăng aberration mạnh
+                                        envMapIntensity={isMobile ? 12.0 : 8.0}
+                                        aberrationStrength={isMobile ? 0.03 : 0.02}
                                         toneMapped={false}
                                     />
                                 ) : (
                                     <meshStandardMaterial
                                         color={meshColors[key] || material?.color || '#ffaf83'}
-                                        roughness={0.2}  // Tăng roughness cho band
-                                        metalness={1}
+                                        roughness={0.3}
+                                        metalness={0.8}
                                         envMap={env}
-                                        envMapIntensity={1.5}  // GIẢM xuống 1.5 cho band
+                                        envMapIntensity={1.0}
                                         side={THREE.DoubleSide}
                                     />
                                 )}
@@ -237,17 +238,17 @@ function RingWithOccluder({
                                     <MeshRefractionMaterial
                                         color={meshColors[key] || material?.color || '#ffffff'}
                                         envMap={env}
-                                        envMapIntensity={30.0}  // TĂNG CAO CHO KIM CƯƠNG
-                                        aberrationStrength={0.08}  // Tăng aberration mạnh
+                                        envMapIntensity={isMobile ? 12.0 : 8.0}
+                                        aberrationStrength={isMobile ? 0.03 : 0.02}
                                         toneMapped={false}
                                     />
                                 ) : (
                                     <meshStandardMaterial
                                         color={meshColors[key] || material?.color || '#ffaf83'}
-                                        roughness={0.2}  // Tăng roughness cho band
-                                        metalness={1}
+                                        roughness={0.3}
+                                        metalness={0.8}
                                         envMap={env}
-                                        envMapIntensity={1.5}  // GIẢM xuống 1.5 cho band
+                                        envMapIntensity={1.0}
                                         transparent={material?.transparent}
                                         opacity={material?.opacity ?? 1}
                                     />
@@ -678,39 +679,32 @@ const Occluder3 = () => {
                                         gl={{
                                             alpha: true,
                                             preserveDrawingBuffer: true,
-                                            antialias: true,  // BẬT antialias cho mọi devices
+                                            antialias: true,  // BẬT antialias
                                             powerPreference: 'high-performance',
-                                            // Giảm precision trên mobile/low-end
-                                            precision: isLowEnd ? 'lowp' : isMobile ? 'mediump' : 'highp',
+                                            // Precision vừa phải cho tất cả
+                                            precision: isLowEnd ? 'lowp' : 'mediump',
                                             // Tắt stencil buffer nếu không dùng
                                             stencil: false,
                                         }}
                                         camera={{ fov: 50, position: [0, 0, 5] }}
                                         frameloop="always"
-                                        // DPR cao để khử răng cưa tốt hơn:
-                                        // - Low-end: max 1.0 (tăng từ 0.75)
-                                        // - Mobile: max 1.5 (tăng từ 1.0)
-                                        // - Desktop: max 2.0 (tăng từ 1.5)
-                                        dpr={isLowEnd ? [0.75, 1.0] : isMobile ? [1.0, 1.5] : [1.5, 2.0]}
+                                        // DPR cao hơn để khử răng cưa:
+                                        // - Low-end: max 1.0
+                                        // - Mobile: max 1.5
+                                        // - Desktop: max 1.5
+                                        dpr={isLowEnd ? [0.75, 1.0] : [1.0, 1.5]}
                                         // Performance mode: tự động giảm chất lượng khi FPS thấp
                                         performance={{ min: 0.5 }}
                                     >
                                         {/* ============================================ */}
-                                        {/* LIGHTS - ÁNH SÁNG VỪA PHẢI, KHÔNG CHÓI */}
+                                        {/* LIGHTS - TỐI ỨU CHO DESKTOP */}
                                         {/* ============================================ */}
-                                        <ambientLight intensity={isMobile ? 2.5 : 4.0} />
+                                        <ambientLight intensity={isMobile ? 2.5 : 3.0} />
 
-                                        {/* Đèn phụ 1 - chiếu từ góc phải */}
+                                        {/* Chỉ 1 đèn chính cho desktop để tăng FPS */}
                                         <directionalLight
-                                            position={[5, 5, 5]}
-                                            intensity={isMobile ? 4 : 6}
-                                            castShadow={false}
-                                        />
-
-                                        {/* Đèn phụ 2 - chiếu từ góc trái */}
-                                        <directionalLight
-                                            position={[-5, 5, 5]}
-                                            intensity={isMobile ? 4 : 6}
+                                            position={[0, 5, 5]}
+                                            intensity={isMobile ? 4 : 5}
                                             castShadow={false}
                                         />
 
@@ -722,37 +716,22 @@ const Occluder3 = () => {
                                             cameraAspect={cameraAspect}
                                             meshColors={colorControls}
                                             onMeshListLoad={setMeshList}
+                                            isMobile={isMobile}
+                                            isLowEnd={isLowEnd}
                                         />
 
-                                        {/* Environment - HDR môi trường cho kim cương phản chiếu */}
+                                        {/* Environment - HDR để phản chiếu */}
                                         <Environment
                                             files="/studio_env/env_metal_1.exr"
                                             background={false}
                                         />
 
-                                        {/* ============================================ */}
-                                        {/* EFFECT COMPOSER - POST-PROCESSING EFFECTS */}
-                                        {/* KHỬ RĂNG CƯA + ĐỘ SÂU */}
-                                        {/* ============================================ */}
+                                        {/* EffectComposer - TONEMAPPING + SMAA */}
                                         <EffectComposer
                                             multisampling={0}
                                             enabled={true}
                                         >
-                                            {/* N8AO - Ambient Occlusion cho độ sâu */}
-                                            {!isLowEnd && (
-                                                <N8AO
-                                                    aoRadius={isMobile ? 0.08 : 0.15}
-                                                    intensity={isMobile ? 1.5 : 4}
-                                                    distanceFalloff={2}
-                                                    aoSamples={isMobile ? 4 : 16}
-                                                    denoiseSamples={isMobile ? 1 : 4}
-                                                    denoiseRadius={isMobile ? 6 : 12}
-                                                />
-                                            )}
-
                                             <ToneMapping />
-
-                                            {/* SMAA - Khử răng cưa (Anti-Aliasing) */}
                                             <SMAA />
                                         </EffectComposer>
                                     </Canvas>
