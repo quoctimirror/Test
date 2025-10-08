@@ -86,6 +86,44 @@
   fill: white;
 }
 
+/* Submit page logo override - must be after default styles */
+.logo-fixed-container.submit-page-logo {
+  mix-blend-mode: normal !important;
+}
+
+/* Desktop: black logo - invert white to black */
+@media screen and (min-width: 1024px) {
+  .logo-fixed-container.submit-page-logo .navbar-logo-svg {
+    filter: invert(1) !important;
+  }
+}
+
+/* Mobile and tablet: white logo - ensure white color */
+@media screen and (max-width: 1023px) {
+  .logo-fixed-container.submit-page-logo .navbar-logo-svg {
+    filter: brightness(0) invert(1) !important;
+  }
+}
+
+/* IntroSubmit section logo (in immersive showroom page) - same as submit page */
+.logo-fixed-container.intro-submit-logo {
+  mix-blend-mode: normal !important;
+}
+
+/* Desktop: black logo - invert white to black */
+@media screen and (min-width: 1024px) {
+  .logo-fixed-container.intro-submit-logo .navbar-logo-svg {
+    filter: invert(1) !important;
+  }
+}
+
+/* Mobile and tablet: white logo - ensure white color */
+@media screen and (max-width: 1023px) {
+  .logo-fixed-container.intro-submit-logo .navbar-logo-svg {
+    filter: brightness(0) invert(1) !important;
+  }
+}
+
 /* Menu container với blend mode */
 .menu-fixed-container {
   position: fixed;

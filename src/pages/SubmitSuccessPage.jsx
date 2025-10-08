@@ -22,7 +22,7 @@ const SubmitSuccessPage = () => {
           SUBMITTED!
         </h1>
         <p className="submit-success-description bodytext-3--no-margin">
-          You’ll get a confirmation email with your submission.
+          You will receive a confirmation email with your submission.
         </p>
 
         <div className="submit-success-buttons">
@@ -34,7 +34,7 @@ const SubmitSuccessPage = () => {
             textClassName="bodytext-4--no-margin"
             onClick={handleBackToSubmit}
           >
-            Back to submit page
+            Back to submission page
           </UnderlineButton>
         </div>
       </div>

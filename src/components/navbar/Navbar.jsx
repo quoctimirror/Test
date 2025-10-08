@@ -17,6 +17,7 @@ export default function Navbar() {
   );
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isInScrollContainer, setIsInScrollContainer] = useState(false);
+  const [isInIntroSubmitSection, setIsInIntroSubmitSection] = useState(false);
   const logoRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
 
@@ -30,6 +31,10 @@ export default function Navbar() {
   // Check if current page is Milan submission page or Submit Success page
   const isMilanPage =
     location.pathname.startsWith("/mirror-in-milan-digital-jewelry-week");
+
+  // Check if current page is submit page (not success page)
+  const isSubmitPage =
+    location.pathname === "/mirror-in-milan-digital-jewelry-week";
 
   // Check if should hide menu, account, and immersive button (Milan and Immersive Showroom)
   const shouldHideButtons =
@@ -122,6 +127,36 @@ export default function Navbar() {
       window.removeEventListener("load", handleScroll);
     };
   }, [isHomePage]);
+
+  // Detect when IntroSubmit section is in view (for immersive showroom page)
+  useEffect(() => {
+    const isImmersiveShowroom = location.pathname === "/immersive-showroom";
+    if (!isImmersiveShowroom) {
+      setIsInIntroSubmitSection(false);
+      return;
+    }
+
+    const handleScroll = () => {
+      const introSubmitSection = document.querySelector(".intro-submit-section");
+      if (!introSubmitSection) return;
+
+      const rect = introSubmitSection.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Only trigger when section top is very close to or past the top of viewport
+      // This ensures logo only changes when user has actually scrolled to the section
+      const isInView = rect.top <= 50 && rect.bottom > windowHeight * 0.2;
+
+      setIsInIntroSubmitSection(isInView);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Initial check
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [location.pathname]);
 
   const performTransition = async (route, options = {}) => {
     // Sử dụng optimized transition system
@@ -300,7 +335,9 @@ export default function Navbar() {
           isHomePage && !isMenuOpen ? "no-blend" : ""
         } ${
           isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
-        } ${shouldDisableLogoClick ? "no-click" : ""}`}
+        } ${shouldDisableLogoClick ? "no-click" : ""} ${
+          isSubmitPage ? "submit-page-logo" : ""
+        } ${isInIntroSubmitSection ? "intro-submit-logo" : ""}`}
         onClick={handleLogoClick}
       >
         <img

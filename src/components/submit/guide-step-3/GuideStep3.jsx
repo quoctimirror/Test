@@ -48,8 +48,8 @@ const GuideStep3 = () => {
 
               <div className="value-item">
                 <p className="value-description bodytext-6--no-margin">
-                  If you would like, a few words about what inspires you and the
-                  story behind your creations.
+                  A few words about what inspires you and the story behind your
+                  creations.
                 </p>
               </div>
             </div>

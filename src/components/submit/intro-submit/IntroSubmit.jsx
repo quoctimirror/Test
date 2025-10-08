@@ -84,7 +84,7 @@ const IntroSubmit = () => {
   };
 
   return (
-    <div className="intro-submit-wrapper">
+    <div className="intro-submit-wrapper intro-submit-section">
       {/* Hero Section */}
       <section className="intro-submit-hero-section">
         <div className="intro-submit-hero-content">

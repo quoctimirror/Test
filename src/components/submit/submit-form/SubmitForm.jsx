@@ -77,6 +77,109 @@ const SubmitForm = () => {
     };
   }, []);
 
+  // Hide search emoji and style search box in phone input dropdown
+  useEffect(() => {
+    const stylePhoneDropdown = () => {
+      const searchEmoji = document.querySelector(
+        ".phone-input-container .search-emoji"
+      );
+      if (searchEmoji) {
+        searchEmoji.style.display = "none";
+      }
+
+      // Match country-list width with input field width
+      const formControl = document.querySelector(
+        ".phone-input-container .form-control"
+      );
+      const countryList = document.querySelector(
+        ".phone-input-container .country-list"
+      );
+
+      if (formControl && countryList) {
+        const inputWidth = formControl.offsetWidth;
+        countryList.style.width = `${inputWidth}px`;
+      }
+
+      const search = document.querySelector(".phone-input-container .search");
+      const searchBox = document.querySelector(
+        ".phone-input-container .search-box"
+      );
+
+      if (search) {
+        search.style.padding = "12px 12px";
+        search.style.boxSizing = "border-box";
+      }
+
+      if (searchBox && search) {
+        // Get search container width and apply to search-box
+        const searchWidth = search.offsetWidth;
+        const searchPadding = 24; // 12px left + 12px right
+        searchBox.style.width = `${searchWidth - searchPadding}px`;
+        searchBox.style.padding = "10px 12px";
+        searchBox.style.fontSize = "14px";
+        searchBox.style.boxSizing = "border-box";
+        searchBox.style.marginLeft = "0";
+        searchBox.style.border = "none";
+        searchBox.style.borderBottom = "1px solid #e0e0e0";
+        searchBox.style.borderRadius = "0";
+        searchBox.style.background = "rgba(246, 246, 246, 1)";
+      }
+
+      // Style dial codes to align right
+      const countries = document.querySelectorAll(
+        ".phone-input-container .country"
+      );
+      countries.forEach((country) => {
+        const dialCode = country.querySelector(".dial-code");
+        if (dialCode) {
+          // Ensure parent is flex
+          country.style.display = "flex";
+          country.style.alignItems = "center";
+          country.style.padding = "12px 12px";
+
+          // Push dial code to the right
+          dialCode.style.marginLeft = "auto";
+          dialCode.style.marginRight = "0";
+          dialCode.style.paddingRight = "0";
+        }
+      });
+
+      // Check if dropdown is closed and remove 'open' class
+      const flagDropdown = document.querySelector(
+        ".phone-input-container .flag-dropdown"
+      );
+      const selectedFlag = document.querySelector(
+        ".phone-input-container .selected-flag"
+      );
+
+      if (flagDropdown && !countryList) {
+        // If no country-list, dropdown is closed
+        flagDropdown.classList.remove("open");
+
+        // Force blur to remove focus/active states
+        if (selectedFlag) {
+          selectedFlag.blur();
+        }
+        if (flagDropdown) {
+          flagDropdown.blur();
+        }
+      }
+    };
+
+    // Run after component mounts and when dropdown opens
+    const observer = new MutationObserver(stylePhoneDropdown);
+    const phoneContainer = document.querySelector(".phone-input-container");
+
+    if (phoneContainer) {
+      observer.observe(phoneContainer, { childList: true, subtree: true });
+      stylePhoneDropdown(); // Initial styling
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   // Feedback options
   const EXPERIENCE_RATINGS = [
     "Exceptional – I was fully immersed",
@@ -95,7 +198,7 @@ const SubmitForm = () => {
 
   const COLLABORATION_LIKELIHOOD_OPTIONS = [
     "Ready to explore collaborations soon",
-    "Interested—let's explore possibilities",
+    "Interested – let's explore possibilities",
     "Would like to learn more first",
   ];
 
@@ -440,7 +543,9 @@ const SubmitForm = () => {
     const scriptURL = import.meta.env.VITE_GOOGLE_SHEETS_SCRIPT_URL;
 
     if (!scriptURL) {
-      throw new Error("Google Sheets script URL is not configured");
+      throw new Error(
+        "We're experiencing technical difficulties. Please try again or contact us at info@mirrorfuturediamond.com"
+      );
     }
 
     try {
@@ -453,7 +558,9 @@ const SubmitForm = () => {
 
       return { success: true };
     } catch (error) {
-      throw new Error("Failed to submit to Google Sheets");
+      throw new Error(
+        "We couldn't process your submission right now. Please try again in a moment, or contact us at info@mirrorfuturediamond.com if the issue persists."
+      );
     }
   };
 
@@ -464,14 +571,14 @@ const SubmitForm = () => {
       { field: "contactEmail", label: "Contact email is required" },
       { field: "location", label: "Location is required" },
       // { field: "categories", label: "Please select at least one category" }, // Commented out for Milan
-      {
-        field: "eventExperienceRating",
-        label: "Please share how the immersive showroom felt",
-      },
-      {
-        field: "collaborationLikelihood",
-        label: "Please share your interest in collaborating",
-      },
+      // {
+      //   field: "eventExperienceRating",
+      //   label: "Please share how the immersive showroom felt",
+      // },
+      // {
+      //   field: "collaborationLikelihood",
+      //   label: "Please share your interest in collaborating",
+      // },
       {
         field: "agreeToContact",
         label: "You must agree to the Privacy Policy",
@@ -526,8 +633,8 @@ const SubmitForm = () => {
       "contactEmail",
       "location",
       // "categories", // Commented out for Milan
-      "eventExperienceRating",
-      "collaborationLikelihood",
+      // "eventExperienceRating", // Made optional
+      // "collaborationLikelihood", // Made optional
       "agreeToContact",
       "captchaToken",
     ];
@@ -659,34 +766,35 @@ const SubmitForm = () => {
       // Submit to Google Sheets
       await submitToGoogleSheets(googleSheetsData);
 
-      // Send email notification to user with retry logic for cold start
-      try {
-        await notificationsAPI.sendEmail(
+      // Send email notification to user in background (non-blocking)
+      notificationsAPI
+        .sendEmail(
           [formData.contactEmail],
           "milan-form",
           {
             name: formData.designerName,
           },
           captchaToken
-        );
-      } catch (emailError) {
-        // Retry once after 2 seconds (in case of cold start)
-        try {
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-          await notificationsAPI.sendEmail(
-            [formData.contactEmail],
-            "milan-form",
-            {
-              name: formData.designerName,
-            },
-            captchaToken
+        )
+        .catch((emailError) => {
+          // Retry once after 2 seconds (in case of cold start)
+          return new Promise((resolve) => setTimeout(resolve, 2000)).then(() =>
+            notificationsAPI
+              .sendEmail(
+                [formData.contactEmail],
+                "milan-form",
+                {
+                  name: formData.designerName,
+                },
+                captchaToken
+              )
+              .catch(() => {
+                // Email failed - silently ignore as form submission was successful
+              })
           );
-        } catch (retryError) {
-          // Don't throw error - form submission was successful
-        }
-      }
+        });
 
-      // Navigate to success page
+      // Navigate to success page immediately
       navigate("/mirror-in-milan-digital-jewelry-week/submit-success");
     } catch (error) {
       alert(error.message || "Failed to submit form. Please try again.");
@@ -768,14 +876,22 @@ const SubmitForm = () => {
                   country={"it"}
                   value={formData.phone}
                   onChange={(phone, country) => {
-                    // Format: add space after country code
-                    const formattedPhone = phone.replace(
-                      new RegExp(`^(${country.dialCode})`),
-                      `$1 `
-                    );
+                    // Add space after country code safely
+                    let formattedPhone = phone;
+                    if (
+                      country.dialCode &&
+                      phone.startsWith(country.dialCode) &&
+                      phone.length > country.dialCode.length &&
+                      !phone.startsWith(country.dialCode + " ")
+                    ) {
+                      formattedPhone =
+                        country.dialCode +
+                        " " +
+                        phone.slice(country.dialCode.length);
+                    }
                     setFormData((prev) => ({
                       ...prev,
-                      phone: formattedPhone.trim(),
+                      phone: formattedPhone,
                     }));
                   }}
                   containerClass="phone-input-container"
@@ -785,8 +901,7 @@ const SubmitForm = () => {
                   enableSearch={true}
                   searchPlaceholder="Search country..."
                   disableCountryCode={false}
-                  countryCodeEditable={false}
-                  enableAreaCodes={true}
+                  countryCodeEditable={true}
                   containerStyle={{
                     width: "100%",
                     maxWidth: "100%",
@@ -801,6 +916,7 @@ const SubmitForm = () => {
                     borderRadius: "0",
                     boxShadow: "none",
                     height: phoneInputHeight,
+                    background: "rgba(246, 246, 246, 1)",
                     fontFamily: '"BT Beau Sans", sans-serif',
                     fontSize: phoneInputFontSize,
                     fontWeight: "400",
@@ -1109,7 +1225,7 @@ const SubmitForm = () => {
 
               <div className="submit-form-group">
                 <label className="submit-form-label bodytext-3--no-margin">
-                  How would you rate the immersive showroom experience? *
+                  How would you rate the immersive showroom experience?
                 </label>
                 <div className="submit-form-radio-group submit-form-radio-group--stacked">
                   {EXPERIENCE_RATINGS.map((option) => (
@@ -1162,7 +1278,7 @@ const SubmitForm = () => {
 
               <div className="submit-form-group">
                 <label className="submit-form-label bodytext-3--no-margin">
-                  How ready are you to explore a collaboration with MIRROR? *
+                  How ready are you to explore a collaboration with MIRROR?
                 </label>
                 <div className="submit-form-radio-group submit-form-radio-group--stacked">
                   {COLLABORATION_LIKELIHOOD_OPTIONS.map((option) => (
@@ -1306,10 +1422,10 @@ const SubmitForm = () => {
                 }}
                 disabled={isUploading}
               >
-                {isUploading ? "Uploading..." : "Share your vision"}
+                {isUploading ? "Submitting..." : "Share your vision"}
               </ShineGlassButton>
               <p className="submit-note bodytext-6--no-margin">
-                You'll receive an email confirmation with your submission
+                You will receive an email confirmation with your submission
                 summary.
               </p>
             </div>
