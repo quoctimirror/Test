@@ -6,12 +6,14 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useEnvironment, Environment, MeshRefractionMaterial } from '@react-three/drei';
 import { EffectComposer, ToneMapping, SMAA } from '@react-three/postprocessing';
 import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
-import { useControls } from 'leva';
 import * as THREE from 'three';
 import { useParams } from 'react-router-dom';
 
 // Config
 import { getRingById, DEFAULT_RING_ID } from "@config/models/rings.js";
+
+// Components
+import RingColorPicker from './RingColorPicker';
 
 // CSS
 import './TryOnRing.css';
@@ -280,6 +282,7 @@ const Occluder3 = () => {
     const [cameraAspect, setCameraAspect] = useState(16 / 9);
     const [isCameraReady, setIsCameraReady] = useState(false);
     const [meshList, setMeshList] = useState([]);
+    const [meshColors, setMeshColors] = useState({});
 
     const videoRef = useRef(null);
     const debugCanvasRef = useRef(null);
@@ -302,27 +305,13 @@ const Occluder3 = () => {
     const selectedRingId = ringId || DEFAULT_RING_ID;
     const ringConfig = getRingById(selectedRingId);
 
-    // Tạo color schema cho từng mesh với màu mặc định
-    const colorSchema = useMemo(() => {
-        const schema = {};
-        meshList.forEach(mesh => {
-            const name = mesh.name.toLowerCase();
-            let defaultColor = '#ffffff';
-
-            // Set màu mặc định theo tên mesh
-            if (name.includes('ring')) {
-                defaultColor = '#ffaf83'; // ring band color
-            } else if (name.includes('diamond') || name.includes('gem') || name.includes('stone')) {
-                defaultColor = '#b5cbdd'; // diamond color
-            }
-
-            schema[mesh.name] = { value: defaultColor, label: mesh.name };
-        });
-        return schema;
-    }, [meshList]);
-
-    // Tạo color controls động cho từng mesh
-    const colorControls = useControls('Mesh Colors', colorSchema, [colorSchema]);
+    // Handler for color change from RingColorPicker
+    const handleColorChange = useCallback((meshName, color) => {
+        setMeshColors(prev => ({
+            ...prev,
+            [meshName]: color
+        }));
+    }, []);
 
     useEffect(() => { selectedFingerRef.current = selectedFinger; }, [selectedFinger]);
 
@@ -714,7 +703,7 @@ const Occluder3 = () => {
                                             occluderTransform={occluderTransform}
                                             isVisible={isHandVisible}
                                             cameraAspect={cameraAspect}
-                                            meshColors={colorControls}
+                                            meshColors={meshColors}
                                             onMeshListLoad={setMeshList}
                                             isMobile={isMobile}
                                             isLowEnd={isLowEnd}
@@ -797,6 +786,13 @@ const Occluder3 = () => {
                             ))}
                         </select>
                     </div>
+                )}
+
+                {!error && !capturedImage && !loadingMessage && (
+                    <RingColorPicker
+                        meshList={meshList}
+                        onColorChange={handleColorChange}
+                    />
                 )}
             </div>
 
