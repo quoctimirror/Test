@@ -1,14 +1,24 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import './TimeOverlay.css';
 import StarlightEffect from './StarlightEffect';
 import ShineGlassButton from '../../common/button/ShineGlassButton';
 
-const TimeOverlay = ({ isVisible, onClose }) => {
+const TimeOverlay = ({ isVisible, onClose, origin }) => {
+    const [isClosing, setIsClosing] = useState(false);
+
+    const handleClose = useCallback(() => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsClosing(false);
+            onClose();
+        }, 300);
+    }, [onClose]);
+
     const handleEscKey = useCallback((event) => {
         if (event.key === 'Escape') {
-            onClose();
+            handleClose();
         }
-    }, [onClose]);
+    }, [handleClose]);
 
     useEffect(() => {
         if (isVisible) {
@@ -27,12 +37,18 @@ const TimeOverlay = ({ isVisible, onClose }) => {
     if (!isVisible) return null;
 
     return (
-        <div className="time-overlay" onClick={onClose}>
-            <div className="time-overlay__content">
+        <div
+            className="time-overlay"
+            onClick={handleClose}
+        >
+            <div
+                className={`time-overlay__content ${isClosing ? 'time-overlay__content--closing' : ''}`}
+                style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}
+            >
                 {/* Close Button */}
                 <div className="time-overlay__close-button">
                     <ShineGlassButton
-                        onClick={onClose}
+                        onClick={handleClose}
                         theme="footer"
                         width={44}
                         height={44}

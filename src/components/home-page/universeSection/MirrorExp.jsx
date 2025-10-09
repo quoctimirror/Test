@@ -12,7 +12,13 @@ const MirrorExp = () => {
   const [showSpaceOverlay, setShowSpaceOverlay] = useState(false);
   const [showTimeOverlay, setShowTimeOverlay] = useState(false);
 
-  const handleSenseClick = () => {
+  const [clickOrigin, setClickOrigin] = useState({ x: 50, y: 50 }); // Default center
+
+  const handleSenseClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+    const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+    setClickOrigin({ x, y });
     setShowSenseOverlay(true);
   };
 
@@ -20,7 +26,11 @@ const MirrorExp = () => {
     setShowSenseOverlay(false);
   };
 
-  const handlePresenceClick = () => {
+  const handlePresenceClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+    const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+    setClickOrigin({ x, y });
     setShowPresenceOverlay(true);
   };
 
@@ -28,7 +38,11 @@ const MirrorExp = () => {
     setShowPresenceOverlay(false);
   };
 
-  const handleSpaceClick = () => {
+  const handleSpaceClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+    const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+    setClickOrigin({ x, y });
     setShowSpaceOverlay(true);
   };
 
@@ -36,7 +50,11 @@ const MirrorExp = () => {
     setShowSpaceOverlay(false);
   };
 
-  const handleTimeClick = () => {
+  const handleTimeClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+    const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+    setClickOrigin({ x, y });
     setShowTimeOverlay(true);
   };
 
@@ -134,18 +152,22 @@ const MirrorExp = () => {
       <SenseOverlay
         isVisible={showSenseOverlay}
         onClose={handleCloseSenseOverlay}
+        origin={clickOrigin}
       />
       <PresenceOverlay
         isVisible={showPresenceOverlay}
         onClose={handleClosePresenceOverlay}
+        origin={clickOrigin}
       />
       <SpaceOverlay
         isVisible={showSpaceOverlay}
         onClose={handleCloseSpaceOverlay}
+        origin={clickOrigin}
       />
       <TimeOverlay
         isVisible={showTimeOverlay}
         onClose={handleCloseTimeOverlay}
+        origin={clickOrigin}
       />
     </div>
   );

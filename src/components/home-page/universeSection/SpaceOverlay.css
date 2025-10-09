@@ -6,16 +6,12 @@
     width: 100%;
     height: 100vh;
     background-color: #000000;
-    background-image: url('/universeSection/tbl-dk-space-overlay.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
     z-index: 1000;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.15s ease-in-out;
     overflow: hidden;
 }
 
@@ -28,12 +24,17 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-image: url('/universeSection/tbl-dk-space-overlay.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: zoomIn 0.3s ease-out;
 }
 
 /* Top text section */
 .space-overlay__top-text {
     position: fixed;
-    top: calc(50% - 200px);
+    top: calc(50% - 220px);
     left: 50%;
     transform: translateX(-50%);
     width: 180.42px;
@@ -67,7 +68,7 @@
 /* StarlightEffect pointing up */
 .space-overlay__starlight-up {
     position: fixed;
-    top: calc(50% + 30px);
+    top: calc(50% + 10px);
     left: 50%;
     transform: translateX(-50%) rotate(180deg);
     z-index: 1000;
@@ -77,7 +78,7 @@
 /* Space title */
 .space-overlay__title {
     position: fixed;
-    top: calc(50% - 60px);
+    top: calc(50% - 40px);
     left: 50%;
     transform: translate(-50%, -50%);
     color: var(--White, #FFF);
@@ -194,38 +195,70 @@
     }
 }
 
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0);
+    }
+}
+
+.space-overlay__content--closing {
+    animation: zoomOut 0.3s ease-in forwards !important;
+}
+
 /* Tablet: 426-1023px */
 @media (max-width: 1023px) {
     .space-overlay {
-        background-size: contain;
+        animation: fadeIn 0.15s ease-in-out;
+    }
+
+    .space-overlay__content {
+        animation: zoomIn 0.3s ease-out;
     }
 
     /* Top text section - same as desktop positioning */
     .space-overlay__top-text {
-        top: calc(50% - 200px);
+        top: calc(50% - 220px);
         width: 180.42px;
     }
 
     /* StarlightEffect pointing up - same as desktop positioning */
     .space-overlay__starlight-up {
-        top: calc(50% + 30px);
+        top: calc(50% + 10px);
     }
 
     /* Space title - same as desktop positioning */
     .space-overlay__title {
-        top: calc(50% - 60px);
+        top: calc(50% - 30px);
         font-size: 36px;
         letter-spacing: -0.72px;
     }
 
     /* StarlightEffect pointing down - same as desktop positioning */
     .space-overlay__starlight-down {
-        top: calc(50% - 80px);
+        top: calc(50% - 60px);
     }
 
     /* Bottom text section - same as desktop positioning */
     .space-overlay__bottom-text {
-        top: calc(50% + 100px);
+        top: calc(50% + 110px);
         width: 179.424px;
         height: 67.537px;
     }
@@ -236,38 +269,96 @@
 /* Mobile: 0-425px */
 @media (max-width: 425px) {
     .space-overlay {
-        background-image: url('/universeSection/mb-space-overlay.png');
-        background-size: cover;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.15s ease-in-out;
     }
 
-    .space-overlay__title {
-        font-size: 32px;
-        letter-spacing: -0.64px;
+    .space-overlay__content {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0;
+        background-image: url('/universeSection/mb-space-overlay.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        animation: zoomIn 0.3s ease-out;
     }
 
     /* Top text section - mobile positioning */
     .space-overlay__top-text {
-        top: calc(50% - 200px);
-        width: 90%;
-        max-width: 180px;
+        position: absolute;
+        top: calc(50% - 220px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 44px;
+        text-align: justify;
     }
 
-    /* StarlightEffect pointing up - mobile positioning */
-    .space-overlay__starlight-up {
-        top: calc(50% + 20px);
+    .space-overlay__top-line span {
+        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+        font-size: 10px;
+        line-height: 100%;
     }
 
-    /* StarlightEffect pointing down - mobile positioning */
+    /* StarlightEffect pointing down - trên chữ Space */
     .space-overlay__starlight-down {
-        top: calc(50% - 70px);
+        position: absolute;
+        top: calc(50% - 50px);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Chữ Space - giữa màn hình */
+    .space-overlay__title {
+        position: absolute;
+        top: calc(50% - 20px);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 32px;
+        letter-spacing: -0.64px;
+    }
+
+    /* StarlightEffect pointing up - dưới chữ Space */
+    .space-overlay__starlight-up {
+        position: absolute;
+        top: calc(50% + 20px);
+        left: 50%;
+        transform: translateX(-50%) rotate(180deg);
     }
 
     /* Bottom text section - mobile positioning */
     .space-overlay__bottom-text {
-        top: calc(50% + 100px);
-        width: 90%;
-        max-width: 180px;
+        position: absolute;
+        top: calc(50% + 130px);
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        width: 145px;
+        height: 55px;
+        flex-direction: column;
+        justify-content: flex-end;
+        flex-shrink: 0;
+        text-align: justify;
     }
 
-    /* Close button already visible from mobile first approach */
+    .space-overlay__bottom-line span {
+        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+        font-size: 10px;
+        line-height: 100%;
+    }
+
+    /* Close button */
+    .space-overlay__close-button {
+        position: fixed;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }

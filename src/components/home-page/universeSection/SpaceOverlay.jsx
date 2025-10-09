@@ -1,14 +1,24 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import './SpaceOverlay.css';
 import StarlightEffect from './StarlightEffect';
 import ShineGlassButton from '../../common/button/ShineGlassButton';
 
-const SpaceOverlay = ({ isVisible, onClose }) => {
+const SpaceOverlay = ({ isVisible, onClose, origin }) => {
+    const [isClosing, setIsClosing] = useState(false);
+
+    const handleClose = useCallback(() => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsClosing(false);
+            onClose();
+        }, 300);
+    }, [onClose]);
+
     const handleEscKey = useCallback((event) => {
         if (event.key === 'Escape') {
-            onClose();
+            handleClose();
         }
-    }, [onClose]);
+    }, [handleClose]);
 
     useEffect(() => {
         if (isVisible) {
@@ -27,12 +37,18 @@ const SpaceOverlay = ({ isVisible, onClose }) => {
     if (!isVisible) return null;
 
     return (
-        <div className="space-overlay" onClick={onClose}>
-            <div className="space-overlay__content">
+        <div
+            className="space-overlay"
+            onClick={handleClose}
+        >
+            <div
+                className={`space-overlay__content ${isClosing ? 'space-overlay__content--closing' : ''}`}
+                style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}
+            >
                 {/* Close Button */}
                 <div className="space-overlay__close-button">
                     <ShineGlassButton
-                        onClick={onClose}
+                        onClick={handleClose}
                         theme="footer"
                         width={44}
                         height={44}
@@ -68,11 +84,11 @@ const SpaceOverlay = ({ isVisible, onClose }) => {
                     </div>
                 </div>
                 <div className="space-overlay__starlight-up">
-                    <StarlightEffect direction="falling" height={120} />
+                    <StarlightEffect direction="falling" height={100} />
                 </div>
                 <h2 className="space-overlay__title heading2--no-margin">Space</h2>
                 <div className="space-overlay__starlight-down">
-                    <StarlightEffect direction="falling" height={120} />
+                    <StarlightEffect direction="falling" height={100} />
                 </div>
                 <div className="space-overlay__bottom-text">
                     <div className="space-overlay__bottom-line">

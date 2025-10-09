@@ -25,7 +25,7 @@
 /* Luxury text styling */
 .mirror-exp__luxury-text {
   position: absolute;
-  top: 0px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   width: 345px;
@@ -387,7 +387,7 @@
   /* 50% - radius * sin(45°) = 50% - 132px */
   left: calc(50% + 120px);
   /* 50% + radius * cos(45°) = 50% + 132px + 10px adjustment */
-  width: 36px;
+  width: 45px;
   height: auto;
   transform: translate(-50%, -50%);
   pointer-events: auto;
@@ -400,10 +400,10 @@
 
 .mirror-exp__heart-senses::after {
   content: "";
-  width: 36px;
-  height: 36px;
+  width: 45px;
+  height: 45px;
   background-image: url("/universeSection/heart-senses.png");
-  background-size: 36px 36px;
+  background-size: 45px 45px;
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -427,7 +427,7 @@
   /* 50% - radius * sin(135°) = 50% - 110px */
   left: calc(50% - 110px - 10px);
   /* 50% + radius * cos(135°) = 50% - 110px */
-  width: 36px;
+  width: 45px;
   height: auto;
   transform: translate(-50%, -50%);
   pointer-events: auto;
@@ -440,10 +440,10 @@
 
 .mirror-exp__circle-presence::after {
   content: "";
-  width: 36px;
-  height: 36px;
+  width: 45px;
+  height: 45px;
   background-image: url("/universeSection/circle-presence.png");
-  background-size: 36px 36px;
+  background-size: 45px 45px;
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -467,7 +467,7 @@
   /* 50% - radius * sin(225°) = 50% + 126 * 0.707 = 50% + 89px - 10px adjustment */
   left: calc(50% - 89px);
   /* 50% + radius * cos(225°) = 50% + 126 * (-0.707) = 50% - 89px */
-  width: 28px;
+  width: 30px;
   height: auto;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -480,10 +480,10 @@
 
 .mirror-exp__droplet-time::after {
   content: "";
-  width: 28px;
-  height: 42px;
+  width: 30px;
+  height: 46px;
   background-image: url("/universeSection/droplet-time.png");
-  background-size: 28px 42px;
+  background-size: 30px 46px;
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -507,7 +507,7 @@
   /* 50% - radius * sin(40°) = 50% + 100px - 10px adjustment */
   left: calc(50% + 119px);
   /* 50% + radius * cos(40°) = 50% + 119px */
-  width: 42px;
+  width: 52px;
   height: auto;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -520,10 +520,10 @@
 
 .mirror-exp__rect-space::after {
   content: "";
-  width: 42px;
-  height: 42px;
+  width: 52px;
+  height: 52px;
   background-image: url("/universeSection/rect-space.png");
-  background-size: 42px 42px;
+  background-size: 52px 52px;
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -574,12 +574,10 @@
   line-height: 120%;
   /* 19.2px */
   text-align: center;
-  background: linear-gradient(
-    227deg,
-    #000 -14.38%,
-    #ec3667 25.96%,
-    #f6f6f6 74.05%
-  );
+  background: linear-gradient(227deg,
+      #000 -14.38%,
+      #ec3667 25.96%,
+      #f6f6f6 74.05%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -616,12 +614,10 @@
     font-style: normal;
     font-weight: 400;
     line-height: 120%;
-    background: linear-gradient(
-      227deg,
-      #000 -14.38%,
-      #ec3667 25.96%,
-      #f6f6f6 74.05%
-    );
+    background: linear-gradient(227deg,
+        #000 -14.38%,
+        #ec3667 25.96%,
+        #f6f6f6 74.05%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -823,12 +819,10 @@
     font-weight: 400;
     line-height: 120%;
     text-align: center;
-    background: linear-gradient(
-      227deg,
-      #000 -14.38%,
-      #ec3667 25.96%,
-      #f6f6f6 74.05%
-    );
+    background: linear-gradient(227deg,
+        #000 -14.38%,
+        #ec3667 25.96%,
+        #f6f6f6 74.05%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
