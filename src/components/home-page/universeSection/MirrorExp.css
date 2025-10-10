@@ -584,7 +584,7 @@
 }
 
 /* Tablet: 426px-1023px */
-@media screen and (max-width: 1023px) {
+@media (min-width: 426px) and (max-width: 1023px) {
   .mirror-exp {
     overflow: hidden;
   }
@@ -623,11 +623,156 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* Update rotating layer0 size for tablet */
+  /* Layer 0 - 192x192px */
   .mirror-exp::before {
-    width: 132px;
-    height: 132px;
-    background-size: 132px 132px;
+    width: 192px;
+    height: 192px;
+    background-size: 192px 192px;
+  }
+
+  /* Layer 1 - 288x288px */
+  .mirror-exp::after {
+    width: 288px;
+    height: 288px;
+    background-size: 288px 288px;
+  }
+
+  /* Layer 2 - 384x384px */
+  .mirror-exp__layer2 {
+    width: 384px;
+    height: 384px;
+    background-size: 384px 384px;
+  }
+
+  /* Layer 3 - 480x480px */
+  .mirror-exp__layer3 {
+    width: 480px;
+    height: 480px;
+    background-size: 480px 480px;
+  }
+
+  /* Layer 4 - 576x576px */
+  .mirror-exp__layer4 {
+    width: 576px;
+    height: 576px;
+    background-size: 576px 576px;
+  }
+
+  /* Layer 5 - 672x672px */
+  .mirror-exp__layer5 {
+    width: 672px;
+    height: 672px;
+    background-size: 672px 672px;
+  }
+
+  /* Meteoroid orbit containers */
+  .mirror-exp__meteoroid-orbit {
+    width: 288px;
+    height: 288px;
+  }
+
+  .mirror-exp__meteoroid-orbit-layer2 {
+    width: 384px;
+    height: 384px;
+  }
+
+  .mirror-exp__meteoroid-orbit-layer4 {
+    width: 576px;
+    height: 576px;
+  }
+
+  /* Meteoroid positions on layer4 (radius 288px) */
+  .mirror-exp__meteoroid-layer4-120deg {
+    top: calc(50% - 249px);
+    left: calc(50% - 144px);
+  }
+
+  .mirror-exp__meteoroid-layer4-240deg {
+    top: calc(50% + 249px);
+    left: calc(50% - 144px);
+  }
+
+  /* Planet elements positions */
+  /* Heart-senses at 45° on layer2 (radius 192px) */
+  .mirror-exp__heart-senses {
+    top: calc(50% - 136px);
+    left: calc(50% + 145px);
+  }
+
+  /* Circle-presence at 135° on layer3 (radius 240px) */
+  .mirror-exp__circle-presence {
+    top: calc(50% - 230px);
+    left: calc(50% - 100px);
+  }
+
+  /* Droplet-time at 225° on layer2 (radius 192px) */
+  .mirror-exp__droplet-time {
+    top: calc(50% + 120px);
+    left: calc(50% - 136px);
+  }
+
+  /* Rect-space at ~40° on layer3 (radius 240px) */
+  .mirror-exp__rect-space {
+    top: calc(50% + 138px);
+    left: calc(50% + 183px);
+  }
+
+  /* Heart-senses icon size for tablet - 50x50px */
+  .mirror-exp__heart-senses {
+    width: 50px;
+    height: auto;
+  }
+
+  .mirror-exp__heart-senses::after {
+    width: 50px;
+    height: 50px;
+    background-size: 50px 50px;
+  }
+
+  /* Text elements font size for tablet - 14px */
+  .mirror-exp__sense-text,
+  .mirror-exp__presence-text,
+  .mirror-exp__time-text,
+  .mirror-exp__space-text {
+    font-size: 14px;
+  }
+
+  /* Circle-presence icon size for tablet - 45x45px */
+  .mirror-exp__circle-presence {
+    width: 45px;
+    height: auto;
+  }
+
+  .mirror-exp__circle-presence::after {
+    width: 45px;
+    height: 45px;
+    background-size: 45px 45px;
+  }
+
+  /* Droplet-time icon size for tablet - 33x50px */
+  .mirror-exp__droplet-time {
+    width: 33px;
+    height: auto;
+  }
+
+  .mirror-exp__droplet-time::after {
+    width: 33px;
+    height: 50px;
+    aspect-ratio: 33/50;
+    background-size: 33px 50px;
+  }
+
+  /* Rect-space icon size for tablet - 57x57px */
+  .mirror-exp__rect-space {
+    width: 57px;
+    height: auto;
+  }
+
+  .mirror-exp__rect-space::after {
+    width: 57px;
+    height: 57px;
+    aspect-ratio: 1/1;
+    background-size: 57px 57px;
   }
 }
 

@@ -137,7 +137,7 @@
 /* Close Button - Visible on mobile/tablet, hidden on desktop */
 .space-overlay__close-button {
     position: fixed;
-    bottom: calc(20% - 120px);
+    bottom: calc(20% - 140px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 1003;
@@ -146,10 +146,65 @@
     /* Show by default for mobile first */
 }
 
-/* Desktop: Hide close button */
+/* Desktop: Show close button */
 @media (min-width: 1024px) {
     .space-overlay__close-button {
-        display: none;
+        display: block;
+    }
+
+    /* Title - Heading 2 style for desktop */
+    .space-overlay__title {
+        font-size: 60px;
+        letter-spacing: -1.2px;
+    }
+
+    /* Top text position for desktop */
+    .space-overlay__top-text {
+        top: calc(50% - 270px);
+        width: 187px;
+        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+        text-align: justify;
+        /* bodytext-6 no margin */
+        font-family: "BT Beau Sans";
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+    }
+
+    /* Bottom text position for desktop */
+    .space-overlay__bottom-text {
+        top: calc(50% + 160px);
+        color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+        text-align: justify;
+        /* bodytext-6 no margin */
+        font-family: "BT Beau Sans";
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+    }
+
+    /* Text elements font-size for desktop */
+    .space-overlay__top-line span,
+    .space-overlay__bottom-line span {
+        font-size: 14px;
+    }
+
+    /* Rect-space icon for desktop */
+    .space-overlay__rect-space {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        background-image: url('/universeSection/dk-rect-space.png');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        pointer-events: none;
     }
 }
 
@@ -172,6 +227,10 @@
             rgba(255, 255, 255, 0.5) 0%,
             rgba(255, 255, 255, 0.5) 100%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) !important;
+}
+
+.space-overlay__close-btn:hover img {
+    filter: brightness(0) saturate(100%) contrast(200%);
 }
 
 /* Animations */
@@ -224,7 +283,7 @@
 }
 
 /* Tablet: 426-1023px */
-@media (max-width: 1023px) {
+@media (min-width: 426px) and (max-width: 1023px) {
     .space-overlay {
         animation: fadeIn 0.15s ease-in-out;
     }
@@ -233,10 +292,14 @@
         animation: zoomIn 0.3s ease-out;
     }
 
-    /* Top text section - same as desktop positioning */
+    /* Top text section for tablet */
     .space-overlay__top-text {
-        top: calc(50% - 220px);
+        top: calc(50% - 280px);
         width: 180.42px;
+    }
+
+    .space-overlay__top-line span {
+        font-size: 12px;
     }
 
     /* StarlightEffect pointing up - same as desktop positioning */
@@ -256,14 +319,25 @@
         top: calc(50% - 60px);
     }
 
-    /* Bottom text section - same as desktop positioning */
+    /* Bottom text section for tablet */
     .space-overlay__bottom-text {
-        top: calc(50% + 110px);
+        top: calc(50% + 170px);
         width: 179.424px;
         height: 67.537px;
     }
 
+    .space-overlay__bottom-line span {
+        font-size: 12px;
+    }
+
     /* Close button already visible from mobile first approach */
+    /* Close button */
+    .space-overlay__close-button {
+        position: fixed;
+        bottom: calc(20% - 180px);
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 /* Mobile: 0-425px */
@@ -293,7 +367,7 @@
     /* Top text section - mobile positioning */
     .space-overlay__top-text {
         position: absolute;
-        top: calc(50% - 220px);
+        top: calc(50% - 210px);
         left: 50%;
         transform: translateX(-50%);
         width: 150px;
@@ -310,7 +384,7 @@
     /* StarlightEffect pointing down - trên chữ Space */
     .space-overlay__starlight-down {
         position: absolute;
-        top: calc(50% - 50px);
+        top: calc(50% - 80px);
         left: 50%;
         transform: translateX(-50%);
     }
@@ -328,7 +402,7 @@
     /* StarlightEffect pointing up - dưới chữ Space */
     .space-overlay__starlight-up {
         position: absolute;
-        top: calc(50% + 20px);
+        top: calc(50% + 45px);
         left: 50%;
         transform: translateX(-50%) rotate(180deg);
     }

@@ -65,7 +65,7 @@ const TimeOverlay = ({ isVisible, onClose, origin }) => {
 
                 <h2 className="time-overlay__title heading2--no-margin">Time</h2>
                 <div className="time-overlay__starlight-down">
-                    <StarlightEffect direction="falling" height={140} />
+                    <StarlightEffect direction="falling" height={160} />
                 </div>
                 <div className="time-overlay__bottom-text">
                     <span className="bodytext-6--no-margin">

@@ -24,7 +24,7 @@
     justify-content: center;
     align-items: center;
     background-image: url('/universeSection/tbl-dk-presence-overlay.png');
-    background-size: auto 1000px;
+    /* background-size: 946px 946px; */
     background-position: center;
     background-repeat: no-repeat;
     animation: zoomIn 0.3s ease-out;
@@ -32,7 +32,7 @@
 
 .presence-overlay__title {
     position: fixed;
-    top: calc(50% - 180px);
+    top: calc(50% - 140px);
     left: 50%;
     transform: translate(-50%, -50%);
     color: var(--White, #FFF);
@@ -48,7 +48,7 @@
 
 .presence-overlay__starlight {
     position: fixed;
-    top: calc(50% - 200px);
+    top: calc(50% - 220px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
@@ -60,7 +60,7 @@
     top: calc(50% + 70px);
     left: 50%;
     transform: translateX(-50%);
-    width: 335px;
+    width: 378px;
     display: flex;
     justify-content: space-between;
     z-index: 1002;
@@ -79,10 +79,10 @@
 
 .presence-overlay__journey-text {
     position: fixed;
-    top: calc(50% + 80px);
+    top: calc(50% + 84px);
     left: 50%;
     transform: translateX(-50%);
-    width: 305px;
+    width: 344px;
     display: flex;
     justify-content: space-between;
     z-index: 1002;
@@ -110,6 +110,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 280px;
 }
 
 .presence-overlay__story-text div {
@@ -126,7 +127,7 @@
 /* Close Button - Visible on mobile/tablet, hidden on desktop */
 .presence-overlay__close-button {
     position: fixed;
-    bottom: calc(20% - 50px);
+    bottom: calc(20% - 80px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 1003;
@@ -135,15 +136,44 @@
     /* Show by default for mobile first */
 }
 
-/* Desktop: Hide close button */
+/* Desktop: Show close button */
 @media (min-width: 1024px) {
     .presence-overlay__close-button {
-        display: none;
+        display: block;
+    }
+
+    /* Title - Heading 2 style for desktop */
+    .presence-overlay__title {
+        font-size: 60px;
+        letter-spacing: -1.2px;
+    }
+
+    /* Text elements font-size for desktop */
+    .presence-overlay__milestone-text span,
+    .presence-overlay__journey-text span,
+    .presence-overlay__story-text div {
+        font-size: 14px;
     }
 
     /* StarlightEffect height for desktop */
     .presence-overlay__starlight .universe-star-container-center svg {
         height: 250px !important;
+    }
+
+    /* Circle-presence icon for desktop */
+    .presence-overlay__circle-presence {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        background-image: url('/universeSection/dk-circle-presence.png');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        pointer-events: none;
     }
 }
 
@@ -166,6 +196,10 @@
             rgba(255, 255, 255, 0.5) 0%,
             rgba(255, 255, 255, 0.5) 100%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) !important;
+}
+
+.presence-overlay__close-btn:hover img {
+    filter: brightness(0) saturate(100%) contrast(200%);
 }
 
 /* Animation */
@@ -208,22 +242,22 @@
 }
 
 /* Tablet: 426-1023px */
-@media (min-width: 426px) {
+@media (min-width: 426px) and (max-width: 1023px) {
     .presence-overlay {
         animation: fadeIn 0.15s ease-in-out;
     }
 
     .presence-overlay__content {
-        background-size: 792px 792px;
+        background-size: 690px 690px;
         animation: zoomIn 0.3s ease-out;
     }
 
     .presence-overlay__title {
-        top: calc(50% - 140px);
+        top: calc(50% - 100px);
     }
 
     .presence-overlay__starlight {
-        top: calc(50% - 100px);
+        top: calc(50% - 110px);
     }
 
     .presence-overlay__starlight .universe-star-container-center {
@@ -236,19 +270,19 @@
     }
 
     .presence-overlay__milestone-text {
-        top: calc(50% + 40px);
+        top: calc(50% + 20px);
         width: 90%;
         max-width: 300px;
     }
 
     .presence-overlay__journey-text {
-        top: calc(50% + 52px);
+        top: calc(50% + 32px);
         width: 90%;
         max-width: 280px;
     }
 
     .presence-overlay__story-text {
-        top: calc(50% + 82px);
+        top: calc(50% + 62px);
         width: 90%;
         max-width: 320px;
     }
@@ -320,7 +354,7 @@
     }
 
     .presence-overlay__story-text {
-        top: calc(50% + 100px);
+        top: calc(50% + 120px);
         width: 228.667px;
         height: 68.6px;
     }
@@ -337,6 +371,6 @@
 
     /* Close button position for mobile */
     .presence-overlay__close-button {
-        bottom: 8%;
+        bottom: calc(20% - 150px)
     }
 }

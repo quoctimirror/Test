@@ -156,7 +156,10 @@ const SenseOverlay = ({ isVisible, onClose, origin }) => {
                 >
                     <span className="bodytext1--no-margin">Touch</span>
                 </div>
-                <div className={`sense-overlay__description ${selectedSense ? `sense-overlay__description--${selectedSense}` : ''}`}>
+                <div
+                    key={selectedSense}
+                    className={`sense-overlay__description ${selectedSense ? `sense-overlay__description--${selectedSense}` : ''}`}
+                >
                     {renderDescription()}
                 </div>
             </div>

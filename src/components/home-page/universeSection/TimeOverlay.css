@@ -51,7 +51,7 @@
 /* StarlightEffect pointing down */
 .time-overlay__starlight-down {
     position: fixed;
-    top: calc(50% - 110px);
+    top: calc(50% - 90px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
@@ -62,7 +62,7 @@
 /* Bottom text section */
 .time-overlay__bottom-text {
     position: fixed;
-    top: calc(50% + 120px);
+    top: calc(50% + 180px);
     left: 50%;
     transform: translateX(-50%);
     height: 72px;
@@ -90,10 +90,37 @@
     /* Show by default for mobile first */
 }
 
-/* Desktop: Hide close button */
+/* Desktop: Show close button */
 @media (min-width: 1024px) {
     .time-overlay__close-button {
-        display: none;
+        display: block;
+    }
+
+    /* Title - Heading 2 style for desktop */
+    .time-overlay__title {
+        font-size: 60px;
+        letter-spacing: -1.2px;
+    }
+
+    /* Bottom text font-size for desktop */
+    .time-overlay__bottom-text {
+        font-size: 14px;
+    }
+
+    /* Droplet-time icon for desktop */
+    .time-overlay__droplet-time {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        background-image: url('/universeSection/dk-droplet-time.png');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        pointer-events: none;
     }
 }
 
@@ -116,6 +143,10 @@
             rgba(255, 255, 255, 0.5) 0%,
             rgba(255, 255, 255, 0.5) 100%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) !important;
+}
+
+.time-overlay__close-btn:hover img {
+    filter: brightness(0) saturate(100%) contrast(200%);
 }
 
 /* Animations */
@@ -168,26 +199,52 @@
 }
 
 /* Tablet: 426-1023px */
-@media (max-width: 1023px) and (min-width: 426px) {
+@media (min-width: 426px) and (max-width: 1023px) {
     .time-overlay {
         animation: fadeIn 0.15s ease-in-out;
     }
 
-    .time-overlay__content {
+    /* .time-overlay__content {
+        background-image: url('/universeSection/tbl-dk-time-overlay.png');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
         animation: zoomIn 0.3s ease-out;
-    }
+    } */
 
-    /* Same positioning as desktop */
+    /* Time title - copy from desktop */
     .time-overlay__title {
-        top: calc(50% - 100px);
+        position: fixed;
+        top: calc(50% - 60px);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: var(--White, #FFF);
+        text-align: center;
+        font-family: "Saol Display";
         font-size: 36px;
+        font-style: italic;
+        font-weight: 300;
+        line-height: 90%;
         letter-spacing: -0.72px;
+        z-index: 1002;
     }
 
+    /* StarlightEffect pointing down - copy from desktop */
+    .time-overlay__starlight-down {
+        position: fixed;
+        top: calc(50% - 60px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        pointer-events: none;
+    }
 
+    /* Bottom text section - copy from desktop */
     .time-overlay__bottom-text {
-        top: calc(50% + 100px);
-        width: 300px;
+        position: fixed;
+        top: calc(50% + 200px);
+        left: 50%;
+        transform: translateX(-50%);
         height: 72px;
         flex-shrink: 0;
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
@@ -197,10 +254,22 @@
         font-style: normal;
         font-weight: 400;
         line-height: 100%;
-        /* 12px */
+        z-index: 1002;
+        pointer-events: none;
     }
 
     /* Close button already visible from mobile first approach */
+    /* Close Button - Visible on mobile/tablet, hidden on desktop */
+    .time-overlay__close-button {
+        position: fixed;
+        bottom: calc(20% - 180px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1003;
+        pointer-events: auto;
+        display: block;
+        /* Show by default for mobile first */
+    }
 }
 
 /* Mobile: 0-425px */

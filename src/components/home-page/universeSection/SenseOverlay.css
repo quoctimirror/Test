@@ -77,8 +77,8 @@
 .sense-overlay__starlight-8h {
     position: fixed;
     top: calc(50% - 25px);
-    left: calc(50% + 4px);
-    transform: translateX(-50%) rotate(70deg);
+    left: calc(50% - 20px);
+    transform: translateX(-50%) rotate(71deg);
     transform-origin: center top;
     z-index: 1000;
     pointer-events: none;
@@ -97,7 +97,7 @@
 .sense-overlay__starlight-4h {
     position: fixed;
     top: calc(50% - 15px);
-    left: calc(50% - 5px);
+    left: calc(50% + 10px);
     transform: translateX(-50%) rotate(280deg);
     transform-origin: center top;
     z-index: 1000;
@@ -107,7 +107,7 @@
 /* Text Elements - Desktop positions */
 .sense-overlay__sound-text {
     position: fixed;
-    top: calc(50% + 64px);
+    top: calc(50% + 90px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
@@ -126,8 +126,8 @@
 
 .sense-overlay__taste-text {
     position: fixed;
-    top: calc(50% + 0px);
-    left: calc(50% + 140px);
+    top: calc(50% + 20px);
+    left: calc(50% + 160px);
     transform: translateX(-50%);
     z-index: 1000;
     pointer-events: none;
@@ -145,8 +145,8 @@
 
 .sense-overlay__scent-text {
     position: fixed;
-    top: calc(50% + 0px);
-    left: calc(50% - 140px);
+    top: calc(50% + 20px);
+    left: calc(50% - 160px);
     transform: translateX(-50%);
     z-index: 1000;
     pointer-events: none;
@@ -164,7 +164,7 @@
 
 .sense-overlay__sight-text {
     position: fixed;
-    top: calc(50% - 135px);
+    top: calc(50% - 138px);
     left: calc(50% - 80px);
     transform: translateX(-50%);
     z-index: 1000;
@@ -183,7 +183,7 @@
 
 .sense-overlay__touch-text {
     position: fixed;
-    top: calc(50% - 135px);
+    top: calc(50% - 138px);
     left: calc(50% + 100px);
     transform: translateX(-50%);
     z-index: 1000;
@@ -208,7 +208,7 @@
 /* Close Button - Visible on mobile/tablet, hidden on desktop */
 .sense-overlay__close-button {
     position: fixed;
-    bottom: 20%;
+    bottom: calc(20% - 20px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 1003;
@@ -217,10 +217,10 @@
     /* Show by default for mobile first */
 }
 
-/* Desktop: Hide close button */
+/* Desktop: Show close button */
 @media (min-width: 1024px) {
     .sense-overlay__close-button {
-        display: none;
+        display: block;
     }
 }
 
@@ -243,6 +243,10 @@
             rgba(255, 255, 255, 0.5) 0%,
             rgba(255, 255, 255, 0.5) 100%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)) !important;
+}
+
+.sense-overlay__close-btn:hover img {
+    filter: brightness(0) saturate(100%) contrast(200%);
 }
 
 /* Animations */
@@ -290,23 +294,61 @@
     }
 }
 
+@keyframes slideUpDescription {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
 .sense-overlay__content--closing {
     animation: zoomOut 0.3s ease-in forwards !important;
 }
 
 /* Tablet: 426-1023px */
-@media (max-width: 1023px) and (min-width: 426px) {
+@media (min-width: 426px) and (max-width: 1023px) {
     .sense-overlay {
         animation: fadeIn 0.15s ease-in-out;
     }
 
-    .sense-overlay__content {
-        background-size: 780px 780px;
+    /* .sense-overlay__content {
+        background-image: url('/universeSection/tbl-dk-sense-overlay.png');
+        background-size: 706px 690px;
         animation: zoomIn 0.3s ease-out;
-    }
+    } */
 
     .sense-overlay__title {
         top: calc(50% - 30px);
+    }
+
+    /* Starlight Effects positions for tablet */
+    .sense-overlay__starlight {
+        top: calc(50% - 50px);
+    }
+
+    .sense-overlay__starlight-10h {
+        top: calc(50% - 5px);
+        left: calc(50% + 5px);
+    }
+
+    .sense-overlay__starlight-8h {
+        top: calc(50% - 25px);
+        left: calc(50% + 4px);
+    }
+
+    .sense-overlay__starlight-2h {
+        top: calc(50% - 7px);
+        left: 50%;
+    }
+
+    .sense-overlay__starlight-4h {
+        top: calc(50% - 18px);
+        left: calc(50% - 12px);
     }
 
     /* Description text - above close button */
@@ -321,6 +363,7 @@
         text-align: center;
         z-index: 1002;
         pointer-events: none;
+        animation: slideUpDescription 0.4s ease-out;
     }
 
     .sense-overlay__description p {
@@ -351,6 +394,15 @@
 
     .sense-overlay__close-button {
         bottom: 20%;
+    }
+
+    /* Text elements font size for tablet - 18px */
+    .sense-overlay__sight-text span,
+    .sense-overlay__touch-text span,
+    .sense-overlay__scent-text span,
+    .sense-overlay__taste-text span,
+    .sense-overlay__sound-text span {
+        font-size: 18px;
     }
 
     /* Close button already visible from mobile first approach */
@@ -452,6 +504,7 @@
         text-align: center;
         z-index: 1002;
         pointer-events: none;
+        animation: slideUpDescription 0.4s ease-out;
     }
 
     .sense-overlay__description p {
@@ -470,6 +523,24 @@
 
 /* Desktop: 1024px+ */
 @media (min-width: 1024px) {
+
+    /* Title - Heading 2 style for desktop */
+    .sense-overlay__title {
+        font-size: 60px;
+        letter-spacing: -1.2px;
+    }
+
+    /* Text labels - Bodytext 1 style for desktop */
+    .sense-overlay__sight-text span,
+    .sense-overlay__touch-text span,
+    .sense-overlay__scent-text span,
+    .sense-overlay__taste-text span,
+    .sense-overlay__sound-text span {
+        /* TL_Bodytext 1 (BT_18px_regular) */
+        font-size: 18px;
+        line-height: 120%;
+        /* 21.6px */
+    }
 
     /* Make sense text clickable on desktop */
     .sense-overlay__sound-text,
@@ -500,12 +571,17 @@
         text-align: center;
         z-index: 1002;
         pointer-events: none;
+        animation: slideUpDescription 0.4s ease-out;
     }
 
     .sense-overlay__description p {
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+        text-align: center;
+        font-family: "BT Beau Sans";
         font-size: 14px;
-        line-height: 1.0;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
         margin-bottom: 4px;
     }
 
@@ -533,5 +609,21 @@
     .sense-overlay__description--taste {
         width: 420px;
         height: 69px;
+    }
+
+    /* Heart-sense icon for desktop */
+    .sense-overlay__heart-sense {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        background-image: url('/universeSection/dk-heart-sense.png');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        pointer-events: none;
     }
 }
