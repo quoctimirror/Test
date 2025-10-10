@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { productsAPI, handleAPIError } from "@services/api";
+import { ROUTES } from "@/constants/routes";
 
 const VendorStatistics = ({ vendorInfo }) => {
   const [stats, setStats] = useState({
@@ -174,10 +175,10 @@ const VendorStatistics = ({ vendorInfo }) => {
         </div>
         <div className="vendor-card-body">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-            <button 
+            <button
               className="admin-button admin-button-primary"
               style={{ padding: "1rem", fontSize: "16px" }}
-              onClick={() => window.location.href = "/dashboard/admin"}
+              onClick={() => window.location.href = ROUTES.ADMIN_DASHBOARD}
             >
               🏢 View Admin Dashboard
             </button>

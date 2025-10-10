@@ -12,7 +12,7 @@
   isolation: isolate;
   /* Reset any inherited styles */
   position: relative;
-  z-index: auto;
+  z-index: 10; /* Above slogan-section (z-index: 0) */
 }
 
 /* Team Members Carousel */

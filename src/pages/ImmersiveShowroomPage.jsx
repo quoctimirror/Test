@@ -1,15 +1,28 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, lazy, Suspense } from "react";
 import Logo from "@assets/images/Logo.svg";
 import SoundIcon from "@assets/images/button/sound.svg";
 import ArrowButton from "@assets/images/button/arrow-button.svg";
-import MirrorIntroduce from "@components/home-page/mirrrorIntroduce/MirrorIntroduce";
-import ScrollEffect from "@components/home-page/scrollEffect/ScrollEffect";
-import BrandPillars from "@components/home-page/brandPillars/BrandPillars";
-import Lumex91 from "@components/home-page/lumex91/Lumex91";
-import UniverseSection from "@components/home-page/universeSection/MirrorExp";
-import FutureDiamond from "@components/home-page/futureDiamond/FutureDiamond";
-import IntroSubmit from "@components/submit/intro-submit/IntroSubmit";
-import ImmersiveShowroom from "@components/home-page/immersiveShowroom/ImmersiveShowroom";
+
+// Lazy load heavy components
+const ScrollEffect = lazy(() =>
+  import("@components/home-page/scrollEffect/ScrollEffect")
+);
+const BrandPillars = lazy(() =>
+  import("@components/home-page/brandPillars/BrandPillars")
+);
+const Lumex91 = lazy(() => import("@components/home-page/lumex91/Lumex91"));
+const UniverseSection = lazy(() =>
+  import("@components/home-page/universeSection/MirrorExp")
+);
+const FutureDiamond = lazy(() =>
+  import("@components/home-page/futureDiamond/FutureDiamond")
+);
+const IntroSubmit = lazy(() =>
+  import("@components/submit/intro-submit/IntroSubmit")
+);
+const ImmersiveShowroom = lazy(() =>
+  import("@components/home-page/immersiveShowroom/ImmersiveShowroom")
+);
 
 const ImmersiveShowroomPage = () => {
   const finalGradientRef = useRef(null);
@@ -87,19 +100,27 @@ const ImmersiveShowroomPage = () => {
 
       {/* <MirrorIntroduce /> */}
 
-      <ScrollEffect />
+      <Suspense
+        fallback={
+          <div style={{ minHeight: "100vh", background: "#000" }}>
+            Loading...
+          </div>
+        }
+      >
+        <ScrollEffect />
 
-      <FutureDiamond />
+        <FutureDiamond />
 
-      <Lumex91 />
+        <Lumex91 />
 
-      <BrandPillars />
+        <BrandPillars />
 
-      <UniverseSection />
+        <UniverseSection />
 
-      <ImmersiveShowroom />
+        <ImmersiveShowroom />
 
-      <IntroSubmit />
+        <IntroSubmit />
+      </Suspense>
     </>
   );
 };

@@ -6,6 +6,7 @@ import { collectionsAPI } from "@services/api";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Section4CollectionDetail.css";
+import { ROUTES } from "@/constants/routes";
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -281,7 +282,7 @@ const Section4CollectionDetail = ({
   }, [products, loading]);
 
   const handleViewAllProducts = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/all-gems");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.ALL_GEMS);
   };
 
   return (

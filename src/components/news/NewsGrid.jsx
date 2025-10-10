@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import { getNewsDetailRoute } from "@/constants/routes";
 import "./NewsGrid.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
@@ -102,7 +103,7 @@ const NewsGrid = () => {
     if (item.id === 1) {
       await optimizedTransitionUtils.transitionToRoute(
         navigate,
-        "/news/new-cut"
+        getNewsDetailRoute("new-cut")
       );
     }
   };

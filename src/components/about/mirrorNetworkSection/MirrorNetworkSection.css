@@ -5,6 +5,7 @@
   background: #F6F6F6;
   position: relative;
   isolation: isolate;
+  contain: layout style paint;
 }
 
 .mirror-network-sticky-wrapper {
@@ -16,6 +17,17 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+
+  /* Performance optimizations */
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  will-change: transform;
+  isolation: isolate;
+  contain: layout style;
 }
 
 .mirror-network-content {
@@ -24,48 +36,63 @@
   padding: 0 40px;
   text-align: center;
   position: relative;
-  transform: translateY(50vh); /* Start from bottom */
+  transform: translateY(50vh) translateZ(0); /* Start from bottom + GPU */
   opacity: 0; /* Initially hidden */
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  contain: layout style;
 }
 
 /* Header */
 .mirror-network-header {
   margin-bottom: 12px;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .mirror-network-header .bodytext-3--no-margin {
   text-transform: uppercase;
-  /* Color controlled by JS */
+  color: #000;
 }
 
 /* Main Title */
 .mirror-network-title {
   margin-bottom: 60px;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.mirror-network-title .heading-1--no-margin {
+  color: #000;
 }
 
 /* Description */
 .mirror-network-description {
   max-width: 609px;
   margin: 0 auto;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .mirror-network-description .bodytext-1--no-margin {
   word-wrap: break-word;
   white-space: normal;
+  color: #000;
 }
-
-/* Description text color controlled by JS */
 
 /* Responsive Design */
 @media (max-width: 1200px) {
   .mirror-network-content {
     max-width: 900px;
     padding: 0 30px;
-  }
-
-  .mirror-network-title .heading-1--no-margin {
-    font-size: clamp(40px, 7vw, 100px);
   }
 }
 
@@ -81,10 +108,6 @@
   .mirror-network-title {
     margin-bottom: 60px;
   }
-
-  .mirror-network-title .heading-1--no-margin {
-    font-size: clamp(32px, 8vw, 60px);
-  }
 }
 
 @media (max-width: 480px) {
@@ -98,9 +121,5 @@
 
   .mirror-network-title {
     margin-bottom: 40px;
-  }
-
-  .mirror-network-title .heading-1--no-margin {
-    font-size: clamp(24px, 10vw, 40px);
   }
 }

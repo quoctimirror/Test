@@ -4,7 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SloganSection from "@components/about/sloganSection/SloganSection";
 import StartingPlaceSection from "@components/about/startingPlaceSection/StartingPlaceSection";
 import IntroBOD from "@components/about/introBOD/IntroBOD";
-import BODMember from "@components/about/BODMember/BODMember";
+import BODMemberV3 from "@components/about/BODMemberV3/BODMemberV3";
 import MirrorNetworkSection from "@components/about/mirrorNetworkSection/MirrorNetworkSection";
 import MirrorverseSection from "@components/about/mirrorverseSection/MirrorverseSection";
 import AtMirror from "@components/about/atMirror/AtMirror";
@@ -16,6 +16,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const AboutPage = () => {
   const setupScrollTriggers = () => {
+    // Kill existing triggers first
+    ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+
     let panels = gsap.utils.toArray(".panel");
 
     panels.forEach((panel) => {
@@ -25,12 +28,18 @@ const AboutPage = () => {
           panel.offsetHeight < window.innerHeight ? "top top" : "bottom bottom",
         pin: true,
         pinSpacing: false,
+        anticipatePin: 1, // Smooth pin when scrolling fast
+        invalidateOnRefresh: true, // Recalculate on refresh
+        fastScrollEnd: true, // Better fast scroll handling
       });
     });
   };
 
   useEffect(() => {
-    setupScrollTriggers();
+    // Small delay to ensure DOM is ready
+    const initTimeout = setTimeout(() => {
+      setupScrollTriggers();
+    }, 100);
 
     const handlePageTransitionComplete = () => {
       setTimeout(() => {
@@ -38,17 +47,24 @@ const AboutPage = () => {
       }, 150);
     };
 
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+
     window.addEventListener(
       "pageTransitionComplete",
       handlePageTransitionComplete
     );
+    window.addEventListener("resize", handleResize);
 
     return () => {
+      clearTimeout(initTimeout);
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
       window.removeEventListener(
         "pageTransitionComplete",
         handlePageTransitionComplete
       );
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -67,7 +83,7 @@ const AboutPage = () => {
       {/* </section> */}
 
       {/* <section className="panel"> */}
-      <BODMember />
+      <BODMemberV3 />
       {/* </section> */}
 
       <section className="panel">
@@ -86,9 +102,9 @@ const AboutPage = () => {
         <DiscoverSection />
       </section>
 
-      <section className="panel">
-        <SharedSection />
-      </section>
+      {/* <section className="panel"> */}
+      <SharedSection />
+      {/* </section> */}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import "@pages/servicesDetail.css";
 import ProductCareRepair from "./ProductCareRepair";
 import TradeInUpgrade from "./TradeInUpgrade";
 import ContactUs from "@components/contactUs/ContactUs";
+import { ROUTES } from "@/constants/routes";
 
 const ServicesDetailPage = () => {
   const [searchParams] = useSearchParams();
@@ -19,7 +20,7 @@ const ServicesDetailPage = () => {
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
-    navigate(`/services/detail?tab=${tabId}`, { replace: true });
+    navigate(`${ROUTES.SERVICES_DETAIL}?tab=${tabId}`, { replace: true });
   };
 
   const tabs = [

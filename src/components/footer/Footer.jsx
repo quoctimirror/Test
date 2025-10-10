@@ -4,6 +4,7 @@ import "./Footer.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import { ROUTES } from "@/constants/routes";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -18,72 +19,78 @@ const Footer = () => {
 
   const handleHomeClick = async (e) => {
     e.preventDefault();
-    if (window.location.pathname === "/") {
+    if (window.location.pathname === ROUTES.HOME) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.HOME);
   };
 
   const handleProductsClick = async (e) => {
     e.preventDefault();
-    if (window.location.pathname === "/collections") {
+    if (window.location.pathname === ROUTES.COLLECTIONS) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/collections");
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      ROUTES.COLLECTIONS
+    );
   };
 
   const handleServicesClick = async (e) => {
     e.preventDefault();
-    if (window.location.pathname === "/services") {
+    if (window.location.pathname === ROUTES.SERVICES) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/services");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.SERVICES);
   };
 
   const handleAboutClick = async (e) => {
     e.preventDefault();
-    if (window.location.pathname === "/about") {
+    if (window.location.pathname === ROUTES.ABOUT) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/about");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.ABOUT);
   };
 
   const handleNewsClick = async (e) => {
     e.preventDefault();
-    if (window.location.pathname === "/news") {
+    if (window.location.pathname === ROUTES.NEWS) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/news");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.NEWS);
   };
 
   const handleContactClick = async (e) => {
     e.preventDefault();
-    if (window.location.pathname === "/contact") {
+    if (window.location.pathname === ROUTES.CONTACT) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/contact");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.CONTACT);
   };
 
   const handleLocationClick = async (e) => {
     e.preventDefault();
-    if (window.location.pathname === "/locations") {
+    if (window.location.pathname === ROUTES.LOCATIONS) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/locations");
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      ROUTES.LOCATIONS
+    );
   };
 
   return (
@@ -155,11 +162,11 @@ const Footer = () => {
                       className="contact-link-button"
                       textClassName="bodytext-3--no-margin"
                     >
-                      support@mirrorfuturediamond.com
+                      info@mirrorfuturediamond.com
                     </UnderlineButton>
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a href="tel:+97.130.0938">
                     <UnderlineButton
                       className="contact-link-button"
@@ -168,9 +175,10 @@ const Footer = () => {
                       +97.130.0938
                     </UnderlineButton>
                   </a>
-                </li>
+                </li> */}
                 <li>
                   <UnderlineButton
+                    onClick={handleContactClick}
                     className="contact-link-button"
                     textClassName="bodytext-3--no-margin"
                   >
@@ -243,7 +251,9 @@ const Footer = () => {
           {/* Footer Bottom Left & Right - Inside footer-bottom */}
           <div className="footer-bottom-row">
             <div className="footer-bottom-left">
-              <p className="bodytext-3--no-margin">All rights reserved © 2025</p>
+              <p className="bodytext-3--no-margin">
+                All rights reserved © 2025
+              </p>
             </div>
 
             <div className="footer-bottom-right">

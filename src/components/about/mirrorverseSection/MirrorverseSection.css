@@ -4,6 +4,8 @@
   height: 300vh; /* Scroll height for animation */
   background: linear-gradient(180deg, rgba(246, 246, 246, 1) 0%, rgba(236, 54, 103, 1) 50%, rgba(0, 0, 0, 1) 100%);
   position: relative;
+  isolation: isolate;
+  contain: layout style paint;
 }
 
 .mirrorverse-sticky-wrapper {
@@ -15,42 +17,73 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+
+  /* Performance optimizations */
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  will-change: transform;
+  isolation: isolate;
+  contain: layout style;
 }
 
 .mirrorverse-content {
   width: 100%;
   text-align: center;
   position: relative;
-  transform: translateY(50vh); /* Start from bottom */
+  transform: translateY(50vh) translateZ(0); /* Start from bottom + GPU */
   opacity: 0; /* Initially hidden */
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  contain: layout style;
 }
 
 /* Header */
 .mirrorverse-header {
   margin-bottom: 12px;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .mirrorverse-header .bodytext-3--no-margin {
   text-transform: uppercase;
-  /* Color controlled by JS */
+  color: #fff;
 }
 
 /* Main Title */
 .mirrorverse-title {
   margin-bottom: 60px;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.mirrorverse-title .heading-1--no-margin {
+  color: #fff;
 }
 
 /* Description */
 .mirrorverse-description {
   max-width: 609px;
   margin: 0 auto 60px auto;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .mirrorverse-description .bodytext-1--no-margin {
   word-wrap: break-word;
   white-space: normal;
-  /* Color controlled by JS */
+  color: #fff;
 }
 
 /* Buttons */
@@ -60,6 +93,10 @@
   justify-content: center;
   align-items: center;
   gap: 6px;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 /* Responsive Design */

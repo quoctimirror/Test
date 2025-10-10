@@ -10,6 +10,7 @@ import UsersManager from "./UsersManager";
 import VendorsManager from "./VendorsManager";
 import DashboardHome from "./DashboardHome";
 import "./AdminDashboard.css";
+import { ROUTES } from "@/constants/routes";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -28,7 +29,7 @@ const AdminDashboard = () => {
   ];
 
   const handleHomeNavigation = () => {
-    window.location.href = '/home';
+    window.location.href = ROUTES.HOME_PAGE;
   };
 
   const renderActiveTab = () => {

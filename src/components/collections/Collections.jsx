@@ -6,6 +6,7 @@ import CollectionHeroSection from "./CollectionHeroSection";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import { collectionsAPI } from "@services/api";
+import { getCollectionDetailRoute } from "@/constants/routes";
 import "./Collections.css";
 
 const products = [
@@ -143,7 +144,7 @@ function Collection() {
       const slug = nameToSlug(featuredCollection.name);
       await optimizedTransitionUtils.transitionToRoute(
         navigate,
-        `/collections/${slug}`
+        getCollectionDetailRoute(slug)
       );
     }
   };
@@ -153,7 +154,7 @@ function Collection() {
       const slug = nameToSlug(collectionName);
       await optimizedTransitionUtils.transitionToRoute(
         navigate,
-        `/collections/${slug}`
+        getCollectionDetailRoute(slug)
       );
     }
   };

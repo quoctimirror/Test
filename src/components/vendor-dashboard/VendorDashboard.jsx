@@ -6,6 +6,7 @@ import VendorProfile from "./VendorProfile";
 import VendorOrders from "./VendorOrders";
 import VendorStatistics from "./VendorStatistics";
 import "./VendorDashboard.css";
+import { ROUTES } from "@/constants/routes";
 
 const VendorDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -55,7 +56,7 @@ const VendorDashboard = () => {
   ];
 
   const handleHomeNavigation = () => {
-    window.location.href = '/home';
+    window.location.href = ROUTES.HOME_PAGE;
   };
 
   const renderActiveTab = () => {

@@ -1,0 +1,98 @@
+.scavenger-hunt {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Ensure A-Frame scene is full screen */
+.scavenger-hunt a-scene {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+/* Ensure A-Frame canvas is full screen */
+.scavenger-hunt a-scene canvas {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* Hide MindAR video element and force it to fill */
+.scavenger-hunt video {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  transform: translate(-50%, -50%) !important;
+  object-fit: cover !important;
+}
+
+/* Welcome Logo */
+.scavenger-hunt .welcome-logo {
+  position: absolute;
+  top: 5.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.scavenger-hunt .welcome-logo img {
+  height: 100px;
+  width: auto;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 30px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.ar-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  color: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+}
+
+/* Responsive */
+@media screen and (max-width: 1023px) {
+  .scavenger-hunt .welcome-logo {
+    top: 3.5%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .scavenger-hunt .welcome-logo img {
+    height: 80px;
+  }
+}

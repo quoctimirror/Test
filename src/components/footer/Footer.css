@@ -204,6 +204,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  margin-top: 24px;
 }
 
 /* Footer Bottom Row - Contains left and right */
@@ -359,7 +360,6 @@
     align-items: center;
   }
 
-
   .footer-bottom {
     display: flex;
     flex-direction: column;
@@ -475,7 +475,6 @@
     width: auto;
     align-items: center;
   }
-
 
   .footer-bottom {
     display: flex;

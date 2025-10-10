@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import "./SharedSection.css";
 
@@ -9,10 +9,7 @@ const SharedSection = () => {
   const headerRef = useRef(null);
   const titleRef = useRef(null);
   const descriptionRef = useRef(null);
-
-  const [headerRevealProgress, setHeaderRevealProgress] = useState(0);
-  const [titleRevealProgress, setTitleRevealProgress] = useState(0);
-  const [descriptionRevealProgress, setDescriptionRevealProgress] = useState(0);
+  const buttonsRef = useRef(null);
 
   const headerText = "THE FUTURE IS SHARED";
   const titleText = "YOU DON'T JUST WEAR MIRROR.\nYOU BECOME PART OF IT.";
@@ -20,60 +17,114 @@ const SharedSection = () => {
     "We invite you not just to own - but to belong.\nTo co-create, to grow, to reflect.\n\nEvery interaction with Mirror - a try-on, a purchase, a story - becomes a part of the Mirrorverse. Because luxury doesn't begin in the box. It begins with you.";
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
+    let ticking = false;
+    let lastProgress = -1;
+
+    const updateScroll = () => {
+      if (!containerRef.current) {
+        ticking = false;
+        return;
+      }
 
       const container = containerRef.current;
       const rect = container.getBoundingClientRect();
       const scrollHeight = container.offsetHeight - window.innerHeight;
       const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
 
-      // Phase 1 (0-30% scroll): Move entire content to fixed position
+      if (Math.abs(progress - lastProgress) < 0.001) {
+        ticking = false;
+        return;
+      }
+      lastProgress = progress;
+
+      // Phase 1 (0-20%): Move entire content to fixed position with scale
       const moveProgress =
-        progress <= 0.3 ? Math.max(0, Math.min(1, progress / 0.3)) : 1;
+        progress <= 0.2 ? Math.max(0, Math.min(1, progress / 0.2)) : 1;
 
       if (contentRef.current) {
-        // Calculate initial position (bottom of viewport) to final position (center)
         const viewportHeight = window.innerHeight;
-        const initialTranslateY = viewportHeight * 0.5; // Start from bottom
-
-        const currentTranslateY =
-          initialTranslateY - moveProgress * initialTranslateY;
+        const initialTranslateY = viewportHeight * 0.5;
+        const currentTranslateY = initialTranslateY - moveProgress * initialTranslateY;
         const currentScale = 0.8 + moveProgress * 0.2; // Scale from 0.8 to 1.0
-        contentRef.current.style.transform = `translateY(${currentTranslateY}px) scale(${currentScale})`;
+        contentRef.current.style.transform = `translate3d(0, ${currentTranslateY}px, 0) scale(${currentScale})`;
         contentRef.current.style.opacity = moveProgress;
       }
 
-      // Phase 2 (30-50% scroll): Header reveal
-      if (progress > 0.3 && progress <= 0.5) {
-        const headerProgress = (progress - 0.3) / 0.2;
-        setHeaderRevealProgress(Math.min(1, headerProgress));
-      } else if (progress <= 0.3) {
-        setHeaderRevealProgress(0);
-      } else {
-        setHeaderRevealProgress(1);
+      // Phase 2 (20-35%): Header fade in + move up
+      if (headerRef.current) {
+        let headerY = 30, headerOpacity = 0;
+        if (progress < 0.2) {
+          headerY = 30; headerOpacity = 0;
+        } else if (progress <= 0.35) {
+          const fadeProgress = (progress - 0.2) / 0.15;
+          headerY = (1 - fadeProgress) * 30;
+          headerOpacity = fadeProgress;
+        } else {
+          headerY = 0; headerOpacity = 1;
+        }
+        headerRef.current.style.transform = `translate3d(0, ${headerY}%, 0)`;
+        headerRef.current.style.opacity = headerOpacity;
       }
 
-      // Phase 3 (50-70% scroll): Title reveal
-      if (progress > 0.5 && progress <= 0.7) {
-        const titleProgress = (progress - 0.5) / 0.2;
-        setTitleRevealProgress(Math.min(1, titleProgress));
-      } else if (progress <= 0.5) {
-        setTitleRevealProgress(0);
-      } else {
-        setTitleRevealProgress(1);
+      // Phase 3 (35-50%): Title fade in + move up
+      if (titleRef.current) {
+        let titleY = 30, titleOpacity = 0;
+        if (progress < 0.35) {
+          titleY = 30; titleOpacity = 0;
+        } else if (progress <= 0.5) {
+          const fadeProgress = (progress - 0.35) / 0.15;
+          titleY = (1 - fadeProgress) * 30;
+          titleOpacity = fadeProgress;
+        } else {
+          titleY = 0; titleOpacity = 1;
+        }
+        titleRef.current.style.transform = `translate3d(0, ${titleY}%, 0)`;
+        titleRef.current.style.opacity = titleOpacity;
       }
 
-      // Phase 4 (70-100% scroll): Description reveal
-      if (progress > 0.7) {
-        const descProgress = (progress - 0.7) / 0.3;
-        setDescriptionRevealProgress(Math.min(1, descProgress));
-      } else {
-        setDescriptionRevealProgress(0);
+      // Phase 4 (50-65%): Description fade in + move up
+      if (descriptionRef.current) {
+        let descY = 30, descOpacity = 0;
+        if (progress < 0.5) {
+          descY = 30; descOpacity = 0;
+        } else if (progress <= 0.65) {
+          const fadeProgress = (progress - 0.5) / 0.15;
+          descY = (1 - fadeProgress) * 30;
+          descOpacity = fadeProgress;
+        } else {
+          descY = 0; descOpacity = 1;
+        }
+        descriptionRef.current.style.transform = `translate3d(0, ${descY}%, 0)`;
+        descriptionRef.current.style.opacity = descOpacity;
+      }
+
+      // Phase 5 (65-75%): Buttons fade in + move up
+      if (buttonsRef.current) {
+        let btnY = 30, btnOpacity = 0;
+        if (progress < 0.65) {
+          btnY = 30; btnOpacity = 0;
+        } else if (progress <= 0.75) {
+          const fadeProgress = (progress - 0.65) / 0.1;
+          btnY = (1 - fadeProgress) * 30;
+          btnOpacity = fadeProgress;
+        } else {
+          btnY = 0; btnOpacity = 1;
+        }
+        buttonsRef.current.style.transform = `translate3d(0, ${btnY}%, 0)`;
+        buttonsRef.current.style.opacity = btnOpacity;
+      }
+
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScroll);
+        ticking = true;
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
@@ -85,82 +136,37 @@ const SharedSection = () => {
         <div className="shared-content" ref={contentRef}>
           {/* Header */}
           <div className="shared-header" ref={headerRef}>
-            <p className="bodytext-3--no-margin">
-              {headerText.split("").map((char, index) => {
-                const charProgress = (index + 1) / headerText.length;
-                const isRevealed = headerRevealProgress >= charProgress;
-
-                return (
-                  <span
-                    key={index}
-                    style={{
-                      color: isRevealed ? "#fff" : "rgba(255, 255, 255, 0.25)",
-                      transition: "color 0.05s ease",
-                    }}
-                  >
-                    {char}
-                  </span>
-                );
-              })}
-            </p>
+            <p className="bodytext-3--no-margin">{headerText}</p>
           </div>
 
           {/* Main Title */}
           <div className="shared-title" ref={titleRef}>
             <h1 className="heading-1--no-margin">
-              {titleText.split("").map((char, index) => {
-                const charProgress = (index + 1) / titleText.length;
-                const isRevealed = titleRevealProgress >= charProgress;
-
-                return (
-                  <span
-                    key={index}
-                    style={{
-                      color: isRevealed ? "#fff" : "rgba(255, 255, 255, 0.25)",
-                      transition: "color 0.05s ease",
-                    }}
-                  >
-                    {char === "\n" ? <br /> : char}
-                  </span>
-                );
-              })}
+              {titleText.split("\n").map((line, index) => (
+                <React.Fragment key={index}>
+                  {line}
+                  {index < titleText.split("\n").length - 1 && <br />}
+                </React.Fragment>
+              ))}
             </h1>
           </div>
 
           {/* Description */}
           <div className="shared-description" ref={descriptionRef}>
             <p className="bodytext-1--no-margin">
-              {descriptionText.split("").map((char, index) => {
-                const charProgress = (index + 1) / descriptionText.length;
-                const isRevealed = descriptionRevealProgress >= charProgress;
-
-                return (
-                  <span
-                    key={index}
-                    style={{
-                      color: isRevealed ? "#fff" : "rgba(255, 255, 255, 0.25)",
-                      transition: "color 0.05s ease",
-                    }}
-                  >
-                    {char === "\n" ? <br /> : char}
-                  </span>
-                );
-              })}
+              {descriptionText.split("\n").map((line, index) => (
+                <React.Fragment key={index}>
+                  {line}
+                  {index < descriptionText.split("\n").length - 1 && <br />}
+                </React.Fragment>
+              ))}
             </p>
           </div>
 
           {/* Buttons */}
-          <div className="shared-buttons">
-            <ShineGlassButton
-              theme="footer"
-            >
-              AR Try on
-            </ShineGlassButton>
-            <ShineGlassButton
-              theme="footer"
-            >
-              Immersive Showroom
-            </ShineGlassButton>
+          <div className="shared-buttons" ref={buttonsRef}>
+            <ShineGlassButton theme="footer">AR Try on</ShineGlassButton>
+            <ShineGlassButton theme="footer">Immersive Showroom</ShineGlassButton>
           </div>
         </div>
       </div>

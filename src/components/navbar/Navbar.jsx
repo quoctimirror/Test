@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import UnderlineButton from "@/components/common/button/UnderlineButton";
+import { ROUTES } from "@/constants/routes";
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,22 +24,22 @@ export default function Navbar() {
 
   // Check if current page is home, welcome, or immersive showroom (pages with white navbar)
   const isHomePage =
-    location.pathname === "/home" ||
-    location.pathname === "/" ||
-    location.pathname === "/welcome" ||
-    location.pathname === "/immersive-showroom";
+    location.pathname === ROUTES.HOME_PAGE ||
+    location.pathname === ROUTES.HOME ||
+    location.pathname === ROUTES.WELCOME ||
+    location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
   // Check if current page is Milan submission page or Submit Success page
   const isMilanPage =
-    location.pathname.startsWith("/mirror-in-milan-digital-jewelry-week");
+    location.pathname.startsWith(ROUTES.MILAN_SUBMIT);
 
   // Check if current page is submit page (not success page)
   const isSubmitPage =
-    location.pathname === "/mirror-in-milan-digital-jewelry-week";
+    location.pathname === ROUTES.MILAN_SUBMIT;
 
   // Check if should hide menu, account, and immersive button (Milan and Immersive Showroom)
   const shouldHideButtons =
-    isMilanPage || location.pathname === "/immersive-showroom";
+    isMilanPage || location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
   // Check if logo click should be disabled (Milan and Immersive Showroom)
   const shouldDisableLogoClick = shouldHideButtons;
@@ -130,7 +131,7 @@ export default function Navbar() {
 
   // Detect when IntroSubmit section is in view (for immersive showroom page)
   useEffect(() => {
-    const isImmersiveShowroom = location.pathname === "/immersive-showroom";
+    const isImmersiveShowroom = location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
     if (!isImmersiveShowroom) {
       setIsInIntroSubmitSection(false);
       return;
@@ -169,78 +170,78 @@ export default function Navbar() {
       return;
     }
 
-    if (window.location.pathname === "/home") {
+    if (window.location.pathname === ROUTES.HOME_PAGE) {
       window.scrollTo(0, 0);
       setTimeout(() => {
         window.location.reload();
       }, 0);
     } else {
       sessionStorage.setItem("scrollToTop", "true");
-      await performTransition("/home");
+      await performTransition(ROUTES.HOME_PAGE);
     }
   };
 
   const handleProductsClick = async () => {
-    if (window.location.pathname === "/collections") {
+    if (window.location.pathname === ROUTES.COLLECTIONS) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await performTransition("/collections", {
+    await performTransition(ROUTES.COLLECTIONS, {
       onStart: () => console.log("Starting transition to collections..."),
       onComplete: () => console.log("Collections page transition completed!"),
     });
   };
 
   const handleServicesClick = async () => {
-    if (window.location.pathname === "/services") {
+    if (window.location.pathname === ROUTES.SERVICES) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await performTransition("/services");
+    await performTransition(ROUTES.SERVICES);
   };
 
   const handleSupportClick = async () => {
-    if (window.location.pathname === "/support") {
+    if (window.location.pathname === ROUTES.SUPPORT) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await performTransition("/support");
+    await performTransition(ROUTES.SUPPORT);
   };
 
   const handleAboutClick = async () => {
-    if (window.location.pathname === "/about") {
+    if (window.location.pathname === ROUTES.ABOUT) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await performTransition("/about");
+    await performTransition(ROUTES.ABOUT);
   };
 
   const handleNewsClick = async () => {
-    if (window.location.pathname === "/news") {
+    if (window.location.pathname === ROUTES.NEWS) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await performTransition("/news");
+    await performTransition(ROUTES.NEWS);
   };
 
   const handleContactClick = async () => {
-    if (window.location.pathname === "/contact") {
+    if (window.location.pathname === ROUTES.CONTACT) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await performTransition("/contact");
+    await performTransition(ROUTES.CONTACT);
   };
 
   // Helper function to check if user is admin
@@ -274,22 +275,22 @@ export default function Navbar() {
 
   const handleProfileClick = async () => {
     setIsAccountMenuOpen(false);
-    await performTransition("/user-profile");
+    await performTransition(ROUTES.USER_PROFILE);
   };
 
   const handleAdminDashboardClick = async () => {
     setIsAccountMenuOpen(false);
-    await performTransition("/dashboard/admin");
+    await performTransition(ROUTES.DASHBOARD_ADMIN);
   };
 
   const handleVendorDashboardClick = async () => {
     setIsAccountMenuOpen(false);
-    await performTransition("/dashboard/vendor");
+    await performTransition(ROUTES.DASHBOARD_VENDOR);
   };
 
   const handleDesignerDashboardClick = async () => {
     setIsAccountMenuOpen(false);
-    await performTransition("/dashboard/designer");
+    await performTransition(ROUTES.DASHBOARD_DESIGNER);
   };
 
   const handleLogoutClick = () => {
@@ -299,24 +300,24 @@ export default function Navbar() {
 
   const handleLoginClick = async () => {
     setIsAccountMenuOpen(false);
-    navigate("/auth/login");
+    navigate(ROUTES.AUTH_LOGIN);
     console.log("Navigating to login");
-    if (window.location.pathname === "/auth/login") {
+    if (window.location.pathname === ROUTES.AUTH_LOGIN) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
     sessionStorage.setItem("scrollToTop", "true");
-    await performTransition("/auth/login");
+    await performTransition(ROUTES.AUTH_LOGIN);
   };
 
   const handleLocationClick = async () => {
-    if (window.location.pathname === "/locations") {
+    if (window.location.pathname === ROUTES.LOCATIONS) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await performTransition("/locations");
+    await performTransition(ROUTES.LOCATIONS);
   };
 
   return (
@@ -406,7 +407,7 @@ export default function Navbar() {
                 <ul className="menu-list">
                   <li
                     onMouseEnter={() =>
-                      optimizedTransitionUtils.prefetch("/collections")
+                      optimizedTransitionUtils.prefetch(ROUTES.COLLECTIONS)
                     }
                   >
                     <UnderlineButton onClick={handleProductsClick}>
@@ -415,7 +416,7 @@ export default function Navbar() {
                   </li>
                   <li
                     onMouseEnter={() =>
-                      optimizedTransitionUtils.prefetch("/services")
+                      optimizedTransitionUtils.prefetch(ROUTES.SERVICES)
                     }
                   >
                     <UnderlineButton onClick={handleServicesClick}>
@@ -424,7 +425,7 @@ export default function Navbar() {
                   </li>
                   <li
                     onMouseEnter={() =>
-                      optimizedTransitionUtils.prefetch("/support")
+                      optimizedTransitionUtils.prefetch(ROUTES.SUPPORT)
                     }
                   >
                     <UnderlineButton onClick={handleSupportClick}>
@@ -433,7 +434,7 @@ export default function Navbar() {
                   </li>
                   <li
                     onMouseEnter={() =>
-                      optimizedTransitionUtils.prefetch("/about")
+                      optimizedTransitionUtils.prefetch(ROUTES.ABOUT)
                     }
                   >
                     <UnderlineButton onClick={handleAboutClick}>
@@ -442,7 +443,7 @@ export default function Navbar() {
                   </li>
                   <li
                     onMouseEnter={() =>
-                      optimizedTransitionUtils.prefetch("/news")
+                      optimizedTransitionUtils.prefetch(ROUTES.NEWS)
                     }
                   >
                     <UnderlineButton onClick={handleNewsClick}>
@@ -456,7 +457,7 @@ export default function Navbar() {
                 <ul className="menu-list">
                   <li
                     onMouseEnter={() =>
-                      optimizedTransitionUtils.prefetch("/locations")
+                      optimizedTransitionUtils.prefetch(ROUTES.LOCATIONS)
                     }
                   >
                     <UnderlineButton onClick={handleLocationClick}>
@@ -465,7 +466,7 @@ export default function Navbar() {
                   </li>
                   <li
                     onMouseEnter={() =>
-                      optimizedTransitionUtils.prefetch("/contact")
+                      optimizedTransitionUtils.prefetch(ROUTES.CONTACT)
                     }
                   >
                     <UnderlineButton onClick={handleContactClick}>

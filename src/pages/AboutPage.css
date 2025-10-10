@@ -2,10 +2,23 @@
 .about-page {
   width: 100%;
   min-height: 100vh;
+  position: relative;
 }
 
 /* Panel wrapper for pinning effect */
 .panel {
   width: 100%;
   min-height: 100vh;
+  position: relative;
+
+  /* Performance optimizations for smooth pinning */
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+
+  /* CSS containment for better performance */
+  contain: layout style;
+  isolation: isolate;
 }

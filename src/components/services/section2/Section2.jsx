@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import { ROUTES } from "@/constants/routes";
 import "./Section2.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
@@ -12,14 +13,14 @@ const Section2 = () => {
   const handleProductCareClick = async () => {
     await optimizedTransitionUtils.transitionToRoute(
       navigate,
-      "/services/detail?tab=product-care-repair"
+      `${ROUTES.SERVICES_DETAIL}?tab=product-care-repair`
     );
   };
 
   const handleTradeInClick = async () => {
     await optimizedTransitionUtils.transitionToRoute(
       navigate,
-      "/services/detail?tab=trade-in-upgrade"
+      `${ROUTES.SERVICES_DETAIL}?tab=trade-in-upgrade`
     );
   };
 

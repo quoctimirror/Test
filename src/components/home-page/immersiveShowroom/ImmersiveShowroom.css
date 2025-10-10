@@ -12,6 +12,33 @@
   overflow: hidden;
 }
 
+/* Gradient overlay - dark at top and bottom, transparent in center */
+.immersive-showroom::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    #000 0%,
+    rgba(0, 0, 0, 0.9) 5%,
+    rgba(0, 0, 0, 0.7) 10%,
+    rgba(0, 0, 0, 0.4) 15%,
+    rgba(0, 0, 0, 0.15) 20%,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0) 70%,
+    rgba(0, 0, 0, 0.15) 80%,
+    rgba(0, 0, 0, 0.4) 85%,
+    rgba(0, 0, 0, 0.7) 90%,
+    rgba(0, 0, 0, 0.9) 95%,
+    #000 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
 .showroom-background {
   position: absolute;
   top: 0;
@@ -21,6 +48,28 @@
   object-fit: cover;
   object-position: center;
   z-index: 0;
+  border: none;
+  pointer-events: none; /* Disable interaction with background iframe */
+  opacity: 0; /* Start hidden */
+  transition: opacity 0.6s ease-in-out;
+}
+
+.showroom-background.loaded {
+  opacity: 0.5; /* 50% opacity at center, gradient overlay darkens at edges */
+}
+
+/* Fallback background image */
+.showroom-background-fallback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  opacity: 0.5; /* 50% opacity at center, gradient overlay darkens at edges */
+  transition: opacity 0.6s ease-in-out;
 }
 
 .showroom-content {
@@ -47,7 +96,6 @@
   margin: 0 0 24px 0;
   color: #ffffff;
   text-transform: uppercase;
-  white-space: nowrap;
 }
 
 .showroom-description {
@@ -56,42 +104,7 @@
   color: #e0e0e0;
 }
 
-/* Gradient boxes */
-.showroom-gradient-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 15vh;
-  background: linear-gradient(
-    180deg,
-    #000 0%,
-    rgba(0, 0, 0, 0.9) 20%,
-    rgba(0, 0, 0, 0.7) 40%,
-    rgba(0, 0, 0, 0.4) 60%,
-    rgba(0, 0, 0, 0.15) 80%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  z-index: 1;
-}
-
-.showroom-gradient-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 15vh;
-  background: linear-gradient(
-    0deg,
-    #000 0%,
-    rgba(0, 0, 0, 0.9) 20%,
-    rgba(0, 0, 0, 0.7) 40%,
-    rgba(0, 0, 0, 0.4) 60%,
-    rgba(0, 0, 0, 0.15) 80%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  z-index: 1;
-}
+/* Gradient boxes - removed, now using ::before pseudo-element on .immersive-showroom */
 
 /* Button styles now handled by ShineGlassButton component */
 
@@ -184,3 +197,59 @@
     margin-bottom: 28px;
   }
 } */
+
+/* Fullscreen Modal */
+.showroom-fullscreen-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.showroom-fullscreen-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  pointer-events: auto; /* Enable interaction in fullscreen */
+}
+
+.showroom-close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.showroom-close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+@media screen and (max-width: 425px) {
+  .showroom-close-button {
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}

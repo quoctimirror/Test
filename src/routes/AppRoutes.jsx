@@ -5,6 +5,7 @@ import { lazy, Suspense } from "react";
 import Navbar from "@components/navbar/Navbar";
 import Footer from "@components/footer/Footer";
 import TryOnRingLayout from "@layouts/TryOnRingLayout";
+import { ROUTES } from "@/constants/routes";
 // Lazy-load components
 const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
@@ -57,29 +58,102 @@ const ProductsV2 = lazy(() => import("@components/productsV2/Products.jsx"));
 const ProductsLeft = lazy(() =>
   import("@components/productsV2/ProductsLeft.jsx")
 );
+const BODMemberV2Page = lazy(() => import("@pages/BODMemberV2Page"));
+const ScavengerHunt = lazy(() =>
+  import("@components/scavenger-hunt/ScavengerHunt")
+);
+
 export default function AppRoutes() {
   const location = useLocation();
+
+  // Check if current path matches any defined route (to detect 404)
+  const isNotFoundPage = () => {
+    const definedRoutes = [
+      ROUTES.HOME,
+      ROUTES.HOME_PAGE,
+      ROUTES.WELCOME,
+      ROUTES.AUTH,
+      `${ROUTES.AUTH}/login`,
+      `${ROUTES.AUTH}/register`,
+      ROUTES.PRODUCTS,
+      ROUTES.PRODUCTS_V2,
+      ROUTES.ALL_GEMS,
+      ROUTES.COLLECTIONS,
+      ROUTES.SERVICES,
+      ROUTES.SERVICES_DETAIL,
+      ROUTES.SUPPORT,
+      ROUTES.CONTACT,
+      ROUTES.ABOUT,
+      ROUTES.LOCATIONS,
+      ROUTES.NEWS,
+      ROUTES.IMMERSIVE_SHOWROOM,
+      ROUTES.MILAN_SUBMIT,
+      `${ROUTES.MILAN_SUBMIT}/submit-success`,
+      ROUTES.HOVER_EXPAND,
+      ROUTES.PRODUCTS_LEFT,
+      ROUTES.BOD_MEMBER_V2,
+      ROUTES.VIEW_360,
+      ROUTES.USER_PROFILE,
+      ROUTES.SCAVENGER_HUNT,
+      ROUTES.DASHBOARD_ADMIN_MANAGE,
+      ROUTES.DASHBOARD_ADMIN,
+      ROUTES.DASHBOARD_VENDOR,
+      ROUTES.DASHBOARD_DESIGNER,
+      ROUTES.UNIVERSE_FINAL,
+      ROUTES.FORGOT_PASSWORD,
+    ];
+
+    // Check exact matches
+    if (definedRoutes.includes(location.pathname)) {
+      return false;
+    }
+
+    // Check dynamic routes (with params)
+    if (
+      location.pathname.startsWith(ROUTES.COLLECTIONS + '/') ||
+      location.pathname.startsWith(ROUTES.NEWS + '/') ||
+      location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+      location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
+      location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
+      location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
+      location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
+      location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
+      location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
+      location.pathname.startsWith(ROUTES.MILAN_SUBMIT)
+    ) {
+      return false;
+    }
+
+    return true; // It's a 404
+  };
+
+  const is404 = isNotFoundPage();
+
   const staticRoutesToHideNavBar =
-    location.pathname.startsWith("/universe-final") ||
-    location.pathname.startsWith("/hover-expand") ||
-    location.pathname.startsWith("/ar/rings") ||
-    location.pathname.startsWith("/dashboard/admin") ||
-    location.pathname.startsWith("/dashboard/vendor") ||
-    location.pathname.startsWith("/dashboard/designer") ||
-    location.pathname === "/welcome" ||
-    location.pathname === "/";
+    is404 ||
+    location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
+    location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
+    location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+    location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
+    location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
+    location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
+    location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
+    location.pathname === ROUTES.WELCOME ||
+    location.pathname === ROUTES.HOME;
 
   const staticRoutesToHideFooter =
-    location.pathname.startsWith("/universe-final") ||
-    location.pathname.startsWith("/hover-expand") ||
-    location.pathname.startsWith("/ar/rings") ||
-    location.pathname.startsWith("/dashboard/admin") ||
-    location.pathname.startsWith("/dashboard/vendor") ||
-    location.pathname.startsWith("/dashboard/designer") ||
-    location.pathname === "/welcome" ||
-    location.pathname === "/" ||
-    location.pathname === "/immersive-showroom" ||
-    location.pathname.startsWith("/mirror-in-milan-digital-jewelry-week");
+    is404 ||
+    location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
+    location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
+    location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+    location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
+    location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
+    location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
+    location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
+    location.pathname === ROUTES.WELCOME ||
+    location.pathname === ROUTES.HOME ||
+    location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
+    location.pathname.startsWith(ROUTES.MILAN_SUBMIT);
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -96,51 +170,51 @@ export default function AppRoutes() {
         }
       >
         <Routes>
-          <Route path="/" element={<WelcomePage />} />
+          <Route path={ROUTES.HOME} element={<WelcomePage />} />
 
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/welcome" element={<WelcomePage />} />
+          <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
+          <Route path={ROUTES.WELCOME} element={<WelcomePage />} />
 
-          <Route path="/auth" element={<AuthPage />}>
+          <Route path={ROUTES.AUTH} element={<AuthPage />}>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
           </Route>
 
-          <Route path="/products" element={<ProductsPage />} />
+          <Route path={ROUTES.PRODUCTS} element={<ProductsPage />} />
 
-          <Route path="/products-v2" element={<ProductsV2 />} />
+          <Route path={ROUTES.PRODUCTS_V2} element={<ProductsV2 />} />
 
-          <Route path="/all-gems" element={<AllGemsPage />} />
+          <Route path={ROUTES.ALL_GEMS} element={<AllGemsPage />} />
 
-          <Route path="/collections" element={<CollectionPage />} />
+          <Route path={ROUTES.COLLECTIONS} element={<CollectionPage />} />
 
           <Route
-            path="/collections/:collectionId"
+            path={ROUTES.COLLECTION_DETAIL}
             element={<CollectionDetailPage />}
           />
 
-          <Route path="/services" element={<ServicesPage />} />
+          <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
 
-          <Route path="/services/detail" element={<ServicesDetailPage />} />
+          <Route path={ROUTES.SERVICES_DETAIL} element={<ServicesDetailPage />} />
 
-          <Route path="/support" element={<SupportPage />} />
+          <Route path={ROUTES.SUPPORT} element={<SupportPage />} />
 
-          <Route path="/contact" element={<ContactPage />} />
+          <Route path={ROUTES.CONTACT} element={<ContactPage />} />
 
-          <Route path="/about" element={<AboutPage />} />
+          <Route path={ROUTES.ABOUT} element={<AboutPage />} />
 
-          <Route path="/locations" element={<LocationsPage />} />
+          <Route path={ROUTES.LOCATIONS} element={<LocationsPage />} />
 
-          <Route path="/news" element={<AllNewsPage />} />
+          <Route path={ROUTES.NEWS} element={<AllNewsPage />} />
 
-          <Route path="/news/:slug" element={<NewCutPage />} />
+          <Route path={ROUTES.NEWS_DETAIL} element={<NewCutPage />} />
 
           <Route
-            path="/immersive-showroom"
+            path={ROUTES.IMMERSIVE_SHOWROOM}
             element={<ImmersiveShowroomPage />}
           />
 
-          <Route path="/mirror-in-milan-digital-jewelry-week">
+          <Route path={ROUTES.MILAN_SUBMIT}>
             <Route index element={<SubmitPage />} />
             <Route path="submit-success" element={<SubmitSuccessPage />} />
           </Route>
@@ -148,24 +222,26 @@ export default function AppRoutes() {
           {/* for observing UI universe-section final */}
           {/* <Route path="/universe-section" element={<UniverseSection />} /> */}
 
-          <Route path="/hover-expand" element={<HoverExpandSection />} />
-
-          {/* Test route for ProductsV2 */}
-          <Route path="/products-v2" element={<ProductsV2 />} />
+          <Route path={ROUTES.HOVER_EXPAND} element={<HoverExpandSection />} />
 
           {/* Test route for ProductsLeft */}
-          <Route path="/products-left" element={<ProductsLeft />} />
+          <Route path={ROUTES.PRODUCTS_LEFT} element={<ProductsLeft />} />
 
-          <Route path="/view-360" element={<View360 />} />
+          {/* Test route for BODMemberV2 */}
+          <Route path={ROUTES.BOD_MEMBER_V2} element={<BODMemberV2Page />} />
 
-          <Route path="/user-profile" element={<Profile />} />
+          <Route path={ROUTES.VIEW_360} element={<View360 />} />
+
+          <Route path={ROUTES.USER_PROFILE} element={<Profile />} />
 
           <Route element={<TryOnRingLayout />}>
-            <Route path="/ar/rings/:ringId" element={<TryOnRing />} />
+            <Route path={ROUTES.AR_RINGS} element={<TryOnRing />} />
           </Route>
 
+          <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
+
           <Route
-            path="dashboard/admin/manage-products"
+            path={ROUTES.DASHBOARD_ADMIN_MANAGE}
             element={
               <ProtectedRoute requiredRole="ADMIN">
                 <ManageProducts />
@@ -174,7 +250,7 @@ export default function AppRoutes() {
           />
 
           <Route
-            path="dashboard/admin"
+            path={ROUTES.DASHBOARD_ADMIN}
             element={
               <ProtectedRoute requiredRole="ADMIN">
                 <AdminDashboard />
@@ -183,7 +259,7 @@ export default function AppRoutes() {
           />
 
           <Route
-            path="dashboard/vendor"
+            path={ROUTES.DASHBOARD_VENDOR}
             element={
               <ProtectedRoute requiredRole="VENDOR">
                 <VendorDashboard />
@@ -192,7 +268,7 @@ export default function AppRoutes() {
           />
 
           <Route
-            path="dashboard/designer"
+            path={ROUTES.DASHBOARD_DESIGNER}
             element={
               <ProtectedRoute requiredRole="DESIGNER">
                 <DesignerDashboard />

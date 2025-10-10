@@ -6,13 +6,14 @@ import image1 from "/home-page/hover-expand/Ring.png";
 import image2 from "/home-page/hover-expand/Earring.png";
 import image3 from "/home-page/hover-expand/Necklace.png";
 import image4 from "/home-page/hover-expand/Bracelet.png";
+import { ROUTES } from "@/constants/routes";
 
 const HoverExpandSection = () => {
   const navigate = useNavigate();
 
   const handleExploreMoreClick = async () => {
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/collections");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.COLLECTIONS);
   };
 
   return (

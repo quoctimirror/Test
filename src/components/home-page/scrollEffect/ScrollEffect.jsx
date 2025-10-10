@@ -3,11 +3,12 @@ import { useLocation } from "react-router-dom";
 import Logo from "@assets/images/Logo.svg";
 import SoundIcon from "@assets/images/button/sound.svg";
 import ArrowButton from "@assets/images/button/arrow-button.svg";
+import { ROUTES } from "@/constants/routes";
 import "./ScrollEffect.css";
 
 export default function ScrollEffect() {
   const location = useLocation();
-  const isImmersiveShowroomPage = location.pathname === "/immersive-showroom";
+  const isImmersiveShowroomPage = location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
   // Original ScrollEffect refs
   const finalGradientRef = useRef(null);
@@ -31,6 +32,7 @@ export default function ScrollEffect() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [text1AutoProgress, setText1AutoProgress] = useState(0);
   const [hasStartedScrolling, setHasStartedScrolling] = useState(false);
+  const lastRenderedFrameRef = useRef(-1);
 
   const numFrames = 249; // Actual frames from Landscape_3D.mp4 (8.3s * 30fps)
   const scrollEffectHeight = 250; // vh for scroll effect - reduced to make mirror introduce start earlier
@@ -66,27 +68,55 @@ export default function ScrollEffect() {
     return `/home-page/frames/frame_${index.toString().padStart(4, "0")}.jpg`;
   }
 
-  // Preload all images
+  // Progressive preload images - load in batches
   function preloadImages() {
-    const imagePromises = [];
+    const batchSize = 20;
+    const loadedImagesArray = new Array(numFrames);
+    let loadedCount = 0;
 
-    for (let i = 1; i <= numFrames; i++) {
-      const promise = new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = getFramePath(i);
-      });
-      imagePromises.push(promise);
-    }
+    const loadBatch = (startIndex, endIndex) => {
+      const promises = [];
+      for (let i = startIndex; i <= Math.min(endIndex, numFrames); i++) {
+        const promise = new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            loadedImagesArray[i - 1] = img;
+            loadedCount++;
+            resolve(img);
+          };
+          img.onerror = reject;
+          img.src = getFramePath(i);
+        });
+        promises.push(promise);
+      }
+      return Promise.all(promises);
+    };
 
-    Promise.all(imagePromises)
-      .then((loadedImages) => {
-        setImages(loadedImages);
+    // Load first batch immediately
+    loadBatch(1, batchSize)
+      .then(() => {
+        setImages([...loadedImagesArray]);
         setIsLoaded(true);
+
+        // Progressively load remaining batches in background
+        let nextBatch = batchSize + 1;
+        const intervalId = setInterval(() => {
+          if (nextBatch <= numFrames) {
+            loadBatch(nextBatch, nextBatch + batchSize - 1)
+              .then(() => {
+                setImages([...loadedImagesArray]);
+              })
+              .catch((error) => {
+                console.error(`Failed to load batch ${nextBatch}:`, error);
+              });
+            nextBatch += batchSize;
+          } else {
+            clearInterval(intervalId);
+          }
+        }, 300);
       })
       .catch((error) => {
-        console.error("Failed to load images:", error);
+        console.error("Failed to load initial images:", error);
       });
   }
 
@@ -299,7 +329,7 @@ export default function ScrollEffect() {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Call once to set initial state
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -335,23 +365,30 @@ export default function ScrollEffect() {
       }
     };
 
-    window.addEventListener("scroll", handleScrollStart);
+    window.addEventListener("scroll", handleScrollStart, { passive: true });
     return () => window.removeEventListener("scroll", handleScrollStart);
   }, [hasStartedScrolling, scrollEffectHeight]);
 
-  // Update canvas when frame changes
+  // Update canvas when frame changes - only render if frame is different
   useEffect(() => {
     if (!canvasRef.current || !images.length || !isLoaded) return;
 
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
-    const image = images[frameIndex];
+    // Skip if same frame already rendered
+    if (frameIndex === lastRenderedFrameRef.current) return;
 
-    if (image) {
+    const image = images[frameIndex];
+    if (!image) return; // Image not loaded yet
+
+    lastRenderedFrameRef.current = frameIndex;
+
+    requestAnimationFrame(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const context = canvas.getContext("2d", { alpha: false });
+
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-
-      context.clearRect(0, 0, canvas.width, canvas.height);
 
       const scaleX = canvas.width / image.width;
       const scaleY = canvas.height / image.height;
@@ -364,7 +401,7 @@ export default function ScrollEffect() {
       const offsetY = (canvas.height - scaledHeight) / 2;
 
       context.drawImage(image, offsetX, offsetY, scaledWidth, scaledHeight);
-    }
+    });
   }, [frameIndex, images, isLoaded]);
 
   const renderTextSlides = () => {

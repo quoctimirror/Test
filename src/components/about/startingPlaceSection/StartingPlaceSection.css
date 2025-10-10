@@ -1,7 +1,7 @@
 /* StartingPlaceSection Component Styles */
 .starting-place-section {
   width: 100%;
-  height: 300vh; /* Scroll height for animation */
+  height: 300vh; /* Scroll height for animation - increased for pause after button */
   background: rgba(255, 255, 255, 0);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -41,28 +41,41 @@
 /* Header */
 .starting-header {
   margin-bottom: 12px;
+  transform: translateY(30%);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 .starting-header .bodytext-3--no-margin {
   text-transform: uppercase;
-  /* Color controlled by JS */
+  color: #fff;
 }
 
 /* Main Title */
 .starting-title {
   margin-bottom: 60px;
+  transform: translateY(30%);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.starting-title .heading-1--no-margin {
+  color: #fff;
 }
 
 /* Description */
 .starting-description {
   max-width: 609px;
   margin: 0 auto 60px auto;
+  transform: translateY(30%);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 .starting-description .bodytext-1--no-margin {
   word-wrap: break-word;
   white-space: normal;
-  /* Color controlled by JS */
+  color: #fff;
 }
 
 /* Button */
@@ -71,6 +84,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: translateY(30%);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
 /* Responsive Design */
@@ -97,7 +113,6 @@
   .starting-description {
     margin-bottom: 40px;
   }
-
 }
 
 @media (max-width: 480px) {
@@ -116,5 +131,4 @@
   .starting-description {
     margin-bottom: 30px;
   }
-
 }

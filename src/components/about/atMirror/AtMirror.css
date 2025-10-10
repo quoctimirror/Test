@@ -33,6 +33,14 @@
 .at-mirror-text {
   max-width: 599px;
   margin: 0 auto;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.at-mirror-text .bodytext-1--no-margin {
+  color: #000;
 }
 
 /* Responsive Design */

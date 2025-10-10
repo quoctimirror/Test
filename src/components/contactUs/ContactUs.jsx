@@ -2,12 +2,13 @@ import "./ContactUs.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import { ROUTES } from "@/constants/routes";
 
 const ContactUs = () => {
   const navigate = useNavigate();
 
   const handleContactUsClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/contact");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.CONTACT);
   };
 
   return (

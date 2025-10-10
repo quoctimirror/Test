@@ -6,6 +6,7 @@ import "react-phone-input-2/lib/style.css";
 import PhoneInput from "react-phone-input-2";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { fileUploadAPI, notificationsAPI } from "@services/api";
+import { ROUTES } from "@/constants/routes";
 
 const TURNSTILE_SITE_KEY = "0x4AAAAAAB5BOMtJV6dfw_JE";
 const TURNSTILE_SCRIPT_URL =
@@ -795,7 +796,7 @@ const SubmitForm = () => {
         });
 
       // Navigate to success page immediately
-      navigate("/mirror-in-milan-digital-jewelry-week/submit-success");
+      navigate(ROUTES.MILAN_SUBMIT_SUCCESS);
     } catch (error) {
       alert(error.message || "Failed to submit form. Please try again.");
     } finally {

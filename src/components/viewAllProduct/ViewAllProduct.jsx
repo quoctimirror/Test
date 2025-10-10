@@ -5,6 +5,7 @@ import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./ViewAllProduct.css";
+import { ROUTES } from "@/constants/routes";
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -105,7 +106,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
   }, []);
 
   const handleViewAllProducts = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/all-gems");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.ALL_GEMS);
   };
 
   return (

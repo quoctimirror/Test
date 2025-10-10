@@ -4,6 +4,7 @@ import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import ArrowDown from "@components/common/decorative/ArrowDown";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
 
 const IntroSubmit = () => {
   const navigate = useNavigate();
@@ -11,11 +12,11 @@ const IntroSubmit = () => {
   const arrowRef = useRef(null);
 
   // Check if current page is Immersive Showroom
-  const isImmersiveShowroomPage = location.pathname === "/immersive-showroom";
+  const isImmersiveShowroomPage = location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
   const handleSubmitPortfolioClick = () => {
     // Check if we're already on the submit page
-    if (location.pathname === "/mirror-in-milan-digital-jewelry-week") {
+    if (location.pathname === ROUTES.MILAN_SUBMIT) {
       const submitFormSection = document.querySelector(".submit-form-section");
       if (submitFormSection) {
         const rect = submitFormSection.getBoundingClientRect();
@@ -28,7 +29,7 @@ const IntroSubmit = () => {
       }
     } else {
       // Navigate to submit page and scroll to form
-      navigate("/mirror-in-milan-digital-jewelry-week");
+      navigate(ROUTES.MILAN_SUBMIT);
       // Use setTimeout to ensure page has loaded before scrolling
       setTimeout(() => {
         const submitFormSection = document.querySelector(
@@ -50,7 +51,7 @@ const IntroSubmit = () => {
 
   const handleViewGuidelinesClick = () => {
     // Check if we're already on the submit page
-    if (location.pathname === "/mirror-in-milan-digital-jewelry-week") {
+    if (location.pathname === ROUTES.MILAN_SUBMIT) {
       const guideStep1Section = document.querySelector(".guide-step-1-section");
       if (guideStep1Section) {
         const rect = guideStep1Section.getBoundingClientRect();
@@ -63,7 +64,7 @@ const IntroSubmit = () => {
       }
     } else {
       // Navigate to submit page and scroll to guidelines
-      navigate("/mirror-in-milan-digital-jewelry-week");
+      navigate(ROUTES.MILAN_SUBMIT);
       // Use setTimeout to ensure page has loaded before scrolling
       setTimeout(() => {
         const guideStep1Section = document.querySelector(

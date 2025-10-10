@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@/components/common/button/ShineGlassButton";
 import "./NotFoundPage.css";
+import { ROUTES } from "@/constants/routes";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const NotFoundPage = () => {
 
   const handleGoHome = async () => {
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, "/");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.HOME);
   };
 
   const handleGoBack = () => {

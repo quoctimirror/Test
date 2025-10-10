@@ -10,6 +10,7 @@ import {
   ordersAPI,
   handleAPIError,
 } from "@services/api";
+import { ROUTES } from "@/constants/routes";
 
 const SelectOptionSection = () => {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ const SelectOptionSection = () => {
   };
 
   const handleContactUs = () => {
-    navigate("/contact");
+    navigate(ROUTES.CONTACT);
   };
 
   const handleBookAppointment = () => {
@@ -106,7 +107,7 @@ const SelectOptionSection = () => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       sessionStorage.setItem("redirectAfterLogin", window.location.pathname);
-      navigate("/auth/login");
+      navigate(ROUTES.AUTH_LOGIN);
       return;
     }
 

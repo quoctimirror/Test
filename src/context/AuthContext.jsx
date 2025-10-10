@@ -8,6 +8,7 @@ import {
 } from "react";
 import api from "@/services/api"; // Use centralized API configuration
 import requestThrottle from "@utils/transitionUtil/requestThrottle";
+import { ROUTES } from "@/constants/routes";
 
 const AuthContext = createContext(null);
 
@@ -163,7 +164,7 @@ export const AuthProvider = ({ children }) => {
     clearUserFromStorage(); // Clear persistent cache
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    window.location.href = "/auth/login";
+    window.location.href = ROUTES.AUTH_LOGIN;
   }, [clearUserFromStorage]);
 
   useEffect(() => {

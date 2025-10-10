@@ -4,6 +4,7 @@
   height: 300vh; /* Scroll height for animation */
   position: relative;
   isolation: isolate;
+  contain: layout style paint;
 }
 
 .shared-sticky-wrapper {
@@ -15,6 +16,17 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+
+  /* Performance optimizations */
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+  will-change: transform;
+  isolation: isolate;
+  contain: layout style;
 }
 
 .shared-sticky-wrapper::before {
@@ -37,40 +49,57 @@
   padding: 0 40px;
   text-align: center;
   position: relative;
-  transform: translateY(50vh) scale(0.8); /* Start from bottom and smaller */
+  transform: translateY(50vh) translateZ(0) scale(0.8); /* Start from bottom + GPU + smaller */
   opacity: 0; /* Initially hidden */
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  contain: layout style;
 }
 
 /* Header */
 .shared-header {
   margin-bottom: 12px;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .shared-header .bodytext-3--no-margin {
   text-transform: uppercase;
-  /* Color controlled by JS */
+  color: #fff;
 }
 
 /* Main Title */
 .shared-title {
   margin-bottom: 60px;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .shared-title .heading-1--no-margin {
   white-space: nowrap;
+  color: #fff;
 }
 
 /* Description */
 .shared-description {
   max-width: 609px;
   margin: 0 auto 60px auto;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .shared-description .bodytext-1--no-margin {
   word-wrap: break-word;
   white-space: normal;
-  /* Color controlled by JS */
+  color: #fff;
 }
 
 /* Buttons */
@@ -80,6 +109,10 @@
   justify-content: center;
   align-items: center;
   gap: 6px;
+  transform: translateY(30%) translateZ(0);
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 /* Responsive Design */
@@ -87,10 +120,6 @@
   .shared-content {
     max-width: 900px;
     padding: 0 30px;
-  }
-
-  .shared-title .heading-1--no-margin {
-    font-size: clamp(40px, 7vw, 100px);
   }
 }
 
@@ -105,10 +134,6 @@
 
   .shared-title {
     margin-bottom: 60px;
-  }
-
-  .shared-title .heading-1--no-margin {
-    font-size: clamp(32px, 8vw, 60px);
   }
 
   .shared-description {
@@ -132,10 +157,6 @@
 
   .shared-title {
     margin-bottom: 40px;
-  }
-
-  .shared-title .heading-1--no-margin {
-    font-size: clamp(24px, 10vw, 40px);
   }
 
   .shared-description {

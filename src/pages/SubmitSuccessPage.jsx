@@ -2,17 +2,18 @@ import { useNavigate } from "react-router-dom";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import "./SubmitSuccessPage.css";
+import { ROUTES } from "@/constants/routes";
 
 const SubmitSuccessPage = () => {
   const navigate = useNavigate();
 
   const handleImmersiveShowroom = () => {
     // Navigate to immersive showroom page
-    navigate("/immersive-showroom");
+    navigate(ROUTES.IMMERSIVE_SHOWROOM);
   };
 
   const handleBackToSubmit = () => {
-    navigate("/mirror-in-milan-digital-jewelry-week");
+    navigate(ROUTES.MILAN_SUBMIT);
   };
 
   return (

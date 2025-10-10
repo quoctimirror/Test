@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./ErrorBoundary.css";
+import { ROUTES } from "@/constants/routes";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       hasError: false,
       error: null,
       errorInfo: null
@@ -20,7 +21,7 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     // Log the error details
     console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+
     this.setState({
       error: error,
       errorInfo: errorInfo
@@ -36,7 +37,7 @@ class ErrorBoundary extends React.Component {
 
   handleGoHome = () => {
     sessionStorage.setItem('scrollToTop', 'true');
-    window.location.href = '/';
+    window.location.href = ROUTES.HOME;
   };
 
   render() {
@@ -88,15 +89,15 @@ class ErrorBoundary extends React.Component {
               <div className="helpful-links">
                 <h3>Need help?</h3>
                 <div className="links-grid">
-                  <Link to="/support" className="helpful-link">
+                  <Link to={ROUTES.SUPPORT} className="helpful-link">
                     <span className="link-icon">💬</span>
                     <div>
                       <strong>Contact Support</strong>
                       <small>Get help from our team</small>
                     </div>
                   </Link>
-                  
-                  <Link to="/collections" className="helpful-link">
+
+                  <Link to={ROUTES.COLLECTIONS} className="helpful-link">
                     <span className="link-icon">💎</span>
                     <div>
                       <strong>Browse Collections</strong>

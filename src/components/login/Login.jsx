@@ -4,6 +4,7 @@ import "./Login.css";
 import { useAuth } from "@/context/AuthContext";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
+import { ROUTES } from "@/constants/routes";
 // import "@styles/typography.css";
 
 const Login = () => {
@@ -72,7 +73,7 @@ const Login = () => {
       // Sử dụng login function từ AuthContext
       await login(payload.username, payload.password);
 
-      navigate("/user-profile");
+      navigate(ROUTES.USER_PROFILE);
     } catch (error) {
       // --- XỬ LÝ KHI THẤT BẠI ---
       let errorMessage = "An unexpected error occurred. Please try again.";
@@ -185,7 +186,7 @@ const Login = () => {
           {/* === KẾT THÚC THAY ĐỔI === */}
 
           <Link
-            to="/forgot-password"
+            to={ROUTES.FORGOT_PASSWORD}
             className="bodytext-4--no-margin forgot-password-link"
           >
             Forgot password?
@@ -203,7 +204,7 @@ const Login = () => {
         <p className="bodytext-3--no-margin register-prompt">
           Not a member?{" "}
           <Link
-            to="/auth/register"
+            to={ROUTES.AUTH_REGISTER}
             className="bodytext-3--no-margin register-link"
           >
             Register now

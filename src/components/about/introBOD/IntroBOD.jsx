@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import "./IntroBOD.css";
 
 const IntroBOD = () => {
@@ -8,66 +8,103 @@ const IntroBOD = () => {
   const headerRef = useRef(null);
   const titleRef = useRef(null);
   const descRef = useRef(null);
-  const [headerRevealProgress, setHeaderRevealProgress] = useState(0);
-  const [titleRevealProgress, setTitleRevealProgress] = useState(0);
-  const [descRevealProgress, setDescRevealProgress] = useState(0);
-  
+
   const headerText = "WHO WE ARE";
   const titleText = "THE MINDS BEHIND MIRROR";
   const descText = "Mirror is led by a collective of visionaries - blending innovation, design, and purpose. From strategy to storytelling, we shape a brand that's equal parts emotional and engineered.";
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
+    let ticking = false;
+    let lastProgress = -1;
+
+    const updateScroll = () => {
+      if (!containerRef.current) {
+        ticking = false;
+        return;
+      }
 
       const container = containerRef.current;
       const rect = container.getBoundingClientRect();
       const scrollHeight = container.offsetHeight - window.innerHeight;
       const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
-      
-      // Phase 1 (0-30% scroll): Move entire content to fixed position
-      const moveProgress = progress <= 0.3 ? Math.max(0, Math.min(1, progress / 0.3)) : 1;
-      
+
+      if (Math.abs(progress - lastProgress) < 0.001) {
+        ticking = false;
+        return;
+      }
+      lastProgress = progress;
+
+      // Phase 1 (0-20%): Move entire content to fixed position
+      const moveProgress =
+        progress <= 0.2 ? Math.max(0, Math.min(1, progress / 0.2)) : 1;
+
       if (contentRef.current) {
-        // Calculate initial position (bottom of viewport) to final position (center)
         const viewportHeight = window.innerHeight;
-        const initialTranslateY = viewportHeight * 0.5; // Start from bottom
-        
-        const currentTranslateY = initialTranslateY - (moveProgress * initialTranslateY);
-        contentRef.current.style.transform = `translateY(${currentTranslateY}px)`;
+        const initialTranslateY = viewportHeight * 0.5;
+        const currentTranslateY = initialTranslateY - moveProgress * initialTranslateY;
+        contentRef.current.style.transform = `translate3d(0, ${currentTranslateY}px, 0)`;
         contentRef.current.style.opacity = moveProgress;
       }
 
-      // Phase 2 (30-50% scroll): Header text reveal
-      if (progress > 0.3 && progress <= 0.5) {
-        const revealProgress = (progress - 0.3) / 0.2;
-        setHeaderRevealProgress(revealProgress);
-      } else if (progress > 0.5) {
-        setHeaderRevealProgress(1);
-      } else {
-        setHeaderRevealProgress(0);
+      // Phase 2 (20-35%): Header fade in + move up
+      if (headerRef.current) {
+        let headerY = 30, headerOpacity = 0;
+        if (progress < 0.2) {
+          headerY = 30; headerOpacity = 0;
+        } else if (progress <= 0.35) {
+          const fadeProgress = (progress - 0.2) / 0.15;
+          headerY = (1 - fadeProgress) * 30;
+          headerOpacity = fadeProgress;
+        } else {
+          headerY = 0; headerOpacity = 1;
+        }
+        headerRef.current.style.transform = `translate3d(0, ${headerY}%, 0)`;
+        headerRef.current.style.opacity = headerOpacity;
       }
 
-      // Phase 3 (50-70% scroll): Title text reveal
-      if (progress > 0.5 && progress <= 0.7) {
-        const revealProgress = (progress - 0.5) / 0.2;
-        setTitleRevealProgress(revealProgress);
-      } else if (progress > 0.7) {
-        setTitleRevealProgress(1);
-      } else {
-        setTitleRevealProgress(0);
+      // Phase 3 (35-50%): Title fade in + move up
+      if (titleRef.current) {
+        let titleY = 30, titleOpacity = 0;
+        if (progress < 0.35) {
+          titleY = 30; titleOpacity = 0;
+        } else if (progress <= 0.5) {
+          const fadeProgress = (progress - 0.35) / 0.15;
+          titleY = (1 - fadeProgress) * 30;
+          titleOpacity = fadeProgress;
+        } else {
+          titleY = 0; titleOpacity = 1;
+        }
+        titleRef.current.style.transform = `translate3d(0, ${titleY}%, 0)`;
+        titleRef.current.style.opacity = titleOpacity;
       }
 
-      // Phase 4 (70-100% scroll): Description text reveal
-      if (progress > 0.7) {
-        const revealProgress = (progress - 0.7) / 0.3;
-        setDescRevealProgress(Math.min(1, revealProgress));
-      } else {
-        setDescRevealProgress(0);
+      // Phase 4 (50-65%): Description fade in + move up
+      if (descRef.current) {
+        let descY = 30, descOpacity = 0;
+        if (progress < 0.5) {
+          descY = 30; descOpacity = 0;
+        } else if (progress <= 0.65) {
+          const fadeProgress = (progress - 0.5) / 0.15;
+          descY = (1 - fadeProgress) * 30;
+          descOpacity = fadeProgress;
+        } else {
+          descY = 0; descOpacity = 1;
+        }
+        descRef.current.style.transform = `translate3d(0, ${descY}%, 0)`;
+        descRef.current.style.opacity = descOpacity;
+      }
+
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScroll);
+        ticking = true;
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
@@ -79,68 +116,17 @@ const IntroBOD = () => {
         <div className="intro-content" ref={contentRef}>
           {/* Header */}
           <div className="intro-header" ref={headerRef}>
-            <span className="bodytext-3--no-margin">
-              {headerText.split("").map((char, index) => {
-                const charProgress = (index + 1) / headerText.length;
-                const isRevealed = headerRevealProgress >= charProgress;
-                
-                return (
-                  <span
-                    key={index}
-                    style={{
-                      color: isRevealed ? '#000' : 'rgba(0, 0, 0, 0.1)',
-                      transition: 'color 0.1s ease'
-                    }}
-                  >
-                    {char === " " ? "\u00A0" : char}
-                  </span>
-                );
-              })}
-            </span>
+            <span className="bodytext-3--no-margin">{headerText}</span>
           </div>
 
           {/* Main Title */}
           <div className="intro-title" ref={titleRef}>
-            <h1 className="heading-1--no-margin">
-              {titleText.split("").map((char, index) => {
-                const charProgress = (index + 1) / titleText.length;
-                const isRevealed = titleRevealProgress >= charProgress;
-                
-                return (
-                  <span
-                    key={index}
-                    style={{
-                      color: isRevealed ? '#000' : 'rgba(0, 0, 0, 0.1)',
-                      transition: 'color 0.1s ease'
-                    }}
-                  >
-                    {char === " " ? "\u00A0" : char}
-                  </span>
-                );
-              })}
-            </h1>
+            <h1 className="heading-1--no-margin">{titleText}</h1>
           </div>
 
           {/* Description */}
           <div className="intro-description" ref={descRef}>
-            <p className="bodytext-1--no-margin">
-              {descText.split("").map((char, index) => {
-                const charProgress = (index + 1) / descText.length;
-                const isRevealed = descRevealProgress >= charProgress;
-                
-                return (
-                  <span
-                    key={index}
-                    style={{
-                      color: isRevealed ? '#000' : 'rgba(0, 0, 0, 0.1)',
-                      transition: 'color 0.05s ease'
-                    }}
-                  >
-                    {char}
-                  </span>
-                );
-              })}
-            </p>
+            <p className="bodytext-1--no-margin">{descText}</p>
           </div>
         </div>
       </div>

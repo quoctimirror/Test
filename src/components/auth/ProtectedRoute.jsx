@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { ROUTES } from '@/constants/routes';
 
 const ProtectedRoute = ({ children, requiredRole = null }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
@@ -20,7 +21,7 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/auth/login" state={{ from: location }} replace />;
+    return <Navigate to={ROUTES.AUTH_LOGIN} state={{ from: location }} replace />;
   }
 
   // Check role-based access if required

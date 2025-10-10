@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import { ROUTES } from "@/constants/routes";
 import "./Section5.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
@@ -11,7 +12,7 @@ const Section5 = () => {
   const handleViewAllFAQs = async () => {
     await optimizedTransitionUtils.transitionToRoute(
       navigate,
-      "/support?tab=faqs"
+      `${ROUTES.SUPPORT}?tab=faqs`
     );
   };
 

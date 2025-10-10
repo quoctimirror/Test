@@ -5,6 +5,7 @@ import "./Register.css";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import { ROUTES } from "@/constants/routes";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ const Register = () => {
       await api.post("/api/auth/register", payload);
 
       // alert('Account created successfully! Please log in.');
-      navigate("/auth/login");
+      navigate(ROUTES.AUTH_LOGIN);
     } catch (error) {
       // Xử lý khi thất bại
       let errorMessage = "Registration failed. Please try again.";
@@ -349,7 +350,7 @@ const Register = () => {
           <p className="bodytext-3--no-margin login-prompt">
             Already a member?{" "}
             <a
-              onClick={() => navigate("/auth/login")}
+              onClick={() => navigate(ROUTES.AUTH_LOGIN)}
               className="bodytext-3--no-margin return-login-link"
             >
               Login now

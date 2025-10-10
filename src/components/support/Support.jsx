@@ -6,6 +6,7 @@ import SizingGuide from "./SizingGuide";
 import WarrantyInfo from "./WarrantyInfo";
 import FAQs from "./FAQs";
 import ContactUs from "@components/contactUs/ContactUs";
+import { ROUTES } from "@/constants/routes";
 
 const Support = () => {
   const [searchParams] = useSearchParams();
@@ -38,7 +39,7 @@ const Support = () => {
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
-    navigate(`/support?tab=${tabId}`, { replace: true });
+    navigate(`${ROUTES.SUPPORT}?tab=${tabId}`, { replace: true });
   };
 
   const handleScrollRight = () => {

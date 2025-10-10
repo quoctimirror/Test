@@ -5,6 +5,7 @@ import DesignerStatistics from "./DesignerStatistics";
 import DesignerDesigns from "./DesignerDesigns";
 import DesignerSales from "./DesignerSales";
 import "./DesignerDashboard.css";
+import { ROUTES } from "@/constants/routes";
 
 const DesignerDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -53,7 +54,7 @@ const DesignerDashboard = () => {
   ];
 
   const handleHomeNavigation = () => {
-    window.location.href = '/home';
+    window.location.href = ROUTES.HOME_PAGE;
   };
 
   const renderActiveTab = () => {
