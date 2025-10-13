@@ -1368,7 +1368,7 @@ const MyPlayground2 = () => {
           ring-enhancer
           gltf-model="/models/nhanMirror.glb"
           position="0 1.6 -0.5"
-          scale="1 1 1"
+          scale="0.5 0.5 0.5"
           rotation="0 0 0"
           class="interactive grabbable rotatable"
         >
