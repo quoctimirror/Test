@@ -407,9 +407,9 @@ const MyPlayground2 = () => {
           
           // ROTATE OBJECT - EXACT COPY FROM WORKING HTML
           var currentRotation = this.selectedObject.getAttribute('rotation');
-          
+
           var deltaY = thumbstickX * this.rotationSpeed;  // Left/right rotation
-          var deltaX = -thumbstickY * this.rotationSpeed; // Up/down rotation (inverted)
+          var deltaX = thumbstickY * this.rotationSpeed; // Up/down rotation
           
           // Apply rotation - SAME AS WORKING HTML
           this.selectedObject.setAttribute('rotation', {
@@ -1078,10 +1078,155 @@ const MyPlayground2 = () => {
     };
   }, []);
 
+  const buttonStyle = {
+    padding: '8px',
+    backgroundColor: '#333',
+    color: 'white',
+    border: '1px solid #555',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '12px',
+    fontWeight: 'bold'
+  };
+
+  const rotateRing = (axis, direction) => {
+    const ring = document.getElementById('ring-entity');
+    if (!ring) return;
+
+    const currentRotation = ring.getAttribute('rotation');
+    const rotationSpeed = 5;
+
+    if (axis === 'x') {
+      ring.setAttribute('rotation', {
+        x: currentRotation.x + (direction * rotationSpeed),
+        y: currentRotation.y,
+        z: currentRotation.z
+      });
+    } else if (axis === 'y') {
+      ring.setAttribute('rotation', {
+        x: currentRotation.x,
+        y: currentRotation.y + (direction * rotationSpeed),
+        z: currentRotation.z
+      });
+    }
+  };
+
+  const moveRing = (axis, direction) => {
+    const ring = document.getElementById('ring-entity');
+    if (!ring) return;
+
+    const currentPos = ring.getAttribute('position');
+    const moveSpeed = 0.1;
+
+    if (axis === 'x') {
+      ring.setAttribute('position', {
+        x: currentPos.x + (direction * moveSpeed),
+        y: currentPos.y,
+        z: currentPos.z
+      });
+    } else if (axis === 'y') {
+      ring.setAttribute('position', {
+        x: currentPos.x,
+        y: currentPos.y + (direction * moveSpeed),
+        z: currentPos.z
+      });
+    } else if (axis === 'z') {
+      ring.setAttribute('position', {
+        x: currentPos.x,
+        y: currentPos.y,
+        z: currentPos.z + (direction * moveSpeed)
+      });
+    }
+  };
+
+  const resetRing = () => {
+    const ring = document.getElementById('ring-entity');
+    if (!ring) return;
+
+    ring.setAttribute('position', '0 1.6 -0.5');
+    ring.setAttribute('rotation', '0 0 0');
+  };
+
   return (
     <div className="myplayground2-container">
+      {/* Desktop Control Panel */}
+      <div style={{
+        position: 'fixed',
+        top: '20px',
+        left: '20px',
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        color: 'white',
+        padding: '20px',
+        borderRadius: '10px',
+        zIndex: 999,
+        fontFamily: 'monospace'
+      }}>
+        <h3 style={{ margin: '0 0 15px 0', color: '#00ff00' }}>Desktop Controls (VR Test)</h3>
+
+        {/* Rotation Controls - giống Thumbstick */}
+        <div style={{ marginBottom: '15px' }}>
+          <strong>ROTATION (Thumbstick):</strong>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 60px)', gap: '5px', marginTop: '10px' }}>
+            <div></div>
+            <button onClick={() => rotateRing('x', 1)} style={buttonStyle}>
+              ⬆️ UP
+            </button>
+            <div></div>
+            <button onClick={() => rotateRing('y', -1)} style={buttonStyle}>
+              ⬅️ LEFT
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888' }}>●</div>
+            <button onClick={() => rotateRing('y', 1)} style={buttonStyle}>
+              ➡️ RIGHT
+            </button>
+            <div></div>
+            <button onClick={() => rotateRing('x', -1)} style={buttonStyle}>
+              ⬇️ DOWN
+            </button>
+            <div></div>
+          </div>
+        </div>
+
+        {/* Movement Controls - giống Trigger + Move */}
+        <div style={{ marginBottom: '15px' }}>
+          <strong>MOVEMENT (Trigger + Move):</strong>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 60px)', gap: '5px', marginTop: '10px' }}>
+            <div></div>
+            <button onClick={() => moveRing('z', -1)} style={buttonStyle}>
+              ⬆️ FWD
+            </button>
+            <div></div>
+            <button onClick={() => moveRing('x', -1)} style={buttonStyle}>
+              ⬅️
+            </button>
+            <button onClick={() => moveRing('y', 1)} style={buttonStyle}>
+              ⬆️ Y
+            </button>
+            <button onClick={() => moveRing('x', 1)} style={buttonStyle}>
+              ➡️
+            </button>
+            <div></div>
+            <button onClick={() => moveRing('z', 1)} style={buttonStyle}>
+              ⬇️ BACK
+            </button>
+            <button onClick={() => moveRing('y', -1)} style={buttonStyle}>
+              ⬇️ Y
+            </button>
+          </div>
+        </div>
+
+        {/* Reset Button */}
+        <button onClick={resetRing} style={{
+          ...buttonStyle,
+          width: '100%',
+          backgroundColor: '#ff4444'
+        }}>
+          🔄 RESET
+        </button>
+      </div>
+
       {/* Force VR Button - always visible */}
-      <button 
+      <button
         style={{
           position: 'fixed',
           bottom: '20px',
@@ -1101,7 +1246,7 @@ const MyPlayground2 = () => {
           try {
             const scene = document.querySelector('a-scene');
             console.log('🔄 Attempting to enter VR...');
-            
+
             if (scene && scene.is && scene.is('vr-mode')) {
               console.log('🚪 Exiting VR...');
               scene.exitVR();
