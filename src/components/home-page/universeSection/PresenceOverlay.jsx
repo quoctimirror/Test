@@ -1,15 +1,24 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import './PresenceOverlay.css';
 import StarlightEffect from './StarlightEffect';
 import ShineGlassButton from '../../common/button/ShineGlassButton';
 
-const PresenceOverlay = ({ isVisible, onClose }) => {
+const PresenceOverlay = ({ isVisible, onClose, origin }) => {
+    const [isClosing, setIsClosing] = useState(false);
+
+    const handleClose = useCallback(() => {
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsClosing(false);
+            onClose();
+        }, 300);
+    }, [onClose]);
 
     const handleEscKey = useCallback((event) => {
         if (event.key === 'Escape') {
-            onClose();
+            handleClose();
         }
-    }, [onClose]);
+    }, [handleClose]);
 
     useEffect(() => {
         if (isVisible) {
@@ -28,12 +37,18 @@ const PresenceOverlay = ({ isVisible, onClose }) => {
     if (!isVisible) return null;
 
     return (
-        <div className="presence-overlay" onClick={onClose}>
-            <div className="presence-overlay__content">
+        <div
+            className="presence-overlay"
+            onClick={handleClose}
+        >
+            <div
+                className={`presence-overlay__content ${isClosing ? 'presence-overlay__content--closing' : ''}`}
+                style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}
+            >
                 {/* Close Button */}
                 <div className="presence-overlay__close-button">
                     <ShineGlassButton
-                        onClick={onClose}
+                        onClick={handleClose}
                         theme="footer"
                         width={44}
                         height={44}
@@ -52,7 +67,7 @@ const PresenceOverlay = ({ isVisible, onClose }) => {
                 <div className="presence-overlay__starlight">
                     <StarlightEffect
                         direction="falling"
-                        height={200}
+                        height={140}
                     />
                 </div>
                 <div className="presence-overlay__milestone-text">

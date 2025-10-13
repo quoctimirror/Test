@@ -16,15 +16,20 @@ const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
 const SupportPage = lazy(() => import("@pages/SupportPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
-// const UniverseSection = lazy(() =>
-//   import("@components/home-page/universeSection/MirrorExp.jsx")
-// );
+const UniverseSection = lazy(() =>
+  import("@components/home-page/universeSection/MirrorExp.jsx")
+);
 const HoverExpandSection = lazy(() =>
   import("@components/home-page/hoverExpandSection/HoverExpandSection.jsx")
 );
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
 // const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
-const TryOnRing = lazy(() => import("@components/arTryOn/Occluder.jsx"));
+const TryOnRing = lazy(() => import("@components/arTryOn/Occluder3.jsx"));
+// KHÔNG lazy load QuocTiar vì nó cần khởi tạo camera/Canvas ngay lập tức
+import QuocTiar from "@components/arTryOn/QuocTiar.jsx";
+const SimpleMeshInspector = lazy(() =>
+  import("@components/arTryOn/quocti_dancefloor/SimpleMeshInspector.jsx")
+);
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
@@ -134,6 +139,8 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+    location.pathname.startsWith("/ar/quoc-ti") ||
+    location.pathname.startsWith("/ar/mesh-inspector") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -146,6 +153,8 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+    location.pathname.startsWith("/ar/quoc-ti") ||
+    location.pathname.startsWith("/ar/mesh-inspector") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -220,7 +229,7 @@ export default function AppRoutes() {
           </Route>
 
           {/* for observing UI universe-section final */}
-          {/* <Route path="/universe-section" element={<UniverseSection />} /> */}
+          <Route path="/universe-section" element={<UniverseSection />} />
 
           <Route path={ROUTES.HOVER_EXPAND} element={<HoverExpandSection />} />
 
@@ -237,6 +246,10 @@ export default function AppRoutes() {
           <Route element={<TryOnRingLayout />}>
             <Route path={ROUTES.AR_RINGS} element={<TryOnRing />} />
           </Route>
+
+          <Route path="/ar/quoc-ti" element={<QuocTiar modelPath="/models/myfav.glb" />} />
+
+          <Route path="/ar/mesh-inspector" element={<SimpleMeshInspector />} />
 
           <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
 
