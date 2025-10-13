@@ -622,6 +622,62 @@ const MyPlayground2 = () => {
       });
     }
 
+    // VR Button Handler Component
+    if (window.AFRAME && !window.AFRAME.components['vr-button-handler']) {
+      window.AFRAME.registerComponent('vr-button-handler', {
+        init: function() {
+          this.el.addEventListener('click', (evt) => {
+            const action = this.el.getAttribute('data-action');
+            const value = parseFloat(this.el.getAttribute('data-value'));
+            const axis = this.el.getAttribute('data-axis');
+
+            const ring = document.getElementById('ring-entity');
+            if (!ring) return;
+
+            console.log('VR Button clicked:', action, value, axis);
+
+            // Flash effect
+            const originalColor = this.el.getAttribute('color');
+            this.el.setAttribute('color', '#00ff00');
+            setTimeout(() => {
+              this.el.setAttribute('color', originalColor);
+            }, 200);
+
+            if (action === 'scale') {
+              ring.setAttribute('scale', `${value} ${value} ${value}`);
+              console.log(`Ring scaled to ${value}x`);
+            } else if (action === 'move') {
+              const currentPos = ring.getAttribute('position');
+              if (axis === 'x') {
+                ring.setAttribute('position', {
+                  x: currentPos.x + value,
+                  y: currentPos.y,
+                  z: currentPos.z
+                });
+              } else if (axis === 'y') {
+                ring.setAttribute('position', {
+                  x: currentPos.x,
+                  y: currentPos.y + value,
+                  z: currentPos.z
+                });
+              } else if (axis === 'z') {
+                ring.setAttribute('position', {
+                  x: currentPos.x,
+                  y: currentPos.y,
+                  z: currentPos.z + value
+                });
+              }
+            } else if (action === 'reset') {
+              ring.setAttribute('position', '0 1.6 -0.5');
+              ring.setAttribute('rotation', '0 0 0');
+              ring.setAttribute('scale', '0.5 0.5 0.5');
+              console.log('Ring reset');
+            }
+          });
+        }
+      });
+    }
+
     // Component để chọn và tương tác với entity - Desktop + Touch Plus
     if (window.AFRAME && !window.AFRAME.components['vr-selectable']) {
       window.AFRAME.registerComponent('vr-selectable', {
@@ -1360,6 +1416,286 @@ const MyPlayground2 = () => {
           ></a-text>
         </a-entity>
 
+        {/* VR Control Panel - Scale Controls */}
+        <a-entity
+          id="vr-control-panel"
+          position="2 1.8 -2"
+          rotation="0 -30 0"
+        >
+          {/* Background Panel */}
+          <a-plane
+            width="2"
+            height="2.5"
+            color="#000000"
+            opacity="0.8"
+          ></a-plane>
+
+          {/* Title */}
+          <a-text
+            value="SCALE CONTROLS"
+            color="#00ff00"
+            position="0 1.1 0.01"
+            align="center"
+            width="3"
+          ></a-text>
+
+          {/* Scale Buttons - Row 1 */}
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="0.1"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="-0.8 0.7 0.01"
+          >
+            <a-text value="0.1x" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="0.5"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="-0.4 0.7 0.01"
+          >
+            <a-text value="0.5x" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="1"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#444444"
+            position="0 0.7 0.01"
+          >
+            <a-text value="1x" align="center" position="0 0 0.03" width="1" color="#ffff00"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="2"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="0.4 0.7 0.01"
+          >
+            <a-text value="2x" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="3"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="0.8 0.7 0.01"
+          >
+            <a-text value="3x" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          {/* Scale Buttons - Row 2 */}
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="5"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="-0.8 0.4 0.01"
+          >
+            <a-text value="5x" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="10"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="-0.4 0.4 0.01"
+          >
+            <a-text value="10x" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="20"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="0 0.4 0.01"
+          >
+            <a-text value="20x" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="50"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="0.4 0.4 0.01"
+          >
+            <a-text value="50x" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="scale"
+            data-value="100"
+            width="0.35"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="0.8 0.4 0.01"
+          >
+            <a-text value="100x" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          {/* Position Controls Label */}
+          <a-text
+            value="POSITION"
+            color="#00ff00"
+            position="0 0.05 0.01"
+            align="center"
+            width="3"
+          ></a-text>
+
+          {/* Position Buttons */}
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="move"
+            data-axis="z"
+            data-value="-0.1"
+            width="0.3"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="0 -0.25 0.01"
+          >
+            <a-text value="FWD" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="move"
+            data-axis="z"
+            data-value="0.1"
+            width="0.3"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="0 -0.65 0.01"
+          >
+            <a-text value="BACK" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="move"
+            data-axis="x"
+            data-value="-0.1"
+            width="0.3"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="-0.4 -0.45 0.01"
+          >
+            <a-text value="LEFT" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="move"
+            data-axis="x"
+            data-value="0.1"
+            width="0.3"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="0.4 -0.45 0.01"
+          >
+            <a-text value="RIGHT" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="move"
+            data-axis="y"
+            data-value="0.1"
+            width="0.3"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="-0.7 -0.25 0.01"
+          >
+            <a-text value="UP" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="move"
+            data-axis="y"
+            data-value="-0.1"
+            width="0.3"
+            height="0.2"
+            depth="0.05"
+            color="#333333"
+            position="-0.7 -0.65 0.01"
+          >
+            <a-text value="DOWN" align="center" position="0 0 0.03" width="1" color="#ffffff"></a-text>
+          </a-box>
+
+          {/* Reset Button */}
+          <a-box
+            class="vr-button interactive"
+            vr-button-handler
+            data-action="reset"
+            width="1.5"
+            height="0.25"
+            depth="0.05"
+            color="#ff4444"
+            position="0 -1 0.01"
+          >
+            <a-text value="RESET" align="center" position="0 0 0.03" width="2" color="#ffffff"></a-text>
+          </a-box>
+        </a-entity>
+
         {/* NHẪN 3D - Enhanced với kim cương lấp lánh và vàng bóng */}
         <a-entity
           id="ring-entity"
@@ -1376,22 +1712,22 @@ const MyPlayground2 = () => {
 
         {/* VR Controllers with grab functionality */}
         <a-entity
-          id="rightController" 
+          id="rightController"
           tracked-controls="hand: right; idPrefix: meta-quest"
           meta-touch-controls="hand: right; model: true"
           laser-controls="hand: right"
           working-thumbstick
-          raycaster="objects: .rotatable; showLine: false; far: 3; interval: 100"
+          raycaster="objects: .rotatable, .vr-button; showLine: true; far: 5; interval: 100"
         >
         </a-entity>
-        
+
         <a-entity
-          id="leftController" 
+          id="leftController"
           tracked-controls="hand: left; idPrefix: meta-quest"
           meta-touch-controls="hand: left; model: true"
-          laser-controls="hand: left" 
+          laser-controls="hand: left"
           working-thumbstick
-          raycaster="objects: .rotatable; showLine: false; far: 3; interval: 100"
+          raycaster="objects: .rotatable, .vr-button; showLine: true; far: 5; interval: 100"
         >
         </a-entity>
 

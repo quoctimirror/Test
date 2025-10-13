@@ -13,6 +13,8 @@
   "dependencies": {
     "@react-three/drei": "^10.7.4",
     "@react-three/fiber": "^9.3.0",
+    "@react-three/postprocessing": "^3.0.4",
+    "@react-three/xr": "^6.6.27",
     "@threepipe/plugin-tweakpane": "^0.8.4",
     "@threepipe/webgi-plugins": "^0.5.10",
     "@types/three": "^0.180.0",
