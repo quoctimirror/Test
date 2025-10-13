@@ -3,12 +3,9 @@
   width: 100%;
   height: 300vh; /* Scroll height for animation - increased for pause after button */
   background: rgba(255, 255, 255, 0);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   position: relative;
   z-index: 20;
   transform: translateZ(0); /* Force GPU acceleration */
-  will-change: transform; /* Optimize for transforms */
 }
 
 .starting-sticky-wrapper {
@@ -20,10 +17,84 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Blur layer with ultra-smooth fade - maximum smoothness at fade/full blur junction */
+.starting-sticky-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -150px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  transform: translateZ(0); /* Maintain blur during transforms */
-  backface-visibility: hidden; /* Prevent flickering */
+  z-index: -1;
+  /* Extra fine steps from 90% to 100% opacity for seamless transition */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.05) 4%,
+    rgba(0, 0, 0, 0.12) 8%,
+    rgba(0, 0, 0, 0.2) 12%,
+    rgba(0, 0, 0, 0.3) 16%,
+    rgba(0, 0, 0, 0.4) 19%,
+    rgba(0, 0, 0, 0.5) 22%,
+    rgba(0, 0, 0, 0.6) 24%,
+    rgba(0, 0, 0, 0.65) 25%,
+    rgba(0, 0, 0, 0.7) 26%,
+    rgba(0, 0, 0, 0.74) 27%,
+    rgba(0, 0, 0, 0.78) 28%,
+    rgba(0, 0, 0, 0.81) 28.5%,
+    rgba(0, 0, 0, 0.84) 29%,
+    rgba(0, 0, 0, 0.865) 29.5%,
+    rgba(0, 0, 0, 0.885) 30%,
+    rgba(0, 0, 0, 0.905) 30.5%,
+    rgba(0, 0, 0, 0.92) 31%,
+    rgba(0, 0, 0, 0.935) 31.5%,
+    rgba(0, 0, 0, 0.948) 32%,
+    rgba(0, 0, 0, 0.96) 32.5%,
+    rgba(0, 0, 0, 0.97) 33%,
+    rgba(0, 0, 0, 0.978) 33.5%,
+    rgba(0, 0, 0, 0.985) 34%,
+    rgba(0, 0, 0, 0.991) 34.5%,
+    rgba(0, 0, 0, 0.995) 35%,
+    rgba(0, 0, 0, 0.998) 35.5%,
+    black 36%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.05) 4%,
+    rgba(0, 0, 0, 0.12) 8%,
+    rgba(0, 0, 0, 0.2) 12%,
+    rgba(0, 0, 0, 0.3) 16%,
+    rgba(0, 0, 0, 0.4) 19%,
+    rgba(0, 0, 0, 0.5) 22%,
+    rgba(0, 0, 0, 0.6) 24%,
+    rgba(0, 0, 0, 0.65) 25%,
+    rgba(0, 0, 0, 0.7) 26%,
+    rgba(0, 0, 0, 0.74) 27%,
+    rgba(0, 0, 0, 0.78) 28%,
+    rgba(0, 0, 0, 0.81) 28.5%,
+    rgba(0, 0, 0, 0.84) 29%,
+    rgba(0, 0, 0, 0.865) 29.5%,
+    rgba(0, 0, 0, 0.885) 30%,
+    rgba(0, 0, 0, 0.905) 30.5%,
+    rgba(0, 0, 0, 0.92) 31%,
+    rgba(0, 0, 0, 0.935) 31.5%,
+    rgba(0, 0, 0, 0.948) 32%,
+    rgba(0, 0, 0, 0.96) 32.5%,
+    rgba(0, 0, 0, 0.97) 33%,
+    rgba(0, 0, 0, 0.978) 33.5%,
+    rgba(0, 0, 0, 0.985) 34%,
+    rgba(0, 0, 0, 0.991) 34.5%,
+    rgba(0, 0, 0, 0.995) 35%,
+    rgba(0, 0, 0, 0.998) 35.5%,
+    black 36%
+  );
 }
 
 .starting-content {
@@ -32,10 +103,9 @@
   padding: 0 40px;
   text-align: center;
   position: relative;
-  transform: translateY(50vh); /* Start from bottom */
+  transform: translateY(0); /* Already centered */
   opacity: 0; /* Initially hidden */
   will-change: transform, opacity;
-  transform-style: preserve-3d; /* Preserve 3D context */
 }
 
 /* Header */
@@ -48,7 +118,7 @@
 
 .starting-header .bodytext-3--no-margin {
   text-transform: uppercase;
-  color: #fff;
+  color: rgba(121, 121, 121, 1);
 }
 
 /* Main Title */

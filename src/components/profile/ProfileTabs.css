@@ -1,0 +1,218 @@
+/* Profile Tab Content Styles */
+.profile-tab-content {
+  width: 100%;
+  max-width: 922px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Items List (for Orders, Services, Wishlist) */
+.profile-items-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.profile-item:first-child {
+  padding-top: 0;
+}
+
+.profile-item:last-child {
+  border-bottom: none;
+}
+
+.profile-item-image {
+  flex-shrink: 0;
+  width: 110px;
+  height: 110px;
+  overflow: hidden;
+  background: #000;
+}
+
+.profile-item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Grayscale for Services images */
+.profile-services-tab .profile-service-image img {
+  filter: grayscale(100%);
+}
+
+.profile-item-info {
+  flex: 1;
+}
+
+.profile-item-name {
+  color: #000;
+}
+
+.profile-item-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-item-date {
+  color: #797979;
+}
+
+.profile-view-detail-btn {
+  background: none;
+  border: none;
+  color: #797979;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.profile-view-detail-btn::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  bottom: -3px;
+  left: 0;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
+}
+
+.profile-view-detail-btn:hover {
+  color: #000;
+}
+
+.profile-view-detail-btn:hover::after {
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
+}
+
+/* Address Book Styles */
+.profile-address-book {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+}
+
+.profile-addresses-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-address-card {
+  text-align: center;
+  max-width: 500px;
+}
+
+.profile-address-name {
+  color: #000;
+  margin-bottom: 24px;
+}
+
+.profile-address-phone,
+.profile-address-street,
+.profile-address-district {
+  color: #000;
+}
+
+.profile-edit-btn {
+  background: none;
+  border: none;
+  color: #797979;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 24px;
+  transition: color 0.2s ease;
+  position: relative;
+  display: inline-block;
+}
+
+.profile-edit-btn::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  bottom: -3px;
+  left: 0;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
+}
+
+.profile-edit-btn:hover {
+  color: #000;
+}
+
+.profile-edit-btn:hover::after {
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
+}
+
+/* profile-add-address-btn now uses ShineGlassButton component */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-tab-content {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .profile-item {
+    gap: 20px;
+    padding: 32px 0;
+  }
+
+  .profile-item-image {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px 0;
+  }
+
+  .profile-item:first-child {
+    padding-top: 0;
+  }
+
+  .profile-item-image {
+    width: 100%;
+    height: 240px;
+  }
+
+  .profile-item-actions {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .profile-address-book {
+    gap: 40px;
+  }
+
+  .profile-address-book .profile-add-address-btn {
+    width: 100%;
+  }
+}

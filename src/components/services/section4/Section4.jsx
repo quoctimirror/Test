@@ -61,6 +61,55 @@ const Section4 = () => {
       }
 
       setScrollProgress(adjustedProgress);
+
+      // Mobile parallax effect - only on mobile screens (<=480px)
+      if (window.innerWidth <= 480) {
+        const mobileScreen1 = document.querySelector('.section4-mobile-screen-1');
+        const mobileScreen2 = document.querySelector('.section4-mobile-screen-2');
+        const mobileScreen3 = document.querySelector('.section4-mobile-screen-3');
+
+        if (mobileScreen1) {
+          const rect1 = mobileScreen1.getBoundingClientRect();
+          const scrollDistance1 = windowHeight - rect1.top;
+          const totalDistance1 = windowHeight + rect1.height;
+          const scrollRatio1 = Math.max(0, Math.min(1, scrollDistance1 / totalDistance1));
+
+          // Dual-layer parallax: background and text move at different speeds (EXTREME)
+          const bgParallax1 = scrollRatio1 * 100; // Background moves DOWN slowly (100px)
+          const textParallax1 = scrollRatio1 * -80; // Text moves UP fast (80px) - opposite direction
+
+          mobileScreen1.style.setProperty('--parallax-bg-offset', `${bgParallax1}px`);
+          mobileScreen1.style.setProperty('--parallax-text-offset', `${textParallax1}px`);
+        }
+
+        if (mobileScreen2) {
+          const rect2 = mobileScreen2.getBoundingClientRect();
+          const scrollDistance2 = windowHeight - rect2.top;
+          const totalDistance2 = windowHeight + rect2.height;
+          const scrollRatio2 = Math.max(0, Math.min(1, scrollDistance2 / totalDistance2));
+
+          // Dual-layer parallax: background and text move at different speeds (EXTREME)
+          const bgParallax2 = scrollRatio2 * 100; // Background moves DOWN slowly (100px)
+          const textParallax2 = scrollRatio2 * -80; // Text moves UP fast (80px) - opposite direction
+
+          mobileScreen2.style.setProperty('--parallax-bg-offset', `${bgParallax2}px`);
+          mobileScreen2.style.setProperty('--parallax-text-offset', `${textParallax2}px`);
+        }
+
+        if (mobileScreen3) {
+          const rect3 = mobileScreen3.getBoundingClientRect();
+          const scrollDistance3 = windowHeight - rect3.top;
+          const totalDistance3 = windowHeight + rect3.height;
+          const scrollRatio3 = Math.max(0, Math.min(1, scrollDistance3 / totalDistance3));
+
+          // Dual-layer parallax: background and text move at different speeds (EXTREME)
+          const bgParallax3 = scrollRatio3 * 100; // Background moves DOWN slowly (100px)
+          const textParallax3 = scrollRatio3 * -80; // Text moves UP fast (80px) - opposite direction
+
+          mobileScreen3.style.setProperty('--parallax-bg-offset', `${bgParallax3}px`);
+          mobileScreen3.style.setProperty('--parallax-text-offset', `${textParallax3}px`);
+        }
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -94,7 +143,7 @@ const Section4 = () => {
                 </div>
                 <ShineGlassButton
                   className="section4-cta"
-                  theme="dark"
+                  theme="footer"
                   onClick={handleReturnExchangeClick}
                 >
                   See more
@@ -125,7 +174,7 @@ const Section4 = () => {
                 </div>
                 <ShineGlassButton
                   className="section4-cta"
-                  theme="dark"
+                  theme="footer"
                   onClick={handleSizingGuideClick}
                 >
                   See more
@@ -155,7 +204,7 @@ const Section4 = () => {
                 </div>
                 <ShineGlassButton
                   className="section4-cta"
-                  theme="dark"
+                  theme="footer"
                   onClick={handleWarrantyInfoClick}
                 >
                   See more

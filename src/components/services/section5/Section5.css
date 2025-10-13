@@ -144,7 +144,8 @@
   }
 }
 
-@media screen and (max-width: 1023px) {
+/* Tablet (481px - 1024px) */
+@media screen and (max-width: 1024px) {
   .faq-item {
     padding: 24px 0;
   }
@@ -164,7 +165,7 @@
   }
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 480px) {
   .faq-item {
     padding: 17px 0;
   }

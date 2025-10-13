@@ -12,28 +12,36 @@
   overflow: hidden;
 }
 
-/* Gradient overlay - dark at top and bottom, transparent in center */
-.immersive-showroom::before {
-  content: '';
+/* Gradient overlays - dark at top and bottom */
+.showroom-gradient-top {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 30%;
   background: linear-gradient(
     180deg,
     #000 0%,
-    rgba(0, 0, 0, 0.9) 5%,
-    rgba(0, 0, 0, 0.7) 10%,
-    rgba(0, 0, 0, 0.4) 15%,
-    rgba(0, 0, 0, 0.15) 20%,
-    rgba(0, 0, 0, 0) 30%,
-    rgba(0, 0, 0, 0) 70%,
-    rgba(0, 0, 0, 0.15) 80%,
-    rgba(0, 0, 0, 0.4) 85%,
-    rgba(0, 0, 0, 0.7) 90%,
-    rgba(0, 0, 0, 0.9) 95%,
-    #000 100%
+    rgba(0, 0, 0, 0.8) 20%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.showroom-gradient-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: linear-gradient(
+    0deg,
+    #000 0%,
+    rgba(0, 0, 0, 0.8) 20%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0) 100%
   );
   z-index: 1;
   pointer-events: none;
@@ -49,13 +57,18 @@
   object-position: center;
   z-index: 0;
   border: none;
+  outline: none;
   pointer-events: none; /* Disable interaction with background iframe */
   opacity: 0; /* Start hidden */
   transition: opacity 0.6s ease-in-out;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: opacity;
 }
 
 .showroom-background.loaded {
-  opacity: 0.5; /* 50% opacity at center, gradient overlay darkens at edges */
+  opacity: 0.5; /* 50% opacity */
 }
 
 /* Fallback background image */
@@ -68,8 +81,29 @@
   object-fit: cover;
   object-position: center;
   z-index: 0;
-  opacity: 0.5; /* 50% opacity at center, gradient overlay darkens at edges */
+  opacity: 0; /* Hidden by default on desktop */
   transition: opacity 0.6s ease-in-out;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Show fallback when iframe is loading/error on desktop */
+.showroom-background-fallback.visible {
+  opacity: 1;
+}
+
+/* Mobile: Always show fallback image, hide iframe */
+@media screen and (max-width: 1023px) {
+  .showroom-background {
+    display: none !important;
+  }
+
+  .showroom-background-fallback {
+    opacity: 1 !important;
+  }
 }
 
 .showroom-content {

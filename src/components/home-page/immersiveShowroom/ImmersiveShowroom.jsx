@@ -28,20 +28,18 @@ const ImmersiveShowroom = () => {
   return (
     <>
       <div className="immersive-showroom">
-        {/* Fallback background image - shown when iframe is loading or failed */}
-        {(!iframeLoaded || iframeError) && (
-          <img
-            src="/immersiveShowroom/immersiveShowroomBackground.png"
-            alt="Immersive Showroom Background"
-            className="showroom-background-fallback"
-          />
-        )}
+        {/* Fallback background image - always rendered, CSS controls visibility */}
+        <img
+          src="/immersiveShowroom/immersiveShowroomBackground.png"
+          alt="Immersive Showroom Background"
+          className={`showroom-background-fallback ${!iframeLoaded || iframeError ? 'visible' : ''}`}
+        />
 
-        {/* Iframe - hidden until loaded, or if error occurred */}
+        {/* Iframe - hidden on mobile via CSS */}
         {!iframeError && (
           <iframe
             src="https://cdn.lov3d.io/spaces/1759690637958-2v6j8tn5fpq/MirrorNEW/index.htm"
-            className={`showroom-background ${iframeLoaded ? 'loaded' : ''}`}
+            className={`showroom-background ${iframeLoaded ? "loaded" : ""}`}
             title="3D viewer for Mirror Jewelry"
             allow="fullscreen; xr-spatial-tracking"
             sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
@@ -51,7 +49,9 @@ const ImmersiveShowroom = () => {
           />
         )}
 
-        {/* Gradient overlay now handled by ::before pseudo-element in CSS */}
+        {/* Gradient overlays */}
+        <div className="showroom-gradient-top"></div>
+        <div className="showroom-gradient-bottom"></div>
 
         <div className="showroom-content">
           <h4 className="bodytext-3--no-margin showroom-subtitle">

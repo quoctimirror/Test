@@ -81,15 +81,19 @@ const BODMemberV3 = () => {
 
       // Check if there's an active image in the center (only for desktop)
       // On tablet/mobile, text is always visible when section is in view
-      const hasActiveImage = isTabletOrMobile ? true : memberRefs.current.some((ref) => {
-        if (!ref) return false;
-        const imgRect = ref.getBoundingClientRect();
-        const centerY = viewportHeight / 2;
-        // Check if image center is close to viewport center
-        const imgCenter = imgRect.top + imgRect.height / 2;
-        const distance = Math.abs(imgCenter - centerY);
-        return distance < viewportHeight / 3 && ref.classList.contains('active');
-      });
+      const hasActiveImage = isTabletOrMobile
+        ? true
+        : memberRefs.current.some((ref) => {
+            if (!ref) return false;
+            const imgRect = ref.getBoundingClientRect();
+            const centerY = viewportHeight / 2;
+            // Check if image center is close to viewport center
+            const imgCenter = imgRect.top + imgRect.height / 2;
+            const distance = Math.abs(imgCenter - centerY);
+            return (
+              distance < viewportHeight / 3 && ref.classList.contains("active")
+            );
+          });
 
       setIsVisible(isInViewport && hasScrolledIn && hasActiveImage);
     };
@@ -121,7 +125,8 @@ const BODMemberV3 = () => {
           if (ref) {
             const rect = ref.getBoundingClientRect();
             const parentRect = container.getBoundingClientRect();
-            const elementCenter = rect.left - parentRect.left + scrollLeft + rect.width / 2;
+            const elementCenter =
+              rect.left - parentRect.left + scrollLeft + rect.width / 2;
             const distance = Math.abs(centerPosition - elementCenter);
 
             if (distance < minDistance) {
@@ -205,7 +210,10 @@ const BODMemberV3 = () => {
     <div className="bod-member-v3-section" ref={sectionRef}>
       <div className="grid-container bod-member-v3-grid">
         {/* Leader Quote - Left side - Sticky */}
-        <div className={`leader-quote-content-v3 ${isVisible ? "visible" : ""}`} ref={quoteRef}>
+        <div
+          className={`leader-quote-content-v3 ${isVisible ? "visible" : ""}`}
+          ref={quoteRef}
+        >
           <p className="bodytext-3--no-margin">
             "As intelligence becomes abundant through technology, what remains
             rare is genuine emotion. Mirror exists to preserve that emotion — to
@@ -225,8 +233,12 @@ const BODMemberV3 = () => {
               data-index={index}
               className={`member-item-v3 ${
                 isTabletOrMobile
-                  ? (index % teamMembers.length === currentIndex ? "active" : "")
-                  : (index === currentIndex ? "active" : "")
+                  ? index % teamMembers.length === currentIndex
+                    ? "active"
+                    : ""
+                  : index === currentIndex
+                  ? "active"
+                  : ""
               }`}
             >
               <img
@@ -241,9 +253,12 @@ const BODMemberV3 = () => {
         </div>
 
         {/* Leader Details - Right side - Sticky */}
-        <div className={`leader-details-content-v3 ${isVisible ? "visible" : ""}`} ref={detailsRef}>
+        <div
+          className={`leader-details-content-v3 ${isVisible ? "visible" : ""}`}
+          ref={detailsRef}
+        >
           <h1 className="heading-1--no-margin">{currentMember.name}</h1>
-          <h3 className="heading-3--no-margin">{currentMember.position}</h3>
+          <h3 className="bodytext-1--no-margin">{currentMember.position}</h3>
         </div>
       </div>
     </div>

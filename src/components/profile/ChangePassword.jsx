@@ -121,26 +121,26 @@ const ChangePassword = ({ onClose }) => {
       <div className="change-password-modal">
         <div className="change-password-header">
           <h2>Change Password</h2>
-          <button className="close-button" onClick={onClose}>
+          <button className="change-password-close-button" onClick={onClose}>
             &times;
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="change-password-form">
-          <div className="form-field-container">
-            <label className="form-field-label">Current Password*</label>
-            <div className="password-input-container">
+          <div className="change-password-field-container">
+            <label className="change-password-field-label">Current Password*</label>
+            <div className="change-password-password-input-container">
               <input
                 type={showPasswords.currentPassword ? "text" : "password"}
                 name="currentPassword"
                 value={passwordData.currentPassword}
                 onChange={handleInputChange}
-                className="form-input password-input"
+                className="change-password-form-input change-password-password-input"
                 required
               />
               <button
                 type="button"
-                className="password-toggle-btn"
+                className="change-password-toggle-btn"
                 onClick={() => togglePasswordVisibility("currentPassword")}
                 aria-label={
                   showPasswords.currentPassword
@@ -163,24 +163,24 @@ const ChangePassword = ({ onClose }) => {
               </button>
             </div>
             {errors.currentPassword && (
-              <p className="input-error">{errors.currentPassword}</p>
+              <p className="change-password-input-error">{errors.currentPassword}</p>
             )}
           </div>
 
-          <div className="form-field-container">
-            <label className="form-field-label">New Password*</label>
-            <div className="password-input-container">
+          <div className="change-password-field-container">
+            <label className="change-password-field-label">New Password*</label>
+            <div className="change-password-password-input-container">
               <input
                 type={showPasswords.newPassword ? "text" : "password"}
                 name="newPassword"
                 value={passwordData.newPassword}
                 onChange={handleInputChange}
-                className="form-input password-input"
+                className="change-password-form-input change-password-password-input"
                 required
               />
               <button
                 type="button"
-                className="password-toggle-btn"
+                className="change-password-toggle-btn"
                 onClick={() => togglePasswordVisibility("newPassword")}
                 aria-label={
                   showPasswords.newPassword ? "Hide password" : "Show password"
@@ -199,24 +199,24 @@ const ChangePassword = ({ onClose }) => {
               </button>
             </div>
             {errors.newPassword && (
-              <p className="input-error">{errors.newPassword}</p>
+              <p className="change-password-input-error">{errors.newPassword}</p>
             )}
           </div>
 
-          <div className="form-field-container">
-            <label className="form-field-label">Confirm New Password*</label>
-            <div className="password-input-container">
+          <div className="change-password-field-container">
+            <label className="change-password-field-label">Confirm New Password*</label>
+            <div className="change-password-password-input-container">
               <input
                 type={showPasswords.confirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={passwordData.confirmPassword}
                 onChange={handleInputChange}
-                className="form-input password-input"
+                className="change-password-form-input change-password-password-input"
                 required
               />
               <button
                 type="button"
-                className="password-toggle-btn"
+                className="change-password-toggle-btn"
                 onClick={() => togglePasswordVisibility("confirmPassword")}
                 aria-label={
                   showPasswords.confirmPassword
@@ -239,24 +239,24 @@ const ChangePassword = ({ onClose }) => {
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="input-error">{errors.confirmPassword}</p>
+              <p className="change-password-input-error">{errors.confirmPassword}</p>
             )}
           </div>
 
           {errors.form && (
-            <div className="form-field-container">
-              <p className="input-error">{errors.form}</p>
+            <div className="change-password-field-container">
+              <p className="change-password-input-error">{errors.form}</p>
             </div>
           )}
 
           <div className="change-password-buttons">
-            <button type="button" onClick={onClose} className="cancel-button">
+            <button type="button" onClick={onClose} className="change-password-cancel-button">
               Cancel
             </button>
             <ShineGlassButton
               theme="light"
               type="submit"
-              className="submit-button"
+              className="change-password-submit-button"
             >
               {isLoading ? "Saving..." : "Save Changes"}
             </ShineGlassButton>

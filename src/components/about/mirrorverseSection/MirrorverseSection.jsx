@@ -28,8 +28,12 @@ const MirrorverseSection = () => {
 
       const container = containerRef.current;
       const rect = container.getBoundingClientRect();
-      const scrollHeight = container.offsetHeight - window.innerHeight;
-      const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
+      const viewportHeight = window.innerHeight;
+
+      // Start animation when section top enters viewport from bottom
+      const scrolled = viewportHeight - rect.top;
+      const totalScrollDistance = container.offsetHeight;
+      const progress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
 
       if (Math.abs(progress - lastProgress) < 0.001) {
         ticking = false;

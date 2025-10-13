@@ -46,15 +46,15 @@
 ============================================================
 */
 
-/* Tablet (426px - 1023px) */
-@media screen and (max-width: 1023px) {
+/* Tablet (481px - 1024px) */
+@media screen and (max-width: 1024px) {
   .section3-content {
     width: 62%;
   }
 }
 
-/* Mobile (425px và xuống) */
-@media screen and (max-width: 425px) {
+/* Mobile (480px và xuống) */
+@media screen and (max-width: 480px) {
   /* Reset the main section */
   .services-section3 {
     height: auto;

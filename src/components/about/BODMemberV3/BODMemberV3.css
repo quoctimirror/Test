@@ -93,6 +93,10 @@
   opacity: 1;
 }
 
+.leader-details-content-v3.visible .bodytext-1--no-margin {
+  color: rgba(121, 121, 121, 1);
+}
+
 .leader-details-content-v3 h1,
 .leader-details-content-v3 h3 {
   text-transform: uppercase;

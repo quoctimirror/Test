@@ -90,11 +90,11 @@
   width: 100%;
   height: 2px;
   background: #000;
-  bottom: -2px;
+  bottom: -3px;
   left: 0;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s ease-out;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
 }
 
 .services-detail-tab:hover {
@@ -102,8 +102,8 @@
 }
 
 .services-detail-tab:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
 }
 
 .services-detail-tab.active {
@@ -112,7 +112,7 @@
 }
 
 .services-detail-tab.active::after {
-  transform: scaleX(1);
+  transform: scaleX(1) scaleY(0.75);
 }
 
 /* Services Detail Content */
@@ -306,7 +306,7 @@
 /* Tablet - 426px to 1023px */
 @media screen and (max-width: 1023px) {
   .services-detail-tab::after {
-    bottom: -1px;
+    bottom: -2px;
   }
   .services-detail-tabs {
     gap: 24px;
@@ -317,7 +317,6 @@
 @media screen and (max-width: 425px) {
   .services-detail-tab::after {
     bottom: -3px; /* 3px gap from text on mobile */
-    height: 1.5px; /* Thinner on mobile */
   }
   .services-detail-content {
     width: 77%;

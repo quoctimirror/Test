@@ -1,20 +1,26 @@
 // src/pages/Profile/Profile.js
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@services/api"; // Use centralized API client
 import "./Profile.css";
 import "@styles/typography.css";
+import "@styles/grid-system.css";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import ChangePassword from "./ChangePassword";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { useAuth } from "@/context/AuthContext";
+import Orders from "./Orders";
+import Services from "./Services";
+import AddressBook from "./AddressBook";
+import Wishlist from "./Wishlist";
 
 const Profile = () => {
   const navigate = useNavigate();
   // Bây giờ chỉ cần 'logout' từ context, không cần 'handleApiError' nữa
   const { logout } = useAuth();
+  const navTabsRef = useRef(null);
 
   // ... (Các state và hằng số không thay đổi)
   const titles = ["Ms", "Mrs", "Mr"];
@@ -115,7 +121,7 @@ const Profile = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [activeNavItem, setActiveNavItem] = useState("My Passport");
+  const [activeNavItem, setActiveNavItem] = useState("Orders");
   const [showChangePassword, setShowChangePassword] = useState(false);
 
   // ... (Các hàm validate, handleInputChange, handlePhoneChange, etc. không thay đổi)
@@ -183,6 +189,13 @@ const Profile = () => {
 
   const handleLogout = () => {
     logout(); // Gọi thẳng hàm logout từ context
+  };
+
+  const handleScrollRight = () => {
+    if (navTabsRef.current) {
+      const scrollAmount = navTabsRef.current.clientWidth * 0.7; // Scroll 70% của width
+      navTabsRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
   };
 
   // useEffect để lấy thông tin user - ĐƠN GIẢN HƠN RẤT NHIỀU
@@ -262,8 +275,8 @@ const Profile = () => {
     <div className="profile-container">
       <div className="profile-form-wrapper">
         {/* Profile Header */}
-        <div className="profile-header">
-          <div className="profile-info">
+        <div className="profile-header grid-container">
+          <div className="profile-info col-4">
             <h1 className="heading-1--no-margin profile-name">
               {formData.firstName}
               <br />
@@ -273,44 +286,50 @@ const Profile = () => {
               Logout
             </div>
           </div>
-          <div className="profile-center">
+          <div className="profile-center col-4">
             <div className="profile-logo"></div>
           </div>
-          <div className="profile-tier">
-            <p className="tier-level">Tier 3</p>
-            <p className="tier-name">hewhewe</p>
+          <div className="profile-tier col-4">
+            <p className="tier-level bodytext-1--no-margin">Tier 3</p>
+            <p className="tier-name bodytext-1--no-margin">hewhewe</p>
           </div>
         </div>
 
         {/* Header Navigation */}
         <div className="profile-nav-header">
-          <nav className="profile-nav">
+          <nav className="profile-nav" ref={navTabsRef}>
             {navItems.map((item) => (
-              <div
+              <button
                 key={item}
                 className={`profile-nav-item ${
                   activeNavItem === item ? "active" : ""
                 }`}
                 onClick={() => handleNavClick(item)}
               >
-                {item}
-              </div>
+                <span className="bodytext-3--no-margin">{item}</span>
+              </button>
             ))}
           </nav>
+          <button className="profile-nav-scroll-arrow" onClick={handleScrollRight}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
 
         {/* Form Content */}
         <div className="profile-form-content">
-          <form className="profile-form" onSubmit={handleSubmit} noValidate>
+          {activeNavItem === "My Passport" && (
+            <form className="profile-form" onSubmit={handleSubmit} noValidate>
             {/* Title */}
-            <div className="title-group">
+            <div className="profile-title-group">
               <label className="bodytext-3--no-margin">Title*</label>
-              <div className="title-options">
+              <div className="profile-title-options">
                 {titles.map((title) => (
                   <span
                     key={title}
                     onClick={() => handleTitleSelect(title)}
-                    className={`title-option bodytext-3--no-margin ${
+                    className={`profile-title-option bodytext-3--no-margin ${
                       formData.title?.toLowerCase() === title.toLowerCase()
                         ? "active"
                         : ""
@@ -323,94 +342,94 @@ const Profile = () => {
             </div>
 
             {/* Form Fields */}
-            <div className="form-field-container">
+            <div className="profile-field-container">
               <label className="bodytext-3--no-margin">First Name*</label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName || ""}
                 onChange={handleInputChange}
-                className="form-input bodytext-3--no-margin"
+                className="profile-form-input bodytext-3--no-margin"
                 required
               />
               {errors.firstName && (
-                <p className="input-error bodytext-4--no-margin">
+                <p className="profile-input-error bodytext-4--no-margin">
                   {errors.firstName}
                 </p>
               )}
             </div>
-            <div className="form-field-container">
+            <div className="profile-field-container">
               <label className="bodytext-3--no-margin">Last name*</label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName || ""}
                 onChange={handleInputChange}
-                className="form-input bodytext-3--no-margin"
+                className="profile-form-input bodytext-3--no-margin"
                 required
               />
               {errors.lastName && (
-                <p className="input-error bodytext-4--no-margin">
+                <p className="profile-input-error bodytext-4--no-margin">
                   {errors.lastName}
                 </p>
               )}
             </div>
-            <div className="form-field-container">
+            <div className="profile-field-container">
               <label className="bodytext-3--no-margin">Email Address*</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email || ""}
                 onChange={handleInputChange}
-                className="form-input bodytext-3--no-margin"
+                className="profile-form-input bodytext-3--no-margin"
                 required
               />
               {errors.email && (
-                <p className="input-error bodytext-4--no-margin">
+                <p className="profile-input-error bodytext-4--no-margin">
                   {errors.email}
                 </p>
               )}
             </div>
-            <div className="form-field-container">
+            <div className="profile-field-container">
               <label className="bodytext-3--no-margin">Day of Birth</label>
               <input
                 type="date"
                 name="dateOfBirth"
                 value={formData.dateOfBirth || ""}
                 onChange={handleInputChange}
-                className="form-input bodytext-3--no-margin"
+                className="profile-form-input bodytext-3--no-margin"
               />
               {errors.dateOfBirth && (
-                <p className="input-error bodytext-4--no-margin">
+                <p className="profile-input-error bodytext-4--no-margin">
                   {errors.dateOfBirth}
                 </p>
               )}
             </div>
 
-            <div className="phone-input-container">
+            <div className="profile-phone-input-container">
               <label className="bodytext-3--no-margin">Phone Number</label>
               <PhoneInput
                 country={"vn"}
                 value={formData.phoneNumber}
                 onChange={handlePhoneChange}
-                inputClass="phone-input-field bodytext-3--no-margin"
-                containerClass="phone-input-control"
-                buttonClass="phone-dropdown-button"
+                inputClass="profile-phone-input-field bodytext-3--no-margin"
+                containerClass="profile-phone-input-control"
+                buttonClass="profile-phone-dropdown-button"
               />
               {errors.phoneNumber && (
-                <p className="input-error bodytext-4--no-margin">
+                <p className="profile-input-error bodytext-4--no-margin">
                   {errors.phoneNumber}
                 </p>
               )}
             </div>
 
-            <div className="form-field-container">
+            <div className="profile-field-container">
               <label className="bodytext-3--no-margin">Nationality</label>
               <select
                 name="nationality"
                 value={formData.nationality || ""}
                 onChange={handleNationalityChange}
-                className="form-input nationality-dropdown bodytext-3--no-margin"
+                className="profile-form-input profile-nationality-dropdown bodytext-3--no-margin"
               >
                 <option value="">Select a country</option>
                 {countries.map((country) => (
@@ -423,30 +442,36 @@ const Profile = () => {
 
             {/* Action Buttons */}
             {errors.form && (
-              <div className="form-field-container">
-                <p className="input-error bodytext-4--no-margin">
+              <div className="profile-field-container">
+                <p className="profile-input-error bodytext-4--no-margin">
                   {errors.form}
                 </p>
               </div>
             )}
 
-            <div className="action-buttons-container">
+            <div className="profile-action-buttons-container">
               <ShineGlassButton
                 theme="light"
                 onClick={() => setShowChangePassword(true)}
-                className="change-password-button"
+                className="profile-change-password-button"
               >
                 Change Password
               </ShineGlassButton>
               <ShineGlassButton
                 theme="light"
                 onClick={() => {}}
-                className="save-profile-button"
+                className="profile-save-button"
               >
                 {isLoading ? "Saving..." : "Save Profile"}
               </ShineGlassButton>
             </div>
           </form>
+          )}
+
+          {activeNavItem === "Orders" && <Orders />}
+          {activeNavItem === "Services" && <Services />}
+          {activeNavItem === "Address Book" && <AddressBook />}
+          {activeNavItem === "Wishlist" && <Wishlist />}
         </div>
       </div>
       {showChangePassword && (

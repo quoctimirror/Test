@@ -27,35 +27,41 @@ const StartingPlaceSection = () => {
 
       const container = containerRef.current;
       const rect = container.getBoundingClientRect();
-      const scrollHeight = container.offsetHeight - window.innerHeight;
-      const progress = Math.max(0, Math.min(1, -rect.top / scrollHeight));
+      const viewportHeight = window.innerHeight;
 
-      // Phase 1 (0-20% scroll): Move entire content to fixed position
-      const moveProgress =
-        progress <= 0.2 ? Math.max(0, Math.min(1, progress / 0.2)) : 1;
+      // Start animation when section top enters viewport from bottom
+      // progress = 0 when section top is at viewport bottom
+      // progress = 1 when section fully scrolled through
+      const scrolled = viewportHeight - rect.top;
+      const totalScrollDistance = container.offsetHeight;
+      const progress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
 
-      if (contentRef.current) {
-        // Calculate initial position (bottom of viewport) to final position (center)
-        const viewportHeight = window.innerHeight;
-        const initialTranslateY = viewportHeight * 0.5; // Start from bottom
+      // Phase 1 (0-15% scroll): Content fade in BEFORE blur finishes
+      const contentFadeProgress =
+        progress <= 0.15 ? Math.max(0, Math.min(1, progress / 0.15)) : 1;
 
-        const currentTranslateY =
-          initialTranslateY - moveProgress * initialTranslateY;
-        contentRef.current.style.transform = `translateY(${currentTranslateY}px)`;
-        contentRef.current.style.opacity = moveProgress;
+      // Debug
+      if (progress > 0 && progress < 0.2) {
+        console.log('Progress:', progress.toFixed(3), 'Content opacity:', contentFadeProgress.toFixed(3));
       }
 
-      // Header animation (20-35% scroll): fade in + move up, then pause
+      if (contentRef.current) {
+        // Content stays centered, fades in quickly before blur completes
+        contentRef.current.style.transform = `translateY(0)`;
+        contentRef.current.style.opacity = contentFadeProgress;
+      }
+
+      // Header animation (15-30% scroll): fade in + move up, then pause
       if (headerRef.current) {
         let headerTransform = "translateY(30%)";
         let headerOpacity = 0;
 
-        if (progress < 0.2) {
+        if (progress < 0.15) {
           headerTransform = "translateY(30%)";
           headerOpacity = 0;
-        } else if (progress <= 0.35) {
+        } else if (progress <= 0.3) {
           // Fade in phase
-          const fadeProgress = (progress - 0.2) / 0.15;
+          const fadeProgress = (progress - 0.15) / 0.15;
           headerTransform = `translateY(${(1 - fadeProgress) * 30}%)`;
           headerOpacity = fadeProgress;
         } else {
@@ -68,17 +74,17 @@ const StartingPlaceSection = () => {
         headerRef.current.style.opacity = headerOpacity;
       }
 
-      // Title animation (35-50% scroll): fade in + move up, then pause
+      // Title animation (30-45% scroll): fade in + move up, then pause
       if (titleRef.current) {
         let titleTransform = "translateY(30%)";
         let titleOpacity = 0;
 
-        if (progress < 0.35) {
+        if (progress < 0.3) {
           titleTransform = "translateY(30%)";
           titleOpacity = 0;
-        } else if (progress <= 0.5) {
+        } else if (progress <= 0.45) {
           // Fade in phase
-          const fadeProgress = (progress - 0.35) / 0.15;
+          const fadeProgress = (progress - 0.3) / 0.15;
           titleTransform = `translateY(${(1 - fadeProgress) * 30}%)`;
           titleOpacity = fadeProgress;
         } else {
@@ -91,17 +97,17 @@ const StartingPlaceSection = () => {
         titleRef.current.style.opacity = titleOpacity;
       }
 
-      // Description animation (50-65% scroll): fade in + move up, then pause
+      // Description animation (45-60% scroll): fade in + move up, then pause
       if (descRef.current) {
         let descTransform = "translateY(30%)";
         let descOpacity = 0;
 
-        if (progress < 0.5) {
+        if (progress < 0.45) {
           descTransform = "translateY(30%)";
           descOpacity = 0;
-        } else if (progress <= 0.65) {
+        } else if (progress <= 0.6) {
           // Fade in phase
-          const fadeProgress = (progress - 0.5) / 0.15;
+          const fadeProgress = (progress - 0.45) / 0.15;
           descTransform = `translateY(${(1 - fadeProgress) * 30}%)`;
           descOpacity = fadeProgress;
         } else {
@@ -114,17 +120,17 @@ const StartingPlaceSection = () => {
         descRef.current.style.opacity = descOpacity;
       }
 
-      // Button animation (65-75% scroll): fade in + move up, then pause
+      // Button animation (60-70% scroll): fade in + move up, then pause
       if (buttonRef.current) {
         let buttonTransform = "translateY(30%)";
         let buttonOpacity = 0;
 
-        if (progress < 0.65) {
+        if (progress < 0.6) {
           buttonTransform = "translateY(30%)";
           buttonOpacity = 0;
-        } else if (progress <= 0.75) {
+        } else if (progress <= 0.7) {
           // Fade in phase
-          const fadeProgress = (progress - 0.65) / 0.1;
+          const fadeProgress = (progress - 0.6) / 0.1;
           buttonTransform = `translateY(${(1 - fadeProgress) * 30}%)`;
           buttonOpacity = fadeProgress;
         } else {
