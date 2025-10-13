@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js GLTF Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .controls-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <div class="loader" id="loader">Loading 3D Model...</div>
+        <div class="info">
+            <h3>Stone RND Model</h3>
+            <p>Format: GLTF 2.0 with Draco Compression</p>
+        </div>
+        <div class="controls-info">
+            <strong>Controls:</strong><br>
+            Left Mouse: Rotate | Right Mouse: Pan | Scroll: Zoom
+        </div>
+    </div>
+    
+    <!-- Import map for ES modules -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x87CEEB);
+        scene.fog = new THREE.Fog(0x87CEEB, 5, 50);
+        
+        // Camera setup
+        const camera = new THREE.PerspectiveCamera(
+            75, 
+            window.innerWidth / window.innerHeight, 
+            0.1, 
+            1000
+        );
+        camera.position.set(2, 2, 5);
+        
+        // Renderer setup
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.screenSpacePanning = false;
+        controls.minDistance = 1;
+        controls.maxDistance = 10;
+        controls.maxPolarAngle = Math.PI / 2;
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 10, 5);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.camera.near = 0.1;
+        directionalLight.shadow.camera.far = 50;
+        directionalLight.shadow.camera.left = -10;
+        directionalLight.shadow.camera.right = 10;
+        directionalLight.shadow.camera.top = 10;
+        directionalLight.shadow.camera.bottom = -10;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        scene.add(directionalLight);
+        
+        const pointLight = new THREE.PointLight(0xffd700, 0.5, 10);
+        pointLight.position.set(-2, 3, -2);
+        scene.add(pointLight);
+        
+        // Ground plane
+        const groundGeometry = new THREE.PlaneGeometry(20, 20);
+        const groundMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x8FBC8F,
+            roughness: 0.8,
+            metalness: 0.2
+        });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+        
+        // Grid helper
+        const gridHelper = new THREE.GridHelper(20, 20, 0x000000, 0x000000);
+        gridHelper.material.opacity = 0.2;
+        gridHelper.material.transparent = true;
+        scene.add(gridHelper);
+        
+        // Load GLTF model with Draco decoder
+        const loader = new GLTFLoader();
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+        dracoLoader.setDecoderConfig({ type: 'js' });
+        loader.setDRACOLoader(dracoLoader);
+        
+        // Your actual GLTF data với embedded binary data
+        const gltfData = {
+            "asset": {
+                "generator": "glTF-Transform v3.2.1",
+                "version": "2.0"
+            },
+            "accessors": [
+                {
+                    "type": "SCALAR",
+                    "componentType": 5123,
+                    "count": 522
+                },
+                {
+                    "type": "VEC3",
+                    "componentType": 5126,
+                    "count": 314,
+                    "max": [0.3249998092651367, 0.391523540019989, 0.32499992847442627],
+                    "min": [-0.3249991536140442, 0, -0.32499903440475464]
+                },
+                {
+                    "type": "VEC2",
+                    "componentType": 5126,
+                    "count": 314
+                },
+                {
+                    "type": "VEC3",
+                    "componentType": 5126,
+                    "count": 314
+                }
+            ],
+            "bufferViews": [
+                {
+                    "buffer": 0,
+                    "byteOffset": 0,
+                    "byteLength": 1331
+                }
+            ],
+            "buffers": [
+                {
+                    "name": "RND",
+                    "uri": "RND.bin",
+                    "byteLength": 1331
+                }
+            ],
+            "materials": [
+                {
+                    "name": "lambert1.013", 
+                    "doubleSided": true,
+                    "pbrMetallicRoughness": {
+                        "baseColorFactor": [0.5, 0.5, 0.5, 1],
+                        "roughnessFactor": 0.5527864098548889,
+                        "metallicFactor": 0
+                    }
+                }
+            ],
+            "meshes": [
+                {
+                    "name": "Stone_RND",
+                    "primitives": [
+                        {
+                            "attributes": {
+                                "POSITION": 1,
+                                "TEXCOORD_0": 2, 
+                                "NORMAL": 3
+                            },
+                            "mode": 4,
+                            "material": 0,
+                            "indices": 0,
+                            "extensions": {
+                                "KHR_draco_mesh_compression": {
+                                    "bufferView": 0,
+                                    "attributes": {
+                                        "POSITION": 0,
+                                        "TEXCOORD_0": 1,
+                                        "NORMAL": 2
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "nodes": [
+                {
+                    "name": "Stone_RND",
+                    "scale": [0.009999999776482582, 0.009999999776482582, 0.009999999776482582],
+                    "mesh": 0
+                }
+            ],
+            "scenes": [
+                {
+                    "name": "Scene", 
+                    "nodes": [0]
+                }
+            ],
+            "scene": 0,
+            "extensionsUsed": ["KHR_draco_mesh_compression"],
+            "extensionsRequired": ["KHR_draco_mesh_compression"]
+        };
+        
+        // Load your actual GLTF model
+        const loader2 = document.getElementById('loader');
+        let stoneMesh = null;
+        
+        // Convert GLTF data to blob and load it
+        const gltfBlob = new Blob([JSON.stringify(gltfData)], { type: 'application/json' });
+        const gltfUrl = URL.createObjectURL(gltfBlob);
+        
+        loader.load(
+            gltfUrl,
+            function (gltf) {
+                console.log('GLTF loaded successfully:', gltf);
+                stoneMesh = gltf.scene;
+                
+                // Configure model properties
+                stoneMesh.traverse((child) => {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                        child.material.side = THREE.DoubleSide;
+                    }
+                });
+                
+                // Position and scale the model
+                stoneMesh.position.y = 1;
+                stoneMesh.scale.set(50, 50, 50); // Scale up since original is very small
+                scene.add(stoneMesh);
+                
+                // Hide loader
+                if (loader2) {
+                    loader2.style.display = 'none';
+                }
+            },
+            function (xhr) {
+                const progress = (xhr.loaded / xhr.total * 100);
+                console.log(progress + '% loaded');
+                if (loader2) {
+                    loader2.textContent = `Loading 3D Model... ${Math.round(progress)}%`;
+                }
+            },
+            function (error) {
+                console.error('Error loading GLTF:', error);
+                
+                // Fallback to placeholder geometry
+                const stoneGeometry = new THREE.DodecahedronGeometry(0.5, 2);
+                const stoneMaterial = new THREE.MeshStandardMaterial({
+                    color: 0x808080,
+                    roughness: 0.5527864098548889,
+                    metalness: 0,
+                    side: THREE.DoubleSide
+                });
+                
+                stoneMesh = new THREE.Mesh(stoneGeometry, stoneMaterial);
+                stoneMesh.position.y = 1;
+                stoneMesh.castShadow = true;
+                stoneMesh.receiveShadow = true;
+                stoneMesh.scale.set(2, 2, 2);
+                scene.add(stoneMesh);
+                
+                if (loader2) {
+                    loader2.textContent = 'Using placeholder geometry (Draco binary data needed)';
+                }
+            }
+        );
+        
+        // Animation
+        let clock = new THREE.Clock();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            const elapsedTime = clock.getElapsedTime();
+            
+            // Rotate stone
+            if (stoneMesh) {
+                stoneMesh.rotation.y = elapsedTime * 0.5;
+                stoneMesh.position.y = 1 + Math.sin(elapsedTime * 2) * 0.1;
+            }
+            
+            // Update controls
+            controls.update();
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Hide loader
+        if (loader2) {
+            loader2.style.display = 'none';
+        }
+        
+        // Start animation
+        animate();
+        
+        // Optional: Try to load the actual GLTF file if it exists
+        // You would need to place the RND.bin file in the same directory
+        /*
+        loader.load(
+            'path/to/your/model.gltf',
+            function (gltf) {
+                scene.remove(stoneMesh);
+                const model = gltf.scene;
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+                scene.add(model);
+                loader2.style.display = 'none';
+            },
+            function (xhr) {
+                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            },
+            function (error) {
+                console.error('An error happened', error);
+                loader2.textContent = 'Error loading model';
+            }
+        );
+        */
+    </script>
+</body>
+</html>

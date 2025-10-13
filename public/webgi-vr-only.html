@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- WebGI Viewer setup -->
+    <script src="https://releases.ijewel3d.com/webgi/runtime/viewer-0.17.0.js"></script>
+
+    <title>WebGI VR Only</title>
+
+    <style>
+        html, body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            font-family: "Inter", sans-serif !important;
+        }
+
+        /* WebGI Canvas Styles */
+        #webgi-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        /* VR Button */
+        .vr-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .vr-button:hover {
+            background: #1565c0;
+        }
+
+        /* Debug Panel */
+        .debug-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+            max-width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Debug Panel -->
+    <div id="debug-panel" class="debug-panel">
+        <div>WebGI VR Only Mode</div>
+        <div>Pure WebGI Experience</div>
+        <div>Desktop + VR Same Quality</div>
+        <div id="status">Initializing...</div>
+    </div>
+
+    <!-- WebGI Viewer Container -->
+    <div id="webgi-container">
+        <!-- WebGI viewer with VR support -->
+        <webgi-viewer id="viewer-3d"
+            src="/models/nhanMirror.glb"
+            environment="https://releases.ijewel3d.com/webgi/assets/hdr/gem_2.hdr"
+            vr="true"
+            controls="true"
+            autoplay="true"
+            style="width: 100%; height: 100%; z-index: 1; display: block;" />
+    </div>
+
+    <!-- Manual VR Button (in case WebGI VR button doesn't show) -->
+    <button id="vr-button" class="vr-button" onclick="toggleWebGIVR()">🥽 Enter VR</button>
+
+    <script>
+        // Global state
+        let isVRMode = false;
+        let webgiViewer = null;
+
+        // Debug logging
+        function debugLog(message) {
+            console.log(message);
+            const status = document.getElementById('status');
+            if (status) {
+                status.innerHTML = message;
+            }
+        }
+
+        // Initialize WebGI with VR support
+        function initializeWebGIVR() {
+            debugLog('🎨 Initializing WebGI with VR support...');
+
+            // WebGI viewer element is already in DOM
+            webgiViewer = document.getElementById('viewer-3d');
+
+            if (webgiViewer) {
+                debugLog('✅ WebGI viewer element found');
+
+                // Enable VR attributes
+                webgiViewer.setAttribute('vr', 'true');
+                webgiViewer.setAttribute('controls', 'true');
+                webgiViewer.setAttribute('autoplay', 'true');
+
+                // Listen for load events
+                webgiViewer.addEventListener('load', () => {
+                    debugLog('✅ WebGI model loaded successfully');
+
+                    // Try to enable VR controls
+                    setTimeout(() => {
+                        enableWebGIVRControls();
+                    }, 1000);
+                });
+
+                webgiViewer.addEventListener('error', (e) => {
+                    debugLog('❌ WebGI error: ' + e.message);
+                });
+
+                // Listen for VR events
+                webgiViewer.addEventListener('enterVR', () => {
+                    debugLog('✅ Entered WebGI VR mode');
+                    isVRMode = true;
+                    updateVRButton();
+                });
+
+                webgiViewer.addEventListener('exitVR', () => {
+                    debugLog('✅ Exited WebGI VR mode');
+                    isVRMode = false;
+                    updateVRButton();
+                });
+            }
+        }
+
+        // Enable WebGI VR Controls
+        function enableWebGIVRControls() {
+            try {
+                debugLog('🎮 Setting up WebGI VR controls...');
+
+                // Try to access WebGI's internal VR methods
+                if (window.webgi && webgiViewer) {
+                    const viewer = webgiViewer._viewer || webgiViewer.viewer || webgiViewer;
+
+                    // Enable VR if available
+                    if (viewer && typeof viewer.setVREnabled === 'function') {
+                        viewer.setVREnabled(true);
+                        debugLog('✅ WebGI VR enabled via setVREnabled');
+                    }
+
+                    // Try other VR enable methods
+                    if (viewer && viewer.renderManager && typeof viewer.renderManager.enableVR === 'function') {
+                        viewer.renderManager.enableVR(true);
+                        debugLog('✅ WebGI VR enabled via renderManager');
+                    }
+
+                    // Check if VR button exists
+                    setTimeout(() => {
+                        const vrButtons = document.querySelectorAll('[data-webgi-vr-button], .webgi-vr-button, .vr-button-webgi');
+                        if (vrButtons.length > 0) {
+                            debugLog('✅ Found WebGI VR buttons: ' + vrButtons.length);
+                            vrButtons.forEach(btn => {
+                                btn.style.display = 'block';
+                                btn.style.zIndex = '998';
+                            });
+                        } else {
+                            debugLog('ℹ️ No WebGI VR buttons found, using manual button');
+                        }
+                    }, 2000);
+                }
+            } catch (error) {
+                debugLog('❌ Error setting up WebGI VR: ' + error.message);
+            }
+        }
+
+        // Manual WebGI VR Toggle
+        async function toggleWebGIVR() {
+            const vrButton = document.getElementById('vr-button');
+
+            try {
+                if (isVRMode) {
+                    // Exit VR
+                    debugLog('🚪 Exiting WebGI VR...');
+
+                    // Try multiple methods to exit VR
+                    if (webgiViewer) {
+                        // Method 1: Direct WebGI viewer
+                        if (typeof webgiViewer.exitVR === 'function') {
+                            await webgiViewer.exitVR();
+                        }
+                        // Method 2: Internal viewer
+                        else if (webgiViewer._viewer && typeof webgiViewer._viewer.exitVR === 'function') {
+                            await webgiViewer._viewer.exitVR();
+                        }
+                        // Method 3: Viewer property
+                        else if (webgiViewer.viewer && typeof webgiViewer.viewer.exitVR === 'function') {
+                            await webgiViewer.viewer.exitVR();
+                        }
+                        // Method 4: WebXR fallback
+                        else if (navigator.xr && navigator.xr.getSession) {
+                            const session = await navigator.xr.getSession();
+                            if (session) {
+                                await session.end();
+                            }
+                        }
+                    }
+
+                    isVRMode = false;
+                    updateVRButton();
+                    debugLog('✅ WebGI VR exited');
+
+                } else {
+                    // Enter VR
+                    debugLog('🥽 Entering WebGI VR...');
+
+                    // Try multiple methods to enter VR
+                    if (webgiViewer) {
+                        // Method 1: Direct WebGI viewer
+                        if (typeof webgiViewer.enterVR === 'function') {
+                            await webgiViewer.enterVR();
+                        }
+                        // Method 2: Internal viewer
+                        else if (webgiViewer._viewer && typeof webgiViewer._viewer.enterVR === 'function') {
+                            await webgiViewer._viewer.enterVR();
+                        }
+                        // Method 3: Viewer property
+                        else if (webgiViewer.viewer && typeof webgiViewer.viewer.enterVR === 'function') {
+                            await webgiViewer.viewer.enterVR();
+                        }
+                        // Method 4: WebXR fallback
+                        else if (navigator.xr) {
+                            const session = await navigator.xr.requestSession('immersive-vr');
+                            if (session) {
+                                // Basic WebXR session setup would go here
+                                debugLog('✅ WebXR session created');
+                            }
+                        }
+                        else {
+                            throw new Error('No VR methods available');
+                        }
+                    }
+
+                    isVRMode = true;
+                    updateVRButton();
+                    debugLog('✅ WebGI VR entered');
+                }
+            } catch (error) {
+                debugLog('❌ VR Error: ' + error.message);
+                console.error('VR Error:', error);
+                alert('VR not supported or available: ' + error.message);
+            }
+        }
+
+        // Update VR Button
+        function updateVRButton() {
+            const vrButton = document.getElementById('vr-button');
+            if (vrButton) {
+                vrButton.innerHTML = isVRMode ? '🚪 Exit VR' : '🥽 Enter VR';
+            }
+        }
+
+        // Check WebXR support
+        function checkWebXRSupport() {
+            if (navigator.xr) {
+                debugLog('✅ WebXR supported');
+                navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+                    if (supported) {
+                        debugLog('✅ VR session supported');
+                    } else {
+                        debugLog('❌ VR session not supported');
+                    }
+                });
+            } else {
+                debugLog('❌ WebXR not supported');
+            }
+
+            if (location.protocol !== 'https:') {
+                debugLog('⚠️ Need HTTPS for VR');
+            }
+        }
+
+        // Initialize everything when page loads
+        window.addEventListener('load', () => {
+            debugLog('🚀 Initializing WebGI VR only...');
+
+            // Initialize WebGI VR
+            setTimeout(() => {
+                initializeWebGIVR();
+            }, 500);
+
+            // Check VR support
+            setTimeout(() => {
+                checkWebXRSupport();
+            }, 1000);
+
+            debugLog('✅ Initialization complete');
+        });
+
+        // Handle visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                debugLog('⏸️ Page hidden');
+            } else {
+                debugLog('▶️ Page visible');
+            }
+        });
+
+        // Auto-hide manual VR button if WebGI shows its own
+        setTimeout(() => {
+            const webgiVRButtons = document.querySelectorAll('[data-webgi-vr-button], .webgi-vr-button');
+            if (webgiVRButtons.length > 0) {
+                debugLog('ℹ️ WebGI VR button found, hiding manual button');
+                document.getElementById('vr-button').style.display = 'none';
+            }
+        }, 3000);
+    </script>
+</body>
+
+</html>

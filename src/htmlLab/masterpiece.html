@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>VR Ring Viewer</title>
+    <meta name="description" content="3D Ring Viewer with VR Support">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
+    
+    <!-- A-Frame VR -->
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .vr-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .vr-button:hover {
+            background: #1565c0;
+        }
+        
+        a-scene {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <!-- Force VR Button -->
+    <button class="vr-button" onclick="toggleVR()">🥽 Enter VR</button>
+    
+    <a-scene 
+        obb-collider="showColliders: false"
+        renderer="antialias: false; powerPreference: high-performance"
+        vr-mode-ui="enabled: true"
+        webxr="referenceSpaceType: local"
+        vr-performance
+        background="color: #001122"
+        id="mainScene"
+    >
+        <!-- HDR Environment -->
+        <a-entity hdr-environment></a-entity>
+
+        <!-- Camera with boundary checking -->
+        <a-entity 
+            id="cameraRig"
+            look-controls
+            position="0 2.0 0"
+        >
+            <!-- Mouse cursor for desktop -->
+            <a-entity 
+                cursor="rayOrigin: mouse; fuse: false"
+                raycaster="objects: .rotatable"
+                hide-on-enter-vr
+            ></a-entity>
+        </a-entity>
+
+        <!-- 3D RING - Enhanced with sparkling diamond and shiny gold -->
+        <a-entity
+            id="ring-entity"
+            vr-selectable
+            grabbable
+            ring-enhancer
+            gltf-model="../../public/models/ring_webgi.glb"
+            position="0 1.6 -2"
+            scale="1 1 1"
+            rotation="0 0 0"
+            class="interactive grabbable rotatable"
+        ></a-entity>
+
+        <!-- VR Controllers with grab functionality -->
+        <a-entity
+            id="rightController" 
+            tracked-controls="hand: right; idPrefix: meta-quest"
+            meta-touch-controls="hand: right; model: true"
+            laser-controls="hand: right"
+            working-thumbstick
+            raycaster="objects: .rotatable; showLine: false; far: 3; interval: 100"
+        ></a-entity>
+        
+        <a-entity
+            id="leftController" 
+            tracked-controls="hand: left; idPrefix: meta-quest"
+            meta-touch-controls="hand: left; model: true"
+            laser-controls="hand: left" 
+            working-thumbstick
+            raycaster="objects: .rotatable; showLine: false; far: 3; interval: 100"
+        ></a-entity>
+    </a-scene>
+
+    <script>
+        // Global variables
+        window.environmentTexture = null;
+        window.isVROptimized = false;
+        window.ringAnalysis = null;
+
+        // VR Toggle Function
+        async function toggleVR() {
+            try {
+                const scene = document.querySelector('a-scene');
+                console.log('🔄 Attempting to enter VR...');
+                
+                // Check if VR is supported first
+                if (!navigator.xr) {
+                    console.warn('⚠️ WebXR not supported');
+                    alert('WebXR is not supported in this browser. Please use a compatible browser like Chrome or Firefox with WebXR enabled.');
+                    return;
+                }
+                
+                // Check session support
+                const supported = await navigator.xr.isSessionSupported('immersive-vr');
+                if (!supported) {
+                    console.warn('⚠️ VR session not supported');
+                    alert('VR sessions are not supported. Please ensure you have a VR headset connected and WebXR enabled.');
+                    return;
+                }
+                
+                if (scene && scene.is && scene.is('vr-mode')) {
+                    console.log('🚪 Exiting VR...');
+                    scene.exitVR();
+                    document.querySelector('.vr-button').innerHTML = '🥽 Enter VR';
+                } else if (scene) {
+                    console.log('🥽 Entering VR...');
+                    await scene.enterVR();
+                    document.querySelector('.vr-button').innerHTML = '🚪 Exit VR';
+                    console.log('✅ VR entered successfully');
+                }
+            } catch (error) {
+                console.error('❌ VR Error:', error);
+                console.log('Browser:', navigator.userAgent);
+                console.log('WebXR available:', !!navigator.xr);
+                console.log('HTTPS:', location.protocol === 'https:');
+                
+                let errorMsg = 'VR Error: ';
+                if (error.name === 'NotSupportedError') {
+                    errorMsg += 'VR not supported. Please ensure:\n• You have a VR headset connected\n• Your browser supports WebXR\n• You are using HTTPS';
+                } else if (error.name === 'SecurityError') {
+                    errorMsg += 'Security error. Please ensure you are using HTTPS.';
+                } else {
+                    errorMsg += error.message;
+                }
+                
+                alert(errorMsg);
+            }
+        }
+
+        // Ring Enhancer Utility
+        const ringEnhancer = {
+            applyRingMaterials: function(mesh, environmentTexture) {
+                console.log('🎨 Applying ring materials...');
+                
+                mesh.traverse(child => {
+                    if (child.isMesh && child.material) {
+                        const materialName = child.material.name?.toLowerCase() || '';
+                        
+                        if (materialName.includes('gold') || materialName.includes('metal')) {
+                            // Gold material
+                            child.material = new THREE.MeshPhysicalMaterial({
+                                color: new THREE.Color().setHex(0xFFD700),
+                                metalness: 1.0,
+                                roughness: 0.1,
+                                envMap: environmentTexture,
+                                envMapIntensity: 2.0
+                            });
+                        } else if (materialName.includes('diamond') || materialName.includes('gem')) {
+                            // Diamond material
+                            child.material = new THREE.MeshPhysicalMaterial({
+                                color: new THREE.Color().setHex(0xFFFFFF),
+                                metalness: 0.0,
+                                roughness: 0.0,
+                                transmission: 0.95,
+                                thickness: 0.5,
+                                ior: 2.42,
+                                envMap: environmentTexture,
+                                envMapIntensity: 3.0
+                            });
+                        }
+                        
+                        child.material.needsUpdate = true;
+                    }
+                });
+            },
+            
+            updateAnimation: function(camera, deltaTime) {
+                // Simple animation updates
+                const ring = document.getElementById('ring-entity');
+                if (ring && ring.object3D) {
+                    // Subtle rotation animation
+                    const rotation = ring.getAttribute('rotation');
+                    ring.setAttribute('rotation', {
+                        x: rotation.x,
+                        y: rotation.y + deltaTime * 10,
+                        z: rotation.z
+                    });
+                }
+            }
+        };
+
+        // GLB Analyzer Utility
+        const glbAnalyzer = {
+            analyzeGLB: function(mesh, filename) {
+                console.log('📊 Analyzing GLB:', filename);
+                
+                const analysis = {
+                    materials: [],
+                    geometries: [],
+                    totalVertices: 0
+                };
+                
+                mesh.traverse(child => {
+                    if (child.isMesh) {
+                        if (child.material) {
+                            analysis.materials.push({
+                                name: child.material.name,
+                                type: child.material.type
+                            });
+                        }
+                        
+                        if (child.geometry) {
+                            const vertices = child.geometry.attributes.position?.count || 0;
+                            analysis.totalVertices += vertices;
+                            analysis.geometries.push({
+                                vertices: vertices,
+                                name: child.name
+                            });
+                        }
+                    }
+                });
+                
+                console.log('📈 Analysis complete:', analysis);
+                return analysis;
+            }
+        };
+
+        // Initialize when A-Frame is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load VR components after A-Frame is ready
+            const loadVRComponents = async () => {
+                try {
+                    console.log('✅ VR interaction components loaded');
+                } catch (error) {
+                    console.error('❌ Failed to load VR components:', error);
+                }
+            };
+            
+            loadVRComponents();
+            
+            // Check WebXR support and force VR button
+            setTimeout(() => {
+                if (navigator.xr) {
+                    console.log('✅ WebXR supported');
+                    navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+                        console.log(supported ? '✅ VR session supported' : '❌ VR session not supported');
+                        
+                        // Force show VR button even if detection fails
+                        const vrButton = document.querySelector('.a-enter-vr-button');
+                        if (vrButton) {
+                            vrButton.style.display = 'block';
+                            console.log('🥽 VR button found and shown');
+                        }
+                    });
+                } else {
+                    console.log('❌ WebXR not supported');
+                }
+                
+                if (location.protocol !== 'https:') {
+                    console.log('⚠️ Need HTTPS for VR');
+                }
+            }, 1000);
+
+            // Register HDR environment component
+            if (window.AFRAME && !window.AFRAME.components['hdr-environment']) {
+                window.AFRAME.registerComponent('hdr-environment', {
+                    init: function() {
+                        const scene = this.el.sceneEl;
+                        
+                        // Create simple environment
+                        const pmremGenerator = new THREE.PMREMGenerator(scene.renderer);
+                        const envTexture = pmremGenerator.fromScene(new THREE.Scene()).texture;
+                        scene.object3D.environment = envTexture;
+                        scene.object3D.background = new THREE.Color().setHex(0x87CEEB);
+                        
+                        window.environmentTexture = envTexture;
+                        console.log('✅ Environment loaded successfully');
+                    }
+                });
+            }
+
+            // Working Thumbstick Rotation Component
+            if (window.AFRAME && !window.AFRAME.components['working-thumbstick']) {
+                window.AFRAME.registerComponent('working-thumbstick', {
+                    schema: {
+                        rotationSpeed: {default: 3.0}
+                    },
+                    
+                    init: function() {
+                        this.GRABBED_STATE = 'grabbed';
+                        this.MOVING_STATE = 'moving';
+                        this.grabbing = false;
+                        this.movingObject = false;
+                        this.selectedObject = null;
+                        this.rotationSpeed = this.data.rotationSpeed;
+                        this.triggerDownTime = 0;
+                        this.HOLD_THRESHOLD = 300;
+                        
+                        this.previousPosition = new THREE.Vector3();
+                        this.currentPosition = new THREE.Vector3();
+                        this.deltaPosition = new THREE.Vector3();
+                        
+                        this.onTriggerDown = this.onTriggerDown.bind(this);
+                        this.onTriggerUp = this.onTriggerUp.bind(this);
+                        this.onThumbstickMoved = this.onThumbstickMoved.bind(this);
+                        this.selectObject = this.selectObject.bind(this);
+                        
+                        console.log('Working thumbstick component initialized for', this.el.id);
+                    },
+
+                    play: function() {
+                        this.el.addEventListener('triggerdown', this.onTriggerDown);
+                        this.el.addEventListener('triggerup', this.onTriggerUp);
+                        this.el.addEventListener('thumbstickmoved', this.onThumbstickMoved);
+                    },
+
+                    onTriggerDown: function() {
+                        console.log('Trigger pressed!');
+                        this.triggerDownTime = Date.now();
+                        this.grabbing = true;
+                        
+                        if (this.selectedObject) {
+                            this.startMoving();
+                        } else {
+                            this.selectObject();
+                        }
+                    },
+
+                    onTriggerUp: function() {
+                        console.log('Trigger released!');
+                        var holdDuration = Date.now() - this.triggerDownTime;
+                        this.grabbing = false;
+                        
+                        if (this.movingObject) {
+                            this.stopMoving();
+                        } else if (holdDuration < this.HOLD_THRESHOLD && this.selectedObject) {
+                            this.deselectObject();
+                        }
+                    },
+
+                    selectObject: function() {
+                        var raycaster = this.el.components.raycaster;
+                        if (!raycaster) {
+                            console.log('No raycaster found!');
+                            return;
+                        }
+                        
+                        var intersectedEls = raycaster.intersectedEls;
+                        console.log('Intersected elements:', intersectedEls);
+                        
+                        if (intersectedEls.length > 0) {
+                            var hitEl = intersectedEls[0];
+                            
+                            if (!hitEl.classList.contains('rotatable')) {
+                                console.log('Object is not rotatable');
+                                return;
+                            }
+                            
+                            this.selectedObject = hitEl;
+                            hitEl.addState(this.GRABBED_STATE);
+                            hitEl.emit('rotationstart');
+                            console.log('Object selected for rotation:', hitEl.tagName);
+                            
+                            this.setObjectColor(hitEl, '#ff4444');
+                        } else {
+                            console.log('No objects intersected by raycaster');
+                        }
+                    },
+
+                    deselectObject: function() {
+                        if (!this.selectedObject) return;
+                        
+                        this.selectedObject.removeState(this.GRABBED_STATE);
+                        this.selectedObject.removeState(this.MOVING_STATE);
+                        this.selectedObject.emit('rotationend');
+                        console.log('Object deselected');
+                        
+                        this.resetObjectColor(this.selectedObject);
+                        this.selectedObject = null;
+                        this.movingObject = false;
+                    },
+
+                    startMoving: function() {
+                        if (!this.selectedObject) return;
+                        
+                        this.movingObject = true;
+                        this.selectedObject.addState(this.MOVING_STATE);
+                        this.selectedObject.emit('movestart');
+                        console.log('Started moving object');
+                        
+                        this.el.object3D.updateMatrixWorld();
+                        this.previousPosition.setFromMatrixPosition(this.el.object3D.matrixWorld);
+                        
+                        this.setObjectColor(this.selectedObject, '#44ff44');
+                    },
+
+                    stopMoving: function() {
+                        if (!this.selectedObject || !this.movingObject) return;
+                        
+                        this.movingObject = false;
+                        this.selectedObject.removeState(this.MOVING_STATE);
+                        this.selectedObject.emit('moveend');
+                        console.log('Stopped moving object');
+                        
+                        this.setObjectColor(this.selectedObject, '#ff4444');
+                    },
+
+                    setObjectColor: function(el, color) {
+                        if (el.setAttribute) {
+                            el.setAttribute('material', 'color', color);
+                        }
+                    },
+
+                    resetObjectColor: function(el) {
+                        if (el.setAttribute) {
+                            el.setAttribute('material', 'color', '#ffffff');
+                        }
+                    },
+
+                    onThumbstickMoved: function(evt) {
+                        if (!this.selectedObject || this.movingObject) return;
+                        
+                        var thumbstickX = evt.detail.x;
+                        var thumbstickY = evt.detail.y;
+                        
+                        if (Math.abs(thumbstickX) < 0.1 && Math.abs(thumbstickY) < 0.1) {
+                            return;
+                        }
+                        
+                        var currentRotation = this.selectedObject.getAttribute('rotation');
+                        
+                        var deltaY = thumbstickX * this.rotationSpeed;
+                        var deltaX = -thumbstickY * this.rotationSpeed;
+                        
+                        this.selectedObject.setAttribute('rotation', {
+                            x: currentRotation.x + deltaX,
+                            y: currentRotation.y + deltaY,
+                            z: currentRotation.z
+                        });
+                    },
+
+                    tick: function() {
+                        if (!this.selectedObject || !this.movingObject) {
+                            return;
+                        }
+                        
+                        this.el.object3D.updateMatrixWorld();
+                        this.currentPosition.setFromMatrixPosition(this.el.object3D.matrixWorld);
+                        
+                        this.deltaPosition.subVectors(this.currentPosition, this.previousPosition);
+                        
+                        var currentPos = this.selectedObject.getAttribute('position');
+                        this.selectedObject.setAttribute('position', {
+                            x: currentPos.x + this.deltaPosition.x,
+                            y: currentPos.y + this.deltaPosition.y,
+                            z: currentPos.z + this.deltaPosition.z
+                        });
+                        
+                        this.previousPosition.copy(this.currentPosition);
+                    }
+                });
+            }
+
+            // VR Selectable Component
+            if (window.AFRAME && !window.AFRAME.components['vr-selectable']) {
+                window.AFRAME.registerComponent('vr-selectable', {
+                    init: function() {
+                        this.el.classList.add('interactive');
+                        this.originalColor = null;
+                        this.isSelected = false;
+                        
+                        this.originalScale = this.el.getAttribute('scale') || {x: 1, y: 1, z: 1};
+                        
+                        this.isDragging = false;
+                        this.mouseX = 0;
+                        this.mouseY = 0;
+                        
+                        this.el.addEventListener('model-loaded', () => {
+                            const mesh = this.el.getObject3D('mesh');
+                            if (mesh) {
+                                mesh.traverse(child => {
+                                    if (child.material) {
+                                        this.originalColor = child.material.color ? child.material.color.clone() : null;
+                                    }
+                                });
+                            }
+                        });
+                        
+                        // Desktop interactions
+                        this.el.addEventListener('mouseenter', () => {
+                            this.highlight();
+                            document.body.style.cursor = 'pointer';
+                        });
+                        
+                        this.el.addEventListener('mouseleave', () => {
+                            if (!this.isSelected) {
+                                this.unhighlight();
+                            }
+                            if (!this.isDragging) {
+                                document.body.style.cursor = 'default';
+                            }
+                        });
+                        
+                        this.el.addEventListener('click', (evt) => {
+                            if (this.isDragging) {
+                                evt.stopPropagation();
+                                return;
+                            }
+                            
+                            this.toggleSelection();
+                        });
+                        
+                        this.el.addEventListener('mousedown', (evt) => {
+                            if (this.isSelected) {
+                                this.isDragging = true;
+                                this.mouseX = evt.clientX;
+                                this.mouseY = evt.clientY;
+                                document.body.style.cursor = 'grabbing';
+                                evt.stopPropagation();
+                            }
+                        });
+
+                        // Keyboard controls
+                        this.handleKeyboard = (evt) => {
+                            if (!this.isSelected) return;
+                            
+                            const position = this.el.getAttribute('position');
+                            const rotation = this.el.getAttribute('rotation');
+                            const moveSpeed = 0.1;
+                            const rotateSpeed = 5;
+                            
+                            switch(evt.key) {
+                                case 'ArrowUp':
+                                    this.el.setAttribute('position', {x: position.x, y: position.y, z: position.z - moveSpeed});
+                                    break;
+                                case 'ArrowDown':
+                                    this.el.setAttribute('position', {x: position.x, y: position.y, z: position.z + moveSpeed});
+                                    break;
+                                case 'ArrowLeft':
+                                    this.el.setAttribute('position', {x: position.x - moveSpeed, y: position.y, z: position.z});
+                                    break;
+                                case 'ArrowRight':
+                                    this.el.setAttribute('position', {x: position.x + moveSpeed, y: position.y, z: position.z});
+                                    break;
+                                case 'q':
+                                case 'Q':
+                                    this.el.setAttribute('position', {x: position.x, y: position.y - moveSpeed, z: position.z});
+                                    break;
+                                case 'e':
+                                case 'E':
+                                    this.el.setAttribute('position', {x: position.x, y: position.y + moveSpeed, z: position.z});
+                                    break;
+                                case 'a':
+                                case 'A':
+                                    this.el.setAttribute('rotation', {x: rotation.x, y: rotation.y - rotateSpeed, z: rotation.z});
+                                    break;
+                                case 'd':
+                                case 'D':
+                                    this.el.setAttribute('rotation', {x: rotation.x, y: rotation.y + rotateSpeed, z: rotation.z});
+                                    break;
+                                case 'w':
+                                case 'W':
+                                    this.el.setAttribute('rotation', {x: rotation.x - rotateSpeed, y: rotation.y, z: rotation.z});
+                                    break;
+                                case 's':
+                                case 'S':
+                                    this.el.setAttribute('rotation', {x: rotation.x + rotateSpeed, y: rotation.y, z: rotation.z});
+                                    break;
+                                case 'r':
+                                case 'R':
+                                    this.el.setAttribute('position', '0 1.6 -1');
+                                    this.el.setAttribute('rotation', '0 0 0');
+                                    break;
+                                case 'Escape':
+                                    this.toggleSelection();
+                                    break;
+                            }
+                        };
+                        
+                        // Mouse move handler
+                        this.handleMouseMove = (evt) => {
+                            if (this.isDragging && this.isSelected) {
+                                const deltaX = evt.clientX - this.mouseX;
+                                const deltaY = evt.clientY - this.mouseY;
+                                
+                                const rotation = this.el.getAttribute('rotation');
+                                
+                                this.el.setAttribute('rotation', {
+                                    x: rotation.x - deltaY * 0.5,
+                                    y: rotation.y + deltaX * 0.5,
+                                    z: rotation.z
+                                });
+                                
+                                this.mouseX = evt.clientX;
+                                this.mouseY = evt.clientY;
+                            }
+                        };
+                        
+                        // Mouse up handler
+                        this.handleMouseUp = () => {
+                            if (this.isDragging) {
+                                this.isDragging = false;
+                                document.body.style.cursor = 'pointer';
+                            }
+                        };
+                        
+                        document.addEventListener('keydown', this.handleKeyboard);
+                        document.addEventListener('mousemove', this.handleMouseMove);
+                        document.addEventListener('mouseup', this.handleMouseUp);
+                    },
+                    
+                    highlight: function() {
+                        const mesh = this.el.getObject3D('mesh');
+                        const tagName = this.el.tagName.toLowerCase();
+                        
+                        if (!this.originalColor) {
+                            if (tagName === 'a-box') {
+                                this.originalColor = this.el.getAttribute('color') || '#FF0000';
+                            }
+                        }
+                        
+                        if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
+                            this.el.setAttribute('color', '#00FFFF');
+                            this.el.setAttribute('material', 'emissive', '#00ff00');
+                            this.el.setAttribute('material', 'emissiveIntensity', 0.5);
+                        } else if (mesh) {
+                            mesh.traverse(child => {
+                                if (child.material) {
+                                    child.material.emissive = new THREE.Color().setHex(0x00ffff);
+                                    child.material.emissiveIntensity = 0.5;
+                                    child.material.needsUpdate = true;
+                                }
+                            });
+                        }
+                    },
+                    
+                    unhighlight: function() {
+                        const mesh = this.el.getObject3D('mesh');
+                        const tagName = this.el.tagName.toLowerCase();
+                        
+                        if (tagName === 'a-box' || tagName === 'a-sphere' || tagName === 'a-cylinder') {
+                            if (this.originalColor) {
+                                this.el.setAttribute('color', this.originalColor);
+                            }
+                            
+                            this.el.setAttribute('material', 'emissive', '#000000');
+                            this.el.setAttribute('material', 'emissiveIntensity', 0);
+                        } else if (mesh) {
+                            mesh.traverse(child => {
+                                if (child.material) {
+                                    child.material.emissive = new THREE.Color().setHex(0x000000);
+                                    child.material.emissiveIntensity = 0;
+                                    child.material.needsUpdate = true;
+                                }
+                            });
+                        }
+                    },
+                    
+                    toggleSelection: function() {
+                        this.isSelected = !this.isSelected;
+                        
+                        const rightController = document.getElementById('rightController')?.components?.['working-thumbstick'];
+                        const leftController = document.getElementById('leftController')?.components?.['working-thumbstick'];
+                        
+                        if (this.isSelected) {
+                            if (rightController) rightController.selectedObject = this.el;
+                            if (leftController) leftController.selectedObject = this.el;
+                            
+                            this.el.setAttribute('data-selected', 'true');
+                            this.el.classList.add('selected');
+                            
+                            const mesh = this.el.getObject3D('mesh');
+                            if (mesh) {
+                                mesh.traverse(child => {
+                                    if (child.material) {
+                                        child.material.emissive = new THREE.Color().setHex(0x00FF00);
+                                        child.material.emissiveIntensity = 0.5;
+                                    }
+                                });
+                            }
+                        } else {
+                            if (rightController) rightController.selectedObject = null;
+                            if (leftController) leftController.selectedObject = null;
+                            
+                            this.el.removeAttribute('data-selected');
+                            this.el.classList.remove('selected');
+                            
+                            this.unhighlight();
+                        }
+                    },
+                    
+                    remove: function() {
+                        document.removeEventListener('keydown', this.handleKeyboard);
+                        document.removeEventListener('mousemove', this.handleMouseMove);
+                        document.removeEventListener('mouseup', this.handleMouseUp);
+                    }
+                });
+            }
+
+            // Hide on enter AR component
+            if (window.AFRAME && !window.AFRAME.components['hide-on-enter-ar']) {
+                window.AFRAME.registerComponent('hide-on-enter-ar', {
+                    init: function () {
+                        this.el.addEventListener('enter-ar', () => {
+                            this.el.object3D.visible = false;
+                        });
+                        this.el.addEventListener('exit-ar', () => {
+                            this.el.object3D.visible = true;
+                        });
+                    }
+                });
+            }
+
+            // Hide on enter VR component  
+            if (window.AFRAME && !window.AFRAME.components['hide-on-enter-vr']) {
+                window.AFRAME.registerComponent('hide-on-enter-vr', {
+                    init: function () {
+                        this.el.addEventListener('enter-vr', () => {
+                            this.el.object3D.visible = false;
+                        });
+                        this.el.addEventListener('exit-vr', () => {
+                            this.el.object3D.visible = true;
+                        });
+                    }
+                });
+            }
+
+            // VR Performance Optimizer Component
+            if (window.AFRAME && !window.AFRAME.components['vr-performance']) {
+                window.AFRAME.registerComponent('vr-performance', {
+                    init: function() {
+                        this.isVR = false;
+                        
+                        this.el.sceneEl.addEventListener('enter-vr', () => {
+                            this.isVR = true;
+                            this.optimizeForVR();
+                        });
+                        
+                        this.el.sceneEl.addEventListener('exit-vr', () => {
+                            this.isVR = false;
+                            this.restoreQuality();
+                        });
+                    },
+                    
+                    optimizeForVR: function() {
+                        console.log('🚀 Optimizing for VR performance...');
+                        
+                        const RENDERER = this.el.sceneEl.renderer;
+                        if (RENDERER) {
+                            RENDERER.setPixelRatio(0.8);
+                            RENDERER.antialias = false;
+                            RENDERER.shadowMap.enabled = false;
+                            RENDERER.physicallyCorrectLights = false;
+                            RENDERER.outputColorSpace = THREE.SRGBColorSpace;
+                        }
+                        
+                        this.el.sceneEl.setAttribute('stats', 'false');
+                        this.el.sceneEl.setAttribute('vr-mode-ui', 'enabled: false');
+                        
+                        console.log('✅ VR optimizations applied');
+                    },
+                    
+                    restoreQuality: function() {
+                        console.log('📈 Restoring desktop quality...');
+                        
+                        const RENDERER = this.el.sceneEl.renderer;
+                        if (RENDERER) {
+                            RENDERER.setPixelRatio(window.devicePixelRatio);
+                            RENDERER.antialias = true;
+                            RENDERER.shadowMap.enabled = true;
+                        }
+                    }
+                });
+            }
+
+            // Ring enhancer component
+            if (window.AFRAME && !window.AFRAME.components['ring-enhancer']) {
+                window.AFRAME.registerComponent('ring-enhancer', {
+                    init: function() {
+                        this.enhanced = false;
+                        
+                        this.el.addEventListener('model-loaded', () => {
+                            if (!this.enhanced) {
+                                this.enhanceRing();
+                            }
+                        });
+                        
+                        if (this.el.getObject3D('mesh')) {
+                            setTimeout(() => {
+                                if (!this.enhanced) {
+                                    this.enhanceRing();
+                                }
+                            }, 100);
+                        }
+                    },
+                    
+                    enhanceRing: function() {
+                        const mesh = this.el.getObject3D('mesh');
+                        console.log('🔍 Checking mesh:', mesh);
+                        console.log('🌍 Environment texture:', window.environmentTexture);
+                        
+                        if (mesh) {
+                            console.log('📊 Analyzing GLB structure...');
+                            const analysis = glbAnalyzer.analyzeGLB(mesh, 'ring_webgi.glb');
+                            
+                            window.ringAnalysis = analysis;
+                            
+                            console.log('💍 Enhancing ring with materials...');
+                            
+                            ringEnhancer.applyRingMaterials(mesh, window.environmentTexture);
+                            this.enhanced = true;
+                            
+                            console.log('✨ Ring enhancement complete!');
+                            console.log('🔗 Access full analysis with: window.ringAnalysis');
+                        } else {
+                            console.log('❌ No mesh found yet, will retry...');
+                            setTimeout(() => {
+                                const retryMesh = this.el.getObject3D('mesh');
+                                if (retryMesh && !this.enhanced) {
+                                    console.log('🔄 Retrying enhancement...');
+                                    this.enhanceRing();
+                                }
+                            }, 1000);
+                        }
+                    },
+                    
+                    tick: function(time) {
+                        if (!this.lastUpdate) this.lastUpdate = 0;
+                        
+                        if (time - this.lastUpdate > 100) {
+                            const camera = this.el.sceneEl.camera;
+                            const isVR = this.el.sceneEl.is('vr-mode');
+                            
+                            if (camera && this.enhanced && (!isVR || time % 200 < 100)) {
+                                ringEnhancer.updateAnimation(camera, (time - this.lastUpdate) / 1000);
+                            }
+                            
+                            this.lastUpdate = time;
+                        }
+                    }
+                });
+            }
+
+            // Grabbable component
+            if (window.AFRAME && !window.AFRAME.components['grabbable']) {
+                window.AFRAME.registerComponent('grabbable', {
+                    init: function() {
+                        this.el.classList.add('grabbable');
+                        console.log('Grabbable component initialized');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

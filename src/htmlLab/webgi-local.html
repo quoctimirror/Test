@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGi Local - Premium Ring Viewer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #webgi-canvas {
+            width: 100%;
+            height: 100vh;
+            display: block;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-icon {
+            font-size: 5rem;
+            animation: sparkle 2s ease-in-out infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { 
+                transform: scale(1) rotate(0deg);
+                filter: brightness(1);
+            }
+            50% { 
+                transform: scale(1.1) rotate(180deg);
+                filter: brightness(1.5);
+            }
+        }
+
+        .loading-text {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: white;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .progress-container {
+            width: 350px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #fff, #f0f0f0);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* UI Controls */
+        .control-panel {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.2rem 2rem;
+            border-radius: 60px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+        }
+
+        .control-btn {
+            padding: 0.8rem 1.6rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .control-btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .control-btn.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+
+        /* Settings Panels */
+        .settings-panel {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+        }
+
+        .panel-left {
+            top: 2rem;
+            left: 2rem;
+        }
+
+        .panel-right {
+            top: 2rem;
+            right: 2rem;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Material Grid */
+        .material-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .material-option {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid transparent;
+        }
+
+        .material-option::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .material-option:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .material-option.active {
+            border-color: #667eea;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.6);
+            transform: scale(1.05);
+        }
+
+        .mat-gold { background: linear-gradient(135deg, #FFD700, #FFA500); }
+        .mat-silver { background: linear-gradient(135deg, #E5E5E5, #999999); }
+        .mat-rose { background: linear-gradient(135deg, #FFC0CB, #FF69B4); }
+        .mat-platinum { background: linear-gradient(135deg, #E5E4E2, #A8A8A8); }
+        .mat-copper { background: linear-gradient(135deg, #B87333, #8B4513); }
+        .mat-titanium { background: linear-gradient(135deg, #878681, #565650); }
+
+        /* Gem Colors */
+        .gem-grid {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .gem-option {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .gem-option::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border-radius: 50%;
+            background: inherit;
+            filter: blur(8px);
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        .gem-option:hover {
+            transform: scale(1.2);
+            border-color: white;
+        }
+
+        .gem-option.active {
+            border-color: #667eea;
+            box-shadow: 0 0 25px currentColor;
+            transform: scale(1.1);
+        }
+
+        .gem-diamond { background: linear-gradient(135deg, #FFFFFF, #E0E0E0); }
+        .gem-ruby { background: linear-gradient(135deg, #E91E63, #880E4F); }
+        .gem-sapphire { background: linear-gradient(135deg, #2196F3, #0D47A1); }
+        .gem-emerald { background: linear-gradient(135deg, #4CAF50, #1B5E20); }
+        .gem-amethyst { background: linear-gradient(135deg, #9C27B0, #4A148C); }
+
+        /* Info Panel */
+        .info-panel {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1.2rem;
+            border-radius: 15px;
+            font-size: 13px;
+            backdrop-filter: blur(15px);
+            z-index: 100;
+        }
+
+        .info-panel strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas -->
+    <canvas id="webgi-canvas"></canvas>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-icon">💍</div>
+        <div class="loading-text">Loading Premium Jewelry Experience</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="control-panel">
+        <button class="control-btn" id="autoRotateBtn">🔄 Auto Rotate</button>
+        <button class="control-btn" id="resetViewBtn">🎯 Reset View</button>
+        <button class="control-btn" id="screenshotBtn">📸 Screenshot</button>
+        <button class="control-btn" id="fullscreenBtn">⛶ Fullscreen</button>
+    </div>
+
+    <!-- Material Selector -->
+    <div class="settings-panel panel-right">
+        <div class="panel-title">Ring Material</div>
+        <div class="material-grid">
+            <div class="material-option mat-gold active" data-material="gold" data-name="Gold"></div>
+            <div class="material-option mat-silver" data-material="silver" data-name="Silver"></div>
+            <div class="material-option mat-rose" data-material="rose" data-name="Rose"></div>
+            <div class="material-option mat-platinum" data-material="platinum" data-name="Platinum"></div>
+            <div class="material-option mat-copper" data-material="copper" data-name="Copper"></div>
+            <div class="material-option mat-titanium" data-material="titanium" data-name="Titanium"></div>
+        </div>
+    </div>
+
+    <!-- Gem Selector -->
+    <div class="settings-panel panel-left">
+        <div class="panel-title">Gem Color</div>
+        <div class="gem-grid">
+            <div class="gem-option gem-diamond active" data-color="#FFFFFF" title="Diamond"></div>
+            <div class="gem-option gem-ruby" data-color="#E91E63" title="Ruby"></div>
+            <div class="gem-option gem-sapphire" data-color="#2196F3" title="Sapphire"></div>
+            <div class="gem-option gem-emerald" data-color="#4CAF50" title="Emerald"></div>
+            <div class="gem-option gem-amethyst" data-color="#9C27B0" title="Amethyst"></div>
+        </div>
+    </div>
+
+    <!-- Info -->
+    <div class="info-panel">
+        <strong>WebGi Controls:</strong><br>
+        Left click + drag: Rotate<br>
+        Scroll: Zoom<br>
+        Right click + drag: Pan
+    </div>
+
+    <!-- Import map for CDN -->
+    <script type="importmap">
+    {
+        "imports": {
+            "threepipe": "https://unpkg.com/threepipe@0.2.0/dist/index.mjs",
+            "@threepipe/webgi-plugins": "https://unpkg.com/@threepipe/webgi-plugins@0.5.10/dist/index.mjs"
+        }
+    }
+    </script>
+    
+    <!-- Main Script -->
+    <script type="module">
+        import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+        import {
+            ThreeViewer,
+            AssetManagerBasicPlugin
+        } from 'threepipe';
+        
+        import {
+            BloomPlugin,
+            SSAAPlugin,
+            SSAOPlugin,
+            TemporalAAPlugin,
+            DepthOfFieldPlugin,
+            GBufferPlugin,
+            BaseGroundPlugin,
+            SSReflectionPlugin
+        } from '@threepipe/webgi-plugins';
+
+        let viewer;
+        let autoRotating = false;
+
+        async function initViewer() {
+            try {
+                // Initialize viewer
+                viewer = new ThreeViewer({
+                    canvas: document.getElementById('webgi-canvas'),
+                    useRgbm: true,
+                    renderScale: "auto"
+                });
+                
+                // Add plugins
+                await viewer.addPlugin(AssetManagerBasicPlugin);
+                await viewer.addPlugin(GBufferPlugin);
+                await viewer.addPlugin(BloomPlugin);
+                await viewer.addPlugin(SSAAPlugin);
+                await viewer.addPlugin(SSAOPlugin);
+                await viewer.addPlugin(TemporalAAPlugin);
+                await viewer.addPlugin(DepthOfFieldPlugin);
+                await viewer.addPlugin(BaseGroundPlugin);
+                await viewer.addPlugin(SSReflectionPlugin);
+
+                // Configure scene
+                viewer.scene.setBackground('#EEB7B5');
+                
+                // Get and configure plugins
+                const bloom = viewer.getPlugin(BloomPlugin);
+                const ssao = viewer.getPlugin(SSAOPlugin);
+                const ground = viewer.getPlugin(BaseGroundPlugin);
+                const ssr = viewer.getPlugin(SSReflectionPlugin);
+                
+                if (bloom) {
+                    bloom.bloomStrength = 2.0;
+                    bloom.bloomThreshold = 0.8;
+                    bloom.bloomRadius = 1.0;
+                    bloom.enabled = true;
+                }
+                
+                if (ssao) {
+                    ssao.radius = 0.3;
+                    ssao.aoIntensity = 0.4;
+                    ssao.enabled = true;
+                }
+                
+                if (ground) {
+                    ground.enabled = true;
+                    ground.opacity = 0.3;
+                }
+                
+                if (ssr) {
+                    ssr.enabled = true;
+                    ssr.intensity = 0.6;
+                }
+
+                // Progress tracking
+                const progressBar = document.getElementById('progressBar');
+                viewer.addEventListener('progress', (ev) => {
+                    const percent = Math.round((ev.loaded / ev.total) * 100);
+                    progressBar.style.width = percent + '%';
+                });
+
+                // Load ring model
+                await viewer.load('../../public/models/ring_webgi.glb');
+                
+                // Setup camera
+                const camera = viewer.scene.activeCamera;
+                camera.position.set(3, 2, 5);
+                camera.target.set(0, 0, 0);
+                camera.setCameraOptions({
+                    controlsEnabled: true,
+                    autoRotate: false,
+                    autoRotateSpeed: 0.8
+                });
+                
+                // Enhance materials
+                enhanceRingMaterials();
+                
+                // Hide loading screen with delay
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').classList.add('fade-out');
+                }, 800);
+                
+                // Setup UI controls
+                setupControlHandlers();
+                setupMaterialSelector();
+                setupGemSelector();
+                
+                console.log('✅ WebGi viewer initialized successfully');
+                
+            } catch (error) {
+                console.error('❌ Error initializing WebGi viewer:', error);
+                document.querySelector('.loading-text').textContent = 'Error loading viewer: ' + error.message;
+            }
+        }
+
+        function enhanceRingMaterials() {
+            viewer.scene.traverse((object) => {
+                if (object.material) {
+                    const name = (object.name || '').toLowerCase();
+                    
+                    // Enhance gems/diamonds
+                    if (name.includes('diamond') || name.includes('gem') || name.includes('stone')) {
+                        object.material.metalness = 0;
+                        object.material.roughness = 0;
+                        object.material.transmission = 0.95;
+                        object.material.ior = 2.42;
+                        object.material.thickness = 0.5;
+                        object.material.emissiveIntensity = 0.15;
+                        object.userData.isGem = true;
+                        console.log('💎 Enhanced gem material:', object.name);
+                    }
+                    // Enhance metals
+                    else if (name.includes('metal') || name.includes('gold') || name.includes('silver') || name.includes('ring')) {
+                        object.material.metalness = 1.0;
+                        object.material.roughness = 0.15;
+                        object.userData.isMetal = true;
+                        console.log('✨ Enhanced metal material:', object.name);
+                    }
+                }
+            });
+        }
+
+        function setupControlHandlers() {
+            // Auto rotate
+            document.getElementById('autoRotateBtn').addEventListener('click', () => {
+                autoRotating = !autoRotating;
+                const camera = viewer.scene.activeCamera;
+                camera.controls.autoRotate = autoRotating;
+                
+                const btn = document.getElementById('autoRotateBtn');
+                btn.textContent = autoRotating ? '⏸️ Stop Rotate' : '🔄 Auto Rotate';
+                btn.classList.toggle('active', autoRotating);
+            });
+
+            // Reset view
+            document.getElementById('resetViewBtn').addEventListener('click', () => {
+                const camera = viewer.scene.activeCamera;
+                camera.position.set(3, 2, 5);
+                camera.target.set(0, 0, 0);
+                camera.setDirty();
+            });
+
+            // Screenshot
+            document.getElementById('screenshotBtn').addEventListener('click', async () => {
+                try {
+                    const blob = await viewer.getScreenshot();
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = `ring-${Date.now()}.png`;
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                } catch (error) {
+                    console.error('Error taking screenshot:', error);
+                }
+            });
+
+            // Fullscreen
+            document.getElementById('fullscreenBtn').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+        }
+
+        function setupMaterialSelector() {
+            const materialColors = {
+                gold: 0xFFD700,
+                silver: 0xC0C0C0,
+                rose: 0xE8B4B8,
+                platinum: 0xE5E4E2,
+                copper: 0xB87333,
+                titanium: 0x878681
+            };
+
+            document.querySelectorAll('.material-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    // Update UI
+                    document.querySelectorAll('.material-option').forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    // Change material
+                    const materialType = option.dataset.material;
+                    const color = materialColors[materialType];
+                    
+                    viewer.scene.traverse((object) => {
+                        if (object.userData.isMetal && object.material) {
+                            object.material.color.setHex(color);
+                            object.material.setDirty();
+                        }
+                    });
+                    
+                    viewer.setDirty();
+                    console.log(`🎨 Changed material to: ${materialType}`);
+                });
+            });
+        }
+
+        function setupGemSelector() {
+            document.querySelectorAll('.gem-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    // Update UI
+                    document.querySelectorAll('.gem-option').forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    // Change gem color
+                    const colorHex = option.dataset.color;
+                    
+                    viewer.scene.traverse((object) => {
+                        if (object.userData.isGem && object.material) {
+                            object.material.color.set(colorHex);
+                            object.material.setDirty();
+                        }
+                    });
+                    
+                    viewer.setDirty();
+                    console.log(`💎 Changed gem color to: ${colorHex}`);
+                });
+            });
+        }
+
+        // Initialize viewer when page loads
+        initViewer();
+    </script>
+</body>
+</html>

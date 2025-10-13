@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGi Diamond Ring Viewer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #webgi-canvas {
+            width: 100%;
+            height: 100vh;
+            display: block;
+            touch-action: none;
+        }
+
+        #webgi-canvas-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-text {
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 20px;
+            font-weight: 300;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Material selector */
+        .material-selector {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+        }
+
+        .material-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .material-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .material-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .material-btn:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .material-btn.active {
+            border-color: #764ba2;
+            box-shadow: 0 0 20px rgba(118, 75, 162, 0.5);
+        }
+
+        .material-btn.gold {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        .material-btn.silver {
+            background: linear-gradient(135deg, #C0C0C0, #808080);
+        }
+
+        .material-btn.rose {
+            background: linear-gradient(135deg, #FFC0CB, #FF69B4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas container -->
+    <div id="webgi-canvas-container">
+        <canvas id="webgi-canvas"></canvas>
+    </div>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-text">💍 Loading WebGi...</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="btn" id="autoRotate">🔄 Auto Rotate</button>
+        <button class="btn" id="resetCamera">🎯 Reset View</button>
+        <button class="btn" id="snapshot">📸 Snapshot</button>
+    </div>
+
+    <!-- Material Selector -->
+    <div class="material-selector">
+        <div class="material-title">✨ Ring Material</div>
+        <div class="material-options">
+            <div class="material-btn gold active" data-material="gold" title="Gold"></div>
+            <div class="material-btn silver" data-material="silver" title="Silver"></div>
+            <div class="material-btn rose" data-material="rose" title="Rose Gold"></div>
+        </div>
+    </div>
+
+    <!-- WebGi Script from CDN -->
+    <script type="module">
+        import {
+            ViewerApp,
+            AssetManagerPlugin,
+            GBufferPlugin,
+            ProgressivePlugin,
+            TonemapPlugin,
+            SSAOPlugin,
+            SSRPlugin,
+            BloomPlugin,
+            GammaCorrectionPlugin,
+            TemporalAAPlugin,
+            GroundPlugin,
+            addBasePlugins,
+            CanvasSnipperPlugin,
+            DiamondPlugin,
+            FileTransferPlugin,
+            PopmotionPlugin,
+            SimpleTextPlugin,
+            CameraViewPlugin,
+            DepthOfFieldPlugin,
+            VariationConfiguratorPlugin,
+            LoadingScreenPlugin
+        } from "https://dist.pixotronics.com/webgi/runtime/bundle-0.5.19.mjs";
+
+        async function setupViewer() {
+            // Initialize the viewer
+            const viewer = new ViewerApp({
+                canvas: document.getElementById('webgi-canvas'),
+                useRgbm: true,
+            });
+
+            // Add plugins
+            const manager = await viewer.addPlugin(AssetManagerPlugin);
+            await addBasePlugins(viewer);
+            
+            // Add advanced plugins for jewelry
+            await viewer.addPlugin(GBufferPlugin);
+            await viewer.addPlugin(new ProgressivePlugin(32));
+            await viewer.addPlugin(new TonemapPlugin(true));
+            await viewer.addPlugin(GammaCorrectionPlugin);
+            
+            // Diamond specific plugin
+            const diamondPlugin = await viewer.addPlugin(DiamondPlugin);
+            
+            // Visual effects
+            await viewer.addPlugin(SSAOPlugin);
+            await viewer.addPlugin(SSRPlugin);
+            const bloom = await viewer.addPlugin(BloomPlugin);
+            await viewer.addPlugin(TemporalAAPlugin);
+            await viewer.addPlugin(DepthOfFieldPlugin);
+            
+            // Ground reflection
+            await viewer.addPlugin(GroundPlugin);
+            
+            // Snapshot capability
+            await viewer.addPlugin(CanvasSnipperPlugin);
+            
+            // Camera controls
+            const camViews = viewer.getPlugin(CameraViewPlugin);
+
+            // Set background
+            viewer.renderer.refreshPipeline();
+            viewer.scene.setBackground('#EEB7B5');
+            
+            // Configure bloom for sparkle
+            bloom.bloomStrength = 1.5;
+            bloom.bloomThreshold = 0.8;
+            bloom.bloomRadius = 0.8;
+
+            // Load the ring model
+            const progressBar = document.getElementById('progress');
+            
+            manager.addEventListener('onProgress', (ev) => {
+                const progress = (ev.loaded / ev.total) * 100;
+                progressBar.style.width = progress + '%';
+            });
+
+            await manager.addFromPath('../../public/models/ring_webgi.glb');
+
+            // Configure camera
+            const camera = viewer.scene.activeCamera;
+            const controls = camera.controls;
+            const position = camera.position;
+            const target = controls.target;
+            
+            // Set initial position
+            position.set(2, 2, 5);
+            target.set(0, 0, 0);
+            controls.autoRotate = false;
+            controls.autoRotateSpeed = 1;
+            
+            // Hide loader
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 500);
+
+            // Setup controls
+            setupControls(viewer, controls);
+            
+            // Setup material changer
+            setupMaterialChanger(viewer);
+        }
+
+        function setupControls(viewer, controls) {
+            // Auto rotate toggle
+            document.getElementById('autoRotate').addEventListener('click', () => {
+                controls.autoRotate = !controls.autoRotate;
+                const btn = document.getElementById('autoRotate');
+                btn.textContent = controls.autoRotate ? '⏸️ Stop Rotate' : '🔄 Auto Rotate';
+            });
+
+            // Reset camera
+            document.getElementById('resetCamera').addEventListener('click', () => {
+                const camera = viewer.scene.activeCamera;
+                camera.position.set(2, 2, 5);
+                controls.target.set(0, 0, 0);
+                viewer.scene.setDirty();
+            });
+
+            // Snapshot
+            document.getElementById('snapshot').addEventListener('click', async () => {
+                const snipper = viewer.getPlugin(CanvasSnipperPlugin);
+                if (snipper) {
+                    const result = await snipper.getFile();
+                    
+                    // Download the image
+                    const link = document.createElement('a');
+                    link.download = 'ring-snapshot.png';
+                    link.href = URL.createObjectURL(result);
+                    link.click();
+                }
+            });
+        }
+
+        function setupMaterialChanger(viewer) {
+            const materialBtns = document.querySelectorAll('.material-btn');
+            
+            materialBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active state
+                    materialBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const material = btn.dataset.material;
+                    changeMaterial(viewer, material);
+                });
+            });
+        }
+
+        function changeMaterial(viewer, materialType) {
+            const colors = {
+                gold: { r: 1.0, g: 0.843, b: 0.0 },    // Gold
+                silver: { r: 0.753, g: 0.753, b: 0.753 }, // Silver
+                rose: { r: 0.714, g: 0.431, b: 0.475 }    // Rose Gold
+            };
+            
+            const color = colors[materialType];
+            
+            // Traverse scene and update materials
+            viewer.scene.traverse((child) => {
+                if (child.material && !child.name.includes('diamond')) {
+                    if (child.material.color) {
+                        child.material.color.setRGB(color.r, color.g, color.b);
+                    }
+                    child.material.setDirty();
+                }
+            });
+            
+            viewer.scene.setDirty();
+        }
+
+        // Initialize viewer
+        setupViewer().catch(console.error);
+    </script>
+</body>
+</html>

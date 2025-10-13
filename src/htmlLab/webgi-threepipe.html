@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGi/Threepipe - Premium Ring Viewer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #000;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #webgi-canvas {
+            width: 100%;
+            height: 100vh;
+            display: block;
+        }
+
+        /* Loading Screen */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        #loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-icon {
+            font-size: 4rem;
+            animation: float 2s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        /* UI Controls */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover::before {
+            transform: translateX(0);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Material Selector */
+        .material-panel {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .material-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .material-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+        }
+
+        .material-option::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: white;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .material-option:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .material-option.active {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .material-gold {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        .material-silver {
+            background: linear-gradient(135deg, #E5E5E5, #999999);
+        }
+
+        .material-rose {
+            background: linear-gradient(135deg, #FFC0CB, #FF69B4);
+        }
+
+        .material-platinum {
+            background: linear-gradient(135deg, #E5E4E2, #A8A8A8);
+        }
+
+        .material-copper {
+            background: linear-gradient(135deg, #B87333, #8B4513);
+        }
+
+        .material-black {
+            background: linear-gradient(135deg, #333333, #000000);
+        }
+
+        /* Gem Color Selector */
+        .gem-panel {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .gem-colors {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .gem-color {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+
+        .gem-color:hover {
+            transform: scale(1.15);
+            border-color: white;
+        }
+
+        .gem-color.active {
+            border-color: #667eea;
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .gem-diamond { background: linear-gradient(135deg, #FFFFFF, #E0E0E0); }
+        .gem-ruby { background: linear-gradient(135deg, #E91E63, #880E4F); }
+        .gem-sapphire { background: linear-gradient(135deg, #2196F3, #0D47A1); }
+        .gem-emerald { background: linear-gradient(135deg, #4CAF50, #1B5E20); }
+        .gem-amethyst { background: linear-gradient(135deg, #9C27B0, #4A148C); }
+
+        /* Info Panel */
+        .info {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+    </style>
+    
+    <!-- Import map for Threepipe/WebGi -->
+    <script type="importmap">
+    {
+        "imports": {
+            "threepipe": "https://unpkg.com/threepipe@0.2.0/dist/index.mjs",
+            "@threepipe/webgi-plugins": "https://unpkg.com/@threepipe/webgi-plugins@0.5.10/dist/index.mjs",
+            "@threepipe/plugin-tweakpane": "https://unpkg.com/@threepipe/plugin-tweakpane@0.8.4/dist/index.mjs"
+        }
+    }
+    </script>
+</head>
+<body>
+    <!-- Canvas -->
+    <canvas id="webgi-canvas"></canvas>
+
+    <!-- Loading Screen -->
+    <div id="loading">
+        <div class="loading-content">
+            <div class="loading-icon">💍</div>
+            <div class="loading-text">Loading Premium Jewelry</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="btn" id="autoRotate">🔄 Auto Rotate</button>
+        <button class="btn" id="resetView">🎯 Reset View</button>
+        <button class="btn" id="screenshot">📸 Screenshot</button>
+        <button class="btn" id="fullscreen">⛶ Fullscreen</button>
+    </div>
+
+    <!-- Material Selector -->
+    <div class="material-panel">
+        <div class="panel-title">Ring Material</div>
+        <div class="material-grid">
+            <div class="material-option material-gold active" data-material="gold" data-name="Gold"></div>
+            <div class="material-option material-silver" data-material="silver" data-name="Silver"></div>
+            <div class="material-option material-rose" data-material="rose" data-name="Rose"></div>
+            <div class="material-option material-platinum" data-material="platinum" data-name="Platinum"></div>
+            <div class="material-option material-copper" data-material="copper" data-name="Copper"></div>
+            <div class="material-option material-black" data-material="black" data-name="Black"></div>
+        </div>
+    </div>
+
+    <!-- Gem Color Selector -->
+    <div class="gem-panel">
+        <div class="panel-title">Gem Color</div>
+        <div class="gem-colors">
+            <div class="gem-color gem-diamond active" data-color="#FFFFFF" title="Diamond"></div>
+            <div class="gem-color gem-ruby" data-color="#E91E63" title="Ruby"></div>
+            <div class="gem-color gem-sapphire" data-color="#2196F3" title="Sapphire"></div>
+            <div class="gem-color gem-emerald" data-color="#4CAF50" title="Emerald"></div>
+            <div class="gem-color gem-amethyst" data-color="#9C27B0" title="Amethyst"></div>
+        </div>
+    </div>
+
+    <!-- Info -->
+    <div class="info">
+        <strong>Controls:</strong> Left click + drag to rotate | Scroll to zoom | Right click + drag to pan
+    </div>
+
+    <!-- Main Script -->
+    <script type="module">
+        import {
+            ThreeViewer,
+            LoadingScreenPlugin,
+            AssetManagerPlugin,
+            ViewerApp,
+            timeout
+        } from 'threepipe';
+        
+        import {
+            BloomPlugin,
+            SSAAPlugin,
+            SSAOPlugin,
+            TemporalAAPlugin,
+            DepthOfFieldPlugin,
+            GBufferPlugin,
+            BaseGroundPlugin,
+            SSReflectionPlugin
+        } from '@threepipe/webgi-plugins';
+
+        let viewer;
+        let autoRotating = false;
+
+        async function setupViewer() {
+            // Initialize viewer
+            viewer = new ThreeViewer({
+                canvas: document.getElementById('webgi-canvas'),
+                useRgbm: true,
+                renderScale: "auto",
+                plugins: [
+                    LoadingScreenPlugin,
+                    AssetManagerPlugin,
+                    GBufferPlugin,
+                    BloomPlugin,
+                    SSAAPlugin,
+                    SSAOPlugin,
+                    TemporalAAPlugin,
+                    DepthOfFieldPlugin,
+                    BaseGroundPlugin,
+                    SSReflectionPlugin
+                ]
+            });
+
+            // Configure viewer
+            viewer.scene.setBackground('#1a1a2e');
+            
+            // Get plugins
+            const bloom = viewer.getPlugin(BloomPlugin);
+            const ssao = viewer.getPlugin(SSAOPlugin);
+            const dof = viewer.getPlugin(DepthOfFieldPlugin);
+            const ground = viewer.getPlugin(BaseGroundPlugin);
+            const ssr = viewer.getPlugin(SSReflectionPlugin);
+            
+            // Configure bloom for sparkle effect
+            if (bloom) {
+                bloom.bloomStrength = 1.5;
+                bloom.bloomThreshold = 0.85;
+                bloom.bloomRadius = 0.8;
+                bloom.enabled = true;
+            }
+            
+            // Configure SSAO for depth
+            if (ssao) {
+                ssao.radius = 0.5;
+                ssao.aoIntensity = 0.3;
+                ssao.enabled = true;
+            }
+            
+            // Configure depth of field
+            if (dof) {
+                dof.focusDistance = 5;
+                dof.focalLength = 50;
+                dof.enabled = false; // Enable only when needed
+            }
+            
+            // Configure ground reflection
+            if (ground) {
+                ground.enabled = true;
+                ground.opacity = 0.5;
+            }
+            
+            // Configure SSR
+            if (ssr) {
+                ssr.enabled = true;
+                ssr.intensity = 0.5;
+            }
+
+            // Progress tracking
+            const progressBar = document.getElementById('progress');
+            viewer.addEventListener('progress', (ev) => {
+                const percent = (ev.loaded / ev.total) * 100;
+                progressBar.style.width = percent + '%';
+            });
+
+            // Load ring model
+            try {
+                await viewer.load('../../public/models/ring_webgi.glb');
+                
+                // Setup camera
+                const camera = viewer.scene.activeCamera;
+                camera.setCameraOptions({
+                    controlsEnabled: true,
+                    autoRotate: false,
+                    autoRotateSpeed: 1
+                });
+                
+                camera.position.set(3, 2, 5);
+                camera.target.set(0, 0, 0);
+                
+                // Enhance materials
+                enhanceMaterials();
+                
+                // Hide loading screen
+                await timeout(500);
+                document.getElementById('loading').classList.add('hidden');
+                
+                // Setup controls
+                setupControls();
+                setupMaterialSelector();
+                setupGemSelector();
+                
+            } catch (error) {
+                console.error('Error loading model:', error);
+                document.querySelector('.loading-text').textContent = 'Error loading model';
+            }
+        }
+
+        function enhanceMaterials() {
+            viewer.scene.traverse((object) => {
+                if (object.material) {
+                    const name = (object.name || '').toLowerCase();
+                    
+                    // Diamond/gem materials
+                    if (name.includes('diamond') || name.includes('gem') || name.includes('stone')) {
+                        object.material.metalness = 0;
+                        object.material.roughness = 0;
+                        object.material.transmission = 0.95;
+                        object.material.ior = 2.42;
+                        object.material.thickness = 0.5;
+                        object.material.emissiveIntensity = 0.1;
+                        object.userData.isGem = true;
+                    }
+                    // Metal materials
+                    else if (name.includes('metal') || name.includes('gold') || name.includes('silver')) {
+                        object.material.metalness = 1.0;
+                        object.material.roughness = 0.2;
+                        object.userData.isMetal = true;
+                    }
+                }
+            });
+        }
+
+        function setupControls() {
+            // Auto rotate
+            document.getElementById('autoRotate').addEventListener('click', () => {
+                autoRotating = !autoRotating;
+                const camera = viewer.scene.activeCamera;
+                camera.controls.autoRotate = autoRotating;
+                
+                const btn = document.getElementById('autoRotate');
+                btn.textContent = autoRotating ? '⏸️ Stop Rotate' : '🔄 Auto Rotate';
+            });
+
+            // Reset view
+            document.getElementById('resetView').addEventListener('click', () => {
+                const camera = viewer.scene.activeCamera;
+                camera.position.set(3, 2, 5);
+                camera.target.set(0, 0, 0);
+                camera.setDirty();
+            });
+
+            // Screenshot
+            document.getElementById('screenshot').addEventListener('click', async () => {
+                const blob = await viewer.getScreenshot();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = 'ring-screenshot.png';
+                link.href = url;
+                link.click();
+                URL.revokeObjectURL(url);
+            });
+
+            // Fullscreen
+            document.getElementById('fullscreen').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+        }
+
+        function setupMaterialSelector() {
+            const materials = {
+                gold: { color: 0xFFD700, metalness: 1.0, roughness: 0.2 },
+                silver: { color: 0xC0C0C0, metalness: 1.0, roughness: 0.15 },
+                rose: { color: 0xE8B4B8, metalness: 1.0, roughness: 0.25 },
+                platinum: { color: 0xE5E4E2, metalness: 1.0, roughness: 0.1 },
+                copper: { color: 0xB87333, metalness: 1.0, roughness: 0.3 },
+                black: { color: 0x1A1A1A, metalness: 0.9, roughness: 0.2 }
+            };
+
+            document.querySelectorAll('.material-option').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update UI
+                    document.querySelectorAll('.material-option').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Change material
+                    const materialType = btn.dataset.material;
+                    const mat = materials[materialType];
+                    
+                    viewer.scene.traverse((object) => {
+                        if (object.userData.isMetal && object.material) {
+                            object.material.color.setHex(mat.color);
+                            object.material.metalness = mat.metalness;
+                            object.material.roughness = mat.roughness;
+                            object.material.setDirty();
+                        }
+                    });
+                    
+                    viewer.setDirty();
+                });
+            });
+        }
+
+        function setupGemSelector() {
+            document.querySelectorAll('.gem-color').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update UI
+                    document.querySelectorAll('.gem-color').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Change gem color
+                    const color = btn.dataset.color;
+                    
+                    viewer.scene.traverse((object) => {
+                        if (object.userData.isGem && object.material) {
+                            object.material.color.set(color);
+                            object.material.setDirty();
+                        }
+                    });
+                    
+                    viewer.setDirty();
+                });
+            });
+        }
+
+        // Initialize viewer
+        setupViewer();
+    </script>
+</body>
+</html>

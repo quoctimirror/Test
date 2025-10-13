@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Ring Viewer - WebGL</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .control-group {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .control-group h3 {
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #fff;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .gem-color {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gem-color::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gem-color:hover {
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .gem-color:hover::before {
+            opacity: 1;
+        }
+
+        .material-btn {
+            min-width: 70px;
+            position: relative;
+        }
+
+        .material-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.8s ease;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-text {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 40px;
+            animation: pulse 2s infinite;
+        }
+
+        .progress-container {
+            width: 320px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #progress-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .info-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 18px;
+            border-radius: 12px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+            opacity: 0.9;
+            max-width: 280px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .stats {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+            
+            .control-group {
+                padding: 12px;
+            }
+            
+            .info-panel {
+                bottom: 10px;
+                right: 10px;
+                font-size: 11px;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader">
+        <div class="loader-text">💎 Đang tải nhẫn kim cương...</div>
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Three.js Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- Stats Display -->
+    <div class="stats" id="stats">
+        FPS: --<br>
+        Triangles: --<br>
+        Draw Calls: --
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <!-- Camera Controls -->
+        <div class="control-group">
+            <h3>📷 Điều khiển Camera</h3>
+            <div class="control-row">
+                <button id="autoRotate">🔄 Tự động xoay</button>
+                <button id="resetView">🎯 Reset view</button>
+                <button id="changeRing">💍 Đổi nhẫn</button>
+            </div>
+        </div>
+
+        <!-- Lighting -->
+        <div class="control-group">
+            <h3>💡 Ánh sáng</h3>
+            <div class="control-row">
+                <button id="environmentLight">🌅 HDR môi trường</button>
+                <button id="spotLight">💡 Đèn spotlight</button>
+                <button id="sparkleMode">✨ Hiệu ứng lấp lánh</button>
+            </div>
+        </div>
+
+        <!-- Gem Colors -->
+        <div class="control-group">
+            <h3>💎 Màu kim cương</h3>
+            <div class="control-row">
+                <div class="gem-color" data-color="#ffffff" style="background: linear-gradient(45deg, #ffffff, #f0f0f0);"></div>
+                <div class="gem-color" data-color="#ffb6c1" style="background: linear-gradient(45deg, #ffb6c1, #ff69b4);"></div>
+                <div class="gem-color" data-color="#87ceeb" style="background: linear-gradient(45deg, #87ceeb, #4169e1);"></div>
+                <div class="gem-color" data-color="#98fb98" style="background: linear-gradient(45deg, #98fb98, #00ff00);"></div>
+                <div class="gem-color" data-color="#f0e68c" style="background: linear-gradient(45deg, #f0e68c, #ffd700);"></div>
+                <div class="gem-color" data-color="#dda0dd" style="background: linear-gradient(45deg, #dda0dd, #9370db);"></div>
+            </div>
+        </div>
+
+        <!-- Material Colors -->
+        <div class="control-group">
+            <h3>🥇 Chất liệu</h3>
+            <div class="control-row">
+                <button class="material-btn active" data-material="default">Mặc định</button>
+                <button class="material-btn" data-material="gold">Vàng</button>
+                <button class="material-btn" data-material="silver">Bạc</button>
+                <button class="material-btn" data-material="rose">Vàng hồng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Panel -->
+    <div class="info-panel">
+        <strong>💡 Hướng dẫn Three.js Viewer:</strong><br>
+        • <strong>Chuột trái:</strong> Xoay camera<br>
+        • <strong>Chuột phải:</strong> Di chuyển camera<br>
+        • <strong>Cuộn chuột:</strong> Zoom in/out<br>
+        • <strong>Touch:</strong> Hỗ trợ đầy đủ mobile<br>
+        • WebGL với Three.js + PBR Materials
+    </div>
+
+    <!-- Three.js từ CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+
+    <script>
+        // Global variables
+        let scene, camera, renderer, controls;
+        let ring, silver, gold, diamondObjects = [];
+        let composer, bloomPass;
+        let autoRotateEnabled = false;
+        let sparkleEnabled = true;
+        let environmentLightEnabled = true;
+
+        const ringModels = [
+            '../../public/models/nhanAnhKhanhLam.glb',
+            '../../public/models/nhanBac.glb', 
+            '../../public/models/nhanPremium.glb',
+            '../../public/models/nhanVang.glb',
+            '../../public/models/ring_webgi.glb'
+        ];
+        let currentRingModel = 0;
+
+        // Initialize Three.js scene
+        function initThree() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a2e);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(2, 2, 5);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ 
+                antialias: true,
+                alpha: true,
+                powerPreference: "high-performance"
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.minDistance = 2;
+            controls.maxDistance = 20;
+            controls.autoRotate = false;
+            controls.autoRotateSpeed = 1.0;
+
+            // Post-processing
+            setupPostProcessing();
+
+            // Lighting
+            setupLighting();
+
+            // Load first ring
+            loadRingModel(ringModels[currentRingModel]);
+
+            // Setup controls
+            setupControls();
+
+            // Start animation
+            animate();
+        }
+
+        function setupPostProcessing() {
+            // Post-processing setup would go here
+            // For now, using basic renderer
+        }
+
+        function setupLighting() {
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+            scene.add(ambientLight);
+
+            // Main directional light
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(10, 10, 5);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+
+            // Fill lights
+            const fillLight1 = new THREE.PointLight(0x4fc3f7, 0.5, 50);
+            fillLight1.position.set(-5, 3, 5);
+            scene.add(fillLight1);
+
+            const fillLight2 = new THREE.PointLight(0xff9800, 0.3, 50);
+            fillLight2.position.set(5, -3, -5);
+            scene.add(fillLight2);
+
+            // Environment map (simple gradient)
+            const envMap = createEnvironmentMap();
+            scene.environment = envMap;
+        }
+
+        function createEnvironmentMap() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 256;
+            const context = canvas.getContext('2d');
+
+            // Create gradient
+            const gradient = context.createLinearGradient(0, 0, 0, 256);
+            gradient.addColorStop(0, '#87CEEB'); // Sky blue
+            gradient.addColorStop(0.5, '#DDA0DD'); // Plum
+            gradient.addColorStop(1, '#4169E1'); // Royal blue
+
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, 512, 256);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            return texture;
+        }
+
+        async function loadRingModel(path) {
+            const loader = new THREE.GLTFLoader();
+            const progressBar = document.getElementById('progress-bar');
+            
+            // Show loader
+            document.getElementById('loader').classList.remove('hidden');
+
+            try {
+                // Clear existing ring
+                if (ring) {
+                    scene.remove(ring);
+                }
+
+                const gltf = await new Promise((resolve, reject) => {
+                    loader.load(
+                        path,
+                        resolve,
+                        (progress) => {
+                            const percent = (progress.loaded / progress.total);
+                            progressBar.style.transform = `scaleX(${percent})`;
+                        },
+                        reject
+                    );
+                });
+
+                ring = gltf.scene;
+                ring.position.set(0, 0, 0);
+                ring.scale.set(1, 1, 1);
+                scene.add(ring);
+
+                // Find components
+                findRingComponents();
+                
+                // Apply materials
+                applyPBRMaterials();
+
+                // Hide loader
+                setTimeout(() => {
+                    document.getElementById('loader').classList.add('hidden');
+                }, 500);
+
+            } catch (error) {
+                console.error('Error loading model:', error);
+                document.getElementById('loader').innerHTML = `
+                    <div class="loader-text">❌ Lỗi tải model</div>
+                    <p style="text-align: center; margin-top: 20px;">
+                        Không thể tải file: ${path}<br>
+                        Vui lòng kiểm tra đường dẫn file.
+                    </p>
+                `;
+            }
+        }
+
+        function findRingComponents() {
+            diamondObjects = [];
+            silver = null;
+            gold = null;
+
+            ring.traverse((child) => {
+                if (child.isMesh) {
+                    const name = child.name.toLowerCase();
+                    const materialName = child.material?.name?.toLowerCase() || '';
+                    
+                    // Find diamonds
+                    if (name.includes('diamond') || materialName.includes('diamond') || 
+                        name.includes('gem') || materialName.includes('gem')) {
+                        diamondObjects.push(child);
+                    }
+                    // Find silver
+                    else if (name.includes('silver') || materialName.includes('silver') ||
+                             name.includes('alliance')) {
+                        silver = child;
+                    }
+                    // Find gold
+                    else if (name.includes('gold') || materialName.includes('gold') ||
+                             name.includes('entourage')) {
+                        gold = child;
+                    }
+                }
+            });
+
+            console.log('🔍 Ring components found:');
+            console.log('Diamonds:', diamondObjects.length);
+            console.log('Silver:', !!silver);
+            console.log('Gold:', !!gold);
+        }
+
+        function applyPBRMaterials() {
+            // Apply diamond materials
+            diamondObjects.forEach(diamond => {
+                const diamondMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xffffff,
+                    metalness: 0.0,
+                    roughness: 0.0,
+                    transmission: 0.95,
+                    thickness: 0.5,
+                    ior: 2.42,
+                    clearcoat: 1.0,
+                    clearcoatRoughness: 0.0,
+                    envMapIntensity: 3.0
+                });
+                diamond.material = diamondMaterial;
+                diamond.castShadow = true;
+                diamond.receiveShadow = true;
+            });
+
+            // Apply metal materials
+            if (silver) {
+                const silverMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xfefefe,
+                    metalness: 1.0,
+                    roughness: 0.1,
+                    envMapIntensity: 2.0
+                });
+                silver.material = silverMaterial;
+                silver.castShadow = true;
+                silver.receiveShadow = true;
+            }
+
+            if (gold) {
+                const goldMaterial = new THREE.MeshPhysicalMaterial({
+                    color: 0xe2bf7f,
+                    metalness: 1.0,
+                    roughness: 0.15,
+                    envMapIntensity: 2.0
+                });
+                gold.material = goldMaterial;
+                gold.castShadow = true;
+                gold.receiveShadow = true;
+            }
+        }
+
+        function setupControls() {
+            // Auto rotate
+            document.getElementById('autoRotate')?.addEventListener('click', () => {
+                autoRotateEnabled = !autoRotateEnabled;
+                controls.autoRotate = autoRotateEnabled;
+                const btn = document.getElementById('autoRotate');
+                btn.textContent = autoRotateEnabled ? '⏸️ Tắt tự động xoay' : '🔄 Tự động xoay';
+            });
+
+            // Reset view
+            document.getElementById('resetView')?.addEventListener('click', () => {
+                camera.position.set(2, 2, 5);
+                controls.target.set(0, 0, 0);
+                controls.update();
+            });
+
+            // Change ring
+            document.getElementById('changeRing')?.addEventListener('click', async () => {
+                currentRingModel = (currentRingModel + 1) % ringModels.length;
+                await loadRingModel(ringModels[currentRingModel]);
+            });
+
+            // Gem colors
+            document.querySelectorAll('.gem-color').forEach(colorBtn => {
+                colorBtn.addEventListener('click', () => {
+                    const color = colorBtn.dataset.color;
+                    changeDiamondColor(color);
+                    
+                    // Visual feedback
+                    document.querySelectorAll('.gem-color').forEach(btn => {
+                        btn.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    });
+                    colorBtn.style.borderColor = 'rgba(255, 255, 255, 0.8)';
+                });
+            });
+
+            // Material colors
+            document.querySelectorAll('.material-btn').forEach(materialBtn => {
+                materialBtn.addEventListener('click', () => {
+                    const material = materialBtn.dataset.material;
+                    changeMaterialColor(material);
+                    
+                    // Visual feedback
+                    document.querySelectorAll('.material-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    materialBtn.classList.add('active');
+                });
+            });
+
+            // Sparkle mode
+            document.getElementById('sparkleMode')?.addEventListener('click', (e) => {
+                sparkleEnabled = !sparkleEnabled;
+                e.target.textContent = sparkleEnabled ? '⏸️ Tắt lấp lánh' : '✨ Hiệu ứng lấp lánh';
+            });
+        }
+
+        function changeDiamondColor(colorHex) {
+            const color = new THREE.Color(colorHex);
+            diamondObjects.forEach(diamond => {
+                if (diamond.material) {
+                    diamond.material.color = color;
+                }
+            });
+        }
+
+        function changeMaterialColor(materialType) {
+            switch (materialType) {
+                case 'default':
+                    if (silver) silver.material.color = new THREE.Color(0xfefefe);
+                    if (gold) gold.material.color = new THREE.Color(0xe2bf7f);
+                    break;
+                case 'gold':
+                    if (silver) silver.material.color = new THREE.Color(0xe2bf7f);
+                    if (gold) gold.material.color = new THREE.Color(0xe2bf7f);
+                    break;
+                case 'silver':
+                    if (silver) silver.material.color = new THREE.Color(0xfefefe);
+                    if (gold) gold.material.color = new THREE.Color(0xfefefe);
+                    break;
+                case 'rose':
+                    if (silver) silver.material.color = new THREE.Color(0xfa8787);
+                    if (gold) gold.material.color = new THREE.Color(0xfa8787);
+                    break;
+            }
+        }
+
+        function createSparkleEffect() {
+            if (!sparkleEnabled) return;
+
+            diamondObjects.forEach((diamond, index) => {
+                if (diamond.material) {
+                    const time = Date.now() * 0.002;
+                    const sparkle = Math.sin(time * 3 + index * Math.PI / 3) * 0.5 + 0.5;
+                    
+                    // Sparkle intensity
+                    const intensity = 0.5 + sparkle * 0.5;
+                    diamond.material.emissiveIntensity = intensity * 0.1;
+                    diamond.material.emissive = new THREE.Color(0x9999ff).multiplyScalar(intensity * 0.1);
+                }
+            });
+        }
+
+        function updateStats() {
+            const statsEl = document.getElementById('stats');
+            if (renderer && scene) {
+                const info = renderer.info;
+                statsEl.innerHTML = `
+                    FPS: ${Math.round(1000 / (performance.now() - lastTime))}<br>
+                    Triangles: ${info.render.triangles}<br>
+                    Draw Calls: ${info.render.calls}
+                `;
+            }
+        }
+
+        let lastTime = performance.now();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update controls
+            controls.update();
+
+            // Sparkle effect
+            createSparkleEffect();
+
+            // Update stats (every 60 frames)
+            if (Math.floor(Date.now() / 16) % 60 === 0) {
+                updateStats();
+            }
+
+            // Render
+            renderer.render(scene, camera);
+            
+            lastTime = performance.now();
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Initialize when page loads
+        window.addEventListener('load', initThree);
+    </script>
+</body>
+</html>

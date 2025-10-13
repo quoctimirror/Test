@@ -1,5 +1,6 @@
 import MyPlayground from './components/MyPlayground/MyPlayground'
 import MyPlayground2 from './components/MyPlayground/MyPlayground2'
+import MyPlayground3 from './components/MyPlayground/MyPlayground3'
 
 import './App.css'
 

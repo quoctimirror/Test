@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Three.js Ring Viewer</title>
+    <meta name="description" content="3D Ring Viewer with Three.js">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>">
+    
+    <!-- Three.js - Using module imports -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
+        }
+    }
+    </script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        #container {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            z-index: 999;
+        }
+        
+        .controls h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .controls ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .reset-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .reset-btn:hover {
+            background: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    
+    <div class="controls">
+        <h3>Controls</h3>
+        <ul>
+            <li>Mouse: Orbit around</li>
+            <li>Scroll: Zoom in/out</li>
+            <li>Right click + drag: Pan</li>
+            <li>R key: Reset view</li>
+        </ul>
+    </div>
+    
+    <button class="reset-btn" onclick="resetCamera()">🔄 Reset View</button>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+        // Global variables
+        let scene, camera, renderer, controls, ring, mixer, clock;
+        let environmentTexture = null;
+        let ringAnalysis = null;
+
+        // Make functions available globally
+        window.resetCamera = resetCamera;
+
+        // Initialize Three.js scene
+        function init() {
+            console.log('🚀 Initializing Three.js scene...');
+            
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x001122);
+            
+            // Create camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 2, 3);
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.physicallyCorrectLights = true;
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.0;
+            
+            document.getElementById('container').appendChild(renderer.domElement);
+            
+            // Create orbit controls
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 1;
+            controls.maxDistance = 10;
+            controls.maxPolarAngle = Math.PI;
+            
+            // Create clock for animations
+            clock = new THREE.Clock();
+            
+            // Setup environment
+            setupEnvironment();
+            
+            // Setup lighting
+            setupLighting();
+            
+            // Load ring model
+            loadRingModel();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Start render loop
+            animate();
+            
+            console.log('✅ Three.js initialization complete');
+        }
+
+        function setupEnvironment() {
+            console.log('🌍 Setting up environment...');
+            
+            // Create gradient background như WebGi
+            scene.background = new THREE.Color(0xEEB7B5); // Màu hồng pastel đẹp
+            scene.fog = new THREE.Fog(0xEEB7B5, 10, 50);
+            
+            // Create environment texture cho reflections
+            const pmremGenerator = new THREE.PMREMGenerator(renderer);
+            const envScene = new THREE.Scene();
+            
+            // Tạo gradient environment
+            const gradientShader = {
+                uniforms: {
+                    topColor: { value: new THREE.Color(0xFFE4E1) },
+                    bottomColor: { value: new THREE.Color(0xEEB7B5) }
+                },
+                vertexShader: `
+                    varying vec3 vWorldPosition;
+                    void main() {
+                        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+                        vWorldPosition = worldPosition.xyz;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 topColor;
+                    uniform vec3 bottomColor;
+                    varying vec3 vWorldPosition;
+                    void main() {
+                        float h = normalize(vWorldPosition).y;
+                        gl_FragColor = vec4(mix(bottomColor, topColor, max(0.0, h)), 1.0);
+                    }
+                `
+            };
+            
+            const skyGeo = new THREE.SphereGeometry(100, 32, 15);
+            const skyMat = new THREE.ShaderMaterial(gradientShader);
+            const sky = new THREE.Mesh(skyGeo, skyMat);
+            envScene.add(sky);
+            
+            environmentTexture = pmremGenerator.fromScene(envScene).texture;
+            scene.environment = environmentTexture;
+            
+            pmremGenerator.dispose();
+            console.log('✅ Environment setup complete');
+        }
+
+        function setupLighting() {
+            console.log('💡 Setting up lighting...');
+            
+            // Ambient light
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+            scene.add(ambientLight);
+            
+            // Main directional light
+            const mainLight = new THREE.DirectionalLight(0xffffff, 1);
+            mainLight.position.set(5, 10, 5);
+            mainLight.castShadow = true;
+            mainLight.shadow.mapSize.width = 2048;
+            mainLight.shadow.mapSize.height = 2048;
+            mainLight.shadow.camera.near = 0.5;
+            mainLight.shadow.camera.far = 500;
+            scene.add(mainLight);
+            
+            // Fill light
+            const fillLight = new THREE.DirectionalLight(0x87CEEB, 0.5);
+            fillLight.position.set(-5, 5, -5);
+            scene.add(fillLight);
+            
+            // Rim light
+            const rimLight = new THREE.DirectionalLight(0xffffff, 0.3);
+            rimLight.position.set(0, -5, -5);
+            scene.add(rimLight);
+            
+            console.log('✅ Lighting setup complete');
+        }
+
+        function loadRingModel() {
+            console.log('📦 Loading ring model...');
+            
+            const loader = new GLTFLoader();
+            
+            // Setup DRACO loader for compressed models
+            const dracoLoader = new DRACOLoader();
+            dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/libs/draco/');
+            loader.setDRACOLoader(dracoLoader);
+            
+            loader.load(
+                '../../public/models/ring_webgi.glb',
+                function(gltf) {
+                    console.log('✅ Ring model loaded successfully');
+                    
+                    ring = gltf.scene;
+                    ring.position.set(0, 0, 0);
+                    ring.scale.set(1, 1, 1);
+                    
+                    // Enable shadows
+                    ring.traverse(function(child) {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
+                    
+                    // Analyze and enhance materials
+                    analyzeAndEnhanceRing(ring);
+                    
+                    scene.add(ring);
+                    
+                    // Setup animations if available
+                    if (gltf.animations && gltf.animations.length > 0) {
+                        mixer = new THREE.AnimationMixer(ring);
+                        gltf.animations.forEach((clip) => {
+                            mixer.clipAction(clip).play();
+                        });
+                    }
+                    
+                    console.log('💍 Ring added to scene');
+                },
+                function(progress) {
+                    console.log('📊 Loading progress:', (progress.loaded / progress.total * 100) + '%');
+                },
+                function(error) {
+                    console.error('❌ Error loading ring model:', error);
+                }
+            );
+        }
+
+        function analyzeAndEnhanceRing(mesh) {
+            console.log('🔍 Analyzing and enhancing ring materials...');
+            
+            const analysis = {
+                materials: [],
+                geometries: [],
+                totalVertices: 0
+            };
+            
+            mesh.traverse(child => {
+                if (child.isMesh) {
+                    // Analyze
+                    if (child.material) {
+                        analysis.materials.push({
+                            name: child.material.name,
+                            type: child.material.type
+                        });
+                    }
+                    
+                    if (child.geometry) {
+                        const vertices = child.geometry.attributes.position?.count || 0;
+                        analysis.totalVertices += vertices;
+                        analysis.geometries.push({
+                            vertices: vertices,
+                            name: child.name
+                        });
+                    }
+                    
+                    // Enhance materials
+                    if (child.material) {
+                        const materialName = child.material.name?.toLowerCase() || '';
+                        
+                        if (materialName.includes('gold') || materialName.includes('metal') || materialName.includes('entourage')) {
+                            // Gold material với hiệu ứng sáng bóng
+                            child.material = new THREE.MeshPhysicalMaterial({
+                                color: new THREE.Color(0xe2bf7f), // Màu vàng đẹp hơn
+                                metalness: 1.0,
+                                roughness: 0.15,
+                                envMap: environmentTexture,
+                                envMapIntensity: 2.5,
+                                clearcoat: 0.3,
+                                clearcoatRoughness: 0.1
+                            });
+                            console.log('✨ Applied gold material');
+                        } else if (materialName.includes('silver') || materialName.includes('alliance')) {
+                            // Silver material
+                            child.material = new THREE.MeshPhysicalMaterial({
+                                color: new THREE.Color(0xfefefe),
+                                metalness: 1.0,
+                                roughness: 0.1,
+                                envMap: environmentTexture,
+                                envMapIntensity: 2.0,
+                                clearcoat: 0.5,
+                                clearcoatRoughness: 0.05
+                            });
+                            console.log('🥈 Applied silver material');
+                        } else if (materialName.includes('diamond') || materialName.includes('gem') || materialName.includes('diamonds')) {
+                            // Diamond material với hiệu ứng lấp lánh
+                            child.material = new THREE.MeshPhysicalMaterial({
+                                color: new THREE.Color(0xFFFFFF),
+                                metalness: 0.0,
+                                roughness: 0.0,
+                                transmission: 0.98,
+                                thickness: 0.5,
+                                ior: 2.42,
+                                envMap: environmentTexture,
+                                envMapIntensity: 4.0,
+                                clearcoat: 1.0,
+                                clearcoatRoughness: 0.0,
+                                reflectivity: 1.0,
+                                emissive: new THREE.Color(0xFFFFFF),
+                                emissiveIntensity: 0.05
+                            });
+                            // Lưu reference để tạo hiệu ứng lấp lánh
+                            child.userData.isDiamond = true;
+                            console.log('💎 Applied diamond material');
+                        } else {
+                            // Default enhanced material
+                            if (child.material.isMeshStandardMaterial || child.material.isMeshBasicMaterial) {
+                                const newMaterial = new THREE.MeshPhysicalMaterial({
+                                    color: child.material.color,
+                                    metalness: 0.5,
+                                    roughness: 0.3,
+                                    envMap: environmentTexture,
+                                    envMapIntensity: 1.0
+                                });
+                                child.material = newMaterial;
+                            }
+                        }
+                        
+                        child.material.needsUpdate = true;
+                    }
+                }
+            });
+            
+            ringAnalysis = analysis;
+            window.ringAnalysis = analysis;
+            
+            console.log('📊 Ring analysis complete:', analysis);
+            console.log('🔗 Access analysis with: window.ringAnalysis');
+        }
+
+        function setupEventListeners() {
+            // Window resize
+            window.addEventListener('resize', onWindowResize, false);
+            
+            // Keyboard controls
+            document.addEventListener('keydown', onKeyDown, false);
+            
+            console.log('🎮 Event listeners setup complete');
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onKeyDown(event) {
+            switch(event.code) {
+                case 'KeyR':
+                    resetCamera();
+                    break;
+                case 'Space':
+                    event.preventDefault();
+                    if (ring) {
+                        // Toggle rotation animation
+                        ring.userData.autoRotate = !ring.userData.autoRotate;
+                        console.log('🔄 Auto rotation:', ring.userData.autoRotate ? 'ON' : 'OFF');
+                    }
+                    break;
+            }
+        }
+
+        function resetCamera() {
+            console.log('🔄 Resetting camera...');
+            if (camera && controls) {
+                camera.position.set(0, 2, 3);
+                camera.lookAt(0, 0, 0);
+                controls.reset();
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+            
+            // Update controls
+            controls.update();
+            
+            // Update animations
+            if (mixer) {
+                mixer.update(delta);
+            }
+            
+            // Auto rotation
+            if (ring && ring.userData.autoRotate) {
+                ring.rotation.y += delta * 0.5;
+            }
+            
+            // Diamond sparkle effect - Hiệu ứng lấp lánh cho kim cương
+            if (ring) {
+                ring.traverse((child) => {
+                    if (child.userData.isDiamond && child.material) {
+                        // Tạo hiệu ứng lấp lánh bằng cách thay đổi emissive intensity
+                        const sparkle = Math.sin(time * 3 + Math.random() * Math.PI) * 0.5 + 0.5;
+                        child.material.emissiveIntensity = sparkle * 0.1;
+                        
+                        // Thay đổi nhẹ màu sắc để tạo hiệu ứng cầu vồng
+                        const hue = (time * 0.1) % 1;
+                        child.material.emissive.setHSL(hue, 0.1, 0.5);
+                    }
+                });
+            }
+            
+            // Render scene
+            renderer.render(scene, camera);
+        }
+
+        // Initialize when module loads
+        init();
+        
+        console.log('🚀 Three.js Ring Viewer script loaded');
+    </script>
+</body>
+</html>
