@@ -1145,6 +1145,16 @@ const MyPlayground2 = () => {
 
     ring.setAttribute('position', '0 1.6 -0.5');
     ring.setAttribute('rotation', '0 0 0');
+    ring.setAttribute('scale', '1 1 1');
+  };
+
+  const scaleRing = (scaleMultiplier) => {
+    const ring = document.getElementById('ring-entity');
+    if (!ring) return;
+
+    const scale = scaleMultiplier;
+    ring.setAttribute('scale', `${scale} ${scale} ${scale}`);
+    console.log(`Ring scaled to ${scaleMultiplier}x`);
   };
 
   return (
@@ -1211,6 +1221,43 @@ const MyPlayground2 = () => {
             </button>
             <button onClick={() => moveRing('y', -1)} style={buttonStyle}>
               ⬇️ Y
+            </button>
+          </div>
+        </div>
+
+        {/* Scale Controls */}
+        <div style={{ marginBottom: '15px' }}>
+          <strong>SCALE:</strong>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '5px', marginTop: '10px' }}>
+            <button onClick={() => scaleRing(0.1)} style={buttonStyle}>
+              0.1x
+            </button>
+            <button onClick={() => scaleRing(0.5)} style={buttonStyle}>
+              0.5x
+            </button>
+            <button onClick={() => scaleRing(1)} style={buttonStyle}>
+              1x
+            </button>
+            <button onClick={() => scaleRing(2)} style={buttonStyle}>
+              2x
+            </button>
+            <button onClick={() => scaleRing(3)} style={buttonStyle}>
+              3x
+            </button>
+            <button onClick={() => scaleRing(5)} style={buttonStyle}>
+              5x
+            </button>
+            <button onClick={() => scaleRing(10)} style={buttonStyle}>
+              10x
+            </button>
+            <button onClick={() => scaleRing(20)} style={buttonStyle}>
+              20x
+            </button>
+            <button onClick={() => scaleRing(50)} style={buttonStyle}>
+              50x
+            </button>
+            <button onClick={() => scaleRing(100)} style={buttonStyle}>
+              100x
             </button>
           </div>
         </div>
@@ -1321,7 +1368,7 @@ const MyPlayground2 = () => {
           ring-enhancer
           gltf-model="/models/nhanMirror.glb"
           position="0 1.6 -0.5"
-          scale="0.5 0.5 0.5"
+          scale="1 1 1"
           rotation="0 0 0"
           class="interactive grabbable rotatable"
         >
