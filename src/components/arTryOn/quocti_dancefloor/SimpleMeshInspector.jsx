@@ -29,6 +29,7 @@ import { ModelUploader } from './components/ModelUploader';
 import { TransformControls } from './components/TransformControls';
 import { MeshList } from './components/MeshList';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { DiamondCustomizer } from './components/DiamondCustomizer';
 
 export default function SimpleMeshInspector() {
   // ===== STATE MANAGEMENT =====
@@ -45,6 +46,20 @@ export default function SimpleMeshInspector() {
   // Màu của từng mesh (key: tên mesh, value: HEX color)
   const [meshColors, setMeshColors] = useState({});
 
+  // Trạng thái hiển thị của từng mesh (key: tên mesh, value: boolean)
+  const [meshVisibility, setMeshVisibility] = useState({});
+
+  // Render mode: 'smooth' (mượt, hiệu suất cao) hoặc 'fullTopping' (đẹp, lấp lánh)
+  const [renderMode, setRenderMode] = useState('smooth');
+
+  // Diamond customization states
+  const [selectedShape, setSelectedShape] = useState('Round');
+  const [selectedSize, setSelectedSize] = useState('1 ct');
+  const [selectedHead, setSelectedHead] = useState('4-Prong Nouveau');
+  const [selectedMetal, setSelectedMetal] = useState('Rose Gold 2');
+  const [selectedBand, setSelectedBand] = useState('Solitaire');
+  const [selectedBandMetal, setSelectedBandMetal] = useState('Rose Gold 2');
+
   // Transform controls (rotation, position, scale, auto-rotate)
   // MẶC ĐỊNH: scale=0.1, posY=-0.12 để hiển thị đẹp
   // Nếu muốn xem ORIGINAL: scale=1, posY=0
@@ -59,8 +74,8 @@ export default function SimpleMeshInspector() {
     autoRotate: false,
   });
 
-  // ===== KHỞI TẠO MÀU MẶC ĐỊNH CHO MESH =====
-  // Khi danh sách mesh thay đổi, tự động set màu mặc định
+  // ===== KHỞI TẠO MÀU VÀ VISIBILITY MẶC ĐỊNH CHO MESH =====
+  // Khi danh sách mesh thay đổi, tự động set màu và visibility mặc định
   useEffect(() => {
     if (meshList.length === 0) return;
 
@@ -73,7 +88,7 @@ export default function SimpleMeshInspector() {
           const name = mesh.name.toLowerCase();
 
           if (name.includes('ring')) {
-            // Ring → Vàng hồng
+            // Ring → Rose Gold 2 (mặc định)
             colors[mesh.name] = '#ffaf83';
           } else if (name.includes('diamond') || name.includes('gem') || name.includes('stone')) {
             // Đá quý → Xanh nhạt
@@ -87,7 +102,59 @@ export default function SimpleMeshInspector() {
 
       return colors;
     });
+
+    // Khởi tạo visibility cho mesh mới (mặc định là hiển thị)
+    setMeshVisibility(prev => {
+      const visibility = { ...prev };
+      meshList.forEach(mesh => {
+        if (visibility[mesh.name] === undefined) {
+          visibility[mesh.name] = true; // Mặc định hiển thị
+        }
+      });
+      return visibility;
+    });
   }, [meshList]);
+
+  // ===== KHI CHỌN BAND METAL → THAY ĐỔI MÀU BAND/RING =====
+  useEffect(() => {
+    if (meshList.length === 0) return;
+
+    // Map metal name to hex color
+    const metalColorMap = {
+      'Rose Gold 1': '#f2af83',
+      'Rose Gold 2': '#ffaf83',
+      'Platinum': '#b9bbbc',
+      'Silver': '#dedede'
+    };
+
+    const newColor = metalColorMap[selectedBandMetal];
+    if (!newColor) return;
+
+    // Tìm mesh có tên chứa "ring" và update màu
+    setMeshColors(prev => {
+      const colors = { ...prev };
+      meshList.forEach(mesh => {
+        const name = mesh.name.toLowerCase();
+        if (name.includes('ring')) {
+          colors[mesh.name] = newColor;
+        }
+      });
+      return colors;
+    });
+  }, [selectedBandMetal, meshList]);
+
+  // ===== CONVERT SELECTED SIZE → DIAMOND SCALE =====
+  const diamondScale = (() => {
+    const sizeMap = {
+      '1 ct': 1.0,    // Original size
+      '1.5 ct': 1.15, // 15% lớn hơn
+      '2 ct': 1.3,    // 30% lớn hơn
+      '2.5 ct': 1.45  // 45% lớn hơn
+    };
+    const scale = sizeMap[selectedSize] || 1.0;
+    console.log('🔍 Diamond Scale:', selectedSize, '→', scale);
+    return scale;
+  })();
 
   // ===== XỬ LÝ UPLOAD FILE =====
   const handleFileUpload = async (url) => {
@@ -102,6 +169,7 @@ export default function SimpleMeshInspector() {
       setSelectedMesh(null);
       setMeshList([]);
       setMeshColors({});
+      setMeshVisibility({});
 
       // Reset transform về giá trị tốt cho model mới
       setTransform({
@@ -144,25 +212,52 @@ export default function SimpleMeshInspector() {
           setTransform={setTransform}
         />
 
-        {/* Danh sách Mesh + Color Picker */}
+        {/* Render Mode Toggle */}
+        <div style={{ marginTop: '25px' }}>
+          <h3 style={{ borderBottom: '2px solid #4CAF50', paddingBottom: '10px' }}>
+            Render Mode
+          </h3>
+          <div style={{ marginTop: '10px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={renderMode === 'fullTopping'}
+                onChange={(e) => setRenderMode(e.target.checked ? 'fullTopping' : 'smooth')}
+                style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+              />
+              <span style={{ fontSize: '14px' }}>
+                {renderMode === 'smooth' ? '⚡ Smooth Mode (Fast)' : '✨ FullTopping Mode (Beautiful)'}
+              </span>
+            </label>
+            <div style={{ fontSize: '11px', color: '#888', marginTop: '8px', marginLeft: '28px' }}>
+              {renderMode === 'smooth'
+                ? 'Hiệu suất cao, mượt mà'
+                : 'Hiệu ứng đầy đủ, sáng lấp lánh'}
+            </div>
+          </div>
+        </div>
+
+        {/* Danh sách Mesh + Color Picker + Visibility Toggle */}
         <MeshList
           meshList={meshList}
           selectedMesh={selectedMesh}
           setSelectedMesh={setSelectedMesh}
           meshColors={meshColors}
           setMeshColors={setMeshColors}
+          meshVisibility={meshVisibility}
+          setMeshVisibility={setMeshVisibility}
         />
       </div>
 
-      {/* ===== 3D CANVAS (BÊN PHẢI) ===== */}
-      <div style={{ flex: 1, background: '#333' }}>
+      {/* ===== 3D CANVAS (GIỮA) ===== */}
+      <div style={{ flex: 1, background: '#ffffff' }}>
         {/* ErrorBoundary: Bắt lỗi khi load model */}
         <ErrorBoundary key={modelPath}>
           {/* Suspense: Hiển thị "Loading..." khi đang load model */}
           <Suspense
             fallback={
               <div style={{
-                color: 'white',
+                color: '#333',
                 height: '100%',
                 display: 'flex',
                 justifyContent: 'center',
@@ -174,9 +269,14 @@ export default function SimpleMeshInspector() {
           >
             <Canvas
               shadows
-              dpr={[1, 1.5]}
-              gl={{ antialias: true, preserveDrawingBuffer: true }}
-              camera={{ position: [0, 0, 3], fov: 25 }}
+              dpr={[1, 2]}
+              gl={{
+                antialias: true,
+                preserveDrawingBuffer: true,
+                powerPreference: 'high-performance',
+                stencil: false
+              }}
+              camera={{ position: [0, 0, 10], fov: 50 }}
             >
               <Scene3D
                 modelPath={modelPath}
@@ -184,10 +284,38 @@ export default function SimpleMeshInspector() {
                 onMeshListLoad={setMeshList}
                 transform={transform}
                 meshColors={meshColors}
+                meshVisibility={meshVisibility}
+                renderMode={renderMode}
+                diamondScale={diamondScale}
               />
             </Canvas>
           </Suspense>
         </ErrorBoundary>
+      </div>
+
+      {/* ===== SIDEBAR PHẢI: DIAMOND CUSTOMIZER ===== */}
+      <div style={{
+        width: '350px',
+        background: '#1a1a1a',
+        color: 'white',
+        padding: '20px',
+        overflowY: 'auto',
+        fontSize: '14px'
+      }}>
+        <DiamondCustomizer
+          selectedShape={selectedShape}
+          selectedSize={selectedSize}
+          selectedHead={selectedHead}
+          selectedMetal={selectedMetal}
+          selectedBand={selectedBand}
+          selectedBandMetal={selectedBandMetal}
+          onShapeChange={setSelectedShape}
+          onSizeChange={setSelectedSize}
+          onHeadChange={setSelectedHead}
+          onMetalChange={setSelectedMetal}
+          onBandChange={setSelectedBand}
+          onBandMetalChange={setSelectedBandMetal}
+        />
       </div>
     </div>
   );

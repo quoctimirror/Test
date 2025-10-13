@@ -6,36 +6,66 @@
  * - Click vào mesh để select/deselect (highlight)
  * - Color picker (visual) để chọn màu
  * - Text input để nhập mã HEX trực tiếp
+ * - Toggle visibility (ẩn/hiện mesh) bằng icon con mắt
  */
 
-export function MeshList({ meshList, selectedMesh, setSelectedMesh, meshColors, setMeshColors }) {
+export function MeshList({ meshList, selectedMesh, setSelectedMesh, meshColors, setMeshColors, meshVisibility, setMeshVisibility }) {
   return (
     <div>
       <h3 style={{ borderBottom: '2px solid #4CAF50', paddingBottom: '10px', marginTop: '25px' }}>
         Meshes ({meshList.length})
       </h3>
 
-      {meshList.map(mesh => (
-        <div
-          key={mesh.name}
-          style={{
-            padding: '10px',
-            margin: '5px 0',
-            background: selectedMesh === mesh.name ? '#ff0000' : '#2a2a2a',
-            borderRadius: '5px',
-            transition: 'all 0.2s'
-          }}
-        >
-          {/* === MESH INFO (Click để select) === */}
+      {meshList.map(mesh => {
+        const isVisible = meshVisibility[mesh.name] !== false; // Mặc định true nếu undefined
+
+        return (
           <div
-            onClick={() => setSelectedMesh(mesh.name === selectedMesh ? null : mesh.name)}
-            style={{ cursor: 'pointer' }}
+            key={mesh.name}
+            style={{
+              padding: '10px',
+              margin: '5px 0',
+              background: selectedMesh === mesh.name ? '#ff0000' : '#2a2a2a',
+              borderRadius: '5px',
+              transition: 'all 0.2s',
+              opacity: isVisible ? 1 : 0.5
+            }}
           >
-            <div style={{ fontWeight: 'bold' }}>{mesh.name}</div>
-            <div style={{ fontSize: '11px', color: '#888', marginTop: '4px' }}>
-              {mesh.type}
+            {/* === MESH INFO (Click để select) === */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {/* Visibility Toggle Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMeshVisibility(prev => ({ ...prev, [mesh.name]: !isVisible }));
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '18px',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: isVisible ? '#4CAF50' : '#666',
+                  transition: 'color 0.2s'
+                }}
+                title={isVisible ? 'Ẩn mesh' : 'Hiện mesh'}
+              >
+                {isVisible ? '👁️' : '👁️‍🗨️'}
+              </button>
+
+              <div
+                onClick={() => setSelectedMesh(mesh.name === selectedMesh ? null : mesh.name)}
+                style={{ cursor: 'pointer', flex: 1 }}
+              >
+                <div style={{ fontWeight: 'bold' }}>{mesh.name}</div>
+                <div style={{ fontSize: '11px', color: '#888', marginTop: '4px' }}>
+                  {mesh.type}
+                </div>
+              </div>
             </div>
-          </div>
 
           {/* === COLOR PICKER === */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
@@ -82,7 +112,8 @@ export function MeshList({ meshList, selectedMesh, setSelectedMesh, meshColors, 
             />
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

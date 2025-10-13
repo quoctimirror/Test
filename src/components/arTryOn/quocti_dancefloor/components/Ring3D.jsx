@@ -14,7 +14,7 @@ import { useFrame } from '@react-three/fiber';
 import { Center, MeshRefractionMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
-export function Ring3D({ nodes, env, selectedMesh, transform, meshColors }) {
+export function Ring3D({ nodes, env, selectedMesh, transform, meshColors, meshVisibility, diamondScale = 1 }) {
   const groupRef = useRef();
 
   // Auto rotate nếu được bật
@@ -39,11 +39,25 @@ export function Ring3D({ nodes, env, selectedMesh, transform, meshColors }) {
           // Bỏ qua các node không có geometry
           if (!node.geometry) return null;
 
+          // Kiểm tra trạng thái visibility - nếu bị ẩn thì không render
+          const isVisible = meshVisibility?.[key] !== false; // Mặc định true nếu undefined
+          if (!isVisible) return null;
+
           const material = node.material;
 
           // ===== XỬ LÝ INSTANCED MESH =====
           // (Mesh được duplicate nhiều lần, hiệu năng cao)
           if (node.isInstancedMesh) {
+            // Áp dụng diamondScale cho InstancedMesh (viên kim cương chính)
+            const originalScale = node.scale;
+            const finalScale = originalScale.clone().multiplyScalar(diamondScale);
+
+            console.log(`💎 InstancedMesh "${key}":`, {
+              originalScale: originalScale.toArray(),
+              diamondScale,
+              finalScale: finalScale.toArray()
+            });
+
             return (
               <instancedMesh
                 key={key}
@@ -53,7 +67,7 @@ export function Ring3D({ nodes, env, selectedMesh, transform, meshColors }) {
                 instanceMatrix={node.instanceMatrix}
                 position={node.position}
                 rotation={node.rotation}
-                scale={node.scale}
+                scale={finalScale}
               >
                 {/* Nếu mesh đang được chọn → highlight màu đỏ */}
                 {selectedMesh === key ? (
@@ -90,6 +104,20 @@ export function Ring3D({ nodes, env, selectedMesh, transform, meshColors }) {
                          key.toLowerCase().includes('diamond') ||
                          key.toLowerCase().includes('stone');
 
+            // Áp dụng diamondScale cho gem meshes (scale mesh transform)
+            const originalScale = node.scale;
+            const finalScale = isGem
+              ? originalScale.clone().multiplyScalar(diamondScale)
+              : originalScale;
+
+            if (isGem) {
+              console.log(`💎 Gem Mesh "${key}":`, {
+                originalScale: originalScale.toArray(),
+                diamondScale,
+                finalScale: finalScale.toArray()
+              });
+            }
+
             return (
               <mesh
                 key={key}
@@ -98,7 +126,7 @@ export function Ring3D({ nodes, env, selectedMesh, transform, meshColors }) {
                 geometry={node.geometry}
                 position={node.position}
                 rotation={node.rotation}
-                scale={node.scale}
+                scale={finalScale}
               >
                 {/* Nếu mesh đang được chọn → highlight màu đỏ */}
                 {selectedMesh === key ? (

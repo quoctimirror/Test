@@ -11,9 +11,10 @@
 
 import { useEffect } from 'react';
 import { useGLTF, useEnvironment, Environment, OrbitControls } from '@react-three/drei';
+import { EffectComposer, Bloom, N8AO, ToneMapping, FXAA } from '@react-three/postprocessing';
 import { Ring3D } from './Ring3D';
 
-export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, meshColors }) {
+export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, meshColors, meshVisibility, renderMode = 'smooth', diamondScale = 1 }) {
   // Load model GLTF
   const { nodes } = useGLTF(modelPath);
 
@@ -44,6 +45,9 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
 
   return (
     <>
+      {/* === BACKGROUND COLOR === */}
+      <color attach="background" args={['#ffffff']} />
+
       {/* === LIGHTING === */}
       {/* SpotLight chiếu từ phía trên */}
       <spotLight
@@ -62,16 +66,53 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
           selectedMesh={selectedMesh}
           transform={transform}
           meshColors={meshColors}
+          meshVisibility={meshVisibility}
+          diamondScale={diamondScale}
         />
       </group>
 
       {/* === CAMERA CONTROLS === */}
       {/* OrbitControls: Click chuột trái để xoay, scroll để zoom */}
-      <OrbitControls makeDefault />
+      <OrbitControls
+        enablePan={false}
+        minPolarAngle={0}
+        maxPolarAngle={Math.PI / 2.25}
+        makeDefault
+      />
+
+      {/* === POST-PROCESSING EFFECTS === */}
+      {/* EffectComposer: conditional rendering dựa trên renderMode */}
+      <EffectComposer
+        disableNormalPass={renderMode === 'smooth'}
+        multisampling={renderMode === 'fullTopping' ? 4 : 2}
+      >
+        {/* FXAA: Anti-aliasing nhẹ, hiệu quả - thay thế SMAA để tránh conflict */}
+        <FXAA />
+
+        {/* N8AO: Ambient Occlusion */}
+        <N8AO
+          aoRadius={renderMode === 'fullTopping' ? 0.15 : 0.1}
+          intensity={renderMode === 'fullTopping' ? 4 : 2}
+          distanceFalloff={renderMode === 'fullTopping' ? 2 : 1}
+          quality={renderMode === 'smooth' ? 'performance' : undefined}
+          halfRes={renderMode === 'smooth'}
+        />
+
+        {/* Bloom: hiệu ứng lấp lánh - Giảm intensity để không quá sáng */}
+        <Bloom
+          luminanceThreshold={renderMode === 'fullTopping' ? 1.5 : 2.0}
+          intensity={renderMode === 'fullTopping' ? 1.2 : 0.8}
+          levels={renderMode === 'fullTopping' ? 9 : 7}
+          mipmapBlur
+        />
+
+        {/* ToneMapping: ánh xạ màu HDR */}
+        <ToneMapping />
+      </EffectComposer>
 
       {/* === ENVIRONMENT === */}
-      {/* Hiển thị environment map làm background và phản chiếu */}
-      <Environment map={env} background />
+      {/* Environment map để phản chiếu và ánh sáng, background trắng ở trên */}
+      <Environment map={env} background={false} />
     </>
   );
 }
