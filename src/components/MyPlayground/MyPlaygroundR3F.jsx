@@ -154,51 +154,65 @@ function Scene({ shadow, frame, diamonds }) {
   const xrState = useXR()
   const isVR = xrState.isPresenting
 
+  useEffect(() => {
+    if (isVR) {
+      console.log('🎯 VR IS PRESENTING - Scene should render now!')
+    }
+  }, [isVR])
+
   return (
     <>
       <VRDebugLogger />
 
-      {/* Background - Meta Quest style with hex number */}
-      <color args={[0xffffff]} attach="background" />
+      {/* Background - WHITE/GRAY so NOT black if working */}
+      <color args={[0xcccccc]} attach="background" />
 
-      {/* Camera - Explicit position for VR (Meta Quest style) */}
+      {/* Camera - Explicit position for VR */}
       <PerspectiveCamera makeDefault position={[0, 1.6, 2]} fov={75} />
 
-      {/* Lighting - VERY BRIGHT in VR */}
-      <ambientLight intensity={isVR ? 3 : 1.5} />
-      <directionalLight position={[5, 5, 5]} intensity={isVR ? 5 : 2} />
-      <directionalLight position={[-5, 5, -3]} intensity={isVR ? 3 : 1} />
-      <pointLight position={[0, 2, 0]} intensity={isVR ? 10 : 2} color="#ffffff" />
+      {/* SUPER BRIGHT LIGHTING - No shadows for performance */}
+      <ambientLight intensity={5} />
+      <hemisphereLight intensity={3} />
+      <pointLight position={[0, 1.6, 0]} intensity={20} />
 
-      {/* TEST CUBE - Always visible in VR to verify it works */}
-      {isVR && (
-        <mesh position={[0, 1.6, -0.5]}>
-          <boxGeometry args={[0.2, 0.2, 0.2]} />
-          <meshBasicMaterial color="#ff0000" />
-        </mesh>
-      )}
+      {/* ALWAYS SHOW CUBES - Both VR and Desktop for testing */}
+      {/* RED CUBE - Very close */}
+      <mesh position={[0, 1.6, -0.3]}>
+        <boxGeometry args={[0.3, 0.3, 0.3]} />
+        <meshBasicMaterial color="#ff0000" />
+      </mesh>
 
-      {/* Environment - ONLY for desktop, skip in VR to avoid loading delay */}
+      {/* GREEN CUBE - Left */}
+      <mesh position={[-0.5, 1.6, -1]}>
+        <boxGeometry args={[0.3, 0.3, 0.3]} />
+        <meshBasicMaterial color="#00ff00" />
+      </mesh>
+
+      {/* BLUE CUBE - Right */}
+      <mesh position={[0.5, 1.6, -1]}>
+        <boxGeometry args={[0.3, 0.3, 0.3]} />
+        <meshBasicMaterial color="#0000ff" />
+      </mesh>
+
+      {/* Environment - ONLY for desktop */}
       {!isVR && <Environment preset="city" background={false} />}
 
-      {/* Ring Model - Close to camera for VR */}
-      <group position={[0, 1.4, -1]}>
-        <Ring frame={frame} diamonds={diamonds} scale={0.3} useRefraction={!isVR} />
-      </group>
+      {/* Ring Model - ONLY show if not testing VR */}
+      {!isVR && (
+        <group position={[0, 1.4, -1]}>
+          <Ring frame={frame} diamonds={diamonds} scale={0.3} useRefraction={true} />
+        </group>
+      )}
 
       {/* Camera Controls - Only for desktop */}
-      <OrbitControls enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2.25} makeDefault />
+      {!isVR && <OrbitControls enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2.25} makeDefault />}
 
-      {/* VR-Optimized Effects */}
-      <EffectComposer disableNormalPass multisampling={isVR ? 0 : 2}>
-        {/* Bloom effect - lighter settings for VR */}
-        <Bloom
-          luminanceThreshold={isVR ? 2.5 : 1.5}
-          intensity={isVR ? 0.6 : 1.2}
-          levels={isVR ? 5 : 7}
-          mipmapBlur
-        />
-      </EffectComposer>
+      {/* Effects - ONLY for desktop */}
+      {!isVR && (
+        <EffectComposer disableNormalPass multisampling={2}>
+          <Bloom luminanceThreshold={1.5} intensity={1.2} levels={7} mipmapBlur />
+        </EffectComposer>
+      )}
     </>
   )
 }
