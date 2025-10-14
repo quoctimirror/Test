@@ -4,7 +4,8 @@
       "Bash(npx localtunnel:*)",
       "WebFetch(domain:pmndrs.github.io)",
       "Bash(npm uninstall:*)",
-      "Bash(ren:*)"
+      "Bash(ren:*)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []

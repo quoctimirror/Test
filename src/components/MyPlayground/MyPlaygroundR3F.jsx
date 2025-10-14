@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import * as THREE from 'three'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, Center, OrbitControls, MeshRefractionMaterial, useEnvironment, Environment } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
-import { XR, createXRStore } from '@react-three/xr'
+import { XR, createXRStore, useXR } from '@react-three/xr'
 import './MyPlayground2.css'
 
 const store = createXRStore({
@@ -90,11 +90,48 @@ function Ring({ frame, diamonds, env, ...props }) {
   )
 }
 
+// Debug VR Status Component
+function VRDebugLogger() {
+  const xrState = useXR()
+  const frameCountRef = { current: 0 }
+
+  useEffect(() => {
+    console.log('🎮 [VR DEBUG] XR State Changed:', {
+      isPresenting: xrState.isPresenting,
+      isHandTracking: xrState.isHandTracking,
+      session: xrState.session ? 'Active' : 'None',
+      mode: xrState.session?.mode || 'N/A'
+    })
+
+    if (xrState.isPresenting) {
+      console.log('✅ [VR DEBUG] VR MODE IS ACTIVE!')
+    } else {
+      console.log('⚪ [VR DEBUG] Desktop mode (not in VR)')
+    }
+  }, [xrState.isPresenting, xrState.session])
+
+  useFrame(({ camera, gl }) => {
+    frameCountRef.current++
+
+    // Log every 60 frames (roughly once per second at 60fps)
+    if (frameCountRef.current % 60 === 0) {
+      console.log('🔄 [VR DEBUG] Frame #' + frameCountRef.current, {
+        isPresenting: xrState.isPresenting,
+        cameraPos: `(${camera.position.x.toFixed(1)}, ${camera.position.y.toFixed(1)}, ${camera.position.z.toFixed(1)})`,
+        renderer: gl.xr?.isPresenting ? 'XR' : 'Regular'
+      })
+    }
+  })
+
+  return null
+}
+
 function Scene({ shadow, frame, diamonds }) {
   const env = useEnvironment({ files: '/studio_small_03_4k.hdr' })
 
   return (
     <>
+      <VRDebugLogger />
       {/* Background color - Bright gray for better visibility */}
       <color attach="background" args={['#cccccc']} />
 
@@ -133,23 +170,87 @@ export default function MyPlaygroundR3F() {
   const [frame] = useState('#ffaf83')      // Rose Gold 2
   const [diamonds] = useState('#b5cbdd')   // Màu xanh nhạt cho kim cương
   const [isEnteringVR, setIsEnteringVR] = useState(false)
+  const [debugLogs, setDebugLogs] = useState([])
+
+  const addLog = (message, type = 'info') => {
+    const timestamp = new Date().toLocaleTimeString()
+    const newLog = { timestamp, message, type }
+    console.log(`[${timestamp}] ${message}`)
+    setDebugLogs(prev => [...prev.slice(-8), newLog]) // Keep last 9 logs
+  }
+
+  useEffect(() => {
+    addLog('🚀 MyPlaygroundR3F mounted!', 'success')
+    addLog('🔍 WebXR available: ' + ('xr' in navigator), 'info')
+
+    if (!('xr' in navigator)) {
+      addLog('⚠️ WebXR NOT supported in this browser!', 'error')
+    }
+  }, [])
 
   const handleEnterVR = async () => {
-    if (isEnteringVR) return // Prevent multiple clicks
+    addLog('🔵 Enter VR button clicked!', 'info')
+
+    if (isEnteringVR) {
+      addLog('⚠️ Already entering VR...', 'warning')
+      return
+    }
 
     try {
+      addLog('🟢 Starting VR session...', 'info')
       setIsEnteringVR(true)
+
       await store.enterVR()
+
+      addLog('✅ VR session started!', 'success')
     } catch (error) {
-      console.error('Failed to enter VR:', error)
-      alert('Cannot enter VR mode. Please check if your device supports WebXR.')
+      addLog('❌ VR Failed: ' + error.message, 'error')
+      console.error('Full error:', error)
     } finally {
       setIsEnteringVR(false)
+      addLog('🟡 Process completed', 'info')
     }
   }
 
   return (
     <div className="myplayground2-container" style={{ width: '100vw', height: '100vh' }}>
+      {/* Debug Logs Panel */}
+      <div style={{
+        position: 'fixed',
+        top: '20px',
+        left: '20px',
+        backgroundColor: 'rgba(0,0,0,0.9)',
+        color: 'white',
+        padding: '15px',
+        borderRadius: '10px',
+        zIndex: 1000,
+        fontFamily: 'monospace',
+        fontSize: '12px',
+        maxWidth: '400px',
+        maxHeight: '300px',
+        overflowY: 'auto'
+      }}>
+        <div style={{ fontWeight: 'bold', marginBottom: '10px', color: '#00ff00' }}>
+          🔍 VR DEBUG LOGS
+        </div>
+        {debugLogs.map((log, i) => (
+          <div key={i} style={{
+            marginBottom: '5px',
+            padding: '5px',
+            backgroundColor: 'rgba(255,255,255,0.05)',
+            borderRadius: '3px',
+            color: log.type === 'error' ? '#ff5555' :
+                   log.type === 'success' ? '#55ff55' :
+                   log.type === 'warning' ? '#ffaa00' : '#aaaaaa'
+          }}>
+            <span style={{ opacity: 0.6 }}>[{log.timestamp}]</span> {log.message}
+          </div>
+        ))}
+        {debugLogs.length === 0 && (
+          <div style={{ opacity: 0.5 }}>Waiting for events...</div>
+        )}
+      </div>
+
       {/* VR Entry Button */}
       <button
         onClick={handleEnterVR}
