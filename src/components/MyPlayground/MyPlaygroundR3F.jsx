@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import * as THREE from 'three'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, Center, OrbitControls, MeshRefractionMaterial, Environment, PerspectiveCamera } from '@react-three/drei'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { XR, createXRStore, useXR } from '@react-three/xr'
 import './MyPlayground2.css'
 
@@ -11,8 +12,10 @@ const store = createXRStore({
   }
 })
 
-function Ring({ frame, diamonds, ...props }) {
+function Ring({ frame, diamonds, useRefraction = false, ...props }) {
   const { nodes } = useGLTF('/models/nhanMirror.glb')
+  const { scene } = useThree()
+  const envMap = scene.environment  // Get environment map từ scene
 
   return (
     <group {...props} dispose={null}>
@@ -22,7 +25,7 @@ function Ring({ frame, diamonds, ...props }) {
         // Bỏ qua các node không có geometry
         if (!node.geometry) return null
 
-        // ===== XỬ LÝ INSTANCED MESH =====
+        // ===== XỬ LÝ INSTANCED MESH (Kim cương nhiều viên) =====
         if (node.isInstancedMesh) {
           return (
             <instancedMesh
@@ -35,19 +38,35 @@ function Ring({ frame, diamonds, ...props }) {
               rotation={node.rotation}
               scale={node.scale}
             >
-              <meshStandardMaterial
-                color={diamonds}
-                roughness={0.1}
-                metalness={0.9}
-                envMapIntensity={1}
-              />
+              {useRefraction && envMap ? (
+                // Desktop: MeshRefractionMaterial (kim cương thật, khúc xạ ánh sáng)
+                <MeshRefractionMaterial
+                  color={diamonds}
+                  envMap={envMap}
+                  side={THREE.DoubleSide}
+                  aberrationStrength={0.05}      // Tăng hiệu ứng lăng kính
+                  ior={2.4}                      // Index of Refraction của kim cương
+                  fresnel={0.1}                  // Fresnel effect
+                  toneMapped={false}
+                />
+              ) : (
+                // VR: Standard material nhẹ hơn nhưng vẫn đẹp
+                <meshStandardMaterial
+                  color={diamonds}
+                  roughness={0.05}
+                  metalness={0.95}
+                  envMapIntensity={1.5}
+                  emissive={diamonds}
+                  emissiveIntensity={0.15}
+                />
+              )}
             </instancedMesh>
           )
         }
 
         // ===== XỬ LÝ MESH THƯỜNG =====
         if (node.isMesh) {
-          // Kiểm tra xem có phải là đá quý không
+          // Kiểm tra xem có phải là đá quý không (gem, diamond, stone)
           const isGem = key.toLowerCase().includes('gem') ||
                        key.toLowerCase().includes('diamond') ||
                        key.toLowerCase().includes('stone')
@@ -62,12 +81,27 @@ function Ring({ frame, diamonds, ...props }) {
               rotation={node.rotation}
               scale={node.scale}
             >
-              <meshStandardMaterial
-                color={isGem ? diamonds : frame}
-                roughness={isGem ? 0.05 : 0.15}
-                metalness={isGem ? 0.95 : 1}
-                envMapIntensity={1.5}
-              />
+              {isGem && useRefraction && envMap ? (
+                // Kim cương đơn lẻ: MeshRefractionMaterial
+                <MeshRefractionMaterial
+                  color={diamonds}
+                  envMap={envMap}
+                  aberrationStrength={0.05}      // Hiệu ứng lăng kính mạnh hơn
+                  ior={2.4}                      // Index of Refraction kim cương
+                  fresnel={0.1}                  // Fresnel effect
+                  toneMapped={false}
+                />
+              ) : (
+                // Kim loại hoặc VR mode: Standard material
+                <meshStandardMaterial
+                  color={isGem ? diamonds : frame}
+                  roughness={isGem ? 0.05 : 0.15}
+                  metalness={isGem ? 0.95 : 1}
+                  envMapIntensity={1.5}
+                  emissive={isGem ? diamonds : undefined}
+                  emissiveIntensity={isGem ? 0.15 : 0}
+                />
+              )}
             </mesh>
           )
         }
@@ -117,36 +151,46 @@ function VRDebugLogger() {
 }
 
 function Scene({ shadow, frame, diamonds }) {
+  const xrState = useXR()
+  const isVR = xrState.isPresenting
+
   return (
     <>
       <VRDebugLogger />
 
       {/* Background - Meta Quest style with hex number */}
-      <color args={[0xcccccc]} attach="background" />
+      <color args={[0xffffff]} attach="background" />
 
       {/* Camera - Explicit position for VR (Meta Quest style) */}
       <PerspectiveCamera makeDefault position={[0, 1.6, 2]} fov={75} />
 
-      {/* Simple ambient lighting */}
-      <ambientLight intensity={2} />
+      {/* Lighting - Brighter for better visibility */}
+      <ambientLight intensity={1.5} />
       <directionalLight position={[5, 5, 5]} intensity={2} />
+      <directionalLight position={[-5, 3, -3]} intensity={1} />
+      <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={2} />
 
-      {/* TEST CUBE - Red cube at eye level */}
-      <mesh position={[0, 1.6, -1]}>
-        <boxGeometry args={[0.3, 0.3, 0.3]} />
-        <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={1} />
-      </mesh>
+      {/* Environment - Must come BEFORE Ring to be available */}
+      <Environment preset="city" background={false} />
 
       {/* Ring Model - Close to camera for VR */}
-      <group position={[0.5, 1.4, -1.5]}>
-        <Ring frame={frame} diamonds={diamonds} scale={0.3} />
+      <group position={[0, 1.4, -1]}>
+        <Ring frame={frame} diamonds={diamonds} scale={0.3} useRefraction={!isVR} />
       </group>
 
       {/* Camera Controls - Only for desktop */}
       <OrbitControls enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2.25} makeDefault />
 
-      {/* Environment - Use preset instead of HDR file (faster loading) */}
-      <Environment preset="city" background={false} />
+      {/* VR-Optimized Effects */}
+      <EffectComposer disableNormalPass multisampling={isVR ? 0 : 2}>
+        {/* Bloom effect - lighter settings for VR */}
+        <Bloom
+          luminanceThreshold={isVR ? 2.5 : 1.5}
+          intensity={isVR ? 0.6 : 1.2}
+          levels={isVR ? 5 : 7}
+          mipmapBlur
+        />
+      </EffectComposer>
     </>
   )
 }
