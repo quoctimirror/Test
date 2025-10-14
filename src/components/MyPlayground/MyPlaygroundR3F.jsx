@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import * as THREE from 'three'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF, Center, OrbitControls, MeshRefractionMaterial, useEnvironment, Environment } from '@react-three/drei'
-import { EffectComposer, Bloom } from '@react-three/postprocessing'
+import { useGLTF, Center, OrbitControls, MeshRefractionMaterial, Environment, PerspectiveCamera } from '@react-three/drei'
 import { XR, createXRStore, useXR } from '@react-three/xr'
 import './MyPlayground2.css'
 
@@ -12,7 +11,7 @@ const store = createXRStore({
   }
 })
 
-function Ring({ frame, diamonds, env, ...props }) {
+function Ring({ frame, diamonds, ...props }) {
   const { nodes } = useGLTF('/models/nhanMirror.glb')
 
   return (
@@ -22,8 +21,6 @@ function Ring({ frame, diamonds, env, ...props }) {
 
         // Bỏ qua các node không có geometry
         if (!node.geometry) return null
-
-        const material = node.material
 
         // ===== XỬ LÝ INSTANCED MESH =====
         if (node.isInstancedMesh) {
@@ -38,12 +35,11 @@ function Ring({ frame, diamonds, env, ...props }) {
               rotation={node.rotation}
               scale={node.scale}
             >
-              <MeshRefractionMaterial
+              <meshStandardMaterial
                 color={diamonds}
-                side={THREE.DoubleSide}
-                envMap={env}
-                aberrationStrength={0.02}
-                toneMapped={false}
+                roughness={0.1}
+                metalness={0.9}
+                envMapIntensity={1}
               />
             </instancedMesh>
           )
@@ -66,20 +62,12 @@ function Ring({ frame, diamonds, env, ...props }) {
               rotation={node.rotation}
               scale={node.scale}
             >
-              {isGem && env ? (
-                <MeshRefractionMaterial
-                  color={diamonds}
-                  envMap={env}
-                  aberrationStrength={0.02}
-                  toneMapped={false}
-                />
-              ) : (
-                <meshStandardMaterial
-                  color={frame}
-                  roughness={0.15}
-                  metalness={1}
-                />
-              )}
+              <meshStandardMaterial
+                color={isGem ? diamonds : frame}
+                roughness={isGem ? 0.05 : 0.15}
+                metalness={isGem ? 0.95 : 1}
+                envMapIntensity={1.5}
+              />
             </mesh>
           )
         }
@@ -96,15 +84,17 @@ function VRDebugLogger() {
   const frameCountRef = { current: 0 }
 
   useEffect(() => {
+    const presenting = xrState.isPresenting
     console.log('🎮 [VR DEBUG] XR State Changed:', {
-      isPresenting: xrState.isPresenting,
+      isPresenting: presenting,
       isHandTracking: xrState.isHandTracking,
       session: xrState.session ? 'Active' : 'None',
       mode: xrState.session?.mode || 'N/A'
     })
 
-    if (xrState.isPresenting) {
-      console.log('✅ [VR DEBUG] VR MODE IS ACTIVE!')
+    if (presenting) {
+      console.log('✅ [VR DEBUG] ============== VR MODE IS ACTIVE! ==============')
+      console.log('✅ [VR DEBUG] You should see objects now!')
     } else {
       console.log('⚪ [VR DEBUG] Desktop mode (not in VR)')
     }
@@ -127,40 +117,36 @@ function VRDebugLogger() {
 }
 
 function Scene({ shadow, frame, diamonds }) {
-  const env = useEnvironment({ files: '/studio_small_03_4k.hdr' })
-
   return (
     <>
       <VRDebugLogger />
-      {/* Background color - Bright gray for better visibility */}
-      <color attach="background" args={['#cccccc']} />
 
-      {/* Lighting - VERY BRIGHT for VR debugging */}
-      <ambientLight intensity={3} />
-      <directionalLight position={[0, 5, 0]} intensity={5} />
-      <pointLight position={[0, 0, 2]} intensity={10} color="#ffffff" />
+      {/* Background - Meta Quest style with hex number */}
+      <color args={[0xcccccc]} attach="background" />
 
-      {/* TEST CUBE - Bright red to verify VR is working */}
+      {/* Camera - Explicit position for VR (Meta Quest style) */}
+      <PerspectiveCamera makeDefault position={[0, 1.6, 2]} fov={75} />
+
+      {/* Simple ambient lighting */}
+      <ambientLight intensity={2} />
+      <directionalLight position={[5, 5, 5]} intensity={2} />
+
+      {/* TEST CUBE - Red cube at eye level */}
       <mesh position={[0, 1.6, -1]}>
         <boxGeometry args={[0.3, 0.3, 0.3]} />
-        <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={2} />
+        <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={1} />
       </mesh>
 
-      {/* Model - Bigger and closer for VR */}
-      <group position={[0, 1.4, -1.5]}>
-        <Ring frame={frame} diamonds={diamonds} env={env} scale={0.5} />
+      {/* Ring Model - Close to camera for VR */}
+      <group position={[0.5, 1.4, -1.5]}>
+        <Ring frame={frame} diamonds={diamonds} scale={0.3} />
       </group>
 
       {/* Camera Controls - Only for desktop */}
       <OrbitControls enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2.25} makeDefault />
 
-      {/* Simpler effects for VR performance */}
-      <EffectComposer disableNormalPass multisampling={0}>
-        <Bloom luminanceThreshold={2.5} intensity={0.5} levels={5} mipmapBlur />
-      </EffectComposer>
-
-      {/* Environment map */}
-      <Environment map={env} background={false} />
+      {/* Environment - Use preset instead of HDR file (faster loading) */}
+      <Environment preset="city" background={false} />
     </>
   )
 }
@@ -280,9 +266,13 @@ export default function MyPlaygroundR3F() {
         dpr={[1, 1.5]}
         gl={{
           antialias: true,
-          xrCompatible: true  // CRITICAL: Enable WebXR compatibility
+          xrCompatible: true  // Enable WebXR
         }}
-        camera={{ position: [0, 1.6, 5], fov: 50 }}
+        style={{
+          position: 'fixed',
+          width: '100vw',
+          height: '100vh'
+        }}
       >
         <XR store={store}>
           <Scene shadow={shadow} frame={frame} diamonds={diamonds} />

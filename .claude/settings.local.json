@@ -5,7 +5,9 @@
       "WebFetch(domain:pmndrs.github.io)",
       "Bash(npm uninstall:*)",
       "Bash(ren:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)"
     ],
     "deny": [],
     "ask": []
