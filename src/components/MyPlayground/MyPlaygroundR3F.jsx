@@ -164,14 +164,22 @@ function Scene({ shadow, frame, diamonds }) {
       {/* Camera - Explicit position for VR (Meta Quest style) */}
       <PerspectiveCamera makeDefault position={[0, 1.6, 2]} fov={75} />
 
-      {/* Lighting - Brighter for better visibility */}
-      <ambientLight intensity={1.5} />
-      <directionalLight position={[5, 5, 5]} intensity={2} />
-      <directionalLight position={[-5, 3, -3]} intensity={1} />
-      <spotLight position={[0, 10, 0]} angle={0.3} penumbra={1} intensity={2} />
+      {/* Lighting - VERY BRIGHT in VR */}
+      <ambientLight intensity={isVR ? 3 : 1.5} />
+      <directionalLight position={[5, 5, 5]} intensity={isVR ? 5 : 2} />
+      <directionalLight position={[-5, 5, -3]} intensity={isVR ? 3 : 1} />
+      <pointLight position={[0, 2, 0]} intensity={isVR ? 10 : 2} color="#ffffff" />
 
-      {/* Environment - Must come BEFORE Ring to be available */}
-      <Environment preset="city" background={false} />
+      {/* TEST CUBE - Always visible in VR to verify it works */}
+      {isVR && (
+        <mesh position={[0, 1.6, -0.5]}>
+          <boxGeometry args={[0.2, 0.2, 0.2]} />
+          <meshBasicMaterial color="#ff0000" />
+        </mesh>
+      )}
+
+      {/* Environment - ONLY for desktop, skip in VR to avoid loading delay */}
+      {!isVR && <Environment preset="city" background={false} />}
 
       {/* Ring Model - Close to camera for VR */}
       <group position={[0, 1.4, -1]}>
