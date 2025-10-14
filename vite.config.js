@@ -7,7 +7,6 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', // Allow external access
     port: 5173,
-    https: false,
     allowedHosts: ['fair-ghosts-dig.loca.lt', '.loca.lt', 'all'] // Allow localtunnel hosts
   }
 })

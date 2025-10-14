@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
-import { useGLTF, Center, OrbitControls, AccumulativeShadows, RandomizedLight, MeshRefractionMaterial, useEnvironment, Environment } from '@react-three/drei'
-import { EffectComposer, Bloom, N8AO, ToneMapping } from '@react-three/postprocessing'
+import { useGLTF, Center, OrbitControls, MeshRefractionMaterial, useEnvironment, Environment } from '@react-three/drei'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { XR, createXRStore } from '@react-three/xr'
 import './MyPlayground2.css'
 
-const store = createXRStore()
+const store = createXRStore({
+  emulate: {
+    inject: false // Tắt emulator khi test trên Quest thật
+  }
+})
 
 function Ring({ frame, diamonds, env, ...props }) {
   const { nodes } = useGLTF('/models/nhanMirror.glb')
@@ -94,29 +98,21 @@ function Scene({ shadow, frame, diamonds }) {
       {/* Background color */}
       <color attach="background" args={['#ffffff']} />
 
-      {/* Lighting */}
+      {/* Lighting - Balanced for both desktop and VR */}
+      <ambientLight intensity={0.8} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
 
-      {/* Model - Scale 0.1 và position như SimpleMeshInspector */}
-      <group position={[0, -0.25, 0]}>
-        <Center top>
-          <Ring frame={frame} diamonds={diamonds} env={env} scale={0.1} position={[0, -0.12, 0]} />
-        </Center>
+      {/* Model - Position for VR (will work on desktop too) */}
+      <group position={[0, 1.4, -0.5]}>
+        <Ring frame={frame} diamonds={diamonds} env={env} scale={0.15} />
       </group>
 
-      {/* Camera Controls */}
+      {/* Camera Controls - Only for desktop */}
       <OrbitControls enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2.25} makeDefault />
 
-      {/* Post-processing Effects */}
-      <EffectComposer disableNormalPass={false} multisampling={4}>
-        {/* N8AO: Ambient Occlusion */}
-        <N8AO aoRadius={0.15} intensity={4} distanceFalloff={2} />
-
-        {/* Bloom: Hiệu ứng lấp lánh */}
-        <Bloom luminanceThreshold={1.5} intensity={1.2} levels={9} mipmapBlur />
-
-        {/* ToneMapping */}
-        <ToneMapping />
+      {/* Simpler effects for VR performance */}
+      <EffectComposer disableNormalPass multisampling={0}>
+        <Bloom luminanceThreshold={2.5} intensity={0.5} levels={5} mipmapBlur />
       </EffectComposer>
 
       {/* Environment map */}
@@ -147,23 +143,7 @@ export default function MyPlaygroundR3F() {
 
   return (
     <div className="myplayground2-container" style={{ width: '100vw', height: '100vh' }}>
-      {/* Desktop Control Panel */}
-      <div style={{
-        position: 'fixed',
-        top: '20px',
-        left: '20px',
-        backgroundColor: 'rgba(0,0,0,0.8)',
-        color: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        zIndex: 999,
-        fontFamily: 'monospace'
-      }}>
-        <h3 style={{ margin: '0 0 15px 0', color: '#00ff00' }}>React Three Fiber + XR</h3>
-        <p style={{ margin: 0, fontSize: '12px' }}>Drag to rotate, scroll to zoom</p>
-      </div>
-
-      {/* VR Entry Button - theo docs @react-three/xr */}
+      {/* VR Entry Button */}
       <button
         onClick={handleEnterVR}
         disabled={isEnteringVR}
@@ -191,10 +171,10 @@ export default function MyPlaygroundR3F() {
         shadows
         dpr={[1, 1.5]}
         gl={{
-          antialias: false,
+          antialias: true,
           xrCompatible: true  // CRITICAL: Enable WebXR compatibility
         }}
-        camera={{ position: [-5, 5, 14], fov: 20 }}
+        camera={{ position: [0, 1.6, 5], fov: 50 }}
       >
         <XR store={store}>
           <Scene shadow={shadow} frame={frame} diamonds={diamonds} />

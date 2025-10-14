@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx localtunnel:*)"
+      "Bash(npx localtunnel:*)",
+      "WebFetch(domain:pmndrs.github.io)",
+      "Bash(npm uninstall:*)",
+      "Bash(ren:*)"
     ],
     "deny": [],
     "ask": []
