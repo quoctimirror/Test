@@ -3,37 +3,36 @@ import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
 import { useGLTF, Center, OrbitControls, AccumulativeShadows, RandomizedLight, MeshRefractionMaterial, useEnvironment, Environment } from '@react-three/drei'
 import { EffectComposer, Bloom, N8AO, ToneMapping } from '@react-three/postprocessing'
+import { XR, createXRStore } from '@react-three/xr'
 import './MyPlayground2.css'
 
-function Ring({ frame, diamonds, env, ...props }) {
-  const { nodes, materials } = useGLTF('/models/nhanMirror.glb')
+const store = createXRStore()
 
-  // Find meshes from the model
-  const meshes = []
-  if (nodes) {
-    Object.keys(nodes).forEach(key => {
-      if (nodes[key].geometry) {
-        meshes.push(nodes[key])
-      }
-    })
-  }
+function Ring({ frame, diamonds, env, ...props }) {
+  const { nodes } = useGLTF('/models/nhanMirror.glb')
 
   return (
     <group {...props} dispose={null}>
-      {meshes.map((mesh, idx) => {
-        // Check if it's likely a diamond (small, many instances) or metal frame
-        const isDiamond = mesh.name?.toLowerCase().includes('diamond') ||
-                         mesh.name?.toLowerCase().includes('stone') ||
-                         mesh.instanceMatrix
+      {Object.keys(nodes).map(key => {
+        const node = nodes[key]
 
-        if (mesh.instanceMatrix) {
-          // Instanced mesh (diamonds)
+        // Bỏ qua các node không có geometry
+        if (!node.geometry) return null
+
+        const material = node.material
+
+        // ===== XỬ LÝ INSTANCED MESH =====
+        if (node.isInstancedMesh) {
           return (
             <instancedMesh
-              key={idx}
+              key={key}
               castShadow
-              args={[mesh.geometry, null, mesh.instanceMatrix.count]}
-              instanceMatrix={mesh.instanceMatrix}
+              receiveShadow
+              args={[node.geometry, undefined, node.count]}
+              instanceMatrix={node.instanceMatrix}
+              position={node.position}
+              rotation={node.rotation}
+              scale={node.scale}
             >
               <MeshRefractionMaterial
                 color={diamonds}
@@ -44,73 +43,107 @@ function Ring({ frame, diamonds, env, ...props }) {
               />
             </instancedMesh>
           )
-        } else if (isDiamond) {
-          // Single diamond mesh
+        }
+
+        // ===== XỬ LÝ MESH THƯỜNG =====
+        if (node.isMesh) {
+          // Kiểm tra xem có phải là đá quý không
+          const isGem = key.toLowerCase().includes('gem') ||
+                       key.toLowerCase().includes('diamond') ||
+                       key.toLowerCase().includes('stone')
+
           return (
-            <mesh key={idx} castShadow geometry={mesh.geometry}>
-              <MeshRefractionMaterial
-                color={diamonds}
-                side={THREE.DoubleSide}
-                envMap={env}
-                aberrationStrength={0.02}
-                toneMapped={false}
-              />
-            </mesh>
-          )
-        } else {
-          // Metal frame
-          return (
-            <mesh key={idx} castShadow geometry={mesh.geometry}>
-              <meshStandardMaterial
-                color={frame}
-                roughness={0.15}
-                metalness={1}
-                envMapIntensity={1.5}
-              />
+            <mesh
+              key={key}
+              castShadow
+              receiveShadow
+              geometry={node.geometry}
+              position={node.position}
+              rotation={node.rotation}
+              scale={node.scale}
+            >
+              {isGem && env ? (
+                <MeshRefractionMaterial
+                  color={diamonds}
+                  envMap={env}
+                  aberrationStrength={0.02}
+                  toneMapped={false}
+                />
+              ) : (
+                <meshStandardMaterial
+                  color={frame}
+                  roughness={0.15}
+                  metalness={1}
+                />
+              )}
             </mesh>
           )
         }
+
+        return null
       })}
     </group>
   )
 }
 
 function Scene({ shadow, frame, diamonds }) {
-  const env = useEnvironment({
-    files: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/peppermint_powerplant_2_1k.hdr'
-  })
+  const env = useEnvironment({ files: '/studio_small_03_4k.hdr' })
 
   return (
     <>
+      {/* Background color */}
+      <color attach="background" args={['#ffffff']} />
+
+      {/* Lighting */}
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
 
+      {/* Model - Scale 0.1 và position như SimpleMeshInspector */}
       <group position={[0, -0.25, 0]}>
-        <Center top position={[0, -0.12, 0]} rotation={[-0.1, 0, 0.085]}>
-          <Ring frame={frame} diamonds={diamonds} env={env} scale={10} />
+        <Center top>
+          <Ring frame={frame} diamonds={diamonds} env={env} scale={0.1} position={[0, -0.12, 0]} />
         </Center>
-
-        <AccumulativeShadows temporal frames={100} color={shadow} opacity={1.05}>
-          <RandomizedLight radius={5} position={[10, 5, -5]} />
-        </AccumulativeShadows>
       </group>
 
-      <OrbitControls enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2.25} />
+      {/* Camera Controls */}
+      <OrbitControls enablePan={false} minPolarAngle={0} maxPolarAngle={Math.PI / 2.25} makeDefault />
 
-      <EffectComposer>
+      {/* Post-processing Effects */}
+      <EffectComposer disableNormalPass={false} multisampling={4}>
+        {/* N8AO: Ambient Occlusion */}
         <N8AO aoRadius={0.15} intensity={4} distanceFalloff={2} />
-        <Bloom luminanceThreshold={3.5} intensity={0.85} levels={9} mipmapBlur />
+
+        {/* Bloom: Hiệu ứng lấp lánh */}
+        <Bloom luminanceThreshold={1.5} intensity={1.2} levels={9} mipmapBlur />
+
+        {/* ToneMapping */}
         <ToneMapping />
       </EffectComposer>
 
-      <Environment map={env} background blur={1} />
+      {/* Environment map */}
+      <Environment map={env} background={false} />
     </>
   )
 }
 
 export default function MyPlaygroundR3F() {
   const [shadow] = useState('#000000')
-  const [frame] = useState('#fff0f0')
-  const [diamonds] = useState('#ffffff')
+  const [frame] = useState('#ffaf83')      // Rose Gold 2
+  const [diamonds] = useState('#b5cbdd')   // Màu xanh nhạt cho kim cương
+  const [isEnteringVR, setIsEnteringVR] = useState(false)
+
+  const handleEnterVR = async () => {
+    if (isEnteringVR) return // Prevent multiple clicks
+
+    try {
+      setIsEnteringVR(true)
+      await store.enterVR()
+    } catch (error) {
+      console.error('Failed to enter VR:', error)
+      alert('Cannot enter VR mode. Please check if your device supports WebXR.')
+    } finally {
+      setIsEnteringVR(false)
+    }
+  }
 
   return (
     <div className="myplayground2-container" style={{ width: '100vw', height: '100vh' }}>
@@ -126,17 +159,46 @@ export default function MyPlaygroundR3F() {
         zIndex: 999,
         fontFamily: 'monospace'
       }}>
-        <h3 style={{ margin: '0 0 15px 0', color: '#00ff00' }}>React Three Fiber</h3>
+        <h3 style={{ margin: '0 0 15px 0', color: '#00ff00' }}>React Three Fiber + XR</h3>
         <p style={{ margin: 0, fontSize: '12px' }}>Drag to rotate, scroll to zoom</p>
       </div>
+
+      {/* VR Entry Button - theo docs @react-three/xr */}
+      <button
+        onClick={handleEnterVR}
+        disabled={isEnteringVR}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          padding: '15px 30px',
+          backgroundColor: isEnteringVR ? '#666' : '#1976d2',
+          color: 'white',
+          border: 'none',
+          borderRadius: '25px',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          cursor: isEnteringVR ? 'not-allowed' : 'pointer',
+          zIndex: 999,
+          boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+          opacity: isEnteringVR ? 0.6 : 1
+        }}
+      >
+        {isEnteringVR ? '⏳ Entering VR...' : '🥽 Enter VR'}
+      </button>
 
       <Canvas
         shadows
         dpr={[1, 1.5]}
-        gl={{ antialias: false }}
+        gl={{
+          antialias: false,
+          xrCompatible: true  // CRITICAL: Enable WebXR compatibility
+        }}
         camera={{ position: [-5, 5, 14], fov: 20 }}
       >
-        <Scene shadow={shadow} frame={frame} diamonds={diamonds} />
+        <XR store={store}>
+          <Scene shadow={shadow} frame={frame} diamonds={diamonds} />
+        </XR>
       </Canvas>
     </div>
   )
