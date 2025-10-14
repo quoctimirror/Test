@@ -95,16 +95,23 @@ function Scene({ shadow, frame, diamonds }) {
 
   return (
     <>
-      {/* Background color */}
-      <color attach="background" args={['#ffffff']} />
+      {/* Background color - Bright gray for better visibility */}
+      <color attach="background" args={['#cccccc']} />
 
-      {/* Lighting - Balanced for both desktop and VR */}
-      <ambientLight intensity={0.8} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+      {/* Lighting - VERY BRIGHT for VR debugging */}
+      <ambientLight intensity={3} />
+      <directionalLight position={[0, 5, 0]} intensity={5} />
+      <pointLight position={[0, 0, 2]} intensity={10} color="#ffffff" />
 
-      {/* Model - Position for VR (will work on desktop too) */}
-      <group position={[0, 1.4, -0.5]}>
-        <Ring frame={frame} diamonds={diamonds} env={env} scale={0.15} />
+      {/* TEST CUBE - Bright red to verify VR is working */}
+      <mesh position={[0, 1.6, -1]}>
+        <boxGeometry args={[0.3, 0.3, 0.3]} />
+        <meshStandardMaterial color="#ff0000" emissive="#ff0000" emissiveIntensity={2} />
+      </mesh>
+
+      {/* Model - Bigger and closer for VR */}
+      <group position={[0, 1.4, -1.5]}>
+        <Ring frame={frame} diamonds={diamonds} env={env} scale={0.5} />
       </group>
 
       {/* Camera Controls - Only for desktop */}
