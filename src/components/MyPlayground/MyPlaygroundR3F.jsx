@@ -386,13 +386,17 @@ function Ring3D({
 // ============================================
 // COMPONENT: VR Info Panel - Bảng thông tin 3D (REALTIME)
 // ============================================
-function VRInfoPanel({ ringRef }) {
+function VRInfoPanel({ ringRef, selectedModel }) {
   // State để lưu giá trị realtime
   const [realtimeInfo, setRealtimeInfo] = useState({
     position: [0, 0, 0],
     rotation: [0, 0, 0],
     scale: 1
   })
+
+  // Tìm tên model từ path
+  const modelInfo = AVAILABLE_MODELS.find(m => m.path === selectedModel)
+  const modelName = modelInfo ? modelInfo.displayName : 'Unknown'
 
   // Update realtime từ ring ref mỗi frame
   useFrame(() => {
@@ -416,19 +420,39 @@ SCALE: ${realtimeInfo.scale.toFixed(3)}`
 
   return (
     <group>
-      {/* Background - TỐI ƯU: Nhỏ hơn */}
+      {/* Background - Tăng chiều cao để chứa tên model */}
       <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[0.5, 0.35]} />
+        <planeGeometry args={[0.5, 0.45]} />
         <meshBasicMaterial color="#000000" opacity={0.85} transparent />
       </mesh>
       {/* TỐI ƯU: Chỉ 1 outline thay vì 4 boxes */}
       <lineSegments>
-        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.5, 0.35)]} />
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.5, 0.45)]} />
         <lineBasicMaterial attach="material" color="#1976d2" linewidth={2} />
       </lineSegments>
+
+      {/* Tên model - Header */}
+      <Text
+        position={[0, 0.19, 0]}
+        fontSize={0.03}
+        color="#1976d2"
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={0.48}
+        fontWeight="bold"
+      >
+        📍 {modelName}
+      </Text>
+
+      {/* Divider line */}
+      <mesh position={[0, 0.14, 0.001]}>
+        <planeGeometry args={[0.45, 0.002]} />
+        <meshBasicMaterial color="#1976d2" />
+      </mesh>
+
       {/* Text - TỐI ƯU: Font nhỏ hơn - REALTIME UPDATE */}
       <Text
-        position={[0, 0, 0]}
+        position={[0, -0.02, 0]}
         fontSize={0.028}
         color="white"
         anchorX="center"
@@ -440,10 +464,19 @@ SCALE: ${realtimeInfo.scale.toFixed(3)}`
         {infoText}
       </Text>
       {/* REALTIME indicator */}
-      <mesh position={[0.22, 0.15, 0.001]}>
+      <mesh position={[0.22, -0.2, 0.001]}>
         <circleGeometry args={[0.01, 8]} />
         <meshBasicMaterial color="#00ff00" />
       </mesh>
+      <Text
+        position={[0.15, -0.2, 0.001]}
+        fontSize={0.018}
+        color="#00ff00"
+        anchorX="right"
+        anchorY="middle"
+      >
+        LIVE
+      </Text>
     </group>
   )
 }
@@ -451,27 +484,49 @@ SCALE: ${realtimeInfo.scale.toFixed(3)}`
 // ============================================
 // COMPONENT: VR Control Buttons - Nút điều khiển 3D
 // ============================================
-function VRControlButtons({ position, setPosition, setRotation, setScale, scale }) {
+function VRControlButtons({ position, setPosition, setRotation, setScale, scale, selectedModel }) {
   const buttonMaterial = useRef()
   const [hovered, setHovered] = useState(null)
 
+  // Tìm tên model từ path
+  const modelInfo = AVAILABLE_MODELS.find(m => m.path === selectedModel)
+  const modelName = modelInfo ? modelInfo.displayName : 'Unknown'
+
   return (
     <group>
-      {/* Background - TỐI ƯU: Nhỏ hơn */}
+      {/* Background - Tăng chiều cao để chứa tên model */}
       <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[0.45, 0.6]} />
+        <planeGeometry args={[0.45, 0.7]} />
         <meshBasicMaterial color="#000000" opacity={0.85} transparent />
       </mesh>
       {/* TỐI ƯU: Chỉ 1 outline */}
       <lineSegments>
-        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.45, 0.6)]} />
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.45, 0.7)]} />
         <lineBasicMaterial attach="material" color="#4CAF50" linewidth={2} />
       </lineSegments>
 
+      {/* Tên model - Header */}
+      <Text
+        position={[0, 0.32, 0]}
+        fontSize={0.028}
+        color="#4CAF50"
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={0.42}
+      >
+        🎯 {modelName}
+      </Text>
+
+      {/* Divider line */}
+      <mesh position={[0, 0.27, 0.001]}>
+        <planeGeometry args={[0.4, 0.002]} />
+        <meshBasicMaterial color="#4CAF50" />
+      </mesh>
+
       {/* Title - TỐI ƯU: Font nhỏ hơn */}
       <Text
-        position={[0, 0.26, 0]}
-        fontSize={0.032}
+        position={[0, 0.21, 0]}
+        fontSize={0.025}
         color="#4CAF50"
         anchorX="center"
         anchorY="middle"
@@ -480,7 +535,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
       </Text>
 
       {/* Reset Button */}
-      <group position={[0, 0.15, 0]}>
+      <group position={[0, 0.1, 0]}>
         <mesh
           onPointerEnter={() => setHovered('reset')}
           onPointerLeave={() => setHovered(null)}
@@ -509,7 +564,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
       </group>
 
       {/* To Eye Button */}
-      <group position={[0, 0.05, 0]}>
+      <group position={[0, 0.0, 0]}>
         <mesh
           onPointerEnter={() => setHovered('eye')}
           onPointerLeave={() => setHovered(null)}
@@ -534,7 +589,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
       </group>
 
       {/* Move Forward Button */}
-      <group position={[0, -0.05, 0]}>
+      <group position={[0, -0.1, 0]}>
         <mesh
           onPointerEnter={() => setHovered('forward')}
           onPointerLeave={() => setHovered(null)}
@@ -559,7 +614,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
       </group>
 
       {/* Move Back Button */}
-      <group position={[0, -0.15, 0]}>
+      <group position={[0, -0.2, 0]}>
         <mesh
           onPointerEnter={() => setHovered('back')}
           onPointerLeave={() => setHovered(null)}
@@ -584,7 +639,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
       </group>
 
       {/* Scale Buttons */}
-      <group position={[-0.1, -0.25, 0]}>
+      <group position={[-0.1, -0.3, 0]}>
         <mesh
           onPointerEnter={() => setHovered('smaller')}
           onPointerLeave={() => setHovered(null)}
@@ -608,7 +663,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
         </Text>
       </group>
 
-      <group position={[0.1, -0.25, 0]}>
+      <group position={[0.1, -0.3, 0]}>
         <mesh
           onPointerEnter={() => setHovered('bigger')}
           onPointerLeave={() => setHovered(null)}
@@ -802,7 +857,7 @@ function Scene({
 
       {/* VR Info Panel - Bảng thông tin bên trái - CÓ THỂ KÉO - REALTIME */}
       <DraggablePanel initialPosition={[-1.2, 1.4, -0.8]} name="INFO">
-        <VRInfoPanel ringRef={ringGroupRef} />
+        <VRInfoPanel ringRef={ringGroupRef} selectedModel={selectedModel} />
       </DraggablePanel>
 
       {/* VR Control Buttons - Bảng điều khiển bên phải - CÓ THỂ KÉO */}
@@ -813,6 +868,7 @@ function Scene({
           setRotation={setRingRotation}
           scale={ringScale}
           setScale={setRingScale}
+          selectedModel={selectedModel}
         />
       </DraggablePanel>
 
