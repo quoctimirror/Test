@@ -8,6 +8,22 @@ import './MyPlayground2.css'
 // Tạo XR store để quản lý VR session
 const store = createXRStore()
 
+// Danh sách models từ thư mục public/models
+const AVAILABLE_MODELS = [
+  { name: 'nhanMirror', path: '/models/nhanMirror.glb', displayName: 'Mirror Ring' },
+  { name: 'heart_ring', path: '/models/heart_ring.glb', displayName: 'Heart Ring' },
+  { name: 'oval_ring', path: '/models/oval_ring.glb', displayName: 'Oval Ring' },
+  { name: 'pear_ring', path: '/models/pear_ring.glb', displayName: 'Pear Ring' },
+  { name: 'myfav', path: '/models/myfav.glb', displayName: 'My Favorite' },
+  { name: 'nhan1', path: '/models/nhan1.glb', displayName: 'Ring 1' },
+  { name: 'nhan2', path: '/models/nhan2.glb', displayName: 'Ring 2' },
+  { name: 'refine-mirror-ring-1', path: '/models/refine-mirror-ring-1.glb', displayName: 'Refine Mirror 1' },
+  { name: 'refine-mirror-ring-2', path: '/models/refine-mirror-ring-2.glb', displayName: 'Refine Mirror 2' },
+  { name: 'ring_webgi', path: '/models/ring_webgi.glb', displayName: 'WebGI Ring' },
+  { name: 'ring2_webgi', path: '/models/ring2_webgi.glb', displayName: 'WebGI Ring 2' },
+  { name: 'lumex91', path: '/models/lumex91.glb', displayName: 'Lumex 91' },
+]
+
 // ============================================
 // COMPONENT: Hiển thị VR Controllers (tay cầm)
 // ============================================
@@ -98,6 +114,10 @@ function Ring3D({
             controllerPos,
             previousControllerPos.current
           )
+
+          // TỐI ƯU: Tăng khoảng cách di chuyển (thay đổi số này để điều chỉnh độ nhạy)
+          // Số càng lớn = di chuyển càng nhanh/xa. Ví dụ: 3, 5, 10, 20...
+          deltaMove.multiplyScalar(5)
 
           // Di chuyển nhẫn theo delta
           groupRef.current.position.add(deltaMove)
@@ -468,9 +488,159 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
 }
 
 // ============================================
+// COMPONENT: VR Model Selector - Chọn model trong VR
+// ============================================
+function VRModelSelector({ selectedModel, onSelectModel }) {
+  const [hovered, setHovered] = useState(null)
+  const [scrollOffset, setScrollOffset] = useState(0)
+
+  const itemsPerPage = 5
+  const totalPages = Math.ceil(AVAILABLE_MODELS.length / itemsPerPage)
+  const currentPage = Math.floor(scrollOffset / itemsPerPage)
+  const visibleModels = AVAILABLE_MODELS.slice(scrollOffset, scrollOffset + itemsPerPage)
+
+  return (
+    <group position={[0, 1.3, -1.2]}>
+      {/* Background */}
+      <mesh position={[0, 0, -0.01]}>
+        <planeGeometry args={[0.6, 0.7]} />
+        <meshBasicMaterial color="#000000" opacity={0.9} transparent />
+      </mesh>
+      {/* Border */}
+      <lineSegments>
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.6, 0.7)]} />
+        <lineBasicMaterial attach="material" color="#FFC107" linewidth={2} />
+      </lineSegments>
+
+      {/* Title */}
+      <Text
+        position={[0, 0.32, 0]}
+        fontSize={0.035}
+        color="#FFC107"
+        anchorX="center"
+        anchorY="middle"
+      >
+        MODEL SELECTOR
+      </Text>
+
+      {/* Scroll Up Button */}
+      {scrollOffset > 0 && (
+        <group position={[0, 0.26, 0]}>
+          <mesh
+            onPointerEnter={() => setHovered('scrollUp')}
+            onPointerLeave={() => setHovered(null)}
+            onClick={() => setScrollOffset(Math.max(0, scrollOffset - 1))}
+          >
+            <planeGeometry args={[0.55, 0.05]} />
+            <meshBasicMaterial
+              color={hovered === 'scrollUp' ? '#FFD54F' : '#FFC107'}
+              opacity={0.8}
+              transparent
+            />
+          </mesh>
+          <Text
+            position={[0, 0, 0.001]}
+            fontSize={0.022}
+            color="black"
+            anchorX="center"
+            anchorY="middle"
+          >
+            ▲ UP
+          </Text>
+        </group>
+      )}
+
+      {/* Page indicator */}
+      <Text
+        position={[0, 0.19, 0]}
+        fontSize={0.018}
+        color="#FFC107"
+        anchorX="center"
+        anchorY="middle"
+      >
+        {`Page ${currentPage + 1} / ${totalPages}`}
+      </Text>
+
+      {/* Model list - 5 items visible */}
+      {visibleModels.map((model, index) => {
+        const yPos = 0.1 - (index * 0.07)
+        const isSelected = selectedModel === model.path
+
+        return (
+          <group key={model.name} position={[0, yPos, 0]}>
+            <mesh
+              onPointerEnter={() => setHovered(model.name)}
+              onPointerLeave={() => setHovered(null)}
+              onClick={() => onSelectModel(model.path)}
+            >
+              <planeGeometry args={[0.55, 0.06]} />
+              <meshBasicMaterial
+                color={
+                  isSelected ? '#4CAF50' :
+                  hovered === model.name ? '#FFD54F' : '#FFA726'
+                }
+                opacity={0.9}
+                transparent
+              />
+            </mesh>
+            <Text
+              position={[0, 0, 0.001]}
+              fontSize={0.02}
+              color={isSelected ? 'white' : 'black'}
+              anchorX="center"
+              anchorY="middle"
+              maxWidth={0.5}
+            >
+              {isSelected ? '✓ ' : ''}{model.displayName}
+            </Text>
+          </group>
+        )
+      })}
+
+      {/* Scroll Down Button */}
+      {scrollOffset + itemsPerPage < AVAILABLE_MODELS.length && (
+        <group position={[0, -0.22, 0]}>
+          <mesh
+            onPointerEnter={() => setHovered('scrollDown')}
+            onPointerLeave={() => setHovered(null)}
+            onClick={() => setScrollOffset(Math.min(AVAILABLE_MODELS.length - itemsPerPage, scrollOffset + 1))}
+          >
+            <planeGeometry args={[0.55, 0.05]} />
+            <meshBasicMaterial
+              color={hovered === 'scrollDown' ? '#FFD54F' : '#FFC107'}
+              opacity={0.8}
+              transparent
+            />
+          </mesh>
+          <Text
+            position={[0, 0, 0.001]}
+            fontSize={0.022}
+            color="black"
+            anchorX="center"
+            anchorY="middle"
+          >
+            ▼ DOWN
+          </Text>
+        </group>
+      )}
+    </group>
+  )
+}
+
+// ============================================
 // COMPONENT: Scene - chứa toàn bộ 3D scene
 // ============================================
-function Scene({ ringPosition, ringRotation, ringScale, autoRotate, setRingPosition, setRingRotation, setRingScale }) {
+function Scene({
+  ringPosition,
+  ringRotation,
+  ringScale,
+  autoRotate,
+  setRingPosition,
+  setRingRotation,
+  setRingScale,
+  selectedModel,
+  setSelectedModel
+}) {
   // Load environment map cho materials (phản chiếu môi trường)
   const env = useEnvironment({ preset: 'apartment' })
 
@@ -493,6 +663,12 @@ function Scene({ ringPosition, ringRotation, ringScale, autoRotate, setRingPosit
         setRotation={setRingRotation}
         scale={ringScale}
         setScale={setRingScale}
+      />
+
+      {/* VR Model Selector - Chọn model ở giữa */}
+      <VRModelSelector
+        selectedModel={selectedModel}
+        onSelectModel={setSelectedModel}
       />
 
       {/* TỐI ƯU CỰC MẠNH: Ánh sáng tối thiểu */}
@@ -518,6 +694,8 @@ function Scene({ ringPosition, ringRotation, ringScale, autoRotate, setRingPosit
       {/* NHẪN 3D - component chính */}
       <Suspense fallback={null}>
         <Ring3D
+          key={selectedModel}  // Force remount when model changes
+          modelPath={selectedModel}
           env={env}
           position={ringPosition}
           rotation={ringRotation}
@@ -540,7 +718,9 @@ function ControlPanel({
   scale,
   setScale,
   autoRotate,
-  setAutoRotate
+  setAutoRotate,
+  selectedModel,
+  setSelectedModel
 }) {
   return (
     <div style={{
@@ -557,6 +737,32 @@ function ControlPanel({
       zIndex: 999
     }}>
       <h3 style={{ marginTop: 0, marginBottom: '15px', fontSize: '18px' }}>Điều khiển nhẫn</h3>
+
+      {/* Model Selector */}
+      <div style={{ marginBottom: '20px' }}>
+        <strong>Model</strong>
+        <select
+          value={selectedModel}
+          onChange={(e) => setSelectedModel(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '8px',
+            marginTop: '5px',
+            backgroundColor: '#333',
+            color: 'white',
+            border: '1px solid #666',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          {AVAILABLE_MODELS.map(model => (
+            <option key={model.name} value={model.path}>
+              {model.displayName}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Auto Rotate Toggle */}
       <div style={{ marginBottom: '20px' }}>
@@ -717,6 +923,9 @@ export default function MyPlaygroundR3F() {
   // State quản lý auto-rotate (bật/tắt)
   const [autoRotate, setAutoRotate] = useState(false)
 
+  // State quản lý model đang được chọn
+  const [selectedModel, setSelectedModel] = useState('/models/nhanMirror.glb')
+
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       {/* Nút Enter VR - hiển thị ở góc dưới bên phải */}
@@ -751,6 +960,8 @@ export default function MyPlaygroundR3F() {
         setScale={setRingScale}
         autoRotate={autoRotate}
         setAutoRotate={setAutoRotate}
+        selectedModel={selectedModel}
+        setSelectedModel={setSelectedModel}
       />
 
       {/* Canvas - vùng render 3D */}
@@ -795,6 +1006,8 @@ export default function MyPlaygroundR3F() {
             setRingPosition={setRingPosition}
             setRingRotation={setRingRotation}
             setRingScale={setRingScale}
+            selectedModel={selectedModel}
+            setSelectedModel={setSelectedModel}
           />
         </XR>
       </Canvas>
