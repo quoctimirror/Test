@@ -157,24 +157,25 @@ function Ring3D({
                   frustumCulled
                 >
                   {isGem ? (
-                    // TỐI ƯU: Material cho KIM CƯƠNG - giảm samples để tăng FPS
+                    // TỐI ƯU CỰC MẠNH: Material cho KIM CƯƠNG
                     <MeshRefractionMaterial
                       color="#b5cbdd"           // Màu xanh nhạt
                       envMap={env}              // Environment map để phản chiếu
-                      aberrationStrength={0.01} // TỐI ƯU: Giảm từ 0.02 → 0.01
-                      toneMapped={false}        // Tắt tone mapping để màu sáng hơn
-                      samples={3}               // TỐI ƯU: Giảm samples xuống 3 (default 6)
-                      resolution={256}          // TỐI ƯU: Giảm resolution xuống 256 (default 1024)
-                      fresnel={0.8}             // TỐI ƯU: Giảm fresnel
+                      aberrationStrength={0}    // TỐI ƯU: TẮT chromatic aberration
+                      toneMapped={false}        // Tắt tone mapping
+                      samples={1}               // TỐI ƯU CỰC MẠNH: Chỉ 1 sample!
+                      resolution={128}          // TỐI ƯU CỰC MẠNH: Xuống 128
+                      fresnel={0.5}             // TỐI ƯU: Giảm fresnel xuống 0.5
+                      fastChroma={true}         // TỐI ƯU: Bật fast chroma
                     />
                   ) : (
-                    // Material cho DẢI NHẪN - kim loại vàng hồng
+                    // TỐI ƯU: Material cho DẢI NHẪN - kim loại vàng hồng
                     <meshStandardMaterial
                       color="#ffaf83"           // Màu vàng hồng (rose gold)
                       roughness={0.15}          // Độ nhám thấp = bóng
                       metalness={1.0}           // Kim loại 100%
                       envMap={env}              // Environment map để phản chiếu
-                      envMapIntensity={1.5}     // Tăng cường độ phản chiếu
+                      envMapIntensity={0.7}     // TỐI ƯU: Giảm từ 1.5 → 0.7
                     />
                   )}
                 </instancedMesh>
@@ -193,24 +194,25 @@ function Ring3D({
                   frustumCulled
                 >
                   {isGem ? (
-                    // TỐI ƯU: Material cho KIM CƯƠNG - giảm samples để tăng FPS
+                    // TỐI ƯU CỰC MẠNH: Material cho KIM CƯƠNG
                     <MeshRefractionMaterial
                       color="#b5cbdd"
                       envMap={env}
-                      aberrationStrength={0.01} // TỐI ƯU: Giảm từ 0.02 → 0.01
+                      aberrationStrength={0}    // TỐI ƯU: TẮT chromatic aberration
                       toneMapped={false}
-                      samples={3}               // TỐI ƯU: Giảm samples xuống 3
-                      resolution={256}          // TỐI ƯU: Giảm resolution xuống 256
-                      fresnel={0.8}             // TỐI ƯU: Giảm fresnel
+                      samples={1}               // TỐI ƯU CỰC MẠNH: Chỉ 1 sample!
+                      resolution={128}          // TỐI ƯU CỰC MẠNH: Xuống 128
+                      fresnel={0.5}             // TỐI ƯU: Giảm fresnel xuống 0.5
+                      fastChroma={true}         // TỐI ƯU: Bật fast chroma
                     />
                   ) : (
-                    // Material cho DẢI NHẪN
+                    // TỐI ƯU: Material cho DẢI NHẪN
                     <meshStandardMaterial
                       color="#ffaf83"
                       roughness={0.15}
                       metalness={1.0}
                       envMap={env}
-                      envMapIntensity={1.5}
+                      envMapIntensity={0.7}     // TỐI ƯU: Giảm từ 1.5 → 0.7
                     />
                   )}
                 </mesh>
@@ -420,9 +422,9 @@ function ControlPanel({
       {/* Reset Button */}
       <button
         onClick={() => {
-          setPosition([0, 0, 0])
-          setRotation([0, 0, 0])
-          setScale(0.15)
+          setPosition([0, 1.2, -2])  // Cách 2m, ngang tầm mắt
+          setRotation([-Math.PI / 2, 0, 0])  // Nằm ngang -90°
+          setScale(0.08)
           setAutoRotate(false)
         }}
         style={{
@@ -447,13 +449,15 @@ function ControlPanel({
 // ============================================
 export default function MyPlaygroundR3F() {
   // State quản lý vị trí nhẫn (X, Y, Z)
-  const [ringPosition, setRingPosition] = useState([0, 0, 0])
+  // VR: Đặt nhẫn cách user 2m, ngang tầm mắt
+  const [ringPosition, setRingPosition] = useState([0, 1.2, -2])
 
   // State quản lý góc xoay nhẫn (X, Y, Z) - tính bằng radian
-  const [ringRotation, setRingRotation] = useState([0, 0, 0])
+  // TỐI ƯU: Nhẫn nằm ngang ban đầu (xoay -90° theo trục X)
+  const [ringRotation, setRingRotation] = useState([-Math.PI / 2, 0, 0])
 
   // State quản lý kích thước nhẫn
-  const [ringScale, setRingScale] = useState(0.15)
+  const [ringScale, setRingScale] = useState(0.08)
 
   // State quản lý auto-rotate (bật/tắt)
   const [autoRotate, setAutoRotate] = useState(false)
@@ -514,15 +518,16 @@ export default function MyPlaygroundR3F() {
         }}
         frameloop="always"        // TỐI ƯU: Render liên tục cho VR smooth
       >
-        {/* OrbitControls - điều khiển camera bằng chuột cho desktop */}
+        {/* TỐI ƯU: OrbitControls - điều khiển camera cho desktop (tự tắt trong VR) */}
         <OrbitControls
-          enablePan={true}       // Cho phép kéo di chuyển
-          enableZoom={true}      // Cho phép zoom
-          enableRotate={true}    // Cho phép xoay
-          minDistance={1}        // Khoảng cách zoom tối thiểu
-          maxDistance={10}       // Khoảng cách zoom tối đa
-          minPolarAngle={0}      // Góc xoay dọc tối thiểu
-          maxPolarAngle={Math.PI / 2} // Không cho xoay xuống dưới mặt đất
+          enablePan={true}
+          enableZoom={true}
+          enableRotate={true}
+          minDistance={1}
+          maxDistance={10}
+          minPolarAngle={0}
+          maxPolarAngle={Math.PI / 2}
+          enableDamping={false}  // TỐI ƯU: Tắt damping để giảm tính toán
         />
 
         {/* XR - wrapper cho VR mode */}
