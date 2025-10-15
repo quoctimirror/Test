@@ -7,7 +7,8 @@
       "Bash(ren:*)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:api.github.com)"
+      "WebFetch(domain:api.github.com)",
+      "Read(//c/Users/DELL/Pictures/Screenshots/**)"
     ],
     "deny": [],
     "ask": []

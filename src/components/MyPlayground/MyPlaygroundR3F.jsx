@@ -70,6 +70,7 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
   const groupRef = useRef()
   const [position, setPosition] = useState(initialPosition)
   const [rotation, setRotation] = useState([0, 0, 0])  // Rotation state
+  const [scale, setScale] = useState(1)  // Scale state
   const [isHovered, setIsHovered] = useState(false)
   const [isGrabbed, setIsGrabbed] = useState(false)
   const previousControllerPos = useRef(null)
@@ -77,6 +78,28 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
 
   const leftController = useXRInputSourceState('controller', 'left')
   const rightController = useXRInputSourceState('controller', 'right')
+
+  // Setters để control panel từ bên ngoài (CONTROLS panel)
+  const handleSetPosition = (newPos) => {
+    setPosition(newPos)
+    if (groupRef.current) {
+      groupRef.current.position.set(newPos[0], newPos[1], newPos[2])
+    }
+  }
+
+  const handleSetRotation = (newRot) => {
+    setRotation(newRot)
+    if (groupRef.current) {
+      groupRef.current.rotation.set(newRot[0], newRot[1], newRot[2])
+    }
+  }
+
+  const handleSetScale = (newScale) => {
+    setScale(newScale)
+    if (groupRef.current) {
+      groupRef.current.scale.set(newScale, newScale, newScale)
+    }
+  }
 
   useFrame((state, delta) => {
     // Check both controllers for grip button
@@ -117,7 +140,10 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
             onSelect({
               name: name,
               type: objectType,
-              ref: groupRef
+              ref: groupRef,
+              setPosition: handleSetPosition,
+              setRotation: handleSetRotation,
+              setScale: handleSetScale
             })
           }
         }
@@ -143,7 +169,10 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
             onSelect({
               name: name,
               type: objectType,
-              ref: groupRef
+              ref: groupRef,
+              setPosition: handleSetPosition,
+              setRotation: handleSetRotation,
+              setScale: handleSetScale
             })
           }
         }
@@ -162,7 +191,10 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
             onSelect({
               name: name,
               type: objectType,
-              ref: groupRef
+              ref: groupRef,
+              setPosition: handleSetPosition,
+              setRotation: handleSetRotation,
+              setScale: handleSetScale
             })
           }
         }
@@ -204,7 +236,10 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
             onSelect({
               name: name,
               type: objectType,
-              ref: groupRef
+              ref: groupRef,
+              setPosition: handleSetPosition,
+              setRotation: handleSetRotation,
+              setScale: handleSetScale
             })
           }
         }}
@@ -277,7 +312,10 @@ function Ring3D({
   autoRotate,
   sharedRef,  // Ref được share từ parent để INFO panel có thể đọc
   onSelect,   // Callback khi ring được select
-  modelName   // Tên model
+  modelName,  // Tên model
+  setPosition,  // Setter để control từ CONTROLS panel
+  setRotation,  // Setter để control từ CONTROLS panel
+  setScale      // Setter để control từ CONTROLS panel
 }) {
   // BƯỚC 1: Load model 3D từ file GLB
   const { nodes } = useGLTF(modelPath)
@@ -326,7 +364,10 @@ function Ring3D({
             onSelect({
               name: modelName || 'Ring',
               type: 'ring',
-              ref: groupRef
+              ref: groupRef,
+              setPosition: setPosition,
+              setRotation: setRotation,
+              setScale: setScale
             })
           }
         }
@@ -357,7 +398,10 @@ function Ring3D({
           onSelect({
             name: modelName || 'Ring',
             type: 'ring',
-            ref: groupRef
+            ref: groupRef,
+            setPosition: setPosition,
+            setRotation: setRotation,
+            setScale: setScale
           })
         }
       }
@@ -372,7 +416,10 @@ function Ring3D({
           onSelect({
             name: modelName || 'Ring',
             type: 'ring',
-            ref: groupRef
+            ref: groupRef,
+            setPosition: setPosition,
+            setRotation: setRotation,
+            setScale: setScale
           })
         }
       }
@@ -614,13 +661,24 @@ SCALE: ${realtimeInfo.scale.toFixed(3)}`
 // ============================================
 // COMPONENT: VR Control Buttons - Nút điều khiển 3D
 // ============================================
-function VRControlButtons({ position, setPosition, setRotation, setScale, scale, selectedModel }) {
-  const buttonMaterial = useRef()
+function VRControlButtons({ activeObject }) {
   const [hovered, setHovered] = useState(null)
 
-  // Tìm tên model từ path
-  const modelInfo = AVAILABLE_MODELS.find(m => m.path === selectedModel)
-  const modelName = modelInfo ? modelInfo.displayName : 'Unknown'
+  // Lấy thông tin từ activeObject
+  const objectName = activeObject ? activeObject.name : 'None'
+  const hasActiveObject = activeObject && activeObject.ref && activeObject.ref.current
+
+  // Lấy position/rotation/scale hiện tại từ ref
+  const getCurrentPosition = () => {
+    if (!hasActiveObject) return [0, 0, 0]
+    const pos = activeObject.ref.current.position
+    return [pos.x, pos.y, pos.z]
+  }
+
+  const getCurrentScale = () => {
+    if (!hasActiveObject) return 1
+    return activeObject.ref.current.scale.x
+  }
 
   return (
     <group>
@@ -635,16 +693,16 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale,
         <lineBasicMaterial attach="material" color="#4CAF50" linewidth={2} />
       </lineSegments>
 
-      {/* Tên model - Header */}
+      {/* Tên object - Header */}
       <Text
         position={[0, 0.32, 0]}
         fontSize={0.028}
-        color="#4CAF50"
+        color={hasActiveObject ? "#4CAF50" : "#888888"}
         anchorX="center"
         anchorY="middle"
         maxWidth={0.42}
       >
-        🎯 {modelName}
+        🎯 {objectName}
       </Text>
 
       {/* Divider line */}
@@ -670,15 +728,16 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale,
           onPointerEnter={() => setHovered('reset')}
           onPointerLeave={() => setHovered(null)}
           onClick={() => {
-            setPosition([0, 1.2, -1.0])
-            setRotation([-Math.PI / 2, 0, 0])
-            setScale(0.01)
+            if (!hasActiveObject) return
+            activeObject.setPosition([0, 1.2, -1.0])
+            if (activeObject.setRotation) activeObject.setRotation([-Math.PI / 2, 0, 0])
+            if (activeObject.setScale) activeObject.setScale(0.01)
           }}
         >
           <planeGeometry args={[0.4, 0.08]} />
           <meshBasicMaterial
             color={hovered === 'reset' ? '#42A5F5' : '#2196F3'}
-            opacity={0.9}
+            opacity={hasActiveObject ? 0.9 : 0.3}
             transparent
           />
         </mesh>
@@ -698,12 +757,15 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale,
         <mesh
           onPointerEnter={() => setHovered('eye')}
           onPointerLeave={() => setHovered(null)}
-          onClick={() => setPosition([0, 1.2, -0.5])}
+          onClick={() => {
+            if (!hasActiveObject) return
+            activeObject.setPosition([0, 1.2, -0.5])
+          }}
         >
           <planeGeometry args={[0.4, 0.08]} />
           <meshBasicMaterial
             color={hovered === 'eye' ? '#66BB6A' : '#4CAF50'}
-            opacity={0.9}
+            opacity={hasActiveObject ? 0.9 : 0.3}
             transparent
           />
         </mesh>
@@ -723,12 +785,16 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale,
         <mesh
           onPointerEnter={() => setHovered('forward')}
           onPointerLeave={() => setHovered(null)}
-          onClick={() => setPosition([position[0], position[1], position[2] - 0.2])}
+          onClick={() => {
+            if (!hasActiveObject) return
+            const pos = getCurrentPosition()
+            activeObject.setPosition([pos[0], pos[1], pos[2] - 0.2])
+          }}
         >
           <planeGeometry args={[0.4, 0.08]} />
           <meshBasicMaterial
             color={hovered === 'forward' ? '#FFA726' : '#FF9800'}
-            opacity={0.9}
+            opacity={hasActiveObject ? 0.9 : 0.3}
             transparent
           />
         </mesh>
@@ -748,12 +814,16 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale,
         <mesh
           onPointerEnter={() => setHovered('back')}
           onPointerLeave={() => setHovered(null)}
-          onClick={() => setPosition([position[0], position[1], position[2] + 0.2])}
+          onClick={() => {
+            if (!hasActiveObject) return
+            const pos = getCurrentPosition()
+            activeObject.setPosition([pos[0], pos[1], pos[2] + 0.2])
+          }}
         >
           <planeGeometry args={[0.4, 0.08]} />
           <meshBasicMaterial
             color={hovered === 'back' ? '#EF5350' : '#F44336'}
-            opacity={0.9}
+            opacity={hasActiveObject ? 0.9 : 0.3}
             transparent
           />
         </mesh>
@@ -773,12 +843,16 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale,
         <mesh
           onPointerEnter={() => setHovered('smaller')}
           onPointerLeave={() => setHovered(null)}
-          onClick={() => setScale(Math.max(0.001, scale * 0.8))}
+          onClick={() => {
+            if (!hasActiveObject || !activeObject.setScale) return
+            const currentScale = getCurrentScale()
+            activeObject.setScale(Math.max(0.001, currentScale * 0.8))
+          }}
         >
           <planeGeometry args={[0.18, 0.08]} />
           <meshBasicMaterial
             color={hovered === 'smaller' ? '#AB47BC' : '#9C27B0'}
-            opacity={0.9}
+            opacity={hasActiveObject ? 0.9 : 0.3}
             transparent
           />
         </mesh>
@@ -797,12 +871,16 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale,
         <mesh
           onPointerEnter={() => setHovered('bigger')}
           onPointerLeave={() => setHovered(null)}
-          onClick={() => setScale(Math.min(0.1, scale * 1.25))}
+          onClick={() => {
+            if (!hasActiveObject || !activeObject.setScale) return
+            const currentScale = getCurrentScale()
+            activeObject.setScale(Math.min(10, currentScale * 1.25))
+          }}
         >
           <planeGeometry args={[0.18, 0.08]} />
           <meshBasicMaterial
             color={hovered === 'bigger' ? '#EC407A' : '#E91E63'}
-            opacity={0.9}
+            opacity={hasActiveObject ? 0.9 : 0.3}
             transparent
           />
         </mesh>
@@ -1021,7 +1099,7 @@ function Scene({
         objectType="panel"
         onSelect={handleSelectObject}
       >
-        <VRInfoPanel selectedObject={selectedObject} />
+        <VRInfoPanel selectedObject={activeObject} />
       </DraggablePanel>
 
       {/* VR Control Buttons - Bảng điều khiển bên phải - CÓ THỂ KÉO */}
@@ -1031,14 +1109,7 @@ function Scene({
         objectType="panel"
         onSelect={handleSelectObject}
       >
-        <VRControlButtons
-          position={ringPosition}
-          setPosition={setRingPosition}
-          setRotation={setRingRotation}
-          scale={ringScale}
-          setScale={setRingScale}
-          selectedModel={selectedModel}
-        />
+        <VRControlButtons activeObject={activeObject} />
       </DraggablePanel>
 
       {/* VR Model Selector - Chọn model ở giữa - CÓ THỂ KÉO */}
@@ -1087,6 +1158,9 @@ function Scene({
           sharedRef={ringGroupRef}  // Pass ref để INFO panel đọc realtime
           onSelect={handleSelectObject}  // Callback khi ring được grab
           modelName={modelName}  // Tên model hiện tại
+          setPosition={setRingPosition}  // Setter để CONTROLS điều khiển
+          setRotation={setRingRotation}  // Setter để CONTROLS điều khiển
+          setScale={setRingScale}  // Setter để CONTROLS điều khiển
         />
       </Suspense>
     </>
@@ -1308,6 +1382,9 @@ export default function MyPlaygroundR3F() {
 
   // State quản lý auto-rotate (bật/tắt)
   const [autoRotate, setAutoRotate] = useState(false)
+
+  // State quản lý auto-rotate Y cho VR
+  const [autoRotateY, setAutoRotateY] = useState(false)
 
   // State quản lý model đang được chọn
   const [selectedModel, setSelectedModel] = useState('/models/nhanMirror.glb')
