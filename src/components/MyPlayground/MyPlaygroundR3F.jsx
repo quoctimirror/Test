@@ -977,20 +977,37 @@ function Scene({
   // Load environment map cho materials (phản chiếu môi trường)
   const env = useEnvironment({ preset: 'apartment' })
 
-  // Shared ref cho Ring để INFO panel có thể đọc realtime
+  // Shared refs cho các objects
   const ringGroupRef = useRef()
+  const monitorPanelRef = useRef()
+  const controlsPanelRef = useRef()
+  const modelsPanelRef = useRef()
 
-  // State để track object nào đang được selected/interact
-  const [selectedObject, setSelectedObject] = useState(null)
+  // State để track object nào đang được ACTIVE/SELECTED
+  const [activeObject, setActiveObject] = useState(null)
 
-  // Handler khi object được selected
+  // Handler khi object được selected/clicked
   const handleSelectObject = (objectInfo) => {
-    setSelectedObject(objectInfo)
+    setActiveObject(objectInfo)
   }
 
   // Tìm tên model từ path
   const modelInfo = AVAILABLE_MODELS.find(m => m.path === selectedModel)
   const modelName = modelInfo ? modelInfo.displayName : 'Unknown'
+
+  // Set ring as active object by default when ring moves/rotates
+  const handleRingInteraction = () => {
+    if (ringGroupRef.current) {
+      setActiveObject({
+        name: modelName,
+        type: 'ring',
+        ref: ringGroupRef,
+        setPosition: setRingPosition,
+        setRotation: setRingRotation,
+        setScale: setRingScale
+      })
+    }
+  }
 
   return (
     <>
