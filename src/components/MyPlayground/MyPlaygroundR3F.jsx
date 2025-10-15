@@ -179,51 +179,14 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
           activeController.current = null
         }}
       >
-        {/* Drag handle nhỏ - chỉ ở header */}
+        {/* Drag handle nhỏ - chỉ ở header - INVISIBLE */}
         <boxGeometry args={[0.6, 0.1, 0.02]} />
         <meshBasicMaterial
-          color={isGrabbed ? '#00ff00' : isHovered ? '#ffff00' : '#ffffff'}
-          opacity={isHovered || isGrabbed ? 0.2 : 0}
+          color="#ffffff"
+          opacity={0}
           transparent
         />
       </mesh>
-
-      {/* Visual indicator khi hover hoặc grab - CHỈ Ở HEADER */}
-      {isHovered && !isGrabbed && (
-        <Text
-          position={[0, 0.42, 0.02]}
-          fontSize={0.02}
-          color="#ffff00"
-          anchorX="center"
-          anchorY="middle"
-        >
-          🖐️ GRIP
-        </Text>
-      )}
-
-      {/* Visual indicator khi đang grab */}
-      {isGrabbed && (
-        <>
-          <Text
-            position={[0, 0.44, 0.02]}
-            fontSize={0.022}
-            color="#00ff00"
-            anchorX="center"
-            anchorY="middle"
-          >
-            ✓ {name}
-          </Text>
-          <Text
-            position={[0, 0.40, 0.02]}
-            fontSize={0.016}
-            color="#00ff00"
-            anchorX="center"
-            anchorY="middle"
-          >
-            MOVE + THUMBSTICK
-          </Text>
-        </>
-      )}
 
       {children}
     </group>
@@ -253,18 +216,85 @@ function Ring3D({
   const { nodes } = useGLTF(modelPath)
   const groupRef = sharedRef || useRef()  // Sử dụng shared ref nếu có
 
-  // Lấy trạng thái VR controllers (tay phải - controller chính)
+  // Lấy trạng thái VR controllers (CẢ HAI TAY)
+  const leftController = useXRInputSourceState('controller', 'left')
   const rightController = useXRInputSourceState('controller', 'right')
 
   // State cho VR interaction
   const previousControllerPos = useRef(null)
   const vrRotation = useRef([0, 0, 0]) // Rotation riêng cho VR mode
 
+  // State cho two-handed scaling (pinch to zoom)
+  const initialDistance = useRef(null)  // Khoảng cách ban đầu giữa 2 controllers
+  const initialScale = useRef(null)     // Scale ban đầu của ring
+
   // BƯỚC 2: Animation loop - chạy mỗi frame
   useFrame((state, delta) => {
     if (!groupRef.current) return
 
-    // ===== VR MODE =====
+    // ===== TWO-HANDED SCALING (PINCH TO ZOOM) =====
+    // Kiểm tra nếu CẢ HAI controllers đang nhấn trigger
+    if (
+      leftController && leftController.inputSource.gamepad &&
+      rightController && rightController.inputSource.gamepad
+    ) {
+      const leftGamepad = leftController.inputSource.gamepad
+      const rightGamepad = rightController.inputSource.gamepad
+      const leftTrigger = leftGamepad.buttons[0]?.pressed
+      const rightTrigger = rightGamepad.buttons[0]?.pressed
+
+      // Nếu CẢ HAI triggers đều đang nhấn
+      if (leftTrigger && rightTrigger) {
+        // Lấy vị trí 2 controllers
+        const leftPos = new THREE.Vector3()
+        const rightPos = new THREE.Vector3()
+        leftPos.setFromMatrixPosition(leftController.object.matrixWorld)
+        rightPos.setFromMatrixPosition(rightController.object.matrixWorld)
+
+        // Tính khoảng cách giữa 2 controllers
+        const currentDistance = leftPos.distanceTo(rightPos)
+
+        // Lần đầu tiên grab bằng 2 tay → lưu khoảng cách ban đầu
+        if (initialDistance.current === null) {
+          initialDistance.current = currentDistance
+          initialScale.current = groupRef.current.scale.x
+        } else {
+          // Tính tỷ lệ thay đổi khoảng cách
+          const scaleRatio = currentDistance / initialDistance.current
+
+          // Áp dụng scale mới
+          const newScale = initialScale.current * scaleRatio
+          if (setScale) {
+            setScale(newScale)
+          }
+
+          // Notify selection khi scaling
+          if (onSelect && groupRef.current) {
+            onSelect({
+              name: modelName || 'Ring',
+              type: 'ring',
+              ref: groupRef,
+              setPosition: setPosition,
+              setRotation: setRotation,
+              setScale: setScale
+            })
+          }
+        }
+
+        // Khi đang scale bằng 2 tay, KHÔNG cho phép di chuyển/xoay bằng 1 tay
+        return
+      } else {
+        // Reset khi thả một trong 2 triggers
+        initialDistance.current = null
+        initialScale.current = null
+      }
+    } else {
+      // Reset khi không có đủ 2 controllers
+      initialDistance.current = null
+      initialScale.current = null
+    }
+
+    // ===== ONE-HANDED CONTROL (DI CHUYỂN/XOAY) =====
     if (rightController && rightController.inputSource.gamepad) {
       const gamepad = rightController.inputSource.gamepad
 
@@ -1225,7 +1255,7 @@ function Scene({
 
       {/* MONITOR Panel - Hiển thị thông tin ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
-        initialPosition={[-1.2, 1.4, -0.8]}
+        initialPosition={[-1.8, 1.4, -1.2]}
         name="MONITOR"
       >
         <VRInfoPanel selectedObject={activeObject} />
@@ -1233,7 +1263,7 @@ function Scene({
 
       {/* CONTROLS Panel - Điều khiển ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
-        initialPosition={[1.2, 1.3, -0.8]}
+        initialPosition={[1.8, 1.3, -1.2]}
         name="CONTROLS"
       >
         <VRControlButtons
@@ -1245,7 +1275,7 @@ function Scene({
 
       {/* MODELS Panel - Chọn model ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
-        initialPosition={[0, 1.3, -1.2]}
+        initialPosition={[0, 1.3, -1.8]}
         name="MODELS"
       >
         <VRModelSelector
