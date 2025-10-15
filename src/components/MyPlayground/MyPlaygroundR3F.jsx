@@ -310,6 +310,7 @@ function Ring3D({
   rotation,
   scale,
   autoRotate,
+  autoRotateY,  // Auto rotate Y trong VR
   sharedRef,  // Ref được share từ parent để INFO panel có thể đọc
   onSelect,   // Callback khi ring được select
   modelName,  // Tên model
@@ -422,6 +423,12 @@ function Ring3D({
             setScale: setScale
           })
         }
+      }
+
+      // --- AUTO ROTATE Y: Tự động xoay theo trục Y trong VR ---
+      if (autoRotateY) {
+        vrRotation.current[1] += delta * 0.5
+        groupRef.current.rotation.y = vrRotation.current[1]
       }
     }
     // ===== DESKTOP MODE =====
@@ -661,18 +668,25 @@ SCALE: ${realtimeInfo.scale.toFixed(3)}`
 // ============================================
 // COMPONENT: VR Control Buttons - Nút điều khiển 3D
 // ============================================
-function VRControlButtons({ activeObject }) {
+function VRControlButtons({ activeObject, autoRotateY, setAutoRotateY }) {
   const [hovered, setHovered] = useState(null)
 
   // Lấy thông tin từ activeObject
   const objectName = activeObject ? activeObject.name : 'None'
   const hasActiveObject = activeObject && activeObject.ref && activeObject.ref.current
+  const isRing = activeObject && activeObject.type === 'ring'
 
   // Lấy position/rotation/scale hiện tại từ ref
   const getCurrentPosition = () => {
     if (!hasActiveObject) return [0, 0, 0]
     const pos = activeObject.ref.current.position
     return [pos.x, pos.y, pos.z]
+  }
+
+  const getCurrentRotation = () => {
+    if (!hasActiveObject) return [0, 0, 0]
+    const rot = activeObject.ref.current.rotation
+    return [rot.x, rot.y, rot.z]
   }
 
   const getCurrentScale = () => {
@@ -682,20 +696,20 @@ function VRControlButtons({ activeObject }) {
 
   return (
     <group>
-      {/* Background - Tăng chiều cao để chứa tên model */}
+      {/* Background - Tăng chiều cao để chứa thêm rotation controls */}
       <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[0.45, 0.7]} />
+        <planeGeometry args={[0.45, 1.1]} />
         <meshBasicMaterial color="#000000" opacity={0.85} transparent />
       </mesh>
       {/* TỐI ƯU: Chỉ 1 outline */}
       <lineSegments>
-        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.45, 0.7)]} />
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.45, 1.1)]} />
         <lineBasicMaterial attach="material" color="#4CAF50" linewidth={2} />
       </lineSegments>
 
       {/* Tên object - Header */}
       <Text
-        position={[0, 0.32, 0]}
+        position={[0, 0.52, 0]}
         fontSize={0.028}
         color={hasActiveObject ? "#4CAF50" : "#888888"}
         anchorX="center"
@@ -706,14 +720,14 @@ function VRControlButtons({ activeObject }) {
       </Text>
 
       {/* Divider line */}
-      <mesh position={[0, 0.27, 0.001]}>
+      <mesh position={[0, 0.47, 0.001]}>
         <planeGeometry args={[0.4, 0.002]} />
         <meshBasicMaterial color="#4CAF50" />
       </mesh>
 
       {/* Title - TỐI ƯU: Font nhỏ hơn */}
       <Text
-        position={[0, 0.21, 0]}
+        position={[0, 0.41, 0]}
         fontSize={0.025}
         color="#4CAF50"
         anchorX="center"
@@ -723,7 +737,7 @@ function VRControlButtons({ activeObject }) {
       </Text>
 
       {/* Reset Button */}
-      <group position={[0, 0.1, 0]}>
+      <group position={[0, 0.3, 0]}>
         <mesh
           onPointerEnter={() => setHovered('reset')}
           onPointerLeave={() => setHovered(null)}
@@ -753,7 +767,7 @@ function VRControlButtons({ activeObject }) {
       </group>
 
       {/* To Eye Button */}
-      <group position={[0, 0.0, 0]}>
+      <group position={[0, 0.2, 0]}>
         <mesh
           onPointerEnter={() => setHovered('eye')}
           onPointerLeave={() => setHovered(null)}
@@ -781,7 +795,7 @@ function VRControlButtons({ activeObject }) {
       </group>
 
       {/* Move Forward Button */}
-      <group position={[0, -0.1, 0]}>
+      <group position={[0, 0.1, 0]}>
         <mesh
           onPointerEnter={() => setHovered('forward')}
           onPointerLeave={() => setHovered(null)}
@@ -810,7 +824,7 @@ function VRControlButtons({ activeObject }) {
       </group>
 
       {/* Move Back Button */}
-      <group position={[0, -0.2, 0]}>
+      <group position={[0, 0.0, 0]}>
         <mesh
           onPointerEnter={() => setHovered('back')}
           onPointerLeave={() => setHovered(null)}
@@ -838,8 +852,179 @@ function VRControlButtons({ activeObject }) {
         </Text>
       </group>
 
+      {/* Rotation Controls - ROT X */}
+      <group position={[-0.1, -0.1, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('rotXMinus')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => {
+            if (!hasActiveObject || !activeObject.setRotation) return
+            const rot = getCurrentRotation()
+            activeObject.setRotation([rot[0] - 0.1, rot[1], rot[2]])
+          }}
+        >
+          <planeGeometry args={[0.13, 0.07]} />
+          <meshBasicMaterial
+            color={hovered === 'rotXMinus' ? '#64B5F6' : '#2196F3'}
+            opacity={hasActiveObject ? 0.9 : 0.3}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.018}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          X -
+        </Text>
+      </group>
+
+      <group position={[0.1, -0.1, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('rotXPlus')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => {
+            if (!hasActiveObject || !activeObject.setRotation) return
+            const rot = getCurrentRotation()
+            activeObject.setRotation([rot[0] + 0.1, rot[1], rot[2]])
+          }}
+        >
+          <planeGeometry args={[0.13, 0.07]} />
+          <meshBasicMaterial
+            color={hovered === 'rotXPlus' ? '#64B5F6' : '#2196F3'}
+            opacity={hasActiveObject ? 0.9 : 0.3}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.018}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          X +
+        </Text>
+      </group>
+
+      {/* Rotation Controls - ROT Y */}
+      <group position={[-0.1, -0.18, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('rotYMinus')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => {
+            if (!hasActiveObject || !activeObject.setRotation) return
+            const rot = getCurrentRotation()
+            activeObject.setRotation([rot[0], rot[1] - 0.1, rot[2]])
+          }}
+        >
+          <planeGeometry args={[0.13, 0.07]} />
+          <meshBasicMaterial
+            color={hovered === 'rotYMinus' ? '#81C784' : '#4CAF50'}
+            opacity={hasActiveObject ? 0.9 : 0.3}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.018}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          Y -
+        </Text>
+      </group>
+
+      <group position={[0.1, -0.18, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('rotYPlus')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => {
+            if (!hasActiveObject || !activeObject.setRotation) return
+            const rot = getCurrentRotation()
+            activeObject.setRotation([rot[0], rot[1] + 0.1, rot[2]])
+          }}
+        >
+          <planeGeometry args={[0.13, 0.07]} />
+          <meshBasicMaterial
+            color={hovered === 'rotYPlus' ? '#81C784' : '#4CAF50'}
+            opacity={hasActiveObject ? 0.9 : 0.3}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.018}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          Y +
+        </Text>
+      </group>
+
+      {/* Rotation Controls - ROT Z */}
+      <group position={[-0.1, -0.26, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('rotZMinus')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => {
+            if (!hasActiveObject || !activeObject.setRotation) return
+            const rot = getCurrentRotation()
+            activeObject.setRotation([rot[0], rot[1], rot[2] - 0.1])
+          }}
+        >
+          <planeGeometry args={[0.13, 0.07]} />
+          <meshBasicMaterial
+            color={hovered === 'rotZMinus' ? '#FFB74D' : '#FF9800'}
+            opacity={hasActiveObject ? 0.9 : 0.3}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.018}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          Z -
+        </Text>
+      </group>
+
+      <group position={[0.1, -0.26, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('rotZPlus')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => {
+            if (!hasActiveObject || !activeObject.setRotation) return
+            const rot = getCurrentRotation()
+            activeObject.setRotation([rot[0], rot[1], rot[2] + 0.1])
+          }}
+        >
+          <planeGeometry args={[0.13, 0.07]} />
+          <meshBasicMaterial
+            color={hovered === 'rotZPlus' ? '#FFB74D' : '#FF9800'}
+            opacity={hasActiveObject ? 0.9 : 0.3}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.018}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          Z +
+        </Text>
+      </group>
+
       {/* Scale Buttons */}
-      <group position={[-0.1, -0.3, 0]}>
+      <group position={[-0.1, -0.36, 0]}>
         <mesh
           onPointerEnter={() => setHovered('smaller')}
           onPointerLeave={() => setHovered(null)}
@@ -867,7 +1052,7 @@ function VRControlButtons({ activeObject }) {
         </Text>
       </group>
 
-      <group position={[0.1, -0.3, 0]}>
+      <group position={[0.1, -0.36, 0]}>
         <mesh
           onPointerEnter={() => setHovered('bigger')}
           onPointerLeave={() => setHovered(null)}
@@ -894,6 +1079,35 @@ function VRControlButtons({ activeObject }) {
           SIZE +
         </Text>
       </group>
+
+      {/* Auto Rotate Y Button - CHỈ HIỆN KHI RING ĐƯỢC CHỌN */}
+      {isRing && (
+        <group position={[0, -0.46, 0]}>
+          <mesh
+            onPointerEnter={() => setHovered('autoRotateY')}
+            onPointerLeave={() => setHovered(null)}
+            onClick={() => {
+              if (setAutoRotateY) setAutoRotateY(!autoRotateY)
+            }}
+          >
+            <planeGeometry args={[0.4, 0.08]} />
+            <meshBasicMaterial
+              color={autoRotateY ? '#00E676' : (hovered === 'autoRotateY' ? '#26A69A' : '#00897B')}
+              opacity={0.9}
+              transparent
+            />
+          </mesh>
+          <Text
+            position={[0, 0, 0.001]}
+            fontSize={0.022}
+            color="white"
+            anchorX="center"
+            anchorY="middle"
+          >
+            {autoRotateY ? '⏸ AUTO ROT Y' : '▶ AUTO ROT Y'}
+          </Text>
+        </group>
+      )}
     </group>
   )
 }
@@ -1046,6 +1260,8 @@ function Scene({
   ringRotation,
   ringScale,
   autoRotate,
+  autoRotateY,
+  setAutoRotateY,
   setRingPosition,
   setRingRotation,
   setRingScale,
@@ -1109,7 +1325,11 @@ function Scene({
         objectType="panel"
         onSelect={handleSelectObject}
       >
-        <VRControlButtons activeObject={activeObject} />
+        <VRControlButtons
+          activeObject={activeObject}
+          autoRotateY={autoRotateY}
+          setAutoRotateY={setAutoRotateY}
+        />
       </DraggablePanel>
 
       {/* VR Model Selector - Chọn model ở giữa - CÓ THỂ KÉO */}
@@ -1155,6 +1375,7 @@ function Scene({
           rotation={ringRotation}
           scale={ringScale}
           autoRotate={autoRotate}
+          autoRotateY={autoRotateY}  // Auto rotate Y trong VR
           sharedRef={ringGroupRef}  // Pass ref để INFO panel đọc realtime
           onSelect={handleSelectObject}  // Callback khi ring được grab
           modelName={modelName}  // Tên model hiện tại
@@ -1466,6 +1687,8 @@ export default function MyPlaygroundR3F() {
             ringRotation={ringRotation}
             ringScale={ringScale}
             autoRotate={autoRotate}
+            autoRotateY={autoRotateY}
+            setAutoRotateY={setAutoRotateY}
             setRingPosition={setRingPosition}
             setRingRotation={setRingRotation}
             setRingScale={setRingScale}
