@@ -227,46 +227,180 @@ function Ring3D({
 }
 
 // ============================================
-// COMPONENT: VR Info Panel - Hiển thị thông tin trong VR (3D Text)
+// COMPONENT: VR Control Panel - Điều khiển trong VR như desktop
 // ============================================
-function VRInfoPanel({ position, rotation, scale }) {
-  const infoText = `RING INFO
-Pos: [${position[0].toFixed(2)}, ${position[1].toFixed(2)}, ${position[2].toFixed(2)}]
-Rot: [${(rotation[0] * 180 / Math.PI).toFixed(0)}°, ${(rotation[1] * 180 / Math.PI).toFixed(0)}°, ${(rotation[2] * 180 / Math.PI).toFixed(0)}°]
-Scale: ${scale.toFixed(3)}
-
-Controls:
-TRIGGER = Move ring
-THUMBSTICK = Rotate ring`
-
+function VRControlPanel({ position, setPosition, rotation, setRotation, scale, setScale }) {
   return (
-    <group position={[-1.2, 1.6, -0.8]}>
-      {/* Background panel */}
-      <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[0.6, 0.5]} />
-        <meshBasicMaterial color="#000000" opacity={0.8} transparent />
-      </mesh>
+    <Html
+      position={[-1, 1.5, -0.5]}  // Bên trái user
+      transform
+      distanceFactor={0.5}
+      occlude={false}
+      style={{
+        width: '350px',
+        maxHeight: '80vh',
+        overflowY: 'auto',
+        padding: '12px',
+        backgroundColor: 'rgba(0, 0, 0, 0.95)',
+        color: 'white',
+        borderRadius: '8px',
+        fontSize: '11px',
+        border: '2px solid #1976d2',
+        userSelect: 'none',
+        pointerEvents: 'auto'
+      }}
+    >
+      <div>
+        <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#1976d2' }}>🎮 VR CONTROLS</h3>
 
-      {/* Text */}
-      <Text
-        position={[0, 0, 0]}
-        fontSize={0.04}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={0.55}
-        textAlign="left"
-      >
-        {infoText}
-      </Text>
-    </group>
+        {/* Position */}
+        <div style={{ marginBottom: '8px' }}>
+          <strong style={{ color: '#4CAF50' }}>📍 Position</strong>
+          <div style={{ marginTop: '3px' }}>
+            <label style={{ fontSize: '10px' }}>X: {position[0].toFixed(2)}</label>
+            <input
+              type="range"
+              min="-5"
+              max="5"
+              step="0.05"
+              value={position[0]}
+              onChange={(e) => setPosition([parseFloat(e.target.value), position[1], position[2]])}
+              style={{ width: '100%', cursor: 'pointer' }}
+            />
+          </div>
+          <div style={{ marginTop: '3px' }}>
+            <label style={{ fontSize: '10px' }}>Y: {position[1].toFixed(2)}</label>
+            <input
+              type="range"
+              min="-2"
+              max="5"
+              step="0.05"
+              value={position[1]}
+              onChange={(e) => setPosition([position[0], parseFloat(e.target.value), position[2]])}
+              style={{ width: '100%', cursor: 'pointer' }}
+            />
+          </div>
+          <div style={{ marginTop: '3px' }}>
+            <label style={{ fontSize: '10px' }}>Z: {position[2].toFixed(2)}</label>
+            <input
+              type="range"
+              min="-10"
+              max="5"
+              step="0.05"
+              value={position[2]}
+              onChange={(e) => setPosition([position[0], position[1], parseFloat(e.target.value)])}
+              style={{ width: '100%', cursor: 'pointer' }}
+            />
+          </div>
+        </div>
+
+        {/* Rotation */}
+        <div style={{ marginBottom: '8px' }}>
+          <strong style={{ color: '#FF9800' }}>🔄 Rotation</strong>
+          <div style={{ marginTop: '3px' }}>
+            <label style={{ fontSize: '10px' }}>X: {(rotation[0] * 180 / Math.PI).toFixed(0)}°</label>
+            <input
+              type="range"
+              min={-Math.PI}
+              max={Math.PI}
+              step="0.05"
+              value={rotation[0]}
+              onChange={(e) => setRotation([parseFloat(e.target.value), rotation[1], rotation[2]])}
+              style={{ width: '100%', cursor: 'pointer' }}
+            />
+          </div>
+          <div style={{ marginTop: '3px' }}>
+            <label style={{ fontSize: '10px' }}>Y: {(rotation[1] * 180 / Math.PI).toFixed(0)}°</label>
+            <input
+              type="range"
+              min={-Math.PI}
+              max={Math.PI}
+              step="0.05"
+              value={rotation[1]}
+              onChange={(e) => setRotation([rotation[0], parseFloat(e.target.value), rotation[2]])}
+              style={{ width: '100%', cursor: 'pointer' }}
+            />
+          </div>
+          <div style={{ marginTop: '3px' }}>
+            <label style={{ fontSize: '10px' }}>Z: {(rotation[2] * 180 / Math.PI).toFixed(0)}°</label>
+            <input
+              type="range"
+              min={-Math.PI}
+              max={Math.PI}
+              step="0.05"
+              value={rotation[2]}
+              onChange={(e) => setRotation([rotation[0], rotation[1], parseFloat(e.target.value)])}
+              style={{ width: '100%', cursor: 'pointer' }}
+            />
+          </div>
+        </div>
+
+        {/* Scale */}
+        <div style={{ marginBottom: '8px' }}>
+          <strong style={{ color: '#E91E63' }}>📏 Scale: {scale.toFixed(3)}</strong>
+          <input
+            type="range"
+            min="0.001"
+            max="0.1"
+            step="0.001"
+            value={scale}
+            onChange={(e) => setScale(parseFloat(e.target.value))}
+            style={{ width: '100%', marginTop: '3px', cursor: 'pointer' }}
+          />
+        </div>
+
+        {/* Buttons */}
+        <div style={{ display: 'flex', gap: '5px' }}>
+          <button
+            onClick={() => {
+              setPosition([0, 1.6, -1.0])
+              setRotation([-Math.PI / 2, 0, 0])
+              setScale(0.01)
+            }}
+            style={{
+              flex: 1,
+              padding: '6px',
+              backgroundColor: '#2196F3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '11px'
+            }}
+          >
+            🔄 Reset
+          </button>
+          <button
+            onClick={() => {
+              setPosition([0, 1.6, -0.5])
+            }}
+            style={{
+              flex: 1,
+              padding: '6px',
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '11px'
+            }}
+          >
+            👁️ To Eye
+          </button>
+        </div>
+
+        <div style={{ marginTop: '8px', fontSize: '9px', color: '#888', borderTop: '1px solid #333', paddingTop: '5px' }}>
+          💡 Trigger = Move | Thumbstick = Rotate
+        </div>
+      </div>
+    </Html>
   )
 }
 
 // ============================================
 // COMPONENT: Scene - chứa toàn bộ 3D scene
 // ============================================
-function Scene({ ringPosition, ringRotation, ringScale, autoRotate }) {
+function Scene({ ringPosition, ringRotation, ringScale, autoRotate, setRingPosition, setRingRotation, setRingScale }) {
   // Load environment map cho materials (phản chiếu môi trường)
   const env = useEnvironment({ preset: 'apartment' })
 
@@ -275,11 +409,14 @@ function Scene({ ringPosition, ringRotation, ringScale, autoRotate }) {
       {/* Hiển thị VR Controllers */}
       <VRControllers />
 
-      {/* VR Info Panel - Bảng thông tin trong VR (3D) */}
-      <VRInfoPanel
+      {/* VR Control Panel - Bảng điều khiển trong VR */}
+      <VRControlPanel
         position={ringPosition}
+        setPosition={setRingPosition}
         rotation={ringRotation}
+        setRotation={setRingRotation}
         scale={ringScale}
+        setScale={setRingScale}
       />
 
       {/* TỐI ƯU: Giảm ánh sáng xuống - chỉ giữ đủ để nhìn rõ */}
@@ -466,7 +603,7 @@ function ControlPanel({
       {/* Reset Button */}
       <button
         onClick={() => {
-          setPosition([0, 1.2, -1.0])  // Cách 1.5m, tầm mắt 1.2m
+          setPosition([0, 1.6, -1.0])  // Cách 1m, tầm mắt 1.6m
           setRotation([-Math.PI / 2, 0, 0])  // Nằm ngang -90°
           setScale(0.01)
           setAutoRotate(false)
@@ -493,8 +630,8 @@ function ControlPanel({
 // ============================================
 export default function MyPlaygroundR3F() {
   // State quản lý vị trí nhẫn (X, Y, Z)
-  // VR: Đặt nhẫn cách user 1m, cao 1.2m (tầm mắt)
-  const [ringPosition, setRingPosition] = useState([0, 1.2, -1.0])
+  // VR: Đặt nhẫn cách user 1m, cao 1.6m (tầm mắt)
+  const [ringPosition, setRingPosition] = useState([0, 1.6, -1.0])
 
   // State quản lý góc xoay nhẫn (X, Y, Z) - tính bằng radian
   // TỐI ƯU: Nhẫn nằm ngang ban đầu (xoay -90° theo trục X)
@@ -581,6 +718,9 @@ export default function MyPlaygroundR3F() {
             ringRotation={ringRotation}
             ringScale={ringScale}
             autoRotate={autoRotate}
+            setRingPosition={setRingPosition}
+            setRingRotation={setRingRotation}
+            setRingScale={setRingScale}
           />
         </XR>
       </Canvas>
