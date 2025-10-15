@@ -1,7 +1,7 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { XR, createXRStore, useXRInputSourceState } from '@react-three/xr'
 import { useState, Suspense, useRef } from 'react'
-import { useGLTF, Environment, MeshRefractionMaterial, useEnvironment, Center, OrbitControls } from '@react-three/drei'
+import { useGLTF, Environment, MeshRefractionMaterial, useEnvironment, OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
 import './MyPlayground2.css'
 
@@ -125,7 +125,7 @@ function Ring3D({
   })
 
   return (
-    <Center top>
+    <>
       {/* Group chứa toàn bộ nhẫn - áp dụng position, rotation, scale */}
       <group
         ref={groupRef}
@@ -222,7 +222,7 @@ function Ring3D({
             return null
           })}
         </group>
-    </Center>
+    </>
   )
 }
 
