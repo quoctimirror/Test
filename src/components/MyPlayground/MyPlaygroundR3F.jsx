@@ -11,17 +11,11 @@ const store = createXRStore()
 // Danh sách models từ thư mục public/models
 const AVAILABLE_MODELS = [
   { name: 'nhanMirror', path: '/models/nhanMirror.glb', displayName: 'Mirror Ring' },
-  { name: 'heart_ring', path: '/models/heart_ring.glb', displayName: 'Heart Ring' },
-  { name: 'oval_ring', path: '/models/oval_ring.glb', displayName: 'Oval Ring' },
-  { name: 'pear_ring', path: '/models/pear_ring.glb', displayName: 'Pear Ring' },
-  { name: 'myfav', path: '/models/myfav.glb', displayName: 'My Favorite' },
-  { name: 'nhan1', path: '/models/nhan1.glb', displayName: 'Ring 1' },
-  { name: 'nhan2', path: '/models/nhan2.glb', displayName: 'Ring 2' },
-  { name: 'refine-mirror-ring-1', path: '/models/refine-mirror-ring-1.glb', displayName: 'Refine Mirror 1' },
-  { name: 'refine-mirror-ring-2', path: '/models/refine-mirror-ring-2.glb', displayName: 'Refine Mirror 2' },
-  { name: 'ring_webgi', path: '/models/ring_webgi.glb', displayName: 'WebGI Ring' },
-  { name: 'ring2_webgi', path: '/models/ring2_webgi.glb', displayName: 'WebGI Ring 2' },
-  { name: 'lumex91', path: '/models/lumex91.glb', displayName: 'Lumex 91' },
+  { name: 'heart_ring', path: '/models/mirror_heart_ring.glb', displayName: 'Mirror Heart Ring' },
+  { name: 'oval_ring', path: '/models/mirror_oval_ring.glb', displayName: 'Mirror Oval Ring' },
+  { name: 'pear_ring', path: '/models/mirror_pear_ring.glb', displayName: 'Mirror Pear Ring' },
+  { name: 'myfav', path: '/models/mirror_myfav.glb', displayName: 'Mirror My Favorite' },
+  { name: 'lumex91', path: '/models/mirror_lumex91.glb', displayName: 'Mirror Lumex 91' },
 ]
 
 // ============================================
