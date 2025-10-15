@@ -18,20 +18,36 @@ function VRControllers() {
 
   return (
     <>
-      {/* TỐI ƯU CỰC MẠNH: Tay trái - giảm xuống 6x6 segments */}
+      {/* Tay trái với laser pointer */}
       {leftController && (
-        <mesh position={leftController.position} rotation={leftController.rotation} frustumCulled>
-          <sphereGeometry args={[0.04, 6, 6]} />
-          <meshBasicMaterial color="#00ff00" />
-        </mesh>
+        <group position={leftController.position} rotation={leftController.rotation}>
+          {/* Controller ball */}
+          <mesh frustumCulled>
+            <sphereGeometry args={[0.04, 6, 6]} />
+            <meshBasicMaterial color="#00ff00" />
+          </mesh>
+          {/* Laser ray - dài 5m, offset về phía trước */}
+          <mesh position={[0, 0, -2.5]}>
+            <boxGeometry args={[0.003, 0.003, 5]} />
+            <meshBasicMaterial color="#00ff00" opacity={0.5} transparent />
+          </mesh>
+        </group>
       )}
 
-      {/* TỐI ƯU CỰC MẠNH: Tay phải - giảm xuống 6x6 segments */}
+      {/* Tay phải với laser pointer */}
       {rightController && (
-        <mesh position={rightController.position} rotation={rightController.rotation} frustumCulled>
-          <sphereGeometry args={[0.04, 6, 6]} />
-          <meshBasicMaterial color="#0000ff" />
-        </mesh>
+        <group position={rightController.position} rotation={rightController.rotation}>
+          {/* Controller ball */}
+          <mesh frustumCulled>
+            <sphereGeometry args={[0.04, 6, 6]} />
+            <meshBasicMaterial color="#0000ff" />
+          </mesh>
+          {/* Laser ray - dài 5m, offset về phía trước */}
+          <mesh position={[0, 0, -2.5]}>
+            <boxGeometry args={[0.003, 0.003, 5]} />
+            <meshBasicMaterial color="#0000ff" opacity={0.5} transparent />
+          </mesh>
+        </group>
       )}
     </>
   )
@@ -236,7 +252,7 @@ ROT: ${(rotation[0] * 180 / Math.PI).toFixed(0)}°, ${(rotation[1] * 180 / Math.
 SCALE: ${scale.toFixed(3)}`
 
   return (
-    <group position={[-1.2, 1.8, -0.8]}>
+    <group position={[-1.2, 1.4, -0.8]}>
       {/* Background - TỐI ƯU: Nhỏ hơn */}
       <mesh position={[0, 0, -0.01]}>
         <planeGeometry args={[0.5, 0.35]} />
@@ -272,7 +288,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
   const [hovered, setHovered] = useState(null)
 
   return (
-    <group position={[1.2, 1.5, -0.8]}>
+    <group position={[1.2, 1.3, -0.8]}>
       {/* Background - TỐI ƯU: Nhỏ hơn */}
       <mesh position={[0, 0, -0.01]}>
         <planeGeometry args={[0.45, 0.6]} />
@@ -301,7 +317,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
           onPointerEnter={() => setHovered('reset')}
           onPointerLeave={() => setHovered(null)}
           onClick={() => {
-            setPosition([0, 1.6, -1.0])
+            setPosition([0, 1.2, -1.0])
             setRotation([-Math.PI / 2, 0, 0])
             setScale(0.01)
           }}
@@ -329,7 +345,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
         <mesh
           onPointerEnter={() => setHovered('eye')}
           onPointerLeave={() => setHovered(null)}
-          onClick={() => setPosition([0, 1.6, -0.5])}
+          onClick={() => setPosition([0, 1.2, -0.5])}
         >
           <planeGeometry args={[0.4, 0.08]} />
           <meshBasicMaterial
@@ -661,7 +677,7 @@ function ControlPanel({
       {/* Reset Button */}
       <button
         onClick={() => {
-          setPosition([0, 1.6, -1.0])  // Cách 1m, tầm mắt 1.6m
+          setPosition([0, 1.2, -1.0])  // Cách 1m, thấp hơn 1.2m
           setRotation([-Math.PI / 2, 0, 0])  // Nằm ngang -90°
           setScale(0.01)
           setAutoRotate(false)
@@ -688,8 +704,8 @@ function ControlPanel({
 // ============================================
 export default function MyPlaygroundR3F() {
   // State quản lý vị trí nhẫn (X, Y, Z)
-  // VR: Đặt nhẫn cách user 1m, cao 1.6m (tầm mắt)
-  const [ringPosition, setRingPosition] = useState([0, 1.6, -1.0])
+  // VR: Đặt nhẫn cách user 1m, thấp hơn (1.2m)
+  const [ringPosition, setRingPosition] = useState([0, 1.2, -1.0])
 
   // State quản lý góc xoay nhẫn (X, Y, Z) - tính bằng radian
   // TỐI ƯU: Nhẫn nằm ngang ban đầu (xoay -90° theo trục X)
