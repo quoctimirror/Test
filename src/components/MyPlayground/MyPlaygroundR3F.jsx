@@ -65,12 +65,12 @@ function VRControllers() {
 
 // ============================================
 // COMPONENT: Draggable & Rotatable Panel - Panel có thể kéo và xoay được
+// Panel CHỈ ĐƯỢC KÉO VÀ XOAY, KHÔNG ĐƯỢC CHỌN ĐỂ ĐIỀU KHIỂN
 // ============================================
-function DraggablePanel({ children, initialPosition, onPositionChange, name = "Panel", onSelect, objectType = "panel" }) {
+function DraggablePanel({ children, initialPosition, onPositionChange, name = "Panel" }) {
   const groupRef = useRef()
   const [position, setPosition] = useState(initialPosition)
   const [rotation, setRotation] = useState([0, 0, 0])  // Rotation state
-  const [scale, setScale] = useState(1)  // Scale state
   const [isHovered, setIsHovered] = useState(false)
   const [isGrabbed, setIsGrabbed] = useState(false)
   const previousControllerPos = useRef(null)
@@ -78,28 +78,6 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
 
   const leftController = useXRInputSourceState('controller', 'left')
   const rightController = useXRInputSourceState('controller', 'right')
-
-  // Setters để control panel từ bên ngoài (CONTROLS panel)
-  const handleSetPosition = (newPos) => {
-    setPosition(newPos)
-    if (groupRef.current) {
-      groupRef.current.position.set(newPos[0], newPos[1], newPos[2])
-    }
-  }
-
-  const handleSetRotation = (newRot) => {
-    setRotation(newRot)
-    if (groupRef.current) {
-      groupRef.current.rotation.set(newRot[0], newRot[1], newRot[2])
-    }
-  }
-
-  const handleSetScale = (newScale) => {
-    setScale(newScale)
-    if (groupRef.current) {
-      groupRef.current.scale.set(newScale, newScale, newScale)
-    }
-  }
 
   useFrame((state, delta) => {
     // Check both controllers for grip button
@@ -134,18 +112,6 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
           ]
           setPosition(newPos)
           if (onPositionChange) onPositionChange(newPos)
-
-          // Update selection info realtime khi đang kéo
-          if (onSelect && groupRef.current) {
-            onSelect({
-              name: name,
-              type: objectType,
-              ref: groupRef,
-              setPosition: handleSetPosition,
-              setRotation: handleSetRotation,
-              setScale: handleSetScale
-            })
-          }
         }
 
         previousControllerPos.current = controllerPos.clone()
@@ -163,18 +129,6 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
           if (groupRef.current) {
             groupRef.current.rotation.y = newRot[1]
           }
-
-          // Update selection
-          if (onSelect && groupRef.current) {
-            onSelect({
-              name: name,
-              type: objectType,
-              ref: groupRef,
-              setPosition: handleSetPosition,
-              setRotation: handleSetRotation,
-              setScale: handleSetScale
-            })
-          }
         }
 
         // Thumbstick lên/xuống -> xoay theo trục X (ngửa/nghiêng)
@@ -184,18 +138,6 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
           setRotation(newRot)
           if (groupRef.current) {
             groupRef.current.rotation.x = newRot[0]
-          }
-
-          // Update selection
-          if (onSelect && groupRef.current) {
-            onSelect({
-              name: name,
-              type: objectType,
-              ref: groupRef,
-              setPosition: handleSetPosition,
-              setRotation: handleSetRotation,
-              setScale: handleSetScale
-            })
           }
         }
 
@@ -230,18 +172,6 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
           setIsGrabbed(true)
           // Determine which controller triggered this
           activeController.current = e.nativeEvent?.inputSource?.handedness || 'right'
-
-          // Notify parent that this object is selected
-          if (onSelect && groupRef.current) {
-            onSelect({
-              name: name,
-              type: objectType,
-              ref: groupRef,
-              setPosition: handleSetPosition,
-              setRotation: handleSetRotation,
-              setScale: handleSetScale
-            })
-          }
         }}
         onPointerUp={(e) => {
           e.stopPropagation()
@@ -301,7 +231,8 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
 }
 
 // ============================================
-// COMPONENT: Nhẫn 3D với controls đầy đủ
+// COMPONENT: Nhẫn 3D - CÓ THỂ CHỌN VÀ ĐIỀU KHIỂN
+// Ring là object DUY NHẤT có thể được chọn để điều khiển từ CONTROLS panel
 // ============================================
 function Ring3D({
   modelPath = '/models/nhanMirror.glb',
@@ -544,7 +475,7 @@ function Ring3D({
 
 // ============================================
 // COMPONENT: VR Info Panel - Bảng thông tin 3D (REALTIME)
-// Hiển thị thông tin của object đang được chọn/interact
+// Hiển thị thông tin của RING đang được chọn/interact
 // ============================================
 function VRInfoPanel({ selectedObject }) {
   // State để lưu giá trị realtime
@@ -554,7 +485,7 @@ function VRInfoPanel({ selectedObject }) {
     scale: 1
   })
 
-  // Update realtime từ selected object ref mỗi frame
+  // Update realtime từ selected ring ref mỗi frame
   useFrame(() => {
     if (selectedObject && selectedObject.ref && selectedObject.ref.current) {
       const obj = selectedObject.ref.current
@@ -570,10 +501,10 @@ function VRInfoPanel({ selectedObject }) {
     }
   })
 
-  // Tên đối tượng và icon
+  // Tên ring và icon
   const objectName = selectedObject ? selectedObject.name : 'None'
   const objectType = selectedObject ? selectedObject.type : 'none'
-  const icon = objectType === 'ring' ? '💍' : objectType === 'panel' ? '📋' : '❓'
+  const icon = objectType === 'ring' ? '💍' : '❓'
 
   const infoText = `POS: ${realtimeInfo.position[0].toFixed(2)}, ${realtimeInfo.position[1].toFixed(2)}, ${realtimeInfo.position[2].toFixed(2)}
 ROT: ${(realtimeInfo.rotation[0] * 180 / Math.PI).toFixed(0)}°, ${(realtimeInfo.rotation[1] * 180 / Math.PI).toFixed(0)}°, ${(realtimeInfo.rotation[2] * 180 / Math.PI).toFixed(0)}°
@@ -667,14 +598,15 @@ SCALE: ${realtimeInfo.scale.toFixed(3)}`
 
 // ============================================
 // COMPONENT: VR Control Buttons - Nút điều khiển 3D
+// Điều khiển RING đang được chọn (position, rotation, scale, auto rotate)
 // ============================================
 function VRControlButtons({ activeObject, autoRotateY, setAutoRotateY }) {
   const [hovered, setHovered] = useState(null)
 
-  // Lấy thông tin từ activeObject
+  // Lấy thông tin từ activeObject (CHỈ RING)
   const objectName = activeObject ? activeObject.name : 'None'
   const hasActiveObject = activeObject && activeObject.ref && activeObject.ref.current
-  const isRing = activeObject && activeObject.type === 'ring'
+  const isRing = activeObject && activeObject.type === 'ring'  // Luôn true vì chỉ ring mới được chọn
 
   // Lấy position/rotation/scale hiện tại từ ref
   const getCurrentPosition = () => {
@@ -1271,59 +1203,38 @@ function Scene({
   // Load environment map cho materials (phản chiếu môi trường)
   const env = useEnvironment({ preset: 'apartment' })
 
-  // Shared refs cho các objects
+  // Shared ref cho ring
   const ringGroupRef = useRef()
-  const monitorPanelRef = useRef()
-  const controlsPanelRef = useRef()
-  const modelsPanelRef = useRef()
 
-  // State để track object nào đang được ACTIVE/SELECTED
+  // State để track RING được chọn (CHỈ RING MỚI CÓ THỂ CHỌN)
   const [activeObject, setActiveObject] = useState(null)
 
-  // Handler khi object được selected/clicked
-  const handleSelectObject = (objectInfo) => {
-    setActiveObject(objectInfo)
+  // Handler khi RING được grab/interact
+  const handleSelectRing = (ringInfo) => {
+    setActiveObject(ringInfo)
   }
 
   // Tìm tên model từ path
   const modelInfo = AVAILABLE_MODELS.find(m => m.path === selectedModel)
   const modelName = modelInfo ? modelInfo.displayName : 'Unknown'
 
-  // Set ring as active object by default when ring moves/rotates
-  const handleRingInteraction = () => {
-    if (ringGroupRef.current) {
-      setActiveObject({
-        name: modelName,
-        type: 'ring',
-        ref: ringGroupRef,
-        setPosition: setRingPosition,
-        setRotation: setRingRotation,
-        setScale: setRingScale
-      })
-    }
-  }
-
   return (
     <>
       {/* Hiển thị VR Controllers */}
       <VRControllers />
 
-      {/* VR Info Panel - Monitor Panel - CÓ THỂ KÉO VÀ XOAY */}
+      {/* MONITOR Panel - Hiển thị thông tin ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
         initialPosition={[-1.2, 1.4, -0.8]}
         name="MONITOR"
-        objectType="panel"
-        onSelect={handleSelectObject}
       >
         <VRInfoPanel selectedObject={activeObject} />
       </DraggablePanel>
 
-      {/* VR Control Buttons - Bảng điều khiển bên phải - CÓ THỂ KÉO */}
+      {/* CONTROLS Panel - Điều khiển ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
         initialPosition={[1.2, 1.3, -0.8]}
         name="CONTROLS"
-        objectType="panel"
-        onSelect={handleSelectObject}
       >
         <VRControlButtons
           activeObject={activeObject}
@@ -1332,12 +1243,10 @@ function Scene({
         />
       </DraggablePanel>
 
-      {/* VR Model Selector - Chọn model ở giữa - CÓ THỂ KÉO */}
+      {/* MODELS Panel - Chọn model ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
         initialPosition={[0, 1.3, -1.2]}
         name="MODELS"
-        objectType="panel"
-        onSelect={handleSelectObject}
       >
         <VRModelSelector
           selectedModel={selectedModel}
@@ -1365,7 +1274,7 @@ function Scene({
       {/* TỐI ƯU CỰC MẠNH: Grid nhỏ hơn - 10x10 ô */}
       <gridHelper args={[10, 10, '#333333', '#111111']} position={[0, 0.01, 0]} />
 
-      {/* NHẪN 3D - component chính */}
+      {/* NHẪN 3D - component chính - CHỈ RING MỚI CÓ THỂ CHỌN ĐỂ ĐIỀU KHIỂN */}
       <Suspense fallback={null}>
         <Ring3D
           key={selectedModel}  // Force remount when model changes
@@ -1377,7 +1286,7 @@ function Scene({
           autoRotate={autoRotate}
           autoRotateY={autoRotateY}  // Auto rotate Y trong VR
           sharedRef={ringGroupRef}  // Pass ref để INFO panel đọc realtime
-          onSelect={handleSelectObject}  // Callback khi ring được grab
+          onSelect={handleSelectRing}  // Callback khi ring được grab
           modelName={modelName}  // Tên model hiện tại
           setPosition={setRingPosition}  // Setter để CONTROLS điều khiển
           setRotation={setRingRotation}  // Setter để CONTROLS điều khiển
