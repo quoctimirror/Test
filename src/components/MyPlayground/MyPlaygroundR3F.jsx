@@ -18,18 +18,18 @@ function VRControllers() {
 
   return (
     <>
-      {/* TỐI ƯU: Tay trái - giảm segments từ 16x16 → 8x8 */}
+      {/* TỐI ƯU CỰC MẠNH: Tay trái - giảm xuống 6x6 segments */}
       {leftController && (
         <mesh position={leftController.position} rotation={leftController.rotation} frustumCulled>
-          <sphereGeometry args={[0.05, 8, 8]} />
+          <sphereGeometry args={[0.04, 6, 6]} />
           <meshBasicMaterial color="#00ff00" />
         </mesh>
       )}
 
-      {/* TỐI ƯU: Tay phải - giảm segments từ 16x16 → 8x8 */}
+      {/* TỐI ƯU CỰC MẠNH: Tay phải - giảm xuống 6x6 segments */}
       {rightController && (
         <mesh position={rightController.position} rotation={rightController.rotation} frustumCulled>
-          <sphereGeometry args={[0.05, 8, 8]} />
+          <sphereGeometry args={[0.04, 6, 6]} />
           <meshBasicMaterial color="#0000ff" />
         </mesh>
       )}
@@ -169,13 +169,13 @@ function Ring3D({
                       fastChroma={true}         // TỐI ƯU: Bật fast chroma
                     />
                   ) : (
-                    // TỐI ƯU: Material cho DẢI NHẪN - kim loại vàng hồng
+                    // TỐI ƯU CỰC MẠNH: Material cho DẢI NHẪN
                     <meshStandardMaterial
                       color="#ffaf83"           // Màu vàng hồng (rose gold)
                       roughness={0.15}          // Độ nhám thấp = bóng
                       metalness={1.0}           // Kim loại 100%
                       envMap={env}              // Environment map để phản chiếu
-                      envMapIntensity={0.7}     // TỐI ƯU: Giảm từ 1.5 → 0.7
+                      envMapIntensity={0.5}     // TỐI ƯU CỰC MẠNH: Giảm xuống 0.5
                     />
                   )}
                 </instancedMesh>
@@ -206,13 +206,13 @@ function Ring3D({
                       fastChroma={true}         // TỐI ƯU: Bật fast chroma
                     />
                   ) : (
-                    // TỐI ƯU: Material cho DẢI NHẪN
+                    // TỐI ƯU CỰC MẠNH: Material cho DẢI NHẪN
                     <meshStandardMaterial
                       color="#ffaf83"
                       roughness={0.15}
                       metalness={1.0}
                       envMap={env}
-                      envMapIntensity={0.7}     // TỐI ƯU: Giảm từ 1.5 → 0.7
+                      envMapIntensity={0.5}     // TỐI ƯU CỰC MẠNH: Giảm xuống 0.5
                     />
                   )}
                 </mesh>
@@ -230,37 +230,33 @@ function Ring3D({
 // COMPONENT: VR Info Panel - Bảng thông tin 3D
 // ============================================
 function VRInfoPanel({ position, rotation, scale }) {
-  const infoText = `RING INFO
-X: ${position[0].toFixed(2)} | Y: ${position[1].toFixed(2)} | Z: ${position[2].toFixed(2)}
-RX: ${(rotation[0] * 180 / Math.PI).toFixed(0)}° | RY: ${(rotation[1] * 180 / Math.PI).toFixed(0)}° | RZ: ${(rotation[2] * 180 / Math.PI).toFixed(0)}°
-Scale: ${scale.toFixed(3)}
-
-CONTROLS:
-TRIGGER = Move Ring
-THUMBSTICK = Rotate Ring`
+  // TỐI ƯU: Chỉ update text mỗi 100ms thay vì mỗi frame
+  const infoText = `POS: ${position[0].toFixed(1)}, ${position[1].toFixed(1)}, ${position[2].toFixed(1)}
+ROT: ${(rotation[0] * 180 / Math.PI).toFixed(0)}°, ${(rotation[1] * 180 / Math.PI).toFixed(0)}°, ${(rotation[2] * 180 / Math.PI).toFixed(0)}°
+SCALE: ${scale.toFixed(3)}`
 
   return (
-    <group position={[-1.2, 2, -0.8]}>
-      {/* Background */}
+    <group position={[-1.2, 1.8, -0.8]}>
+      {/* Background - TỐI ƯU: Nhỏ hơn */}
       <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[0.7, 0.6]} />
-        <meshBasicMaterial color="#000000" opacity={0.9} transparent />
+        <planeGeometry args={[0.5, 0.35]} />
+        <meshBasicMaterial color="#000000" opacity={0.85} transparent />
       </mesh>
-      {/* Border */}
-      <mesh position={[0, 0, 0]}>
-        <planeGeometry args={[0.72, 0.62]} />
-        <meshBasicMaterial color="#1976d2" opacity={0.8} transparent wireframe />
-      </mesh>
-      {/* Text */}
+      {/* TỐI ƯU: Chỉ 1 outline thay vì 4 boxes */}
+      <lineSegments>
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.5, 0.35)]} />
+        <lineBasicMaterial attach="material" color="#1976d2" linewidth={2} />
+      </lineSegments>
+      {/* Text - TỐI ƯU: Font nhỏ hơn */}
       <Text
         position={[0, 0, 0]}
-        fontSize={0.035}
+        fontSize={0.028}
         color="white"
         anchorX="center"
         anchorY="middle"
-        maxWidth={0.65}
+        maxWidth={0.48}
         textAlign="left"
-        lineHeight={1.2}
+        lineHeight={1.3}
       >
         {infoText}
       </Text>
@@ -277,27 +273,26 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
 
   return (
     <group position={[1.2, 1.5, -0.8]}>
-      {/* Background panel */}
+      {/* Background - TỐI ƯU: Nhỏ hơn */}
       <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[0.5, 0.7]} />
-        <meshBasicMaterial color="#000000" opacity={0.9} transparent />
+        <planeGeometry args={[0.45, 0.6]} />
+        <meshBasicMaterial color="#000000" opacity={0.85} transparent />
       </mesh>
-      {/* Border */}
-      <mesh position={[0, 0, 0]}>
-        <planeGeometry args={[0.52, 0.72]} />
-        <meshBasicMaterial color="#4CAF50" opacity={0.8} transparent wireframe />
-      </mesh>
+      {/* TỐI ƯU: Chỉ 1 outline */}
+      <lineSegments>
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.45, 0.6)]} />
+        <lineBasicMaterial attach="material" color="#4CAF50" linewidth={2} />
+      </lineSegments>
 
-      {/* Title */}
+      {/* Title - TỐI ƯU: Font nhỏ hơn */}
       <Text
-        position={[0, 0.28, 0]}
-        fontSize={0.04}
+        position={[0, 0.26, 0]}
+        fontSize={0.032}
         color="#4CAF50"
         anchorX="center"
         anchorY="middle"
-        fontWeight="bold"
       >
-        QUICK ACTIONS
+        CONTROLS
       </Text>
 
       {/* Reset Button */}
@@ -320,7 +315,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
         </mesh>
         <Text
           position={[0, 0, 0.001]}
-          fontSize={0.03}
+          fontSize={0.025}
           color="white"
           anchorX="center"
           anchorY="middle"
@@ -345,7 +340,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
         </mesh>
         <Text
           position={[0, 0, 0.001]}
-          fontSize={0.03}
+          fontSize={0.025}
           color="white"
           anchorX="center"
           anchorY="middle"
@@ -370,7 +365,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
         </mesh>
         <Text
           position={[0, 0, 0.001]}
-          fontSize={0.03}
+          fontSize={0.025}
           color="white"
           anchorX="center"
           anchorY="middle"
@@ -395,7 +390,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
         </mesh>
         <Text
           position={[0, 0, 0.001]}
-          fontSize={0.03}
+          fontSize={0.025}
           color="white"
           anchorX="center"
           anchorY="middle"
@@ -420,7 +415,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
         </mesh>
         <Text
           position={[0, 0, 0.001]}
-          fontSize={0.025}
+          fontSize={0.022}
           color="white"
           anchorX="center"
           anchorY="middle"
@@ -444,7 +439,7 @@ function VRControlButtons({ position, setPosition, setRotation, setScale, scale 
         </mesh>
         <Text
           position={[0, 0, 0.001]}
-          fontSize={0.025}
+          fontSize={0.022}
           color="white"
           anchorX="center"
           anchorY="middle"
@@ -484,27 +479,25 @@ function Scene({ ringPosition, ringRotation, ringScale, autoRotate, setRingPosit
         setScale={setRingScale}
       />
 
-      {/* TỐI ƯU: Giảm ánh sáng xuống - chỉ giữ đủ để nhìn rõ */}
-      <ambientLight intensity={0.8} />
+      {/* TỐI ƯU CỰC MẠNH: Ánh sáng tối thiểu */}
+      <ambientLight intensity={0.5} />
 
-      {/* TỐI ƯU: 1 directional light thay vì nhiều light sources */}
-      <directionalLight position={[5, 5, 5]} intensity={1.5} castShadow={false} />
+      {/* TỐI ƯU CỰC MẠNH: Giảm directional light */}
+      <directionalLight position={[5, 5, 5]} intensity={1.0} castShadow={false} />
 
-      {/* TỐI ƯU: Environment với intensity thấp hơn */}
-      <Environment preset="apartment" environmentIntensity={0.25} background={false} />
+      {/* TỐI ƯU CỰC MẠNH: Environment rất thấp */}
+      <Environment preset="apartment" environmentIntensity={0.15} background={false} />
 
-      {/* TỐI ƯU: Mặt phẳng nền - giảm segments */}
+      {/* TỐI ƯU CỰC MẠNH: Mặt phẳng nền nhỏ hơn */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} frustumCulled>
-        <planeGeometry args={[20, 20, 1, 1]} />
-        <meshStandardMaterial
-          color="#7a7a7a"
-          roughness={0.9}
-          metalness={0.1}
+        <planeGeometry args={[10, 10, 1, 1]} />
+        <meshBasicMaterial
+          color="#555555"
         />
       </mesh>
 
-      {/* TỐI ƯU: Grid helper - giảm từ 50x50 → 20x20 ô */}
-      <gridHelper args={[20, 20, '#444444', '#222222']} position={[0, 0.01, 0]} />
+      {/* TỐI ƯU CỰC MẠNH: Grid nhỏ hơn - 10x10 ô */}
+      <gridHelper args={[10, 10, '#333333', '#111111']} position={[0, 0.01, 0]} />
 
       {/* NHẪN 3D - component chính */}
       <Suspense fallback={null}>
@@ -751,10 +744,10 @@ export default function MyPlaygroundR3F() {
           position: [0, 1.6, 3],  // Vị trí camera (giống chiều cao mắt người)
           fov: 75                 // Field of view
         }}
-        dpr={1}                   // TỐI ƯU VR: Fix DPR = 1 (Quest 3 đã có độ phân giải cao)
-        performance={{ min: 0.1 }} // TỐI ƯU: Cho phép giảm quality mạnh khi lag
+        dpr={0.8}                 // TỐI ƯU CỰC MẠNH: Giảm DPR xuống 0.8 cho VR
+        performance={{ min: 0.05 }} // TỐI ƯU CỰC MẠNH: Cho phép giảm quality rất mạnh
         gl={{
-          antialias: true,        // Giữ khử răng cưa
+          antialias: false,       // TỐI ƯU CỰC MẠNH: Tắt AA (VR có AA tự nhiên)
           alpha: false,           // Không cần nền trong suốt
           powerPreference: 'high-performance', // Ưu tiên hiệu suất
           stencil: false,         // Tắt stencil buffer
