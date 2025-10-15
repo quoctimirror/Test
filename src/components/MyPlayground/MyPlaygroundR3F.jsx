@@ -182,9 +182,9 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
       ref={groupRef}
       position={position}
     >
-      {/* Drag handle - invisible box for grabbing */}
+      {/* Drag handle - CHỈ Ở HEADER AREA, KHÔNG CHE TOÀN BỘ PANEL */}
       <mesh
-        position={[0, 0, 0]}
+        position={[0, 0.35, 0.01]}  // Chỉ ở vùng header phía trên
         onPointerEnter={(e) => {
           e.stopPropagation()
           setIsHovered(true)
@@ -214,48 +214,49 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
           activeController.current = null
         }}
       >
-        <boxGeometry args={[0.7, 0.8, 0.05]} />
+        {/* Drag handle nhỏ - chỉ ở header */}
+        <boxGeometry args={[0.6, 0.1, 0.02]} />
         <meshBasicMaterial
           color={isGrabbed ? '#00ff00' : isHovered ? '#ffff00' : '#ffffff'}
-          opacity={0}
+          opacity={isHovered || isGrabbed ? 0.2 : 0}
           transparent
         />
       </mesh>
 
-      {/* Visual indicator khi hover hoặc grab */}
-      {(isHovered || isGrabbed) && (
+      {/* Visual indicator khi hover hoặc grab - CHỈ Ở HEADER */}
+      {isHovered && !isGrabbed && (
+        <Text
+          position={[0, 0.42, 0.02]}
+          fontSize={0.02}
+          color="#ffff00"
+          anchorX="center"
+          anchorY="middle"
+        >
+          🖐️ GRIP
+        </Text>
+      )}
+
+      {/* Visual indicator khi đang grab */}
+      {isGrabbed && (
         <>
-          {/* Highlight border */}
-          <lineSegments>
-            <edgesGeometry attach="geometry" args={[new THREE.BoxGeometry(0.7, 0.8, 0.05)]} />
-            <lineBasicMaterial
-              attach="material"
-              color={isGrabbed ? '#00ff00' : '#ffff00'}
-              linewidth={3}
-            />
-          </lineSegments>
-          {/* Grab text indicator */}
           <Text
-            position={[0, 0.45, 0.01]}
+            position={[0, 0.44, 0.02]}
             fontSize={0.022}
-            color={isGrabbed ? '#00ff00' : '#ffff00'}
+            color="#00ff00"
             anchorX="center"
             anchorY="middle"
           >
-            {isGrabbed ? `✓ ${name}` : `GRIP TO GRAB`}
+            ✓ {name}
           </Text>
-          {/* Instruction text */}
-          {isGrabbed && (
-            <Text
-              position={[0, 0.41, 0.01]}
-              fontSize={0.018}
-              color="#00ff00"
-              anchorX="center"
-              anchorY="middle"
-            >
-              MOVE + THUMBSTICK ROTATE
-            </Text>
-          )}
+          <Text
+            position={[0, 0.40, 0.02]}
+            fontSize={0.016}
+            color="#00ff00"
+            anchorX="center"
+            anchorY="middle"
+          >
+            MOVE + THUMBSTICK
+          </Text>
         </>
       )}
 
