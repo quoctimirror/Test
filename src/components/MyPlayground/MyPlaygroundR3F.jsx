@@ -18,19 +18,19 @@ function VRControllers() {
 
   return (
     <>
-      {/* Tay trái - hiển thị bóng màu xanh lá */}
+      {/* TỐI ƯU: Tay trái - giảm segments từ 16x16 → 8x8 */}
       {leftController && (
-        <mesh position={leftController.position} rotation={leftController.rotation}>
-          <sphereGeometry args={[0.05, 16, 16]} />
-          <meshStandardMaterial color="#00ff00" emissive="#00ff00" emissiveIntensity={0.5} />
+        <mesh position={leftController.position} rotation={leftController.rotation} frustumCulled>
+          <sphereGeometry args={[0.05, 8, 8]} />
+          <meshBasicMaterial color="#00ff00" />
         </mesh>
       )}
 
-      {/* Tay phải - hiển thị bóng màu xanh dương */}
+      {/* TỐI ƯU: Tay phải - giảm segments từ 16x16 → 8x8 */}
       {rightController && (
-        <mesh position={rightController.position} rotation={rightController.rotation}>
-          <sphereGeometry args={[0.05, 16, 16]} />
-          <meshStandardMaterial color="#0000ff" emissive="#0000ff" emissiveIntensity={0.5} />
+        <mesh position={rightController.position} rotation={rightController.rotation} frustumCulled>
+          <sphereGeometry args={[0.05, 8, 8]} />
+          <meshBasicMaterial color="#0000ff" />
         </mesh>
       )}
     </>
@@ -154,14 +154,18 @@ function Ring3D({
                   position={node.position}
                   rotation={node.rotation}
                   scale={node.scale}
+                  frustumCulled
                 >
                   {isGem ? (
-                    // Material cho KIM CƯƠNG - khúc xạ ánh sáng như thật
+                    // TỐI ƯU: Material cho KIM CƯƠNG - giảm samples để tăng FPS
                     <MeshRefractionMaterial
                       color="#b5cbdd"           // Màu xanh nhạt
                       envMap={env}              // Environment map để phản chiếu
-                      aberrationStrength={0.02} // Độ tán sắc (chromatic aberration)
+                      aberrationStrength={0.01} // TỐI ƯU: Giảm từ 0.02 → 0.01
                       toneMapped={false}        // Tắt tone mapping để màu sáng hơn
+                      samples={3}               // TỐI ƯU: Giảm samples xuống 3 (default 6)
+                      resolution={256}          // TỐI ƯU: Giảm resolution xuống 256 (default 1024)
+                      fresnel={0.8}             // TỐI ƯU: Giảm fresnel
                     />
                   ) : (
                     // Material cho DẢI NHẪN - kim loại vàng hồng
@@ -186,14 +190,18 @@ function Ring3D({
                   position={node.position}
                   rotation={node.rotation}
                   scale={node.scale}
+                  frustumCulled
                 >
                   {isGem ? (
-                    // Material cho KIM CƯƠNG
+                    // TỐI ƯU: Material cho KIM CƯƠNG - giảm samples để tăng FPS
                     <MeshRefractionMaterial
                       color="#b5cbdd"
                       envMap={env}
-                      aberrationStrength={0.02}
+                      aberrationStrength={0.01} // TỐI ƯU: Giảm từ 0.02 → 0.01
                       toneMapped={false}
+                      samples={3}               // TỐI ƯU: Giảm samples xuống 3
+                      resolution={256}          // TỐI ƯU: Giảm resolution xuống 256
+                      fresnel={0.8}             // TỐI ƯU: Giảm fresnel
                     />
                   ) : (
                     // Material cho DẢI NHẪN
@@ -228,26 +236,27 @@ function Scene({ ringPosition, ringRotation, ringScale, autoRotate }) {
       {/* Hiển thị VR Controllers */}
       <VRControllers />
 
-      {/* Ánh sáng môi trường - chiếu sáng đều khắp scene */}
-      <ambientLight intensity={1.5} />
+      {/* TỐI ƯU: Giảm ánh sáng xuống - chỉ giữ đủ để nhìn rõ */}
+      <ambientLight intensity={0.8} />
 
-      {/* Ánh sáng định hướng - tạo bóng đổ */}
-      <directionalLight position={[5, 5, 5]} intensity={2} />
+      {/* TỐI ƯU: 1 directional light thay vì nhiều light sources */}
+      <directionalLight position={[5, 5, 5]} intensity={1.5} castShadow={false} />
 
-      {/* Ánh sáng điểm - chiếu từ một điểm */}
-      <pointLight position={[-3, 3, -3]} intensity={1} />
+      {/* TỐI ƯU: Environment với intensity thấp hơn */}
+      <Environment preset="apartment" environmentIntensity={0.25} background={false} />
 
-      {/* Environment - tạo môi trường phản chiếu (HDR) */}
-      <Environment preset="apartment" environmentIntensity={0.4} />
-
-      {/* Mặt phẳng nền - sàn nhà */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-        <planeGeometry args={[50, 50]} />
-        <meshStandardMaterial color="#7a7a7a" roughness={0.8} metalness={0.2} />
+      {/* TỐI ƯU: Mặt phẳng nền - giảm segments */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} frustumCulled>
+        <planeGeometry args={[20, 20, 1, 1]} />
+        <meshStandardMaterial
+          color="#7a7a7a"
+          roughness={0.9}
+          metalness={0.1}
+        />
       </mesh>
 
-      {/* Grid helper - lưới ô vuông trên sàn */}
-      <gridHelper args={[50, 50, '#444444', '#222222']} position={[0, 0.01, 0]} />
+      {/* TỐI ƯU: Grid helper - giảm từ 50x50 → 20x20 ô */}
+      <gridHelper args={[20, 20, '#444444', '#222222']} position={[0, 0.01, 0]} />
 
       {/* NHẪN 3D - component chính */}
       <Suspense fallback={null}>
@@ -492,14 +501,18 @@ export default function MyPlaygroundR3F() {
           position: [0, 1.6, 3],  // Vị trí camera (giống chiều cao mắt người)
           fov: 75                 // Field of view
         }}
-        dpr={[1, 1.5]}            // Device pixel ratio - tối ưu hiệu suất
-        performance={{ min: 0.5 }} // Tự động giảm chất lượng nếu FPS thấp
+        dpr={1}                   // TỐI ƯU VR: Fix DPR = 1 (Quest 3 đã có độ phân giải cao)
+        performance={{ min: 0.1 }} // TỐI ƯU: Cho phép giảm quality mạnh khi lag
         gl={{
-          antialias: true,        // Khử răng cưa
+          antialias: true,        // Giữ khử răng cưa
           alpha: false,           // Không cần nền trong suốt
           powerPreference: 'high-performance', // Ưu tiên hiệu suất
-          stencil: false          // Tắt stencil buffer để tăng hiệu suất
+          stencil: false,         // Tắt stencil buffer
+          depth: true,            // Giữ depth buffer
+          logarithmicDepthBuffer: false, // TỐI ƯU: Tắt log depth
+          preserveDrawingBuffer: false   // TỐI ƯU: Không lưu buffer
         }}
+        frameloop="always"        // TỐI ƯU: Render liên tục cho VR smooth
       >
         {/* OrbitControls - điều khiển camera bằng chuột cho desktop */}
         <OrbitControls
