@@ -422,9 +422,9 @@ function ControlPanel({
       {/* Reset Button */}
       <button
         onClick={() => {
-          setPosition([0, 1.2, -2])  // Cách 2m, ngang tầm mắt
+          setPosition([0, 2.2, -10])  // Cách 10m, ngang tầm mắt
           setRotation([-Math.PI / 2, 0, 0])  // Nằm ngang -90°
-          setScale(0.08)
+          setScale(0.01)
           setAutoRotate(false)
         }}
         style={{
@@ -449,15 +449,15 @@ function ControlPanel({
 // ============================================
 export default function MyPlaygroundR3F() {
   // State quản lý vị trí nhẫn (X, Y, Z)
-  // VR: Đặt nhẫn cách user 2m, ngang tầm mắt
-  const [ringPosition, setRingPosition] = useState([0, 1.2, -2])
+  // VR: Đặt nhẫn cách user 10m, ngang tầm mắt
+  const [ringPosition, setRingPosition] = useState([0, 2.2, -10])
 
   // State quản lý góc xoay nhẫn (X, Y, Z) - tính bằng radian
   // TỐI ƯU: Nhẫn nằm ngang ban đầu (xoay -90° theo trục X)
   const [ringRotation, setRingRotation] = useState([-Math.PI / 2, 0, 0])
 
   // State quản lý kích thước nhẫn
-  const [ringScale, setRingScale] = useState(0.08)
+  const [ringScale, setRingScale] = useState(0.01)
 
   // State quản lý auto-rotate (bật/tắt)
   const [autoRotate, setAutoRotate] = useState(false)
