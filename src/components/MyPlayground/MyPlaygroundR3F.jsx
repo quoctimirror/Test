@@ -1,5 +1,5 @@
-import { Canvas, useFrame } from '@react-three/fiber'
-import { XR, createXRStore, Interactive } from '@react-three/xr'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { XR, createXRStore, Interactive, useXRInputSourceState, XROrigin } from '@react-three/xr'
 import { useState, Suspense, useRef } from 'react'
 import { useGLTF, Environment, MeshRefractionMaterial, useEnvironment, Center, OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
@@ -7,21 +7,87 @@ import './MyPlayground2.css'
 
 const store = createXRStore()
 
-// Component nhẫn tối ưu cho VR - ĐẦY ĐỦ TẤT CẢ
+// VR Controllers Visualization
+function VRControllers() {
+  const leftController = useXRInputSourceState('controller', 'left')
+  const rightController = useXRInputSourceState('controller', 'right')
+
+  return (
+    <>
+      {/* Left Controller */}
+      {leftController && (
+        <mesh position={leftController.position} rotation={leftController.rotation}>
+          <sphereGeometry args={[0.05, 16, 16]} />
+          <meshStandardMaterial color="#00ff00" emissive="#00ff00" emissiveIntensity={0.5} />
+        </mesh>
+      )}
+
+      {/* Right Controller */}
+      {rightController && (
+        <mesh position={rightController.position} rotation={rightController.rotation}>
+          <sphereGeometry args={[0.05, 16, 16]} />
+          <meshStandardMaterial color="#0000ff" emissive="#0000ff" emissiveIntensity={0.5} />
+        </mesh>
+      )}
+    </>
+  )
+}
+
+// Component nhẫn tối ưu cho VR - ĐẦY ĐỦ TẤT CẢ với VR INTERACTION
 function Ring3D({ modelPath = '/models/nhanMirror.glb', env, autoRotate = false }) {
   const { nodes } = useGLTF(modelPath)
   const groupRef = useRef()
+  const [isGrabbed, setIsGrabbed] = useState(false)
+  const [controllerPosition, setControllerPosition] = useState(null)
+  const [controllerRotation, setControllerRotation] = useState(null)
 
   // Auto-rotate (TẮT mặc định để tương tác được)
   useFrame((state, delta) => {
-    if (autoRotate && groupRef.current) {
+    if (autoRotate && groupRef.current && !isGrabbed) {
       groupRef.current.rotation.y += delta * 0.5
+    }
+
+    // Follow controller when grabbed
+    if (isGrabbed && groupRef.current && controllerPosition) {
+      groupRef.current.position.lerp(controllerPosition, 0.3)
+      if (controllerRotation) {
+        groupRef.current.rotation.x += (controllerRotation.x - groupRef.current.rotation.x) * 0.3
+        groupRef.current.rotation.y += (controllerRotation.y - groupRef.current.rotation.y) * 0.3
+        groupRef.current.rotation.z += (controllerRotation.z - groupRef.current.rotation.z) * 0.3
+      }
     }
   })
 
+  const handleSelectStart = (e) => {
+    setIsGrabbed(true)
+    console.log('Ring grabbed in VR!')
+  }
+
+  const handleSelectEnd = () => {
+    setIsGrabbed(false)
+    console.log('Ring released in VR!')
+  }
+
+  const handlePointerMove = (e) => {
+    if (isGrabbed && e.intersection) {
+      setControllerPosition(new THREE.Vector3(
+        e.intersection.point.x,
+        e.intersection.point.y,
+        e.intersection.point.z
+      ))
+    }
+  }
+
   return (
     <Center top>
-      <Interactive onSelect={() => console.log('Ring selected in VR!')}>
+      <Interactive
+        onSelect={() => console.log('Ring clicked in VR!')}
+        onSelectStart={handleSelectStart}
+        onSelectEnd={handleSelectEnd}
+        onSqueezeStart={handleSelectStart}
+        onSqueezeEnd={handleSelectEnd}
+        onMove={handlePointerMove}
+      >
         <group ref={groupRef} position={[0, 0, 0]} rotation={[0, 0, 0]} scale={0.15}>
           {Object.keys(nodes).map(key => {
           const node = nodes[key]
@@ -112,6 +178,9 @@ function Scene() {
 
   return (
     <>
+      {/* VR Controllers - hiển thị tay cầm */}
+      <VRControllers />
+
       {/* Lighting tối ưu cho VR */}
       <ambientLight intensity={1.5} />
       <directionalLight position={[5, 5, 5]} intensity={2} />
@@ -129,7 +198,7 @@ function Scene() {
       {/* Grid helper */}
       <gridHelper args={[50, 50, '#444444', '#222222']} position={[0, 0.01, 0]} />
 
-      {/* Ring 3D - NHẪN ĐÃ ĐƯỢC LÀM ĐẸP */}
+      {/* Ring 3D - NHẪN ĐÃ ĐƯỢC LÀM ĐẸP + VR INTERACTION */}
       <Suspense fallback={null}>
         <Ring3D env={env} />
       </Suspense>
