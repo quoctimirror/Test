@@ -227,173 +227,232 @@ function Ring3D({
 }
 
 // ============================================
-// COMPONENT: VR Control Panel - Điều khiển trong VR như desktop
+// COMPONENT: VR Info Panel - Bảng thông tin 3D
 // ============================================
-function VRControlPanel({ position, setPosition, rotation, setRotation, scale, setScale }) {
+function VRInfoPanel({ position, rotation, scale }) {
+  const infoText = `RING INFO
+X: ${position[0].toFixed(2)} | Y: ${position[1].toFixed(2)} | Z: ${position[2].toFixed(2)}
+RX: ${(rotation[0] * 180 / Math.PI).toFixed(0)}° | RY: ${(rotation[1] * 180 / Math.PI).toFixed(0)}° | RZ: ${(rotation[2] * 180 / Math.PI).toFixed(0)}°
+Scale: ${scale.toFixed(3)}
+
+CONTROLS:
+TRIGGER = Move Ring
+THUMBSTICK = Rotate Ring`
+
   return (
-    <Html
-      position={[-1, 1.5, -0.5]}  // Bên trái user
-      transform
-      distanceFactor={0.5}
-      occlude={false}
-      style={{
-        width: '350px',
-        maxHeight: '80vh',
-        overflowY: 'auto',
-        padding: '12px',
-        backgroundColor: 'rgba(0, 0, 0, 0.95)',
-        color: 'white',
-        borderRadius: '8px',
-        fontSize: '11px',
-        border: '2px solid #1976d2',
-        userSelect: 'none',
-        pointerEvents: 'auto'
-      }}
-    >
-      <div>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#1976d2' }}>🎮 VR CONTROLS</h3>
+    <group position={[-1.2, 2, -0.8]}>
+      {/* Background */}
+      <mesh position={[0, 0, -0.01]}>
+        <planeGeometry args={[0.7, 0.6]} />
+        <meshBasicMaterial color="#000000" opacity={0.9} transparent />
+      </mesh>
+      {/* Border */}
+      <mesh position={[0, 0, 0]}>
+        <planeGeometry args={[0.72, 0.62]} />
+        <meshBasicMaterial color="#1976d2" opacity={0.8} transparent wireframe />
+      </mesh>
+      {/* Text */}
+      <Text
+        position={[0, 0, 0]}
+        fontSize={0.035}
+        color="white"
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={0.65}
+        textAlign="left"
+        lineHeight={1.2}
+      >
+        {infoText}
+      </Text>
+    </group>
+  )
+}
 
-        {/* Position */}
-        <div style={{ marginBottom: '8px' }}>
-          <strong style={{ color: '#4CAF50' }}>📍 Position</strong>
-          <div style={{ marginTop: '3px' }}>
-            <label style={{ fontSize: '10px' }}>X: {position[0].toFixed(2)}</label>
-            <input
-              type="range"
-              min="-5"
-              max="5"
-              step="0.05"
-              value={position[0]}
-              onChange={(e) => setPosition([parseFloat(e.target.value), position[1], position[2]])}
-              style={{ width: '100%', cursor: 'pointer' }}
-            />
-          </div>
-          <div style={{ marginTop: '3px' }}>
-            <label style={{ fontSize: '10px' }}>Y: {position[1].toFixed(2)}</label>
-            <input
-              type="range"
-              min="-2"
-              max="5"
-              step="0.05"
-              value={position[1]}
-              onChange={(e) => setPosition([position[0], parseFloat(e.target.value), position[2]])}
-              style={{ width: '100%', cursor: 'pointer' }}
-            />
-          </div>
-          <div style={{ marginTop: '3px' }}>
-            <label style={{ fontSize: '10px' }}>Z: {position[2].toFixed(2)}</label>
-            <input
-              type="range"
-              min="-10"
-              max="5"
-              step="0.05"
-              value={position[2]}
-              onChange={(e) => setPosition([position[0], position[1], parseFloat(e.target.value)])}
-              style={{ width: '100%', cursor: 'pointer' }}
-            />
-          </div>
-        </div>
+// ============================================
+// COMPONENT: VR Control Buttons - Nút điều khiển 3D
+// ============================================
+function VRControlButtons({ position, setPosition, setRotation, setScale, scale }) {
+  const buttonMaterial = useRef()
+  const [hovered, setHovered] = useState(null)
 
-        {/* Rotation */}
-        <div style={{ marginBottom: '8px' }}>
-          <strong style={{ color: '#FF9800' }}>🔄 Rotation</strong>
-          <div style={{ marginTop: '3px' }}>
-            <label style={{ fontSize: '10px' }}>X: {(rotation[0] * 180 / Math.PI).toFixed(0)}°</label>
-            <input
-              type="range"
-              min={-Math.PI}
-              max={Math.PI}
-              step="0.05"
-              value={rotation[0]}
-              onChange={(e) => setRotation([parseFloat(e.target.value), rotation[1], rotation[2]])}
-              style={{ width: '100%', cursor: 'pointer' }}
-            />
-          </div>
-          <div style={{ marginTop: '3px' }}>
-            <label style={{ fontSize: '10px' }}>Y: {(rotation[1] * 180 / Math.PI).toFixed(0)}°</label>
-            <input
-              type="range"
-              min={-Math.PI}
-              max={Math.PI}
-              step="0.05"
-              value={rotation[1]}
-              onChange={(e) => setRotation([rotation[0], parseFloat(e.target.value), rotation[2]])}
-              style={{ width: '100%', cursor: 'pointer' }}
-            />
-          </div>
-          <div style={{ marginTop: '3px' }}>
-            <label style={{ fontSize: '10px' }}>Z: {(rotation[2] * 180 / Math.PI).toFixed(0)}°</label>
-            <input
-              type="range"
-              min={-Math.PI}
-              max={Math.PI}
-              step="0.05"
-              value={rotation[2]}
-              onChange={(e) => setRotation([rotation[0], rotation[1], parseFloat(e.target.value)])}
-              style={{ width: '100%', cursor: 'pointer' }}
-            />
-          </div>
-        </div>
+  return (
+    <group position={[1.2, 1.5, -0.8]}>
+      {/* Background panel */}
+      <mesh position={[0, 0, -0.01]}>
+        <planeGeometry args={[0.5, 0.7]} />
+        <meshBasicMaterial color="#000000" opacity={0.9} transparent />
+      </mesh>
+      {/* Border */}
+      <mesh position={[0, 0, 0]}>
+        <planeGeometry args={[0.52, 0.72]} />
+        <meshBasicMaterial color="#4CAF50" opacity={0.8} transparent wireframe />
+      </mesh>
 
-        {/* Scale */}
-        <div style={{ marginBottom: '8px' }}>
-          <strong style={{ color: '#E91E63' }}>📏 Scale: {scale.toFixed(3)}</strong>
-          <input
-            type="range"
-            min="0.001"
-            max="0.1"
-            step="0.001"
-            value={scale}
-            onChange={(e) => setScale(parseFloat(e.target.value))}
-            style={{ width: '100%', marginTop: '3px', cursor: 'pointer' }}
+      {/* Title */}
+      <Text
+        position={[0, 0.28, 0]}
+        fontSize={0.04}
+        color="#4CAF50"
+        anchorX="center"
+        anchorY="middle"
+        fontWeight="bold"
+      >
+        QUICK ACTIONS
+      </Text>
+
+      {/* Reset Button */}
+      <group position={[0, 0.15, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('reset')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => {
+            setPosition([0, 1.6, -1.0])
+            setRotation([-Math.PI / 2, 0, 0])
+            setScale(0.01)
+          }}
+        >
+          <planeGeometry args={[0.4, 0.08]} />
+          <meshBasicMaterial
+            color={hovered === 'reset' ? '#42A5F5' : '#2196F3'}
+            opacity={0.9}
+            transparent
           />
-        </div>
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.03}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          RESET
+        </Text>
+      </group>
 
-        {/* Buttons */}
-        <div style={{ display: 'flex', gap: '5px' }}>
-          <button
-            onClick={() => {
-              setPosition([0, 1.6, -1.0])
-              setRotation([-Math.PI / 2, 0, 0])
-              setScale(0.01)
-            }}
-            style={{
-              flex: 1,
-              padding: '6px',
-              backgroundColor: '#2196F3',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '11px'
-            }}
-          >
-            🔄 Reset
-          </button>
-          <button
-            onClick={() => {
-              setPosition([0, 1.6, -0.5])
-            }}
-            style={{
-              flex: 1,
-              padding: '6px',
-              backgroundColor: '#4CAF50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '11px'
-            }}
-          >
-            👁️ To Eye
-          </button>
-        </div>
+      {/* To Eye Button */}
+      <group position={[0, 0.05, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('eye')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => setPosition([0, 1.6, -0.5])}
+        >
+          <planeGeometry args={[0.4, 0.08]} />
+          <meshBasicMaterial
+            color={hovered === 'eye' ? '#66BB6A' : '#4CAF50'}
+            opacity={0.9}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.03}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          TO EYE
+        </Text>
+      </group>
 
-        <div style={{ marginTop: '8px', fontSize: '9px', color: '#888', borderTop: '1px solid #333', paddingTop: '5px' }}>
-          💡 Trigger = Move | Thumbstick = Rotate
-        </div>
-      </div>
-    </Html>
+      {/* Move Forward Button */}
+      <group position={[0, -0.05, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('forward')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => setPosition([position[0], position[1], position[2] - 0.2])}
+        >
+          <planeGeometry args={[0.4, 0.08]} />
+          <meshBasicMaterial
+            color={hovered === 'forward' ? '#FFA726' : '#FF9800'}
+            opacity={0.9}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.03}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          CLOSER
+        </Text>
+      </group>
+
+      {/* Move Back Button */}
+      <group position={[0, -0.15, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('back')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => setPosition([position[0], position[1], position[2] + 0.2])}
+        >
+          <planeGeometry args={[0.4, 0.08]} />
+          <meshBasicMaterial
+            color={hovered === 'back' ? '#EF5350' : '#F44336'}
+            opacity={0.9}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.03}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          FARTHER
+        </Text>
+      </group>
+
+      {/* Scale Buttons */}
+      <group position={[-0.1, -0.25, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('smaller')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => setScale(Math.max(0.001, scale * 0.8))}
+        >
+          <planeGeometry args={[0.18, 0.08]} />
+          <meshBasicMaterial
+            color={hovered === 'smaller' ? '#AB47BC' : '#9C27B0'}
+            opacity={0.9}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.025}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          SIZE -
+        </Text>
+      </group>
+
+      <group position={[0.1, -0.25, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('bigger')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => setScale(Math.min(0.1, scale * 1.25))}
+        >
+          <planeGeometry args={[0.18, 0.08]} />
+          <meshBasicMaterial
+            color={hovered === 'bigger' ? '#EC407A' : '#E91E63'}
+            opacity={0.9}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.025}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          SIZE +
+        </Text>
+      </group>
+    </group>
   )
 }
 
@@ -409,11 +468,17 @@ function Scene({ ringPosition, ringRotation, ringScale, autoRotate, setRingPosit
       {/* Hiển thị VR Controllers */}
       <VRControllers />
 
-      {/* VR Control Panel - Bảng điều khiển trong VR */}
-      <VRControlPanel
+      {/* VR Info Panel - Bảng thông tin bên trái */}
+      <VRInfoPanel
+        position={ringPosition}
+        rotation={ringRotation}
+        scale={ringScale}
+      />
+
+      {/* VR Control Buttons - Bảng điều khiển bên phải */}
+      <VRControlButtons
         position={ringPosition}
         setPosition={setRingPosition}
-        rotation={ringRotation}
         setRotation={setRingRotation}
         scale={ringScale}
         setScale={setRingScale}
