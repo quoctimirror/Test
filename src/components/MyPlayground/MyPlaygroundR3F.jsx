@@ -1,7 +1,7 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { XR, createXRStore, useXRInputSourceState } from '@react-three/xr'
 import { useState, Suspense, useRef } from 'react'
-import { useGLTF, Environment, MeshRefractionMaterial, useEnvironment, OrbitControls, Html } from '@react-three/drei'
+import { useGLTF, Environment, MeshRefractionMaterial, useEnvironment, OrbitControls, Html, Text } from '@react-three/drei'
 import * as THREE from 'three'
 import './MyPlayground2.css'
 
@@ -227,152 +227,46 @@ function Ring3D({
 }
 
 // ============================================
-// COMPONENT: VR Control Panel - Bảng điều khiển trong VR
+// COMPONENT: VR Info Panel - Hiển thị thông tin trong VR (3D Text)
 // ============================================
-function VRControlPanel({ position, setPosition, rotation, setRotation, scale, setScale }) {
+function VRInfoPanel({ position, rotation, scale }) {
+  const infoText = `RING INFO
+Pos: [${position[0].toFixed(2)}, ${position[1].toFixed(2)}, ${position[2].toFixed(2)}]
+Rot: [${(rotation[0] * 180 / Math.PI).toFixed(0)}°, ${(rotation[1] * 180 / Math.PI).toFixed(0)}°, ${(rotation[2] * 180 / Math.PI).toFixed(0)}°]
+Scale: ${scale.toFixed(3)}
+
+Controls:
+TRIGGER = Move ring
+THUMBSTICK = Rotate ring`
+
   return (
-    <Html
-      position={[-1.5, 1.5, -1]}  // Đặt bên trái user
-      transform
-      occlude
-      style={{
-        width: '400px',
-        padding: '15px',
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-        color: 'white',
-        borderRadius: '10px',
-        fontSize: '12px',
-        userSelect: 'none'
-      }}
-    >
-      <div>
-        <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>🎮 Điều khiển VR</h3>
+    <group position={[-1.2, 1.6, -0.8]}>
+      {/* Background panel */}
+      <mesh position={[0, 0, -0.01]}>
+        <planeGeometry args={[0.6, 0.5]} />
+        <meshBasicMaterial color="#000000" opacity={0.8} transparent />
+      </mesh>
 
-        {/* Position Controls */}
-        <div style={{ marginBottom: '10px' }}>
-          <strong>Vị trí (Position)</strong>
-          <div>
-            <label>X: {position[0].toFixed(2)}</label>
-            <input
-              type="range"
-              min="-5"
-              max="5"
-              step="0.1"
-              value={position[0]}
-              onChange={(e) => setPosition([parseFloat(e.target.value), position[1], position[2]])}
-              style={{ width: '100%' }}
-            />
-          </div>
-          <div>
-            <label>Y: {position[1].toFixed(2)}</label>
-            <input
-              type="range"
-              min="-2"
-              max="5"
-              step="0.1"
-              value={position[1]}
-              onChange={(e) => setPosition([position[0], parseFloat(e.target.value), position[2]])}
-              style={{ width: '100%' }}
-            />
-          </div>
-          <div>
-            <label>Z: {position[2].toFixed(2)}</label>
-            <input
-              type="range"
-              min="-10"
-              max="5"
-              step="0.1"
-              value={position[2]}
-              onChange={(e) => setPosition([position[0], position[1], parseFloat(e.target.value)])}
-              style={{ width: '100%' }}
-            />
-          </div>
-        </div>
-
-        {/* Rotation Controls */}
-        <div style={{ marginBottom: '10px' }}>
-          <strong>Góc xoay (Rotation)</strong>
-          <div>
-            <label>X: {(rotation[0] * 180 / Math.PI).toFixed(0)}°</label>
-            <input
-              type="range"
-              min={-Math.PI}
-              max={Math.PI}
-              step="0.1"
-              value={rotation[0]}
-              onChange={(e) => setRotation([parseFloat(e.target.value), rotation[1], rotation[2]])}
-              style={{ width: '100%' }}
-            />
-          </div>
-          <div>
-            <label>Y: {(rotation[1] * 180 / Math.PI).toFixed(0)}°</label>
-            <input
-              type="range"
-              min={-Math.PI}
-              max={Math.PI}
-              step="0.1"
-              value={rotation[1]}
-              onChange={(e) => setRotation([rotation[0], parseFloat(e.target.value), rotation[2]])}
-              style={{ width: '100%' }}
-            />
-          </div>
-          <div>
-            <label>Z: {(rotation[2] * 180 / Math.PI).toFixed(0)}°</label>
-            <input
-              type="range"
-              min={-Math.PI}
-              max={Math.PI}
-              step="0.1"
-              value={rotation[2]}
-              onChange={(e) => setRotation([rotation[0], rotation[1], parseFloat(e.target.value)])}
-              style={{ width: '100%' }}
-            />
-          </div>
-        </div>
-
-        {/* Scale Control */}
-        <div style={{ marginBottom: '10px' }}>
-          <strong>Scale: {scale.toFixed(3)}</strong>
-          <input
-            type="range"
-            min="0.001"
-            max="0.1"
-            step="0.001"
-            value={scale}
-            onChange={(e) => setScale(parseFloat(e.target.value))}
-            style={{ width: '100%' }}
-          />
-        </div>
-
-        {/* Reset Button */}
-        <button
-          onClick={() => {
-            setPosition([0, 1.2, -1.0])
-            setRotation([-Math.PI / 2, 0, 0])
-            setScale(0.01)
-          }}
-          style={{
-            width: '100%',
-            padding: '8px',
-            backgroundColor: '#2196F3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '14px'
-          }}
-        >
-          🔄 Reset
-        </button>
-      </div>
-    </Html>
+      {/* Text */}
+      <Text
+        position={[0, 0, 0]}
+        fontSize={0.04}
+        color="white"
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={0.55}
+        textAlign="left"
+      >
+        {infoText}
+      </Text>
+    </group>
   )
 }
 
 // ============================================
 // COMPONENT: Scene - chứa toàn bộ 3D scene
 // ============================================
-function Scene({ ringPosition, ringRotation, ringScale, autoRotate, setRingPosition, setRingRotation, setRingScale }) {
+function Scene({ ringPosition, ringRotation, ringScale, autoRotate }) {
   // Load environment map cho materials (phản chiếu môi trường)
   const env = useEnvironment({ preset: 'apartment' })
 
@@ -381,14 +275,11 @@ function Scene({ ringPosition, ringRotation, ringScale, autoRotate, setRingPosit
       {/* Hiển thị VR Controllers */}
       <VRControllers />
 
-      {/* VR Control Panel - Bảng điều khiển trong VR */}
-      <VRControlPanel
+      {/* VR Info Panel - Bảng thông tin trong VR (3D) */}
+      <VRInfoPanel
         position={ringPosition}
-        setPosition={setRingPosition}
         rotation={ringRotation}
-        setRotation={setRingRotation}
         scale={ringScale}
-        setScale={setRingScale}
       />
 
       {/* TỐI ƯU: Giảm ánh sáng xuống - chỉ giữ đủ để nhìn rõ */}
@@ -690,9 +581,6 @@ export default function MyPlaygroundR3F() {
             ringRotation={ringRotation}
             ringScale={ringScale}
             autoRotate={autoRotate}
-            setRingPosition={setRingPosition}
-            setRingRotation={setRingRotation}
-            setRingScale={setRingScale}
           />
         </XR>
       </Canvas>
