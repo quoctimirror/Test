@@ -64,11 +64,12 @@ function VRControllers() {
 }
 
 // ============================================
-// COMPONENT: Draggable Group - Panel có thể kéo được
+// COMPONENT: Draggable & Rotatable Panel - Panel có thể kéo và xoay được
 // ============================================
-function DraggablePanel({ children, initialPosition, onPositionChange, name = "Panel" }) {
+function DraggablePanel({ children, initialPosition, onPositionChange, name = "Panel", onSelect, objectType = "panel" }) {
   const groupRef = useRef()
   const [position, setPosition] = useState(initialPosition)
+  const [rotation, setRotation] = useState([0, 0, 0])  // Rotation state
   const [isHovered, setIsHovered] = useState(false)
   const [isGrabbed, setIsGrabbed] = useState(false)
   const previousControllerPos = useRef(null)
@@ -77,7 +78,7 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
   const leftController = useXRInputSourceState('controller', 'left')
   const rightController = useXRInputSourceState('controller', 'right')
 
-  useFrame(() => {
+  useFrame((state, delta) => {
     // Check both controllers for grip button
     const controllers = [
       { controller: leftController, name: 'left' },
@@ -110,9 +111,62 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
           ]
           setPosition(newPos)
           if (onPositionChange) onPositionChange(newPos)
+
+          // Update selection info realtime khi đang kéo
+          if (onSelect && groupRef.current) {
+            onSelect({
+              name: name,
+              type: objectType,
+              ref: groupRef
+            })
+          }
         }
 
         previousControllerPos.current = controllerPos.clone()
+
+        // --- THUMBSTICK: Rotate panel khi đang grab ---
+        const thumbstickX = gamepad.axes[2] || 0
+        const thumbstickY = gamepad.axes[3] || 0
+        const rotSpeed = 1.5
+
+        // Thumbstick trái/phải -> xoay theo trục Y (quay ngang)
+        if (Math.abs(thumbstickX) > 0.1) {
+          const newRot = [...rotation]
+          newRot[1] += thumbstickX * delta * rotSpeed
+          setRotation(newRot)
+          if (groupRef.current) {
+            groupRef.current.rotation.y = newRot[1]
+          }
+
+          // Update selection
+          if (onSelect && groupRef.current) {
+            onSelect({
+              name: name,
+              type: objectType,
+              ref: groupRef
+            })
+          }
+        }
+
+        // Thumbstick lên/xuống -> xoay theo trục X (ngửa/nghiêng)
+        if (Math.abs(thumbstickY) > 0.1) {
+          const newRot = [...rotation]
+          newRot[0] -= thumbstickY * delta * rotSpeed
+          setRotation(newRot)
+          if (groupRef.current) {
+            groupRef.current.rotation.x = newRot[0]
+          }
+
+          // Update selection
+          if (onSelect && groupRef.current) {
+            onSelect({
+              name: name,
+              type: objectType,
+              ref: groupRef
+            })
+          }
+        }
+
         return  // Exit early if we found the active controller
       }
     }
@@ -144,6 +198,15 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
           setIsGrabbed(true)
           // Determine which controller triggered this
           activeController.current = e.nativeEvent?.inputSource?.handedness || 'right'
+
+          // Notify parent that this object is selected
+          if (onSelect && groupRef.current) {
+            onSelect({
+              name: name,
+              type: objectType,
+              ref: groupRef
+            })
+          }
         }}
         onPointerUp={(e) => {
           e.stopPropagation()
@@ -173,14 +236,26 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
           </lineSegments>
           {/* Grab text indicator */}
           <Text
-            position={[0, 0.42, 0.01]}
-            fontSize={0.025}
+            position={[0, 0.45, 0.01]}
+            fontSize={0.022}
             color={isGrabbed ? '#00ff00' : '#ffff00'}
             anchorX="center"
             anchorY="middle"
           >
-            {isGrabbed ? `✓ DRAGGING ${name}` : `HOLD GRIP TO DRAG`}
+            {isGrabbed ? `✓ ${name}` : `GRIP TO GRAB`}
           </Text>
+          {/* Instruction text */}
+          {isGrabbed && (
+            <Text
+              position={[0, 0.41, 0.01]}
+              fontSize={0.018}
+              color="#00ff00"
+              anchorX="center"
+              anchorY="middle"
+            >
+              MOVE + THUMBSTICK ROTATE
+            </Text>
+          )}
         </>
       )}
 
@@ -199,7 +274,9 @@ function Ring3D({
   rotation,
   scale,
   autoRotate,
-  sharedRef  // Ref được share từ parent để INFO panel có thể đọc
+  sharedRef,  // Ref được share từ parent để INFO panel có thể đọc
+  onSelect,   // Callback khi ring được select
+  modelName   // Tên model
 }) {
   // BƯỚC 1: Load model 3D từ file GLB
   const { nodes } = useGLTF(modelPath)
@@ -242,6 +319,15 @@ function Ring3D({
 
           // Di chuyển nhẫn theo delta
           groupRef.current.position.add(deltaMove)
+
+          // Notify parent that ring is being moved (selected)
+          if (onSelect && groupRef.current) {
+            onSelect({
+              name: modelName || 'Ring',
+              type: 'ring',
+              ref: groupRef
+            })
+          }
         }
 
         // Lưu vị trí hiện tại cho frame tiếp theo
@@ -264,12 +350,30 @@ function Ring3D({
       if (Math.abs(thumbstickX) > 0.1) {
         vrRotation.current[1] += thumbstickX * delta * rotSpeed
         groupRef.current.rotation.y = vrRotation.current[1]
+
+        // Notify selection when rotating
+        if (onSelect && groupRef.current) {
+          onSelect({
+            name: modelName || 'Ring',
+            type: 'ring',
+            ref: groupRef
+          })
+        }
       }
 
       // Thumbstick lên/xuống -> xoay theo trục X (ngửa/nghiêng)
       if (Math.abs(thumbstickY) > 0.1) {
         vrRotation.current[0] -= thumbstickY * delta * rotSpeed
         groupRef.current.rotation.x = vrRotation.current[0]
+
+        // Notify selection when rotating
+        if (onSelect && groupRef.current) {
+          onSelect({
+            name: modelName || 'Ring',
+            type: 'ring',
+            ref: groupRef
+          })
+        }
       }
     }
     // ===== DESKTOP MODE =====
@@ -385,8 +489,9 @@ function Ring3D({
 
 // ============================================
 // COMPONENT: VR Info Panel - Bảng thông tin 3D (REALTIME)
+// Hiển thị thông tin của object đang được chọn/interact
 // ============================================
-function VRInfoPanel({ ringRef, selectedModel }) {
+function VRInfoPanel({ selectedObject }) {
   // State để lưu giá trị realtime
   const [realtimeInfo, setRealtimeInfo] = useState({
     position: [0, 0, 0],
@@ -394,18 +499,14 @@ function VRInfoPanel({ ringRef, selectedModel }) {
     scale: 1
   })
 
-  // Tìm tên model từ path
-  const modelInfo = AVAILABLE_MODELS.find(m => m.path === selectedModel)
-  const modelName = modelInfo ? modelInfo.displayName : 'Unknown'
-
-  // Update realtime từ ring ref mỗi frame
+  // Update realtime từ selected object ref mỗi frame
   useFrame(() => {
-    if (ringRef && ringRef.current) {
-      const pos = ringRef.current.position
-      const rot = ringRef.current.rotation
-      const scl = ringRef.current.scale.x // Uniform scale
+    if (selectedObject && selectedObject.ref && selectedObject.ref.current) {
+      const obj = selectedObject.ref.current
+      const pos = obj.position
+      const rot = obj.rotation
+      const scl = obj.scale.x // Uniform scale
 
-      // Chỉ update khi có thay đổi đáng kể (tránh update liên tục)
       setRealtimeInfo({
         position: [pos.x, pos.y, pos.z],
         rotation: [rot.x, rot.y, rot.z],
@@ -414,7 +515,12 @@ function VRInfoPanel({ ringRef, selectedModel }) {
     }
   })
 
-  const infoText = `POS: ${realtimeInfo.position[0].toFixed(1)}, ${realtimeInfo.position[1].toFixed(1)}, ${realtimeInfo.position[2].toFixed(1)}
+  // Tên đối tượng và icon
+  const objectName = selectedObject ? selectedObject.name : 'None'
+  const objectType = selectedObject ? selectedObject.type : 'none'
+  const icon = objectType === 'ring' ? '💍' : objectType === 'panel' ? '📋' : '❓'
+
+  const infoText = `POS: ${realtimeInfo.position[0].toFixed(2)}, ${realtimeInfo.position[1].toFixed(2)}, ${realtimeInfo.position[2].toFixed(2)}
 ROT: ${(realtimeInfo.rotation[0] * 180 / Math.PI).toFixed(0)}°, ${(realtimeInfo.rotation[1] * 180 / Math.PI).toFixed(0)}°, ${(realtimeInfo.rotation[2] * 180 / Math.PI).toFixed(0)}°
 SCALE: ${realtimeInfo.scale.toFixed(3)}`
 
@@ -422,54 +528,77 @@ SCALE: ${realtimeInfo.scale.toFixed(3)}`
     <group>
       {/* Background - Tăng chiều cao để chứa tên model */}
       <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[0.5, 0.45]} />
+        <planeGeometry args={[0.55, 0.5]} />
         <meshBasicMaterial color="#000000" opacity={0.85} transparent />
       </mesh>
       {/* TỐI ƯU: Chỉ 1 outline thay vì 4 boxes */}
       <lineSegments>
-        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.5, 0.45)]} />
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.55, 0.5)]} />
         <lineBasicMaterial attach="material" color="#1976d2" linewidth={2} />
       </lineSegments>
 
-      {/* Tên model - Header */}
+      {/* Title */}
       <Text
-        position={[0, 0.19, 0]}
-        fontSize={0.03}
+        position={[0, 0.22, 0]}
+        fontSize={0.025}
         color="#1976d2"
         anchorX="center"
         anchorY="middle"
-        maxWidth={0.48}
+      >
+        MONITOR
+      </Text>
+
+      {/* Tên object - Header */}
+      <Text
+        position={[0, 0.16, 0]}
+        fontSize={0.032}
+        color="#FFD700"
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={0.52}
         fontWeight="bold"
       >
-        📍 {modelName}
+        {icon} {objectName}
       </Text>
 
       {/* Divider line */}
-      <mesh position={[0, 0.14, 0.001]}>
-        <planeGeometry args={[0.45, 0.002]} />
+      <mesh position={[0, 0.11, 0.001]}>
+        <planeGeometry args={[0.5, 0.002]} />
         <meshBasicMaterial color="#1976d2" />
       </mesh>
 
       {/* Text - TỐI ƯU: Font nhỏ hơn - REALTIME UPDATE */}
       <Text
-        position={[0, -0.02, 0]}
-        fontSize={0.028}
+        position={[0, -0.03, 0]}
+        fontSize={0.026}
         color="white"
         anchorX="center"
         anchorY="middle"
-        maxWidth={0.48}
+        maxWidth={0.52}
         textAlign="left"
         lineHeight={1.3}
       >
         {infoText}
       </Text>
+
+      {/* Type badge */}
+      <Text
+        position={[-0.23, -0.21, 0.001]}
+        fontSize={0.02}
+        color="#1976d2"
+        anchorX="left"
+        anchorY="middle"
+      >
+        TYPE: {objectType.toUpperCase()}
+      </Text>
+
       {/* REALTIME indicator */}
-      <mesh position={[0.22, -0.2, 0.001]}>
+      <mesh position={[0.25, -0.21, 0.001]}>
         <circleGeometry args={[0.01, 8]} />
         <meshBasicMaterial color="#00ff00" />
       </mesh>
       <Text
-        position={[0.15, -0.2, 0.001]}
+        position={[0.18, -0.21, 0.001]}
         fontSize={0.018}
         color="#00ff00"
         anchorX="right"
@@ -850,18 +979,40 @@ function Scene({
   // Shared ref cho Ring để INFO panel có thể đọc realtime
   const ringGroupRef = useRef()
 
+  // State để track object nào đang được selected/interact
+  const [selectedObject, setSelectedObject] = useState(null)
+
+  // Handler khi object được selected
+  const handleSelectObject = (objectInfo) => {
+    setSelectedObject(objectInfo)
+  }
+
+  // Tìm tên model từ path
+  const modelInfo = AVAILABLE_MODELS.find(m => m.path === selectedModel)
+  const modelName = modelInfo ? modelInfo.displayName : 'Unknown'
+
   return (
     <>
       {/* Hiển thị VR Controllers */}
       <VRControllers />
 
-      {/* VR Info Panel - Bảng thông tin bên trái - CÓ THỂ KÉO - REALTIME */}
-      <DraggablePanel initialPosition={[-1.2, 1.4, -0.8]} name="INFO">
-        <VRInfoPanel ringRef={ringGroupRef} selectedModel={selectedModel} />
+      {/* VR Info Panel - Monitor Panel - CÓ THỂ KÉO VÀ XOAY */}
+      <DraggablePanel
+        initialPosition={[-1.2, 1.4, -0.8]}
+        name="MONITOR"
+        objectType="panel"
+        onSelect={handleSelectObject}
+      >
+        <VRInfoPanel selectedObject={selectedObject} />
       </DraggablePanel>
 
       {/* VR Control Buttons - Bảng điều khiển bên phải - CÓ THỂ KÉO */}
-      <DraggablePanel initialPosition={[1.2, 1.3, -0.8]} name="CONTROLS">
+      <DraggablePanel
+        initialPosition={[1.2, 1.3, -0.8]}
+        name="CONTROLS"
+        objectType="panel"
+        onSelect={handleSelectObject}
+      >
         <VRControlButtons
           position={ringPosition}
           setPosition={setRingPosition}
@@ -873,7 +1024,12 @@ function Scene({
       </DraggablePanel>
 
       {/* VR Model Selector - Chọn model ở giữa - CÓ THỂ KÉO */}
-      <DraggablePanel initialPosition={[0, 1.3, -1.2]} name="MODELS">
+      <DraggablePanel
+        initialPosition={[0, 1.3, -1.2]}
+        name="MODELS"
+        objectType="panel"
+        onSelect={handleSelectObject}
+      >
         <VRModelSelector
           selectedModel={selectedModel}
           onSelectModel={setSelectedModel}
@@ -911,6 +1067,8 @@ function Scene({
           scale={ringScale}
           autoRotate={autoRotate}
           sharedRef={ringGroupRef}  // Pass ref để INFO panel đọc realtime
+          onSelect={handleSelectObject}  // Callback khi ring được grab
+          modelName={modelName}  // Tên model hiện tại
         />
       </Suspense>
     </>
