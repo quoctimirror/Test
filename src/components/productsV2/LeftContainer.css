@@ -1,5 +1,5 @@
 /* LeftContainer - Chứa Section1 và Section2 - Desktop only (1024px+) */
-.left-container {
+.pv2-left-container {
     width: 66.25%;
     height: 100vh;
     position: relative;
@@ -11,9 +11,12 @@
     overflow-y: auto;
 }
 
-/* Mobile & Tablet - LeftContainer chiếm full width khi RightConfiguration ẩn */
+/* Mobile & Tablet - LeftContainer chiếm full width, bỏ scroll riêng */
 @media (max-width: 1023px) {
-    .left-container {
+    .pv2-left-container {
         width: 100%;
+        height: auto;
+        min-height: 100vh;
+        overflow-y: visible;
     }
 }

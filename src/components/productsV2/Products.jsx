@@ -169,7 +169,7 @@ const Products = () => {
     useEffect(() => {
         const handleScroll = () => {
             // Get products-container position
-            const productsContainer = document.querySelector('.products-container');
+            const productsContainer = document.querySelector('.pv2-products-container');
             if (productsContainer) {
                 const rect = productsContainer.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
@@ -263,13 +263,13 @@ const Products = () => {
 
     return (
         <>
-            <div className="products-main-wrapper">
-                <div className="products-container">
+            <div className="pv2-products-main-wrapper">
+                <div className="pv2-products-container">
                     {/* Left side - LeftContainer chứa Section1 và Section2 */}
                     <LeftContainer />
 
                     {/* Right side - Configuration */}
-                    <div className="products-right">
+                    <div className="pv2-products-right">
                         <RightConfiguration />
                     </div>
                 </div>

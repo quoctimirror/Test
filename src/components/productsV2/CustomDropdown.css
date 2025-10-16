@@ -1,12 +1,12 @@
 /* Custom Dropdown Container */
-.custom-dropdown {
+.pv2-custom-dropdown {
     position: relative;
     width: auto;
     min-width: 100%;
 }
 
 /* Dropdown Header */
-.custom-dropdown-header {
+.pv2-custom-dropdown-header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,27 +22,27 @@
     text-align: center;
 }
 
-.custom-dropdown-header:hover {
+.pv2-custom-dropdown-header:hover {
     opacity: 0.7;
 }
 
 /* Selected Value Text */
-.custom-dropdown-selected {
+.pv2-custom-dropdown-selected {
     white-space: nowrap;
 }
 
 /* Arrow Icon */
-.custom-dropdown-arrow {
+.pv2-custom-dropdown-arrow {
     transition: transform 0.3s ease;
     flex-shrink: 0;
 }
 
-.custom-dropdown-arrow.open {
+.pv2-custom-dropdown-arrow.pv2-open {
     transform: rotate(180deg);
 }
 
 /* Dropdown List */
-.custom-dropdown-list {
+.pv2-custom-dropdown-list {
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
@@ -59,7 +59,7 @@
 }
 
 /* Dropdown Option */
-.custom-dropdown-option {
+.pv2-custom-dropdown-option {
     padding: 10px 14px;
     font-family: "BT Beau Sans";
     font-size: 12px;
@@ -73,32 +73,32 @@
 }
 
 /* Hover State - THIS IS WHAT YOU WANTED */
-.custom-dropdown-option:hover {
+.pv2-custom-dropdown-option:hover {
     background: transparent !important;
     background-color: transparent !important;
     color: #BC224C !important;
 }
 
 /* Selected Option */
-.custom-dropdown-option.selected {
+.pv2-custom-dropdown-option.pv2-selected {
     color: #BC224C;
     background: transparent;
 }
 
 /* Scrollbar styling */
-.custom-dropdown-list::-webkit-scrollbar {
+.pv2-custom-dropdown-list::-webkit-scrollbar {
     width: 6px;
 }
 
-.custom-dropdown-list::-webkit-scrollbar-track {
+.pv2-custom-dropdown-list::-webkit-scrollbar-track {
     background: #F0F0F0;
 }
 
-.custom-dropdown-list::-webkit-scrollbar-thumb {
+.pv2-custom-dropdown-list::-webkit-scrollbar-thumb {
     background: #CCCCCC;
     border-radius: 3px;
 }
 
-.custom-dropdown-list::-webkit-scrollbar-thumb:hover {
+.pv2-custom-dropdown-list::-webkit-scrollbar-thumb:hover {
     background: #999999;
 }

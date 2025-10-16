@@ -22,48 +22,48 @@ const MobileConfigModal = ({ isOpen, onClose }) => {
 
     return (
         <>
-            <div className={`mobile-config-modal ${isOpen ? 'open' : 'closed'}`}>
-                <div className="mobile-config-content">
-                    <h1 className="mobile-config-title heading-1--no-margin">LUMINA OLIVIA 5</h1>
+            <div className={`pv2-mobile-config-modal ${isOpen ? 'open' : 'closed'}`}>
+                <div className="pv2-mobile-config-content">
+                    <h1 className="pv2-mobile-config-title heading-1--no-margin">LUMINA OLIVIA 5</h1>
 
-                    <div className="mobile-configuration-options">
-                        <div className="mobile-option-row">
-                            <span className="mobile-option-label bodytext-3--no-margin">Shape</span>
-                            <div className="mobile-option-value-container">
-                                <span className="mobile-option-value bodytext-1--no-margin">Pear</span>
-                                <img src={opaqueIcon} alt="" className="mobile-option-icon" />
+                    <div className="pv2-mobile-configuration-options">
+                        <div className="pv2-mobile-option-row">
+                            <span className="pv2-mobile-option-label bodytext-3--no-margin">Shape</span>
+                            <div className="pv2-mobile-option-value-container">
+                                <span className="pv2-mobile-option-value bodytext-1--no-margin">Pear</span>
+                                <img src={opaqueIcon} alt="" className="pv2-mobile-option-icon" />
                             </div>
                         </div>
 
-                        <div className="mobile-option-row">
-                            <span className="mobile-option-label bodytext-3--no-margin">Metal</span>
-                            <div className="mobile-option-value-container">
-                                <span className="mobile-option-value bodytext-1--no-margin">Yellow Gold</span>
-                                <img src={opaqueIcon} alt="" className="mobile-option-icon" />
+                        <div className="pv2-mobile-option-row">
+                            <span className="pv2-mobile-option-label bodytext-3--no-margin">Metal</span>
+                            <div className="pv2-mobile-option-value-container">
+                                <span className="pv2-mobile-option-value bodytext-1--no-margin">Yellow Gold</span>
+                                <img src={opaqueIcon} alt="" className="pv2-mobile-option-icon" />
                             </div>
                         </div>
 
-                        <div className="mobile-option-row">
-                            <span className="mobile-option-label bodytext-3--no-margin">Band</span>
-                            <div className="mobile-option-value-container">
-                                <span className="mobile-option-value bodytext-1--no-margin">Single band</span>
-                                <img src={opaqueIcon} alt="" className="mobile-option-icon" />
+                        <div className="pv2-mobile-option-row">
+                            <span className="pv2-mobile-option-label bodytext-3--no-margin">Band</span>
+                            <div className="pv2-mobile-option-value-container">
+                                <span className="pv2-mobile-option-value bodytext-1--no-margin">Single band</span>
+                                <img src={opaqueIcon} alt="" className="pv2-mobile-option-icon" />
                             </div>
                         </div>
 
-                        <div className="mobile-option-row mobile-size-row">
-                            <span className="mobile-option-label bodytext-3--no-margin">Size</span>
-                            <div className="mobile-size-selector" onClick={() => setShowSizeSelector(true)}>
-                                <span className="mobile-size-value bodytext-1--no-margin">{size}</span>
-                                <img src={whiteIcon} alt="" className="mobile-size-arrow-icon" />
+                        <div className="pv2-mobile-option-row pv2-mobile-size-row">
+                            <span className="pv2-mobile-option-label bodytext-3--no-margin">Size</span>
+                            <div className="pv2-mobile-size-selector" onClick={() => setShowSizeSelector(true)}>
+                                <span className="pv2-mobile-size-value bodytext-1--no-margin">{size}</span>
+                                <img src={whiteIcon} alt="" className="pv2-mobile-size-arrow-icon" />
                             </div>
                         </div>
 
-                        <div className="mobile-option-row mobile-quantity-row">
-                            <span className="mobile-option-label bodytext-3--no-margin">Quantity</span>
-                            <div className="mobile-quantity-selector">
+                        <div className="pv2-mobile-option-row pv2-mobile-quantity-row">
+                            <span className="pv2-mobile-option-label bodytext-3--no-margin">Quantity</span>
+                            <div className="pv2-mobile-quantity-selector">
                                 <button
-                                    className="mobile-quantity-btn"
+                                    className="pv2-mobile-quantity-btn"
                                     onClick={() => handleQuantityChange(-1)}
                                     disabled={quantity <= 1}
                                 >
@@ -73,11 +73,11 @@ const MobileConfigModal = ({ isOpen, onClose }) => {
                                     type="number"
                                     value={quantity}
                                     onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                                    className="mobile-quantity-value bodytext-1--no-margin"
+                                    className="pv2-mobile-quantity-value bodytext-1--no-margin"
                                     min="1"
                                 />
                                 <button
-                                    className="mobile-quantity-btn"
+                                    className="pv2-mobile-quantity-btn"
                                     onClick={() => handleQuantityChange(1)}
                                 >
                                     +
@@ -86,19 +86,19 @@ const MobileConfigModal = ({ isOpen, onClose }) => {
                         </div>
                     </div>
 
-                    <div className="mobile-additional-info">
-                        <p className="mobile-shipping-info bodytext-4--no-margin">Complimentary shipping & returns</p>
-                        <a href="#" className="mobile-contact-link bodytext-4--no-margin">Contact us</a>
+                    <div className="pv2-mobile-additional-info">
+                        <p className="pv2-mobile-shipping-info bodytext-4--no-margin">Complimentary shipping & returns</p>
+                        <a href="#" className="pv2-mobile-contact-link bodytext-4--no-margin">Contact us</a>
                     </div>
 
-                    <div className="mobile-price-section">
-                        <span className="mobile-price heading-3--no-margin">$15,600</span>
+                    <div className="pv2-mobile-price-section">
+                        <span className="pv2-mobile-price heading-3--no-margin">$15,600</span>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="mobile-modal-action-buttons">
+                    <div className="pv2-mobile-modal-action-buttons">
                         <ShineGlassButton
-                            className="mobile-modal-wishlist-btn"
+                            className="pv2-mobile-modal-wishlist-btn"
                             width={44}
                             height={44}
                             theme="footer"
@@ -108,25 +108,25 @@ const MobileConfigModal = ({ isOpen, onClose }) => {
                             </svg>
                         </ShineGlassButton>
 
-                        <div className="mobile-modal-appointment-btn">
+                        <div className="pv2-mobile-modal-appointment-btn">
                             <ShineGlassButton theme="footer">
                                 Book An Appointment
                             </ShineGlassButton>
                         </div>
                     </div>
 
-                    <button className="mobile-modal-order-btn bodytext-4--no-margin">
+                    <button className="pv2-mobile-modal-order-btn">
                         Order Now
                     </button>
-                </div>
 
-                {/* Caret Down to close */}
-                <img
-                    src={greyCaretUp}
-                    alt=""
-                    className="mobile-config-caret-down"
-                    onClick={onClose}
-                />
+                    {/* Caret Down to close */}
+                    <img
+                        src={greyCaretUp}
+                        alt=""
+                        className="pv2-mobile-config-caret-down"
+                        onClick={onClose}
+                    />
+                </div>
 
                 {/* Size Selector Modal */}
                 {showSizeSelector && (

@@ -1,5 +1,5 @@
 /* ===== BASE STYLES - MOBILE FIRST (320px+) ===== */
-.section2-container {
+.pv2-section2-container {
     /* border: 2px solid #000; */
     background: #E0E0E0;
     margin-top: 0;
@@ -8,20 +8,20 @@
     /* Mobile: padding nhỏ */
 }
 
-.section2-wrapper {
+.pv2-section2-wrapper {
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
 }
 
-.section2-content {
+.pv2-section2-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
 }
 
-.section2-header {
+.pv2-section2-header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -29,7 +29,7 @@
     width: 100%;
 }
 
-.section2-collection {
+.pv2-section2-collection {
     color: var(--gray-3, #797979);
     text-align: center;
     font-family: "BT Beau Sans";
@@ -42,41 +42,45 @@
     letter-spacing: 0.5px;
 }
 
-.section2-title {
+.pv2-section2-title {
     color: var(--Black, #000);
     text-align: center;
     padding: 0 !important;
     margin-bottom: 24px !important;
 }
 
-.section2-subtitle {
+.pv2-section2-subtitle {
+    /* Mobile: Sử dụng bodytext-mobile-product */
     color: var(--gray-3, #797979);
     text-align: center;
+    font-family: "BT Beau Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%; /* 18.2px */
     margin: 0 auto !important;
-    padding: 0 12px !important;
-    /* Mobile: padding nhỏ */
-    max-width: 100%;
-    /* Mobile: full width */
-    width: 100%;
+    padding: 0 !important;
+    width: 304px;
+    max-width: calc(100% - 24px);
+    min-height: 126px;
+    height: auto;
+    box-sizing: border-box;
     word-wrap: break-word;
     white-space: normal;
-    line-height: 1.5;
-    font-size: 14px;
-    /* Mobile: font nhỏ */
 }
 
 /* ===== 📱 MOBILE NHỎ NHẤT - 320px+ ===== */
 @media (min-width: 320px) {
-    .section2-container {
+    .pv2-section2-container {
         margin-top: 0;
         padding: 30px 12px;
     }
 
-    .section2-collection {
+    .pv2-section2-collection {
         font-size: 12px;
     }
 
-    .section2-subtitle {
+    .pv2-section2-subtitle {
         font-size: 14px;
         padding: 0 10px !important;
     }
@@ -84,68 +88,84 @@
 
 /* ===== 📱 TABLET BẮT ĐẦU - 768px+ ===== */
 @media (min-width: 768px) {
-    .section2-container {
+    .pv2-section2-container {
         margin-top: 0;
         /* Tăng margin cho tablet */
         padding: 40px 16px;
         /* Tăng padding */
     }
 
-    .section2-collection {
+    .pv2-section2-collection {
         font-size: 14px;
         /* Font lớn hơn */
     }
 
-    .section2-subtitle {
+    .pv2-section2-subtitle {
+        /* Tablet: 520px width, height tự động theo content */
+        font-family: "BT Beau Sans";
         font-size: 16px;
-        /* Font lớn hơn */
-        line-height: 1.5;
-        padding: 0 16px !important;
-        max-width: 600px;
-        /* Giới hạn width trên tablet */
+        font-style: normal;
+        font-weight: 400;
+        line-height: 130%; /* 20.8px */
+        color: var(--gray-3, #797979);
+        text-align: center;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        width: 520px;
+        max-width: calc(100% - 32px);
+        height: auto;
+        box-sizing: border-box;
     }
 }
 
 /* ===== 💻 DESKTOP BẮT ĐẦU - 1024px+ ===== */
 @media (min-width: 1024px) {
-    .section2-container {
+    .pv2-section2-container {
         margin-top: 0;
         /* Tăng margin cho desktop */
         padding: 50px 20px;
         /* Padding desktop */
     }
 
-    .section2-collection {
+    .pv2-section2-collection {
         font-size: 16px;
         /* Font size gốc */
     }
 
-    .section2-subtitle {
+    .pv2-section2-subtitle {
+        /* Desktop: 692x92px box */
+        font-family: "BT Beau Sans";
         font-size: 18px;
-        /* Font size gốc */
-        line-height: 1.6;
-        /* Line height gốc */
-        padding: 0 20px !important;
-        max-width: 800px;
-        /* Max width gốc */
+        font-style: normal;
+        font-weight: 400;
+        line-height: 130%; /* 23.4px */
+        color: var(--gray-3, #797979);
+        text-align: center;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        width: 692px;
+        max-width: calc(100% - 40px);
+        min-height: 92px;
+        height: auto;
+        box-sizing: border-box;
     }
 }
 
 /* ===== 💻 DESKTOP LỚN - 1440px+ ===== */
 @media (min-width: 1440px) {
-    .section2-container {
+    .pv2-section2-container {
         margin-top: 0;
         /* Margin lớn nhất */
         padding: 60px 20px;
         /* Padding lớn nhất */
     }
 
-    .section2-collection {
+    .pv2-section2-collection {
         font-size: 18px;
         /* Font lớn hơn cho màn hình lớn */
     }
 
-    .section2-subtitle {
+    .pv2-section2-subtitle {
         font-size: 20px;
         /* Font lớn hơn */
         line-height: 1.7;

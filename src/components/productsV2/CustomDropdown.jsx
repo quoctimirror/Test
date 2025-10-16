@@ -27,16 +27,16 @@ const CustomDropdown = ({ value, onChange, options, className = '' }) => {
     const selectedOption = options.find(opt => opt.value === value);
 
     return (
-        <div className={`custom-dropdown ${className}`} ref={dropdownRef}>
+        <div className={`pv2-custom-dropdown ${className}`} ref={dropdownRef}>
             <div
-                className="custom-dropdown-header"
+                className="pv2-custom-dropdown-header"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="custom-dropdown-selected">
+                <span className="pv2-custom-dropdown-selected">
                     {selectedOption?.label || 'Select...'}
                 </span>
                 <svg
-                    className={`custom-dropdown-arrow ${isOpen ? 'open' : ''}`}
+                    className={`pv2-custom-dropdown-arrow ${isOpen ? 'pv2-open' : ''}`}
                     width="12"
                     height="8"
                     viewBox="0 0 12 8"
@@ -53,11 +53,11 @@ const CustomDropdown = ({ value, onChange, options, className = '' }) => {
             </div>
 
             {isOpen && (
-                <div className="custom-dropdown-list">
+                <div className="pv2-custom-dropdown-list">
                     {options.map((option) => (
                         <div
                             key={option.value}
-                            className={`custom-dropdown-option ${option.value === value ? 'selected' : ''}`}
+                            className={`pv2-custom-dropdown-option ${option.value === value ? 'pv2-selected' : ''}`}
                             onClick={() => handleSelect(option.value)}
                         >
                             {option.label}

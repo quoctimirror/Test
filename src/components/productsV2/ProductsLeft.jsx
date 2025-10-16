@@ -10,7 +10,7 @@ const ProductsLeft = () => {
     if (!viewerRootRef.current || !window.ijewelViewer) return;
 
     // URL model 3D local từ public/models
-    const model = "/models/refine-mirror-ring-1.glb";
+    const model = "/models/rings/mirror-default.glb";
 
     // Khởi tạo iJewel3D Viewer
     // Tham số 1: DOM element để render viewer
@@ -40,7 +40,7 @@ const ProductsLeft = () => {
 
   return (
     // Element để render viewer vào
-    <div id="viewer-root" ref={viewerRootRef}></div>
+    <div id="pv2-viewer-root" ref={viewerRootRef}></div>
   );
 };
 

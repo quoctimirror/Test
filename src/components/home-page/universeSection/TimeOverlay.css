@@ -199,7 +199,7 @@
 }
 
 /* Tablet: 426-1023px */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media (min-width: 481px) and (max-width: 1023px) {
     .time-overlay {
         animation: fadeIn 0.15s ease-in-out;
     }
@@ -242,7 +242,7 @@
     /* Bottom text section - copy from desktop */
     .time-overlay__bottom-text {
         position: fixed;
-        top: calc(50% + 200px);
+        top: calc(70%);
         left: 50%;
         transform: translateX(-50%);
         height: 72px;
@@ -273,7 +273,7 @@
 }
 
 /* Mobile: 0-425px */
-@media (max-width: 425px) {
+@media (max-width: 480px) {
     .time-overlay {
         animation: fadeIn 0.15s ease-in-out;
     }

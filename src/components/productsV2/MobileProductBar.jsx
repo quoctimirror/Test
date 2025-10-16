@@ -9,19 +9,19 @@ const MobileProductBar = ({ isVisible }) => {
 
     return (
         <>
-            <div className={`mobile-product-bar ${isVisible ? 'visible' : 'hidden'}`}>
+            <div className={`pv2-mobile-product-bar ${isVisible ? 'visible' : 'hidden'}`}>
                 <img
                     src={greyCaretUp}
                     alt=""
-                    className="mobile-bar-caret-up"
+                    className="pv2-mobile-bar-caret-up"
                     onClick={() => setShowConfigModal(true)}
                 />
-                <div className="mobile-product-content">
-                <h1 className="mobile-product-title heading-1--no-margin">LUMINA OLIVIA 5</h1>
+                <div className="pv2-mobile-product-content">
+                <h1 className="pv2-mobile-product-title heading-1--no-margin">LUMINA OLIVIA 5</h1>
 
-                <div className="mobile-action-buttons">
+                <div className="pv2-mobile-action-buttons">
                     <ShineGlassButton
-                        className="mobile-wishlist-btn-glass"
+                        className="pv2-mobile-wishlist-btn-glass"
                         width={36}
                         height={36}
                         theme="footer"
@@ -31,7 +31,7 @@ const MobileProductBar = ({ isVisible }) => {
                         </svg>
                     </ShineGlassButton>
 
-                    <div className="mobile-appointment-btn-glass">
+                    <div className="pv2-mobile-appointment-btn-glass">
                         <ShineGlassButton
                             theme="footer"
                         >
@@ -40,11 +40,11 @@ const MobileProductBar = ({ isVisible }) => {
                     </div>
                 </div>
 
-                <button className="mobile-order-btn bodytext-4--no-margin">
+                <button className="pv2-mobile-order-btn bodytext-4--no-margin">
                     Order Now
                 </button>
+                </div>
             </div>
-        </div>
 
         <MobileConfigModal
             isOpen={showConfigModal}

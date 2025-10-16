@@ -9,17 +9,23 @@
  * - Trích xuất danh sách mesh từ model và gửi lên parent
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGLTF, useEnvironment, Environment, OrbitControls } from '@react-three/drei';
 import { EffectComposer, Bloom, N8AO, ToneMapping, FXAA } from '@react-three/postprocessing';
 import { Ring3D } from './Ring3D';
+import { SpotLightHelper } from 'three';
 
-export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, meshColors, meshVisibility, renderMode = 'smooth', diamondScale = 1 }) {
+export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, meshColors, meshVisibility, renderMode = 'smooth', diamondScale = 1, showDebugHelpers = false, enableBloom = true }) {
   // Load model GLTF
   const { nodes } = useGLTF(modelPath);
 
   // Load environment map (HDR) để tạo phản chiếu
   const env = useEnvironment({ files: '/studio_env/env_metal_1.exr' });
+
+  // Refs cho các light helpers
+  const spotLightRef = useRef();
+  const helperSpotRef = useRef();
+  const helperPointRef = useRef();
 
   // Trích xuất danh sách mesh từ model khi model được load
   useEffect(() => {
@@ -49,14 +55,37 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
       <color attach="background" args={['#ffffff']} />
 
       {/* === LIGHTING === */}
-      {/* SpotLight chiếu từ phía trên */}
+      {/* SpotLight chính chiếu từ phía trên */}
       <spotLight
+        ref={spotLightRef}
         position={[10, 10, 10]}
         angle={0.15}
         penumbra={1}
         decay={0}
-        intensity={Math.PI}
+        intensity={Math.PI * 3}
+        castShadow
       />
+
+      {/* ⚡ ÁNH SÁNG PHÍA SAU - để ánh sáng đi xuyên qua kim cương tạo khúc xạ */}
+      <pointLight position={[0, -2, -3]} intensity={Math.PI * 2} color="#ffffff" />
+      <pointLight position={[3, 0, -3]} intensity={Math.PI * 1.5} color="#ffffff" />
+      <pointLight position={[-3, 0, -3]} intensity={Math.PI * 1.5} color="#ffffff" />
+
+      {/* Ambient light nhẹ */}
+      <ambientLight intensity={0.2} />
+
+      {/* 🔦 DEBUG: SpotLight Helper - Vẽ hình nón ánh sáng chiếu vào nhẫn */}
+      {showDebugHelpers && spotLightRef.current && (
+        <primitive object={new SpotLightHelper(spotLightRef.current, '#ffff00')} />
+      )}
+
+      {/* 💡 DEBUG: Quả cầu đỏ đánh dấu vị trí nguồn sáng */}
+      {showDebugHelpers && (
+        <mesh position={[10, 10, 10]}>
+          <sphereGeometry args={[0.3, 16, 16]} />
+          <meshBasicMaterial color="#ff0000" />
+        </mesh>
+      )}
 
       {/* === MODEL === */}
       <group position={[0, -0.25, 0]}>
@@ -98,13 +127,15 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
           halfRes={renderMode === 'smooth'}
         />
 
-        {/* Bloom: hiệu ứng lấp lánh - Giảm intensity để không quá sáng */}
-        <Bloom
-          luminanceThreshold={renderMode === 'fullTopping' ? 1.5 : 2.0}
-          intensity={renderMode === 'fullTopping' ? 1.2 : 0.8}
-          levels={renderMode === 'fullTopping' ? 9 : 7}
-          mipmapBlur
-        />
+        {/* Bloom: hiệu ứng lấp lánh - Tăng cường cho kim cương */}
+        {enableBloom && (
+          <Bloom
+            luminanceThreshold={renderMode === 'fullTopping' ? 0.9 : 1.2}
+            intensity={renderMode === 'fullTopping' ? 1.8 : 1.2}
+            levels={renderMode === 'fullTopping' ? 9 : 8}
+            mipmapBlur
+          />
+        )}
 
         {/* ToneMapping: ánh xạ màu HDR */}
         <ToneMapping />

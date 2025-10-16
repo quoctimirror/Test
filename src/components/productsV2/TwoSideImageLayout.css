@@ -1,56 +1,49 @@
-.two-side-image-layout-container {
+.pv2-two-side-image-layout-container {
     width: 100%;
     padding: 0;
+    margin: 0;
 }
 
-.two-side-image-layout-wrapper {
+.pv2-two-side-image-layout-wrapper {
     max-width: 100%;
     width: 100%;
+    margin: 0;
 }
 
-.two-side-image-layout-grid {
+.pv2-two-side-image-layout-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 100vh;
     width: 100%;
+    gap: 0;
+    margin: 0;
 }
 
-.two-side-image-layout-left,
-.two-side-image-layout-right {
+.pv2-two-side-image-layout-left,
+.pv2-two-side-image-layout-right {
     position: relative;
     overflow: hidden;
+    margin: 0;
+    display: block;
 }
 
-.two-side-image-layout-left img,
-.two-side-image-layout-right img {
+.pv2-two-side-image-layout-left img,
+.pv2-two-side-image-layout-right img {
     width: 100%;
-    height: 100%;
+    height: auto;
+    display: block;
     object-fit: cover;
+    margin: 0;
 }
 
 /* Mobile only - max-width: 425px */
 @media (max-width: 425px) {
-    .two-side-image-layout-grid {
+    .pv2-two-side-image-layout-grid {
         grid-template-columns: 1fr;
+    }
+
+    .pv2-two-side-image-layout-left img,
+    .pv2-two-side-image-layout-right img {
+        width: 100%;
         height: auto;
-    }
-
-    .two-side-image-layout-left,
-    .two-side-image-layout-right {
-        height: 50vh;
-    }
-}
-
-/* Tablet - 426px to 1023px - Same as desktop (2 columns) */
-@media (min-width: 426px) and (max-width: 1023px) {
-    .two-side-image-layout-grid {
-        grid-template-columns: 1fr 1fr;
-        height: 100vh;
-    }
-
-    .two-side-image-layout-left,
-    .two-side-image-layout-right {
-        position: relative;
-        overflow: hidden;
     }
 }

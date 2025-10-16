@@ -1,5 +1,5 @@
 /* Desktop styles */
-.right-configuration {
+.pv2-right-configuration {
     width: 100%;
     height: 100vh;
     background: linear-gradient(180deg, #FFF 0%, #BB234C 100%);
@@ -9,7 +9,7 @@
     flex-direction: column;
 }
 
-.product-info {
+.pv2-product-info {
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
@@ -19,7 +19,7 @@
     justify-content: flex-start;
 }
 
-.product-title {
+.pv2-product-title {
     /* Override với specificity cao nhất */
     margin-bottom: 72px !important;
     text-align: center !important;
@@ -33,14 +33,14 @@
 
 
 
-.configuration-options {
+.pv2-configuration-options {
     display: flex;
     flex-direction: column;
     gap: 20px;
     margin-bottom: 24px;
 }
 
-.option-row {
+.pv2-option-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -48,44 +48,44 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.option-label {
+.pv2-option-label {
     color: rgba(255, 255, 255, 0.5) !important;
 }
 
-.option-value-container {
+.pv2-option-value-container {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.option-value {
+.pv2-option-value {
     color: #FFFFFF !important;
     text-align: right;
 }
 
-.option-icon {
+.pv2-option-icon {
     width: auto;
     height: auto;
     flex-shrink: 0;
 }
 
-.size-row {
+.pv2-size-row {
     cursor: pointer;
 }
 
-.size-selector {
+.pv2-size-selector {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-right: 12px;
 }
 
-.size-value {
+.pv2-size-value {
     color: #FFFFFF !important;
     text-align: right;
 }
 
-.size-arrow-icon {
+.pv2-size-arrow-icon {
     width: auto;
     height: auto;
     cursor: pointer;
@@ -93,11 +93,11 @@
     transition: opacity 0.2s ease;
 }
 
-.size-arrow-icon:hover {
+.pv2-size-arrow-icon:hover {
     opacity: 1;
 }
 
-.quantity-selector {
+.pv2-quantity-selector {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -105,7 +105,7 @@
     margin-left: auto;
 }
 
-.quantity-btn {
+.pv2-quantity-btn {
     width: 32px;
     height: 32px;
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -120,17 +120,17 @@
     justify-content: center;
 }
 
-.quantity-btn:hover:not(:disabled) {
+.pv2-quantity-btn:hover:not(:disabled) {
     border-color: #FFFFFF;
     background: rgba(255, 255, 255, 0.1);
 }
 
-.quantity-btn:disabled {
+.pv2-quantity-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
 }
 
-.quantity-value {
+.pv2-quantity-value {
     color: #FFFFFF !important;
     width: 30px;
     text-align: center;
@@ -143,29 +143,29 @@
     line-height: 1.2 !important;
 }
 
-.quantity-value::-webkit-outer-spin-button,
-.quantity-value::-webkit-inner-spin-button {
+.pv2-quantity-value::-webkit-outer-spin-button,
+.pv2-quantity-value::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-.quantity-value[type=number] {
+.pv2-quantity-value[type=number] {
     appearance: textfield;
     -moz-appearance: textfield;
 }
 
-.additional-info {
+.pv2-additional-info {
     margin-bottom: 72px;
 }
 
-.shipping-info {
+.pv2-shipping-info {
     color: rgba(255, 255, 255, 0.5) !important;
     text-align: left;
     margin: 0 0 8px 0;
     line-height: 1.2 !important;
 }
 
-.contact-link {
+.pv2-contact-link {
     color: rgba(255, 255, 255, 0.5) !important;
     text-align: left;
     text-decoration: none;
@@ -174,24 +174,24 @@
     display: block;
 }
 
-.contact-link:hover {
+.pv2-contact-link:hover {
     opacity: 0.8;
 }
 
-.price-section {
+.pv2-price-section {
     margin-bottom: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.price {
+.pv2-price {
     color: #FFFFFF !important;
     text-align: center;
     align-self: stretch;
 }
 
-.action-buttons {
+.pv2-action-buttons {
     display: flex;
     gap: 12px;
     margin-bottom: 12px;
@@ -199,19 +199,19 @@
     align-items: stretch;
 }
 
-.wishlist-btn-glass {
+.pv2-wishlist-btn-glass {
     flex-shrink: 0;
     width: 56px !important;
     max-width: 56px !important;
     min-width: 56px !important;
 }
 
-.wishlist-btn-glass .shine-button-wrap {
+.pv2-wishlist-btn-glass .shine-button-wrap {
     width: 56px !important;
     height: 56px !important;
 }
 
-.wishlist-btn-glass .shine-glass-button {
+.pv2-wishlist-btn-glass .shine-glass-button {
     width: 56px !important;
     height: 56px !important;
     border: none !important;
@@ -219,36 +219,36 @@
     background: transparent !important;
 }
 
-.wishlist-btn-glass .glass-layer {
+.pv2-wishlist-btn-glass .glass-layer {
     background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.8) !important;
     box-sizing: border-box !important;
     transition: background var(--shine-anim--hover-time) var(--shine-anim--hover-ease) !important;
 }
 
-.wishlist-btn-glass .shine-glass-button:hover .glass-layer {
+.pv2-wishlist-btn-glass .shine-glass-button:hover .glass-layer {
     background: linear-gradient(-75deg,
             rgba(0, 0, 0, 0.95),
             rgba(0, 0, 0, 0.98),
             rgba(0, 0, 0, 0.95)) !important;
 }
 
-.wishlist-btn-glass .border-layer {
+.pv2-wishlist-btn-glass .border-layer {
     display: none !important;
 }
 
-.wishlist-btn-glass svg {
+.pv2-wishlist-btn-glass svg {
     color: rgba(255, 255, 255, 0.8);
     stroke: rgba(255, 255, 255, 0.8);
     transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
 }
 
-.wishlist-btn-glass .shine-glass-button:hover svg {
+.pv2-wishlist-btn-glass .shine-glass-button:hover svg {
     color: rgba(255, 255, 255, 1);
     stroke: rgba(255, 255, 255, 1);
 }
 
-.wishlist-btn-glass .shine-layer::before {
+.pv2-wishlist-btn-glass .shine-layer::before {
     background: radial-gradient(circle 200px at var(--mouse-x) var(--mouse-y),
             rgba(255, 255, 255, 0.5) 0%,
             rgba(255, 255, 255, 0.25) 25%,
@@ -256,7 +256,7 @@
             transparent 100%) !important;
 }
 
-.appointment-btn-glass {
+.pv2-appointment-btn-glass {
     flex: 1 1 auto;
     height: 56px;
     min-width: 0;
@@ -264,14 +264,14 @@
     display: flex;
 }
 
-.appointment-btn-glass .shine-button-wrap {
+.pv2-appointment-btn-glass .shine-button-wrap {
     width: 100% !important;
     height: 56px !important;
     max-width: none !important;
     flex: 1 !important;
 }
 
-.appointment-btn-glass .shine-glass-button {
+.pv2-appointment-btn-glass .shine-glass-button {
     width: 100% !important;
     height: 56px !important;
     border: none !important;
@@ -281,18 +281,18 @@
     min-width: 0 !important;
 }
 
-.appointment-btn-glass .glass-layer {
+.pv2-appointment-btn-glass .glass-layer {
     background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.8) !important;
     box-sizing: border-box !important;
 }
 
-.appointment-btn-glass .border-layer {
+.pv2-appointment-btn-glass .border-layer {
     display: none !important;
 }
 
 
-.order-btn {
+.pv2-order-btn {
     width: 100%;
     height: 56px;
     background: #FFFFFF;
@@ -303,7 +303,7 @@
     border-radius: 28px;
 }
 
-.order-btn:hover {
+.pv2-order-btn:hover {
     background: rgba(255, 255, 255, 0.95);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -311,7 +311,7 @@
 
 /* Mobile & Tablet - Hide RightConfiguration (max-width: 1023px) */
 @media (max-width: 1023px) {
-    .right-configuration {
+    .pv2-right-configuration {
         display: none;
     }
 }

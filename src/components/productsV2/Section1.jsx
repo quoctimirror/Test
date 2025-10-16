@@ -4,10 +4,10 @@ import ProductsLeft from './ProductsLeft';
 
 const Section1 = () => {
     return (
-        <div className="section1">
-            <div className="section1-container">
+        <div className="pv2-section1">
+            <div className="pv2-section1-container">
                 {/* Left Arrow Button */}
-                <div className="section1-arrow-btn section1-arrow-left" style={{ transform: 'none', transition: 'none' }}>
+                <div className="pv2-section1-arrow-btn pv2-section1-arrow-left" style={{ transform: 'none', transition: 'none' }}>
                     <ShineGlassButton
                         width={56}
                         height={56}
@@ -20,7 +20,7 @@ const Section1 = () => {
                 </div>
 
                 {/* Right Arrow Button */}
-                <div className="section1-arrow-btn section1-arrow-right" style={{ transform: 'none', transition: 'none' }}>
+                <div className="pv2-section1-arrow-btn pv2-section1-arrow-right" style={{ transform: 'none', transition: 'none' }}>
                     <ShineGlassButton
                         width={56}
                         height={56}
@@ -33,7 +33,7 @@ const Section1 = () => {
                 </div>
 
                 {/* Loading Model Area */}
-                <div className="model-area">
+                <div className="pv2-model-area">
                     <ProductsLeft />
                 </div>
             </div>

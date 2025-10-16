@@ -283,7 +283,7 @@
 }
 
 /* Tablet: 426-1023px */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media (min-width: 481px) and (max-width: 1023px) {
     .space-overlay {
         animation: fadeIn 0.15s ease-in-out;
     }
@@ -341,7 +341,7 @@
 }
 
 /* Mobile: 0-425px */
-@media (max-width: 425px) {
+@media (max-width: 480px) {
     .space-overlay {
         padding: 0;
         display: flex;

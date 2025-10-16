@@ -7,7 +7,7 @@ import OneImageLayout from './OneImageLayout';
 
 const LeftContainer = () => {
     return (
-        <div className="left-container">
+        <div className="pv2-left-container">
             <Section1 />
             <Section2 />
             <TwoSideImageLayout leftImage="placeholder1.png" rightImage="placeholder2.png" />

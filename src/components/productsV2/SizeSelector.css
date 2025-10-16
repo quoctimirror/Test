@@ -1,5 +1,5 @@
 /* Size Selector Overlay */
-.size-selector-overlay {
+.pv2-size-selector-overlay {
     position: absolute;
     top: 0;
     /* Same as RightConfiguration */
@@ -35,12 +35,12 @@
 }
 
 /* Closing state */
-.size-selector-overlay.closing {
+.pv2-size-selector-overlay.closing {
     animation: slideOut 0.3s ease-out forwards;
 }
 
 /* Size Selector Modal */
-.size-selector-modal {
+.pv2-size-selector-modal {
     width: 100%;
     height: 100%;
     /* Full height of overlay */
@@ -56,7 +56,7 @@
 }
 
 /* Header Tabs */
-.size-selector-header {
+.pv2-size-selector-header {
     display: flex;
     gap: 24px;
     /* Khoảng cách giữa 2 tabs */
@@ -65,7 +65,7 @@
     justify-content: center;
 }
 
-.size-tab {
+.pv2-size-tab {
     flex: none;
     background: none;
     border: none;
@@ -82,13 +82,13 @@
 }
 
 /* Tab text - normal text */
-.tab-text {
+.pv2-tab-text {
     position: relative;
     z-index: 2;
 }
 
 /* Tab ghost - sliding text clone */
-.tab-ghost {
+.pv2-tab-ghost {
     position: absolute;
     left: 0;
     top: 0;
@@ -99,12 +99,12 @@
 }
 
 /* Left tab (Select your size) - when inactive, ghost slides to right */
-.size-tab-left:not(.active) .tab-ghost {
+.pv2-size-tab-left:not(.active) .pv2-tab-ghost {
     animation: slideGhostRight 0.8s ease forwards;
 }
 
 /* Right tab (Find your size) - when inactive, ghost slides to left */
-.size-tab-right:not(.active) .tab-ghost {
+.pv2-size-tab-right:not(.active) .pv2-tab-ghost {
     animation: slideGhostLeft 0.8s ease forwards;
 }
 
@@ -132,7 +132,7 @@
     }
 }
 
-.size-tab::after {
+.pv2-size-tab::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -143,28 +143,28 @@
     transition: background-color 0.3s ease;
 }
 
-.size-tab.active {
+.pv2-size-tab.active {
     color: var(--Black, #000);
     /* Active color */
 }
 
-.size-tab.active::after {
+.pv2-size-tab.active::after {
     background-color: #000000;
 }
 
-.size-tab:hover {
+.pv2-size-tab:hover {
     color: var(--Black, #000);
 }
 
 /* Filters */
-.size-selector-filters {
+.pv2-size-selector-filters {
     display: flex;
     padding: 0 0 20px 0;
     background: var(--Gray-1, #F6F6F6);
     justify-content: space-around;
 }
 
-.filter-group {
+.pv2-filter-group {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
@@ -175,12 +175,12 @@
 /* Filter select styles removed - now using CustomDropdown */
 
 /* Custom styling for select dropdown */
-.filter-select {
+.pv2-filter-select {
     color-scheme: light;
 }
 
 /* Style for dropdown options */
-.filter-select option {
+.pv2-filter-select option {
     background-color: #FFFFFF;
     color: #000000;
     padding: 8px 12px;
@@ -189,7 +189,7 @@
 }
 
 /* Hover state for options - Chrome/Edge */
-.filter-select option:hover {
+.pv2-filter-select option:hover {
     background-color: transparent !important;
     background-image: none !important;
     color: #BC224C !important;
@@ -197,14 +197,14 @@
 }
 
 /* Focus/Active state */
-.filter-select option:focus,
-.filter-select option:active {
+.pv2-filter-select option:focus,
+.pv2-filter-select option:active {
     background-color: transparent !important;
     color: #BC224C !important;
 }
 
 /* Selected option */
-.filter-select option:checked {
+.pv2-filter-select option:checked {
     background-color: transparent;
     color: #BC224C;
     font-weight: 400;
@@ -212,21 +212,21 @@
 
 /* Firefox specific */
 @-moz-document url-prefix() {
-    .filter-select option:hover {
+    .pv2-filter-select option:hover {
         background-color: transparent !important;
         color: #BC224C !important;
     }
 }
 
 /* Country/Region select - arrow sát text hơn và canh giữa */
-.filter-select-country {
+.pv2-filter-select-country {
     /* Padding trái để cân bằng và canh giữa */
     background-position: calc(50% + 60px) center;
     /* Arrow canh giữa, offset để sát text */
 }
 
 /* Size Table Container */
-.size-table-container {
+.pv2-size-table-container {
     flex: 1;
     overflow-y: auto;
     background: var(--Gray-1, #F6F6F6);
@@ -234,56 +234,56 @@
 }
 
 /* Custom Scrollbar */
-.size-table-container::-webkit-scrollbar {
+.pv2-size-table-container::-webkit-scrollbar {
     width: 6px;
 }
 
-.size-table-container::-webkit-scrollbar-track {
+.pv2-size-table-container::-webkit-scrollbar-track {
     background: #E0E0E0;
 }
 
-.size-table-container::-webkit-scrollbar-thumb {
+.pv2-size-table-container::-webkit-scrollbar-thumb {
     background: #999999;
     border-radius: 3px;
 }
 
-.size-table-container::-webkit-scrollbar-thumb:hover {
+.pv2-size-table-container::-webkit-scrollbar-thumb:hover {
     background: #666666;
 }
 
 /* Size Table */
-.size-table {
+.pv2-size-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     background: var(--Gray-1, #F6F6F6);
 }
 
-.size-row {
+.pv2-size-row {
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.size-row .size-cell {
+.pv2-size-row .pv2-size-cell {
     border-bottom: 1px solid #E0E0E0;
 }
 
-.size-row:first-child .size-cell {
+.pv2-size-row:first-child .pv2-size-cell {
     border-top: 1px solid #E0E0E0;
 }
 
-.size-row:hover .size-cell {
+.pv2-size-row:hover .pv2-size-cell {
     border-top: 1px solid #BC224C;
     border-bottom: 1px solid #BC224C;
     background: #F9F9F9;
     color: #BC224C;
 }
 
-.size-row:first-child:hover .size-cell {
+.pv2-size-row:first-child:hover .pv2-size-cell {
     border-top: 1px solid #BC224C;
 }
 
-.size-cell {
+.pv2-size-cell {
     padding: 16px 20px;
     font-family: 'Inter', sans-serif;
     font-size: 14px;
@@ -294,13 +294,13 @@
 }
 
 /* Footer Gradient Bar */
-.size-selector-footer {
+.pv2-size-selector-footer {
     height: 8px;
     background: linear-gradient(90deg, #BB234C 0%, #9B4F96 100%);
 }
 
 /* Find Your Size Content */
-.find-size-content {
+.pv2-find-size-content {
     flex: 1;
     overflow-y: auto;
     color: #000000;
@@ -310,33 +310,36 @@
     align-items: flex-start;
 }
 
-.find-size-content>div {
+.pv2-find-size-content>div {
     max-width: 552px;
     width: 100%;
     height: 232px;
     text-align: left;
 }
 
-.find-size-intro {
+.pv2-find-size-intro {
     margin: 0 0 20px 0;
+    align-self: stretch;
+    color: var(--Black, #000);
 }
 
-.find-size-steps {
+.pv2-find-size-steps {
     margin: 0 0 20px 0;
     padding-left: 20px;
+    list-style-type: decimal;
 }
 
-.find-size-steps li {
+.pv2-find-size-steps li {
     margin-bottom: 12px;
 }
 
-.find-size-tip {
+.pv2-find-size-tip {
     margin: 12px 0 24px 0;
     color: #BC224C;
     max-width: 554px;
 }
 
-.find-size-footer {
+.pv2-find-size-footer {
     margin: 0;
     color: rgba(0, 0, 0, 0.50);
     text-align: center;
@@ -346,13 +349,13 @@
     transition: color 0.3s ease;
 }
 
-.find-size-content>div {
+.pv2-find-size-content>div {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.find-size-footer::after {
+.pv2-find-size-footer::after {
     content: '';
     position: absolute;
     bottom: -2px;
@@ -365,18 +368,18 @@
     transition: transform 0.3s ease;
 }
 
-.find-size-footer:hover {
+.pv2-find-size-footer:hover {
     color: #000000;
 }
 
-.find-size-footer:hover::after {
+.pv2-find-size-footer:hover::after {
     transform: scaleX(1);
     transform-origin: left;
 }
 
 /* Mobile & Tablet - max-width: 1023px */
 @media (max-width: 1023px) {
-    .size-selector-overlay {
+    .pv2-size-selector-overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -386,51 +389,109 @@
         z-index: 400;
     }
 
-    .size-selector-modal {
+    .pv2-size-selector-modal {
         width: 100%;
         height: 100%;
-        padding: 60px 24px 24px;
+        padding: 60px 20px 24px;
         border-radius: 0;
         box-shadow: none;
     }
 
-    .size-selector-header {
+    .pv2-size-selector-header {
         gap: 20px;
         padding: 0 0 16px 0;
     }
 
-    .size-tab {
+    .pv2-size-tab {
         font-size: 14px;
     }
 
-    .size-selector-filters {
-        gap: 16px;
+    .pv2-size-selector-filters {
+        gap: 8px;
         padding: 0 0 16px 0;
+        flex-direction: row;
+        flex-wrap: nowrap;
     }
 
-    .filter-group {
-        flex: 1;
+    .pv2-filter-group {
+        flex: 1 1 50%;
+        min-width: 0;
+        max-width: 50%;
+    }
+
+    .pv2-find-size-content {
+        margin-top: 20px;
+        align-items: flex-start;
+    }
+
+    .pv2-find-size-content > div {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        text-align: left;
+    }
+
+    .pv2-find-size-intro {
+        font-family: "BT Beau Sans";
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 130%; /* 18.2px */
+        text-align: left;
+        margin-bottom: 16px;
+    }
+
+    .pv2-find-size-steps {
+        font-family: "BT Beau Sans";
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 130%;
+        text-align: left;
+        margin-bottom: 16px;
+        padding-left: 20px;
+        list-style-type: decimal;
+    }
+
+    .pv2-find-size-steps li {
+        margin-bottom: 12px;
+        padding-left: 8px;
+    }
+
+    .pv2-find-size-tip {
+        font-family: "BT Beau Sans";
+        font-size: 14px;
+        font-style: italic;
+        font-weight: 400;
+        line-height: 130%;
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
+    .pv2-find-size-footer {
+        text-align: center;
     }
 }
 
 /* Tablet specific - 426px to 1023px */
 @media (min-width: 426px) and (max-width: 1023px) {
-    .size-selector-modal {
-        max-width: 600px;
-        margin: 0 auto;
+    .pv2-size-selector-modal {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
         padding: 80px 40px 40px;
     }
 
-    .size-selector-header {
+    .pv2-size-selector-header {
         gap: 24px;
         padding: 0 0 20px 0;
     }
 
-    .size-tab {
+    .pv2-size-tab {
         font-size: 16px;
     }
 
-    .size-selector-filters {
+    .pv2-size-selector-filters {
         gap: 20px;
         padding: 0 0 20px 0;
     }

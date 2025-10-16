@@ -41,7 +41,7 @@ export default function SimpleMeshInspector() {
   const [meshList, setMeshList] = useState([]);
 
   // Đường dẫn file model hiện tại
-  const [modelPath, setModelPath] = useState('/models/myfav.glb');
+  const [modelPath, setModelPath] = useState('/models/rings/myfav.glb');
 
   // Màu của từng mesh (key: tên mesh, value: HEX color)
   const [meshColors, setMeshColors] = useState({});
@@ -51,6 +51,12 @@ export default function SimpleMeshInspector() {
 
   // Render mode: 'smooth' (mượt, hiệu suất cao) hoặc 'fullTopping' (đẹp, lấp lánh)
   const [renderMode, setRenderMode] = useState('smooth');
+
+  // Debug mode: Hiển thị/ẩn các helpers (tia sáng, quả cầu)
+  const [showDebugHelpers, setShowDebugHelpers] = useState(false);
+
+  // Bloom effect: Bật/tắt hiệu ứng lấp lánh (vùng sáng tỏa ra)
+  const [enableBloom, setEnableBloom] = useState(true);
 
   // Diamond customization states
   const [selectedShape, setSelectedShape] = useState('Round');
@@ -130,12 +136,12 @@ export default function SimpleMeshInspector() {
     const newColor = metalColorMap[selectedBandMetal];
     if (!newColor) return;
 
-    // Tìm mesh có tên chứa "ring" và update màu
+    // Tìm mesh có tên chứa "ring" hoặc "band" và update màu
     setMeshColors(prev => {
       const colors = { ...prev };
       meshList.forEach(mesh => {
         const name = mesh.name.toLowerCase();
-        if (name.includes('ring')) {
+        if (name.includes('ring') || name.includes('band')) {
           colors[mesh.name] = newColor;
         }
       });
@@ -237,6 +243,56 @@ export default function SimpleMeshInspector() {
           </div>
         </div>
 
+        {/* Debug Helpers Toggle */}
+        <div style={{ marginTop: '25px' }}>
+          <h3 style={{ borderBottom: '2px solid #FFA500', paddingBottom: '10px' }}>
+            Debug Mode
+          </h3>
+          <div style={{ marginTop: '10px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={showDebugHelpers}
+                onChange={(e) => setShowDebugHelpers(e.target.checked)}
+                style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+              />
+              <span style={{ fontSize: '14px' }}>
+                {showDebugHelpers ? '🔦 Debug Helpers ON' : '🔦 Debug Helpers OFF'}
+              </span>
+            </label>
+            <div style={{ fontSize: '11px', color: '#888', marginTop: '8px', marginLeft: '28px' }}>
+              {showDebugHelpers
+                ? 'Hiển thị tia sáng và vị trí nguồn sáng'
+                : 'Ẩn các debug helpers'}
+            </div>
+          </div>
+        </div>
+
+        {/* Bloom Effect Toggle */}
+        <div style={{ marginTop: '25px' }}>
+          <h3 style={{ borderBottom: '2px solid #FFD700', paddingBottom: '10px' }}>
+            Bloom Effect
+          </h3>
+          <div style={{ marginTop: '10px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={enableBloom}
+                onChange={(e) => setEnableBloom(e.target.checked)}
+                style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+              />
+              <span style={{ fontSize: '14px' }}>
+                {enableBloom ? '✨ Bloom ON (Lấp lánh)' : '🚫 Bloom OFF (Không lấp lánh)'}
+              </span>
+            </label>
+            <div style={{ fontSize: '11px', color: '#888', marginTop: '8px', marginLeft: '28px' }}>
+              {enableBloom
+                ? 'Hiệu ứng vùng sáng tỏa ra (2 vùng sáng)'
+                : 'Tắt bloom, không có vùng sáng'}
+            </div>
+          </div>
+        </div>
+
         {/* Danh sách Mesh + Color Picker + Visibility Toggle */}
         <MeshList
           meshList={meshList}
@@ -287,6 +343,8 @@ export default function SimpleMeshInspector() {
                 meshVisibility={meshVisibility}
                 renderMode={renderMode}
                 diamondScale={diamondScale}
+                showDebugHelpers={showDebugHelpers}
+                enableBloom={enableBloom}
               />
             </Canvas>
           </Suspense>

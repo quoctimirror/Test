@@ -242,13 +242,13 @@
 }
 
 /* Tablet: 426-1023px */
-@media (min-width: 426px) and (max-width: 1023px) {
+@media (min-width: 481px) and (max-width: 1023px) {
     .presence-overlay {
         animation: fadeIn 0.15s ease-in-out;
     }
 
     .presence-overlay__content {
-        background-size: 690px 690px;
+        background-size: 690px 750px;
         animation: zoomIn 0.3s ease-out;
     }
 
@@ -294,7 +294,7 @@
 }
 
 /* Mobile: 0-425px */
-@media (max-width: 425.98px) {
+@media (max-width: 480px) {
     .presence-overlay {
         animation: fadeIn 0.15s ease-in-out;
     }

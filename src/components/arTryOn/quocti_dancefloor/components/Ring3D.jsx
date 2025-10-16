@@ -79,16 +79,22 @@ export function Ring3D({ nodes, env, selectedMesh, transform, meshColors, meshVi
                 ) : env ? (
                   // Có environment map → dùng MeshRefractionMaterial (thủy tinh/kim cương)
                   <MeshRefractionMaterial
-                    color={meshColors[key] || material?.color || '#b5cbdd'}
-                    side={THREE.DoubleSide}
+                    color={meshColors[key] || '#b5cbdd'}
                     envMap={env}
-                    aberrationStrength={0.02}
+                    bounces={4}  // Tăng số lần khúc xạ để lấp lánh hơn
+                    ior={2.417}  // Index of Refraction - Kim cương thật: 2.417
+                    fresnel={0.1}  // Giảm fresnel để ánh sáng đi qua nhiều hơn
+                    aberrationStrength={0.02}  // Hiệu ứng tách màu như kim cương thật
+                    fastChroma={true}
                     toneMapped={false}
+                    transmission={0.95}  // Gần như trong suốt hoàn toàn
+                    thickness={0.2}  // Độ dày mỏng để ánh sáng khúc xạ tốt
+                    envMapIntensity={1.5}  // Tăng cường độ phản chiếu môi trường
                   />
                 ) : (
                   // Không có env → dùng material thường
                   <meshStandardMaterial
-                    color={meshColors[key] || material?.color || '#b5cbdd'}
+                    color={meshColors[key] || '#b5cbdd'}
                     roughness={0.15}
                     metalness={1}
                   />
@@ -138,17 +144,24 @@ export function Ring3D({ nodes, env, selectedMesh, transform, meshColors, meshVi
                 ) : isGem && env ? (
                   // Là đá quý + có env → dùng MeshRefractionMaterial
                   <MeshRefractionMaterial
-                    color={meshColors[key] || material?.color || '#b5cbdd'}
+                    color={meshColors[key] || '#b5cbdd'}
                     envMap={env}
+                    bounces={4}
+                    ior={2.417}  // Kim cương thật
+                    fresnel={0.1}
                     aberrationStrength={0.02}
+                    fastChroma={true}
                     toneMapped={false}
+                    transmission={0.95}
+                    thickness={0.2}
+                    envMapIntensity={1.5}
                   />
                 ) : (
-                  // Mesh thường → dùng meshStandardMaterial
+                  // Mesh thường (đai nhẫn) → giữ nguyên material gốc
                   <meshStandardMaterial
                     color={meshColors[key] || material?.color || '#ffaf83'}
-                    roughness={0.15}
-                    metalness={1}
+                    roughness={material?.roughness ?? 0.3}
+                    metalness={material?.metalness ?? 0.8}
                   />
                 )}
               </mesh>

@@ -1,13 +1,13 @@
 /* ===== PRODUCTS LAYOUT - MAIN CONTAINER ===== */
 
 /* Products Main Wrapper - Contains both main content and parallax */
-.products-main-wrapper {
+.pv2-products-main-wrapper {
     width: 100%;
     position: relative;
 }
 
 /* Products Main Container */
-.products-container {
+.pv2-products-container {
     width: 100%;
     min-height: 100vh;
     display: flex;
@@ -18,7 +18,7 @@
 }
 
 /* ===== RIGHT SIDE - CONFIGURATION CONTAINER - Desktop only (1024px+) ===== */
-.products-right {
+.pv2-products-right {
     width: calc(100% - 66.25%);
     height: 100vh;
     position: sticky;

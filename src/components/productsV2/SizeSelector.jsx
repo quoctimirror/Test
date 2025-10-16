@@ -64,33 +64,33 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
 
     return (
         <div
-            className={`size-selector-overlay ${isClosing ? 'closing' : ''}`}
+            className={`pv2-size-selector-overlay ${isClosing ? 'closing' : ''}`}
             onClick={handleClose}
         >
-            <div className="size-selector-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="pv2-size-selector-modal" onClick={(e) => e.stopPropagation()}>
                 {/* Header Tabs */}
-                <div className="size-selector-header">
+                <div className="pv2-size-selector-header">
                     <button
-                        className={`size-tab size-tab-left bodytext-4--no-margin ${activeTab === 'select' ? 'active' : ''}`}
+                        className={`pv2-size-tab pv2-size-tab-left bodytext-4--no-margin ${activeTab === 'select' ? 'active' : ''}`}
                         onClick={() => handleTabChange('select')}
                     >
-                        <span className="tab-text">Select your size</span>
-                        <span className="tab-ghost">Select your size</span>
+                        <span className="pv2-tab-text">Select your size</span>
+                        <span className="pv2-tab-ghost">Select your size</span>
                     </button>
                     <button
-                        className={`size-tab size-tab-right bodytext-4--no-margin ${activeTab === 'find' ? 'active' : ''}`}
+                        className={`pv2-size-tab pv2-size-tab-right bodytext-4--no-margin ${activeTab === 'find' ? 'active' : ''}`}
                         onClick={() => handleTabChange('find')}
                     >
-                        <span className="tab-text">Find your size</span>
-                        <span className="tab-ghost">Find your size</span>
+                        <span className="pv2-tab-text">Find your size</span>
+                        <span className="pv2-tab-ghost">Find your size</span>
                     </button>
                 </div>
 
                 {activeTab === 'select' ? (
                     <>
                         {/* Filters */}
-                        <div className="size-selector-filters">
-                            <div className="filter-group">
+                        <div className="pv2-size-selector-filters">
+                            <div className="pv2-filter-group">
                                 <CustomDropdown
                                     value={measurementUnit}
                                     onChange={setMeasurementUnit}
@@ -98,11 +98,11 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
                                         { value: 'mm', label: 'Inside Circumference (mm)' },
                                         { value: 'inch', label: 'Inside Circumference (inch)' }
                                     ]}
-                                    className="filter-select"
+                                    className="pv2-filter-select"
                                 />
                             </div>
 
-                            <div className="filter-group">
+                            <div className="pv2-filter-group">
                                 <CustomDropdown
                                     value={selectedCountryId}
                                     onChange={setSelectedCountryId}
@@ -110,14 +110,14 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
                                         value: country.id,
                                         label: `${country.flag} ${country.name}`
                                     }))}
-                                    className="filter-select filter-select-country"
+                                    className="pv2-filter-select pv2-filter-select-country"
                                 />
                             </div>
                         </div>
 
                         {/* Size Table */}
-                        <div className="size-table-container">
-                            <table className="size-table">
+                        <div className="pv2-size-table-container">
+                            <table className="pv2-size-table">
                                 <tbody>
                                     {conversionData.map((item) => {
                                         const size = getSize(item);
@@ -127,11 +127,11 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
                                         return (
                                             <tr
                                                 key={item.id}
-                                                className="size-row"
+                                                className="pv2-size-row"
                                                 onClick={() => handleSizeSelect(item)}
                                             >
-                                                <td className="size-cell">{getCircumference(item)}</td>
-                                                <td className="size-cell">{size}</td>
+                                                <td className="pv2-size-cell">{getCircumference(item)}</td>
+                                                <td className="pv2-size-cell">{size}</td>
                                             </tr>
                                         );
                                     })}
@@ -141,28 +141,28 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
                     </>
                 ) : (
                     /* Find Your Size Content */
-                    <div className="find-size-content">
+                    <div className="pv2-find-size-content">
                         <div>
-                            <p className="find-size-intro bodytext-3--no-margin">
-                                You can easily measure your ring size at home using just a <br />
+                            <p className="pv2-find-size-intro">
+                                You can easily measure your ring size at home using just a
                                 string, thread, or ribbon and a ruler. Here's how:
                             </p>
 
-                            <ol className="find-size-steps bodytext-3--no-margin">
-                                <li>Gently wrap the string around the base of your finger, close <br />
+                            <ol className="pv2-find-size-steps bodytext-3--no-margin">
+                                <li>Gently wrap the string around the base of your finger, close
                                     to your knuckle (where a ring would sit comfortably).</li>
                                 <li>Mark the exact point where the string overlaps.</li>
-                                <li>Lay the string flat next to a ruler and measure the length in <br />
-                                    millimeters (mm). This number is your finger's<br />
+                                <li>Lay the string flat next to a ruler and measure the length in
+                                    millimeters (mm). This number is your finger's
                                     circumference.</li>
                             </ol>
 
-                            <p className="find-size-tip bodytext-5--no-margin">
+                            <p className="pv2-find-size-tip bodytext-5--no-margin">
                                 Tips: For the most accurate results, measure your finger at the end of the day when it's at its largest, and avoid measuring when your hands are cold.
                             </p>
 
                             <p
-                                className="find-size-footer bodytext-4--no-margin"
+                                className="pv2-find-size-footer bodytext-4--no-margin"
                                 onClick={() => handleTabChange('select')}
                             >
                                 Have your result? Select your size
