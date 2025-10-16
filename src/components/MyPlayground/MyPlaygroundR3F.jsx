@@ -1,7 +1,7 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { XR, createXRStore, useXRInputSourceState } from '@react-three/xr'
 import { useState, Suspense, useRef } from 'react'
-import { useGLTF, Environment, MeshRefractionMaterial, useEnvironment, OrbitControls, Html, Text } from '@react-three/drei'
+import { useGLTF, Environment, MeshRefractionMaterial, useEnvironment, OrbitControls, Html, Text, useHelper } from '@react-three/drei'
 import * as THREE from 'three'
 import './MyPlayground2.css'
 
@@ -1496,6 +1496,184 @@ function VRPanelToggleButtons({ showMonitorPanel, setShowMonitorPanel, showContr
 }
 
 // ============================================
+// COMPONENT: VR Lighting Panel - Điều chỉnh ánh sáng trong VR
+// ============================================
+function VRLightingPanel({
+  environmentIntensity,
+  setEnvironmentIntensity,
+  ambientIntensity,
+  setAmbientIntensity,
+  directionalIntensity,
+  setDirectionalIntensity,
+  debugMode,
+  setDebugMode
+}) {
+  const [hovered, setHovered] = useState(null)
+
+  // Helper function to render a slider with +/- buttons
+  const renderSlider = (label, value, setValue, min, max, step, color, hoveredId) => {
+    return (
+      <group>
+        {/* Label */}
+        <Text
+          position={[0, 0.06, 0]}
+          fontSize={0.022}
+          color={color}
+          anchorX="center"
+          anchorY="middle"
+          fontWeight="bold"
+        >
+          {label}: {value.toFixed(2)}
+        </Text>
+
+        {/* Minus Button */}
+        <group position={[-0.15, 0, 0]}>
+          <mesh
+            onPointerEnter={() => setHovered(hoveredId + '_minus')}
+            onPointerLeave={() => setHovered(null)}
+            onClick={() => setValue(Math.max(min, value - step))}
+          >
+            <planeGeometry args={[0.08, 0.05]} />
+            <meshBasicMaterial
+              color={hovered === hoveredId + '_minus' ? '#FFD54F' : '#FFA726'}
+              opacity={0.9}
+              transparent
+            />
+          </mesh>
+          <Text
+            position={[0, 0, 0.001]}
+            fontSize={0.025}
+            color="white"
+            anchorX="center"
+            anchorY="middle"
+          >
+            -
+          </Text>
+        </group>
+
+        {/* Plus Button */}
+        <group position={[0.15, 0, 0]}>
+          <mesh
+            onPointerEnter={() => setHovered(hoveredId + '_plus')}
+            onPointerLeave={() => setHovered(null)}
+            onClick={() => setValue(Math.min(max, value + step))}
+          >
+            <planeGeometry args={[0.08, 0.05]} />
+            <meshBasicMaterial
+              color={hovered === hoveredId + '_plus' ? '#66BB6A' : '#4CAF50'}
+              opacity={0.9}
+              transparent
+            />
+          </mesh>
+          <Text
+            position={[0, 0, 0.001]}
+            fontSize={0.025}
+            color="white"
+            anchorX="center"
+            anchorY="middle"
+          >
+            +
+          </Text>
+        </group>
+
+        {/* Value Bar (visual indicator) */}
+        <mesh position={[0, -0.03, 0]}>
+          <planeGeometry args={[0.3 * (value - min) / (max - min), 0.01]} />
+          <meshBasicMaterial color={color} />
+        </mesh>
+        <mesh position={[0, -0.03, -0.001]}>
+          <planeGeometry args={[0.3, 0.01]} />
+          <meshBasicMaterial color="#333333" />
+        </mesh>
+      </group>
+    )
+  }
+
+  return (
+    <group>
+      {/* Background */}
+      <mesh position={[0, 0, -0.01]}>
+        <planeGeometry args={[0.5, 0.75]} />
+        <meshBasicMaterial color="#000000" opacity={0.9} transparent />
+      </mesh>
+      {/* Border */}
+      <lineSegments>
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.5, 0.75)]} />
+        <lineBasicMaterial attach="material" color="#FFC107" linewidth={2} />
+      </lineSegments>
+
+      {/* Title */}
+      <Text
+        position={[0, 0.35, 0]}
+        fontSize={0.032}
+        color="#FFC107"
+        anchorX="center"
+        anchorY="middle"
+      >
+        💡 LIGHTING
+      </Text>
+
+      {/* Divider */}
+      <mesh position={[0, 0.3, 0.001]}>
+        <planeGeometry args={[0.45, 0.002]} />
+        <meshBasicMaterial color="#FFC107" />
+      </mesh>
+
+      {/* Debug Mode Toggle */}
+      <group position={[0, 0.23, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('debug')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => setDebugMode(!debugMode)}
+        >
+          <planeGeometry args={[0.4, 0.06]} />
+          <meshBasicMaterial
+            color={debugMode ? '#00E676' : (hovered === 'debug' ? '#666' : '#444')}
+            opacity={0.9}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.02}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {debugMode ? '👁️ DEBUG: ON' : '👁️ DEBUG: OFF'}
+        </Text>
+      </group>
+
+      {/* Environment Intensity Slider */}
+      <group position={[0, 0.12, 0]}>
+        {renderSlider('ENV', environmentIntensity, setEnvironmentIntensity, 0, 2.0, 0.05, '#FFC107', 'env')}
+      </group>
+
+      {/* Ambient Intensity Slider */}
+      <group position={[0, -0.02, 0]}>
+        {renderSlider('AMBIENT', ambientIntensity, setAmbientIntensity, 0, 2.0, 0.05, '#4CAF50', 'ambient')}
+      </group>
+
+      {/* Directional Intensity Slider */}
+      <group position={[0, -0.16, 0]}>
+        {renderSlider('DIRECT', directionalIntensity, setDirectionalIntensity, 0, 3.0, 0.1, '#2196F3', 'direct')}
+      </group>
+
+      {/* Hint text */}
+      <Text
+        position={[0, -0.32, 0.001]}
+        fontSize={0.015}
+        color="#888"
+        anchorX="center"
+        anchorY="middle"
+      >
+        Use +/- to adjust
+      </Text>
+    </group>
+  )
+}
+
+// ============================================
 // COMPONENT: Scene - chứa toàn bộ 3D scene
 // ============================================
 function Scene({
@@ -1517,7 +1695,15 @@ function Scene({
   tryOnMode,
   setTryOnMode,
   showSparkles,
-  setShowSparkles
+  setShowSparkles,
+  environmentIntensity,
+  setEnvironmentIntensity,
+  ambientIntensity,
+  setAmbientIntensity,
+  directionalIntensity,
+  setDirectionalIntensity,
+  debugMode,
+  setDebugMode
 }) {
   // Load environment map cho materials (phản chiếu môi trường)
   const env = useEnvironment({ preset: 'apartment' })
@@ -1525,8 +1711,14 @@ function Scene({
   // Shared ref cho ring
   const ringGroupRef = useRef()
 
+  // Ref cho directional light (để hiển thị helper)
+  const directionalLightRef = useRef()
+
   // State để track RING được chọn (CHỈ RING MỚI CÓ THỂ CHỌN)
   const [activeObject, setActiveObject] = useState(null)
+
+  // Show DirectionalLight helper khi debugMode = true
+  useHelper(debugMode ? directionalLightRef : null, THREE.DirectionalLightHelper, 1, 'yellow')
 
   // Handler khi RING được grab/interact
   const handleSelectRing = (ringInfo) => {
@@ -1590,14 +1782,36 @@ function Scene({
         />
       </DraggablePanel>
 
-      {/* TỐI ƯU CỰC MẠNH: Ánh sáng tối thiểu */}
-      <ambientLight intensity={0.5} />
+      {/* LIGHTING PANEL - Điều chỉnh ánh sáng trong VR */}
+      <DraggablePanel
+        initialPosition={[0.8, 1.5, -0.8]}
+        name="LIGHTING"
+      >
+        <VRLightingPanel
+          environmentIntensity={environmentIntensity}
+          setEnvironmentIntensity={setEnvironmentIntensity}
+          ambientIntensity={ambientIntensity}
+          setAmbientIntensity={setAmbientIntensity}
+          directionalIntensity={directionalIntensity}
+          setDirectionalIntensity={setDirectionalIntensity}
+          debugMode={debugMode}
+          setDebugMode={setDebugMode}
+        />
+      </DraggablePanel>
 
-      {/* TỐI ƯU CỰC MẠNH: Giảm directional light */}
-      <directionalLight position={[5, 5, 5]} intensity={1.0} castShadow={false} />
+      {/* AMBIENT LIGHT - Ánh sáng xung quanh */}
+      <ambientLight intensity={ambientIntensity} />
 
-      {/* TỐI ƯU CỰC MẠNH: Environment rất thấp */}
-      <Environment preset="apartment" environmentIntensity={0.15} background={false} />
+      {/* DIRECTIONAL LIGHT - Ánh sáng chính */}
+      <directionalLight
+        ref={directionalLightRef}
+        position={[5, 5, 5]}
+        intensity={directionalIntensity}
+        castShadow={false}
+      />
+
+      {/* Environment với background đẹp */}
+      <Environment preset="apartment" environmentIntensity={environmentIntensity} background={true} />
 
       {/* TỐI ƯU CỰC MẠNH: Mặt phẳng nền nhỏ hơn */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} frustumCulled>
@@ -1661,7 +1875,15 @@ function ControlPanel({
   autoRotate,
   setAutoRotate,
   selectedModel,
-  setSelectedModel
+  setSelectedModel,
+  environmentIntensity,
+  setEnvironmentIntensity,
+  ambientIntensity,
+  setAmbientIntensity,
+  directionalIntensity,
+  setDirectionalIntensity,
+  debugMode,
+  setDebugMode
 }) {
   return (
     <div style={{
@@ -1821,6 +2043,90 @@ function ControlPanel({
         />
       </div>
 
+      {/* LIGHTING CONTROLS - Điều chỉnh ánh sáng */}
+      <div style={{
+        marginBottom: '20px',
+        padding: '15px',
+        backgroundColor: 'rgba(255, 193, 7, 0.1)',
+        borderRadius: '8px',
+        border: '1px solid #FFC107'
+      }}>
+        <h4 style={{ marginTop: 0, marginBottom: '15px', color: '#FFC107', fontSize: '16px' }}>
+          💡 LIGHTING DEBUG
+        </h4>
+
+        {/* Debug Mode Toggle */}
+        <div style={{ marginBottom: '15px' }}>
+          <button
+            onClick={() => setDebugMode(!debugMode)}
+            style={{
+              width: '100%',
+              padding: '8px',
+              backgroundColor: debugMode ? '#00E676' : '#666',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            {debugMode ? '👁️ Debug Mode: ON' : '👁️ Debug Mode: OFF'}
+          </button>
+        </div>
+
+        {/* Environment Intensity */}
+        <div style={{ marginBottom: '10px' }}>
+          <label style={{ color: '#FFC107' }}>
+            <strong>Environment Intensity: {environmentIntensity.toFixed(2)}</strong>
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="2.0"
+            step="0.05"
+            value={environmentIntensity}
+            onChange={(e) => setEnvironmentIntensity(parseFloat(e.target.value))}
+            style={{ width: '100%', marginTop: '5px' }}
+          />
+          <small style={{ color: '#AAA' }}>Ánh sáng môi trường phản chiếu</small>
+        </div>
+
+        {/* Ambient Intensity */}
+        <div style={{ marginBottom: '10px' }}>
+          <label style={{ color: '#4CAF50' }}>
+            <strong>Ambient Light: {ambientIntensity.toFixed(2)}</strong>
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="2.0"
+            step="0.05"
+            value={ambientIntensity}
+            onChange={(e) => setAmbientIntensity(parseFloat(e.target.value))}
+            style={{ width: '100%', marginTop: '5px' }}
+          />
+          <small style={{ color: '#AAA' }}>Ánh sáng xung quanh (tổng thể)</small>
+        </div>
+
+        {/* Directional Intensity */}
+        <div style={{ marginBottom: '10px' }}>
+          <label style={{ color: '#2196F3' }}>
+            <strong>Directional Light: {directionalIntensity.toFixed(2)}</strong>
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="3.0"
+            step="0.1"
+            value={directionalIntensity}
+            onChange={(e) => setDirectionalIntensity(parseFloat(e.target.value))}
+            style={{ width: '100%', marginTop: '5px' }}
+          />
+          <small style={{ color: '#AAA' }}>Ánh sáng chính (từ góc trên)</small>
+        </div>
+      </div>
+
       {/* Reset Button */}
       <button
         onClick={() => {
@@ -1878,6 +2184,12 @@ export default function MyPlaygroundR3F() {
   const [tryOnMode, setTryOnMode] = useState(false)
   const [showSparkles, setShowSparkles] = useState(false)
 
+  // State quản lý lighting
+  const [environmentIntensity, setEnvironmentIntensity] = useState(0.15)
+  const [ambientIntensity, setAmbientIntensity] = useState(0.5)
+  const [directionalIntensity, setDirectionalIntensity] = useState(1.0)
+  const [debugMode, setDebugMode] = useState(false)
+
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       {/* Nút Enter VR - hiển thị ở góc dưới bên phải */}
@@ -1902,19 +2214,7 @@ export default function MyPlaygroundR3F() {
         🥽 Enter VR
       </button>
 
-      {/* Control Panel - bảng điều khiển */}
-      <ControlPanel
-        position={ringPosition}
-        setPosition={setRingPosition}
-        rotation={ringRotation}
-        setRotation={setRingRotation}
-        scale={ringScale}
-        setScale={setRingScale}
-        autoRotate={autoRotate}
-        setAutoRotate={setAutoRotate}
-        selectedModel={selectedModel}
-        setSelectedModel={setSelectedModel}
-      />
+      {/* Control Panel - BỎ ĐI - CHỈ VR THÔI */}
 
       {/* Canvas - vùng render 3D */}
       <Canvas
@@ -1970,6 +2270,14 @@ export default function MyPlaygroundR3F() {
             setTryOnMode={setTryOnMode}
             showSparkles={showSparkles}
             setShowSparkles={setShowSparkles}
+            environmentIntensity={environmentIntensity}
+            setEnvironmentIntensity={setEnvironmentIntensity}
+            ambientIntensity={ambientIntensity}
+            setAmbientIntensity={setAmbientIntensity}
+            directionalIntensity={directionalIntensity}
+            setDirectionalIntensity={setDirectionalIntensity}
+            debugMode={debugMode}
+            setDebugMode={setDebugMode}
           />
         </XR>
       </Canvas>
