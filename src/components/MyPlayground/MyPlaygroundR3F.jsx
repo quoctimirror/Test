@@ -64,6 +64,73 @@ function VRControllers() {
 }
 
 // ============================================
+// COMPONENT: Sparkle Effect - Hiệu ứng kim cương lấp lánh khi attach
+// ============================================
+function SparkleEffect({ position, show, onComplete }) {
+  const particlesRef = useRef()
+  const [particles, setParticles] = useState([])
+
+  // Generate particles khi show = true
+  useFrame((state, delta) => {
+    if (!show) return
+
+    if (particles.length === 0) {
+      // Tạo 30 particles bay ra xung quanh
+      const newParticles = []
+      for (let i = 0; i < 30; i++) {
+        newParticles.push({
+          id: i,
+          position: [position[0], position[1], position[2]],
+          velocity: [
+            (Math.random() - 0.5) * 2,
+            (Math.random() - 0.5) * 2,
+            (Math.random() - 0.5) * 2
+          ],
+          life: 1.0,
+          scale: Math.random() * 0.02 + 0.01
+        })
+      }
+      setParticles(newParticles)
+    } else {
+      // Update particles
+      const updatedParticles = particles.map(p => ({
+        ...p,
+        position: [
+          p.position[0] + p.velocity[0] * delta,
+          p.position[1] + p.velocity[1] * delta,
+          p.position[2] + p.velocity[2] * delta
+        ],
+        life: p.life - delta * 2
+      })).filter(p => p.life > 0)
+
+      setParticles(updatedParticles)
+
+      // Khi hết particles, gọi onComplete
+      if (updatedParticles.length === 0 && onComplete) {
+        onComplete()
+      }
+    }
+  })
+
+  if (!show || particles.length === 0) return null
+
+  return (
+    <group ref={particlesRef}>
+      {particles.map(p => (
+        <mesh key={p.id} position={p.position}>
+          <sphereGeometry args={[p.scale, 6, 6]} />
+          <meshBasicMaterial
+            color="#FFD700"
+            transparent
+            opacity={p.life}
+          />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+// ============================================
 // COMPONENT: Draggable & Rotatable Panel - Panel có thể kéo và xoay được
 // Panel CHỈ ĐƯỢC KÉO VÀ XOAY, KHÔNG ĐƯỢC CHỌN ĐỂ ĐIỀU KHIỂN
 // ============================================
@@ -213,7 +280,9 @@ function Ring3D({
   modelName,  // Tên model
   setPosition,  // Setter để control từ CONTROLS panel
   setRotation,  // Setter để control từ CONTROLS panel
-  setScale      // Setter để control từ CONTROLS panel
+  setScale,      // Setter để control từ CONTROLS panel
+  tryOnMode,    // Try-On mode flag
+  setShowSparkles  // Trigger sparkle effect
 }) {
   // BƯỚC 1: Load model 3D từ file GLB
   const { nodes } = useGLTF(modelPath)
@@ -231,9 +300,92 @@ function Ring3D({
   const initialDistance = useRef(null)  // Khoảng cách ban đầu giữa 2 controllers
   const initialScale = useRef(null)     // Scale ban đầu của ring
 
+  // State cho Try-On mode
+  const tryOnModeActive = useRef(false)
+  const targetScale = useRef(scale)
+
+  // Function để phát âm thanh "ting" khi attach
+  const playAttachSound = () => {
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+      const oscillator = audioContext.createOscillator()
+      const gainNode = audioContext.createGain()
+
+      oscillator.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+
+      // Tạo âm thanh "ting" - nốt cao, ngắn
+      oscillator.frequency.value = 1200 // Frequency cao = âm thanh sáng
+      oscillator.type = 'sine'
+
+      // Envelope: fade in nhanh, fade out nhanh
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime)
+      gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3)
+
+      oscillator.start(audioContext.currentTime)
+      oscillator.stop(audioContext.currentTime + 0.3)
+    } catch (error) {
+      console.log('Audio not supported:', error)
+    }
+  }
+
   // BƯỚC 2: Animation loop - chạy mỗi frame
   useFrame((state, delta) => {
     if (!groupRef.current) return
+
+    // ===== TRY-ON MODE: Follow left controller (ngón tay ảo) =====
+    if (tryOnMode && leftController) {
+      // Lần đầu tiên vào try-on mode
+      if (!tryOnModeActive.current) {
+        tryOnModeActive.current = true
+        // Trigger sparkle effect
+        if (setShowSparkles) {
+          setShowSparkles(true)
+          setTimeout(() => setShowSparkles(false), 1000)
+        }
+        // Play attach sound
+        playAttachSound()
+        // Scale nhỏ lại để vừa ngón tay (khoảng 1/3 size ban đầu)
+        targetScale.current = scale * 0.3
+      }
+
+      // Follow left controller position (offset một chút để trông như đeo trên ngón)
+      const leftPos = new THREE.Vector3()
+      leftPos.setFromMatrixPosition(leftController.object.matrixWorld)
+
+      // Offset để nhẫn nằm ở đầu ngón tay controller
+      const offset = new THREE.Vector3(0, 0, -0.05)
+      offset.applyQuaternion(leftController.object.quaternion)
+      leftPos.add(offset)
+
+      // Smooth transition đến vị trí mới
+      groupRef.current.position.lerp(leftPos, 0.2)
+
+      // Rotation theo tay
+      groupRef.current.quaternion.slerp(leftController.object.quaternion, 0.2)
+
+      // Smooth scale animation
+      const currentScale = groupRef.current.scale.x
+      const newScale = THREE.MathUtils.lerp(currentScale, targetScale.current, 0.1)
+      groupRef.current.scale.set(newScale, newScale, newScale)
+
+      return // Khi ở try-on mode, không cho phép tương tác khác
+    } else {
+      // Reset try-on mode flag khi thoát
+      if (tryOnModeActive.current) {
+        tryOnModeActive.current = false
+        // Scale về bình thường
+        targetScale.current = scale
+      }
+
+      // Smooth scale về bình thường khi thoát try-on mode
+      if (groupRef.current.scale.x !== scale) {
+        const currentScale = groupRef.current.scale.x
+        const newScale = THREE.MathUtils.lerp(currentScale, scale, 0.1)
+        groupRef.current.scale.set(newScale, newScale, newScale)
+      }
+    }
 
     // ===== TWO-HANDED SCALING (PINCH TO ZOOM) =====
     // Kiểm tra nếu CẢ HAI controllers đang nhấn trigger
@@ -1218,49 +1370,75 @@ function VRModelSelector({ selectedModel, onSelectModel }) {
 }
 
 // ============================================
-// COMPONENT: VR Panel Toggle Buttons - Toggle visibility của panels
+// COMPONENT: VR Panel Toggle Buttons - Toggle visibility của panels + Try-On
 // ============================================
-function VRPanelToggleButtons({ showMonitorPanel, setShowMonitorPanel, showControlsPanel, setShowControlsPanel }) {
+function VRPanelToggleButtons({ showMonitorPanel, setShowMonitorPanel, showControlsPanel, setShowControlsPanel, tryOnMode, setTryOnMode }) {
   const [hovered, setHovered] = useState(null)
 
   return (
     <group>
-      {/* Background */}
+      {/* Background - Tăng chiều cao để chứa Try-On button */}
       <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[0.4, 0.35]} />
+        <planeGeometry args={[0.4, 0.48]} />
         <meshBasicMaterial color="#000000" opacity={0.9} transparent />
       </mesh>
       {/* Border */}
       <lineSegments>
-        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.4, 0.35)]} />
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.4, 0.48)]} />
         <lineBasicMaterial attach="material" color="#FF5722" linewidth={2} />
       </lineSegments>
 
       {/* Title */}
       <Text
-        position={[0, 0.15, 0]}
+        position={[0, 0.21, 0]}
         fontSize={0.028}
         color="#FF5722"
         anchorX="center"
         anchorY="middle"
       >
-        PANEL TOGGLE
+        QUICK ACTIONS
       </Text>
 
       {/* Divider */}
-      <mesh position={[0, 0.1, 0.001]}>
+      <mesh position={[0, 0.16, 0.001]}>
         <planeGeometry args={[0.35, 0.002]} />
         <meshBasicMaterial color="#FF5722" />
       </mesh>
 
+      {/* Try-On Mode Button - HIGHLIGHT */}
+      <group position={[0, 0.1, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('tryon')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => setTryOnMode(!tryOnMode)}
+        >
+          <planeGeometry args={[0.35, 0.09]} />
+          <meshBasicMaterial
+            color={tryOnMode ? (hovered === 'tryon' ? '#FFD700' : '#FFC107') : (hovered === 'tryon' ? '#AB47BC' : '#9C27B0')}
+            opacity={0.95}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.025}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+          fontWeight="bold"
+        >
+          {tryOnMode ? '💍 TRY-ON: ON' : '👋 TRY-ON'}
+        </Text>
+      </group>
+
       {/* Monitor Panel Toggle Button */}
-      <group position={[0, 0.04, 0]}>
+      <group position={[0, -0.01, 0]}>
         <mesh
           onPointerEnter={() => setHovered('monitor')}
           onPointerLeave={() => setHovered(null)}
           onClick={() => setShowMonitorPanel(!showMonitorPanel)}
         >
-          <planeGeometry args={[0.35, 0.08]} />
+          <planeGeometry args={[0.35, 0.07]} />
           <meshBasicMaterial
             color={showMonitorPanel ? (hovered === 'monitor' ? '#66BB6A' : '#4CAF50') : (hovered === 'monitor' ? '#EF5350' : '#F44336')}
             opacity={0.9}
@@ -1269,7 +1447,7 @@ function VRPanelToggleButtons({ showMonitorPanel, setShowMonitorPanel, showContr
         </mesh>
         <Text
           position={[0, 0, 0.001]}
-          fontSize={0.022}
+          fontSize={0.02}
           color="white"
           anchorX="center"
           anchorY="middle"
@@ -1279,13 +1457,13 @@ function VRPanelToggleButtons({ showMonitorPanel, setShowMonitorPanel, showContr
       </group>
 
       {/* Controls Panel Toggle Button */}
-      <group position={[0, -0.07, 0]}>
+      <group position={[0, -0.09, 0]}>
         <mesh
           onPointerEnter={() => setHovered('controls')}
           onPointerLeave={() => setHovered(null)}
           onClick={() => setShowControlsPanel(!showControlsPanel)}
         >
-          <planeGeometry args={[0.35, 0.08]} />
+          <planeGeometry args={[0.35, 0.07]} />
           <meshBasicMaterial
             color={showControlsPanel ? (hovered === 'controls' ? '#66BB6A' : '#4CAF50') : (hovered === 'controls' ? '#EF5350' : '#F44336')}
             opacity={0.9}
@@ -1294,7 +1472,7 @@ function VRPanelToggleButtons({ showMonitorPanel, setShowMonitorPanel, showContr
         </mesh>
         <Text
           position={[0, 0, 0.001]}
-          fontSize={0.022}
+          fontSize={0.02}
           color="white"
           anchorX="center"
           anchorY="middle"
@@ -1302,6 +1480,17 @@ function VRPanelToggleButtons({ showMonitorPanel, setShowMonitorPanel, showContr
           {showControlsPanel ? '✓ CONTROLS' : '✗ CONTROLS'}
         </Text>
       </group>
+
+      {/* Hint text */}
+      <Text
+        position={[0, -0.19, 0.001]}
+        fontSize={0.015}
+        color="#FFD700"
+        anchorX="center"
+        anchorY="middle"
+      >
+        {tryOnMode ? 'Left hand = Ring finger' : 'Click TRY-ON to wear ring!'}
+      </Text>
     </group>
   )
 }
@@ -1324,7 +1513,11 @@ function Scene({
   showMonitorPanel,
   setShowMonitorPanel,
   showControlsPanel,
-  setShowControlsPanel
+  setShowControlsPanel,
+  tryOnMode,
+  setTryOnMode,
+  showSparkles,
+  setShowSparkles
 }) {
   // Load environment map cho materials (phản chiếu môi trường)
   const env = useEnvironment({ preset: 'apartment' })
@@ -1382,7 +1575,7 @@ function Scene({
         />
       </DraggablePanel>
 
-      {/* PANEL TOGGLE BUTTONS - Toggle Monitor và Controls panels */}
+      {/* PANEL TOGGLE BUTTONS - Toggle Monitor và Controls panels + Try-On */}
       <DraggablePanel
         initialPosition={[-0.8, 1.5, -0.8]}
         name="PANEL_TOGGLE"
@@ -1392,6 +1585,8 @@ function Scene({
           setShowMonitorPanel={setShowMonitorPanel}
           showControlsPanel={showControlsPanel}
           setShowControlsPanel={setShowControlsPanel}
+          tryOnMode={tryOnMode}
+          setTryOnMode={setTryOnMode}
         />
       </DraggablePanel>
 
@@ -1432,8 +1627,23 @@ function Scene({
           setPosition={setRingPosition}  // Setter để CONTROLS điều khiển
           setRotation={setRingRotation}  // Setter để CONTROLS điều khiển
           setScale={setRingScale}  // Setter để CONTROLS điều khiển
+          tryOnMode={tryOnMode}  // Try-On mode flag
+          setShowSparkles={setShowSparkles}  // Trigger sparkle effect
         />
       </Suspense>
+
+      {/* Sparkle Effect - Hiển thị khi attach nhẫn */}
+      {ringGroupRef.current && (
+        <SparkleEffect
+          position={[
+            ringGroupRef.current.position.x,
+            ringGroupRef.current.position.y,
+            ringGroupRef.current.position.z
+          ]}
+          show={showSparkles}
+          onComplete={() => setShowSparkles(false)}
+        />
+      )}
     </>
   )
 }
@@ -1756,6 +1966,10 @@ export default function MyPlaygroundR3F() {
             setShowMonitorPanel={setShowMonitorPanel}
             showControlsPanel={showControlsPanel}
             setShowControlsPanel={setShowControlsPanel}
+            tryOnMode={tryOnMode}
+            setTryOnMode={setTryOnMode}
+            showSparkles={showSparkles}
+            setShowSparkles={setShowSparkles}
           />
         </XR>
       </Canvas>
