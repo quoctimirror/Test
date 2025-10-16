@@ -67,7 +67,7 @@ function VRControllers() {
 // COMPONENT: Draggable & Rotatable Panel - Panel có thể kéo và xoay được
 // Panel CHỈ ĐƯỢC KÉO VÀ XOAY, KHÔNG ĐƯỢC CHỌN ĐỂ ĐIỀU KHIỂN
 // ============================================
-function DraggablePanel({ children, initialPosition, onPositionChange, name = "Panel" }) {
+function DraggablePanel({ children, initialPosition, onPositionChange, name = "Panel", visible = true }) {
   const groupRef = useRef()
   const [position, setPosition] = useState(initialPosition)
   const [rotation, setRotation] = useState([0, 0, 0])  // Rotation state
@@ -150,6 +150,9 @@ function DraggablePanel({ children, initialPosition, onPositionChange, name = "P
       previousControllerPos.current = null
     }
   })
+
+  // Không hiển thị panel nếu visible = false
+  if (!visible) return null
 
   return (
     <group
@@ -1215,6 +1218,95 @@ function VRModelSelector({ selectedModel, onSelectModel }) {
 }
 
 // ============================================
+// COMPONENT: VR Panel Toggle Buttons - Toggle visibility của panels
+// ============================================
+function VRPanelToggleButtons({ showMonitorPanel, setShowMonitorPanel, showControlsPanel, setShowControlsPanel }) {
+  const [hovered, setHovered] = useState(null)
+
+  return (
+    <group>
+      {/* Background */}
+      <mesh position={[0, 0, -0.01]}>
+        <planeGeometry args={[0.4, 0.35]} />
+        <meshBasicMaterial color="#000000" opacity={0.9} transparent />
+      </mesh>
+      {/* Border */}
+      <lineSegments>
+        <edgesGeometry attach="geometry" args={[new THREE.PlaneGeometry(0.4, 0.35)]} />
+        <lineBasicMaterial attach="material" color="#FF5722" linewidth={2} />
+      </lineSegments>
+
+      {/* Title */}
+      <Text
+        position={[0, 0.15, 0]}
+        fontSize={0.028}
+        color="#FF5722"
+        anchorX="center"
+        anchorY="middle"
+      >
+        PANEL TOGGLE
+      </Text>
+
+      {/* Divider */}
+      <mesh position={[0, 0.1, 0.001]}>
+        <planeGeometry args={[0.35, 0.002]} />
+        <meshBasicMaterial color="#FF5722" />
+      </mesh>
+
+      {/* Monitor Panel Toggle Button */}
+      <group position={[0, 0.04, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('monitor')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => setShowMonitorPanel(!showMonitorPanel)}
+        >
+          <planeGeometry args={[0.35, 0.08]} />
+          <meshBasicMaterial
+            color={showMonitorPanel ? (hovered === 'monitor' ? '#66BB6A' : '#4CAF50') : (hovered === 'monitor' ? '#EF5350' : '#F44336')}
+            opacity={0.9}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.022}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {showMonitorPanel ? '✓ MONITOR' : '✗ MONITOR'}
+        </Text>
+      </group>
+
+      {/* Controls Panel Toggle Button */}
+      <group position={[0, -0.07, 0]}>
+        <mesh
+          onPointerEnter={() => setHovered('controls')}
+          onPointerLeave={() => setHovered(null)}
+          onClick={() => setShowControlsPanel(!showControlsPanel)}
+        >
+          <planeGeometry args={[0.35, 0.08]} />
+          <meshBasicMaterial
+            color={showControlsPanel ? (hovered === 'controls' ? '#66BB6A' : '#4CAF50') : (hovered === 'controls' ? '#EF5350' : '#F44336')}
+            opacity={0.9}
+            transparent
+          />
+        </mesh>
+        <Text
+          position={[0, 0, 0.001]}
+          fontSize={0.022}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {showControlsPanel ? '✓ CONTROLS' : '✗ CONTROLS'}
+        </Text>
+      </group>
+    </group>
+  )
+}
+
+// ============================================
 // COMPONENT: Scene - chứa toàn bộ 3D scene
 // ============================================
 function Scene({
@@ -1228,7 +1320,11 @@ function Scene({
   setRingRotation,
   setRingScale,
   selectedModel,
-  setSelectedModel
+  setSelectedModel,
+  showMonitorPanel,
+  setShowMonitorPanel,
+  showControlsPanel,
+  setShowControlsPanel
 }) {
   // Load environment map cho materials (phản chiếu môi trường)
   const env = useEnvironment({ preset: 'apartment' })
@@ -1255,16 +1351,18 @@ function Scene({
 
       {/* MONITOR Panel - Hiển thị thông tin ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
-        initialPosition={[-1.8, 1.4, -1.2]}
+        initialPosition={[-1.8, 1.4, -6.2]}
         name="MONITOR"
+        visible={showMonitorPanel}
       >
         <VRInfoPanel selectedObject={activeObject} />
       </DraggablePanel>
 
       {/* CONTROLS Panel - Điều khiển ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
-        initialPosition={[1.8, 1.3, -1.2]}
+        initialPosition={[1.8, 1.3, -6.2]}
         name="CONTROLS"
+        visible={showControlsPanel}
       >
         <VRControlButtons
           activeObject={activeObject}
@@ -1275,12 +1373,25 @@ function Scene({
 
       {/* MODELS Panel - Chọn model ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
-        initialPosition={[0, 1.3, -1.8]}
+        initialPosition={[0, 1.3, -6.8]}
         name="MODELS"
       >
         <VRModelSelector
           selectedModel={selectedModel}
           onSelectModel={setSelectedModel}
+        />
+      </DraggablePanel>
+
+      {/* PANEL TOGGLE BUTTONS - Toggle Monitor và Controls panels */}
+      <DraggablePanel
+        initialPosition={[-0.8, 1.5, -0.8]}
+        name="PANEL_TOGGLE"
+      >
+        <VRPanelToggleButtons
+          showMonitorPanel={showMonitorPanel}
+          setShowMonitorPanel={setShowMonitorPanel}
+          showControlsPanel={showControlsPanel}
+          setShowControlsPanel={setShowControlsPanel}
         />
       </DraggablePanel>
 
@@ -1549,6 +1660,10 @@ export default function MyPlaygroundR3F() {
   // State quản lý model đang được chọn
   const [selectedModel, setSelectedModel] = useState('/models/nhanMirror.glb')
 
+  // State quản lý visibility của panels trong VR
+  const [showMonitorPanel, setShowMonitorPanel] = useState(true)
+  const [showControlsPanel, setShowControlsPanel] = useState(true)
+
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       {/* Nút Enter VR - hiển thị ở góc dưới bên phải */}
@@ -1633,6 +1748,10 @@ export default function MyPlaygroundR3F() {
             setRingScale={setRingScale}
             selectedModel={selectedModel}
             setSelectedModel={setSelectedModel}
+            showMonitorPanel={showMonitorPanel}
+            setShowMonitorPanel={setShowMonitorPanel}
+            showControlsPanel={showControlsPanel}
+            setShowControlsPanel={setShowControlsPanel}
           />
         </XR>
       </Canvas>
