@@ -1351,7 +1351,7 @@ function Scene({
 
       {/* MONITOR Panel - Hiển thị thông tin ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
-        initialPosition={[-1.8, 1.4, -6.2]}
+        initialPosition={[-1.8, 1.4, -2.0]}
         name="MONITOR"
         visible={showMonitorPanel}
       >
@@ -1360,7 +1360,7 @@ function Scene({
 
       {/* CONTROLS Panel - Điều khiển ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
-        initialPosition={[1.8, 1.3, -6.2]}
+        initialPosition={[1.8, 1.3, -2.0]}
         name="CONTROLS"
         visible={showControlsPanel}
       >
@@ -1373,7 +1373,7 @@ function Scene({
 
       {/* MODELS Panel - Chọn model ring - CHỈ KÉO/XOAY, KHÔNG ĐIỀU KHIỂN */}
       <DraggablePanel
-        initialPosition={[0, 1.3, -6.8]}
+        initialPosition={[0, 1.3, -2.5]}
         name="MODELS"
       >
         <VRModelSelector
@@ -1663,6 +1663,10 @@ export default function MyPlaygroundR3F() {
   // State quản lý visibility của panels trong VR
   const [showMonitorPanel, setShowMonitorPanel] = useState(true)
   const [showControlsPanel, setShowControlsPanel] = useState(true)
+
+  // State quản lý Try-On mode
+  const [tryOnMode, setTryOnMode] = useState(false)
+  const [showSparkles, setShowSparkles] = useState(false)
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
