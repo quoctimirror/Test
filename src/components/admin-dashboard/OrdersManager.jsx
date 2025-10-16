@@ -48,7 +48,7 @@ const OrdersManager = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [statusFilter, setStatusFilter] = useState("NEW");
+  const [statusFilter, setStatusFilter] = useState("ALL");
   const [page, setPage] = useState(0);
   const [pageSize] = useState(20);
   const [totalCount, setTotalCount] = useState(0);
@@ -111,6 +111,13 @@ const OrdersManager = () => {
     ["NEW", "PENDING", "CONFIRMED", "IN_PRODUCTION"].includes(status);
 
   const canRenew = (status) => status === "CANCELLED";
+
+  // Status progression helpers
+  const canStartProduction = (status) => status === "CONFIRMED";
+
+  const canMarkReadyForDelivery = (status) => status === "IN_PRODUCTION";
+
+  const canComplete = (status) => status === "READY_FOR_DELIVERY";
 
   const pageInfo = useMemo(() => {
     const start = page * pageSize + 1;
@@ -296,6 +303,57 @@ const OrdersManager = () => {
                           onClick={() => openConfirmModal(order)}
                         >
                           Confirm
+                        </button>
+                      )}
+
+                      {canStartProduction(order.status) && (
+                        <button
+                          className="admin-button admin-button-primary"
+                          onClick={async () => {
+                            try {
+                              await handleStatusUpdate(order.id, "IN_PRODUCTION");
+                              fetchOrders();
+                            } catch (err) {
+                              const apiError = handleAPIError(err, "Unable to start production");
+                              setError(apiError.message);
+                            }
+                          }}
+                        >
+                          Start Production
+                        </button>
+                      )}
+
+                      {canMarkReadyForDelivery(order.status) && (
+                        <button
+                          className="admin-button admin-button-primary"
+                          onClick={async () => {
+                            try {
+                              await handleStatusUpdate(order.id, "READY_FOR_DELIVERY");
+                              fetchOrders();
+                            } catch (err) {
+                              const apiError = handleAPIError(err, "Unable to mark ready");
+                              setError(apiError.message);
+                            }
+                          }}
+                        >
+                          Ready for Delivery
+                        </button>
+                      )}
+
+                      {canComplete(order.status) && (
+                        <button
+                          className="admin-button admin-button-primary"
+                          onClick={async () => {
+                            try {
+                              await handleStatusUpdate(order.id, "COMPLETED");
+                              fetchOrders();
+                            } catch (err) {
+                              const apiError = handleAPIError(err, "Unable to complete order");
+                              setError(apiError.message);
+                            }
+                          }}
+                        >
+                          Complete Order
                         </button>
                       )}
 

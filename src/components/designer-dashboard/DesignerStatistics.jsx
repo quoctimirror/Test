@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import { designersAPI } from "@/services/api";
+import LineChart from "../charts/LineChart";
+import BarChart from "../charts/BarChart";
+import PieChart from "../charts/PieChart";
+import AreaChart from "../charts/AreaChart";
 
 const DesignerStatistics = ({ designerInfo }) => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -27,6 +31,28 @@ const DesignerStatistics = ({ designerInfo }) => {
           totalReviewsCount: 45,
           averageOrderValue: 4464285, // ~4.5M VND
           totalDesignsCreated: 18,
+          // Monthly sales trend data
+          monthlySalesTrend: [
+            { month: 'Jan', sales: 12000000, earnings: 1800000, orders: 8 },
+            { month: 'Feb', sales: 18000000, earnings: 2700000, orders: 12 },
+            { month: 'Mar', sales: 22000000, earnings: 3300000, orders: 15 },
+            { month: 'Apr', sales: 16000000, earnings: 2400000, orders: 10 },
+            { month: 'May', sales: 25000000, earnings: 3750000, orders: 18 },
+            { month: 'Jun', sales: 32000000, earnings: 4800000, orders: 22 }
+          ],
+          // Design category performance
+          designCategories: [
+            { name: 'Rings', value: 45000000, count: 10 },
+            { name: 'Necklaces', value: 35000000, count: 8 },
+            { name: 'Bracelets', value: 25000000, count: 6 },
+            { name: 'Earrings', value: 20000000, count: 4 }
+          ],
+          // Commission breakdown
+          earningsBreakdown: [
+            { name: 'Commission', value: 12500000 },
+            { name: 'Loyalty Bonus', value: 4250000 },
+            { name: 'Performance Bonus', value: 2000000 }
+          ],
           recentSales: [
             {
               id: '1',
@@ -250,6 +276,116 @@ const DesignerStatistics = ({ designerInfo }) => {
             {dashboardData?.totalDesignsCreated || 0}
           </div>
           <small>Design portfolio</small>
+        </div>
+      </div>
+
+      {/* Visual Analytics Section */}
+      <div className="analytics-section">
+        <h2 className="section-title">Performance Analytics</h2>
+
+        {/* Sales & Earnings Trend */}
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3>Sales & Earnings Trend</h3>
+            <p className="chart-description">Monthly performance over the last 6 months</p>
+          </div>
+          <div className="chart-body">
+            {dashboardData?.monthlySalesTrend && (
+              <AreaChart
+                data={dashboardData.monthlySalesTrend}
+                areas={[
+                  { dataKey: 'sales', name: 'Sales (VND)', color: '#8884d8' },
+                  { dataKey: 'earnings', name: 'Earnings (VND)', color: '#82ca9d' }
+                ]}
+                xDataKey="month"
+                height={350}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Design Categories & Earnings Breakdown */}
+        <div className="charts-grid">
+          <div className="chart-container">
+            <div className="chart-header">
+              <h3>Design Category Performance</h3>
+              <p className="chart-description">Sales distribution by product category</p>
+            </div>
+            <div className="chart-body">
+              {dashboardData?.designCategories && (
+                <PieChart
+                  data={dashboardData.designCategories}
+                  dataKey="value"
+                  nameKey="name"
+                  height={300}
+                  innerRadius={60}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="chart-container">
+            <div className="chart-header">
+              <h3>Earnings Breakdown</h3>
+              <p className="chart-description">Revenue sources composition</p>
+            </div>
+            <div className="chart-body">
+              {dashboardData?.earningsBreakdown && (
+                <PieChart
+                  data={dashboardData.earningsBreakdown}
+                  dataKey="value"
+                  nameKey="name"
+                  height={300}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Top Designs Performance */}
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3>Top Designs Performance</h3>
+            <p className="chart-description">Best performing designs by sales volume</p>
+          </div>
+          <div className="chart-body">
+            {dashboardData?.topDesigns && (
+              <BarChart
+                data={dashboardData.topDesigns.map(design => ({
+                  name: design.designName,
+                  sales: design.totalSalesAmount,
+                  earnings: design.totalCommissionEarned + design.totalLoyaltyEarned
+                }))}
+                bars={[
+                  { dataKey: 'sales', name: 'Total Sales (VND)', color: '#8884d8' },
+                  { dataKey: 'earnings', name: 'Total Earnings (VND)', color: '#82ca9d' }
+                ]}
+                xDataKey="name"
+                layout="vertical"
+                height={300}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Monthly Order Volume */}
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3>Order Volume Trend</h3>
+            <p className="chart-description">Number of orders per month</p>
+          </div>
+          <div className="chart-body">
+            {dashboardData?.monthlySalesTrend && (
+              <LineChart
+                data={dashboardData.monthlySalesTrend}
+                lines={[
+                  { dataKey: 'orders', name: 'Orders', color: '#ffc658' }
+                ]}
+                xDataKey="month"
+                height={300}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

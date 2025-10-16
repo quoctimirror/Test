@@ -540,6 +540,14 @@ export default function Navbar() {
                         </li>
                       )}
 
+                      {isUserDesigner() && (
+                        <li>
+                          <UnderlineButton onClick={handleDesignerDashboardClick}>
+                            Designer Dashboard
+                          </UnderlineButton>
+                        </li>
+                      )}
+
                       <li className="logout-item">
                         <UnderlineButton onClick={handleLogoutClick}>
                           Logout

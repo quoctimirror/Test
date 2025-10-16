@@ -5,18 +5,32 @@ import whiteIcon from '../../assets/images/white_gts.svg';
 import ShineGlassButton from '../common/button/ShineGlassButton';
 import SizeSelector from './SizeSelector';
 
-const RightConfiguration = ({ hideButtons = false }) => {
-    const [quantity, setQuantity] = useState(1);
-    const [size, setSize] = useState('6.0');
+const RightConfiguration = ({ hideButtons = false, productConfig, setProductConfig, onOrderNow }) => {
     const [showSizeSelector, setShowSizeSelector] = useState(false);
 
+    // Use productConfig if provided, otherwise use local state
+    const quantity = productConfig?.quantity || 1;
+    const size = productConfig?.size || '6.0';
+
     const handleQuantityChange = (increment) => {
-        setQuantity(prev => Math.max(1, prev + increment));
+        const newQuantity = Math.max(1, quantity + increment);
+        if (setProductConfig) {
+            setProductConfig(prev => ({ ...prev, quantity: newQuantity }));
+        }
     };
 
     const handleSizeSelect = (sizeItem) => {
-        setSize(sizeItem.size.toString());
+        const newSize = sizeItem.size.toString();
+        if (setProductConfig) {
+            setProductConfig(prev => ({ ...prev, size: newSize }));
+        }
         setShowSizeSelector(false);
+    };
+
+    const handleOrderNowClick = () => {
+        if (onOrderNow) {
+            onOrderNow();
+        }
     };
 
     return (
@@ -116,7 +130,10 @@ const RightConfiguration = ({ hideButtons = false }) => {
                             </div>
                         </div>
 
-                        <button className="pv2-order-btn bodytext-4--no-margin">
+                        <button
+                            className="pv2-order-btn bodytext-4--no-margin"
+                            onClick={handleOrderNowClick}
+                        >
                             Order Now
                         </button>
                     </>

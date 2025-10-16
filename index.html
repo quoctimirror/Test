@@ -17,6 +17,21 @@
     <meta property="twitter:description" content="Welcome Logo. Awakening Luxury through Your Senses.. in Every Time, Space, and Presence." />
     <meta property="twitter:image" content="https://mirrorfuturediamond.com/mirror-logo-square.svg" />
 
+    <!-- Content Security Policy - Development Mode (More Permissive) -->
+    <!-- For production, tighten these rules -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http://localhost:*;
+      style-src 'self' 'unsafe-inline' https:;
+      img-src 'self' data: https: http: blob:;
+      font-src 'self' data: https:;
+      connect-src 'self' http://localhost:* https:;
+      frame-src 'self' https:;
+      child-src 'self' https: blob:;
+      worker-src 'self' blob:;
+      media-src 'self' https: blob:;
+    ">
+
     <!-- Schema.org Structured Data for Google Search -->
     <script type="application/ld+json">
     {

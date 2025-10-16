@@ -1093,3 +1093,81 @@
 .home-nav-label {
   font-weight: 500;
 }
+
+/* Chart Styling */
+.analytics-section {
+  margin-top: 2rem;
+}
+
+.section-title {
+  font-family: "Saol Display", serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: #343a40;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.chart-container {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.chart-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.chart-header {
+  margin-bottom: 1rem;
+}
+
+.chart-header h3 {
+  color: #343a40;
+  margin: 0 0 0.5rem 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.chart-description {
+  color: #6c757d;
+  font-size: 14px;
+  margin: 0;
+}
+
+.chart-body {
+  padding: 1rem 0;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive chart adjustments */
+@media (max-width: 1024px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    padding: 1rem;
+  }
+
+  .chart-header h3 {
+    font-size: 16px;
+  }
+
+  .chart-description {
+    font-size: 13px;
+  }
+}

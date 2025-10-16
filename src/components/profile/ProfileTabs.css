@@ -216,3 +216,277 @@
     width: 100%;
   }
 }
+
+/* Order Status Badges */
+.profile-item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.order-status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.status-new {
+  background: #E3F2FD;
+  color: #1976D2;
+}
+
+.status-confirmed {
+  background: #F3E5F5;
+  color: #7B1FA2;
+}
+
+.status-production {
+  background: #FFF3E0;
+  color: #F57C00;
+}
+
+.status-ready {
+  background: #E8F5E9;
+  color: #388E3C;
+}
+
+.status-completed {
+  background: #E0E0E0;
+  color: #424242;
+}
+
+.status-cancelled {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+.status-default {
+  background: #F5F5F5;
+  color: #757575;
+}
+
+.order-payment-status {
+  color: #797979;
+}
+
+/* Loading and Error States */
+.profile-loading-state,
+.profile-error-state,
+.profile-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #797979;
+}
+
+.profile-error-state {
+  color: #C62828;
+}
+
+.profile-empty-state {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Order Detail Modal */
+.order-detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.order-detail-modal {
+  background: white;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 0;
+  position: relative;
+}
+
+.order-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 40px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+}
+
+.order-detail-close {
+  background: none;
+  border: none;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  color: #797979;
+  transition: color 0.2s ease;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-detail-close:hover {
+  color: #000;
+}
+
+.order-detail-content {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.order-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-detail-section h3 {
+  color: #000;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.order-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.order-detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.order-detail-field span:first-child {
+  color: #797979;
+}
+
+.order-detail-field span:last-child {
+  color: #000;
+}
+
+.order-detail-product {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.order-detail-product-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  background: #000;
+  flex-shrink: 0;
+}
+
+.order-detail-product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Order Timeline */
+.order-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 20px;
+}
+
+.order-timeline-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+
+.order-timeline-item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 20px;
+  bottom: -20px;
+  width: 2px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.order-timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #000;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.order-timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-timeline-content span:first-child {
+  color: #000;
+}
+
+.order-timeline-content span:last-child {
+  color: #797979;
+}
+
+/* Responsive for Modal */
+@media (max-width: 768px) {
+  .order-detail-modal {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .order-detail-header {
+    padding: 24px 20px;
+  }
+
+  .order-detail-content {
+    padding: 24px 20px;
+    gap: 32px;
+  }
+
+  .order-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .order-detail-product {
+    flex-direction: column;
+  }
+
+  .order-detail-product-image {
+    width: 100%;
+    height: 200px;
+  }
+}
