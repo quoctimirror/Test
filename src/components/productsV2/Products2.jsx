@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import './Products.css';
-import LeftContainer from './LeftContainer';
+import LeftContainer_v2 from './LeftContainer_v2';
 import RightConfiguration from './RightConfiguration';
 import MobileProductBar from './MobileProductBar';
 import ViewAllProduct from '../viewAllProduct/ViewAllProduct';
 import Contact from '../contactUs/ContactUs';
-import OrderFormModal from './OrderFormModal';
-import OrderSuccessModal from './OrderSuccessModal';
 
 
-const Products = () => {
+const Products2 = () => {
     const canvasRef = useRef(null);
     const viewerRef = useRef(null);
     const [loading, setLoading] = useState(true);
@@ -24,23 +22,6 @@ const Products = () => {
         { name: 'Refine Mirror Ring 1', path: '/models/refine-mirror-ring-1.glb' },
         { name: 'Refine Mirror Ring 2', path: '/models/refine-mirror-ring-2.glb' }
     ]);
-
-    // Modal states
-    const [showOrderForm, setShowOrderForm] = useState(false);
-    const [showOrderSuccess, setShowOrderSuccess] = useState(false);
-    const [orderDetails, setOrderDetails] = useState(null);
-
-    // Product configuration state (shared with RightConfiguration)
-    const [productConfig, setProductConfig] = useState({
-        id: 'PRD000024', // Mirror Custom Ring product ID
-        name: 'LUMINA OLIVIA 5',
-        shape: 'Pear',
-        metal: 'Yellow Gold',
-        band: 'Single band',
-        size: '6.0',
-        quantity: 1,
-        price: 15600
-    });
 
     // useEffect(() => {
     //     const setupViewer = async () => {
@@ -280,40 +261,16 @@ const Products = () => {
     //     }
     // };
 
-    // Order handlers
-    const handleOrderNow = () => {
-        setShowOrderForm(true);
-    };
-
-    const handleOrderSuccess = (order) => {
-        setOrderDetails(order);
-        setShowOrderForm(false);
-        setShowOrderSuccess(true);
-    };
-
-    const handleCloseOrderForm = () => {
-        setShowOrderForm(false);
-    };
-
-    const handleCloseOrderSuccess = () => {
-        setShowOrderSuccess(false);
-        setOrderDetails(null);
-    };
-
     return (
         <>
             <div className="pv2-products-main-wrapper">
                 <div className="pv2-products-container">
-                    {/* Left side - LeftContainer chứa Section1 và Section2 */}
-                    <LeftContainer />
+                    {/* Left side - LeftContainer_v2 chứa Section1_v2 (with ProductsLeft2) và Section2 */}
+                    <LeftContainer_v2 />
 
                     {/* Right side - Configuration */}
                     <div className="pv2-products-right">
-                        <RightConfiguration
-                            productConfig={productConfig}
-                            setProductConfig={setProductConfig}
-                            onOrderNow={handleOrderNow}
-                        />
+                        <RightConfiguration />
                     </div>
                 </div>
 
@@ -325,24 +282,9 @@ const Products = () => {
 
                 {/* Mobile Product Bar - Only visible on mobile */}
                 <MobileProductBar isVisible={showMobileBar} />
-
-                {/* Order Form Modal */}
-                <OrderFormModal
-                    isOpen={showOrderForm}
-                    onClose={handleCloseOrderForm}
-                    productDetails={productConfig}
-                    onSuccess={handleOrderSuccess}
-                />
-
-                {/* Order Success Modal */}
-                <OrderSuccessModal
-                    isOpen={showOrderSuccess}
-                    onClose={handleCloseOrderSuccess}
-                    orderDetails={orderDetails}
-                />
             </div>
         </>
     );
 };
 
-export default Products;
+export default Products2;

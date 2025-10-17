@@ -9,9 +9,9 @@
  * - Trích xuất danh sách mesh từ model và gửi lên parent
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useGLTF, useEnvironment, Environment, OrbitControls } from '@react-three/drei';
-import { EffectComposer, Bloom, N8AO, ToneMapping, FXAA } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, N8AO, ToneMapping, SMAA } from '@react-three/postprocessing';
 import { Ring3D } from './Ring3D';
 import { SpotLightHelper } from 'three';
 
@@ -20,16 +20,20 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
   const { nodes } = useGLTF(modelPath);
 
   // Load environment map (HDR) để tạo phản chiếu
-  const env = useEnvironment({ files: '/studio_env/env_metal_1.exr' });
+  const env = useEnvironment({ files: '/studio_env/brown_photostudio_02_4k.exr' });
 
-  // Refs cho các light helpers
+  // Ref cho spotlight helper
   const spotLightRef = useRef();
-  const helperSpotRef = useRef();
-  const helperPointRef = useRef();
 
   // Trích xuất danh sách mesh từ model khi model được load
+  const handleMeshListLoad = useCallback((list) => {
+    if (onMeshListLoad) {
+      onMeshListLoad(list);
+    }
+  }, [onMeshListLoad]);
+
   useEffect(() => {
-    if (nodes && onMeshListLoad) {
+    if (nodes) {
       const list = [];
 
       Object.keys(nodes).forEach(key => {
@@ -45,14 +49,14 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
       });
 
       // Gửi danh sách mesh lên component cha
-      onMeshListLoad(list);
+      handleMeshListLoad(list);
     }
-  }, [nodes, onMeshListLoad]);
+  }, [nodes, handleMeshListLoad]);
 
   return (
     <>
       {/* === BACKGROUND COLOR === */}
-      <color attach="background" args={['#ffffff']} />
+      <color attach="background" args={['#ffffff']} /> {/* Background màu trắng */}
 
       {/* === LIGHTING === */}
       {/* SpotLight chính chiếu từ phía trên */}
@@ -64,6 +68,8 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
         decay={0}
         intensity={Math.PI * 3}
         castShadow
+        shadow-mapSize={[512, 512]}
+        shadow-bias={-0.0001}
       />
 
       {/* ⚡ ÁNH SÁNG PHÍA SAU - để ánh sáng đi xuyên qua kim cương tạo khúc xạ */}
@@ -97,6 +103,7 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
           meshColors={meshColors}
           meshVisibility={meshVisibility}
           diamondScale={diamondScale}
+          renderMode={renderMode}
         />
       </group>
 
@@ -113,19 +120,20 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
       {/* EffectComposer: conditional rendering dựa trên renderMode */}
       <EffectComposer
         disableNormalPass={renderMode === 'smooth'}
-        multisampling={renderMode === 'fullTopping' ? 4 : 2}
+        multisampling={renderMode === 'fullTopping' ? 8 : 4}
+        enabled={true}
       >
-        {/* FXAA: Anti-aliasing nhẹ, hiệu quả - thay thế SMAA để tránh conflict */}
-        <FXAA />
+        {/* SMAA: Anti-aliasing mạnh, chống răng cưa tốt hơn FXAA */}
+        <SMAA />
 
-        {/* N8AO: Ambient Occlusion */}
-        <N8AO
-          aoRadius={renderMode === 'fullTopping' ? 0.15 : 0.1}
-          intensity={renderMode === 'fullTopping' ? 4 : 2}
-          distanceFalloff={renderMode === 'fullTopping' ? 2 : 1}
-          quality={renderMode === 'smooth' ? 'performance' : undefined}
-          halfRes={renderMode === 'smooth'}
-        />
+        {/* N8AO: Ambient Occlusion - Chỉ bật ở fullTopping mode */}
+        {renderMode === 'fullTopping' && (
+          <N8AO
+            aoRadius={0.15}
+            intensity={4}
+            distanceFalloff={2}
+          />
+        )}
 
         {/* Bloom: hiệu ứng lấp lánh - Tăng cường cho kim cương */}
         {enableBloom && (
@@ -137,12 +145,13 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
           />
         )}
 
-        {/* ToneMapping: ánh xạ màu HDR */}
-        <ToneMapping />
+        {/* ToneMapping: ánh xạ màu HDR - TẮT để background trắng không bị xám */}
+        {/* <ToneMapping /> */}
       </EffectComposer>
 
       {/* === ENVIRONMENT === */}
-      {/* Environment map để phản chiếu và ánh sáng, background trắng ở trên */}
+      {/* Environment map để phản chiếu và ánh sáng */}
+      {/* background={false} → KHÔNG hiển thị HDRI làm background, chỉ dùng cho phản chiếu */}
       <Environment map={env} background={false} />
     </>
   );

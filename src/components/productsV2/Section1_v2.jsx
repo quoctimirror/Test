@@ -1,9 +1,8 @@
 import './Section1.css';
 import ShineGlassButton from '../common/button/ShineGlassButton';
-import ProductsLeft from './ProductsLeft'; // iJewel viewer (commented out)
-// import ProductsLeft2 from './ProductsLeft2'; // quocti_dancefloor viewer (realistic rendering)
+import ProductsLeft2 from './ProductsLeft2'; // quocti_dancefloor viewer (realistic rendering)
 
-const Section1 = () => {
+const Section1_v2 = () => {
     return (
         <div className="pv2-section1">
             <div className="pv2-section1-container">
@@ -35,8 +34,7 @@ const Section1 = () => {
 
                 {/* Loading Model Area */}
                 <div className="pv2-model-area">
-                    {/* <ProductsLeft /> */} {/* iJewel viewer - commented out for testing */}
-                    <ProductsLeft /> {/* quocti_dancefloor viewer - realistic 3D rendering */}
+                    <ProductsLeft2 /> {/* quocti_dancefloor viewer - realistic 3D rendering */}
                 </div>
             </div>
         </div>
@@ -44,4 +42,4 @@ const Section1 = () => {
 };
 
 
-export default Section1;
+export default Section1_v2;

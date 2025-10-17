@@ -19,7 +19,7 @@
  * TƯƠNG THÍCH: React 19 (không dùng Leva)
  */
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useCallback, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 
@@ -150,7 +150,7 @@ export default function SimpleMeshInspector() {
   }, [selectedBandMetal, meshList]);
 
   // ===== CONVERT SELECTED SIZE → DIAMOND SCALE =====
-  const diamondScale = (() => {
+  const diamondScale = useMemo(() => {
     const sizeMap = {
       '1 ct': 1.0,    // Original size
       '1.5 ct': 1.15, // 15% lớn hơn
@@ -160,10 +160,10 @@ export default function SimpleMeshInspector() {
     const scale = sizeMap[selectedSize] || 1.0;
     console.log('🔍 Diamond Scale:', selectedSize, '→', scale);
     return scale;
-  })();
+  }, [selectedSize]);
 
   // ===== XỬ LÝ UPLOAD FILE =====
-  const handleFileUpload = async (url) => {
+  const handleFileUpload = useCallback(async (url) => {
     try {
       // Clear GLTF cache để tránh conflict
       useGLTF.clear();
@@ -192,7 +192,7 @@ export default function SimpleMeshInspector() {
       console.error('Error loading model:', error);
       alert('Không thể load model này. Vui lòng chọn file GLB/GLTF hợp lệ.');
     }
-  };
+  }, []);
 
   // ===== RENDER UI =====
   return (
@@ -306,14 +306,14 @@ export default function SimpleMeshInspector() {
       </div>
 
       {/* ===== 3D CANVAS (GIỮA) ===== */}
-      <div style={{ flex: 1, background: '#ffffff' }}>
+      <div style={{ flex: 1, background: renderMode === 'smooth' ? '#000000' : '#ffffff' }}>
         {/* ErrorBoundary: Bắt lỗi khi load model */}
         <ErrorBoundary key={modelPath}>
           {/* Suspense: Hiển thị "Loading..." khi đang load model */}
           <Suspense
             fallback={
               <div style={{
-                color: '#333',
+                color: renderMode === 'smooth' ? '#fff' : '#333',
                 height: '100%',
                 display: 'flex',
                 justifyContent: 'center',
@@ -325,12 +325,12 @@ export default function SimpleMeshInspector() {
           >
             <Canvas
               shadows
-              dpr={[1, 2]}
+              dpr={renderMode === 'fullTopping' ? [1.5, 2] : [1, 1.5]}
               gl={{
-                antialias: true,
-                preserveDrawingBuffer: true,
+                antialias: renderMode === 'fullTopping',
                 powerPreference: 'high-performance',
-                stencil: false
+                stencil: false,
+                alpha: false
               }}
               camera={{ position: [0, 0, 10], fov: 50 }}
             >

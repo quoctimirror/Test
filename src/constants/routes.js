@@ -33,6 +33,7 @@ export const ROUTES = {
 
   // Test routes
   PRODUCTS_V2: "/7b8e9f0a-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
+  PRODUCTS_V3: "/3f4a5b6c-7d8e-9f0a-1b2c-3d4e5f6a7b8c",
   PRODUCTS_LEFT: "/4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
   BOD_MEMBER_V2: "/9e0f1a2b-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
   VIEW_360: "/6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f",

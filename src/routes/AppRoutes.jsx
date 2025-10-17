@@ -60,6 +60,7 @@ const ImmersiveShowroomPage = lazy(() =>
 const SubmitPage = lazy(() => import("@pages/SubmitPage"));
 const SubmitSuccessPage = lazy(() => import("@pages/SubmitSuccessPage"));
 const ProductsV2 = lazy(() => import("@components/productsV2/Products.jsx"));
+const ProductsV3 = lazy(() => import("@components/productsV2/Products2.jsx"));
 const ProductsLeft = lazy(() =>
   import("@components/productsV2/ProductsLeft.jsx")
 );
@@ -82,6 +83,7 @@ export default function AppRoutes() {
       `${ROUTES.AUTH}/register`,
       ROUTES.PRODUCTS,
       ROUTES.PRODUCTS_V2,
+      ROUTES.PRODUCTS_V3,
       ROUTES.ALL_GEMS,
       ROUTES.COLLECTIONS,
       ROUTES.SERVICES,
@@ -192,6 +194,8 @@ export default function AppRoutes() {
           <Route path={ROUTES.PRODUCTS} element={<ProductsPage />} />
 
           <Route path={ROUTES.PRODUCTS_V2} element={<ProductsV2 />} />
+
+          <Route path={ROUTES.PRODUCTS_V3} element={<ProductsV3 />} />
 
           <Route path={ROUTES.ALL_GEMS} element={<AllGemsPage />} />
 

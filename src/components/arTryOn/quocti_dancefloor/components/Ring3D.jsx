@@ -9,16 +9,15 @@
  * - Auto-rotate nếu được bật
  */
 
-import { useRef } from 'react';
+import { useRef, memo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Center, MeshRefractionMaterial } from '@react-three/drei';
-import * as THREE from 'three';
 
-export function Ring3D({ nodes, env, selectedMesh, transform, meshColors, meshVisibility, diamondScale = 1 }) {
+export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform, meshColors, meshVisibility, diamondScale = 1, renderMode = 'smooth' }) {
   const groupRef = useRef();
 
   // Auto rotate nếu được bật
-  useFrame((state, delta) => {
+  useFrame((_state, delta) => {
     if (transform.autoRotate && groupRef.current) {
       groupRef.current.rotation.y += delta * 0.5;
     }
@@ -78,18 +77,21 @@ export function Ring3D({ nodes, env, selectedMesh, transform, meshColors, meshVi
                   />
                 ) : env ? (
                   // Có environment map → dùng MeshRefractionMaterial (thủy tinh/kim cương)
+                  // Converted from diamond-material.dmat (iJewel3D DiamondMaterial)
                   <MeshRefractionMaterial
-                    color={meshColors[key] || '#b5cbdd'}
+                    color="#ffffff"  // color: 16777215 từ .dmat
                     envMap={env}
-                    bounces={4}  // Tăng số lần khúc xạ để lấp lánh hơn
-                    ior={2.417}  // Index of Refraction - Kim cương thật: 2.417
-                    fresnel={0.1}  // Giảm fresnel để ánh sáng đi qua nhiều hơn
-                    aberrationStrength={0.02}  // Hiệu ứng tách màu như kim cương thật
-                    fastChroma={true}
+                    bounces={5}  // rayBounces: 5 từ .dmat
+                    ior={2.6}  // refractiveIndex: 2.6 từ .dmat
+                    fresnel={0.5}  // reflectivity: 0.5 từ .dmat
+                    aberrationStrength={0}  // TẮT hoàn toàn dispersion/chromatic aberration
+                    fastChroma={false}  // Chất lượng cao
                     toneMapped={false}
-                    transmission={0.95}  // Gần như trong suốt hoàn toàn
-                    thickness={0.2}  // Độ dày mỏng để ánh sáng khúc xạ tốt
-                    envMapIntensity={1.5}  // Tăng cường độ phản chiếu môi trường
+                    transmission={1.0}  // Hoàn toàn trong suốt (fix transmission: 0 trong .dmat)
+                    thickness={0.2}  // Thickness vừa phải
+                    envMapIntensity={1.3}  // envMapIntensity: 1.3 từ .dmat
+                    clearcoat={1}
+                    clearcoatRoughness={0}
                   />
                 ) : (
                   // Không có env → dùng material thường
@@ -143,18 +145,21 @@ export function Ring3D({ nodes, env, selectedMesh, transform, meshColors, meshVi
                   />
                 ) : isGem && env ? (
                   // Là đá quý + có env → dùng MeshRefractionMaterial
+                  // Converted from diamond-material.dmat
                   <MeshRefractionMaterial
-                    color={meshColors[key] || '#b5cbdd'}
+                    color="#ffffff"
                     envMap={env}
-                    bounces={4}
-                    ior={2.417}  // Kim cương thật
-                    fresnel={0.1}
-                    aberrationStrength={0.02}
-                    fastChroma={true}
+                    bounces={5}
+                    ior={2.6}
+                    fresnel={0.5}
+                    aberrationStrength={0}  // TẮT hoàn toàn
+                    fastChroma={false}
                     toneMapped={false}
-                    transmission={0.95}
+                    transmission={1.0}
                     thickness={0.2}
-                    envMapIntensity={1.5}
+                    envMapIntensity={1.3}
+                    clearcoat={1}
+                    clearcoatRoughness={0}
                   />
                 ) : (
                   // Mesh thường (đai nhẫn) → giữ nguyên material gốc
@@ -173,4 +178,4 @@ export function Ring3D({ nodes, env, selectedMesh, transform, meshColors, meshVi
       </group>
     </Center>
   );
-}
+});
