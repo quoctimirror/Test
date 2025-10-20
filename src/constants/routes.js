@@ -8,6 +8,7 @@ export const ROUTES = {
   MILAN_SUBMIT: "/mirror-in-milan-digital-jewelry-week",
   MILAN_SUBMIT_SUCCESS: "/mirror-in-milan-digital-jewelry-week/submit-success",
   SCAVENGER_HUNT: "/scavenger-hunt",
+  VERIFY_EMAIL: "/verify-email",
 
   // UUID-protected routes
   WELCOME: "/5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b",

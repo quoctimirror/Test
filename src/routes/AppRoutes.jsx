@@ -45,6 +45,7 @@ const DesignerDashboard = lazy(() =>
 const AuthPage = lazy(() => import("@pages/AuthPage"));
 const Login = lazy(() => import("@components/login/Login"));
 const Register = lazy(() => import("@components/register/Register"));
+const EmailVerification = lazy(() => import("@components/email-verification/EmailVerification"));
 const Profile = lazy(() => import("@components/profile/Profile"));
 const ProtectedRoute = lazy(() => import("@components/auth/ProtectedRoute"));
 const AllGemsPage = lazy(() => import("@pages/AllGemsPage"));
@@ -81,6 +82,7 @@ export default function AppRoutes() {
       ROUTES.AUTH,
       `${ROUTES.AUTH}/login`,
       `${ROUTES.AUTH}/register`,
+      ROUTES.VERIFY_EMAIL,
       ROUTES.PRODUCTS,
       ROUTES.PRODUCTS_V2,
       ROUTES.PRODUCTS_V3,
@@ -190,6 +192,8 @@ export default function AppRoutes() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
           </Route>
+
+          <Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
 
           <Route path={ROUTES.PRODUCTS} element={<ProductsPage />} />
 

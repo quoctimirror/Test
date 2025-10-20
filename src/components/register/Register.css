@@ -723,44 +723,179 @@
         padding: 10px;
         align-items: flex-start;
     }
-    
+
     .register-title {
         margin-top: 20px;
         margin-bottom: 20px;
         font-size: 1.4rem;
     }
-    
+
     .title-group {
         margin-bottom: 16px;
     }
-    
+
     .form-field-container {
         margin-bottom: 16px;
     }
-    
+
     .password-requirements {
         margin-top: 16px;
         margin-bottom: 20px;
         font-size: 11px;
     }
-    
+
     .password-requirements li {
         font-size: 10px;
         margin-bottom: 2px;
     }
-    
+
     .privacy-info {
         margin-bottom: 12px;
         font-size: 10px;
     }
-    
+
     .create-account-button {
         margin-bottom: 16px;
         font-size: 13px;
     }
-    
+
     .login-prompt {
         margin-bottom: 20px;
         font-size: 11px;
+    }
+}
+
+/* --- Registration Success Screen --- */
+.registration-success {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.success-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 32px;
+    margin-top: 120px;
+}
+
+.success-icon svg {
+    color: #28a745;
+    filter: drop-shadow(0 2px 8px rgba(40, 167, 69, 0.3));
+}
+
+.registration-success .register-title {
+    margin-top: 0;
+    margin-bottom: 24px;
+    margin-left: 0;
+}
+
+.success-message {
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
+    margin-bottom: 16px;
+}
+
+.registered-email {
+    color: #000;
+    font-weight: 500;
+    margin-bottom: 24px;
+    word-break: break-word;
+}
+
+.verification-instruction {
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
+    margin-bottom: 48px;
+    line-height: 1.6;
+}
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+.email-note {
+    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
+    font-style: italic;
+    margin-bottom: 120px;
+}
+
+/* Responsive for success screen */
+@media screen and (max-width: 768px) {
+    .registration-success {
+        padding: 30px 15px;
+    }
+
+    .success-icon {
+        margin-top: 100px;
+        margin-bottom: 28px;
+    }
+
+    .success-icon svg {
+        width: 56px;
+        height: 56px;
+    }
+
+    .registration-success .register-title {
+        margin-bottom: 20px;
+        font-size: 1.6rem;
+    }
+
+    .verification-instruction {
+        margin-bottom: 40px;
+    }
+
+    .success-actions {
+        margin-bottom: 28px;
+    }
+
+    .email-note {
+        margin-bottom: 100px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .registration-success {
+        padding: 20px 10px;
+    }
+
+    .success-icon {
+        margin-top: 60px;
+        margin-bottom: 24px;
+    }
+
+    .success-icon svg {
+        width: 48px;
+        height: 48px;
+    }
+
+    .registration-success .register-title {
+        margin-bottom: 16px;
+        font-size: 1.4rem;
+        line-height: 1.2;
+    }
+
+    .success-message,
+    .verification-instruction,
+    .email-note {
+        font-size: 14px;
+    }
+
+    .registered-email {
+        font-size: 15px;
+    }
+
+    .verification-instruction {
+        margin-bottom: 32px;
+    }
+
+    .success-actions {
+        margin-bottom: 24px;
+    }
+
+    .email-note {
+        margin-bottom: 60px;
     }
 }

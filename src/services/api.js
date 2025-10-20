@@ -110,6 +110,34 @@ api.interceptors.response.use(
   }
 );
 
+// ===== AUTHENTICATION API =====
+export const authAPI = {
+  // Login / Authenticate
+  authenticate: (username, password) =>
+    api.post("/api/auth/authenticate", { username, password }),
+
+  // Register new user
+  register: (userData) => api.post("/api/auth/register", userData),
+
+  // Verify email with token (GET with query param)
+  verifyEmail: (token) => api.get(`/api/auth/verify-email?token=${token}`),
+
+  // Resend verification email
+  resendVerificationEmail: (email) =>
+    api.post("/api/auth/resend-verification-email", { email }),
+
+  // Refresh token
+  refreshToken: (refreshToken) =>
+    api.post("/api/auth/refresh-token", { refreshToken }),
+
+  // Forgot password
+  forgotPassword: (email) => api.post("/api/auth/forgot-password", { email }),
+
+  // Reset password
+  resetPassword: (token, newPassword) =>
+    api.post("/api/auth/reset-password", { token, newPassword }),
+};
+
 // ===== LOCATIONS API =====
 export const locationsAPI = {
   // Get all active locations

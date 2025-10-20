@@ -25,6 +25,76 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
+
+  const validatePassword = (password) => {
+    // Validate password according to backend PasswordValidationService.java rules
+    const errors = [];
+
+    // Length check (8-128 characters)
+    if (password.length < 8 || password.length > 128) {
+      errors.push("Password must be between 8 and 128 characters");
+    }
+
+    // Must contain at least 1 uppercase letter
+    if (!/[A-Z]/.test(password)) {
+      errors.push("Password must contain at least 1 uppercase letter");
+    }
+
+    // Must contain at least 1 lowercase letter
+    if (!/[a-z]/.test(password)) {
+      errors.push("Password must contain at least 1 lowercase letter");
+    }
+
+    // Must contain at least 1 digit
+    if (!/\d/.test(password)) {
+      errors.push("Password must contain at least 1 digit");
+    }
+
+    // Must contain at least 1 special character
+    if (!/[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/;'`~]/.test(password)) {
+      errors.push("Password must contain at least 1 special character");
+    }
+
+    // No whitespace allowed
+    if (/\s/.test(password)) {
+      errors.push("Password cannot contain whitespace");
+    }
+
+    // No more than 4 consecutive repeated characters
+    if (/(.)\1{3,}/.test(password)) {
+      errors.push("Password cannot have more than 4 consecutive repeated characters");
+    }
+
+    // Check for common passwords
+    const commonPasswords = [
+      "password", "123456", "password123", "admin", "qwerty",
+      "letmein", "welcome", "monkey", "1234567890", "abc123"
+    ];
+    const lowerPassword = password.toLowerCase();
+    if (commonPasswords.some(common => lowerPassword.includes(common))) {
+      errors.push("Password is too common and easily guessable");
+    }
+
+    // Check for illegal sequences (5+ consecutive characters)
+    // Alphabetical sequences
+    if (/abcde|bcdef|cdefg|defgh|efghi|fghij|ghijk|hijkl|ijklm|jklmn|klmno|lmnop|mnopq|nopqr|opqrs|pqrst|qrstu|rstuv|stuvw|tuvwx|uvwxy|vwxyz/i.test(password)) {
+      errors.push("Password cannot contain alphabetical sequences of 5 or more characters");
+    }
+
+    // Numerical sequences
+    if (/01234|12345|23456|34567|45678|56789/.test(password)) {
+      errors.push("Password cannot contain numerical sequences of 5 or more characters");
+    }
+
+    // QWERTY sequences
+    if (/qwert|werty|asdfg|sdfgh|zxcvb|xcvbn/i.test(password)) {
+      errors.push("Password cannot contain keyboard sequences of 5 or more characters");
+    }
+
+    return errors;
+  };
 
   const validateForm = () => {
     const newErrors = {};
@@ -33,7 +103,14 @@ const Register = () => {
 
     if (!firstName.trim()) newErrors.firstName = "First Name is required";
     if (!lastName.trim()) newErrors.lastName = "Last Name is required";
-    if (!username.trim()) newErrors.username = "Username is required";
+
+    // Username validation (3-50 characters)
+    if (!username.trim()) {
+      newErrors.username = "Username is required";
+    } else if (username.trim().length < 3 || username.trim().length > 50) {
+      newErrors.username = "Username must be between 3 and 50 characters";
+    }
+
     if (!email.trim()) {
       newErrors.email = "Email Address is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -42,9 +119,11 @@ const Register = () => {
 
     if (!password) {
       newErrors.password = "Password is required";
-    } else if (password.length < 8) {
-      // Cập nhật độ dài tối thiểu theo backend (nếu có)
-      newErrors.password = "Password must be at least 8 characters long.";
+    } else {
+      const passwordErrors = validatePassword(password);
+      if (passwordErrors.length > 0) {
+        newErrors.password = passwordErrors[0]; // Show first error
+      }
     }
 
     if (!confirmPassword) {
@@ -80,8 +159,9 @@ const Register = () => {
     try {
       await api.post("/api/auth/register", payload);
 
-      // alert('Account created successfully! Please log in.');
-      navigate(ROUTES.AUTH_LOGIN);
+      // Lưu email và hiển thị thông báo kiểm tra email
+      setRegisteredEmail(formData.email);
+      setRegistrationSuccess(true);
     } catch (error) {
       // Xử lý khi thất bại
       let errorMessage = "Registration failed. Please try again.";
@@ -140,6 +220,55 @@ const Register = () => {
       />
     </button>
   );
+
+  // Nếu đăng ký thành công, hiển thị thông báo kiểm tra email
+  if (registrationSuccess) {
+    return (
+      <div className="register-container">
+        <div className="register-form-wrapper">
+          <div className="registration-success">
+            <div className="success-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="64"
+                height="64"
+              >
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              </svg>
+            </div>
+            <h1 className="heading-1--no-margin register-title">
+              Registration Successful!
+            </h1>
+            <p className="bodytext-3--no-margin success-message">
+              Thank you for registering. We've sent a verification email to:
+            </p>
+            <p className="bodytext-2--no-margin registered-email">
+              {registeredEmail}
+            </p>
+            <p className="bodytext-3--no-margin verification-instruction">
+              Please check your email and click on the verification link to
+              activate your account. The link will expire in 24 hours.
+            </p>
+            <div className="success-actions">
+              <ShineGlassButton
+                theme="shine"
+                onClick={() => navigate(ROUTES.AUTH_LOGIN)}
+                className="back-to-login-button"
+              >
+                Back to Login
+              </ShineGlassButton>
+            </div>
+            <p className="bodytext-4--no-margin email-note">
+              Didn't receive the email? Check your spam folder or contact
+              support.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="register-container">
@@ -316,20 +445,22 @@ const Register = () => {
           <div className="password-requirements">
             <p className="bodytext-5--no-margin">Password requirements</p>
             <ul>
+              <li className="bodytext-5--no-margin">8-128 characters in length</li>
+              <li className="bodytext-5--no-margin">At least 1 uppercase letter</li>
+              <li className="bodytext-5--no-margin">At least 1 lowercase letter</li>
+              <li className="bodytext-5--no-margin">At least 1 number</li>
               <li className="bodytext-5--no-margin">
-                No repetition of more than two characters
+                At least 1 special character (!@#$%^&amp;*(),.?&quot;:{}|&lt;&gt;_-+=[]\/;'`~)
               </li>
-              <li className="bodytext-5--no-margin">One lowercase character</li>
-              <li className="bodytext-5--no-margin">One number</li>
-              <li className="bodytext-5--no-margin">One uppercase character</li>
+              <li className="bodytext-5--no-margin">No whitespace allowed</li>
               <li className="bodytext-5--no-margin">
-                At least 1 special character(s)
+                No more than 4 consecutive repeated characters
               </li>
-              <li className="bodytext-5--no-margin">8 characters minimum</li>
               <li className="bodytext-5--no-margin">
-                {
-                  "Allowed special character(s) from !#$€£%&()*+,-./:;<=>?@[]^_~"
-                }
+                No alphabetical, numerical, or keyboard sequences of 5+ characters
+              </li>
+              <li className="bodytext-5--no-margin">
+                Cannot contain common passwords
               </li>
             </ul>
           </div>
@@ -343,6 +474,7 @@ const Register = () => {
               theme="shine"
               onClick={() => {}}
               className="create-account-button"
+              disabled={isLoading}
             >
               {isLoading ? "Creating Account..." : "Create account"}
             </ShineGlassButton>
