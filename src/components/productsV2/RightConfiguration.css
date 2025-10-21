@@ -309,9 +309,18 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Mobile & Tablet - Hide RightConfiguration (max-width: 1023px) */
-@media (max-width: 1023px) {
+/* ========================================
+   RESPONSIVE - MOBILE FIRST
+   ======================================== */
+
+/* Base Mobile - Hide on small screens */
+.pv2-right-configuration {
+    display: none;
+}
+
+/* Desktop - ≥1024px - Show on desktop */
+@media (min-width: 1024px) {
     .pv2-right-configuration {
-        display: none;
+        display: block;
     }
 }

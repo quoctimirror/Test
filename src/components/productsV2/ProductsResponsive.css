@@ -352,40 +352,122 @@ html {
     color: #4a5568;
 }
 
-/* Responsive Design */
+/* ========================================
+   RESPONSIVE - MOBILE FIRST
+   Base (Mobile): < 576px
+   ======================================== */
 
-/* Large Desktop (1440px+) */
-@media (min-width: 1440px) {
+/* Mobile Base Styles - Stack layout */
+.pv2-products-wrapper {
+    grid-template-columns: 1fr;
+    grid-template-rows: 50vh 1fr;
+}
+
+.pv2-viewer-panel {
+    border-radius: 0 0 16px 16px;
+    padding: 20px 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.pv2-info-panel {
+    padding: 24px 16px;
+}
+
+.pv2-info-panel::before {
+    height: 3px;
+}
+
+.pv2-model-selector {
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.pv2-model-dropdown {
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+
+.pv2-product-actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.pv2-btn-primary,
+.pv2-btn-secondary {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    letter-spacing: 0;
+}
+
+.pv2-product-details,
+.pv2-product-controls {
+    margin-bottom: 20px;
+}
+
+.pv2-product-details li,
+.pv2-product-controls li {
+    padding: 6px 0;
+}
+
+/* ========================================
+   LARGE MOBILE - ≥576px
+   ======================================== */
+@media (min-width: 576px) {
     .pv2-products-wrapper {
-        max-width: 1920px;
+        grid-template-rows: 55vh 1fr;
     }
 
     .pv2-viewer-panel {
-        padding: 60px;
+        border-radius: 0 0 20px 20px;
+        padding: 24px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
     }
 
     .pv2-info-panel {
-        padding: 80px 60px;
+        padding: 32px 24px;
+    }
+
+    .pv2-model-selector {
+        padding: 18px;
+        margin-bottom: 24px;
+        border-radius: 12px;
+    }
+
+    .pv2-model-dropdown {
+        padding: 14px 16px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+
+    .pv2-product-actions {
+        gap: 12px;
+        margin-top: 28px;
+    }
+
+    .pv2-btn-primary,
+    .pv2-btn-secondary {
+        padding: 16px 24px;
+        font-size: 1rem;
+        border-radius: 10px;
+    }
+
+    .pv2-product-details,
+    .pv2-product-controls {
+        margin-bottom: 24px;
     }
 }
 
-/* Desktop (1024px - 1439px) */
-@media (max-width: 1439px) and (min-width: 1024px) {
-    .pv2-viewer-panel {
-        padding: 32px;
-    }
-
-    .pv2-info-panel {
-        padding: 48px 32px;
-    }
-}
-
-/* Tablet (768px - 1023px) */
-@media (max-width: 1023px) and (min-width: 768px) {
+/* ========================================
+   TABLET - ≥768px
+   ======================================== */
+@media (min-width: 768px) {
     .pv2-products-wrapper {
-        grid-template-columns: 1fr;
         grid-template-rows: 60vh 1fr;
-        gap: 0;
     }
 
     .pv2-viewer-panel {
@@ -412,144 +494,44 @@ html {
     .pv2-btn-primary,
     .pv2-btn-secondary {
         padding: 16px 28px;
-        font-size: 1rem;
     }
 }
 
-/* Mobile Large (481px - 767px) */
-@media (max-width: 767px) and (min-width: 481px) {
-    .pv2-products-container {
-        min-height: 100vh;
-    }
-
+/* ========================================
+   DESKTOP - ≥1024px
+   ======================================== */
+@media (min-width: 1024px) {
+    /* Desktop uses side-by-side layout */
     .pv2-products-wrapper {
-        grid-template-columns: 1fr;
-        grid-template-rows: 55vh 1fr;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+        max-width: 1920px;
     }
 
     .pv2-viewer-panel {
-        border-radius: 0 0 20px 20px;
-        padding: 24px;
-        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+        padding: 32px;
+        border-radius: 0 20px 20px 0;
     }
 
     .pv2-info-panel {
-        padding: 32px 24px;
-    }
-
-    .pv2-info-panel::before {
-        height: 3px;
-    }
-
-    .pv2-model-selector {
-        padding: 18px;
-        margin-bottom: 24px;
-        border-radius: 12px;
-    }
-
-    .pv2-model-dropdown {
-        padding: 14px 16px;
-        font-size: 15px;
-        border-radius: 10px;
-    }
-
-    .pv2-product-actions {
-        flex-direction: column;
-        gap: 12px;
-        margin-top: 28px;
-    }
-
-    .pv2-btn-primary,
-    .pv2-btn-secondary {
-        width: 100%;
-        padding: 16px 24px;
-        font-size: 1rem;
-        border-radius: 10px;
-    }
-
-    .pv2-product-details,
-    .pv2-product-controls {
-        margin-bottom: 24px;
+        padding: 48px 32px;
     }
 }
 
-/* Mobile Small (320px - 480px) */
-@media (max-width: 480px) {
-    .pv2-products-container {
-        min-height: 100vh;
-    }
-
+/* ========================================
+   LARGE DESKTOP - ≥1280px
+   ======================================== */
+@media (min-width: 1280px) {
     .pv2-products-wrapper {
-        grid-template-columns: 1fr;
-        grid-template-rows: 50vh 1fr;
+        max-width: 1920px;
     }
 
     .pv2-viewer-panel {
-        border-radius: 0 0 16px 16px;
-        padding: 20px 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        padding: 60px;
     }
 
     .pv2-info-panel {
-        padding: 24px 16px;
-    }
-
-    .pv2-model-selector {
-        padding: 16px;
-        margin-bottom: 20px;
-        border-radius: 10px;
-    }
-
-    .pv2-model-dropdown {
-        padding: 12px 14px;
-        font-size: 14px;
-        border-radius: 8px;
-    }
-
-    .pv2-product-actions {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 24px;
-    }
-
-    .pv2-btn-primary,
-    .pv2-btn-secondary {
-        width: 100%;
-        padding: 14px 20px;
-        font-size: 0.95rem;
-        border-radius: 8px;
-        letter-spacing: 0;
-    }
-
-    .pv2-product-details,
-    .pv2-product-controls {
-        margin-bottom: 20px;
-    }
-
-    .pv2-product-details li,
-    .pv2-product-controls li {
-        padding: 6px 0;
-    }
-}
-
-/* Extra Small Mobile (below 360px) */
-@media (max-width: 359px) {
-    .pv2-viewer-panel {
-        padding: 16px 12px;
-    }
-
-    .pv2-info-panel {
-        padding: 20px 12px;
-    }
-
-    .pv2-model-selector {
-        padding: 12px;
-    }
-
-    .pv2-btn-primary,
-    .pv2-btn-secondary {
-        padding: 12px 16px;
-        font-size: 0.9rem;
+        padding: 80px 60px;
     }
 }
 

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './SizeSelector.css'; // Reuse same styling
 import { AVAILABLE_SHAPES, getShapeConfig } from './shapeConfig';
+import ShineGlassButton from '../common/button/ShineGlassButton';
 
 const ShapeSelector = ({ onClose, onSelectShape, selectedShape }) => {
     const [isClosing, setIsClosing] = useState(false);
@@ -28,6 +29,24 @@ const ShapeSelector = ({ onClose, onSelectShape, selectedShape }) => {
             onClick={handleClose}
         >
             <div className="pv2-size-selector-modal" onClick={(e) => e.stopPropagation()}>
+                {/* Close Button */}
+                <div className="pv2-shape-selector-close-button">
+                    <ShineGlassButton
+                        onClick={handleClose}
+                        theme="footer"
+                        width={32}
+                        height={32}
+                        className="pv2-shape-selector-close-btn"
+                    >
+                        <img
+                            src="/universeSection/close-x-icon.svg"
+                            alt="Close"
+                            width="14"
+                            height="14"
+                        />
+                    </ShineGlassButton>
+                </div>
+
                 {/* Header */}
                 <div className="pv2-size-selector-header">
                     <button
@@ -53,7 +72,7 @@ const ShapeSelector = ({ onClose, onSelectShape, selectedShape }) => {
                                         onClick={() => handleShapeSelect(shapeName)}
                                     >
                                         <td className="pv2-size-cell">{shapeConfig.shape}</td>
-                                        <td className="pv2-size-cell" style={{ fontSize: '12px', color: '#999' }}>
+                                        <td className="pv2-size-cell pv2-size-cell-secondary">
                                             {shapeConfig.metal} | {shapeConfig.band}
                                         </td>
                                     </tr>

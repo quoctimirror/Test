@@ -79,7 +79,7 @@
 /* ===================================================================
    LARGE DESKTOP STYLES (>= 1440px)
    =================================================================== */
-@media (min-width: 1440px) {
+@media (min-width: 1280px) {
     /* Maintain desktop layout with optimal proportions */
     .pv2-products-right {
         width: calc(100% - 66.25%);

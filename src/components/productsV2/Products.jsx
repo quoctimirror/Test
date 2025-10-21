@@ -32,7 +32,7 @@ const Products = () => {
     const [orderDetails, setOrderDetails] = useState(null);
 
     // Product configuration state (shared with RightConfiguration)
-    const defaultShape = getShapeConfig('Pear'); // Default shape
+    const defaultShape = getShapeConfig('Fiston'); // Default shape
     const [productConfig, setProductConfig] = useState({
         id: 'PRD000024', // Mirror Custom Ring product ID
         name: 'LUMINA OLIVIA 5',
@@ -303,6 +303,25 @@ const Products = () => {
         setOrderDetails(null);
     };
 
+    // Handle shape change from mobile
+    const handleShapeChange = (shapeConfig) => {
+        setProductConfig(prev => ({
+            ...prev,
+            shape: shapeConfig.shape,
+            modelId: shapeConfig.modelId,
+            metal: shapeConfig.metal,
+            band: shapeConfig.band
+        }));
+    };
+
+    // Handle size change from mobile
+    const handleSizeChange = (newSize) => {
+        setProductConfig(prev => ({
+            ...prev,
+            size: newSize
+        }));
+    };
+
     return (
         <>
             <div className="pv2-products-main-wrapper">
@@ -327,7 +346,13 @@ const Products = () => {
                 <Contact />
 
                 {/* Mobile Product Bar - Only visible on mobile */}
-                <MobileProductBar isVisible={showMobileBar} />
+                <MobileProductBar
+                    isVisible={showMobileBar}
+                    selectedShape={productConfig.shape}
+                    onShapeChange={handleShapeChange}
+                    selectedSize={productConfig.size}
+                    onSizeChange={handleSizeChange}
+                />
 
                 {/* Order Form Modal */}
                 <OrderFormModal

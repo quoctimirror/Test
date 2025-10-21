@@ -1,0 +1,219 @@
+/* ========================================
+   PRODUCTSV2 BREAKPOINTS - MOBILE FIRST
+   Clean Code & DRY Principles
+   ======================================== */
+
+/*
+   STANDARDIZED BREAKPOINTS:
+   - Base (Mobile):    < 576px    (No media query needed)
+   - Large Mobile:     ≥ 576px    (sm)
+   - Tablet:           ≥ 768px    (md)
+   - Desktop:          ≥ 1024px   (lg)
+   - Large Desktop:    ≥ 1280px   (xl)
+*/
+
+:root {
+  /* Breakpoint values as CSS variables */
+  --bp-sm: 576px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+}
+
+/* ========================================
+   UTILITY CLASSES - REUSABLE
+   ======================================== */
+
+/* Hide/Show utilities */
+.hide-mobile {
+  display: none;
+}
+
+@media (min-width: 576px) {
+  .hide-mobile {
+    display: block;
+  }
+  .show-mobile-only {
+    display: none;
+  }
+}
+
+.hide-tablet {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hide-tablet {
+    display: block;
+  }
+  .show-tablet-only {
+    display: none;
+  }
+}
+
+.hide-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .hide-desktop {
+    display: block;
+  }
+  .show-desktop-only {
+    display: none;
+  }
+}
+
+/* ========================================
+   SPACING SCALE - RESPONSIVE
+   ======================================== */
+
+.responsive-padding {
+  padding: 16px;
+}
+
+@media (min-width: 576px) {
+  .responsive-padding {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive-padding {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-padding {
+    padding: 32px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .responsive-padding {
+    padding: 40px;
+  }
+}
+
+/* ========================================
+   CONTAINER - RESPONSIVE
+   ======================================== */
+
+.pv2-responsive-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 576px) {
+  .pv2-responsive-container {
+    padding: 0 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .pv2-responsive-container {
+    padding: 0 24px;
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pv2-responsive-container {
+    padding: 0 32px;
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .pv2-responsive-container {
+    padding: 0 40px;
+    max-width: 1200px;
+  }
+}
+
+/* ========================================
+   TYPOGRAPHY SCALE - RESPONSIVE
+   ======================================== */
+
+.pv2-responsive-text-sm {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+  .pv2-responsive-text-sm {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pv2-responsive-text-sm {
+    font-size: 14px;
+  }
+}
+
+.pv2-responsive-text-base {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .pv2-responsive-text-base {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pv2-responsive-text-base {
+    font-size: 16px;
+  }
+}
+
+.pv2-responsive-text-lg {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .pv2-responsive-text-lg {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pv2-responsive-text-lg {
+    font-size: 20px;
+  }
+}
+
+/* ========================================
+   COMMENTS FOR DEVELOPERS
+   ======================================== */
+
+/*
+  USAGE EXAMPLES:
+
+  1. Mobile First Approach:
+     .my-element {
+       // Mobile styles (base)
+       padding: 16px;
+     }
+
+     @media (min-width: 768px) {
+       .my-element {
+         // Tablet styles
+         padding: 24px;
+       }
+     }
+
+  2. Using Utility Classes:
+     <div className="hide-mobile">Desktop only content</div>
+     <div className="show-mobile-only">Mobile only content</div>
+
+  3. Responsive Container:
+     <div className="pv2-responsive-container">
+       Auto-scaling padding and max-width
+     </div>
+*/

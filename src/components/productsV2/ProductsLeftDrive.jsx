@@ -63,7 +63,7 @@ const ProductsLeftDrive = ({ modelId }) => {
 
         // iJewel Drive configuration
         const driveBasename = 'drive'; // Your Drive instance name
-        const modelFileId = modelId || 'OPdq2RjLTsikXl71-YvsJg'; // Default to Pear if no modelId provided
+        const modelFileId = modelId || 'MFGQrBe1RpiawHlEpH3fJQ'; // Default to Pear if no modelId provided
         const containerElement = containerRef.current;
 
         // Load model from iJewel Drive using SDK

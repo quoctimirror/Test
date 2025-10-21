@@ -1,4 +1,10 @@
-/* Mobile Config Modal */
+/* ===================================================================
+   MOBILE CONFIG MODAL - MOBILE FIRST RESPONSIVE
+   Breakpoints: 576px | 768px | 1024px | 1280px
+   =================================================================== */
+
+/* ===== BASE MOBILE (< 576px) ===== */
+
 .pv2-mobile-config-modal {
     position: fixed;
     top: 0;
@@ -20,21 +26,39 @@
     transform: translateY(100%);
 }
 
+/* Main Content Container - Flexbox Layout */
 .pv2-mobile-config-content {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    max-width: 100%;
-    padding: 40px 24px 24px 24px;
+    top: 50%;
+    /* Center vertically */
+    left: 11vw;
+    /* Left margin: 11% */
+    right: 11vw;
+    /* Right margin: 11% */
+    transform: translateY(-50%);
+    /* Center alignment */
+
+    width: auto;
+    /* Tự động tính từ left/right */
+    height: 80vh;
+    /* MOBILE: Luôn luôn 80% chiều cao màn hình */
+    max-height: 80vh;
+    /* Maximum 80vh */
+
     box-sizing: border-box;
+    padding: 0;
+
+    /* Flexbox layout theo chiều dọc */
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Fixed viewport height */
-    overflow: hidden; /* No scroll - all content must fit */
-    justify-content: space-between; /* Space elements evenly */
+    justify-content: space-between;
+    /* Phân bố đều các phần tử */
+
+    /* KHÔNG SCROLL - Tất cả phải fit vào viewport */
+    overflow: hidden;
 }
 
+/* 1️⃣ TITLE - LUMINA OLIVIA 5 */
 .pv2-mobile-config-title {
     text-align: center;
     color: #BC224C !important;
@@ -42,22 +66,36 @@
     filter: none !important;
     backdrop-filter: none !important;
     letter-spacing: -0.02em !important;
-    margin: 0 0 24px 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 1;
+    /* Cho phép co lại nếu cần */
+    min-height: 0;
+    /* Cho phép nhỏ hơn nội dung */
 }
 
+/* 2️⃣ CONFIGURATION OPTIONS */
 .pv2-mobile-configuration-options {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 0;
+    gap: clamp(3px, 0.6vh, 8px);
+    /* Dynamic gap: nhỏ hơn để fit 60vh */
+    margin: 0;
+    padding: 0;
+    flex-shrink: 1;
+    /* Cho phép co lại */
+    min-height: 0;
 }
 
 .pv2-mobile-option-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 12px;
+    min-height: 46px;
+    padding-top: 8px;
+    padding-bottom: 8px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 1;
 }
 
 .pv2-mobile-option-label {
@@ -81,6 +119,10 @@
     flex-shrink: 0;
 }
 
+.pv2-mobile-shape-row {
+    cursor: pointer;
+}
+
 .pv2-mobile-size-row {
     cursor: pointer;
 }
@@ -89,7 +131,6 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-right: 12px;
 }
 
 .pv2-mobile-size-value {
@@ -123,8 +164,11 @@
     border: 1px solid rgba(255, 255, 255, 0.5);
     background: transparent;
     color: #FFFFFF;
-    font-size: 18px;
+    font-size: 16px; /* Giảm từ 18px */
     font-weight: 300;
+    line-height: 1; /* Đảm bảo text nằm giữa */
+    padding: 0; /* Bỏ padding default */
+    padding-bottom: 2px; /* Nâng text lên bằng cách thêm padding dưới */
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -150,7 +194,7 @@
     border: none !important;
     outline: none !important;
     font-family: var(--font-bt-beau-sans) !important;
-    font-size: 20px !important;
+    font-size: 16px !important;
     font-weight: 400 !important;
     line-height: 1.2 !important;
 }
@@ -166,8 +210,13 @@
     -moz-appearance: textfield;
 }
 
+/* 3️⃣ ADDITIONAL INFO */
 .pv2-mobile-additional-info {
-    margin-bottom: 0;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 1;
+    /* Cho phép co lại */
+    min-height: 0;
 }
 
 .pv2-mobile-shipping-info {
@@ -190,11 +239,16 @@
     opacity: 0.8;
 }
 
+/* 4️⃣ PRICE SECTION */
 .pv2-mobile-price-section {
-    margin-bottom: 0;
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 1;
+    /* Cho phép co lại */
+    min-height: 0;
 }
 
 .pv2-mobile-price {
@@ -203,28 +257,48 @@
     align-self: stretch;
 }
 
-/* Action Buttons */
+/* 5️⃣ + 6️⃣ BUTTONS CONTAINER - Chứa cả Action Buttons và Order Button */
+.pv2-mobile-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    /* Giảm gap để fit 60vh */
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    flex-shrink: 0;
+    /* KHÔNG co lại - giữ nguyên size */
+}
+
+/* 5️⃣ ACTION BUTTONS (wishlist + appointment) */
 .pv2-mobile-modal-action-buttons {
     display: flex;
-    gap: 8px;
-    margin-bottom: 0;
+    gap: 6px;
+    /* Giảm gap */
+    margin: 0;
+    padding: 0;
     width: 100%;
     align-items: center;
+    flex-shrink: 0;
+    /* KHÔNG co lại */
+    min-height: 36px;
+    /* Giảm min height để fit 60vh */
 }
 
 .pv2-mobile-modal-wishlist-btn {
     flex-shrink: 0;
-    width: 40px;
+    width: 36px;
+    /* Giảm từ 40px để fit 60vh */
 }
 
 .pv2-mobile-modal-wishlist-btn .shine-button-wrap {
-    width: 40px !important;
-    height: 40px !important;
+    width: 36px !important;
+    height: 36px !important;
 }
 
 .pv2-mobile-modal-wishlist-btn .shine-glass-button {
-    width: 40px !important;
-    height: 40px !important;
+    width: 36px !important;
+    height: 36px !important;
     border: none !important;
     border-radius: 50% !important;
     background: transparent !important;
@@ -269,7 +343,8 @@
 
 .pv2-mobile-modal-appointment-btn {
     flex: 1 1 auto;
-    height: 40px !important;
+    height: 36px !important;
+    /* Giảm từ 40px */
     min-width: 0;
     width: 100%;
     display: flex;
@@ -277,14 +352,16 @@
 
 .pv2-mobile-modal-appointment-btn .shine-button-wrap {
     width: 100% !important;
-    height: 40px !important;
+    height: 36px !important;
+    /* Giảm từ 40px */
     max-width: none !important;
     flex: 1 !important;
 }
 
 .pv2-mobile-modal-appointment-btn .shine-glass-button {
     width: 100% !important;
-    height: 40px !important;
+    height: 36px !important;
+    /* Giảm từ 40px */
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
@@ -297,6 +374,7 @@
     text-align: center !important;
     padding: 0 4px !important;
     font-size: 13px !important;
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .pv2-mobile-modal-appointment-btn .glass-layer {
@@ -309,24 +387,34 @@
     display: none !important;
 }
 
+/* 6️⃣ ORDER NOW BUTTON (nằm trong buttons-container) */
 .pv2-mobile-modal-order-btn {
     width: 100%;
-    height: 40px;
+    height: 36px;
+    /* Giảm từ 40px */
+    min-height: 36px;
+    /* Đảm bảo min height */
     background: #FFFFFF;
     border: none;
     color: black;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 20px;
+    border-radius: 18px;
+    /* Giảm từ 20px */
     box-sizing: border-box;
     font-family: var(--font-bt-beau-sans);
-    font-size: 14px;
+    font-size: 13px;
+    /* Giảm từ 14px */
     font-weight: 400;
-    line-height: 40px;
+    line-height: 36px;
+    /* Giảm từ 40px */
     padding: 0;
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    /* KHÔNG co lại */
 }
 
 .pv2-mobile-modal-order-btn:hover {
@@ -335,89 +423,99 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* 7️⃣ CARET DOWN (close icon) */
 .pv2-mobile-config-caret-down {
-    margin-top: 0;
-    width: 24px;
-    height: 24px;
+    margin: 0;
+    padding: 0;
+    width: 20px;
+    /* Giảm từ 24px */
+    height: 20px;
+    /* Giảm từ 24px */
+    min-height: 20px;
+    /* Đảm bảo min height */
     opacity: 0.5;
     cursor: pointer;
     transition: opacity 0.2s ease;
     transform: rotate(180deg);
     align-self: center;
+    flex-shrink: 0;
+    /* KHÔNG co lại */
 }
 
 .pv2-mobile-config-caret-down:hover {
     opacity: 0.8;
 }
 
-/* Tablet - 426px to 1023px - Same as mobile with slightly larger sizing */
-@media (min-width: 426px) and (max-width: 1023px) {
-    .pv2-mobile-config-content {
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 30px 30px 24px 30px;
-    }
+/* ===================================================================
+   RESPONSIVE - MOBILE FIRST
+   ======================================================================
+   WIDTH Breakpoints: 576px | 768px | 1024px | 1280px
+   =================================================================== */
 
-    .pv2-mobile-config-title {
-        font-size: 28px;
-        margin: 0 0 28px 0 !important;
-    }
-
-    .pv2-mobile-configuration-options {
-        gap: 16px;
-        margin-bottom: 24px;
-    }
-
-    .pv2-mobile-option-row {
-        padding-bottom: 14px;
-    }
-
-    .pv2-mobile-additional-info {
-        margin-bottom: 28px;
-    }
-
-    .pv2-mobile-price-section {
-        margin-bottom: 16px;
-    }
-
-    .pv2-mobile-modal-action-buttons {
-        margin-bottom: 16px;
-    }
-
+/* ===== LARGE MOBILE WIDTH (≥ 576px) ===== */
+@media (min-width: 576px) {
     .pv2-mobile-modal-wishlist-btn {
-        width: 48px;
+        width: 44px;
     }
 
     .pv2-mobile-modal-wishlist-btn .shine-button-wrap {
-        width: 48px !important;
-        height: 48px !important;
+        width: 44px !important;
+        height: 44px !important;
     }
 
     .pv2-mobile-modal-wishlist-btn .shine-glass-button {
-        width: 48px !important;
-        height: 48px !important;
+        width: 44px !important;
+        height: 44px !important;
     }
 
     .pv2-mobile-modal-appointment-btn {
-        height: 48px !important;
+        height: 44px !important;
     }
 
     .pv2-mobile-modal-appointment-btn .shine-button-wrap {
-        height: 48px !important;
+        height: 44px !important;
     }
 
     .pv2-mobile-modal-appointment-btn .shine-glass-button {
-        height: 48px !important;
+        height: 44px !important;
     }
 
     .pv2-mobile-modal-order-btn {
-        height: 48px;
-        border-radius: 24px;
+        height: 44px;
+        min-height: 44px;
+        border-radius: 22px;
+        line-height: 44px;
     }
 
     .pv2-mobile-config-caret-down {
-        width: 28px;
-        height: 28px;
-        bottom: 12px;
+        width: 26px;
+        height: 26px;
+        min-height: 26px;
+    }
+
+    .pv2-mobile-modal-action-buttons {
+        min-height: 44px;
+    }
+}
+
+/* ===== TABLET (≥ 768px) - Hidden on tablet and up ===== */
+@media (min-width: 768px) {
+    .pv2-mobile-config-modal {
+        display: none;
+        /* Modal chỉ dùng cho mobile */
+    }
+}
+
+/* ===== DESKTOP (≥ 1024px) - Hidden ===== */
+@media (min-width: 1024px) {
+    .pv2-mobile-config-modal {
+        display: none;
+    }
+}
+
+/* ===== LARGE DESKTOP (≥ 1280px) - Hidden ===== */
+@media (min-width: 1280px) {
+    .pv2-mobile-config-modal {
+        display: none;
     }
 }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './SizeSelector.css';
 import sizeConversionData from '../../assets/sizeConversionBoard.json';
 import CustomDropdown from './CustomDropdown';
+import ShineGlassButton from '../common/button/ShineGlassButton';
 
 const SizeSelector = ({ onClose, onSelectSize, selectedSize }) => {
     const [activeTab, setActiveTab] = useState('select'); // 'select' or 'find'
@@ -68,6 +69,24 @@ const SizeSelector = ({ onClose, onSelectSize, selectedSize }) => {
             onClick={handleClose}
         >
             <div className="pv2-size-selector-modal" onClick={(e) => e.stopPropagation()}>
+                {/* Close Button */}
+                <div className="pv2-size-selector-close-button">
+                    <ShineGlassButton
+                        onClick={handleClose}
+                        theme="footer"
+                        width={32}
+                        height={32}
+                        className="pv2-size-selector-close-btn"
+                    >
+                        <img
+                            src="/universeSection/close-x-icon.svg"
+                            alt="Close"
+                            width="14"
+                            height="14"
+                        />
+                    </ShineGlassButton>
+                </div>
+
                 {/* Header Tabs */}
                 <div className="pv2-size-selector-header">
                     <button
