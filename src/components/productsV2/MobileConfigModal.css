@@ -498,11 +498,12 @@
     }
 }
 
-/* ===== TABLET (≥ 768px) - Hidden on tablet and up ===== */
+/* ===== TABLET (≥ 768px) - Still visible on tablet ===== */
 @media (min-width: 768px) {
-    .pv2-mobile-config-modal {
-        display: none;
-        /* Modal chỉ dùng cho mobile */
+    /* Modal vẫn hiển thị trên tablet, chỉ điều chỉnh sizing */
+    .pv2-mobile-config-content {
+        left: 10vw;
+        right: 10vw;
     }
 }
 

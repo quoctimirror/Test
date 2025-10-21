@@ -231,8 +231,12 @@
     border-color: #FFFFFF;
 }
 
-/* Tablet - 426px to 1023px - Same as mobile but centered */
-@media (min-width: 426px) and (max-width: 1023px) {
+/* Tablet - 768px to 1023px - Increased height to 30vh */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .pv2-mobile-product-bar {
+        height: 30vh;
+    }
+
     .pv2-mobile-product-content {
         max-width: 600px;
         margin: 0 auto;

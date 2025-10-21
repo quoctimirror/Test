@@ -44,10 +44,12 @@
 @media (min-width: 1024px) {
     .pv2-left-container {
         width: 66.25%;
-        height: 100vh;
-        /* Fixed height trên desktop */
-        overflow-y: auto;
-        /* Scroll riêng trong container */
+        height: auto;
+        /* Auto height - cho phép expand với content */
+        min-height: 100vh;
+        /* Tối thiểu 100vh */
+        overflow-y: visible;
+        /* Body scroll, không phải container scroll */
         flex-shrink: 0;
         padding: 0;
         /* Reset all padding - không cần space cho MobileProductBar */

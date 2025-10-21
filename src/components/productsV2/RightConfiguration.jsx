@@ -56,6 +56,8 @@ const RightConfiguration = ({ hideButtons = false, productConfig, setProductConf
             <div className="pv2-product-info">
                 <h1 className="pv2-product-title heading-1--no-margin">LUMINA OLIVIA 5</h1>
 
+                {/* Container 1: Configuration + Additional Info */}
+                <div className="pv2-config-container">
                 <div className="pv2-configuration-options">
                     {/* Shape - Clickable */}
                     <div className="pv2-option-row pv2-size-row" style={{ cursor: 'pointer' }} onClick={() => setShowShapeSelector(true)}>
@@ -123,7 +125,11 @@ const RightConfiguration = ({ hideButtons = false, productConfig, setProductConf
                     <p className="pv2-shipping-info bodytext-4--no-margin">Complimentary shipping & returns</p>
                     <a href="#" className="pv2-contact-link bodytext-4--no-margin">Contact us</a>
                 </div>
+                </div>
+                {/* End Container 1 */}
 
+                {/* Container 2: Price + Action Buttons + Order Button */}
+                <div className="pv2-bottom-container">
                 <div className="pv2-price-section">
                     <span className="pv2-price heading-3--no-margin">$15,600</span>
                 </div>
@@ -159,6 +165,8 @@ const RightConfiguration = ({ hideButtons = false, productConfig, setProductConf
                         </button>
                     </>
                 )}
+                </div>
+                {/* End Container 2 */}
             </div>
 
             {/* Shape Selector Modal */}
