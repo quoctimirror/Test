@@ -7,6 +7,7 @@ import ViewAllProduct from '../viewAllProduct/ViewAllProduct';
 import Contact from '../contactUs/ContactUs';
 import OrderFormModal from './OrderFormModal';
 import OrderSuccessModal from './OrderSuccessModal';
+import { getShapeConfig } from './shapeConfig';
 
 
 const Products = () => {
@@ -31,13 +32,15 @@ const Products = () => {
     const [orderDetails, setOrderDetails] = useState(null);
 
     // Product configuration state (shared with RightConfiguration)
+    const defaultShape = getShapeConfig('Pear'); // Default shape
     const [productConfig, setProductConfig] = useState({
         id: 'PRD000024', // Mirror Custom Ring product ID
         name: 'LUMINA OLIVIA 5',
-        shape: 'Pear',
-        metal: 'Yellow Gold',
-        band: 'Single band',
-        size: '6.0',
+        shape: defaultShape.shape,
+        modelId: defaultShape.modelId,
+        metal: defaultShape.metal,
+        band: defaultShape.band,
+        size: '3.0',
         quantity: 1,
         price: 15600
     });
@@ -193,17 +196,17 @@ const Products = () => {
                 const rect = productsContainer.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
 
-                // Show mobile bar if we're within products-container area
-                // Hide mobile bar if we scrolled past products-container
-                if (rect.bottom > 0 && rect.top < windowHeight) {
-                    // We're within products-container viewport
-                    setShowMobileBar(true);
-                } else if (rect.bottom <= 0) {
-                    // We've scrolled past products-container (into More Gems)
+                // Hide mobile bar if we've scrolled past products-container (bottom is above viewport)
+                if (rect.bottom <= 0) {
                     setShowMobileBar(false);
-                } else {
-                    // We're above products-container
+                }
+                // Show mobile bar if we're within products-container area
+                else if (rect.bottom > 0 && rect.top < windowHeight) {
                     setShowMobileBar(true);
+                }
+                // Hide if we're above products-container
+                else {
+                    setShowMobileBar(false);
                 }
             }
         };
@@ -305,7 +308,7 @@ const Products = () => {
             <div className="pv2-products-main-wrapper">
                 <div className="pv2-products-container">
                     {/* Left side - LeftContainer chứa Section1 và Section2 */}
-                    <LeftContainer />
+                    <LeftContainer productConfig={productConfig} />
 
                     {/* Right side - Configuration */}
                     <div className="pv2-products-right">

@@ -283,6 +283,18 @@
     border-top: 1px solid #BC224C;
 }
 
+/* Selected size row - highlight with pink */
+.pv2-size-row.selected .pv2-size-cell {
+    border-top: 1px solid #BC224C;
+    border-bottom: 1px solid #BC224C;
+    color: #BC224C;
+    font-weight: 500;
+}
+
+.pv2-size-row:first-child.selected .pv2-size-cell {
+    border-top: 1px solid #BC224C;
+}
+
 .pv2-size-cell {
     padding: 16px 20px;
     font-family: 'Inter', sans-serif;

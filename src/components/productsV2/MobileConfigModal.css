@@ -1,7 +1,7 @@
 /* Mobile Config Modal */
 .pv2-mobile-config-modal {
     position: fixed;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
@@ -9,6 +9,7 @@
     z-index: 300;
     box-sizing: border-box;
     transition: transform 0.5s ease-in-out;
+    overflow: hidden;
 }
 
 .pv2-mobile-config-modal.open {
@@ -20,15 +21,18 @@
 }
 
 .pv2-mobile-config-content {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     max-width: 100%;
-    padding: 60px 24px 24px 24px;
+    padding: 40px 24px 24px 24px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    overflow-y: auto;
-    justify-content: center;
+    height: 100vh; /* Fixed viewport height */
+    overflow: hidden; /* No scroll - all content must fit */
+    justify-content: space-between; /* Space elements evenly */
 }
 
 .pv2-mobile-config-title {
@@ -44,8 +48,8 @@
 .pv2-mobile-configuration-options {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 0;
 }
 
 .pv2-mobile-option-row {
@@ -163,7 +167,7 @@
 }
 
 .pv2-mobile-additional-info {
-    margin-bottom: 24px;
+    margin-bottom: 0;
 }
 
 .pv2-mobile-shipping-info {
@@ -187,7 +191,7 @@
 }
 
 .pv2-mobile-price-section {
-    margin-bottom: 14px;
+    margin-bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -203,7 +207,7 @@
 .pv2-mobile-modal-action-buttons {
     display: flex;
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 0;
     width: 100%;
     align-items: center;
 }
@@ -332,7 +336,7 @@
 }
 
 .pv2-mobile-config-caret-down {
-    margin-top: 16px;
+    margin-top: 0;
     width: 24px;
     height: 24px;
     opacity: 0.5;

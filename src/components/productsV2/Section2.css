@@ -50,7 +50,7 @@
 }
 
 .pv2-section2-subtitle {
-    /* Mobile: Sử dụng bodytext-mobile-product */
+    /* Mobile: bodytext-3 from typography.css */
     color: var(--gray-3, #797979);
     text-align: center;
     font-family: "BT Beau Sans";
@@ -60,9 +60,8 @@
     line-height: 130%; /* 18.2px */
     margin: 0 auto !important;
     padding: 0 !important;
-    width: 304px;
-    max-width: calc(100% - 24px);
-    min-height: 126px;
+    width: 304px; /* Box width for mobile (304/390) */
+    max-width: 78%; /* 304/390 = 78% */
     height: auto;
     box-sizing: border-box;
     word-wrap: break-word;

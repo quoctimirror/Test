@@ -1,22 +1,81 @@
-/* LeftContainer - Chứa Section1 và Section2 - Desktop only (1024px+) */
+/* ===================================================================
+   LEFT CONTAINER - MOBILE FIRST
+   =================================================================== */
+
+/* ===================================================================
+   MOBILE BASE STYLES (< 768px)
+   =================================================================== */
+
 .pv2-left-container {
-    width: 66.25%;
-    height: 100vh;
-    position: relative;
-    background: #FFFFFF;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    /* Auto height - content tự nhiên */
+    min-height: 100vh;
+    /* Tối thiểu full viewport */
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    /* padding-bottom: 35vh;  */
     box-sizing: border-box;
-    flex-shrink: 0;
+    background: #ffffff;
+    overflow-y: visible;
+    /* Scroll tự nhiên theo body */
+    position: relative;
     z-index: 1;
-    /* Below navbar */
-    overflow-y: auto;
 }
 
-/* Mobile & Tablet - LeftContainer chiếm full width, bỏ scroll riêng */
-@media (max-width: 1023px) {
+/* ===================================================================
+   TABLET STYLES (>= 768px)
+   =================================================================== */
+@media (min-width: 768px) {
     .pv2-left-container {
-        width: 100%;
-        height: auto;
-        min-height: 100vh;
-        overflow-y: visible;
+        gap: 0;
+        padding-bottom: 30vh;
+        /* Space cho MobileProductBar */
     }
 }
+
+/* ===================================================================
+   DESKTOP STYLES (>= 1024px)
+   =================================================================== */
+@media (min-width: 1024px) {
+    .pv2-left-container {
+        width: 66.25%;
+        height: 100vh;
+        /* Fixed height trên desktop */
+        overflow-y: auto;
+        /* Scroll riêng trong container */
+        flex-shrink: 0;
+        padding: 0;
+        /* Reset all padding - không cần space cho MobileProductBar */
+    }
+}
+
+/* ===================================================================
+   LARGE DESKTOP STYLES (>= 1440px)
+   =================================================================== */
+@media (min-width: 1440px) {
+    .pv2-left-container {
+        width: 66.25%;
+        height: 100vh;
+    }
+}
+
+/*
+📏 HEIGHT STRATEGY:
+===================
+
+✅ MOBILE/TABLET:
+- height: auto - Cho phép content expand tự nhiên
+- min-height: 100vh - Đảm bảo tối thiểu full screen
+- padding-bottom: 30vh - Space cho MobileProductBar fixed bottom
+- overflow-y: visible - Body scroll
+
+✅ DESKTOP:
+- height: 100vh - Fixed height sidebar
+- overflow-y: auto - Scroll riêng trong container
+- Không có padding-bottom (không có MobileProductBar)
+*/
