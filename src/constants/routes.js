@@ -40,6 +40,7 @@ export const ROUTES = {
   VIEW_360: "/6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
   HOVER_EXPAND: "/2a5f8c9d-4e3b-4a1c-9f7e-8d6c5b4a3e2f",
   UNIVERSE_FINAL: "/1f2e3d4c-5b6a-7c8d-9e0f-1a2b3c4d5e6f",
+  NEWS_V2: "/5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
 
   // Dashboard routes (keep original - protected by auth)
   DASHBOARD_ADMIN: "/dashboard/admin",

@@ -45,11 +45,17 @@ const DesignerDashboard = lazy(() =>
 const AuthPage = lazy(() => import("@pages/AuthPage"));
 const Login = lazy(() => import("@components/login/Login"));
 const Register = lazy(() => import("@components/register/Register"));
-const EmailVerification = lazy(() => import("@components/email-verification/EmailVerification"));
+const ForgotPassword = lazy(() =>
+  import("@components/forgot-password/ForgotPassword")
+);
+const EmailVerification = lazy(() =>
+  import("@components/email-verification/EmailVerification")
+);
 const Profile = lazy(() => import("@components/profile/Profile"));
 const ProtectedRoute = lazy(() => import("@components/auth/ProtectedRoute"));
 const AllGemsPage = lazy(() => import("@pages/AllGemsPage"));
 const AllNewsPage = lazy(() => import("@pages/AllNewsPage"));
+const AllNewsPageV2 = lazy(() => import("@pages/AllNewsPageV2"));
 const NewCutPage = lazy(() => import("@pages/NewCutPage"));
 const ContactPage = lazy(() => import("@pages/ContactPage"));
 const AboutPage = lazy(() => import("@pages/AboutPage"));
@@ -95,6 +101,7 @@ export default function AppRoutes() {
       ROUTES.ABOUT,
       ROUTES.LOCATIONS,
       ROUTES.NEWS,
+      ROUTES.NEWS_V2,
       ROUTES.IMMERSIVE_SHOWROOM,
       ROUTES.MILAN_SUBMIT,
       `${ROUTES.MILAN_SUBMIT}/submit-success`,
@@ -119,9 +126,9 @@ export default function AppRoutes() {
 
     // Check dynamic routes (with params)
     if (
-      location.pathname.startsWith(ROUTES.COLLECTIONS + '/') ||
-      location.pathname.startsWith(ROUTES.NEWS + '/') ||
-      location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+      location.pathname.startsWith(ROUTES.COLLECTIONS + "/") ||
+      location.pathname.startsWith(ROUTES.NEWS + "/") ||
+      location.pathname.startsWith(ROUTES.AR_RINGS.split(":")[0]) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
@@ -142,7 +149,7 @@ export default function AppRoutes() {
     is404 ||
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
-    location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+    location.pathname.startsWith(ROUTES.AR_RINGS.split(":")[0]) ||
     location.pathname.startsWith("/ar/quoc-ti") ||
     location.pathname.startsWith("/ar/mesh-inspector") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
@@ -156,7 +163,7 @@ export default function AppRoutes() {
     is404 ||
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
-    location.pathname.startsWith(ROUTES.AR_RINGS.split(':')[0]) ||
+    location.pathname.startsWith(ROUTES.AR_RINGS.split(":")[0]) ||
     location.pathname.startsWith("/ar/quoc-ti") ||
     location.pathname.startsWith("/ar/mesh-inspector") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
@@ -193,6 +200,7 @@ export default function AppRoutes() {
             <Route path="register" element={<Register />} />
           </Route>
 
+          <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
           <Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
 
           <Route path={ROUTES.PRODUCTS} element={<ProductsPage />} />
@@ -212,7 +220,10 @@ export default function AppRoutes() {
 
           <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
 
-          <Route path={ROUTES.SERVICES_DETAIL} element={<ServicesDetailPage />} />
+          <Route
+            path={ROUTES.SERVICES_DETAIL}
+            element={<ServicesDetailPage />}
+          />
 
           <Route path={ROUTES.SUPPORT} element={<SupportPage />} />
 
@@ -223,6 +234,8 @@ export default function AppRoutes() {
           <Route path={ROUTES.LOCATIONS} element={<LocationsPage />} />
 
           <Route path={ROUTES.NEWS} element={<AllNewsPage />} />
+
+          <Route path={ROUTES.NEWS_V2} element={<AllNewsPageV2 />} />
 
           <Route path={ROUTES.NEWS_DETAIL} element={<NewCutPage />} />
 
@@ -255,7 +268,10 @@ export default function AppRoutes() {
             <Route path={ROUTES.AR_RINGS} element={<TryOnRing />} />
           </Route>
 
-          <Route path="/ar/quoc-ti" element={<QuocTiar modelPath="/models/myfav.glb" />} />
+          <Route
+            path="/ar/quoc-ti"
+            element={<QuocTiar modelPath="/models/myfav.glb" />}
+          />
 
           <Route path="/ar/mesh-inspector" element={<SimpleMeshInspector />} />
 

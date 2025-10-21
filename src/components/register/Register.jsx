@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@services/api";
 import "./Register.css";
@@ -27,6 +27,12 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
+
+  // Resend email states
+  const [isResending, setIsResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState("");
+  const [resendCountdown, setResendCountdown] = useState(0);
+  const countdownIntervalRef = useRef(null);
 
   const validatePassword = (password) => {
     // Validate password according to backend PasswordValidationService.java rules
@@ -64,33 +70,53 @@ const Register = () => {
 
     // No more than 4 consecutive repeated characters
     if (/(.)\1{3,}/.test(password)) {
-      errors.push("Password cannot have more than 4 consecutive repeated characters");
+      errors.push(
+        "Password cannot have more than 4 consecutive repeated characters"
+      );
     }
 
     // Check for common passwords
     const commonPasswords = [
-      "password", "123456", "password123", "admin", "qwerty",
-      "letmein", "welcome", "monkey", "1234567890", "abc123"
+      "password",
+      "123456",
+      "password123",
+      "admin",
+      "qwerty",
+      "letmein",
+      "welcome",
+      "monkey",
+      "1234567890",
+      "abc123",
     ];
     const lowerPassword = password.toLowerCase();
-    if (commonPasswords.some(common => lowerPassword.includes(common))) {
+    if (commonPasswords.some((common) => lowerPassword.includes(common))) {
       errors.push("Password is too common and easily guessable");
     }
 
     // Check for illegal sequences (5+ consecutive characters)
     // Alphabetical sequences
-    if (/abcde|bcdef|cdefg|defgh|efghi|fghij|ghijk|hijkl|ijklm|jklmn|klmno|lmnop|mnopq|nopqr|opqrs|pqrst|qrstu|rstuv|stuvw|tuvwx|uvwxy|vwxyz/i.test(password)) {
-      errors.push("Password cannot contain alphabetical sequences of 5 or more characters");
+    if (
+      /abcde|bcdef|cdefg|defgh|efghi|fghij|ghijk|hijkl|ijklm|jklmn|klmno|lmnop|mnopq|nopqr|opqrs|pqrst|qrstu|rstuv|stuvw|tuvwx|uvwxy|vwxyz/i.test(
+        password
+      )
+    ) {
+      errors.push(
+        "Password cannot contain alphabetical sequences of 5 or more characters"
+      );
     }
 
     // Numerical sequences
     if (/01234|12345|23456|34567|45678|56789/.test(password)) {
-      errors.push("Password cannot contain numerical sequences of 5 or more characters");
+      errors.push(
+        "Password cannot contain numerical sequences of 5 or more characters"
+      );
     }
 
     // QWERTY sequences
     if (/qwert|werty|asdfg|sdfgh|zxcvb|xcvbn/i.test(password)) {
-      errors.push("Password cannot contain keyboard sequences of 5 or more characters");
+      errors.push(
+        "Password cannot contain keyboard sequences of 5 or more characters"
+      );
     }
 
     return errors;
@@ -134,6 +160,60 @@ const Register = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  // Countdown timer for resend button
+  useEffect(() => {
+    if (resendCountdown > 0) {
+      countdownIntervalRef.current = setInterval(() => {
+        setResendCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdownIntervalRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => {
+        if (countdownIntervalRef.current) {
+          clearInterval(countdownIntervalRef.current);
+        }
+      };
+    }
+  }, [resendCountdown]);
+
+  // Handle resend verification email
+  const handleResendEmail = async () => {
+    if (resendCountdown > 0 || isResending) return;
+
+    setIsResending(true);
+    setResendMessage("");
+
+    try {
+      await api.post("/api/auth/resend-verification-email", {
+        email: registeredEmail,
+      });
+
+      setResendMessage(
+        "Verification email sent successfully! Please check your inbox."
+      );
+      setResendCountdown(60); // 60 seconds cooldown
+    } catch (error) {
+      let errorMessage = "Failed to resend email. Please try again later.";
+
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        errorMessage = error.response.data.message;
+      }
+
+      setResendMessage(errorMessage);
+    } finally {
+      setIsResending(false);
+    }
   };
 
   // --- BƯỚC 3: CẬP NHẬT HOÀN CHỈNH HÀM SUBMIT ---
@@ -225,7 +305,7 @@ const Register = () => {
   if (registrationSuccess) {
     return (
       <div className="register-container">
-        <div className="register-form-wrapper">
+        <div className="registration-success-wrapper">
           <div className="registration-success">
             <div className="success-icon">
               <svg
@@ -251,19 +331,45 @@ const Register = () => {
               Please check your email and click on the verification link to
               activate your account. The link will expire in 24 hours.
             </p>
+
+            {/* Resend email message */}
+            {resendMessage && (
+              <p
+                className={`bodytext-4--no-margin resend-message ${
+                  resendMessage.includes("success") ? "success" : "error"
+                }`}
+              >
+                {resendMessage}
+              </p>
+            )}
+
             <div className="success-actions">
               <ShineGlassButton
-                theme="shine"
+                theme="light"
                 onClick={() => navigate(ROUTES.AUTH_LOGIN)}
                 className="back-to-login-button"
               >
                 Back to Login
               </ShineGlassButton>
             </div>
-            <p className="bodytext-4--no-margin email-note">
-              Didn't receive the email? Check your spam folder or contact
-              support.
-            </p>
+
+            {/* Resend email section */}
+            <div className="resend-email-section">
+              <p className="bodytext-4--no-margin email-note">
+                Didn't receive the email?
+              </p>
+              <button
+                className="resend-email-button bodytext-4--no-margin"
+                onClick={handleResendEmail}
+                disabled={resendCountdown > 0 || isResending}
+              >
+                {isResending
+                  ? "Sending..."
+                  : resendCountdown > 0
+                  ? `Resend in ${resendCountdown}s`
+                  : "Resend Verification Email"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -445,19 +551,42 @@ const Register = () => {
           <div className="password-requirements">
             <p className="bodytext-5--no-margin">Password requirements</p>
             <ul>
-              <li className="bodytext-5--no-margin">8-128 characters in length</li>
-              <li className="bodytext-5--no-margin">At least 1 uppercase letter</li>
-              <li className="bodytext-5--no-margin">At least 1 lowercase letter</li>
+              <li className="bodytext-5--no-margin">
+                8-128 characters in length
+              </li>
+              <li className="bodytext-5--no-margin">
+                At least 1 uppercase letter
+              </li>
+              <li className="bodytext-5--no-margin">
+                At least 1 lowercase letter
+              </li>
               <li className="bodytext-5--no-margin">At least 1 number</li>
               <li className="bodytext-5--no-margin">
-                At least 1 special character (!@#$%^&amp;*(),.?&quot;:{}|&lt;&gt;_-+=[]\/;'`~)
+                At least 1 special character (!@#$%^&amp;*(),.?&quot;:{}
+                |&lt;&gt;_-+=[]\/;'`~)
+              </li>
+              <li className="bodytext-5--no-margin">No whitespace allowed</li>
+              <li className="bodytext-5--no-margin">
+                8-128 characters in length
+              </li>
+              <li className="bodytext-5--no-margin">
+                At least 1 uppercase letter
+              </li>
+              <li className="bodytext-5--no-margin">
+                At least 1 lowercase letter
+              </li>
+              <li className="bodytext-5--no-margin">At least 1 number</li>
+              <li className="bodytext-5--no-margin">
+                At least 1 special character (!@#$%^&amp;*(),.?&quot;:{}
+                |&lt;&gt;_-+=[]\/;'`~)
               </li>
               <li className="bodytext-5--no-margin">No whitespace allowed</li>
               <li className="bodytext-5--no-margin">
                 No more than 4 consecutive repeated characters
               </li>
               <li className="bodytext-5--no-margin">
-                No alphabetical, numerical, or keyboard sequences of 5+ characters
+                No alphabetical, numerical, or keyboard sequences of 5+
+                characters
               </li>
               <li className="bodytext-5--no-margin">
                 Cannot contain common passwords

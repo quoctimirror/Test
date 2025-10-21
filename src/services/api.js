@@ -37,13 +37,13 @@ api.interceptors.request.use(
     const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      
+
       // Add X-User-Id header from JWT token
       try {
-        const base64Payload = token.split('.')[1];
+        const base64Payload = token.split(".")[1];
         const payload = JSON.parse(atob(base64Payload));
         if (payload.userId) {
-          config.headers['X-User-Id'] = payload.userId.toString();
+          config.headers["X-User-Id"] = payload.userId.toString();
         }
       } catch (decodeError) {
         console.error("❌ Error decoding JWT for X-User-Id:", decodeError);
@@ -68,8 +68,9 @@ api.interceptors.response.use(
       requestUrl.includes("/auth/authenticate") ||
       requestUrl.includes("/auth/refresh-token");
 
-    const requiresAuth = ["/users/", "/orders/", "/me/"]
-      .some((path) => requestUrl.includes(path));
+    const requiresAuth = ["/users/", "/orders/", "/me/"].some((path) =>
+      requestUrl.includes(path)
+    );
 
     if (
       status === 401 &&
@@ -130,12 +131,19 @@ export const authAPI = {
   refreshToken: (refreshToken) =>
     api.post("/api/auth/refresh-token", { refreshToken }),
 
-  // Forgot password
+  // Forgot password - Step 1: Request OTP
   forgotPassword: (email) => api.post("/api/auth/forgot-password", { email }),
 
-  // Reset password
-  resetPassword: (token, newPassword) =>
-    api.post("/api/auth/reset-password", { token, newPassword }),
+  // Verify OTP - Step 2: Verify OTP and get reset token
+  verifyOtp: (email, otp) => api.post("/api/auth/verify-otp", { email, otp }),
+
+  // Reset password - Step 3: Reset with token
+  resetPassword: (resetToken, newPassword) =>
+    api.post("/api/auth/reset-password", { resetToken, newPassword }),
+
+  // Resend password reset OTP
+  resendPasswordResetOtp: (email) =>
+    api.post("/api/auth/resend-password-reset-otp", { email }),
 };
 
 // ===== LOCATIONS API =====
@@ -217,10 +225,10 @@ export const productsAPI = {
   // Get products by price range
   getByPriceRange: (min, max) =>
     api.get(`/api/products/price-range?min=${min}&max=${max}`),
-    
+
   // Get products by vendor ID
   getByVendorId: (vendorId) => api.get(`/api/products?vendorId=${vendorId}`),
-  
+
   // Get current user's vendor products (authenticated endpoint)
   getCurrentUserProducts: () => api.get("/api/products"),
 
@@ -532,13 +540,13 @@ export const designersAPI = {
   getCurrentUserDesigners: () => api.get("/api/designers?filter=current-user"),
 
   // Get current user's designer info for dashboard
-  getCurrentDesignerInfo: () => api.get("/api/designers?filter=current-user")
-    .then(response => {
+  getCurrentDesignerInfo: () =>
+    api.get("/api/designers?filter=current-user").then((response) => {
       const designers = response.data;
 
       return {
         data: designers && designers.length > 0 ? designers[0] : null,
-        hasDesigner: designers && designers.length > 0
+        hasDesigner: designers && designers.length > 0,
       };
     }),
 
@@ -549,7 +557,8 @@ export const designersAPI = {
   getByCode: (code) => api.get(`/api/designers/code/${code}`),
 
   // Get designers by specialty
-  getBySpecialty: (specialty) => api.get(`/api/designers/specialty/${specialty}`),
+  getBySpecialty: (specialty) =>
+    api.get(`/api/designers/specialty/${specialty}`),
 
   // Get verified designers
   getVerified: () => api.get("/api/designers/verified"),
@@ -582,17 +591,17 @@ export const designersAPI = {
 
   // Get design products for current user's designer
   getCurrentDesignerDesigns: () =>
-    designersAPI.getCurrentDesignerInfo()
-      .then(designerInfo => {
-        if (designerInfo.hasDesigner && designerInfo.data) {
-          return designersAPI.getDesigns(designerInfo.data.id);
-        } else {
-          return { data: [] };
-        }
-      }),
+    designersAPI.getCurrentDesignerInfo().then((designerInfo) => {
+      if (designerInfo.hasDesigner && designerInfo.data) {
+        return designersAPI.getDesigns(designerInfo.data.id);
+      } else {
+        return { data: [] };
+      }
+    }),
 
   // Get designer dashboard data by designer ID
-  getDashboard: (designerId) => api.get(`/api/designers/${designerId}/dashboard`),
+  getDashboard: (designerId) =>
+    api.get(`/api/designers/${designerId}/dashboard`),
 
   // Get designer dashboard data for current user
   getCurrentUserDashboard: () => api.get("/api/designers/dashboard"),
@@ -608,18 +617,18 @@ export const designerAPI = {
 export const vendorsAPI = {
   // Get all active vendors (filtered by current user if authenticated)
   getAll: () => api.get("/api/vendors"),
-  
+
   // Get current user's vendors (authenticated endpoint)
   getCurrentUserVendors: () => api.get("/api/vendors?filter=current-user"),
-  
+
   // Get current user's vendor info for dashboard
-  getCurrentVendorInfo: () => api.get("/api/vendors?filter=current-user")
-    .then(response => {
+  getCurrentVendorInfo: () =>
+    api.get("/api/vendors?filter=current-user").then((response) => {
       const vendors = response.data;
-      
-      return { 
+
+      return {
         data: vendors && vendors.length > 0 ? vendors[0] : null,
-        hasVendor: vendors && vendors.length > 0
+        hasVendor: vendors && vendors.length > 0,
       };
     }),
 
@@ -654,20 +663,19 @@ export const vendorsAPI = {
   update: (id, vendorData) => api.put(`/api/vendors/${id}`, vendorData),
   delete: (id) => api.delete(`/api/vendors/${id}`),
   deactivate: (id) => api.patch(`/api/vendors/${id}/deactivate`),
-  
+
   // Get products for a specific vendor
   getProducts: (vendorId) => api.get(`/api/vendors/${vendorId}/products`),
-  
+
   // Get products for current user's vendor
-  getCurrentVendorProducts: () => 
-    vendorsAPI.getCurrentVendorInfo()
-      .then(vendorInfo => {
-        if (vendorInfo.hasVendor && vendorInfo.data) {
-          return vendorsAPI.getProducts(vendorInfo.data.id);
-        } else {
-          return { data: [] };
-        }
-      }),
+  getCurrentVendorProducts: () =>
+    vendorsAPI.getCurrentVendorInfo().then((vendorInfo) => {
+      if (vendorInfo.hasVendor && vendorInfo.data) {
+        return vendorsAPI.getProducts(vendorInfo.data.id);
+      } else {
+        return { data: [] };
+      }
+    }),
 };
 
 // ===== FILE UPLOAD API =====
@@ -700,17 +708,21 @@ export const notificationsAPI = {
   // Send email notification (public endpoint - no auth required)
   sendEmail: (recipients, emailType, model, captchaToken) => {
     // Use raw axios without interceptors to bypass Authorization header
-    return axios.post(`${API_BASE_URL}/api/notifications/email`, {
-      recipients,
-      emailType,
-      model,
-      captchaToken,
-    }, {
-      headers: {
-        "Content-Type": "application/json",
+    return axios.post(
+      `${API_BASE_URL}/api/notifications/email`,
+      {
+        recipients,
+        emailType,
+        model,
+        captchaToken,
       },
-      timeout: 30000,
-    });
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        timeout: 30000,
+      }
+    );
   },
 };
 
