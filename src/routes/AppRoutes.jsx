@@ -30,6 +30,7 @@ import QuocTiar from "@components/arTryOn/QuocTiar.jsx";
 const SimpleMeshInspector = lazy(() =>
   import("@components/arTryOn/quocti_dancefloor/SimpleMeshInspector.jsx")
 );
+const IJewelTryOn = lazy(() => import("@components/arTryOn/IJewelTryOn.jsx"));
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
@@ -129,6 +130,7 @@ export default function AppRoutes() {
       location.pathname.startsWith(ROUTES.COLLECTIONS + "/") ||
       location.pathname.startsWith(ROUTES.NEWS + "/") ||
       location.pathname.startsWith(ROUTES.AR_RINGS.split(":")[0]) ||
+      location.pathname.startsWith("/ar/ijewel") ||
       location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
@@ -152,6 +154,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.AR_RINGS.split(":")[0]) ||
     location.pathname.startsWith("/ar/quoc-ti") ||
     location.pathname.startsWith("/ar/mesh-inspector") ||
+    location.pathname.startsWith("/ar/ijewel") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -166,6 +169,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.AR_RINGS.split(":")[0]) ||
     location.pathname.startsWith("/ar/quoc-ti") ||
     location.pathname.startsWith("/ar/mesh-inspector") ||
+    location.pathname.startsWith("/ar/ijewel") ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -274,6 +278,8 @@ export default function AppRoutes() {
           />
 
           <Route path="/ar/mesh-inspector" element={<SimpleMeshInspector />} />
+
+          <Route path="/ar/ijewel/:ringId?" element={<IJewelTryOn />} />
 
           <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
 

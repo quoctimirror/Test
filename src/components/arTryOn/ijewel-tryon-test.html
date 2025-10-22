@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iJewel Ring TryOn - Test</title>
+
+    <!-- iJewel SDK Scripts -->
+    <script src="https://releases.ijewel3d.com/webgi/runtime/bundle-0.15.2.js" crossorigin="anonymous"></script>
+    <script>window.webgi = window;</script>
+    <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.35/web-vto-instore.js" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+
+        #header-text {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 10;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        #webgi-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            z-index: 200;
+            text-align: center;
+        }
+
+        .error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 200;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .error h3 {
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <div id="header-text">iJewel Realtime Tryon</div>
+        <canvas id="webgi-canvas"></canvas>
+    </div>
+
+    <button id="start-tryon" style="position: fixed; top: 0.5rem; right: 0.5rem; height: 30px;">Start Try-On</button>
+
+    <div id="tryon-options" style="display: none; position: fixed; bottom: 12px; right: 2%; display: flex; gap: 10px;">
+        <button id="flip-camera">Flip Camera</button>
+        <button id="switch-finger">Switch Finger</button>
+        <button id="save-image">Save Image</button>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">Loading...</div>
+    <div id="error" class="error" style="display: none;">
+        <h3>Error</h3>
+        <p id="error-message"></p>
+    </div>
+
+    <!-- Eruda Console for mobile debugging -->
+    <script>
+    ;(function () {
+        var src = '//cdn.jsdelivr.net/npm/eruda';
+        if (!/debug/.test(window.location) && localStorage.getItem('active-eruda') != 'true') return;
+        document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+        document.write('<scr' + 'ipt>eruda.init();</scr' + 'ipt>');
+    })();
+    </script>
+
+    <script>
+        async function init() {
+            try {
+                // Initialize the viewer
+                const viewer = new ViewerApp({
+                    canvas: document.getElementById("webgi-canvas")
+                });
+
+                // Set the canvas scaling to 1.5 for sharper rendering
+                viewer.renderer.displayCanvasScaling = 1.5;
+
+                // Add and setup all necessary plugins
+                await addBasePlugins(viewer);
+                const diamondPlugin = await viewer.addPlugin(DiamondPlugin);
+                diamondPlugin.setKey("LICENSE_KEY_FOR_IJEWEL_SDK");
+
+                // Add the Ring Try-On Plugin
+                const tryon = await viewer.addPlugin(ij_vto.RingTryonPlugin);
+                tryon.setKey("LICENSE_KEY_FOR_TRYON_SDK");
+
+                // Add the Ring Try-On UI Plugin
+                await viewer.addPlugin(ij_vto.RingTryonUIPlugin);
+
+                viewer.renderEnabled = false;
+
+                // Load the ring model and config that includes scene settings and model settings
+                // TODO: REPLACE WITH YOUR MODEL URL
+                await viewer.load("https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.glb");
+                await viewer.load("https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.json");
+
+                viewer.renderEnabled = true;
+                const tryonOptions = document.querySelector("#tryon-options");
+
+                // Start or stop the tryon when the button is clicked
+                const startBtn = document.querySelector("#start-tryon");
+                startBtn.onclick = async () => {
+                    tryon.running ? await tryon.stop() : await tryon.start();
+
+                    if (tryon.running) {
+                        tryonOptions.style.display = "flex";
+                    } else {
+                        tryonOptions.style.display = "none";
+                    }
+
+                    startBtn.innerHTML = tryon.running ? "Stop Try-On" : "Start Try-On";
+                };
+
+                const flipCameraBtn = document.querySelector("#flip-camera");
+                flipCameraBtn.onclick = () => tryon.running && tryon.flipCamera();
+
+                const switchFingerBtn = document.querySelector("#switch-finger");
+                switchFingerBtn.onclick = () => tryon.running && (tryon.finger = (tryon.finger + 1) % 5);
+
+                const saveImageBtn = document.querySelector("#save-image");
+                saveImageBtn.onclick = () => tryon.running && tryon.saveImage();
+
+                console.log('✅ iJewel SDK initialized successfully');
+
+            } catch (err) {
+                console.error('❌ Initialization error:', err);
+                alert('Failed to initialize: ' + err.message);
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
