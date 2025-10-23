@@ -50,9 +50,37 @@ const IJewelTryOn = () => {
 
                 viewer.renderEnabled = false;
 
-                // Load the ring model and config (using demo model)
-                await viewer.load("https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.glb");
-                await viewer.load("https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.json");
+                // Load HDR environment for proper lighting
+                await viewer.setEnvironmentMap("/hdr/studio_small_03_4k.hdr");
+
+                // Load the ring model and config
+                await viewer.load("/models/rings/mirror-fiston.glb");
+                await viewer.load("/fiston.json");
+
+                // Setup scene lighting and materials
+                const scene = viewer.scene;
+
+                // Enhance environment lighting
+                if (scene.environment) {
+                    scene.environment.intensity = 1.5;
+                }
+
+                // Setup materials for all meshes in the model
+                scene.traverse((object) => {
+                    if (object.material) {
+                        // Configure material properties for metal/gems
+                        object.material.metalness = 0.9;
+                        object.material.roughness = 0.1;
+                        object.material.envMapIntensity = 1.5;
+
+                        // If material has a color, ensure it's not pure black
+                        if (object.material.color && object.material.color.r === 0 && object.material.color.g === 0 && object.material.color.b === 0) {
+                            object.material.color.setRGB(0.8, 0.8, 0.8); // Set to light gray instead of black
+                        }
+
+                        object.material.needsUpdate = true;
+                    }
+                });
 
                 viewer.renderEnabled = true;
 

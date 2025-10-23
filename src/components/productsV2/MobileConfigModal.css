@@ -501,9 +501,39 @@
 /* ===== TABLET (≥ 768px) - Still visible on tablet ===== */
 @media (min-width: 768px) {
     /* Modal vẫn hiển thị trên tablet, chỉ điều chỉnh sizing */
+    .pv2-mobile-config-modal.open {
+        padding-top: 2.5vh; /* 24/960 */
+        padding-bottom: 5vh; /* 48/960 */
+        padding-left: 5.75vw; /* 48/834 */
+        padding-right: 5.75vw; /* 48/834 */
+        box-sizing: border-box;
+    }
+
     .pv2-mobile-config-content {
         left: 10vw;
         right: 10vw;
+    }
+
+    /* Option rows - cách đều với đơn vị tương đối */
+    .pv2-mobile-option-row {
+        min-height: 5vh; /* Chiều cao tối thiểu tương đối */
+        padding-top: 1.5vh; /* Padding đều phía trên */
+        padding-bottom: 1.5vh; /* Padding đều phía dưới */
+    }
+
+    /* Additional info spacing */
+    .pv2-mobile-additional-info {
+        padding-top: 2.5vh; /* 24/960 */
+    }
+
+    /* Price spacing */
+    .pv2-mobile-price {
+        margin-bottom: 2.5vh; /* 24/960 */
+    }
+
+    /* Action buttons gap */
+    .pv2-mobile-modal-action-buttons {
+        gap: 1.04vh; /* 10/960 */
     }
 }
 

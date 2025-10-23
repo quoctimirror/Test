@@ -218,6 +218,44 @@ const Products = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Handle sticky behavior for right sidebar on desktop
+    useEffect(() => {
+        const handleRightSidebarScroll = () => {
+            const leftContainer = document.querySelector('.pv2-left-container');
+            const rightSidebar = document.querySelector('.pv2-products-right');
+
+            if (!leftContainer || !rightSidebar || window.innerWidth < 1024) {
+                return; // Only apply on desktop
+            }
+
+            const leftRect = leftContainer.getBoundingClientRect();
+            const leftBottom = leftRect.bottom;
+            const viewportHeight = window.innerHeight;
+
+            // If we've scrolled past the left container (left container is fully scrolled)
+            if (leftBottom <= viewportHeight) {
+                // Switch to absolute positioning to scroll with page
+                rightSidebar.style.position = 'absolute';
+                rightSidebar.style.top = `${leftContainer.offsetHeight - viewportHeight}px`;
+                rightSidebar.style.right = '0';
+            } else {
+                // Keep fixed while scrolling through left container
+                rightSidebar.style.position = 'fixed';
+                rightSidebar.style.top = '0';
+                rightSidebar.style.right = '0';
+            }
+        };
+
+        handleRightSidebarScroll();
+        window.addEventListener('scroll', handleRightSidebarScroll);
+        window.addEventListener('resize', handleRightSidebarScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleRightSidebarScroll);
+            window.removeEventListener('resize', handleRightSidebarScroll);
+        };
+    }, []);
+
     // Function to switch models
     // const switchModel = async (newModelIndex) => {
     //     if (newModelIndex === currentModelIndex || !viewerRef.current) return;

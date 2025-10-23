@@ -20,7 +20,7 @@
 
 .pv2-mobile-bar-caret-up {
     position: absolute;
-    top: 8px;
+    top: 0.2%;
     left: 50%;
     transform: translateX(-50%);
     width: 24px;
@@ -28,6 +28,7 @@
     opacity: 0.5;
     cursor: pointer;
     transition: opacity 0.2s ease;
+    z-index: 10;
 }
 
 .pv2-mobile-bar-caret-up:hover {
@@ -173,12 +174,18 @@
 .pv2-mobile-order-btn {
     width: 100%;
     height: 40px;
+    min-height: 40px;
     background: #FFFFFF;
     border: none;
     color: black;
     cursor: pointer;
     transition: all 0.2s ease;
     border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    box-sizing: border-box;
 }
 
 .pv2-mobile-order-btn:hover {
@@ -231,10 +238,10 @@
     border-color: #FFFFFF;
 }
 
-/* Tablet - 768px to 1023px - Increased height to 30vh */
-@media (min-width: 768px) and (max-width: 1023px) {
+/* Tablet - >= 768px - Increased height to 30vh */
+@media (min-width: 768px) {
     .pv2-mobile-product-bar {
-        height: 30vh;
+        height: 25vh;
     }
 
     .pv2-mobile-product-content {
@@ -284,12 +291,13 @@
     }
 
     .pv2-mobile-bar-caret-up {
+        top: 5%;
         width: 24px;
         height: 24px;
     }
 }
 
-/* Desktop - 1024px and up - Hide mobile bar */
+/* Desktop - >= 1024px - Hide mobile bar */
 @media (min-width: 1024px) {
     .pv2-mobile-product-bar {
         display: none;

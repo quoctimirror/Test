@@ -59,17 +59,18 @@
     /* Container becomes side-by-side layout */
     .pv2-products-container {
         flex-direction: row;
-        align-items: flex-start;
+        align-items: stretch;
+        min-height: 100vh;
     }
 
-    /* Right Configuration visible on desktop */
+    /* Right Configuration visible on desktop - Always visible when scrolling */
     .pv2-products-right {
         display: flex;
         width: calc(100% - 66.25%);
         height: 100vh;
-        position: sticky;
+        position: fixed;
         top: 0;
-        align-self: flex-start;
+        right: 0;
         flex-shrink: 0;
         box-sizing: border-box;
         z-index: 50;
