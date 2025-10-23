@@ -135,14 +135,14 @@
 
 /* Description */
 .starting-description {
-  max-width: 609px;
+  max-width: 600px;
   margin: 0 auto 60px auto;
   transform: translateY(30%);
   opacity: 0;
   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 
-.starting-description .bodytext-1--no-margin {
+.starting-description .bodytext-4--no-margin {
   word-wrap: break-word;
   white-space: normal;
   color: #fff;

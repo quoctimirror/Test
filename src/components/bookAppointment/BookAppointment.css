@@ -1,0 +1,642 @@
+.book-appointment-page {
+  width: 100%;
+  min-height: 100vh;
+  background: #f6f6f6;
+  position: relative;
+}
+
+/* Scroll Progress Bar */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 0;
+  background: linear-gradient(90deg, #bc224c 0%, #d63566 50%, #bc224c 100%);
+  border-radius: 0 10px 10px 0;
+  z-index: 9999;
+  will-change: width;
+  transition: opacity 0.3s ease;
+}
+
+/* Hero Section with Gradient */
+.book-hero {
+  width: 100%;
+  min-height: 66vh;
+  background: linear-gradient(180deg, #7a0525 0%, #bc224c 25%, #f6f6f6 100%),
+    linear-gradient(180deg, rgba(246, 246, 246, 0) 50%, #f6f6f6 100%),
+    url("/path-to-your-image.jpg") lightgray 50% / cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.book-hero-title {
+  color: white;
+  margin: 0;
+}
+
+/* Section Wrapper */
+.book-section-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: #f6f6f6;
+  padding: 80px 0;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+.book-section-wrapper .grid-container {
+  row-gap: 60px;
+}
+
+.book-section-wrapper.book-section-wrapper-02 .grid-container {
+  row-gap: 36px !important;
+}
+
+/* Space after section title */
+.book-section {
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+/* Custom styles for each section */
+.book-section-01 {
+  margin-bottom: 0;
+}
+
+.book-section-02 {
+  margin-bottom: 24px;
+}
+
+.book-section-03 {
+  margin-bottom: 48px;
+}
+
+/* Grid positioning - explicit combine như Milan */
+.book-section.col-6.col-start-4 {
+  grid-column: 4 / span 6;
+}
+
+.book-form-group.col-6.col-start-4 {
+  grid-column: 4 / span 6;
+  width: 100%;
+}
+
+.book-form-group.col-3.col-start-4 {
+  grid-column: 4 / span 3;
+  width: 100%;
+}
+
+.book-form-group.col-3.col-start-7 {
+  grid-column: 7 / span 3;
+  width: 100%;
+}
+
+.book-additional-info.col-6.col-start-4 {
+  grid-column: 4 / span 6;
+  width: 100%;
+}
+
+/* Button wrapper grid positioning */
+.book-section-wrapper .shine-button-wrap:has(.book-continue-btn),
+.book-section-wrapper .shine-button-wrap:has(.book-submit-btn) {
+  grid-column: 4 / span 6 !important;
+  justify-self: center;
+  margin-top: 60px;
+}
+
+.book-section-number {
+  color: rgba(121, 121, 121, 0.5);
+  margin-bottom: 12px;
+}
+
+.book-section-title {
+  color: #000000;
+}
+
+/* Form */
+.book-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 40px;
+}
+
+.book-form-group {
+  display: flex;
+  flex-direction: column;
+  /* gap: 12px; */
+  text-align: left;
+  align-items: stretch;
+}
+
+.book-label {
+  color: #797979;
+  margin-bottom: 12px;
+}
+
+.book-input,
+.book-select {
+  width: 100%;
+  padding: 12px 0px;
+  border: none;
+  border-bottom: 1px solid var(--Gray-2, #e0e0e0);
+  background: rgba(246, 246, 246, 1);
+  color: #000;
+  border-radius: 0;
+  backdrop-filter: blur(2.5px);
+  box-sizing: border-box;
+  height: 44px;
+  margin: 0;
+  font-style: normal;
+}
+
+/* Select specific styling */
+select.book-input {
+  padding: 12px 24px 12px 0px;
+  height: 44px;
+  line-height: 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23797979' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 12px 8px;
+  cursor: pointer;
+  margin: 0;
+}
+
+/* Options styling - force dropdown to match select width */
+select.book-input option {
+  padding: 12px 0;
+  background: white;
+  color: #000;
+}
+
+/* Time Picker Custom Styles */
+.book-timepicker-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.book-timepicker-input {
+  cursor: pointer;
+  user-select: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23797979' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right center !important;
+  background-size: 12px 8px !important;
+  padding-right: 24px !important;
+}
+
+.book-timepicker-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: white;
+  border: none;
+  padding: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.book-timepicker-option {
+  padding: 24px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(121, 121, 121, 1);
+  text-align: center;
+  border-bottom: 1px solid var(--Gray-2, #e0e0e0);
+  border-right: 1px solid var(--Gray-2, #e0e0e0);
+}
+
+.book-timepicker-option:nth-child(2n) {
+  border-right: none;
+}
+
+.book-timepicker-option:nth-last-child(-n + 2) {
+  border-bottom: none;
+}
+
+.book-timepicker-option:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.book-timepicker-option.selected {
+  background: #000;
+  color: white;
+  font-weight: 400;
+}
+
+.book-timepicker-option.selected:hover {
+  background: #000;
+}
+
+.book-input:focus,
+.book-select:focus,
+.book-timepicker-input:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.5);
+}
+
+.book-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* Showroom Radio */
+.book-showroom-info {
+  text-align: left;
+}
+
+.book-showroom-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0px;
+  background: rgba(246, 246, 246, 1);
+  border: none;
+  border-bottom: 1px solid var(--Gray-2, #e0e0e0);
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.book-showroom-radio:hover {
+  border-color: rgba(0, 0, 0, 0.5);
+}
+
+.book-showroom-radio input[type="radio"] {
+  margin-top: 4px;
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  appearance: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background: white;
+  cursor: pointer;
+}
+
+.book-showroom-radio input[type="radio"]:checked {
+  background: rgba(0, 0, 0, 1);
+  border-color: rgba(0, 0, 0, 1);
+}
+
+.book-showroom-radio label {
+  flex: 1;
+  cursor: pointer;
+}
+
+.book-showroom-name {
+  color: #000000;
+  margin-bottom: 12px;
+}
+
+.book-showroom-address {
+  color: rgba(121, 121, 121, 1);
+  line-height: 1.5;
+}
+
+/* Radio Group */
+.book-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.book-radio-group.horizontal {
+  flex-direction: row;
+  gap: 32px;
+}
+
+.book-radio-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.book-radio-item input[type="radio"] {
+  margin: 0;
+  min-width: 12px;
+  min-height: 12px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  appearance: none;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background: white;
+  cursor: pointer;
+}
+
+.book-radio-item input[type="radio"]:checked {
+  background: rgba(0, 0, 0, 1);
+  border-color: rgba(0, 0, 0, 1);
+}
+
+.book-radio-label {
+  color: #000000;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.book-radio-label:hover,
+.book-radio-label:has(input[type="radio"]:checked) {
+  color: rgba(0, 0, 0, 1);
+}
+
+/* Additional Info Text */
+.book-additional-info {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Error Message */
+.book-error-message {
+  color: #dc2626;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* DatePicker Custom Styles */
+.book-datepicker-wrapper {
+  width: 100%;
+  display: block;
+}
+
+.book-datepicker-wrapper .react-datepicker__input-container {
+  width: 100%;
+  display: block;
+}
+
+.book-datepicker-wrapper .react-datepicker__input-container input {
+  width: 100%;
+  display: block;
+  margin: 0 !important;
+  padding: 12px 24px 12px 0px !important;
+  height: 44px !important;
+  line-height: 20px !important;
+  box-sizing: border-box !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23797979' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right center !important;
+  background-size: 12px 8px !important;
+  cursor: pointer !important;
+}
+
+/* Calendar Popup */
+.book-datepicker-calendar {
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 0px !important;
+  padding: 20px !important;
+  background: white !important;
+}
+
+/* Header */
+.book-datepicker-calendar .react-datepicker__header {
+  background: white !important;
+  border: none !important;
+  padding: 0 0 16px 0 !important;
+}
+
+.book-datepicker-calendar .react-datepicker__current-month {
+  color: #000 !important;
+  margin-bottom: 16px !important;
+}
+
+/* Navigation Arrows */
+.book-datepicker-calendar .react-datepicker__navigation {
+  top: 20px !important;
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.book-datepicker-calendar .react-datepicker__navigation-icon::before {
+  border-color: #000 !important;
+  border-width: 2px 2px 0 0 !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+
+/* Day Names */
+.book-datepicker-calendar .react-datepicker__day-names {
+  display: flex !important;
+  justify-content: space-between !important;
+  margin-bottom: 8px !important;
+}
+
+.book-datepicker-calendar .react-datepicker__day-name {
+  color: #000 !important;
+  width: 36px !important;
+  margin: 0 !important;
+}
+
+/* Month Container */
+.book-datepicker-calendar .react-datepicker__month {
+  margin: 0 !important;
+}
+
+.book-datepicker-calendar .react-datepicker__week {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
+/* Days */
+.book-datepicker-calendar .react-datepicker__day {
+  color: #000 !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+  transition: all 0.2s ease !important;
+}
+
+.book-datepicker-calendar .react-datepicker__day:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 50% !important;
+}
+
+/* Outside Month Days */
+.book-datepicker-calendar .react-datepicker__day--outside-month {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Selected Day */
+.book-datepicker-calendar .react-datepicker__day--selected,
+.book-datepicker-calendar .react-datepicker__day--keyboard-selected {
+  background: #000 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  font-weight: 400 !important;
+}
+
+.book-datepicker-calendar .react-datepicker__day--selected:hover {
+  background: #000 !important;
+}
+
+/* Today */
+.book-datepicker-calendar .react-datepicker__day--today {
+  font-weight: 500 !important;
+}
+
+/* Confirmation */
+.book-confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 60px;
+  text-align: left;
+}
+
+.book-confirmation-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.book-confirmation-label {
+  color: rgba(121, 121, 121, 1);
+  flex-shrink: 0;
+  min-width: 150px;
+}
+
+.book-confirmation-value-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.book-confirmation-value {
+  color: #000000;
+  text-align: right;
+}
+
+.book-confirmation-address {
+  color: rgba(121, 121, 121, 1);
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+/* Submit Button */
+.book-confirmation .shine-button-wrap:has(.book-submit-btn) {
+  margin: 96px auto 0;
+}
+
+.book-confirmation-note {
+  text-align: center;
+  color: rgba(121, 121, 121, 1);
+  margin-top: 6px;
+}
+
+/* Responsive */
+@media screen and (max-width: 1024px) {
+  .book-hero {
+    min-height: 50vh;
+  }
+
+  .book-section-wrapper {
+    padding: 60px 0;
+  }
+
+  /* Tablet Grid - Start at column 3, span 8 */
+  .book-section.col-6.col-start-4 {
+    grid-column: 3 / span 8;
+  }
+
+  .book-form-group.col-6.col-start-4 {
+    grid-column: 3 / span 8;
+  }
+
+  /* Full width for paired fields (Date/Time, Name, Email/Phone) */
+  .book-form-group.col-3.col-start-4,
+  .book-form-group.col-3.col-start-7 {
+    grid-column: 3 / span 8;
+  }
+
+  .book-additional-info.col-6.col-start-4 {
+    grid-column: 3 / span 8;
+  }
+
+  /* Button wrapper for tablet */
+  .book-section-wrapper .shine-button-wrap:has(.book-continue-btn),
+  .book-section-wrapper .shine-button-wrap:has(.book-submit-btn) {
+    grid-column: 3 / span 8 !important;
+  }
+  .book-label {
+    margin-bottom: 12px;
+  }
+  .book-showroom-radio {
+    padding: 6px 0 0;
+  }
+  .book-section-wrapper .grid-container {
+    row-gap: 36px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .book-hero {
+    min-height: 40vh;
+  }
+
+  .book-section-wrapper {
+    padding: 40px 0;
+  }
+
+  .book-form {
+    gap: 24px;
+  }
+
+  .book-radio-group.horizontal {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .book-confirmation-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .book-confirmation-value {
+    text-align: left;
+  }
+
+  /* Mobile Grid - Start at column 2, span 10 */
+  .book-section.col-6.col-start-4 {
+    grid-column: 2 / span 10;
+  }
+
+  .book-form-group.col-6.col-start-4 {
+    grid-column: 2 / span 10;
+  }
+
+  .book-form-group.col-3.col-start-4,
+  .book-form-group.col-3.col-start-7 {
+    grid-column: 2 / span 10;
+  }
+
+  .book-additional-info.col-6.col-start-4 {
+    grid-column: 2 / span 10;
+  }
+
+  /* Button wrapper for mobile */
+  .book-section-wrapper .shine-button-wrap:has(.book-continue-btn),
+  .book-section-wrapper .shine-button-wrap:has(.book-submit-btn) {
+    grid-column: 2 / span 10 !important;
+  }
+}

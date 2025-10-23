@@ -20,10 +20,10 @@ const ContactUs = () => {
       />
       <div className="contact-us-gradient-box"></div>
       <div className="contact-us-hero-content">
-        <h4 className="bodytext-3--no-margin">NEED HELP?</h4>
+        <h4 className="bodytext-4--no-margin">NEED HELP?</h4>
         <h1 className="heading-1--no-margin">REACH OUT</h1>
-        <p className="bodytext-3--no-margin">We would love to hear from you.</p>
-        <p className="bodytext-3--no-margin">
+        <p className="bodytext-4--no-margin">We would love to hear from you.</p>
+        <p className="bodytext-4--no-margin">
           Our client care experts are always here to help.
         </p>
         <div className="contact-us-button-wrapper">

@@ -13,7 +13,10 @@ const HoverExpandSection = () => {
 
   const handleExploreMoreClick = async () => {
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.COLLECTIONS);
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      ROUTES.COLLECTIONS
+    );
   };
 
   return (
@@ -22,7 +25,7 @@ const HoverExpandSection = () => {
         <h2 className="heading-1--no-margin hover-expand-title">
           EXPLORE THE GEMS
         </h2>
-        <p className="bodytext-3--no-margin hover-expand-subtitle">
+        <p className="bodytext-4--no-margin hover-expand-subtitle">
           Discover a variety of our pieces.
         </p>
         <ShineGlassButton

@@ -8,7 +8,7 @@
     #5e1226 11%,
     #c9385f 20%,
     #bb234c 25%,
-    #000 55%
+    #000 100%
   );
   display: flex;
   flex-direction: column;
@@ -29,7 +29,7 @@
 }
 
 .future-diamond-logo {
-  width: 120px;
+  width: 90px;
   height: auto;
   opacity: 0.9;
   margin-top: 50vh;
@@ -41,7 +41,7 @@
   justify-content: center;
   text-align: center;
   font-family: "Saol Display", serif;
-  font-size: clamp(32px, 15vw, 300px);
+  font-size: 200px;
   font-style: normal;
   font-weight: 300;
   line-height: 90%;
@@ -98,6 +98,37 @@
   max-width: 922px;
 }
 
+.future-diamond-description .segment {
+  display: inline;
+}
+
+.future-diamond-description .word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.future-diamond-description .char {
+  color: rgba(255, 255, 255, 0.15);
+  display: inline-block;
+}
+
+.future-diamond-description .char.reveal {
+  animation: charReveal 0.4s ease forwards;
+}
+
+.future-diamond-description .char.reveal.fast {
+  animation: charReveal 0.15s ease forwards;
+}
+
+@keyframes charReveal {
+  from {
+    color: rgba(255, 255, 255, 0.15);
+  }
+  to {
+    color: #ffffff;
+  }
+}
+
 /* Medium screens (tablets) - 426px to 1023px */
 @media screen and (max-width: 1023px) {
   .future-diamond {
@@ -141,7 +172,7 @@
   }
 
   .future-diamond-title {
-    font-size: clamp(20px, 24vw, 101px);
+    font-size: clamp(20px, 24vw, 60px);
     margin: 10vh 0 8vh 0;
     padding: 0 2.5%;
     white-space: normal;

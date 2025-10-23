@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./EmailVerification.css";
 import { authAPI } from "@/services/api";
 import { ROUTES } from "@/constants/routes";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const EmailVerification = () => {
   const navigate = useNavigate();
@@ -74,27 +75,33 @@ const EmailVerification = () => {
 
           {status === "success" && (
             <>
+              <h1 className="heading-1--no-margin verify-title">VERIFY SUCCESSFUL!</h1>
+              <p className="bodytext-4--no-margin verify-message">Your account has been created</p>
               <div className="verification-icon success">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  width="64"
-                  height="64"
+                  width="48"
+                  height="48"
                 >
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                 </svg>
               </div>
-              <h2>Email Verified!</h2>
-              <p>{message}</p>
-              <p className="redirect-message">
-                Redirecting to login page in a few seconds...
-              </p>
+              <ShineGlassButton
+                theme="light"
+                onClick={handleBackToLogin}
+                className="back-to-signin-btn"
+              >
+                Back to Sign in
+              </ShineGlassButton>
             </>
           )}
 
           {status === "error" && (
             <>
+              <h1 className="heading-1--no-margin verify-title error-title">VERIFICATION FAILED</h1>
+              <p className="bodytext-4--no-margin verify-message error-message">{message}</p>
               <div className="verification-icon error">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -106,11 +113,13 @@ const EmailVerification = () => {
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
                 </svg>
               </div>
-              <h2>Verification Failed</h2>
-              <p>{message}</p>
-              <button onClick={handleBackToLogin} className="back-to-login-btn">
-                Back to Login
-              </button>
+              <ShineGlassButton
+                theme="light"
+                onClick={handleBackToLogin}
+                className="back-to-signin-btn"
+              >
+                Back to Sign in
+              </ShineGlassButton>
             </>
           )}
         </div>

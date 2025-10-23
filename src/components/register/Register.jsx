@@ -220,7 +220,15 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Thực hiện validation phía client trước
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      // Scroll to top to show errors
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setErrors(prev => ({
+        ...prev,
+        form: "Please fix the errors above before submitting."
+      }));
+      return;
+    }
 
     setIsLoading(true);
     setErrors({}); // Xóa lỗi cũ trước khi gửi
@@ -279,7 +287,14 @@ const Register = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Nếu là firstName hoặc lastName, chỉ cho phép chữ cái không dấu và khoảng trắng
+    let processedValue = value;
+    if (name === 'firstName' || name === 'lastName') {
+      processedValue = value.replace(/[^a-zA-Z\s]/g, '');
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: processedValue }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
@@ -307,29 +322,17 @@ const Register = () => {
       <div className="register-container">
         <div className="registration-success-wrapper">
           <div className="registration-success">
-            <div className="success-icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                width="64"
-                height="64"
-              >
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-              </svg>
-            </div>
-            <h1 className="heading-1--no-margin register-title">
-              Registration Successful!
+            <h1 className="heading-1--no-margin register-title success-title">
+              REGISTRATION<br />SUCCESSFUL!
             </h1>
-            <p className="bodytext-3--no-margin success-message">
-              Thank you for registering. We've sent a verification email to:
+            <p className="bodytext-4--no-margin success-message">
+              Thank you for registering.
             </p>
-            <p className="bodytext-2--no-margin registered-email">
-              {registeredEmail}
+            <p className="bodytext-4--no-margin verification-instruction">
+              We've sent a verification email to <strong>{registeredEmail}</strong>. Please check your email and click on the verification link to activate your account.
             </p>
-            <p className="bodytext-3--no-margin verification-instruction">
-              Please check your email and click on the verification link to
-              activate your account. The link will expire in 24 hours.
+            <p className="bodytext-4--no-margin expiry-notice">
+              The link will expire in 24 hours.
             </p>
 
             {/* Resend email message */}
@@ -349,26 +352,25 @@ const Register = () => {
                 onClick={() => navigate(ROUTES.AUTH_LOGIN)}
                 className="back-to-login-button"
               >
-                Back to Login
+                Back to Sign in
               </ShineGlassButton>
             </div>
 
             {/* Resend email section */}
             <div className="resend-email-section">
-              <p className="bodytext-4--no-margin email-note">
-                Didn't receive the email?
+              <p className="bodytext-3--no-margin email-note">
+                Didn't receive the email? <button
+                  className="resend-email-button bodytext-3--no-margin"
+                  onClick={handleResendEmail}
+                  disabled={resendCountdown > 0 || isResending}
+                >
+                  {isResending
+                    ? "Sending..."
+                    : resendCountdown > 0
+                    ? `Resend Verification Email (${resendCountdown}s)`
+                    : "Resend Verification Email"}
+                </button>
               </p>
-              <button
-                className="resend-email-button bodytext-4--no-margin"
-                onClick={handleResendEmail}
-                disabled={resendCountdown > 0 || isResending}
-              >
-                {isResending
-                  ? "Sending..."
-                  : resendCountdown > 0
-                  ? `Resend in ${resendCountdown}s`
-                  : "Resend Verification Email"}
-              </button>
             </div>
           </div>
         </div>
@@ -379,9 +381,7 @@ const Register = () => {
   return (
     <div className="register-container">
       <div className="register-form-wrapper">
-        <h1 className="heading-1--no-margin register-title">
-          CREATE YOUR ACCOUNT
-        </h1>
+        <h1 className="heading-1--no-margin register-title">CREATE ACCOUNT</h1>
         <form className="register-form" onSubmit={handleSubmit} noValidate>
           {/* Hiển thị lỗi chung của form */}
           {errors.form && (
@@ -552,44 +552,21 @@ const Register = () => {
             <p className="bodytext-5--no-margin">Password requirements</p>
             <ul>
               <li className="bodytext-5--no-margin">
-                8-128 characters in length
+                No repetition of more than two characters
               </li>
               <li className="bodytext-5--no-margin">
-                At least 1 uppercase letter
+                One lowercase character
+              </li>
+              <li className="bodytext-5--no-margin">One number</li>
+              <li className="bodytext-5--no-margin">
+                One uppercase character
               </li>
               <li className="bodytext-5--no-margin">
-                At least 1 lowercase letter
+                At least 1 special character(s)
               </li>
-              <li className="bodytext-5--no-margin">At least 1 number</li>
+              <li className="bodytext-5--no-margin">10 characters minimum</li>
               <li className="bodytext-5--no-margin">
-                At least 1 special character (!@#$%^&amp;*(),.?&quot;:{}
-                |&lt;&gt;_-+=[]\/;'`~)
-              </li>
-              <li className="bodytext-5--no-margin">No whitespace allowed</li>
-              <li className="bodytext-5--no-margin">
-                8-128 characters in length
-              </li>
-              <li className="bodytext-5--no-margin">
-                At least 1 uppercase letter
-              </li>
-              <li className="bodytext-5--no-margin">
-                At least 1 lowercase letter
-              </li>
-              <li className="bodytext-5--no-margin">At least 1 number</li>
-              <li className="bodytext-5--no-margin">
-                At least 1 special character (!@#$%^&amp;*(),.?&quot;:{}
-                |&lt;&gt;_-+=[]\/;'`~)
-              </li>
-              <li className="bodytext-5--no-margin">No whitespace allowed</li>
-              <li className="bodytext-5--no-margin">
-                No more than 4 consecutive repeated characters
-              </li>
-              <li className="bodytext-5--no-margin">
-                No alphabetical, numerical, or keyboard sequences of 5+
-                characters
-              </li>
-              <li className="bodytext-5--no-margin">
-                Cannot contain common passwords
+                Allowed special character(s) from {`!"#$£€%&()*+,-./:<=>?@[]^_{}~\`¨`}
               </li>
             </ul>
           </div>
@@ -600,8 +577,8 @@ const Register = () => {
           </p>
           <div className="create-account-button-wrapper">
             <ShineGlassButton
-              theme="shine"
-              onClick={() => {}}
+              theme="light"
+              type="submit"
               className="create-account-button"
               disabled={isLoading}
             >
@@ -614,7 +591,7 @@ const Register = () => {
               onClick={() => navigate(ROUTES.AUTH_LOGIN)}
               className="bodytext-3--no-margin return-login-link"
             >
-              Login now
+              Sign in now
             </a>
           </p>
         </form>

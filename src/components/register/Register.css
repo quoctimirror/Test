@@ -11,12 +11,12 @@
   /* padding: 40px 20px; */
   /* Thêm padding trên dưới */
   box-sizing: border-box;
-  background: linear-gradient(0deg, #000 -16.37%, #ec3667 4.03%, #fff 36.66%);
+  background: linear-gradient(0deg, #000 0%, #bc224c 5%, #f6f6f6 15%);
 }
 
 .register-form-wrapper {
   width: 100%;
-  max-width: 480px;
+  max-width: 600px;
 }
 
 /* --- Title --- */
@@ -24,10 +24,9 @@
   color: var(--Black, #000);
   text-transform: uppercase;
   text-align: center;
-  margin-bottom: 48px;
-  margin-top: 206px;
+  margin-bottom: 60px;
+  margin-top: 240px;
   white-space: nowrap;
-  margin-left: -18%;
 }
 
 .register-form {
@@ -89,8 +88,7 @@
   border: none;
   border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.5));
   background-color: transparent;
-  padding: 10px 0;
-  font-size: 1.1rem;
+  padding: 12px 0;
   color: #333;
   outline: none;
   transition: border-color 0.3s ease;
@@ -110,7 +108,6 @@
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown) + label {
   top: -14px;
-  font-size: 0.8rem;
   color: #888;
 }
 
@@ -152,9 +149,8 @@
 /* --- Các phần còn lại --- */
 .password-requirements {
   color: #f00;
-  margin-top: 36px;
   /* Giảm khoảng trống do margin của form-field-container cuối cùng */
-  margin-bottom: 48px;
+  margin-bottom: 60px;
 }
 
 .password-requirements p {
@@ -188,22 +184,21 @@
 
 .privacy-info strong {
   color: #000;
-  font-weight: 500;
 }
 
 .create-account-button-wrapper {
   display: flex;
   justify-content: center;
-  margin: 0 auto 48px auto;
+  margin: 0 auto 60px auto;
 }
 
 /* Button styles moved to common Button component */
 
 /* --- Login Prompt --- */
 .login-prompt {
-  color: var(--transparent-white-50, rgba(255, 255, 255, 0.5));
+  color: rgba(121, 121, 121, 1);
   text-align: center;
-  margin-bottom: 120px;
+  margin-bottom: 240px;
 }
 
 .return-login-link {
@@ -211,26 +206,26 @@
   text-decoration: none;
   position: relative;
   display: inline-block;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .return-login-link::after {
   content: "";
   position: absolute;
-  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  bottom: -3px;
   left: 0;
-  width: 0;
-  height: 1.5px;
-  background-color: var(--Black, #000);
-  transition: width 0.3s ease;
-}
-
-.return-login-link:hover {
-  color: var(--Black, #000);
-  cursor: pointer;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
 }
 
 .return-login-link:hover::after {
-  width: 100%;
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
 }
 
 .form-error {
@@ -256,7 +251,6 @@
   .register-title {
     margin-top: 180px;
     margin-bottom: 42px;
-    margin-left: -16%;
   }
 
   .title-group {
@@ -272,19 +266,16 @@
   }
 
   .input-group input {
-    font-size: 1.05rem;
     padding: 9px 0;
   }
 
   .input-group label {
-    font-size: 1.05rem;
     top: 9px;
   }
 
   .input-group input:focus + label,
   .input-group input:not(:placeholder-shown) + label {
     top: -13px;
-    font-size: 0.75rem;
   }
 
   .password-requirements {
@@ -319,7 +310,6 @@
   .register-title {
     margin-top: 160px;
     margin-bottom: 40px;
-    margin-left: -14%;
   }
 
   .title-group {
@@ -335,19 +325,16 @@
   }
 
   .input-group input {
-    font-size: 1rem;
     padding: 8px 0;
   }
 
   .input-group label {
-    font-size: 1rem;
     top: 8px;
   }
 
   .input-group input:focus + label,
   .input-group input:not(:placeholder-shown) + label {
     top: -12px;
-    font-size: 0.7rem;
   }
 
   .password-toggle {
@@ -360,39 +347,26 @@
   }
 
   .input-error {
-    font-size: 13px;
     margin-top: 7px;
   }
 
   .password-requirements {
     margin-top: 31px;
     margin-bottom: 42px;
-    font-size: 13px;
-  }
-
-  .password-requirements li {
-    font-size: 13px;
   }
 
   .privacy-info {
-    font-size: 13px;
     margin-bottom: 21px;
   }
 
   .create-account-button {
     width: 260px;
     padding: 12px 18px;
-    font-size: 13px;
     margin-bottom: 42px;
   }
 
   .login-prompt {
-    font-size: 13px;
     margin-bottom: 100px;
-  }
-
-  .return-login-link {
-    font-size: 13px;
   }
 }
 
@@ -409,17 +383,11 @@
   .register-title {
     margin-top: 140px;
     margin-bottom: 36px;
-    margin-left: -12%;
     white-space: normal;
-    line-height: 1.1;
   }
 
   .title-group {
     margin-bottom: 28px;
-  }
-
-  .title-group label {
-    font-size: 14px;
   }
 
   .title-options {
@@ -428,7 +396,6 @@
   }
 
   .title-option {
-    font-size: 14px;
     padding-bottom: 4px;
   }
 
@@ -437,19 +404,16 @@
   }
 
   .input-group input {
-    font-size: 0.95rem;
     padding: 7px 0;
   }
 
   .input-group label {
-    font-size: 0.95rem;
     top: 7px;
   }
 
   .input-group input:focus + label,
   .input-group input:not(:placeholder-shown) + label {
     top: -11px;
-    font-size: 0.65rem;
   }
 
   .password-toggle {
@@ -462,44 +426,33 @@
   }
 
   .input-error {
-    font-size: 12px;
     margin-top: 6px;
   }
 
   .password-requirements {
     margin-top: 29px;
     margin-bottom: 40px;
-    font-size: 12px;
   }
 
   .password-requirements li {
-    font-size: 12px;
     margin-bottom: 3px;
   }
 
   .privacy-info {
-    font-size: 12px;
     margin-bottom: 20px;
   }
 
   .create-account-button {
     width: 240px;
     padding: 11px 17px;
-    font-size: 12px;
     margin-bottom: 40px;
   }
 
   .login-prompt {
-    font-size: 12px;
     margin-bottom: 90px;
   }
 
-  .return-login-link {
-    font-size: 12px;
-  }
-
   .form-error {
-    font-size: 12px;
     padding: 8px;
     margin-bottom: 18px;
   }
@@ -522,16 +475,10 @@
     margin-bottom: 32px;
     margin-left: 0;
     white-space: normal;
-    line-height: 1;
-    font-size: 1.8rem;
   }
 
   .title-group {
     margin-bottom: 26px;
-  }
-
-  .title-group label {
-    font-size: 13px;
   }
 
   .title-options {
@@ -541,7 +488,6 @@
   }
 
   .title-option {
-    font-size: 13px;
     min-height: 44px;
     display: flex;
     align-items: center;
@@ -563,12 +509,10 @@
   }
 
   .input-group input {
-    font-size: 16px;
     padding: 10px 0;
   }
 
   .input-group label {
-    font-size: 16px;
     top: 10px;
   }
 
@@ -608,13 +552,10 @@
   .password-requirements li {
     font-size: 12px;
     margin-bottom: 4px;
-    line-height: 1.3;
   }
 
   .privacy-info {
-    font-size: 12px;
     margin-bottom: 18px;
-    line-height: 1.4;
   }
 
   .create-account-button {
@@ -622,7 +563,6 @@
     max-width: 280px;
     min-height: 44px;
     padding: 12px 20px;
-    font-size: 16px;
     margin-bottom: 32px;
   }
 
@@ -658,8 +598,6 @@
   .register-title {
     margin-top: 40px;
     margin-bottom: 28px;
-    font-size: 1.6rem;
-    line-height: 0.95;
   }
 
   .title-group {
@@ -766,6 +704,8 @@
 /* --- Registration Success Screen --- */
 .registration-success-wrapper {
   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -774,7 +714,6 @@
 
 .registration-success {
   text-align: center;
-  padding: 40px 20px;
 }
 
 .success-icon {
@@ -791,15 +730,20 @@
 }
 
 .registration-success .register-title {
-  margin-top: 0;
-  margin-bottom: 24px;
+  margin-top: 120px;
+  margin-bottom: 60px;
   margin-left: 0;
   white-space: normal;
 }
 
+.success-title {
+  text-align: center;
+  line-height: 1.2;
+}
+
 .success-message {
   color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
-  margin-bottom: 16px;
+  /* margin-bottom: 36px; */
 }
 
 .registered-email {
@@ -811,19 +755,27 @@
 
 .verification-instruction {
   color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
-  margin-bottom: 48px;
-  line-height: 1.6;
+  margin-bottom: 60px;
+}
+
+.verification-instruction strong {
+  color: #000;
+  font-weight: 500;
+}
+
+.expiry-notice {
+  color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
+  margin-bottom: 12px;
 }
 
 .success-actions {
   display: flex;
   justify-content: center;
-  margin-bottom: 32px;
+  margin-bottom: 12px;
 }
 
 .email-note {
   color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
-  font-style: italic;
   margin-bottom: 8px;
 }
 
@@ -857,30 +809,44 @@
   background: none;
   border: none;
   color: #000;
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 0;
   font-weight: 500;
-  transition: opacity 0.3s ease;
-  margin-top: 4px;
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
 }
 
-.resend-email-button:hover:not(:disabled) {
-  opacity: 0.7;
+.resend-email-button::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  bottom: -3px;
+  left: 0;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
+}
+
+.resend-email-button:hover:not(:disabled)::after {
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
 }
 
 .resend-email-button:disabled {
   color: #888;
   cursor: not-allowed;
-  text-decoration: none;
+}
+
+.resend-email-button:disabled::after {
+  display: none;
 }
 
 /* Responsive for success screen */
 @media screen and (max-width: 768px) {
-  .registration-success {
-    padding: 30px 15px;
-  }
-
   .success-icon {
     margin-top: 100px;
     margin-bottom: 28px;
@@ -919,10 +885,6 @@
 }
 
 @media screen and (max-width: 480px) {
-  .registration-success {
-    padding: 20px 10px;
-  }
-
   .success-icon {
     margin-top: 60px;
     margin-bottom: 24px;

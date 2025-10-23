@@ -93,7 +93,7 @@
   opacity: 1;
 }
 
-.leader-details-content-v3.visible .bodytext-1--no-margin {
+.leader-details-content-v3.visible .bodytext-4--no-margin {
   color: rgba(121, 121, 121, 1);
 }
 
@@ -120,31 +120,32 @@
   }
 
   .bod-member-v3-grid {
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto auto;
+    min-height: 0;
   }
 
   .leader-details-content-v3 {
-    grid-column: 1 / span 12;
-    grid-row: 1;
+    grid-column: 4 / span 6;
+    grid-row: 2;
     position: relative;
     top: auto;
     transform: none;
-    padding: 30px 0;
+    padding: 60px 0 36px 0;
+    flex-direction: column-reverse;
   }
 
   .members-scroll-container-v3 {
     grid-column: 1 / -1;
-    grid-row: 2;
+    grid-row: 1;
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    padding: 40px 0;
+    gap: 12px;
+    padding: 0;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     align-items: center;
-    height: 450px;
     align-self: center;
   }
 
@@ -154,13 +155,13 @@
 
   .member-item-v3 {
     flex-shrink: 0;
-    width: 200px;
-    height: 300px;
+    width: 60vw;
+    aspect-ratio: 4 / 5;
   }
 
   .member-item-v3.active {
-    width: 280px;
-    height: 420px;
+    /* Keep same size, only restore color */
+    transform: none;
   }
 
   .leader-quote-content-v3 {
@@ -169,7 +170,6 @@
     position: relative;
     top: auto;
     transform: none;
-    padding: 30px 0;
   }
 }
 
@@ -179,28 +179,32 @@
   }
 
   .leader-details-content-v3 {
-    padding: 20px 0;
+    padding: 0 0 60px;
+    grid-column: 1 / span 12;
+    grid-row: 1;
   }
 
   .members-scroll-container-v3 {
-    padding: 30px 0;
-    gap: 15px;
-    height: 360px;
+    padding: 0;
+    gap: 12px;
     align-self: center;
+    grid-row: 2;
   }
 
   .member-item-v3 {
-    width: 150px;
-    height: 225px;
+    flex-shrink: 0;
+    width: 70vw;
+    aspect-ratio: 4 / 5;
   }
 
   .member-item-v3.active {
-    width: 220px;
-    height: 330px;
+    /* Keep same size, only restore color */
+    transform: none;
   }
 
   .leader-quote-content-v3 {
     grid-column: 2 / span 10;
-    padding: 20px 0;
+    padding: 60px 0;
+    grid-row: 3;
   }
 }

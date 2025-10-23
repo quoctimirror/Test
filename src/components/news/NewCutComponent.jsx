@@ -101,11 +101,11 @@ const NewCutComponent = () => {
         <div className="new-cut-hero-content">
           <div className="new-cut-hero-text">
             <div className="new-cut-hero-text-main">
-              <span className="new-cut-hero-date bodytext-4--no-margin">June 2024</span>
+              <span className="new-cut-hero-date bodytext-4--no-margin">
+                June 2024
+              </span>
               <h1 className="new-cut-hero-title heading-1--no-margin">
-                Lumex-91™ - The Next
-                <br />
-                Star Has Arrived
+                Mirror-Lumex 91™ - The next star has arrived
               </h1>
             </div>
             <p className="new-cut-hero-description bodytext-5--no-margin">
@@ -129,7 +129,7 @@ const NewCutComponent = () => {
             <h2 className="new-cut-section-title heading-3--no-margin">
               Born from Luminax
             </h2>
-            <p className="new-cut-section-text bodytext-3--no-margin">
+            <p className="new-cut-section-text bodytext-4--no-margin">
               At the center of the Mirrorverse lies Luminax™, the symbolic
               epicenter of purity and energy. It is here that Lumex-91™ was
               conceived — a vision shaped in light, sculpted in precision, and
@@ -154,14 +154,14 @@ const NewCutComponent = () => {
             <h2 className="new-cut-section-title heading-3--no-margin">
               The Legacy of the Stars
             </h2>
-            <p className="new-cut-section-text bodytext-3--no-margin">
+            <p className="new-cut-section-text bodytext-4--no-margin">
               Inspired by the celestial artistry of the Optica Stelo, Lumex-91™
               carries forward the spirit of human exploration. It honors the
               moment humanity reached beyond our planet — and reminds us that
               the stars are not distant; they live in our hands. This is a
               diamond that does not simply sparkle. It guides.
             </p>
-            <p className="new-cut-section-text bodytext-3--no-margin">
+            <p className="new-cut-section-text bodytext-4--no-margin">
               Each facet is a portal of light. Individually, they capture and
               bend illumination; together, they create a performance of symmetry
               and radiance visible from afar. This is not just a cut — it is
@@ -174,7 +174,7 @@ const NewCutComponent = () => {
             <h2 className="new-cut-section-title heading-3--no-margin">
               Hold the Future in Your Hands
             </h2>
-            <p className="new-cut-section-text bodytext-3--no-margin">
+            <p className="new-cut-section-text bodytext-4--no-margin">
               With Lumex-91™, we redefine what a diamond can be: a symbol of
               progress, a piece of the cosmos, a reflection of your own inner
               light. The stars are no longer above you — they are with you.

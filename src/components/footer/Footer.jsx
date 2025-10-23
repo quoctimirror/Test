@@ -205,7 +205,7 @@ const Footer = () => {
               ENTER <br />
               THE UNIVERSE
             </h2>
-            <p className="bodytext-6--no-margin newsletter-subtitle">
+            <p className="bodytext-4--no-margin newsletter-subtitle">
               For a more personalized experience and exclusive news.
             </p>
             <div className="newsletter-form">
@@ -214,7 +214,7 @@ const Footer = () => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="email-input"
+                className="email-input bodytext-4--no-margin"
               />
               <ShineGlassButton
                 onClick={handleSignUp}
@@ -251,13 +251,13 @@ const Footer = () => {
           {/* Footer Bottom Left & Right - Inside footer-bottom */}
           <div className="footer-bottom-row">
             <div className="footer-bottom-left">
-              <p className="bodytext-3--no-margin">
+              <p className="bodytext-4--no-margin">
                 All rights reserved © 2025
               </p>
             </div>
 
             <div className="footer-bottom-right">
-              <a className="bodytext-3--no-margin legal-link">Legal mentions</a>
+              <a className="bodytext-4--no-margin legal-link">Legal mentions</a>
             </div>
           </div>
         </div>

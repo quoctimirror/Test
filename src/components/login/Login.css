@@ -4,38 +4,36 @@
 
 /* --- General Styling & Centering --- */
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    width: 100%;
-    background-color: #f8f8f8;
-    padding: 20px;
-    box-sizing: border-box;
-    background: linear-gradient(0deg, #000 -3.63%, #EC3667 13.61%, #FFF 79.31%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background: linear-gradient(0deg, #000 0%, #bc224c 5%, #f6f6f6 15%);
 }
 
 .login-form-wrapper {
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
 }
 
 /* --- Title --- */
 .login-title {
-    color: var(--Black, #000);
-    margin-bottom: 48px;
-    white-space: nowrap;
-    text-align: center;
-    text-transform: uppercase;
-    margin-left: -10%;
+  color: var(--Black, #000);
+  margin-bottom: 60px;
+  white-space: nowrap;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 /* --- Form & Input Fields --- */
 .login-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 
@@ -44,32 +42,32 @@
 
 /* 1. Class mới để bọc input và lỗi */
 .form-field-container {
-    /* Chuyển margin chính vào đây để tạo khoảng cách giữa các trường */
-    margin-bottom: 35px;
-    text-align: left;
+  /* Chuyển margin chính vào đây để tạo khoảng cách giữa các trường */
+  margin-bottom: 35px;
+  text-align: left;
 }
 
 .input-group {
-    position: relative;
-    /* Bỏ margin-bottom ở đây để lỗi có thể nằm sát ngay dưới */
-    /* margin-bottom: 35px; <- Xóa dòng này */
-    transition: border-color 0.3s ease;
+  position: relative;
+  /* Bỏ margin-bottom ở đây để lỗi có thể nằm sát ngay dưới */
+  /* margin-bottom: 35px; <- Xóa dòng này */
+  transition: border-color 0.3s ease;
 }
 
 .input-group input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
-    background-color: transparent !important;
-    padding: 10px 0;
-    font-family: var(--font-bt-beau-sans);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: 0;
-    color: #333 !important;
-    outline: none;
-    transition: border-color 0.3s ease;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.5)) !important;
+  background-color: transparent !important;
+  padding: 10px 0;
+  font-family: var(--font-bt-beau-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: #333 !important;
+  outline: none;
+  transition: border-color 0.3s ease;
 }
 
 /* Override browser autocomplete styles */
@@ -77,395 +75,358 @@
 .input-group input:-webkit-autofill:hover,
 .input-group input:-webkit-autofill:focus,
 .input-group input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px transparent inset !important;
-    -webkit-text-fill-color: #333 !important;
-    background-color: transparent !important;
-    border: none !important;
-    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
-    transition: background-color 5000s ease-in-out 0s !important;
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  -webkit-text-fill-color: #333 !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.5)) !important;
+  transition: background-color 5000s ease-in-out 0s !important;
 }
 
 /* Firefox autocomplete */
 .input-group input:-moz-autofill,
 .input-group input:-moz-autofill:hover,
 .input-group input:-moz-autofill:focus {
-    background-color: transparent !important;
-    color: #333 !important;
-    border: none !important;
-    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+  background-color: transparent !important;
+  color: #333 !important;
+  border: none !important;
+  border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.5)) !important;
 }
 
 .input-group input:focus {
-    border-bottom-color: var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+  border-bottom-color: var(
+    --transparent-black-50,
+    rgba(0, 0, 0, 0.5)
+  ) !important;
 }
 
 /* Floating label styles */
 .floating-label {
-    position: absolute;
-    left: 0;
-    top: 10px;
-    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
-    transition: all 0.2s ease;
-    pointer-events: none;
+  position: absolute;
+  left: 0;
+  top: 10px;
+  color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
+  transition: all 0.2s ease;
+  pointer-events: none;
 }
 
 /* Reset styles to ensure consistent border color */
 .input-group input:not(:focus) {
-    border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+  border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.5)) !important;
 }
 
 /* When input is focused or has value, move label up */
-.input-group input:focus+.floating-label,
-.input-group input:not(:placeholder-shown)+.floating-label,
-.input-group input:valid+.floating-label {
-    top: -14px;
-    font-size: 0.8rem;
-    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
+.input-group input:focus + .floating-label,
+.input-group input:not(:placeholder-shown) + .floating-label,
+.input-group input:valid + .floating-label {
+  top: -14px;
+  font-size: 0.8rem;
+  color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
 }
 
 .input-group input::placeholder {
-    color: transparent;
+  color: transparent;
 }
 
 /* --- Password Toggle Button --- */
 .password-group {
-    position: relative;
+  position: relative;
 }
 
 .password-toggle {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none !important;
-    border: none !important;
-    cursor: pointer;
-    padding: 5px;
-    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
-    transition: color 0.3s ease;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 5px;
+  color: var(--transparent-black-50, rgba(0, 0, 0, 0.5)) !important;
+  transition: color 0.3s ease;
 }
 
 .password-toggle:hover {
-    color: #333 !important;
+  color: #333 !important;
 }
 
 /* Force reset any inherited colors */
 .password-toggle:focus,
 .password-toggle:active,
 .password-toggle:visited {
-    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50)) !important;
+  color: var(--transparent-black-50, rgba(0, 0, 0, 0.5)) !important;
 }
 
 .password-toggle svg {
-    display: block;
+  display: block;
 }
 
 /* --- Links --- */
+.forgot-password-wrapper {
+  text-align: center;
+  margin-top: 48px;
+  margin-bottom: 12px;
+}
+
 .forgot-password-link {
-    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
-    text-align: center;
-    text-decoration: none;
-    margin-top: 48px;
-    margin-bottom: 24px;
-    transition: color 0.3s ease;
-    display: block;
+  color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: inline-block;
+  position: relative;
+}
+
+.forgot-password-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  bottom: -3px;
+  left: 0;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
 }
 
 .forgot-password-link:hover {
-    color: #000;
+  color: #000;
+}
+
+.forgot-password-link:hover::after {
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
 }
 
 /* --- Sign In Button --- */
+/* Using ShineGlassButton component - only layout styles needed */
 .sign-in-button {
-    padding: 14px 120px;
-    width: auto;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 40px;
-    border: 0.5px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
-    color: var(--transparent-white-75, rgba(255, 255, 255, 0.75));
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: 30px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-    overflow: hidden;
-}
-
-.sign-in-button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg,
-            transparent,
-            rgba(255, 255, 255, 0.8),
-            transparent);
-}
-
-.sign-in-button::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1px;
-    height: 100%;
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.8),
-            transparent,
-            rgba(255, 255, 255, 0.3));
-}
-
-.sign-in-button:hover {
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 0 16px 8px rgba(255, 255, 255, 0.8);
-    color: black;
+  width: 222px;
+  max-width: 100%;
+  margin-bottom: 12px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* --- Register Prompt --- */
 .register-prompt {
-    color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
-    text-align: center;
+  color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
+  text-align: center;
 }
 
 .register-link {
-    color: var(--Black, #000);
-    text-decoration: none;
-    position: relative;
-    display: inline-block;
+  color: var(--Black, #000);
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .register-link::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 1.5px;
-    background-color: var(--Black, #000);
-    transition: width 0.3s ease;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  bottom: -3px;
+  left: 0;
+  transform: scaleX(0) scaleY(0.75);
+  transform-origin: right center;
+  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
 }
 
-
 .register-link:hover {
-    color: var(--Black, #000);
-    cursor: pointer;
+  color: var(--Black, #000);
 }
 
 .register-link:hover::after {
-    width: 100%;
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
 }
 
 /* --- Styles for Validation and Loading State --- */
 .input-error {
-    color: #d9534f;
-    text-align: left;
-    /* Thêm một chút margin-top để tạo khoảng cách với đường gạch */
-    margin-top: 4px;
+  color: #d9534f;
+  text-align: left;
+  /* Thêm một chút margin-top để tạo khoảng cách với đường gạch */
+  margin-top: 4px;
 }
 
 /* Xóa bỏ luật CSS cũ không cần thiết nữa */
-/* 
+/*
 .input-group {
     margin-bottom: 35px;
-} 
+}
 */
 
-.sign-in-button:disabled {
-    background-color: #ccc;
-    border-color: #ccc;
-    color: #666;
-    cursor: not-allowed;
-}
-
-.sign-in-button:disabled:hover {
-    background-color: #ccc;
-    color: #666;
-}
+/* ShineGlassButton handles disabled state internally */
 
 /* --- Enhanced Responsive Design --- */
 @media screen and (max-width: 1200px) {
-    .login-container {
-        padding: 18px;
-    }
-    
-    .login-form-wrapper {
-        max-width: 380px;
-    }
-    
-    .login-title {
-        margin-bottom: 42px;
-        margin-left: -8%;
-    }
-    
-    .form-field-container {
-        margin-bottom: 32px;
-    }
-    
-    .forgot-password-link {
-        margin-top: 42px;
-        margin-bottom: 22px;
-    }
-    
-    .sign-in-button {
-        padding: 13px 110px;
-        margin-bottom: 28px;
-    }
+  .login-container {
+    padding: 18px;
+  }
+
+  .login-form-wrapper {
+    max-width: 380px;
+  }
+
+  .login-title {
+    margin-bottom: 42px;
+  }
+
+  .form-field-container {
+    margin-bottom: 32px;
+  }
+
+  .forgot-password-wrapper {
+    margin-top: 42px;
+    margin-bottom: 22px;
+  }
+
+  .sign-in-button {
+    margin-bottom: 28px;
+  }
 }
 
 @media screen and (max-width: 992px) {
-    .login-container {
-        padding: 16px;
-    }
-    
-    .login-form-wrapper {
-        max-width: 360px;
-    }
-    
-    .login-title {
-        margin-bottom: 40px;
-        margin-left: -6%;
-    }
-    
-    .form-field-container {
-        margin-bottom: 30px;
-    }
-    
-    .input-group input {
-        font-size: 15px;
-        padding: 9px 0;
-    }
-    
-    .floating-label {
-        font-size: 15px;
-    }
-    
-    .input-group input:focus+.floating-label,
-    .input-group input:not(:placeholder-shown)+.floating-label,
-    .input-group input:valid+.floating-label {
-        font-size: 0.75rem;
-    }
-    
-    .forgot-password-link {
-        margin-top: 40px;
-        margin-bottom: 20px;
-        font-size: 14px;
-    }
-    
-    .sign-in-button {
-        padding: 12px 100px;
-        margin-bottom: 26px;
-        font-size: 14px;
-    }
-    
-    .register-prompt {
-        font-size: 14px;
-    }
-    
-    .register-link {
-        font-size: 14px;
-    }
+  .login-container {
+    padding: 16px;
+  }
+
+  .login-form-wrapper {
+    max-width: 360px;
+  }
+
+  .login-title {
+    margin-bottom: 40px;
+  }
+
+  .form-field-container {
+    margin-bottom: 30px;
+  }
+
+  .input-group input {
+    font-size: 15px;
+    padding: 9px 0;
+  }
+
+  .floating-label {
+    font-size: 15px;
+  }
+
+  .input-group input:focus + .floating-label,
+  .input-group input:not(:placeholder-shown) + .floating-label,
+  .input-group input:valid + .floating-label {
+    font-size: 0.75rem;
+  }
+
+  .forgot-password-wrapper {
+    margin-top: 40px;
+    margin-bottom: 20px;
+  }
+
+  .forgot-password-link {
+    font-size: 14px;
+  }
+
+  .sign-in-button {
+    margin-bottom: 26px;
+  }
+
+  .register-prompt {
+    font-size: 14px;
+  }
+
+  .register-link {
+    font-size: 14px;
+  }
 }
 
 @media screen and (max-width: 768px) {
-    .login-container {
-        padding: 15px;
-    }
-    
-    .login-form-wrapper {
-        max-width: 340px;
-        padding: 0 8px;
-    }
-    
-    .login-title {
-        margin-bottom: 36px;
-        margin-left: -4%;
-        white-space: normal;
-        line-height: 1.1;
-    }
-    
-    .form-field-container {
-        margin-bottom: 28px;
-    }
-    
-    .input-group input {
-        font-size: 14px;
-        padding: 8px 0;
-    }
-    
-    .floating-label {
-        font-size: 14px;
-        top: 8px;
-    }
-    
-    .input-group input:focus+.floating-label,
-    .input-group input:not(:placeholder-shown)+.floating-label,
-    .input-group input:valid+.floating-label {
-        top: -12px;
-        font-size: 0.7rem;
-    }
-    
-    .password-toggle {
-        padding: 4px;
-    }
-    
-    .password-toggle img {
-        width: 18px;
-        height: 18px;
-    }
-    
-    .input-error {
-        font-size: 12px;
-        margin-top: 3px;
-    }
-    
-    .forgot-password-link {
-        margin-top: 36px;
-        margin-bottom: 18px;
-        font-size: 13px;
-    }
-    
-    .sign-in-button {
-        padding: 11px 90px;
-        margin-bottom: 24px;
-        font-size: 13px;
-    }
-    
-    .register-prompt {
-        font-size: 13px;
-    }
-    
-    .register-link {
-        font-size: 13px;
-    }
+  .login-container {
+    padding: 15px;
+  }
+
+  .login-form-wrapper {
+    max-width: 340px;
+    padding: 0 8px;
+  }
+
+  .login-title {
+    margin-bottom: 36px;
+    white-space: normal;
+    line-height: 1.1;
+  }
+
+  .form-field-container {
+    margin-bottom: 28px;
+  }
+
+  .input-group input {
+    font-size: 14px;
+    padding: 8px 0;
+  }
+
+  .floating-label {
+    font-size: 14px;
+    top: 8px;
+  }
+
+  .input-group input:focus + .floating-label,
+  .input-group input:not(:placeholder-shown) + .floating-label,
+  .input-group input:valid + .floating-label {
+    top: -12px;
+    font-size: 0.7rem;
+  }
+
+  .password-toggle {
+    padding: 4px;
+  }
+
+  .password-toggle img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .input-error {
+    font-size: 12px;
+    margin-top: 3px;
+  }
+
+  .forgot-password-wrapper {
+    margin-top: 36px;
+    margin-bottom: 18px;
+  }
+
+  .forgot-password-link {
+    font-size: 13px;
+  }
+
+  .sign-in-button {
+    margin-bottom: 24px;
+  }
+
+  .register-prompt {
+    font-size: 13px;
+  }
+
+  .register-link {
+    font-size: 13px;
+  }
 }
 
 /* --- Original Mobile Styles --- */
 @media screen and (max-width: 480px) {
-    .login-title {
-        margin-bottom: 40px;
-        margin-left: 0;
-        /* Reset margin-left tr\u00ean mobile */
-    }
+  .login-title {
+    margin-bottom: 40px;
+    margin-left: 0;
+    /* Reset margin-left tr\u00ean mobile */
+  }
 
-    .login-form-wrapper {
-        padding: 0 10px;
-    }
-
-    .sign-in-button {
-        padding: 12px 15px !important;
-    }
+  .login-form-wrapper {
+    padding: 0 10px;
+  }
 }

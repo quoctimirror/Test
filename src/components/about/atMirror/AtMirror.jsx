@@ -91,7 +91,7 @@ const AtMirror = () => {
         <div className="at-mirror-content" ref={contentRef}>
           {/* Text */}
           <div className="at-mirror-text" ref={textRef}>
-            <p className="bodytext-1--no-margin">{fullText}</p>
+            <p className="bodytext-4--no-margin">{fullText}</p>
           </div>
         </div>
       </div>

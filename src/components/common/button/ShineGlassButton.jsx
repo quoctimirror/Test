@@ -11,6 +11,7 @@ const ShineGlassButton = ({
   fontSize, // Optional - only use if explicitly needed
   theme = "shine", // 'shine' | 'light' | 'footer'
   variant = "default", // 'default' | 'custom'
+  type = "button", // 'button' | 'submit' | 'reset'
 }) => {
   const buttonRef = useRef(null);
 
@@ -120,6 +121,7 @@ const ShineGlassButton = ({
     <div className="shine-button-wrap">
       <button
         ref={buttonRef}
+        type={type}
         onClick={onClick}
         disabled={disabled}
         className={`shine-glass-button shine-glass-button--${theme} shine-glass-button--variant-${variant} bodytext-4--no-margin ${className}`}

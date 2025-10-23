@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
 import { ROUTES } from "@/constants/routes";
-// import "@styles/typography.css";
+import ShineGlassButton from "@/components/common/button/ShineGlassButton";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -185,20 +185,23 @@ const Login = () => {
 
           {/* === KẾT THÚC THAY ĐỔI === */}
 
-          <Link
-            to={ROUTES.FORGOT_PASSWORD}
-            className="bodytext-4--no-margin forgot-password-link"
-          >
-            Forgot password?
-          </Link>
+          <div className="forgot-password-wrapper">
+            <Link
+              to={ROUTES.FORGOT_PASSWORD}
+              className="bodytext-4--no-margin forgot-password-link"
+            >
+              Forgot password?
+            </Link>
+          </div>
 
-          <button
+          <ShineGlassButton
             type="submit"
-            className="bodytext-4--no-margin sign-in-button"
+            theme="light"
             disabled={isLoading}
+            className="sign-in-button"
           >
             {isLoading ? "Signing in..." : "Sign in"}
-          </button>
+          </ShineGlassButton>
         </form>
 
         <p className="bodytext-3--no-margin register-prompt">

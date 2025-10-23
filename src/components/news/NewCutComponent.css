@@ -101,6 +101,7 @@
   padding: 0;
   white-space: normal;
   text-align: center;
+  max-width: 600px;
 }
 
 .new-cut-hero-description {
@@ -179,9 +180,9 @@
 }
 
 .new-cut-section-text {
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(121, 121, 121, 1);
   margin: 0 auto 24px;
-  max-width: 905px;
+  max-width: 753px;
 }
 
 .new-cut-section-text:last-child {
@@ -347,6 +348,13 @@
   .new-cut-bottom-image {
     height: 350px;
   }
+  .new-cut-section-text {
+    margin-bottom: 12px;
+    max-width: 62%;
+  }
+  .new-cut-hero-title {
+    max-width: 62%;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -392,6 +400,7 @@
 
   .new-cut-section-text {
     margin-bottom: 12px;
+    max-width: 77%;
   }
 
   .new-cut-section-text.bodytext-3--no-margin {
@@ -411,6 +420,9 @@
 
   .new-cut-bottom-image {
     height: 220px;
+  }
+  .new-cut-hero-title {
+    max-width: 77%;
   }
 }
 
@@ -435,7 +447,7 @@
 .new-cut-hero .new-cut-hero-description.bodytext-5--no-margin,
 .new-cut-hero-content .new-cut-hero-description.bodytext-5--no-margin {
   color: rgba(0, 0, 0, 0.7);
-  margin: 0 0 24px 0;
+  margin: 0 0 12px 0;
   padding: 0;
   text-align: center;
   white-space: normal;
@@ -460,7 +472,7 @@
 .new-cut-hero-content .new-cut-hero-date.bodytext-4--no-margin {
   color: rgba(0, 0, 0, 0.6);
   text-transform: uppercase;
-  margin-bottom: 36px;
+  margin-bottom: 12px;
   display: block;
   text-align: center;
 }

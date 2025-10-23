@@ -4,7 +4,7 @@ export default function UnderlineButton({
   children,
   onClick,
   className = "",
-  textClassName = "bodytext-3--no-margin",
+  textClassName = "bodytext-4--no-margin",
   disabled = false
 }) {
   return (

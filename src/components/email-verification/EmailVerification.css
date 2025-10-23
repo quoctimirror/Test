@@ -3,25 +3,31 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(0deg, #000 0%, #bc224c 5%, #f6f6f6 15%);
   padding: 20px;
 }
 
 .email-verification-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
+  background: transparent;
+  max-width: 600px;
   width: 100%;
-  padding: 60px 40px;
 }
 
 .email-verification-content {
   text-align: center;
 }
 
+.verify-title {
+  margin-top: 120px;
+  margin-bottom: 12px;
+}
+
+.verify-message {
+  margin-bottom: 60px;
+}
+
 .verification-icon {
-  margin-bottom: 24px;
+  margin-bottom: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,11 +38,24 @@
 }
 
 .verification-icon.success {
-  color: #10b981;
+  width: 120px;
+  height: 120px;
+  background: #1abc9c;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 60px;
+  box-shadow: 0 4px 20px rgba(26, 188, 156, 0.3);
+}
+
+.verification-icon.success svg {
+  color: white;
 }
 
 .verification-icon.error {
   color: #ef4444;
+  margin-bottom: 60px;
 }
 
 .spinner {
@@ -77,33 +96,93 @@
   font-style: italic;
 }
 
-.back-to-login-btn {
-  margin-top: 32px;
-  padding: 14px 32px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
+.back-to-signin-btn {
+  margin: 0 auto 120px;
+  display: block;
+  width: 294px;
+  background: white;
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 50px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
-.back-to-login-btn:hover {
-  background: #5568d3;
+.back-to-signin-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.back-to-login-btn:active {
+.back-to-signin-btn:active {
   transform: translateY(0);
 }
 
 /* Responsive */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .verify-title {
+    font-size: 2rem;
+    margin-top: 80px;
+    margin-bottom: 28px;
+  }
+
+  .verify-message {
+    font-size: 0.9rem;
+    margin-bottom: 48px;
+  }
+
+  .verification-icon.success {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 48px;
+  }
+
+  .verification-icon.success svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .back-to-signin-btn {
+    padding: 12px 32px;
+    font-size: 15px;
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 480px) {
   .email-verification-card {
-    padding: 40px 24px;
+    padding: 40px 20px;
+  }
+
+  .verify-title {
+    font-size: 1.6rem;
+    margin-top: 60px;
+    margin-bottom: 24px;
+  }
+
+  .verify-message {
+    font-size: 0.85rem;
+    margin-bottom: 40px;
+  }
+
+  .verification-icon.success {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 40px;
+  }
+
+  .verification-icon.success svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .back-to-signin-btn {
+    padding: 12px 28px;
+    font-size: 14px;
+    margin-bottom: 60px;
   }
 
   .email-verification-content h2 {

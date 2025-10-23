@@ -294,6 +294,7 @@ html {
   color: #797979;
   margin: 0;
   padding: 12px 0 0 0;
+  white-space: pre-line;
 }
 
 /* Responsive Design */

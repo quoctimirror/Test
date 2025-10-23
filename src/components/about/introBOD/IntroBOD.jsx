@@ -130,7 +130,7 @@ const IntroBOD = () => {
 
           {/* Description */}
           <div className="intro-description" ref={descRef}>
-            <p className="bodytext-1--no-margin">{descText}</p>
+            <p className="bodytext-4--no-margin">{descText}</p>
           </div>
         </div>
       </div>

@@ -32,7 +32,9 @@ const ImmersiveShowroom = () => {
         <img
           src="/immersiveShowroom/immersiveShowroomBackground.png"
           alt="Immersive Showroom Background"
-          className={`showroom-background-fallback ${!iframeLoaded || iframeError ? 'visible' : ''}`}
+          className={`showroom-background-fallback ${
+            !iframeLoaded || iframeError ? "visible" : ""
+          }`}
         />
 
         {/* Iframe - hidden on mobile via CSS */}
@@ -60,7 +62,7 @@ const ImmersiveShowroom = () => {
           <h1 className="heading-1--no-margin showroom-title">
             IMMERSIVE SHOWROOM
           </h1>
-          <p className="bodytext-3--no-margin showroom-description">
+          <p className="bodytext-4--no-margin showroom-description">
             Step into Mirror's physical universe — a sensorial space where
             light, sound, and storytelling converge. Here, lab-grown brilliance
             comes alive through cinematic displays, tactile explorations and

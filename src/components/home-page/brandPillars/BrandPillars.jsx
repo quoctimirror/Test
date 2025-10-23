@@ -44,13 +44,14 @@ const BrandPillars = () => {
             <div
               className="brand-pillars-sticky-item"
               style={{
-                opacity: scrollProgress <= 0.25
-                  ? Math.min(1, scrollProgress * 4)
-                  : scrollProgress <= 0.4
-                  ? 1
-                  : scrollProgress <= 0.5
-                  ? 1 - (scrollProgress - 0.4) * 10
-                  : 0,
+                opacity:
+                  scrollProgress <= 0.25
+                    ? Math.min(1, scrollProgress * 4)
+                    : scrollProgress <= 0.4
+                    ? 1
+                    : scrollProgress <= 0.5
+                    ? 1 - (scrollProgress - 0.4) * 10
+                    : 0,
                 transform: `translateY(${
                   scrollProgress <= 0.4
                     ? 0
@@ -69,9 +70,9 @@ const BrandPillars = () => {
                   <StarlightEffect direction="falling" height={60} />
                 </div>
                 <div className="brand-sticky-expand">
-                  <p className="bodytext-3--no-margin">
-                    Where human craft meets cutting-edge technology.
-                    We shape diamonds with the world's most advanced cutting techniques.
+                  <p className="bodytext-4--no-margin">
+                    Where human craft meets cutting-edge technology. We shape
+                    diamonds with the world's most advanced cutting techniques.
                   </p>
                 </div>
               </div>
@@ -81,15 +82,16 @@ const BrandPillars = () => {
             <div
               className="brand-pillars-sticky-item"
               style={{
-                opacity: scrollProgress <= 0.45
-                  ? 0
-                  : scrollProgress <= 0.7
-                  ? Math.min(1, (scrollProgress - 0.45) * 4)
-                  : scrollProgress <= 0.85
-                  ? 1
-                  : scrollProgress <= 0.95
-                  ? 1 - (scrollProgress - 0.85) * 10
-                  : 0,
+                opacity:
+                  scrollProgress <= 0.45
+                    ? 0
+                    : scrollProgress <= 0.7
+                    ? Math.min(1, (scrollProgress - 0.45) * 4)
+                    : scrollProgress <= 0.85
+                    ? 1
+                    : scrollProgress <= 0.95
+                    ? 1 - (scrollProgress - 0.85) * 10
+                    : 0,
                 transform: `translateY(${
                   scrollProgress <= 0.85
                     ? 0
@@ -105,9 +107,9 @@ const BrandPillars = () => {
                   <StarlightEffect direction="falling" height={60} />
                 </div>
                 <div className="brand-sticky-expand">
-                  <p className="bodytext-3--no-margin">
-                    Made for the planet, not taken from it.
-                    Lab-grown brilliance that honors our planet.
+                  <p className="bodytext-4--no-margin">
+                    Made for the planet, not taken from it. Lab-grown brilliance
+                    that honors our planet.
                   </p>
                 </div>
               </div>
@@ -117,14 +119,11 @@ const BrandPillars = () => {
             <div
               className="brand-pillars-sticky-item"
               style={{
-                opacity: scrollProgress <= 0.9
-                  ? 0
-                  : Math.min(1, (scrollProgress - 0.9) * 10),
-                transform: `translateY(${
+                opacity:
                   scrollProgress <= 0.9
-                    ? 20
-                    : 0
-                }px)`,
+                    ? 0
+                    : Math.min(1, (scrollProgress - 0.9) * 10),
+                transform: `translateY(${scrollProgress <= 0.9 ? 20 : 0}px)`,
               }}
             >
               <div className="brand-sticky-group">
@@ -136,9 +135,9 @@ const BrandPillars = () => {
                   <StarlightEffect direction="falling" height={60} />
                 </div>
                 <div className="brand-sticky-expand">
-                  <p className="bodytext-3--no-margin">
-                    True modern luxury is not in price tags.
-                    A space of mindful beauty, crafted to awaken your senses.
+                  <p className="bodytext-4--no-margin">
+                    True modern luxury is not in price tags. A space of mindful
+                    beauty, crafted to awaken your senses.
                   </p>
                 </div>
               </div>
@@ -147,69 +146,69 @@ const BrandPillars = () => {
         </div>
 
         <div className="brand-pillars-content">
-        <h1 className="brand-pillars-text">
-          <div className="brand-group">
-            <div className="brand-main-text">
-              <span className="brand-line">PRECISION</span>
-              <div className="brand-line-with-expand">
-                <span className="brand-line">TECHNOLOGY</span>
-                <div className="starlight-6-oclock-wrapper">
-                  <StarlightEffect direction="falling" height={60} />
-                </div>
-                <div className="brand-expand-text">
-                  <p className="bodytext-3--no-margin">
-                    Where human craft meets cutting-edge technology.
-                    <br />
-                    We shape diamonds with the world's most advanced
-                    <br />
-                    cutting techniques — each one a fusion of human
-                    <br />
-                    artistry and scientific precision.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="brand-group">
-            <div className="starlight-6-oclock-wrapper">
-              <StarlightEffect direction="falling" height={60} />
-            </div>
-            <div className="brand-expand-text">
-              <p className="bodytext-3--no-margin">
-                Made for the planet, not taken from it.
-                <br />
-                We create with the future in mind —
-                <br /> lab-grown brilliance that honors our
-                <br />
-                planet, not extracts from it.
-              </p>
-            </div>
-            <div className="brand-main-text">
-              <span className="brand-line">SUSTAINABILITY</span>
-            </div>
-          </div>
-          <div className="brand-group">
-            <div className="brand-main-text">
-              <div className="brand-line-with-expand">
-                <span className="brand-line">REDEFINING</span>
-                <div className="starlight-6-oclock-wrapper">
-                  <StarlightEffect direction="falling" height={60} />
-                </div>
-                <div className="brand-expand-text">
-                  <p className="bodytext-3--no-margin">
-                    True modern luxury is not in price tags.
-                    <br />
-                    You're not just buying a product — you're entering
-                    <br /> a space of mindful beauty, crafted to awaken
-                    <br />
-                    your senses and reflect your story.
-                  </p>
+          <h1 className="brand-pillars-text">
+            <div className="brand-group">
+              <div className="brand-main-text">
+                <span className="brand-line">PRECISION</span>
+                <div className="brand-line-with-expand">
+                  <span className="brand-line">TECHNOLOGY</span>
+                  <div className="starlight-6-oclock-wrapper">
+                    <StarlightEffect direction="falling" height={60} />
+                  </div>
+                  <div className="brand-expand-text">
+                    <p className="bodytext-4--no-margin">
+                      Where human craft meets cutting-edge technology.
+                      <br />
+                      We shape diamonds with the world's most advanced
+                      <br />
+                      cutting techniques — each one a fusion of human
+                      <br />
+                      artistry and scientific precision.
+                    </p>
+                  </div>
                 </div>
               </div>
-              <span className="brand-line">LUXURY</span>
             </div>
-          </div>
-        </h1>
+            <div className="brand-group">
+              <div className="starlight-6-oclock-wrapper">
+                <StarlightEffect direction="falling" height={60} />
+              </div>
+              <div className="brand-expand-text">
+                <p className="bodytext-4--no-margin">
+                  Made for the planet, not taken from it.
+                  <br />
+                  We create with the future in mind —
+                  <br /> lab-grown brilliance that honors our
+                  <br />
+                  planet, not extracts from it.
+                </p>
+              </div>
+              <div className="brand-main-text">
+                <span className="brand-line">SUSTAINABILITY</span>
+              </div>
+            </div>
+            <div className="brand-group">
+              <div className="brand-main-text">
+                <div className="brand-line-with-expand">
+                  <span className="brand-line">REDEFINING</span>
+                  <div className="starlight-6-oclock-wrapper">
+                    <StarlightEffect direction="falling" height={60} />
+                  </div>
+                  <div className="brand-expand-text">
+                    <p className="bodytext-4--no-margin">
+                      True modern luxury is not in price tags.
+                      <br />
+                      You're not just buying a product — you're entering
+                      <br /> a space of mindful beauty, crafted to awaken
+                      <br />
+                      your senses and reflect your story.
+                    </p>
+                  </div>
+                </div>
+                <span className="brand-line">LUXURY</span>
+              </div>
+            </div>
+          </h1>
         </div>
       </div>
     </section>

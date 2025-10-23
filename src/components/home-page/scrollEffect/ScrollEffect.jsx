@@ -2,13 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Logo from "@assets/images/Logo.svg";
 import SoundIcon from "@assets/images/button/sound.svg";
-import ArrowButton from "@assets/images/button/arrow-button.svg";
 import { ROUTES } from "@/constants/routes";
 import "./ScrollEffect.css";
 
 export default function ScrollEffect() {
   const location = useLocation();
-  const isImmersiveShowroomPage = location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
+  const isImmersiveShowroomPage =
+    location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
   // Original ScrollEffect refs
   const finalGradientRef = useRef(null);
@@ -47,17 +47,17 @@ export default function ScrollEffect() {
         "It begins with the way light dances across a diamond's surface - but goes far beyond...",
     },
     {
-      title: "The Reflection of Beauty",
+      title: "Reflection of Beauty",
       subtitle:
         "From the sparkle on the surface to the brilliance within, Mirror celebrates the harmony between outer elegance and inner light.",
     },
     {
-      title: "The Reflection of Self",
+      title: "Reflection of Self",
       subtitle:
         "A moment of stillness where you meet yourself - past, present, and becoming.",
     },
     {
-      title: "The Reflection of\nArtistry and Innovation",
+      title: "Reflection of\nArtistry and Innovation",
       subtitle:
         "Each piece is crafted with the precision of technology and the soul of human touch — a seamless harmony between machine intelligence and human intuition.",
     },
@@ -529,10 +529,10 @@ export default function ScrollEffect() {
             (index === 0
               ? 0
               : index === 1
-              ? 0.23  // Text 2 container starts at 25%, title at 23%
+              ? 0.23 // Text 2 container starts at 25%, title at 23%
               : index === 2
-              ? 0.50  // Text 3 container starts at 52%, title at 50%
-              : 0.77)) /  // Text 4 container starts at 79%, title at 77%
+              ? 0.5 // Text 3 container starts at 52%, title at 50%
+              : 0.77)) / // Text 4 container starts at 79%, title at 77%
             0.03,
           0
         ),
@@ -548,10 +548,10 @@ export default function ScrollEffect() {
             (index === 0
               ? 0.02
               : index === 1
-              ? 0.27  // Text 2 title at 23%, subtitle at 27%
+              ? 0.27 // Text 2 title at 23%, subtitle at 27%
               : index === 2
-              ? 0.54  // Text 3 title at 50%, subtitle at 54%
-              : 0.81)) /  // Text 4 title at 77%, subtitle at 81%
+              ? 0.54 // Text 3 title at 50%, subtitle at 54%
+              : 0.81)) / // Text 4 title at 77%, subtitle at 81%
             0.03,
           0
         ),
@@ -566,13 +566,16 @@ export default function ScrollEffect() {
           className="text-slide"
           style={{
             transform,
-            opacity: index === 0
-              ? opacity // Text 1: Use container opacity (whole text fade out together)
-              : Math.max(titleOpacity, subtitleOpacity) > 0 ? 1 : 0, // Other texts: Use staggered
+            opacity:
+              index === 0
+                ? opacity // Text 1: Use container opacity (whole text fade out together)
+                : Math.max(titleOpacity, subtitleOpacity) > 0
+                ? 1
+                : 0, // Other texts: Use staggered
             transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
           }}
         >
-          <div className="slide-content">
+          <div className={`slide-content ${index === 0 ? 'slide-content-wide' : 'slide-content-narrow'}`}>
             <h1
               className="heading-1--no-margin slide-title"
               style={{
@@ -596,6 +599,7 @@ export default function ScrollEffect() {
                 opacity: index === 0 ? 1 : subtitleOpacity, // Text 1: No individual fade, Others: Staggered
                 transform: index === 0 ? "translateY(0%)" : subtitleTransform,
                 transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
+                marginTop: index === 0 ? 0 : "24px", // Gap 24px only for slides 2, 3, 4
               }}
             >
               {slide.subtitle}
@@ -654,11 +658,23 @@ export default function ScrollEffect() {
 
             {!isImmersiveShowroomPage && (
               <div className="elements-to-fade" ref={elementsToFadeRef}>
-                <div className="scroll-down">
-                  <button>
-                    <img src={ArrowButton} alt="Arrow Button" />
-                  </button>
-                </div>
+                <button className="scroll-down-arrow" aria-label="Scroll down">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M19 9L12 16L5 9"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
                 <div className="vetor-button">
                   <button>
                     <img src={SoundIcon} alt="Sound" />

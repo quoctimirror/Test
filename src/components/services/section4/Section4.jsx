@@ -64,50 +64,83 @@ const Section4 = () => {
 
       // Mobile parallax effect - only on mobile screens (<=480px)
       if (window.innerWidth <= 480) {
-        const mobileScreen1 = document.querySelector('.section4-mobile-screen-1');
-        const mobileScreen2 = document.querySelector('.section4-mobile-screen-2');
-        const mobileScreen3 = document.querySelector('.section4-mobile-screen-3');
+        const mobileScreen1 = document.querySelector(
+          ".section4-mobile-screen-1"
+        );
+        const mobileScreen2 = document.querySelector(
+          ".section4-mobile-screen-2"
+        );
+        const mobileScreen3 = document.querySelector(
+          ".section4-mobile-screen-3"
+        );
 
         if (mobileScreen1) {
           const rect1 = mobileScreen1.getBoundingClientRect();
           const scrollDistance1 = windowHeight - rect1.top;
           const totalDistance1 = windowHeight + rect1.height;
-          const scrollRatio1 = Math.max(0, Math.min(1, scrollDistance1 / totalDistance1));
+          const scrollRatio1 = Math.max(
+            0,
+            Math.min(1, scrollDistance1 / totalDistance1)
+          );
 
           // Dual-layer parallax: background and text move at different speeds (EXTREME)
           const bgParallax1 = scrollRatio1 * 100; // Background moves DOWN slowly (100px)
           const textParallax1 = scrollRatio1 * -80; // Text moves UP fast (80px) - opposite direction
 
-          mobileScreen1.style.setProperty('--parallax-bg-offset', `${bgParallax1}px`);
-          mobileScreen1.style.setProperty('--parallax-text-offset', `${textParallax1}px`);
+          mobileScreen1.style.setProperty(
+            "--parallax-bg-offset",
+            `${bgParallax1}px`
+          );
+          mobileScreen1.style.setProperty(
+            "--parallax-text-offset",
+            `${textParallax1}px`
+          );
         }
 
         if (mobileScreen2) {
           const rect2 = mobileScreen2.getBoundingClientRect();
           const scrollDistance2 = windowHeight - rect2.top;
           const totalDistance2 = windowHeight + rect2.height;
-          const scrollRatio2 = Math.max(0, Math.min(1, scrollDistance2 / totalDistance2));
+          const scrollRatio2 = Math.max(
+            0,
+            Math.min(1, scrollDistance2 / totalDistance2)
+          );
 
           // Dual-layer parallax: background and text move at different speeds (EXTREME)
           const bgParallax2 = scrollRatio2 * 100; // Background moves DOWN slowly (100px)
           const textParallax2 = scrollRatio2 * -80; // Text moves UP fast (80px) - opposite direction
 
-          mobileScreen2.style.setProperty('--parallax-bg-offset', `${bgParallax2}px`);
-          mobileScreen2.style.setProperty('--parallax-text-offset', `${textParallax2}px`);
+          mobileScreen2.style.setProperty(
+            "--parallax-bg-offset",
+            `${bgParallax2}px`
+          );
+          mobileScreen2.style.setProperty(
+            "--parallax-text-offset",
+            `${textParallax2}px`
+          );
         }
 
         if (mobileScreen3) {
           const rect3 = mobileScreen3.getBoundingClientRect();
           const scrollDistance3 = windowHeight - rect3.top;
           const totalDistance3 = windowHeight + rect3.height;
-          const scrollRatio3 = Math.max(0, Math.min(1, scrollDistance3 / totalDistance3));
+          const scrollRatio3 = Math.max(
+            0,
+            Math.min(1, scrollDistance3 / totalDistance3)
+          );
 
           // Dual-layer parallax: background and text move at different speeds (EXTREME)
           const bgParallax3 = scrollRatio3 * 100; // Background moves DOWN slowly (100px)
           const textParallax3 = scrollRatio3 * -80; // Text moves UP fast (80px) - opposite direction
 
-          mobileScreen3.style.setProperty('--parallax-bg-offset', `${bgParallax3}px`);
-          mobileScreen3.style.setProperty('--parallax-text-offset', `${textParallax3}px`);
+          mobileScreen3.style.setProperty(
+            "--parallax-bg-offset",
+            `${bgParallax3}px`
+          );
+          mobileScreen3.style.setProperty(
+            "--parallax-text-offset",
+            `${textParallax3}px`
+          );
         }
       }
     };
@@ -128,14 +161,14 @@ const Section4 = () => {
               <div className="section4-full-content">
                 <div className="section4-header-description">
                   <div className="section4-header">
-                    <span className="section4-subtitle bodytext-3--no-margin">
+                    <span className="section4-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
                     <h2 className="section4-title heading-1--no-margin">
                       RETURN & EXCHANGE
                     </h2>
                   </div>
-                  <p className="section4-description bodytext-6--no-margin">
+                  <p className="section4-description bodytext-4--no-margin">
                     Extend the life and brilliance of your jewelry with Mirror's
                     professional care and repair services, tailored to keep each
                     piece as radiant as the day you received it.
@@ -159,14 +192,14 @@ const Section4 = () => {
               <div className="section4-full-content">
                 <div className="section4-header-description">
                   <div className="section4-header">
-                    <span className="section4-subtitle bodytext-3--no-margin">
+                    <span className="section4-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
                     <h2 className="section4-title heading-1--no-margin">
                       SIZING GUIDE
                     </h2>
                   </div>
-                  <p className="section4-description bodytext-6--no-margin">
+                  <p className="section4-description bodytext-4--no-margin">
                     Elevate your gift with our signature wrapping — a carefully
                     crafted presentation that captures the essence of refined
                     giving.
@@ -190,14 +223,14 @@ const Section4 = () => {
               <div className="section4-full-content">
                 <div className="section4-header-description">
                   <div className="section4-header">
-                    <span className="section4-subtitle bodytext-3--no-margin">
+                    <span className="section4-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
                     <h2 className="section4-title heading-1--no-margin">
                       WARRANTY & INFO
                     </h2>
                   </div>
-                  <p className="section4-description bodytext-6--no-margin">
+                  <p className="section4-description bodytext-4--no-margin">
                     Activate your warranty to ensure your Future Diamond is
                     protected under our care.
                   </p>
@@ -280,14 +313,14 @@ const Section4 = () => {
               <div className="section4-full-content">
                 <div className="section4-header-description">
                   <div className="section4-header">
-                    <span className="section4-subtitle bodytext-3--no-margin">
+                    <span className="section4-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
                     <h2 className="section4-title heading-1--no-margin">
                       RETURN & EXCHANGE
                     </h2>
                   </div>
-                  <p className="section4-description bodytext-6--no-margin">
+                  <p className="section4-description bodytext-4--no-margin">
                     Extend the life and brilliance of your jewelry with Mirror's
                     professional care and repair services, tailored to keep each
                     piece as radiant as the day you received it.
@@ -327,14 +360,14 @@ const Section4 = () => {
               <div className="section4-full-content">
                 <div className="section4-header-description">
                   <div className="section4-header">
-                    <span className="section4-subtitle bodytext-3--no-margin">
+                    <span className="section4-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
                     <h2 className="section4-title heading-1--no-margin">
                       SIZING GUIDE
                     </h2>
                   </div>
-                  <p className="section4-description bodytext-6--no-margin">
+                  <p className="section4-description bodytext-4--no-margin">
                     Elevate your gift with our signature wrapping — a carefully
                     crafted presentation that captures the essence of refined
                     giving.
@@ -366,14 +399,14 @@ const Section4 = () => {
               <div className="section4-full-content">
                 <div className="section4-header-description">
                   <div className="section4-header">
-                    <span className="section4-subtitle bodytext-3--no-margin">
+                    <span className="section4-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
                     <h2 className="section4-title heading-1--no-margin">
                       WARRANTY & INFO
                     </h2>
                   </div>
-                  <p className="section4-description bodytext-6--no-margin">
+                  <p className="section4-description bodytext-4--no-margin">
                     Activate your warranty to ensure your Future Diamond is
                     protected under our care.
                   </p>

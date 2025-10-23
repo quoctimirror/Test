@@ -594,7 +594,6 @@
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    padding: 2rem;
   }
 
   .collection-content-panel.full-width {
@@ -653,6 +652,54 @@
   }
 }
 
+/* Nút scroll down trong section 2 */
+.section-2 .scroll-down-arrow {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+/*
+============================================================
+    SECTION 3: OTHER COLLECTIONS
+============================================================
+*/
+.section-3 {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.other-collections-content {
+  text-align: center;
+  max-width: 800px;
+  width: 100%;
+  padding: 240px 0;
+}
+
+.other-collections-subtitle {
+  color: #797979;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+  isolation: auto;
+  transform: none;
+}
+
+.collection-names {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.collection-name {
+  color: #000000;
+}
 /* Mobile (425px và xuống) */
 @media screen and (max-width: 480px) {
   .section-2 {
@@ -685,7 +732,6 @@
     justify-content: center;
     align-items: center;
     margin: 0 auto;
-    padding: 1.5rem;
   }
 
   .collection-image-panel {
@@ -757,53 +803,8 @@
   .other-collections-content {
     padding: 180px 1.5rem;
   }
-}
 
-/* Nút scroll down trong section 2 */
-.section-2 .scroll-down-arrow {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-}
-
-/*
-============================================================
-    SECTION 3: OTHER COLLECTIONS
-============================================================
-*/
-.section-3 {
-  min-height: 100vh;
-  width: 100%;
-  background-color: #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.other-collections-content {
-  text-align: center;
-  max-width: 800px;
-  width: 100%;
-  padding: 240px 0;
-}
-
-.other-collections-subtitle {
-  color: #797979;
-  text-transform: uppercase;
-  margin-bottom: 3rem;
-  isolation: auto;
-  transform: none;
-}
-
-.collection-names {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  align-items: center;
-}
-
-.collection-name {
-  color: #000000;
+  .collection-names {
+    gap: 12px;
+  }
 }

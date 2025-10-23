@@ -1,0 +1,764 @@
+.milan-page {
+  width: 100%;
+  background: #f6f6f6;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+/* Hero Section */
+.milan-hero {
+  width: 100%;
+  height: 100vh;
+  background: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  transform-origin: center center;
+}
+
+/* Hero Content */
+.milan-page .milan-hero .milan-hero-content {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  height: 100%;
+  contain: layout style;
+  isolation: isolate;
+  transform: translateZ(0);
+  will-change: contents;
+  position: relative;
+  box-sizing: border-box;
+  background: #f6f6f6;
+}
+
+.milan-hero-content {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+  background: #f6f6f6;
+}
+
+/* Hero Text */
+.milan-page .milan-hero-content .milan-hero-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  contain: layout;
+  isolation: isolate;
+  background: #f6f6f6;
+}
+
+.milan-hero-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  background: #f6f6f6;
+}
+
+.milan-page .milan-hero-content .milan-hero-text-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.milan-hero-text-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.milan-hero-date {
+  color: rgba(121, 121, 121, 1);
+  letter-spacing: 1px;
+  margin-bottom: 36px;
+  display: block;
+}
+
+.milan-hero-title {
+  color: #000000;
+  margin: 0;
+  padding: 0;
+  white-space: normal;
+  text-align: center;
+  max-width: 600px;
+}
+
+.milan-hero-description {
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0 0 24px 0;
+  padding: 0;
+  text-align: center;
+  white-space: normal;
+  max-width: 600px;
+}
+
+/* Hero Image */
+.milan-page .milan-hero-content .milan-hero-image {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  contain: layout style;
+  isolation: isolate;
+}
+
+.milan-hero-image {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.milan-page .milan-hero-content .milan-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  max-width: none;
+}
+
+.milan-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Article Content */
+.milan-article-content {
+  width: 100%;
+  padding: 240px 0 120px 0;
+  background: #f6f6f6;
+  position: relative;
+  z-index: 10;
+  margin-top: 100vh;
+  min-height: 100vh;
+}
+
+.milan-article-container {
+  margin: 0 auto;
+}
+
+/* Introduction Section */
+.milan-intro-section {
+  text-align: center;
+  margin-bottom: 120px;
+}
+
+.milan-intro-title {
+  color: #000000;
+  margin: 0 0 24px 0;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.milan-intro-text {
+  color: rgba(121, 121, 121, 1);
+  margin: 0 auto;
+  max-width: 753px;
+}
+
+/* Feature Image */
+.milan-feature-image {
+  width: 100%;
+  overflow: hidden;
+}
+
+.milan-feature-image.col-8.col-start-3 {
+  grid-column: 3 / span 8;
+}
+
+.milan-feature-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Content Sections */
+.milan-content-section {
+  max-width: 753px;
+  margin: 120px auto 120px;
+  text-align: center;
+}
+
+.milan-content-text {
+  color: rgba(121, 121, 121, 1);
+  margin: 0 0 24px 0;
+}
+
+.milan-content-text:last-child {
+  margin-bottom: 0;
+}
+
+/* Horizontal Scroll Carousel */
+.milan-carousel-wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Slider Arrows - Overlay trên carousel với ShineGlassButton */
+.milan-slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.milan-slider-arrow:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.milan-slider-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.milan-slider-arrow-left {
+  left: 20px;
+}
+
+.milan-slider-arrow-right {
+  right: 20px;
+}
+
+.milan-carousel-container {
+  display: flex;
+  gap: 0.625%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  cursor: grab;
+  user-select: none;
+  width: 100%;
+}
+
+.milan-carousel-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.milan-carousel-container.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+.milan-carousel-item {
+  flex: 0 0 calc(33.333% - 0.417%); /* 4 cột trong 12-column grid */
+  aspect-ratio: 4/5;
+  overflow: hidden;
+}
+
+.milan-carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Large Carousel (8-column items) */
+.milan-large-carousel-wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+.milan-large-carousel-container {
+  display: flex;
+  gap: 0.625%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  cursor: grab;
+  user-select: none;
+  width: 100%;
+}
+
+.milan-large-carousel-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.milan-large-carousel-container.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+.milan-large-carousel-item {
+  flex: 0 0 calc(66.666% - 0.417%); /* 8 cột trong 12-column grid */
+  aspect-ratio: 5/4;
+  overflow: hidden;
+}
+
+.milan-large-carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Large 3-Column Grid (old static grid - kept for backwards compatibility) */
+.milan-large-grid {
+  margin-bottom: 80px;
+}
+
+.milan-large-grid-item {
+  aspect-ratio: 4/5;
+  overflow: hidden;
+}
+
+.milan-large-grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Final Image */
+.milan-final-image {
+  width: 100%;
+  margin-bottom: 120px;
+  overflow: hidden;
+  aspect-ratio: 3/2;
+}
+
+.milan-final-image.col-8.col-start-3 {
+  grid-column: 3 / span 8;
+}
+
+.milan-final-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Navigation */
+.milan-navigation {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0.625%;
+  padding: 120px 0 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.milan-nav-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #000;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.milan-nav-button:hover {
+  opacity: 0.6;
+}
+
+.milan-nav-prev {
+  align-items: flex-start;
+  text-align: left;
+  grid-column: span 4;
+}
+
+.milan-nav-next {
+  align-items: flex-end;
+  text-align: right;
+  grid-column: 9 / span 4;
+}
+
+.milan-nav-date {
+  color: rgba(121, 121, 121, 1);
+  margin: 0;
+}
+
+.milan-nav-title {
+  color: #000000;
+  margin: 0;
+}
+
+.milan-nav-label {
+  color: rgba(121, 121, 121, 1);
+  margin: 12px 0 0;
+}
+
+/* Footer CTA Section */
+.milan-footer-cta {
+  width: 100%;
+  min-height: 60vh;
+  background: linear-gradient(180deg, #4a0e1f 0%, #8b1538 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 2.5%;
+  position: relative;
+}
+
+.milan-cta-content {
+  text-align: center;
+  max-width: 800px;
+}
+
+.milan-cta-title {
+  font-size: 72px;
+  font-weight: 400;
+  color: white;
+  margin: 0 0 24px 0;
+  line-height: 1.1;
+  letter-spacing: 2px;
+}
+
+.milan-cta-text {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 40px 0;
+  font-size: 18px;
+}
+
+.milan-cta-button {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 16px 48px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.milan-cta-button:hover {
+  background: white;
+  color: #4a0e1f;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+  .milan-hero {
+    height: 150vh;
+    position: relative;
+  }
+
+  .milan-page .milan-hero .milan-hero-content,
+  .milan-hero-content {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: unset;
+    gap: 0;
+    height: 100%;
+  }
+
+  .milan-page .milan-hero-content .milan-hero-text,
+  .milan-hero-text {
+    padding-right: 0;
+    order: 2;
+    height: 50vh;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .milan-page .milan-hero-content .milan-hero-text-main,
+  .milan-hero-text-main {
+    text-align: center;
+  }
+
+  .milan-page .milan-hero-content .milan-hero-description,
+  .milan-hero-description,
+  .milan-page .milan-hero-content .milan-hero-description.bodytext-5--no-margin,
+  .milan-hero .milan-hero-description.bodytext-5--no-margin,
+  .milan-hero-content .milan-hero-description.bodytext-5--no-margin {
+    display: none;
+  }
+
+  .milan-page .milan-hero-content .milan-hero-date.bodytext-4--no-margin,
+  .milan-hero .milan-hero-date.bodytext-4--no-margin,
+  .milan-hero-content .milan-hero-date.bodytext-4--no-margin {
+    margin-bottom: 6px !important;
+  }
+
+  .milan-page .milan-hero-content .milan-hero-image,
+  .milan-hero-image {
+    order: 1;
+    height: 100vh;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .milan-page .milan-hero-content .milan-hero-image::after,
+  .milan-hero-image::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20%;
+    background: linear-gradient(0deg, #f6f6f6 0%, rgba(246, 246, 246, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .milan-article-content {
+    padding: 120px 0;
+    margin-top: 0;
+  }
+
+  .milan-hero-title {
+    max-width: 62%;
+  }
+
+  .milan-intro-section.col-12 {
+    grid-column: 3 / span 8;
+  }
+
+  .milan-content-section.col-12 {
+    grid-column: 3 / span 8;
+  }
+
+  .milan-slider-arrow-left {
+    left: 12px;
+  }
+
+  .milan-slider-arrow-right {
+    right: 12px;
+  }
+
+  .milan-carousel-item {
+    flex: 0 0 calc(50% - 0.3125%); /* 6 cột = 50% trên tablet */
+  }
+
+  .milan-large-carousel-item {
+    flex: 0 0 calc(83.333% - 0.417%); /* 10 cột = 83.333% trên tablet */
+  }
+
+  .milan-large-grid {
+    margin-bottom: 60px;
+  }
+
+  .milan-navigation {
+    padding: 60px 0 0;
+  }
+
+  .milan-nav-prev {
+    grid-column: span 5 !important;
+  }
+
+  .milan-nav-next {
+    grid-column: 8 / span 5 !important;
+  }
+
+  .milan-footer-cta {
+    padding: 80px 2.5%;
+    min-height: 50vh;
+  }
+
+  .milan-cta-title {
+    font-size: 48px;
+  }
+
+  .milan-cta-text {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .milan-hero {
+    height: 150vh;
+    position: relative;
+  }
+
+  .milan-page .milan-hero .milan-hero-content,
+  .milan-hero-content {
+    gap: 0;
+  }
+
+  .milan-page .milan-hero-content .milan-hero-text,
+  .milan-hero-text {
+    gap: 20px;
+    height: 50vh;
+  }
+
+  .milan-page .milan-hero-content .milan-hero-description,
+  .milan-hero-description,
+  .milan-page .milan-hero-content .milan-hero-description.bodytext-5--no-margin,
+  .milan-hero .milan-hero-description.bodytext-5--no-margin,
+  .milan-hero-content .milan-hero-description.bodytext-5--no-margin {
+    display: none;
+  }
+
+  .milan-page .milan-hero-content .milan-hero-image,
+  .milan-hero-image {
+    height: 100vh;
+    min-height: 100vh;
+  }
+
+  .milan-hero-title {
+    max-width: 77%;
+  }
+
+  .milan-article-content {
+    padding: 60px 0;
+  }
+
+  .milan-intro-section {
+    margin-bottom: 60px;
+  }
+
+  .milan-intro-section.col-12 {
+    grid-column: 2 / span 10;
+  }
+
+  .milan-content-section {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+
+  .milan-content-section.col-12 {
+    grid-column: 2 / span 10;
+  }
+
+  .milan-content-text {
+    font-size: 14px;
+  }
+
+  .milan-slider-arrow-left {
+    left: 8px;
+  }
+
+  .milan-slider-arrow-right {
+    right: 8px;
+  }
+
+  .milan-carousel-item {
+    flex: 0 0 85%; /* 85% width trên mobile cho mỗi ảnh */
+  }
+
+  .milan-large-carousel-item {
+    flex: 0 0 90%; /* 90% width trên mobile cho ảnh lớn */
+  }
+
+  .milan-large-grid {
+    margin-bottom: 40px;
+  }
+
+  .milan-final-image {
+    margin-bottom: 60px;
+  }
+
+  .milan-navigation {
+    display: flex;
+    flex-direction: column;
+    padding: 60px 0 0;
+    gap: 120px;
+  }
+
+  .milan-nav-button {
+    gap: 8px;
+  }
+
+  .milan-nav-prev {
+    grid-column: auto;
+  }
+
+  .milan-nav-next {
+    grid-column: auto;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .milan-footer-cta {
+    padding: 60px 2.5%;
+    min-height: 40vh;
+  }
+
+  .milan-cta-title {
+    font-size: 36px;
+  }
+
+  .milan-cta-text {
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+
+  .milan-cta-button {
+    padding: 12px 36px;
+    font-size: 14px;
+  }
+}
+
+/* Typography Protection */
+.milan-page .milan-hero-content .milan-hero-title.heading-1--no-margin,
+.milan-hero .milan-hero-title.heading-1--no-margin,
+.milan-hero-content .milan-hero-title.heading-1--no-margin {
+  color: #000000;
+  margin: 0;
+  padding: 0;
+  white-space: normal;
+  text-align: center;
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.milan-page .milan-hero-content .milan-hero-description.bodytext-5--no-margin,
+.milan-hero .milan-hero-description.bodytext-5--no-margin,
+.milan-hero-content .milan-hero-description.bodytext-5--no-margin {
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0 0 12px 0;
+  padding: 0;
+  text-align: center;
+  white-space: normal;
+  display: block;
+  width: auto;
+  height: auto;
+  text-decoration: none;
+}
+
+@media screen and (max-width: 1024px) {
+  .milan-page .milan-hero-content .milan-hero-description.bodytext-5--no-margin,
+  .milan-hero .milan-hero-description.bodytext-5--no-margin,
+  .milan-hero-content .milan-hero-description.bodytext-5--no-margin {
+    display: none;
+  }
+}
+
+.milan-page .milan-hero-content .milan-hero-date.bodytext-4--no-margin,
+.milan-hero .milan-hero-date.bodytext-4--no-margin,
+.milan-hero-content .milan-hero-date.bodytext-4--no-margin {
+  color: rgba(121, 121, 121, 1);
+  margin-bottom: 12px;
+  display: block;
+  text-align: center;
+}

@@ -103,6 +103,7 @@
   min-width: 1px;
   flex: 1;
   height: 100%;
+  aspect-ratio: 4 / 5;
 }
 
 .gallery-item img {
@@ -134,32 +135,52 @@
   display: none;
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 426px) and (max-width: 1024px) {
+  .hover-expand-section {
+    position: relative;
+    min-height: 125vw; /* 2 rows × 62.5vw */
+  }
+
   .hover-expand-header {
-    padding-top: 180px;
-    padding-bottom: 120px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    border-radius: 12px;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
   }
 
   .hover-expand-title {
     margin-bottom: 12px;
   }
+
   .hover-expand-gallery {
     flex-wrap: wrap !important;
     gap: 0;
-    height: auto;
+    height: 100%;
     margin: 0;
+    line-height: 0;
   }
 
   .gallery-item {
     flex: none !important;
     width: 50vw !important;
-    height: 66.67vw !important; /* 3:4 aspect ratio (50vw * 4/3) */
+    height: 62.5vw !important; /* 4:5 aspect ratio (50vw * 5/4) */
+    aspect-ratio: 4 / 5;
     transition: all 1.3s ease;
+    margin: 0;
+    padding: 0;
   }
 
   .gallery-item img {
     transition: all 1.3s ease;
     filter: grayscale(100%);
+    display: block;
+    margin: 0;
+    padding: 0;
   }
 
   .gallery-item:hover {
@@ -175,8 +196,23 @@
 }
 
 @media (max-width: 425px) {
+  .hover-expand-section {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+    padding-top: 180px;
+    padding-bottom: 0;
+  }
+
   .hover-expand-header {
-    padding: 180px 0 120px 0px;
+    position: relative;
+    padding: 0 20px 120px 20px;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .hover-expand-subtitle {
@@ -184,17 +220,18 @@
   }
 
   .hover-expand-gallery {
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
     gap: 0;
     height: auto;
     margin: 0;
+    line-height: 0;
   }
 
   .gallery-item {
     flex: none !important;
-    width: 100% !important;
-    height: auto !important;
+    width: 50vw !important;
+    height: 62.5vw !important; /* 4:5 aspect ratio (50vw * 5/4) */
+    aspect-ratio: 4 / 5;
     cursor: default;
     margin: 0;
     padding: 0;
@@ -203,7 +240,7 @@
 
   .gallery-item img {
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
     object-position: center;
     filter: grayscale(100%);
@@ -226,13 +263,6 @@
   }
 
   .gallery-item-text {
-    display: block;
-    position: absolute;
-    bottom: 50%;
-    width: 100vw;
-    color: #fff;
-    text-align: center;
-    z-index: 10;
-    pointer-events: none;
+    display: none;
   }
 }

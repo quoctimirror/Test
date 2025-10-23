@@ -5,6 +5,7 @@ export const ROUTES = {
   // Public routes (keep original)
   HOME: "/",
   IMMERSIVE_SHOWROOM: "/immersive-showroom",
+  BOOK_APPOINTMENT: "/book-an-appointment",
   MILAN_SUBMIT: "/mirror-in-milan-digital-jewelry-week",
   MILAN_SUBMIT_SUCCESS: "/mirror-in-milan-digital-jewelry-week/submit-success",
   SCAVENGER_HUNT: "/scavenger-hunt",

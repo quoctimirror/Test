@@ -14,7 +14,7 @@ const SharedSection = () => {
   const headerText = "THE FUTURE IS SHARED";
   const titleText = "YOU DON'T JUST WEAR MIRROR.\nYOU BECOME PART OF IT.";
   const descriptionText =
-    "We invite you not just to own - but to belong.\nTo co-create, to grow, to reflect.\n\nEvery interaction with Mirror - a try-on, a purchase, a story - becomes a part of the Mirrorverse. Because luxury doesn't begin in the box. It begins with you.";
+    "We invite you not just to own - but to belong. To co-create, to grow, to reflect. Every interaction with Mirror - a try-on, a purchase, a story — becomes a part of the Mirrorverse. Because luxury doesn’t begin in the box. It begins with you.";
 
   useEffect(() => {
     let ticking = false;
@@ -48,7 +48,8 @@ const SharedSection = () => {
       if (contentRef.current) {
         const viewportHeight = window.innerHeight;
         const initialTranslateY = viewportHeight * 0.5;
-        const currentTranslateY = initialTranslateY - moveProgress * initialTranslateY;
+        const currentTranslateY =
+          initialTranslateY - moveProgress * initialTranslateY;
         const currentScale = 0.8 + moveProgress * 0.2; // Scale from 0.8 to 1.0
         contentRef.current.style.transform = `translate3d(0, ${currentTranslateY}px, 0) scale(${currentScale})`;
         contentRef.current.style.opacity = moveProgress;
@@ -56,15 +57,18 @@ const SharedSection = () => {
 
       // Phase 2 (20-35%): Header fade in + move up
       if (headerRef.current) {
-        let headerY = 30, headerOpacity = 0;
+        let headerY = 30,
+          headerOpacity = 0;
         if (progress < 0.2) {
-          headerY = 30; headerOpacity = 0;
+          headerY = 30;
+          headerOpacity = 0;
         } else if (progress <= 0.35) {
           const fadeProgress = (progress - 0.2) / 0.15;
           headerY = (1 - fadeProgress) * 30;
           headerOpacity = fadeProgress;
         } else {
-          headerY = 0; headerOpacity = 1;
+          headerY = 0;
+          headerOpacity = 1;
         }
         headerRef.current.style.transform = `translate3d(0, ${headerY}%, 0)`;
         headerRef.current.style.opacity = headerOpacity;
@@ -72,15 +76,18 @@ const SharedSection = () => {
 
       // Phase 3 (35-50%): Title fade in + move up
       if (titleRef.current) {
-        let titleY = 30, titleOpacity = 0;
+        let titleY = 30,
+          titleOpacity = 0;
         if (progress < 0.35) {
-          titleY = 30; titleOpacity = 0;
+          titleY = 30;
+          titleOpacity = 0;
         } else if (progress <= 0.5) {
           const fadeProgress = (progress - 0.35) / 0.15;
           titleY = (1 - fadeProgress) * 30;
           titleOpacity = fadeProgress;
         } else {
-          titleY = 0; titleOpacity = 1;
+          titleY = 0;
+          titleOpacity = 1;
         }
         titleRef.current.style.transform = `translate3d(0, ${titleY}%, 0)`;
         titleRef.current.style.opacity = titleOpacity;
@@ -88,15 +95,18 @@ const SharedSection = () => {
 
       // Phase 4 (50-65%): Description fade in + move up
       if (descriptionRef.current) {
-        let descY = 30, descOpacity = 0;
+        let descY = 30,
+          descOpacity = 0;
         if (progress < 0.5) {
-          descY = 30; descOpacity = 0;
+          descY = 30;
+          descOpacity = 0;
         } else if (progress <= 0.65) {
           const fadeProgress = (progress - 0.5) / 0.15;
           descY = (1 - fadeProgress) * 30;
           descOpacity = fadeProgress;
         } else {
-          descY = 0; descOpacity = 1;
+          descY = 0;
+          descOpacity = 1;
         }
         descriptionRef.current.style.transform = `translate3d(0, ${descY}%, 0)`;
         descriptionRef.current.style.opacity = descOpacity;
@@ -104,15 +114,18 @@ const SharedSection = () => {
 
       // Phase 5 (65-75%): Buttons fade in + move up
       if (buttonsRef.current) {
-        let btnY = 30, btnOpacity = 0;
+        let btnY = 30,
+          btnOpacity = 0;
         if (progress < 0.65) {
-          btnY = 30; btnOpacity = 0;
+          btnY = 30;
+          btnOpacity = 0;
         } else if (progress <= 0.75) {
           const fadeProgress = (progress - 0.65) / 0.1;
           btnY = (1 - fadeProgress) * 30;
           btnOpacity = fadeProgress;
         } else {
-          btnY = 0; btnOpacity = 1;
+          btnY = 0;
+          btnOpacity = 1;
         }
         buttonsRef.current.style.transform = `translate3d(0, ${btnY}%, 0)`;
         buttonsRef.current.style.opacity = btnOpacity;
@@ -157,7 +170,7 @@ const SharedSection = () => {
 
           {/* Description */}
           <div className="shared-description" ref={descriptionRef}>
-            <p className="bodytext-1--no-margin">
+            <p className="bodytext-4--no-margin">
               {descriptionText.split("\n").map((line, index) => (
                 <React.Fragment key={index}>
                   {line}
@@ -170,7 +183,9 @@ const SharedSection = () => {
           {/* Buttons */}
           <div className="shared-buttons" ref={buttonsRef}>
             <ShineGlassButton theme="footer">AR Try on</ShineGlassButton>
-            <ShineGlassButton theme="footer">Immersive Showroom</ShineGlassButton>
+            <ShineGlassButton theme="footer">
+              Immersive Showroom
+            </ShineGlassButton>
           </div>
         </div>
       </div>

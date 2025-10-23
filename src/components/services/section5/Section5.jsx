@@ -90,7 +90,7 @@ const Section5 = () => {
                   ></span>
                 </button>
                 <div className="faq-answer" data-faq-id={faq.id}>
-                  <p className="bodytext-3--no-margin">
+                  <p className="bodytext-4--no-margin">
                     This is the answer content for "{faq.question}". Lorem ipsum
                     dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                     tempor incididunt ut labore et dolore magna aliqua.

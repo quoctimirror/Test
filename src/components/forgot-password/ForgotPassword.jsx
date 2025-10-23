@@ -15,9 +15,12 @@ const ForgotPassword = () => {
 
   // Form data
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // OTP input refs
+  const otpInputRefs = useRef([]);
 
   // Password visibility states
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -70,13 +73,57 @@ const ForgotPassword = () => {
 
   // Validate OTP
   const validateOtp = (otp) => {
-    if (!otp.trim()) {
+    const otpString = Array.isArray(otp) ? otp.join("") : otp;
+    if (!otpString.trim()) {
       return "OTP is required";
     }
-    if (!/^[0-9]{6}$/.test(otp)) {
+    if (!/^[0-9]{6}$/.test(otpString)) {
       return "OTP must be 6 digits";
     }
     return null;
+  };
+
+  // Handle OTP input change
+  const handleOtpChange = (index, value) => {
+    // Only allow digits
+    if (value && !/^\d$/.test(value)) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+
+    // Auto-focus to next input
+    if (value && index < 5) {
+      otpInputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  // Handle OTP input keydown
+  const handleOtpKeyDown = (index, e) => {
+    // Handle backspace
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      otpInputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  // Handle OTP paste
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").slice(0, 6);
+    const digits = pastedData.match(/\d/g);
+
+    if (digits) {
+      const newOtp = [...otp];
+      digits.forEach((digit, i) => {
+        if (i < 6) newOtp[i] = digit;
+      });
+      setOtp(newOtp);
+
+      // Focus the next empty input or last input
+      const nextEmptyIndex = newOtp.findIndex(val => !val);
+      const focusIndex = nextEmptyIndex === -1 ? 5 : nextEmptyIndex;
+      otpInputRefs.current[focusIndex]?.focus();
+    }
   };
 
   // Validate password (same as Register)
@@ -102,26 +149,46 @@ const ForgotPassword = () => {
       errors.push("Password cannot contain whitespace");
     }
     if (/(.)\1{3,}/.test(password)) {
-      errors.push("Password cannot have more than 4 consecutive repeated characters");
+      errors.push(
+        "Password cannot have more than 4 consecutive repeated characters"
+      );
     }
 
     const commonPasswords = [
-      "password", "123456", "password123", "admin", "qwerty",
-      "letmein", "welcome", "monkey", "1234567890", "abc123"
+      "password",
+      "123456",
+      "password123",
+      "admin",
+      "qwerty",
+      "letmein",
+      "welcome",
+      "monkey",
+      "1234567890",
+      "abc123",
     ];
     const lowerPassword = password.toLowerCase();
-    if (commonPasswords.some(common => lowerPassword.includes(common))) {
+    if (commonPasswords.some((common) => lowerPassword.includes(common))) {
       errors.push("Password is too common and easily guessable");
     }
 
-    if (/abcde|bcdef|cdefg|defgh|efghi|fghij|ghijk|hijkl|ijklm|jklmn|klmno|lmnop|mnopq|nopqr|opqrs|pqrst|qrstu|rstuv|stuvw|tuvwx|uvwxy|vwxyz/i.test(password)) {
-      errors.push("Password cannot contain alphabetical sequences of 5 or more characters");
+    if (
+      /abcde|bcdef|cdefg|defgh|efghi|fghij|ghijk|hijkl|ijklm|jklmn|klmno|lmnop|mnopq|nopqr|opqrs|pqrst|qrstu|rstuv|stuvw|tuvwx|uvwxy|vwxyz/i.test(
+        password
+      )
+    ) {
+      errors.push(
+        "Password cannot contain alphabetical sequences of 5 or more characters"
+      );
     }
     if (/01234|12345|23456|34567|45678|56789/.test(password)) {
-      errors.push("Password cannot contain numerical sequences of 5 or more characters");
+      errors.push(
+        "Password cannot contain numerical sequences of 5 or more characters"
+      );
     }
     if (/qwert|werty|asdfg|sdfgh|zxcvb|xcvbn/i.test(password)) {
-      errors.push("Password cannot contain keyboard sequences of 5 or more characters");
+      errors.push(
+        "Password cannot contain keyboard sequences of 5 or more characters"
+      );
     }
 
     return errors;
@@ -142,13 +209,17 @@ const ForgotPassword = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.post("/api/auth/forgot-password", { email });
-      setMessage(response.data.message || "OTP has been sent to your email");
+      await api.post("/api/auth/forgot-password", { email });
+      // Don't show message, just proceed to step 2
       setStep(2);
       setResendCountdown(60); // Start countdown
     } catch (error) {
       let errorMessage = "Failed to send OTP. Please try again.";
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         errorMessage = error.response.data.message;
       }
       setErrors({ form: errorMessage });
@@ -171,14 +242,20 @@ const ForgotPassword = () => {
 
     setIsLoading(true);
 
+    const otpString = otp.join("");
+
     try {
-      const response = await api.post("/api/auth/verify-otp", { email, otp });
+      const response = await api.post("/api/auth/verify-otp", { email, otp: otpString });
       setResetToken(response.data.resetToken);
       setMessage(response.data.message || "OTP verified successfully");
       setStep(3);
     } catch (error) {
       let errorMessage = "Invalid or expired OTP. Please try again.";
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         errorMessage = error.response.data.message;
       }
       setErrors({ otp: errorMessage });
@@ -219,7 +296,11 @@ const ForgotPassword = () => {
       }, 2000);
     } catch (error) {
       let errorMessage = "Failed to reset password. Please try again.";
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         errorMessage = error.response.data.message;
       }
       setErrors({ form: errorMessage });
@@ -237,12 +318,18 @@ const ForgotPassword = () => {
     setErrors({});
 
     try {
-      const response = await api.post("/api/auth/resend-password-reset-otp", { email });
-      setMessage(response.data.message || "OTP has been resent to your email");
+      await api.post("/api/auth/resend-password-reset-otp", {
+        email,
+      });
+      // Don't show message, just reset countdown
       setResendCountdown(60);
     } catch (error) {
       let errorMessage = "Failed to resend OTP. Please try again.";
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         errorMessage = error.response.data.message;
       }
       setErrors({ form: errorMessage });
@@ -260,7 +347,11 @@ const ForgotPassword = () => {
 
         {/* General message */}
         {message && (
-          <p className={`bodytext-4--no-margin message-box ${message.includes("success") ? "success" : "info"}`}>
+          <p
+            className={`bodytext-4--no-margin message-box ${
+              message.includes("success") ? "success" : "info"
+            }`}
+          >
             {message}
           </p>
         )}
@@ -275,8 +366,9 @@ const ForgotPassword = () => {
         {/* Step 1: Enter Email */}
         {step === 1 && (
           <form onSubmit={handleRequestOtp} className="forgot-password-form">
-            <p className="bodytext-3--no-margin step-instruction">
-              Enter your email address and we'll send you an OTP to reset your password.
+            <p className="bodytext-4--no-margin step-instruction">
+              Enter your email address and we'll send you an OTP to reset your
+              password.
             </p>
 
             <div className="form-field-container">
@@ -315,7 +407,7 @@ const ForgotPassword = () => {
             <p className="bodytext-3--no-margin back-link-wrapper">
               <a
                 onClick={() => navigate(ROUTES.AUTH_LOGIN)}
-                className="bodytext-3--no-margin back-link"
+                className="bodytext-4--no-margin back-link"
               >
                 Back to Login
               </a>
@@ -327,24 +419,28 @@ const ForgotPassword = () => {
         {step === 2 && (
           <form onSubmit={handleVerifyOtp} className="forgot-password-form">
             <p className="bodytext-3--no-margin step-instruction">
-              We've sent a 6-digit OTP to <strong>{email}</strong>. Please enter it below.
+              We've sent a 6-digit OTP to <strong>{email}</strong>.
+              <br />
+              Please enter it below.
             </p>
 
             <div className="form-field-container">
-              <div className="input-group">
-                <input
-                  type="text"
-                  id="otp"
-                  name="otp"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder=" "
-                  maxLength="6"
-                  required
-                />
-                <label htmlFor="otp" className="bodytext-3--no-margin">
-                  Enter OTP*
-                </label>
+              <div className="otp-input-container">
+                {otp.map((digit, index) => (
+                  <input
+                    key={index}
+                    ref={(el) => (otpInputRefs.current[index] = el)}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength="1"
+                    value={digit}
+                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                    onPaste={index === 0 ? handleOtpPaste : undefined}
+                    className="otp-input"
+                    autoFocus={index === 0}
+                  />
+                ))}
               </div>
               {errors.otp && (
                 <p className="input-error bodytext-4--no-margin">
@@ -366,27 +462,39 @@ const ForgotPassword = () => {
 
             {/* Resend OTP */}
             <div className="resend-section">
-              <p className="bodytext-4--no-margin">Didn't receive the OTP?</p>
-              <button
-                type="button"
-                className="resend-button bodytext-4--no-margin"
-                onClick={handleResendOtp}
-                disabled={resendCountdown > 0 || isResending}
-              >
-                {isResending
-                  ? "Sending..."
-                  : resendCountdown > 0
-                  ? `Resend in ${resendCountdown}s`
-                  : "Resend OTP"}
-              </button>
+              <p className="bodytext-3--no-margin">Didn't receive the OTP?</p>
+              <p className="bodytext-3--no-margin">Please check your spam folder or verify your email address.</p>
+              <p className="bodytext-4--no-margin">
+                <button
+                  type="button"
+                  className="resend-button bodytext-4--no-margin"
+                  onClick={handleResendOtp}
+                  disabled={resendCountdown > 0 || isResending}
+                >
+                  {isResending
+                    ? "Sending..."
+                    : resendCountdown > 0
+                    ? `Resend OTP (${resendCountdown}s)`
+                    : "Resend OTP"}
+                </button> or <a
+                  onClick={() => {
+                    setStep(1);
+                    setOtp(["", "", "", "", "", ""]);
+                    setErrors({});
+                  }}
+                  className="bodytext-4--no-margin back-link"
+                >
+                  Change email
+                </a>
+              </p>
             </div>
 
             <p className="bodytext-3--no-margin back-link-wrapper">
               <a
-                onClick={() => setStep(1)}
+                onClick={() => navigate(ROUTES.AUTH_LOGIN)}
                 className="bodytext-3--no-margin back-link"
               >
-                Change Email
+                Back to login
               </a>
             </p>
           </form>
@@ -417,7 +525,9 @@ const ForgotPassword = () => {
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  aria-label={showNewPassword ? "Hide password" : "Show password"}
+                  aria-label={
+                    showNewPassword ? "Hide password" : "Show password"
+                  }
                 >
                   <img
                     src={showNewPassword ? EyeSlashIconSvg : EyeIconSvg}
@@ -445,18 +555,25 @@ const ForgotPassword = () => {
                   placeholder=" "
                   required
                 />
-                <label htmlFor="confirmPassword" className="bodytext-3--no-margin">
+                <label
+                  htmlFor="confirmPassword"
+                  className="bodytext-3--no-margin"
+                >
                   Confirm Password*
                 </label>
                 <button
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  aria-label={
+                    showConfirmPassword ? "Hide password" : "Show password"
+                  }
                 >
                   <img
                     src={showConfirmPassword ? EyeSlashIconSvg : EyeIconSvg}
-                    alt={showConfirmPassword ? "Hide password" : "Show password"}
+                    alt={
+                      showConfirmPassword ? "Hide password" : "Show password"
+                    }
                     width="20"
                     height="20"
                   />
@@ -472,23 +589,33 @@ const ForgotPassword = () => {
             <div className="password-requirements">
               <p className="bodytext-5--no-margin">Password requirements</p>
               <ul>
-                <li className="bodytext-5--no-margin">8-128 characters in length</li>
-                <li className="bodytext-5--no-margin">At least 1 uppercase letter</li>
-                <li className="bodytext-5--no-margin">At least 1 lowercase letter</li>
-                <li className="bodytext-5--no-margin">At least 1 number</li>
-                <li className="bodytext-5--no-margin">At least 1 special character</li>
-                <li className="bodytext-5--no-margin">No whitespace allowed</li>
-                <li className="bodytext-5--no-margin">No more than 4 consecutive repeated characters</li>
-                <li className="bodytext-5--no-margin">No alphabetical, numerical, or keyboard sequences of 5+ characters</li>
+                <li className="bodytext-5--no-margin">
+                  No repetition of more than two characters
+                </li>
+                <li className="bodytext-5--no-margin">
+                  One lowercase character
+                </li>
+                <li className="bodytext-5--no-margin">One number</li>
+                <li className="bodytext-5--no-margin">
+                  One uppercase character
+                </li>
+                <li className="bodytext-5--no-margin">
+                  At least 1 special character(s)
+                </li>
+                <li className="bodytext-5--no-margin">10 characters minimum</li>
+                <li className="bodytext-5--no-margin">
+                  Allowed special character(s) from {`!"#$£€%&()*+,-./:<=>?@[]^_{}~\`¨`}
+                </li>
               </ul>
             </div>
 
             <div className="button-wrapper">
               <ShineGlassButton
-                theme="shine"
+                theme="light"
                 type="submit"
                 disabled={isLoading}
                 className="submit-button"
+                style={{ width: '300px' }}
               >
                 {isLoading ? "Resetting..." : "Reset Password"}
               </ShineGlassButton>

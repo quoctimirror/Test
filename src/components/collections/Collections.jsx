@@ -177,7 +177,7 @@ function Collection() {
                 : featuredCollection?.title || "TREASURE OF THE ORIENT"}
             </div>
           </div>
-          <div className="collection-hero-description bodytext-3--no-margin">
+          <div className="collection-hero-description bodytext-4--no-margin">
             {loading
               ? "Loading collection details..."
               : featuredCollection?.description || (
@@ -268,7 +268,10 @@ function Collection() {
               key={`${currentProduct.id}-info-${slideDirection}`}
             >
               <h3 className="heading-3--no-margin">{currentProduct.title}</h3>
-              <UnderlineButton className="shop-now-button" textClassName="bodytext-4--no-margin">
+              <UnderlineButton
+                className="shop-now-button"
+                textClassName="bodytext-4--no-margin"
+              >
                 Shop now
               </UnderlineButton>
             </div>
@@ -279,7 +282,7 @@ function Collection() {
       {/* --- SECTION 3 --- */}
       <div className="section-3">
         <div className="other-collections-content">
-          <div className="other-collections-subtitle bodytext-3--no-margin">
+          <div className="other-collections-subtitle bodytext-4--no-margin">
             OTHER COLLECTION
           </div>
           <div className="collection-names">

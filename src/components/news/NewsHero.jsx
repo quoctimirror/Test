@@ -6,7 +6,7 @@ const NewsHero = () => {
     <section className="news-hero">
       <div className="news-hero-container">
         <h1 className="news-hero-title heading-1--no-margin">NEWS</h1>
-        <p className="news-hero-subtitle bodytext-3--no-margin">
+        <p className="news-hero-subtitle bodytext-4--no-margin">
           Have a question or concern? Our team is standing by to assist.
         </p>
       </div>

@@ -26,11 +26,6 @@
 .news-item {
   background: white;
   border-radius: 0;
-  transition: all 0.3s ease;
-}
-
-.news-item.clickable {
-  cursor: pointer;
 }
 
 .news-item-image {
@@ -42,6 +37,10 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+.news-item-image.news-item-image-portrait {
+  aspect-ratio: 4/5;
 }
 
 /* Only set min-height when there's no image */
@@ -93,14 +92,19 @@
 
 .news-item-button .underline-button-text {
   color: rgba(0, 0, 0, 0.5);
+  transition: color 0.3s ease;
 }
 
 .news-item-button .underline-button-text::after {
   background: #000000 !important;
 }
 
+.news-item-button:hover .underline-button-text {
+  color: rgba(0, 0, 0, 1);
+}
+
 .news-item-button:hover .underline-button-text::after {
-  background: #000000 !important;
+  background: rgba(0, 0, 0, 1) !important;
 }
 
 .view-more-section {

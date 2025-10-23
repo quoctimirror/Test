@@ -22,17 +22,17 @@ const MirrorIntroduce = () => {
         "It begins with the way light dances across a diamond's surface - but goes far beyond...",
     },
     {
-      title: "The Reflection of Beauty",
+      title: "Reflection of Beauty",
       subtitle:
         "From the sparkle on the surface to the brilliance within, Mirror celebrates the harmony between outer elegance and inner light.",
     },
     {
-      title: "The Reflection of Self",
+      title: "Reflection of Self",
       subtitle:
         "A moment of stillness where you meet yourself - past, present, and becoming.",
     },
     {
-      title: "The Reflection of\nArtistry and Innovation",
+      title: "Reflection of Artistry and Innovation",
       subtitle:
         "Each piece is crafted with the precision of technology and the soul of human touch — a seamless harmony between machine intelligence and human intuition.",
     },
@@ -66,7 +66,6 @@ const MirrorIntroduce = () => {
         console.error("Failed to load images:", error);
       });
   }
-
 
   // Handle scroll for frame calculation - simple natural scrolling
   const handleScroll = () => {
@@ -106,7 +105,6 @@ const MirrorIntroduce = () => {
       setSlideProgress(1);
     }
   };
-
 
   // Update canvas when frame changes
   useEffect(() => {
@@ -190,7 +188,10 @@ const MirrorIntroduce = () => {
                 const windowHeight = window.innerHeight;
                 const scrollRange = containerHeight - windowHeight;
                 const scrolled = rect ? Math.abs(Math.min(rect.top, 0)) : 0;
-                const scrollProgress = Math.min(Math.max(scrolled / scrollRange, 0), 1);
+                const scrollProgress = Math.min(
+                  Math.max(scrolled / scrollRange, 0),
+                  1
+                );
 
                 // Text 1: pause (0-15%), fade out (15-25%)
                 if (index === 0) {
@@ -200,7 +201,7 @@ const MirrorIntroduce = () => {
                     opacity = 1;
                   } else if (scrollProgress <= 0.25) {
                     // Fade out from 15% to 25%
-                    const fadeProgress = (scrollProgress - 0.15) / 0.10;
+                    const fadeProgress = (scrollProgress - 0.15) / 0.1;
                     transform = `translateY(${-fadeProgress * 100}%)`;
                     opacity = 1 - fadeProgress * 0.5;
                   } else {
@@ -215,7 +216,7 @@ const MirrorIntroduce = () => {
                     opacity = 0;
                   } else if (scrollProgress <= 0.25) {
                     // Fade in from 15% to 25%
-                    const fadeProgress = (scrollProgress - 0.15) / 0.10;
+                    const fadeProgress = (scrollProgress - 0.15) / 0.1;
                     transform = `translateY(${(1 - fadeProgress) * 100}%)`;
                     opacity = fadeProgress;
                   } else if (scrollProgress <= 0.35) {
@@ -224,7 +225,7 @@ const MirrorIntroduce = () => {
                     opacity = 1;
                   } else if (scrollProgress <= 0.45) {
                     // Fade out from 35% to 45%
-                    const fadeProgress = (scrollProgress - 0.35) / 0.10;
+                    const fadeProgress = (scrollProgress - 0.35) / 0.1;
                     transform = `translateY(${-fadeProgress * 100}%)`;
                     opacity = 1 - fadeProgress * 0.5;
                   } else {
@@ -237,7 +238,7 @@ const MirrorIntroduce = () => {
                   if (scrollProgress < 0.35) {
                     transform = "translateY(100%)";
                     opacity = 0;
-                  } else if (scrollProgress <= 0.40) {
+                  } else if (scrollProgress <= 0.4) {
                     // Fade in from 35% to 40%
                     const fadeProgress = (scrollProgress - 0.35) / 0.05;
                     transform = `translateY(${(1 - fadeProgress) * 100}%)`;
@@ -246,7 +247,7 @@ const MirrorIntroduce = () => {
                     // Fully visible from 40% to 75% (pause 35%)
                     transform = `translateY(0%)`;
                     opacity = 1;
-                  } else if (scrollProgress <= 0.80) {
+                  } else if (scrollProgress <= 0.8) {
                     // Fade out from 75% to 80%
                     const fadeProgress = (scrollProgress - 0.75) / 0.05;
                     transform = `translateY(${-fadeProgress * 100}%)`;
@@ -258,12 +259,12 @@ const MirrorIntroduce = () => {
                 }
                 // Text 4: fade in (80-85%), pause (85-100%) - no fade out
                 else if (index === 3) {
-                  if (scrollProgress < 0.80) {
+                  if (scrollProgress < 0.8) {
                     transform = "translateY(100%)";
                     opacity = 0;
                   } else if (scrollProgress <= 0.85) {
                     // Fade in from 80% to 85%
-                    const fadeProgress = (scrollProgress - 0.80) / 0.05;
+                    const fadeProgress = (scrollProgress - 0.8) / 0.05;
                     transform = `translateY(${(1 - fadeProgress) * 100}%)`;
                     opacity = fadeProgress;
                   } else {

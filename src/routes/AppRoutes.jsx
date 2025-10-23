@@ -1,6 +1,6 @@
 // src/routes/index.jsx
 
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Navbar from "@components/navbar/Navbar";
 import Footer from "@components/footer/Footer";
@@ -57,7 +57,23 @@ const AllGemsPage = lazy(() => import("@pages/AllGemsPage"));
 const AllNewsPage = lazy(() => import("@pages/AllNewsPage"));
 const AllNewsPageV2 = lazy(() => import("@pages/AllNewsPageV2"));
 const NewCutPage = lazy(() => import("@pages/NewCutPage"));
+const MilanPage = lazy(() => import("@pages/MilanPage"));
 const ContactPage = lazy(() => import("@pages/ContactPage"));
+
+// News Detail Wrapper Component
+const NewsDetailWrapper = () => {
+  const { slug } = useParams();
+
+  // Map slugs to their respective components
+  const newsPages = {
+    'milan': MilanPage,
+    'new-cut': NewCutPage,
+    // Add more news article slugs here
+  };
+
+  const PageComponent = newsPages[slug] || NewCutPage;
+  return <PageComponent />;
+};
 const AboutPage = lazy(() => import("@pages/AboutPage"));
 const LocationsPage = lazy(() => import("@pages/LocationsPage"));
 const WelcomePage = lazy(() => import("@pages/WelcomePage"));
@@ -75,6 +91,7 @@ const BODMemberV2Page = lazy(() => import("@pages/BODMemberV2Page"));
 const ScavengerHunt = lazy(() =>
   import("@components/scavenger-hunt/ScavengerHunt")
 );
+const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -103,6 +120,7 @@ export default function AppRoutes() {
       ROUTES.NEWS,
       ROUTES.NEWS_V2,
       ROUTES.IMMERSIVE_SHOWROOM,
+      ROUTES.BOOK_APPOINTMENT,
       ROUTES.MILAN_SUBMIT,
       `${ROUTES.MILAN_SUBMIT}/submit-success`,
       ROUTES.HOVER_EXPAND,
@@ -237,11 +255,16 @@ export default function AppRoutes() {
 
           <Route path={ROUTES.NEWS_V2} element={<AllNewsPageV2 />} />
 
-          <Route path={ROUTES.NEWS_DETAIL} element={<NewCutPage />} />
+          <Route path={ROUTES.NEWS_DETAIL} element={<NewsDetailWrapper />} />
 
           <Route
             path={ROUTES.IMMERSIVE_SHOWROOM}
             element={<ImmersiveShowroomPage />}
+          />
+
+          <Route
+            path={ROUTES.BOOK_APPOINTMENT}
+            element={<BookAppointmentPage />}
           />
 
           <Route path={ROUTES.MILAN_SUBMIT}>

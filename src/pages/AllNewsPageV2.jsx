@@ -6,7 +6,7 @@ import NewsItemV2 from "@components/news/NewsItemV2";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const AllNewsPageV2 = () => {
-  const [visibleItems, setVisibleItems] = useState(3);
+  const [visibleItems, setVisibleItems] = useState(999); // Show all items
 
   // Sample news data - replace with actual API data
   const newsData = [
@@ -102,18 +102,6 @@ const AllNewsPageV2 = () => {
           {newsData.slice(0, visibleItems).map((item) => (
             <NewsItemV2 key={item.id} item={item} />
           ))}
-
-          {visibleItems < newsData.length && (
-            <div className="view-more-section-v2">
-              <ShineGlassButton
-                className="view-more-btn-v2"
-                theme="light"
-                onClick={handleViewMore}
-              >
-                View more
-              </ShineGlassButton>
-            </div>
-          )}
         </div>
       </section>
     </div>

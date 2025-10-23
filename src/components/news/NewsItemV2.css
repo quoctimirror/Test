@@ -121,14 +121,19 @@
 
 .news-item-v2-button .underline-button-text {
   color: rgba(0, 0, 0, 0.5);
+  transition: color 0.3s ease;
 }
 
 .news-item-v2-button .underline-button-text::after {
   background: #000000 !important;
 }
 
+.news-item-v2-button:hover .underline-button-text {
+  color: rgba(0, 0, 0, 1);
+}
+
 .news-item-v2-button:hover .underline-button-text::after {
-  background: #000000 !important;
+  background: rgba(0, 0, 0, 1) !important;
 }
 
 /* Responsive Design */

@@ -318,6 +318,128 @@
   border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.5)) !important;
 }
 
+/* DatePicker Styles - Match Book Appointment */
+.profile-datepicker-wrapper {
+  width: 100%;
+  display: block;
+}
+
+.profile-datepicker-wrapper .react-datepicker__input-container {
+  width: 100%;
+  display: block;
+}
+
+.profile-datepicker-wrapper .react-datepicker__input-container input {
+  width: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 12px 24px 12px 0px !important;
+  height: 44px !important;
+  line-height: 20px !important;
+  box-sizing: border-box !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23797979' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right center !important;
+  background-size: 12px 8px !important;
+  cursor: pointer !important;
+  border: none !important;
+  border-bottom: 1px solid var(--transparent-black-50, rgba(0, 0, 0, 0.5)) !important;
+  background-color: transparent !important;
+  font-family: var(--font-bt-beau-sans) !important;
+  color: #333 !important;
+}
+
+/* Calendar Popup */
+.profile-datepicker-calendar {
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 0px !important;
+  padding: 20px !important;
+  background: white !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__header {
+  background: white !important;
+  border: none !important;
+  padding: 0 0 16px 0 !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__current-month {
+  color: #000 !important;
+  margin-bottom: 16px !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__navigation {
+  top: 20px !important;
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__navigation-icon::before {
+  border-color: #000 !important;
+  border-width: 2px 2px 0 0 !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__day-names {
+  display: flex !important;
+  justify-content: space-between !important;
+  margin-bottom: 8px !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__day-name {
+  color: #000 !important;
+  width: 36px !important;
+  margin: 0 !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__month {
+  margin: 0 !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__week {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__day {
+  color: #000 !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+  transition: all 0.2s ease !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__day:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 50% !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__day--outside-month {
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__day--selected,
+.profile-datepicker-calendar .react-datepicker__day--keyboard-selected {
+  background: #000 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  font-weight: 400 !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__day--selected:hover {
+  background: #000 !important;
+}
+
+.profile-datepicker-calendar .react-datepicker__day--today {
+  font-weight: 500 !important;
+}
+
 /* Rule cho select để cũng chỉ có underline */
 select.profile-form-input,
 .profile-nationality-dropdown {

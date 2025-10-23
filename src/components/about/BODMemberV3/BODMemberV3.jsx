@@ -214,7 +214,7 @@ const BODMemberV3 = () => {
           className={`leader-quote-content-v3 ${isVisible ? "visible" : ""}`}
           ref={quoteRef}
         >
-          <p className="bodytext-3--no-margin">
+          <p className="bodytext-4--no-margin">
             "As intelligence becomes abundant through technology, what remains
             rare is genuine emotion. Mirror exists to preserve that emotion — to
             cherish every loving moment and transform each gift you give into an
@@ -258,7 +258,7 @@ const BODMemberV3 = () => {
           ref={detailsRef}
         >
           <h1 className="heading-1--no-margin">{currentMember.name}</h1>
-          <h3 className="bodytext-1--no-margin">{currentMember.position}</h3>
+          <h3 className="bodytext-4--no-margin">{currentMember.position}</h3>
         </div>
       </div>
     </div>

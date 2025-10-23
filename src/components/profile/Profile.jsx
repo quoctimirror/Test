@@ -8,6 +8,8 @@ import "@styles/typography.css";
 import "@styles/grid-system.css";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import ChangePassword from "./ChangePassword";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { useAuth } from "@/context/AuthContext";
@@ -123,6 +125,8 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeNavItem, setActiveNavItem] = useState("Orders");
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const datePickerRef = useRef(null);
 
   // ... (Các hàm validate, handleInputChange, handlePhoneChange, etc. không thay đổi)
   const validateForm = () => {
@@ -207,7 +211,8 @@ const Profile = () => {
         const response = await api.get("/api/users/me");
         let userData = response.data;
         if (userData.dateOfBirth) {
-          userData.dateOfBirth = userData.dateOfBirth.split("T")[0];
+          // Convert string to Date object for DatePicker
+          userData.dateOfBirth = new Date(userData.dateOfBirth);
         }
         setFormData((prev) => ({ ...prev, ...userData }));
       } catch (error) {
@@ -232,10 +237,10 @@ const Profile = () => {
     setIsLoading(true);
     setErrors({});
 
-    // Chuyển đổi date format từ yyyy-MM-dd sang MM/dd/yyyy
+    // Chuyển đổi date format từ Date object sang MM/dd/yyyy
     let formattedDateOfBirth = null;
     if (formData.dateOfBirth) {
-      const date = new Date(formData.dateOfBirth);
+      const date = formData.dateOfBirth;
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const day = String(date.getDate()).padStart(2, "0");
       const year = date.getFullYear();
@@ -263,6 +268,17 @@ const Profile = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleDateChange = (date) => {
+    setFormData((prev) => ({ ...prev, dateOfBirth: date }));
+    if (errors.dateOfBirth) {
+      setErrors((prev) => ({ ...prev, dateOfBirth: null }));
+    }
+  };
+
+  const handleDatePickerClick = () => {
+    setIsDatePickerOpen((prev) => !prev);
   };
 
   // Phần JSX return không có gì thay đổi
@@ -392,12 +408,23 @@ const Profile = () => {
             </div>
             <div className="profile-field-container">
               <label className="bodytext-3--no-margin">Day of Birth</label>
-              <input
-                type="date"
-                name="dateOfBirth"
-                value={formData.dateOfBirth || ""}
-                onChange={handleInputChange}
-                className="profile-form-input bodytext-3--no-margin"
+              <DatePicker
+                ref={datePickerRef}
+                selected={formData.dateOfBirth}
+                onChange={handleDateChange}
+                onInputClick={handleDatePickerClick}
+                open={isDatePickerOpen}
+                onClickOutside={() => setIsDatePickerOpen(false)}
+                onSelect={() => setIsDatePickerOpen(false)}
+                placeholderText="Select..."
+                dateFormat="MMMM d, yyyy"
+                className="profile-form-input profile-datepicker-input bodytext-3--no-margin"
+                wrapperClassName="profile-datepicker-wrapper"
+                calendarClassName="profile-datepicker-calendar"
+                showYearDropdown
+                scrollableYearDropdown
+                yearDropdownItemNumber={100}
+                maxDate={new Date()}
               />
               {errors.dateOfBirth && (
                 <p className="profile-input-error bodytext-4--no-margin">

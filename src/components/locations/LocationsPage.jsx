@@ -138,8 +138,8 @@ const LocationsPage = () => {
     <div className="locations-page">
       {/* Hero Section */}
       <div className="locations-hero-section">
-        <div className="hero-content">
-          <h1>LOCATION</h1>
+        <div className="locations-hero-content">
+          <h1 className="heading-1--no-margin">LOCATION</h1>
         </div>
       </div>
 

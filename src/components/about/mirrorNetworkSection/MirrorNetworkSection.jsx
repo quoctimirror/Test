@@ -147,7 +147,7 @@ const MirrorNetworkSection = () => {
 
           {/* Description */}
           <div className="mirror-network-description" ref={descriptionRef}>
-            <p className="bodytext-1--no-margin">
+            <p className="bodytext-4--no-margin">
               {descriptionText.split("\n").map((line, index) => (
                 <React.Fragment key={index}>
                   {line}

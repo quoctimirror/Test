@@ -88,7 +88,7 @@
 
 /* Description */
 .shared-description {
-  max-width: 609px;
+  max-width: 600px;
   margin: 0 auto 60px auto;
   transform: translateY(30%) translateZ(0);
   opacity: 0;
@@ -96,7 +96,7 @@
   backface-visibility: hidden;
 }
 
-.shared-description .bodytext-1--no-margin {
+.shared-description .bodytext-4--no-margin {
   word-wrap: break-word;
   white-space: normal;
   color: #fff;
