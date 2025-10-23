@@ -164,11 +164,15 @@
     border: 1px solid rgba(255, 255, 255, 0.5);
     background: transparent;
     color: #FFFFFF;
-    font-size: 16px; /* Giảm từ 18px */
+    font-size: 16px;
+    /* Giảm từ 18px */
     font-weight: 300;
-    line-height: 1; /* Đảm bảo text nằm giữa */
-    padding: 0; /* Bỏ padding default */
-    padding-bottom: 2px; /* Nâng text lên bằng cách thêm padding dưới */
+    line-height: 1;
+    /* Đảm bảo text nằm giữa */
+    padding: 0;
+    /* Bỏ padding default */
+    padding-bottom: 2px;
+    /* Nâng text lên bằng cách thêm padding dưới */
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -500,12 +504,17 @@
 
 /* ===== TABLET (≥ 768px) - Still visible on tablet ===== */
 @media (min-width: 768px) {
+
     /* Modal vẫn hiển thị trên tablet, chỉ điều chỉnh sizing */
     .pv2-mobile-config-modal.open {
-        padding-top: 2.5vh; /* 24/960 */
-        padding-bottom: 5vh; /* 48/960 */
-        padding-left: 5.75vw; /* 48/834 */
-        padding-right: 5.75vw; /* 48/834 */
+        padding-top: 2.5vh;
+        /* 24/960 */
+        padding-bottom: 5vh;
+        /* 48/960 */
+        padding-left: 5.75vw;
+        /* 48/834 */
+        padding-right: 5.75vw;
+        /* 48/834 */
         box-sizing: border-box;
     }
 
@@ -516,24 +525,30 @@
 
     /* Option rows - cách đều với đơn vị tương đối */
     .pv2-mobile-option-row {
-        min-height: 5vh; /* Chiều cao tối thiểu tương đối */
-        padding-top: 1.5vh; /* Padding đều phía trên */
-        padding-bottom: 1.5vh; /* Padding đều phía dưới */
+        min-height: 5vh;
+        /* Chiều cao tối thiểu tương đối */
+        padding-top: 1.5vh;
+        /* Padding đều phía trên */
+        padding-bottom: 1.5vh;
+        /* Padding đều phía dưới */
     }
 
     /* Additional info spacing */
     .pv2-mobile-additional-info {
-        padding-top: 2.5vh; /* 24/960 */
+        padding-top: 2.5vh;
+        /* 24/960 */
     }
 
     /* Price spacing */
     .pv2-mobile-price {
-        margin-bottom: 2.5vh; /* 24/960 */
+        margin-bottom: 2.5vh;
+        /* 24/960 */
     }
 
     /* Action buttons gap */
     .pv2-mobile-modal-action-buttons {
-        gap: 1.04vh; /* 10/960 */
+        gap: 1.04vh;
+        /* 10/960 */
     }
 }
 
