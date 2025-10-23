@@ -10,9 +10,10 @@
     margin: 0;
 }
 
+/* Mobile first - Base styles for < 576px */
 .pv2-two-side-image-layout-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     width: 100%;
     gap: 0;
     margin: 0;
@@ -35,15 +36,9 @@
     margin: 0;
 }
 
-/* Mobile only - max-width: 425px */
-@media (max-width: 425px) {
+/* Large mobile and up - >= 576px */
+@media (min-width: 576px) {
     .pv2-two-side-image-layout-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .pv2-two-side-image-layout-left img,
-    .pv2-two-side-image-layout-right img {
-        width: 100%;
-        height: auto;
+        grid-template-columns: 1fr 1fr;
     }
 }

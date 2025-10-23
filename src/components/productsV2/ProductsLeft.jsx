@@ -10,7 +10,7 @@ const ProductsLeft = () => {
     if (!viewerRootRef.current || !window.ijewelViewer) return;
 
     // URL model 3D local từ public/models
-    const model = "/models/rings/mirror-default.glb";
+    const model = "/models/rings/refine-mirror-fiston.glb";
 
     // Khởi tạo iJewel3D Viewer
     // Tham số 1: DOM element để render viewer

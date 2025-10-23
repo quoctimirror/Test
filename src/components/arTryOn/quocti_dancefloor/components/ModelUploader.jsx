@@ -13,13 +13,17 @@ const AVAILABLE_MODELS = [
   { name: 'My Favorite', path: '/models/rings/myfav.glb' },
   { name: 'Heart Ring', path: '/models/rings/heart_ring.glb' },
   { name: 'Oval Ring', path: '/models/rings/oval_ring.glb' },
-  { name: 'Pear Ring', path: '/models/rings/pear_ring.glb' },
+  // { name: 'Pear Ring', path: '/models/rings/pear_ring.glb' },
+  { name: 'Emerald Ring', path: '/models/rings/refine-mirror-fiston.glb' },
+  { name: 'Pear Ring', path: '/models/rings/refine-mirror-pear.glb' },
   { name: 'Refine Mirror Ring 1', path: '/models/rings/refine-mirror-ring-1.glb' },
   { name: 'Refine Mirror Ring 2', path: '/models/rings/refine-mirror-ring-2.glb' },
   { name: 'Ring WebGI', path: '/models/rings/ring_webgi.glb' },
   { name: 'Ring 2 WebGI', path: '/models/rings/ring2_webgi.glb' },
   { name: 'Oval', path: '/models/rings/oval.glb' },
   { name: 'Lumex91', path: '/models/rings/lumex91.glb' },
+
+
 ];
 
 export function ModelUploader({ modelPath, onFileUpload }) {

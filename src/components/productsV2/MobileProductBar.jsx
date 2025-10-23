@@ -4,7 +4,7 @@ import ShineGlassButton from '../common/button/ShineGlassButton';
 import MobileConfigModal from './MobileConfigModal';
 import greyCaretUp from '../../assets/images/grey-caret-up.svg';
 
-const MobileProductBar = ({ isVisible }) => {
+const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSize, onSizeChange }) => {
     const [showConfigModal, setShowConfigModal] = useState(false);
 
     return (
@@ -49,6 +49,10 @@ const MobileProductBar = ({ isVisible }) => {
         <MobileConfigModal
             isOpen={showConfigModal}
             onClose={() => setShowConfigModal(false)}
+            selectedShape={selectedShape}
+            onShapeChange={onShapeChange}
+            selectedSize={selectedSize}
+            onSizeChange={onSizeChange}
         />
         </>
     );

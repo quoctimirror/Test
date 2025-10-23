@@ -1,0 +1,27 @@
+{
+    "modelScaleFactor": 0.062,
+    "modelRotation": {
+        "x": -169.98,
+        "y": -176,
+        "z": -179.2,
+        "isVector3": true
+    },
+    "modelPosition": {
+        "x": 0,
+        "y": 0.076,
+        "z": 0.23,
+        "isVector3": true
+    },
+    "occluderScaleFactor": 1,
+    "type": "RingTryonPlugin",
+    "resources": {
+        "geometries": {},
+        "materials": {},
+        "textures": {},
+        "images": {},
+        "shapes": {},
+        "skeletons": {},
+        "animations": {},
+        "extras": {}
+    }
+}

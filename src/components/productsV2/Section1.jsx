@@ -1,9 +1,10 @@
 import './Section1.css';
 import ShineGlassButton from '../common/button/ShineGlassButton';
-import ProductsLeft from './ProductsLeft'; // iJewel viewer (commented out)
+import ProductsLeft from './ProductsLeft'; // iJewel viewer - local models
+import ProductsLeftDrive from './ProductsLeftDrive'; // iJewel Drive - cloud models (TEST)
 // import ProductsLeft2 from './ProductsLeft2'; // quocti_dancefloor viewer (realistic rendering)
 
-const Section1 = () => {
+const Section1 = ({ productConfig }) => {
     return (
         <div className="pv2-section1">
             <div className="pv2-section1-container">
@@ -35,8 +36,11 @@ const Section1 = () => {
 
                 {/* Loading Model Area */}
                 <div className="pv2-model-area">
-                    {/* <ProductsLeft /> */} {/* iJewel viewer - commented out for testing */}
-                    <ProductsLeft /> {/* quocti_dancefloor viewer - realistic 3D rendering */}
+                    {/* ORIGINAL - Local models with iJewel SDK */}
+                    {/* <ProductsLeft /> */}
+
+                    {/* iJewel Drive cloud models with shape selection */}
+                    <ProductsLeftDrive modelId={productConfig?.modelId} />
                 </div>
             </div>
         </div>

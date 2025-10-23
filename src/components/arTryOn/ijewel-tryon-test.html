@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iJewel Ring TryOn - Test</title>
+
+    <!-- iJewel SDK Scripts -->
+    <script src="https://releases.ijewel3d.com/webgi/runtime/bundle-0.15.2.js" crossorigin="anonymous"></script>
+    <script>window.webgi = window;</script>
+    <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.35/web-vto-instore.js" crossorigin="anonymous"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+
+        #header-text {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 10;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        #webgi-canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #start-tryon {
+            position: fixed;
+            top: 0.5rem;
+            right: 0.5rem;
+            height: 30px;
+        }
+
+        #tryon-options {
+            display: none;
+            position: fixed;
+            bottom: 12px;
+            right: 2%;
+            gap: 10px;
+        }
+
+        #loading-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: white;
+        }
+
+        #controls-panel {
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        #controls-panel.show {
+            display: block;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .control-group input[type="range"] {
+            width: 200px;
+        }
+
+        .control-group .value-display {
+            display: inline-block;
+            margin-left: 10px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        #toggle-controls {
+            position: fixed;
+            top: 0.5rem;
+            left: 0.5rem;
+            padding: 8px 16px;
+            font-size: 14px;
+            height: 30px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            color: #667eea;
+            border-bottom: 1px solid #667eea;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas-container">
+        <div id="header-text">iJewel Realtime Tryon</div>
+        <canvas id="webgi-canvas"></canvas>
+        <div id="loading-text">Loading...</div>
+    </div>
+
+    <button id="toggle-controls">Controls</button>
+    <button id="start-tryon">Start Try-On</button>
+
+    <div id="tryon-options">
+        <button id="flip-camera">Flip Camera</button>
+        <button id="switch-finger">Switch Finger</button>
+        <button id="save-image">Save Image</button>
+    </div>
+
+    <!-- Controls Panel -->
+    <div id="controls-panel">
+        <div class="section-title">Scale</div>
+        <div class="control-group">
+            <label>Scale: <span class="value-display" id="scale-value">0.110</span></label>
+            <input type="range" id="scale-input" min="0" max="1" step="0.001" value="0.11">
+        </div>
+
+        <div class="section-title">Position</div>
+
+        <div class="control-group">
+            <label>X: <span class="value-display" id="pos-x-value">0.000</span></label>
+            <input type="range" id="pos-x" min="-1" max="1" step="0.001" value="0">
+        </div>
+
+        <div class="control-group">
+            <label>Y: <span class="value-display" id="pos-y-value">0.000</span></label>
+            <input type="range" id="pos-y" min="0" max="2" step="0.001" value="0">
+        </div>
+
+        <div class="control-group">
+            <label>Z: <span class="value-display" id="pos-z-value">0.00</span></label>
+            <input type="range" id="pos-z" min="-2" max="5" step="0.01" value="0">
+        </div>
+
+        <div class="section-title">Rotation</div>
+
+        <div class="control-group">
+            <label>X: <span class="value-display" id="rot-x-value">0</span>°</label>
+            <input type="range" id="rot-x" min="-180" max="180" step="1" value="0">
+        </div>
+
+        <div class="control-group">
+            <label>Y: <span class="value-display" id="rot-y-value">0</span>°</label>
+            <input type="range" id="rot-y" min="-180" max="180" step="1" value="0">
+        </div>
+
+        <div class="control-group">
+            <label>Z: <span class="value-display" id="rot-z-value">0</span>°</label>
+            <input type="range" id="rot-z" min="-180" max="180" step="0.1" value="0">
+        </div>
+
+        <button onclick="copyConfig()" style="width: 100%; margin-top: 10px;">Copy Config</button>
+    </div>
+
+    <script>
+        async function init() {
+            try {
+                // Initialize the viewer
+                const viewer = new ViewerApp({
+                    canvas: document.getElementById("webgi-canvas")
+                });
+
+                // Set the canvas scaling to 1.5 for sharper rendering
+                viewer.renderer.displayCanvasScaling = 1.5;
+
+                // Add and setup all necessary plugins
+                await addBasePlugins(viewer);
+                const diamondPlugin = await viewer.addPlugin(DiamondPlugin);
+                diamondPlugin.setKey("LICENSE_KEY_FOR_IJEWEL_SDK");
+
+                // Add the Ring Try-On Plugin
+                const tryon = await viewer.addPlugin(ij_vto.RingTryonPlugin);
+                tryon.setKey("LICENSE_KEY_FOR_TRYON_SDK");
+
+                // Add the Ring Try-On UI Plugin
+                await viewer.addPlugin(ij_vto.RingTryonUIPlugin);
+
+                viewer.renderEnabled = false;
+
+                // Load the ring model and config that includes scene settings and model settings
+                // await viewer.load("https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.glb");
+                // await viewer.load("https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.json");
+                await viewer.load("../../../public/models/rings/fiston.glb");
+                await viewer.load("../../../public/models/rings/fiston.json");
+
+                document.querySelector("#loading-text").remove();
+                viewer.renderEnabled = true;
+                const tryonOptions = document.querySelector("#tryon-options");
+
+                // Start or stop the tryon when the button is clicked
+                const startBtn = document.querySelector("#start-tryon");
+                startBtn.style.display = "initial";
+                startBtn.onclick = async () => {
+                    tryon.running ? await tryon.stop() : await tryon.start();
+
+                    if (tryon.running) {
+                        tryonOptions.style.display = "flex";
+                    } else {
+                        tryonOptions.style.display = "none";
+                    }
+
+                    startBtn.innerHTML = tryon.running ? "Stop Try-On" : "Start Try-On";
+                };
+
+                const flipCameraBtn = document.querySelector("#flip-camera");
+                flipCameraBtn.style.display = "initial";
+                flipCameraBtn.onclick = () => tryon.running && tryon.flipCamera();
+
+                const switchFingerBtn = document.querySelector("#switch-finger");
+                switchFingerBtn.style.display = "initial";
+                switchFingerBtn.onclick = () => tryon.running && (tryon.finger = (tryon.finger + 1) % 5);
+
+                const saveImageBtn = document.querySelector("#save-image");
+                saveImageBtn.style.display = "initial";
+                saveImageBtn.onclick = () => tryon.running && tryon.saveImage();
+
+                // Toggle controls panel
+                const toggleControlsBtn = document.querySelector("#toggle-controls");
+                const controlsPanel = document.querySelector("#controls-panel");
+                toggleControlsBtn.onclick = () => {
+                    controlsPanel.classList.toggle("show");
+                };
+
+                // Setup controls for scale, position and rotation
+                const scaleSlider = document.getElementById("scale-input");
+                const posXSlider = document.getElementById("pos-x");
+                const posYSlider = document.getElementById("pos-y");
+                const posZSlider = document.getElementById("pos-z");
+                const rotXSlider = document.getElementById("rot-x");
+                const rotYSlider = document.getElementById("rot-y");
+                const rotZSlider = document.getElementById("rot-z");
+
+                // Load initial values from tryon plugin (loaded from JSON)
+                if (tryon) {
+                    if (tryon.modelScaleFactor !== undefined) {
+                        scaleSlider.value = tryon.modelScaleFactor;
+                    }
+                    if (tryon.modelPosition) {
+                        posXSlider.value = tryon.modelPosition.x;
+                        posYSlider.value = tryon.modelPosition.y;
+                        posZSlider.value = tryon.modelPosition.z;
+                    }
+                    if (tryon.modelRotation) {
+                        rotXSlider.value = tryon.modelRotation.x;
+                        rotYSlider.value = tryon.modelRotation.y;
+                        rotZSlider.value = tryon.modelRotation.z;
+                    }
+                }
+
+                // Update display values
+                function updateDisplay() {
+                    document.getElementById("scale-value").textContent = parseFloat(scaleSlider.value).toFixed(3);
+                    document.getElementById("pos-x-value").textContent = parseFloat(posXSlider.value).toFixed(3);
+                    document.getElementById("pos-y-value").textContent = parseFloat(posYSlider.value).toFixed(3);
+                    document.getElementById("pos-z-value").textContent = parseFloat(posZSlider.value).toFixed(2);
+                    document.getElementById("rot-x-value").textContent = parseFloat(rotXSlider.value).toFixed(0);
+                    document.getElementById("rot-y-value").textContent = parseFloat(rotYSlider.value).toFixed(0);
+                    document.getElementById("rot-z-value").textContent = parseFloat(rotZSlider.value).toFixed(1);
+                }
+
+                // Initial display update
+                updateDisplay();
+
+                // Apply changes to tryon plugin
+                function applyChanges() {
+                    if (tryon) {
+                        if (tryon.modelScaleFactor !== undefined) {
+                            tryon.modelScaleFactor = parseFloat(scaleSlider.value);
+                        }
+                        if (tryon.modelPosition) {
+                            tryon.modelPosition.x = parseFloat(posXSlider.value);
+                            tryon.modelPosition.y = parseFloat(posYSlider.value);
+                            tryon.modelPosition.z = parseFloat(posZSlider.value);
+                        }
+                        if (tryon.modelRotation) {
+                            tryon.modelRotation.x = parseFloat(rotXSlider.value);
+                            tryon.modelRotation.y = parseFloat(rotYSlider.value);
+                            tryon.modelRotation.z = parseFloat(rotZSlider.value);
+                        }
+                    }
+                    updateDisplay();
+                }
+
+                // Add event listeners
+                scaleSlider.addEventListener("input", applyChanges);
+                posXSlider.addEventListener("input", applyChanges);
+                posYSlider.addEventListener("input", applyChanges);
+                posZSlider.addEventListener("input", applyChanges);
+                rotXSlider.addEventListener("input", applyChanges);
+                rotYSlider.addEventListener("input", applyChanges);
+                rotZSlider.addEventListener("input", applyChanges);
+
+                // Make tryon and config accessible globally for copy function
+                window.currentTryon = tryon;
+                window.copyConfig = function () {
+                    const config = {
+                        modelScaleFactor: parseFloat(scaleSlider.value),
+                        modelPosition: {
+                            x: parseFloat(posXSlider.value),
+                            y: parseFloat(posYSlider.value),
+                            z: parseFloat(posZSlider.value),
+                            isVector3: true
+                        },
+                        modelRotation: {
+                            x: parseFloat(rotXSlider.value),
+                            y: parseFloat(rotYSlider.value),
+                            z: parseFloat(rotZSlider.value),
+                            isVector3: true
+                        }
+                    };
+                    navigator.clipboard.writeText(JSON.stringify(config, null, 2));
+                    alert("Config copied to clipboard!");
+                };
+
+                console.log('✅ iJewel SDK initialized successfully');
+
+            } catch (err) {
+                console.error('❌ Initialization error:', err);
+                alert('Failed to initialize: ' + err.message);
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

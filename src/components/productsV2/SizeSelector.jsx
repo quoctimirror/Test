@@ -2,8 +2,9 @@ import { useState } from 'react';
 import './SizeSelector.css';
 import sizeConversionData from '../../assets/sizeConversionBoard.json';
 import CustomDropdown from './CustomDropdown';
+import ShineGlassButton from '../common/button/ShineGlassButton';
 
-const SizeSelector = ({ onClose, onSelectSize }) => {
+const SizeSelector = ({ onClose, onSelectSize, selectedSize }) => {
     const [activeTab, setActiveTab] = useState('select'); // 'select' or 'find'
     const [measurementUnit, setMeasurementUnit] = useState('mm');
     const [selectedCountryId, setSelectedCountryId] = useState('US');
@@ -68,6 +69,24 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
             onClick={handleClose}
         >
             <div className="pv2-size-selector-modal" onClick={(e) => e.stopPropagation()}>
+                {/* Close Button */}
+                <div className="pv2-size-selector-close-button">
+                    <ShineGlassButton
+                        onClick={handleClose}
+                        theme="footer"
+                        width={32}
+                        height={32}
+                        className="pv2-size-selector-close-btn"
+                    >
+                        <img
+                            src="/universeSection/close-x-icon.svg"
+                            alt="Close"
+                            width="14"
+                            height="14"
+                        />
+                    </ShineGlassButton>
+                </div>
+
                 {/* Header Tabs */}
                 <div className="pv2-size-selector-header">
                     <button
@@ -124,10 +143,19 @@ const SizeSelector = ({ onClose, onSelectSize }) => {
                                         // Skip if size is null for this system
                                         if (size === null) return null;
 
+                                        // Check if this row is the selected size
+                                        // Convert both to string and compare, also handle number comparison
+                                        const sizeStr = String(size);
+                                        const selectedSizeStr = String(selectedSize);
+                                        const isSelected = selectedSize && (
+                                            sizeStr === selectedSizeStr ||
+                                            parseFloat(sizeStr) === parseFloat(selectedSizeStr)
+                                        );
+
                                         return (
                                             <tr
                                                 key={item.id}
-                                                className="pv2-size-row"
+                                                className={`pv2-size-row ${isSelected ? 'selected' : ''}`}
                                                 onClick={() => handleSizeSelect(item)}
                                             >
                                                 <td className="pv2-size-cell">{getCircumference(item)}</td>

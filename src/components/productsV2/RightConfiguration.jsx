@@ -4,13 +4,18 @@ import opaqueIcon from '../../assets/images/opaque_gts.svg';
 import whiteIcon from '../../assets/images/white_gts.svg';
 import ShineGlassButton from '../common/button/ShineGlassButton';
 import SizeSelector from './SizeSelector';
+import ShapeSelector from './ShapeSelector';
 
 const RightConfiguration = ({ hideButtons = false, productConfig, setProductConfig, onOrderNow }) => {
     const [showSizeSelector, setShowSizeSelector] = useState(false);
+    const [showShapeSelector, setShowShapeSelector] = useState(false);
 
     // Use productConfig if provided, otherwise use local state
     const quantity = productConfig?.quantity || 1;
-    const size = productConfig?.size || '6.0';
+    const size = productConfig?.size || '3.0';
+    const shape = productConfig?.shape || 'Pear';
+    const metal = productConfig?.metal || 'Silver';
+    const band = productConfig?.band || 'Single band';
 
     const handleQuantityChange = (increment) => {
         const newQuantity = Math.max(1, quantity + increment);
@@ -27,6 +32,19 @@ const RightConfiguration = ({ hideButtons = false, productConfig, setProductConf
         setShowSizeSelector(false);
     };
 
+    const handleShapeSelect = (shapeConfig) => {
+        if (setProductConfig) {
+            setProductConfig(prev => ({
+                ...prev,
+                shape: shapeConfig.shape,
+                modelId: shapeConfig.modelId,
+                metal: shapeConfig.metal,
+                band: shapeConfig.band
+            }));
+        }
+        setShowShapeSelector(false);
+    };
+
     const handleOrderNowClick = () => {
         if (onOrderNow) {
             onOrderNow();
@@ -38,28 +56,33 @@ const RightConfiguration = ({ hideButtons = false, productConfig, setProductConf
             <div className="pv2-product-info">
                 <h1 className="pv2-product-title heading-1--no-margin">LUMINA OLIVIA 5</h1>
 
+                {/* Container 1: Configuration + Additional Info */}
+                <div className="pv2-config-container">
                 <div className="pv2-configuration-options">
-                    <div className="pv2-option-row">
+                    {/* Shape - Clickable */}
+                    <div className="pv2-option-row pv2-size-row" style={{ cursor: 'pointer' }} onClick={() => setShowShapeSelector(true)}>
                         <span className="pv2-option-label bodytext-3--no-margin">Shape</span>
                         <div className="pv2-option-value-container">
-                            <span className="pv2-option-value bodytext-1--no-margin">Pear</span>
-                            <img src={opaqueIcon} alt="" className="pv2-option-icon" />
+                            <span className="pv2-option-value bodytext-1--no-margin">{shape}</span>
+                            <img src={whiteIcon} alt="" className="pv2-size-arrow-icon" />
                         </div>
                     </div>
 
+                    {/* Metal - Read only (auto-changes with shape) */}
                     <div className="pv2-option-row">
                         <span className="pv2-option-label bodytext-3--no-margin">Metal</span>
                         <div className="pv2-option-value-container">
-                            <span className="pv2-option-value bodytext-1--no-margin">Yellow Gold</span>
-                            <img src={opaqueIcon} alt="" className="pv2-option-icon" />
+                            <span className="pv2-option-value bodytext-1--no-margin">{metal}</span>
+                            <img src={opaqueIcon} alt="" className="pv2-option-icon" style={{ opacity: 0.5 }} />
                         </div>
                     </div>
 
+                    {/* Band - Read only (auto-changes with shape) */}
                     <div className="pv2-option-row">
                         <span className="pv2-option-label bodytext-3--no-margin">Band</span>
                         <div className="pv2-option-value-container">
-                            <span className="pv2-option-value bodytext-1--no-margin">Single band</span>
-                            <img src={opaqueIcon} alt="" className="pv2-option-icon" />
+                            <span className="pv2-option-value bodytext-1--no-margin">{band}</span>
+                            <img src={opaqueIcon} alt="" className="pv2-option-icon" style={{ opacity: 0.5 }} />
                         </div>
                     </div>
 
@@ -102,7 +125,11 @@ const RightConfiguration = ({ hideButtons = false, productConfig, setProductConf
                     <p className="pv2-shipping-info bodytext-4--no-margin">Complimentary shipping & returns</p>
                     <a href="#" className="pv2-contact-link bodytext-4--no-margin">Contact us</a>
                 </div>
+                </div>
+                {/* End Container 1 */}
 
+                {/* Container 2: Price + Action Buttons + Order Button */}
+                <div className="pv2-bottom-container">
                 <div className="pv2-price-section">
                     <span className="pv2-price heading-3--no-margin">$15,600</span>
                 </div>
@@ -138,13 +165,25 @@ const RightConfiguration = ({ hideButtons = false, productConfig, setProductConf
                         </button>
                     </>
                 )}
+                </div>
+                {/* End Container 2 */}
             </div>
+
+            {/* Shape Selector Modal */}
+            {showShapeSelector && (
+                <ShapeSelector
+                    onClose={() => setShowShapeSelector(false)}
+                    onSelectShape={handleShapeSelect}
+                    selectedShape={shape}
+                />
+            )}
 
             {/* Size Selector Modal */}
             {showSizeSelector && (
                 <SizeSelector
                     onClose={() => setShowSizeSelector(false)}
                     onSelectSize={handleSizeSelect}
+                    selectedSize={size}
                 />
             )}
         </div>

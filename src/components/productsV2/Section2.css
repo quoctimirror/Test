@@ -9,9 +9,9 @@
 }
 
 .pv2-section2-wrapper {
-    max-width: 1200px;
     margin: 0 auto;
     width: 100%;
+    max-width: 100%;
 }
 
 .pv2-section2-content {
@@ -19,6 +19,9 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    gap: 16px; /* Fixed gap instead of margin for consistent spacing */
+    max-width: 600px; /* Prevent content from being too wide */
+    margin: 0 auto;
 }
 
 .pv2-section2-header {
@@ -50,63 +53,75 @@
 }
 
 .pv2-section2-subtitle {
-    /* Mobile: Sử dụng bodytext-mobile-product */
+    /* Mobile: bodytext-3 from typography.css */
     color: var(--gray-3, #797979);
     text-align: center;
     font-family: "BT Beau Sans";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 130%; /* 18.2px */
+    line-height: 130%;
+    /* 18.2px */
     margin: 0 auto !important;
     padding: 0 !important;
-    width: 304px;
-    max-width: calc(100% - 24px);
-    min-height: 126px;
     height: auto;
     box-sizing: border-box;
     word-wrap: break-word;
     white-space: normal;
 }
 
-/* ===== 📱 MOBILE NHỎ NHẤT - 320px+ ===== */
-@media (min-width: 320px) {
+/* ========================================
+   RESPONSIVE - MOBILE FIRST
+   Base (Mobile): < 576px
+   ======================================== */
+
+/* Base mobile styles already defined above */
+
+/* ========================================
+   LARGE MOBILE - ≥576px
+   ======================================== */
+@media (min-width: 576px) {
     .pv2-section2-container {
-        margin-top: 0;
-        padding: 30px 12px;
+        padding: 35px 16px;
+    }
+
+    .pv2-section2-content {
+        gap: 20px; /* Slightly larger gap on larger screens */
     }
 
     .pv2-section2-collection {
-        font-size: 12px;
+        font-size: 13px;
     }
 
     .pv2-section2-subtitle {
-        font-size: 14px;
-        padding: 0 10px !important;
+        font-size: 15px;
+        padding: 0 !important;
     }
 }
 
-/* ===== 📱 TABLET BẮT ĐẦU - 768px+ ===== */
+/* ========================================
+   TABLET - ≥768px
+   ======================================== */
 @media (min-width: 768px) {
     .pv2-section2-container {
         margin-top: 0;
-        /* Tăng margin cho tablet */
         padding: 40px 16px;
-        /* Tăng padding */
+    }
+
+    .pv2-section2-content {
+        gap: 24px; /* More breathing room on tablet */
     }
 
     .pv2-section2-collection {
         font-size: 14px;
-        /* Font lớn hơn */
     }
 
     .pv2-section2-subtitle {
-        /* Tablet: 520px width, height tự động theo content */
         font-family: "BT Beau Sans";
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
-        line-height: 130%; /* 20.8px */
+        line-height: 130%;
         color: var(--gray-3, #797979);
         text-align: center;
         margin: 0 auto !important;
@@ -118,27 +133,29 @@
     }
 }
 
-/* ===== 💻 DESKTOP BẮT ĐẦU - 1024px+ ===== */
+/* ========================================
+   DESKTOP - ≥1024px
+   ======================================== */
 @media (min-width: 1024px) {
     .pv2-section2-container {
         margin-top: 0;
-        /* Tăng margin cho desktop */
         padding: 50px 20px;
-        /* Padding desktop */
+    }
+
+    .pv2-section2-content {
+        gap: 28px; /* Optimal spacing for desktop */
     }
 
     .pv2-section2-collection {
         font-size: 16px;
-        /* Font size gốc */
     }
 
     .pv2-section2-subtitle {
-        /* Desktop: 692x92px box */
         font-family: "BT Beau Sans";
         font-size: 18px;
         font-style: normal;
         font-weight: 400;
-        line-height: 130%; /* 23.4px */
+        line-height: 130%;
         color: var(--gray-3, #797979);
         text-align: center;
         margin: 0 auto !important;
@@ -151,46 +168,22 @@
     }
 }
 
-/* ===== 💻 DESKTOP LỚN - 1440px+ ===== */
-@media (min-width: 1440px) {
+/* ========================================
+   LARGE DESKTOP - ≥1280px
+   ======================================== */
+@media (min-width: 1280px) {
     .pv2-section2-container {
         margin-top: 0;
-        /* Margin lớn nhất */
         padding: 60px 20px;
-        /* Padding lớn nhất */
     }
 
     .pv2-section2-collection {
         font-size: 18px;
-        /* Font lớn hơn cho màn hình lớn */
     }
 
     .pv2-section2-subtitle {
         font-size: 20px;
-        /* Font lớn hơn */
         line-height: 1.7;
-        /* Line height rộng hơn */
         max-width: 900px;
-        /* Width rộng hơn */
     }
 }
-
-/* 
-💡 SO SÁNH CODE CŨ VS MỚI:
-
-❌ CODE CŨ (Desktop First):
-@media screen and (max-width: 768px) { ... }
-@media screen and (max-width: 480px) { ... }
-
-✅ CODE MỚI (Mobile First):
-@media (min-width: 320px) { ... }
-@media (min-width: 768px) { ... }
-@media (min-width: 1024px) { ... }
-@media (min-width: 1440px) { ... }
-
-🎯 LỢI ÍCH:
-- Tối ưu hiệu năng cho mobile
-- Dễ maintain và scale
-- Theo chuẩn modern web development
-- Progressive enhancement
-*/

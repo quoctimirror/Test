@@ -1,50 +1,110 @@
-/* ===== PRODUCTS LAYOUT - MAIN CONTAINER ===== */
+/* ===================================================================
+   PRODUCTS V2 - MOBILE FIRST RESPONSIVE LAYOUT
+   =================================================================== */
 
-/* Products Main Wrapper - Contains both main content and parallax */
+/* ===================================================================
+   MOBILE BASE STYLES (< 768px)
+   =================================================================== */
+
+/* Products Main Wrapper */
 .pv2-products-main-wrapper {
     width: 100%;
+    max-width: 100%;
     position: relative;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
-/* Products Main Container */
+/* Products Main Container - Mobile: Stack layout */
 .pv2-products-container {
     width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     position: relative;
     align-items: flex-start;
-    z-index: 1; /* Below navbar (navbar is 201) */
+    z-index: 1;
     overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ===== RIGHT SIDE - CONFIGURATION CONTAINER - Desktop only (1024px+) ===== */
+/* Right Configuration - Hidden on mobile, shown via MobileProductBar */
 .pv2-products-right {
-    width: calc(100% - 66.25%);
-    height: 100vh;
-    position: sticky;
-    top: 0;
-    align-self: flex-start;
-    flex-shrink: 0;
-    box-sizing: border-box;
-    z-index: 50; /* Below navbar (201) */
+    display: none;
+}
+
+/* ===================================================================
+   TABLET STYLES (>= 768px)
+   =================================================================== */
+@media (min-width: 768px) {
+    /* Container remains stacked but with better spacing */
+    .pv2-products-container {
+        padding: 0;
+    }
+
+    /* Right Configuration still hidden on tablet */
+    .pv2-products-right {
+        display: none;
+    }
+}
+
+/* ===================================================================
+   DESKTOP STYLES (>= 1024px)
+   =================================================================== */
+@media (min-width: 1024px) {
+    /* Container becomes side-by-side layout */
+    .pv2-products-container {
+        flex-direction: row;
+        align-items: stretch;
+        min-height: 100vh;
+    }
+
+    /* Right Configuration visible on desktop - Always visible when scrolling */
+    .pv2-products-right {
+        display: flex;
+        width: calc(100% - 66.25%);
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        right: 0;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        z-index: 50;
+    }
+}
+
+/* ===================================================================
+   LARGE DESKTOP STYLES (>= 1440px)
+   =================================================================== */
+@media (min-width: 1280px) {
+    /* Maintain desktop layout with optimal proportions */
+    .pv2-products-right {
+        width: calc(100% - 66.25%);
+    }
 }
 
 /*
-💡 HƯỚNG DẪN SỬ DỤNG - DESKTOP ONLY (1024px+):
+📱 MOBILE FIRST ARCHITECTURE:
+===============================
 
-✅ STRUCTURE LAYOUT:
+✅ BREAKPOINTS:
+- Mobile:   < 768px (Base/Default)
+- Tablet:   >= 768px
+- Desktop:  >= 1024px
+- Large:    >= 1440px
+
+✅ LAYOUT STRATEGY:
+- Mobile/Tablet: Stack layout (LeftContainer full width, MobileProductBar at bottom)
+- Desktop+: Side-by-side (LeftContainer 66.25% | RightConfiguration 33.75%)
+
+✅ COMPONENT STRUCTURE:
 ├── Products.jsx (import Products.css)
-├── Products.css (file này - chỉ quản lý layout chung)
-├── LeftContainer.jsx + LeftContainer.css (width: 66.25%, chứa Section1 và Section2)
-└── RightConfiguration.jsx + RightConfiguration.css (width: 100% trong products-right)
-
-📐 LAYOUT BREAKDOWN:
-- Desktop: LeftContainer 66.25% | RightConfiguration 33.75%
-- Không hỗ trợ responsive (chỉ desktop 1024px+)
-
-🎯 COMPONENT CON:
-- LeftContainer quản lý Section1 và Section2
-- Layout tổng quát được handle ở Products.css này
-- Tối ưu cho desktop experience
+├── Products.css (this file - manages overall layout)
+├── LeftContainer.jsx + LeftContainer.css (scrollable content area)
+├── RightConfiguration.jsx + RightConfiguration.css (desktop sidebar)
+└── MobileProductBar.jsx + MobileProductBar.css (mobile/tablet bottom bar)
 */
-

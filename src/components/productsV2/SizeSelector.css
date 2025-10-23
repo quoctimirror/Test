@@ -58,8 +58,8 @@
 /* Header Tabs */
 .pv2-size-selector-header {
     display: flex;
-    gap: 24px;
-    /* Khoảng cách giữa 2 tabs */
+    gap: 1.5rem;
+    /* Khoảng cách giữa 2 tabs (24px = 1.5rem) */
     padding: 0 0 20px 0;
     background: var(--Gray-1, #F6F6F6);
     justify-content: center;
@@ -283,6 +283,18 @@
     border-top: 1px solid #BC224C;
 }
 
+/* Selected size row - highlight with pink */
+.pv2-size-row.selected .pv2-size-cell {
+    border-top: 1px solid #BC224C;
+    border-bottom: 1px solid #BC224C;
+    color: #BC224C;
+    font-weight: 500;
+}
+
+.pv2-size-row:first-child.selected .pv2-size-cell {
+    border-top: 1px solid #BC224C;
+}
+
 .pv2-size-cell {
     padding: 16px 20px;
     font-family: 'Inter', sans-serif;
@@ -291,6 +303,11 @@
     color: #666666;
     text-align: center;
     border: none;
+}
+
+.pv2-size-cell-secondary {
+    font-size: 12px;
+    color: #999999;
 }
 
 /* Footer Gradient Bar */
@@ -377,113 +394,141 @@
     transform-origin: left;
 }
 
-/* Mobile & Tablet - max-width: 1023px */
-@media (max-width: 1023px) {
-    .pv2-size-selector-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 400;
-    }
+/* ========================================
+   RESPONSIVE - MOBILE FIRST
+   Base (Mobile): < 576px
+   ======================================== */
 
+/* Mobile Base Styles - Applied by default on mobile/tablet for overlay behavior */
+.pv2-size-selector-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 400;
+}
+
+.pv2-size-selector-modal {
+    width: 100%;
+    height: 100%;
+    padding: 60px 20px 24px;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.pv2-size-selector-header {
+    gap: 1.25rem;
+    /* 20px */
+    padding: 0 0 16px 0;
+}
+
+.pv2-size-tab {
+    font-size: 14px;
+}
+
+.pv2-size-selector-filters {
+    gap: 8px;
+    padding: 0 0 16px 0;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.pv2-filter-group {
+    flex: 1 1 50%;
+    min-width: 0;
+    max-width: 50%;
+}
+
+.pv2-find-size-content {
+    margin-top: 20px;
+    align-items: flex-start;
+}
+
+.pv2-find-size-content>div {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    text-align: left;
+}
+
+.pv2-find-size-intro {
+    font-family: "BT Beau Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%;
+    text-align: left;
+    margin-bottom: 16px;
+}
+
+.pv2-find-size-steps {
+    font-family: "BT Beau Sans";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%;
+    text-align: left;
+    margin-bottom: 16px;
+    padding-left: 20px;
+    list-style-type: decimal;
+}
+
+.pv2-find-size-steps li {
+    margin-bottom: 12px;
+    padding-left: 8px;
+}
+
+.pv2-find-size-tip {
+    font-family: "BT Beau Sans";
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 130%;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.pv2-find-size-footer {
+    text-align: center;
+}
+
+/* ========================================
+   LARGE MOBILE - ≥576px
+   ======================================== */
+@media (min-width: 576px) {
     .pv2-size-selector-modal {
-        width: 100%;
-        height: 100%;
-        padding: 60px 20px 24px;
-        border-radius: 0;
-        box-shadow: none;
+        padding: 70px 30px 32px;
     }
 
     .pv2-size-selector-header {
-        gap: 20px;
-        padding: 0 0 16px 0;
+        gap: 1.375rem;
+        /* 22px */
+        padding: 0 0 18px 0;
     }
 
     .pv2-size-tab {
-        font-size: 14px;
+        font-size: 15px;
     }
 
     .pv2-size-selector-filters {
-        gap: 8px;
-        padding: 0 0 16px 0;
-        flex-direction: row;
-        flex-wrap: nowrap;
-    }
-
-    .pv2-filter-group {
-        flex: 1 1 50%;
-        min-width: 0;
-        max-width: 50%;
-    }
-
-    .pv2-find-size-content {
-        margin-top: 20px;
-        align-items: flex-start;
-    }
-
-    .pv2-find-size-content > div {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        text-align: left;
-    }
-
-    .pv2-find-size-intro {
-        font-family: "BT Beau Sans";
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 130%; /* 18.2px */
-        text-align: left;
-        margin-bottom: 16px;
-    }
-
-    .pv2-find-size-steps {
-        font-family: "BT Beau Sans";
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 130%;
-        text-align: left;
-        margin-bottom: 16px;
-        padding-left: 20px;
-        list-style-type: decimal;
-    }
-
-    .pv2-find-size-steps li {
-        margin-bottom: 12px;
-        padding-left: 8px;
-    }
-
-    .pv2-find-size-tip {
-        font-family: "BT Beau Sans";
-        font-size: 14px;
-        font-style: italic;
-        font-weight: 400;
-        line-height: 130%;
-        text-align: left;
-        margin-bottom: 20px;
-    }
-
-    .pv2-find-size-footer {
-        text-align: center;
+        gap: 12px;
+        padding: 0 0 18px 0;
     }
 }
 
-/* Tablet specific - 426px to 1023px */
-@media (min-width: 426px) and (max-width: 1023px) {
+/* ========================================
+   TABLET - ≥768px
+   ======================================== */
+@media (min-width: 768px) {
     .pv2-size-selector-modal {
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
         padding: 80px 40px 40px;
     }
 
     .pv2-size-selector-header {
-        gap: 24px;
+        gap: 1.5rem;
+        /* 24px */
         padding: 0 0 20px 0;
     }
 
@@ -494,5 +539,125 @@
     .pv2-size-selector-filters {
         gap: 20px;
         padding: 0 0 20px 0;
+    }
+}
+
+/* ========================================
+   DESKTOP - ≥1024px
+   ======================================== */
+@media (min-width: 1024px) {
+
+    /* Desktop uses absolute positioning within parent */
+    .pv2-size-selector-overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+    }
+
+    .pv2-size-selector-modal {
+        padding: 120px 40px 20px;
+        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* ========================================
+   LARGE DESKTOP - ≥1280px
+   ======================================== */
+@media (min-width: 1280px) {
+    .pv2-size-selector-modal {
+        padding: 120px 50px 20px;
+    }
+}
+
+/* ========================================
+   CLOSE BUTTON - SHARED STYLES
+   Size Selector & Shape Selector
+   ======================================== */
+
+/* Base Mobile Styles */
+.pv2-size-selector-close-button,
+.pv2-shape-selector-close-button {
+    position: absolute;
+    top: 8vw;
+    /* 8vw từ trên xuống cho mobile */
+    right: 5vw;
+    z-index: 101;
+    pointer-events: auto;
+}
+
+.pv2-size-selector-close-btn .button-text,
+.pv2-shape-selector-close-btn .button-text {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pv2-size-selector-close-btn .border-layer,
+.pv2-shape-selector-close-btn .border-layer {
+    background: transparent !important;
+    border: none !important;
+}
+
+.pv2-size-selector-close-btn:hover .border-layer,
+.pv2-shape-selector-close-btn:hover .border-layer {
+    background: conic-gradient(from 0deg at 50% 50%,
+            rgba(188, 34, 76, 0.2) 0%,
+            rgba(188, 34, 76, 0.2) 100%),
+        linear-gradient(180deg, rgba(188, 34, 76, 0.1), rgba(188, 34, 76, 0.1)) !important;
+    border: none !important;
+}
+
+.pv2-size-selector-close-btn img,
+.pv2-shape-selector-close-btn img {
+    filter: brightness(0) saturate(100%) invert(60%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(90%);
+    opacity: 0.6;
+}
+
+.pv2-size-selector-close-btn:hover img,
+.pv2-shape-selector-close-btn:hover img {
+    filter: brightness(0) saturate(100%) invert(22%) sepia(67%) saturate(2571%) hue-rotate(326deg) brightness(86%) contrast(88%);
+    opacity: 1;
+}
+
+/* Large Mobile - ≥576px */
+@media (min-width: 576px) {
+
+    .pv2-size-selector-close-button,
+    .pv2-shape-selector-close-button {
+        top: 8vw;
+        /* 8vw cho large mobile */
+        right: 4.5vw;
+    }
+}
+
+/* Tablet - ≥768px */
+@media (min-width: 768px) {
+
+    .pv2-size-selector-close-button,
+    .pv2-shape-selector-close-button {
+        /* top: 9vh; */
+        right: 4vw;
+    }
+}
+
+/* Desktop - ≥1024px */
+@media (min-width: 1024px) {
+
+    .pv2-size-selector-close-button,
+    .pv2-shape-selector-close-button {
+        top: 11vh;
+        right: 3vw;
+    }
+}
+
+/* Large Desktop - ≥1280px */
+@media (min-width: 1280px) {
+
+    .pv2-size-selector-close-button,
+    .pv2-shape-selector-close-button {
+        top: 11vh;
+        right: 2.5vw;
     }
 }

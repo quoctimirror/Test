@@ -7,6 +7,7 @@ import ViewAllProduct from '../viewAllProduct/ViewAllProduct';
 import Contact from '../contactUs/ContactUs';
 import OrderFormModal from './OrderFormModal';
 import OrderSuccessModal from './OrderSuccessModal';
+import { getShapeConfig } from './shapeConfig';
 
 
 const Products = () => {
@@ -31,13 +32,15 @@ const Products = () => {
     const [orderDetails, setOrderDetails] = useState(null);
 
     // Product configuration state (shared with RightConfiguration)
+    const defaultShape = getShapeConfig('Fiston'); // Default shape
     const [productConfig, setProductConfig] = useState({
         id: 'PRD000024', // Mirror Custom Ring product ID
         name: 'LUMINA OLIVIA 5',
-        shape: 'Pear',
-        metal: 'Yellow Gold',
-        band: 'Single band',
-        size: '6.0',
+        shape: defaultShape.shape,
+        modelId: defaultShape.modelId,
+        metal: defaultShape.metal,
+        band: defaultShape.band,
+        size: '3.0',
         quantity: 1,
         price: 15600
     });
@@ -193,17 +196,17 @@ const Products = () => {
                 const rect = productsContainer.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
 
-                // Show mobile bar if we're within products-container area
-                // Hide mobile bar if we scrolled past products-container
-                if (rect.bottom > 0 && rect.top < windowHeight) {
-                    // We're within products-container viewport
-                    setShowMobileBar(true);
-                } else if (rect.bottom <= 0) {
-                    // We've scrolled past products-container (into More Gems)
+                // Hide mobile bar if we've scrolled past products-container (bottom is above viewport)
+                if (rect.bottom <= 0) {
                     setShowMobileBar(false);
-                } else {
-                    // We're above products-container
+                }
+                // Show mobile bar if we're within products-container area
+                else if (rect.bottom > 0 && rect.top < windowHeight) {
                     setShowMobileBar(true);
+                }
+                // Hide if we're above products-container
+                else {
+                    setShowMobileBar(false);
                 }
             }
         };
@@ -213,6 +216,44 @@ const Products = () => {
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Handle sticky behavior for right sidebar on desktop
+    useEffect(() => {
+        const handleRightSidebarScroll = () => {
+            const leftContainer = document.querySelector('.pv2-left-container');
+            const rightSidebar = document.querySelector('.pv2-products-right');
+
+            if (!leftContainer || !rightSidebar || window.innerWidth < 1024) {
+                return; // Only apply on desktop
+            }
+
+            const leftRect = leftContainer.getBoundingClientRect();
+            const leftBottom = leftRect.bottom;
+            const viewportHeight = window.innerHeight;
+
+            // If we've scrolled past the left container (left container is fully scrolled)
+            if (leftBottom <= viewportHeight) {
+                // Switch to absolute positioning to scroll with page
+                rightSidebar.style.position = 'absolute';
+                rightSidebar.style.top = `${leftContainer.offsetHeight - viewportHeight}px`;
+                rightSidebar.style.right = '0';
+            } else {
+                // Keep fixed while scrolling through left container
+                rightSidebar.style.position = 'fixed';
+                rightSidebar.style.top = '0';
+                rightSidebar.style.right = '0';
+            }
+        };
+
+        handleRightSidebarScroll();
+        window.addEventListener('scroll', handleRightSidebarScroll);
+        window.addEventListener('resize', handleRightSidebarScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleRightSidebarScroll);
+            window.removeEventListener('resize', handleRightSidebarScroll);
+        };
     }, []);
 
     // Function to switch models
@@ -300,12 +341,31 @@ const Products = () => {
         setOrderDetails(null);
     };
 
+    // Handle shape change from mobile
+    const handleShapeChange = (shapeConfig) => {
+        setProductConfig(prev => ({
+            ...prev,
+            shape: shapeConfig.shape,
+            modelId: shapeConfig.modelId,
+            metal: shapeConfig.metal,
+            band: shapeConfig.band
+        }));
+    };
+
+    // Handle size change from mobile
+    const handleSizeChange = (newSize) => {
+        setProductConfig(prev => ({
+            ...prev,
+            size: newSize
+        }));
+    };
+
     return (
         <>
             <div className="pv2-products-main-wrapper">
                 <div className="pv2-products-container">
                     {/* Left side - LeftContainer chứa Section1 và Section2 */}
-                    <LeftContainer />
+                    <LeftContainer productConfig={productConfig} />
 
                     {/* Right side - Configuration */}
                     <div className="pv2-products-right">
@@ -324,7 +384,13 @@ const Products = () => {
                 <Contact />
 
                 {/* Mobile Product Bar - Only visible on mobile */}
-                <MobileProductBar isVisible={showMobileBar} />
+                <MobileProductBar
+                    isVisible={showMobileBar}
+                    selectedShape={productConfig.shape}
+                    onShapeChange={handleShapeChange}
+                    selectedSize={productConfig.size}
+                    onSizeChange={handleSizeChange}
+                />
 
                 {/* Order Form Modal */}
                 <OrderFormModal
