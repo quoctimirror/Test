@@ -51,8 +51,10 @@
     /* Flexbox layout theo chiều dọc */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    /* Phân bố đều các phần tử */
+    justify-content: space-evenly;
+    /* Giãn đều các phần tử với khoảng cách bằng nhau */
+    gap: 8vh;
+    /* Không dùng gap để space-evenly tự động tính */
 
     /* KHÔNG SCROLL - Tất cả phải fit vào viewport */
     overflow: hidden;
@@ -217,6 +219,8 @@
 /* 3️⃣ ADDITIONAL INFO */
 .pv2-mobile-additional-info {
     margin: 0;
+    margin-top: 3.33vh;
+    /* 24/720 for mobile */
     padding: 0;
     flex-shrink: 1;
     /* Cho phép co lại */
@@ -259,6 +263,7 @@
     color: #FFFFFF !important;
     text-align: center;
     align-self: stretch;
+    margin-bottom: 3.33vh; /* 24/720 for mobile */
 }
 
 /* 5️⃣ + 6️⃣ BUTTONS CONTAINER - Chứa cả Action Buttons và Order Button */
@@ -458,6 +463,11 @@
 
 /* ===== LARGE MOBILE WIDTH (≥ 576px) ===== */
 @media (min-width: 576px) {
+    .pv2-mobile-additional-info {
+        margin-top: 3.33vh;
+        /* 24/720 for large mobile */
+    }
+
     .pv2-mobile-modal-wishlist-btn {
         width: 44px;
     }
