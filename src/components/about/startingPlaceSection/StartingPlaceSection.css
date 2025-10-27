@@ -118,12 +118,17 @@
 
 .starting-header .bodytext-3--no-margin {
   text-transform: uppercase;
-  color: rgba(121, 121, 121, 1);
+  color: rgba(224, 224, 224, 1);
+}
+
+.starting-header .bodytext-4--no-margin {
+  text-transform: uppercase;
+  color: rgba(224, 224, 224, 1);
 }
 
 /* Main Title */
 .starting-title {
-  margin-bottom: 60px;
+  margin-bottom: 24px;
   transform: translateY(30%);
   opacity: 0;
   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
@@ -176,10 +181,6 @@
     margin-bottom: 40px;
   }
 
-  .starting-title {
-    margin-bottom: 60px;
-  }
-
   .starting-description {
     margin-bottom: 40px;
   }
@@ -192,10 +193,6 @@
 
   .starting-header {
     margin-bottom: 30px;
-  }
-
-  .starting-title {
-    margin-bottom: 40px;
   }
 
   .starting-description {

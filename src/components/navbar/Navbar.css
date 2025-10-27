@@ -27,7 +27,7 @@
   z-index: 200;
   pointer-events: none;
   overflow: hidden;
-  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.05), 0 0 20px rgba(0, 0, 0, 0.05);
   transition: all 0.35s ease-out;
 }
 
@@ -41,8 +41,8 @@
   position: absolute;
   z-index: 0;
   inset: 0;
-  backdrop-filter: blur(0.5px);
-  -webkit-backdrop-filter: blur(0.5px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   filter: url(#navbar-glass-distortion);
   overflow: hidden;
 }
@@ -215,8 +215,8 @@
   position: fixed;
   top: 20px;
   right: calc(
-    2.5% + 221px + 1.875%
-  ); /* 2.5% (immersive margin) + 221px (button width) + 1.875% (gap) */
+    2.5% + 242px + 48px
+  ); /* 2.5% (immersive margin) + 242px (button width) + 48px (gap) */
   z-index: 201;
   mix-blend-mode: difference;
   pointer-events: none;
@@ -386,8 +386,8 @@
   cursor: pointer;
   transition: all 0.5s ease;
   text-transform: capitalize;
-  width: 221px;
-  height: 57px;
+  width: 242px;
+  height: 55px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -404,8 +404,8 @@
   position: fixed;
   top: 20px;
   right: 2.5%;
-  width: 221px;
-  height: 57px;
+  width: 242px;
+  height: 55px;
   z-index: 203; /* Cao nhất để ở trên cùng */
   mix-blend-mode: difference;
   pointer-events: none;
@@ -463,8 +463,8 @@
   position: fixed;
   top: 20px;
   right: 2.5%;
-  width: 221px;
-  height: 57px;
+  width: 242px;
+  height: 55px;
   z-index: 202; /* Cao hơn button nhưng thấp hơn text */
   mix-blend-mode: difference;
   pointer-events: none;
@@ -661,23 +661,29 @@
 /* Media Queries for Responsive Design */
 
 /* Responsive Glass Background */
+@media screen and (max-width: 1023px) {
+  .navbar-glass-background {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .navbar-glass-background {
-    height: 85px;
+    display: none;
   }
 
   .navbar-glass-background.expanded {
-    height: 100vh;
+    display: none;
   }
 }
 
 @media screen and (max-width: 425px) {
   .navbar-glass-background {
-    height: 75px;
+    display: none;
   }
 
   .navbar-glass-background.expanded {
-    height: 100vh;
+    display: none;
   }
 }
 
@@ -741,9 +747,9 @@
 @media screen and (max-width: 1023px) {
   /* Adjust immersive button position */
   .immersive-fixed-container {
-    top: 18px;
+    /* top: 18px; */
     right: 19px;
-    height: 45px;
+    height: 49px;
   }
 
   .immersive-text-container,
@@ -1178,14 +1184,14 @@
   }
 
   .immersive-button {
-    width: 210px;
-    height: 43px;
+    width: 216px;
+    height: 49px;
   }
 
   .immersive-text-container,
   .immersive-border-container {
-    width: 210px;
-    height: 42px;
+    width: 216px;
+    height: 49px;
   }
 
   /* Hide account button on tablet */

@@ -56,7 +56,12 @@
 
 .mirror-network-header .bodytext-3--no-margin {
   text-transform: uppercase;
-  color: #797979;
+  color: rgba(121, 121, 121, 1);
+}
+
+.mirror-network-header .bodytext-4--no-margin {
+  text-transform: uppercase;
+  color: rgba(121, 121, 121, 1);
 }
 
 /* Main Title */
@@ -70,7 +75,7 @@
 
 .mirror-network-title .heading-1--no-margin {
   color: #000;
-  max-width: 550px;
+  max-width: 600px;
   margin: auto;
 }
 

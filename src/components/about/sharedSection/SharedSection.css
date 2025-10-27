@@ -69,7 +69,12 @@
 
 .shared-header .bodytext-3--no-margin {
   text-transform: uppercase;
-  color: #fff;
+  color: rgba(224, 224, 224, 1);
+}
+
+.shared-header .bodytext-4--no-margin {
+  text-transform: uppercase;
+  color: rgba(224, 224, 224, 1);
 }
 
 /* Main Title */

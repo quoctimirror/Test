@@ -14,7 +14,7 @@ const StartingPlaceSection = () => {
   const headerText = "WHERE IT ALL BEGAN";
   const titleText = "FROM RARITY TO RESONANCE";
   const descText =
-    "In a world where diamond mines scar the earth, Mirror offers a different reflection - one where rare science becomes soul, and beauty carries meaning. Our Love-Grown Diamonds™ are created through cutting-edge science — a process that honors both planet and person. Each gem is shaped not by rarity, but by responsibility, intention, and the desire to connect.";
+    "In a world where diamond mines scar the earth, Mirror offers a different reflection - one where rare science becomes soul, and beauty carries meaning. Our Love-Grown Diamonds™ are created through cutting-edge science - a process that honors both planet and person. Each gem is shaped not by rarity, but by responsibility, intention, and the desire to connect.";
 
   useEffect(() => {
     let ticking = false;
@@ -42,7 +42,12 @@ const StartingPlaceSection = () => {
 
       // Debug
       if (progress > 0 && progress < 0.2) {
-        console.log('Progress:', progress.toFixed(3), 'Content opacity:', contentFadeProgress.toFixed(3));
+        console.log(
+          "Progress:",
+          progress.toFixed(3),
+          "Content opacity:",
+          contentFadeProgress.toFixed(3)
+        );
       }
 
       if (contentRef.current) {
@@ -165,7 +170,7 @@ const StartingPlaceSection = () => {
         <div className="starting-content" ref={contentRef}>
           {/* Header */}
           <div className="starting-header" ref={headerRef}>
-            <span className="bodytext-3--no-margin">{headerText}</span>
+            <span className="bodytext-4--no-margin">{headerText}</span>
           </div>
 
           {/* Main Title */}

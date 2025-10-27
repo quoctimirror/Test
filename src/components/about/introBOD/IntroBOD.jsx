@@ -11,7 +11,8 @@ const IntroBOD = () => {
 
   const headerText = "WHO WE ARE";
   const titleText = "THE MINDS BEHIND MIRROR";
-  const descText = "Mirror is led by a collective of visionaries - blending innovation, design, and purpose. From strategy to storytelling, we shape a brand that's equal parts emotional and engineered.";
+  const descText =
+    "Mirror is led by a collective of visionaries - blending innovation, design, and purpose. From strategy to storytelling, we shape a brand that's equal parts emotional and engineered.";
 
   useEffect(() => {
     let ticking = false;
@@ -45,22 +46,26 @@ const IntroBOD = () => {
       if (contentRef.current) {
         const viewportHeight = window.innerHeight;
         const initialTranslateY = viewportHeight * 0.5;
-        const currentTranslateY = initialTranslateY - moveProgress * initialTranslateY;
+        const currentTranslateY =
+          initialTranslateY - moveProgress * initialTranslateY;
         contentRef.current.style.transform = `translate3d(0, ${currentTranslateY}px, 0)`;
         contentRef.current.style.opacity = moveProgress;
       }
 
       // Phase 2 (20-35%): Header fade in + move up
       if (headerRef.current) {
-        let headerY = 30, headerOpacity = 0;
+        let headerY = 30,
+          headerOpacity = 0;
         if (progress < 0.2) {
-          headerY = 30; headerOpacity = 0;
+          headerY = 30;
+          headerOpacity = 0;
         } else if (progress <= 0.35) {
           const fadeProgress = (progress - 0.2) / 0.15;
           headerY = (1 - fadeProgress) * 30;
           headerOpacity = fadeProgress;
         } else {
-          headerY = 0; headerOpacity = 1;
+          headerY = 0;
+          headerOpacity = 1;
         }
         headerRef.current.style.transform = `translate3d(0, ${headerY}%, 0)`;
         headerRef.current.style.opacity = headerOpacity;
@@ -68,15 +73,18 @@ const IntroBOD = () => {
 
       // Phase 3 (35-50%): Title fade in + move up
       if (titleRef.current) {
-        let titleY = 30, titleOpacity = 0;
+        let titleY = 30,
+          titleOpacity = 0;
         if (progress < 0.35) {
-          titleY = 30; titleOpacity = 0;
+          titleY = 30;
+          titleOpacity = 0;
         } else if (progress <= 0.5) {
           const fadeProgress = (progress - 0.35) / 0.15;
           titleY = (1 - fadeProgress) * 30;
           titleOpacity = fadeProgress;
         } else {
-          titleY = 0; titleOpacity = 1;
+          titleY = 0;
+          titleOpacity = 1;
         }
         titleRef.current.style.transform = `translate3d(0, ${titleY}%, 0)`;
         titleRef.current.style.opacity = titleOpacity;
@@ -84,15 +92,18 @@ const IntroBOD = () => {
 
       // Phase 4 (50-65%): Description fade in + move up
       if (descRef.current) {
-        let descY = 30, descOpacity = 0;
+        let descY = 30,
+          descOpacity = 0;
         if (progress < 0.5) {
-          descY = 30; descOpacity = 0;
+          descY = 30;
+          descOpacity = 0;
         } else if (progress <= 0.65) {
           const fadeProgress = (progress - 0.5) / 0.15;
           descY = (1 - fadeProgress) * 30;
           descOpacity = fadeProgress;
         } else {
-          descY = 0; descOpacity = 1;
+          descY = 0;
+          descOpacity = 1;
         }
         descRef.current.style.transform = `translate3d(0, ${descY}%, 0)`;
         descRef.current.style.opacity = descOpacity;
@@ -120,7 +131,7 @@ const IntroBOD = () => {
         <div className="intro-content" ref={contentRef}>
           {/* Header */}
           <div className="intro-header" ref={headerRef}>
-            <span className="bodytext-3--no-margin">{headerText}</span>
+            <span className="bodytext-4--no-margin">{headerText}</span>
           </div>
 
           {/* Main Title */}

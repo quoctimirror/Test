@@ -78,53 +78,37 @@
 
 /* Khung chứa văn bản */
 .text-pane {
-  width: 50%;
+  width: 62.5%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5rem;
-  background-color: rgba(246, 246, 246, 1); /* Màu nền hơi khác để tạo chiều sâu */
+  background-color: rgba(
+    246,
+    246,
+    246,
+    1
+  ); /* Màu nền hơi khác để tạo chiều sâu */
 }
 
 .text-content {
-  max-width: 400px;
+  max-width: 62.5%;
   text-align: left;
 }
 
-.text-content h4 {
-  font-family: "BT Beau Sans", sans-serif;
-  font-weight: 500;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 110%;
-  letter-spacing: 0%;
+.text-content .bodytext-4--no-margin {
+  color: rgba(121, 121, 121, 1);
   text-align: center;
-  margin: 0 0 12px 0;
-  color: #797979;
+  margin-bottom: 12px;
 }
 
-.text-content h1 {
-  font-family: "Saol Display", serif;
-  font-weight: 300;
-  font-style: normal;
-  font-size: 64px;
-  line-height: 90%;
-  letter-spacing: -3%;
+.text-content .heading-1--no-margin {
   text-align: center;
-  margin: 0 0 24px 0;
-  color: #000000;
+  margin-bottom: 24px;
 }
 
-.text-content p {
-  font-family: "BT Beau Sans", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 120%;
-  letter-spacing: 0%;
+.text-content .bodytext-3--no-margin {
   text-align: center;
-  color: #797979;
-  margin: 0;
+  color: rgba(121, 121, 121, 1);
 }
 
 /* Responsive Design */
@@ -137,45 +121,5 @@
   .text-pane {
     width: 100%;
     height: 50%;
-  }
-
-  .text-pane {
-    padding: 2rem;
-  }
-
-  .text-content h4 {
-    font-size: 14px;
-    margin: 0 0 8px 0;
-  }
-
-  .text-content h1 {
-    font-size: 48px;
-    margin: 0 0 16px 0;
-  }
-
-  .text-content p {
-    font-size: 14px;
-    margin: 0;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .text-pane {
-    padding: 1.5rem;
-  }
-
-  .text-content h4 {
-    font-size: 13px;
-    margin: 0 0 6px 0;
-  }
-
-  .text-content h1 {
-    font-size: 36px;
-    margin: 0 0 12px 0;
-  }
-
-  .text-content p {
-    font-size: 13px;
-    margin: 0;
   }
 }

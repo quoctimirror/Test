@@ -59,7 +59,12 @@
 
 .mirrorverse-header .bodytext-3--no-margin {
   text-transform: uppercase;
-  color: #797979;
+  color: rgba(224, 224, 224, 1);
+}
+
+.mirrorverse-header .bodytext-4--no-margin {
+  text-transform: uppercase;
+  color: rgba(224, 224, 224, 1);
 }
 
 /* Main Title */

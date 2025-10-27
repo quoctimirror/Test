@@ -26,8 +26,6 @@
 
 .section4-collection-grid-container {
   /* 2.5% margin on each side = 48px at 1920px width */
-  margin-left: 2.5%;
-  margin-right: 2.5%;
   /* Gap between items - default for desktop */
   --gap: 12px;
 }

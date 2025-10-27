@@ -158,18 +158,14 @@ const ParallaxScrolling = () => {
           </div>
           <div className="text-pane">
             <div className="text-content">
-              <h4>THE FIRST COLLECTION</h4>
-              <h1>LUMINA RING</h1>
-              <p>
-                The LUMINA Band features five perfectly
-                <br />
-                calibrated future diamonds round brilliant
-                <br /> diamonds, each 0.5ct, symbolizing five <br />
-                transformative chapters of your journey. Set in
-                <br /> a hard-prong aerial band, this ring captures
-                <br />
-                light from every angle — soft, luminous, and
-                <br /> unmistakably personal.
+              <div className="bodytext-4--no-margin">THE FIRST COLLECTION</div>
+              <h1 className="heading-1--no-margin">LUMINA RING</h1>
+              <p className="bodytext-3--no-margin">
+                The LUMINA Band features five perfectly calibrated future
+                diamonds round brilliant diamonds, each 0.5ct, symbolizing five
+                transformative chapters of your journey. Set in a shared-prong
+                aerial band, this ring captures light from every angle — soft,
+                luminous, and unmistakably personal.
               </p>
             </div>
           </div>

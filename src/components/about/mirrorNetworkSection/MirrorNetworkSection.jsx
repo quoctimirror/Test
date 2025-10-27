@@ -12,7 +12,7 @@ const MirrorNetworkSection = () => {
   const headerText = "THE MIRROR NETWORK";
   const titleText = "A LIVING SYSTEM OF MODERN LUXURY";
   const descriptionText =
-    "Mirror is not a place — it's a presence.\nOur Mirror Network connects every part of the journey: from customers and collaborators, to physical PODs and digital tools. Every touchpoint becomes a portal — amplifying presence, creativity, and connection.\n\nWe collaborate with artists, hotels, creators, and technologists to make luxury fluid — flowing through Sense, Time, Space, and Presence.";
+    "Mirror is not a place - it's a presence.\nOur Mirror Network connects every part of the journey: from customers and collaborators, to physical PODs and digital tools. Every touchpoint becomes a portal - amplifying presence, creativity, and connection.\n\nWe collaborate with artists, hotels, creators, and technologists to make luxury fluid - flowing through Sense, Time, Space, and Presence.";
 
   useEffect(() => {
     let ticking = false;
@@ -47,7 +47,8 @@ const MirrorNetworkSection = () => {
       if (contentRef.current) {
         const viewportHeight = window.innerHeight;
         const initialTranslateY = viewportHeight * 0.5;
-        const currentTranslateY = initialTranslateY - moveProgress * initialTranslateY;
+        const currentTranslateY =
+          initialTranslateY - moveProgress * initialTranslateY;
         contentRef.current.style.transform = `translate3d(0, ${currentTranslateY}px, 0)`;
         contentRef.current.style.opacity = moveProgress;
       }
@@ -137,7 +138,7 @@ const MirrorNetworkSection = () => {
         <div className="mirror-network-content" ref={contentRef}>
           {/* Header */}
           <div className="mirror-network-header" ref={headerRef}>
-            <p className="bodytext-3--no-margin">{headerText}</p>
+            <p className="bodytext-4--no-margin">{headerText}</p>
           </div>
 
           {/* Main Title */}

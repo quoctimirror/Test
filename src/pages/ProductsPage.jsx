@@ -18,9 +18,7 @@ const ProductsPage = () => {
   return (
     <div className="products-page">
       {/* Section 1: View360 Component */}
-      <section className="products-section-1">
-        <View360 />
-      </section>
+      {/* <section className="products-section-1"><View360 /></section> */}
 
       {/* Section 2: SelectOptionSection */}
       <section className="products-section-2">

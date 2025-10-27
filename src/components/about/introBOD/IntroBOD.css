@@ -1,7 +1,7 @@
 /* IntroBOD Component Styles */
 .intro-bod-section {
   width: 100%;
-  height: 300vh; /* Scroll height for animation */
+  height: 250vh; /* Scroll height for animation */
   background: #f6f6f6;
   position: relative;
   isolation: isolate;
@@ -60,9 +60,14 @@
   color: rgba(121, 121, 121, 1);
 }
 
+.intro-header .bodytext-4--no-margin {
+  text-transform: uppercase;
+  color: rgba(121, 121, 121, 1);
+}
+
 /* Main Title */
 .intro-title {
-  margin-bottom: 60px;
+  margin-bottom: 24px;
   transform: translateY(30%) translateZ(0);
   opacity: 0;
   will-change: transform, opacity;
@@ -105,10 +110,6 @@
   .intro-header {
     margin-bottom: 40px;
   }
-
-  .intro-title {
-    margin-bottom: 60px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -118,9 +119,5 @@
 
   .intro-header {
     margin-bottom: 30px;
-  }
-
-  .intro-title {
-    margin-bottom: 40px;
   }
 }

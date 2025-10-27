@@ -30,12 +30,10 @@ export default function Navbar() {
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
   // Check if current page is Milan submission page or Submit Success page
-  const isMilanPage =
-    location.pathname.startsWith(ROUTES.MILAN_SUBMIT);
+  const isMilanPage = location.pathname.startsWith(ROUTES.MILAN_SUBMIT);
 
   // Check if current page is submit page (not success page)
-  const isSubmitPage =
-    location.pathname === ROUTES.MILAN_SUBMIT;
+  const isSubmitPage = location.pathname === ROUTES.MILAN_SUBMIT;
 
   // Check if should hide menu, account, and immersive button (Milan and Immersive Showroom)
   const shouldHideButtons =
@@ -138,7 +136,9 @@ export default function Navbar() {
     }
 
     const handleScroll = () => {
-      const introSubmitSection = document.querySelector(".intro-submit-section");
+      const introSubmitSection = document.querySelector(
+        ".intro-submit-section"
+      );
       if (!introSubmitSection) return;
 
       const rect = introSubmitSection.getBoundingClientRect();
@@ -319,14 +319,18 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar Liquid Glass Background */}
-      <div className={`navbar-glass-background ${isMenuOpen || isMenuHovered || isAccountMenuOpen ? "expanded" : ""}`}>
+      <div
+        className={`navbar-glass-background ${
+          isMenuOpen || isMenuHovered || isAccountMenuOpen ? "expanded" : ""
+        }`}
+      >
         <div className="liquidGlass-effect"></div>
         <div className="liquidGlass-tint"></div>
         <div className="liquidGlass-shine"></div>
       </div>
 
       {/* SVG Filter for Liquid Glass Distortion */}
-      <svg style={{ display: 'none' }}>
+      <svg style={{ display: "none" }}>
         <filter
           id="navbar-glass-distortion"
           x="0%"
@@ -337,9 +341,9 @@ export default function Navbar() {
         >
           <feTurbulence
             type="fractalNoise"
-            baseFrequency="0.007 0.007"
+            baseFrequency="0.000 0.000"
             numOctaves="1"
-            seed="5"
+            seed="1"
             result="turbulence"
           />
 
@@ -602,7 +606,9 @@ export default function Navbar() {
 
                       {isUserDesigner() && (
                         <li>
-                          <UnderlineButton onClick={handleDesignerDashboardClick}>
+                          <UnderlineButton
+                            onClick={handleDesignerDashboardClick}
+                          >
                             Designer Dashboard
                           </UnderlineButton>
                         </li>

@@ -14,7 +14,7 @@ const SharedSection = () => {
   const headerText = "THE FUTURE IS SHARED";
   const titleText = "YOU DON'T JUST WEAR MIRROR.\nYOU BECOME PART OF IT.";
   const descriptionText =
-    "We invite you not just to own - but to belong. To co-create, to grow, to reflect. Every interaction with Mirror - a try-on, a purchase, a story — becomes a part of the Mirrorverse. Because luxury doesn’t begin in the box. It begins with you.";
+    "We invite you not just to own - but to belong. To co-create, to grow, to reflect. Every interaction with Mirror - a try-on, a purchase, a story - becomes a part of the Mirrorverse. Because luxury doesn’t begin in the box. It begins with you.";
 
   useEffect(() => {
     let ticking = false;
@@ -153,7 +153,7 @@ const SharedSection = () => {
         <div className="shared-content" ref={contentRef}>
           {/* Header */}
           <div className="shared-header" ref={headerRef}>
-            <p className="bodytext-3--no-margin">{headerText}</p>
+            <p className="bodytext-4--no-margin">{headerText}</p>
           </div>
 
           {/* Main Title */}

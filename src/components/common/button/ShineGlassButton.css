@@ -136,7 +136,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
-  padding: 20px 36px; /* Fixed padding like in the image */
+  padding: 18px 36px; /* Fixed padding like in the image */
   pointer-events: none;
   z-index: 2;
   text-align: center;
@@ -289,7 +289,7 @@
 
 /* ========== RESPONSIVE BEHAVIOR ========== */
 
-@media screen and (max-width: 1279px) {
+@media screen and (max-width: 1300px) {
   .shine-glass-button .button-text {
     padding: 16px 24px; /* Smaller padding for mobile as shown in image */
   }

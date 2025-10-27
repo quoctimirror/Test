@@ -26,8 +26,6 @@
 
 .gems-grid-container {
   /* 2.5% margin on each side = 48px at 1920px width */
-  margin-left: 2.5%;
-  margin-right: 2.5%;
   /* Gap between items - default for desktop */
   --gap: 12px;
 }
@@ -161,8 +159,6 @@
   }
   .gems-grid-container {
     --gap: 8px;
-    margin-left: 24px;
-    margin-right: 24px;
   }
 
   /* Convert to 2 columns on tablet */

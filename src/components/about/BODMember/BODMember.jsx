@@ -271,10 +271,10 @@ const BODMember = () => {
           <div className="leader-quote-fixed col-start-9 col-sm-start-6 col-xs-start-1">
             <p className="bodytext-3--no-margin">
               "As intelligence becomes abundant through technology, what remains
-              rare is genuine emotion. Mirror exists to preserve that emotion —
+              rare is genuine emotion. Mirror exists to preserve that emotion -
               to cherish every loving moment and transform each gift you give
               into an extension of your heart. Because we believe the most
-              precious gift isn't its value — it's the feeling of being truly
+              precious gift isn't its value - it's the feeling of being truly
               understood. In a world chasing perfection, we choose what's real."
             </p>
           </div>

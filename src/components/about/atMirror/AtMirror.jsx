@@ -8,7 +8,7 @@ const AtMirror = () => {
   const textRef = useRef(null);
 
   const fullText =
-    "At Mirror, our team is a constellation of creators, engineers, and storytellers. Together, we weave emotion and precision into every detail — shaping experiences that reflect not just who we are, but the future we believe in.";
+    "At Mirror, our team is a constellation of creators, engineers, and storytellers. Together, we weave emotion and precision into every detail - shaping experiences that reflect not just who we are, but the future we believe in.";
 
   useEffect(() => {
     let ticking = false;
@@ -43,7 +43,8 @@ const AtMirror = () => {
       if (contentRef.current) {
         const viewportHeight = window.innerHeight;
         const initialTranslateY = viewportHeight * 0.5;
-        const currentTranslateY = initialTranslateY - moveProgress * initialTranslateY;
+        const currentTranslateY =
+          initialTranslateY - moveProgress * initialTranslateY;
         contentRef.current.style.transform = `translate3d(0, ${currentTranslateY}px, 0)`;
         contentRef.current.style.opacity = moveProgress;
       }
