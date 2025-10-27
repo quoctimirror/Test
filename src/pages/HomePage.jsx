@@ -8,6 +8,7 @@ import UniverseSection from "@components/home-page/universeSection/MirrorExp";
 import FutureDiamond from "@components/home-page/futureDiamond/FutureDiamond";
 import HoverExpandSection from "@components/home-page/hoverExpandSection/HoverExpandSection";
 import ContactUs from "@components/contactUs/ContactUs";
+import MirrorQuote from "@components/home-page/mirrorQuote/MirrorQuote";
 
 export default function HomePage() {
   return (
@@ -19,6 +20,8 @@ export default function HomePage() {
       <FutureDiamond />
 
       <Lumex91 />
+
+      <MirrorQuote />
 
       <BrandPillars />
 

@@ -219,6 +219,9 @@
 .milan-carousel-wrapper {
   overflow: hidden;
   position: relative;
+  margin-left: calc(-1 * var(--grid-gutter, 2.5%));
+  margin-right: calc(-1 * var(--grid-gutter, 2.5%));
+  width: calc(100% + 2 * var(--grid-gutter, 2.5%));
 }
 
 /* Slider Arrows - Overlay trên carousel với ShineGlassButton */
@@ -289,6 +292,9 @@
 .milan-large-carousel-wrapper {
   overflow: hidden;
   position: relative;
+  margin-left: calc(-1 * var(--grid-gutter, 2.5%));
+  margin-right: calc(-1 * var(--grid-gutter, 2.5%));
+  width: calc(100% + 2 * var(--grid-gutter, 2.5%));
 }
 
 .milan-large-carousel-container {
@@ -468,7 +474,7 @@
 /* Responsive Design */
 @media screen and (max-width: 1024px) {
   .milan-hero {
-    height: 150vh;
+    height: 100vh;
     position: relative;
   }
 
@@ -485,9 +491,11 @@
   .milan-hero-text {
     padding-right: 0;
     order: 2;
-    height: 50vh;
+    height: 33.333vh;
     justify-content: center;
     gap: 30px;
+    margin-top: -1px;
+    width: 100%;
   }
 
   .milan-page .milan-hero-content .milan-hero-text-main,
@@ -512,8 +520,8 @@
   .milan-page .milan-hero-content .milan-hero-image,
   .milan-hero-image {
     order: 1;
-    height: 100vh;
-    min-height: 100vh;
+    height: 66.666vh;
+    min-height: 66.666vh;
     position: relative;
   }
 
@@ -547,12 +555,34 @@
     grid-column: 3 / span 8;
   }
 
+  .milan-carousel-wrapper {
+    margin-left: -24px;
+    margin-right: -24px;
+    width: calc(100% + 48px);
+  }
+
+  .milan-large-carousel-wrapper {
+    margin-left: -24px;
+    margin-right: -24px;
+    width: calc(100% + 48px);
+  }
+
   .milan-slider-arrow-left {
     left: 12px;
   }
 
   .milan-slider-arrow-right {
     right: 12px;
+  }
+
+  .milan-slider-arrow button {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .milan-slider-arrow svg {
+    width: 18px !important;
+    height: 18px !important;
   }
 
   .milan-carousel-item {
@@ -595,7 +625,7 @@
 
 @media screen and (max-width: 480px) {
   .milan-hero {
-    height: 150vh;
+    height: 100vh;
     position: relative;
   }
 
@@ -607,7 +637,7 @@
   .milan-page .milan-hero-content .milan-hero-text,
   .milan-hero-text {
     gap: 20px;
-    height: 50vh;
+    height: 33.333vh;
   }
 
   .milan-page .milan-hero-content .milan-hero-description,
@@ -620,8 +650,8 @@
 
   .milan-page .milan-hero-content .milan-hero-image,
   .milan-hero-image {
-    height: 100vh;
-    min-height: 100vh;
+    height: 66.666vh;
+    min-height: 66.666vh;
   }
 
   .milan-hero-title {
@@ -659,6 +689,16 @@
 
   .milan-slider-arrow-right {
     right: 8px;
+  }
+
+  .milan-slider-arrow button {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .milan-slider-arrow svg {
+    width: 16px !important;
+    height: 16px !important;
   }
 
   .milan-carousel-item {

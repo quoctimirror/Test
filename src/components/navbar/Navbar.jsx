@@ -188,10 +188,7 @@ export default function Navbar() {
     }
 
     sessionStorage.setItem("scrollToTop", "true");
-    await performTransition(ROUTES.COLLECTIONS, {
-      onStart: () => console.log("Starting transition to collections..."),
-      onComplete: () => console.log("Collections page transition completed!"),
-    });
+    await performTransition(ROUTES.COLLECTIONS);
   };
 
   const handleServicesClick = async () => {
@@ -301,7 +298,6 @@ export default function Navbar() {
   const handleLoginClick = async () => {
     setIsAccountMenuOpen(false);
     navigate(ROUTES.AUTH_LOGIN);
-    console.log("Navigating to login");
     if (window.location.pathname === ROUTES.AUTH_LOGIN) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -322,6 +318,70 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Navbar Liquid Glass Background */}
+      <div className={`navbar-glass-background ${isMenuOpen || isMenuHovered || isAccountMenuOpen ? "expanded" : ""}`}>
+        <div className="liquidGlass-effect"></div>
+        <div className="liquidGlass-tint"></div>
+        <div className="liquidGlass-shine"></div>
+      </div>
+
+      {/* SVG Filter for Liquid Glass Distortion */}
+      <svg style={{ display: 'none' }}>
+        <filter
+          id="navbar-glass-distortion"
+          x="0%"
+          y="0%"
+          width="100%"
+          height="100%"
+          filterUnits="objectBoundingBox"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.007 0.007"
+            numOctaves="1"
+            seed="5"
+            result="turbulence"
+          />
+
+          <feComponentTransfer in="turbulence" result="mapped">
+            <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
+            <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
+            <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
+          </feComponentTransfer>
+
+          <feGaussianBlur in="turbulence" stdDeviation="4" result="softMap" />
+
+          <feSpecularLighting
+            in="softMap"
+            surfaceScale="3"
+            specularConstant="0.9"
+            specularExponent="100"
+            lightingColor="white"
+            result="specLight"
+          >
+            <fePointLight x="-200" y="-200" z="300" />
+          </feSpecularLighting>
+
+          <feComposite
+            in="specLight"
+            operator="arithmetic"
+            k1="0"
+            k2="1"
+            k3="1"
+            k4="0"
+            result="litImage"
+          />
+
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="softMap"
+            scale="60"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </svg>
+
       {/* Mobile/Tablet menu overlay */}
       {(isMobile || isTablet) && isMenuOpen && (
         <div

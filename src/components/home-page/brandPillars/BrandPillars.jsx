@@ -62,9 +62,18 @@ const BrandPillars = () => {
               }}
             >
               <div className="brand-sticky-group">
-                <div className="brand-sticky-lines">
-                  <span className="brand-sticky-line">PRECISION</span>
-                  <span className="brand-sticky-line">TECHNOLOGY</span>
+                <div className="brand-sticky-header-group">
+                  <span className="brand-sticky-header bodytext-6--no-margin">
+                    SHAPED BY
+                  </span>
+                  <div className="brand-sticky-lines">
+                    <span className="brand-sticky-line heading-2--no-margin">
+                      Precision
+                    </span>
+                    <span className="brand-sticky-line heading-2--no-margin">
+                      technology
+                    </span>
+                  </div>
                 </div>
                 <div className="starlight-6-oclock-wrapper">
                   <StarlightEffect direction="falling" height={60} />
@@ -72,7 +81,9 @@ const BrandPillars = () => {
                 <div className="brand-sticky-expand">
                   <p className="bodytext-4--no-margin">
                     Where human craft meets cutting-edge technology. We shape
-                    diamonds with the world's most advanced cutting techniques.
+                    diamonds with the world’s most advanced cutting techniques —
+                    each one a fusion of human artistry and scientific
+                    precision.
                   </p>
                 </div>
               </div>
@@ -102,14 +113,22 @@ const BrandPillars = () => {
               }}
             >
               <div className="brand-sticky-group">
-                <span className="brand-sticky-line">SUSTAINABILITY</span>
+                <div className="brand-sticky-header-group">
+                  <span className="brand-sticky-header bodytext-6--no-margin">
+                    POWERED BY
+                  </span>
+                  <span className="brand-sticky-line heading-2--no-margin">
+                    Sustainability
+                  </span>
+                </div>
                 <div className="starlight-6-oclock-wrapper">
                   <StarlightEffect direction="falling" height={60} />
                 </div>
                 <div className="brand-sticky-expand">
                   <p className="bodytext-4--no-margin">
-                    Made for the planet, not taken from it. Lab-grown brilliance
-                    that honors our planet.
+                    Made for the planet, not taken from it. We create with the
+                    future in mind — lab-grown brilliance that honors our
+                    planet, not extracts from it.
                   </p>
                 </div>
               </div>
@@ -127,17 +146,27 @@ const BrandPillars = () => {
               }}
             >
               <div className="brand-sticky-group">
-                <div className="brand-sticky-lines">
-                  <span className="brand-sticky-line">REDEFINING</span>
-                  <span className="brand-sticky-line">LUXURY</span>
+                <div className="brand-sticky-header-group">
+                  <span className="brand-sticky-header bodytext-6--no-margin">
+                    DEVOTED TO
+                  </span>
+                  <div className="brand-sticky-lines">
+                    <span className="brand-sticky-line heading-2--no-margin">
+                      Redefining
+                    </span>
+                    <span className="brand-sticky-line heading-2--no-margin">
+                      luxury
+                    </span>
+                  </div>
                 </div>
                 <div className="starlight-6-oclock-wrapper">
                   <StarlightEffect direction="falling" height={60} />
                 </div>
                 <div className="brand-sticky-expand">
                   <p className="bodytext-4--no-margin">
-                    True modern luxury is not in price tags. A space of mindful
-                    beauty, crafted to awaken your senses.
+                    Not defined by excess, but by meaning.You’re not just buying
+                    a product — you’re entering a space of mindful beauty,
+                    crafted to awaken your senses and reflect your story.
                   </p>
                 </div>
               </div>

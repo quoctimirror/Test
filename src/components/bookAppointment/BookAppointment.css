@@ -23,6 +23,7 @@
 .book-hero {
   width: 100%;
   min-height: 66vh;
+  margin-bottom: -1px;
   background: linear-gradient(180deg, #7a0525 0%, #bc224c 25%, #f6f6f6 100%),
     linear-gradient(180deg, rgba(246, 246, 246, 0) 50%, #f6f6f6 100%),
     url("/path-to-your-image.jpg") lightgray 50% / cover no-repeat;
@@ -260,10 +261,9 @@ select.book-input option {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 12px 0px;
+  padding: 12px 0px 0;
   background: rgba(246, 246, 246, 1);
   border: none;
-  border-bottom: 1px solid var(--Gray-2, #e0e0e0);
   cursor: pointer;
   transition: border-color 0.3s ease;
 }
@@ -491,11 +491,38 @@ select.book-input option {
   font-weight: 500 !important;
 }
 
+/* Edit Icon */
+.book-edit-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+}
+
+.book-edit-icon:hover {
+  opacity: 0.7;
+}
+
+/* Edit Icon Responsive */
+@media screen and (max-width: 1024px) {
+  .book-edit-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .book-edit-icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+
 /* Confirmation */
 .book-confirmation {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  /* gap: 18px; */
   margin-top: 60px;
   text-align: left;
 }
@@ -503,7 +530,8 @@ select.book-input option {
 .book-confirmation-row {
   display: flex;
   justify-content: space-between;
-  gap: 18px;
+  align-items: center;
+  /* gap: 18px; */
   padding: 18px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -512,6 +540,7 @@ select.book-input option {
   color: rgba(121, 121, 121, 1);
   flex-shrink: 0;
   min-width: 150px;
+  align-self: center;
 }
 
 .book-confirmation-value-wrapper {
@@ -520,17 +549,26 @@ select.book-input option {
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
+  min-width: 0;
 }
 
 .book-confirmation-value {
   color: #000000;
   text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 .book-confirmation-address {
   color: rgba(121, 121, 121, 1);
   margin-top: 4px;
   font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Submit Button */
@@ -541,7 +579,7 @@ select.book-input option {
 .book-confirmation-note {
   text-align: center;
   color: rgba(121, 121, 121, 1);
-  margin-top: 6px;
+  margin-top: 24px;
 }
 
 /* Responsive */
@@ -609,7 +647,17 @@ select.book-input option {
 
   .book-confirmation-row {
     flex-direction: column;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .book-confirmation-label {
+    width: 100%;
+  }
+
+  .book-confirmation-value-wrapper {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .book-confirmation-value {

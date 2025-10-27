@@ -119,6 +119,9 @@ export const optimizedTransitionUtils = {
     optimizedTransitionUtils.state.isTransitioning = true;
 
     try {
+      // Notify components that transition is starting (pause animations)
+      window.dispatchEvent(new CustomEvent("pageTransitionStart"));
+
       if (onStart) onStart();
 
       const root = document.getElementById("root");

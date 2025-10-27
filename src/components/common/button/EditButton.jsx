@@ -1,28 +1,23 @@
 import React from "react";
 import "./EditButton.css";
 
-const EditButton = ({ onClick, className = "", size = 30 }) => {
+const EditButton = ({ onClick, className = "", size = 20 }) => {
   return (
     <button className={`edit-button ${className}`} onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width={size}
         height={size}
-        viewBox="0 0 30 30"
+        viewBox="0 0 18 18"
         fill="none"
       >
         <path
-          d="M22.2148 11.58L10.7947 23H7V19.2053L18.42 7.78523C18.9235 7.28242 19.6059 7 20.3174 7C21.0289 7 21.7113 7.28242 22.2148 7.78523C22.7176 8.28866 23 8.97108 23 9.6826C23 10.3941 22.7176 11.0765 22.2148 11.58Z"
+          d="M15.9648 5.32997L4.54474 16.75H0.75V12.9553L12.17 1.53523C12.6735 1.03242 13.3559 0.75 14.0674 0.75C14.7789 0.75 15.4613 1.03242 15.9648 1.53523C16.4676 2.03866 16.75 2.72108 16.75 3.4326C16.75 4.14411 16.4676 4.82654 15.9648 5.32997Z"
           stroke="#797979"
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
           className="edit-button-stroke"
-        />
-        <path
-          d="M11.5 23L7 18.5V23H11.5Z"
-          fill="#797979"
-          className="edit-button-fill"
         />
       </svg>
     </button>

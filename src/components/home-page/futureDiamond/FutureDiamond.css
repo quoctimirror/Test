@@ -113,11 +113,13 @@
 }
 
 .future-diamond-description .char.reveal {
-  animation: charReveal 0.4s ease forwards;
+  animation: charReveal var(--animation-duration) ease forwards;
+  will-change: color;
 }
 
-.future-diamond-description .char.reveal.fast {
-  animation: charReveal 0.15s ease forwards;
+/* Remove will-change after animation completes */
+.future-diamond-description .char:not(.reveal) {
+  will-change: auto;
 }
 
 @keyframes charReveal {

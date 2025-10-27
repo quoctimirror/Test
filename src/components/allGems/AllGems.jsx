@@ -3,14 +3,14 @@ import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import "./AllGems.css";
 
 const AllGems = () => {
-  const productCards = Array(24).fill("/products/allGems/product_card_1.svg");
+  const productCards = Array(24).fill("/products/allGems/product_card_1.png");
   const modelImage = "/products/allGems/model_1.svg";
 
   return (
     <div className="all-gems-page">
       <div className="gems-header">
         <h1 className="gems-title heading-1--no-margin">OUR GEMS</h1>
-        <p className="gems-subtitle bodytext-3--no-margin">
+        <p className="gems-subtitle bodytext-4--no-margin">
           Mirror invites you to step into the era of personalized luxury. Each
           piece is a reflection of your unique style and a signpost to endless
           possibilities. Every gem has a story, and that story awaits your
@@ -88,12 +88,6 @@ const AllGems = () => {
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="gems-footer">
-        <ShineGlassButton theme="light">
-          View more
-        </ShineGlassButton>
       </div>
     </div>
   );

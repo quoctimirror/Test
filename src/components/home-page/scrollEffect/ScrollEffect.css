@@ -381,86 +381,38 @@ html {
   }
 }
 
-/* Vetor Button */
+/* Vetor Button (Sound Button) */
 .vetor-button {
   position: absolute;
   bottom: 48px;
   right: 50px;
   z-index: 10;
-  width: 58px;
-  height: 58px;
 }
 
 .vetor-button button {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 0.5px solid rgba(255, 255, 255, 0.3);
-  border-radius: 100%;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 0 12px 6px rgba(255, 255, 255, 0.05);
-  width: 57px;
-  height: 57px;
-  color: rgba(255, 255, 255, 0.75);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+  display: inline-flex;
+  width: 50px;
+  height: 50px;
   padding: 0;
-  position: relative;
-  overflow: hidden;
-  opacity: 0.5;
-}
-
-.vetor-button button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.8),
-    transparent
-  );
-}
-
-.vetor-button button::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.8),
-    transparent,
-    rgba(255, 255, 255, 0.3)
-  );
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .vetor-button button:hover {
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 0 16px 8px rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 1);
-  opacity: 1;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .vetor-button button img {
-  width: 57px;
-  height: 57px;
+  width: 24px;
+  height: 24px;
 }
 
 /* Re-enable mouse events for interactive areas */
@@ -521,8 +473,25 @@ html {
   .scroll-down {
     bottom: 24px;
   }
+
+  .scroll-down-arrow {
+    bottom: 24px;
+    width: 50px;
+    height: 50px;
+  }
+
   .vetor-button {
     bottom: 24px;
+  }
+
+  .vetor-button button {
+    width: 50px;
+    height: 50px;
+  }
+
+  .vetor-button button img {
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -571,21 +540,24 @@ html {
     height: 46px;
   }
 
-  .vetor-button {
-    right: 25px;
+  .scroll-down-arrow {
     width: 48px;
     height: 48px;
   }
 
-  .vetor-button button {
-    width: 46px;
-    height: 46px;
+  .vetor-button {
+    right: 25px;
   }
-  /*
+
+  .vetor-button button {
+    width: 48px;
+    height: 48px;
+  }
+
   .vetor-button button img {
     width: 22px;
     height: 22px;
-  } */
+  }
 
   /* Next section */
   .next-section {
@@ -638,21 +610,24 @@ html {
     height: 40px;
   }
 
-  .vetor-button {
-    right: 20px;
+  .scroll-down-arrow {
     width: 42px;
     height: 42px;
   }
 
-  .vetor-button button {
-    width: 40px;
-    height: 40px;
+  .vetor-button {
+    right: 20px;
   }
 
-  /* .vetor-button button img {
-    width: 18px;
-    height: 18px;
-  } */
+  .vetor-button button {
+    width: 42px;
+    height: 42px;
+  }
+
+  .vetor-button button img {
+    width: 20px;
+    height: 20px;
+  }
 
   /* Next section mobile */
   .next-section {
@@ -689,26 +664,33 @@ html {
   }
 
   /* Even smaller buttons */
-  .scroll-down,
-  .vetor-button {
+  .scroll-down {
     width: 38px;
     height: 38px;
   }
 
-  .scroll-down button,
-  .vetor-button button {
+  .scroll-down button {
     width: 36px;
     height: 36px;
   }
 
-  /* .scroll-down button img,
-  .vetor-button button img {
-    width: 16px;
-    height: 16px;
-  } */
+  .scroll-down-arrow {
+    width: 38px;
+    height: 38px;
+  }
 
   .vetor-button {
     right: 15px;
+  }
+
+  .vetor-button button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .vetor-button button img {
+    width: 18px;
+    height: 18px;
   }
 
   .next-section h1 {

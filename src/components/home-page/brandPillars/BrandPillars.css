@@ -292,15 +292,23 @@
   box-sizing: border-box;
 }
 
-.brand-sticky-line {
-  font-family: "Saol Display", serif;
-  font-size: 64px;
-  font-weight: 300;
-  line-height: 80%;
-  letter-spacing: -0.02em;
+.brand-sticky-header-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.brand-sticky-header {
+  color: rgba(121, 121, 121, 1);
   text-transform: uppercase;
+  margin: 0 0 6px 0 !important;
+  padding: 0 !important;
+}
+
+.brand-sticky-line {
   color: var(--Pink, #bc224c);
-  margin: 0;
+  text-transform: uppercase;
 }
 
 .brand-sticky-expand {
@@ -308,7 +316,7 @@
 }
 
 .brand-sticky-expand .bodytext-4--no-margin {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.5);
   text-align: center;
 }
 
@@ -317,6 +325,22 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
+}
+
+/* Desktop: Keep uppercase */
+@media (min-width: 1024px) {
+  .brand-sticky-line {
+    text-transform: uppercase;
+  }
+}
+
+/* Mobile/Tablet: Display in one line */
+@media (max-width: 1023px) {
+  .brand-sticky-lines {
+    flex-direction: row;
+    gap: 0.3em;
+    flex-wrap: nowrap;
+  }
 }
 
 /* Small Desktop (1024px - 1279px) */
@@ -337,6 +361,30 @@
     overflow: visible !important; /* Allow sticky to work */
     align-items: flex-start; /* Align to top for sticky */
     justify-content: flex-start;
+  }
+
+  /* Change brand line color to white on mobile/tablet */
+  .brand-sticky-line {
+    color: #fff !important;
+    text-transform: none !important;
+  }
+
+  /* Reorder elements: header-group -> expand -> starlight */
+  .brand-sticky-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand-sticky-header-group {
+    order: 1;
+  }
+
+  .brand-sticky-expand {
+    order: 2;
+  }
+
+  .starlight-6-oclock-wrapper {
+    order: 3;
   }
 
   /* Hide metaball and gradients on mobile and tablet */
@@ -398,10 +446,6 @@
 
   .brand-sticky-group {
     width: 77%;
-  }
-
-  .brand-sticky-line {
-    font-size: 40px;
   }
 }
 

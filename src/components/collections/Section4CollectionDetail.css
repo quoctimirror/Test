@@ -1,235 +1,197 @@
-/* Collection Detail Section */
-.collection-detail-section {
-  width: 100%;
+.section4-collection-page {
   min-height: 100vh;
-  padding: 120px 0;
-  background: #f8f9fa;
-  box-sizing: border-box;
-  position: relative;
-}
-
-/* Loading state styles */
-.collection-detail-product-image-loading {
-  width: 100%;
-  height: 100%;
-  background: #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #797979;
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 16px;
-  border-radius: 4px;
-}
-
-/* No products message */
-.collection-detail-no-products-message {
-  width: 100%;
-  padding: 60px 20px;
-  text-align: center;
-  color: #797979;
-  font-family: "BT Beau Sans", sans-serif;
-  font-size: 18px;
-}
-
-.collection-detail-section.is-sticky {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-/* GSAP Horizontal Scroll Layout */
-.collection-detail-section-gsap {
-  width: 100%;
-  min-height: 100vh;
-  padding: 240px 0 0 0 !important;
   background: #f6f6f6;
-  box-sizing: border-box;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 0;
+  padding-top: 240px;
+  padding-bottom: 120px;
 }
 
-.horizontal-scroll-wrapper {
-  width: 100%;
-  overflow: hidden;
-}
-
-.collection-detail-grid-gsap {
-  display: flex;
-  gap: 10px;
-  flex-wrap: nowrap;
-  width: fit-content;
-  /* Add right padding to allow next image to peek */
-  padding-right: 30px;
-}
-
-.collection-detail-container {
-  width: 100%;
-  margin: 0;
-  padding: 0 30px 0 30px;
-  box-sizing: border-box;
-}
-
-.collection-detail-header {
+.section4-collection-header {
   text-align: center;
-  margin-bottom: 60px;
+  padding: 0px 20px 60px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .section4-collection-title {
-  /* Sử dụng class heading-1 từ typography.css */
-  /* Các thuộc tính font đã được xác định trong heading-1 */
-  text-align: center;
   color: #333;
-  /* Ghi đè margin mặc định của heading-1 */
+  margin-bottom: 36px !important;
+  margin-top: 0 !important;
 }
 
-.collection-detail-description {
-  font-style: normal;
-  text-align: center;
-  color: #797979;
-  margin: 0;
+.section4-collection-subtitle {
+  color: #666;
+  margin: 0 auto !important;
+  max-width: 600px;
 }
 
-.collection-detail-grid {
+.section4-collection-grid-container {
+  /* 2.5% margin on each side = 48px at 1920px width */
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+  /* Gap between items - default for desktop */
+  --gap: 12px;
+}
+
+.section4-collection-row {
   display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  cursor: grab;
-  user-select: none;
-  scroll-behavior: smooth;
+  margin-bottom: var(--gap);
+  gap: var(--gap);
 }
 
-.collection-detail-grid:active {
-  cursor: grabbing;
+/* 4 column row */
+.section4-collection-row-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
 }
 
-.collection-detail-grid.dragging .collection-detail-product-card:hover {
-  transform: none;
+/* 3 column row with 2 regular + 1 large */
+.section4-collection-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  gap: var(--gap);
 }
 
-.collection-detail-grid::-webkit-scrollbar {
-  display: none;
+/* 3 column row with 2x2 grid + 1 large */
+.section4-collection-row-3-special {
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  gap: var(--gap);
 }
 
-.collection-detail-product-card {
-  flex: 0 0 auto;
-  /* Desktop: 4 images + peek of 5th (divide by 4.2 for ~20% peek) */
-  width: calc((100vw - 30px - 30px) / 4.2);
+/* 3 column row with 1 large + 2 regular */
+.section4-collection-row-3-reverse {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--gap);
+}
+
+/* 3 column row with 1 large + 2x2 grid */
+.section4-collection-row-3-reverse-special {
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  gap: var(--gap);
+}
+
+/* 2x2 grid for gem items */
+.section4-collection-grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.section4-collection-item {
+  position: relative;
+  background: white;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin: 0;
-  line-height: 0;
-  aspect-ratio: 447 / 559;
+  cursor: pointer;
 }
 
-.collection-detail-product-image {
+.section4-collection-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0) 50%, #f6f6f6 100%);
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.section4-collection-item:hover::before {
+  opacity: 0;
+}
+
+.section4-collection-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  pointer-events: none;
-  user-select: none;
   transition: transform 0.3s ease;
 }
 
-.collection-detail-product-card:hover .collection-detail-product-image {
+.section4-collection-item:hover img {
   transform: scale(1.1);
 }
 
-/* Responsive Design */
+.section4-collection-item-large::before {
+  display: none; /* No gradient overlay on large model images */
+}
+
+.section4-collection-item-large img {
+  transition: none;
+}
+
+.section4-collection-item-large:hover img {
+  transform: none;
+}
+
+.section4-collection-item-large {
+  grid-column: span 1;
+}
+
+.section4-collection-label {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(121, 121, 121, 1) !important;
+  text-align: center;
+  margin: 0 !important;
+  z-index: 2;
+}
+
+/* Responsive adjustments */
 @media screen and (max-width: 1023px) {
-  .collection-detail-section,
-  .collection-detail-section-gsap {
-    padding: 120px 0 0 0 !important;
+  .section4-collection-header {
+    padding: 0px 20px 120px;
+    max-width: 62%;
+  }
+  .section4-collection-grid-container {
+    --gap: 12px;
+    margin-left: 0px;
+    margin-right: 0px;
   }
 
-  .collection-detail-container {
-    padding: 0 30px 0 30px;
+  /* Convert to 2 columns on tablet */
+  .section4-collection-row-4 {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .collection-detail-grid-gsap {
-    padding-right: 30px;
+  .section4-collection-row-3,
+  .section4-collection-row-3-reverse,
+  .section4-collection-row-3-special,
+  .section4-collection-row-3-reverse-special {
+    grid-template-columns: 1fr 1fr;
   }
 
-  .collection-detail-header {
-    margin-bottom: 60px;
+  .section4-collection-grid-2x2 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
   }
 
-  .collection-detail-description {
-    font-size: 15px;
+  .section4-collection-row-3-special .section4-collection-grid-2x2,
+  .section4-collection-row-3-reverse-special .section4-collection-grid-2x2 {
+    grid-column: span 2;
   }
 
-  .collection-detail-product-card {
-    /* Tablet: 2 images + peek of 3rd (divide by 2.15 for ~15% peek) */
-    width: calc((100vw - 30px - 30px) / 2.15);
+  .section4-collection-item-large {
+    grid-column: span 2;
   }
-}
-
-@media screen and (max-width: 425px) {
-  .collection-detail-container {
-    padding: 0 12px 0 12px;
-  }
-
-  .collection-detail-grid-gsap {
-    padding-right: 12px;
-  }
-
-  .collection-detail-description {
-    font-size: 14px;
-  }
-
-  .collection-detail-product-card {
-    /* Mobile: 1 image + peek of 2nd (divide by 1.15 for ~15% peek) */
-    width: calc((100vw - 12px - 12px) / 1.15);
-  }
-}
-
-/* Collection Detail Button */
-.collection-detail-button-container {
-  display: flex;
-  justify-content: center;
-  background: #f6f6f6;
-  padding-top: 36px;
-  padding-bottom: 120px;
-  margin-top: 0;
-  border: none;
-}
-
-/* Responsive for button container */
-@media screen and (max-width: 992px) {
-  .collection-detail-button-container {
-    padding-top: 30px;
-    padding-bottom: 100px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .collection-detail-button-container {
-    padding-top: 24px;
-    padding-bottom: 80px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .collection-detail-button-container {
-    padding-top: 20px;
+  .section4-collection-page {
+    padding-top: 120px;
     padding-bottom: 60px;
   }
 }
-
-.view-product-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  line-height: 0;
-  transition: all 0.3s ease;
+@media screen and (max-width: 425px) {
+  .section4-collection-header {
+    padding: 0px 0px 60px;
+    max-width: 77%;
+  }
+  .section4-collection-grid-container {
+    --gap: 6px;
+  }
 }
-
-/* Button styles moved to common Button component */

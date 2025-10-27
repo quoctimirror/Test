@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./BookAppointment.css";
 import "@styles/grid-system.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
-import EditButton from "@components/common/button/EditButton";
+import EditIcon from "@assets/images/icons/LT_Edit button.svg";
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1);
@@ -42,7 +42,10 @@ const BookAppointment = () => {
   // Close time picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (timePickerRef.current && !timePickerRef.current.contains(event.target)) {
+      if (
+        timePickerRef.current &&
+        !timePickerRef.current.contains(event.target)
+      ) {
         setIsTimePickerOpen(false);
       }
     };
@@ -66,9 +69,9 @@ const BookAppointment = () => {
 
         // Show/hide based on scroll position
         if (scrollTop < 50) {
-          progressBarRef.current.style.opacity = '0';
+          progressBarRef.current.style.opacity = "0";
         } else {
-          progressBarRef.current.style.opacity = '1';
+          progressBarRef.current.style.opacity = "1";
         }
 
         // Map current page scroll to total progress based on step
@@ -117,7 +120,8 @@ const BookAppointment = () => {
 
   const validateStep2 = () => {
     const newErrors = {};
-    if (!formData.firstName) newErrors.firstName = "Please enter your first name";
+    if (!formData.firstName)
+      newErrors.firstName = "Please enter your first name";
     if (!formData.lastName) newErrors.lastName = "Please enter your last name";
     if (!formData.email) newErrors.email = "Please enter your email address";
     if (!formData.phone) newErrors.phone = "Please enter your phone number";
@@ -137,7 +141,9 @@ const BookAppointment = () => {
     setStep(step + 1);
     // Scroll to next section
     setTimeout(() => {
-      const nextSection = document.querySelector(`.book-section-wrapper-0${step + 1}`);
+      const nextSection = document.querySelector(
+        `.book-section-wrapper-0${step + 1}`
+      );
       if (nextSection) {
         nextSection.scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -147,7 +153,9 @@ const BookAppointment = () => {
   const handleEdit = (sectionStep) => {
     // Don't change step, just scroll to the section
     setTimeout(() => {
-      const section = document.querySelector(`.book-section-wrapper-0${sectionStep}`);
+      const section = document.querySelector(
+        `.book-section-wrapper-0${sectionStep}`
+      );
       if (section) {
         section.scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -175,400 +183,455 @@ const BookAppointment = () => {
 
       {/* Step 1: Schedule Appointment */}
       {step >= 1 && (
-      <section className="book-section-wrapper book-section-wrapper-01">
-        <div className="grid-container">
-          <div className="book-section book-section-01 col-6 col-start-4 col-sm-12">
-            <div className="book-section-number bodytext-3--no-margin">(1)</div>
-            <h2 className="book-section-title heading-2--no-margin">
-              Schedule your appointment
-            </h2>
-          </div>
+        <section className="book-section-wrapper book-section-wrapper-01">
+          <div className="grid-container">
+            <div className="book-section book-section-01 col-6 col-start-4 col-sm-12">
+              <div className="book-section-number bodytext-3--no-margin">
+                (1)
+              </div>
+              <h2 className="book-section-title heading-2--no-margin">
+                Schedule your appointment
+              </h2>
+            </div>
 
-          <div className="book-form-group col-6 col-start-4 col-sm-12">
-            <label className="book-label bodytext-6--no-margin">
-              Select a boutique *
-            </label>
-            <div className="book-showroom-info">
-              <div className="book-showroom-radio">
-                <input
-                  type="radio"
-                  id="sala-showroom"
-                  name="showroom"
-                  checked={formData.showroom === "Sala showroom"}
-                  onChange={() =>
-                    handleInputChange("showroom", "Sala showroom")
-                  }
-                />
-                <label htmlFor="sala-showroom">
-                  <div className="book-showroom-name bodytext-4--no-margin">
-                    Sala showroom
-                  </div>
-                  <div className="book-showroom-address bodytext-4--no-margin">
-                    74 Nguyen Co Thach street, An Khanh ward, Ho Chi Minh city,
-                    Vietnam
-                  </div>
-                </label>
+            <div className="book-form-group col-6 col-start-4 col-sm-12">
+              <label className="book-label bodytext-6--no-margin">
+                Select a boutique *
+              </label>
+              <div className="book-showroom-info">
+                <div className="book-showroom-radio">
+                  <input
+                    type="radio"
+                    id="sala-showroom"
+                    name="showroom"
+                    checked={formData.showroom === "Sala showroom"}
+                    onChange={() =>
+                      handleInputChange("showroom", "Sala showroom")
+                    }
+                  />
+                  <label htmlFor="sala-showroom">
+                    <div className="book-showroom-name bodytext-4--no-margin">
+                      Sala showroom
+                    </div>
+                    <div className="book-showroom-address bodytext-4--no-margin">
+                      74 Nguyen Co Thach street, An Khanh ward, Ho Chi Minh
+                      city, Vietnam
+                    </div>
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="book-form-group col-3 col-start-4 col-sm-12">
-            <label className="book-label bodytext-6--no-margin">Date *</label>
-            <DatePicker
-              ref={datePickerRef}
-              selected={formData.date}
-              onChange={(date) => handleInputChange("date", date)}
-              onInputClick={handleDatePickerClick}
-              open={isDatePickerOpen}
-              onClickOutside={() => setIsDatePickerOpen(false)}
-              onSelect={() => setIsDatePickerOpen(false)}
-              placeholderText="Select..."
-              dateFormat="MMMM d, yyyy"
-              className="book-input bodytext-5--no-margin"
-              wrapperClassName="book-datepicker-wrapper"
-              calendarClassName="book-datepicker-calendar"
-            />
-            {errors.date && (
-              <p className="book-error-message bodytext-6--no-margin">
-                {errors.date}
-              </p>
-            )}
-          </div>
-          <div className="book-form-group col-3 col-start-7 col-sm-12">
-            <label className="book-label bodytext-6--no-margin">Time *</label>
-            <div className="book-timepicker-wrapper" ref={timePickerRef}>
-              <div
-                className="book-input book-timepicker-input bodytext-5--no-margin"
-                onClick={() => setIsTimePickerOpen(!isTimePickerOpen)}
-              >
-                {formData.time
-                  ? timeSlots.find((slot) => slot.value === formData.time)?.label
-                  : "Select..."}
-              </div>
-              {isTimePickerOpen && (
-                <div className="book-timepicker-dropdown">
-                  {timeSlots.map((slot) => (
-                    <div
-                      key={slot.value}
-                      className={`book-timepicker-option bodytext-5--no-margin ${
-                        formData.time === slot.value ? "selected" : ""
-                      }`}
-                      onClick={() => {
-                        handleInputChange("time", slot.value);
-                        setIsTimePickerOpen(false);
-                      }}
-                    >
-                      {slot.label}
-                    </div>
-                  ))}
-                </div>
+            <div className="book-form-group col-3 col-start-4 col-sm-12">
+              <label className="book-label bodytext-6--no-margin">Date *</label>
+              <DatePicker
+                ref={datePickerRef}
+                selected={formData.date}
+                onChange={(date) => handleInputChange("date", date)}
+                onInputClick={handleDatePickerClick}
+                open={isDatePickerOpen}
+                onClickOutside={() => setIsDatePickerOpen(false)}
+                onSelect={() => setIsDatePickerOpen(false)}
+                placeholderText="Select..."
+                dateFormat="MMMM d, yyyy"
+                className="book-input bodytext-5--no-margin"
+                wrapperClassName="book-datepicker-wrapper"
+                calendarClassName="book-datepicker-calendar"
+              />
+              {errors.date && (
+                <p className="book-error-message bodytext-6--no-margin">
+                  {errors.date}
+                </p>
               )}
             </div>
-            {errors.time && (
-              <p className="book-error-message bodytext-6--no-margin">
-                {errors.time}
-              </p>
-            )}
-          </div>
-
-          <div className="book-form-group col-6 col-start-4 col-sm-12">
-            <label className="book-label bodytext-6--no-margin">
-              Preferred language *
-            </label>
-            <div className="book-radio-group">
-              <div className="book-radio-item">
-                <input
-                  type="radio"
-                  id="english"
-                  name="language"
-                  value="English"
-                  checked={formData.language === "English"}
-                  onChange={(e) =>
-                    handleInputChange("language", e.target.value)
-                  }
-                />
-                <label
-                  htmlFor="english"
-                  className="book-radio-label bodytext-4--no-margin"
+            <div className="book-form-group col-3 col-start-7 col-sm-12">
+              <label className="book-label bodytext-6--no-margin">Time *</label>
+              <div className="book-timepicker-wrapper" ref={timePickerRef}>
+                <div
+                  className="book-input book-timepicker-input bodytext-5--no-margin"
+                  onClick={() => setIsTimePickerOpen(!isTimePickerOpen)}
                 >
-                  English
-                </label>
+                  {formData.time
+                    ? timeSlots.find((slot) => slot.value === formData.time)
+                        ?.label
+                    : "Select..."}
+                </div>
+                {isTimePickerOpen && (
+                  <div className="book-timepicker-dropdown">
+                    {timeSlots.map((slot) => (
+                      <div
+                        key={slot.value}
+                        className={`book-timepicker-option bodytext-5--no-margin ${
+                          formData.time === slot.value ? "selected" : ""
+                        }`}
+                        onClick={() => {
+                          handleInputChange("time", slot.value);
+                          setIsTimePickerOpen(false);
+                        }}
+                      >
+                        {slot.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className="book-radio-item">
-                <input
-                  type="radio"
-                  id="vietnamese"
-                  name="language"
-                  value="Vietnamese"
-                  checked={formData.language === "Vietnamese"}
-                  onChange={(e) =>
-                    handleInputChange("language", e.target.value)
-                  }
-                />
-                <label
-                  htmlFor="vietnamese"
-                  className="book-radio-label bodytext-4--no-margin"
-                >
-                  Vietnamese
-                </label>
+              {errors.time && (
+                <p className="book-error-message bodytext-6--no-margin">
+                  {errors.time}
+                </p>
+              )}
+            </div>
+
+            <div className="book-form-group col-6 col-start-4 col-sm-12">
+              <label className="book-label bodytext-6--no-margin">
+                Preferred language *
+              </label>
+              <div className="book-radio-group">
+                <div className="book-radio-item">
+                  <input
+                    type="radio"
+                    id="english"
+                    name="language"
+                    value="English"
+                    checked={formData.language === "English"}
+                    onChange={(e) =>
+                      handleInputChange("language", e.target.value)
+                    }
+                  />
+                  <label
+                    htmlFor="english"
+                    className="book-radio-label bodytext-4--no-margin"
+                  >
+                    English
+                  </label>
+                </div>
+                <div className="book-radio-item">
+                  <input
+                    type="radio"
+                    id="vietnamese"
+                    name="language"
+                    value="Vietnamese"
+                    checked={formData.language === "Vietnamese"}
+                    onChange={(e) =>
+                      handleInputChange("language", e.target.value)
+                    }
+                  />
+                  <label
+                    htmlFor="vietnamese"
+                    className="book-radio-label bodytext-4--no-margin"
+                  >
+                    Vietnamese
+                  </label>
+                </div>
               </div>
             </div>
-          </div>
 
-          <ShineGlassButton
-            theme="light"
-            onClick={handleContinue}
-            className="book-continue-btn col-6 col-start-4 col-sm-12"
-          >
-            <span className="bodytext-4--no-margin">Continue</span>
-          </ShineGlassButton>
-        </div>
-      </section>
+            <ShineGlassButton
+              theme="light"
+              onClick={handleContinue}
+              className="book-continue-btn col-6 col-start-4 col-sm-12"
+            >
+              <span className="bodytext-4--no-margin">Continue</span>
+            </ShineGlassButton>
+          </div>
+        </section>
       )}
 
       {/* Step 2: Personal Information */}
       {step >= 2 && (
-      <section className="book-section-wrapper book-section-wrapper-02">
-        <div className="grid-container">
-          <div className="book-section book-section-02 col-6 col-start-4 col-sm-12">
-            <div className="book-section-number bodytext-3--no-margin">(2)</div>
-            <h2 className="book-section-title heading-2--no-margin">
-              Personal information
-            </h2>
-          </div>
-
-          <div className="book-form-group col-6 col-start-4 col-sm-12">
-            <label className="book-label bodytext-4--no-margin">Title *</label>
-            <div className="book-radio-group horizontal">
-              {["Mr", "Mrs", "Ms"].map((title) => (
-                <div className="book-radio-item" key={title}>
-                  <input
-                    type="radio"
-                    id={title.toLowerCase()}
-                    name="title"
-                    value={title}
-                    checked={formData.title === title}
-                    onChange={(e) => handleInputChange("title", e.target.value)}
-                  />
-                  <label
-                    htmlFor={title.toLowerCase()}
-                    className="book-radio-label bodytext-4--no-margin"
-                  >
-                    {title}
-                  </label>
-                </div>
-              ))}
+        <section className="book-section-wrapper book-section-wrapper-02">
+          <div className="grid-container">
+            <div className="book-section book-section-02 col-6 col-start-4 col-sm-12">
+              <div className="book-section-number bodytext-3--no-margin">
+                (2)
+              </div>
+              <h2 className="book-section-title heading-2--no-margin">
+                Personal information
+              </h2>
             </div>
-          </div>
 
-          <div className="book-form-group col-3 col-start-4 col-sm-12">
-            <label className="book-label bodytext-6--no-margin">
-              First Name *
-            </label>
-            <input
-              type="text"
-              placeholder="Nguyen"
-              value={formData.firstName}
-              onChange={(e) => handleInputChange("firstName", e.target.value)}
-              className="book-input bodytext-5--no-margin"
-            />
-            {errors.firstName && (
-              <p className="book-error-message bodytext-6--no-margin">
-                {errors.firstName}
-              </p>
-            )}
-          </div>
-          <div className="book-form-group col-3 col-start-7 col-sm-12">
-            <label className="book-label bodytext-6--no-margin">
-              Last Name *
-            </label>
-            <input
-              type="text"
-              placeholder="Your last name"
-              value={formData.lastName}
-              onChange={(e) => handleInputChange("lastName", e.target.value)}
-              className="book-input bodytext-5--no-margin"
-            />
-            {errors.lastName && (
-              <p className="book-error-message bodytext-6--no-margin">
-                {errors.lastName}
-              </p>
-            )}
-          </div>
+            <div className="book-form-group col-6 col-start-4 col-sm-12">
+              <label className="book-label bodytext-4--no-margin">
+                Title *
+              </label>
+              <div className="book-radio-group horizontal">
+                {["Mr", "Mrs", "Ms"].map((title) => (
+                  <div className="book-radio-item" key={title}>
+                    <input
+                      type="radio"
+                      id={title.toLowerCase()}
+                      name="title"
+                      value={title}
+                      checked={formData.title === title}
+                      onChange={(e) =>
+                        handleInputChange("title", e.target.value)
+                      }
+                    />
+                    <label
+                      htmlFor={title.toLowerCase()}
+                      className="book-radio-label bodytext-4--no-margin"
+                    >
+                      {title}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          <div className="book-form-group col-3 col-start-4 col-sm-12">
-            <label className="book-label bodytext-6--no-margin">
-              Email Address *
-            </label>
-            <input
-              type="email"
-              placeholder="name@gmail.com"
-              value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              className="book-input bodytext-5--no-margin"
-            />
-            {errors.email && (
-              <p className="book-error-message bodytext-6--no-margin">
-                {errors.email}
-              </p>
-            )}
-          </div>
-          <div className="book-form-group col-3 col-start-7 col-sm-12">
-            <label className="book-label bodytext-6--no-margin">
-              Phone / WhatsApp *
-            </label>
-            <input
-              type="tel"
-              placeholder="+840"
-              value={formData.phone}
-              onChange={(e) => handleInputChange("phone", e.target.value)}
-              className="book-input bodytext-5--no-margin"
-            />
-            {errors.phone && (
-              <p className="book-error-message bodytext-6--no-margin">
-                {errors.phone}
-              </p>
-            )}
-          </div>
+            <div className="book-form-group col-3 col-start-4 col-sm-12">
+              <label className="book-label bodytext-6--no-margin">
+                First Name *
+              </label>
+              <input
+                type="text"
+                placeholder="Nguyen"
+                value={formData.firstName}
+                onChange={(e) => handleInputChange("firstName", e.target.value)}
+                className="book-input bodytext-5--no-margin"
+              />
+              {errors.firstName && (
+                <p className="book-error-message bodytext-6--no-margin">
+                  {errors.firstName}
+                </p>
+              )}
+            </div>
+            <div className="book-form-group col-3 col-start-7 col-sm-12">
+              <label className="book-label bodytext-6--no-margin">
+                Last Name *
+              </label>
+              <input
+                type="text"
+                placeholder="Your last name"
+                value={formData.lastName}
+                onChange={(e) => handleInputChange("lastName", e.target.value)}
+                className="book-input bodytext-5--no-margin"
+              />
+              {errors.lastName && (
+                <p className="book-error-message bodytext-6--no-margin">
+                  {errors.lastName}
+                </p>
+              )}
+            </div>
 
-          <div className="book-additional-info col-6 col-start-4 col-sm-12">
-            <p className="bodytext-5--no-margin">
-              Fill in all additional information
-            </p>
-          </div>
+            <div className="book-form-group col-3 col-start-4 col-sm-12">
+              <label className="book-label bodytext-6--no-margin">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                placeholder="name@gmail.com"
+                value={formData.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                className="book-input bodytext-5--no-margin"
+              />
+              {errors.email && (
+                <p className="book-error-message bodytext-6--no-margin">
+                  {errors.email}
+                </p>
+              )}
+            </div>
+            <div className="book-form-group col-3 col-start-7 col-sm-12">
+              <label className="book-label bodytext-6--no-margin">
+                Phone / WhatsApp *
+              </label>
+              <input
+                type="tel"
+                placeholder="+840"
+                value={formData.phone}
+                onChange={(e) => handleInputChange("phone", e.target.value)}
+                className="book-input bodytext-5--no-margin"
+              />
+              {errors.phone && (
+                <p className="book-error-message bodytext-6--no-margin">
+                  {errors.phone}
+                </p>
+              )}
+            </div>
 
-          <ShineGlassButton
-            theme="light"
-            onClick={handleContinue}
-            className="book-continue-btn col-6 col-start-4 col-sm-12"
-          >
-            <span className="bodytext-4--no-margin">Continue</span>
-          </ShineGlassButton>
-        </div>
-      </section>
+            <div className="book-additional-info col-6 col-start-4 col-sm-12">
+              <p className="bodytext-5--no-margin">
+                Fill in all additional information
+              </p>
+            </div>
+
+            <ShineGlassButton
+              theme="light"
+              onClick={handleContinue}
+              className="book-continue-btn col-6 col-start-4 col-sm-12"
+            >
+              <span className="bodytext-4--no-margin">Continue</span>
+            </ShineGlassButton>
+          </div>
+        </section>
       )}
 
       {/* Step 3: Booking Confirmation */}
       {step >= 3 && (
-      <section className="book-section-wrapper book-section-wrapper-03">
-        <div className="grid-container">
-          <div className="book-section book-section-03 col-6 col-start-4 col-sm-12">
-            <div className="book-section-number bodytext-3--no-margin">(3)</div>
-            <h2 className="book-section-title heading-2--no-margin">Booking</h2>
+        <section className="book-section-wrapper book-section-wrapper-03">
+          <div className="grid-container">
+            <div className="book-section book-section-03 col-6 col-start-4 col-sm-12">
+              <div className="book-section-number bodytext-3--no-margin">
+                (3)
+              </div>
+              <h2 className="book-section-title heading-2--no-margin">
+                Booking
+              </h2>
 
-            <div className="book-confirmation">
-              <div className="book-confirmation-row">
-                <label className="book-confirmation-label bodytext-6--no-margin">
-                  Select a boutique *
-                </label>
-                <div className="book-confirmation-value-wrapper">
-                  <div className="book-confirmation-value">
-                    <div className="bodytext-1--no-margin">
-                      {formData.showroom}
+              <div className="book-confirmation">
+                <div className="book-confirmation-row">
+                  <label className="book-confirmation-label bodytext-6--no-margin">
+                    Select a boutique *
+                  </label>
+                  <div className="book-confirmation-value-wrapper">
+                    <div className="book-confirmation-value">
+                      <div className="bodytext-1--no-margin">
+                        {formData.showroom}
+                      </div>
+                      <div className="book-confirmation-address bodytext-4--no-margin">
+                        {formData.address}
+                      </div>
                     </div>
-                    <div className="book-confirmation-address bodytext-4--no-margin">
-                      {formData.address}
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="book-edit-icon"
+                      onClick={() => handleEdit(1)}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </div>
+                </div>
+
+                <div className="book-confirmation-row">
+                  <label className="book-confirmation-label bodytext-6--no-margin">
+                    Date *
+                  </label>
+                  <div className="book-confirmation-value-wrapper">
+                    <div className="book-confirmation-value bodytext-1--no-margin">
+                      {formData.date
+                        ? formData.date.toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        : "October 25, 2025"}
                     </div>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="book-edit-icon"
+                      onClick={() => handleEdit(1)}
+                      style={{ cursor: 'pointer' }}
+                    />
                   </div>
-                  <EditButton size={30} onClick={() => handleEdit(1)} />
                 </div>
-              </div>
 
-              <div className="book-confirmation-row">
-                <label className="book-confirmation-label bodytext-6--no-margin">
-                  Date *
-                </label>
-                <div className="book-confirmation-value-wrapper">
-                  <div className="book-confirmation-value bodytext-1--no-margin">
-                    {formData.date
-                      ? formData.date.toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
-                      : "October 25, 2025"}
+                <div className="book-confirmation-row">
+                  <label className="book-confirmation-label bodytext-6--no-margin">
+                    Time *
+                  </label>
+                  <div className="book-confirmation-value-wrapper">
+                    <div className="book-confirmation-value bodytext-1--no-margin">
+                      {formData.time || "5 PM"}
+                    </div>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="book-edit-icon"
+                      onClick={() => handleEdit(1)}
+                      style={{ cursor: 'pointer' }}
+                    />
                   </div>
-                  <EditButton size={30} onClick={() => handleEdit(1)} />
                 </div>
-              </div>
 
-              <div className="book-confirmation-row">
-                <label className="book-confirmation-label bodytext-6--no-margin">
-                  Time *
-                </label>
-                <div className="book-confirmation-value-wrapper">
-                  <div className="book-confirmation-value bodytext-1--no-margin">
-                    {formData.time || "5 PM"}
+                <div className="book-confirmation-row">
+                  <label className="book-confirmation-label bodytext-6--no-margin">
+                    Preferred language *
+                  </label>
+                  <div className="book-confirmation-value-wrapper">
+                    <div className="book-confirmation-value bodytext-1--no-margin">
+                      {formData.language}
+                    </div>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="book-edit-icon"
+                      onClick={() => handleEdit(1)}
+                      style={{ cursor: 'pointer' }}
+                    />
                   </div>
-                  <EditButton size={30} onClick={() => handleEdit(1)} />
                 </div>
-              </div>
 
-              <div className="book-confirmation-row">
-                <label className="book-confirmation-label bodytext-6--no-margin">
-                  Preferred language *
-                </label>
-                <div className="book-confirmation-value-wrapper">
-                  <div className="book-confirmation-value bodytext-1--no-margin">
-                    {formData.language}
+                <div className="book-confirmation-row">
+                  <label className="book-confirmation-label bodytext-6--no-margin">
+                    Personal information *
+                  </label>
+                  <div className="book-confirmation-value-wrapper">
+                    <div className="book-confirmation-value bodytext-1--no-margin">
+                      {formData.title} {formData.firstName || "Linh"}{" "}
+                      {formData.lastName || "Nguyen"}
+                    </div>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="book-edit-icon"
+                      onClick={() => handleEdit(2)}
+                      style={{ cursor: 'pointer' }}
+                    />
                   </div>
-                  <EditButton size={30} onClick={() => handleEdit(1)} />
                 </div>
-              </div>
 
-              <div className="book-confirmation-row">
-                <label className="book-confirmation-label bodytext-6--no-margin">
-                  Personal information *
-                </label>
-                <div className="book-confirmation-value-wrapper">
-                  <div className="book-confirmation-value bodytext-1--no-margin">
-                    {formData.title} {formData.firstName || "Linh"}{" "}
-                    {formData.lastName || "Nguyen"}
+                <div className="book-confirmation-row">
+                  <label className="book-confirmation-label bodytext-6--no-margin">
+                    Email Address *
+                  </label>
+                  <div className="book-confirmation-value-wrapper">
+                    <div className="book-confirmation-value bodytext-1--no-margin">
+                      {formData.email || "linh@gmail.com"}
+                    </div>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="book-edit-icon"
+                      onClick={() => handleEdit(2)}
+                      style={{ cursor: 'pointer' }}
+                    />
                   </div>
-                  <EditButton size={30} onClick={() => handleEdit(2)} />
                 </div>
-              </div>
 
-              <div className="book-confirmation-row">
-                <label className="book-confirmation-label bodytext-6--no-margin">
-                  Email Address *
-                </label>
-                <div className="book-confirmation-value-wrapper">
-                  <div className="book-confirmation-value bodytext-1--no-margin">
-                    {formData.email || "linh@gmail.com"}
+                <div className="book-confirmation-row">
+                  <label className="book-confirmation-label bodytext-6--no-margin">
+                    Phone / WhatsApp *
+                  </label>
+                  <div className="book-confirmation-value-wrapper">
+                    <div className="book-confirmation-value bodytext-1--no-margin">
+                      {formData.phone || "(+84) 793-973-234"}
+                    </div>
+                    <img
+                      src={EditIcon}
+                      alt="Edit"
+                      className="book-edit-icon"
+                      onClick={() => handleEdit(2)}
+                      style={{ cursor: 'pointer' }}
+                    />
                   </div>
-                  <EditButton size={30} onClick={() => handleEdit(2)} />
                 </div>
+
+                <ShineGlassButton
+                  theme="light"
+                  className="book-submit-btn col-6 col-start-4 col-sm-12"
+                >
+                  <span className="bodytext-4--no-margin">
+                    Book this appointment
+                  </span>
+                </ShineGlassButton>
+
+                <p className="book-confirmation-note bodytext-6--no-margin">
+                  You'll receive an email confirmation
+                </p>
               </div>
-
-              <div className="book-confirmation-row">
-                <label className="book-confirmation-label bodytext-6--no-margin">
-                  Phone / WhatsApp *
-                </label>
-                <div className="book-confirmation-value-wrapper">
-                  <div className="book-confirmation-value bodytext-1--no-margin">
-                    {formData.phone || "(+84) 793-973-234"}
-                  </div>
-                  <EditButton size={30} onClick={() => handleEdit(2)} />
-                </div>
-              </div>
-
-              <ShineGlassButton
-                theme="light"
-                className="book-submit-btn col-6 col-start-4 col-sm-12"
-              >
-                <span className="bodytext-4--no-margin">
-                  Book this appointment
-                </span>
-              </ShineGlassButton>
-
-              <p className="book-confirmation-note bodytext-6--no-margin">
-                You'll receive an email confirmation
-              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       )}
     </div>
   );
