@@ -24,7 +24,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('/universeSection/tbl-dk-time-overlay.png');
+    background-image: url('/universeSection/tbl-dk-time-overlay.svg');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -34,7 +34,7 @@
 /* Time title */
 .time-overlay__title {
     position: fixed;
-    top: calc(50% - 100px);
+    top: calc(50% - 60px);
     left: 50%;
     transform: translate(-50%, -50%);
     color: var(--White, #FFF);
@@ -56,13 +56,14 @@
     transform: translateX(-50%);
     z-index: 1000;
     pointer-events: none;
-    animation: syncStarlight 1.5s infinite;
+    opacity: 1;
+    animation: syncStarlight 0.5s infinite;
 }
 
 /* Bottom text section */
 .time-overlay__bottom-text {
-    position: fixed;
-    top: calc(50% + 180px);
+    position: absolute;
+    top: calc(50% + 170px);
     left: 50%;
     transform: translateX(-50%);
     height: 72px;
@@ -81,19 +82,58 @@
 /* Close Button - Visible on mobile/tablet, hidden on desktop */
 .time-overlay__close-button {
     position: fixed;
-    bottom: calc(20% - 60px);
+    bottom: 5%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1003;
     pointer-events: auto;
     display: block;
+    animation: zoomInButton 0.3s ease-out;
     /* Show by default for mobile first */
 }
 
-/* Desktop: Show close button */
+@keyframes zoomInButton {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+}
+
+@keyframes zoomOutButton {
+    from {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-50%) scale(0);
+    }
+}
+
+.time-overlay__close-button--closing {
+    animation: zoomOutButton 0.3s ease-in forwards !important;
+}
+
+/* Desktop: Hide close button */
 @media (min-width: 1024px) {
     .time-overlay__close-button {
-        display: block;
+        display: none;
+    }
+
+    /* Content overlay box - fixed size for desktop */
+    .time-overlay__content {
+        width: 546px;
+        height: 834px;
+        flex-shrink: 0;
+        aspect-ratio: 91/139;
+        background-image: url('/universeSection/dk-droplet-time.svg');
+        background-size: cover;
     }
 
     /* Title - Heading 2 style for desktop */
@@ -104,6 +144,7 @@
 
     /* Bottom text font-size for desktop */
     .time-overlay__bottom-text {
+        width: 289px;
         font-size: 14px;
     }
 
@@ -114,7 +155,7 @@
         left: 50%;
         width: 100px;
         height: 100px;
-        background-image: url('/universeSection/dk-droplet-time.png');
+        background-image: url('/universeSection/dk-droplet-time.svg');
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
@@ -194,6 +235,16 @@
     }
 }
 
+@keyframes fadeInDelayed {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 .time-overlay__content--closing {
     animation: zoomOut 0.3s ease-in forwards !important;
 }
@@ -204,13 +255,16 @@
         animation: fadeIn 0.15s ease-in-out;
     }
 
-    /* .time-overlay__content {
-        background-image: url('/universeSection/tbl-dk-time-overlay.png');
-        background-size: contain;
+    .time-overlay__content {
+        background-image: url('/universeSection/dk-droplet-time.svg');
+        background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        animation: zoomIn 0.3s ease-out;
-    } */
+        width: 522px;
+        height: 796px;
+        flex-shrink: 0;
+        aspect-ratio: 261/398;
+    }
 
     /* Time title - copy from desktop */
     .time-overlay__title {
@@ -232,7 +286,7 @@
     /* StarlightEffect pointing down - copy from desktop */
     .time-overlay__starlight-down {
         position: fixed;
-        top: calc(50% - 60px);
+        top: calc(50% - 110px);
         left: 50%;
         transform: translateX(-50%);
         z-index: 1000;
@@ -241,16 +295,17 @@
 
     /* Bottom text section - copy from desktop */
     .time-overlay__bottom-text {
-        position: fixed;
-        top: calc(70%);
+        position: absolute;
+        top: calc(50% + 160);
         left: 50%;
         transform: translateX(-50%);
+        width: 284px;
         height: 72px;
         flex-shrink: 0;
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
         text-align: center;
         font-family: "BT Beau Sans";
-        font-size: 12px;
+        font-size: 14px;
         font-style: normal;
         font-weight: 400;
         line-height: 100%;
@@ -262,7 +317,7 @@
     /* Close Button - Visible on mobile/tablet, hidden on desktop */
     .time-overlay__close-button {
         position: fixed;
-        bottom: calc(20% - 180px);
+        bottom: calc(20% - 80px);
         left: 50%;
         transform: translateX(-50%);
         z-index: 1003;
@@ -279,9 +334,14 @@
     }
 
     .time-overlay__content {
-        background-image: url('/universeSection/mb-time-overlay.png');
+        background-image: url('/universeSection/dk-droplet-time.svg');
         background-size: cover;
-        animation: zoomIn 0.3s ease-out;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 466px;
+        height: 712px;
+        flex-shrink: 0;
+        aspect-ratio: 233/356;
     }
 
     .time-overlay__title {
@@ -291,16 +351,16 @@
     }
 
     .time-overlay__starlight-down {
-        top: calc(50% - 90px);
+        top: calc(50% - 110px);
     }
 
     .time-overlay__bottom-text {
         top: calc(50% + 140px);
-        width: 213px;
+        width: 260px;
         height: 72px;
         text-align: center;
         line-height: 100%;
-        font-size: 10px !important;
+        font-size: 12px !important;
     }
 
     /* Close button already visible from mobile first approach */

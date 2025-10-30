@@ -24,7 +24,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('/universeSection/tbl-dk-space-overlay.png');
+    background-image: url('/universeSection/dk-rect-space.svg');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -62,7 +62,8 @@
 /* Đồng bộ hóa tất cả StarlightEffect */
 .space-overlay__starlight-up,
 .space-overlay__starlight-down {
-    animation: syncStarlight 1.5s infinite;
+    opacity: 1;
+    animation: syncStarlight 0.5s infinite;
 }
 
 /* StarlightEffect pointing up */
@@ -137,19 +138,58 @@
 /* Close Button - Visible on mobile/tablet, hidden on desktop */
 .space-overlay__close-button {
     position: fixed;
-    bottom: calc(20% - 140px);
+    bottom: 5%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1003;
     pointer-events: auto;
     display: block;
+    animation: zoomInButton 0.3s ease-out;
     /* Show by default for mobile first */
 }
 
-/* Desktop: Show close button */
+@keyframes zoomInButton {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+}
+
+@keyframes zoomOutButton {
+    from {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-50%) scale(0);
+    }
+}
+
+.space-overlay__close-button--closing {
+    animation: zoomOutButton 0.3s ease-in forwards !important;
+}
+
+/* Desktop: Hide close button */
 @media (min-width: 1024px) {
     .space-overlay__close-button {
-        display: block;
+        display: none;
+    }
+
+    /* Content overlay box - fixed size for desktop */
+    .space-overlay__content {
+        width: 541px;
+        height: 820px;
+        flex-shrink: 0;
+        aspect-ratio: 541/820;
+        background-image: url('/universeSection/dk-rect-space.svg');
+        background-size: cover;
     }
 
     /* Title - Heading 2 style for desktop */
@@ -160,7 +200,7 @@
 
     /* Top text position for desktop */
     .space-overlay__top-text {
-        top: calc(50% - 270px);
+        top: calc(50% - 280px);
         width: 187px;
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
         text-align: justify;
@@ -174,7 +214,7 @@
 
     /* Bottom text position for desktop */
     .space-overlay__bottom-text {
-        top: calc(50% + 160px);
+        top: calc(50% + 170px);
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
         text-align: justify;
         /* bodytext-6 no margin */
@@ -198,7 +238,7 @@
         left: 50%;
         width: 100px;
         height: 100px;
-        background-image: url('/universeSection/dk-rect-space.png');
+        background-image: url('/universeSection/dk-rect-space.svg');
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
@@ -278,6 +318,16 @@
     }
 }
 
+@keyframes fadeInDelayed {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
 .space-overlay__content--closing {
     animation: zoomOut 0.3s ease-in forwards !important;
 }
@@ -289,7 +339,14 @@
     }
 
     .space-overlay__content {
-        animation: zoomIn 0.3s ease-out;
+        width: 522px;
+        height: 792px;
+        flex-shrink: 0;
+        aspect-ratio: 29/44;
+        background-image: url('/universeSection/dk-rect-space.svg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
     }
 
     /* Top text section for tablet */
@@ -333,10 +390,7 @@
     /* Close button already visible from mobile first approach */
     /* Close button */
     .space-overlay__close-button {
-        position: fixed;
-        bottom: calc(20% - 180px);
-        left: 50%;
-        transform: translateX(-50%);
+        bottom: 5%;
     }
 }
 
@@ -351,23 +405,20 @@
     }
 
     .space-overlay__content {
-        position: relative;
-        width: 100vw;
-        height: 100vh;
-        flex-shrink: 0;
-        margin: 0;
-        padding: 0;
-        background-image: url('/universeSection/mb-space-overlay.png');
+        background-image: url('/universeSection/dk-rect-space.svg');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        animation: zoomIn 0.3s ease-out;
+        width: 424px;
+        height: 642px;
+        flex-shrink: 0;
+        aspect-ratio: 212/321;
     }
 
     /* Top text section - mobile positioning */
     .space-overlay__top-text {
         position: absolute;
-        top: calc(50% - 210px);
+        top: calc(50% - 220px);
         left: 50%;
         transform: translateX(-50%);
         width: 150px;
@@ -384,7 +435,7 @@
     /* StarlightEffect pointing down - trên chữ Space */
     .space-overlay__starlight-down {
         position: absolute;
-        top: calc(50% - 80px);
+        top: calc(50% - 70px);
         left: 50%;
         transform: translateX(-50%);
     }
@@ -430,9 +481,6 @@
 
     /* Close button */
     .space-overlay__close-button {
-        position: fixed;
         bottom: 5%;
-        left: 50%;
-        transform: translateX(-50%);
     }
 }

@@ -6,6 +6,7 @@ import ShineGlassButton from '../../common/button/ShineGlassButton';
 const SenseOverlay = ({ isVisible, onClose, origin }) => {
     const [selectedSense, setSelectedSense] = useState(null);
     const [isClosing, setIsClosing] = useState(false);
+    const [imagesLoaded, setImagesLoaded] = useState(false);
 
     const handleClose = useCallback(() => {
         setIsClosing(true);
@@ -20,6 +21,33 @@ const SenseOverlay = ({ isVisible, onClose, origin }) => {
             handleClose();
         }
     }, [handleClose]);
+
+    // Preload background images immediately when component mounts
+    useEffect(() => {
+        const imagesToPreload = [
+            '/universeSection/dk-heart-sense.svg'
+        ];
+
+        let loadedCount = 0;
+        const totalImages = imagesToPreload.length;
+
+        imagesToPreload.forEach((src) => {
+            const img = new Image();
+            img.onload = () => {
+                loadedCount++;
+                if (loadedCount === totalImages) {
+                    setImagesLoaded(true);
+                }
+            };
+            img.onerror = () => {
+                loadedCount++;
+                if (loadedCount === totalImages) {
+                    setImagesLoaded(true);
+                }
+            };
+            img.src = src;
+        });
+    }, []); // Empty dependency array - run once on mount
 
     useEffect(() => {
         if (isVisible) {
@@ -41,38 +69,33 @@ const SenseOverlay = ({ isVisible, onClose, origin }) => {
         const descriptions = {
             sight: (
                 <>
-                    <p className="bodytext-6--no-margin">The dance of light through faceted</p>
-                    <p className="bodytext-6--no-margin">stones, the glow of Viva Magenta</p>
-                    <p className="bodytext-6--no-margin">reflecting off mirrored surfaces.</p>
-                    <p className="bodytext-6--no-margin">Each display is a painting.</p>
-                    <p className="bodytext-6--no-margin">Each showroom, a moving gallery.</p>
+                    <p className="bodytext-6--no-margin">The dance of light through faceted stones, the glow of Viva Magenta reflecting off mirrored surfaces.
+                        Each display is a painting.
+                        Each showroom, a moving gallery.
+                    </p>
                 </>
             ),
             touch: (
                 <>
-                    <p className="bodytext-6--no-margin">The weight of gold, the chill of glass, the softness</p>
-                    <p className="bodytext-6--no-margin">of velvet beneath your fingers.</p>
-                    <p className="bodytext-6--no-margin">Every texture, a whisper of refinement.</p>
+                    <p className="bodytext-6--no-margin">The weight of gold, the chill of glass, the softness of velvet beneath your fingers.
+                        Every texture, a whisper of refinement.  </p>
                 </>
             ),
             scent: (
                 <>
-                    <p className="bodytext-6--no-margin">Our signature fragrance lingers in the air.</p>
-                    <p className="bodytext-6--no-margin">A memory waiting to be written.</p>
+                    <p className="bodytext-6--no-margin">Our signature fragrance lingers in the air. A memory waiting to be written. </p>
+
                 </>
             ),
             sound: (
                 <>
-                    <p className="bodytext-6--no-margin">Curated melodies.</p>
-                    <p className="bodytext-6--no-margin">Ambient echoes that ground you in the now.</p>
-                    <p className="bodytext-6--no-margin">The hum of craftsmanship, the pulse of elegance.</p>
+                    <p className="bodytext-6--no-margin">Curated melodies. Ambient echoes that ground you in the now. The hum of craftsmanship, the pulse of elegance.</p>
+
                 </>
             ),
             taste: (
                 <>
-                    <p className="bodytext-6--no-margin">Not in food, but in aftertaste.</p>
-                    <p className="bodytext-6--no-margin">The lingering feeling of a moment made</p>
-                    <p className="bodytext-6--no-margin">beautiful.</p>
+                    <p className="bodytext-6--no-margin">Not in food, but in aftertaste. The lingering feeling of a moment made beautiful.</p>
                 </>
             )
         };
@@ -82,33 +105,57 @@ const SenseOverlay = ({ isVisible, onClose, origin }) => {
 
     if (!isVisible) return null;
 
+    // Don't show content until images are loaded
+    if (!imagesLoaded) {
+        return (
+            <div className="sense-overlay">
+                <div className="sense-overlay__content" style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}>
+                    {/* Loading placeholder */}
+                </div>
+            </div>
+        );
+    }
+
+    const handleOverlayClick = (e) => {
+        // Disable click-to-close for mobile and tablet (< 1024px)
+        if (window.innerWidth < 1024) {
+            return;
+        }
+        // Desktop: close when clicking on background
+        if (e.target === e.currentTarget) {
+            handleClose();
+        }
+    };
+
     return (
         <div
             className="sense-overlay"
-            onClick={handleClose}
+            onClick={handleOverlayClick}
         >
+            {/* Close Button - moved outside content to prevent jumping */}
+            <div
+                className={`sense-overlay__close-button ${isClosing ? 'sense-overlay__close-button--closing' : ''}`}
+            >
+                <ShineGlassButton
+                    onClick={handleClose}
+                    theme="footer"
+                    width={44}
+                    height={44}
+                    className="sense-overlay__close-btn"
+                >
+                    <img
+                        src="/universeSection/close-x-icon.svg"
+                        alt="Close"
+                        width="20"
+                        height="20"
+                    />
+                </ShineGlassButton>
+            </div>
+
             <div
                 className={`sense-overlay__content ${isClosing ? 'sense-overlay__content--closing' : ''}`}
                 style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}
             >
-                {/* Close Button */}
-                <div className="sense-overlay__close-button">
-                    <ShineGlassButton
-                        onClick={handleClose}
-                        theme="footer"
-                        width={44}
-                        height={44}
-                        className="sense-overlay__close-btn"
-                    >
-                        <img
-                            src="/universeSection/close-x-icon.svg"
-                            alt="Close"
-                            width="20"
-                            height="20"
-                        />
-                    </ShineGlassButton>
-                </div>
-
                 <h2 className="sense-overlay__title heading2--no-margin">Senses</h2>
                 {/* <div className="sense-overlay__center-dot"></div> */}
                 <div className="sense-overlay__starlight">

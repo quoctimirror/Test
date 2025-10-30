@@ -1,11 +1,16 @@
 /* ===== BASE STYLES - MOBILE FIRST (320px+) ===== */
 .pv2-section2-container {
     /* border: 2px solid #000; */
-    background: #E0E0E0;
+    background: #FF6B6B;
+    /* DEBUG: Red background to see section area */
     margin-top: 0;
-    /* Mobile: margin nhỏ */
-    padding: 30px 12px;
-    /* Mobile: padding nhỏ */
+    width: 100%;
+    padding: 120px 43px;
+    /* Mobile: padding-top 120px, padding-bottom 120px, padding left/right 43px */
+    min-height: 443px;
+    /* Content height */
+    box-sizing: border-box;
+    display: block;
 }
 
 .pv2-section2-wrapper {
@@ -19,9 +24,12 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    gap: 16px; /* Fixed gap instead of margin for consistent spacing */
-    max-width: 600px; /* Prevent content from being too wide */
+    gap: 16px;
+    /* Fixed gap instead of margin for consistent spacing */
+    max-width: 600px;
+    /* Prevent content from being too wide */
     margin: 0 auto;
+    background: yellow;
 }
 
 .pv2-section2-header {
@@ -36,20 +44,22 @@
     color: var(--gray-3, #797979);
     text-align: center;
     font-family: "BT Beau Sans";
-    font-size: 12px;
+    font-size: 16px;
     /* Mobile: font nhỏ nhất */
     font-style: normal;
-    font-weight: 500;
+    font-weight: 400;
     align-self: stretch;
-    margin-bottom: -5px;
     letter-spacing: 0.5px;
+    line-height: 120%;
+    /* 19.2px */
+    margin-bottom: 12px;
 }
 
 .pv2-section2-title {
     color: var(--Black, #000);
     text-align: center;
     padding: 0 !important;
-    margin-bottom: 24px !important;
+    margin-bottom: 36px !important;
 }
 
 .pv2-section2-subtitle {
@@ -60,14 +70,56 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 130%;
+    line-height: 120%;
     /* 18.2px */
     margin: 0 auto !important;
     padding: 0 !important;
-    height: auto;
+    width: 305px;
+    height: 119px;
     box-sizing: border-box;
     word-wrap: break-word;
     white-space: normal;
+    margin-bottom: 60px !important;
+}
+
+/* Configuration Details Section */
+.pv2-section2-config-details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 305px;
+    /* Same as subtitle width for mobile */
+    margin: 0 auto;
+}
+
+.pv2-section2-config-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.pv2-section2-config-row:first-child {
+    border-top: 1px solid #E0E0E0;
+}
+
+.pv2-section2-config-row:last-child {
+    border-bottom: none;
+}
+
+.pv2-section2-config-label {
+    color: var(--gray-3, #797979);
+    /* bodytext-6--no-margin already applied in JSX */
+    /* font-size: 12px on mobile (from typography.css @media max-width: 480px) */
+}
+
+.pv2-section2-config-value {
+    color: var(--Black, #000);
+    text-align: right;
+    /* bodytext-3--no-margin already applied in JSX */
+    /* font-size: 16px on mobile (from typography.css @media max-width: 480px) */
 }
 
 /* ========================================
@@ -86,7 +138,8 @@
     }
 
     .pv2-section2-content {
-        gap: 20px; /* Slightly larger gap on larger screens */
+        gap: 20px;
+        /* Slightly larger gap on larger screens */
     }
 
     .pv2-section2-collection {
@@ -109,7 +162,8 @@
     }
 
     .pv2-section2-content {
-        gap: 24px; /* More breathing room on tablet */
+        gap: 24px;
+        /* More breathing room on tablet */
     }
 
     .pv2-section2-collection {
@@ -134,16 +188,17 @@
 }
 
 /* ========================================
-   DESKTOP - ≥1024px
+   TABLET LANDSCAPE - ≥992px (iPad landscape, Laptop nhỏ)
    ======================================== */
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
     .pv2-section2-container {
         margin-top: 0;
         padding: 50px 20px;
     }
 
     .pv2-section2-content {
-        gap: 28px; /* Optimal spacing for desktop */
+        gap: 28px;
+        /* Optimal spacing for desktop */
     }
 
     .pv2-section2-collection {
@@ -169,9 +224,9 @@
 }
 
 /* ========================================
-   LARGE DESKTOP - ≥1280px
+   DESKTOP - ≥1200px (MacBook Pro, Desktop HD)
    ======================================== */
-@media (min-width: 1280px) {
+@media (min-width: 1200px) {
     .pv2-section2-container {
         margin-top: 0;
         padding: 60px 20px;
@@ -185,5 +240,24 @@
         font-size: 20px;
         line-height: 1.7;
         max-width: 900px;
+    }
+}
+
+/* ========================================
+   LARGE DESKTOP - ≥1400px (Full HD, 2K, 4K)
+   ======================================== */
+@media (min-width: 1400px) {
+    .pv2-section2-container {
+        padding: 70px 24px;
+    }
+
+    .pv2-section2-collection {
+        font-size: 20px;
+    }
+
+    .pv2-section2-subtitle {
+        font-size: 22px;
+        line-height: 1.8;
+        max-width: 1000px;
     }
 }

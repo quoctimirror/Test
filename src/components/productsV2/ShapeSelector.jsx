@@ -28,6 +28,7 @@ const ShapeSelector = ({ onClose, onSelectShape, selectedShape }) => {
             className={`pv2-size-selector-overlay ${isClosing ? 'closing' : ''}`}
             onClick={handleClose}
         >
+
             <div className="pv2-size-selector-modal" onClick={(e) => e.stopPropagation()}>
                 {/* Close Button */}
                 <div className="pv2-shape-selector-close-button">

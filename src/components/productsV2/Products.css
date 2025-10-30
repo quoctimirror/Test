@@ -55,7 +55,7 @@
 /* ===================================================================
    DESKTOP STYLES (>= 1024px)
    =================================================================== */
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
     /* Container becomes side-by-side layout */
     .pv2-products-container {
         flex-direction: row;
@@ -80,7 +80,7 @@
 /* ===================================================================
    LARGE DESKTOP STYLES (>= 1440px)
    =================================================================== */
-@media (min-width: 1280px) {
+@media (min-width: 1200px) {
     /* Maintain desktop layout with optimal proportions */
     .pv2-products-right {
         width: calc(100% - 66.25%);

@@ -21,9 +21,10 @@
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('/universeSection/tbl-dk-sense-overlay.png');
+    background-image: url('/universeSection/dk-heart-sense.svg');
     background-size: auto 1000px;
     background-position: center;
     background-repeat: no-repeat;
@@ -52,7 +53,8 @@
 .sense-overlay__starlight-4h,
 .sense-overlay__starlight-8h,
 .sense-overlay__starlight-10h {
-    animation: syncStarlight 1.5s infinite;
+    opacity: 1;
+    animation: syncStarlight 0.5s infinite;
 }
 
 .sense-overlay__starlight {
@@ -67,7 +69,7 @@
 .sense-overlay__starlight-10h {
     position: fixed;
     top: calc(50% - 5px);
-    left: calc(50% + 5px);
+    left: calc(50% - 5px);
     transform: translateX(-50%) rotate(150deg);
     transform-origin: center top;
     z-index: 1000;
@@ -214,13 +216,52 @@
     z-index: 1003;
     pointer-events: auto;
     display: block;
+    animation: zoomInButton 0.3s ease-out;
     /* Show by default for mobile first */
 }
 
-/* Desktop: Show close button */
+@keyframes zoomInButton {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+}
+
+@keyframes zoomOutButton {
+    from {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-50%) scale(0);
+    }
+}
+
+.sense-overlay__close-button--closing {
+    animation: zoomOutButton 0.3s ease-in forwards !important;
+}
+
+/* Desktop: Hide close button */
 @media (min-width: 1024px) {
     .sense-overlay__close-button {
-        display: block;
+        display: none;
+    }
+
+    /* Content overlay box - fixed size for desktop */
+    .sense-overlay__content {
+        width: 978px;
+        height: 956px;
+        flex-shrink: 0;
+        aspect-ratio: 489/478;
+        background-image: url('/universeSection/dk-heart-sense.svg');
+        background-size: cover;
     }
 }
 
@@ -316,11 +357,15 @@
         animation: fadeIn 0.15s ease-in-out;
     }
 
-    /* .sense-overlay__content {
-        background-image: url('/universeSection/tbl-dk-sense-overlay.png');
-        background-size: 706px 690px;
-        animation: zoomIn 0.3s ease-out;
-    } */
+    .sense-overlay__content {
+        background-image: url('/universeSection/dk-heart-sense.svg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 706px;
+        height: 690px;
+        flex-shrink: 0;
+    }
 
     .sense-overlay__title {
         top: calc(50% - 30px);
@@ -333,7 +378,7 @@
 
     .sense-overlay__starlight-10h {
         top: calc(50% - 5px);
-        left: calc(50% + 5px);
+        left: calc(50% - 7px);
     }
 
     .sense-overlay__starlight-8h {
@@ -355,10 +400,10 @@
     .sense-overlay__description {
         display: block;
         position: fixed;
-        top: calc(50% + 120px);
+        top: calc(50% + 150px);
         left: 50%;
         transform: translateX(-50%);
-        width: 62vw;
+        width: 25vw;
         height: 60px;
         text-align: center;
         z-index: 1002;
@@ -393,7 +438,7 @@
     }
 
     .sense-overlay__close-button {
-        bottom: 20%;
+        bottom: 8%;
     }
 
     /* Text elements font size for tablet - 18px */
@@ -415,9 +460,14 @@
     }
 
     .sense-overlay__content {
-        background-image: url('/universeSection/mb-sense-overlay.png');
+        background-image: url('/universeSection/dk-heart-sense.svg');
         background-size: cover;
-        animation: zoomIn 0.3s ease-out;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 706px;
+        height: 690px;
+        flex-shrink: 0;
+        aspect-ratio: 1/1;
     }
 
     .sense-overlay__title {
@@ -428,25 +478,27 @@
 
     /* Adjust Starlight positions for Mobile */
     .sense-overlay__starlight {
-        top: calc(50% - 30px);
+        top: calc(50% - 35px);
     }
 
     .sense-overlay__starlight-10h {
-        top: calc(50% + 10px);
-        left: calc(50% - 10px);
+        top: calc(50% + 20px);
+        left: calc(50% - 7px);
     }
 
     .sense-overlay__starlight-8h {
-        top: calc(50% - 5px);
+        top: calc(50% - 15px);
+        left: calc(50% + 10px) !important;
     }
 
     .sense-overlay__starlight-2h {
-        top: calc(50% + 9px);
-        left: calc(50% - 5px);
+        top: calc(50% + 19px);
+        left: calc(50% - 2px);
     }
 
     .sense-overlay__starlight-4h {
-        top: calc(50% - 9px);
+        top: calc(50% - 19px);
+        left: calc(50% - 14px);
         transform: translateX(-50%) rotate(290deg);
     }
 
@@ -459,12 +511,14 @@
 
     .sense-overlay__taste-text {
         top: calc(50% + 20px);
+        left: calc(50% + 126px);
         cursor: pointer;
         pointer-events: auto;
     }
 
     .sense-overlay__scent-text {
         top: calc(50% + 20px);
+        left: calc(50% - 120px);
         cursor: pointer;
         pointer-events: auto;
     }
@@ -478,7 +532,7 @@
 
     .sense-overlay__touch-text {
         top: calc(50% - 120px);
-        left: calc(50% + 80px);
+        left: calc(50% + 86px);
         cursor: pointer;
         pointer-events: auto;
     }
@@ -499,7 +553,7 @@
         top: calc(50% + 150px);
         left: 50%;
         transform: translateX(-50%);
-        width: 77vw;
+        width: 60vw;
         height: 50px;
         text-align: center;
         z-index: 1002;
@@ -509,8 +563,8 @@
 
     .sense-overlay__description p {
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+        /* bodytext-6--no-margin class from typography.css handles font styling */
         margin-bottom: 4px;
-        line-height: 1.0;
     }
 
     /* Close button - lower position for mobile */
@@ -618,12 +672,17 @@
         left: 50%;
         width: 100px;
         height: 100px;
-        background-image: url('/universeSection/dk-heart-sense.png');
+        background-image: url('/universeSection/dk-heart-sense.svg');
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
         transform: translate(-50%, -50%);
         z-index: 1001;
         pointer-events: none;
+    }
+
+    /* Close button position for desktop */
+    .sense-overlay__close-button {
+        bottom: calc(20% - 80px);
     }
 }

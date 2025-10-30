@@ -22,7 +22,7 @@ export const SHAPE_CONFIGS = {
   },
   Fiston: {
     shape: 'Fiston',
-    modelId: 'MFGQrBe1RpiawHlEpH3fJQ',
+    modelId: 'eOcY7UV6TMWbra25hv9dwQ',
     metal: 'Gold 24k',
     band: 'Single band'
   }

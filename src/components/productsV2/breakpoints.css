@@ -1,23 +1,43 @@
 /* ========================================
    PRODUCTSV2 BREAKPOINTS - MOBILE FIRST
-   Clean Code & DRY Principles
+   Bootstrap 5 Standard - See BREAKPOINTS_NOTES.md
    ======================================== */
 
 /*
-   STANDARDIZED BREAKPOINTS:
-   - Base (Mobile):    < 576px    (No media query needed)
-   - Large Mobile:     ≥ 576px    (sm)
-   - Tablet:           ≥ 768px    (md)
-   - Desktop:          ≥ 1024px   (lg)
-   - Large Desktop:    ≥ 1280px   (xl)
+   BREAKPOINTS BY DEVICE GROUP:
+
+   📱 MOBILE GROUP:
+   - Base (xs):        < 576px    iPhone SE, iPhone 8
+   - Large Mobile (sm): ≥ 576px   iPhone Pro Max landscape
+
+   📱 TABLET GROUP:
+   - Tablet Portrait (md):  ≥ 768px    iPad Mini, iPad portrait
+   - Tablet Landscape (lg): ≥ 992px    iPad landscape, Laptop nhỏ
+
+   💻 DESKTOP GROUP:
+   - Desktop (xl):      ≥ 1200px   MacBook Pro, Desktop HD
+   - Large Desktop (xxl): ≥ 1400px  Full HD, 2K, 4K
 */
 
 :root {
-  /* Breakpoint values as CSS variables */
+  /* Mobile Group */
+  --bp-mobile-sm: 0px;      /* xs - base */
+  --bp-mobile-lg: 576px;    /* sm */
+
+  /* Tablet Group */
+  --bp-tablet-sm: 768px;    /* md */
+  --bp-tablet-lg: 992px;    /* lg */
+
+  /* Desktop Group */
+  --bp-desktop-sm: 1200px;  /* xl */
+  --bp-desktop-lg: 1400px;  /* xxl */
+
+  /* Legacy naming (for backward compatibility) */
   --bp-sm: 576px;
   --bp-md: 768px;
-  --bp-lg: 1024px;
-  --bp-xl: 1280px;
+  --bp-lg: 992px;
+  --bp-xl: 1200px;
+  --bp-xxl: 1400px;
 }
 
 /* ========================================
@@ -55,7 +75,7 @@
   display: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
   .hide-desktop {
     display: block;
   }
@@ -84,15 +104,21 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
   .responsive-padding {
     padding: 32px;
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1200px) {
   .responsive-padding {
     padding: 40px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .responsive-padding {
+    padding: 48px;
   }
 }
 
@@ -119,17 +145,24 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
   .pv2-responsive-container {
     padding: 0 32px;
     max-width: 960px;
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1200px) {
   .pv2-responsive-container {
     padding: 0 40px;
-    max-width: 1200px;
+    max-width: 1140px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .pv2-responsive-container {
+    padding: 0 48px;
+    max-width: 1320px;
   }
 }
 
@@ -148,9 +181,15 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
   .pv2-responsive-text-sm {
     font-size: 14px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .pv2-responsive-text-sm {
+    font-size: 15px;
   }
 }
 
@@ -165,9 +204,15 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
   .pv2-responsive-text-base {
     font-size: 16px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .pv2-responsive-text-base {
+    font-size: 17px;
   }
 }
 
@@ -182,9 +227,21 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
   .pv2-responsive-text-lg {
     font-size: 20px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .pv2-responsive-text-lg {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .pv2-responsive-text-lg {
+    font-size: 24px;
   }
 }
 

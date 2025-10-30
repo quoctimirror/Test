@@ -6,9 +6,11 @@
     bottom: 0;
     left: 0;
     right: 0;
-    width: 100%;
-    height: 25vh;
-    background: linear-gradient(180deg, #FFF 0%, #BB234C 100%);
+    width: 100vw;
+    /* Formula: (115 + 24) / (657 + 40) * 100vh = 139/697 ≈ 19.94vh */
+    height: calc((115 + 24) / (657 + 40) * 100vh);
+    /* background: linear-gradient(180deg, #FFF 0%, #BB234C 100%); */
+    background: white;
     z-index: 100;
     box-sizing: border-box;
     transition: transform 1s ease-in-out;
@@ -16,19 +18,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    /* DEBUG: Tô màu để dễ nhìn area */
+    /* border: 1px solid rgba(255, 0, 0, 0.8); */
 }
 
 .pv2-mobile-bar-caret-up {
-    position: absolute;
-    top: 0.2%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     opacity: 0.5;
     cursor: pointer;
     transition: opacity 0.2s ease;
-    z-index: 10;
+    box-sizing: border-box;
+    margin: 0 auto;
 }
 
 .pv2-mobile-bar-caret-up:hover {
@@ -44,148 +46,54 @@
 }
 
 .pv2-mobile-product-content {
+    position: relative;
     width: 100%;
     max-width: 100%;
-    padding: 20px 24px 20px 24px;
+    padding: 12px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    justify-content: center;
     align-items: center;
     height: 100%;
 }
 
 .pv2-mobile-product-title {
     text-align: center;
-    color: #BC224C !important;
-    -webkit-text-fill-color: #BC224C !important;
+    color: var(--Pink, #BC224C) !important;
+    -webkit-text-fill-color: var(--Pink, #BC224C) !important;
     filter: none !important;
     backdrop-filter: none !important;
-    letter-spacing: -0.02em !important;
+    font-size: 32px !important;
+    font-style: italic !important;
+    font-weight: 300 !important;
+    line-height: 100% !important;
+    /* 32px */
+    letter-spacing: 0 !important;
     margin: 0 !important;
-}
-
-.pv2-mobile-action-buttons {
-    display: flex;
-    gap: 8px;
-    width: 100%;
-    position: relative;
-    align-items: center;
-}
-
-.pv2-mobile-wishlist-btn-glass {
-    flex-shrink: 0;
-    width: 36px;
-}
-
-.pv2-mobile-wishlist-btn-glass .shine-button-wrap {
-    width: 36px !important;
-    height: 36px !important;
-}
-
-.pv2-mobile-wishlist-btn-glass .shine-glass-button {
-    width: 36px !important;
-    height: 36px !important;
-    border: none !important;
-    border-radius: 50% !important;
-    background: transparent !important;
-}
-
-.pv2-mobile-wishlist-btn-glass .glass-layer {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
-    box-sizing: border-box !important;
-    transition: background var(--shine-anim--hover-time) var(--shine-anim--hover-ease) !important;
-}
-
-.pv2-mobile-wishlist-btn-glass .shine-glass-button:hover .glass-layer {
-    background: linear-gradient(-75deg,
-            rgba(0, 0, 0, 0.95),
-            rgba(0, 0, 0, 0.98),
-            rgba(0, 0, 0, 0.95)) !important;
-}
-
-.pv2-mobile-wishlist-btn-glass .border-layer {
-    display: none !important;
-}
-
-.pv2-mobile-wishlist-btn-glass svg {
-    color: rgba(255, 255, 255, 0.8);
-    stroke: rgba(255, 255, 255, 0.8);
-    transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
-}
-
-.pv2-mobile-wishlist-btn-glass .shine-glass-button:hover svg {
-    color: rgba(255, 255, 255, 1);
-    stroke: rgba(255, 255, 255, 1);
-}
-
-.pv2-mobile-wishlist-btn-glass .shine-layer::before {
-    background: radial-gradient(circle 200px at var(--mouse-x) var(--mouse-y),
-            rgba(255, 255, 255, 0.5) 0%,
-            rgba(255, 255, 255, 0.25) 25%,
-            rgba(255, 255, 255, 0.15) 50%,
-            transparent 100%) !important;
-}
-
-.pv2-mobile-appointment-btn-glass {
-    flex: 1 1 auto;
-    height: 40px !important;
-    min-width: 0;
-    width: 100%;
-    display: flex;
-}
-
-.pv2-mobile-appointment-btn-glass .shine-button-wrap {
-    width: 100% !important;
-    height: 40px !important;
-    max-width: none !important;
-    flex: 1 !important;
-}
-
-.pv2-mobile-appointment-btn-glass .shine-glass-button {
-    width: 100% !important;
-    height: 40px !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    min-width: 0 !important;
-    text-align: center !important;
-}
-
-.pv2-mobile-appointment-btn-glass .button-text {
-    text-align: center !important;
-    padding: 0 4px !important;
-    font-size: 13px !important;
-}
-
-.pv2-mobile-appointment-btn-glass .glass-layer {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
-    box-sizing: border-box !important;
-}
-
-.pv2-mobile-appointment-btn-glass .border-layer {
-    display: none !important;
+    width: fit-content;
+    max-width: 100%;
 }
 
 .pv2-mobile-order-btn {
     width: 100%;
-    height: 40px;
-    min-height: 40px;
-    background: #FFFFFF;
+    height: 49px;
+    min-height: 49px;
+    /* background: #FFFFFF; */
+    background: var(--transparent-black-75, rgba(0, 0, 0, 0.75));
     border: none;
-    color: black;
+    color: white;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 16px;
+    padding: 16px 20px;
     box-sizing: border-box;
+    box-shadow: -1px -1px 4px 0 rgba(255, 255, 255, 0.25) inset, 1px 1px 4px 0 rgba(255, 255, 255, 0.50) inset;
+    backdrop-filter: blur(6px);
+    border-radius: 100px;
+    border: 0.5px solid #000;
 }
 
 .pv2-mobile-order-btn:hover {
@@ -251,54 +159,14 @@
         gap: 8px;
     }
 
-    .pv2-mobile-product-title {
-        font-size: 32px;
-    }
-
-    .pv2-mobile-action-buttons {
-        gap: 8px;
-    }
-
-    .pv2-mobile-wishlist-btn-glass {
-        width: 36px;
-    }
-
-    .pv2-mobile-wishlist-btn-glass .shine-button-wrap {
-        width: 36px !important;
-        height: 36px !important;
-    }
-
-    .pv2-mobile-wishlist-btn-glass .shine-glass-button {
-        width: 36px !important;
-        height: 36px !important;
-    }
-
-    .pv2-mobile-appointment-btn-glass {
-        height: 40px !important;
-    }
-
-    .pv2-mobile-appointment-btn-glass .shine-button-wrap {
-        height: 40px !important;
-    }
-
-    .pv2-mobile-appointment-btn-glass .shine-glass-button {
-        height: 40px !important;
-    }
-
     .pv2-mobile-order-btn {
         height: 40px;
         border-radius: 20px;
     }
-
-    .pv2-mobile-bar-caret-up {
-        top: 5%;
-        width: 24px;
-        height: 24px;
-    }
 }
 
 /* Desktop - >= 1024px - Hide mobile bar */
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
     .pv2-mobile-product-bar {
         display: none;
     }

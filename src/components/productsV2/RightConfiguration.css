@@ -337,7 +337,7 @@
 }
 
 /* Desktop - ≥1024px - Show on desktop */
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
     .pv2-right-configuration {
         display: block;
     }

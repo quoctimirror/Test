@@ -564,14 +564,21 @@
 }
 
 /* ===== DESKTOP (≥ 1024px) - Hidden ===== */
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
     .pv2-mobile-config-modal {
         display: none;
     }
 }
 
-/* ===== LARGE DESKTOP (≥ 1280px) - Hidden ===== */
-@media (min-width: 1280px) {
+/* ===== DESKTOP (≥1200px) - Hidden ===== */
+@media (min-width: 1200px) {
+    .pv2-mobile-config-modal {
+        display: none;
+    }
+}
+
+/* ===== LARGE DESKTOP (≥1400px) - Hidden ===== */
+@media (min-width: 1400px) {
     .pv2-mobile-config-modal {
         display: none;
     }

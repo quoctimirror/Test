@@ -41,7 +41,7 @@ const ProductsLeftDrive = ({ modelId }) => {
       });
     };
 
-    // Load model from iJewel Drive
+    // Load model from iJewel Drive with fallback to local
     const loadModel = async () => {
       if (!containerRef.current) return;
 
@@ -51,7 +51,7 @@ const ProductsLeftDrive = ({ modelId }) => {
         // Load SDK script
         await loadScript();
 
-        console.log('SDK loaded, loading model from Drive...');
+        console.log('SDK loaded, loading local model...');
 
         // Wait a bit for container to be ready
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -61,12 +61,12 @@ const ProductsLeftDrive = ({ modelId }) => {
           containerRef.current.innerHTML = '';
         }
 
-        // iJewel Drive configuration
-        const driveBasename = 'drive'; // Your Drive instance name
-        const modelFileId = modelId || 'MFGQrBe1RpiawHlEpH3fJQ'; // Default to Pear if no modelId provided
         const containerElement = containerRef.current;
 
-        // Load model from iJewel Drive using SDK
+        // Load model from iJewel Drive
+        const driveBasename = 'drive';
+        const modelFileId = modelId || 'eOcY7UV6TMWbra25hv9dwQ'; // Default model
+
         window.ijewelViewer.loadModelById(
           modelFileId,
           driveBasename,
@@ -80,7 +80,7 @@ const ProductsLeftDrive = ({ modelId }) => {
         console.log('✅ Loading model from iJewel Drive:', modelFileId);
 
       } catch (err) {
-        console.error('❌ Error loading model from iJewel Drive:', err);
+        console.error('❌ Error loading model:', err);
       }
     };
 

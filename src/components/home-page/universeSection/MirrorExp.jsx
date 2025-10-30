@@ -113,8 +113,8 @@ const MirrorExp = () => {
 
   return (
     <div className="mirror-exp" ref={mirrorExpRef}>
-      <div className="mirror-exp__luxury-text bodytext-1--no-margin">
-        Awakening luxury through your senses, in every time, space and presence.
+      <div className="mirror-exp__luxury-text bodytext-4--no-margin">
+        AWAKENING LUXURY THROUGH YOUR SENSES, IN EVERY TIME, SPACE AND PRESENCE.
       </div>
       <div className="mirror-exp-title"></div>
       <div className="mirror-exp__layer5"></div>

@@ -39,9 +39,9 @@
 }
 
 /* ===================================================================
-   DESKTOP STYLES (>= 1024px)
+   TABLET LANDSCAPE (≥992px) - iPad landscape, Laptop nhỏ
    =================================================================== */
-@media (min-width: 1024px) {
+@media (min-width: 992px) {
     .pv2-left-container {
         width: 66.25%;
         height: auto;
@@ -57,11 +57,21 @@
 }
 
 /* ===================================================================
-   LARGE DESKTOP STYLES (>= 1440px)
+   DESKTOP (≥1200px) - MacBook Pro, Desktop HD
    =================================================================== */
-@media (min-width: 1280px) {
+@media (min-width: 1200px) {
     .pv2-left-container {
         width: 66.25%;
+    }
+}
+
+/* ===================================================================
+   LARGE DESKTOP (≥1400px) - Full HD, 2K, 4K
+   =================================================================== */
+@media (min-width: 1400px) {
+    .pv2-left-container {
+        width: 66.25%;
+        max-width: 1400px;
     }
 }
 

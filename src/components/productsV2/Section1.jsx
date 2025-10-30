@@ -5,11 +5,18 @@ import ProductsLeftDrive from './ProductsLeftDrive'; // iJewel Drive - cloud mod
 // import ProductsLeft2 from './ProductsLeft2'; // quocti_dancefloor viewer (realistic rendering)
 
 const Section1 = ({ productConfig }) => {
+    const handleScrollDown = () => {
+        const section2 = document.querySelector('.pv2-section2-container');
+        if (section2) {
+            section2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     return (
         <div className="pv2-section1">
-            <div className="pv2-section1-container">
+            {/* <div className="pv2-section1-container"> */}
                 {/* Left Arrow Button */}
-                <div className="pv2-section1-arrow-btn pv2-section1-arrow-left" style={{ transform: 'none', transition: 'none' }}>
+                {/* <div className="pv2-section1-arrow-btn pv2-section1-arrow-left" style={{ transform: 'none', transition: 'none' }}>
                     <ShineGlassButton
                         width={56}
                         height={56}
@@ -19,10 +26,10 @@ const Section1 = ({ productConfig }) => {
                             <path d="M24.25 15.5L6.75 15.5M6.75 15.5L14.25 8M6.75 15.5L14.25 23" stroke="gray" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="square" />
                         </svg>
                     </ShineGlassButton>
-                </div>
+                </div> */}
 
                 {/* Right Arrow Button */}
-                <div className="pv2-section1-arrow-btn pv2-section1-arrow-right" style={{ transform: 'none', transition: 'none' }}>
+                {/* <div className="pv2-section1-arrow-btn pv2-section1-arrow-right" style={{ transform: 'none', transition: 'none' }}>
                     <ShineGlassButton
                         width={56}
                         height={56}
@@ -32,17 +39,31 @@ const Section1 = ({ productConfig }) => {
                             <path d="M6.75 15.5L24.25 15.5M24.25 15.5L16.75 23M24.25 15.5L16.75 8" stroke="gray" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="square" />
                         </svg>
                     </ShineGlassButton>
-                </div>
+                </div> */}
 
                 {/* Loading Model Area */}
-                <div className="pv2-model-area">
+                {/* <div className="pv2-model-area"> */}
                     {/* ORIGINAL - Local models with iJewel SDK */}
                     {/* <ProductsLeft /> */}
 
                     {/* iJewel Drive cloud models with shape selection */}
-                    <ProductsLeftDrive modelId={productConfig?.modelId} />
+                    {/* <ProductsLeftDrive modelId={productConfig?.modelId} />
+                </div> */}
+
+                {/* Scroll Down Button - Bottom Center */}
+                {/* <div className="pv2-section1-scroll-btn">
+                    <ShineGlassButton
+                        variant="circle"
+                        width={46}
+                        height={46}
+                        onClick={handleScrollDown}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 5L10 15M10 15L6 11M10 15L14 11" stroke="rgba(0, 0, 0, 0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </ShineGlassButton>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };
