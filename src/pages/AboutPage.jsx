@@ -10,11 +10,18 @@ import MirrorverseSection from "@components/about/mirrorverseSection/Mirrorverse
 import AtMirror from "@components/about/atMirror/AtMirror";
 import SharedSection from "@components/about/sharedSection/SharedSection";
 import DiscoverSection from "@components/about/discoverSection/DiscoverSection";
+import ScrollDownArrow from "@components/common/button/ScrollDownArrow";
+import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
+import "@components/home-page/scrollEffect/ScrollEffect.css"; // Import CSS for arrow styling
 import "./AboutPage.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutPage = () => {
+  const { isArrowVisible, handleArrowClick } = useScrollToNextSection({
+    footerSelector: '[data-section="shared-section"], .footer', // Check both SharedSection and global footer
+  });
+
   const setupScrollTriggers = () => {
     // Kill existing triggers first
     ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
@@ -36,6 +43,9 @@ const AboutPage = () => {
   };
 
   useEffect(() => {
+    // Scroll to top on mount
+    window.scrollTo(0, 0);
+
     // Small delay to ensure DOM is ready
     const initTimeout = setTimeout(() => {
       setupScrollTriggers();
@@ -70,41 +80,48 @@ const AboutPage = () => {
 
   return (
     <div className="about-page">
-      {/* <section className="panel"> */}
-      <SloganSection />
-      {/* </section> */}
+      <div data-section="slogan-section">
+        <SloganSection />
+      </div>
 
-      <section className="panel">
+      <section className="panel" data-section="starting-place">
         <StartingPlaceSection />
       </section>
 
-      {/* <section className="panel"> */}
-      <IntroBOD />
-      {/* </section> */}
+      <div data-section="intro-bod">
+        <IntroBOD />
+      </div>
 
-      {/* <section className="panel"> */}
-      <BODMemberV3 />
-      {/* </section> */}
+      <div data-section="bod-member">
+        <BODMemberV3 />
+      </div>
 
-      <section className="panel">
+      <section className="panel" data-section="at-mirror">
         <AtMirror />
       </section>
 
-      <section className="panel">
+      <div data-section="mirrorverse">
         <MirrorverseSection />
-      </section>
+      </div>
 
-      <section className="panel">
+      <section className="panel" data-section="mirror-network">
         <MirrorNetworkSection />
       </section>
 
-      <section className="panel">
+      <section className="panel" data-section="discover">
         <DiscoverSection />
       </section>
 
-      {/* <section className="panel"> */}
-      <SharedSection />
-      {/* </section> */}
+      <div data-section="shared-section">
+        <SharedSection />
+      </div>
+
+      {/* Fixed Arrow Button */}
+      {isArrowVisible && (
+        <div className="fixed-arrow-container">
+          <ScrollDownArrow onClick={handleArrowClick} />
+        </div>
+      )}
     </div>
   );
 };

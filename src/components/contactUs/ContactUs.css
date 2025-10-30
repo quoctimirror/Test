@@ -79,6 +79,9 @@
   .contact-us-hero-content {
     width: 49%;
   }
+  .contact-us-hero {
+    min-height: 60vh;
+  }
 }
 
 /* Gradient box at bottom of background */

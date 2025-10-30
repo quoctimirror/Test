@@ -4,6 +4,7 @@ import "./ChangePassword.css";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
 import EyeSlashIconSvg from "@assets/images/icons/EyeSlashIcon.svg";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import Toast from "@components/common/toast/Toast";
 
 const ChangePassword = ({ onClose }) => {
   const [passwordData, setPasswordData] = useState({
@@ -18,6 +19,7 @@ const ChangePassword = ({ onClose }) => {
     newPassword: false,
     confirmPassword: false,
   });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
 
   // SỬA TÊN FUNCTION
   const getAuthToken = () => {
@@ -97,20 +99,32 @@ const ChangePassword = ({ onClose }) => {
       });
 
       console.log("Password changed successfully:", response.data);
-      alert("Password changed successfully!");
-      onClose();
+      setToast({
+        show: true,
+        message: "Password changed successfully!",
+        type: "success",
+      });
+      setTimeout(() => {
+        onClose();
+      }, 1500); // Close modal after showing success toast
     } catch (error) {
       console.error("Password change failed:", error);
       console.error("Error response:", error.response?.data);
 
+      let errorMessage;
       if (error.response?.status === 401) {
-        setErrors({ form: "Session expired. Please login again." });
+        errorMessage = "Session expired. Please login again.";
       } else {
-        const errorMessage =
+        errorMessage =
           error.response?.data?.message ||
           "Failed to change password. Please try again.";
-        setErrors({ form: errorMessage });
       }
+      setErrors({ form: errorMessage });
+      setToast({
+        show: true,
+        message: errorMessage,
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -263,6 +277,15 @@ const ChangePassword = ({ onClose }) => {
           </div>
         </form>
       </div>
+
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={10000}
+          onClose={() => setToast({ show: false, message: "", type: "success" })}
+        />
+      )}
     </div>
   );
 };

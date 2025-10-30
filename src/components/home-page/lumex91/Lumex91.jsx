@@ -2,9 +2,20 @@ import "./Lumex91.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import ShinyText from "@components/common/shiny-text/ShinyText";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getNewsDetailRoute } from "@/constants/routes";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 
 const Lumex91 = () => {
   const [videoError, setVideoError] = useState(false);
+  const navigate = useNavigate();
+
+  const handleExploreClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      getNewsDetailRoute("milan")
+    );
+  };
 
   return (
     <section className="lumex91">
@@ -32,9 +43,11 @@ const Lumex91 = () => {
 
         <div className="lumex91-content">
           <h1 className="heading-1--no-margin">
-            <ShinyText text="Mirror-Lumex 91" speed={2.5} />
+            <ShinyText text="Mirror-Lumex 91™" speed={2.5} />
           </h1>
-          <ShineGlassButton theme="footer">Explore more</ShineGlassButton>
+          <ShineGlassButton theme="footer" onClick={handleExploreClick}>
+            Explore more
+          </ShineGlassButton>
         </div>
       </div>
     </section>

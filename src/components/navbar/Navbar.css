@@ -23,7 +23,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 97px;
+  height: 80px;
   z-index: 200;
   pointer-events: none;
   overflow: hidden;
@@ -68,7 +68,7 @@
 /* Logo container riêng cho blend mode */
 .logo-fixed-container {
   position: fixed;
-  top: 30px;
+  top: 23px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 201;
@@ -125,8 +125,8 @@
 }
 
 .logo-fixed-container .navbar-logo-svg {
-  width: 151.98065185546875px;
-  height: 40px;
+  width: auto;
+  height: 32px;
   display: block;
 }
 
@@ -175,7 +175,7 @@
 /* Menu container với blend mode */
 .menu-fixed-container {
   position: fixed;
-  top: 20px;
+  top: 11.5px;
   left: 2.5%;
   right: 2.5%;
   z-index: 201;
@@ -213,7 +213,7 @@
 /* Account link container với blend mode */
 .account-fixed-container {
   position: fixed;
-  top: 20px;
+  top: 11.5px;
   right: calc(
     2.5% + 242px + 48px
   ); /* 2.5% (immersive margin) + 242px (button width) + 48px (gap) */
@@ -246,7 +246,7 @@
 /* Immersive button container KHÔNG có blend mode cho background */
 .immersive-fixed-container {
   position: fixed;
-  top: 20px;
+  top: 12.5px;
   right: 2.5%;
   z-index: 201;
   pointer-events: auto;
@@ -402,7 +402,7 @@
 /* Container riêng cho text với blend mode */
 .immersive-text-container {
   position: fixed;
-  top: 20px;
+  top: 12.5px;
   right: 2.5%;
   width: 242px;
   height: 55px;
@@ -461,7 +461,7 @@
 /* Container riêng cho border với blend mode */
 .immersive-border-container {
   position: fixed;
-  top: 20px;
+  top: 12.5px;
   right: 2.5%;
   width: 242px;
   height: 55px;
@@ -697,8 +697,8 @@
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 50%;
     padding: 3px;
-    width: 30px;
-    height: 30px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -808,7 +808,6 @@
   .immersive-fixed-container {
     top: 20px;
     right: 15px;
-    height: 45px;
   }
 
   .immersive-button {
@@ -837,7 +836,7 @@
 @media screen and (max-width: 425px) {
   /* Small mobile adjustments */
   .logo-fixed-container {
-    top: 30px;
+    top: 27px;
   }
 
   .logo-fixed-container .navbar-logo-svg {
@@ -983,7 +982,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 110vh;
   background: var(
     --Gradient-5,
     linear-gradient(180deg, #000 17.79%, #ec3667 55.29%, #f6f6f6 100%)
@@ -993,6 +992,7 @@
   z-index: 200;
   opacity: 0;
   transition: opacity 0.3s ease;
+  pointer-events: auto;
 }
 
 /* Mobile specific styles */
@@ -1098,8 +1098,8 @@
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 50%;
     padding: 3px;
-    width: 30px;
-    height: 30px;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;

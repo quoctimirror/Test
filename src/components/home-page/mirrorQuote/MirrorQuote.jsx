@@ -5,7 +5,7 @@ const MirrorQuote = () => {
     <section className="mirror-quote">
       <div className="mirror-quote-content">
         <div className="mirror-quote-text">
-          <span className="mirror-quote-line heading-3--no-margin">
+          <span className="mirror-quote-line bodytext-4--no-margin">
             MIRROR was never made to follow. It was born to uphold its own
             code...
           </span>

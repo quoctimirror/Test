@@ -8,11 +8,13 @@ const TradeInUpgrade = () => {
         <h3 className="heading-3--no-margin">Trade-In & Upgrade Programs</h3>
         <p className="bodytext-3--no-margin">
           Mirror's "Reclaim & Renew" program allows you to trade in eligible
-          pieces in the future toward upgraded designs— a promise of continuous
+          pieces in the future toward upgraded designs - a promise of continuous
           evolution in your jewelry journey.
         </p>
         <p className="availability-note">
-          <em className="bodytext-5--no-margin">Details available in showroom or by inquiry.</em>
+          <em className="bodytext-5--no-margin">
+            Details available in showroom or by inquiry.
+          </em>
         </p>
       </div>
 
@@ -23,7 +25,9 @@ const TradeInUpgrade = () => {
           <ul>
             <li>
               <p className="bodytext-3--no-margin">
-                <strong className="bodytext-2--no-margin">Trade-In Value:</strong>
+                <strong className="bodytext-2--no-margin">
+                  Trade-In Value:
+                </strong>
               </p>
               <ul>
                 <li>
@@ -38,11 +42,15 @@ const TradeInUpgrade = () => {
             </li>
             <li>
               <p className="bodytext-3--no-margin">
-                <strong className="bodytext-2--no-margin">Eligibility Criteria</strong>
+                <strong className="bodytext-2--no-margin">
+                  Eligibility Criteria
+                </strong>
               </p>
               <ul>
                 <li>
-                  <p className="bodytext-3--no-margin">Must be a piece originally purchased from Mirror</p>
+                  <p className="bodytext-3--no-margin">
+                    Must be a piece originally purchased from Mirror
+                  </p>
                 </li>
                 <li>
                   <p className="bodytext-3--no-margin">
@@ -60,7 +68,9 @@ const TradeInUpgrade = () => {
             </li>
             <li>
               <p className="bodytext-3--no-margin">
-                <strong className="bodytext-2--no-margin">Upgrade Opportunities</strong>
+                <strong className="bodytext-2--no-margin">
+                  Upgrade Opportunities
+                </strong>
               </p>
               <ul>
                 <li>
@@ -74,14 +84,16 @@ const TradeInUpgrade = () => {
             </li>
             <li>
               <p className="bodytext-3--no-margin">
-                <strong className="bodytext-2--no-margin">Sustainable Luxury</strong>
+                <strong className="bodytext-2--no-margin">
+                  Sustainable Luxury
+                </strong>
               </p>
               <ul>
                 <li>
                   <p className="bodytext-3--no-margin">
-                    Reclaim & Renew is also a commitment to
-                    sustainability—giving your existing jewelry a second life
-                    and reducing waste while enhancing your collection.
+                    Reclaim & Renew is also a commitment to sustainability -
+                    giving your existing jewelry a second life and reducing
+                    waste while enhancing your collection.
                   </p>
                 </li>
               </ul>
@@ -101,10 +113,7 @@ const TradeInUpgrade = () => {
       </div>
 
       <div className="cta-section">
-        <ShineGlassButton
-          className="services-cta"
-          theme="light"
-        >
+        <ShineGlassButton className="services-cta" theme="light">
           Book an Appointment
         </ShineGlassButton>
       </div>

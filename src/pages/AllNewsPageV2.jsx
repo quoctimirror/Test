@@ -21,7 +21,7 @@ const AllNewsPageV2 = () => {
       ],
       date: "10/2025",
       description:
-        "At the heart of Milan's Digital Jewelry Week 2025, MIRROR unveiled a glimpse into the future of luxury — where technology and emotion merge through light, sound, and reflection.",
+        "At the heart of Milan's Digital Jewelry Week 2025, MIRROR unveiled a glimpse into the future of luxury - where technology and emotion merge through light, sound, and reflection.",
     },
     {
       id: 2,

@@ -200,7 +200,7 @@ const Section4 = () => {
                     </h2>
                   </div>
                   <p className="section4-description bodytext-4--no-margin">
-                    Elevate your gift with our signature wrapping — a carefully
+                    Elevate your gift with our signature wrapping - a carefully
                     crafted presentation that captures the essence of refined
                     giving.
                   </p>
@@ -368,7 +368,7 @@ const Section4 = () => {
                     </h2>
                   </div>
                   <p className="section4-description bodytext-4--no-margin">
-                    Elevate your gift with our signature wrapping — a carefully
+                    Elevate your gift with our signature wrapping - a carefully
                     crafted presentation that captures the essence of refined
                     giving.
                   </p>

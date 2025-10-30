@@ -17,6 +17,7 @@ import Orders from "./Orders";
 import Services from "./Services";
 import AddressBook from "./AddressBook";
 import Wishlist from "./Wishlist";
+import Toast from "@components/common/toast/Toast";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -127,6 +128,7 @@ const Profile = () => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const datePickerRef = useRef(null);
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
 
   // ... (Các hàm validate, handleInputChange, handlePhoneChange, etc. không thay đổi)
   const validateForm = () => {
@@ -259,12 +261,21 @@ const Profile = () => {
 
     try {
       await api.put("/api/users/me", payload);
-      // alert('Your changes have been saved successfully!');
+      setToast({
+        show: true,
+        message: "Your changes have been saved successfully!",
+        type: "success",
+      });
     } catch (error) {
       console.error("Failed to save profile:", error);
       const errorMessage =
         error.response?.data?.message || "Save failed. Please try again.";
       setErrors({ form: errorMessage });
+      setToast({
+        show: true,
+        message: `Failed to save profile: ${errorMessage}`,
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -486,7 +497,7 @@ const Profile = () => {
               </ShineGlassButton>
               <ShineGlassButton
                 theme="light"
-                onClick={() => {}}
+                type="submit"
                 className="profile-save-button"
               >
                 {isLoading ? "Saving..." : "Save Profile"}
@@ -503,6 +514,15 @@ const Profile = () => {
       </div>
       {showChangePassword && (
         <ChangePassword onClose={() => setShowChangePassword(false)} />
+      )}
+
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={10000}
+          onClose={() => setToast({ show: false, message: "", type: "success" })}
+        />
       )}
     </div>
   );

@@ -164,7 +164,7 @@ const ParallaxScrolling = () => {
                 The LUMINA Band features five perfectly calibrated future
                 diamonds round brilliant diamonds, each 0.5ct, symbolizing five
                 transformative chapters of your journey. Set in a shared-prong
-                aerial band, this ring captures light from every angle — soft,
+                aerial band, this ring captures light from every angle - soft,
                 luminous, and unmistakably personal.
               </p>
             </div>

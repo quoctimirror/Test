@@ -22,7 +22,7 @@ const GuideStep2 = () => {
             <div className="guide-step-2-step">
               <h3 className="step-title bodytext-1--no-margin">Share</h3>
               <p className="step-description bodytext-4--no-margin">
-                Send us your portfolio — and feel free to include a few words
+                Send us your portfolio - and feel free to include a few words
                 about your inspirations. This is an open dialogue, meant to
                 reflect your creative voice.
               </p>
@@ -49,7 +49,7 @@ const GuideStep2 = () => {
                 Create Together
               </h3>
               <p className="step-description bodytext-4--no-margin">
-                We will follow up to discuss opportunities in more depth — on
+                We will follow up to discuss opportunities in more depth - on
                 your terms, at your pace.
               </p>
             </div>

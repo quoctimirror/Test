@@ -172,10 +172,10 @@ const ReturnExchange = () => {
       <section className="section why-sales-final-section">
         <h3 className="heading-3--no-margin">4. Why All Sales Are Final</h3>
         <p className="bodytext-3--no-margin">
-          Every piece Mirror creates represents an exclusive release — crafted
+          Every piece Mirror creates represents an exclusive release - crafted
           not only for beauty, but meaning. Limiting returns and minimizing
           exchanges ensure each customer receives a piece that has never been
-          worn, tried, or handled by others — preserving the emotion, quality,
+          worn, tried, or handled by others - preserving the emotion, quality,
           and soul of your diamond.
         </p>
       </section>

@@ -56,14 +56,14 @@ const ImmersiveShowroom = () => {
         <div className="showroom-gradient-bottom"></div>
 
         <div className="showroom-content">
-          <h4 className="bodytext-3--no-margin showroom-subtitle">
+          <h4 className="bodytext-4--no-margin showroom-subtitle">
             WHERE TECHNOLOGY MEETS EMOTIONS
           </h4>
           <h1 className="heading-1--no-margin showroom-title">
             IMMERSIVE SHOWROOM
           </h1>
           <p className="bodytext-4--no-margin showroom-description">
-            Step into Mirror's physical universe — a sensorial space where
+            Step into Mirror's physical universe - a sensorial space where
             light, sound, and storytelling converge. Here, lab-grown brilliance
             comes alive through cinematic displays, tactile explorations and
             AR/VR encounters that let you feel the future of luxury before you

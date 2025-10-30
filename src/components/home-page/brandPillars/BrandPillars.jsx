@@ -7,6 +7,91 @@ const BrandPillars = () => {
   const sectionRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  // Background gradient configuration (same as TestBackground)
+  const baseColor = "#660620";
+
+  const horizontalGradient = {
+    enabled: true,
+    color1: "#660620",
+    stop1: "0%",
+    opacity1: "80",
+    color2: "#000000",
+    stop2: "50%",
+    opacity2: "80",
+    color3: "#660620",
+    stop3: "100%",
+    opacity3: "80",
+  };
+
+  const verticalGradient = {
+    enabled: true,
+    color1: "#000000",
+    stop1: "0%",
+    opacity1: "100",
+    color2: "#000000",
+    stop2: "20%",
+    opacity2: "0",
+    color3: "#000000",
+    stop3: "80%",
+    opacity3: "0",
+    color4: "#000000",
+    stop4: "100%",
+    opacity4: "100",
+  };
+
+  // Helper to convert hex + opacity to rgba
+  const hexToRgba = (hex, opacity) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`;
+  };
+
+  // Build gradient styles
+  const buildGradientStyle = () => {
+    let layers = [];
+
+    // Add vertical gradient first (on top)
+    if (verticalGradient.enabled) {
+      const vGrad = `linear-gradient(180deg, ${hexToRgba(
+        verticalGradient.color1,
+        verticalGradient.opacity1
+      )} ${verticalGradient.stop1}, ${hexToRgba(
+        verticalGradient.color2,
+        verticalGradient.opacity2
+      )} ${verticalGradient.stop2}, ${hexToRgba(
+        verticalGradient.color3,
+        verticalGradient.opacity3
+      )} ${verticalGradient.stop3}, ${hexToRgba(
+        verticalGradient.color4,
+        verticalGradient.opacity4
+      )} ${verticalGradient.stop4})`;
+      layers.push(vGrad);
+    }
+
+    // Add horizontal gradient second (middle)
+    if (horizontalGradient.enabled) {
+      const hGrad = `linear-gradient(90deg, ${hexToRgba(
+        horizontalGradient.color1,
+        horizontalGradient.opacity1
+      )} ${horizontalGradient.stop1}, ${hexToRgba(
+        horizontalGradient.color2,
+        horizontalGradient.opacity2
+      )} ${horizontalGradient.stop2}, ${hexToRgba(
+        horizontalGradient.color3,
+        horizontalGradient.opacity3
+      )} ${horizontalGradient.stop3})`;
+      layers.push(hGrad);
+    }
+
+    // Add base color last (bottom)
+    layers.push(baseColor);
+
+    return { background: layers.join(", ") };
+  };
+
+  const gradientStyle = buildGradientStyle();
+
   useEffect(() => {
     const handleScroll = () => {
       if (!sectionRef.current) return;
@@ -33,12 +118,27 @@ const BrandPillars = () => {
   return (
     <section ref={sectionRef} className="brand-pillars-wrapper">
       <div className="brand-pillars">
+        {/* Mobile/Tablet: Gradient Background */}
+        <div
+          className="brand-pillars-mobile-background"
+          style={gradientStyle}
+        />
+
+        {/* Desktop: Metaball Background */}
         <MetaballBackground className="brand-pillars-background" />
         <div className="brand-pillars-gradient-overlay-top" />
         <div className="brand-pillars-gradient-overlay-bottom" />
 
         {/* Mobile/Tablet Sticky Scroll Overlay */}
         <div className="brand-pillars-sticky-overlay">
+          {/* Quote Text - Mobile/Tablet Version */}
+          <div className="brand-pillars-quote brand-pillars-quote-mobile">
+            <span className="brand-pillars-quote-line bodytext-4--no-margin">
+              MIRROR was never made to follow. It was born to uphold its own
+              code...
+            </span>
+          </div>
+
           <div className="brand-pillars-sticky-content">
             {/* Content 1: PRECISION TECHNOLOGY */}
             <div
@@ -81,7 +181,7 @@ const BrandPillars = () => {
                 <div className="brand-sticky-expand">
                   <p className="bodytext-4--no-margin">
                     Where human craft meets cutting-edge technology. We shape
-                    diamonds with the world’s most advanced cutting techniques —
+                    diamonds with the world’s most advanced cutting techniques -
                     each one a fusion of human artistry and scientific
                     precision.
                   </p>
@@ -127,7 +227,7 @@ const BrandPillars = () => {
                 <div className="brand-sticky-expand">
                   <p className="bodytext-4--no-margin">
                     Made for the planet, not taken from it. We create with the
-                    future in mind — lab-grown brilliance that honors our
+                    future in mind - lab-grown brilliance that honors our
                     planet, not extracts from it.
                   </p>
                 </div>
@@ -159,13 +259,10 @@ const BrandPillars = () => {
                     </span>
                   </div>
                 </div>
-                <div className="starlight-6-oclock-wrapper">
-                  <StarlightEffect direction="falling" height={60} />
-                </div>
                 <div className="brand-sticky-expand">
                   <p className="bodytext-4--no-margin">
-                    Not defined by excess, but by meaning.You’re not just buying
-                    a product — you’re entering a space of mindful beauty,
+                    Not defined by excess, but by meaning.You're not just buying
+                    a product - you're entering a space of mindful beauty,
                     crafted to awaken your senses and reflect your story.
                   </p>
                 </div>
@@ -175,6 +272,14 @@ const BrandPillars = () => {
         </div>
 
         <div className="brand-pillars-content">
+          {/* Quote Text - Above Brand Pillars */}
+          <div className="brand-pillars-quote">
+            <span className="brand-pillars-quote-line bodytext-4--no-margin">
+              MIRROR was never made to follow. It was born to uphold its own
+              code...
+            </span>
+          </div>
+
           <h1 className="brand-pillars-text">
             <div className="brand-group">
               <div className="brand-main-text">
@@ -190,7 +295,7 @@ const BrandPillars = () => {
                       <br />
                       We shape diamonds with the world's most advanced
                       <br />
-                      cutting techniques — each one a fusion of human
+                      cutting techniques - each one a fusion of human
                       <br />
                       artistry and scientific precision.
                     </p>
@@ -206,7 +311,7 @@ const BrandPillars = () => {
                 <p className="bodytext-4--no-margin">
                   Made for the planet, not taken from it.
                   <br />
-                  We create with the future in mind —
+                  We create with the future in mind -
                   <br /> lab-grown brilliance that honors our
                   <br />
                   planet, not extracts from it.
@@ -227,7 +332,7 @@ const BrandPillars = () => {
                     <p className="bodytext-4--no-margin">
                       True modern luxury is not in price tags.
                       <br />
-                      You're not just buying a product — you're entering
+                      You're not just buying a product - you're entering
                       <br /> a space of mindful beauty, crafted to awaken
                       <br />
                       your senses and reflect your story.

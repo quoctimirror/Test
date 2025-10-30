@@ -10,6 +10,7 @@ const MirrorverseSection = () => {
   const titleRef = useRef(null);
   const descriptionRef = useRef(null);
   const buttonsRef = useRef(null);
+  const videoRef = useRef(null);
 
   const headerText = "ENTER THE MIRRORVERSE";
   const titleText = "WHERE LUXURY BECOMES AN EXPERIENCE";
@@ -130,6 +131,19 @@ const MirrorverseSection = () => {
         buttonsRef.current.style.opacity = btnOpacity;
       }
 
+      // Phase 6 (75-100%): Video fade in
+      if (videoRef.current) {
+        let videoOpacity = 0;
+        if (progress < 0.75) {
+          videoOpacity = 0;
+        } else if (progress <= 1) {
+          videoOpacity = (progress - 0.75) / 0.25;
+        } else {
+          videoOpacity = 1;
+        }
+        videoRef.current.style.opacity = videoOpacity;
+      }
+
       ticking = false;
     };
 
@@ -179,6 +193,19 @@ const MirrorverseSection = () => {
               Immersive Showroom
             </ShineGlassButton>
           </div>
+        </div>
+
+        {/* Video Section */}
+        <div className="mirrorverse-video" ref={videoRef}>
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="mirrorverse-video-element"
+          >
+            <source src="/about/immersive_showroom.mp4" type="video/mp4" />
+          </video>
         </div>
       </div>
     </div>

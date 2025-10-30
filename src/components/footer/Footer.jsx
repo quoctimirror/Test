@@ -151,7 +151,7 @@ const Footer = () => {
                   <UnderlineButton
                     onClick={handleContactClick}
                     className="contact-link-button"
-                    textClassName="bodytext-3--no-margin"
+                    textClassName="bodytext-4--no-margin"
                   >
                     Contact us
                   </UnderlineButton>
@@ -160,7 +160,7 @@ const Footer = () => {
                   <a href="mailto:support@mirrorfuturediamond.com">
                     <UnderlineButton
                       className="contact-link-button"
-                      textClassName="bodytext-3--no-margin"
+                      textClassName="bodytext-4--no-margin"
                     >
                       info@mirrorfuturediamond.com
                     </UnderlineButton>
@@ -180,7 +180,7 @@ const Footer = () => {
                   <UnderlineButton
                     onClick={handleContactClick}
                     className="contact-link-button"
-                    textClassName="bodytext-3--no-margin"
+                    textClassName="bodytext-4--no-margin"
                   >
                     Book an appointment
                   </UnderlineButton>
@@ -189,7 +189,7 @@ const Footer = () => {
                   <UnderlineButton
                     onClick={handleLocationClick}
                     className="contact-link-button"
-                    textClassName="bodytext-3--no-margin"
+                    textClassName="bodytext-4--no-margin"
                   >
                     Location
                   </UnderlineButton>
@@ -251,13 +251,13 @@ const Footer = () => {
           {/* Footer Bottom Left & Right - Inside footer-bottom */}
           <div className="footer-bottom-row">
             <div className="footer-bottom-left">
-              <p className="bodytext-4--no-margin">
+              <p className="bodytext-6--no-margin">
                 All rights reserved © 2025
               </p>
             </div>
 
             <div className="footer-bottom-right">
-              <a className="bodytext-4--no-margin legal-link">Legal mentions</a>
+              <a className="bodytext-6--no-margin legal-link">Legal mentions</a>
             </div>
           </div>
         </div>

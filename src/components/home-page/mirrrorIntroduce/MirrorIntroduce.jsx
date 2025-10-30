@@ -34,7 +34,7 @@ const MirrorIntroduce = () => {
     {
       title: "Reflection of Artistry and Innovation",
       subtitle:
-        "Each piece is crafted with the precision of technology and the soul of human touch — a seamless harmony between machine intelligence and human intuition.",
+        "Each piece is crafted with the precision of technology and the soul of human touch - a seamless harmony between machine intelligence and human intuition.",
     },
   ];
 

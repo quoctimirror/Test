@@ -12,7 +12,7 @@ const SharedSection = () => {
   const buttonsRef = useRef(null);
 
   const headerText = "THE FUTURE IS SHARED";
-  const titleText = "YOU DON'T JUST WEAR MIRROR.\nYOU BECOME PART OF IT.";
+  const titleText = "YOU DON'T JUST WEAR MIRROR. YOU BECOME PART OF IT.";
   const descriptionText =
     "We invite you not just to own - but to belong. To co-create, to grow, to reflect. Every interaction with Mirror - a try-on, a purchase, a story - becomes a part of the Mirrorverse. Because luxury doesn’t begin in the box. It begins with you.";
 

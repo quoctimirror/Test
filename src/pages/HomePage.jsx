@@ -2,7 +2,6 @@ import TopBanner from "@components/topBanner/TopBanner";
 import ScrollEffect from "@components/home-page/scrollEffect/ScrollEffect";
 import ImmersiveShowroom from "@components/home-page/immersiveShowroom/ImmersiveShowroom";
 import BrandPillars from "@components/home-page/brandPillars/BrandPillars";
-import Lumex91 from "@components/home-page/lumex91/Lumex91";
 // import UniverseSection from "@components/home-page/universeSection/MirrorExp";
 import UniverseSection from "@components/home-page/universeSection/MirrorExp";
 import FutureDiamond from "@components/home-page/futureDiamond/FutureDiamond";
@@ -15,23 +14,37 @@ export default function HomePage() {
     <>
       {/* <TopBanner /> */}
 
-      <ScrollEffect />
+      <div data-section="scroll-effect">
+        <ScrollEffect />
+      </div>
 
-      <FutureDiamond />
+      <div data-section="future-diamond">
+        <FutureDiamond />
+      </div>
 
-      <Lumex91 />
+      {/* <div data-section="mirror-quote">
+        <MirrorQuote />
+      </div> */}
 
-      <MirrorQuote />
+      <div data-section="brand-pillars">
+        <BrandPillars />
+      </div>
 
-      <BrandPillars />
+      <div data-section="universe-section">
+        <UniverseSection />
+      </div>
 
-      <UniverseSection />
+      <div data-section="immersive-showroom">
+        <ImmersiveShowroom />
+      </div>
 
-      <ImmersiveShowroom />
+      <div data-section="hover-expand">
+        <HoverExpandSection />
+      </div>
 
-      <HoverExpandSection />
-
-      <ContactUs />
+      <div data-section="contact-us">
+        <ContactUs />
+      </div>
     </>
   );
 }

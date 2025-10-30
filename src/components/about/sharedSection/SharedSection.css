@@ -30,7 +30,7 @@
 }
 
 .shared-sticky-wrapper::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -84,10 +84,10 @@
   opacity: 0;
   will-change: transform, opacity;
   backface-visibility: hidden;
+  max-width: 863px;
 }
 
 .shared-title .heading-1--no-margin {
-  white-space: nowrap;
   color: #fff;
 }
 

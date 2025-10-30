@@ -110,7 +110,7 @@ const NewCutComponent = () => {
             </div>
             <p className="new-cut-hero-description bodytext-5--no-margin">
               From the heart of the Mirrorverse comes a diamond unlike any
-              other. Lumex-91™ is our most advanced proprietary cut — a living
+              other. Lumex-91™ is our most advanced proprietary cut - a living
               geometry where light becomes structure, and every facet holds a
               story.
             </p>
@@ -132,7 +132,7 @@ const NewCutComponent = () => {
             <p className="new-cut-section-text bodytext-4--no-margin">
               At the center of the Mirrorverse lies Luminax™, the symbolic
               epicenter of purity and energy. It is here that Lumex-91™ was
-              conceived — a vision shaped in light, sculpted in precision, and
+              conceived - a vision shaped in light, sculpted in precision, and
               charged with emotion. Its 91 ultra-fine facets are engineered to
               refract light with absolute mastery, creating a display of
               brilliance that feels almost alive.
@@ -157,14 +157,14 @@ const NewCutComponent = () => {
             <p className="new-cut-section-text bodytext-4--no-margin">
               Inspired by the celestial artistry of the Optica Stelo, Lumex-91™
               carries forward the spirit of human exploration. It honors the
-              moment humanity reached beyond our planet — and reminds us that
+              moment humanity reached beyond our planet - and reminds us that
               the stars are not distant; they live in our hands. This is a
               diamond that does not simply sparkle. It guides.
             </p>
             <p className="new-cut-section-text bodytext-4--no-margin">
               Each facet is a portal of light. Individually, they capture and
               bend illumination; together, they create a performance of symmetry
-              and radiance visible from afar. This is not just a cut — it is
+              and radiance visible from afar. This is not just a cut - it is
               light, perfected.
             </p>
           </div>
@@ -177,7 +177,7 @@ const NewCutComponent = () => {
             <p className="new-cut-section-text bodytext-4--no-margin">
               With Lumex-91™, we redefine what a diamond can be: a symbol of
               progress, a piece of the cosmos, a reflection of your own inner
-              light. The stars are no longer above you — they are with you.
+              light. The stars are no longer above you - they are with you.
             </p>
           </div>
 

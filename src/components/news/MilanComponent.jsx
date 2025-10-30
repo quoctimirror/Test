@@ -697,7 +697,7 @@ const MilanComponent = () => {
             </div>
             <p className="milan-hero-description bodytext-5--no-margin">
               At the heart of Milan's Digital Jewelry Week 2025, MIRROR unveiled
-              a glimpse into the future of luxury — where technology and emotion
+              a glimpse into the future of luxury - where technology and emotion
               merge through light, sound, and reflection.
             </p>
           </div>
@@ -746,7 +746,7 @@ const MilanComponent = () => {
             <p className="milan-content-text bodytext-4--no-margin">
               Bathed in cinematic light and resonant soundscapes, the MIRROR
               space invited guests to discover the world of Love-Grown™ Diamonds
-              — a new generation of gemstones born from science, shaped by
+              - a new generation of gemstones born from science, shaped by
               emotion, and crafted in harmony with the Earth.
             </p>
           </div>
@@ -900,7 +900,7 @@ const MilanComponent = () => {
           <div className="milan-content-section col-12">
             <p className="milan-content-text bodytext-3--no-margin">
               This moment in Milan marked more than an exhibition. It was a
-              poetic declaration — a future where artistry, consciousness, and
+              poetic declaration - a future where artistry, consciousness, and
               technology coexist to redefine the meaning of timeless beauty.
             </p>
           </div>

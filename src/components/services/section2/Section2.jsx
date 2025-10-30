@@ -168,7 +168,7 @@ const Section2 = () => {
                   </div>
                   <p className="section2-description bodytext-4--no-margin">
                     Mirror's "Reclaim & Renew" program allows you to trade in
-                    eligible pieces in the future toward upgraded designs— a
+                    eligible pieces in the future toward upgraded designs - a
                     promise of continuous evolution in your jewelry journey.
                   </p>
                 </div>
@@ -276,7 +276,7 @@ const Section2 = () => {
                   </div>
                   <p className="section2-description bodytext-4--no-margin">
                     Mirror’s “Reclaim & Renew” program allows you to trade in
-                    eligible pieces in the future toward upgraded designs— a
+                    eligible pieces in the future toward upgraded designs - a
                     promise of continuous evolution in your jewelry journey.
                   </p>
                 </div>

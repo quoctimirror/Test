@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Logo from "@assets/images/Logo.svg";
-import SoundIcon from "@assets/images/button/sound.svg";
 import { ROUTES } from "@/constants/routes";
+import ScrollDownArrow from "@/components/common/button/ScrollDownArrow";
+import SoundButton from "@/components/common/button/SoundButton";
 import "./ScrollEffect.css";
 
 export default function ScrollEffect() {
@@ -15,7 +16,6 @@ export default function ScrollEffect() {
   const finalGradientTopRef = useRef(null);
   const finalGradientBottomRef = useRef(null);
   const gradientInitialRef = useRef(null);
-  const elementsToFadeRef = useRef(null);
   const mainLogoRef = useRef(null);
   const futureDiamondTextRef = useRef(null);
   const containerRef = useRef(null);
@@ -33,10 +33,76 @@ export default function ScrollEffect() {
   const [text1AutoProgress, setText1AutoProgress] = useState(0);
   const [hasStartedScrolling, setHasStartedScrolling] = useState(false);
   const lastRenderedFrameRef = useRef(-1);
+  const [isArrowVisible, setIsArrowVisible] = useState(true);
+  const [isSoundActive, setIsSoundActive] = useState(false);
 
   const numFrames = 249; // Actual frames from Landscape_3D.mp4 (8.3s * 30fps)
   const scrollEffectHeight = 250; // vh for scroll effect - reduced to make mirror introduce start earlier
   const mirrorIntroduceHeight = 780; // vh for mirror introduce
+
+  // Handle sound button click - toggle sound state
+  const handleSoundClick = () => {
+    setIsSoundActive((prev) => !prev);
+  };
+
+  // Handle arrow click - scroll to next section
+  const handleArrowClick = () => {
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const scrollEffectEnd = (scrollEffectHeight / 100) * windowHeight;
+    const totalHeight =
+      ((scrollEffectHeight + mirrorIntroduceHeight) / 100) * windowHeight;
+
+    // Determine which section we're in and scroll to next
+    if (scrollY < scrollEffectEnd) {
+      // Currently in ScrollEffect section -> scroll to where first text appears
+      // Text 1 starts auto-appearing right after split (250vh), so scroll a bit further to see text
+      const textStartPosition = scrollEffectEnd + windowHeight * 0.1; // 250vh + 10vh buffer
+      window.scrollTo({
+        top: textStartPosition,
+        behavior: "smooth",
+      });
+    } else if (scrollY < totalHeight - 100) {
+      // Currently in MirrorIntroduce section -> scroll to next page section (after this component)
+      // Add 100px buffer so that once we're near the end, we switch to section-based navigation
+      window.scrollTo({
+        top: totalHeight,
+        behavior: "smooth",
+      });
+    } else {
+      // Already past ScrollEffect component -> find all sections and scroll to next one
+      const sections = Array.from(document.querySelectorAll("[data-section]"));
+      let nextSection = null;
+
+      // Find the first section that starts below current scroll position
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i];
+        const rect = section.getBoundingClientRect();
+
+        // If section top is more than 50px below viewport top, it's the next section
+        if (rect.top > 50) {
+          nextSection = section;
+          break;
+        }
+      }
+
+      // If found next section, scroll to it; otherwise scroll one viewport
+      if (nextSection) {
+        const rect = nextSection.getBoundingClientRect();
+        const targetPosition = scrollY + rect.top;
+        window.scrollTo({
+          top: targetPosition,
+          behavior: "smooth",
+        });
+      } else {
+        // No next section found, scroll one viewport
+        window.scrollTo({
+          top: scrollY + windowHeight,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
 
   // Text slides data
   const textSlides = [
@@ -59,7 +125,7 @@ export default function ScrollEffect() {
     {
       title: "Reflection of\nArtistry and Innovation",
       subtitle:
-        "Each piece is crafted with the precision of technology and the soul of human touch — a seamless harmony between machine intelligence and human intuition.",
+        "Each piece is crafted with the precision of technology and the soul of human touch - a seamless harmony between machine intelligence and human intuition.",
     },
   ];
 
@@ -177,11 +243,6 @@ export default function ScrollEffect() {
           );
         }
 
-        if (elementsToFadeRef.current) {
-          const fadeProgress = Math.min(1, Math.max(0, (progress - 0.5) * 2));
-          elementsToFadeRef.current.style.opacity = 1 - fadeProgress;
-        }
-
         if (mainLogoRef.current) {
           let logoOpacity = 1;
 
@@ -295,9 +356,6 @@ export default function ScrollEffect() {
         if (futureDiamondTextRef.current) {
           futureDiamondTextRef.current.style.opacity = 0;
         }
-        if (elementsToFadeRef.current) {
-          elementsToFadeRef.current.style.opacity = 0;
-        }
 
         // Ensure split is fully opened and mirror introduce is fully visible
         if (splitTopRef.current && splitBottomRef.current) {
@@ -368,6 +426,33 @@ export default function ScrollEffect() {
     window.addEventListener("scroll", handleScrollStart, { passive: true });
     return () => window.removeEventListener("scroll", handleScrollStart);
   }, [hasStartedScrolling, scrollEffectHeight]);
+
+  // Hide arrow button when scrolled to footer (ContactUs section)
+  useEffect(() => {
+    const handleArrowVisibility = () => {
+      const footerSection = document.querySelector(
+        '[data-section="contact-us"]'
+      );
+
+      if (footerSection) {
+        const rect = footerSection.getBoundingClientRect();
+        const scrollY = window.scrollY;
+        const footerTop = scrollY + rect.top;
+
+        // Hide arrow when we're within 100px of footer top
+        if (scrollY >= footerTop - 100) {
+          setIsArrowVisible(false);
+        } else {
+          setIsArrowVisible(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleArrowVisibility, { passive: true });
+    handleArrowVisibility(); // Initial check
+
+    return () => window.removeEventListener("scroll", handleArrowVisibility);
+  }, []);
 
   // Update canvas when frame changes - only render if frame is different
   useEffect(() => {
@@ -575,7 +660,11 @@ export default function ScrollEffect() {
             transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
           }}
         >
-          <div className={`slide-content ${index === 0 ? 'slide-content-wide' : 'slide-content-narrow'}`}>
+          <div
+            className={`slide-content ${
+              index === 0 ? "slide-content-wide" : "slide-content-narrow"
+            }`}
+          >
             <h1
               className="heading-1--no-margin slide-title"
               style={{
@@ -593,7 +682,7 @@ export default function ScrollEffect() {
               className={
                 index === 0
                   ? "heading-1--no-margin slide-subtitle"
-                  : "bodytext-3--no-margin slide-subtitle"
+                  : "bodytext-4--no-margin slide-subtitle"
               }
               style={{
                 opacity: index === 0 ? 1 : subtitleOpacity, // Text 1: No individual fade, Others: Staggered
@@ -655,36 +744,23 @@ export default function ScrollEffect() {
                 <span className="heading-3--no-margin">Future Diamond</span>
               </div>
             </div>
-
-            {!isImmersiveShowroomPage && (
-              <div className="elements-to-fade" ref={elementsToFadeRef}>
-                <button className="scroll-down-arrow" aria-label="Scroll down">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M19 9L12 16L5 9"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                <div className="vetor-button">
-                  <button>
-                    <img src={SoundIcon} alt="Sound" />
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
+
+      {/* Fixed Sound Button - visible except in Immersive Showroom */}
+      {!isImmersiveShowroomPage && (
+        <div className="fixed-sound-container">
+          <SoundButton isActive={isSoundActive} onClick={handleSoundClick} />
+        </div>
+      )}
+
+      {/* Fixed Arrow Button - visible except in footer */}
+      {!isImmersiveShowroomPage && isArrowVisible && (
+        <div className="fixed-arrow-container">
+          <ScrollDownArrow onClick={handleArrowClick} />
+        </div>
+      )}
 
       {/* MirrorIntroduce Section */}
       <div className="mirror-introduce-section" ref={mirrorIntroduceSectionRef}>

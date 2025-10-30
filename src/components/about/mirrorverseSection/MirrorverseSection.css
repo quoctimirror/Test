@@ -1,7 +1,7 @@
 /* MirrorverseSection Component Styles */
 .mirrorverse-section {
   width: 100%;
-  height: 300vh; /* Scroll height for animation */
+  height: 400vh; /* Scroll height for animation */
   background: linear-gradient(
     180deg,
     rgba(246, 246, 246, 1) 0%,
@@ -46,6 +46,7 @@
   -webkit-backface-visibility: hidden;
   transform-style: preserve-3d;
   contain: layout style;
+  z-index: 10;
 }
 
 /* Header */
@@ -107,6 +108,25 @@
   opacity: 0;
   will-change: transform, opacity;
   backface-visibility: hidden;
+}
+
+/* Video Section */
+.mirrorverse-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  will-change: opacity;
+  z-index: 0;
+}
+
+.mirrorverse-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Responsive Design */

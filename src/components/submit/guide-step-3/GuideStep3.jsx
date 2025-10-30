@@ -14,7 +14,7 @@ const GuideStep3 = () => {
           <p className="guide-step-3-description bodytext-3--no-margin">
             We are moved by creations that bend light into brilliance, weave
             emotion into form, and embody the highest artistry of craft.
-            Perfection is not the measure — authenticity is. What is truly yours
+            Perfection is not the measure - authenticity is. What is truly yours
             is what shines.
           </p>
 
@@ -34,7 +34,7 @@ const GuideStep3 = () => {
 
               <div className="value-item">
                 <p className="value-description bodytext-6--no-margin">
-                  A curated selection of your work — quality always outshines
+                  A curated selection of your work - quality always outshines
                   quantity.
                 </p>
               </div>

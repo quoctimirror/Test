@@ -555,16 +555,24 @@
     grid-column: 3 / span 8;
   }
 
+  .milan-feature-image.col-8.col-start-3 {
+    grid-column: 2 / span 10;
+  }
+
+  .milan-final-image.col-8.col-start-3 {
+    grid-column: 2 / span 10;
+  }
+
   .milan-carousel-wrapper {
-    margin-left: -24px;
-    margin-right: -24px;
-    width: calc(100% + 48px);
+    margin-left: -2.5%;
+    margin-right: -2.5%;
+    width: calc(105%);
   }
 
   .milan-large-carousel-wrapper {
-    margin-left: -24px;
-    margin-right: -24px;
-    width: calc(100% + 48px);
+    margin-left: -2.5%;
+    margin-right: -2.5%;
+    width: calc(105%);
   }
 
   .milan-slider-arrow-left {
@@ -576,13 +584,13 @@
   }
 
   .milan-slider-arrow button {
-    width: 40px !important;
-    height: 40px !important;
+    width: 48px !important;
+    height: 48px !important;
   }
 
   .milan-slider-arrow svg {
-    width: 18px !important;
-    height: 18px !important;
+    width: 20px !important;
+    height: 20px !important;
   }
 
   .milan-carousel-item {
@@ -679,6 +687,14 @@
     grid-column: 2 / span 10;
   }
 
+  .milan-feature-image.col-8.col-start-3 {
+    grid-column: 1 / span 12;
+  }
+
+  .milan-final-image.col-8.col-start-3 {
+    grid-column: 1 / span 12;
+  }
+
   .milan-content-text {
     font-size: 14px;
   }
@@ -692,13 +708,13 @@
   }
 
   .milan-slider-arrow button {
-    width: 36px !important;
-    height: 36px !important;
+    width: 48px !important;
+    height: 48px !important;
   }
 
   .milan-slider-arrow svg {
-    width: 16px !important;
-    height: 16px !important;
+    width: 20px !important;
+    height: 20px !important;
   }
 
   .milan-carousel-item {

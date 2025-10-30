@@ -1,13 +1,12 @@
 /* MirrorQuote Component Styles */
 .mirror-quote {
   width: 100%;
-  min-height: 100vh;
   background-color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 10vh 2.5%;
+  /* padding: 20vh 0 0; */
   box-sizing: border-box;
   margin: 0;
   margin-bottom: -2px; /* Overlap with next section to prevent gap */
@@ -25,38 +24,37 @@
 }
 
 .mirror-quote-text {
-  margin: 0;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   max-width: 600px;
+  align-items: center;
 }
 
 .mirror-quote-line {
   display: block;
   color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  max-width: 400px;
 }
 
 /* Tablet (426px-1023px) */
 @media screen and (max-width: 1023px) {
-  .mirror-quote {
-    min-height: 80vh;
-    padding: 8vh 5%;
-  }
-
   .mirror-quote-text {
     max-width: 62%;
+    margin: 0 auto;
   }
 }
 
 /* Mobile (≤425px) */
 @media screen and (max-width: 425px) {
   .mirror-quote {
-    min-height: 60vh;
-    padding: 6vh 7.5%;
+    text-align: center;
   }
 
   .mirror-quote-text {
     max-width: 77%;
+    margin: 0 auto;
   }
 }
 

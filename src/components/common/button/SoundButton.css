@@ -1,0 +1,183 @@
+/* Sound Button */
+.sound-button {
+  position: absolute;
+  bottom: 48px;
+  right: 50px;
+  z-index: 10;
+}
+
+.sound-button button {
+  display: inline-flex;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
+  mix-blend-mode: difference;
+}
+
+.sound-button button:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Wave Container - overflow hidden to crop the wave */
+.wave-container {
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Sound Wave SVG */
+.sound-wave-svg {
+  width: 120px;
+  height: 24px;
+  display: block;
+  flex-shrink: 0;
+  mix-blend-mode: difference;
+}
+
+/* Animate the SVG when active */
+.sound-wave-svg.active {
+  animation: wave-flow 2s linear infinite;
+  will-change: transform;
+}
+
+/* Wave paths */
+.wave-path-straight {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wave-path-straight.visible {
+  opacity: 1;
+}
+
+/* Wave group */
+.wave-group {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wave-group.visible {
+  opacity: 1;
+}
+
+/* Wave flow animation - moves from right to left */
+@keyframes wave-flow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-16.67%);
+  }
+}
+
+/* ============= RESPONSIVE DESIGN ============= */
+
+/* Full HD Desktop */
+@media (min-width: 1920px) and (min-height: 1080px) {
+  .sound-button button {
+    width: 57px;
+    height: 57px;
+  }
+
+  .wave-container {
+    width: 26px;
+    height: 26px;
+  }
+
+  .sound-wave-svg {
+    width: 130px;
+    height: 26px;
+  }
+}
+
+/* Small Laptop (1023px and below) */
+@media (max-width: 1023px) {
+  .sound-button {
+    bottom: 24px;
+  }
+
+  .sound-button button {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* Tablet and Mobile (768px and below) */
+@media (max-width: 768px) {
+  .sound-button {
+    right: 25px;
+  }
+
+  .sound-button button {
+    width: 48px;
+    height: 48px;
+  }
+
+  .wave-container {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sound-wave-svg {
+    width: 110px;
+    height: 22px;
+  }
+}
+
+/* Large Mobile (480px and below) */
+@media (max-width: 480px) {
+  .sound-button {
+    right: 20px;
+  }
+
+  .sound-button button {
+    width: 48px;
+    height: 48px;
+  }
+
+  .wave-container {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sound-wave-svg {
+    width: 110px;
+    height: 22px;
+  }
+}
+
+/* Small Mobile (360px and below) */
+@media (max-width: 360px) {
+  .sound-button {
+    right: 15px;
+  }
+
+  .sound-button button {
+    width: 48px;
+    height: 48px;
+  }
+
+  .wave-container {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sound-wave-svg {
+    width: 110px;
+    height: 22px;
+  }
+}

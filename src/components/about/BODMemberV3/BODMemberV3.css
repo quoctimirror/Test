@@ -185,7 +185,7 @@
 
   .members-scroll-container-v3 {
     padding: 0;
-    gap: 12px;
+    gap: 6px;
     align-self: center;
     grid-row: 2;
   }

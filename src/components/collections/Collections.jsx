@@ -1,5 +1,5 @@
-// Thêm 'useState', 'useRef', 'useEffect' từ React
-import React, { useState, useRef, useEffect } from "react";
+// Thêm 'useState', 'useEffect' từ React
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import CollectionHeroSection from "./CollectionHeroSection";
@@ -34,7 +34,6 @@ const products = [
 ];
 
 function Collection() {
-  const section2Ref = useRef(null);
   const navigate = useNavigate();
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -110,10 +109,6 @@ function Collection() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleScrollToSection2 = () => {
-    section2Ref.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   // MỚI: Hàm handleNext được đơn giản hóa tối đa
   const handleNext = () => {
     setSlideDirection("right");
@@ -162,10 +157,12 @@ function Collection() {
   return (
     <div className="collection-page">
       {/* --- SECTION 1 --- */}
-      <CollectionHeroSection onScrollToSection2={handleScrollToSection2} />
+      <div data-section="collection-hero">
+        <CollectionHeroSection />
+      </div>
 
       {/* --- SECTION 2 --- */}
-      <div className="section-2" ref={section2Ref}>
+      <div className="section-2" data-section="collection-featured">
         <div className="collection-hero-content">
           <div className="collection-hero-subtitle bodytext-3--no-margin">
             THE NEWEST COLLECTION
@@ -262,12 +259,14 @@ function Collection() {
               </button>
             </div>
 
-            {/* MỚI: Áp dụng tương tự cho phần thông tin sản phẩm */}
-            <div
-              className={`product-info slide-effect-${slideDirection}`}
-              key={`${currentProduct.id}-info-${slideDirection}`}
-            >
-              <h3 className="heading-3--no-margin">{currentProduct.title}</h3>
+            {/* Product info with separate animation for title and static button */}
+            <div className="product-info">
+              <h3
+                className={`heading-3--no-margin product-title slide-effect-${slideDirection}`}
+                key={`${currentProduct.id}-title-${slideDirection}`}
+              >
+                {currentProduct.title}
+              </h3>
               <UnderlineButton
                 className="shop-now-button"
                 textClassName="bodytext-4--no-margin"
@@ -280,7 +279,7 @@ function Collection() {
       </div>
 
       {/* --- SECTION 3 --- */}
-      <div className="section-3">
+      <div className="section-3" data-section="collection-other">
         <div className="other-collections-content">
           <div className="other-collections-subtitle bodytext-4--no-margin">
             OTHER COLLECTION
