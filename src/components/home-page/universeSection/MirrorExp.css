@@ -22,48 +22,56 @@
 
 /* Remove global scroll prevention - handle locally in component */
 
+/* Performance optimization: GPU acceleration for all rotating elements */
+.mirror-exp__layer0,
+.mirror-exp__layer1,
+.mirror-exp__layer2,
+.mirror-exp__layer3,
+.mirror-exp__layer4,
+.mirror-exp__layer5,
+.mirror-exp__meteoroid-orbit,
+.mirror-exp__meteoroid-orbit-layer2,
+.mirror-exp__meteoroid-orbit-layer4 {
+  will-change: transform;
+}
+
 /* Luxury text styling */
 .mirror-exp__luxury-text {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 345px;
+  position: relative;
+  padding-top: 60px;
+  padding-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  width: 100%;
   color: #797979;
   text-align: center;
-  z-index: 20;
+  z-index: 100;
 }
 
 /* Mobile First: 0-425px */
 .mirror-exp {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-  max-width: 100vw;
-  max-height: 100vh;
-  text-align: center;
   background-color: #000000;
-  position: relative;
-  overflow: hidden;
+  min-height: calc(60px + 432px + 60px + 60px);
+  overflow-x: hidden;
+  padding-bottom: 60px;
+  width: 100%;
 }
 
-/* Layer0 - rotating background layer - 192x192px */
-.mirror-exp::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 192px;
-  height: 192px;
-  background-image: url("/universeSection/layer0.png");
-  background-size: 192px 192px;
-  background-position: center;
-  background-repeat: no-repeat;
-  transform: translate(-50%, -50%);
-  z-index: 6;
-  animation: rotateClockwise 8s linear infinite;
+/* Universe container - wrapper for all layers and interactive elements */
+/* Mobile: 432px (layer5 size) */
+.mirror-exp__universe-container {
+  position: relative;
+  width: 100%;
+  max-width: 432px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  margin-top: 60px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 60px !important;
+  pointer-events: none;
+  z-index: 10;
 }
 
 /* Layer1 - rotating background layer - 288x288px */
@@ -146,8 +154,8 @@
   animation: rotateCounterClockwise 12s linear infinite;
 }
 
-.mirror-exp::before {
-  content: "";
+/* Layer0 - innermost rotating layer - 132px (mobile) */
+.mirror-exp__layer0 {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -163,8 +171,8 @@
   z-index: 6;
 }
 
-.mirror-exp::after {
-  content: "";
+/* Layer1 - second rotating layer - 192px (mobile) */
+.mirror-exp__layer1 {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -540,26 +548,15 @@
   white-space: nowrap;
 }
 
-/* Center dot - điểm đỏ ở giữa */
-/* .mirror-exp__center-dot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  background-color: red;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 20;
-} */
-
 .mirror-exp__text {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0px;
-  position: relative;
+  gap: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 10;
   text-align: center;
 }
@@ -585,13 +582,21 @@
 
 /* Tablet: 426px-1023px */
 @media (min-width: 426px) and (max-width: 1023px) {
+  /* Tablet: 672px (layer5 size) */
+  .mirror-exp__universe-container {
+    width: 672px;
+    height: 672px;
+  }
+
   .mirror-exp {
-    overflow: hidden;
+    min-height: calc(60px + 672px + 60px + 60px);
+    overflow-x: hidden;
+    width: 100%;
   }
 
   .mirror-exp__text {
     flex-direction: column;
-    gap: 4px;
+    gap: 0;
     text-align: center;
   }
 
@@ -624,14 +629,14 @@
   }
 
   /* Layer 0 - 192x192px */
-  .mirror-exp::before {
+  .mirror-exp__layer0 {
     width: 192px;
     height: 192px;
     background-size: 192px 192px;
   }
 
   /* Layer 1 - 288x288px */
-  .mirror-exp::after {
+  .mirror-exp__layer1 {
     width: 288px;
     height: 288px;
     background-size: 288px 288px;
@@ -778,26 +783,32 @@
 
 /* Desktop: 1024px+ */
 @media (min-width: 1024px) {
+  /* Desktop: 730px (layer5 size) */
+  .mirror-exp__universe-container {
+    width: 730px;
+    height: 730px;
+  }
+
   .mirror-exp {
-    height: 100vh;
-    overflow: hidden;
+    min-height: calc(60px + 730px + 60px + 60px);
+    overflow-x: hidden;
+    width: 100%;
   }
 
   /* Update luxury text for desktop */
   .mirror-exp__luxury-text {
-    top: 0px;
     width: 47%;
   }
 
   /* Layer 0 - updated size for desktop (180x180px) */
-  .mirror-exp::before {
+  .mirror-exp__layer0 {
     width: 180px;
     height: 180px;
     background-size: 180px 180px;
   }
 
   /* Layer 1 - updated size for desktop (290x290px) */
-  .mirror-exp::after {
+  .mirror-exp__layer1 {
     width: 290px;
     height: 290px;
     background-size: 290px 290px;
@@ -952,7 +963,7 @@
 
   .mirror-exp__text {
     flex-direction: column;
-    gap: 0px;
+    gap: 0;
     text-align: center;
   }
 
@@ -1003,13 +1014,20 @@
 }
 
 @media screen and (max-width: 425px) {
+  .mirror-exp__universe-container {
+    width: min(432px, 100vw) !important;
+    height: min(432px, 100vw) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
   .mirror-exp {
     overflow: hidden;
   }
 
   .mirror-exp__text {
     flex-direction: column;
-    gap: 8px;
+    gap: 0;
     text-align: center;
   }
 
@@ -1026,7 +1044,7 @@
   }
 
   /* Override tablet layer0 size back to mobile size */
-  .mirror-exp::before {
+  .mirror-exp__layer0 {
     width: 132px;
     height: 132px;
     background-size: 132px 132px;

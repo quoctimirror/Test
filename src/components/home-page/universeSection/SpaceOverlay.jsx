@@ -1,15 +1,17 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import './SpaceOverlay.css';
 import StarlightEffect from './StarlightEffect';
 import ShineGlassButton from '../../common/button/ShineGlassButton';
+import RectSpaceSVG from './svg/RectSpaceSVG';
 
 const SpaceOverlay = ({ isVisible, onClose, origin }) => {
     const [isClosing, setIsClosing] = useState(false);
-    const [imagesLoaded, setImagesLoaded] = useState(false);
+    
+    const closeTimeoutRef = useRef(null);
 
     const handleClose = useCallback(() => {
         setIsClosing(true);
-        setTimeout(() => {
+        closeTimeoutRef.current = setTimeout(() => {
             setIsClosing(false);
             onClose();
         }, 300);
@@ -20,34 +22,6 @@ const SpaceOverlay = ({ isVisible, onClose, origin }) => {
             handleClose();
         }
     }, [handleClose]);
-
-    // Preload background images immediately when component mounts
-    useEffect(() => {
-        const imagesToPreload = [
-            '/universeSection/dk-rect-space.svg'
-        ];
-
-        let loadedCount = 0;
-        const totalImages = imagesToPreload.length;
-
-        imagesToPreload.forEach((src) => {
-            const img = new Image();
-            img.onload = () => {
-                loadedCount++;
-                if (loadedCount === totalImages) {
-                    setImagesLoaded(true);
-                }
-            };
-            img.onerror = () => {
-                // Even on error, count as loaded to prevent blocking
-                loadedCount++;
-                if (loadedCount === totalImages) {
-                    setImagesLoaded(true);
-                }
-            };
-            img.src = src;
-        });
-    }, []); // Empty dependency array - run once on mount
 
     useEffect(() => {
         if (isVisible) {
@@ -63,18 +37,16 @@ const SpaceOverlay = ({ isVisible, onClose, origin }) => {
         }
     }, [isVisible, handleEscKey]);
 
-    if (!isVisible) return null;
+    // Cleanup setTimeout on unmount
+    useEffect(() => {
+        return () => {
+            if (closeTimeoutRef.current) {
+                clearTimeout(closeTimeoutRef.current);
+            }
+        };
+    }, []);
 
-    // Don't show content until images are loaded
-    if (!imagesLoaded) {
-        return (
-            <div className="space-overlay">
-                <div className="space-overlay__content" style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}>
-                    {/* Loading placeholder - can add spinner here if needed */}
-                </div>
-            </div>
-        );
-    }
+    if (!isVisible) return null;
 
     const handleOverlayClick = (e) => {
         // Disable click-to-close for mobile and tablet (< 1024px)
@@ -87,11 +59,23 @@ const SpaceOverlay = ({ isVisible, onClose, origin }) => {
         }
     };
 
+    const handleContentClick = (e) => {
+        if (e.target === e.currentTarget) {
+            handleClose();
+        }
+    };
+
     return (
         <div
             className="space-overlay"
             onClick={handleOverlayClick}
         >
+            {/* Liquid Glass Effect Layers - only on desktop */}
+            <div className="space-overlay__glass-background">
+                <div className="liquidGlass-effect"></div>
+                <div className="liquidGlass-tint"></div>
+                <div className="liquidGlass-shine"></div>
+            </div>
             {/* Close Button - moved outside content to prevent jumping */}
             <div className={`space-overlay__close-button ${isClosing ? 'space-overlay__close-button--closing' : ''}`}>
                 <ShineGlassButton
@@ -113,7 +97,9 @@ const SpaceOverlay = ({ isVisible, onClose, origin }) => {
             <div
                 className={`space-overlay__content ${isClosing ? 'space-overlay__content--closing' : ''}`}
                 style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}
+                onClick={handleContentClick}
             >
+                <RectSpaceSVG className="space-overlay__svg" />
                 <div className="space-overlay__top-text">
                     <div className="space-overlay__top-line">
                         <span className="bodytext-6--no-margin">With </span>

@@ -1,15 +1,17 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import './TimeOverlay.css';
 import StarlightEffect from './StarlightEffect';
 import ShineGlassButton from '../../common/button/ShineGlassButton';
+import DropletTimeSVG from './svg/DropletTimeSVG';
 
 const TimeOverlay = ({ isVisible, onClose, origin }) => {
     const [isClosing, setIsClosing] = useState(false);
-    const [imagesLoaded, setImagesLoaded] = useState(false);
+
+    const closeTimeoutRef = useRef(null);
 
     const handleClose = useCallback(() => {
         setIsClosing(true);
-        setTimeout(() => {
+        closeTimeoutRef.current = setTimeout(() => {
             setIsClosing(false);
             onClose();
         }, 300);
@@ -20,33 +22,6 @@ const TimeOverlay = ({ isVisible, onClose, origin }) => {
             handleClose();
         }
     }, [handleClose]);
-
-    // Preload background images immediately when component mounts
-    useEffect(() => {
-        const imagesToPreload = [
-            '/universeSection/dk-droplet-time.svg'
-        ];
-
-        let loadedCount = 0;
-        const totalImages = imagesToPreload.length;
-
-        imagesToPreload.forEach((src) => {
-            const img = new Image();
-            img.onload = () => {
-                loadedCount++;
-                if (loadedCount === totalImages) {
-                    setImagesLoaded(true);
-                }
-            };
-            img.onerror = () => {
-                loadedCount++;
-                if (loadedCount === totalImages) {
-                    setImagesLoaded(true);
-                }
-            };
-            img.src = src;
-        });
-    }, []); // Empty dependency array - run once on mount
 
     useEffect(() => {
         if (isVisible) {
@@ -62,18 +37,16 @@ const TimeOverlay = ({ isVisible, onClose, origin }) => {
         }
     }, [isVisible, handleEscKey]);
 
-    if (!isVisible) return null;
+    // Cleanup setTimeout on unmount
+    useEffect(() => {
+        return () => {
+            if (closeTimeoutRef.current) {
+                clearTimeout(closeTimeoutRef.current);
+            }
+        };
+    }, []);
 
-    // Don't show content until images are loaded
-    if (!imagesLoaded) {
-        return (
-            <div className="time-overlay">
-                <div className="time-overlay__content" style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}>
-                    {/* Loading placeholder */}
-                </div>
-            </div>
-        );
-    }
+    if (!isVisible) return null;
 
     const handleOverlayClick = (e) => {
         // Disable click-to-close for mobile and tablet (< 1024px)
@@ -86,11 +59,23 @@ const TimeOverlay = ({ isVisible, onClose, origin }) => {
         }
     };
 
+    const handleContentClick = (e) => {
+        if (e.target === e.currentTarget) {
+            handleClose();
+        }
+    };
+
     return (
         <div
             className="time-overlay"
             onClick={handleOverlayClick}
         >
+            {/* Liquid Glass Effect Layers - only on desktop */}
+            <div className="time-overlay__glass-background">
+                <div className="liquidGlass-effect"></div>
+                <div className="liquidGlass-tint"></div>
+                <div className="liquidGlass-shine"></div>
+            </div>
             {/* Close Button - moved outside content to prevent jumping */}
             <div className={`time-overlay__close-button ${isClosing ? 'time-overlay__close-button--closing' : ''}`}>
                 <ShineGlassButton
@@ -112,7 +97,9 @@ const TimeOverlay = ({ isVisible, onClose, origin }) => {
             <div
                 className={`time-overlay__content ${isClosing ? 'time-overlay__content--closing' : ''}`}
                 style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}
+                onClick={handleContentClick}
             >
+                <DropletTimeSVG className="time-overlay__svg" />
                 <h2 className="time-overlay__title heading2--no-margin">Time</h2>
                 <div className="time-overlay__starlight-down">
                     <StarlightEffect direction="falling" height={160} />

@@ -1,16 +1,16 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import './PresenceOverlay.css';
 import StarlightEffect from './StarlightEffect';
 import ShineGlassButton from '../../common/button/ShineGlassButton';
+import CirclePresenceSVG from './svg/CirclePresenceSVG';
 
 const PresenceOverlay = ({ isVisible, onClose, origin }) => {
     const [isClosing, setIsClosing] = useState(false);
-    const [imagesLoaded, setImagesLoaded] = useState(false);
-    const [fontLoaded, setFontLoaded] = useState(false);
+    const closeTimeoutRef = useRef(null);
 
     const handleClose = useCallback(() => {
         setIsClosing(true);
-        setTimeout(() => {
+        closeTimeoutRef.current = setTimeout(() => {
             setIsClosing(false);
             onClose();
         }, 300);
@@ -21,48 +21,6 @@ const PresenceOverlay = ({ isVisible, onClose, origin }) => {
             handleClose();
         }
     }, [handleClose]);
-
-    // Preload background images immediately when component mounts
-    useEffect(() => {
-        const imagesToPreload = [
-            '/universeSection/dk-circle-presence.svg'
-        ];
-
-        let loadedCount = 0;
-        const totalImages = imagesToPreload.length;
-
-        imagesToPreload.forEach((src) => {
-            const img = new Image();
-            img.onload = () => {
-                loadedCount++;
-                if (loadedCount === totalImages) {
-                    setImagesLoaded(true);
-                }
-            };
-            img.onerror = () => {
-                loadedCount++;
-                if (loadedCount === totalImages) {
-                    setImagesLoaded(true);
-                }
-            };
-            img.src = src;
-        });
-    }, []); // Empty dependency array - run once on mount
-
-    // Check if Saol Display font is loaded
-    useEffect(() => {
-        if (document.fonts) {
-            document.fonts.load('300 italic 60px "Saol Display"').then(() => {
-                setFontLoaded(true);
-            }).catch(() => {
-                // If font fails to load, show text anyway after timeout
-                setTimeout(() => setFontLoaded(true), 1000);
-            });
-        } else {
-            // Fallback for browsers without Font Loading API
-            setFontLoaded(true);
-        }
-    }, []);
 
     useEffect(() => {
         if (isVisible) {
@@ -78,18 +36,16 @@ const PresenceOverlay = ({ isVisible, onClose, origin }) => {
         }
     }, [isVisible, handleEscKey]);
 
-    if (!isVisible) return null;
+    // Cleanup setTimeout on unmount
+    useEffect(() => {
+        return () => {
+            if (closeTimeoutRef.current) {
+                clearTimeout(closeTimeoutRef.current);
+            }
+        };
+    }, []);
 
-    // Don't show content until images are loaded
-    if (!imagesLoaded) {
-        return (
-            <div className="presence-overlay">
-                <div className="presence-overlay__content" style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}>
-                    {/* Loading placeholder */}
-                </div>
-            </div>
-        );
-    }
+    if (!isVisible) return null;
 
     const handleOverlayClick = (e) => {
         // Disable click-to-close for mobile and tablet (< 1024px)
@@ -102,11 +58,24 @@ const PresenceOverlay = ({ isVisible, onClose, origin }) => {
         }
     };
 
+    const handleContentClick = (e) => {
+        // Only close if clicking directly on the content div (not on any child elements)
+        if (e.target === e.currentTarget) {
+            handleClose();
+        }
+    };
+
     return (
         <div
             className="presence-overlay"
             onClick={handleOverlayClick}
         >
+            {/* Liquid Glass Effect Layers - only on desktop */}
+            <div className="presence-overlay__glass-background">
+                <div className="liquidGlass-effect"></div>
+                <div className="liquidGlass-tint"></div>
+                <div className="liquidGlass-shine"></div>
+            </div>
             {/* Close Button - moved outside content to prevent jumping */}
             <div
                 className={`presence-overlay__close-button ${isClosing ? 'presence-overlay__close-button--closing' : ''}`}
@@ -130,7 +99,10 @@ const PresenceOverlay = ({ isVisible, onClose, origin }) => {
             <div
                 className={`presence-overlay__content ${isClosing ? 'presence-overlay__content--closing' : ''}`}
                 style={{ transformOrigin: `${origin.x}% ${origin.y}%` }}
+                onClick={handleContentClick}
             >
+                {/* Inline SVG for click detection */}
+                <CirclePresenceSVG className="presence-overlay__svg" />
                 <h2 className="presence-overlay__title heading2--no-margin">Presence</h2>
                 <div className="presence-overlay__starlight">
                     <StarlightEffect

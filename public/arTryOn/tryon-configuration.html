@@ -11,11 +11,15 @@
     <script>window.webgi = window;</script>
     <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.35/web-vto-instore.js" crossorigin="anonymous"></script>
 
-    <!-- Meshopt Decoder for faster GLB loading -->
-    <script type="module">
+    <!-- Meshopt Decoder for faster GLB loading - deferred to reduce initial load -->
+    <script type="module" defer>
         import { MeshoptDecoder } from 'https://unpkg.com/meshoptimizer@0.20.0/meshopt_decoder.module.js';
         window.MeshoptDecoder = MeshoptDecoder;
     </script>
+
+    <!-- iOS Safari memory management meta tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <style>
         * {
@@ -461,14 +465,19 @@
     <div id="model-selector">
         <label for="ring-model-select">Select Ring Model:</label>
         <select id="ring-model-select">
+            <!-- code gốc  -->
             <option value="demo_tryon">Demo Try-On</option>
+
+            <!-- Mirror models -->
             <option value="refined_mirror_fistion">fiston</option>
-            <option value="refined_mirror_oval">oval</option>
-            <option value="refined_mirror_pear">pear</option>
-            <option value="refined_mirror_myfav">myfav</option>
-            <option value="refined_mirror_trilogy">trilogy</option>
             <option value="refined_mirror_flower">flower</option>
             <option value="refined_mirror_heart" selected>heart</option>
+            <option value="refined_mirror_myfav">myfav</option>
+            <option value="refined_mirror_oval">oval</option>
+            <option value="refined_mirror_pear">pear</option>
+            <option value="refined_mirror_trilogy">trilogy</option>
+            <option value="refined_mirror_twin">twin</option>
+            <option value="refined_mirror_ufo">ufo</option>
         </select>
     </div>
 
@@ -515,6 +524,10 @@
             },
             refined_mirror_twin: {
                 glb: "/models/rings/refined_mirror_twin.glb",
+                json: "/arTryOn/standard.json"
+            },
+            refined_mirror_ufo: {
+                glb: "/models/rings/refined_mirror_ufo.glb",
                 json: "/arTryOn/standard.json"
             },
         };
@@ -569,24 +582,49 @@
                     canvas: document.getElementById("webgi-canvas")
                 });
 
-                // OPTIMIZATION 1: Increase rendering quality for sharp, clear images
-                viewer.renderer.displayCanvasScaling = 2.0; // Increase from 1.5 to 2.0 for maximum quality
+                // OPTIMIZATION 1: Adaptive canvas scaling based on device
+                const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-                // OPTIMIZATION 2: Enable high-quality rendering settings
-                if (viewer.renderer.blobRenderTarget) {
-                    viewer.renderer.blobRenderTarget.samples = 4; // Enable MSAA anti-aliasing
+                // CRITICAL: Much lower scaling for iOS Safari to prevent crashes
+                if (isIOS) {
+                    viewer.renderer.displayCanvasScaling = 0.75; // Very low for iOS stability
+                } else if (isMobileDevice) {
+                    viewer.renderer.displayCanvasScaling = 1.0;
+                } else {
+                    viewer.renderer.displayCanvasScaling = 1.5;
                 }
 
-                // OPTIMIZATION 3: Set high quality shadow and lighting
+                // OPTIMIZATION 2: Disable MSAA completely on mobile
+                if (!isMobileDevice && viewer.renderer.blobRenderTarget) {
+                    viewer.renderer.blobRenderTarget.samples = 2;
+                }
+
+                // OPTIMIZATION 3: Set camera FOV
                 viewer.scene.activeCamera.setCameraOptions({
                     fov: 60,
                 });
 
-                // OPTIMIZATION 4: Enable GPU acceleration
-                if (viewer.renderer.context) {
+                // OPTIMIZATION 4: Enable GPU acceleration (disabled on mobile for stability)
+                if (!isMobileDevice && viewer.renderer.context) {
                     const gl = viewer.renderer.context;
                     gl.hint(gl.FRAGMENT_SHADER_DERIVATIVE_HINT, gl.NICEST);
                 }
+
+                // OPTIMIZATION 5: Add WebGL context lost/restore handlers for iOS Safari
+                const canvas = document.getElementById("webgi-canvas");
+                canvas.addEventListener('webglcontextlost', function(event) {
+                    event.preventDefault();
+                    console.warn('WebGL context lost - attempting to restore');
+                    if (tryon && tryon.running) {
+                        tryon.stop().catch(() => {});
+                    }
+                }, false);
+
+                canvas.addEventListener('webglcontextrestored', function() {
+                    console.log('WebGL context restored');
+                    // Context will be recreated automatically by viewer
+                }, false);
 
                 await addBasePlugins(viewer);
 
@@ -598,8 +636,8 @@
 
                 await viewer.addPlugin(ij_vto.RingTryonUIPlugin);
 
-                // OPTIMIZATION 5: Preload all models in background for instant switching
-                preloadAllModels();
+                // OPTIMIZATION 5: Lazy load models on demand instead of preloading all (prevents memory overflow)
+                // preloadAllModels(); // DISABLED - was causing memory issues on mobile
 
                 // Load default model (heart) when page opens
                 viewer.renderEnabled = false;
@@ -612,9 +650,13 @@
                 // Wait for SDK to parse JSON config
                 await new Promise(resolve => setTimeout(resolve, 100));
 
-                // Read transforms from loaded model
-                readModelTransforms(currentModel);
-                loadTransformsForModel(currentModel);
+                // Read transforms from loaded model with error handling
+                try {
+                    readModelTransforms(currentModel);
+                    loadTransformsForModel(currentModel);
+                } catch (error) {
+                    console.error('Failed to load transforms:', error);
+                }
 
                 viewer.renderEnabled = true;
                 document.querySelector("#loading-text").remove();
@@ -623,15 +665,25 @@
                 const startBtn = document.querySelector("#start-tryon");
                 startBtn.style.display = "initial";
                 startBtn.onclick = async () => {
-                    tryon.running ? await tryon.stop() : await tryon.start();
+                    try {
+                        if (!tryon) {
+                            alert('Try-on plugin not initialized');
+                            return;
+                        }
 
-                    if (tryon.running) {
-                        tryonOptions.style.display = "flex";
-                    } else {
-                        tryonOptions.style.display = "none";
+                        tryon.running ? await tryon.stop() : await tryon.start();
+
+                        if (tryon.running) {
+                            tryonOptions.style.display = "flex";
+                        } else {
+                            tryonOptions.style.display = "none";
+                        }
+
+                        startBtn.innerHTML = tryon.running ? "Stop Try-On" : "Start Try-On";
+                    } catch (error) {
+                        console.error('Try-on error:', error);
+                        alert('Failed to start try-on: ' + error.message);
                     }
-
-                    startBtn.innerHTML = tryon.running ? "Stop Try-On" : "Start Try-On";
                 };
 
                 const flipCameraBtn = document.querySelector("#flip-camera");
@@ -727,7 +779,7 @@
                     console.log('✅ Image downloaded:', filename);
                 }
 
-                // OPTIMIZATION 6: Fast model switching with cache
+                // OPTIMIZATION 6: Fast model switching with proper cleanup
                 const modelSelector = document.getElementById("ring-model-select");
                 modelSelector.addEventListener("change", async function (e) {
                     const selectedModel = e.target.value;
@@ -750,16 +802,13 @@
                         // Disable rendering only briefly
                         viewer.renderEnabled = false;
 
+                        // MEMORY CLEANUP: Remove old scene models properly
                         const scene = viewer.scene;
                         const modelRoot = scene.modelRoot;
                         if (modelRoot) {
                             scene.removeSceneModels();
-                        }
-
-                        // FAST LOADING: Check cache first, if not found, load normally
-                        if (modelCache.has(selectedModel)) {
-                            console.log(`⚡ Loading ${selectedModel} from cache`);
-                            // Models are already cached by browser after first load
+                            // Force garbage collection hint
+                            currentModelObject = null;
                         }
 
                         // Load with priority and caching
@@ -792,8 +841,6 @@
                         // Re-enable rendering
                         viewer.renderEnabled = true;
 
-                        console.log(`✅ Model changed to: ${selectedModel}`);
-
                         if (wasRunning) {
                             await tryon.start();
                             startBtn.innerHTML = "Stop Try-On";
@@ -819,7 +866,39 @@
                 // Setup control listeners
                 setupControls();
 
-                console.log('✅ iJewel SDK initialized successfully');
+                // OPTIMIZATION 6: Add Page Visibility API to pause rendering when hidden (critical for iOS)
+                document.addEventListener('visibilitychange', async function() {
+                    if (document.hidden) {
+                        // Page is hidden (user switched tab or minimized browser)
+                        if (viewer) {
+                            viewer.renderEnabled = false;
+                        }
+                        if (tryon && tryon.running) {
+                            try {
+                                await tryon.stop();
+                                startBtn.innerHTML = "Start Try-On";
+                                tryonOptions.style.display = "none";
+                            } catch (e) {
+                                console.error('Error stopping tryon:', e);
+                            }
+                        }
+                    } else {
+                        // Page is visible again
+                        if (viewer) {
+                            viewer.renderEnabled = true;
+                        }
+                    }
+                });
+
+                // iOS Safari: Handle page becoming inactive (when going to background)
+                window.addEventListener('pagehide', function() {
+                    if (viewer) {
+                        viewer.renderEnabled = false;
+                    }
+                    if (tryon && tryon.running) {
+                        tryon.stop().catch(() => {});
+                    }
+                });
 
             } catch (err) {
                 console.error('❌ Initialization error:', err);
@@ -827,33 +906,18 @@
             }
         }
 
-        // OPTIMIZATION 7: Preload all models in background
+        // OPTIMIZATION 7: Preload models on demand (commented out to prevent memory issues)
         async function preloadAllModels() {
-            console.log('🚀 Preloading models in background...');
-
-            // Preload models one by one to avoid blocking
-            for (const [modelKey, config] of Object.entries(modelConfigs)) {
-                if (!modelCache.has(modelKey)) {
-                    try {
-                        // Use fetch to cache the files in browser cache
-                        await Promise.all([
-                            fetch(config.glb).then(r => r.blob()),
-                            fetch(config.json).then(r => r.json())
-                        ]);
-                        modelCache.set(modelKey, true);
-                        console.log(`✅ Preloaded: ${modelKey}`);
-                    } catch (error) {
-                        console.warn(`⚠️ Failed to preload ${modelKey}:`, error);
-                    }
-                }
-            }
-            console.log('✅ All models preloaded!');
+            // DISABLED - This was causing memory overflow on mobile devices
+            // Models will be loaded on-demand when selected instead
+            console.log('ℹ️ Model preloading disabled for better memory management');
         }
 
         // OPTIMIZATION 8: Throttled update function to prevent lag
+        const isMobileForThrottle = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         const throttledUpdate = throttle((controlType, axis, value) => {
             updateModelTransform(controlType, axis, value);
-        }, 16); // 60fps = ~16ms per frame
+        }, isMobileForThrottle ? 50 : 16); // 50ms on mobile, 16ms on desktop
 
         function setupControls() {
             // Handle all control buttons
@@ -930,58 +994,35 @@
 
         // Update transforms via tryon plugin API (works during Try-On)
         function updateModelTransform(controlType, axis, value) {
-            if (!tryon) {
-                console.warn('⚠️ Tryon plugin not available');
-                return;
-            }
+            if (!tryon) return;
 
             // Save to model transforms storage
             if (controlType === 'position') {
                 modelTransforms[currentModel].position[axis] = value;
-                // Apply to tryon plugin (SDK will handle the rest)
                 if (tryon.modelPosition) {
                     tryon.modelPosition[axis] = value;
-                    console.log(`📍 Updated tryon.modelPosition.${axis} = ${value}`);
                 }
             } else if (controlType === 'rotation') {
                 modelTransforms[currentModel].rotation[axis] = value;
-                // Apply to tryon plugin (degrees, no conversion needed)
                 if (tryon.modelRotation) {
                     tryon.modelRotation[axis] = value;
-                    console.log(`🔄 Updated tryon.modelRotation.${axis} = ${value}°`);
                 }
             } else if (controlType === 'scale') {
                 modelTransforms[currentModel].scale = value;
-                // Apply to tryon plugin
                 if (tryon.modelScaleFactor !== undefined) {
                     tryon.modelScaleFactor = value;
-                    console.log(`📏 Updated tryon.modelScaleFactor = ${value}`);
                 }
             }
         }
 
         // Read the original transforms from the tryon plugin (not Three.js object)
         function readModelTransforms(modelKey) {
-            if (!tryon) {
-                console.warn(`⚠️ Cannot read transforms: tryon plugin is null`);
-                return;
-            }
-
-            console.log(`🔍 Reading transforms from tryon plugin for ${modelKey}`);
-            console.log(`🔌 Tryon plugin state:`, {
-                modelPosition: tryon.modelPosition,
-                modelRotation: tryon.modelRotation,
-                modelScaleFactor: tryon.modelScaleFactor
-            });
+            if (!tryon) return;
 
             // Read actual values from tryon plugin API (loaded from JSON config)
             const position = tryon.modelPosition || { x: 0, y: 0, z: 0 };
             const rotation = tryon.modelRotation || { x: 0, y: 0, z: 0 };
             const scale = tryon.modelScaleFactor !== undefined ? tryon.modelScaleFactor : 1;
-
-            console.log(`📍 Position (meters):`, { x: position.x, y: position.y, z: position.z });
-            console.log(`🔄 Rotation (degrees):`, { x: rotation.x, y: rotation.y, z: rotation.z });
-            console.log(`📏 Scale (multiplier):`, scale);
 
             // Save the original transforms from tryon plugin
             modelTransforms[modelKey] = {
@@ -997,19 +1038,11 @@
                 },
                 scale: scale
             };
-
-            console.log(`✅ Saved transforms for ${modelKey}:`, modelTransforms[modelKey]);
         }
 
         function loadTransformsForModel(modelKey) {
             const transforms = modelTransforms[modelKey];
-
-            if (!transforms) {
-                console.warn(`⚠️ No transforms found for ${modelKey}`);
-                return;
-            }
-
-            console.log(`✅ Loading transforms to UI for ${modelKey}:`, transforms);
+            if (!transforms) return;
 
             // Update UI inputs with actual values from tryon plugin
             document.querySelector('.control-input[data-control="position"][data-axis="x"]').value = transforms.position.x.toFixed(3);
@@ -1021,10 +1054,6 @@
             document.querySelector('.control-input[data-control="rotation"][data-axis="z"]').value = transforms.rotation.z.toFixed(0);
 
             document.querySelector('.control-input[data-control="scale"][data-axis="uniform"]').value = transforms.scale.toFixed(2);
-
-            console.log(`📺 UI Updated - Position: (${transforms.position.x.toFixed(3)}, ${transforms.position.y.toFixed(3)}, ${transforms.position.z.toFixed(3)})`);
-            console.log(`📺 UI Updated - Rotation: (${transforms.rotation.x.toFixed(0)}°, ${transforms.rotation.y.toFixed(0)}°, ${transforms.rotation.z.toFixed(0)}°)`);
-            console.log(`📺 UI Updated - Scale: ${transforms.scale.toFixed(2)}`);
 
             // Apply transforms to tryon plugin (not Three.js object)
             if (tryon) {
@@ -1043,8 +1072,6 @@
                 if (tryon.modelScaleFactor !== undefined) {
                     tryon.modelScaleFactor = transforms.scale;
                 }
-
-                console.log(`✅ Applied transforms to tryon plugin`);
             }
         }
 

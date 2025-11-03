@@ -5,8 +5,8 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: #000000;
-    z-index: 1000;
+    background: transparent;
+    z-index: 100;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,20 +15,81 @@
     overflow: hidden;
 }
 
+/* Liquid Glass Background - 3 layers */
+.sense-overlay__glass-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Liquid Glass Effect Layer - Distortion */
+.sense-overlay__glass-background .liquidGlass-effect {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    /* background: rgba(255, 255, 255, 0.15); */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    overflow: hidden;
+}
+
+/* Liquid Glass Tint Layer - Color overlay */
+.sense-overlay__glass-background .liquidGlass-tint {
+    z-index: 1;
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.01);
+}
+
+/* Liquid Glass Shine Layer - Glossy highlights */
+.sense-overlay__glass-background .liquidGlass-shine {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+        inset 0 -0.5px 0 0 rgba(255, 255, 255, 0.05);
+}
+
 .sense-overlay__content {
     position: relative;
-    cursor: default;
+    cursor: pointer;
+    /* Show pointer cursor in empty areas to indicate clickable */
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('/universeSection/dk-heart-sense.svg');
-    background-size: auto 1000px;
-    background-position: center;
-    background-repeat: no-repeat;
     animation: zoomIn 0.3s ease-out;
+}
+
+/* Inline SVG styling */
+.sense-overlay__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 0;
+    pointer-events: none;
+    /* Let clicks pass through to container */
+}
+
+/* SVG shapes should block clicks */
+.sense-overlay__svg path,
+.sense-overlay__svg polygon,
+.sense-overlay__svg circle,
+.sense-overlay__svg rect {
+    pointer-events: auto;
+    /* Block clicks on shapes */
+    cursor: default;
+    /* Don't show pointer cursor on shapes */
 }
 
 .sense-overlay__title {
@@ -44,7 +105,7 @@
     font-weight: 300;
     line-height: 90%;
     letter-spacing: -0.72px;
-    z-index: 1002;
+    z-index: 102;
 }
 
 /* Starlight Effects - Desktop positions */
@@ -62,7 +123,7 @@
     top: calc(50% - 50px);
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1000;
+    z-index: 100;
     pointer-events: none;
 }
 
@@ -72,7 +133,7 @@
     left: calc(50% - 5px);
     transform: translateX(-50%) rotate(150deg);
     transform-origin: center top;
-    z-index: 1000;
+    z-index: 100;
     pointer-events: none;
 }
 
@@ -82,7 +143,7 @@
     left: calc(50% - 20px);
     transform: translateX(-50%) rotate(71deg);
     transform-origin: center top;
-    z-index: 1000;
+    z-index: 100;
     pointer-events: none;
 }
 
@@ -92,7 +153,7 @@
     left: 50%;
     transform: translateX(-50%) rotate(220deg);
     transform-origin: center top;
-    z-index: 1000;
+    z-index: 100;
     pointer-events: none;
 }
 
@@ -102,7 +163,7 @@
     left: calc(50% + 10px);
     transform: translateX(-50%) rotate(280deg);
     transform-origin: center top;
-    z-index: 1000;
+    z-index: 100;
     pointer-events: none;
 }
 
@@ -112,8 +173,10 @@
     top: calc(50% + 90px);
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1000;
-    pointer-events: none;
+    z-index: 100;
+    pointer-events: auto;
+    /* Allow clicking to select sense */
+    cursor: pointer;
 }
 
 .sense-overlay__sound-text span {
@@ -131,8 +194,9 @@
     top: calc(50% + 20px);
     left: calc(50% + 160px);
     transform: translateX(-50%);
-    z-index: 1000;
-    pointer-events: none;
+    z-index: 100;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .sense-overlay__taste-text span {
@@ -150,8 +214,9 @@
     top: calc(50% + 20px);
     left: calc(50% - 160px);
     transform: translateX(-50%);
-    z-index: 1000;
-    pointer-events: none;
+    z-index: 100;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .sense-overlay__scent-text span {
@@ -167,10 +232,11 @@
 .sense-overlay__sight-text {
     position: fixed;
     top: calc(50% - 138px);
-    left: calc(50% - 80px);
+    left: calc(50% - 95px);
     transform: translateX(-50%);
-    z-index: 1000;
-    pointer-events: none;
+    z-index: 100;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .sense-overlay__sight-text span {
@@ -188,8 +254,9 @@
     top: calc(50% - 138px);
     left: calc(50% + 100px);
     transform: translateX(-50%);
-    z-index: 1000;
-    pointer-events: none;
+    z-index: 100;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .sense-overlay__touch-text span {
@@ -213,11 +280,21 @@
     bottom: calc(20% - 20px);
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1003;
+    z-index: 103;
     pointer-events: auto;
     display: block;
     animation: zoomInButton 0.3s ease-out;
-    /* Show by default for mobile first */
+}
+
+/* Apply scroll-down-arrow style to close button */
+.sense-overlay__close-button .shine-glass-button {
+    /* background: rgba(255, 255, 255, 0.15) !important; */
+    backdrop-filter: blur(2.5px) !important;
+    -webkit-backdrop-filter: blur(2.5px) !important;
+}
+
+.sense-overlay__close-button .border-layer {
+    background: transparent !important;
 }
 
 @keyframes zoomInButton {
@@ -260,8 +337,6 @@
         height: 956px;
         flex-shrink: 0;
         aspect-ratio: 489/478;
-        background-image: url('/universeSection/dk-heart-sense.svg');
-        background-size: cover;
     }
 }
 
@@ -354,14 +429,16 @@
 /* Tablet: 426-1023px */
 @media (min-width: 481px) and (max-width: 1023px) {
     .sense-overlay {
+        background-color: #000000;
         animation: fadeIn 0.15s ease-in-out;
     }
 
+    /* Hide glass background on tablet */
+    .sense-overlay__glass-background {
+        display: none;
+    }
+
     .sense-overlay__content {
-        background-image: url('/universeSection/dk-heart-sense.svg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
         width: 706px;
         height: 690px;
         flex-shrink: 0;
@@ -406,7 +483,7 @@
         width: 25vw;
         height: 60px;
         text-align: center;
-        z-index: 1002;
+        z-index: 102;
         pointer-events: none;
         animation: slideUpDescription 0.4s ease-out;
     }
@@ -456,14 +533,16 @@
 /* Mobile: 0-425px */
 @media (max-width: 480px) {
     .sense-overlay {
+        background-color: #000000;
         animation: fadeIn 0.15s ease-in-out;
     }
 
+    /* Hide glass background on mobile */
+    .sense-overlay__glass-background {
+        display: none;
+    }
+
     .sense-overlay__content {
-        background-image: url('/universeSection/dk-heart-sense.svg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
         width: 706px;
         height: 690px;
         flex-shrink: 0;
@@ -556,7 +635,7 @@
         width: 60vw;
         height: 50px;
         text-align: center;
-        z-index: 1002;
+        z-index: 102;
         pointer-events: none;
         animation: slideUpDescription 0.4s ease-out;
     }
@@ -623,7 +702,7 @@
         left: 50%;
         transform: translateX(-50%);
         text-align: center;
-        z-index: 1002;
+        z-index: 102;
         pointer-events: none;
         animation: slideUpDescription 0.4s ease-out;
     }
@@ -672,12 +751,8 @@
         left: 50%;
         width: 100px;
         height: 100px;
-        background-image: url('/universeSection/dk-heart-sense.svg');
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
         transform: translate(-50%, -50%);
-        z-index: 1001;
+        z-index: 101;
         pointer-events: none;
     }
 

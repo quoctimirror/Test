@@ -1,68 +1,60 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import './MirrorExp.css';
 import SenseOverlay from './SenseOverlay';
 import PresenceOverlay from './PresenceOverlay';
 import SpaceOverlay from './SpaceOverlay';
 import TimeOverlay from './TimeOverlay';
 
-const MirrorExp = () => {
+const MirrorExp = ({
+  showSenseOverlay,
+  setShowSenseOverlay,
+  showPresenceOverlay,
+  setShowPresenceOverlay,
+  showSpaceOverlay,
+  setShowSpaceOverlay,
+  showTimeOverlay,
+  setShowTimeOverlay
+}) => {
   const mirrorExpRef = useRef(null);
-  const [showSenseOverlay, setShowSenseOverlay] = useState(false);
-  const [showPresenceOverlay, setShowPresenceOverlay] = useState(false);
-  const [showSpaceOverlay, setShowSpaceOverlay] = useState(false);
-  const [showTimeOverlay, setShowTimeOverlay] = useState(false);
-
   const [clickOrigin, setClickOrigin] = useState({ x: 50, y: 50 }); // Default center
 
-  const handleSenseClick = (e) => {
+  // Helper function to calculate origin from click event
+  const calculateOrigin = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
     const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
-    setClickOrigin({ x, y });
-    setShowSenseOverlay(true);
-  };
+    return { x, y };
+  }, []);
 
-  const handleCloseSenseOverlay = () => {
-    setShowSenseOverlay(false);
-  };
+  // Unified overlay click handler
+  const handleOverlayClick = useCallback((overlayType) => (e) => {
+    setClickOrigin(calculateOrigin(e));
+    switch (overlayType) {
+      case 'sense':
+        setShowSenseOverlay(true);
+        break;
+      case 'presence':
+        setShowPresenceOverlay(true);
+        break;
+      case 'space':
+        setShowSpaceOverlay(true);
+        break;
+      case 'time':
+        setShowTimeOverlay(true);
+        break;
+      default:
+        break;
+    }
+  }, [calculateOrigin, setShowSenseOverlay, setShowPresenceOverlay, setShowSpaceOverlay, setShowTimeOverlay]);
 
-  const handlePresenceClick = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
-    const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
-    setClickOrigin({ x, y });
-    setShowPresenceOverlay(true);
-  };
-
-  const handleClosePresenceOverlay = () => {
-    setShowPresenceOverlay(false);
-  };
-
-  const handleSpaceClick = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
-    const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
-    setClickOrigin({ x, y });
-    setShowSpaceOverlay(true);
-  };
-
-  const handleCloseSpaceOverlay = () => {
-    setShowSpaceOverlay(false);
-  };
-
-  const handleTimeClick = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
-    const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
-    setClickOrigin({ x, y });
-    setShowTimeOverlay(true);
-  };
-
-  const handleCloseTimeOverlay = () => {
-    setShowTimeOverlay(false);
-  };
+  // Close handlers
+  const handleCloseSenseOverlay = useCallback(() => setShowSenseOverlay(false), [setShowSenseOverlay]);
+  const handleClosePresenceOverlay = useCallback(() => setShowPresenceOverlay(false), [setShowPresenceOverlay]);
+  const handleCloseSpaceOverlay = useCallback(() => setShowSpaceOverlay(false), [setShowSpaceOverlay]);
+  const handleCloseTimeOverlay = useCallback(() => setShowTimeOverlay(false), [setShowTimeOverlay]);
 
 
+  /* LAYER RADIUS REFERENCE - Kept for future calculations
   useEffect(() => {
     if (mirrorExpRef.current) {
       const container = mirrorExpRef.current;
@@ -110,44 +102,50 @@ const MirrorExp = () => {
 
     }
   }, []);
+  */
 
   return (
     <div className="mirror-exp" ref={mirrorExpRef}>
       <div className="mirror-exp__luxury-text bodytext-4--no-margin">
-        AWAKENING LUXURY THROUGH YOUR SENSES, IN EVERY TIME, SPACE AND PRESENCE.
+        AWAKENING LUXURY THROUGH YOUR SENSES
       </div>
-      <div className="mirror-exp-title"></div>
-      <div className="mirror-exp__layer5"></div>
-      <div className="mirror-exp__layer4"></div>
-      <div className="mirror-exp__layer3"></div>
-      <div className="mirror-exp__layer2"></div>
-      <div className="mirror-exp__meteoroid-orbit">
-        <div className="mirror-exp__meteoroid-3h"></div>
-      </div>
-      <div className="mirror-exp__meteoroid-orbit-layer2">
-        <div className="mirror-exp__meteoroid-layer2-12h"></div>
-      </div>
-      <div className="mirror-exp__meteoroid-orbit-layer4">
-        <div className="mirror-exp__meteoroid-layer4-0deg"></div>
-        <div className="mirror-exp__meteoroid-layer4-120deg"></div>
-        <div className="mirror-exp__meteoroid-layer4-240deg"></div>
-      </div>
-      <div className="mirror-exp__heart-senses" onClick={handleSenseClick} style={{ cursor: 'pointer' }}>
-        <span className="mirror-exp__sense-text bodytext-4--no-margin">Sense</span>
-      </div>
-      <div className="mirror-exp__circle-presence" onClick={handlePresenceClick} style={{ cursor: 'pointer' }}>
-        <span className="mirror-exp__presence-text bodytext-4--no-margin">Presence</span>
-      </div>
-      <div className="mirror-exp__droplet-time" onClick={handleTimeClick} style={{ cursor: 'pointer' }}>
-        <span className="mirror-exp__time-text bodytext-4--no-margin">Time</span>
-      </div>
-      <div className="mirror-exp__rect-space" onClick={handleSpaceClick} style={{ cursor: 'pointer' }}>
-        <span className="mirror-exp__space-text bodytext-4--no-margin">Space</span>
-      </div>
-      <div className="mirror-exp__center-dot"></div>
-      <div className="mirror-exp__text">
-        <span className="mirror-exp__mirror bodytext-3--no-margin">MIRROR</span>
-        <span className="mirror-exp__experience bodytext-3--no-margin">EXPERIENCE</span>
+      {/* Universe visualization container */}
+      <div className="mirror-exp__universe-container">
+        <div className="mirror-exp-title"></div>
+        <div className="mirror-exp__layer0"></div>
+        <div className="mirror-exp__layer1"></div>
+        <div className="mirror-exp__layer5"></div>
+        <div className="mirror-exp__layer4"></div>
+        <div className="mirror-exp__layer3"></div>
+        <div className="mirror-exp__layer2"></div>
+        <div className="mirror-exp__meteoroid-orbit">
+          <div className="mirror-exp__meteoroid-3h"></div>
+        </div>
+        <div className="mirror-exp__meteoroid-orbit-layer2">
+          <div className="mirror-exp__meteoroid-layer2-12h"></div>
+        </div>
+        <div className="mirror-exp__meteoroid-orbit-layer4">
+          <div className="mirror-exp__meteoroid-layer4-0deg"></div>
+          <div className="mirror-exp__meteoroid-layer4-120deg"></div>
+          <div className="mirror-exp__meteoroid-layer4-240deg"></div>
+        </div>
+        <div className="mirror-exp__heart-senses" onClick={handleOverlayClick('sense')} style={{ cursor: 'pointer' }}>
+          <span className="mirror-exp__sense-text bodytext-4--no-margin">Sense</span>
+        </div>
+        <div className="mirror-exp__circle-presence" onClick={handleOverlayClick('presence')} style={{ cursor: 'pointer' }}>
+          <span className="mirror-exp__presence-text bodytext-4--no-margin">Presence</span>
+        </div>
+        <div className="mirror-exp__droplet-time" onClick={handleOverlayClick('time')} style={{ cursor: 'pointer' }}>
+          <span className="mirror-exp__time-text bodytext-4--no-margin">Time</span>
+        </div>
+        <div className="mirror-exp__rect-space" onClick={handleOverlayClick('space')} style={{ cursor: 'pointer' }}>
+          <span className="mirror-exp__space-text bodytext-4--no-margin">Space</span>
+        </div>
+        <div className="mirror-exp__center-dot"></div>
+        <div className="mirror-exp__text">
+          <span className="mirror-exp__mirror bodytext-3--no-margin">MIRROR</span>
+          <span className="mirror-exp__experience bodytext-3--no-margin">EXPERIENCE</span>
+        </div>
       </div>
       <SenseOverlay
         isVisible={showSenseOverlay}

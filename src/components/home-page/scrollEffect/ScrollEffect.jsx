@@ -6,7 +6,7 @@ import ScrollDownArrow from "@/components/common/button/ScrollDownArrow";
 import SoundButton from "@/components/common/button/SoundButton";
 import "./ScrollEffect.css";
 
-export default function ScrollEffect() {
+export default function ScrollEffect({ isAnyOverlayOpen = false }) {
   const location = useLocation();
   const isImmersiveShowroomPage =
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
@@ -748,15 +748,15 @@ export default function ScrollEffect() {
         </div>
       </div>
 
-      {/* Fixed Sound Button - visible except in Immersive Showroom */}
-      {!isImmersiveShowroomPage && (
+      {/* Fixed Sound Button - visible except in Immersive Showroom and when overlay is open */}
+      {!isImmersiveShowroomPage && !isAnyOverlayOpen && (
         <div className="fixed-sound-container">
           <SoundButton isActive={isSoundActive} onClick={handleSoundClick} />
         </div>
       )}
 
-      {/* Fixed Arrow Button - visible except in footer */}
-      {!isImmersiveShowroomPage && isArrowVisible && (
+      {/* Fixed Arrow Button - visible except in footer and when overlay is open */}
+      {!isImmersiveShowroomPage && !isAnyOverlayOpen && isArrowVisible && (
         <div className="fixed-arrow-container">
           <ScrollDownArrow onClick={handleArrowClick} />
         </div>
