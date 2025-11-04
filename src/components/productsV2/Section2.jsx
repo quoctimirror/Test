@@ -19,6 +19,22 @@ const Section2 = () => {
               luminous, and unmistakably personal.
             </p>
           </div>
+
+          {/* Configuration Details */}
+          <div className="pv2-section2-config-details">
+            <div className="pv2-section2-config-row">
+              <span className="pv2-section2-config-label bodytext-6--no-margin">Shape</span>
+              <span className="pv2-section2-config-value bodytext-3--no-margin">Pear</span>
+            </div>
+            <div className="pv2-section2-config-row">
+              <span className="pv2-section2-config-label bodytext-6--no-margin">Metal</span>
+              <span className="pv2-section2-config-value bodytext-3--no-margin">18k Yellow Gold</span>
+            </div>
+            <div className="pv2-section2-config-row">
+              <span className="pv2-section2-config-label bodytext-6--no-margin">Band</span>
+              <span className="pv2-section2-config-value bodytext-3--no-margin">Single band</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -190,23 +190,34 @@ const Products = () => {
     // Handle scroll to show/hide MobileProductBar
     useEffect(() => {
         const handleScroll = () => {
-            // Get products-container position
-            const productsContainer = document.querySelector('.pv2-products-container');
-            if (productsContainer) {
-                const rect = productsContainer.getBoundingClientRect();
+            // Get Section4 button container position (last element)
+            const section4Button = document.querySelector('.pv2-section4-button-container');
+            if (section4Button) {
+                const rect = section4Button.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
 
-                // Hide mobile bar if we've scrolled past products-container (bottom is above viewport)
+                // Hide mobile bar if we've scrolled past Section4 button (bottom is above viewport)
                 if (rect.bottom <= 0) {
                     setShowMobileBar(false);
                 }
-                // Show mobile bar if we're within products-container area
-                else if (rect.bottom > 0 && rect.top < windowHeight) {
+                // Show mobile bar if we're still viewing Section4 or above
+                else {
                     setShowMobileBar(true);
                 }
-                // Hide if we're above products-container
-                else {
-                    setShowMobileBar(false);
+            } else {
+                // Fallback to products-container if Section4 button not found
+                const productsContainer = document.querySelector('.pv2-products-container');
+                if (productsContainer) {
+                    const rect = productsContainer.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+
+                    if (rect.bottom <= 0) {
+                        setShowMobileBar(false);
+                    } else if (rect.bottom > 0 && rect.top < windowHeight) {
+                        setShowMobileBar(true);
+                    } else {
+                        setShowMobileBar(false);
+                    }
                 }
             }
         };
@@ -376,9 +387,6 @@ const Products = () => {
                         />
                     </div>
                 </div>
-
-                {/* View All Products Section */}
-                <ViewAllProduct showViewProductButton={true} />
 
                 {/* Contact Section */}
                 <Contact />

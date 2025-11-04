@@ -6,21 +6,28 @@
     bottom: 0;
     left: 0;
     right: 0;
-    width: 100vw;
+    width: 100%;
     /* Formula: (115 + 24) / (657 + 40) * 100vh = 139/697 ≈ 19.94vh */
     height: calc((115 + 24) / (657 + 40) * 100vh);
     /* background: linear-gradient(180deg, #FFF 0%, #BB234C 100%); */
     background: white;
     z-index: 100;
     box-sizing: border-box;
-    transition: transform 1s ease-in-out;
+    transition: transform 1s ease-in-out, opacity 0.3s ease-in-out, z-index 0s 0.3s;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    opacity: 1;
 
     /* DEBUG: Tô màu để dễ nhìn area */
     /* border: 1px solid rgba(255, 0, 0, 0.8); */
+}
+
+.pv2-mobile-product-bar.fade-out {
+    opacity: 0;
+    z-index: 100;
+    transition: transform 1s ease-in-out, opacity 0.3s ease-in-out, z-index 0s 0s;
 }
 
 .pv2-mobile-bar-caret-up {
