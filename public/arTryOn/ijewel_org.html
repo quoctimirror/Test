@@ -1,0 +1,347 @@
+<html>
+
+<head>
+    <title>iJewel Try-On Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #start-tryon,
+        /* #enter-setup-mode, */
+        #flip-camera,
+        #switch-finger,
+        #save-image {
+            width: 100px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        #tryon-options {
+            display: none;
+            position: fixed;
+            bottom: 12px;
+            right: 2%;
+        }
+
+        #start-tryon {
+            position: fixed;
+            top: 0.5rem;
+            right: 0.5rem;
+            height: 30px;
+        }
+
+        /* #enter-setup-mode {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+        } */
+
+        #loading-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+        }
+    </style>
+    <script type="module">
+        import { MeshoptDecoder } from 'https://unpkg.com/meshoptimizer@0.20.0/meshopt_decoder.module.js';
+        window.MeshoptDecoder = MeshoptDecoder
+    </script>
+</head>
+
+<body cz-shortcut-listen="true">
+    <div id="canvas-container" style="position: relative; width: 100%; height: 100%;">
+        <canvas id="webgi-canvas" style="position: absolute; height: 100%; width: 100%; touch-action: none;"
+            data-engine="three.js r160" width="1536" height="2049"></canvas>
+        <div id="loading-text">Loading...</div>
+        <div
+            style="width: 40px; height: 40px; border-radius: 100%; border: 4px solid rgb(255, 68, 68); transform: translate(-50%, -50%); position: absolute; top: 0px; left: 0px; z-index: 10000; opacity: 0; transition: opacity 0.5s; pointer-events: none;">
+        </div>
+        <div style="position: absolute; top: 0px; left: 0px; width: 10px; height: 10px; opacity: 0;"><svg
+                xmlns="http://www.w3.org/2000/svg" style="transform: translate(-50%, -25%);" width="25" height="36">
+                <defs>
+                    <path id="A" d="M.001.232h24.997V36H.001z"></path>
+                </defs>
+                <g transform="translate(-11 -4)" fill="none" fill-rule="evenodd">
+                    <path fill-opacity="0" fill="#fff" d="M0 0h44v44H0z"></path>
+                    <g transform="translate(11 3)">
+                        <path
+                            d="M8.733 11.165c.04-1.108.766-2.027 1.743-2.307a2.54 2.54 0 0 1 .628-.089c.16 0 .314.017.463.044 1.088.2 1.9 1.092 1.9 2.16v8.88h1.26c2.943-1.39 5-4.45 5-8.025a9.01 9.01 0 0 0-1.9-5.56l-.43-.5c-.765-.838-1.683-1.522-2.712-2-1.057-.49-2.226-.77-3.46-.77s-2.4.278-3.46.77c-1.03.478-1.947 1.162-2.71 2l-.43.5a9.01 9.01 0 0 0-1.9 5.56 9.04 9.04 0 0 0 .094 1.305c.03.21.088.41.13.617l.136.624c.083.286.196.56.305.832l.124.333a8.78 8.78 0 0 0 .509.953l.065.122a8.69 8.69 0 0 0 3.521 3.191l1.11.537v-9.178z"
+                            fill-opacity=".5" fill="#e4e4e4"></path>
+                        <path
+                            d="M22.94 26.218l-2.76 7.74c-.172.485-.676.8-1.253.8H12.24c-1.606 0-3.092-.68-3.98-1.82-1.592-2.048-3.647-3.822-6.11-5.27-.095-.055-.15-.137-.152-.23-.004-.1.046-.196.193-.297.56-.393 1.234-.6 1.926-.6a3.43 3.43 0 0 1 .691.069l4.922.994V10.972c0-.663.615-1.203 1.37-1.203s1.373.54 1.373 1.203v9.882h2.953c.273 0 .533.073.757.21l6.257 3.874c.027.017.045.042.07.06.41.296.586.77.426 1.22M4.1 16.614c-.024-.04-.042-.083-.065-.122a8.69 8.69 0 0 1-.509-.953c-.048-.107-.08-.223-.124-.333l-.305-.832c-.058-.202-.09-.416-.136-.624l-.13-.617a9.03 9.03 0 0 1-.094-1.305c0-2.107.714-4.04 1.9-5.56l.43-.5c.764-.84 1.682-1.523 2.71-2 1.058-.49 2.226-.77 3.46-.77s2.402.28 3.46.77c1.03.477 1.947 1.16 2.712 2l.428.5a9 9 0 0 1 1.901 5.559c0 3.577-2.056 6.636-5 8.026h-1.26v-8.882c0-1.067-.822-1.96-1.9-2.16-.15-.028-.304-.044-.463-.044-.22 0-.427.037-.628.09-.977.28-1.703 1.198-1.743 2.306v9.178l-1.11-.537C6.18 19.098 4.96 18 4.1 16.614M22.97 24.09l-6.256-3.874c-.102-.063-.218-.098-.33-.144 2.683-1.8 4.354-4.855 4.354-8.243 0-.486-.037-.964-.104-1.43a9.97 9.97 0 0 0-1.57-4.128l-.295-.408-.066-.092a10.05 10.05 0 0 0-.949-1.078c-.342-.334-.708-.643-1.094-.922-1.155-.834-2.492-1.412-3.94-1.65l-.732-.088-.748-.03a9.29 9.29 0 0 0-1.482.119c-1.447.238-2.786.816-3.94 1.65a9.33 9.33 0 0 0-.813.686 9.59 9.59 0 0 0-.845.877l-.385.437-.36.5-.288.468-.418.778-.04.09c-.593 1.28-.93 2.71-.93 4.222 0 3.832 2.182 7.342 5.56 8.938l1.437.68v4.946L5 25.64a4.44 4.44 0 0 0-.888-.086c-.017 0-.034.003-.05.003-.252.004-.503.033-.75.08a5.08 5.08 0 0 0-.237.056c-.193.046-.382.107-.568.18-.075.03-.15.057-.225.1-.25.114-.494.244-.723.405a1.31 1.31 0 0 0-.566 1.122 1.28 1.28 0 0 0 .645 1.051C4 29.925 5.96 31.614 7.473 33.563a5.06 5.06 0 0 0 .434.491c1.086 1.082 2.656 1.713 4.326 1.715h6.697c.748-.001 1.43-.333 1.858-.872.142-.18.256-.38.336-.602l2.757-7.74c.094-.26.13-.53.112-.794s-.088-.52-.203-.76a2.19 2.19 0 0 0-.821-.91"
+                            fill-opacity=".6" fill="#000"></path>
+                        <path
+                            d="M22.444 24.94l-6.257-3.874a1.45 1.45 0 0 0-.757-.211h-2.953v-9.88c0-.663-.616-1.203-1.373-1.203s-1.37.54-1.37 1.203v16.643l-4.922-.994a3.44 3.44 0 0 0-.692-.069 3.35 3.35 0 0 0-1.925.598c-.147.102-.198.198-.194.298.004.094.058.176.153.23 2.462 1.448 4.517 3.22 6.11 5.27.887 1.14 2.373 1.82 3.98 1.82h6.686c.577 0 1.08-.326 1.253-.8l2.76-7.74c.16-.448-.017-.923-.426-1.22-.025-.02-.043-.043-.07-.06z"
+                            fill="#fff"></path>
+                        <g transform="translate(0 .769)">
+                            <mask id="B" fill="#fff">
+                                <use xlink:href="#A"></use>
+                            </mask>
+                            <path
+                                d="M23.993 24.992a1.96 1.96 0 0 1-.111.794l-2.758 7.74c-.08.22-.194.423-.336.602-.427.54-1.11.87-1.857.872h-6.698c-1.67-.002-3.24-.633-4.326-1.715-.154-.154-.3-.318-.434-.49C5.96 30.846 4 29.157 1.646 27.773c-.385-.225-.626-.618-.645-1.05a1.31 1.31 0 0 1 .566-1.122 4.56 4.56 0 0 1 .723-.405l.225-.1a4.3 4.3 0 0 1 .568-.18l.237-.056c.248-.046.5-.075.75-.08.018 0 .034-.003.05-.003.303-.001.597.027.89.086l3.722.752V20.68l-1.436-.68c-3.377-1.596-5.56-5.106-5.56-8.938 0-1.51.336-2.94.93-4.222.015-.03.025-.06.04-.09.127-.267.268-.525.418-.778.093-.16.186-.316.288-.468.063-.095.133-.186.2-.277L3.773 5c.118-.155.26-.29.385-.437.266-.3.544-.604.845-.877a9.33 9.33 0 0 1 .813-.686C6.97 2.167 8.31 1.59 9.757 1.35a9.27 9.27 0 0 1 1.481-.119 8.82 8.82 0 0 1 .748.031c.247.02.49.05.733.088 1.448.238 2.786.816 3.94 1.65.387.28.752.588 1.094.922a9.94 9.94 0 0 1 .949 1.078l.066.092c.102.133.203.268.295.408a9.97 9.97 0 0 1 1.571 4.128c.066.467.103.945.103 1.43 0 3.388-1.67 6.453-4.353 8.243.11.046.227.08.33.144l6.256 3.874c.37.23.645.55.82.9.115.24.185.498.203.76m.697-1.195c-.265-.55-.677-1.007-1.194-1.326l-5.323-3.297c2.255-2.037 3.564-4.97 3.564-8.114 0-2.19-.637-4.304-1.84-6.114-.126-.188-.26-.37-.4-.552-.645-.848-1.402-1.6-2.252-2.204C15.472.91 13.393.232 11.238.232A10.21 10.21 0 0 0 5.23 2.19c-.848.614-1.606 1.356-2.253 2.205-.136.18-.272.363-.398.55C1.374 6.756.737 8.87.737 11.06c0 4.218 2.407 8.08 6.133 9.842l.863.41v3.092l-2.525-.51c-.356-.07-.717-.106-1.076-.106a5.45 5.45 0 0 0-3.14.996c-.653.46-1.022 1.202-.99 1.983a2.28 2.28 0 0 0 1.138 1.872c2.24 1.318 4.106 2.923 5.543 4.772 1.26 1.62 3.333 2.59 5.55 2.592h6.698c1.42-.001 2.68-.86 3.134-2.138l2.76-7.74c.272-.757.224-1.584-.134-2.325"
+                                fill-opacity=".05" fill="#000" mask="url(#B)"></path>
+                        </g>
+                    </g>
+                </g>
+            </svg></div>
+        <div
+            style="position: absolute; padding: 1rem; left: 0px; bottom: 0px; width: 100%; height: auto; display: flex; align-items: center; background-color: rgba(0, 0, 0, 0); z-index: 9999; pointer-events: none;">
+            <!--Notice - iJewel3D License Required to remove attribution. Check the details at https://developer.ijewel3d.com/ -->
+            <svg width="320" height="150" viewBox="0 0 320 150" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style="width: min(20%, 150px); height: auto;">
+                <g filter="url(#filter0_d_2013_189)">
+                    <path
+                        d="M63.0313 37.6615C63.0313 37.0497 62.8369 36.5115 62.4485 36.0465C62.0601 35.5815 61.5625 35.2879 60.9555 35.1411L71.2491 30.8711V79.1495C71.2491 82.3555 70.4357 85.2195 68.7971 87.7275C67.1705 90.2355 64.7063 91.5315 61.4047 91.6175C57.6903 91.3975 55.0441 89.5015 53.4295 85.9275C52.7983 84.4475 52.4707 82.9315 52.4707 81.3655H53.2961C53.2961 82.8455 53.5873 84.2395 54.1701 85.5495C54.8013 86.6875 55.7967 87.4335 57.1319 87.7635C58.4793 88.0935 59.6809 87.9715 60.7613 87.3835C61.5139 86.9075 62.0359 86.1115 62.3635 84.9995C62.6791 83.8855 62.8735 82.7715 62.9219 81.6455C62.9827 80.5335 63.0069 79.7375 63.0069 79.2595L63.0313 37.6615Z"
+                        fill="white"></path>
+                    <path
+                        d="M49.4 38.5287C49.4 37.9169 49.2056 37.3785 48.8172 36.9137C48.4288 36.4487 47.9312 36.1551 47.3242 36.0083L57.6178 31.7383V65.5675L49.4 69.8375V38.5287Z"
+                        fill="white"></path>
+                    <path
+                        d="M106.949 51.1695H82.6592C82.5742 54.4355 83.3026 57.6775 84.8442 60.8955C86.3736 64.1135 88.9228 66.1455 92.4672 66.9895C96.8372 67.5515 100.77 66.4635 104.254 63.7215C104.861 63.1595 105.419 62.5475 105.917 61.8755C105.977 61.7895 106.05 61.7395 106.172 61.7035C106.281 61.6795 106.39 61.7035 106.499 61.7895C106.584 61.8495 106.633 61.9235 106.669 62.0335C106.694 62.1435 106.669 62.2535 106.584 62.3635C106.062 63.0375 105.492 63.6735 104.885 64.2855C101.595 67.9675 97.4562 70.1695 92.4794 70.8915C86.8834 71.0875 82.5014 69.1175 79.2968 64.9695C76.1044 60.8355 74.3928 56.2455 74.1744 51.2295C74.0044 47.2171 74.8178 43.4487 76.6264 39.9495C78.4228 36.4503 81.239 33.9055 85.0506 32.3149C88.1824 31.1403 91.3748 30.7977 94.64 31.2627C99.2284 32.2415 102.567 34.8231 104.642 39.0075C106.257 42.5923 107.034 46.3117 106.949 50.2147V51.1695ZM82.6592 50.3369H98.3544C98.3788 50.2759 98.3908 50.2391 98.3908 50.2147C99.6896 46.7521 100.382 43.3875 100.467 40.0841C100.333 36.0711 98.318 33.4405 94.4458 32.2171C89.8818 31.3239 86.495 32.9267 84.2736 37.0253C82.9748 40.6225 82.4286 44.3663 82.6592 48.2449V50.3369Z"
+                        fill="white"></path>
+                    <path
+                        d="M168.843 32.9737C169.013 32.4965 168.965 32.0561 168.721 31.6523C168.467 31.2485 168.091 31.0283 167.557 31.0039H172.581C171.223 31.1139 170.275 31.7991 169.717 33.0593L155.429 70.4619L155.637 71.0119H146.799L138.411 48.9647L130.193 70.4619L130.401 71.0119H121.564L107.155 33.1817C106.597 31.8969 105.638 31.1751 104.254 31.0039H117.206C116.708 31.0649 116.332 31.2853 116.065 31.6889C115.798 32.0927 115.749 32.5455 115.919 33.0471L129.781 69.2879L137.963 47.8269L132.403 33.1817C131.845 31.8969 130.885 31.1751 129.501 31.0039H142.417C142.029 31.0649 141.713 31.2363 141.459 31.5299C141.203 31.8235 141.083 32.1539 141.083 32.5087C141.083 32.8635 141.107 32.8513 141.167 33.0471L142.417 36.2281L142.829 37.4027L155.029 69.2879L168.843 32.9737Z"
+                        fill="white"></path>
+                    <path
+                        d="M202.55 51.1695H178.262C178.176 54.4355 178.904 57.6775 180.434 60.8955C181.976 64.1135 184.512 66.1455 188.058 66.9895C192.428 67.5515 196.36 66.4635 199.844 63.7215C200.45 63.1595 201.01 62.5475 201.506 61.8755C201.556 61.7895 201.64 61.7395 201.762 61.7035C201.872 61.6795 201.98 61.7035 202.09 61.7895C202.174 61.8495 202.224 61.9235 202.26 62.0335C202.284 62.1435 202.26 62.2535 202.174 62.3635C201.652 63.0375 201.082 63.6735 200.476 64.2855C197.186 67.9675 193.046 70.1695 188.07 70.8915C182.474 71.0875 178.092 69.1175 174.888 64.9695C171.694 60.8355 169.984 56.2455 169.764 51.2295C169.594 47.2171 170.42 43.4487 172.216 39.9495C174.014 36.4503 176.83 33.9055 180.64 32.3149C183.772 31.1403 186.964 30.7977 190.23 31.2627C194.818 32.2415 198.156 34.8231 200.232 39.0075C201.858 42.5923 202.636 46.3117 202.55 50.2147V51.1695ZM178.262 50.3369H193.956C193.982 50.2759 193.994 50.2391 193.994 50.2147C195.292 46.7521 195.984 43.3875 196.068 40.0841C195.936 36.0711 193.92 33.4405 190.048 32.2171C185.484 31.3239 182.086 32.9267 179.876 37.0253C178.578 40.6225 178.03 44.3663 178.262 48.2449V50.3369Z"
+                        fill="white"></path>
+                    <path
+                        d="M214.3 68.798C214.3 69.386 214.494 69.886 214.884 70.302C215.272 70.718 215.758 70.964 216.34 71.012H204.006C204.59 70.952 205.076 70.73 205.464 70.328C205.852 69.924 206.046 69.434 206.046 68.846V17.4478C206.046 16.8606 205.852 16.3588 205.464 15.9184C205.076 15.4902 204.59 15.2332 204.006 15.1476L214.3 11V68.798Z"
+                        fill="white"></path>
+                    <path
+                        d="M60.2022 15.5255L57.1676 13.2007C57.1554 13.1885 57.1432 13.1885 57.1312 13.1763C57.119 13.1641 57.0946 13.1641 57.0826 13.1641H49.1196C49.0954 13.1641 49.0832 13.1641 49.071 13.1763C49.059 13.1885 49.0468 13.1885 49.0346 13.2007L46 15.5255H60.2022Z"
+                        fill="white"></path>
+                    <path
+                        d="M46.0977 16.0044L52.9925 22.1586H53.0047C53.0167 22.1708 53.0289 22.1708 53.0411 22.183C53.0531 22.183 53.0775 22.1952 53.0897 22.1952C53.1017 22.1952 53.1261 22.1954 53.1381 22.183C53.1503 22.183 53.1625 22.1708 53.1745 22.1586H53.1867L60.0815 15.9922H46.0977V16.0044Z"
+                        fill="white"></path>
+                    <path
+                        d="M237.681 55.6091C237.293 55.6091 237.183 55.4611 237.183 55.1691C237.183 54.7531 237.377 54.4211 237.681 54.4211C237.985 54.4211 238.785 54.6431 239.817 54.6431C241.613 54.6431 242.937 53.2111 242.937 50.8739C242.937 48.5369 242.719 48.3901 240.947 48.3901C239.173 48.3901 238.785 49.4791 238.215 50.9227C238.021 51.3631 237.827 51.4971 237.523 51.4971C237.219 51.4971 236.589 51.1551 236.589 50.5067C236.589 49.2465 238.457 47.7539 241.019 47.7539C243.581 47.7539 245.267 48.5003 245.267 51.1311C245.267 53.7611 242.937 54.7531 241.213 54.8991V54.9971C242.719 55.2671 244.479 56.3311 244.479 58.4711C244.479 62.0191 241.601 63.4511 238.627 63.4511C235.653 63.4511 234.027 61.7391 234.027 60.6251C234.027 59.5111 234.621 59.3651 235.157 59.3651C235.691 59.3651 235.679 59.6091 235.799 60.0631C236.297 61.8971 237.099 62.8151 238.725 62.8151C240.351 62.8151 242.027 61.5791 242.027 58.1771C242.027 54.7771 241.553 55.4011 239.611 55.4011C238.689 55.4011 237.997 55.6091 237.681 55.6091Z"
+                        fill="white"></path>
+                    <path
+                        d="M259.105 45.918L259.203 45.9914L255.513 61.1146C255.317 61.8366 255.293 62.3746 255.707 62.3746C256.325 62.3746 257.333 60.7586 257.745 59.9386L258.219 60.2826C257.455 62.0186 256.229 63.5006 254.601 63.5006C252.975 63.5006 253.255 62.5086 253.667 60.8946C253.885 60.0986 254.105 59.2786 254.287 58.4706H254.237C252.915 60.9066 250.997 63.5006 248.387 63.5006C245.777 63.5006 246.201 61.9826 246.201 60.4786C246.201 57.7246 248.521 51.7786 253.825 51.7786C259.129 51.7786 255.305 52.0226 255.695 52.2686L256.727 47.9002C256.895 47.1782 256.871 47.0314 256.313 46.9826L254.991 46.8356L255.087 46.4198L259.105 45.918ZM249.491 62.3506C251.603 62.3506 254.261 57.7866 254.979 55.0086C255.123 54.3606 255.391 53.5166 255.525 52.9286C255.257 52.7566 254.663 52.5126 253.971 52.5126C250.377 52.5126 248.387 58.2146 248.387 60.6726C248.387 61.8106 248.775 62.3366 249.491 62.3506Z"
+                        fill="white"></path>
+                    <path
+                        d="M257.663 71.0129H235.571C226.649 71.0129 219.389 63.6969 219.389 54.7029C219.389 45.7109 226.649 38.3945 235.571 38.3945H257.663C266.585 38.3945 273.843 45.7109 273.843 54.7029C273.843 63.6969 266.585 71.0129 257.663 71.0129ZM235.571 39.3855C227.183 39.3855 220.361 46.2615 220.361 54.7149C220.361 63.1709 227.183 70.0469 235.571 70.0469H257.663C266.051 70.0469 272.871 63.1709 272.871 54.7149C272.871 46.2615 266.051 39.3855 257.663 39.3855H235.571Z"
+                        fill="white"></path>
+                </g>
+                <g filter="url(#filter1_d_2013_189)">
+                    <path
+                        d="M17.656 134.564H15.892C13.54 131.344 12 126.584 12 121.768C12 117.148 13.484 112.332 15.892 109H17.656C15.5 112.024 13.988 116.728 13.988 121.768C13.988 126.696 15.444 131.484 17.656 134.564Z"
+                        fill="white"></path>
+                    <path
+                        d="M32.1018 130.169H20.0898V110.121H32.0738V111.969H22.1059V119.193H31.1498V121.013H22.1059V128.321H32.1018V130.169Z"
+                        fill="white"></path>
+                    <path
+                        d="M41.7111 130.169L34.0391 110.121H36.1951L41.5431 124.065C41.9631 125.157 42.3551 126.249 42.8031 127.649C43.2231 126.193 43.7271 124.793 44.0351 124.037L49.3551 110.121H51.4271L43.8111 130.169H41.7111Z"
+                        fill="white"></path>
+                    <path
+                        d="M51.5889 130.169H49.5449L56.9089 110.121H59.4009L66.8489 130.169H64.7489L62.7889 124.849H53.5489L51.5889 130.169ZM57.8889 112.949L54.1649 123.085H62.1449L58.3929 112.949C58.3089 112.669 58.1689 112.333 58.1409 112.137C58.1129 112.305 58.0009 112.669 57.8889 112.949Z"
+                        fill="white"></path>
+                    <path d="M71.6527 110.121V128.321H80.8647V130.169H69.6367V110.121H71.6527Z" fill="white"></path>
+                    <path
+                        d="M82.8945 123.197V110.121H84.9105V123.113C84.9105 126.641 86.8425 128.545 90.3425 128.545C93.7585 128.545 95.6905 126.585 95.6905 123.113V110.121H97.7065V123.197C97.7065 127.733 94.9065 130.505 90.3425 130.505C85.6945 130.505 82.8945 127.761 82.8945 123.197Z"
+                        fill="white"></path>
+                    <path
+                        d="M101.601 130.169H99.5566L106.921 110.121H109.413L116.861 130.169H114.761L112.801 124.849H103.561L101.601 130.169ZM107.901 112.949L104.177 123.085H112.157L108.405 112.949C108.321 112.669 108.181 112.333 108.153 112.137C108.125 112.305 108.013 112.669 107.901 112.949Z"
+                        fill="white"></path>
+                    <path d="M115.715 111.969V110.121H130.079V111.969H123.891V130.169H121.875V111.969H115.715Z"
+                        fill="white"></path>
+                    <path d="M134.872 110.121V130.169H132.855V110.121H134.872Z" fill="white"></path>
+                    <path
+                        d="M157.609 120.146C157.609 126.222 153.662 130.506 148.062 130.506C142.434 130.506 138.514 126.222 138.514 120.146C138.514 114.07 142.462 109.758 148.062 109.758C153.69 109.758 157.609 114.042 157.609 120.146ZM155.537 120.146C155.537 115.134 152.486 111.718 148.062 111.718C143.638 111.718 140.614 115.134 140.614 120.146C140.614 125.158 143.638 128.574 148.062 128.574C152.486 128.574 155.537 125.13 155.537 120.146Z"
+                        fill="white"></path>
+                    <path
+                        d="M163.28 130.169H161.264V110.121H163.308L174.34 126.809V110.121H176.328V130.169H174.34L163.28 113.481V130.169Z"
+                        fill="white"></path>
+                    <path
+                        d="M194.508 130.169L186.836 110.121H188.992L194.34 124.065C194.76 125.157 195.152 126.249 195.6 127.649C196.02 126.193 196.524 124.793 196.832 124.037L202.152 110.121H204.224L196.608 130.169H194.508Z"
+                        fill="white"></path>
+                    <path
+                        d="M218.94 130.169H206.928V110.121H218.912V111.969H208.944V119.193H217.988V121.013H208.944V128.321H218.94V130.169Z"
+                        fill="white"></path>
+                    <path
+                        d="M225.051 130.169H223.035V110.121H230.511C234.571 110.121 237.035 112.361 237.035 115.917C237.035 118.801 235.523 120.817 232.947 121.517L237.231 130.169H234.991L230.903 121.853H225.051V130.169ZM225.051 111.941V120.033H230.567C233.339 120.033 234.963 118.521 234.963 115.973C234.963 113.369 233.255 111.941 230.511 111.941H225.051Z"
+                        fill="white"></path>
+                    <path
+                        d="M239.74 115.33C239.74 111.97 242.428 109.758 246.46 109.758C250.072 109.758 252.452 111.774 252.76 115.134H250.716C250.492 112.866 248.952 111.578 246.432 111.578C243.604 111.578 241.756 113.034 241.756 115.302C241.756 117.066 242.792 118.186 244.892 118.718L248.336 119.558C251.472 120.314 253.096 122.106 253.096 124.822C253.096 128.294 250.408 130.506 246.264 130.506C242.372 130.506 239.74 128.462 239.488 125.186H241.56C241.672 127.286 243.52 128.658 246.264 128.658C249.204 128.658 251.08 127.23 251.08 124.934C251.08 123.142 250.072 121.966 247.916 121.462L244.528 120.622C241.392 119.866 239.74 118.074 239.74 115.33Z"
+                        fill="white"></path>
+                    <path d="M258.739 110.121V130.169H256.723V110.121H258.739Z" fill="white"></path>
+                    <path
+                        d="M281.477 120.146C281.477 126.222 277.529 130.506 271.929 130.506C266.301 130.506 262.381 126.222 262.381 120.146C262.381 114.07 266.329 109.758 271.929 109.758C277.557 109.758 281.477 114.042 281.477 120.146ZM279.405 120.146C279.405 115.134 276.353 111.718 271.929 111.718C267.505 111.718 264.481 115.134 264.481 120.146C264.481 125.158 267.505 128.574 271.929 128.574C276.353 128.574 279.405 125.13 279.405 120.146Z"
+                        fill="white"></path>
+                    <path
+                        d="M287.149 130.169H285.133V110.121H287.177L298.209 126.809V110.121H300.197V130.169H298.209L287.149 113.481V130.169Z"
+                        fill="white"></path>
+                    <path
+                        d="M304.42 134.564H302.656C304.868 131.484 306.352 126.696 306.352 121.768C306.352 116.728 304.812 112.024 302.656 109H304.42C306.856 112.332 308.312 117.148 308.312 121.768C308.312 126.584 306.772 131.344 304.42 134.564Z"
+                        fill="white"></path>
+                </g>
+                <defs>
+                    <filter id="filter0_d_2013_189" x="35" y="4" width="249.842" height="102.617"
+                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"></feColorMatrix>
+                        <feOffset dy="4"></feOffset>
+                        <feGaussianBlur stdDeviation="5.5"></feGaussianBlur>
+                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                        <feColorMatrix type="matrix"
+                            values="0 0 0 0 0.123486 0 0 0 0 0.123486 0 0 0 0 0.123486 0 0 0 0.45 0"></feColorMatrix>
+                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2013_189"></feBlend>
+                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2013_189" result="shape">
+                        </feBlend>
+                    </filter>
+                    <filter id="filter1_d_2013_189" x="1" y="102" width="318.312" height="47.5625"
+                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"></feColorMatrix>
+                        <feOffset dy="4"></feOffset>
+                        <feGaussianBlur stdDeviation="5.5"></feGaussianBlur>
+                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                        <feColorMatrix type="matrix"
+                            values="0 0 0 0 0.123486 0 0 0 0 0.123486 0 0 0 0 0.123486 0 0 0 0.45 0"></feColorMatrix>
+                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2013_189"></feBlend>
+                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_2013_189" result="shape">
+                        </feBlend>
+                    </filter>
+                </defs>
+            </svg>
+        </div>
+    </div>
+
+    <button id="start-tryon" style="display: initial;">Start Try-On</button>
+    <!-- <button id="enter-setup-mode">Enter Setup Mode</button> -->
+
+    <div id="tryon-options">
+        <button id="flip-camera" style="display: initial;">Flip Camera</button>
+        <button id="switch-finger" style="display: initial;">Switch Finger</button>
+        <button id="save-image" style="display: initial;">Save Image</button>
+    </div>
+
+
+
+    <script src="https://releases.ijewel3d.com/webgi/runtime/bundle-0.15.2.js" crossorigin="anonymous"></script>
+    <script>
+        window.webgi = window;
+    </script>
+    <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.35/web-vto-instore.js" crossorigin="anonymous"></script>
+    <script defer=""
+        src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+        data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;338ab206732e49a1939a0da8a2024d1a&quot;,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}"
+        crossorigin="anonymous"></script>
+
+
+    <script>
+        async function init() {
+            // Initialize the viewer
+            const viewer = new ViewerApp({
+                canvas: document.getElementById("webgi-canvas")
+            });
+
+            // Set the canvas scaling to 1.5 for sharper rendering
+            viewer.renderer.displayCanvasScaling = 1.5;
+
+            // Add and setup all necessary plugins
+            await addBasePlugins(viewer);
+            const diamondPlugin = await viewer.addPlugin(DiamondPlugin);
+            // TODO: Replace with your actual iJewel SDK license key
+            // Get your license at https://developer.ijewel3d.com/
+            diamondPlugin.setKey("LICENSE_KEY_FOR_IJEWEL_SDK");
+
+            // Add the Ring Try-On Plugin
+            const tryon = await viewer.addPlugin(ij_vto.RingTryonPlugin);
+            // TODO: Replace with your actual Ring Try-On SDK license key
+            tryon.setKey("LICENSE_KEY_FOR_TRYON_SDK");
+
+            // Add the Ring Try-On UI Plugin
+            await viewer.addPlugin(ij_vto.RingTryonUIPlugin);
+
+            const url = new URL(window.location);
+            let params = new URLSearchParams(url.search);
+
+            if (params.get("edit") !== null) {
+                const uiPlugin = await viewer.addPlugin(TweakpaneUiPlugin);
+                uiPlugin.setupPlugins(ij_vto.RingTryonPlugin);
+            }
+
+            viewer.renderEnabled = false
+            // Load the ring model and config that includes scene settings and model settings
+            await viewer.load("https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.glb");
+            await viewer.load("https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.json");
+
+            // Load an optional scene configuration
+            // await viewer.load("https://demo.ijewel3d.com/web-vto/tryon-2-web.json");
+
+            const loadingText = document.querySelector("#loading-text");
+            if (loadingText) {
+                loadingText.remove();
+            }
+            viewer.renderEnabled = true
+            const tryonOptions = document.querySelector("#tryon-options");
+
+            // Start or stop the tryon when the button is clicked
+            const startBtn = document.querySelector("#start-tryon");
+            startBtn.style.display = "initial";
+            startBtn.onclick = async () => {
+                tryon.running ? await tryon.stop() : await tryon.start();
+
+                if (tryon.running) {
+                    tryonOptions.style.display = "initial";
+                    // enterSetupModeBtn.style.display = "none";
+                } else {
+                    // enterSetupModeBtn.style.display = "initial";
+                    tryonOptions.style.display = "none";
+                }
+
+                startBtn.innerHTML = tryon.running ? "Stop Try-On" : "Start Try-On";
+            };
+
+            // const enterSetupModeBtn = document.querySelector("#enter-setup-mode");
+            // enterSetupModeBtn.onclick = () => {
+            //     if (tryon.inSetupMode) {
+            //         tryon.exitSetupMode();
+            //         enterSetupModeBtn.textContent = "Enter Setup Mode";
+            //         startBtn.style.display = "initial";
+            //     } else {
+            //         tryon.enterSetupMode();
+            //         enterSetupModeBtn.textContent = "Exit Setup Mode";
+            //         startBtn.style.display = "none";
+            //     }
+            // }
+
+            const flipCameraBtn = document.querySelector("#flip-camera");
+            flipCameraBtn.style.display = "initial";
+            flipCameraBtn.onclick = () => tryon.running && tryon.flipCamera();
+
+            const switchFingerBtn = document.querySelector("#switch-finger");
+            switchFingerBtn.style.display = "initial";
+            switchFingerBtn.onclick = () => tryon.running && (tryon.finger = (tryon.finger + 1) % 5);
+
+            const saveImageBtn = document.querySelector("#save-image");
+            saveImageBtn.style.display = "initial";
+            saveImageBtn.onclick = () => tryon.running && tryon.saveImage();
+        }
+
+        init();
+    </script>
+
+    <div id="give-freely-root-kkkbiiikppgjdiebcabomlbidfodipjg" class="give-freely-root"
+        data-extension-id="kkkbiiikppgjdiebcabomlbidfodipjg"
+        data-extension-name="Substital: Add subtitles to videos and movies" style="display: block;"></div>
+</body>
+
+</html>

@@ -94,6 +94,7 @@ const ScavengerHunt = lazy(() =>
   import("@components/scavenger-hunt/ScavengerHunt")
 );
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
+const IJewelARTryOnPage = lazy(() => import("@pages/IJewelARTryOnPage"));
 const ScrollEffectTestPage = lazy(() => import("@pages/ScrollEffectTestPage"));
 const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"));
 
@@ -142,6 +143,7 @@ export default function AppRoutes() {
       ROUTES.FORGOT_PASSWORD,
       ROUTES.SCROLL_EFFECT_TEST,
       ROUTES.SCROLL_EFFECT_TEST_V2,
+      ROUTES.IJEWEL_AR_TRYON,
     ];
 
     // Check exact matches
@@ -309,6 +311,9 @@ export default function AppRoutes() {
           <Route element={<TryOnRingLayout />}>
             <Route path={ROUTES.AR_RINGS} element={<TryOnRing />} />
           </Route>
+
+          {/* IJewel AR Try-On Route - Support query params: ?model=oval */}
+          <Route path={ROUTES.IJEWEL_AR_TRYON} element={<IJewelARTryOnPage />} />
 
           <Route
             path="/ar/quoc-ti"

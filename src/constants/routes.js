@@ -33,6 +33,7 @@ export const ROUTES = {
   ALL_GEMS: "/c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
   USER_PROFILE: "/e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b",
   AR_RINGS: "/f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c/:ringId",
+  IJEWEL_AR_TRYON: "/ijewel-tryon", // IJewel AR Try-On page
 
   // Test routes
   PRODUCTS_V2: "/7b8e9f0a-3c4d-5e6f-7a8b-9c0d1e2f3a4b",

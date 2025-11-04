@@ -33,12 +33,17 @@
 .mirror-exp__meteoroid-orbit-layer2,
 .mirror-exp__meteoroid-orbit-layer4 {
   will-change: transform;
+  pointer-events: none;
+  /* Don't block scroll or interactive elements */
+  /* Isolate each layer's transform context */
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 /* Luxury text styling */
 .mirror-exp__luxury-text {
   position: relative;
-  padding-top: 60px;
+  padding-top: 120px;
   padding-bottom: 0;
   margin-left: auto;
   margin-right: auto;
@@ -52,10 +57,10 @@
 /* Mobile First: 0-425px */
 .mirror-exp {
   background-color: #000000;
-  min-height: calc(60px + 432px + 60px + 60px);
-  overflow-x: hidden;
   padding-bottom: 60px;
   width: 100%;
+  /* Add scroll offset to prevent navbar from covering luxury text */
+  scroll-margin-top: 80px;
 }
 
 /* Universe container - wrapper for all layers and interactive elements */
@@ -70,8 +75,11 @@
   margin-left: auto !important;
   margin-right: auto !important;
   margin-bottom: 60px !important;
-  pointer-events: none;
   z-index: 10;
+  /* Isolate transform/animation context from scroll */
+  transform-style: preserve-3d;
+  contain: layout style;
+  backface-visibility: hidden;
 }
 
 /* Layer1 - rotating background layer - 288x288px */
@@ -582,6 +590,7 @@
 
 /* Tablet: 426px-1023px */
 @media (min-width: 426px) and (max-width: 1023px) {
+
   /* Tablet: 672px (layer5 size) */
   .mirror-exp__universe-container {
     width: 672px;
@@ -592,6 +601,8 @@
     min-height: calc(60px + 672px + 60px + 60px);
     overflow-x: hidden;
     width: 100%;
+    /* Tablet navbar height (50px + 20px top padding) */
+    scroll-margin-top: 70px;
   }
 
   .mirror-exp__text {
@@ -783,6 +794,7 @@
 
 /* Desktop: 1024px+ */
 @media (min-width: 1024px) {
+
   /* Desktop: 730px (layer5 size) */
   .mirror-exp__universe-container {
     width: 730px;
@@ -793,6 +805,8 @@
     min-height: calc(60px + 730px + 60px + 60px);
     overflow-x: hidden;
     width: 100%;
+    /* Desktop navbar height is 80px */
+    scroll-margin-top: 80px;
   }
 
   /* Update luxury text for desktop */
@@ -1023,6 +1037,8 @@
 
   .mirror-exp {
     overflow: hidden;
+    /* Mobile navbar height is smaller (50px + 15px top padding) */
+    scroll-margin-top: 65px;
   }
 
   .mirror-exp__text {

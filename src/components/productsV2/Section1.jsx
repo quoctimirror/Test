@@ -5,17 +5,17 @@ import ProductsLeftDrive from './ProductsLeftDrive'; // iJewel Drive - cloud mod
 // import ProductsLeft2 from './ProductsLeft2'; // quocti_dancefloor viewer (realistic rendering)
 
 const Section1 = ({ productConfig }) => {
-    const handleScrollDown = () => {
-        const section2 = document.querySelector('.pv2-section2-container');
-        if (section2) {
-            section2.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    };
+    // const handleScrollDown = () => {
+    //     const section2 = document.querySelector('.pv2-section2-container');
+    //     if (section2) {
+    //         section2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    //     }
+    // };
 
     return (
         <div className="pv2-section1">
             {/* <div className="pv2-section1-container"> */}
-                {/* Left Arrow Button */}
+                {/* Left Arrow Button - Hiển thị trên desktop để điều hướng giữa các sản phẩm */}
                 {/* <div className="pv2-section1-arrow-btn pv2-section1-arrow-left" style={{ transform: 'none', transition: 'none' }}>
                     <ShineGlassButton
                         width={56}
@@ -28,7 +28,7 @@ const Section1 = ({ productConfig }) => {
                     </ShineGlassButton>
                 </div> */}
 
-                {/* Right Arrow Button */}
+                {/* Right Arrow Button - Hiển thị trên desktop để điều hướng giữa các sản phẩm */}
                 {/* <div className="pv2-section1-arrow-btn pv2-section1-arrow-right" style={{ transform: 'none', transition: 'none' }}>
                     <ShineGlassButton
                         width={56}
@@ -41,7 +41,7 @@ const Section1 = ({ productConfig }) => {
                     </ShineGlassButton>
                 </div> */}
 
-                {/* Loading Model Area */}
+                {/* Loading Model Area - Khu vực hiển thị 3D viewer */}
                 {/* <div className="pv2-model-area"> */}
                     {/* ORIGINAL - Local models with iJewel SDK */}
                     {/* <ProductsLeft /> */}
@@ -50,7 +50,7 @@ const Section1 = ({ productConfig }) => {
                     {/* <ProductsLeftDrive modelId={productConfig?.modelId} />
                 </div> */}
 
-                {/* Scroll Down Button - Bottom Center */}
+                {/* Scroll Down Button - Bottom Center - Nút scroll xuống section tiếp theo (chỉ hiển thị trên mobile) */}
                 {/* <div className="pv2-section1-scroll-btn">
                     <ShineGlassButton
                         variant="circle"
