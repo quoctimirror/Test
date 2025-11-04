@@ -14,6 +14,7 @@ const CollectionDetailPage = lazy(() => import("@pages/CollectionDetailPage"));
 const ServicesPage = lazy(() => import("@pages/ServicesPage"));
 const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
 const SupportPage = lazy(() => import("@pages/SupportPage"));
+const SupportDetailPage = lazy(() => import("@pages/SupportDetailPage"));
 const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 
 const UniverseSection = lazy(() =>
@@ -93,6 +94,8 @@ const ScavengerHunt = lazy(() =>
   import("@components/scavenger-hunt/ScavengerHunt")
 );
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
+const ScrollEffectTestPage = lazy(() => import("@pages/ScrollEffectTestPage"));
+const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -115,6 +118,7 @@ export default function AppRoutes() {
       ROUTES.SERVICES,
       ROUTES.SERVICES_DETAIL,
       ROUTES.SUPPORT,
+      ROUTES.SUPPORT_DETAIL,
       ROUTES.CONTACT,
       ROUTES.ABOUT,
       ROUTES.LOCATIONS,
@@ -136,6 +140,8 @@ export default function AppRoutes() {
       ROUTES.DASHBOARD_DESIGNER,
       ROUTES.UNIVERSE_FINAL,
       ROUTES.FORGOT_PASSWORD,
+      ROUTES.SCROLL_EFFECT_TEST,
+      ROUTES.SCROLL_EFFECT_TEST_V2,
     ];
 
     // Check exact matches
@@ -178,7 +184,9 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
     location.pathname === ROUTES.WELCOME ||
-    location.pathname === ROUTES.HOME;
+    location.pathname === ROUTES.HOME ||
+    location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
+    location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -195,7 +203,9 @@ export default function AppRoutes() {
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.HOME ||
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
-    location.pathname.startsWith(ROUTES.MILAN_SUBMIT);
+    location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
+    location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
+    location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -248,6 +258,11 @@ export default function AppRoutes() {
           />
 
           <Route path={ROUTES.SUPPORT} element={<SupportPage />} />
+
+          <Route
+            path={ROUTES.SUPPORT_DETAIL}
+            element={<SupportDetailPage />}
+          />
 
           <Route path={ROUTES.CONTACT} element={<ContactPage />} />
 
@@ -305,6 +320,18 @@ export default function AppRoutes() {
           <Route path="/ar/ijewel/:ringId?" element={<IJewelTryOn />} />
 
           <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
+
+          {/* Test route for ScrollEffect */}
+          <Route
+            path={ROUTES.SCROLL_EFFECT_TEST}
+            element={<ScrollEffectTestPage />}
+          />
+
+          {/* Test route for ScrollEffect V2 */}
+          <Route
+            path={ROUTES.SCROLL_EFFECT_TEST_V2}
+            element={<ScrollEffectTestV2Page />}
+          />
 
           <Route
             path={ROUTES.DASHBOARD_ADMIN_MANAGE}

@@ -48,7 +48,6 @@ const ComponentOptionalsManager = () => {
       const componentsResponse = await api.get("/api/components");
       if (componentsResponse.status === 200) {
         const componentsData = componentsResponse.data;
-        console.log("API Components data (for options):", componentsData); // Debug log
 
         // Transform API data to match our component structure
         const transformedComponents = componentsData.map((item) => ({
@@ -56,10 +55,6 @@ const ComponentOptionalsManager = () => {
           componentName: item.componentName || item.name,
         }));
 
-        console.log(
-          "Transformed Components (for options):",
-          transformedComponents
-        ); // Debug log
         setComponents(transformedComponents);
       } else {
         console.error("Failed to fetch components");
@@ -74,14 +69,16 @@ const ComponentOptionalsManager = () => {
       const optionalsResponse = await api.get("/api/component-optionals");
       if (optionalsResponse.status === 200) {
         const optionalsData = optionalsResponse.data;
-        console.log("API Component Optionals data:", optionalsData); // Debug log
 
         // Transform API data to match our component structure
         const transformedOptionals = optionalsData.map((item) => ({
           id: item.componentOptionalId || item.id,
           componentOptionalName: item.componentOptionalName || item.name,
           componentId: item.component?.componentId || item.componentId,
-          componentName: item.component?.componentName || item.componentName || "Unknown Component",
+          componentName:
+            item.component?.componentName ||
+            item.componentName ||
+            "Unknown Component",
           description: item.description || "",
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
@@ -90,7 +87,6 @@ const ComponentOptionalsManager = () => {
           isActive: item.isActive,
         }));
 
-        console.log("Transformed Component Optionals:", transformedOptionals); // Debug log
         setComponentOptionals(transformedOptionals);
       } else {
         console.error("Failed to fetch component optionals");
@@ -193,23 +189,32 @@ const ComponentOptionalsManager = () => {
     try {
       if (editingOption) {
         // Update existing component optional
-        const response = await api.put(`/api/component-optionals/${editingOption.id}`, formData);
+        const response = await api.put(
+          `/api/component-optionals/${editingOption.id}`,
+          formData
+        );
 
         if (response.status === 200) {
           const updatedOption = response.data;
           setComponentOptionals(
             componentOptionals.map((option) =>
-              option.id === editingOption.id ? {
-                ...updatedOption,
-                id: updatedOption.componentOptionalId,
-                componentOptionalName: updatedOption.componentOptionalName,
-                componentName: updatedOption.component?.componentName || 'Unknown Component'
-              } : option
+              option.id === editingOption.id
+                ? {
+                    ...updatedOption,
+                    id: updatedOption.componentOptionalId,
+                    componentOptionalName: updatedOption.componentOptionalName,
+                    componentName:
+                      updatedOption.component?.componentName ||
+                      "Unknown Component",
+                  }
+                : option
             )
           );
         } else {
           console.error("Failed to update component optional:", response.data);
-          setErrorMessage(response.data?.message || "Failed to update component optional");
+          setErrorMessage(
+            response.data?.message || "Failed to update component optional"
+          );
           return;
         }
       } else {
@@ -218,15 +223,21 @@ const ComponentOptionalsManager = () => {
 
         if (response.status === 201 || response.status === 200) {
           const newOption = response.data;
-          setComponentOptionals([...componentOptionals, {
-            ...newOption,
-            id: newOption.componentOptionalId,
-            componentOptionalName: newOption.componentOptionalName,
-            componentName: newOption.component?.componentName || 'Unknown Component'
-          }]);
+          setComponentOptionals([
+            ...componentOptionals,
+            {
+              ...newOption,
+              id: newOption.componentOptionalId,
+              componentOptionalName: newOption.componentOptionalName,
+              componentName:
+                newOption.component?.componentName || "Unknown Component",
+            },
+          ]);
         } else {
           console.error("Failed to create component optional:", response.data);
-          setErrorMessage(response.data?.message || "Failed to create component optional");
+          setErrorMessage(
+            response.data?.message || "Failed to create component optional"
+          );
           return;
         }
       }
@@ -264,7 +275,9 @@ const ComponentOptionalsManager = () => {
           );
         } else {
           console.error("Failed to delete component optional:", response.data);
-          setErrorMessage(response.data?.message || "Failed to delete component optional");
+          setErrorMessage(
+            response.data?.message || "Failed to delete component optional"
+          );
         }
       } catch (error) {
         console.error("Error deleting component optional:", error);
@@ -306,7 +319,11 @@ const ComponentOptionalsManager = () => {
       </div>
 
       {errorMessage && (
-        <div className={`error-message-container ${isErrorFadingOut ? 'fade-out' : ''}`}>
+        <div
+          className={`error-message-container ${
+            isErrorFadingOut ? "fade-out" : ""
+          }`}
+        >
           <p>{errorMessage}</p>
           <button className="error-close-button" onClick={closeErrorMessage}>
             ×
@@ -339,17 +356,26 @@ const ComponentOptionalsManager = () => {
               </tr>
             ) : (
               componentOptionals.map((option) => {
-                console.log("Rendering component option:", option); // Debug log
                 return (
-                  <tr key={option.id || option.componentOptionalId || `option-${option.componentOptionalName}`}>
+                  <tr
+                    key={
+                      option.id ||
+                      option.componentOptionalId ||
+                      `option-${option.componentOptionalName}`
+                    }
+                  >
                     <td>{option.id}</td>
                     <td>{option.componentOptionalName}</td>
                     <td>{option.componentName}</td>
                     <td>{option.description}</td>
                     <td>{option.createdBy}</td>
                     <td>
-                      <span className={`status-badge ${option.isActive ? 'active' : 'inactive'}`}>
-                        {option.isActive ? 'Active' : 'Inactive'}
+                      <span
+                        className={`status-badge ${
+                          option.isActive ? "active" : "inactive"
+                        }`}
+                      >
+                        {option.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td>
@@ -396,7 +422,10 @@ const ComponentOptionalsManager = () => {
                   id="componentOptionalName"
                   value={formData.componentOptionalName}
                   onChange={(e) =>
-                    setFormData({ ...formData, componentOptionalName: e.target.value })
+                    setFormData({
+                      ...formData,
+                      componentOptionalName: e.target.value,
+                    })
                   }
                   required
                 />
@@ -414,7 +443,10 @@ const ComponentOptionalsManager = () => {
                 >
                   <option value="">Select Component</option>
                   {components.map((component) => (
-                    <option key={component.componentId} value={component.componentId}>
+                    <option
+                      key={component.componentId}
+                      value={component.componentId}
+                    >
                       {component.componentName}
                     </option>
                   ))}
@@ -439,7 +471,10 @@ const ComponentOptionalsManager = () => {
                   id="isActive"
                   value={formData.isActive.toString()}
                   onChange={(e) =>
-                    setFormData({ ...formData, isActive: e.target.value === 'true' })
+                    setFormData({
+                      ...formData,
+                      isActive: e.target.value === "true",
+                    })
                   }
                 >
                   <option value="true">Active</option>

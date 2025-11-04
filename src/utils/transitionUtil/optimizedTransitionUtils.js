@@ -11,6 +11,46 @@ export const optimizedTransitionUtils = {
     enableWillChange: true,
     enableRAF: true,
     prefetchDelay: 100,
+    // Performance settings
+    isLowPerformance: false, // Will be auto-detected
+    simplifiedTransition: false,
+  },
+
+  // Detect device performance
+  detectPerformance: () => {
+    // Check hardware concurrency (CPU cores)
+    const cores = navigator.hardwareConcurrency || 2;
+
+    // Check memory (if available)
+    const memory = navigator.deviceMemory || 4;
+
+    // Check if mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    // Check connection speed
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const slowConnection = connection && (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g' || connection.effectiveType === '3g');
+
+    // Determine if low performance
+    const isLowPerformance = (
+      cores <= 2 ||
+      memory <= 2 ||
+      slowConnection ||
+      (isMobile && cores <= 4)
+    );
+
+    optimizedTransitionUtils.config.isLowPerformance = isLowPerformance;
+    optimizedTransitionUtils.config.simplifiedTransition = isLowPerformance;
+
+    // Adjust settings for low performance devices
+    if (isLowPerformance) {
+      optimizedTransitionUtils.config.duration = 0.3; // Shorter duration
+      optimizedTransitionUtils.config.enableGPU = false; // Disable GPU on weak devices
+      optimizedTransitionUtils.config.enableWillChange = false;
+      optimizedTransitionUtils.config.enableRAF = false; // Use CSS transitions instead
+    }
+
+    return isLowPerformance;
   },
 
   // State management
@@ -65,6 +105,9 @@ export const optimizedTransitionUtils = {
   init: () => {
     if (optimizedTransitionUtils.state.isInitialized) return;
 
+    // Detect device performance first
+    optimizedTransitionUtils.detectPerformance();
+
     // Setup prefetch on link hover
     if (typeof document !== "undefined") {
       const prefetchLink = optimizedTransitionUtils.optimizations.throttle(
@@ -104,10 +147,91 @@ export const optimizedTransitionUtils = {
     optimizedTransitionUtils.state.isInitialized = true;
   },
 
+  // Lightweight transition for low-performance devices
+  lightweightTransition: async (navigateFunction, route, options = {}) => {
+    if (optimizedTransitionUtils.state.isTransitioning) {
+      return;
+    }
+
+    const {
+      onStart = null,
+      onComplete = null,
+    } = options;
+
+    optimizedTransitionUtils.state.isTransitioning = true;
+
+    try {
+      if (onStart) onStart();
+
+      const root = document.getElementById("root");
+      if (!root) throw new Error("Root element not found");
+
+      // Simple fade out + subtle scale using CSS
+      root.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
+      root.style.opacity = '0';
+      root.style.transform = 'scale(0.98)'; // Subtle scale down
+
+      // Wait for fade out
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Navigate
+      navigateFunction(route);
+
+      // Scroll to top immediately
+      window.scrollTo(0, 0);
+
+      // Wait minimal time for React to render
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Fade in + scale back to normal
+      root.style.opacity = '1';
+      root.style.transform = 'scale(1)';
+
+      // Wait for fade in
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Clean up
+      root.style.transition = '';
+      root.style.transform = '';
+
+      // Kill ScrollTriggers
+      setTimeout(() => {
+        try {
+          ScrollTrigger.killAll();
+        } catch (e) {
+          // Ignore
+        }
+
+        window.dispatchEvent(new CustomEvent("pageTransitionComplete"));
+        window.scrollTo(0, 0);
+      }, 50);
+
+      optimizedTransitionUtils.state.isTransitioning = false;
+      if (onComplete) onComplete();
+    } catch (error) {
+      console.error("Lightweight transition failed:", error);
+
+      const root = document.getElementById("root");
+      if (root) {
+        root.style.opacity = "1";
+        root.style.transition = "";
+        root.style.transform = "";
+      }
+
+      optimizedTransitionUtils.state.isTransitioning = false;
+      navigateFunction(route);
+    }
+  },
+
   // Optimized page transition with preloading
   transitionToRoute: async (navigateFunction, route, options = {}) => {
     if (optimizedTransitionUtils.state.isTransitioning) {
       return;
+    }
+
+    // Use lightweight transition for low-performance devices
+    if (optimizedTransitionUtils.config.simplifiedTransition) {
+      return optimizedTransitionUtils.lightweightTransition(navigateFunction, route, options);
     }
 
     const {
@@ -168,58 +292,26 @@ export const optimizedTransitionUtils = {
       // Navigate to new route (hidden)
       navigateFunction(route);
 
-      // Ensure new page starts from top multiple times to be safe
-      setTimeout(() => window.scrollTo(0, 0), 10);
-      setTimeout(() => window.scrollTo(0, 0), 50);
-      setTimeout(() => window.scrollTo(0, 0), 100);
-      setTimeout(() => window.scrollTo(0, 0), 200);
+      // Scroll to top once only
+      window.scrollTo(0, 0);
 
-      // Wait for new content to fully load
+      // Wait for new content to fully load - optimized
       const waitForPageLoad = async () => {
         let retries = 0;
-        const maxRetries = 50; // 5 seconds max wait
+        const maxRetries = 30; // Reduce max wait time to 3 seconds
 
         while (retries < maxRetries) {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           // Check if React has rendered
-          if (root.children.length === 0) {
-            retries++;
-            continue;
-          }
-
-          // Check for critical resources
-          const images = root.querySelectorAll("img");
-          const videos = root.querySelectorAll("video");
-
-          // Wait for critical images (above the fold)
-          let criticalImagesLoaded = true;
-          for (let i = 0; i < Math.min(images.length, 3); i++) {
-            const img = images[i];
-            if (img && !img.complete && !img.src.includes("data:")) {
-              criticalImagesLoaded = false;
-              break;
-            }
-          }
-
-          // For videos, just ensure they have metadata
-          for (const video of videos) {
-            if (video.readyState < 1) {
-              // HAVE_METADATA
-              video.preload = "metadata";
-            }
-          }
-
-          // If critical resources are ready, proceed
-          if (criticalImagesLoaded) {
+          if (root.children.length > 0) {
+            // Content rendered, wait a bit more for JS to settle
+            await new Promise((resolve) => setTimeout(resolve, 150));
             break;
           }
 
           retries++;
         }
-
-        // Extra wait for JS to settle
-        await new Promise((resolve) => setTimeout(resolve, 100));
       };
 
       await waitForPageLoad();
@@ -299,7 +391,7 @@ export const optimizedTransitionUtils = {
         optimizedTransitionUtils.optimizations.enableGPU(newPageContainer);
       }
 
-      // Perform smooth animation
+      // Perform smooth animation - optimized
       const performAnimation = async () => {
         return new Promise((resolve) => {
           if (optimizedTransitionUtils.config.enableRAF) {
@@ -310,20 +402,20 @@ export const optimizedTransitionUtils = {
               const elapsed = currentTime - startTime;
               const progress = Math.min(elapsed / animationDuration, 1);
 
-              // Current page fade out and scale down
-              const opacity = Math.max(0, 1 - progress / 0.7);
-              const scale = 1 - progress * 0.08;
+              // Current page: fade out + scale down
+              // Combine opacity and transform in single operation for better performance
+              const opacity = Math.max(0, 1 - progress * 1.2); // Faster fade
+              const scale = 1 - progress * 0.05; // Subtle scale: 1 -> 0.95 (giảm từ 0.08 xuống 0.05)
+
               currentPageWrapper.style.opacity = opacity;
-              currentPageWrapper.style.transform = `scale(${scale}) ${
-                optimizedTransitionUtils.config.enableGPU ? "translateZ(0)" : ""
+              currentPageWrapper.style.transform = `scale(${scale})${
+                optimizedTransitionUtils.config.enableGPU ? " translateZ(0)" : ""
               }`;
 
-              // New page slide up
+              // New page: slide up
               const translateY = 100 * (1 - progress);
               newPageContainer.style.transform = `translateY(${translateY}%)${
-                optimizedTransitionUtils.config.enableGPU
-                  ? " translateZ(0)"
-                  : ""
+                optimizedTransitionUtils.config.enableGPU ? " translateZ(0)" : ""
               }`;
 
               if (progress < 1) {
@@ -337,13 +429,13 @@ export const optimizedTransitionUtils = {
             optimizedTransitionUtils.state.rafId =
               requestAnimationFrame(animate);
           } else {
-            // GSAP fallback
+            // GSAP fallback - with scale
             const tl = gsap.timeline({ onComplete: resolve });
 
             tl.to(currentPageWrapper, {
               duration: duration,
               opacity: 0,
-              scale: 0.92,
+              scale: 0.95, // Scale từ 1 -> 0.95
               ease: optimizedTransitionUtils.config.easing,
             }).to(
               newPageContainer,
@@ -425,6 +517,11 @@ export const optimizedTransitionUtils = {
   smoothTransition: async (navigateFunction, route, options = {}) => {
     if (optimizedTransitionUtils.state.isTransitioning) {
       return;
+    }
+
+    // Use lightweight transition for low-performance devices
+    if (optimizedTransitionUtils.config.simplifiedTransition) {
+      return optimizedTransitionUtils.lightweightTransition(navigateFunction, route, options);
     }
 
     const {
@@ -561,6 +658,11 @@ export const optimizedTransitionUtils = {
   smartTransition: async (navigateFunction, route, options = {}) => {
     if (optimizedTransitionUtils.state.isTransitioning) {
       return;
+    }
+
+    // Use lightweight transition for low-performance devices
+    if (optimizedTransitionUtils.config.simplifiedTransition) {
+      return optimizedTransitionUtils.lightweightTransition(navigateFunction, route, options);
     }
 
     const {

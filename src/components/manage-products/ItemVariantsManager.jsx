@@ -63,14 +63,14 @@ const ItemVariantsManager = () => {
   // Upload file to server
   const uploadFile = async (file) => {
     const uploadFormData = new FormData();
-    uploadFormData.append('file', file);
-    uploadFormData.append('description', 'Item variant image');
-    uploadFormData.append('bucketName', 'mirror-storage');
-    uploadFormData.append('folderPath', 'public');
+    uploadFormData.append("file", file);
+    uploadFormData.append("description", "Item variant image");
+    uploadFormData.append("bucketName", "mirror-storage");
+    uploadFormData.append("folderPath", "public");
 
-    const response = await api.post('/api/files/upload', uploadFormData, {
+    const response = await api.post("/api/files/upload", uploadFormData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
 
@@ -78,7 +78,7 @@ const ItemVariantsManager = () => {
       const result = response.data;
       return result.publicUrl;
     } else {
-      throw new Error('Failed to upload file');
+      throw new Error("Failed to upload file");
     }
   };
 
@@ -89,15 +89,12 @@ const ItemVariantsManager = () => {
       const itemsResponse = await api.get("/api/item-variants");
       if (itemsResponse.status === 200) {
         const itemsData = itemsResponse.data;
-        console.log("API Items data (for variants):", itemsData); // Debug log
 
         // Transform API data to match our component structure
         const transformedItems = itemsData.map((item) => ({
           id: item.itemId || item.id,
           name: item.itemName || item.name,
         }));
-
-        console.log("Transformed Items (for variants):", transformedItems); // Debug log
         setItems(transformedItems);
       } else {
         console.error("Failed to fetch items");
@@ -112,7 +109,6 @@ const ItemVariantsManager = () => {
       const variantsResponse = await api.get("/api/item-variants");
       if (variantsResponse.status === 200) {
         const variantsData = variantsResponse.data;
-        console.log("API Item Variants data:", variantsData); // Debug log
 
         // Transform API data to match our component structure
         const transformedVariants = variantsData.map((item) => ({
@@ -127,7 +123,6 @@ const ItemVariantsManager = () => {
           isActive: item.isActive,
         }));
 
-        console.log("Transformed Item Variants:", transformedVariants); // Debug log
         setItemVariants(transformedVariants);
       } else {
         console.error("Failed to fetch item variants");
@@ -144,7 +139,7 @@ const ItemVariantsManager = () => {
             isActive: true,
           },
           {
-            id: "ITEM0002", 
+            id: "ITEM0002",
             name: "Sample Item Variant 2",
             itemVariantUrl: "test-2",
             description: "URL model 2",
@@ -153,7 +148,7 @@ const ItemVariantsManager = () => {
             createdBy: "system",
             updatedBy: "system",
             isActive: false,
-          }
+          },
         ]);
       }
     } catch (error) {
@@ -177,7 +172,7 @@ const ItemVariantsManager = () => {
           isActive: true,
         },
         {
-          id: "ITEM0002", 
+          id: "ITEM0002",
           name: "Sample Item Variant 2",
           itemVariantUrl: "test-2",
           description: "URL model 2",
@@ -186,7 +181,7 @@ const ItemVariantsManager = () => {
           createdBy: "system",
           updatedBy: "system",
           isActive: false,
-        }
+        },
       ]);
     }
   };
@@ -201,36 +196,41 @@ const ItemVariantsManager = () => {
 
     try {
       let imageUrl = formData.itemVariantUrl;
-      
+
       // Upload file if a new file is selected
       if (selectedFile) {
         imageUrl = await uploadFile(selectedFile);
       }
       if (editingVariant) {
         // Update existing variant
-        const response = await api.put(`/api/item-variants/${editingVariant.id}`, {
-          itemVariantName: formData.name,
-          itemVariantUrl: imageUrl,
-          description: formData.description,
-          isActive: formData.isActive,
-        });
+        const response = await api.put(
+          `/api/item-variants/${editingVariant.id}`,
+          {
+            itemVariantName: formData.name,
+            itemVariantUrl: imageUrl,
+            description: formData.description,
+            isActive: formData.isActive,
+          }
+        );
 
         if (response.status === 200) {
           const updatedVariant = response.data;
           setItemVariants(
             itemVariants.map((variant) =>
               variant.id === editingVariant.id
-                ? { 
-                    ...updatedVariant, 
+                ? {
+                    ...updatedVariant,
                     id: updatedVariant.itemVariantId,
-                    name: updatedVariant.itemVariantName || updatedVariant.name
+                    name: updatedVariant.itemVariantName || updatedVariant.name,
                   }
                 : variant
             )
           );
         } else {
           console.error("Failed to update item variant:", response.data);
-          setErrorMessage(response.data?.message || "Failed to update item variant");
+          setErrorMessage(
+            response.data?.message || "Failed to update item variant"
+          );
           return;
         }
       } else {
@@ -244,14 +244,19 @@ const ItemVariantsManager = () => {
 
         if (response.status === 201 || response.status === 200) {
           const newVariant = response.data;
-          setItemVariants([...itemVariants, { 
-            ...newVariant, 
-            id: newVariant.itemVariantId,
-            name: newVariant.itemVariantName || newVariant.name
-          }]);
+          setItemVariants([
+            ...itemVariants,
+            {
+              ...newVariant,
+              id: newVariant.itemVariantId,
+              name: newVariant.itemVariantName || newVariant.name,
+            },
+          ]);
         } else {
           console.error("Failed to create item variant:", response.data);
-          setErrorMessage(response.data?.message || "Failed to create item variant");
+          setErrorMessage(
+            response.data?.message || "Failed to create item variant"
+          );
           return;
         }
       }
@@ -287,7 +292,9 @@ const ItemVariantsManager = () => {
           setItemVariants(itemVariants.filter((variant) => variant.id !== id));
         } else {
           console.error("Failed to delete item variant:", response.data);
-          setErrorMessage(response.data?.message || "Failed to delete item variant");
+          setErrorMessage(
+            response.data?.message || "Failed to delete item variant"
+          );
         }
       } catch (error) {
         console.error("Error deleting item variant:", error);
@@ -333,7 +340,11 @@ const ItemVariantsManager = () => {
       </div>
 
       {errorMessage && (
-        <div className={`error-message-container ${isErrorFadingOut ? 'fade-out' : ''}`}>
+        <div
+          className={`error-message-container ${
+            isErrorFadingOut ? "fade-out" : ""
+          }`}
+        >
           <p>{errorMessage}</p>
           <button className="error-close-button" onClick={closeErrorMessage}>
             ×
@@ -367,21 +378,20 @@ const ItemVariantsManager = () => {
               </tr>
             ) : (
               itemVariants.map((variant, index) => {
-                console.log("Rendering item variant:", variant); // Debug log
                 return (
                   <tr key={`variant-${variant.id || index}`}>
                     <td>{variant.id}</td>
                     <td>{variant.name}</td>
                     <td>
                       {variant.itemVariantUrl && (
-                        <img 
-                          src={variant.itemVariantUrl} 
-                          alt={variant.name || 'Item variant'}
-                          style={{ 
-                            width: '60px', 
-                            height: '60px', 
-                            objectFit: 'cover', 
-                            borderRadius: '4px' 
+                        <img
+                          src={variant.itemVariantUrl}
+                          alt={variant.name || "Item variant"}
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            objectFit: "cover",
+                            borderRadius: "4px",
                           }}
                         />
                       )}
@@ -390,8 +400,12 @@ const ItemVariantsManager = () => {
                     <td>{new Date(variant.createdAt).toLocaleDateString()}</td>
                     <td>{variant.createdBy}</td>
                     <td>
-                      <span className={`status-badge ${variant.isActive ? 'active' : 'inactive'}`}>
-                        {variant.isActive ? 'Active' : 'Inactive'}
+                      <span
+                        className={`status-badge ${
+                          variant.isActive ? "active" : "inactive"
+                        }`}
+                      >
+                        {variant.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td>
@@ -453,20 +467,28 @@ const ItemVariantsManager = () => {
                   required={!editingVariant}
                 />
                 {imagePreview && (
-                  <div style={{ marginTop: '10px' }}>
-                    <img 
-                      src={imagePreview} 
-                      alt="Preview" 
-                      style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+                  <div style={{ marginTop: "10px" }}>
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      style={{
+                        maxWidth: "200px",
+                        maxHeight: "200px",
+                        objectFit: "cover",
+                      }}
                     />
                   </div>
                 )}
                 {editingVariant && formData.itemVariantUrl && !imagePreview && (
-                  <div style={{ marginTop: '10px' }}>
-                    <img 
-                      src={formData.itemVariantUrl} 
-                      alt="Current image" 
-                      style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
+                  <div style={{ marginTop: "10px" }}>
+                    <img
+                      src={formData.itemVariantUrl}
+                      alt="Current image"
+                      style={{
+                        maxWidth: "200px",
+                        maxHeight: "200px",
+                        objectFit: "cover",
+                      }}
                     />
                   </div>
                 )}
@@ -492,7 +514,10 @@ const ItemVariantsManager = () => {
                   id="isActive"
                   value={formData.isActive.toString()}
                   onChange={(e) =>
-                    setFormData({ ...formData, isActive: e.target.value === 'true' })
+                    setFormData({
+                      ...formData,
+                      isActive: e.target.value === "true",
+                    })
                   }
                 >
                   <option value="true">Active</option>

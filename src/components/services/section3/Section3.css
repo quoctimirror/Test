@@ -1,14 +1,30 @@
 .services-section3 {
-  height: 100vh;
-  background-image: url("/services/section_3.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  height: 67vh;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Background layer với grayscale image */
+.services-section3::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/services/section_3.jpg") lightgray 50% / cover no-repeat;
   filter: grayscale(100%);
+  z-index: 0;
+}
+
+/* Gradient overlay layer */
+.services-section3::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, #000 0%, #BC224C 54.81%, #F6F6F6 100%),
+    linear-gradient(180deg, rgba(246, 246, 246, 0.00) 50%, #F6F6F6 100%);
+  z-index: 1;
 }
 
 .section3-background-overlay {
@@ -19,6 +35,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
   z-index: 1;
+  display: none; /* Ẩn overlay ở desktop */
 }
 
 .section3-container {
@@ -28,7 +45,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
 .section3-content {
@@ -48,6 +65,29 @@
 
 /* Tablet (481px - 1024px) */
 @media screen and (max-width: 1024px) {
+  .services-section3 {
+    height: 100vh;
+    background-image: url("/services/section_3.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: grayscale(100%);
+  }
+
+  /* Bỏ pseudo-elements ở tablet */
+  .services-section3::before,
+  .services-section3::after {
+    display: none;
+  }
+
+  .section3-background-overlay {
+    display: block; /* Hiển thị lại overlay cho tablet */
+  }
+
+  .section3-container {
+    z-index: 2;
+  }
+
   .section3-content {
     width: 62%;
   }
@@ -58,10 +98,10 @@
   /* Reset the main section */
   .services-section3 {
     height: auto;
-    background-image: none;
+    background: none;
     display: block;
     position: relative;
-    filter: none; /* Remove grayscale on mobile */
+    filter: none;
   }
 
   /* Hide the overlay on mobile */
@@ -69,17 +109,21 @@
     display: none;
   }
 
+  /* Override desktop pseudo-elements */
+  .services-section3::after {
+    display: none;
+  }
+
   /* Create image section - 50vh */
   .services-section3::before {
     content: "";
     display: block;
+    position: relative;
     width: 100%;
     height: 50vh;
-    background-image: url("/services/section_3.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: url("/services/section_3.jpg") lightgray 50% / cover no-repeat;
     filter: grayscale(100%);
+    z-index: auto;
   }
 
   /* Content section - 50vh with white background */
@@ -90,6 +134,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: auto;
   }
 
   .section3-content {

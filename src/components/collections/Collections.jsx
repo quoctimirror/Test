@@ -5,6 +5,7 @@ import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransit
 import CollectionHeroSection from "./CollectionHeroSection";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
+import ArrowButton from "@components/common/button/ArrowButton";
 import { collectionsAPI } from "@services/api";
 import { getCollectionDetailRoute } from "@/constants/routes";
 import "./Collections.css";
@@ -164,7 +165,7 @@ function Collection() {
       {/* --- SECTION 2 --- */}
       <div className="section-2" data-section="collection-featured">
         <div className="collection-hero-content">
-          <div className="collection-hero-subtitle bodytext-3--no-margin">
+          <div className="collection-hero-subtitle bodytext-4--no-margin">
             THE NEWEST COLLECTION
           </div>
           <div className="collection-hero-title">
@@ -204,26 +205,12 @@ function Collection() {
         <div className="collection-content-panel full-width">
           <div className="product-slider">
             <div className="slider-main-row">
-              <button
+              <ArrowButton
+                direction="left"
                 className="slider-arrow"
-                aria-label="Previous Product"
                 onClick={handlePrevious}
-              >
-                <svg
-                  width="30"
-                  height="30"
-                  viewBox="0 0 30 30"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M23.75 15L6.25 15M6.25 15L13.75 7.5M6.25 15L13.75 22.5"
-                    stroke="#797979"
-                    strokeWidth="2"
-                    strokeLinecap="square"
-                  />
-                </svg>
-              </button>
+                ariaLabel="Previous Product"
+              />
 
               {/* MỚI: Áp dụng class động dựa trên slideDirection */}
               <div
@@ -237,26 +224,12 @@ function Collection() {
                 />
               </div>
 
-              <button
+              <ArrowButton
+                direction="right"
                 className="slider-arrow"
-                aria-label="Next Product"
                 onClick={handleNext}
-              >
-                <svg
-                  width="30"
-                  height="30"
-                  viewBox="0 0 30 30"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6.25 15L23.75 15M23.75 15L16.25 22.5M23.75 15L16.25 7.5"
-                    stroke="#797979"
-                    strokeWidth="2"
-                    strokeLinecap="square"
-                  />
-                </svg>
-              </button>
+                ariaLabel="Next Product"
+              />
             </div>
 
             {/* Product info with separate animation for title and static button */}

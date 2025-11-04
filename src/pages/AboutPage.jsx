@@ -5,11 +5,10 @@ import SloganSection from "@components/about/sloganSection/SloganSection";
 import StartingPlaceSection from "@components/about/startingPlaceSection/StartingPlaceSection";
 import IntroBOD from "@components/about/introBOD/IntroBOD";
 import BODMemberV3 from "@components/about/BODMemberV3/BODMemberV3";
-import MirrorNetworkSection from "@components/about/mirrorNetworkSection/MirrorNetworkSection";
+import MirrorNetworkDiscoverSection from "@components/about/mirrorNetworkDiscoverSection/MirrorNetworkDiscoverSection";
 import MirrorverseSection from "@components/about/mirrorverseSection/MirrorverseSection";
 import AtMirror from "@components/about/atMirror/AtMirror";
 import SharedSection from "@components/about/sharedSection/SharedSection";
-import DiscoverSection from "@components/about/discoverSection/DiscoverSection";
 import ScrollDownArrow from "@components/common/button/ScrollDownArrow";
 import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
 import "@components/home-page/scrollEffect/ScrollEffect.css"; // Import CSS for arrow styling
@@ -20,6 +19,8 @@ gsap.registerPlugin(ScrollTrigger);
 const AboutPage = () => {
   const { isArrowVisible, handleArrowClick } = useScrollToNextSection({
     footerSelector: '[data-section="shared-section"], .footer', // Check both SharedSection and global footer
+    scrollToEnd: true, // Scroll to end of each section instead of start
+    scrollToStartSections: ['bod-member'], // BOD Member section should scroll to start instead of end
   });
 
   const setupScrollTriggers = () => {
@@ -83,11 +84,11 @@ const AboutPage = () => {
       <div data-section="slogan-section">
         <SloganSection />
       </div>
-
-      <section className="panel" data-section="starting-place">
+      <div data-section="starting-place">
+        {/* <section className="panel" data-section="starting-place"> */}
         <StartingPlaceSection />
-      </section>
-
+        {/* </section> */}
+      </div>
       <div data-section="intro-bod">
         <IntroBOD />
       </div>
@@ -96,20 +97,16 @@ const AboutPage = () => {
         <BODMemberV3 />
       </div>
 
-      <section className="panel" data-section="at-mirror">
+      {/* <section className="panel" data-section="at-mirror">
         <AtMirror />
-      </section>
+      </section> */}
 
       <div data-section="mirrorverse">
         <MirrorverseSection />
       </div>
 
-      <section className="panel" data-section="mirror-network">
-        <MirrorNetworkSection />
-      </section>
-
-      <section className="panel" data-section="discover">
-        <DiscoverSection />
+      <section className="panel" data-section="mirror-network-discover">
+        <MirrorNetworkDiscoverSection />
       </section>
 
       <div data-section="shared-section">

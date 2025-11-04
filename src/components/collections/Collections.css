@@ -409,35 +409,35 @@
 
 /* Nút mũi tên của slider */
 .slider-arrow {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  width: 57px;
-  height: 57px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
-  color: #797979;
-  /* Màu mũi tên */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  transition: all 0.3s ease;
-  /* Đẩy arrow xuống dưới */
   margin-top: 0;
-  /* Thêm khoảng cách từ trên xuống */
 }
 
-.slider-arrow:hover {
-  background: #ffffff;
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #000000;
-  transform: translateY(-1px);
+/* Target the nested ShineGlassButton */
+.slider-arrow button {
+  width: 57px !important;
+  height: 57px !important;
 }
 
-.slider-arrow:hover path {
-  stroke: #000000;
+/* Override glass-layer to be more opaque/frosted */
+.slider-arrow button .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.06)
+  ) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+.slider-arrow button:hover .glass-layer {
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
 }
 
 /*
@@ -513,9 +513,9 @@
 }
 
 @media screen and (max-width: 768px) {
-  .slider-arrow {
-    width: 40px;
-    height: 40px;
+  .slider-arrow button {
+    width: 48px !important;
+    height: 48px !important;
   }
 }
 
@@ -724,10 +724,9 @@
     margin-top: 0;
   }
 
-  .slider-arrow {
-    width: 38px;
-    height: 38px;
-    margin-top: 0;
+  .slider-arrow button {
+    width: 48px !important;
+    height: 48px !important;
   }
 
   .product-description {

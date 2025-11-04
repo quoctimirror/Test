@@ -24,6 +24,7 @@ export const ROUTES = {
   SERVICES: "/e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b",
   SERVICES_DETAIL: "/e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b/detail",
   SUPPORT: "/f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c",
+  SUPPORT_DETAIL: "/f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c/detail",
   CONTACT: "/a7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d",
   ABOUT: "/b8c9d0e1-f2a3-4b5c-6d7e-8f9a0b1c2d3e",
   LOCATIONS: "/c9d0e1f2-a3b4-5c6d-7e8f-9a0b1c2d3e4f",
@@ -42,6 +43,8 @@ export const ROUTES = {
   HOVER_EXPAND: "/2a5f8c9d-4e3b-4a1c-9f7e-8d6c5b4a3e2f",
   UNIVERSE_FINAL: "/1f2e3d4c-5b6a-7c8d-9e0f-1a2b3c4d5e6f",
   NEWS_V2: "/5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
+  SCROLL_EFFECT_TEST: "/test-scroll-effect",
+  SCROLL_EFFECT_TEST_V2: "/test-scroll-effect-v2",
 
   // Dashboard routes (keep original - protected by auth)
   DASHBOARD_ADMIN: "/dashboard/admin",

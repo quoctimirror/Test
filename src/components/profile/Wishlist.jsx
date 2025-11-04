@@ -17,7 +17,6 @@ const Wishlist = () => {
   ];
 
   const handleViewDetail = (itemId) => {
-    console.log("View wishlist item detail:", itemId);
     // Navigate to product detail page
   };
 
@@ -30,7 +29,9 @@ const Wishlist = () => {
               <img src={item.image} alt={item.name} />
             </div>
             <div className="profile-item-info">
-              <h3 className="profile-item-name heading-3--no-margin">{item.name}</h3>
+              <h3 className="profile-item-name heading-3--no-margin">
+                {item.name}
+              </h3>
             </div>
             <div className="profile-item-actions">
               <button

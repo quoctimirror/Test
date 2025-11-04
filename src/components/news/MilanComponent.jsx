@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./MilanComponent.css";
 import "../../styles/grid-system.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import ArrowButton from "@components/common/button/ArrowButton";
 
 const MilanComponent = () => {
   const heroRef = useRef(null);
@@ -753,22 +753,12 @@ const MilanComponent = () => {
 
           {/* 4-Column Image Grid - Horizontal Scroll */}
           <div className="milan-carousel-wrapper col-12">
-            <div
+            <ArrowButton
+              direction="left"
               className="milan-slider-arrow milan-slider-arrow-left"
               onClick={handlePrevious}
-            >
-              <ShineGlassButton width={56} height={56} theme="footer">
-                <svg width="24" height="24" viewBox="0 0 31 31" fill="none">
-                  <path
-                    d="M24.25 15.5L6.75 15.5M6.75 15.5L14.25 8M6.75 15.5L14.25 23"
-                    stroke="gray"
-                    strokeOpacity="0.6"
-                    strokeWidth="2"
-                    strokeLinecap="square"
-                  />
-                </svg>
-              </ShineGlassButton>
-            </div>
+              ariaLabel="Previous image"
+            />
 
             <div className="milan-carousel-container" ref={carouselRef}>
               {/* Duplicate 10 lần để buffer lớn hơn cho arrow scrolling */}
@@ -802,22 +792,12 @@ const MilanComponent = () => {
               ))}
             </div>
 
-            <div
+            <ArrowButton
+              direction="right"
               className="milan-slider-arrow milan-slider-arrow-right"
               onClick={handleNext}
-            >
-              <ShineGlassButton width={56} height={56} theme="footer">
-                <svg width="24" height="24" viewBox="0 0 31 31" fill="none">
-                  <path
-                    d="M6.75 15.5L24.25 15.5M24.25 15.5L16.75 23M24.25 15.5L16.75 8"
-                    stroke="gray"
-                    strokeOpacity="0.6"
-                    strokeWidth="2"
-                    strokeLinecap="square"
-                  />
-                </svg>
-              </ShineGlassButton>
-            </div>
+              ariaLabel="Next image"
+            />
           </div>
 
           {/* Content Section 2 */}
@@ -832,22 +812,12 @@ const MilanComponent = () => {
 
           {/* Large Image Grid Carousel */}
           <div className="milan-large-carousel-wrapper col-12">
-            <div
+            <ArrowButton
+              direction="left"
               className="milan-slider-arrow milan-slider-arrow-left"
               onClick={handleLargePrevious}
-            >
-              <ShineGlassButton width={56} height={56} theme="footer">
-                <svg width="24" height="24" viewBox="0 0 31 31" fill="none">
-                  <path
-                    d="M24.25 15.5L6.75 15.5M6.75 15.5L14.25 8M6.75 15.5L14.25 23"
-                    stroke="gray"
-                    strokeOpacity="0.6"
-                    strokeWidth="2"
-                    strokeLinecap="square"
-                  />
-                </svg>
-              </ShineGlassButton>
-            </div>
+              ariaLabel="Previous large image"
+            />
 
             <div
               className="milan-large-carousel-container"
@@ -878,22 +848,12 @@ const MilanComponent = () => {
               ))}
             </div>
 
-            <div
+            <ArrowButton
+              direction="right"
               className="milan-slider-arrow milan-slider-arrow-right"
               onClick={handleLargeNext}
-            >
-              <ShineGlassButton width={56} height={56} theme="footer">
-                <svg width="24" height="24" viewBox="0 0 31 31" fill="none">
-                  <path
-                    d="M6.75 15.5L24.25 15.5M24.25 15.5L16.75 23M24.25 15.5L16.75 8"
-                    stroke="gray"
-                    strokeOpacity="0.6"
-                    strokeWidth="2"
-                    strokeLinecap="square"
-                  />
-                </svg>
-              </ShineGlassButton>
-            </div>
+              ariaLabel="Next large image"
+            />
           </div>
 
           {/* Content Section 3 */}

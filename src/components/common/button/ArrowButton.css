@@ -1,0 +1,40 @@
+/* Arrow Button Container */
+.arrow-button {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* No transform here - let parent handle positioning */
+
+/* Icon color transition */
+.arrow-button svg path {
+  transition: stroke 0.3s ease;
+}
+
+/* Hover state - icon changes to black */
+.arrow-button:hover svg path {
+  stroke: #000;
+}
+
+/* Responsive icon sizes */
+.arrow-button svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* Tablet and Mobile - smaller icons */
+@media (max-width: 1024px) {
+  .arrow-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .arrow-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}

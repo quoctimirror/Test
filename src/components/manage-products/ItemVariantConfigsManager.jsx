@@ -58,26 +58,48 @@ const ItemVariantConfigsManager = () => {
       } else {
         console.error("Failed to fetch item variants");
         setItemVariants([
-          { itemVariantId: "ITEM0001", itemVariantName: "Sample Item Variant 1", itemVariantUrl: "test", description: "URL model 1" },
-          { itemVariantId: "ITEM0002", itemVariantName: "Sample Item Variant 2", itemVariantUrl: "test-2", description: "URL model 2" },
+          {
+            itemVariantId: "ITEM0001",
+            itemVariantName: "Sample Item Variant 1",
+            itemVariantUrl: "test",
+            description: "URL model 1",
+          },
+          {
+            itemVariantId: "ITEM0002",
+            itemVariantName: "Sample Item Variant 2",
+            itemVariantUrl: "test-2",
+            description: "URL model 2",
+          },
         ]);
       }
 
       // Fetch component optionals
-      const componentOptionalsResponse = await api.get("/api/component-optionals");
+      const componentOptionalsResponse = await api.get(
+        "/api/component-optionals"
+      );
       if (componentOptionalsResponse.status === 200) {
         const componentOptionalsData = componentOptionalsResponse.data;
-        const transformedComponentOptionals = componentOptionalsData.map((item) => ({
-          componentOptionalId: item.componentOptionalId || item.id,
-          componentOptionalName: item.componentOptionalName,
-          description: item.description,
-        }));
+        const transformedComponentOptionals = componentOptionalsData.map(
+          (item) => ({
+            componentOptionalId: item.componentOptionalId || item.id,
+            componentOptionalName: item.componentOptionalName,
+            description: item.description,
+          })
+        );
         setComponentOptionals(transformedComponentOptionals);
       } else {
         console.error("Failed to fetch component optionals");
         setComponentOptionals([
-          { componentOptionalId: "OPT001", componentOptionalName: "White Gold Option", description: "White gold material" },
-          { componentOptionalId: "OPT002", componentOptionalName: "Rose Gold Option", description: "Rose gold material" },
+          {
+            componentOptionalId: "OPT001",
+            componentOptionalName: "White Gold Option",
+            description: "White gold material",
+          },
+          {
+            componentOptionalId: "OPT002",
+            componentOptionalName: "Rose Gold Option",
+            description: "Rose gold material",
+          },
         ]);
       }
 
@@ -85,7 +107,6 @@ const ItemVariantConfigsManager = () => {
       const configsResponse = await api.get("/api/item-variant-configs");
       if (configsResponse.status === 200) {
         const configsData = configsResponse.data;
-        console.log("API Item Variant Configs data:", configsData);
 
         const transformedConfigs = configsData.map((item) => ({
           id: item.itemVariantConfigId,
@@ -101,7 +122,6 @@ const ItemVariantConfigsManager = () => {
           updatedBy: item.updatedBy,
         }));
 
-        console.log("Transformed Item Variant Configs:", transformedConfigs);
         setItemVariantConfigs(transformedConfigs);
       } else {
         console.error("Failed to fetch item variant configs");
@@ -132,12 +152,30 @@ const ItemVariantConfigsManager = () => {
       console.error("Error fetching data:", error);
       // Fallback to mock data
       setItemVariants([
-        { itemVariantId: "ITEM0001", itemVariantName: "Sample Item Variant 1", itemVariantUrl: "test", description: "URL model 1" },
-        { itemVariantId: "ITEM0002", itemVariantName: "Sample Item Variant 2", itemVariantUrl: "test-2", description: "URL model 2" },
+        {
+          itemVariantId: "ITEM0001",
+          itemVariantName: "Sample Item Variant 1",
+          itemVariantUrl: "test",
+          description: "URL model 1",
+        },
+        {
+          itemVariantId: "ITEM0002",
+          itemVariantName: "Sample Item Variant 2",
+          itemVariantUrl: "test-2",
+          description: "URL model 2",
+        },
       ]);
       setComponentOptionals([
-        { componentOptionalId: "OPT001", componentOptionalName: "White Gold Option", description: "White gold material" },
-        { componentOptionalId: "OPT002", componentOptionalName: "Rose Gold Option", description: "Rose gold material" },
+        {
+          componentOptionalId: "OPT001",
+          componentOptionalName: "White Gold Option",
+          description: "White gold material",
+        },
+        {
+          componentOptionalId: "OPT002",
+          componentOptionalName: "Rose Gold Option",
+          description: "Rose gold material",
+        },
       ]);
       setItemVariantConfigs([
         {
@@ -175,7 +213,10 @@ const ItemVariantConfigsManager = () => {
     try {
       if (editingConfig) {
         // Update existing config
-        const response = await api.put(`/api/item-variant-configs/${editingConfig.id}`, formData);
+        const response = await api.put(
+          `/api/item-variant-configs/${editingConfig.id}`,
+          formData
+        );
 
         if (response.status === 200) {
           const updatedConfig = response.data;
@@ -184,7 +225,8 @@ const ItemVariantConfigsManager = () => {
             id: updatedConfig.itemVariantConfigId,
             itemVariantConfigId: updatedConfig.itemVariantConfigId,
             itemVariantName: updatedConfig.itemVariantUrl || "Unknown",
-            componentOptionalName: updatedConfig.componentOptionalName || "Unknown",
+            componentOptionalName:
+              updatedConfig.componentOptionalName || "Unknown",
           };
           setItemVariantConfigs(
             itemVariantConfigs.map((config) =>
@@ -193,7 +235,9 @@ const ItemVariantConfigsManager = () => {
           );
         } else {
           console.error("Failed to update item variant config:", response.data);
-          setErrorMessage(response.data?.message || "Failed to update item variant config");
+          setErrorMessage(
+            response.data?.message || "Failed to update item variant config"
+          );
           return;
         }
       } else {
@@ -212,7 +256,9 @@ const ItemVariantConfigsManager = () => {
           setItemVariantConfigs([...itemVariantConfigs, transformedConfig]);
         } else {
           console.error("Failed to create item variant config:", response.data);
-          setErrorMessage(response.data?.message || "Failed to create item variant config");
+          setErrorMessage(
+            response.data?.message || "Failed to create item variant config"
+          );
           return;
         }
       }
@@ -237,15 +283,23 @@ const ItemVariantConfigsManager = () => {
 
   const handleDelete = async (id) => {
     setErrorMessage(null);
-    if (window.confirm("Are you sure you want to delete this item variant config?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this item variant config?"
+      )
+    ) {
       try {
         const response = await api.delete(`/api/item-variant-configs/${id}`);
 
         if (response.status === 200 || response.status === 204) {
-          setItemVariantConfigs(itemVariantConfigs.filter((config) => config.id !== id));
+          setItemVariantConfigs(
+            itemVariantConfigs.filter((config) => config.id !== id)
+          );
         } else {
           console.error("Failed to delete item variant config:", response.data);
-          setErrorMessage(response.data?.message || "Failed to delete item variant config");
+          setErrorMessage(
+            response.data?.message || "Failed to delete item variant config"
+          );
         }
       } catch (error) {
         console.error("Error deleting item variant config:", error);
@@ -285,7 +339,11 @@ const ItemVariantConfigsManager = () => {
       </div>
 
       {errorMessage && (
-        <div className={`error-message-container ${isErrorFadingOut ? 'fade-out' : ''}`}>
+        <div
+          className={`error-message-container ${
+            isErrorFadingOut ? "fade-out" : ""
+          }`}
+        >
           <p>{errorMessage}</p>
           <button className="error-close-button" onClick={closeErrorMessage}>
             ×
@@ -317,16 +375,25 @@ const ItemVariantConfigsManager = () => {
               </tr>
             ) : (
               itemVariantConfigs.map((config) => {
-                console.log("Rendering item variant config:", config);
                 return (
-                  <tr key={config.id || config.itemVariantConfigId || `config-${config.itemVariantId}-${config.componentOptionalId}`}>
+                  <tr
+                    key={
+                      config.id ||
+                      config.itemVariantConfigId ||
+                      `config-${config.itemVariantId}-${config.componentOptionalId}`
+                    }
+                  >
                     <td>{config.itemVariantConfigId}</td>
                     <td>{config.itemVariantName}</td>
                     <td>{config.componentOptionalName}</td>
                     <td>{config.createdBy}</td>
                     <td>
-                      <span className={`status-badge ${config.isActive ? 'active' : 'inactive'}`}>
-                        {config.isActive ? 'Active' : 'Inactive'}
+                      <span
+                        className={`status-badge ${
+                          config.isActive ? "active" : "inactive"
+                        }`}
+                      >
+                        {config.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
                     <td>
@@ -356,7 +423,9 @@ const ItemVariantConfigsManager = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h3>
-                {editingConfig ? "Edit Item Variant Config" : "Add New Item Variant Config"}
+                {editingConfig
+                  ? "Edit Item Variant Config"
+                  : "Add New Item Variant Config"}
               </h3>
               <button className="close-button" onClick={closeModal}>
                 ×
@@ -376,8 +445,12 @@ const ItemVariantConfigsManager = () => {
                 >
                   <option value="">Select Item Variant</option>
                   {itemVariants.map((variant) => (
-                    <option key={variant.itemVariantId} value={variant.itemVariantId}>
-                      {variant.itemVariantId} - {variant.itemVariantName || variant.description}
+                    <option
+                      key={variant.itemVariantId}
+                      value={variant.itemVariantId}
+                    >
+                      {variant.itemVariantId} -{" "}
+                      {variant.itemVariantName || variant.description}
                     </option>
                   ))}
                 </select>
@@ -389,13 +462,19 @@ const ItemVariantConfigsManager = () => {
                   id="componentOptionalId"
                   value={formData.componentOptionalId}
                   onChange={(e) =>
-                    setFormData({ ...formData, componentOptionalId: e.target.value })
+                    setFormData({
+                      ...formData,
+                      componentOptionalId: e.target.value,
+                    })
                   }
                   required
                 >
                   <option value="">Select Component Option</option>
                   {componentOptionals.map((option) => (
-                    <option key={option.componentOptionalId} value={option.componentOptionalId}>
+                    <option
+                      key={option.componentOptionalId}
+                      value={option.componentOptionalId}
+                    >
                       {option.componentOptionalName} - {option.description}
                     </option>
                   ))}
@@ -408,7 +487,10 @@ const ItemVariantConfigsManager = () => {
                   id="isActive"
                   value={formData.isActive.toString()}
                   onChange={(e) =>
-                    setFormData({ ...formData, isActive: e.target.value === 'true' })
+                    setFormData({
+                      ...formData,
+                      isActive: e.target.value === "true",
+                    })
                   }
                 >
                   <option value="true">Active</option>

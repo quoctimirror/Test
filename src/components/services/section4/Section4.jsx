@@ -13,21 +13,21 @@ const Section4 = () => {
   const handleReturnExchangeClick = async () => {
     await optimizedTransitionUtils.transitionToRoute(
       navigate,
-      `${ROUTES.SUPPORT}?tab=return-exchange`
+      `${ROUTES.SUPPORT_DETAIL}?tab=return-exchange`
     );
   };
 
   const handleSizingGuideClick = async () => {
     await optimizedTransitionUtils.transitionToRoute(
       navigate,
-      `${ROUTES.SUPPORT}?tab=sizing-guide`
+      `${ROUTES.SUPPORT_DETAIL}?tab=sizing-guide`
     );
   };
 
   const handleWarrantyInfoClick = async () => {
     await optimizedTransitionUtils.transitionToRoute(
       navigate,
-      `${ROUTES.SUPPORT}?tab=warranty-info`
+      `${ROUTES.SUPPORT_DETAIL}?tab=warranty-info`
     );
   };
 

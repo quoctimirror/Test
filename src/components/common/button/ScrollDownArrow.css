@@ -1,8 +1,8 @@
 /* Scroll down arrow button */
 .scroll-down-arrow {
   display: inline-flex;
-  width: 50px;
-  height: 50px;
+  width: 57px;
+  height: 57px;
   padding: 0;
   justify-content: center;
   align-items: center;
@@ -20,6 +20,8 @@
 
 .scroll-down-arrow svg {
   mix-blend-mode: difference;
+  width: 26px;
+  height: 26px;
 }
 
 .scroll-down-arrow:hover {
@@ -49,8 +51,13 @@
 /* Small Laptop (1023px and below) */
 @media (max-width: 1023px) {
   .scroll-down-arrow {
-    width: 50px;
-    height: 50px;
+    width: 57px;
+    height: 57px;
+  }
+
+  .scroll-down-arrow svg {
+    width: 26px;
+    height: 26px;
   }
 }
 
@@ -59,6 +66,11 @@
   .scroll-down-arrow {
     width: 48px;
     height: 48px;
+  }
+
+  .scroll-down-arrow svg {
+    width: 22px;
+    height: 22px;
   }
 }
 

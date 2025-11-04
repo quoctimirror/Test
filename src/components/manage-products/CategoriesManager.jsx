@@ -44,7 +44,6 @@ const CategoriesManager = () => {
       const response = await api.get("/api/categories");
       if (response.status === 200) {
         const data = response.data;
-        console.log("API Categories data:", data); // Debug log
 
         // Transform API data to match our component structure if needed
         const transformedData = data.map((item) => ({
@@ -58,7 +57,6 @@ const CategoriesManager = () => {
           isActive: item.isActive,
         }));
 
-        console.log("Transformed Categories:", transformedData); // Debug log
         setCategories(transformedData);
       } else {
         console.error("Failed to fetch categories:", response.status);
@@ -124,20 +122,17 @@ const CategoriesManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('=== HANDLE SUBMIT CALLED ===');
-    console.log('Current formData:', formData);
 
     try {
       if (editingCategory) {
         // Update existing category
-        console.log('Updating category with ID:', editingCategory.id);
-        console.log('Form data being sent:', formData);
-        const response = await api.put(`/api/categories/${editingCategory.id}`, formData);
-        console.log('Update response status:', response.status);
-        
+        const response = await api.put(
+          `/api/categories/${editingCategory.id}`,
+          formData
+        );
+
         if (response.status === 200) {
           const updatedCategory = response.data;
-          console.log('API response after update:', updatedCategory);
           const transformedCategory = {
             ...updatedCategory,
             id: updatedCategory.categoryId || updatedCategory.id,
@@ -147,19 +142,16 @@ const CategoriesManager = () => {
             createdBy: updatedCategory.createdBy,
             updatedBy: updatedCategory.updatedBy,
             createdAt: updatedCategory.createdAt,
-            updatedAt: updatedCategory.updatedAt
+            updatedAt: updatedCategory.updatedAt,
           };
-          console.log('Updating category:', editingCategory.id, 'with data:', transformedCategory);
           setCategories(
             categories.map((cat) => {
               if (cat.id === editingCategory.id) {
-                console.log('Found matching category, updating:', cat.id);
                 return transformedCategory;
               }
               return cat;
             })
           );
-          console.log('Categories after update:', categories);
         } else {
           console.error("Failed to update category");
           // Fallback to local update
@@ -184,7 +176,7 @@ const CategoriesManager = () => {
             createdBy: newCategory.createdBy,
             updatedBy: newCategory.updatedBy,
             createdAt: newCategory.createdAt,
-            updatedAt: newCategory.updatedAt
+            updatedAt: newCategory.updatedAt,
           };
           setCategories([...categories, transformedCategory]);
         } else {
@@ -240,7 +232,9 @@ const CategoriesManager = () => {
           setCategories(categories.filter((cat) => cat.id !== id));
         } else {
           console.error("Failed to delete category:", response.data);
-          setErrorMessage(response.data?.message || "Failed to delete category");
+          setErrorMessage(
+            response.data?.message || "Failed to delete category"
+          );
         }
       } catch (error) {
         console.error("Error deleting category:", error);
@@ -272,7 +266,11 @@ const CategoriesManager = () => {
       </div>
 
       {errorMessage && (
-        <div className={`error-message-container ${isErrorFadingOut ? 'fade-out' : ''}`}>
+        <div
+          className={`error-message-container ${
+            isErrorFadingOut ? "fade-out" : ""
+          }`}
+        >
           <p>{errorMessage}</p>
           <button className="error-close-button" onClick={closeErrorMessage}>
             ×
@@ -304,9 +302,14 @@ const CategoriesManager = () => {
               </tr>
             ) : (
               categories.map((category) => {
-                console.log("Rendering category:", category); // Debug log
                 return (
-                  <tr key={category.id || category.categoryId || `category-${category.categoryName}`}>
+                  <tr
+                    key={
+                      category.id ||
+                      category.categoryId ||
+                      `category-${category.categoryName}`
+                    }
+                  >
                     <td>{category.id}</td>
                     <td>{category.categoryName}</td>
                     <td>{category.description}</td>
@@ -384,7 +387,10 @@ const CategoriesManager = () => {
                   id="isActive"
                   value={formData.isActive.toString()}
                   onChange={(e) =>
-                    setFormData({ ...formData, isActive: e.target.value === 'true' })
+                    setFormData({
+                      ...formData,
+                      isActive: e.target.value === "true",
+                    })
                   }
                 >
                   <option value="true">Active</option>

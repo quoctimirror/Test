@@ -4,24 +4,18 @@ import Logo from "@assets/images/Logo.svg";
 import { ROUTES } from "@/constants/routes";
 import ScrollDownArrow from "@/components/common/button/ScrollDownArrow";
 import SoundButton from "@/components/common/button/SoundButton";
-import "./ScrollEffect.css";
+import "./ScrollEffectTestV2.css";
 
-export default function ScrollEffect({ isAnyOverlayOpen = false }) {
+export default function ScrollEffectTestV2() {
   const location = useLocation();
   const isImmersiveShowroomPage =
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
-  // Original ScrollEffect refs
-  const finalGradientRef = useRef(null);
-  const finalGradientTopRef = useRef(null);
-  const finalGradientBottomRef = useRef(null);
-  const gradientInitialRef = useRef(null);
+  // Simple gradient refs for phase 1
+  const gradientTopRef = useRef(null);
+  const gradientBottomRef = useRef(null);
   const mainLogoRef = useRef(null);
   const containerRef = useRef(null);
-
-  // Split animation refs
-  const splitTopRef = useRef(null);
-  const splitBottomRef = useRef(null);
 
   // MirrorIntroduce state and refs
   const canvasRef = useRef(null);
@@ -39,7 +33,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
 
   const numFrames = 249; // Actual frames from Landscape_3D.mp4 (8.3s * 30fps)
   const scrollEffectHeight = 250; // vh for scroll effect - reduced to make mirror introduce start earlier
-  const mirrorIntroduceHeight = 600; // vh for mirror introduce
+  const mirrorIntroduceHeight = 780; // vh for mirror introduce
 
   // Handle sound button click - toggle sound state
   const handleSoundClick = () => {
@@ -58,7 +52,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
     if (scrollY < scrollEffectEnd) {
       // Currently in ScrollEffect section -> scroll to where first text appears
       // Text 1 starts auto-appearing right after split (250vh), so scroll a bit further to see text
-      const textStartPosition = scrollEffectEnd + windowHeight * 0.5; // 250vh + 50vh buffer
+      const textStartPosition = scrollEffectEnd + windowHeight * 0.1; // 250vh + 10vh buffer
       window.scrollTo({
         top: textStartPosition,
         behavior: "smooth",
@@ -230,20 +224,15 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
 
       // If user is in Phase 1 (0 < scrollY < 250vh) and scrolling down
       // AND they were in early Phase 1 (not coming back from Phase 2)
-      if (
-        scrollY > 0 &&
-        scrollY < scrollEffectEnd &&
-        isScrollingDown &&
-        wasInEarlyPhase1
-      ) {
+      if (scrollY > 0 && scrollY < scrollEffectEnd && isScrollingDown && wasInEarlyPhase1) {
         isAutoScrollingRef.current = true;
 
-        // Auto-scroll to where text 1 appears (250vh + 50vh buffer)
-        const textStartPosition = scrollEffectEnd + windowHeight * 0.5;
+        // Auto-scroll to where text 1 appears (250vh + 15vh buffer)
+        const textStartPosition = scrollEffectEnd + windowHeight * 0.15;
 
         window.scrollTo({
           top: textStartPosition,
-          behavior: "smooth",
+          behavior: 'smooth'
         });
 
         // Reset flag after scroll completes (smooth scroll takes ~1.5s)
@@ -253,9 +242,9 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
       }
     };
 
-    window.addEventListener("scroll", handleAutoScroll, { passive: true });
+    window.addEventListener('scroll', handleAutoScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", handleAutoScroll);
+      window.removeEventListener('scroll', handleAutoScroll);
       if (autoScrollTimeout) {
         clearTimeout(autoScrollTimeout);
       }
@@ -277,166 +266,43 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
       // Calculate which section we're in
       const scrollEffectEnd = (scrollEffectHeight / 100) * windowHeight; // Use scrollEffectHeight variable
 
-      // Phase 1: ScrollEffect (0 to scrollEffectHeight vh)
+      // Phase 1: Simple gradient fade (like ScrollEffectTest)
       if (scrollY <= scrollEffectEnd) {
         const progress = scrollY / scrollEffectEnd;
+        const opacity = Math.max(1 - progress, 0);
 
-        // Make Phase 2 canvas visible early so transparent center shows it
-        if (phase2CanvasLayerRef.current) {
-          // Fade in canvas as gradient wipe starts (0-30% progress)
-          const canvasOpacity = Math.min(progress / 0.3, 1);
-          phase2CanvasLayerRef.current.style.opacity = canvasOpacity;
+        // Fade out gradients
+        if (gradientTopRef.current) {
+          gradientTopRef.current.style.opacity = opacity;
+        }
+        if (gradientBottomRef.current) {
+          gradientBottomRef.current.style.opacity = opacity;
+        }
+
+        // Fade out logo
+        if (mainLogoRef.current) {
+          mainLogoRef.current.style.opacity = opacity;
         }
 
         // Keep mirror introduce text section invisible during Phase 1
         if (mirrorIntroduceSectionRef.current) {
           mirrorIntroduceSectionRef.current.style.opacity = 0;
+          mirrorIntroduceSectionRef.current.style.display = 'none';
         }
 
-        // Original scroll effect animations
-        if (finalGradientRef.current) {
-          // Complete gradient wipe by 60% progress instead of 100%
-          const wipeProgress = Math.min(progress / 0.6, 1);
-          const wipePosition = 400 - wipeProgress * 350;
-          finalGradientRef.current.style.setProperty(
-            "--wipe-progress",
-            `${wipePosition}%`
-          );
-        }
-        if (finalGradientTopRef.current) {
-          const wipeProgress = Math.min(progress / 0.6, 1);
-          const wipePosition = 400 - wipeProgress * 350;
-          finalGradientTopRef.current.style.setProperty(
-            "--wipe-progress",
-            `${wipePosition}%`
-          );
-        }
-        if (finalGradientBottomRef.current) {
-          const wipeProgress = Math.min(progress / 0.6, 1);
-          const wipePosition = 400 - wipeProgress * 350;
-          finalGradientBottomRef.current.style.setProperty(
-            "--wipe-progress",
-            `${wipePosition}%`
-          );
-        }
-
-        if (mainLogoRef.current) {
-          let logoOpacity = 1;
-
-          if (progress >= 0.5 && progress <= 0.6) {
-            // Logo fade out from 50% to 60% (175vh to 210vh) - earlier
-            const logoFadeProgress = (progress - 0.5) / 0.1;
-            logoOpacity = 1 - logoFadeProgress;
-          } else if (progress > 0.6) {
-            logoOpacity = 0;
-          } else if (progress < 0.5) {
-            logoOpacity = 1;
-          }
-
-          mainLogoRef.current.style.opacity = logoOpacity;
-        }
-
-        // Fade animation at end of scroll effect (93-100% progress)
-        // Extended range to make animation smoother when scrolling back
-        if (splitTopRef.current && splitBottomRef.current) {
-          if (progress >= 0.93) {
-            // Calculate fade progress with extended range (93-100% instead of 95-100%)
-            const fadeProgress = Math.min((progress - 0.93) / 0.07, 1); // 0 to 1
-
-            // Fade from center: top half fades upward, bottom half fades downward
-            const maskPosition = fadeProgress * 100; // 0% to 100%
-
-            // Top half: fade from 50vh (center) to 0vh (top)
-            splitTopRef.current.style.maskImage = `linear-gradient(to top, transparent ${maskPosition}%, black 100%)`;
-            splitTopRef.current.style.webkitMaskImage = `linear-gradient(to top, transparent ${maskPosition}%, black 100%)`;
-
-            // Bottom half: fade from 50vh (center) to 100vh (bottom)
-            splitBottomRef.current.style.maskImage = `linear-gradient(to bottom, transparent ${maskPosition}%, black 100%)`;
-            splitBottomRef.current.style.webkitMaskImage = `linear-gradient(to bottom, transparent ${maskPosition}%, black 100%)`;
-
-            // Fade out combined sections smoothly instead of instant display toggle
-            const combinedOpacity = Math.max(0, 1 - fadeProgress * 2);
-            if (finalGradientRef.current) {
-              finalGradientRef.current.style.opacity = combinedOpacity;
-            }
-            if (gradientInitialRef.current) {
-              gradientInitialRef.current.style.opacity = combinedOpacity;
-            }
-
-            // Fade in split sections smoothly
-            const splitOpacity = Math.min(1, fadeProgress * 2);
-            splitTopRef.current.style.opacity = splitOpacity;
-            splitBottomRef.current.style.opacity = splitOpacity;
-
-            // Fade in canvas layer during split animation
-            if (phase2CanvasLayerRef.current) {
-              // Ensure canvas is fully visible by end of split
-              phase2CanvasLayerRef.current.style.opacity = 1;
-            }
-
-            // Much slower mirror introduce fade in - very gradual
-            if (mirrorIntroduceSectionRef.current) {
-              // Use stronger easing function to make opacity fade much slower
-              const easedOpacity = Math.pow(fadeProgress, 4); // Higher power = much slower start
-              mirrorIntroduceSectionRef.current.style.opacity = easedOpacity;
-            }
-
-            // Always show both to allow opacity transitions
-            splitTopRef.current.style.display = "block";
-            splitBottomRef.current.style.display = "block";
-            if (finalGradientRef.current) {
-              finalGradientRef.current.style.display = "block";
-            }
-            if (gradientInitialRef.current) {
-              gradientInitialRef.current.style.display = "block";
-            }
-          } else {
-            // Reset mask
-            splitTopRef.current.style.maskImage = "none";
-            splitTopRef.current.style.webkitMaskImage = "none";
-            splitBottomRef.current.style.maskImage = "none";
-            splitBottomRef.current.style.webkitMaskImage = "none";
-
-            // Hide mirror introduce when fade is not active
-            if (mirrorIntroduceSectionRef.current) {
-              mirrorIntroduceSectionRef.current.style.opacity = 0;
-            }
-
-            // Reset canvas layer opacity based on early phase progress
-            if (phase2CanvasLayerRef.current) {
-              // Canvas fades in 0-30% progress
-              const canvasOpacity = Math.min(progress / 0.3, 1);
-              phase2CanvasLayerRef.current.style.opacity = canvasOpacity;
-            }
-
-            // Reset opacities
-            splitTopRef.current.style.opacity = 0;
-            splitBottomRef.current.style.opacity = 0;
-            if (finalGradientRef.current) {
-              finalGradientRef.current.style.opacity = 1;
-            }
-            if (gradientInitialRef.current) {
-              gradientInitialRef.current.style.opacity = 1;
-            }
-
-            // Hide split sections, show combined sections
-            splitTopRef.current.style.display = "none";
-            splitBottomRef.current.style.display = "none";
-            // Reset gradient layers display to block when scrolling back to Phase 1
-            if (finalGradientRef.current) {
-              finalGradientRef.current.style.display = "block";
-            }
-            if (gradientInitialRef.current) {
-              gradientInitialRef.current.style.display = "block";
-            }
-          }
-        }
-
-        // Reset mirror introduce elements
+        // Reset frame to first
         setFrameIndex(0);
       }
       // Phase 2: MirrorIntroduce (after scrollEffectHeight vh)
       else {
+        // Hide gradients completely
+        if (gradientTopRef.current) {
+          gradientTopRef.current.style.opacity = 0;
+        }
+        if (gradientBottomRef.current) {
+          gradientBottomRef.current.style.opacity = 0;
+        }
+
         const mirrorScrolled = scrollY - scrollEffectEnd;
         const mirrorScrollRange =
           (mirrorIntroduceHeight / 100) * windowHeight - windowHeight;
@@ -452,33 +318,9 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
         );
         setFrameIndex(index);
 
-        // Ensure Phase 2 canvas is fully visible
-        if (phase2CanvasLayerRef.current) {
-          phase2CanvasLayerRef.current.style.opacity = 1;
-        }
-
-        // Ensure all phase 1 elements are properly hidden
-        if (mainLogoRef.current) {
-          mainLogoRef.current.style.opacity = 0;
-        }
-
-        // Hide all Phase 1 gradient layers in Phase 2
-        if (splitTopRef.current && splitBottomRef.current) {
-          // Hide split sections completely in Phase 2
-          splitTopRef.current.style.display = "none";
-          splitBottomRef.current.style.display = "none";
-
-          // Hide gradient layers
-          if (finalGradientRef.current) {
-            finalGradientRef.current.style.display = "none";
-          }
-          if (gradientInitialRef.current) {
-            gradientInitialRef.current.style.display = "none";
-          }
-        }
-
-        // Ensure mirror introduce is fully visible
+        // Show mirror introduce text
         if (mirrorIntroduceSectionRef.current) {
+          mirrorIntroduceSectionRef.current.style.display = 'block';
           mirrorIntroduceSectionRef.current.style.opacity = 1;
         }
       }
@@ -776,7 +618,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
             }`}
           >
             <h1
-              className="heading-2--no-margin slide-title"
+              className="heading-1--no-margin slide-title"
               style={{
                 opacity: index === 0 ? 1 : titleOpacity, // Text 1: No individual fade, Others: Staggered
                 transform: index === 0 ? "translateY(0%)" : titleTransform,
@@ -791,14 +633,14 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
             <p
               className={
                 index === 0
-                  ? "heading-2--no-margin slide-subtitle"
+                  ? "heading-1--no-margin slide-subtitle"
                   : "bodytext-4--no-margin slide-subtitle"
               }
               style={{
                 opacity: index === 0 ? 1 : subtitleOpacity, // Text 1: No individual fade, Others: Staggered
                 transform: index === 0 ? "translateY(0%)" : subtitleTransform,
                 transition: "transform 0.3s ease-out, opacity 0.3s ease-out",
-                marginTop: index === 0 ? 0 : "12px", // Gap 24px only for slides 2, 3, 4
+                marginTop: index === 0 ? 0 : "24px", // Gap 24px only for slides 2, 3, 4
               }}
             >
               {slide.subtitle}
@@ -822,52 +664,33 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
         </div>
       </div>
 
-      {/* Original ScrollEffect Section */}
+      {/* Phase 1: Simple gradient fade section */}
       <div className="scroll-effect-section">
-        <div className="scroll-container">
-          <div className="homepage">
-            {/* Split sections for animation */}
-            <div className="split-section split-top" ref={splitTopRef}>
-              <div className="gradient-initial">
-                <div className="gradient-top"></div>
-              </div>
-              <div className="gradient-final" ref={finalGradientTopRef}></div>
-            </div>
+        <div className="homepage">
+          {/* Split gradients - fade out on scroll */}
+          <div className="gradient-top-half">
+            <div className="gradient-top" ref={gradientTopRef}></div>
+          </div>
+          <div className="gradient-bottom-half">
+            <div className="gradient-bottom" ref={gradientBottomRef}></div>
+          </div>
 
-            <div className="split-section split-bottom" ref={splitBottomRef}>
-              <div className="gradient-initial">
-                <div className="gradient-bottom"></div>
-              </div>
-              <div
-                className="gradient-final"
-                ref={finalGradientBottomRef}
-              ></div>
-            </div>
-
-            {/* Original combined sections for normal scroll effect */}
-            <div className="gradient-initial" ref={gradientInitialRef}>
-              <div className="gradient-top"></div>
-              <div className="gradient-bottom"></div>
-            </div>
-
-            <div className="gradient-final" ref={finalGradientRef}></div>
-
-            <div className="logo-center" ref={mainLogoRef}>
-              <img src={Logo} alt="Mirror Logo" className="main-logo" />
-            </div>
+          {/* Logo in center */}
+          <div className="logo-center" ref={mainLogoRef}>
+            <img src={Logo} alt="Mirror Logo" className="main-logo" />
           </div>
         </div>
       </div>
 
-      {/* Fixed Sound Button - visible except in Immersive Showroom and when overlay is open */}
-      {!isImmersiveShowroomPage && !isAnyOverlayOpen && (
+      {/* Fixed Sound Button - visible except in Immersive Showroom */}
+      {!isImmersiveShowroomPage && (
         <div className="fixed-sound-container">
           <SoundButton isActive={isSoundActive} onClick={handleSoundClick} />
         </div>
       )}
 
-      {/* Fixed Arrow Button - visible except in footer and when overlay is open */}
-      {!isImmersiveShowroomPage && !isAnyOverlayOpen && isArrowVisible && (
+      {/* Fixed Arrow Button - visible except in footer */}
+      {!isImmersiveShowroomPage && isArrowVisible && (
         <div className="fixed-arrow-container">
           <ScrollDownArrow onClick={handleArrowClick} />
         </div>

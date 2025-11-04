@@ -12,7 +12,7 @@ const Section5 = () => {
   const handleViewAllFAQs = async () => {
     await optimizedTransitionUtils.transitionToRoute(
       navigate,
-      `${ROUTES.SUPPORT}?tab=faqs`
+      `${ROUTES.SUPPORT_DETAIL}?tab=faqs`
     );
   };
 

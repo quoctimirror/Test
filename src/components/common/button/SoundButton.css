@@ -8,8 +8,8 @@
 
 .sound-button button {
   display: inline-flex;
-  width: 50px;
-  height: 50px;
+  width: 57px;
+  height: 57px;
   padding: 0;
   justify-content: center;
   align-items: center;
@@ -31,8 +31,8 @@
 
 /* Wave Container - overflow hidden to crop the wave */
 .wave-container {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -41,8 +41,8 @@
 
 /* Sound Wave SVG */
 .sound-wave-svg {
-  width: 120px;
-  height: 24px;
+  width: 130px;
+  height: 26px;
   display: block;
   flex-shrink: 0;
   mix-blend-mode: difference;
@@ -111,8 +111,18 @@
   }
 
   .sound-button button {
-    width: 50px;
-    height: 50px;
+    width: 57px;
+    height: 57px;
+  }
+
+  .wave-container {
+    width: 26px;
+    height: 26px;
+  }
+
+  .sound-wave-svg {
+    width: 130px;
+    height: 26px;
   }
 }
 

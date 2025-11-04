@@ -19,18 +19,17 @@ const ChangePassword = ({ onClose }) => {
     newPassword: false,
     confirmPassword: false,
   });
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" });
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
 
   // SỬA TÊN FUNCTION
   const getAuthToken = () => {
     const accessToken =
       localStorage.getItem("accessToken") ||
       sessionStorage.getItem("accessToken");
-    console.log("AccessToken found:", !!accessToken);
-    console.log(
-      "Token preview:",
-      accessToken ? accessToken.substring(0, 50) + "..." : "null"
-    );
     return accessToken;
   };
 
@@ -90,15 +89,12 @@ const ChangePassword = ({ onClose }) => {
         return;
       }
 
-      console.log("Sending request to change password...");
-
       const response = await api.post("/api/v1/users/change-password", {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
         confirmPassword: passwordData.confirmPassword,
       });
 
-      console.log("Password changed successfully:", response.data);
       setToast({
         show: true,
         message: "Password changed successfully!",
@@ -142,7 +138,9 @@ const ChangePassword = ({ onClose }) => {
 
         <form onSubmit={handleSubmit} className="change-password-form">
           <div className="change-password-field-container">
-            <label className="change-password-field-label">Current Password*</label>
+            <label className="change-password-field-label">
+              Current Password*
+            </label>
             <div className="change-password-password-input-container">
               <input
                 type={showPasswords.currentPassword ? "text" : "password"}
@@ -177,7 +175,9 @@ const ChangePassword = ({ onClose }) => {
               </button>
             </div>
             {errors.currentPassword && (
-              <p className="change-password-input-error">{errors.currentPassword}</p>
+              <p className="change-password-input-error">
+                {errors.currentPassword}
+              </p>
             )}
           </div>
 
@@ -213,12 +213,16 @@ const ChangePassword = ({ onClose }) => {
               </button>
             </div>
             {errors.newPassword && (
-              <p className="change-password-input-error">{errors.newPassword}</p>
+              <p className="change-password-input-error">
+                {errors.newPassword}
+              </p>
             )}
           </div>
 
           <div className="change-password-field-container">
-            <label className="change-password-field-label">Confirm New Password*</label>
+            <label className="change-password-field-label">
+              Confirm New Password*
+            </label>
             <div className="change-password-password-input-container">
               <input
                 type={showPasswords.confirmPassword ? "text" : "password"}
@@ -253,7 +257,9 @@ const ChangePassword = ({ onClose }) => {
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="change-password-input-error">{errors.confirmPassword}</p>
+              <p className="change-password-input-error">
+                {errors.confirmPassword}
+              </p>
             )}
           </div>
 
@@ -264,7 +270,11 @@ const ChangePassword = ({ onClose }) => {
           )}
 
           <div className="change-password-buttons">
-            <button type="button" onClick={onClose} className="change-password-cancel-button">
+            <button
+              type="button"
+              onClick={onClose}
+              className="change-password-cancel-button"
+            >
               Cancel
             </button>
             <ShineGlassButton
@@ -283,7 +293,9 @@ const ChangePassword = ({ onClose }) => {
           message={toast.message}
           type={toast.type}
           duration={10000}
-          onClose={() => setToast({ show: false, message: "", type: "success" })}
+          onClose={() =>
+            setToast({ show: false, message: "", type: "success" })
+          }
         />
       )}
     </div>

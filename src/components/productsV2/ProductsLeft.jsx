@@ -24,7 +24,6 @@ const ProductsLeft = () => {
 
     // Event listener khi viewer đã sẵn sàng
     const handleViewerReady = async (ev) => {
-      console.log("ready");
       const viewer = ev.detail.viewer; // Lấy instance của viewer
       // Có thể sử dụng viewer instance để control viewer (zoom, rotate, etc.)
     };

@@ -29,35 +29,53 @@ html {
   z-index: 3;
 }
 
-/* Split sections for fade animation */
-.split-section {
+/* Top half wrapper */
+.gradient-top-half {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 50vh;
+  overflow: hidden;
   z-index: 2;
-  display: none; /* Initially hidden */
 }
 
-.split-top {
-  top: 0;
-  height: 50vh;
-}
-
-.split-bottom {
+/* Bottom half wrapper */
+.gradient-bottom-half {
+  position: absolute;
   top: 50vh;
+  left: 0;
+  width: 100%;
   height: 50vh;
+  overflow: hidden;
+  z-index: 2;
 }
 
-/* Layer containing initial gradient */
-.gradient-initial {
+/* Top gradient - simple fade style */
+.gradient-top {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  background: linear-gradient(83deg, #bc224c 37.61%, #000 115.98%);
+  transform: rotate(-180deg);
+  opacity: 1;
+  transition: opacity 0.1s linear;
+  z-index: 2;
+}
+
+/* Bottom gradient - simple fade style */
+.gradient-bottom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(96deg, #000 0.98%, #bc224c 98.65%);
+  opacity: 1;
+  transition: opacity 0.1s linear;
+  z-index: 2;
 }
 
 /* Phase 2 Canvas Sticky Wrapper */
@@ -68,19 +86,18 @@ html {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 10;
+  z-index: 1;
 }
 
-/* Phase 2 Canvas Layer - sticky positioned */
+/* Phase 2 Canvas Layer - sticky positioned, always visible behind gradients */
 .phase2-canvas-layer {
   position: sticky;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  background: transparent;
+  opacity: 1;
+  background: #000;
   pointer-events: none;
 }
 
@@ -89,7 +106,7 @@ html {
   height: 100vh;
   object-fit: cover;
   object-position: center;
-  background: transparent;
+  background: #000;
 }
 
 .phase2-canvas-layer .loading-overlay {
@@ -112,126 +129,24 @@ html {
   animation: pulse 2s infinite;
 }
 
-/* Final gradient (light pink) will be on top */
-.gradient-final {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
-  /* Gradient with transparent center for see-through effect */
-  background: radial-gradient(
-    ellipse 120% 100% at 50% 50%,
-    transparent 0%,
-    rgba(188, 34, 76, 0.4) 25%,
-    rgba(188, 34, 76, 0.8) 40%,
-    #bc224c 55%
-  );
-  z-index: 5;
-
-  --wipe-progress: 400%;
-  --feather-amount: 15%;
-
-  mask-image: radial-gradient(
-    ellipse 150vw 150vh at var(--wipe-progress) 50%,
-    black 10%,
-    transparent 20%
-  );
-
-  -webkit-mask-image: radial-gradient(
-    ellipse 700vw 700vh at var(--wipe-progress) 50%,
-    black 10%,
-    transparent 50%
-  );
-
-  /* mask-image: linear-gradient(
-    to left,
-    transparent 0,
-    transparent calc(var(--wipe-progress) - var(--feather-amount)),
-    black calc(var(--wipe-progress) + var(--feather-amount)),
-    black 100%
-  );
-
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    transparent calc(var(--wipe-progress) - var(--feather-amount)),
-    black calc(var(--wipe-progress) + var(--feather-amount)),
-    black 100%
-  ); */
-}
-
-/* Wrapper div for elements that need to fade */
-.elements-to-fade {
-  /* Make it an absolute layer, covering the full screen */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
-  /* Set highest z-index so it and its children are on top */
-  z-index: 4;
-
-  /* Keep transition for smoothness */
-  transition: opacity 0.1s linear;
-
-  /* VERY IMPORTANT: This layer will block mouse events.
-     This property makes this layer "transparent" to clicks,
-     allowing you to interact with buttons below when needed. */
-  pointer-events: none;
-}
-
 .homepage {
   height: 100vh;
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   color: white;
-  z-index: 1;
+  z-index: 3;
   overflow: hidden;
-}
-
-.gradient-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50vh;
-  transform: rotate(-180deg);
-  opacity: 1;
-  background: linear-gradient(83deg, #bc224c 37.61%, #000 115.98%);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
-}
-
-.gradient-bottom {
-  position: absolute;
-  top: calc(50vh - 1px); /* Overlap by 1px to avoid gap */
-  left: 0;
-  width: 100%;
-  height: calc(50vh + 1px); /* Add 1px to height */
-  transform: rotate(0deg);
-  opacity: 1;
-  background: linear-gradient(96deg, #000 0.98%, #bc224c 98.65%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
 }
 
 /* Logo Center */
 .logo-center {
-  position: absolute;
-  top: 49.75%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 6;
-  transition: opacity 0.1s linear;
+  position: relative;
+  z-index: 10;
 }
 
 .main-logo {
@@ -627,7 +542,7 @@ html {
 
 .mirror-introduce-section {
   position: relative;
-  height: 600vh;
+  height: 800vh;
   margin: 0;
   padding: 0;
   pointer-events: none;

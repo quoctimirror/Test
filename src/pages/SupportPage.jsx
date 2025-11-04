@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
-import Support from "@components/support/Support";
+import Section3 from "@components/services/section3/Section3";
+import Section4 from "@components/services/section4/Section4";
+import Section5 from "@components/services/section5/Section5";
+import ContactUs from "@components/contactUs/ContactUs";
 
 const SupportPage = () => {
   useEffect(() => {
@@ -13,7 +16,10 @@ const SupportPage = () => {
   return (
     <div className="support-page">
       <main>
-        <Support />
+        <Section3 />
+        <Section4 />
+        <Section5 />
+        <ContactUs />
       </main>
     </div>
   );

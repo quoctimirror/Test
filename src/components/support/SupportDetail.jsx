@@ -8,7 +8,7 @@ import FAQs from "./FAQs";
 import ContactUs from "@components/contactUs/ContactUs";
 import { ROUTES } from "@/constants/routes";
 
-const Support = () => {
+const SupportDetail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("return-exchange");
@@ -39,7 +39,7 @@ const Support = () => {
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
-    navigate(`${ROUTES.SUPPORT}?tab=${tabId}`, { replace: true });
+    navigate(`${ROUTES.SUPPORT_DETAIL}?tab=${tabId}`, { replace: true });
   };
 
   const handleScrollRight = () => {
@@ -97,4 +97,4 @@ const Support = () => {
   );
 };
 
-export default Support;
+export default SupportDetail;

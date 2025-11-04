@@ -1,9 +1,9 @@
 .services-section1 {
-  height: 100vh;
-  background-image: url("/services/section_1.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  height: 67vh;
+  background:
+    linear-gradient(180deg, #000 0%, #BC224C 54.81%, #F6F6F6 100%),
+    linear-gradient(180deg, rgba(246, 246, 246, 0.00) 50%, #F6F6F6 100%),
+    url("/services/section_1.jpg") lightgray 50% / cover no-repeat;
   position: relative;
   display: flex;
   align-items: center;
@@ -18,6 +18,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
   z-index: 1;
+  display: none; /* Ẩn overlay ở desktop */
 }
 
 .section1-container {
@@ -70,6 +71,18 @@
 
 /* Tablet (481px - 1024px) */
 @media screen and (max-width: 1024px) {
+  .services-section1 {
+    height: 100vh;
+    background-image: url("/services/section_1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .section1-background-overlay {
+    display: block; /* Hiển thị lại overlay cho tablet */
+  }
+
   .section1-content {
     width: 62%;
   }

@@ -12,7 +12,6 @@ const Footer = () => {
 
   const handleSignUp = () => {
     if (email) {
-      console.log("Sign up with email:", email);
       setEmail("");
     }
   };
@@ -48,6 +47,16 @@ const Footer = () => {
     }
     sessionStorage.setItem("scrollToTop", "true");
     await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.SERVICES);
+  };
+
+  const handleSupportClick = async (e) => {
+    e.preventDefault();
+    if (window.location.pathname === ROUTES.SUPPORT) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    sessionStorage.setItem("scrollToTop", "true");
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.SUPPORT);
   };
 
   const handleAboutClick = async (e) => {
@@ -121,7 +130,15 @@ const Footer = () => {
                     onClick={handleServicesClick}
                     className="footer-link-button"
                   >
-                    Service & Support
+                    Service
+                  </UnderlineButton>
+                </li>
+                <li>
+                  <UnderlineButton
+                    onClick={handleSupportClick}
+                    className="footer-link-button"
+                  >
+                    Support
                   </UnderlineButton>
                 </li>
                 <li>

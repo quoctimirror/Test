@@ -25,7 +25,6 @@ const Services = () => {
   ];
 
   const handleViewDetail = (serviceId) => {
-    console.log("View service detail:", serviceId);
     // Navigate to service detail page
   };
 
@@ -38,7 +37,9 @@ const Services = () => {
               <img src={service.image} alt={service.name} />
             </div>
             <div className="profile-item-info">
-              <h3 className="profile-item-name heading-3--no-margin">{service.name}</h3>
+              <h3 className="profile-item-name heading-3--no-margin">
+                {service.name}
+              </h3>
             </div>
             <div className="profile-item-actions">
               <span className="profile-item-date bodytext-3--no-margin">
