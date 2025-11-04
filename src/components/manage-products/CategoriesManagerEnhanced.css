@@ -102,6 +102,21 @@
   line-height: 1.5;
 }
 
+.category-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.35rem 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.category-meta span strong {
+  color: #1f2937;
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
 .category-actions {
   display: flex;
   gap: 0.5rem;
@@ -497,6 +512,38 @@
 
 .modal-form {
   padding: 1.5rem;
+}
+
+.misa-reference-block {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 1.5rem;
+}
+
+.misa-reference-block h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.misa-reference-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.misa-reference-block ul li span {
+  font-weight: 600;
+  margin-right: 0.35rem;
+  color: #1f2937;
 }
 
 .form-group {

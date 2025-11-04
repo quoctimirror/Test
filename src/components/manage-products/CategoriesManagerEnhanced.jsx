@@ -20,6 +20,7 @@ const CategoriesManagerEnhanced = () => {
     categoryName: "",
     description: "",
     isActive: true,
+    skuCode: "",
   });
 
   const [componentFormData, setComponentFormData] = useState({
@@ -74,6 +75,11 @@ const CategoriesManagerEnhanced = () => {
           createdBy: item.createdBy,
           updatedBy: item.updatedBy,
           isActive: item.isActive,
+          skuCode: item.skuCode || "",
+          misaCategoryId: item.misaCategoryId || "",
+          misaCategoryCode: item.misaCategoryCode || "",
+          misaCategoryName: item.misaCategoryName || "",
+          misaLastSyncedAt: item.misaLastSyncedAt || null,
         }));
         setCategories(transformedData);
         
@@ -163,6 +169,11 @@ const CategoriesManagerEnhanced = () => {
             categoryName: response.data.categoryName,
             description: response.data.description,
             isActive: response.data.isActive,
+            skuCode: response.data.skuCode || "",
+            misaCategoryId: response.data.misaCategoryId || "",
+            misaCategoryCode: response.data.misaCategoryCode || "",
+            misaCategoryName: response.data.misaCategoryName || "",
+            misaLastSyncedAt: response.data.misaLastSyncedAt || null,
           };
           setCategories(categories.map((cat) =>
             cat.id === editingCategory.id ? transformedCategory : cat
@@ -177,6 +188,11 @@ const CategoriesManagerEnhanced = () => {
             categoryName: response.data.categoryName,
             description: response.data.description,
             isActive: response.data.isActive,
+            skuCode: response.data.skuCode || "",
+            misaCategoryId: response.data.misaCategoryId || "",
+            misaCategoryCode: response.data.misaCategoryCode || "",
+            misaCategoryName: response.data.misaCategoryName || "",
+            misaLastSyncedAt: response.data.misaLastSyncedAt || null,
           };
           setCategories([...categories, transformedCategory]);
         }
@@ -194,6 +210,7 @@ const CategoriesManagerEnhanced = () => {
       categoryName: category.categoryName,
       description: category.description,
       isActive: category.isActive,
+      skuCode: category.skuCode || "",
     });
     setIsModalOpen(true);
   };
@@ -214,14 +231,14 @@ const CategoriesManagerEnhanced = () => {
 
   const openCategoryModal = () => {
     setEditingCategory(null);
-    setCategoryFormData({ categoryName: "", description: "", isActive: true });
+    setCategoryFormData({ categoryName: "", description: "", isActive: true, skuCode: "" });
     setIsModalOpen(true);
   };
 
   const closeCategoryModal = () => {
     setIsModalOpen(false);
     setEditingCategory(null);
-    setCategoryFormData({ categoryName: "", description: "", isActive: true });
+    setCategoryFormData({ categoryName: "", description: "", isActive: true, skuCode: "" });
   };
 
   // Component handlers
@@ -426,6 +443,23 @@ const CategoriesManagerEnhanced = () => {
                   <h3>{category.categoryName}</h3>
                   <p className="category-id">ID: {category.id}</p>
                   <p className="category-description">{category.description}</p>
+                  <div className="category-meta">
+                    <span>
+                      <strong>Mirror SKU:</strong> {category.skuCode || "—"}
+                    </span>
+                    <span>
+                      <strong>MISA ID:</strong> {category.misaCategoryId || "—"}
+                    </span>
+                    <span>
+                      <strong>MISA Code:</strong> {category.misaCategoryCode || "—"}
+                    </span>
+                    <span>
+                      <strong>MISA Name:</strong> {category.misaCategoryName || "—"}
+                    </span>
+                    <span>
+                      <strong>Last Sync:</strong> {category.misaLastSyncedAt ? new Date(category.misaLastSyncedAt).toLocaleString() : "—"}
+                    </span>
+                  </div>
                   <span className={`status-badge ${category.isActive ? "active" : "inactive"}`}>
                     {category.isActive ? "Active" : "Inactive"}
                   </span>
@@ -564,6 +598,30 @@ const CategoriesManagerEnhanced = () => {
                   rows="3"
                 />
               </div>
+              <div className="form-group">
+                <label htmlFor="skuCode">Mirror SKU:</label>
+                <input
+                  type="text"
+                  id="skuCode"
+                  value={categoryFormData.skuCode}
+                  onChange={(e) => setCategoryFormData({ ...categoryFormData, skuCode: e.target.value })}
+                  placeholder="e.g., RNG"
+                />
+              </div>
+              {editingCategory && (
+                <div className="misa-reference-block">
+                  <h4>MISA Reference</h4>
+                  <ul>
+                    <li><span>MISA ID:</span> {editingCategory.misaCategoryId || "—"}</li>
+                    <li><span>MISA Code:</span> {editingCategory.misaCategoryCode || "—"}</li>
+                    <li><span>MISA Name:</span> {editingCategory.misaCategoryName || "—"}</li>
+                    <li>
+                      <span>Last Sync:</span>{" "}
+                      {editingCategory.misaLastSyncedAt ? new Date(editingCategory.misaLastSyncedAt).toLocaleString() : "—"}
+                    </li>
+                  </ul>
+                </div>
+              )}
               <div className="form-group">
                 <label htmlFor="isActive">Status:</label>
                 <select

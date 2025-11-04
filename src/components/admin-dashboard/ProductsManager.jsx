@@ -369,7 +369,11 @@ const ProductsManager = () => {
               <option value="all">All Categories</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
-                  {category.name || category.categoryName || "Unnamed Category"}
+                  {typeof category.name === 'string'
+                    ? category.name
+                    : (typeof category.categoryName === 'string'
+                        ? category.categoryName
+                        : "Unnamed Category")}
                 </option>
               ))}
             </select>
@@ -446,19 +450,36 @@ const ProductsManager = () => {
                       borderRadius: "4px",
                     }}
                   >
-                    {product.sku}
+                    {product.skuId ||
+                     (typeof product.sku === 'string'
+                       ? product.sku
+                       : product.sku?.id || product.sku?.name || "N/A")}
                   </code>
                 </td>
-                <td>{product.category?.name || "No Category"}</td>
+                <td>
+                  {(() => {
+                    if (!product.category) return "No Category";
+                    if (typeof product.category === 'string') return product.category;
+                    if (typeof product.category === 'object') {
+                      return product.category.name || product.category.categoryName || "Unnamed Category";
+                    }
+                    return String(product.category);
+                  })()}
+                </td>
                 <td>
                   {product.vendor ? (
                     <div>
                       <div style={{ fontWeight: "500", color: "#0066cc" }}>
-                        {product.vendor.name}
+                        {typeof product.vendor === 'string'
+                          ? product.vendor
+                          : (product.vendor.name || product.vendor.vendorName || "Unknown Vendor")}
                       </div>
-                      <div style={{ fontSize: "12px", color: "#666" }}>
-                        {product.vendor.code} • {product.vendor.country}
-                      </div>
+                      {typeof product.vendor === 'object' && product.vendor.code && (
+                        <div style={{ fontSize: "12px", color: "#666" }}>
+                          {typeof product.vendor.code === 'string' ? product.vendor.code : String(product.vendor.code || '')}
+                          {product.vendor.country && ` • ${typeof product.vendor.country === 'string' ? product.vendor.country : String(product.vendor.country || '')}`}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <span style={{ color: "#999", fontStyle: "italic" }}>
@@ -674,9 +695,11 @@ const ProductsManager = () => {
                         <option value="">Select Category</option>
                         {categories.map((category) => (
                           <option key={category.id} value={category.id}>
-                            {category.name ||
-                              category.categoryName ||
-                              "Unnamed Category"}
+                            {typeof category.name === 'string'
+                              ? category.name
+                              : (typeof category.categoryName === 'string'
+                                  ? category.categoryName
+                                  : "Unnamed Category")}
                           </option>
                         ))}
                       </select>

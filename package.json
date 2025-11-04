@@ -30,6 +30,7 @@
     "axios": "^1.11.0",
     "gsap": "^3.13.0",
     "leva": "^0.10.0",
+    "lucide-react": "^0.548.0",
     "postprocessing": "^6.37.8",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",

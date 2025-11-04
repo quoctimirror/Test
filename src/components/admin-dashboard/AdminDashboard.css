@@ -15,7 +15,8 @@
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
@@ -26,6 +27,7 @@
   padding: 2rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 
 .admin-sidebar-title {
@@ -47,9 +49,32 @@
 /* Navigation */
 .admin-sidebar-nav {
   flex: 1;
+  min-height: 0;
   padding: 1rem 0;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for sidebar navigation */
+.admin-sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .admin-nav-button {
@@ -98,6 +123,7 @@
   padding: 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 
 .admin-user-info {
@@ -181,6 +207,8 @@
 
 .admin-content-body {
   padding: 2.5rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
 }
 
 /* Responsive Design */
@@ -199,6 +227,7 @@
 
   .admin-content-body {
     padding: 2rem;
+    max-height: calc(100vh - 180px);
   }
 }
 
@@ -207,6 +236,12 @@
     width: 100%;
     position: relative;
     min-height: auto;
+    max-height: none;
+  }
+
+  .admin-sidebar-nav {
+    max-height: 60vh;
+    overflow-y: auto;
   }
 
   .admin-main-content {
@@ -223,6 +258,12 @@
 
   .admin-content-body {
     padding: 1.5rem;
+    max-height: calc(100vh - 150px);
+  }
+
+  .admin-nav-button {
+    padding: 0.875rem 1.25rem;
+    font-size: 14px;
   }
 }
 

@@ -255,6 +255,16 @@ export const productsAPI = {
   toggleFeatured: (id) => api.post(`/api/products/${id}/toggle-featured`),
   updateStock: (id, quantity) =>
     api.put(`/api/products/${id}/stock`, { quantity }),
+
+  // Product Fulfillment operations
+  getPendingFulfillment: () => api.get("/api/products/pending-fulfillment"),
+  getDraft: () => api.get("/api/products/draft"),
+  fulfill: (id, fulfillmentData) =>
+    api.post(`/api/products/${id}/fulfill`, fulfillmentData),
+  markReadyForRelease: (id) =>
+    api.post(`/api/products/${id}/mark-ready-for-release`),
+  publish: (id) => api.post(`/api/products/${id}/publish`),
+  archive: (id) => api.post(`/api/products/${id}/archive`),
 };
 
 // ===== ORDERS API =====
@@ -278,6 +288,17 @@ export const ordersAPI = {
       `/api/orders/${orderId}/payment-schedule/${scheduleId}/payments`,
       payload
     ),
+
+  // NEW: Order Workflow endpoints (MISA SKU enforcement)
+  confirm: (id, data) => api.post(`/api/orders/${id}/confirm`, data),
+  startProduction: (id) => api.post(`/api/orders/${id}/start-production`),
+  ship: (id, data) => api.post(`/api/orders/${id}/ship`, data),
+  complete: (id, data) => api.post(`/api/orders/${id}/complete`, data),
+  getAwaitingMisaSku: () => api.get('/api/orders/awaiting-misa-sku'),
+  markMisaSkuCreated: (id, misaItemId) =>
+    api.post(`/api/orders/${id}/misa-sku-created`, null, {
+      params: { misaItemId }
+    }),
 };
 
 // ===== COLLECTIONS API =====
@@ -351,63 +372,145 @@ export const collectionsAPI = {
   toggleFeatured: (id) => api.patch(`/api/collections/${id}/featured`),
 };
 
-// ===== CATEGORIES API =====
-export const categoriesAPI = {
-  // Get all active categories
-  getAll: () => api.get("/api/categories"),
+// ===== SKU DEFINITIONS API =====
+export const skusAPI = {
+  // Get all active SKU definitions
+  getAll: () =>
+    api.get("/api/skus").then((response) => ({
+      ...response,
+      data: (response.data || []).map((item) => ({
+        ...item,
+        categoryName: item.skuName,
+        categoryCode: item.skuCode,
+      })),
+    })),
 
-  // Get category by ID
-  getById: (id) => api.get(`/api/categories/${id}`),
+  // Get SKU definition by ID
+  getById: (id) =>
+    api.get(`/api/skus/${id}`).then((response) => ({
+      ...response,
+      data: response.data
+        ? {
+            ...response.data,
+            categoryName: response.data.skuName,
+            categoryCode: response.data.skuCode,
+          }
+        : response.data,
+    })),
 
-  // Get category by name
+  // Get SKU definition by name
   getByName: (name) =>
-    api.get(`/api/categories/name/${encodeURIComponent(name)}`),
+    api.get(`/api/skus/name/${encodeURIComponent(name)}`).then((response) => ({
+      ...response,
+      data: response.data
+        ? {
+            ...response.data,
+            categoryName: response.data.skuName,
+            categoryCode: response.data.skuCode,
+          }
+        : response.data,
+    })),
 
-  // Check if category exists by name
+  // Check if SKU exists by name
   checkExists: (name) =>
-    api.get(`/api/categories/exists/${encodeURIComponent(name)}`),
+    api.get(`/api/skus/exists/${encodeURIComponent(name)}`),
 
   // Get active count
-  getActiveCount: () => api.get("/api/categories/count"),
+  getActiveCount: () => api.get("/api/skus/count"),
 
   // CRUD operations
-  create: (categoryData) => api.post("/api/categories", categoryData),
-  update: (id, categoryData) => api.put(`/api/categories/${id}`, categoryData),
-  delete: (id) => api.delete(`/api/categories/${id}`),
-  deactivate: (id) => api.patch(`/api/categories/${id}/deactivate`),
+  create: (skuData) => {
+    const payload = {
+      skuName: skuData.skuName ?? skuData.categoryName,
+      description: skuData.description ?? skuData.categoryDescription,
+      skuCode: skuData.skuCode ?? skuData.categoryCode,
+    };
+    return api.post("/api/skus", payload);
+  },
+  update: (id, skuData) => {
+    const payload = {
+      skuName: skuData.skuName ?? skuData.categoryName,
+      description: skuData.description ?? skuData.categoryDescription,
+      skuCode: skuData.skuCode ?? skuData.categoryCode,
+    };
+    return api.put(`/api/skus/${id}`, payload);
+  },
+  delete: (id) => api.delete(`/api/skus/${id}`),
+  deactivate: (id) => api.patch(`/api/skus/${id}/deactivate`),
 };
+
+// Temporary alias for backwards compatibility with components still using categoriesAPI
+export const categoriesAPI = skusAPI;
 
 // ===== COMPONENTS API =====
 export const componentsAPI = {
   // Get all active components
-  getAll: () => api.get("/api/components"),
+  getAll: () =>
+    api.get("/api/components").then((response) => ({
+      ...response,
+      data: (response.data || []).map((component) => ({
+        ...component,
+        categoryId: component.skuId,
+        categoryName: component.skuName,
+      })),
+    })),
 
   // Get component by ID
-  getById: (id) => api.get(`/api/components/${id}`),
+  getById: (id) =>
+    api.get(`/api/components/${id}`).then((response) => ({
+      ...response,
+      data: response.data
+        ? {
+            ...response.data,
+            categoryId: response.data.skuId,
+            categoryName: response.data.skuName,
+          }
+        : response.data,
+    })),
 
-  // Get components by category ID
-  getByCategoryId: (categoryId) =>
-    api.get(`/api/components/category/${categoryId}`),
+  // Get components by SKU definition ID (legacy name kept for compatibility)
+  getByCategoryId: (skuId) =>
+    api.get(`/api/components/sku/${skuId}`).then((response) => ({
+      ...response,
+      data: (response.data || []).map((component) => ({
+        ...component,
+        categoryId: component.skuId,
+        categoryName: component.skuName,
+      })),
+    })),
 
   // Get component by name
   getByName: (name) =>
     api.get(`/api/components/name/${encodeURIComponent(name)}`),
 
   // Check if component exists
-  checkExists: (name, categoryId) =>
+  checkExists: (name, skuId) =>
     api.get(
       `/api/components/exists/${encodeURIComponent(
         name
-      )}/category/${categoryId}`
+      )}/sku/${skuId}`
     ),
 
   // Get active count
   getActiveCount: () => api.get("/api/components/count"),
 
   // CRUD operations
-  create: (componentData) => api.post("/api/components", componentData),
-  update: (id, componentData) =>
-    api.put(`/api/components/${id}`, componentData),
+  create: (componentData) => {
+    const payload = {
+      ...componentData,
+      skuId: componentData.skuId ?? componentData.categoryId,
+    };
+    delete payload.categoryId;
+    return api.post("/api/components", payload);
+  },
+  update: (id, componentData) => {
+    const payload = {
+      ...componentData,
+      skuId: componentData.skuId ?? componentData.categoryId,
+    };
+    delete payload.categoryId;
+    return api.put(`/api/components/${id}`, payload);
+  },
   delete: (id) => api.delete(`/api/components/${id}`),
   deactivate: (id) => api.patch(`/api/components/${id}/deactivate`),
 };
@@ -678,6 +781,95 @@ export const vendorsAPI = {
     }),
 };
 
+// ===== SKU CODES API =====
+export const skuCodesAPI = {
+  // Generate jewelry SKU
+  generateJewelrySku: (codeData) =>
+    api.post("/api/sku-codes/jewelry", codeData),
+
+  // Generate packaging SKU
+  generatePackagingSku: (codeData) =>
+    api.post("/api/sku-codes/packaging", codeData),
+
+  // Fetch generated SKUs saved in the catalog
+  getGeneratedSkus: (params = {}) =>
+    api.get("/api/sku-codes/generated", { params }),
+
+  // Bulk import jewelry SKUs from CSV
+  importJewelrySkus: (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return api.post("/api/sku-codes/jewelry/import", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+
+  // Bulk import packaging SKUs from CSV
+  importPackagingSkus: (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return api.post("/api/sku-codes/packaging/import", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+
+  // Search SKUs with fuzzy matching
+  searchSkus: (query, limit = 50, threshold = 0.3) =>
+    api.get("/api/sku-codes/search", {
+      params: { q: query, threshold, limit },
+    }),
+
+  // Search SKUs using POST
+  searchSkusPost: (searchData) =>
+    api.post("/api/sku-codes/search", searchData),
+
+  // Export all generated SKUs to MISA template
+  exportAllToMisa: () =>
+    api.get("/api/sku-codes/export-misa", {
+      responseType: "blob",
+    }),
+
+  // Export selected products by IDs to MISA template
+  exportByIdsToMisa: (productIds) =>
+    api.post("/api/sku-codes/export-misa-by-ids", productIds, {
+      responseType: "blob",
+    }),
+
+  // Export products by category to MISA template
+  exportByCategoryToMisa: (category) =>
+    api.get("/api/sku-codes/export-misa-by-category", {
+      params: { category },
+      responseType: "blob",
+    }),
+};
+
+// ===== DROPDOWN CONFIGURATION API =====
+export const dropdownConfigAPI = {
+  // Get all SKU prefix options
+  getPrefixes: () => api.get("/api/dropdown-config/prefixes"),
+
+  // Get all material options
+  getMaterials: () => api.get("/api/dropdown-config/materials"),
+
+  // Get all material color options
+  getMaterialColors: () => api.get("/api/dropdown-config/material-colors"),
+
+  // Get all stone origin options
+  getStoneOrigins: () => api.get("/api/dropdown-config/stone-origins"),
+
+  // Get all stone shape options
+  getStoneShapes: () => api.get("/api/dropdown-config/stone-shapes"),
+
+  // Get all stone weight options
+  getStoneWeights: () => api.get("/api/dropdown-config/stone-weights"),
+
+  // Get all side stones options
+  getSideStones: () => api.get("/api/dropdown-config/side-stones"),
+
+  // Get all country of origin options
+  getCountries: () => api.get("/api/dropdown-config/countries"),
+};
+
 // ===== FILE UPLOAD API =====
 export const fileUploadAPI = {
   // Upload file (public endpoint - no auth required)
@@ -724,6 +916,53 @@ export const notificationsAPI = {
       }
     );
   },
+};
+
+// ===== CURRENCY API ===== (FREE exchangerate-api.com)
+export const currencyAPI = {
+  // Get exchange rate between two currencies
+  getExchangeRate: (from, to) =>
+    api.get("/api/currency/rate", { params: { from, to } }),
+
+  // Get all exchange rates for a base currency
+  getAllExchangeRates: (baseCurrency) =>
+    api.get(`/api/currency/rates/${baseCurrency}`),
+
+  // Calculate import cost with customs, VAT, and fees
+  calculateImportCost: (request) =>
+    api.post("/api/currency/calculate-import-cost", request),
+};
+
+// ===== VENDOR MATCHING API =====
+export const vendorMatchingAPI = {
+  // Find matching vendors for a collection plan
+  findMatchingVendors: (request) =>
+    api.post("/api/vendor-matching/find", request),
+
+  // Get vendor matches by collection plan ID
+  getMatchesByCollectionPlan: (collectionPlanId) =>
+    api.get(`/api/vendor-matching/collection-plan/${collectionPlanId}`),
+};
+
+// ===== VENDOR OPTIMIZATION API =====
+export const vendorOptimizationAPI = {
+  // Calculate optimal vendors based on multi-criteria optimization
+  calculateOptimalVendors: (request) =>
+    api.post("/api/vendor-optimization/calculate", request),
+};
+
+// ===== PRECIOUS METAL API ===== (PAID API - metals-api.com or goldapi.io)
+// NOTE: Requires PAID API key ($50-200/month) - currently using mock data
+export const preciousMetalAPI = {
+  // Get current precious metal prices in USD
+  getPricesInUSD: () => api.get("/api/precious-metals/prices/usd"),
+
+  // Get current precious metal prices in VND
+  getPricesInVND: () => api.get("/api/precious-metals/prices/vnd"),
+
+  // Calculate material cost for a given weight and metal type
+  calculateMaterialCost: (request) =>
+    api.post("/api/precious-metals/calculate-material-cost", request),
 };
 
 // Export the axios instance for custom calls

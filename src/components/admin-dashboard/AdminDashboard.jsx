@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import ProductsManager from "./ProductsManager";
 import OrdersManager from "./OrdersManager";
+import OrderWorkflow from "./OrderWorkflow";
+import ProductFulfillment from "./ProductFulfillment";
+import VendorMatching from "./VendorMatching";
+import VendorOptimization from "./VendorOptimization";
+import MultiCurrencyCalculator from "./MultiCurrencyCalculator";
+import PreciousMetalDashboard from "./PreciousMetalDashboard";
+import UnitConversionCalculator from "./UnitConversionCalculator";
 import PaymentSchedulesManager from "./PaymentSchedulesManager";
 import CategoriesManagerEnhanced from "@components/manage-products/CategoriesManagerEnhanced";
 import CollectionsManager from "./CollectionsManager";
@@ -8,7 +15,14 @@ import LocationsManager from "./LocationsManager";
 import ComponentsManager from "./ComponentsManager";
 import UsersManager from "./UsersManager";
 import VendorsManager from "./VendorsManager";
+import SkuCodesManager from "./SkuCodesManager";
 import DashboardHome from "./DashboardHome";
+import CollectionPlanWizard from "./CollectionPlanWizard";
+import CustomsComplianceManager from "./CustomsComplianceManager";
+import JewelrySpecificationManager from "./JewelrySpecificationManager";
+import MarketTrendDashboard from "./MarketTrendDashboard";
+import PurchaseOrderSummary from "./PurchaseOrderSummary";
+import VendorSelectionWizard from "./VendorSelectionWizard";
 import "./AdminDashboard.css";
 import { ROUTES } from "@/constants/routes";
 
@@ -18,12 +32,26 @@ const AdminDashboard = () => {
   const menuItems = [
     { id: "dashboard", label: "Dashboard" },
     { id: "products", label: "Products" },
+    { id: "product-fulfillment", label: "Product Fulfillment" },
+    { id: "sku-codes", label: "SKU Codes" },
     { id: "orders", label: "Orders" },
+    { id: "order-workflow", label: "Order Workflow" },
     { id: "payments", label: "Payment schedules" },
     { id: "categories", label: "Categories" },
     { id: "collections", label: "Collections" },
     { id: "locations", label: "Locations" },
     { id: "vendors", label: "Vendors" },
+    { id: "vendor-matching", label: "Vendor Matching" },
+    { id: "vendor-optimization", label: "Vendor Optimization" },
+    { id: "vendor-selection-wizard", label: "Vendor Selection Wizard" },
+    { id: "currency-calculator", label: "Currency Calculator" },
+    { id: "metal-prices", label: "Metal Prices" },
+    { id: "unit-converter", label: "Unit Converter" },
+    { id: "collection-plan-wizard", label: "Collection Plan Wizard" },
+    { id: "jewelry-specifications", label: "Jewelry Specifications" },
+    { id: "purchase-orders", label: "Purchase Orders" },
+    { id: "market-trends", label: "Market Trends" },
+    { id: "customs-compliance", label: "Customs & Compliance" },
     // { id: "components", label: "Components" },
     { id: "users", label: "Users" },
   ];
@@ -38,8 +66,14 @@ const AdminDashboard = () => {
         return <DashboardHome setActiveTab={setActiveTab} />;
       case "products":
         return <ProductsManager />;
+      case "product-fulfillment":
+        return <ProductFulfillment />;
+      case "sku-codes":
+        return <SkuCodesManager />;
       case "orders":
         return <OrdersManager />;
+      case "order-workflow":
+        return <OrderWorkflow />;
       case "payments":
         return <PaymentSchedulesManager />;
       case "categories":
@@ -50,6 +84,28 @@ const AdminDashboard = () => {
         return <LocationsManager />;
       case "vendors":
         return <VendorsManager />;
+      case "vendor-matching":
+        return <VendorMatching />;
+      case "vendor-optimization":
+        return <VendorOptimization />;
+      case "vendor-selection-wizard":
+        return <VendorSelectionWizard onBack={() => setActiveTab("dashboard")} onComplete={() => setActiveTab("purchase-orders")} />;
+      case "currency-calculator":
+        return <MultiCurrencyCalculator />;
+      case "metal-prices":
+        return <PreciousMetalDashboard />;
+      case "unit-converter":
+        return <UnitConversionCalculator />;
+      case "collection-plan-wizard":
+        return <CollectionPlanWizard collectionPlanId="1" onBack={() => setActiveTab("dashboard")} onNext={() => setActiveTab("vendor-matching")} />;
+      case "jewelry-specifications":
+        return <JewelrySpecificationManager />;
+      case "purchase-orders":
+        return <PurchaseOrderSummary />;
+      case "market-trends":
+        return <MarketTrendDashboard />;
+      case "customs-compliance":
+        return <CustomsComplianceManager />;
       case "components":
         return <ComponentsManager />;
       case "users":
@@ -70,14 +126,28 @@ const AdminDashboard = () => {
         description:
           "Manage your diamond products, rings, necklaces, and jewelry items",
       },
+      "product-fulfillment": {
+        title: "Product Fulfillment",
+        description:
+          "Complete product details, add images, and publish products to the website",
+      },
       categories: {
         title: "Categories Management",
         description:
           "Organize products into categories like rings, necklaces, earrings",
       },
+      "sku-codes": {
+        title: "SKU Codes Management",
+        description:
+          "Generate standardized SKU codes and search existing SKUs with fuzzy matching",
+      },
       orders: {
         title: "Orders Management",
         description: "Review new customer orders and coordinate follow-up",
+      },
+      "order-workflow": {
+        title: "Order Workflow & Production",
+        description: "Manage order lifecycle from confirmation to completion with MISA SKU enforcement",
       },
       payments: {
         title: "Payment Schedules",
@@ -96,6 +166,26 @@ const AdminDashboard = () => {
         title: "Vendors Management",
         description: "Manage vendor information, contracts, and supplier details",
       },
+      "vendor-matching": {
+        title: "Vendor Matching & Selection",
+        description: "AI-powered vendor matching and selection for optimal sourcing",
+      },
+      "vendor-optimization": {
+        title: "Vendor Optimization Engine",
+        description: "Find optimal vendors based on cost, quality, and timeline constraints",
+      },
+      "currency-calculator": {
+        title: "Multi-Currency Cost Calculator",
+        description: "Calculate import costs with real-time exchange rates and customs duties",
+      },
+      "metal-prices": {
+        title: "Precious Metal Price Tracker",
+        description: "Real-time gold, silver, platinum prices with material cost calculations",
+      },
+      "unit-converter": {
+        title: "Jewelry Unit Converter",
+        description: "Convert between grams, ounces, lượng, and chỉ for jewelry measurements",
+      },
       components: {
         title: "Components Management",
         description: "Manage product components and customizable options",
@@ -103,6 +193,30 @@ const AdminDashboard = () => {
       users: {
         title: "Users Management",
         description: "Manage user accounts, permissions, and access control",
+      },
+      "vendor-selection-wizard": {
+        title: "Vendor Selection Wizard",
+        description: "Guided workflow to find and select optimal vendors for your requirements",
+      },
+      "collection-plan-wizard": {
+        title: "Collection Plan Wizard",
+        description: "Step-by-step planning for new jewelry collections and product lines",
+      },
+      "jewelry-specifications": {
+        title: "Jewelry Specifications",
+        description: "Manage synthetic diamond jewelry designs and specifications",
+      },
+      "purchase-orders": {
+        title: "Purchase Orders",
+        description: "Track and manage all purchase orders from vendors",
+      },
+      "market-trends": {
+        title: "Market Trend Analysis",
+        description: "Vietnam jewelry import market intelligence and trend analysis",
+      },
+      "customs-compliance": {
+        title: "Customs & Compliance",
+        description: "Research duty rates and manage regulatory compliance for jewelry imports",
       },
     };
     return pageMap[activeTab] || pageMap.dashboard;
