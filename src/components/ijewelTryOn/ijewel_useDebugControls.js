@@ -65,6 +65,10 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
       if (currentFinger === 0) {
         newRotationY = -0.080;
       }
+      // Ngón trỏ (3) → rotation Y = 0.8
+      else if (currentFinger === 3) {
+        newRotationY = 0.8;
+      }
       // Ngón giữa (4) → rotation Y = 0.8
       else if (currentFinger === 4) {
         newRotationY = 0.8;
