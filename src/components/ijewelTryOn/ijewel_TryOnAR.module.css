@@ -398,6 +398,46 @@
 }
 
 /* ==========================================
+   INFO PANEL - Always visible on top left
+   ========================================== */
+.infoPanel {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 12px 16px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.infoItem:last-child {
+  margin-bottom: 0;
+}
+
+.infoLabel {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.infoValue {
+  color: #667eea;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ==========================================
    DEBUG PANEL
    ========================================== */
 .debugToggle {

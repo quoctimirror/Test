@@ -27,6 +27,8 @@ const IJewelTryOnAR = ({
   // ==========================================
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
   const [currentFinger, setCurrentFinger] = useState(0);
+  const [currentCamera, setCurrentCamera] = useState(0); // 0 = cam sau (mobile) / cam trước (desktop), 1 = cam trước (mobile)
+  const [deviceType, setDeviceType] = useState('Unknown');
 
   // ==========================================
   // CUSTOM HOOKS - Logic AR Try-On
@@ -68,17 +70,41 @@ const IJewelTryOnAR = ({
   });
 
   // ==========================================
-  // FINGER NAMES
+  // DETECT DEVICE TYPE
+  // ==========================================
+  useEffect(() => {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    setDeviceType(isMobile ? 'Mobile' : 'Desktop');
+    // Desktop/Laptop mặc định cam trước (0), Mobile mặc định cam sau (0)
+  }, []);
+
+  // ==========================================
+  // HELPER FUNCTIONS
   // ==========================================
   const getFingerName = (index) => {
     const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
     return fingerNames[index] || 'Unknown';
   };
 
+  const getCameraName = () => {
+    const isMobile = deviceType === 'Mobile';
+    if (isMobile) {
+      return currentCamera === 0 ? 'Cam sau' : 'Cam trước';
+    } else {
+      return 'Cam trước'; // Desktop/Laptop chỉ có cam trước
+    }
+  };
+
   const handleSwitchFinger = () => {
     const newFinger = (currentFinger + 1) % 5;
     setCurrentFinger(newFinger);
     switchFinger();
+  };
+
+  const handleFlipCamera = () => {
+    const newCamera = (currentCamera + 1) % 2;
+    setCurrentCamera(newCamera);
+    flipCamera();
   };
 
   // ==========================================
@@ -171,10 +197,26 @@ const IJewelTryOnAR = ({
         </ShineButton>
       </div>
 
+      {/* Info Panel - Always visible on top left */}
+      <div className={styles.infoPanel}>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>Thiết bị:</span>
+          <span className={styles.infoValue}>{deviceType}</span>
+        </div>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>Camera:</span>
+          <span className={styles.infoValue}>{getCameraName()}</span>
+        </div>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>Ngón tay:</span>
+          <span className={styles.infoValue}>{getFingerName(currentFinger)}</span>
+        </div>
+      </div>
+
       {/* Try-On Control Buttons */}
       {isARRunning && (
         <div className={styles.tryonOptions}>
-          <ShineButton onClick={flipCamera} small>
+          <ShineButton onClick={handleFlipCamera} small>
             Flip Camera
           </ShineButton>
           <ShineButton onClick={handleSwitchFinger} small>
