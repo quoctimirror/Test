@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styles from './ijewel_TryOnAR.module.css';
 import { useIJewelARTryOn } from './ijewel_useARTryOn';
 import { useIJewelDebugControls } from './ijewel_useDebugControls';
@@ -20,6 +20,7 @@ const IJewelTryOnAR = ({
   // REFS - Tham chiếu đến DOM elements
   // ==========================================
   const canvasRef = useRef(null);
+  const debugPanelRef = useRef(null);
 
   // ==========================================
   // STATES
@@ -66,6 +67,31 @@ const IJewelTryOnAR = ({
   });
 
   // ==========================================
+  // CLICK OUTSIDE TO CLOSE DEBUG PANEL
+  // ==========================================
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (debugPanelOpen &&
+          debugPanelRef.current &&
+          !debugPanelRef.current.contains(event.target)) {
+        // Check if click is not on debug toggle button
+        const debugToggle = document.querySelector(`.${styles.debugToggle}`);
+        if (debugToggle && !debugToggle.contains(event.target)) {
+          setDebugPanelOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [debugPanelOpen]);
+
+  // ==========================================
   // RENDER
   // ==========================================
   return (
@@ -106,6 +132,7 @@ const IJewelTryOnAR = ({
       {/* Debug Panel */}
       {debugPanelOpen && (
         <DebugPanel
+          ref={debugPanelRef}
           position={position}
           rotation={rotation}
           scale={scale}
@@ -221,7 +248,7 @@ const LoadingScreen = ({ progress, text }) => {
 // ==========================================
 // DEBUG PANEL COMPONENT
 // ==========================================
-const DebugPanel = ({
+const DebugPanel = React.forwardRef(({
   position,
   rotation,
   scale,
@@ -230,13 +257,13 @@ const DebugPanel = ({
   onScaleChange,
   onExport,
   onCopy
-}) => {
+}, ref) => {
   const [positionStep, setPositionStep] = useState(0.001);
   const [rotationStep, setRotationStep] = useState(1);
   const [scaleStep, setScaleStep] = useState(0.01);
 
   return (
-    <div className={styles.debugPanel}>
+    <div ref={ref} className={styles.debugPanel}>
       <DebugSection title="📍 Position">
         <StepSizeControl
           value={positionStep}
@@ -313,7 +340,7 @@ const DebugPanel = ({
       </DebugSection>
     </div>
   );
-};
+});
 
 const DebugSection = ({ title, children }) => (
   <div className={styles.debugSection}>
