@@ -258,6 +258,7 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
 
   const toggleAR = useCallback(async () => {
     const tryon = tryonRef.current;
+    const viewer = viewerRef.current;
     const canvas = canvasRef.current;
     if (!tryon || !canvas) return;
 
@@ -265,11 +266,23 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       if (tryon.running) {
         await tryon.stop();
         setIsARRunning(false);
-        // Show canvas again when stopping
+
+        // Re-enable 3D viewer rendering when exiting AR
+        if (viewer) {
+          viewer.renderEnabled = true;
+        }
+
         canvas.style.opacity = '1';
+        console.log('🔙 Exited AR mode, viewer enabled');
       } else {
         // Hide canvas before starting to avoid showing front camera
         canvas.style.opacity = '0';
+
+        // Disable 3D viewer rendering when entering AR mode
+        if (viewer) {
+          viewer.renderEnabled = false;
+          console.log('🎥 Entering AR mode, viewer disabled');
+        }
 
         await tryon.start();
         setIsARRunning(true);
@@ -294,7 +307,8 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       }
     } catch (err) {
       console.error('❌ AR toggle error:', err);
-      // Show canvas even on error
+      // Re-enable viewer and show canvas even on error
+      if (viewer) viewer.renderEnabled = true;
       if (canvas) canvas.style.opacity = '1';
 
       let errorMsg = 'Failed to start AR try-on.\n\n';
