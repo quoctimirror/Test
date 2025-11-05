@@ -68,7 +68,11 @@ const IJewelTryOnAR = ({
     copyToClipboard
   } = useIJewelDebugControls({
     tryon,
-    modelName
+    modelName,
+    currentHand,
+    currentCamera,
+    currentFinger,
+    deviceType
   });
 
   // ==========================================

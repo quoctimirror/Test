@@ -8,8 +8,9 @@ import { useState, useCallback, useEffect } from 'react';
  * - Cập nhật transform qua tryon plugin API
  * - Export configuration ra JSON
  * - Copy configuration vào clipboard
+ * - Override rotation Y cho các trường hợp đặc biệt
  */
-export const useIJewelDebugControls = ({ tryon, modelName }) => {
+export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentCamera, currentFinger, deviceType }) => {
   // ==========================================
   // STATES
   // ==========================================
@@ -26,7 +27,7 @@ export const useIJewelDebugControls = ({ tryon, modelName }) => {
     // Delay để đảm bảo config đã load xong
     const loadTransforms = () => {
       const pos = tryon.modelPosition || { x: 0, y: 0, z: 0 };
-      const rot = tryon.modelRotation || { x: 0, y: 0, z: 0 };
+      let rot = tryon.modelRotation || { x: 0, y: 0, z: 0 };
       const scl = tryon.modelScaleFactor !== undefined ? tryon.modelScaleFactor : 1;
 
       setPosition({ x: pos.x, y: pos.y, z: pos.z });
@@ -45,6 +46,37 @@ export const useIJewelDebugControls = ({ tryon, modelName }) => {
 
     return () => clearTimeout(timer);
   }, [tryon, modelName]);
+
+  // ==========================================
+  // OVERRIDE ROTATION Y - Special Cases
+  // ==========================================
+  useEffect(() => {
+    if (!tryon || !tryon.modelRotation) return;
+
+    const isMobile = deviceType === 'Mobile';
+    const isFrontCamera = isMobile ? currentCamera === 1 : true; // Desktop luôn là cam trước
+    const isRightHand = currentHand === 1;
+
+    // Chỉ apply cho: Tay phải + Cam trước
+    if (isRightHand && isFrontCamera) {
+      let newRotationY = null;
+
+      // Ngón áp út (0) → rotation Y = -0.080
+      if (currentFinger === 0) {
+        newRotationY = -0.080;
+      }
+      // Ngón giữa (4) → rotation Y = 0.8
+      else if (currentFinger === 4) {
+        newRotationY = 0.8;
+      }
+
+      if (newRotationY !== null) {
+        setRotation(prev => ({ ...prev, y: newRotationY }));
+        tryon.modelRotation.y = newRotationY;
+        console.log(`🔄 Override rotation Y for finger ${currentFinger}: ${newRotationY}`);
+      }
+    }
+  }, [currentHand, currentCamera, currentFinger, deviceType, tryon]);
 
   // ==========================================
   // UPDATE FUNCTIONS
