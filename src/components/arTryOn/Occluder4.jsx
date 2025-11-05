@@ -188,7 +188,7 @@ function RingWithOccluder({
                                     <MeshRefractionMaterial
                                         color={meshColors[key] || '#ffffff'}
                                         envMap={env}
-                                        bounces={5}                    // ⭐ 5 bounces for sparkle
+                                        bounces={4}                    // ⭐ 4 bounces (80% quality)
                                         ior={2.6}                      // ⭐ High IOR
                                         fresnel={0.5}
                                         aberrationStrength={0}          // ⭐ NO chromatic aberration
@@ -196,7 +196,7 @@ function RingWithOccluder({
                                         toneMapped={false}              // ⭐ Keep natural brightness
                                         transmission={1.0}
                                         thickness={0.2}
-                                        envMapIntensity={1.3}
+                                        envMapIntensity={1.1}           // ⭐ 80% intensity
                                         clearcoat={1}                   // ⭐ WET LOOK
                                         clearcoatRoughness={0}          // ⭐ Perfect gloss
                                     />
@@ -204,10 +204,10 @@ function RingWithOccluder({
                                     // ⭐ STUDIO METAL MATERIAL
                                     <meshStandardMaterial
                                         color={meshColors[key] || '#ffaf83'}
-                                        roughness={0.15}                // ⭐ More glossy (0.15 vs 0.3)
+                                        roughness={0.18}                // ⭐ 80% glossy
                                         metalness={1}                   // ⭐ 100% metal
                                         envMap={env}
-                                        envMapIntensity={1.5}           // ⭐ Strong reflection
+                                        envMapIntensity={1.2}           // ⭐ 80% reflection
                                         side={THREE.DoubleSide}
                                     />
                                 )}
@@ -232,7 +232,7 @@ function RingWithOccluder({
                                     <MeshRefractionMaterial
                                         color={meshColors[key] || '#ffffff'}
                                         envMap={env}
-                                        bounces={5}
+                                        bounces={4}
                                         ior={2.6}
                                         fresnel={0.5}
                                         aberrationStrength={0}
@@ -240,7 +240,7 @@ function RingWithOccluder({
                                         toneMapped={false}
                                         transmission={1.0}
                                         thickness={0.2}
-                                        envMapIntensity={1.3}
+                                        envMapIntensity={1.1}
                                         clearcoat={1}
                                         clearcoatRoughness={0}
                                     />
@@ -248,10 +248,10 @@ function RingWithOccluder({
                                     // ⭐ STUDIO METAL MATERIAL
                                     <meshStandardMaterial
                                         color={meshColors[key] || '#ffaf83'}
-                                        roughness={0.15}
+                                        roughness={0.18}
                                         metalness={1}
                                         envMap={env}
-                                        envMapIntensity={1.5}
+                                        envMapIntensity={1.2}
                                         transparent={material?.transparent}
                                         opacity={material?.opacity ?? 1}
                                     />
@@ -660,31 +660,40 @@ const Occluder4 = () => {
                                         shadows={false}
                                         camera={{ fov: 50, position: [0, 0, 5] }}
                                         frameloop="always"
-                                        // DPR tối ưu: [1, 1.5] cho TẤT CẢ
-                                        // Lý do: Đủ sắc nét mà vẫn mượt
-                                        dpr={[1, 1.5]}
+                                        // DPR 80% quality: [1.2, 1.6] desktop / [1, 1.3] mobile
+                                        // Lý do: Tăng độ sắc nét lên 80% so với tối ưu 100%
+                                        dpr={isMobile ? [1, 1.3] : [1.2, 1.6]}
                                         performance={{ min: 0.5 }}
                                     >
                                         {/* ⭐ LIGHTING - TỐI ƯU CHO iOS */}
 
-                                        {/* ⭐ LIGHTING TỐI ƯU: 3 LIGHTS (cân bằng đẹp + mượt) */}
+                                        {/* ⭐ LIGHTING 80% QUALITY: 4 LIGHTS (Desktop) / 3 LIGHTS (Mobile) */}
 
                                         {/* 1. Directional Light - Ánh sáng chính */}
                                         <directionalLight
                                             position={[5, 8, 5]}
-                                            intensity={isMobile ? 4 : 5}
+                                            intensity={isMobile ? 3.5 : 4}
                                             castShadow={false}
                                         />
 
-                                        {/* 2. ⭐ 1 BACKLIGHT phía sau - tạo sparkle xuyên qua gem */}
+                                        {/* 2. ⭐ BACKLIGHT phía sau - tạo sparkle xuyên qua gem */}
                                         <pointLight
                                             position={[0, -2, -3]}
-                                            intensity={Math.PI * 2}
+                                            intensity={Math.PI * 1.6}
                                             color="#ffffff"
                                         />
 
-                                        {/* 3. Ambient light - ánh sáng nền */}
-                                        <ambientLight intensity={isMobile ? 2.5 : 1.5} />
+                                        {/* 3. Side backlight - tăng độ lấp lánh (desktop only) */}
+                                        {!isMobile && (
+                                            <pointLight
+                                                position={[-3, 0, -2]}
+                                                intensity={Math.PI * 1.2}
+                                                color="#ffffff"
+                                            />
+                                        )}
+
+                                        {/* 4. Ambient light - ánh sáng nền */}
+                                        <ambientLight intensity={isMobile ? 2.2 : 1.3} />
 
                                         <RingWithOccluder
                                             modelPath={ringConfig.modelPath}
@@ -703,16 +712,15 @@ const Occluder4 = () => {
                                             background={false}
                                         />
 
-                                        {/* ⭐ POST-PROCESSING - CHUẨN CHẤT LƯỢNG CAO NHƯNG VẪN MƯỢT */}
+                                        {/* ⭐ POST-PROCESSING - 80% QUALITY */}
                                         <EffectComposer
-                                            // Multisampling: 0 cho TẤT CẢ để tăng FPS tối đa
-                                            // Vì đã có SMAA rồi (nhẹ hơn và đủ đẹp)
-                                            multisampling={0}
+                                            // Multisampling: 0 cho mobile, 2 cho desktop (80% quality)
+                                            multisampling={isMobile ? 0 : 2}
                                             enabled={true}
                                         >
                                             {/*
                                             ========================================
-                                            CHIẾN LƯỢC: ĐẸP + MƯỢT
+                                            CHIẾN LƯỢC 80%: CÂN BẰNG ĐẸP + MƯỢT
                                             ========================================
 
                                             ✅ SMAA - NHẸ, ĐẸP, GIỮ LẠI
@@ -720,32 +728,41 @@ const Occluder4 = () => {
                                                - Performance: Rất nhẹ (1-2ms)
                                                - Kết quả: Viền mượt mà
 
-                                            ❌ N8AO - NẶNG, TẮT HOÀN TOÀN
-                                               - Chi phí: 10-20ms per frame
-                                               - Ảnh hưởng: Chỉ bóng nhẹ trong góc
-                                               - Quyết định: TẮT - không đáng để mất FPS
+                                            ⚠️ N8AO - BẬT LẠI VỚI SETTINGS NHẸ (DESKTOP ONLY)
+                                               - aoRadius: 0.1 (nhỏ hơn)
+                                               - intensity: 1.2 (thấp hơn)
+                                               - Chi phí: ~8ms (80% optimized)
+                                               - Kết quả: Bóng nhẹ tăng độ thật
 
-                                            ❌ Multisampling - NẶNG, TẮT
-                                               - SMAA đã đủ tốt
-                                               - Multisampling tốn 2-3x performance
+                                            ⚠️ Multisampling - BẬT LẠI NHẸ (DESKTOP: 2, MOBILE: 0)
+                                               - Desktop: 2x multisampling
+                                               - Mobile: 0 để giữ FPS
 
-                                            ❌ Bloom - Không cần (gây lóa)
+                                            ❌ Bloom - Vẫn TẮT (gây lóa)
+                                            ❌ ToneMapping - Vẫn TẮT (conflict)
 
-                                            ❌ ToneMapping - Conflict với toneMapped={false}
-
-                                            KẾT QUẢ: Nhẫn vẫn ĐẸP nhờ:
+                                            KẾT QUẢ 80%: Kim cương ĐẸP HƠN nhờ:
                                             - Clearcoat (wet look) ⭐
                                             - Studio HDR 4K ⭐
-                                            - MeshRefraction bounces=5 ⭐
-                                            - SMAA mượt mà ⭐
-                                            - 5 lights (desktop) / 2 lights (mobile) ⭐
+                                            - MeshRefraction bounces=4 (80%) ⭐
+                                            - SMAA + Multisampling=2 (desktop) ⭐
+                                            - N8AO nhẹ (desktop) ⭐
+                                            - 4 lights (desktop) / 3 lights (mobile) ⭐
                                             */}
 
                                             {/* SMAA - Khử răng cưa (NHẸ + ĐẸP) */}
                                             <SMAA />
 
-                                            {/* N8AO - TẮT HOÀN TOÀN để tăng FPS */}
-                                            {/* Lý do: Chi phí 10-20ms, chỉ tạo bóng nhẹ không đáng kể */}
+                                            {/* N8AO - BẬT LẠI CHO DESKTOP với settings nhẹ (80% quality) */}
+                                            {!isMobile && (
+                                                <N8AO
+                                                    aoRadius={0.1}      // Nhỏ hơn (0.15 → 0.1)
+                                                    intensity={1.2}     // Thấp hơn (2 → 1.2)
+                                                    color="black"
+                                                    distanceFalloff={1}
+                                                    quality="performance"
+                                                />
+                                            )}
                                         </EffectComposer>
                                     </Canvas>
                                 </Suspense>
