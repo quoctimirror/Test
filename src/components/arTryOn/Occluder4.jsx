@@ -188,7 +188,7 @@ function RingWithOccluder({
                                     <MeshRefractionMaterial
                                         color={meshColors[key] || '#ffffff'}
                                         envMap={env}
-                                        bounces={4}                    // ⭐ 4 bounces (80% quality)
+                                        bounces={5}                    // ⭐ 5 bounces FULL QUALITY
                                         ior={2.6}                      // ⭐ High IOR
                                         fresnel={0.5}
                                         aberrationStrength={0}          // ⭐ NO chromatic aberration
@@ -196,7 +196,7 @@ function RingWithOccluder({
                                         toneMapped={false}              // ⭐ Keep natural brightness
                                         transmission={1.0}
                                         thickness={0.2}
-                                        envMapIntensity={1.1}           // ⭐ 80% intensity
+                                        envMapIntensity={1.3}           // ⭐ FULL intensity (giống SimpleMeshInspector)
                                         clearcoat={1}                   // ⭐ WET LOOK
                                         clearcoatRoughness={0}          // ⭐ Perfect gloss
                                     />
@@ -204,10 +204,10 @@ function RingWithOccluder({
                                     // ⭐ STUDIO METAL MATERIAL
                                     <meshStandardMaterial
                                         color={meshColors[key] || '#ffaf83'}
-                                        roughness={0.18}                // ⭐ 80% glossy
+                                        roughness={0.15}                // ⭐ FULL glossy (giống SimpleMeshInspector)
                                         metalness={1}                   // ⭐ 100% metal
                                         envMap={env}
-                                        envMapIntensity={1.2}           // ⭐ 80% reflection
+                                        envMapIntensity={1.5}           // ⭐ FULL reflection
                                         side={THREE.DoubleSide}
                                     />
                                 )}
@@ -232,7 +232,7 @@ function RingWithOccluder({
                                     <MeshRefractionMaterial
                                         color={meshColors[key] || '#ffffff'}
                                         envMap={env}
-                                        bounces={4}
+                                        bounces={5}
                                         ior={2.6}
                                         fresnel={0.5}
                                         aberrationStrength={0}
@@ -240,7 +240,7 @@ function RingWithOccluder({
                                         toneMapped={false}
                                         transmission={1.0}
                                         thickness={0.2}
-                                        envMapIntensity={1.1}
+                                        envMapIntensity={1.3}
                                         clearcoat={1}
                                         clearcoatRoughness={0}
                                     />
@@ -248,10 +248,10 @@ function RingWithOccluder({
                                     // ⭐ STUDIO METAL MATERIAL
                                     <meshStandardMaterial
                                         color={meshColors[key] || '#ffaf83'}
-                                        roughness={0.18}
+                                        roughness={0.15}
                                         metalness={1}
                                         envMap={env}
-                                        envMapIntensity={1.2}
+                                        envMapIntensity={1.5}
                                         transparent={material?.transparent}
                                         opacity={material?.opacity ?? 1}
                                     />
