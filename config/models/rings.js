@@ -42,6 +42,12 @@ export const ringModels = {
     description: "",
     modelPath: "/models/refine-mirror-ring-1.glb",
   },
+  myfav: {
+    id: "myfav",
+    name: "My Favorite Ring",
+    description: "Refined mirror myfav ring",
+    modelPath: "/models/rings/myfav.glb",
+  },
 };
 
 // Helper function to get ring by ID
@@ -60,6 +66,6 @@ export const isValidRingId = (id) => {
 };
 
 // Default ring ID for fallback
-export const DEFAULT_RING_ID = "nhanMirror"; // Hoặc thử: "nhanVang", "nhanXam", "nhanBase"
+export const DEFAULT_RING_ID = "myfav"; // Hoặc thử: "nhanVang", "nhanXam", "nhanBase", "nhanMirror"
 
 export default ringModels;

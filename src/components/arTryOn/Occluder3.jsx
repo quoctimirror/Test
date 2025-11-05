@@ -531,9 +531,9 @@ const Occluder3 = () => {
                     const baseTargetQuaternion = new THREE.Quaternion().setFromRotationMatrix(rotationMatrix);
                     const targetQuaternion = new THREE.Quaternion().setFromRotationMatrix(rotationMatrix);
 
-                    // Correction rotation
-                    const correctionQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -(Math.PI / 2));
-                    targetQuaternion.multiply(correctionQuaternion);
+                    // Correction rotation - BỎ XOAY
+                    // const correctionQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -(Math.PI / 2));
+                    // targetQuaternion.multiply(correctionQuaternion);
 
                     // Update ring transform - KHÔNG SMOOTHING Ở ĐÂY (smoothing trong useFrame)
                     setRingTransform({

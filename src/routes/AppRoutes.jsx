@@ -321,7 +321,7 @@ export default function AppRoutes() {
 
           <Route
             path="/ar/quoc-ti"
-            element={<QuocTiar modelPath="/models/myfav.glb" />}
+            element={<QuocTiar modelPath="/models/rings/myfav.glb" />}
           />
 
           <Route path="/ar/mesh-inspector" element={<SimpleMeshInspector />} />
