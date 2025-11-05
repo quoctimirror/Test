@@ -4,7 +4,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useEnvironment, Environment, MeshRefractionMaterial } from '@react-three/drei';
-import { EffectComposer, ToneMapping, SMAA, Bloom, N8AO } from '@react-three/postprocessing';
+import { EffectComposer, SMAA, Bloom, N8AO } from '@react-three/postprocessing';
 import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import * as THREE from 'three';
 import { useParams } from 'react-router-dom';
@@ -178,8 +178,8 @@ function RingWithOccluder({
                         return (
                             <instancedMesh
                                 key={key}
-                                castShadow={false}      // TẮT shadow cho tất cả
-                                receiveShadow={false}   // TẮT shadow cho tất cả
+                                castShadow={false}
+                                receiveShadow={false}
                                 args={[node.geometry, null, node.count]}
                                 instanceMatrix={node.instanceMatrix}
                             >
@@ -223,8 +223,8 @@ function RingWithOccluder({
                         return (
                             <mesh
                                 key={key}
-                                castShadow={false}      // TẮT shadow cho tất cả
-                                receiveShadow={false}   // TẮT shadow cho tất cả
+                                castShadow={false}
+                                receiveShadow={false}
                                 geometry={node.geometry}
                             >
                                 {isGemMesh && env ? (
@@ -652,11 +652,10 @@ const Occluder4 = () => {
                                             preserveDrawingBuffer: true,
                                             antialias: true,
                                             powerPreference: 'high-performance',
-                                            // Tất cả dùng mediump - cân bằng tốt nhất
                                             precision: 'mediump',
                                             stencil: false,
                                         }}
-                                        // TẮT shadows cho TẤT CẢ - tốn performance mà ít ảnh hưởng
+                                        // TẮT shadows
                                         shadows={false}
                                         camera={{ fov: 50, position: [0, 0, 5] }}
                                         frameloop="always"
@@ -667,33 +666,37 @@ const Occluder4 = () => {
                                     >
                                         {/* ⭐ LIGHTING - TỐI ƯU CHO iOS */}
 
-                                        {/* ⭐ LIGHTING 80% QUALITY: 4 LIGHTS (Desktop) / 3 LIGHTS (Mobile) */}
+                                        {/* ⭐ LIGHTING - FULL QUALITY (giống SimpleMeshInspector) */}
 
-                                        {/* 1. Directional Light - Ánh sáng chính */}
-                                        <directionalLight
-                                            position={[5, 8, 5]}
-                                            intensity={isMobile ? 3.5 : 4}
+                                        {/* 1. SpotLight chính - ánh sáng mạnh từ trên */}
+                                        <spotLight
+                                            position={[10, 10, 10]}
+                                            angle={0.15}
+                                            penumbra={1}
+                                            decay={0}
+                                            intensity={Math.PI * 3}
                                             castShadow={false}
                                         />
 
-                                        {/* 2. ⭐ BACKLIGHT phía sau - tạo sparkle xuyên qua gem */}
+                                        {/* 2-4. ⭐ 3 BACKLIGHTS - ánh sáng xuyên qua kim cương tạo khúc xạ */}
                                         <pointLight
                                             position={[0, -2, -3]}
-                                            intensity={Math.PI * 1.6}
+                                            intensity={Math.PI * 2}
+                                            color="#ffffff"
+                                        />
+                                        <pointLight
+                                            position={[3, 0, -3]}
+                                            intensity={Math.PI * 1.5}
+                                            color="#ffffff"
+                                        />
+                                        <pointLight
+                                            position={[-3, 0, -3]}
+                                            intensity={Math.PI * 1.5}
                                             color="#ffffff"
                                         />
 
-                                        {/* 3. Side backlight - tăng độ lấp lánh (desktop only) */}
-                                        {!isMobile && (
-                                            <pointLight
-                                                position={[-3, 0, -2]}
-                                                intensity={Math.PI * 1.2}
-                                                color="#ffffff"
-                                            />
-                                        )}
-
-                                        {/* 4. Ambient light - ánh sáng nền */}
-                                        <ambientLight intensity={isMobile ? 2.2 : 1.3} />
+                                        {/* 5. Ambient light nhẹ */}
+                                        <ambientLight intensity={0.2} />
 
                                         <RingWithOccluder
                                             modelPath={ringConfig.modelPath}
@@ -712,10 +715,10 @@ const Occluder4 = () => {
                                             background={false}
                                         />
 
-                                        {/* ⭐ POST-PROCESSING - 80% QUALITY */}
+                                        {/* ⭐ POST-PROCESSING - FULL QUALITY (giống SimpleMeshInspector) */}
                                         <EffectComposer
-                                            // Multisampling: 0 cho mobile, 2 cho desktop (80% quality)
-                                            multisampling={isMobile ? 0 : 2}
+                                            disableNormalPass={isMobile}
+                                            multisampling={isMobile ? 0 : 4}
                                             enabled={true}
                                         >
                                             {/*
@@ -753,14 +756,22 @@ const Occluder4 = () => {
                                             {/* SMAA - Khử răng cưa (NHẸ + ĐẸP) */}
                                             <SMAA />
 
-                                            {/* N8AO - BẬT LẠI CHO DESKTOP với settings nhẹ (80% quality) */}
+                                            {/* N8AO - FULL QUALITY cho desktop (giống SimpleMeshInspector) */}
                                             {!isMobile && (
                                                 <N8AO
-                                                    aoRadius={0.1}      // Nhỏ hơn (0.15 → 0.1)
-                                                    intensity={1.2}     // Thấp hơn (2 → 1.2)
-                                                    color="black"
-                                                    distanceFalloff={1}
-                                                    quality="performance"
+                                                    aoRadius={0.15}
+                                                    intensity={4}
+                                                    distanceFalloff={2}
+                                                />
+                                            )}
+
+                                            {/* Bloom - Hiệu ứng lấp lánh cho kim cương (conditional) */}
+                                            {!isMobile && (
+                                                <Bloom
+                                                    luminanceThreshold={0.9}
+                                                    intensity={1.8}
+                                                    levels={9}
+                                                    mipmapBlur
                                                 />
                                             )}
                                         </EffectComposer>
