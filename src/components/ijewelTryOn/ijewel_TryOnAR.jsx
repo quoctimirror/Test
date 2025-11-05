@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import styles from './ijewel_TryOnAR.module.css';
 import { useIJewelARTryOn } from './ijewel_useARTryOn';
 import { useIJewelDebugControls } from './ijewel_useDebugControls';
+import { useMediaPipeHands } from './ijewel_useMediaPipeHands';
 
 /**
  * IJewel TryOnAR Component - Component chính cho AR Try-On nhẫn
@@ -71,6 +72,14 @@ const IJewelTryOnAR = ({
   });
 
   // ==========================================
+  // CUSTOM HOOKS - MediaPipe Hand Detection
+  // ==========================================
+  const { detectedHand } = useMediaPipeHands({
+    canvasRef,
+    isARRunning
+  });
+
+  // ==========================================
   // DETECT DEVICE TYPE
   // ==========================================
   useEffect(() => {
@@ -102,39 +111,11 @@ const IJewelTryOnAR = ({
   };
 
   // ==========================================
-  // DETECT HAND FROM TRYON SDK (MediaPipe)
+  // SYNC MEDIAPIPE HAND DETECTION
   // ==========================================
   useEffect(() => {
-    if (!isARRunning || !tryon) return;
-
-    // Log toàn bộ tryon object 1 lần để inspect
-    console.log('🔍 Inspecting tryon object:', tryon);
-    console.log('🔍 Available properties:', Object.keys(tryon));
-
-    // Poll hand detection từ SDK
-    const handDetectionInterval = setInterval(() => {
-      // Kiểm tra các thuộc tính có thể có trong SDK
-      if (tryon.hand !== undefined) {
-        console.log('✅ Found tryon.hand:', tryon.hand);
-        setCurrentHand(tryon.hand);
-      } else if (tryon.handedness !== undefined) {
-        console.log('✅ Found tryon.handedness:', tryon.handedness);
-        // MediaPipe handedness: 0 = Left, 1 = Right
-        setCurrentHand(tryon.handedness);
-      } else if (tryon.detectedHand !== undefined) {
-        console.log('✅ Found tryon.detectedHand:', tryon.detectedHand);
-        setCurrentHand(tryon.detectedHand);
-      } else if (tryon.leftRight !== undefined) {
-        console.log('✅ Found tryon.leftRight:', tryon.leftRight);
-        setCurrentHand(tryon.leftRight);
-      } else if (tryon.handType !== undefined) {
-        console.log('✅ Found tryon.handType:', tryon.handType);
-        setCurrentHand(tryon.handType);
-      }
-    }, 500); // Check mỗi 500ms (giảm tần suất log)
-
-    return () => clearInterval(handDetectionInterval);
-  }, [isARRunning, tryon]);
+    setCurrentHand(detectedHand);
+  }, [detectedHand]);
 
   const handleSwitchFinger = () => {
     const newFinger = (currentFinger + 1) % 5;
