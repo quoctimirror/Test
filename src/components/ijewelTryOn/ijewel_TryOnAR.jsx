@@ -258,18 +258,13 @@ const DebugPanel = React.forwardRef(({
   onExport,
   onCopy
 }, ref) => {
-  const [positionStep, setPositionStep] = useState(0.001);
-  const [rotationStep, setRotationStep] = useState(1);
-  const [scaleStep, setScaleStep] = useState(0.01);
+  const [positionStep, setPositionStep] = useState(0.01);
+  const [rotationStep, setRotationStep] = useState(0.01);
+  const [scaleStep, setScaleStep] = useState(0.001);
 
   return (
     <div ref={ref} className={styles.debugPanel}>
       <DebugSection title="📍 Position">
-        <StepSizeControl
-          value={positionStep}
-          onChange={setPositionStep}
-          label="Step Size"
-        />
         <AxisControl
           label="X Axis"
           value={position.x}
@@ -285,17 +280,12 @@ const DebugPanel = React.forwardRef(({
         <AxisControl
           label="Z Axis"
           value={position.z}
-          step={positionStep}
+          step={0.1}
           onChange={(val) => onPositionChange('z', val)}
         />
       </DebugSection>
 
       <DebugSection title="🔄 Rotation">
-        <StepSizeControl
-          value={rotationStep}
-          onChange={setRotationStep}
-          label="Step Size (degrees)"
-        />
         <AxisControl
           label="X Axis (degrees)"
           value={rotation.x}
@@ -311,17 +301,12 @@ const DebugPanel = React.forwardRef(({
         <AxisControl
           label="Z Axis (degrees)"
           value={rotation.z}
-          step={rotationStep}
+          step={0.1}
           onChange={(val) => onRotationChange('z', val)}
         />
       </DebugSection>
 
       <DebugSection title="📏 Scale">
-        <StepSizeControl
-          value={scaleStep}
-          onChange={setScaleStep}
-          label="Step Size"
-        />
         <AxisControl
           label="Uniform Scale"
           value={scale}
