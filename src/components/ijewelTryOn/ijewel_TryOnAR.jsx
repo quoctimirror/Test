@@ -28,6 +28,7 @@ const IJewelTryOnAR = ({
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
   const [currentFinger, setCurrentFinger] = useState(0);
   const [currentCamera, setCurrentCamera] = useState(0); // 0 = cam sau (mobile) / cam trước (desktop), 1 = cam trước (mobile)
+  const [currentHand, setCurrentHand] = useState(-1); // -1 = chưa phát hiện, 0 = tay trái, 1 = tay phải
   const [deviceType, setDeviceType] = useState('Unknown');
 
   // ==========================================
@@ -94,6 +95,46 @@ const IJewelTryOnAR = ({
       return 'Cam trước'; // Desktop/Laptop chỉ có cam trước
     }
   };
+
+  const getHandName = () => {
+    if (currentHand === -1) return 'Chưa phát hiện';
+    return currentHand === 0 ? 'Tay trái' : 'Tay phải';
+  };
+
+  // ==========================================
+  // DETECT HAND FROM TRYON SDK (MediaPipe)
+  // ==========================================
+  useEffect(() => {
+    if (!isARRunning || !tryon) return;
+
+    // Log toàn bộ tryon object 1 lần để inspect
+    console.log('🔍 Inspecting tryon object:', tryon);
+    console.log('🔍 Available properties:', Object.keys(tryon));
+
+    // Poll hand detection từ SDK
+    const handDetectionInterval = setInterval(() => {
+      // Kiểm tra các thuộc tính có thể có trong SDK
+      if (tryon.hand !== undefined) {
+        console.log('✅ Found tryon.hand:', tryon.hand);
+        setCurrentHand(tryon.hand);
+      } else if (tryon.handedness !== undefined) {
+        console.log('✅ Found tryon.handedness:', tryon.handedness);
+        // MediaPipe handedness: 0 = Left, 1 = Right
+        setCurrentHand(tryon.handedness);
+      } else if (tryon.detectedHand !== undefined) {
+        console.log('✅ Found tryon.detectedHand:', tryon.detectedHand);
+        setCurrentHand(tryon.detectedHand);
+      } else if (tryon.leftRight !== undefined) {
+        console.log('✅ Found tryon.leftRight:', tryon.leftRight);
+        setCurrentHand(tryon.leftRight);
+      } else if (tryon.handType !== undefined) {
+        console.log('✅ Found tryon.handType:', tryon.handType);
+        setCurrentHand(tryon.handType);
+      }
+    }, 500); // Check mỗi 500ms (giảm tần suất log)
+
+    return () => clearInterval(handDetectionInterval);
+  }, [isARRunning, tryon]);
 
   const handleSwitchFinger = () => {
     const newFinger = (currentFinger + 1) % 5;
@@ -206,6 +247,10 @@ const IJewelTryOnAR = ({
         <div className={styles.infoItem}>
           <span className={styles.infoLabel}>Camera:</span>
           <span className={styles.infoValue}>{getCameraName()}</span>
+        </div>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>Bàn tay:</span>
+          <span className={styles.infoValue}>{getHandName()}</span>
         </div>
         <div className={styles.infoItem}>
           <span className={styles.infoLabel}>Ngón tay:</span>
