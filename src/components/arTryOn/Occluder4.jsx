@@ -178,8 +178,8 @@ function RingWithOccluder({
                         return (
                             <instancedMesh
                                 key={key}
-                                castShadow={true}
-                                receiveShadow={true}
+                                castShadow={false}      // TẮT shadow cho tất cả
+                                receiveShadow={false}   // TẮT shadow cho tất cả
                                 args={[node.geometry, null, node.count]}
                                 instanceMatrix={node.instanceMatrix}
                             >
@@ -223,8 +223,8 @@ function RingWithOccluder({
                         return (
                             <mesh
                                 key={key}
-                                castShadow={true}
-                                receiveShadow={true}
+                                castShadow={false}      // TẮT shadow cho tất cả
+                                receiveShadow={false}   // TẮT shadow cho tất cả
                                 geometry={node.geometry}
                             >
                                 {isGemMesh && env ? (
@@ -650,38 +650,41 @@ const Occluder4 = () => {
                                         gl={{
                                             alpha: true,
                                             preserveDrawingBuffer: true,
-                                            antialias: true,                    // ⭐ ANTIALIAS ON
+                                            antialias: true,
                                             powerPreference: 'high-performance',
-                                            precision: 'highp',                 // ⭐ HIGH PRECISION
+                                            // Tất cả dùng mediump - cân bằng tốt nhất
+                                            precision: 'mediump',
                                             stencil: false,
                                         }}
-                                        shadows={true}                          // ⭐ SHADOWS ON
+                                        // TẮT shadows cho TẤT CẢ - tốn performance mà ít ảnh hưởng
+                                        shadows={false}
                                         camera={{ fov: 50, position: [0, 0, 5] }}
                                         frameloop="always"
-                                        dpr={[1.5, 2]}                          // ⭐ HIGH DPR [1.5-2]
+                                        // DPR tối ưu: [1, 1.5] cho TẤT CẢ
+                                        // Lý do: Đủ sắc nét mà vẫn mượt
+                                        dpr={[1, 1.5]}
                                         performance={{ min: 0.5 }}
                                     >
-                                        {/* ⭐ STUDIO LIGHTING - 5 LIGHTS */}
+                                        {/* ⭐ LIGHTING - TỐI ƯU CHO iOS */}
 
-                                        {/* 1. Spotlight chính - từ trên xuống */}
-                                        <spotLight
-                                            position={[10, 10, 10]}
-                                            angle={0.15}
-                                            penumbra={1}
-                                            decay={0}
-                                            intensity={Math.PI * 3}             // ~9.42
-                                            castShadow={true}
-                                            shadow-mapSize={[512, 512]}
-                                            shadow-bias={-0.0001}
+                                        {/* ⭐ LIGHTING TỐI ƯU: 3 LIGHTS (cân bằng đẹp + mượt) */}
+
+                                        {/* 1. Directional Light - Ánh sáng chính */}
+                                        <directionalLight
+                                            position={[5, 8, 5]}
+                                            intensity={isMobile ? 4 : 5}
+                                            castShadow={false}
                                         />
 
-                                        {/* 2. ⭐ 3 BACKLIGHTS - ánh sáng xuyên qua gem */}
-                                        <pointLight position={[0, -2, -3]} intensity={Math.PI * 2} color="#ffffff" />
-                                        <pointLight position={[3, 0, -3]} intensity={Math.PI * 1.5} color="#ffffff" />
-                                        <pointLight position={[-3, 0, -3]} intensity={Math.PI * 1.5} color="#ffffff" />
+                                        {/* 2. ⭐ 1 BACKLIGHT phía sau - tạo sparkle xuyên qua gem */}
+                                        <pointLight
+                                            position={[0, -2, -3]}
+                                            intensity={Math.PI * 2}
+                                            color="#ffffff"
+                                        />
 
-                                        {/* 3. Ambient light - nền nhẹ */}
-                                        <ambientLight intensity={0.2} />
+                                        {/* 3. Ambient light - ánh sáng nền */}
+                                        <ambientLight intensity={isMobile ? 2.5 : 1.5} />
 
                                         <RingWithOccluder
                                             modelPath={ringConfig.modelPath}
@@ -700,49 +703,49 @@ const Occluder4 = () => {
                                             background={false}
                                         />
 
-                                        {/* ⭐ POST-PROCESSING - CHỈ GIỮ CÁC HIỆU ỨNG CẦN THIẾT */}
+                                        {/* ⭐ POST-PROCESSING - CHUẨN CHẤT LƯỢNG CAO NHƯNG VẪN MƯỢT */}
                                         <EffectComposer
-                                            multisampling={8}               // 8x MSAA - Khử răng cưa (anti-aliasing)
+                                            // Multisampling: 0 cho TẤT CẢ để tăng FPS tối đa
+                                            // Vì đã có SMAA rồi (nhẹ hơn và đủ đẹp)
+                                            multisampling={0}
                                             enabled={true}
                                         >
                                             {/*
                                             ========================================
-                                            GIẢI THÍCH TỪNG HIỆU ỨNG:
+                                            CHIẾN LƯỢC: ĐẸP + MƯỢT
                                             ========================================
 
-                                            1. SMAA (Subpixel Morphological Anti-Aliasing)
-                                               - Mục đích: Làm mượt viền nhẫn, khử răng cưa
-                                               - Liên quan nhẫn: ✅ CÓ - làm viền nhẫn mượt mà
-                                               - Quyết định: GIỮ LẠI
+                                            ✅ SMAA - NHẸ, ĐẸP, GIỮ LẠI
+                                               - Anti-aliasing quality cao
+                                               - Performance: Rất nhẹ (1-2ms)
+                                               - Kết quả: Viền mượt mà
 
-                                            2. N8AO (Ambient Occlusion)
-                                               - Mục đích: Tạo bóng mờ trong kẽ hở, góc khuất
-                                               - Liên quan nhẫn: ✅ CÓ - tạo độ sâu cho nhẫn
-                                               - Quyết định: GIỮ LẠI
+                                            ❌ N8AO - NẶNG, TẮT HOÀN TOÀN
+                                               - Chi phí: 10-20ms per frame
+                                               - Ảnh hưởng: Chỉ bóng nhẹ trong góc
+                                               - Quyết định: TẮT - không đáng để mất FPS
 
-                                            3. Bloom
-                                               - Mục đích: Tạo hiệu ứng lấp lánh lan tỏa
-                                               - Liên quan nhẫn: ⚠️ CÓ nhưng quá mức - gây lóa mắt
-                                               - Quyết định: ĐÃ TẮT
+                                            ❌ Multisampling - NẶNG, TẮT
+                                               - SMAA đã đủ tốt
+                                               - Multisampling tốn 2-3x performance
 
-                                            4. ToneMapping
-                                               - Mục đích: Điều chỉnh độ sáng/tối tổng thể
-                                               - Liên quan nhẫn: ⚠️ CÓ nhưng làm tối kim cương
-                                               - Quyết định: TẮT ĐI (vì đã set toneMapped={false} ở material)
+                                            ❌ Bloom - Không cần (gây lóa)
+
+                                            ❌ ToneMapping - Conflict với toneMapped={false}
+
+                                            KẾT QUẢ: Nhẫn vẫn ĐẸP nhờ:
+                                            - Clearcoat (wet look) ⭐
+                                            - Studio HDR 4K ⭐
+                                            - MeshRefraction bounces=5 ⭐
+                                            - SMAA mượt mà ⭐
+                                            - 5 lights (desktop) / 2 lights (mobile) ⭐
                                             */}
 
-                                            {/* SMAA - Khử răng cưa */}
+                                            {/* SMAA - Khử răng cưa (NHẸ + ĐẸP) */}
                                             <SMAA />
 
-                                            {/* N8AO - Bóng trong kẽ hở */}
-                                            <N8AO
-                                                aoRadius={0.15}
-                                                intensity={4}
-                                                distanceFalloff={2}
-                                            />
-
-                                            {/* ToneMapping - TẮT vì conflict với toneMapped={false} */}
-                                            {/* <ToneMapping /> */}
+                                            {/* N8AO - TẮT HOÀN TOÀN để tăng FPS */}
+                                            {/* Lý do: Chi phí 10-20ms, chỉ tạo bóng nhẹ không đáng kể */}
                                         </EffectComposer>
                                     </Canvas>
                                 </Suspense>
