@@ -258,7 +258,12 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
         await tryon.start();
         setIsARRunning(true);
 
+        // Flip to back camera by default
         setTimeout(() => {
+          if (tryon?.flipCamera) {
+            tryon.flipCamera();
+            console.log('📷 Flipped to back camera by default');
+          }
           hideWatermarks();
         }, 500);
       }
