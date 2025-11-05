@@ -411,24 +411,24 @@
 
 .debugPanel {
   position: fixed;
-  right: 10px; /* Di chuyển sang góc phải */
-  top: 50px;
-  max-height: calc(100vh - 150px); /* Tăng margin bottom để không che nút Try-On */
-  width: 300px; /* Giảm width một chút cho mobile */
-  max-width: calc(100vw - 20px); /* Đảm bảo không tràn màn hình mobile */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 50vh; /* Chiếm tối đa 50% chiều cao màn hình */
+  width: 100%;
   background: rgba(0, 0, 0, 0.95);
   padding: 15px;
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0; /* Bo góc trên, không bo góc dưới */
   z-index: 1000;
   overflow-y: auto;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* Desktop: Width lớn hơn */
+/* Desktop: Giữ nguyên layout bottom */
 @media (min-width: 768px) {
   .debugPanel {
-    width: 320px;
-    max-height: calc(100vh - 60px); /* Desktop có nhiều không gian hơn */
+    padding: 20px;
+    max-height: 60vh;
   }
 }
 
