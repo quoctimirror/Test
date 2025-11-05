@@ -26,6 +26,7 @@ const IJewelTryOnAR = ({
   // STATES
   // ==========================================
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
+  const [currentFinger, setCurrentFinger] = useState(0);
 
   // ==========================================
   // CUSTOM HOOKS - Logic AR Try-On
@@ -65,6 +66,20 @@ const IJewelTryOnAR = ({
     tryon,
     modelName
   });
+
+  // ==========================================
+  // FINGER NAMES
+  // ==========================================
+  const getFingerName = (index) => {
+    const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+    return fingerNames[index] || 'Unknown';
+  };
+
+  const handleSwitchFinger = () => {
+    const newFinger = (currentFinger + 1) % 5;
+    setCurrentFinger(newFinger);
+    switchFinger();
+  };
 
   // ==========================================
   // CLICK OUTSIDE TO CLOSE DEBUG PANEL
@@ -136,6 +151,8 @@ const IJewelTryOnAR = ({
           position={position}
           rotation={rotation}
           scale={scale}
+          currentFinger={currentFinger}
+          fingerName={getFingerName(currentFinger)}
           onPositionChange={updatePosition}
           onRotationChange={updateRotation}
           onScaleChange={updateScale}
@@ -160,7 +177,7 @@ const IJewelTryOnAR = ({
           <ShineButton onClick={flipCamera} small>
             Flip Camera
           </ShineButton>
-          <ShineButton onClick={switchFinger} small>
+          <ShineButton onClick={handleSwitchFinger} small>
             Switch Finger
           </ShineButton>
           <ShineButton onClick={saveImage} small>
@@ -252,6 +269,8 @@ const DebugPanel = React.forwardRef(({
   position,
   rotation,
   scale,
+  currentFinger,
+  fingerName,
   onPositionChange,
   onRotationChange,
   onScaleChange,
@@ -264,6 +283,12 @@ const DebugPanel = React.forwardRef(({
 
   return (
     <div ref={ref} className={styles.debugPanel}>
+      <DebugSection title="👆 Current Finger">
+        <div className={styles.fingerDisplay}>
+          <span className={styles.fingerName}>{fingerName}</span>
+          <span className={styles.fingerIndex}>(Index: {currentFinger})</span>
+        </div>
+      </DebugSection>
       <DebugSection title="📍 Position">
         <AxisControl
           label="X Axis"

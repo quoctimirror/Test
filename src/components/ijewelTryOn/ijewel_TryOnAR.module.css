@@ -452,6 +452,27 @@
   letter-spacing: 1px;
 }
 
+.fingerDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+  background: rgba(102, 126, 234, 0.2);
+  border-radius: 8px;
+}
+
+.fingerName {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.fingerIndex {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
 .controlGroup {
   margin-bottom: 10px;
 }
