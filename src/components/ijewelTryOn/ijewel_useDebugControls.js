@@ -23,15 +23,27 @@ export const useIJewelDebugControls = ({ tryon, modelName }) => {
   useEffect(() => {
     if (!tryon) return;
 
-    const pos = tryon.modelPosition || { x: 0, y: 0, z: 0 };
-    const rot = tryon.modelRotation || { x: 0, y: 0, z: 0 };
-    const scl = tryon.modelScaleFactor !== undefined ? tryon.modelScaleFactor : 1;
+    // Delay để đảm bảo config đã load xong
+    const loadTransforms = () => {
+      const pos = tryon.modelPosition || { x: 0, y: 0, z: 0 };
+      const rot = tryon.modelRotation || { x: 0, y: 0, z: 0 };
+      const scl = tryon.modelScaleFactor !== undefined ? tryon.modelScaleFactor : 1;
 
-    setPosition({ x: pos.x, y: pos.y, z: pos.z });
-    setRotation({ x: rot.x, y: rot.y, z: rot.z });
-    setScale(scl);
+      setPosition({ x: pos.x, y: pos.y, z: pos.z });
+      setRotation({ x: rot.x, y: rot.y, z: rot.z });
+      setScale(scl);
 
-    console.log('📊 Loaded transforms for', modelName);
+      console.log('📊 Loaded transforms for', modelName);
+      console.log('   Position:', pos);
+      console.log('   Rotation:', rot);
+      console.log('   Scale:', scl);
+    };
+
+    // Load ngay lập tức và sau 500ms để đảm bảo config đã load
+    loadTransforms();
+    const timer = setTimeout(loadTransforms, 500);
+
+    return () => clearTimeout(timer);
   }, [tryon, modelName]);
 
   // ==========================================

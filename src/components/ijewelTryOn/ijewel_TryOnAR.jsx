@@ -349,8 +349,26 @@ const StepSizeControl = ({ value, onChange, label }) => (
 );
 
 const AxisControl = ({ label, value, step, onChange }) => {
+  const [inputValue, setInputValue] = React.useState(value.toFixed(3));
   const handleDecrease = () => onChange(value - step);
   const handleIncrease = () => onChange(value + step);
+
+  React.useEffect(() => {
+    setInputValue(value.toFixed(3));
+  }, [value]);
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputBlur = () => {
+    const parsed = parseFloat(inputValue);
+    if (!isNaN(parsed)) {
+      onChange(parsed);
+    } else {
+      setInputValue(value.toFixed(3));
+    }
+  };
 
   return (
     <div className={styles.controlGroup}>
@@ -362,8 +380,14 @@ const AxisControl = ({ label, value, step, onChange }) => {
         <input
           type="number"
           className={styles.controlInput}
-          value={value.toFixed(3)}
-          onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+          value={inputValue}
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.target.blur();
+            }
+          }}
           step={step}
         />
         <button className={styles.controlBtn} onClick={handleIncrease}>
