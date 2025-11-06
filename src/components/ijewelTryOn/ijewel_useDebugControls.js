@@ -80,6 +80,12 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
         console.log(`🔄 Override rotation Y for finger ${currentFinger}: ${newRotationY}`);
       }
     }
+    // Tay trái → rotation Y = 0 cho tất cả các ngón
+    else if (!isRightHand && isFrontCamera) {
+      setRotation(prev => ({ ...prev, y: 0 }));
+      tryon.modelRotation.y = 0;
+      console.log(`🔄 Reset rotation Y for left hand: 0`);
+    }
   }, [currentHand, currentCamera, currentFinger, deviceType, tryon]);
 
   // ==========================================
