@@ -89,6 +89,24 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
   }, [currentHand, currentCamera, currentFinger, deviceType, tryon]);
 
   // ==========================================
+  // OVERRIDE POSITION X - Left Hand Back Camera
+  // ==========================================
+  useEffect(() => {
+    if (!tryon || !tryon.modelPosition) return;
+
+    const isMobile = deviceType === 'Mobile';
+    const isBackCamera = isMobile ? currentCamera === 0 : false;
+    const isLeftHand = currentHand === 0;
+
+    // Tay trái + Cam sau + Ngón áp út (0) → position X = 0.060
+    if (isLeftHand && isBackCamera && currentFinger === 0) {
+      setPosition(prev => ({ ...prev, x: 0.060 }));
+      tryon.modelPosition.x = 0.060;
+      console.log(`📍 Override position X for left hand back camera finger 0: 0.060`);
+    }
+  }, [currentHand, currentCamera, currentFinger, deviceType, tryon]);
+
+  // ==========================================
   // UPDATE FUNCTIONS
   // ==========================================
 
