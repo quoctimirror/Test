@@ -334,9 +334,9 @@
     /* Content overlay box - fixed size for desktop */
     .sense-overlay__content {
         /* width: 978px; (old) */
-        width: 900px;
+        width: 860px;
         /* height: 956px; */
-        height: 780px;
+        height: 740px;
         flex-shrink: 0;
         aspect-ratio: 489/478;
     }
