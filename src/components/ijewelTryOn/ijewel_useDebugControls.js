@@ -58,7 +58,7 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
     const isRightHand = currentHand === 1;
 
     // Chỉ apply cho: Tay phải + Cam trước
-    if (isRightHand) {
+    if (isRightHand && isFrontCamera) {
       let newRotationY = null;
 
       // Ngón áp út (0) → rotation Y = -0.080
@@ -81,7 +81,7 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
       }
     }
     // Tay trái → rotation Y = 0 cho tất cả các ngón
-    else if (!isRightHand) {
+    else if (!isRightHand && isFrontCamera) {
       setRotation(prev => ({ ...prev, y: 0 }));
       tryon.modelRotation.y = 0;
       console.log(`🔄 Reset rotation Y for left hand: 0`);
@@ -99,7 +99,7 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
     const isLeftHand = currentHand === 0;
 
     // Tay trái + Cam sau + Ngón áp út (0) → position X = 0.060
-    if (isLeftHand && currentFinger === 0) {
+    if (isLeftHand && isBackCamera && currentFinger === 0) {
       setPosition(prev => ({ ...prev, x: 0.060 }));
       tryon.modelPosition.x = 0.060;
       console.log(`📍 Override position X for left hand back camera finger 0: 0.060`);
