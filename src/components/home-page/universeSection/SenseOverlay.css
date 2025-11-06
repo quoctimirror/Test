@@ -443,7 +443,7 @@
 
     .sense-overlay__content {
         width: 706px;
-        height: 690px;
+        height: 600px;
         flex-shrink: 0;
     }
 
@@ -546,8 +546,10 @@
     }
 
     .sense-overlay__content {
-        width: 706px;
-        height: 690px;
+        /* width: 706px;
+        height: 690px; */
+        width: 580px;
+        height: 560px;
         flex-shrink: 0;
         aspect-ratio: 1/1;
     }
@@ -632,10 +634,10 @@
     .sense-overlay__description {
         display: block;
         position: fixed;
-        top: calc(50% + 150px);
+        top: calc(50% + 135px);
         left: 50%;
         transform: translateX(-50%);
-        width: 60vw;
+        width: 52vw;
         height: 50px;
         text-align: center;
         z-index: 102;

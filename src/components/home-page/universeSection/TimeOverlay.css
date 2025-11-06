@@ -312,8 +312,10 @@
     }
 
     .time-overlay__content {
-        width: 522px;
-        height: 796px;
+        /* width: 522px;
+        height: 796px; */
+        width: 422px;
+        height: 596px;
         flex-shrink: 0;
         aspect-ratio: 261/398;
     }
@@ -321,7 +323,7 @@
     /* Time title - copy from desktop */
     .time-overlay__title {
         position: fixed;
-        top: calc(50% - 60px);
+        top: calc(50% - 70px);
         left: 50%;
         transform: translate(-50%, -50%);
         color: var(--White, #FFF);
@@ -348,7 +350,7 @@
     /* Bottom text section - copy from desktop */
     .time-overlay__bottom-text {
         position: absolute;
-        top: calc(50% + 160);
+        top: calc(50% + 150px);
         left: 50%;
         transform: translateX(-50%);
         width: 284px;
@@ -369,7 +371,7 @@
     /* Close Button - Visible on mobile/tablet, hidden on desktop */
     .time-overlay__close-button {
         position: fixed;
-        bottom: calc(20% - 80px);
+        bottom: calc(20% - 60px);
         left: 50%;
         transform: translateX(-50%);
         z-index: 103;
@@ -392,14 +394,16 @@
     }
 
     .time-overlay__content {
-        width: 466px;
-        height: 712px;
+        /* width: 466px;
+        height: 712px; */
+        width: 300px;
+        height: 512px;
         flex-shrink: 0;
         aspect-ratio: 233/356;
     }
 
     .time-overlay__title {
-        top: calc(50% - 80px);
+        top: calc(50% - 60px);
         font-size: 32px;
         letter-spacing: -0.64px;
     }
@@ -409,8 +413,8 @@
     }
 
     .time-overlay__bottom-text {
-        top: calc(50% + 140px);
-        width: 260px;
+        top: calc(50% + 115px);
+        width: 250px;
         height: 72px;
         text-align: center;
         line-height: 100%;

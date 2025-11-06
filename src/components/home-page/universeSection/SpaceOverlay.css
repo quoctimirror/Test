@@ -398,15 +398,17 @@
     }
 
     .space-overlay__content {
-        width: 522px;
-        height: 792px;
+        /* width: 522px;
+        height: 792px; */
+        width: 422px;
+        height: 692px;
         flex-shrink: 0;
         aspect-ratio: 29/44;
     }
 
     /* Top text section for tablet */
     .space-overlay__top-text {
-        top: calc(50% - 280px);
+        top: calc(50% - 230px);
         width: 210px;
     }
 
@@ -416,7 +418,7 @@
 
     /* StarlightEffect pointing up - same as desktop positioning */
     .space-overlay__starlight-up {
-        top: calc(50% + 10px);
+        top: calc(50% + 25px);
     }
 
     /* Space title - same as desktop positioning */
@@ -428,12 +430,12 @@
 
     /* StarlightEffect pointing down - same as desktop positioning */
     .space-overlay__starlight-down {
-        top: calc(50% - 60px);
+        top: calc(50% - 75px);
     }
 
     /* Bottom text section for tablet */
     .space-overlay__bottom-text {
-        top: calc(50% + 170px);
+        top: calc(50% + 120px);
         width: 210px;
         height: 67.537px;
     }
@@ -466,8 +468,10 @@
     }
 
     .space-overlay__content {
-        width: 424px;
-        height: 642px;
+        /* width: 424px;
+        height: 642px; */
+        width: 324px;
+        height: 600px;
         flex-shrink: 0;
         aspect-ratio: 212/321;
     }
@@ -475,13 +479,12 @@
     /* Top text section - mobile positioning */
     .space-overlay__top-text {
         position: absolute;
-        top: calc(50% - 220px);
+        top: calc(50% - 180px);
         left: 50%;
         transform: translateX(-50%);
-        width: 150px;
+        width: 170px;
         height: 44px;
         text-align: justify;
-        width: 180px;
     }
 
     .space-overlay__top-line span {
@@ -493,7 +496,7 @@
     /* StarlightEffect pointing down - trên chữ Space */
     .space-overlay__starlight-down {
         position: absolute;
-        top: calc(50% - 70px);
+        top: calc(50% - 90px);
         left: 50%;
         transform: translateX(-50%);
     }
@@ -501,7 +504,7 @@
     /* Chữ Space - giữa màn hình */
     .space-overlay__title {
         position: absolute;
-        top: calc(50% - 20px);
+        top: calc(50% - 30px);
         left: 50%;
         transform: translate(-50%, -50%);
         font-size: 32px;
@@ -519,11 +522,11 @@
     /* Bottom text section - mobile positioning */
     .space-overlay__bottom-text {
         position: absolute;
-        top: calc(50% + 130px);
+        top: calc(50% + 90px);
         left: 50%;
         transform: translateX(-50%);
         display: flex;
-        width: 180px;
+        width: 170px;
         height: 55px;
         flex-direction: column;
         justify-content: flex-end;
