@@ -258,16 +258,30 @@
         aspect-ratio: 541/820;
     }
 
+    /* Move SVG down for desktop */
+    .space-overlay__svg {
+        top: 50px;
+    }
+
     /* Title - Heading 2 style for desktop */
     .space-overlay__title {
         font-size: 60px;
         letter-spacing: -1.2px;
+        top: calc(50% + 10px);
+    }
+
+    /* Starlight effects position for desktop */
+    .space-overlay__starlight-up {
+        top: calc(50% + 60px);
+    }
+
+    .space-overlay__starlight-down {
+        top: calc(50% - 30px);
     }
 
     /* Top text position for desktop */
     .space-overlay__top-text {
-        /* top: calc(50% - 280px); */
-        top: calc(50% - 240px);
+        top: calc(50% - 190px);
         width: 210px;
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
         text-align: justify;
@@ -281,7 +295,7 @@
 
     /* Bottom text position for desktop */
     .space-overlay__bottom-text {
-        top: calc(50% + 130px);
+        top: calc(50% + 180px);
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
         text-align: justify;
         /* bodytext-6 no margin */
