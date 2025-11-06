@@ -40,7 +40,7 @@ const SENSE_DESCRIPTIONS = {
 };
 
 const SenseOverlay = ({ isVisible, onClose, origin }) => {
-    const [selectedSense, setSelectedSense] = useState(null);
+    const [selectedSense, setSelectedSense] = useState('sight'); // Default to 'sight'
     const [isClosing, setIsClosing] = useState(false);
     const closeTimeoutRef = useRef(null);
 

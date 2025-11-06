@@ -253,7 +253,7 @@
     /* Content overlay box - fixed size for desktop */
     .space-overlay__content {
         width: 541px;
-        height: 820px;
+        height: 720px;
         flex-shrink: 0;
         aspect-ratio: 541/820;
     }
@@ -266,7 +266,8 @@
 
     /* Top text position for desktop */
     .space-overlay__top-text {
-        top: calc(50% - 280px);
+        /* top: calc(50% - 280px); */
+        top: calc(50% - 240px);
         width: 210px;
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
         text-align: justify;
@@ -280,7 +281,7 @@
 
     /* Bottom text position for desktop */
     .space-overlay__bottom-text {
-        top: calc(50% + 170px);
+        top: calc(50% + 130px);
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
         text-align: justify;
         /* bodytext-6 no margin */

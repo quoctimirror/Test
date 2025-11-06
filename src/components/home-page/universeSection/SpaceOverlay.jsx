@@ -6,7 +6,7 @@ import RectSpaceSVG from './svg/RectSpaceSVG';
 
 const SpaceOverlay = ({ isVisible, onClose, origin }) => {
     const [isClosing, setIsClosing] = useState(false);
-    
+
     const closeTimeoutRef = useRef(null);
 
     const handleClose = useCallback(() => {
@@ -121,11 +121,11 @@ const SpaceOverlay = ({ isVisible, onClose, origin }) => {
                     </div>
                 </div>
                 <div className="space-overlay__starlight-up">
-                    <StarlightEffect direction="falling" height={150} />
+                    <StarlightEffect direction="falling" height={120} />
                 </div>
                 <h2 className="space-overlay__title heading2--no-margin">Space</h2>
                 <div className="space-overlay__starlight-down">
-                    <StarlightEffect direction="falling" height={150} />
+                    <StarlightEffect direction="falling" height={120} />
                 </div>
                 <div className="space-overlay__bottom-text">
                     <div className="space-overlay__bottom-line">

@@ -196,7 +196,8 @@
     /* Content overlay box - fixed size for desktop */
     .time-overlay__content {
         width: 546px;
-        height: 834px;
+        /* height: 834px */
+        height: 700px;
         flex-shrink: 0;
         aspect-ratio: 91/139;
     }
