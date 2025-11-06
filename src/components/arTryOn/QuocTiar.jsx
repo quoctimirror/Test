@@ -238,7 +238,7 @@ function FingerAxesDebug({ landmarks, selectedFinger, camera }) {
 function RingWithOccluder({
   landmarks,
   selectedFinger,
-  modelPath = '/myfav.glb',
+  modelPath = '/models/rings/myfav.glb',
   meshColors = {},
   isVisible = true,
   onMeshListLoad,
@@ -539,10 +539,10 @@ const Scene = React.memo(function Scene({ landmarks, selectedFinger, modelPath, 
 
 // ==================== PRELOAD MODEL ====================
 // Preload the model to avoid loading delays
-useGLTF.preload('/myfav.glb')
+useGLTF.preload('/models/rings/myfav.glb')
 
 // ==================== MAIN COMPONENT ====================
-export default function QuocTiar({ modelPath = '/myfav.glb' }) {
+export default function QuocTiar({ modelPath = '/models/rings/myfav.glb' }) {
 
   const [landmarks, setLandmarks] = useState(null)
   const [isHandVisible, setIsHandVisible] = useState(false)

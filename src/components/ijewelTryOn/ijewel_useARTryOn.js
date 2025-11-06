@@ -101,6 +101,16 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       setLoadingProgress(0);
       setLoadingText('Loading models... This will take a few seconds.');
 
+      // Clear scene to hide old model
+      if (viewer.scene) {
+        const scene = viewer.scene;
+        // Remove all previous models from scene
+        const models = scene.modelRoot?.children?.filter(child => child.modelObject) || [];
+        models.forEach(model => {
+          if (model.visible !== undefined) model.visible = false;
+        });
+      }
+
       setLoadingProgress(30);
       await viewer.load(modelConfigs[modelKey].json);
 
@@ -248,22 +258,58 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
 
   const toggleAR = useCallback(async () => {
     const tryon = tryonRef.current;
-    if (!tryon) return;
+    const viewer = viewerRef.current;
+    const canvas = canvasRef.current;
+    if (!tryon || !canvas) return;
 
     try {
       if (tryon.running) {
         await tryon.stop();
         setIsARRunning(false);
+
+        // Re-enable 3D viewer rendering when exiting AR
+        if (viewer) {
+          viewer.renderEnabled = true;
+        }
+
+        canvas.style.opacity = '1';
+        console.log('🔙 Exited AR mode, viewer enabled');
       } else {
+        // Hide canvas before starting to avoid showing front camera
+        canvas.style.opacity = '0';
+
+        // Disable 3D viewer rendering when entering AR mode
+        if (viewer) {
+          viewer.renderEnabled = false;
+          console.log('🎥 Entering AR mode, viewer disabled');
+        }
+
         await tryon.start();
         setIsARRunning(true);
 
+        // Flip to back camera as soon as possible
         setTimeout(() => {
+          if (tryon?.flipCamera) {
+            tryon.flipCamera();
+            console.log('📷 Flipping to back camera...');
+
+            // Show canvas immediately after flip (total 500ms from start)
+            setTimeout(() => {
+              canvas.style.opacity = '1';
+              console.log('✅ Back camera ready, showing canvas');
+            }, 200);
+          } else {
+            // If flip failed, still show canvas
+            canvas.style.opacity = '1';
+          }
           hideWatermarks();
-        }, 500);
+        }, 300);
       }
     } catch (err) {
       console.error('❌ AR toggle error:', err);
+      // Re-enable viewer and show canvas even on error
+      if (viewer) viewer.renderEnabled = true;
+      if (canvas) canvas.style.opacity = '1';
 
       let errorMsg = 'Failed to start AR try-on.\n\n';
       if (err.name === 'NotAllowedError' || err.message.includes('permission')) {
@@ -319,9 +365,18 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
 
     const reloadModel = async () => {
       setIsLoading(true);
+
+      // Disable render while loading to hide old model
+      viewer.renderEnabled = false;
+
       const modelKey = getModelKey(modelName);
       await loadModelProgressive(modelKey);
+
+      // Re-enable render after new model is loaded
+      viewer.renderEnabled = true;
+
       setIsLoading(false);
+      console.log(`✅ Model switched to: ${modelKey}`);
     };
 
     reloadModel();

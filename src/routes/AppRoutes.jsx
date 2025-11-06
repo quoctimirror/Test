@@ -26,6 +26,7 @@ const HoverExpandSection = lazy(() =>
 const View360 = lazy(() => import("@components/view360/View360.jsx"));
 // const AR = lazy(() => import("@components/arTryOn/AR.jsx"));
 const TryOnRing = lazy(() => import("@components/arTryOn/Occluder3.jsx"));
+const TryOnRingHQ = lazy(() => import("@components/arTryOn/Occluder4.jsx"));
 // KHÔNG lazy load QuocTiar vì nó cần khởi tạo camera/Canvas ngay lập tức
 import QuocTiar from "@components/arTryOn/QuocTiar.jsx";
 const SimpleMeshInspector = lazy(() =>
@@ -158,6 +159,7 @@ export default function AppRoutes() {
       location.pathname.startsWith(ROUTES.COLLECTIONS + "/") ||
       location.pathname.startsWith(ROUTES.NEWS + "/") ||
       location.pathname.startsWith(ROUTES.AR_RINGS.split(":")[0]) ||
+      location.pathname.startsWith(ROUTES.AR_RINGS_HQ.split(":")[0]) ||
       location.pathname.startsWith("/ar/ijewel") ||
       location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -180,6 +182,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.AR_RINGS.split(":")[0]) ||
+    location.pathname.startsWith(ROUTES.AR_RINGS_HQ.split(":")[0]) ||
     location.pathname.startsWith("/ar/quoc-ti") ||
     location.pathname.startsWith("/ar/mesh-inspector") ||
     location.pathname.startsWith("/ar/ijewel") ||
@@ -197,6 +200,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.AR_RINGS.split(":")[0]) ||
+    location.pathname.startsWith(ROUTES.AR_RINGS_HQ.split(":")[0]) ||
     location.pathname.startsWith("/ar/quoc-ti") ||
     location.pathname.startsWith("/ar/mesh-inspector") ||
     location.pathname.startsWith("/ar/ijewel") ||
@@ -316,12 +320,17 @@ export default function AppRoutes() {
             <Route path={ROUTES.AR_RINGS} element={<TryOnRing />} />
           </Route>
 
+          {/* High Quality Studio Mode AR Try-On */}
+          <Route element={<TryOnRingLayout />}>
+            <Route path={ROUTES.AR_RINGS_HQ} element={<TryOnRingHQ />} />
+          </Route>
+
           {/* IJewel AR Try-On Route - Support query params: ?model=oval */}
           <Route path={ROUTES.IJEWEL_AR_TRYON} element={<IJewelARTryOnPage />} />
 
           <Route
             path="/ar/quoc-ti"
-            element={<QuocTiar modelPath="/models/myfav.glb" />}
+            element={<QuocTiar modelPath="/models/rings/myfav.glb" />}
           />
 
           <Route path="/ar/mesh-inspector" element={<SimpleMeshInspector />} />

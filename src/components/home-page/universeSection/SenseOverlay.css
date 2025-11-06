@@ -333,10 +333,17 @@
 
     /* Content overlay box - fixed size for desktop */
     .sense-overlay__content {
-        width: 978px;
-        height: 956px;
+        /* width: 978px; (old) */
+        width: 860px;
+        /* height: 956px; */
+        height: 740px;
         flex-shrink: 0;
         aspect-ratio: 489/478;
+    }
+
+    /* Move SVG down for desktop */
+    .sense-overlay__svg {
+        top: 50px;
     }
 }
 
@@ -440,7 +447,7 @@
 
     .sense-overlay__content {
         width: 706px;
-        height: 690px;
+        height: 600px;
         flex-shrink: 0;
     }
 
@@ -543,8 +550,10 @@
     }
 
     .sense-overlay__content {
-        width: 706px;
-        height: 690px;
+        /* width: 706px;
+        height: 690px; */
+        width: 580px;
+        height: 560px;
         flex-shrink: 0;
         aspect-ratio: 1/1;
     }
@@ -629,10 +638,10 @@
     .sense-overlay__description {
         display: block;
         position: fixed;
-        top: calc(50% + 150px);
+        top: calc(50% + 135px);
         left: 50%;
         transform: translateX(-50%);
-        width: 60vw;
+        width: 52vw;
         height: 50px;
         text-align: center;
         z-index: 102;
@@ -661,6 +670,7 @@
     .sense-overlay__title {
         font-size: 60px;
         letter-spacing: -1.2px;
+        top: calc(50% + 20px);
     }
 
     /* Text labels - Bodytext 1 style for desktop */
@@ -698,7 +708,7 @@
     .sense-overlay__description {
         display: block;
         position: fixed;
-        top: calc(50% + 140px);
+        top: calc(50% + 190px);
         left: 50%;
         transform: translateX(-50%);
         text-align: center;
@@ -759,5 +769,46 @@
     /* Close button position for desktop */
     .sense-overlay__close-button {
         bottom: calc(20% - 80px);
+    }
+
+    /* Move all elements down by 50px */
+    .sense-overlay__starlight {
+        top: calc(50% + 0px);
+    }
+
+    .sense-overlay__starlight-10h {
+        top: calc(50% + 45px);
+    }
+
+    .sense-overlay__starlight-8h {
+        top: calc(50% + 25px);
+    }
+
+    .sense-overlay__starlight-2h {
+        top: calc(50% + 40px);
+    }
+
+    .sense-overlay__starlight-4h {
+        top: calc(50% + 35px);
+    }
+
+    .sense-overlay__sound-text {
+        top: calc(50% + 140px);
+    }
+
+    .sense-overlay__taste-text {
+        top: calc(50% + 70px);
+    }
+
+    .sense-overlay__scent-text {
+        top: calc(50% + 70px);
+    }
+
+    .sense-overlay__sight-text {
+        top: calc(50% - 88px);
+    }
+
+    .sense-overlay__touch-text {
+        top: calc(50% - 88px);
     }
 }

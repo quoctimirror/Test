@@ -90,7 +90,8 @@
 
 .presence-overlay__title {
     position: fixed;
-    top: calc(50% - 200px);
+    /* top: calc(50% - 200px); */
+    top: calc(50% - 120px);
     left: 50%;
     transform: translate(-50%, -50%);
     color: var(--White, #FFF);
@@ -106,7 +107,7 @@
 
 .presence-overlay__starlight {
     position: fixed;
-    top: calc(50% - 240px);
+    top: calc(50% - 210px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
@@ -117,7 +118,7 @@
 
 .presence-overlay__milestone-text {
     position: fixed;
-    top: calc(50% + 100px);
+    top: calc(50% + 110px);
     left: 50%;
     transform: translateX(-50%);
     width: 378px;
@@ -138,7 +139,7 @@
 
 .presence-overlay__journey-text {
     position: fixed;
-    top: calc(50% + 114px);
+    top: calc(50% + 124px);
     left: 50%;
     transform: translateX(-50%);
     width: 344px;
@@ -159,7 +160,7 @@
 
 .presence-overlay__story-text {
     position: fixed;
-    top: calc(50% + 140px);
+    top: calc(50% + 150px);
     left: 50%;
     transform: translateX(-50%);
     z-index: 102;
@@ -240,16 +241,40 @@
 
     /* Content overlay box - fixed size for desktop */
     .presence-overlay__content {
-        width: 846px;
-        height: 846px;
+        width: 700px;
+        height: 700px;
         flex-shrink: 0;
         aspect-ratio: 1/1;
+    }
+
+    /* Move SVG down for desktop */
+    .presence-overlay__svg {
+        top: 50px;
     }
 
     /* Title - Heading 2 style for desktop */
     .presence-overlay__title {
         font-size: 60px;
         letter-spacing: -1.2px;
+        top: calc(50% - 70px);
+    }
+
+    /* Starlight position for desktop */
+    .presence-overlay__starlight {
+        top: calc(50% - 140px);
+    }
+
+    /* Text elements position for desktop */
+    .presence-overlay__milestone-text {
+        top: calc(50% + 120px);
+    }
+
+    .presence-overlay__journey-text {
+        top: calc(50% + 134px);
+    }
+
+    .presence-overlay__story-text {
+        top: calc(50% + 160px);
     }
 
     /* Text elements font-size for desktop */
@@ -261,7 +286,7 @@
 
     /* StarlightEffect height for desktop */
     .presence-overlay__starlight .universe-star-container-center svg {
-        height: 250px !important;
+        height: 200px !important;
     }
 }
 
@@ -325,6 +350,31 @@
     }
 }
 
+/* Desktop-specific animations with translateY */
+@keyframes zoomInDesktop {
+    from {
+        opacity: 0;
+        transform: scale(0) translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(50px);
+    }
+}
+
+@keyframes zoomOutDesktop {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(50px);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0) translateY(50px);
+    }
+}
+
 @keyframes syncStarlight {
     0% {
         opacity: 1;
@@ -352,18 +402,18 @@
     }
 
     .presence-overlay__content {
-        width: 690px;
-        height: 690px;
+        width: 580px;
+        height: 580px;
         flex-shrink: 0;
         aspect-ratio: 1/1;
     }
 
     .presence-overlay__title {
-        top: calc(50% - 150px);
+        top: calc(50% - 130px);
     }
 
     .presence-overlay__starlight {
-        top: calc(50% - 150px);
+        top: calc(50% - 160px);
     }
 
     .presence-overlay__starlight .universe-star-container-center {
@@ -376,19 +426,19 @@
     }
 
     .presence-overlay__milestone-text {
-        top: calc(50% + 65px);
+        top: calc(50% + 35px);
         width: 90%;
         max-width: 300px;
     }
 
     .presence-overlay__journey-text {
-        top: calc(50% + 80px);
+        top: calc(50% + 50px);
         width: 90%;
         max-width: 280px;
     }
 
     .presence-overlay__story-text {
-        top: calc(50% + 110px);
+        top: calc(50% + 80px);
         width: 90%;
         max-width: 320px;
     }
@@ -416,20 +466,20 @@
     }
 
     .presence-overlay__content {
-        width: 640px;
-        height: 640px;
+        width: 500px;
+        height: 500px;
         flex-shrink: 0;
         aspect-ratio: 1/1;
     }
 
     .presence-overlay__title {
-        top: calc(50% - 120px);
+        top: calc(50% - 110px);
         font-size: 32px;
         letter-spacing: -0.64px;
     }
 
     .presence-overlay__starlight {
-        top: calc(50% - 210px);
+        top: calc(50% - 220px);
     }
 
     /* StarlightEffect height for mobile */
@@ -438,7 +488,7 @@
     }
 
     .presence-overlay__milestone-text {
-        top: calc(50% + 70px);
+        top: calc(50% + 40px);
         width: 308.7px;
         height: 22.867px;
         flex-shrink: 0;
@@ -454,7 +504,7 @@
     }
 
     .presence-overlay__journey-text {
-        top: calc(50% + 80px);
+        top: calc(50% + 50px);
         width: 280.933px;
         height: 22.867px;
         flex-shrink: 0;
@@ -470,7 +520,7 @@
     }
 
     .presence-overlay__story-text {
-        top: calc(50% + 100px);
+        top: calc(50% + 70px);
         width: 228.667px;
         height: 68.6px;
     }

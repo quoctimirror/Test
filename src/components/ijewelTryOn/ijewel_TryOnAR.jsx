@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styles from './ijewel_TryOnAR.module.css';
 import { useIJewelARTryOn } from './ijewel_useARTryOn';
 import { useIJewelDebugControls } from './ijewel_useDebugControls';
+import { useMediaPipeHands } from './ijewel_useMediaPipeHands';
 
 /**
  * IJewel TryOnAR Component - Component chính cho AR Try-On nhẫn
@@ -20,11 +21,16 @@ const IJewelTryOnAR = ({
   // REFS - Tham chiếu đến DOM elements
   // ==========================================
   const canvasRef = useRef(null);
+  const debugPanelRef = useRef(null);
 
   // ==========================================
   // STATES
   // ==========================================
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
+  const [currentFinger, setCurrentFinger] = useState(0);
+  const [currentCamera, setCurrentCamera] = useState(0); // 0 = cam sau (mobile) / cam trước (desktop), 1 = cam trước (mobile)
+  const [currentHand, setCurrentHand] = useState(-1); // -1 = chưa phát hiện, 0 = tay trái, 1 = tay phải
+  const [deviceType, setDeviceType] = useState('Unknown');
 
   // ==========================================
   // CUSTOM HOOKS - Logic AR Try-On
@@ -62,8 +68,95 @@ const IJewelTryOnAR = ({
     copyToClipboard
   } = useIJewelDebugControls({
     tryon,
-    modelName
+    modelName,
+    currentHand,
+    currentCamera,
+    currentFinger,
+    deviceType
   });
+
+  // ==========================================
+  // CUSTOM HOOKS - MediaPipe Hand Detection
+  // ==========================================
+  const { detectedHand } = useMediaPipeHands({
+    canvasRef,
+    isARRunning
+  });
+
+  // ==========================================
+  // DETECT DEVICE TYPE
+  // ==========================================
+  useEffect(() => {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    setDeviceType(isMobile ? 'Mobile' : 'Desktop');
+    // Desktop/Laptop mặc định cam trước (0), Mobile mặc định cam sau (0)
+  }, []);
+
+  // ==========================================
+  // HELPER FUNCTIONS
+  // ==========================================
+  const getFingerName = (index) => {
+    const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+    return fingerNames[index] || 'Unknown';
+  };
+
+  const getCameraName = () => {
+    const isMobile = deviceType === 'Mobile';
+    if (isMobile) {
+      return currentCamera === 0 ? 'Cam sau' : 'Cam trước';
+    } else {
+      return 'Cam trước'; // Desktop/Laptop chỉ có cam trước
+    }
+  };
+
+  const getHandName = () => {
+    if (currentHand === -1) return 'Chưa phát hiện';
+    return currentHand === 0 ? 'Tay trái' : 'Tay phải';
+  };
+
+  // ==========================================
+  // SYNC MEDIAPIPE HAND DETECTION
+  // ==========================================
+  useEffect(() => {
+    setCurrentHand(detectedHand);
+  }, [detectedHand]);
+
+  const handleSwitchFinger = () => {
+    const newFinger = (currentFinger + 1) % 5;
+    setCurrentFinger(newFinger);
+    switchFinger();
+  };
+
+  const handleFlipCamera = () => {
+    const newCamera = (currentCamera + 1) % 2;
+    setCurrentCamera(newCamera);
+    flipCamera();
+  };
+
+  // ==========================================
+  // CLICK OUTSIDE TO CLOSE DEBUG PANEL
+  // ==========================================
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (debugPanelOpen &&
+          debugPanelRef.current &&
+          !debugPanelRef.current.contains(event.target)) {
+        // Check if click is not on debug toggle button
+        const debugToggle = document.querySelector(`.${styles.debugToggle}`);
+        if (debugToggle && !debugToggle.contains(event.target)) {
+          setDebugPanelOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [debugPanelOpen]);
 
   // ==========================================
   // RENDER
@@ -106,9 +199,12 @@ const IJewelTryOnAR = ({
       {/* Debug Panel */}
       {debugPanelOpen && (
         <DebugPanel
+          ref={debugPanelRef}
           position={position}
           rotation={rotation}
           scale={scale}
+          currentFinger={currentFinger}
+          fingerName={getFingerName(currentFinger)}
           onPositionChange={updatePosition}
           onRotationChange={updateRotation}
           onScaleChange={updateScale}
@@ -127,13 +223,33 @@ const IJewelTryOnAR = ({
         </ShineButton>
       </div>
 
+      {/* Info Panel - Always visible on top left */}
+      <div className={styles.infoPanel}>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>Thiết bị:</span>
+          <span className={styles.infoValue}>{deviceType}</span>
+        </div>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>Camera:</span>
+          <span className={styles.infoValue}>{getCameraName()}</span>
+        </div>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>Bàn tay:</span>
+          <span className={styles.infoValue}>{getHandName()}</span>
+        </div>
+        <div className={styles.infoItem}>
+          <span className={styles.infoLabel}>Ngón tay:</span>
+          <span className={styles.infoValue}>{getFingerName(currentFinger)}</span>
+        </div>
+      </div>
+
       {/* Try-On Control Buttons */}
       {isARRunning && (
         <div className={styles.tryonOptions}>
-          <ShineButton onClick={flipCamera} small>
+          <ShineButton onClick={handleFlipCamera} small>
             Flip Camera
           </ShineButton>
-          <ShineButton onClick={switchFinger} small>
+          <ShineButton onClick={handleSwitchFinger} small>
             Switch Finger
           </ShineButton>
           <ShineButton onClick={saveImage} small>
@@ -221,28 +337,31 @@ const LoadingScreen = ({ progress, text }) => {
 // ==========================================
 // DEBUG PANEL COMPONENT
 // ==========================================
-const DebugPanel = ({
+const DebugPanel = React.forwardRef(({
   position,
   rotation,
   scale,
+  currentFinger,
+  fingerName,
   onPositionChange,
   onRotationChange,
   onScaleChange,
   onExport,
   onCopy
-}) => {
-  const [positionStep, setPositionStep] = useState(0.001);
-  const [rotationStep, setRotationStep] = useState(1);
-  const [scaleStep, setScaleStep] = useState(0.01);
+}, ref) => {
+  const [positionStep, setPositionStep] = useState(0.01);
+  const [rotationStep, setRotationStep] = useState(0.01);
+  const [scaleStep, setScaleStep] = useState(0.001);
 
   return (
-    <div className={styles.debugPanel}>
+    <div ref={ref} className={styles.debugPanel}>
+      <DebugSection title="👆 Current Finger">
+        <div className={styles.fingerDisplay}>
+          <span className={styles.fingerName}>{fingerName}</span>
+          <span className={styles.fingerIndex}>(Index: {currentFinger})</span>
+        </div>
+      </DebugSection>
       <DebugSection title="📍 Position">
-        <StepSizeControl
-          value={positionStep}
-          onChange={setPositionStep}
-          label="Step Size"
-        />
         <AxisControl
           label="X Axis"
           value={position.x}
@@ -258,17 +377,12 @@ const DebugPanel = ({
         <AxisControl
           label="Z Axis"
           value={position.z}
-          step={positionStep}
+          step={0.1}
           onChange={(val) => onPositionChange('z', val)}
         />
       </DebugSection>
 
       <DebugSection title="🔄 Rotation">
-        <StepSizeControl
-          value={rotationStep}
-          onChange={setRotationStep}
-          label="Step Size (degrees)"
-        />
         <AxisControl
           label="X Axis (degrees)"
           value={rotation.x}
@@ -284,17 +398,12 @@ const DebugPanel = ({
         <AxisControl
           label="Z Axis (degrees)"
           value={rotation.z}
-          step={rotationStep}
+          step={0.1}
           onChange={(val) => onRotationChange('z', val)}
         />
       </DebugSection>
 
       <DebugSection title="📏 Scale">
-        <StepSizeControl
-          value={scaleStep}
-          onChange={setScaleStep}
-          label="Step Size"
-        />
         <AxisControl
           label="Uniform Scale"
           value={scale}
@@ -313,7 +422,7 @@ const DebugPanel = ({
       </DebugSection>
     </div>
   );
-};
+});
 
 const DebugSection = ({ title, children }) => (
   <div className={styles.debugSection}>
@@ -337,8 +446,26 @@ const StepSizeControl = ({ value, onChange, label }) => (
 );
 
 const AxisControl = ({ label, value, step, onChange }) => {
+  const [inputValue, setInputValue] = React.useState(value.toFixed(3));
   const handleDecrease = () => onChange(value - step);
   const handleIncrease = () => onChange(value + step);
+
+  React.useEffect(() => {
+    setInputValue(value.toFixed(3));
+  }, [value]);
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputBlur = () => {
+    const parsed = parseFloat(inputValue);
+    if (!isNaN(parsed)) {
+      onChange(parsed);
+    } else {
+      setInputValue(value.toFixed(3));
+    }
+  };
 
   return (
     <div className={styles.controlGroup}>
@@ -350,8 +477,14 @@ const AxisControl = ({ label, value, step, onChange }) => {
         <input
           type="number"
           className={styles.controlInput}
-          value={value.toFixed(3)}
-          onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+          value={inputValue}
+          onChange={handleInputChange}
+          onBlur={handleInputBlur}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.target.blur();
+            }
+          }}
           step={step}
         />
         <button className={styles.controlBtn} onClick={handleIncrease}>

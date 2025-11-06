@@ -52,7 +52,6 @@
     letter-spacing: 0.5px;
     line-height: 120%;
     /* 19.2px */
-    margin-bottom: 12px;
 }
 
 .pv2-section2-title {
@@ -74,8 +73,7 @@
     /* 18.2px */
     margin: 0 auto !important;
     padding: 0 !important;
-    width: 305px;
-    height: 119px;
+    width: 100%;
     box-sizing: border-box;
     word-wrap: break-word;
     white-space: normal;
@@ -103,10 +101,6 @@
 
 .pv2-section2-config-row:first-child {
     border-top: 1px solid #E0E0E0;
-}
-
-.pv2-section2-config-row:last-child {
-    border-bottom: none;
 }
 
 .pv2-section2-config-label {

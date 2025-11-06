@@ -7,56 +7,52 @@
 
 .pv2-mobile-config-modal {
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    right: 0;
+    width: 100%;
+    height: 90vh;
     background: linear-gradient(180deg, #FFF 0%, #BB234C 100%);
-    z-index: 300;
+    z-index: 50;
     box-sizing: border-box;
-    transition: transform 0.5s ease-in-out;
+    transition: transform 0.5s ease-in-out, z-index 0s 0.5s;
     overflow: hidden;
+    padding: 24px 18px;
 }
 
 .pv2-mobile-config-modal.open {
     transform: translateY(0);
+    z-index: 200;
+    transition: transform 0.5s ease-in-out, z-index 0s 0.5s;
+
 }
 
 .pv2-mobile-config-modal.closed {
+    transform: translateY(calc(90vh - (115 + 24) / (657 + 40) * 100vh));
+    z-index: 50;
+    transition: transform 0.5s ease-in-out, z-index 0s 0s;
+}
+
+.pv2-mobile-config-modal.hidden {
     transform: translateY(100%);
+    z-index: 50;
+    transition: transform 0.5s ease-in-out;
 }
 
 /* Main Content Container - Flexbox Layout */
 .pv2-mobile-config-content {
-    position: fixed;
-    top: 50%;
-    /* Center vertically */
-    left: 11vw;
-    /* Left margin: 11% */
-    right: 11vw;
-    /* Right margin: 11% */
-    transform: translateY(-50%);
-    /* Center alignment */
-
-    width: auto;
-    /* Tự động tính từ left/right */
-    height: 80vh;
-    /* MOBILE: Luôn luôn 80% chiều cao màn hình */
-    max-height: 80vh;
-    /* Maximum 80vh */
+    position: relative;
+    width: 100%;
+    height: 100%;
 
     box-sizing: border-box;
     padding: 0;
 
-    /* Flexbox layout theo chiều dọc */
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    /* Giãn đều các phần tử với khoảng cách bằng nhau */
+    justify-content: space-between;
     gap: 2vh;
-    /* Không dùng gap để space-evenly tự động tính */
 
-    /* KHÔNG SCROLL - Tất cả phải fit vào viewport */
     overflow: hidden;
 }
 
@@ -67,7 +63,11 @@
     -webkit-text-fill-color: #BC224C !important;
     filter: none !important;
     backdrop-filter: none !important;
-    letter-spacing: -0.02em !important;
+    font-size: 32px !important;
+    font-style: italic !important;
+    font-weight: 300 !important;
+    line-height: 100% !important;
+    letter-spacing: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     flex-shrink: 1;
@@ -263,7 +263,7 @@
     color: #FFFFFF !important;
     text-align: center;
     align-self: stretch;
-    margin-bottom: 3.33vh;
+    margin-bottom: 10px;
     /* 24/720 for mobile */
 }
 
@@ -353,8 +353,7 @@
 
 .pv2-mobile-modal-appointment-btn {
     flex: 1 1 auto;
-    height: 36px !important;
-    /* Giảm từ 40px */
+    height: 49px !important;
     min-width: 0;
     width: 100%;
     display: flex;
@@ -362,22 +361,22 @@
 
 .pv2-mobile-modal-appointment-btn .shine-button-wrap {
     width: 100% !important;
-    height: 36px !important;
-    /* Giảm từ 40px */
+    height: 49px !important;
     max-width: none !important;
     flex: 1 !important;
 }
 
 .pv2-mobile-modal-appointment-btn .shine-glass-button {
     width: 100% !important;
-    height: 36px !important;
-    /* Giảm từ 40px */
+    height: 49px !important;
+    padding: 16px 20px !important;
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
     background: transparent !important;
     min-width: 0 !important;
     text-align: center !important;
+    box-sizing: border-box !important;
 }
 
 .pv2-mobile-modal-appointment-btn .button-text {
@@ -400,31 +399,25 @@
 /* 6️⃣ ORDER NOW BUTTON (nằm trong buttons-container) */
 .pv2-mobile-modal-order-btn {
     width: 100%;
-    height: 36px;
-    /* Giảm từ 40px */
-    min-height: 36px;
-    /* Đảm bảo min height */
+    height: 49px;
+    min-height: 49px;
     background: #FFFFFF;
     border: none;
     color: black;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 18px;
-    /* Giảm từ 20px */
+    border-radius: 24.5px;
     box-sizing: border-box;
     font-family: var(--font-bt-beau-sans);
-    font-size: 13px;
-    /* Giảm từ 14px */
+    font-size: 16px;
     font-weight: 400;
-    line-height: 36px;
-    /* Giảm từ 40px */
-    padding: 0;
+    line-height: 1.2;
+    padding: 16px 20px;
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    /* KHÔNG co lại */
 }
 
 .pv2-mobile-modal-order-btn:hover {

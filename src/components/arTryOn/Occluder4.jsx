@@ -1,10 +1,10 @@
-// OCCLUDER 3 - WITH BLOOM & POST-PROCESSING EFFECTS
-// Hybrid: Occluder2.jsx positioning + RingInspector.jsx sparkle effects
-// OPTIMIZED FOR MOBILE & LOW-END DEVICES
+// OCCLUDER 4 - STUDIO QUALITY RENDERING
+// Based on Occluder3.jsx + SimpleMeshInspector rendering techniques
+// MAXIMUM VISUAL QUALITY - Studio Mode with Clearcoat, Bloom, N8AO
 import { useState, useRef, useEffect, useCallback, useMemo, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useEnvironment, Environment, MeshRefractionMaterial } from '@react-three/drei';
-import { EffectComposer, ToneMapping, SMAA } from '@react-three/postprocessing';
+import { EffectComposer, SMAA, Bloom, N8AO } from '@react-three/postprocessing';
 import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import * as THREE from 'three';
 import { useParams } from 'react-router-dom';
@@ -53,21 +53,11 @@ const FINGER_GEOMETRY_DATA = {
 // Detect mobile device
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-// Detect low-end devices (tối ưu cực mạnh)
-const isLowEnd = (() => {
-    // Check hardware concurrency (số cores)
-    const cores = navigator.hardwareConcurrency || 2;
-    // Check memory (nếu có API)
-    const memory = navigator.deviceMemory || 4;
-    // Low-end: <= 4 cores hoặc <= 4GB RAM
-    return cores <= 4 || memory <= 4;
-})();
-
 const SMOOTHING_FACTOR = 0.25;
-const TARGET_FPS = isMobile ? 20 : 30;  // Mobile: 20fps, Desktop: 30fps
+const TARGET_FPS = isMobile ? 20 : 30;
 const FRAME_INTERVAL = 1000 / TARGET_FPS;
 
-// ==================== RING WITH OCCLUDER ====================
+// ==================== RING WITH OCCLUDER - STUDIO QUALITY ====================
 function RingWithOccluder({
     modelPath,
     ringTransform,
@@ -76,18 +66,16 @@ function RingWithOccluder({
     cameraAspect,
     meshColors = {},
     onMeshListLoad,
-    isMobile,
-    isLowEnd
+    isMobile
 }) {
     const { nodes } = useGLTF(modelPath);
     const ringGroupRef = useRef();
     const occluderRef = useRef();
     const { camera } = useThree();
 
-    // Sync camera với video aspect VÀ ĐẢM BẢO POSITION ĐÚNG
+    // Sync camera với video aspect
     useEffect(() => {
         if (camera) {
-            // Đảm bảo camera ở đúng vị trí
             camera.position.set(0, 0, 5);
             camera.lookAt(0, 0, 0);
 
@@ -115,30 +103,27 @@ function RingWithOccluder({
         }
     }, [nodes, onMeshListLoad]);
 
-    // Load environment map - dùng file nhẹ
-    const env = useEnvironment({ files: '/studio_env/env_metal_1.exr' });
+    // ⭐ STUDIO HDR - brown_photostudio_02_4k.exr
+    const env = useEnvironment({ files: '/studio_env/brown_photostudio_02_4k.exr' });
 
-    // Geometry cho occluder - tạo một lần
+    // Geometry cho occluder
     const occluderGeometry = useMemo(() => {
         const geo = new THREE.CylinderGeometry(1, 1, 1, 16);
         geo.rotateX(Math.PI / 2);
         return geo;
     }, []);
 
-    // Track if this is first frame to avoid initial lerp delay
     const isFirstFrameRef = useRef(true);
 
-    // Reset isFirstFrameRef khi cameraAspect thay đổi để recalculate transform
     useEffect(() => {
         isFirstFrameRef.current = true;
     }, [cameraAspect]);
 
-    // ÁP DỤNG SMOOTHING TRONG USEFRAME - GIỐNG OCCLUDER.JSX
+    // Smoothing trong useFrame
     useFrame(() => {
         if (!ringGroupRef.current || !occluderRef.current) return;
 
         if (isVisible && ringTransform && occluderTransform) {
-            // Nếu là frame đầu tiên, set trực tiếp không lerp
             if (isFirstFrameRef.current) {
                 ringGroupRef.current.position.copy(ringTransform.position);
                 ringGroupRef.current.scale.copy(ringTransform.scale);
@@ -150,14 +135,12 @@ function RingWithOccluder({
 
                 isFirstFrameRef.current = false;
             } else {
-                // Apply ring transform với SMOOTHING (giống Occluder.jsx)
                 ringGroupRef.current.position.lerp(ringTransform.position, SMOOTHING_FACTOR);
                 ringGroupRef.current.scale.lerp(ringTransform.scale, SMOOTHING_FACTOR);
                 ringGroupRef.current.quaternion.slerp(ringTransform.quaternion, SMOOTHING_FACTOR);
 
-                // Apply occluder transform với SMOOTHING
                 occluderRef.current.position.lerp(occluderTransform.position, SMOOTHING_FACTOR);
-                occluderRef.current.scale.copy(occluderTransform.scale); // Scale không cần smooth
+                occluderRef.current.scale.copy(occluderTransform.scale);
                 occluderRef.current.quaternion.slerp(occluderTransform.quaternion, SMOOTHING_FACTOR);
             }
 
@@ -166,7 +149,7 @@ function RingWithOccluder({
         } else {
             ringGroupRef.current.visible = false;
             occluderRef.current.visible = false;
-            isFirstFrameRef.current = true; // Reset để lần sau lại set trực tiếp
+            isFirstFrameRef.current = true;
         }
     });
 
@@ -181,14 +164,13 @@ function RingWithOccluder({
                 />
             </mesh>
 
-            {/* Ring model - render after - MATERIALS TỪ QUOCTIAR.JSX */}
+            {/* Ring model - STUDIO QUALITY MATERIALS */}
             <group ref={ringGroupRef} renderOrder={1} dispose={null} visible={false}>
                 {Object.keys(nodes).map(key => {
                     const node = nodes[key];
                     const material = node.material;
 
                     if (node.isInstancedMesh) {
-                        // Detect nếu InstancedMesh là kim cương
                         const isGemInstance = key.toLowerCase().includes('gem') ||
                             key.toLowerCase().includes('diamond') ||
                             key.toLowerCase().includes('stone');
@@ -202,20 +184,30 @@ function RingWithOccluder({
                                 instanceMatrix={node.instanceMatrix}
                             >
                                 {isGemInstance && env ? (
+                                    // ⭐ STUDIO DIAMOND MATERIAL
                                     <MeshRefractionMaterial
-                                        color={meshColors[key] || material?.color || '#ffffff'}
+                                        color={meshColors[key] || '#ffffff'}
                                         envMap={env}
-                                        envMapIntensity={isMobile ? 12.0 : 8.0}
-                                        aberrationStrength={isMobile ? 0.03 : 0.02}
-                                        toneMapped={false}
+                                        bounces={5}                    // ⭐ 5 bounces FULL QUALITY
+                                        ior={2.6}                      // ⭐ High IOR
+                                        fresnel={0.5}
+                                        aberrationStrength={0}          // ⭐ NO chromatic aberration
+                                        fastChroma={false}
+                                        toneMapped={false}              // ⭐ Keep natural brightness
+                                        transmission={1.0}
+                                        thickness={0.2}
+                                        envMapIntensity={1.3}           // ⭐ FULL intensity (giống SimpleMeshInspector)
+                                        clearcoat={1}                   // ⭐ WET LOOK
+                                        clearcoatRoughness={0}          // ⭐ Perfect gloss
                                     />
                                 ) : (
+                                    // ⭐ STUDIO METAL MATERIAL
                                     <meshStandardMaterial
-                                        color={meshColors[key] || material?.color || '#ffaf83'}
-                                        roughness={0.3}
-                                        metalness={0.8}
+                                        color={meshColors[key] || '#ffaf83'}
+                                        roughness={0.15}                // ⭐ FULL glossy (giống SimpleMeshInspector)
+                                        metalness={1}                   // ⭐ 100% metal
                                         envMap={env}
-                                        envMapIntensity={1.0}
+                                        envMapIntensity={1.5}           // ⭐ FULL reflection
                                         side={THREE.DoubleSide}
                                     />
                                 )}
@@ -224,7 +216,6 @@ function RingWithOccluder({
                     }
 
                     if (node.isMesh) {
-                        // Detect gem meshes by name - TỪ QUOCTIAR.JSX
                         const isGemMesh = key.toLowerCase().includes('gem') ||
                             key.toLowerCase().includes('diamond') ||
                             key.toLowerCase().includes('stone');
@@ -237,20 +228,30 @@ function RingWithOccluder({
                                 geometry={node.geometry}
                             >
                                 {isGemMesh && env ? (
+                                    // ⭐ STUDIO DIAMOND MATERIAL
                                     <MeshRefractionMaterial
-                                        color={meshColors[key] || material?.color || '#ffffff'}
+                                        color={meshColors[key] || '#ffffff'}
                                         envMap={env}
-                                        envMapIntensity={isMobile ? 12.0 : 8.0}
-                                        aberrationStrength={isMobile ? 0.03 : 0.02}
+                                        bounces={5}
+                                        ior={2.6}
+                                        fresnel={0.5}
+                                        aberrationStrength={0}
+                                        fastChroma={false}
                                         toneMapped={false}
+                                        transmission={1.0}
+                                        thickness={0.2}
+                                        envMapIntensity={1.3}
+                                        clearcoat={1}
+                                        clearcoatRoughness={0}
                                     />
                                 ) : (
+                                    // ⭐ STUDIO METAL MATERIAL
                                     <meshStandardMaterial
-                                        color={meshColors[key] || material?.color || '#ffaf83'}
-                                        roughness={0.3}
-                                        metalness={0.8}
+                                        color={meshColors[key] || '#ffaf83'}
+                                        roughness={0.15}
+                                        metalness={1}
                                         envMap={env}
-                                        envMapIntensity={1.0}
+                                        envMapIntensity={1.5}
                                         transparent={material?.transparent}
                                         opacity={material?.opacity ?? 1}
                                     />
@@ -266,7 +267,7 @@ function RingWithOccluder({
 }
 
 // ==================== MAIN COMPONENT ====================
-const Occluder3 = () => {
+const Occluder4 = () => {
     const { ringId } = useParams();
 
     const [loadingMessage, setLoadingMessage] = useState("Loading...");
@@ -275,7 +276,6 @@ const Occluder3 = () => {
     const [selectedFinger, setSelectedFinger] = useState("Ring");
     const [isProcessing, setIsProcessing] = useState(false);
 
-    // Transform states để truyền vào R3F
     const [ringTransform, setRingTransform] = useState(null);
     const [occluderTransform, setOccluderTransform] = useState(null);
     const [isHandVisible, setIsHandVisible] = useState(false);
@@ -294,18 +294,15 @@ const Occluder3 = () => {
     const isInitializedRef = useRef(false);
     const streamRef = useRef(null);
 
-    // Camera ref để tính toán positioning
     const virtualCameraRef = useRef({
         position: { z: 5 },
         fov: 50,
         aspect: 16 / 9
     });
 
-    // Determine ring config
     const selectedRingId = ringId || DEFAULT_RING_ID;
     const ringConfig = getRingById(selectedRingId);
 
-    // Handler for color change from RingColorPicker
     const handleColorChange = useCallback((meshName, color) => {
         setMeshColors(prev => ({
             ...prev,
@@ -315,7 +312,6 @@ const Occluder3 = () => {
 
     useEffect(() => { selectedFingerRef.current = selectedFinger; }, [selectedFinger]);
 
-    // Cleanup function
     const cleanup = useCallback(() => {
         console.log("🧹 Cleanup được gọi");
         if (animationFrameIdRef.current) {
@@ -328,7 +324,7 @@ const Occluder3 = () => {
         }
         isInitializedRef.current = false;
         handLandmarkerRef.current = null;
-        setIsCameraReady(false); // Reset camera ready state
+        setIsCameraReady(false);
         console.log("✅ Cleanup hoàn tất");
     }, []);
 
@@ -346,7 +342,7 @@ const Occluder3 = () => {
             setIsProcessing(true);
             setError(null);
             try {
-                console.log("🚀 Bắt đầu khởi tạo");
+                console.log("🚀 Bắt đầu khởi tạo (Studio Mode)");
                 await setupMediaPipe();
                 if (isCancelled) return;
                 await startWebcam();
@@ -354,7 +350,7 @@ const Occluder3 = () => {
                 startAnimationLoop();
                 isInitializedRef.current = true;
                 setLoadingMessage('');
-                console.log("✅ Khởi tạo thành công");
+                console.log("✅ Khởi tạo thành công (Studio Mode)");
             } catch (err) {
                 if (isCancelled) return;
                 console.error("❌ Khởi tạo thất bại:", err);
@@ -379,9 +375,9 @@ const Occluder3 = () => {
                     },
                     runningMode: "VIDEO",
                     numHands: 1,
-                    minHandDetectionConfidence: isMobile ? 0.7 : 0.5,  // Mobile: cao hơn để giảm tính toán
-                    minHandPresenceConfidence: isMobile ? 0.7 : 0.5,   // Mobile: cao hơn
-                    minTrackingConfidence: isMobile ? 0.6 : 0.5        // Mobile: tracking chặt hơn
+                    minHandDetectionConfidence: isMobile ? 0.7 : 0.5,
+                    minHandPresenceConfidence: isMobile ? 0.7 : 0.5,
+                    minTrackingConfidence: isMobile ? 0.6 : 0.5
                 });
                 console.log("✅ MediaPipe loaded");
             } catch (error) {
@@ -418,11 +414,10 @@ const Occluder3 = () => {
                         debugCanvasRef.current.width = vW;
                         debugCanvasRef.current.height = vH;
 
-                        // Update virtual camera aspect
                         const aspect = vW / vH;
                         virtualCameraRef.current.aspect = aspect;
                         setCameraAspect(aspect);
-                        setIsCameraReady(true); // Camera ready, có thể render Canvas
+                        setIsCameraReady(true);
                         console.log('📐 Camera aspect set:', aspect);
 
                         console.log("✅ Camera ready");
@@ -461,7 +456,6 @@ const Occluder3 = () => {
             animationFrameIdRef.current = requestAnimationFrame(animate);
         };
 
-        // ===== PROCESSFRAME - Y CHANG OCCLUDER.JSX =====
         const processFrame = () => {
             if (!handLandmarkerRef.current || !videoRef.current) {
                 return;
@@ -514,9 +508,8 @@ const Occluder3 = () => {
 
                     const targetPosition = new THREE.Vector3().addVectors(worldPos1, worldPos2).multiplyScalar(0.5);
 
-                    // Tính chiều rộng ngón tay
                     const fingerWidthInWorld = landmarkToWorld(widthLm1).distanceTo(landmarkToWorld(widthLm2));
-                    const SCALE_ADJUSTMENT_FACTOR = 0.06;  // GIảM SCALE XUỐNG
+                    const SCALE_ADJUSTMENT_FACTOR = 0.06;
                     const targetScaleValue = fingerWidthInWorld * SCALE_ADJUSTMENT_FACTOR;
                     const targetScale = new THREE.Vector3(targetScaleValue, targetScaleValue, targetScaleValue);
 
@@ -531,18 +524,12 @@ const Occluder3 = () => {
                     const baseTargetQuaternion = new THREE.Quaternion().setFromRotationMatrix(rotationMatrix);
                     const targetQuaternion = new THREE.Quaternion().setFromRotationMatrix(rotationMatrix);
 
-                    // Correction rotation - BỎ XOAY
-                    // const correctionQuaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -(Math.PI / 2));
-                    // targetQuaternion.multiply(correctionQuaternion);
-
-                    // Update ring transform - KHÔNG SMOOTHING Ở ĐÂY (smoothing trong useFrame)
                     setRingTransform({
                         position: targetPosition,
                         scale: targetScale,
                         quaternion: targetQuaternion
                     });
 
-                    // Update occluder transform - KHÔNG SMOOTHING Ở ĐÂY
                     const occluderRadius = fingerWidthInWorld / 2.1;
                     const occluderLength = fingerWidthInWorld * 2;
                     setOccluderTransform({
@@ -588,13 +575,8 @@ const Occluder3 = () => {
             tempCanvas.height = video.videoHeight;
             const ctx = tempCanvas.getContext('2d');
 
-            // Layer 1: Video
             ctx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
-
-            // Layer 2: R3F Canvas
             ctx.drawImage(r3fCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
-
-            // Layer 3: Debug canvas
             ctx.drawImage(debugCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
 
             setCapturedImage(tempCanvas.toDataURL('image/jpeg', 1.0));
@@ -644,7 +626,7 @@ const Occluder3 = () => {
                     <>
                         <video ref={videoRef} className="camera-video" autoPlay playsInline muted />
 
-                        {/* R3F Canvas overlay - CHỈ RENDER KHI CAMERA READY */}
+                        {/* R3F Canvas overlay - STUDIO QUALITY */}
                         <div className="three-canvas" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
                             {!loadingMessage && ringConfig && isCameraReady && (
                                 <Suspense fallback={
@@ -659,7 +641,7 @@ const Occluder3 = () => {
                                         padding: '20px',
                                         borderRadius: '10px'
                                     }}>
-                                        Loading 3D model...
+                                        Loading 3D model (Studio Mode)...
                                     </div>
                                 }>
                                     <Canvas
@@ -668,34 +650,53 @@ const Occluder3 = () => {
                                         gl={{
                                             alpha: true,
                                             preserveDrawingBuffer: true,
-                                            antialias: true,  // BẬT antialias
+                                            antialias: true,
                                             powerPreference: 'high-performance',
-                                            // Precision vừa phải cho tất cả
-                                            precision: isLowEnd ? 'lowp' : 'mediump',
-                                            // Tắt stencil buffer nếu không dùng
+                                            precision: 'mediump',
                                             stencil: false,
                                         }}
+                                        // TẮT shadows
+                                        shadows={false}
                                         camera={{ fov: 50, position: [0, 0, 5] }}
                                         frameloop="always"
-                                        // DPR cao hơn để khử răng cưa:
-                                        // - Low-end: max 1.0
-                                        // - Mobile: max 1.5
-                                        // - Desktop: max 1.5
-                                        dpr={isLowEnd ? [0.75, 1.0] : [1.0, 1.5]}
-                                        // Performance mode: tự động giảm chất lượng khi FPS thấp
+                                        // DPR 80% quality: [1.2, 1.6] desktop / [1, 1.3] mobile
+                                        // Lý do: Tăng độ sắc nét lên 80% so với tối ưu 100%
+                                        dpr={isMobile ? [1, 1.3] : [1.2, 1.6]}
                                         performance={{ min: 0.5 }}
                                     >
-                                        {/* ============================================ */}
-                                        {/* LIGHTS - TỐI ỨU CHO DESKTOP */}
-                                        {/* ============================================ */}
-                                        <ambientLight intensity={isMobile ? 2.5 : 3.0} />
+                                        {/* ⭐ LIGHTING - TỐI ƯU CHO iOS */}
 
-                                        {/* Chỉ 1 đèn chính cho desktop để tăng FPS */}
-                                        <directionalLight
-                                            position={[0, 5, 5]}
-                                            intensity={isMobile ? 4 : 5}
+                                        {/* ⭐ LIGHTING - FULL QUALITY (giống SimpleMeshInspector) */}
+
+                                        {/* 1. SpotLight chính - ánh sáng mạnh từ trên */}
+                                        <spotLight
+                                            position={[10, 10, 10]}
+                                            angle={0.15}
+                                            penumbra={1}
+                                            decay={0}
+                                            intensity={Math.PI * 3}
                                             castShadow={false}
                                         />
+
+                                        {/* 2-4. ⭐ 3 BACKLIGHTS - ánh sáng xuyên qua kim cương tạo khúc xạ */}
+                                        <pointLight
+                                            position={[0, -2, -3]}
+                                            intensity={Math.PI * 2}
+                                            color="#ffffff"
+                                        />
+                                        <pointLight
+                                            position={[3, 0, -3]}
+                                            intensity={Math.PI * 1.5}
+                                            color="#ffffff"
+                                        />
+                                        <pointLight
+                                            position={[-3, 0, -3]}
+                                            intensity={Math.PI * 1.5}
+                                            color="#ffffff"
+                                        />
+
+                                        {/* 5. Ambient light nhẹ */}
+                                        <ambientLight intensity={0.2} />
 
                                         <RingWithOccluder
                                             modelPath={ringConfig.modelPath}
@@ -706,22 +707,73 @@ const Occluder3 = () => {
                                             meshColors={meshColors}
                                             onMeshListLoad={setMeshList}
                                             isMobile={isMobile}
-                                            isLowEnd={isLowEnd}
                                         />
 
-                                        {/* Environment - HDR để phản chiếu */}
+                                        {/* ⭐ STUDIO HDR ENVIRONMENT */}
                                         <Environment
-                                            files="/studio_env/env_metal_1.exr"
+                                            files="/studio_env/brown_photostudio_02_4k.exr"
                                             background={false}
                                         />
 
-                                        {/* EffectComposer - TONEMAPPING + SMAA */}
+                                        {/* ⭐ POST-PROCESSING - FULL QUALITY (giống SimpleMeshInspector) */}
                                         <EffectComposer
-                                            multisampling={0}
+                                            disableNormalPass={isMobile}
+                                            multisampling={isMobile ? 0 : 4}
                                             enabled={true}
                                         >
-                                            <ToneMapping />
+                                            {/*
+                                            ========================================
+                                            CHIẾN LƯỢC 80%: CÂN BẰNG ĐẸP + MƯỢT
+                                            ========================================
+
+                                            ✅ SMAA - NHẸ, ĐẸP, GIỮ LẠI
+                                               - Anti-aliasing quality cao
+                                               - Performance: Rất nhẹ (1-2ms)
+                                               - Kết quả: Viền mượt mà
+
+                                            ⚠️ N8AO - BẬT LẠI VỚI SETTINGS NHẸ (DESKTOP ONLY)
+                                               - aoRadius: 0.1 (nhỏ hơn)
+                                               - intensity: 1.2 (thấp hơn)
+                                               - Chi phí: ~8ms (80% optimized)
+                                               - Kết quả: Bóng nhẹ tăng độ thật
+
+                                            ⚠️ Multisampling - BẬT LẠI NHẸ (DESKTOP: 2, MOBILE: 0)
+                                               - Desktop: 2x multisampling
+                                               - Mobile: 0 để giữ FPS
+
+                                            ❌ Bloom - Vẫn TẮT (gây lóa)
+                                            ❌ ToneMapping - Vẫn TẮT (conflict)
+
+                                            KẾT QUẢ 80%: Kim cương ĐẸP HƠN nhờ:
+                                            - Clearcoat (wet look) ⭐
+                                            - Studio HDR 4K ⭐
+                                            - MeshRefraction bounces=4 (80%) ⭐
+                                            - SMAA + Multisampling=2 (desktop) ⭐
+                                            - N8AO nhẹ (desktop) ⭐
+                                            - 4 lights (desktop) / 3 lights (mobile) ⭐
+                                            */}
+
+                                            {/* SMAA - Khử răng cưa (NHẸ + ĐẸP) */}
                                             <SMAA />
+
+                                            {/* N8AO - FULL QUALITY cho desktop (giống SimpleMeshInspector) */}
+                                            {!isMobile && (
+                                                <N8AO
+                                                    aoRadius={0.15}
+                                                    intensity={4}
+                                                    distanceFalloff={2}
+                                                />
+                                            )}
+
+                                            {/* Bloom - Hiệu ứng lấp lánh cho kim cương (conditional) */}
+                                            {!isMobile && (
+                                                <Bloom
+                                                    luminanceThreshold={0.9}
+                                                    intensity={1.8}
+                                                    levels={9}
+                                                    mipmapBlur
+                                                />
+                                            )}
                                         </EffectComposer>
                                     </Canvas>
                                 </Suspense>
@@ -738,7 +790,7 @@ const Occluder3 = () => {
             <div className="ui-overlay">
                 <header className="mirror-header">
                     <button onClick={handleClose} className="close-button">×</button>
-                    <h1 className="mirror-title">MIRROR</h1>
+                    <h1 className="mirror-title">MIRROR (Studio)</h1>
                 </header>
 
                 {!capturedImage && !error && !loadingMessage && (
@@ -805,4 +857,4 @@ const Occluder3 = () => {
     );
 };
 
-export default Occluder3;
+export default Occluder4;
