@@ -132,6 +132,9 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
                     className="product-image"
                     draggable={false}
                   />
+                  <span className="product-label heading-3--no-margin">
+                    {product.name}
+                  </span>
                 </div>
               ))}
             </div>

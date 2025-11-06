@@ -47,10 +47,21 @@ const ServicesDetailPage = () => {
     }
   };
 
+  const getHeroTheme = () => {
+    switch (activeTab) {
+      case "trade-in-upgrade":
+        return "white";
+      case "product-care-repair":
+      default:
+        return "blend";
+    }
+  };
+
   return (
     <>
       <div
         className="services-detail-hero-section"
+        data-navbar-theme={getHeroTheme()}
         style={{ backgroundImage: `url("${getHeroImage()}")` }}
       >
         <div className="hero-content">
@@ -58,7 +69,7 @@ const ServicesDetailPage = () => {
         </div>
       </div>
 
-      <div className="services-detail-wrapper">
+      <div className="services-detail-wrapper" data-navbar-theme="blend">
         <div className="services-detail-tabs">
           {tabs.map((tab) => (
             <button
@@ -85,7 +96,7 @@ const ServicesDetailPage = () => {
           </div>
         </div>
       </div>
-      
+
       <ContactUs />
     </>
   );

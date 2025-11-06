@@ -15,9 +15,15 @@ const ServicesPage = () => {
 
   return (
     <div className="services-page">
-      <Section1 />
-      <Section2 />
-      <ContactUs />
+      <div data-section="section-1" data-navbar-theme="white">
+        <Section1 />
+      </div>
+      <div data-section="section-2" data-navbar-theme="black">
+        <Section2 />
+      </div>
+      <div data-section="contact-us">
+        <ContactUs />
+      </div>
     </div>
   );
 };

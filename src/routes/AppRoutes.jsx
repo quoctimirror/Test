@@ -61,6 +61,7 @@ const AllNewsPageV2 = lazy(() => import("@pages/AllNewsPageV2"));
 const NewCutPage = lazy(() => import("@pages/NewCutPage"));
 const MilanPage = lazy(() => import("@pages/MilanPage"));
 const ContactPage = lazy(() => import("@pages/ContactPage"));
+const ContactPageV2 = lazy(() => import("@pages/ContactPageV2"));
 
 // News Detail Wrapper Component
 const NewsDetailWrapper = () => {
@@ -121,6 +122,7 @@ export default function AppRoutes() {
       ROUTES.SUPPORT,
       ROUTES.SUPPORT_DETAIL,
       ROUTES.CONTACT,
+      ROUTES.CONTACT_V2,
       ROUTES.ABOUT,
       ROUTES.LOCATIONS,
       ROUTES.NEWS,
@@ -267,6 +269,8 @@ export default function AppRoutes() {
           />
 
           <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+
+          <Route path={ROUTES.CONTACT_V2} element={<ContactPageV2 />} />
 
           <Route path={ROUTES.ABOUT} element={<AboutPage />} />
 

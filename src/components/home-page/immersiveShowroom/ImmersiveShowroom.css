@@ -271,6 +271,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  mix-blend-mode: difference;
 }
 
 .showroom-close-button:hover {

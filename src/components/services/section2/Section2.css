@@ -2,7 +2,7 @@
 .section2-wrapper {
   position: relative;
   height: 400vh; /* Quadruple height for buffer zones */
-  background: white;
+  background: #F6F6F6;
 }
 
 .section2-sticky-container {
@@ -178,7 +178,7 @@
     opacity: 1 !important;
     z-index: 20;
     pointer-events: auto !important;
-    background: white;
+    background: #F6F6F6;
   }
 
   /* Create screen 2 - Image container */
@@ -210,7 +210,7 @@
     opacity: 1 !important;
     z-index: 20;
     pointer-events: auto !important;
-    background: white;
+    background: #F6F6F6;
   }
 
   /* Content styling */

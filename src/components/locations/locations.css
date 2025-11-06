@@ -19,7 +19,7 @@
 /* Hero Section - Gradient Background */
 .locations-hero-section {
   width: 100%;
-  height: 66vh;
+  height: 56vh;
   background: linear-gradient(180deg, #7a0525 0%, #bc224c 25%, #f6f6f6 100%),
     linear-gradient(180deg, rgba(246, 246, 246, 0) 50%, #f6f6f6 100%);
   display: flex;
@@ -37,9 +37,15 @@
   color: #fff;
 }
 
+.locations-hero-description {
+  color: #fff;
+  margin-top: 12px;
+  max-width: 600px;
+}
+
 /* Main Content */
 .locations-content {
-  background: #f8f8f8;
+  background: #f6f6f6;
   color: #333;
   height: 100vh;
 }
@@ -53,7 +59,7 @@
 /* Left Side - Location List */
 .locations-list {
   padding: 40px;
-  background: white;
+  background: #f6f6f6;
   border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
@@ -77,10 +83,8 @@
 }
 
 .filter-label {
-  font-size: 14px;
   font-weight: 500;
   color: #333;
-  font-family: inherit;
 }
 
 /* Custom Dropdown Styling */
@@ -95,11 +99,8 @@
   justify-content: space-between;
   padding: 12px 16px;
   border: 1px solid #ddd;
-  border-radius: 6px;
   background: white;
   cursor: pointer;
-  font-size: 14px;
-  font-family: inherit;
   transition: all 0.3s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -117,7 +118,6 @@
 }
 
 .selected-text {
-  font-weight: 500;
   color: #333;
 }
 
@@ -140,8 +140,6 @@
   background: white;
   border: 1px solid #333;
   border-top: none;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 100;
   overflow: hidden;
@@ -150,8 +148,6 @@
 .dropdown-option {
   padding: 12px 16px;
   cursor: pointer;
-  font-size: 14px;
-  font-family: inherit;
   color: #333;
   transition: background-color 0.2s ease;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -162,7 +158,7 @@
 }
 
 .dropdown-option:hover {
-  background-color: #f8f8f8;
+  background-color: #f6f6f6;
 }
 
 .dropdown-option.selected {
@@ -199,7 +195,6 @@
 
 .location-name {
   margin: 0 0 8px 0;
-  font-size: 18px;
   font-weight: 500;
   color: #333;
   transition: color 0.3s ease;
@@ -215,57 +210,44 @@
 
 .location-type {
   margin: 0 0 6px 0;
-  font-size: 14px;
   color: #666;
-  font-weight: 400;
 }
 
 .location-address {
   margin: 0 0 6px 0;
-  font-size: 14px;
   color: #333;
   font-weight: 500;
 }
 
 .location-hours {
   margin: 0 0 6px 0;
-  font-size: 12px;
   color: #888;
 }
 
 .location-phone {
   margin: 0;
-  font-size: 12px;
   color: #888;
 }
 
 .location-item.selected {
-  background: #f8f8f8;
+  background: #f6f6f6;
   border-left: 3px solid #333;
   padding-left: 17px;
 }
 
 .location-actions {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
-.view-map-btn {
-  padding: 8px 16px;
-  background: transparent;
-  color: #333;
-  border: 1px solid #333;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-  font-family: inherit;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.location-actions .underline-button-text {
+  color: #000;
+  padding-bottom: 1.5px;
 }
 
-.view-map-btn:hover {
-  background: #333;
-  color: white;
+.location-actions .underline-button-text::after {
+  background-color: #000;
 }
 
 /* Right Side - Map */
@@ -306,18 +288,8 @@
   margin: 0 auto 10px;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .map-loading p {
   margin: 0;
-  font-size: 14px;
   color: #666;
 }
 
@@ -329,6 +301,9 @@
 /* Responsive Design */
 
 @media (max-width: 1023px) {
+  .locations-hero-section {
+    height: 40vh;
+  }
   .locations-content {
     height: auto;
     min-height: 80vh;
@@ -359,19 +334,16 @@
   .map-container {
     height: 100%;
   }
+  .locations-hero-description {
+    max-width: 62%;
+    margin: auto;
+  }
 }
 
 @media (max-width: 992px) {
-  .locations-hero-section {
-    height: 500px;
-  }
 }
 
 @media (max-width: 768px) {
-  .locations-hero-section {
-    height: 400px;
-  }
-
   .locations-list {
     padding: 20px;
   }
@@ -394,7 +366,7 @@
 
 @media (max-width: 480px) {
   .locations-hero-section {
-    height: 350px;
+    height: 30vh;
   }
 
   .locations-list {
@@ -403,5 +375,8 @@
 
   .map-container {
     min-height: 40vh;
+  }
+  .locations-hero-description {
+    max-width: 77%;
   }
 }

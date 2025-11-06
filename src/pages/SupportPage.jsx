@@ -16,9 +16,15 @@ const SupportPage = () => {
   return (
     <div className="support-page">
       <main>
-        <Section3 />
-        <Section4 />
-        <Section5 />
+        <div data-section="section-3" data-navbar-theme="white">
+          <Section3 />
+        </div>
+        <div data-section="section-4" data-navbar-theme="black">
+          <Section4 />
+        </div>
+        <div data-section="section-5" data-navbar-theme="black">
+          <Section5 />
+        </div>
         <ContactUs />
       </main>
     </div>

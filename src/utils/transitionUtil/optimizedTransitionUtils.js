@@ -174,8 +174,12 @@ export const optimizedTransitionUtils = {
       // Wait for fade out
       await new Promise(resolve => setTimeout(resolve, 200));
 
-      // Navigate
-      navigateFunction(route);
+      // Navigate - Pass options to preserve state
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
 
       // Scroll to top immediately
       window.scrollTo(0, 0);
@@ -219,7 +223,11 @@ export const optimizedTransitionUtils = {
       }
 
       optimizedTransitionUtils.state.isTransitioning = false;
-      navigateFunction(route);
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
     }
   },
 
@@ -289,8 +297,12 @@ export const optimizedTransitionUtils = {
       root.style.opacity = "0";
       root.style.pointerEvents = "none";
 
-      // Navigate to new route (hidden)
-      navigateFunction(route);
+      // Navigate to new route (hidden) - Pass options to preserve state
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
 
       // Scroll to top once only
       window.scrollTo(0, 0);
@@ -509,7 +521,11 @@ export const optimizedTransitionUtils = {
       }
 
       optimizedTransitionUtils.state.isTransitioning = false;
-      navigateFunction(route);
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
     }
   },
 
@@ -556,8 +572,12 @@ export const optimizedTransitionUtils = {
       overlay.innerHTML = currentContent;
       document.body.appendChild(overlay);
 
-      // Navigate in background
-      navigateFunction(route);
+      // Navigate in background - Pass options to preserve state
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
 
       // Wait for new content with intelligent checking
       const waitForReady = async () => {
@@ -650,7 +670,11 @@ export const optimizedTransitionUtils = {
     } catch (error) {
       console.error("Smooth transition failed:", error);
       optimizedTransitionUtils.state.isTransitioning = false;
-      navigateFunction(route);
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
     }
   },
 
@@ -722,8 +746,12 @@ export const optimizedTransitionUtils = {
         });
       }
 
-      // Navigate and wait for content
-      navigateFunction(route);
+      // Navigate and wait for content - Pass options to preserve state
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
 
       // Smart waiting - check content weight
       const waitForContent = async () => {
@@ -810,7 +838,11 @@ export const optimizedTransitionUtils = {
     } catch (error) {
       console.error("Smart transition failed:", error);
       optimizedTransitionUtils.state.isTransitioning = false;
-      navigateFunction(route);
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
     }
   },
 
@@ -839,8 +871,12 @@ export const optimizedTransitionUtils = {
         force3D: optimizedTransitionUtils.config.enableGPU,
       });
 
-      // Navigate
-      navigateFunction(route);
+      // Navigate - Pass options to preserve state
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
 
       // Fade in
       setTimeout(() => {
@@ -862,7 +898,11 @@ export const optimizedTransitionUtils = {
     } catch (error) {
       console.error("Fade transition failed:", error);
       optimizedTransitionUtils.state.isTransitioning = false;
-      navigateFunction(route);
+      const navigationOptions = {
+        state: options.state,
+        replace: options.replace
+      };
+      navigateFunction(route, navigationOptions);
     }
   },
 

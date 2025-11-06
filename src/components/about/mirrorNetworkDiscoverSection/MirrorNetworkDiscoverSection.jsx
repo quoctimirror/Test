@@ -1,9 +1,13 @@
 import React, { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import { ROUTES } from "@/constants/routes";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import "../../../styles/grid-system.css";
 import "./MirrorNetworkDiscoverSection.css";
 
 const MirrorNetworkDiscoverSection = () => {
+  const navigate = useNavigate();
   const containerRef = useRef(null);
   const contentRef = useRef(null);
   const headerRef = useRef(null);
@@ -14,6 +18,10 @@ const MirrorNetworkDiscoverSection = () => {
   const titleText = "A LIVING SYSTEM OF MODERN LUXURY";
   const descriptionText =
     "Mirror is not a place - it's a presence.\nOur Mirror Network connects every part of the journey: from customers and collaborators, to physical PODs and digital tools. Every touchpoint becomes a portal - amplifying presence, creativity, and connection.\n\nWe collaborate with artists, hotels, creators, and technologists to make luxury fluid - flowing through Sense, Time, Space, and Presence.";
+
+  const handleDiscoverClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.LOCATIONS);
+  };
 
   useEffect(() => {
     let ticking = false;
@@ -188,7 +196,7 @@ const MirrorNetworkDiscoverSection = () => {
 
           {/* Button */}
           <div className="discover-button-container">
-            <ShineGlassButton theme="light">
+            <ShineGlassButton theme="light" onClick={handleDiscoverClick}>
               Discover the Mirror Network
             </ShineGlassButton>
           </div>

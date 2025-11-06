@@ -4,6 +4,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Remove all focus states */
+.arrow-button,
+.arrow-button *,
+.arrow-button button {
+  outline: none !important;
+}
+
+.arrow-button:focus,
+.arrow-button:focus-visible,
+.arrow-button button:focus,
+.arrow-button button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* No transform here - let parent handle positioning */
@@ -13,9 +29,11 @@
   transition: stroke 0.3s ease;
 }
 
-/* Hover state - icon changes to black */
-.arrow-button:hover svg path {
-  stroke: #000;
+/* Hover state - icon changes to black (desktop only) */
+@media (hover: hover) and (pointer: fine) {
+  .arrow-button:hover svg path {
+    stroke: #000;
+  }
 }
 
 /* Responsive icon sizes */

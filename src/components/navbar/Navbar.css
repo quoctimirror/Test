@@ -53,6 +53,7 @@
   position: absolute;
   inset: 0;
   background: rgba(255, 255, 255, 0.01);
+  transition: background 0.35s ease-out;
 }
 
 /* Liquid Glass Shine Layer - Glossy highlights */
@@ -278,8 +279,8 @@
   color: white;
   border: none;
   padding: 0;
-  pointer-events: auto;
-  cursor: pointer;
+  pointer-events: none; /* Desktop: disable click, only hover works */
+  cursor: default;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -552,7 +553,7 @@
   top: 20px;
   left: -20px;
   background: transparent;
-  padding: 32px 20px 20px 20px;
+  padding: 36px 20px 20px 20px;
   box-sizing: border-box;
   transform: scaleY(0);
   transform-origin: top;
@@ -577,7 +578,7 @@
 .menu-groups {
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 24px;
 }
 
 .menu-list {
@@ -586,7 +587,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 .menu-popup .menu-list li {
@@ -595,12 +596,23 @@
   white-space: nowrap;
 }
 
+/* Active menu item - show underline */
+.menu-popup .menu-list li.active .underline-button-text::after {
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
+}
+
+/* Hide account button in menu on desktop (when navbar account button is visible) */
+.menu-popup .menu-list li.account-menu-item {
+  display: none;
+}
+
 .menu-divider {
-  height: 1px;
-  background: #e0e0e0;
-  margin: 10px 0;
+  width: 18px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 1);
   cursor: default !important;
-  width: 50px;
+  margin: 0;
 }
 
 /* Xóa các class cũ không còn sử dụng */
@@ -661,29 +673,24 @@
 /* Media Queries for Responsive Design */
 
 /* Responsive Glass Background */
-@media screen and (max-width: 1023px) {
+/* Tablet - Large (769px-1023px) */
+@media screen and (min-width: 769px) and (max-width: 1023px) {
   .navbar-glass-background {
-    display: none;
+    height: 78px; /* immersive height: 49px at top default position */
   }
 }
 
-@media screen and (max-width: 768px) {
+/* Tablet - Medium (426px-768px) */
+@media screen and (min-width: 426px) and (max-width: 768px) {
   .navbar-glass-background {
-    display: none;
-  }
-
-  .navbar-glass-background.expanded {
-    display: none;
+    height: 85px; /* button height: 45px, top: 20px => 20 + 45 + 20 = 85px */
   }
 }
 
+/* Mobile - 425px and below */
 @media screen and (max-width: 425px) {
   .navbar-glass-background {
-    display: none;
-  }
-
-  .navbar-glass-background.expanded {
-    display: none;
+    height: 70px; /* button height: 40px, top: 15px => 15 + 40 + 15 = 70px */
   }
 }
 
@@ -704,6 +711,7 @@
     justify-content: center;
     transition: all 0.3s ease;
     cursor: pointer;
+    pointer-events: auto; /* Tablet: enable click */
   }
 
   .menu-text {
@@ -827,6 +835,11 @@
     display: none; /* Hide account link on mobile */
   }
 
+  /* Show account button in menu when navbar account button is hidden */
+  .menu-popup .menu-list li.account-menu-item {
+    display: inline-block !important;
+  }
+
   .menu-popup {
     width: 90vw;
     max-width: 400px;
@@ -895,9 +908,9 @@
 .account-popup {
   position: absolute;
   top: 20px;
-  right: -20px;
+  left: -20px;
   background: transparent;
-  padding: 32px 20px 20px 20px;
+  padding: 36px 20px 20px 20px;
   box-sizing: border-box;
   transform: scaleY(0);
   transform-origin: top;
@@ -918,25 +931,17 @@
 .account-groups {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 .account-user-info {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .account-user-info span {
   color: white;
-  font-weight: 500;
-}
-
-.account-fixed-container.scrolled .account-user-info {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
 }
 
 .account-fixed-container.scrolled .account-user-info span {
@@ -960,7 +965,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 .account-popup .account-list li {
@@ -1021,6 +1026,7 @@
   /* Center align menu list text on mobile */
   .menu-popup .menu-groups {
     gap: 72px;
+    align-items: center;
   }
 
   .menu-popup .menu-list {
@@ -1104,6 +1110,8 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto; /* Mobile: enable click */
   }
 
   .menu-button:hover {
@@ -1140,6 +1148,7 @@
   /* Center align menu list text on tablet */
   .menu-popup .menu-groups {
     gap: 72px;
+    align-items: center;
   }
 
   .menu-popup .menu-list {
@@ -1198,6 +1207,11 @@
   .account-fixed-container {
     display: none;
   }
+
+  /* Show account button in menu when navbar account button is hidden */
+  .menu-popup .menu-list li.account-menu-item {
+    display: inline-block !important;
+  }
 }
 
 @media screen and (min-width: 1024px) {
@@ -1213,4 +1227,359 @@
   .immersive-menu-item {
     display: none !important;
   }
+}
+
+/* ========================================
+   NAVBAR THEME SYSTEM
+   Apply these classes dynamically based on section data attributes:
+   - data-navbar-theme="white" for white text/icons (dark backgrounds)
+   - data-navbar-theme="black" for black text/icons (light backgrounds)
+   - data-navbar-theme="blend" for mix-blend-mode (default)
+
+   Theme affects ALL navbar elements: logo, menu, account, immersive button
+======================================== */
+
+/* ========== LOGO THEME ========== */
+
+/* White Theme - White logo for dark background sections */
+.logo-fixed-container.navbar-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.logo-fixed-container.navbar-theme-white .navbar-logo-svg {
+  filter: none !important;
+}
+
+.logo-fixed-container.navbar-theme-white .navbar-logo-svg path {
+  fill: rgba(255, 255, 255, 1) !important;
+}
+
+/* Black Theme - Black logo for light background sections */
+.logo-fixed-container.navbar-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.logo-fixed-container.navbar-theme-black .navbar-logo-svg {
+  filter: invert(1) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for logo */
+.logo-fixed-container.navbar-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* ========== MENU BUTTON THEME ========== */
+
+/* White Theme - White menu text and icons */
+.menu-fixed-container.navbar-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.menu-fixed-container.navbar-theme-white .menu-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-fixed-container.navbar-theme-white .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-fixed-container.navbar-theme-white .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-fixed-container.navbar-theme-white .menu-icon {
+  filter: brightness(0) invert(1) !important;
+}
+
+.menu-fixed-container.navbar-theme-white .menu-icon-close {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Black Theme - Black menu text and icons */
+.menu-fixed-container.navbar-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.menu-fixed-container.navbar-theme-black .menu-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.navbar-theme-black .underline-button-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.navbar-theme-black .underline-button-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-fixed-container.navbar-theme-black .menu-icon {
+  filter: brightness(0) !important;
+}
+
+.menu-fixed-container.navbar-theme-black .menu-icon-close {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for menu */
+.menu-fixed-container.navbar-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* ========== MENU HOVER/OPEN - Override theme to blend mode ========== */
+/* When menu is hovered or opened, force blend mode regardless of theme */
+
+.menu-fixed-container:hover,
+.menu-fixed-container:has(.menu-container.menu-open) {
+  mix-blend-mode: difference !important;
+}
+
+/* Reset all text to white for blend mode */
+.menu-fixed-container:hover .menu-text,
+.menu-fixed-container:has(.menu-container.menu-open) .menu-text,
+.menu-fixed-container:hover .underline-button-text,
+.menu-fixed-container:has(.menu-container.menu-open) .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Reset all underlines to white for blend mode */
+.menu-fixed-container:hover .underline-button-text::after,
+.menu-fixed-container:has(.menu-container.menu-open)
+  .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Reset icons to white for blend mode */
+.menu-fixed-container:hover .menu-icon,
+.menu-fixed-container:has(.menu-container.menu-open) .menu-icon {
+  filter: brightness(0) invert(1) !important;
+}
+
+.menu-fixed-container:hover .menu-icon-close,
+.menu-fixed-container:has(.menu-container.menu-open) .menu-icon-close {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Reset menu divider to white for blend mode */
+.menu-fixed-container:hover .menu-divider,
+.menu-fixed-container:has(.menu-container.menu-open) .menu-divider {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Menu button glassmorphism background theme (mobile/tablet) */
+@media screen and (max-width: 1023px) {
+  .menu-fixed-container.navbar-theme-white .menu-button {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  .menu-fixed-container.navbar-theme-white .menu-button:hover,
+  .menu-fixed-container.navbar-theme-white
+    .menu-container.menu-open
+    .menu-button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+  }
+
+  .menu-fixed-container.navbar-theme-black .menu-button {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .menu-fixed-container.navbar-theme-black .menu-button:hover,
+  .menu-fixed-container.navbar-theme-black
+    .menu-container.menu-open
+    .menu-button {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(0, 0, 0, 0.35) !important;
+  }
+
+  /* Override to white when hovered/opened (for blend mode) */
+  .menu-fixed-container:hover .menu-button,
+  .menu-fixed-container:has(.menu-container.menu-open) .menu-button {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  .menu-fixed-container:hover .menu-button:hover,
+  .menu-fixed-container:has(.menu-container.menu-open) .menu-button,
+  .menu-fixed-container .menu-container.menu-open .menu-button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+  }
+}
+
+/* ========== ACCOUNT BUTTON THEME ========== */
+
+/* White Theme - White account text */
+.account-fixed-container.navbar-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.account-fixed-container.navbar-theme-white .account-text,
+.account-fixed-container.navbar-theme-white .account-button-wrapper {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.account-fixed-container.navbar-theme-white .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.account-fixed-container.navbar-theme-white .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Black Theme - Black account text */
+.account-fixed-container.navbar-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.account-fixed-container.navbar-theme-black .account-text,
+.account-fixed-container.navbar-theme-black .account-button-wrapper {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.account-fixed-container.navbar-theme-black .underline-button-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.account-fixed-container.navbar-theme-black .underline-button-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for account */
+.account-fixed-container.navbar-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* ========== ACCOUNT HOVER/OPEN - Override theme to blend mode ========== */
+/* When account is hovered or dropdown opened, force blend mode regardless of theme */
+
+.account-fixed-container:hover,
+.account-fixed-container:has(.account-popup.active) {
+  mix-blend-mode: difference !important;
+}
+
+/* Reset all text to white for blend mode */
+.account-fixed-container:hover .account-text,
+.account-fixed-container:has(.account-popup.active) .account-text,
+.account-fixed-container:hover .underline-button-text,
+.account-fixed-container:has(.account-popup.active) .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Reset all underlines to white for blend mode */
+.account-fixed-container:hover .underline-button-text::after,
+.account-fixed-container:has(.account-popup.active)
+  .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.account-fixed-container:hover .account-user-info span,
+.account-fixed-container:has(.account-popup.active) .account-user-info span {
+  color: white !important;
+}
+
+/* Reset account divider to white for blend mode */
+.account-fixed-container:hover .menu-divider,
+.account-fixed-container:has(.account-popup.active) .menu-divider {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* ========== IMMERSIVE BUTTON THEME ========== */
+
+/* White Theme - White text and border */
+.immersive-text-container.navbar-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-text-container.navbar-theme-white .immersive-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.immersive-border-container.navbar-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-border-container.navbar-theme-white .immersive-border::after {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.3) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0.3) 60% 95%,
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+}
+
+/* Black Theme - Black text and border */
+.immersive-text-container.navbar-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-text-container.navbar-theme-black .immersive-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.immersive-border-container.navbar-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-border-container.navbar-theme-black .immersive-border::after {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.3) 5% 40%,
+      rgba(0, 0, 0, 0.8) 50%,
+      rgba(0, 0, 0, 0.3) 60% 95%,
+      rgba(0, 0, 0, 0.8)
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for immersive button */
+.immersive-text-container.navbar-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+.immersive-border-container.navbar-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* Immersive button background theme - subtle tint changes */
+.immersive-fixed-container .immersive-button {
+  /* Default: white subtle background */
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.navbar-theme-black
+  ~ .immersive-border-container
+  ~ .immersive-fixed-container
+  .immersive-button,
+body:has(.navbar-theme-black) .immersive-button {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.navbar-theme-black
+  ~ .immersive-border-container
+  ~ .immersive-fixed-container
+  .immersive-button:hover,
+body:has(.navbar-theme-black) .immersive-button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.navbar-theme-white
+  ~ .immersive-border-container
+  ~ .immersive-fixed-container
+  .immersive-button,
+body:has(.navbar-theme-white) .immersive-button {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.navbar-theme-white
+  ~ .immersive-border-container
+  ~ .immersive-fixed-container
+  .immersive-button:hover,
+body:has(.navbar-theme-white) .immersive-button:hover {
+  background: rgba(255, 255, 255, 0.1);
 }

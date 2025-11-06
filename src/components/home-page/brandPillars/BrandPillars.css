@@ -138,7 +138,7 @@
   pointer-events: none;
 }
 
-.brand-pillars .brand-expand-text .bodytext-4--no-margin {
+.brand-pillars .brand-expand-text .bodytext-6--no-margin {
   color: rgba(255, 255, 255, 0.75);
   white-space: normal;
   word-wrap: break-word;
@@ -148,7 +148,7 @@
 .brand-pillars
   .brand-group:nth-child(1)
   .brand-expand-text
-  .bodytext-4--no-margin {
+  .bodytext-6--no-margin {
   max-width: none;
   white-space: nowrap;
 }
@@ -156,7 +156,7 @@
 .brand-pillars
   .brand-group:nth-child(2)
   .brand-expand-text
-  .bodytext-4--no-margin {
+  .bodytext-6--no-margin {
   max-width: 453px;
   white-space: normal;
   text-align: right;
@@ -165,7 +165,7 @@
 .brand-pillars
   .brand-group:nth-child(3)
   .brand-expand-text
-  .bodytext-4--no-margin {
+  .bodytext-6--no-margin {
   max-width: none;
   white-space: nowrap;
 }

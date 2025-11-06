@@ -290,7 +290,7 @@ const BrandPillars = () => {
                     <StarlightEffect direction="falling" height={60} />
                   </div>
                   <div className="brand-expand-text">
-                    <p className="bodytext-4--no-margin">
+                    <p className="bodytext-6--no-margin">
                       Where human craft meets cutting-edge technology.
                       <br />
                       We shape diamonds with the world's most advanced
@@ -308,7 +308,7 @@ const BrandPillars = () => {
                 <StarlightEffect direction="falling" height={60} />
               </div>
               <div className="brand-expand-text">
-                <p className="bodytext-4--no-margin">
+                <p className="bodytext-6--no-margin">
                   Made for the planet, not taken from it.
                   <br />
                   We create with the future in mind -
@@ -329,7 +329,7 @@ const BrandPillars = () => {
                     <StarlightEffect direction="falling" height={60} />
                   </div>
                   <div className="brand-expand-text">
-                    <p className="bodytext-4--no-margin">
+                    <p className="bodytext-6--no-margin">
                       True modern luxury is not in price tags.
                       <br />
                       You're not just buying a product - you're entering

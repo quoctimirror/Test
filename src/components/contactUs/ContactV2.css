@@ -1,0 +1,176 @@
+.contact-v2 {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.contact-v2-header {
+  height: 56vh;
+  background: linear-gradient(180deg, #bc224c 0%, #f6f6f6 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.contact-v2-title {
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.contact-v2-subtitle {
+  color: rgba(246, 246, 246, 1);
+  max-width: 600px;
+}
+
+.contact-v2-cards {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  background: #f6f6f6;
+}
+
+.contact-v2-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--Gray-1, #f6f6f6);
+  transition: background 0.3s ease;
+  aspect-ratio: 1;
+}
+
+.contact-v2-card.clickable {
+  cursor: pointer;
+}
+
+.contact-v2-card:hover {
+  background: linear-gradient(180deg, #f6f6f6 50%, #e0e0e0 100%);
+}
+
+.contact-v2-card-title {
+  color: #000;
+  margin-bottom: 12px;
+}
+
+.contact-v2-card-details {
+  color: #797979;
+  margin-bottom: 36px;
+}
+
+.contact-v2-card-link .underline-button-text {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.contact-v2-card-link .underline-button-text::after {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.contact-v2-card:hover .contact-v2-card-link .underline-button-text::after {
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
+}
+
+.contact-v2-card-arrow {
+  display: none;
+}
+
+/* Tablet - 1023px and below */
+@media screen and (max-width: 1023px) {
+  .contact-v2-header {
+    height: 40vh;
+  }
+
+  .contact-v2-cards {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 40px 0 80px;
+  }
+
+  .contact-v2-card {
+    padding: 30px 20px;
+  }
+  .contact-v2-subtitle {
+    max-width: 62%;
+  }
+}
+
+/* Mobile - 425px and below */
+@media screen and (max-width: 425px) {
+  .contact-v2 {
+    background: linear-gradient(180deg, #bc224c 0%, #fff 100%);
+  }
+
+  .contact-v2-header {
+    height: auto;
+    min-height: 30vh;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .contact-v2-cards {
+    grid-template-columns: 1fr;
+    padding: 0;
+    background: #fff;
+  }
+  .contact-v2-subtitle {
+    max-width: 77%;
+  }
+
+  .contact-v2-card {
+    aspect-ratio: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    text-align: left;
+    padding: 36px 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: #fff;
+  }
+
+  .contact-v2-card:hover {
+    background: #fff;
+  }
+
+  .contact-v2-card:last-child {
+    border-bottom: none;
+  }
+
+  .contact-v2-card-title {
+    color: #bc224c;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .contact-v2-card-details {
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .contact-v2-card-content {
+    flex: 1;
+  }
+
+  .contact-v2-card-link {
+    display: none;
+  }
+
+  .contact-v2-card-arrow {
+    display: block;
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.3);
+    line-height: 1;
+    margin-left: 12px;
+    align-self: center;
+  }
+
+  .contact-v2-title {
+    margin-bottom: 12px;
+  }
+}

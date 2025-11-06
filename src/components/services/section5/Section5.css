@@ -1,6 +1,6 @@
 .services-section5 {
   padding: 1px 0;
-  background: white;
+  background: #f6f6f6;
   font-family: "BT Beau Sans", sans-serif;
   box-sizing: border-box;
 }
@@ -39,6 +39,7 @@
   margin: 0;
   padding: 24px 0;
   transition: border-color 0.3s ease;
+  cursor: pointer;
 }
 
 .faq-item:first-child {
@@ -58,6 +59,12 @@
   align-items: center;
   color: rgba(0, 0, 0, 0.5);
   transition: color 0.3s ease;
+  pointer-events: none;
+}
+
+.faq-question span,
+.faq-question .faq-icon {
+  pointer-events: none;
 }
 
 .faq-item:hover .faq-question {
@@ -71,8 +78,16 @@
 
 .faq-item:hover,
 .faq-item.active {
-  border-top-color: #bc224c;
-  border-bottom-color: #bc224c;
+  border-top: 1px solid #bc224c;
+  border-bottom: 1px solid #bc224c;
+}
+
+/* Fix double border when adjacent items are both active/hover */
+.faq-item.active + .faq-item:hover,
+.faq-item:hover + .faq-item.active,
+.faq-item.active + .faq-item.active,
+.faq-item:hover + .faq-item:hover {
+  border-top: 1px solid transparent;
 }
 
 .faq-item.active .faq-question {
@@ -102,10 +117,11 @@
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0.5;
+  transform: rotate(180deg);
 }
 
 .faq-icon.expanded {
-  transform: rotate(180deg);
+  transform: rotate(0deg);
 }
 
 .faq-answer {

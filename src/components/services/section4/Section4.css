@@ -2,7 +2,7 @@
 .section4-wrapper {
   position: relative;
   height: 600vh; /* Reduced height for smoother transitions */
-  background: white;
+  background: #F6F6F6;
   font-family: "BT Beau Sans", sans-serif;
 }
 
@@ -128,7 +128,7 @@
 /* Section 4 Part 2 - Sizing Guide */
 .services-section4-part2 {
   height: 100vh;
-  background: white;
+  background: #F6F6F6;
   font-family: "BT Beau Sans", sans-serif;
   display: flex;
   align-items: center;
@@ -295,7 +295,7 @@
     opacity: 1 !important;
     z-index: 20;
     pointer-events: auto !important;
-    background: white;
+    background: #F6F6F6;
   }
 
   /* Create screen 2 - Content container */
@@ -312,7 +312,7 @@
     opacity: 1 !important;
     z-index: 20;
     pointer-events: auto !important;
-    background: white;
+    background: #F6F6F6;
   }
 
   /* Create screen 3 - Content container */
@@ -329,7 +329,7 @@
     opacity: 1 !important;
     z-index: 20;
     pointer-events: auto !important;
-    background: white;
+    background: #F6F6F6;
   }
 
   /* Content styling */
@@ -516,7 +516,7 @@
 /* Section 4 Part 3 - Warranty & Info */
 .services-section4-part3 {
   height: 100vh;
-  background: white;
+  background: #F6F6F6;
   font-family: "BT Beau Sans", sans-serif;
   display: flex;
   align-items: center;

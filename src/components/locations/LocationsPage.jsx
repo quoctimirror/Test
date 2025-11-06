@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { locationsAPI, handleAPIError } from "@services/api";
+import UnderlineButton from "@components/common/button/UnderlineButton";
 import "./locations.css";
 
 const LocationsPage = () => {
@@ -137,14 +138,17 @@ const LocationsPage = () => {
   return (
     <div className="locations-page">
       {/* Hero Section */}
-      <div className="locations-hero-section">
+      <div className="locations-hero-section" data-navbar-theme="white">
         <div className="locations-hero-content">
           <h1 className="heading-1--no-margin">LOCATION</h1>
+          <p className="bodytext-4--no-margin locations-hero-description">
+            Our network spans across showrooms, pods, and boutiques - where each space reflects Mirror's world of sensory luxury.
+          </p>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="locations-content">
+      <div className="locations-content" data-navbar-theme="black">
         <div className="locations-container">
           {/* Error Message */}
           {error && (
@@ -178,10 +182,10 @@ const LocationsPage = () => {
           <div className="locations-list">
             <div className="filters-container">
               <div className="filter-item">
-                <label className="filter-label">Filter by City/Province:</label>
+                <label className="filter-label bodytext-6--no-margin">Filter by City/Province:</label>
                 <div className="custom-dropdown" ref={dropdownRef}>
-                  <div 
-                    className={`dropdown-selected ${dropdownOpen ? 'open' : ''}`}
+                  <div
+                    className={`dropdown-selected bodytext-6--no-margin ${dropdownOpen ? 'open' : ''}`}
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
                     <span className="selected-text">
@@ -196,7 +200,7 @@ const LocationsPage = () => {
                       {cities.map((city) => (
                         <div
                           key={city}
-                          className={`dropdown-option ${selectedCity === city ? 'selected' : ''}`}
+                          className={`dropdown-option bodytext-6--no-margin ${selectedCity === city ? 'selected' : ''}`}
                           onClick={() => handleCityFilter(city)}
                         >
                           {city === "all" ? "All Cities" : city}
@@ -208,10 +212,10 @@ const LocationsPage = () => {
               </div>
 
               <div className="filter-item">
-                <label className="filter-label">Filter by Type:</label>
+                <label className="filter-label bodytext-6--no-margin">Filter by Type:</label>
                 <div className="custom-dropdown" ref={typeDropdownRef}>
-                  <div 
-                    className={`dropdown-selected ${typeDropdownOpen ? 'open' : ''}`}
+                  <div
+                    className={`dropdown-selected bodytext-6--no-margin ${typeDropdownOpen ? 'open' : ''}`}
                     onClick={() => setTypeDropdownOpen(!typeDropdownOpen)}
                   >
                     <span className="selected-text">
@@ -226,7 +230,7 @@ const LocationsPage = () => {
                       {types.map((type) => (
                         <div
                           key={type}
-                          className={`dropdown-option ${selectedType === type ? 'selected' : ''}`}
+                          className={`dropdown-option bodytext-6--no-margin ${selectedType === type ? 'selected' : ''}`}
                           onClick={() => handleTypeFilter(type)}
                         >
                           {type === "all" ? "All Types" : type}
@@ -281,19 +285,19 @@ const LocationsPage = () => {
                 filteredLocations.map((location) => (
                   <div key={location.id} className={`location-item ${selectedLocation?.id === location.id ? 'selected' : ''}`}>
                     <div className="location-info">
-                      <h3 className="location-name">{location.name}</h3>
-                      <p className="location-type">{location.type}</p>
-                      <p className="location-address">{location.address}</p>
-                      <p className="location-hours">{location.hours}</p>
-                      <p className="location-phone">{location.phone}</p>
+                      <h3 className="location-name bodytext-3--no-margin">{location.name}</h3>
+                      <p className="location-type bodytext-6--no-margin">{location.type}</p>
+                      <p className="location-address bodytext-6--no-margin">{location.address}</p>
+                      <p className="location-hours bodytext-6--no-margin">{location.hours}</p>
+                      <p className="location-phone bodytext-6--no-margin">{location.phone}</p>
                     </div>
                     <div className="location-actions">
-                      <button 
-                        className="view-map-btn"
+                      <UnderlineButton
                         onClick={() => handleViewOnMap(location)}
+                        textClassName="bodytext-6--no-margin"
                       >
                         View on map
-                      </button>
+                      </UnderlineButton>
                     </div>
                   </div>
                 ))

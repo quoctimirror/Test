@@ -24,11 +24,11 @@ export default function HomePage() {
     <>
       {/* <TopBanner /> */}
 
-      <div data-section="scroll-effect">
+      <div data-section="scroll-effect" data-navbar-theme="white">
         <ScrollEffect isAnyOverlayOpen={isAnyOverlayOpen} />
       </div>
 
-      <div data-section="future-diamond">
+      <div data-section="future-diamond" data-navbar-theme="white">
         <FutureDiamond />
       </div>
 
@@ -36,11 +36,11 @@ export default function HomePage() {
         <MirrorQuote />
       </div> */}
 
-      <div data-section="brand-pillars">
+      <div data-section="brand-pillars" data-navbar-theme="white">
         <BrandPillars />
       </div>
 
-      <div data-section="universe-section">
+      <div data-section="universe-section" data-navbar-theme="white">
         <UniverseSection
           showSenseOverlay={showSenseOverlay}
           setShowSenseOverlay={setShowSenseOverlay}
@@ -53,11 +53,11 @@ export default function HomePage() {
         />
       </div>
 
-      <div data-section="immersive-showroom">
+      <div data-section="immersive-showroom" data-navbar-theme="white">
         <ImmersiveShowroom />
       </div>
 
-      <div data-section="hover-expand">
+      <div data-section="hover-expand" data-navbar-theme="white">
         <HoverExpandSection />
       </div>
 

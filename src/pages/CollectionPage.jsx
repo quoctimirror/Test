@@ -19,10 +19,12 @@ const CollectionPage = () => {
   return (
     <div className="collection-page-wrapper">
       {/* Section 1-3: Collection component with internal sections */}
-      <Collection />
+      <div data-section="collection" data-navbar-theme="blend">
+        <Collection />
+      </div>
 
       {/* Section 4: View All Products */}
-      <div data-section="view-all-product">
+      <div data-section="view-all-product" data-navbar-theme="black">
         <ViewAllProduct showViewProductButton={true} />
       </div>
 

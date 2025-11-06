@@ -319,7 +319,7 @@ const Register = () => {
   // Nếu đăng ký thành công, hiển thị thông báo kiểm tra email
   if (registrationSuccess) {
     return (
-      <div className="register-container">
+      <div className="register-container" data-navbar-theme="black">
         <div className="registration-success-wrapper">
           <div className="registration-success">
             <h1 className="heading-1--no-margin register-title success-title">
@@ -379,7 +379,7 @@ const Register = () => {
   }
 
   return (
-    <div className="register-container">
+    <div className="register-container" data-navbar-theme="black">
       <div className="register-form-wrapper">
         <h1 className="heading-1--no-margin register-title">CREATE ACCOUNT</h1>
         <form className="register-form" onSubmit={handleSubmit} noValidate>

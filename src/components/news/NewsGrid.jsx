@@ -162,6 +162,7 @@ const NewsGrid = () => {
                 <div
                   key={item.id}
                   className="news-item"
+                  onClick={() => item.slug && handleNewsItemClick(item)}
                 >
                   <div
                     className={`news-item-image ${
@@ -191,7 +192,6 @@ const NewsGrid = () => {
                       <UnderlineButton
                         className="news-item-button"
                         textClassName="bodytext-4--no-margin"
-                        onClick={() => handleNewsItemClick(item)}
                       >
                         Discover
                       </UnderlineButton>

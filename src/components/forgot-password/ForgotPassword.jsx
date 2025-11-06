@@ -339,7 +339,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="forgot-password-container">
+    <div className="forgot-password-container" data-navbar-theme="black">
       <div className="forgot-password-wrapper">
         <h1 className="heading-1--no-margin forgot-password-title">
           RESET PASSWORD

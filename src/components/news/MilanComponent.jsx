@@ -522,9 +522,16 @@ const MilanComponent = () => {
   }, []);
 
   // Large Carousel arrow handlers
-  const handleLargePrevious = () => {
+  const handleLargePrevious = (e) => {
     const carousel = largeCarouselRef.current;
     if (!carousel || isLargeArrowScrolling.current) return;
+
+    // Remove focus to prevent sticky active state on mobile
+    if (e && e.currentTarget) {
+      const button = e.currentTarget.querySelector('button');
+      if (button) button.blur();
+      e.currentTarget.blur();
+    }
 
     const items = carousel.querySelectorAll(".milan-large-carousel-item");
     if (!items.length) return;
@@ -560,9 +567,16 @@ const MilanComponent = () => {
     }
   };
 
-  const handleLargeNext = () => {
+  const handleLargeNext = (e) => {
     const carousel = largeCarouselRef.current;
     if (!carousel || isLargeArrowScrolling.current) return;
+
+    // Remove focus to prevent sticky active state on mobile
+    if (e && e.currentTarget) {
+      const button = e.currentTarget.querySelector('button');
+      if (button) button.blur();
+      e.currentTarget.blur();
+    }
 
     const items = carousel.querySelectorAll(".milan-large-carousel-item");
     if (!items.length) return;
@@ -600,9 +614,16 @@ const MilanComponent = () => {
   };
 
   // Arrow navigation handlers với preemptive repositioning
-  const handlePrevious = () => {
+  const handlePrevious = (e) => {
     const carousel = carouselRef.current;
     if (!carousel || isArrowScrolling.current) return;
+
+    // Remove focus to prevent sticky active state on mobile
+    if (e && e.currentTarget) {
+      const button = e.currentTarget.querySelector('button');
+      if (button) button.blur();
+      e.currentTarget.blur();
+    }
 
     const items = carousel.querySelectorAll(".milan-carousel-item");
     if (!items.length) return;
@@ -640,9 +661,16 @@ const MilanComponent = () => {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = (e) => {
     const carousel = carouselRef.current;
     if (!carousel || isArrowScrolling.current) return;
+
+    // Remove focus to prevent sticky active state on mobile
+    if (e && e.currentTarget) {
+      const button = e.currentTarget.querySelector('button');
+      if (button) button.blur();
+      e.currentTarget.blur();
+    }
 
     const items = carousel.querySelectorAll(".milan-carousel-item");
     if (!items.length) return;

@@ -22,7 +22,7 @@
 /* Hero Section with Gradient */
 .book-hero {
   width: 100%;
-  min-height: 66vh;
+  min-height: 56vh;
   margin-bottom: -1px;
   background: linear-gradient(180deg, #7a0525 0%, #bc224c 25%, #f6f6f6 100%),
     linear-gradient(180deg, rgba(246, 246, 246, 0) 50%, #f6f6f6 100%),

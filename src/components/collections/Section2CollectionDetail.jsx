@@ -3,7 +3,7 @@ import "./Section2CollectionDetail.css";
 
 const Section2CollectionDetail = () => {
   return (
-    <div className="section2-collection-detail">
+    <div className="section2-collection-detail" data-navbar-theme="blend">
       <div className="collection-detail-content">
         <div className="collection-detail-subtitle bodytext-4--no-margin">
           THE FIRST COLLECTION

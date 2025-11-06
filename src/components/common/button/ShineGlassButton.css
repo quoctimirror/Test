@@ -303,14 +303,120 @@
 }
 
 @media screen and (hover: none) and (pointer: coarse) {
-  .border-layer,
-  .shine-glass-button:hover .border-layer,
-  .shine-glass-button:active .border-layer {
-    --angle-1: 0deg;
+  /* Disable hover effects - keep original styles */
+  .shine-glass-button:hover {
+    transform: scale(1) !important;
   }
 
-  .shine-layer {
+  .shine-glass-button:hover .glass-layer {
+    backdrop-filter: blur(clamp(1px, 0.125em, 4px)) !important;
+    -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px)) !important;
+    -moz-backdrop-filter: blur(clamp(1px, 0.125em, 4px)) !important;
+    -ms-backdrop-filter: blur(clamp(1px, 0.125em, 4px)) !important;
+  }
+
+  .shine-glass-button:hover .shine-layer {
     opacity: 0 !important;
+  }
+
+  .shine-glass-button:hover .border-layer {
+    --angle-1: 75deg !important;
+  }
+
+  /* Footer theme - disable hover effects */
+  .shine-glass-button--footer:hover .glass-layer {
+    background: linear-gradient(
+      -75deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.05)
+    ) !important;
+    box-shadow: none !important;
+  }
+
+  .shine-glass-button--footer:hover .button-text {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  /* Light theme - disable hover effects */
+  .shine-glass-button--light:hover .glass-layer {
+    background: linear-gradient(
+        -75deg,
+        rgba(255, 255, 255, 0.05),
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.05)
+      ),
+      rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .shine-glass-button--light:hover .button-text {
+    color: rgba(0, 0, 0, 0.75) !important;
+  }
+
+  /* Enable touch-active state effects - same as desktop hover */
+  .shine-glass-button.touch-active {
+    transform: scale(1) !important;
+  }
+
+  .shine-glass-button.touch-active .glass-layer {
+    backdrop-filter: blur(0.01em) !important;
+    -webkit-backdrop-filter: blur(0.01em) !important;
+    -moz-backdrop-filter: blur(0.01em) !important;
+    -ms-backdrop-filter: blur(0.01em) !important;
+  }
+
+  .shine-glass-button.touch-active .shine-layer {
+    opacity: 1 !important;
+  }
+
+  .shine-glass-button.touch-active .border-layer {
+    --angle-1: 180deg !important;
+  }
+
+  /* Change icon color to black on touch-active */
+  .shine-glass-button.touch-active .button-text svg path {
+    stroke: #000 !important;
+  }
+
+  /* Footer theme - touch-active effects */
+  .shine-glass-button--footer.touch-active .glass-layer {
+    background: linear-gradient(
+      -75deg,
+      rgba(140, 140, 140, 0.95),
+      rgba(160, 160, 160, 0.95),
+      rgba(140, 140, 140, 0.95)
+    ) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .shine-glass-button--footer.touch-active .button-text {
+    color: rgba(0, 0, 0, 0.9) !important;
+  }
+
+  /* Light theme - touch-active effects */
+  .shine-glass-button--light.touch-active .glass-layer {
+    background: linear-gradient(
+      -75deg,
+      rgba(0, 0, 0, 0.95),
+      rgba(0, 0, 0, 0.98),
+      rgba(0, 0, 0, 0.95)
+    ) !important;
+  }
+
+  .shine-glass-button--light.touch-active .button-text {
+    color: rgba(255, 255, 255, 1) !important;
+  }
+
+  /* Light theme - icon should be white on dark background */
+  .shine-glass-button--light.touch-active .button-text svg path {
+    stroke: #fff !important;
+  }
+
+  /* Disable focus effects */
+  .shine-glass-button:focus,
+  .shine-glass-button:focus-visible {
+    outline: none !important;
   }
 }
 

@@ -166,7 +166,7 @@ function Collection() {
       <div className="section-2" data-section="collection-featured">
         <div className="collection-hero-content">
           <div className="collection-hero-subtitle bodytext-4--no-margin">
-            THE NEWEST COLLECTION
+            THE NEW COLLECTION
           </div>
           <div className="collection-hero-title">
             <div className="collection-title-text heading-1--no-margin">
@@ -240,12 +240,12 @@ function Collection() {
               >
                 {currentProduct.title}
               </h3>
-              <UnderlineButton
+              <ShineGlassButton
                 className="shop-now-button"
-                textClassName="bodytext-4--no-margin"
+                theme="footer"
               >
                 Shop now
-              </UnderlineButton>
+              </ShineGlassButton>
             </div>
           </div>
         </div>
@@ -255,7 +255,7 @@ function Collection() {
       <div className="section-3" data-section="collection-other">
         <div className="other-collections-content">
           <div className="other-collections-subtitle bodytext-4--no-margin">
-            OTHER COLLECTION
+            OTHER COLLECTIONS
           </div>
           <div className="collection-names">
             <div className="collection-name heading-1--no-margin">

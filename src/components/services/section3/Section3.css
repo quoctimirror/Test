@@ -1,5 +1,5 @@
 .services-section3 {
-  height: 67vh;
+  height: 56vh;
   position: relative;
   display: flex;
   align-items: center;
@@ -21,9 +21,8 @@
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, #000 0%, #BC224C 54.81%, #F6F6F6 100%),
-    linear-gradient(180deg, rgba(246, 246, 246, 0.00) 50%, #F6F6F6 100%);
+  background: linear-gradient(180deg, #000 0%, #bc224c 54.81%, #f6f6f6 100%),
+    linear-gradient(180deg, rgba(246, 246, 246, 0) 50%, #f6f6f6 100%);
   z-index: 1;
 }
 

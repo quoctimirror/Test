@@ -4,7 +4,8 @@ import "./AllGems.css";
 
 const AllGems = () => {
   const productCards = Array(24).fill("/products/allGems/product_card_1.png");
-  const modelImage = "/products/allGems/model_1.svg";
+  const modelImage1 = "/products/allGems/earrings-heart.png";
+  const modelImage2 = "/products/allGems/flower.png";
 
   return (
     <div className="all-gems-page">
@@ -40,7 +41,7 @@ const AllGems = () => {
             ))}
           </div>
           <div className="gem-item gem-item-large">
-            <img src={modelImage} alt="Model showcase" />
+            <img src={modelImage1} alt="Model showcase 1" />
           </div>
         </div>
 
@@ -57,7 +58,7 @@ const AllGems = () => {
         {/* Fourth row - 3 columns (1 large + 2 columns with 2x2 grid) */}
         <div className="gems-row gems-row-3-reverse-special">
           <div className="gem-item gem-item-large">
-            <img src={modelImage} alt="Model showcase" />
+            <img src={modelImage2} alt="Model showcase 2" />
           </div>
           <div className="gem-grid-2x2">
             {productCards.slice(12, 16).map((src, index) => (

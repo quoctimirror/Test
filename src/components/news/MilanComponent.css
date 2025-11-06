@@ -243,6 +243,46 @@
   transform: translateY(-50%) scale(0.95);
 }
 
+/* Remove focus outline and all focus states */
+.milan-slider-arrow,
+.milan-slider-arrow button,
+.milan-slider-arrow *,
+.milan-slider-arrow button * {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Force remove focus-visible state */
+.milan-slider-arrow:focus,
+.milan-slider-arrow:focus-visible,
+.milan-slider-arrow button:focus,
+.milan-slider-arrow button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Prevent sticky hover/active on touch devices */
+@media (hover: none) {
+  .milan-slider-arrow:hover {
+    transform: translateY(-50%) scale(1) !important;
+  }
+}
+
+/* Disable active state on touch devices to prevent sticky active state */
+@media (hover: none) and (pointer: coarse) {
+  .milan-slider-arrow:active {
+    transform: translateY(-50%) scale(1);
+  }
+
+  /* Keep icon white on touch devices - no color change */
+  .milan-slider-arrow svg path,
+  .milan-slider-arrow:hover svg path,
+  .milan-slider-arrow:active svg path,
+  .milan-slider-arrow:focus svg path {
+    stroke: #fff !important;
+  }
+}
+
 .milan-slider-arrow-left {
   left: 20px;
 }
@@ -327,7 +367,7 @@
 }
 
 .milan-large-carousel-item {
-  flex: 0 0 calc(66.666% - 0.417%); /* 8 cột trong 12-column grid */
+  flex: 0 0 calc(50% - 0.417%); /* 6 cột trong 12-column grid */
   aspect-ratio: 5/4;
   overflow: hidden;
 }
@@ -799,7 +839,7 @@
 .milan-hero .milan-hero-description.bodytext-5--no-margin,
 .milan-hero-content .milan-hero-description.bodytext-5--no-margin {
   color: rgba(0, 0, 0, 0.5);
-  margin: 0 0 12px 0;
+  margin: 0 0 36px 0;
   padding: 0;
   text-align: center;
   white-space: normal;

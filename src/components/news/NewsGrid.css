@@ -6,11 +6,10 @@
 
 .news-grid-container {
   margin: 0 auto;
-  padding: 0 2.5%;
 }
 
 .news-row {
-  margin-bottom: 60px;
+  margin-bottom: 120px;
 }
 
 .news-row:last-child {
@@ -20,17 +19,22 @@
 .news-row-content {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  column-gap: 12px;
+  column-gap: 24px;
 }
 
 .news-item {
   background: white;
   border-radius: 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.news-item:hover {
+  opacity: 0.8;
 }
 
 .news-item-image {
   width: 100%;
-  aspect-ratio: 5/4;
   background: #f5f5f5;
   position: relative;
   display: flex;
@@ -39,8 +43,17 @@
   overflow: hidden;
 }
 
-.news-item-image.news-item-image-portrait {
+/* Pattern lặp lại: 1, 4/5, 5/4 */
+.news-item:nth-child(3n + 1) .news-item-image {
+  aspect-ratio: 1;
+}
+
+.news-item:nth-child(3n + 2) .news-item-image {
   aspect-ratio: 4/5;
+}
+
+.news-item:nth-child(3n + 3) .news-item-image {
+  aspect-ratio: 5/4;
 }
 
 /* Only set min-height when there's no image */
@@ -90,6 +103,10 @@
   flex: 1;
 }
 
+.news-item-button {
+  pointer-events: none;
+}
+
 .news-item-button .underline-button-text {
   color: rgba(0, 0, 0, 0.5);
   transition: color 0.3s ease;
@@ -99,12 +116,24 @@
   background: #000000 !important;
 }
 
-.news-item-button:hover .underline-button-text {
+/* Hover effect when hovering on news-item */
+.news-item:hover .news-item-button .underline-button-text {
   color: rgba(0, 0, 0, 1);
 }
 
-.news-item-button:hover .underline-button-text::after {
-  background: rgba(0, 0, 0, 1) !important;
+.news-item:hover .news-item-button .underline-button-text::after {
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
+}
+
+/* Disabled state */
+.news-item:has(.news-item-button:disabled) {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.news-item:has(.news-item-button:disabled):hover {
+  opacity: 0.6;
 }
 
 .view-more-section {
@@ -133,6 +162,9 @@
 
   .view-more-section {
     margin-top: 30px;
+  }
+  .news-row {
+    margin-bottom: 60px;
   }
 }
 

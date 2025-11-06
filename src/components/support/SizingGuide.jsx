@@ -78,7 +78,7 @@ const SizingGuide = () => {
 
         <div className="size-chart">
           <img
-            src="./support/support.png"
+            src="/support/support.png"
             alt="Ring Size Chart"
             className="chart-image"
           />

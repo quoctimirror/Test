@@ -6,8 +6,12 @@ import NewsGrid from "@components/news/NewsGrid";
 const AllNewsPage = () => {
   return (
     <div className="all-news-page">
-      <NewsHero />
-      <NewsGrid />
+      <div data-navbar-theme="white">
+        <NewsHero />
+      </div>
+      <div data-navbar-theme="black">
+        <NewsGrid />
+      </div>
     </div>
   );
 };

@@ -86,6 +86,7 @@
 }
 
 .product-card {
+  position: relative;
   flex: 0 0 auto;
   /* Desktop: 4 images + peek of 5th (divide by 4.2 for ~20% peek) */
   width: calc((100vw - 30px - 30px) / 4.2);
@@ -106,6 +107,16 @@
 
 .product-card:hover .product-image {
   transform: scale(1.1);
+}
+
+.product-label {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  color: rgba(255, 255, 255, 1) !important;
+  text-align: left;
+  margin: 0 !important;
+  z-index: 2;
 }
 
 /* View Product Button Container */

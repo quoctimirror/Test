@@ -5,6 +5,9 @@ import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import { ROUTES } from "@/constants/routes";
+import fbIcon from "@assets/images/icons/fb_icon.svg";
+import instaIcon from "@assets/images/icons/insta_icon.svg";
+import tiktokIcon from "@assets/images/icons/tiktok_icon.svg";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -122,7 +125,7 @@ const Footer = () => {
                     onClick={handleProductsClick}
                     className="footer-link-button"
                   >
-                    Product
+                    Products
                   </UnderlineButton>
                 </li>
                 <li>
@@ -130,7 +133,7 @@ const Footer = () => {
                     onClick={handleServicesClick}
                     className="footer-link-button"
                   >
-                    Service
+                    Services
                   </UnderlineButton>
                 </li>
                 <li>
@@ -247,20 +250,29 @@ const Footer = () => {
         <div className="footer-bottom">
           <div className="footer-bottom-center">
             <div className="social-icons">
-              <a className="social-icon facebook">
-                <i className="fab fa-facebook-f"></i>
+              <a
+                href="https://www.facebook.com/mirrorfuturediamond"
+                className="social-icon facebook"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={fbIcon} alt="Facebook" />
               </a>
-              <a className="social-icon instagram">
-                <i className="fab fa-instagram"></i>
+              <a
+                href="https://www.instagram.com/mirrorfuturediamond"
+                className="social-icon instagram"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={instaIcon} alt="Instagram" />
               </a>
-              <a className="social-icon youtube">
-                <i className="fab fa-youtube"></i>
-              </a>
-              <a className="social-icon linkedin">
-                <i className="fab fa-linkedin-in"></i>
-              </a>
-              <a className="social-icon pinterest">
-                <i className="fab fa-pinterest-p"></i>
+              <a
+                href="https://www.tiktok.com/@mirrorfuturediamond?_r=1&_t=ZS-916kE9BBDoC"
+                className="social-icon tiktok"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={tiktokIcon} alt="TikTok" />
               </a>
             </div>
           </div>

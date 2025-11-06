@@ -28,9 +28,9 @@ const AllNewsPageV2 = () => {
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       image: "/news/mirror-milan2.png",
       gallery: [
+        "/news/mirror-milan2.png",
         "/news/mirror-milan3.png",
         "/news/mirror-milan1.png",
-        "/news/mirror-milan2.png",
       ],
       date: "10/2025",
       description:
@@ -41,9 +41,9 @@ const AllNewsPageV2 = () => {
       title: "Sustainable Luxury: The Future of Fine Jewelry",
       image: "/news/mirror-milan3.png",
       gallery: [
-        "/news/mirror-milan1.png",
         "/news/mirror-milan2.png",
         "/news/mirror-milan3.png",
+        "/news/mirror-milan1.png",
       ],
       date: "09/2025",
       description:
@@ -67,9 +67,9 @@ const AllNewsPageV2 = () => {
       title: "The Art of Craftsmanship Meets Modern Design",
       image: "/news/mirror-milan2.png",
       gallery: [
+        "/news/mirror-milan2.png",
         "/news/mirror-milan3.png",
         "/news/mirror-milan1.png",
-        "/news/mirror-milan2.png",
       ],
       date: "08/2025",
       description:
@@ -80,9 +80,9 @@ const AllNewsPageV2 = () => {
       title: "Global Trends in Luxury Market 2025",
       image: "/news/mirror-milan3.png",
       gallery: [
-        "/news/mirror-milan1.png",
         "/news/mirror-milan2.png",
         "/news/mirror-milan3.png",
+        "/news/mirror-milan1.png",
       ],
       date: "08/2025",
       description:
@@ -95,7 +95,7 @@ const AllNewsPageV2 = () => {
   };
 
   return (
-    <div className="all-news-page-v2">
+    <div className="all-news-page-v2" data-navbar-theme="blend">
       <NewsHero />
       <section className="news-list-v2">
         <div className="news-list-v2-container">

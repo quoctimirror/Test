@@ -43,7 +43,7 @@ const Lumex91 = () => {
 
         <div className="lumex91-content">
           <h1 className="heading-1--no-margin">
-            <ShinyText text="Mirror-Lumex 91™" speed={2.5} />
+            <ShinyText text="Mirror-Lumex 91™" speed={2} />
           </h1>
           <ShineGlassButton theme="footer" onClick={handleExploreClick}>
             Explore more

@@ -4,7 +4,7 @@
 
 .mirror-network-discover-wrapper {
   width: 100%;
-  min-height: 500vh; /* Total height of both sections */
+  /* min-height: 500vh; Total height of both sections */
   background: linear-gradient(
     180deg,
     #000 17.79%,
@@ -76,12 +76,12 @@
 
 .mirror-network-header .bodytext-4--no-margin {
   text-transform: uppercase;
-  color: rgba(121, 121, 121, 1);
+  color: #e0e0e0;
 }
 
 /* Main Title */
 .mirror-network-title {
-  margin-bottom: 60px;
+  margin-bottom: 24px;
   transform: translateY(30%) translateZ(0);
   opacity: 0;
   will-change: transform, opacity;
@@ -107,7 +107,7 @@
 .mirror-network-description .bodytext-4--no-margin {
   word-wrap: break-word;
   white-space: normal;
-  color: #797979;
+  color: #e0e0e0;
 }
 
 /* ========================================
@@ -116,7 +116,7 @@
 
 .discover-section-wrapper {
   width: 100%;
-  min-height: 200vh;
+  /* min-height: 200vh; */
   background: transparent; /* No background - use wrapper's gradient */
   position: relative;
 }
@@ -272,7 +272,7 @@
   }
 
   .discover-section-wrapper {
-    min-height: 120vh;
+    min-height: 100vh;
   }
 
   .discover-section-wrapper .grid-container {

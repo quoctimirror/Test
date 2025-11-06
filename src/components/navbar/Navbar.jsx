@@ -7,6 +7,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import UnderlineButton from "@/components/common/button/UnderlineButton";
 import { ROUTES } from "@/constants/routes";
+import { useNavbarTheme } from "@/hooks/useNavbarTheme";
+
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,6 +23,9 @@ export default function Navbar() {
   const [isInIntroSubmitSection, setIsInIntroSubmitSection] = useState(false);
   const logoRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
+
+  // Get current navbar theme from hook
+  const { theme: navbarTheme } = useNavbarTheme();
 
   // Check if current page is home, welcome, or immersive showroom (pages with white navbar)
   const isHomePage =
@@ -290,9 +295,18 @@ export default function Navbar() {
     }
   };
 
-  const handleProfileClick = async () => {
+  const handleProfileClick = async (tab = "My Passport") => {
     setIsAccountMenuOpen(false);
-    await performTransition(ROUTES.USER_PROFILE);
+
+    // If already on profile page, force navigation with replace to update state
+    if (location.pathname === ROUTES.USER_PROFILE) {
+      navigate(ROUTES.USER_PROFILE, {
+        state: { activeTab: tab, timestamp: Date.now() },
+        replace: true
+      });
+    } else {
+      await performTransition(ROUTES.USER_PROFILE, { state: { activeTab: tab, timestamp: Date.now() } });
+    }
   };
 
   const handleAdminDashboardClick = async () => {
@@ -336,11 +350,35 @@ export default function Navbar() {
     await performTransition(ROUTES.LOCATIONS);
   };
 
+  const handleAccountMenuClick = async () => {
+    // Check if user is authenticated
+    const hasToken = localStorage.getItem("accessToken");
+    const isLoggedIn = (isAuthenticated && user) || hasToken;
+
+    if (isLoggedIn) {
+      // If logged in, navigate to profile
+      if (window.location.pathname === ROUTES.USER_PROFILE) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      sessionStorage.setItem("scrollToTop", "true");
+      await performTransition(ROUTES.USER_PROFILE);
+    } else {
+      // If not logged in, navigate to login
+      if (window.location.pathname === ROUTES.AUTH_LOGIN) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      sessionStorage.setItem("scrollToTop", "true");
+      await performTransition(ROUTES.AUTH_LOGIN);
+    }
+  };
+
   return (
     <>
       {/* Navbar Liquid Glass Background */}
       <div
-        className={`navbar-glass-background ${
+        className={`navbar-glass-background navbar-theme-${navbarTheme} ${
           isMenuOpen || isMenuHovered || isAccountMenuOpen ? "expanded" : ""
         }`}
       >
@@ -416,7 +454,7 @@ export default function Navbar() {
 
       {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
       <div
-        className={`logo-fixed-container ${
+        className={`logo-fixed-container navbar-theme-${navbarTheme} ${
           isHomePage && !isMenuOpen ? "no-blend" : ""
         } ${
           isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
@@ -436,7 +474,7 @@ export default function Navbar() {
       {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
       {!shouldHideButtons && (
         <div
-          className={`menu-fixed-container ${
+          className={`menu-fixed-container navbar-theme-${navbarTheme} ${
             isHomePage && !isMenuOpen ? "no-blend" : ""
           } ${
             isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
@@ -456,8 +494,11 @@ export default function Navbar() {
                 !isMobile && !isTablet && setIsMenuHovered(false)
               }
               onClick={(e) => {
-                e.stopPropagation();
-                setIsMenuOpen(!isMenuOpen);
+                // Only allow click on mobile/tablet, not desktop
+                if (isMobile || isTablet) {
+                  e.stopPropagation();
+                  setIsMenuOpen(!isMenuOpen);
+                }
               }}
             >
               <div className="menu-icon-container">
@@ -490,6 +531,7 @@ export default function Navbar() {
               <div className="menu-groups">
                 <ul className="menu-list">
                   <li
+                    className={location.pathname === ROUTES.COLLECTIONS ? "active" : ""}
                     onMouseEnter={() =>
                       optimizedTransitionUtils.prefetch(ROUTES.COLLECTIONS)
                     }
@@ -499,6 +541,7 @@ export default function Navbar() {
                     </UnderlineButton>
                   </li>
                   <li
+                    className={location.pathname === ROUTES.SERVICES ? "active" : ""}
                     onMouseEnter={() =>
                       optimizedTransitionUtils.prefetch(ROUTES.SERVICES)
                     }
@@ -508,6 +551,7 @@ export default function Navbar() {
                     </UnderlineButton>
                   </li>
                   <li
+                    className={location.pathname === ROUTES.SUPPORT ? "active" : ""}
                     onMouseEnter={() =>
                       optimizedTransitionUtils.prefetch(ROUTES.SUPPORT)
                     }
@@ -517,6 +561,7 @@ export default function Navbar() {
                     </UnderlineButton>
                   </li>
                   <li
+                    className={location.pathname === ROUTES.ABOUT ? "active" : ""}
                     onMouseEnter={() =>
                       optimizedTransitionUtils.prefetch(ROUTES.ABOUT)
                     }
@@ -526,6 +571,7 @@ export default function Navbar() {
                     </UnderlineButton>
                   </li>
                   <li
+                    className={location.pathname === ROUTES.NEWS ? "active" : ""}
                     onMouseEnter={() =>
                       optimizedTransitionUtils.prefetch(ROUTES.NEWS)
                     }
@@ -534,12 +580,14 @@ export default function Navbar() {
                       News
                     </UnderlineButton>
                   </li>
-                  <li className="immersive-menu-item">
+                  <li className={`immersive-menu-item ${location.pathname === ROUTES.IMMERSIVE_SHOWROOM ? "active" : ""}`}>
                     <UnderlineButton>Immersive Showroom</UnderlineButton>
                   </li>
                 </ul>
+                <div className="menu-divider"></div>
                 <ul className="menu-list">
                   <li
+                    className={location.pathname === ROUTES.LOCATIONS ? "active" : ""}
                     onMouseEnter={() =>
                       optimizedTransitionUtils.prefetch(ROUTES.LOCATIONS)
                     }
@@ -549,6 +597,7 @@ export default function Navbar() {
                     </UnderlineButton>
                   </li>
                   <li
+                    className={location.pathname === ROUTES.CONTACT ? "active" : ""}
                     onMouseEnter={() =>
                       optimizedTransitionUtils.prefetch(ROUTES.CONTACT)
                     }
@@ -557,8 +606,8 @@ export default function Navbar() {
                       Contact us
                     </UnderlineButton>
                   </li>
-                  <li>
-                    <UnderlineButton onClick={handleAccountClick}>
+                  <li className="account-menu-item">
+                    <UnderlineButton onClick={handleAccountMenuClick}>
                       Account
                     </UnderlineButton>
                   </li>
@@ -571,40 +620,57 @@ export default function Navbar() {
 
       {!shouldHideButtons && (
         <div
-          className={`account-fixed-container ${
+          className={`account-fixed-container navbar-theme-${navbarTheme} ${
             isHomePage && !isMenuOpen ? "no-blend" : ""
           } ${
             isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
           }`}
         >
           <div className="account-container">
-            <div
-              className="account-button-wrapper"
-              onMouseEnter={() => setIsAccountMenuOpen(true)}
-              onMouseLeave={() => setIsAccountMenuOpen(false)}
-            >
-              <UnderlineButton>Account</UnderlineButton>
-            </div>
+            {isAuthenticated ? (
+              // Logged in: Show "Account" with hover dropdown
+              <>
+                <div
+                  className="account-button-wrapper"
+                  onMouseEnter={() => setIsAccountMenuOpen(true)}
+                  onMouseLeave={() => setIsAccountMenuOpen(false)}
+                >
+                  <UnderlineButton>Account</UnderlineButton>
+                </div>
 
-            {/* Account Dropdown Menu - Shows for both authenticated and non-authenticated users */}
-            <div
-              className={`account-popup ${isAccountMenuOpen ? "active" : ""}`}
-              onMouseEnter={() => setIsAccountMenuOpen(true)}
-              onMouseLeave={() => setIsAccountMenuOpen(false)}
-            >
-              <div className="account-groups">
-                {isAuthenticated ? (
-                  <>
+                {/* Account Dropdown Menu - Only for authenticated users */}
+                <div
+                  className={`account-popup ${isAccountMenuOpen ? "active" : ""}`}
+                  onMouseEnter={() => setIsAccountMenuOpen(true)}
+                  onMouseLeave={() => setIsAccountMenuOpen(false)}
+                >
+                  <div className="account-groups">
                     <div className="account-user-info">
                       <span className="bodytext-4--no-margin">
                         {user?.username || "User"}
                       </span>
                     </div>
+                    <div className="menu-divider"></div>
 
                     <ul className="account-list">
                       <li>
-                        <UnderlineButton onClick={handleProfileClick}>
-                          My Profile
+                        <UnderlineButton onClick={() => handleProfileClick("My Passport")}>
+                          My Passport
+                        </UnderlineButton>
+                      </li>
+                      <li>
+                        <UnderlineButton onClick={() => handleProfileClick("Orders")}>
+                          Orders
+                        </UnderlineButton>
+                      </li>
+                      <li>
+                        <UnderlineButton onClick={() => handleProfileClick("Services")}>
+                          Services
+                        </UnderlineButton>
+                      </li>
+                      <li>
+                        <UnderlineButton onClick={() => handleProfileClick("Wishlist")}>
+                          Wishlist
                         </UnderlineButton>
                       </li>
 
@@ -633,25 +699,28 @@ export default function Navbar() {
                           </UnderlineButton>
                         </li>
                       )}
+                    </ul>
 
+                    <div className="menu-divider"></div>
+
+                    <ul className="account-list">
                       <li className="logout-item">
                         <UnderlineButton onClick={handleLogoutClick}>
                           Logout
                         </UnderlineButton>
                       </li>
                     </ul>
-                  </>
-                ) : (
-                  <ul className="account-list">
-                    <li>
-                      <UnderlineButton onClick={handleLoginClick}>
-                        Login
-                      </UnderlineButton>
-                    </li>
-                  </ul>
-                )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              // Not logged in: Show "Login" button, no dropdown
+              <div className="account-button-wrapper">
+                <UnderlineButton onClick={handleLoginClick}>
+                  Login
+                </UnderlineButton>
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}
@@ -665,7 +734,7 @@ export default function Navbar() {
 
           {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
           <div
-            className={`immersive-border-container ${
+            className={`immersive-border-container navbar-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""
             } ${
               isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
@@ -676,7 +745,7 @@ export default function Navbar() {
 
           {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
           <div
-            className={`immersive-text-container ${
+            className={`immersive-text-container navbar-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""
             } ${
               isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""

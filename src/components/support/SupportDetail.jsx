@@ -20,6 +20,9 @@ const SupportDetail = () => {
     if (tabFromUrl && validTabs.includes(tabFromUrl)) {
       setActiveTab(tabFromUrl);
     }
+
+    // Scroll to top immediately when tab changes (without smooth behavior)
+    window.scrollTo(0, 0);
   }, [searchParams]);
 
   const tabs = [
@@ -51,13 +54,13 @@ const SupportDetail = () => {
 
   return (
     <>
-      <div className="support-hero-section">
+      <div className="support-hero-section" data-navbar-theme="white">
         <div className="hero-content">
           <h1>Support</h1>
         </div>
       </div>
 
-      <div className="support-wrapper">
+      <div className="support-wrapper" data-navbar-theme="black">
         <div className="support-tabs-container">
           <div className="support-tabs" ref={tabsRef}>
             {tabs.map((tab) => (

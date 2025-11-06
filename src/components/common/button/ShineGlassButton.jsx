@@ -22,6 +22,43 @@ const ShineGlassButton = ({
     const shineLayer = button.querySelector(".shine-layer");
     if (!shineLayer) return;
 
+    // Handle touch devices - add tap feedback effect
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+    let touchTimeout = null;
+
+    if (isTouchDevice) {
+      const handleTouchStart = () => {
+        // Add active class to trigger effects
+        button.classList.add('touch-active');
+
+        // Clear any existing timeout
+        if (touchTimeout) {
+          clearTimeout(touchTimeout);
+        }
+      };
+
+      const handleTouchEnd = () => {
+        // Remove active class after a short delay to show the effect
+        touchTimeout = setTimeout(() => {
+          button.classList.remove('touch-active');
+          button.blur();
+        }, 150); // 150ms delay to show the effect
+      };
+
+      const handleTouchCancel = () => {
+        if (touchTimeout) {
+          clearTimeout(touchTimeout);
+        }
+        button.classList.remove('touch-active');
+        button.blur();
+      };
+
+      button.addEventListener('touchstart', handleTouchStart, { passive: true });
+      button.addEventListener('touchend', handleTouchEnd, { passive: true });
+      button.addEventListener('touchcancel', handleTouchCancel, { passive: true });
+    }
+
     // Variables for smooth interpolation
     let currentX = 50;
     let currentY = 50;
@@ -111,9 +148,19 @@ const ShineGlassButton = ({
       if (animationFrame) {
         cancelAnimationFrame(animationFrame);
       }
+      if (touchTimeout) {
+        clearTimeout(touchTimeout);
+      }
       button.removeEventListener("mousemove", handleMouseMove);
       button.removeEventListener("mouseenter", handleMouseEnter);
       button.removeEventListener("mouseleave", handleMouseLeave);
+
+      // Cleanup touch listeners
+      if (isTouchDevice) {
+        button.removeEventListener('touchstart', () => {});
+        button.removeEventListener('touchend', () => {});
+        button.removeEventListener('touchcancel', () => {});
+      }
     };
   }, []);
 

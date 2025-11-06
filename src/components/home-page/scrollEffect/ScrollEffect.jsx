@@ -121,12 +121,12 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
     {
       title: "Reflection of Self",
       subtitle:
-        "A moment of stillness where you meet yourself - past, present, and becoming.",
+        "A quiet moment of encounter — where you face yourself in all dimensions: past, present, and becoming.",
     },
     {
-      title: "Reflection of\nArtistry and Innovation",
+      title: "Reflection of Artistry and Innovation",
       subtitle:
-        "Each piece is crafted with the precision of technology and the soul of human touch - a seamless harmony between machine intelligence and human intuition.",
+        "Each creation is shaped with technological precision and human soul — where machine intelligence and intuition craft in unison.",
     },
   ];
 
@@ -776,7 +776,9 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
             }`}
           >
             <h1
-              className="heading-2--no-margin slide-title"
+              className={`${
+                index === 0 ? "heading-1--no-margin" : "heading-2--no-margin"
+              } slide-title`}
               style={{
                 opacity: index === 0 ? 1 : titleOpacity, // Text 1: No individual fade, Others: Staggered
                 transform: index === 0 ? "translateY(0%)" : titleTransform,
@@ -791,7 +793,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
             <p
               className={
                 index === 0
-                  ? "heading-2--no-margin slide-subtitle"
+                  ? "heading-1--no-margin slide-subtitle"
                   : "bodytext-4--no-margin slide-subtitle"
               }
               style={{

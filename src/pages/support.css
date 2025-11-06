@@ -3,7 +3,7 @@
 /* Support Page Layout */
 .support-hero-section {
   width: 100%;
-  height: 600px;
+  height: 56vh;
   background-image: url("/support/section_1.jpg");
   background-size: cover;
   background-position: center;
@@ -135,11 +135,11 @@
   width: 100%;
   height: 2px;
   background: #000;
-  bottom: -3px;
+  bottom: -1.5px;
   left: 0;
   transform: scaleX(0) scaleY(0.75);
   transform-origin: right center;
-  transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
+  transition: transform 0.3s linear;
 }
 
 .support-tab:hover {

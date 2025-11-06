@@ -168,6 +168,32 @@ const FAQs = () => {
     };
   }, []);
 
+  // Handle smooth scroll for anchor navigation
+  useEffect(() => {
+    const handleAnchorClick = (e) => {
+      const target = e.target.closest('a[href^="#"]');
+      if (target) {
+        e.preventDefault();
+        const id = target.getAttribute('href').slice(1);
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+
+    const navElement = document.querySelector('.faq-nav');
+    if (navElement) {
+      navElement.addEventListener('click', handleAnchorClick);
+    }
+
+    return () => {
+      if (navElement) {
+        navElement.removeEventListener('click', handleAnchorClick);
+      }
+    };
+  }, []);
+
   const toggleFAQ = (id) => {
     const panel = document.querySelector(`[data-faq-id="${id}"]`);
 
@@ -247,10 +273,10 @@ const FAQs = () => {
                             ? "active"
                             : ""
                         }`}
+                        onClick={() => toggleFAQ(`${section.id}-${index}`)}
                       >
                         <button
                           className="faq-question"
-                          onClick={() => toggleFAQ(`${section.id}-${index}`)}
                         >
                           <span>{faq.question}</span>
                           <span

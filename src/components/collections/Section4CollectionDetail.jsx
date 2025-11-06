@@ -11,7 +11,7 @@ const Section4CollectionDetail = ({
   const [error, setError] = useState(null);
 
   const productCards = Array(24).fill("/products/allGems/product_card_1.png");
-  const modelImage = "/products/allGems/model_2.gif";
+  const modelImage = "/products/allGems/flower.png";
 
   // Helper function to convert slug back to name for API lookup
   const slugToName = (slug) => {
@@ -181,8 +181,11 @@ const Section4CollectionDetail = ({
   };
 
   return (
-    <div className="section4-collection-page">
+    <div className="section4-collection-page" data-navbar-theme="black">
       <div className="section4-collection-header">
+        <p className="section4-collection-explore bodytext-4--no-margin">
+          EXPLORE
+        </p>
         <h1 className="section4-collection-title heading-1--no-margin">
           OUR GEMS
         </h1>

@@ -12,7 +12,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="contact-us-hero">
+    <section className="contact-us-hero" data-navbar-theme="white">
       <img
         src="/contactUs/ReachOut.svg"
         alt="Contact Us Background"
@@ -36,7 +36,7 @@ const ContactUs = () => {
           </ShineGlassButton>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -76,10 +76,10 @@ const Section5 = () => {
               <div
                 key={faq.id}
                 className={`faq-item ${openFaq === faq.id ? "active" : ""}`}
+                onClick={() => toggleFaq(faq.id)}
               >
                 <button
                   className="faq-question"
-                  onClick={() => toggleFaq(faq.id)}
                   aria-expanded={openFaq === faq.id}
                 >
                   <span className="bodytext-3--no-margin">{faq.question}</span>

@@ -1,25 +1,31 @@
 .section4-collection-page {
   min-height: 100vh;
   background: #f6f6f6;
-  padding-top: 240px;
   padding-bottom: 120px;
+  margin-top: -1px;
 }
 
 .section4-collection-header {
   text-align: center;
-  padding: 0px 20px 60px;
-  max-width: 800px;
+  padding: 240px 20px 120px;
   margin: 0 auto;
+  background: linear-gradient(180deg, #000 0%, #bc224c 54.81%, #f6f6f6 100%);
+}
+
+.section4-collection-explore {
+  color: #e0e0e0;
+  margin-bottom: 12px !important;
+  text-transform: uppercase;
 }
 
 .section4-collection-title {
-  color: #333;
+  color: #fff;
   margin-bottom: 36px !important;
   margin-top: 0 !important;
 }
 
 .section4-collection-subtitle {
-  color: #666;
+  color: #e0e0e0;
   margin: 0 auto !important;
   max-width: 600px;
 }
@@ -145,8 +151,18 @@
 /* Responsive adjustments */
 @media screen and (max-width: 1023px) {
   .section4-collection-header {
-    padding: 0px 20px 120px;
+    background: #f6f6f6;
+    padding: 120px 0px 120px;
     max-width: 62%;
+  }
+  .section4-collection-explore {
+    color: #797979;
+  }
+  .section4-collection-title {
+    color: #000;
+  }
+  .section4-collection-subtitle {
+    color: #797979;
   }
   .section4-collection-grid-container {
     --gap: 12px;
@@ -180,13 +196,12 @@
     grid-column: span 2;
   }
   .section4-collection-page {
-    padding-top: 120px;
     padding-bottom: 60px;
   }
 }
 @media screen and (max-width: 425px) {
   .section4-collection-header {
-    padding: 0px 0px 60px;
+    padding: 120px 0px 60px;
     max-width: 77%;
   }
   .section4-collection-grid-container {

@@ -20,7 +20,7 @@ const AboutPage = () => {
   const { isArrowVisible, handleArrowClick } = useScrollToNextSection({
     footerSelector: '[data-section="shared-section"], .footer', // Check both SharedSection and global footer
     scrollToEnd: true, // Scroll to end of each section instead of start
-    scrollToStartSections: ['bod-member'], // BOD Member section should scroll to start instead of end
+    scrollToStartSections: ["bod-member"], // BOD Member section should scroll to start instead of end
   });
 
   const setupScrollTriggers = () => {
@@ -81,19 +81,19 @@ const AboutPage = () => {
 
   return (
     <div className="about-page">
-      <div data-section="slogan-section">
+      <div data-section="slogan-section" data-navbar-theme="white">
         <SloganSection />
       </div>
-      <div data-section="starting-place">
+      <div data-section="starting-place" data-navbar-theme="white">
         {/* <section className="panel" data-section="starting-place"> */}
         <StartingPlaceSection />
         {/* </section> */}
       </div>
-      <div data-section="intro-bod">
+      <div data-section="intro-bod" data-navbar-theme="black">
         <IntroBOD />
       </div>
 
-      <div data-section="bod-member">
+      <div data-section="bod-member" data-navbar-theme="white">
         <BODMemberV3 />
       </div>
 
@@ -101,15 +101,15 @@ const AboutPage = () => {
         <AtMirror />
       </section> */}
 
-      <div data-section="mirrorverse">
+      <div data-section="mirrorverse" data-navbar-theme="white">
         <MirrorverseSection />
       </div>
 
-      <section className="panel" data-section="mirror-network-discover">
+      <section data-section="mirror-network-discover" data-navbar-theme="white">
         <MirrorNetworkDiscoverSection />
       </section>
 
-      <div data-section="shared-section">
+      <div data-section="shared-section" data-navbar-theme="white">
         <SharedSection />
       </div>
 

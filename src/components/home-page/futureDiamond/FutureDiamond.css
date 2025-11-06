@@ -74,7 +74,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradientMove 5s ease-in-out infinite;
+  animation: gradientMove 3s ease-in-out infinite;
 }
 
 .future-diamond-description-container {
@@ -176,7 +176,7 @@
 
   .future-diamond .future-diamond-title {
     animation: fadeInUp 0.8s ease-out 0.2s forwards,
-      gradientMove 5s ease-in-out infinite;
+      gradientMove 2s ease-in-out infinite;
   }
 
   .future-diamond .heading-1--no-margin {
@@ -193,10 +193,10 @@
 
 @keyframes gradientMove {
   0% {
-    background-position: 55% 50%;
+    background-position: 50% 50%;
   }
   50% {
-    background-position: 20% 50%;
+    background-position: 20% 0%;
   }
   100% {
     background-position: 55% 50%;

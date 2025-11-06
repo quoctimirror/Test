@@ -24,6 +24,7 @@
   background: #000;
   padding: 0 0.3125% 0 2.5%;
   box-sizing: border-box;
+  margin-right: -1px;
 }
 
 .main-display img {
@@ -73,7 +74,6 @@
   top: 50%;
   transform: translateY(-50%);
   will-change: transform;
-  pointer-events: none;
   user-select: none;
 }
 
@@ -82,21 +82,33 @@
   max-height: 195px;
   object-fit: contain;
   flex-shrink: 0;
-  cursor: default;
+  cursor: pointer;
   user-select: none;
-  pointer-events: none;
   image-rendering: auto;
   image-rendering: -webkit-optimize-contrast;
-  filter: grayscale(100%);
+  filter: grayscale(100%) blur(2px);
   transition: filter 0.3s ease;
+}
+
+.carousel img:hover {
+  filter: grayscale(0%) blur(0);
 }
 
 .carousel img.active {
   border: 2px solid #fff;
-  filter: grayscale(0%);
+  filter: grayscale(0%) blur(0);
+}
+
+.carousel img.active:hover {
+  filter: grayscale(0%) blur(0);
 }
 
 .carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide arrow buttons on desktop */
+.collection-slider-arrow {
   display: none;
 }
 
@@ -123,36 +135,138 @@
     display: none;
   }
 
-  /* Show all images in a vertical layout */
+  /* Horizontal scrolling carousel like milan-carousel */
   .carousel-wrapper {
     width: 100%;
     padding: 0;
     background: #f6f6f6;
     height: auto;
+    overflow: hidden;
+    position: relative;
+    margin-left: calc(-1 * var(--grid-gutter, 2.5%));
+    margin-right: calc(-1 * var(--grid-gutter, 2.5%));
+    width: calc(100% + 2 * var(--grid-gutter, 2.5%));
+  }
+
+  /* Arrow buttons - matching milan-carousel style */
+  .collection-slider-arrow {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    transition: transform 0.3s ease;
+  }
+
+  .collection-slider-arrow:hover {
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  .collection-slider-arrow:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  .collection-slider-arrow,
+  .collection-slider-arrow button,
+  .collection-slider-arrow *,
+  .collection-slider-arrow button * {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .collection-slider-arrow:focus,
+  .collection-slider-arrow:focus-visible,
+  .collection-slider-arrow button:focus,
+  .collection-slider-arrow button:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  @media (hover: none) {
+    .collection-slider-arrow:hover {
+      transform: translateY(-50%) scale(1) !important;
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .collection-slider-arrow:active {
+      transform: translateY(-50%) scale(1);
+    }
+
+    .collection-slider-arrow svg path,
+    .collection-slider-arrow:hover svg path,
+    .collection-slider-arrow:active svg path,
+    .collection-slider-arrow:focus svg path {
+      stroke: #fff !important;
+    }
+  }
+
+  .collection-slider-arrow-left {
+    left: 36px;
+  }
+
+  .collection-slider-arrow-right {
+    right: 36px;
+  }
+
+  .collection-slider-arrow button {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .collection-slider-arrow svg {
+    width: 20px !important;
+    height: 20px !important;
   }
 
   .carousel {
     height: auto;
-    overflow: visible;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    user-select: none;
     position: static;
+    align-items: stretch;
+    padding: 0;
+    display: flex;
+    gap: 0.625%;
+    width: 100%;
+  }
+
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
   }
 
   .carousel-track {
-    position: static;
-    transform: none;
-    flex-direction: column;
-    gap: 0;
-    width: 100%;
-    pointer-events: auto;
+    display: contents;
   }
 
   .carousel img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    max-height: none;
-    filter: none;
-    pointer-events: auto;
+    flex: 0 0 calc(33.333% - 0.417%) !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    filter: none !important;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: default !important;
+    border: none !important;
+    transition: none !important;
+    overflow: hidden;
   }
 
   .carousel img.active {
@@ -177,36 +291,85 @@
     display: none;
   }
 
-  /* Show all images in a vertical layout */
+  /* Horizontal scrolling carousel like milan-carousel */
   .carousel-wrapper {
     width: 100%;
     padding: 0;
     background: #f6f6f6;
     height: auto;
+    overflow: hidden;
+    position: relative;
+    margin-left: calc(-1 * var(--grid-gutter, 2.5%));
+    margin-right: calc(-1 * var(--grid-gutter, 2.5%));
+    width: calc(100% + 2 * var(--grid-gutter, 2.5%));
+  }
+
+  .collection-slider-arrow-left {
+    left: 18px;
+  }
+
+  .collection-slider-arrow-right {
+    right: 18px;
+  }
+
+  .collection-slider-arrow button {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .collection-slider-arrow svg {
+    width: 20px !important;
+    height: 20px !important;
   }
 
   .carousel {
     height: auto;
-    overflow: visible;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    user-select: none;
     position: static;
+    align-items: stretch;
+    padding: 0;
+    display: flex;
+    gap: 0.625%;
+    width: 100%;
+  }
+
+  .carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
   }
 
   .carousel-track {
-    position: static;
-    transform: none;
-    flex-direction: column;
-    gap: 0;
-    width: 100%;
-    pointer-events: auto;
+    display: contents;
   }
 
   .carousel img {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    max-height: none;
-    filter: none;
-    pointer-events: auto;
+    flex: 0 0 85% !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    filter: none !important;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: default !important;
+    border: none !important;
+    transition: none !important;
+    overflow: hidden;
   }
 
   .carousel img.active {

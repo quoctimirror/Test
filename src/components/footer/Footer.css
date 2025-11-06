@@ -256,6 +256,12 @@
   font-size: 18px;
 }
 
+.social-icon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
 .social-icon:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
@@ -391,6 +397,11 @@
     height: 32px;
     font-size: 14px;
   }
+
+  .social-icon img {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 /* Mobile - 425px and below */
@@ -507,5 +518,10 @@
     width: 32px;
     height: 32px;
     font-size: 14px;
+  }
+
+  .social-icon img {
+    width: 20px;
+    height: 20px;
   }
 }
