@@ -58,7 +58,7 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
     const isRightHand = currentHand === 1;
 
     // Chỉ apply cho: Tay phải + Cam trước
-    if (isRightHand && isFrontCamera) {
+    if (isRightHand) {
       let newRotationY = null;
 
       // Ngón áp út (0) → rotation Y = -0.080
