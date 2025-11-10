@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getImageUrl } from "@utils/cloudflareMediaUtil";
 import "./WelcomePage.css";
 
 const WelcomePage = () => {
@@ -16,7 +17,7 @@ const WelcomePage = () => {
 
       {/* Logo */}
       <div className="welcome-logo">
-        <img src="/welcome/welcome_logo.svg" alt="Welcome Logo" />
+        <img src={getImageUrl("welcome/welcome_logo.svg")} alt="Welcome Logo" />
       </div>
 
       {/* Main content */}

@@ -1,4 +1,5 @@
 import React from "react";
+import MediaImage from "@components/common/media/MediaImage";
 import "./SizingGuide.css";
 
 const SizingGuide = () => {
@@ -77,8 +78,8 @@ const SizingGuide = () => {
         </div>
 
         <div className="size-chart">
-          <img
-            src="/support/support.png"
+          <MediaImage
+            src="support/support.png"
             alt="Ring Size Chart"
             className="chart-image"
           />

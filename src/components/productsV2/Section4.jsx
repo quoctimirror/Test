@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 import "./Section4.css";
 
@@ -8,14 +9,14 @@ const Section4 = () => {
   const navigate = useNavigate();
 
   const products = [
-    { id: 1, name: "Lumina", image: "/products/more_r.png" },
-    { id: 2, name: "Lumina", image: "/products/more_r.png" },
-    { id: 3, name: "Lumina", image: "/products/more_r.png" },
-    { id: 4, name: "Lumina", image: "/products/more_r.png" },
-    { id: 5, name: "Lumina", image: "/products/more_r.png" },
-    { id: 6, name: "Lumina", image: "/products/more_r.png" },
-    { id: 7, name: "Lumina", image: "/products/more_r.png" },
-    { id: 8, name: "Lumina", image: "/products/more_r.png" },
+    { id: 1, name: "Lumina", image: "products/more_r.png" },
+    { id: 2, name: "Lumina", image: "products/more_r.png" },
+    { id: 3, name: "Lumina", image: "products/more_r.png" },
+    { id: 4, name: "Lumina", image: "products/more_r.png" },
+    { id: 5, name: "Lumina", image: "products/more_r.png" },
+    { id: 6, name: "Lumina", image: "products/more_r.png" },
+    { id: 7, name: "Lumina", image: "products/more_r.png" },
+    { id: 8, name: "Lumina", image: "products/more_r.png" },
   ];
 
   const handleViewAllProducts = async () => {
@@ -41,7 +42,7 @@ const Section4 = () => {
             <div className="pv2-section4-grid">
               {products.map((product) => (
                 <div key={product.id} className="pv2-section4-product-card">
-                  <img
+                  <MediaImage
                     src={product.image}
                     alt={`${product.name} Ring`}
                     className="pv2-section4-product-image"

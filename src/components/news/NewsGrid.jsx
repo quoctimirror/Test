@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import { getNewsDetailRoute } from "@/constants/routes";
+import { MediaImage } from "@components/common/media";
 import "./NewsGrid.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
@@ -17,63 +18,63 @@ const NewsGrid = () => {
       id: 1,
       title: "Digital Jewelry Week Milan 2025",
       slug: "milan",
-      image: "/news/mirror-milan1.png",
+      image: "news/mirror-milan1.png",
       date: "10/2025",
     },
     {
       id: 2,
       title: "Lumex-91™: The Next Star Has Arrived",
       slug: "new-cut",
-      image: "/news/lumex_91.png",
+      image: "news/lumex_91.png",
       date: "10/2024",
     },
     {
       id: 3,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null, // No detail page yet
-      image: "/news/news_img_2.svg",
+      image: "news/news_img_2.svg",
       date: "09/2024",
     },
     {
       id: 4,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news_img_3.svg",
+      image: "news/news_img_3.svg",
       date: "08/2024",
     },
     {
       id: 5,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news_img_4.svg",
+      image: "news/news_img_4.svg",
       date: "07/2024",
     },
     {
       id: 6,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news_img_7.svg",
+      image: "news/news_img_7.svg",
       date: "06/2024",
     },
     {
       id: 7,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news_img_6.svg",
+      image: "news/news_img_6.svg",
       date: "05/2024",
     },
     {
       id: 8,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news_img_5.svg",
+      image: "news/news_img_5.svg",
       date: "04/2024",
     },
     {
       id: 9,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news_img_8.svg",
+      image: "news/news_img_8.svg",
       date: "03/2024",
     },
     // Add more placeholder items
@@ -81,49 +82,49 @@ const NewsGrid = () => {
       id: 10,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news-9.jpg",
+      image: "news/news-9.jpg",
       date: "02/2024",
     },
     {
       id: 11,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news-10.jpg",
+      image: "news/news-10.jpg",
       date: "01/2024",
     },
     {
       id: 12,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news-11.jpg",
+      image: "news/news-11.jpg",
       date: "12/2023",
     },
     {
       id: 13,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news-12.jpg",
+      image: "news/news-12.jpg",
       date: "11/2023",
     },
     {
       id: 14,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news-13.jpg",
+      image: "news/news-13.jpg",
       date: "10/2023",
     },
     {
       id: 15,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news-14.jpg",
+      image: "news/news-14.jpg",
       date: "09/2023",
     },
     {
       id: 16,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "/news/news-15.jpg",
+      image: "news/news-15.jpg",
       date: "08/2023",
     },
   ];
@@ -174,7 +175,7 @@ const NewsGrid = () => {
                     }`}
                   >
                     {item.image && !imageErrors[item.id] && (
-                      <img
+                      <MediaImage
                         src={item.image}
                         alt=""
                         onError={() => handleImageError(item.id)}

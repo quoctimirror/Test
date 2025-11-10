@@ -246,7 +246,7 @@
     left: 0;
     width: 100%;
     height: 50vh;
-    background-image: url("/services/b2f5b664-7235-4fe3-b721-c19450d3518a.png");
+    background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/b2f5b664-7235-4fe3-b721-c19450d3518a.png");
     background-size: cover;
     background-position: center;
     z-index: 10;
@@ -261,7 +261,7 @@
     left: 0;
     width: 100%;
     height: 50vh;
-    background-image: url("/services/img_2_section_3.jpg");
+    background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/img_2_section_3.jpg");
     background-size: cover;
     background-position: center;
     z-index: 10;
@@ -275,7 +275,7 @@
     left: 0;
     width: 100%;
     height: 50vh;
-    background-image: url("/services/img_2_section_2.jpg");
+    background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/img_2_section_2.jpg");
     background-size: cover;
     background-position: center;
     z-index: 10;
@@ -411,7 +411,7 @@
     width: 100%;
     height: calc(100% + 300px);
     background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-      url("/services/b2f5b664-7235-4fe3-b721-c19450d3518a.png") center/cover no-repeat;
+      url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/b2f5b664-7235-4fe3-b721-c19450d3518a.png") center/cover no-repeat;
     z-index: 0;
     will-change: transform;
     transform: translateY(var(--parallax-bg-offset));
@@ -437,7 +437,7 @@
     width: 100%;
     height: calc(100% + 300px);
     background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-      url("/services/img_2_section_3.jpg") center/cover no-repeat;
+      url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/img_2_section_3.jpg") center/cover no-repeat;
     z-index: 0;
     will-change: transform;
     transform: translateY(var(--parallax-bg-offset));
@@ -463,7 +463,7 @@
     width: 100%;
     height: calc(100% + 300px);
     background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-      url("/services/img_2_section_2.jpg") center/cover no-repeat;
+      url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/img_2_section_2.jpg") center/cover no-repeat;
     z-index: 0;
     will-change: transform;
     transform: translateY(var(--parallax-bg-offset));

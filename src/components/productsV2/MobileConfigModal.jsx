@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MediaImage } from '@components/common/media';
 import './MobileConfigModal.css';
 import opaqueIcon from '../../assets/images/opaque_gts.svg';
 import whiteIcon from '../../assets/images/white_gts.svg';
@@ -50,7 +51,7 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
             <div className={`pv2-mobile-config-modal ${getModalClass()}`}>
                 <div className="pv2-mobile-config-content">
                     {/* Caret Down to close - Moved to top */}
-                    <img
+                    <MediaImage
                         src={greyCaretUp}
                         alt=""
                         className="pv2-mobile-config-caret-down"
@@ -66,7 +67,7 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
                                 <span className="pv2-mobile-option-label bodytext-6--no-margin">Shape</span>
                                 <div className="pv2-mobile-option-value-container">
                                     <span className="pv2-mobile-option-value bodytext-3--no-margin">{currentShape}</span>
-                                    <img src={whiteIcon} alt="" className="pv2-mobile-option-icon" />
+                                    <MediaImage src={whiteIcon} alt="" className="pv2-mobile-option-icon" />
                                 </div>
                             </div>
 
@@ -74,7 +75,7 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
                                 <span className="pv2-mobile-option-label bodytext-6--no-margin">Metal</span>
                                 <div className="pv2-mobile-option-value-container">
                                     <span className="pv2-mobile-option-value bodytext-3--no-margin">Yellow Gold</span>
-                                    <img src={opaqueIcon} alt="" className="pv2-mobile-option-icon" />
+                                    <MediaImage src={opaqueIcon} alt="" className="pv2-mobile-option-icon" />
                                 </div>
                             </div>
 
@@ -82,7 +83,7 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
                                 <span className="pv2-mobile-option-label bodytext-6--no-margin">Band</span>
                                 <div className="pv2-mobile-option-value-container">
                                     <span className="pv2-mobile-option-value bodytext-3--no-margin">Single band</span>
-                                    <img src={opaqueIcon} alt="" className="pv2-mobile-option-icon" />
+                                    <MediaImage src={opaqueIcon} alt="" className="pv2-mobile-option-icon" />
                                 </div>
                             </div>
 
@@ -90,7 +91,7 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
                                 <span className="pv2-mobile-option-label bodytext-6--no-margin">Size</span>
                                 <div className="pv2-mobile-size-selector" onClick={() => setShowSizeSelector(true)}>
                                     <span className="pv2-mobile-size-value bodytext-3--no-margin">{currentSize}</span>
-                                    <img src={whiteIcon} alt="" className="pv2-mobile-size-arrow-icon" />
+                                    <MediaImage src={whiteIcon} alt="" className="pv2-mobile-size-arrow-icon" />
                                 </div>
                             </div>
 

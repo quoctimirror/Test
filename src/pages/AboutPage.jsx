@@ -4,7 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SloganSection from "@components/about/sloganSection/SloganSection";
 import StartingPlaceSection from "@components/about/startingPlaceSection/StartingPlaceSection";
 import IntroBOD from "@components/about/introBOD/IntroBOD";
-import BODMemberV3 from "@components/about/BODMemberV3/BODMemberV3";
+import BODMemberV4 from "@components/about/BODMemberV4/BODMemberV4";
 import MirrorNetworkDiscoverSection from "@components/about/mirrorNetworkDiscoverSection/MirrorNetworkDiscoverSection";
 import MirrorverseSection from "@components/about/mirrorverseSection/MirrorverseSection";
 import AtMirror from "@components/about/atMirror/AtMirror";
@@ -94,7 +94,7 @@ const AboutPage = () => {
       </div>
 
       <div data-section="bod-member" data-navbar-theme="white">
-        <BODMemberV3 />
+        <BODMemberV4 />
       </div>
 
       {/* <section className="panel" data-section="at-mirror">

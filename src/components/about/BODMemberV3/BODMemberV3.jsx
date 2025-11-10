@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { MediaImage } from "@components/common/media";
 import "./BODMemberV3.css";
 import "../../../styles/grid-system.css";
 
@@ -7,31 +8,31 @@ const BODMemberV3 = () => {
     {
       name: "Kenneth Nguyen",
       position: "CSO",
-      image: "/about/BODMember/MrKhanh.svg",
+      image: "about/BODMember/MrKhanh.svg",
       isMainLeader: true,
     },
     {
       name: "Hai Son Dang",
       position: "CEO",
-      image: "/about/BODMember/MrSon.svg",
+      image: "about/BODMember/MrSon.svg",
       isMainLeader: true,
     },
     {
       name: "Kim Ngan Tran",
       position: "CSIR",
-      image: "/about/BODMember/MsNgan.svg",
+      image: "about/BODMember/MsNgan.svg",
       isMainLeader: true,
     },
     {
       name: "Uyen Dong",
       position: "CMO",
-      image: "/about/BODMember/MsUyen.svg",
+      image: "about/BODMember/MsUyen.svg",
       isMainLeader: true,
     },
     {
       name: "Nhat Minh Tran",
       position: "CTO",
-      image: "/about/BODMember/MrMinh.svg",
+      image: "about/BODMember/MrMinh.svg",
       isMainLeader: true,
     },
   ];
@@ -241,7 +242,7 @@ const BODMemberV3 = () => {
                   : ""
               }`}
             >
-              <img
+              <MediaImage
                 src={member.image}
                 alt={member.name}
                 onError={(e) => {

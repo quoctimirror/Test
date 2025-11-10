@@ -2,6 +2,7 @@ import "./ContactUs.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 
 const ContactUs = () => {
@@ -13,8 +14,8 @@ const ContactUs = () => {
 
   return (
     <section className="contact-us-hero" data-navbar-theme="white">
-      <img
-        src="/contactUs/ReachOut.svg"
+      <MediaImage
+        src="contactUs/ReachOut.svg"
         alt="Contact Us Background"
         className="contact-us-hero-background"
       />

@@ -2,10 +2,7 @@ import "./HoverExpand.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
-import image1 from "/home-page/hover-expand/Ring.png";
-import image2 from "/home-page/hover-expand/Earring.png";
-import image3 from "/home-page/hover-expand/Necklace.png";
-import image4 from "/home-page/hover-expand/Bracelet.png";
+import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 
 const HoverExpandSection = () => {
@@ -40,25 +37,25 @@ const HoverExpandSection = () => {
       <div className="hover-expand-gallery">
         <div className="hover-expand-gradient-top"></div>
         <div className="gallery-item">
-          <img src={image1} alt="Jewelry piece 1" />
+          <MediaImage src="home-page/hover-expand/Ring.png" alt="Jewelry piece 1" />
           <p className="bodytext-1--no-margin gallery-item-text">
             Premium Collection
           </p>
         </div>
         <div className="gallery-item">
-          <img src={image2} alt="Jewelry piece 2" />
+          <MediaImage src="home-page/hover-expand/Earring.png" alt="Jewelry piece 2" />
           <p className="bodytext-1--no-margin gallery-item-text">
             Luxury Rings
           </p>
         </div>
         <div className="gallery-item">
-          <img src={image3} alt="Jewelry piece 3" />
+          <MediaImage src="home-page/hover-expand/Necklace.png" alt="Jewelry piece 3" />
           <p className="bodytext-1--no-margin gallery-item-text">
             Diamond Series
           </p>
         </div>
         <div className="gallery-item">
-          <img src={image4} alt="Jewelry piece 4" />
+          <MediaImage src="home-page/hover-expand/Bracelet.png" alt="Jewelry piece 4" />
           <p className="bodytext-1--no-margin gallery-item-text">
             Signature Pieces
           </p>

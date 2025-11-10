@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 import "./Section2.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
@@ -193,8 +194,8 @@ const Section2 = () => {
               opacity: 1 - scrollProgress * 0.5,
             }}
           >
-            <img
-              src="/services/Product care & Repair_960x1080.jpg"
+            <MediaImage
+              src="services/Product care & Repair_960x1080.jpg"
               alt="Product Care"
             />
           </div>
@@ -205,7 +206,7 @@ const Section2 = () => {
               opacity: scrollProgress,
             }}
           >
-            <img src="/services/Trade in_960x1080.jpg" alt="Trade In" />
+            <MediaImage src="services/Trade in_960x1080.jpg" alt="Trade In" />
           </div>
         </div>
 

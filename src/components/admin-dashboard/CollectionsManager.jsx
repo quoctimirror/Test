@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { collectionsAPI, productsAPI, handleAPIError } from "@services/api";
+import { getImageUrl } from "@utils/cloudflareMediaUtil";
 
 const CollectionsManager = () => {
   const [collections, setCollections] = useState([]);
@@ -429,7 +430,7 @@ const CollectionsManager = () => {
               <div
                 style={{
                   height: "200px",
-                  backgroundImage: `url(${collection.imageUrl})`,
+                  backgroundImage: `url(${collection.imageUrl.startsWith('http') ? collection.imageUrl : getImageUrl(collection.imageUrl)})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   position: "relative",

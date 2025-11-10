@@ -8,6 +8,7 @@ import UnderlineButton from "@components/common/button/UnderlineButton";
 import ArrowButton from "@components/common/button/ArrowButton";
 import { collectionsAPI } from "@services/api";
 import { getCollectionDetailRoute } from "@/constants/routes";
+import MediaImage from "@components/common/media/MediaImage";
 import "./Collections.css";
 
 const products = [
@@ -217,7 +218,7 @@ function Collection() {
                 className={`product-image-container slide-effect-${slideDirection}`}
                 key={`${currentProduct.id}-${slideDirection}`}
               >
-                <img
+                <MediaImage
                   src={currentProduct.image}
                   alt={currentProduct.title}
                   className="product-image"

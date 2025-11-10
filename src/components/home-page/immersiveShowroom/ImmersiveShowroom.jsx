@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MediaImage } from "@components/common/media";
 import "./ImmersiveShowroom.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
@@ -29,8 +30,8 @@ const ImmersiveShowroom = () => {
     <>
       <div className="immersive-showroom">
         {/* Fallback background image - always rendered, CSS controls visibility */}
-        <img
-          src="/immersiveShowroom/immersiveShowroomBackground.png"
+        <MediaImage
+          src="immersiveShowroom/immersiveShowroomBackground.png"
           alt="Immersive Showroom Background"
           className={`showroom-background-fallback ${
             !iframeLoaded || iframeError ? "visible" : ""

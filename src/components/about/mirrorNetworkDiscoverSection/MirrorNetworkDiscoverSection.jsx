@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import { ROUTES } from "@/constants/routes";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import { MediaImage } from "@components/common/media";
 import "../../../styles/grid-system.css";
 import "./MirrorNetworkDiscoverSection.css";
 
@@ -176,22 +177,22 @@ const MirrorNetworkDiscoverSection = () => {
         <div className="grid-container">
           {/* Images positioned using grid system */}
           <div className="shape shape-1">
-            <img src="/about/discover-section/img_1.png" alt="Discover 1" />
+            <MediaImage src="about/discover-section/img_1.png" alt="Discover 1" />
           </div>
           <div className="shape shape-2">
-            <img src="/about/discover-section/img_2.png" alt="Discover 2" />
+            <MediaImage src="about/discover-section/img_2.png" alt="Discover 2" />
           </div>
           <div className="shape shape-3">
-            <img src="/about/discover-section/img_3.png" alt="Discover 3" />
+            <MediaImage src="about/discover-section/img_3.png" alt="Discover 3" />
           </div>
           <div className="shape shape-4">
-            <img src="/about/discover-section/img_4.png" alt="Discover 4" />
+            <MediaImage src="about/discover-section/img_4.png" alt="Discover 4" />
           </div>
           <div className="shape shape-5">
-            <img src="/about/discover-section/img_5.png" alt="Discover 5" />
+            <MediaImage src="about/discover-section/img_5.png" alt="Discover 5" />
           </div>
           <div className="shape shape-6">
-            <img src="/about/discover-section/img_6.png" alt="Discover 6" />
+            <MediaImage src="about/discover-section/img_6.png" alt="Discover 6" />
           </div>
 
           {/* Button */}

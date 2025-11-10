@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import MediaImage from "@components/common/media/MediaImage";
 import "./ParallaxScrolling.css";
 
 const ParallaxScrolling = () => {
@@ -135,9 +136,9 @@ const ParallaxScrolling = () => {
   };
 
   const images = [
-    { src: "/parallaxScrolling/3_rings.jpg", alt: "Bộ ba nhẫn vàng ánh đỏ" },
-    { src: "/parallaxScrolling/1_ring.png", alt: "Nhẫn ba vòng lồng vào nhau" },
-    { src: "/parallaxScrolling/snake_h.png", alt: "Vòng tay và nhẫn hình rắn" },
+    { src: "parallaxScrolling/3_rings.jpg", alt: "Bộ ba nhẫn vàng ánh đỏ" },
+    { src: "parallaxScrolling/1_ring.png", alt: "Nhẫn ba vòng lồng vào nhau" },
+    { src: "parallaxScrolling/snake_h.png", alt: "Vòng tay và nhẫn hình rắn" },
   ];
 
   return (
@@ -147,7 +148,7 @@ const ParallaxScrolling = () => {
         <div className="split-container">
           <div className="image-pane parallax-image-container">
             {images.map((image, index) => (
-              <img
+              <MediaImage
                 key={index}
                 src={image.src}
                 alt={image.alt}
@@ -176,14 +177,14 @@ const ParallaxScrolling = () => {
       <section className="screen">
         <div className="split-container">
           <div className="image-pane">
-            <img
-              src="/parallaxScrolling/1_ring.png"
+            <MediaImage
+              src="parallaxScrolling/1_ring.png"
               alt="Nhẫn ba vòng lồng vào nhau"
             />
           </div>
           <div className="image-pane">
-            <img
-              src="/parallaxScrolling/snake_h.png"
+            <MediaImage
+              src="parallaxScrolling/snake_h.png"
               alt="Vòng tay và nhẫn hình rắn"
             />
           </div>

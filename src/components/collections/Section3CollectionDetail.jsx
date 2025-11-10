@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import ArrowButton from "@components/common/button/ArrowButton";
+import { MediaImage } from "@components/common/media";
 import "./Section3CollectionDetail.css";
 
 const Section3CollectionDetail = () => {
   const images = [
-    "/collections/collectionDetail/bong_hoa.png",
-    "/collections/collectionDetail/earrings-heart.png",
-    "/collections/collectionDetail/model_3.png",
-    "/collections/collectionDetail/model_6.png",
-    "/collections/collectionDetail/pink_diamond.png",
-    "/collections/collectionDetail/product_10.png",
-    "/collections/collectionDetail/product-6.png",
-    "/collections/collectionDetail/product-11.png",
-    "/collections/collectionDetail/product-8.png",
-    "/collections/collectionDetail/product-15-opt2.png",
-    "/collections/collectionDetail/product-17.png",
-    "/collections/collectionDetail/product-23.png",
-    "/collections/collectionDetail/uynhu._httpss.mj.runYccCkEmimOY_A_luxury_editorial_close-up_p_d2e70813-b2a6-48c4-840f-26f53cd18a22_2 copy.png",
+    "collections/collectionDetail/bong_hoa.png",
+    "collections/collectionDetail/earrings-heart.png",
+    "collections/collectionDetail/model_3.png",
+    "collections/collectionDetail/model_6.png",
+    "collections/collectionDetail/pink_diamond.png",
+    "collections/collectionDetail/product_10.png",
+    "collections/collectionDetail/product-6.png",
+    "collections/collectionDetail/product-11.png",
+    "collections/collectionDetail/product-8.png",
+    "collections/collectionDetail/product-15-opt2.png",
+    "collections/collectionDetail/product-17.png",
+    "collections/collectionDetail/product-23.png",
+    "collections/collectionDetail/uynhu._httpss.mj.runYccCkEmimOY_A_luxury_editorial_close-up_p_d2e70813-b2a6-48c4-840f-26f53cd18a22_2 copy.png",
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -182,7 +183,7 @@ const Section3CollectionDetail = () => {
     <div className="section3-collection-detail" data-navbar-theme="white">
       <div className="gallery-container">
         <div className="main-display">
-          <img src={mainImage} alt="Main display" />
+          <MediaImage src={mainImage} alt="Main display" />
         </div>
         <div className="carousel-wrapper">
           <ArrowButton
@@ -195,7 +196,7 @@ const Section3CollectionDetail = () => {
           <div className="carousel" ref={mobileCarouselRef}>
             <div className="carousel-track" ref={carouselTrackRef}>
               {images.map((image, index) => (
-                <img
+                <MediaImage
                   key={index}
                   src={image}
                   alt={`Gallery image ${index + 1}`}

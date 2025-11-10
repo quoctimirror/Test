@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SelectOptionSection.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import MediaImage from "@components/common/media/MediaImage";
 import {
   categoriesAPI,
   componentsAPI,
@@ -517,8 +518,8 @@ const SelectOptionSection = () => {
     <div className="select-option-section">
       {/* Main ring display */}
       <div className="ring-display">
-        <img
-          src="/products/nhan_ex.png"
+        <MediaImage
+          src="products/nhan_ex.png"
           alt="Wedding Ring Set"
           className="ring-image"
         />

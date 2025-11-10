@@ -1,4 +1,5 @@
 import React from 'react';
+import { MediaImage } from '@components/common/media';
 import './TwoSideImageLayout.css';
 
 const TwoSideImageLayout = ({ leftImage, rightImage }) => {
@@ -7,10 +8,10 @@ const TwoSideImageLayout = ({ leftImage, rightImage }) => {
             <div className="pv2-two-side-image-layout-wrapper">
                 <div className="pv2-two-side-image-layout-grid">
                     <div className="pv2-two-side-image-layout-left">
-                        <img src={`products/${leftImage}`} alt="Left image" />
+                        <MediaImage src={`products/${leftImage}`} alt="Left image" />
                     </div>
                     <div className="pv2-two-side-image-layout-right">
-                        <img src={`products/${rightImage}`} alt="Right image" />
+                        <MediaImage src={`products/${rightImage}`} alt="Right image" />
                     </div>
                 </div>
             </div>

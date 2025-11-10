@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import { getNewsDetailRoute } from "@/constants/routes";
+import { MediaImage } from "@components/common/media";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import "@styles/grid-system.css";
 import "./NewsItemV2.css";
@@ -42,7 +43,7 @@ const NewsItemV2 = ({ item }) => {
           }`}
         >
           {item.image && !imageError && (
-            <img src={item.image} alt={item.title} onError={handleImageError} />
+            <MediaImage src={item.image} alt={item.title} onError={handleImageError} />
           )}
         </div>
 
@@ -73,7 +74,7 @@ const NewsItemV2 = ({ item }) => {
                 }`}
               >
                 {!galleryErrors[0] && (
-                  <img
+                  <MediaImage
                     src={item.gallery[0]}
                     alt=""
                     onError={() => handleGalleryImageError(0)}
@@ -87,7 +88,7 @@ const NewsItemV2 = ({ item }) => {
                   }`}
                 >
                   {!galleryErrors[1] && (
-                    <img
+                    <MediaImage
                       src={item.gallery[1]}
                       alt=""
                       onError={() => handleGalleryImageError(1)}
@@ -102,7 +103,7 @@ const NewsItemV2 = ({ item }) => {
                   }`}
                 >
                   {!galleryErrors[2] && (
-                    <img
+                    <MediaImage
                       src={item.gallery[2]}
                       alt=""
                       onError={() => handleGalleryImageError(2)}
