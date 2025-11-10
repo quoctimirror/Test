@@ -24,8 +24,19 @@
     display: block;
 }
 
-/* Desktop - ≥1024px */
+/* Tablet Portrait - ≥768px */
+@media (min-width: 768px) {
+    .pv2-one-image-layout-container {
+        padding-top: 0;
+    }
+}
+
+/* Tablet Landscape - ≥992px */
 @media (min-width: 992px) {
+    .pv2-one-image-layout-container {
+        padding-top: 0;
+    }
+
     .pv2-one-image-layout-image {
         height: 100vh;
         min-height: auto;

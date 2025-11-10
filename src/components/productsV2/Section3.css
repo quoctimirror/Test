@@ -88,7 +88,29 @@
    ======================================== */
 @media (min-width: 768px) {
   .pv2-section3-container {
-    padding: 80px 40px;
+    padding: 200px 0 0 0;
+  }
+
+  .pv2-section3-wrapper {
+    margin-bottom: 12px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .pv2-section3-carousel-container {
+    gap: 12px;
+  }
+
+  .pv2-section3-carousel-item {
+    width: 654px;
+    height: 818px;
+    flex-shrink: 0;
+    aspect-ratio: 327/409;
+  }
+
+  /* OneImageLayout inside Section3 container */
+  .pv2-section3-container .pv2-one-image-layout-container {
+    padding-top: 0;
   }
 }
 
@@ -97,7 +119,29 @@
    ======================================== */
 @media (min-width: 992px) {
   .pv2-section3-container {
-    padding: 100px 60px;
+    padding: 200px 0 0 0;
+  }
+
+  .pv2-section3-wrapper {
+    margin-bottom: 12px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .pv2-section3-carousel-container {
+    gap: 12px;
+  }
+
+  .pv2-section3-carousel-item {
+    width: 654px;
+    height: 818px;
+    flex-shrink: 0;
+    aspect-ratio: 327/409;
+  }
+
+  /* OneImageLayout inside Section3 container */
+  .pv2-section3-container .pv2-one-image-layout-container {
+    padding-top: 0;
   }
 }
 

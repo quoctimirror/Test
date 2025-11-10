@@ -166,12 +166,19 @@
         line-height: 130%;
         color: var(--gray-3, #797979);
         text-align: center;
-        margin: 0 auto !important;
+        margin: 0 auto 60px auto !important;
         padding: 0 !important;
-        width: 520px;
+        width: 522px;
         max-width: calc(100% - 32px);
-        height: auto;
         box-sizing: border-box;
+    }
+
+    .pv2-section2-config-details {
+        max-width: 522px;
+    }
+
+    .pv2-section2-config-row {
+        width: 100%;
     }
 }
 
@@ -201,13 +208,19 @@
         line-height: 130%;
         color: var(--gray-3, #797979);
         text-align: center;
-        margin: 0 auto !important;
+        margin: 0 auto 60px auto !important;
         padding: 0 !important;
-        width: 692px;
+        width: 522px;
         max-width: calc(100% - 40px);
-        min-height: 92px;
-        height: auto;
         box-sizing: border-box;
+    }
+
+    .pv2-section2-config-details {
+        max-width: 522px;
+    }
+
+    .pv2-section2-config-row {
+        width: 100%;
     }
 }
 
