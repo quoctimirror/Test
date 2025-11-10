@@ -29,8 +29,9 @@
 .pv2-section4-description {
   text-align: center;
   color: #797979;
-  margin: 0 !important;
-  width: 100%;
+  margin: 0 auto !important;
+  width: 304px;
+  height: 85px;
 }
 
 .pv2-section4-scroll-wrapper {

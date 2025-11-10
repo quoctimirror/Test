@@ -7,7 +7,7 @@ const Section2 = () => {
       <div className="pv2-section2-wrapper">
         <div className="pv2-section2-content">
           <div className="pv2-section2-header">
-            <p className="pv2-section2-collection">THE FIRST COLLECTION</p>
+            <p className="pv2-section2-collection bodytext-4--no-margin">THE FIRST COLLECTION</p>
             <h2 className="pv2-section2-title heading-1--no-margin">
               LUMINA RING
             </h2>

@@ -32,9 +32,11 @@ const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSiz
                         onClick={handleOpenModal}
                     />
                     <h1 className="pv2-mobile-product-title heading-2--no-margin">Lumina Olivia 5</h1>
-                    <button className="pv2-mobile-order-btn bodytext-4--no-margin">
-                        Order Now
-                    </button>
+                    <div className="pv2-mobile-bar-order-btn">
+                        <ShineGlassButton theme="light" className="bodytext-4--no-margin">
+                            Order Now
+                        </ShineGlassButton>
+                    </div>
                 </div>
             </div>
 

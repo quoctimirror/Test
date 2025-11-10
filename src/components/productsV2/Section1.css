@@ -56,11 +56,37 @@
 }
 
 /* ===================================================================
+   LARGE MOBILE (>= 576px)
+   =================================================================== */
+@media (min-width: 576px) {
+    .pv2-section1 {
+        /* Tablet: Auto height = viewport - MobileProductBar (18vh from tablet) */
+        height: calc(100vh - 18vh);
+        min-height: 400px;
+    }
+
+    .pv2-section1-container {
+        padding: 20px;
+    }
+
+    .pv2-model-area {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Arrow buttons hidden on tablet */
+    .pv2-section1-arrow-btn {
+        display: none;
+    }
+}
+
+/* ===================================================================
    TABLET STYLES (>= 768px)
    =================================================================== */
 @media (min-width: 768px) {
     .pv2-section1 {
-        height: 70vh;
+        /* Tablet: Auto height = viewport - MobileProductBar (18vh from tablet) */
+        height: calc(100vh - 18vh);
         min-height: 500px;
     }
 
@@ -70,7 +96,7 @@
 
     .pv2-model-area {
         width: 100%;
-        height: 80%;
+        height: 100%;
     }
 
     /* Arrow buttons still hidden on tablet */

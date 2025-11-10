@@ -190,22 +190,22 @@ const Products = () => {
     // Handle scroll to show/hide MobileProductBar
     useEffect(() => {
         const handleScroll = () => {
-            // Get Section4 button container position (last element)
-            const section4Button = document.querySelector('.pv2-section4-button-container');
-            if (section4Button) {
-                const rect = section4Button.getBoundingClientRect();
+            // Get Section4 container (You May Also Like section)
+            const section4Container = document.querySelector('.pv2-section4-container');
+
+            if (section4Container) {
+                const rect = section4Container.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
 
-                // Hide mobile bar if we've scrolled past Section4 button (bottom is above viewport)
-                if (rect.bottom <= 0) {
+                // Hide mobile bar when Section4 starts entering viewport
+                // Check if top of Section4 is visible (has entered from bottom)
+                if (rect.top < windowHeight) {
                     setShowMobileBar(false);
-                }
-                // Show mobile bar if we're still viewing Section4 or above
-                else {
+                } else {
                     setShowMobileBar(true);
                 }
             } else {
-                // Fallback to products-container if Section4 button not found
+                // Fallback: hide when scrolled past products-container
                 const productsContainer = document.querySelector('.pv2-products-container');
                 if (productsContainer) {
                     const rect = productsContainer.getBoundingClientRect();
