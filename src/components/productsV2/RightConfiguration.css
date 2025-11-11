@@ -323,12 +323,14 @@
 .pv2-order-btn {
     width: 100%;
     height: 56px;
-    background: #FFFFFF;
-    border: none;
-    color: black;
+    background: rgba(0, 0, 0, 0.75);
+    border: 0.5px solid #000;
+    color: #FFFFFF;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 28px;
+    border-radius: 100px;
+    box-shadow: -1px -1px 4px 0 rgba(255, 255, 255, 0.25) inset, 1px 1px 4px 0 rgba(255, 255, 255, 0.50) inset;
+    backdrop-filter: blur(6px);
 }
 
 .pv2-order-btn:hover {

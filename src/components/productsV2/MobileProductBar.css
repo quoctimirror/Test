@@ -128,6 +128,8 @@
 .pv2-mobile-bar-order-btn .glass-layer {
     background: rgba(255, 255, 255, 0.8) !important;
     border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    box-shadow: -1px -1px 4px 0 rgba(255, 255, 255, 0.25) inset, 1px 1px 4px 0 rgba(255, 255, 255, 0.50) inset !important;
+    backdrop-filter: blur(6px) !important;
     box-sizing: border-box !important;
 }
 
@@ -186,9 +188,8 @@
     }
 
     .pv2-mobile-product-content {
-        max-width: 600px;
+        width: 90vw;
         margin: 0 auto;
-        padding: 20px 30px 8px 30px;
         gap: 8px;
     }
 
@@ -213,8 +214,8 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 12px;
-        width: 100%;
-        max-width: 700px;
+        width: 100vw;
+        max-width: 100vw;
     }
 
     /* Appointment button - equal width with grid */
