@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import './MobileConfigModal.css';
 import opaqueIcon from '../../assets/images/opaque_gts.svg';
 import whiteIcon from '../../assets/images/white_gts.svg';
@@ -12,31 +12,6 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
     const [quantity, setQuantity] = useState(1);
     const [showSizeSelector, setShowSizeSelector] = useState(false);
     const [showShapeSelector, setShowShapeSelector] = useState(false);
-    const [internalVisible, setInternalVisible] = useState(isVisible);
-    const timeoutRef = useRef(null);
-
-    // Handle smooth transition when visibility changes
-    useEffect(() => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-
-        if (isVisible) {
-            // When becoming visible, add small delay for animation
-            timeoutRef.current = setTimeout(() => {
-                setInternalVisible(true);
-            }, 100);
-        } else {
-            // When hiding, no delay
-            setInternalVisible(false);
-        }
-
-        return () => {
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-        };
-    }, [isVisible]);
 
     // Use selectedShape from props, fallback to 'Fiston'
     const currentShape = selectedShape || 'Fiston';
@@ -64,17 +39,10 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
 
     // Determine modal state class
     const getModalClass = () => {
-        // Use internalVisible instead of isVisible for smooth transition
-        if (!internalVisible) return 'hidden';
-
-        // When visible but modal never opened, show in closed position (not hidden)
-        if (!hasOpenedModal) return 'closed';
-
-        // When modal is actively opened
-        if (isOpen) return 'open';
-
-        // When modal was opened before, now closed
-        return 'closed';
+        if (!isVisible) return 'hidden'; // ProductBar is hidden (scroll away)
+        if (!hasOpenedModal) return 'hidden'; // Modal has never been opened yet
+        if (isOpen) return 'open'; // Modal is opened
+        return 'closed'; // Modal was opened before, now closed
     };
 
     return (
