@@ -32,10 +32,28 @@ const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSiz
                         onClick={handleOpenModal}
                     />
                     <h1 className="pv2-mobile-product-title heading-2--no-margin">Lumina Olivia 5</h1>
-                    <div className="pv2-mobile-bar-order-btn">
+
+                    {/* Mobile: Single Order Now button */}
+                    <div className="pv2-mobile-bar-order-btn pv2-mobile-only">
                         <ShineGlassButton theme="light" className="bodytext-4--no-margin">
                             Order Now
                         </ShineGlassButton>
+                    </div>
+
+                    {/* Tablet: Two buttons - Book Appointment + Order Now */}
+                    <div className="pv2-mobile-bar-buttons-wrapper pv2-tablet-only">
+                        <div className="pv2-mobile-bar-buttons-container">
+                            <div className="pv2-mobile-bar-appointment-btn">
+                                <ShineGlassButton theme="light" className="bodytext-4--no-margin">
+                                    Book An Appointment
+                                </ShineGlassButton>
+                            </div>
+                            <div className="pv2-mobile-bar-order-btn">
+                                <ShineGlassButton theme="light" className="bodytext-4--no-margin">
+                                    Order Now
+                                </ShineGlassButton>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -188,7 +188,7 @@
 @media (min-width: 992px) {
     .pv2-section2-container {
         margin-top: 0;
-        padding: 50px 20px;
+        padding: 120px 0;
     }
 
     .pv2-section2-content {
@@ -201,22 +201,16 @@
     }
 
     .pv2-section2-subtitle {
-        font-family: "BT Beau Sans";
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 130%;
-        color: var(--gray-3, #797979);
         text-align: center;
         margin: 0 auto 60px auto !important;
         padding: 0 !important;
-        width: 522px;
-        max-width: calc(100% - 40px);
+        width: 600px;
+        height: auto;
         box-sizing: border-box;
     }
 
     .pv2-section2-config-details {
-        max-width: 522px;
+        display: none;
     }
 
     .pv2-section2-config-row {
@@ -230,7 +224,7 @@
 @media (min-width: 1200px) {
     .pv2-section2-container {
         margin-top: 0;
-        padding: 60px 20px;
+        padding: 120px 0;
     }
 
     .pv2-section2-collection {
@@ -238,9 +232,8 @@
     }
 
     .pv2-section2-subtitle {
-        font-size: 20px;
-        line-height: 1.7;
-        max-width: 900px;
+        width: 600px;
+        height: auto;
     }
 }
 
@@ -249,7 +242,7 @@
    ======================================== */
 @media (min-width: 1400px) {
     .pv2-section2-container {
-        padding: 70px 24px;
+        padding: 120px 0;
     }
 
     .pv2-section2-collection {
@@ -257,8 +250,7 @@
     }
 
     .pv2-section2-subtitle {
-        font-size: 22px;
-        line-height: 1.8;
-        max-width: 1000px;
+        width: 600px;
+        height: auto;
     }
 }

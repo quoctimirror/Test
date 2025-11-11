@@ -34,11 +34,20 @@
 /* Tablet Landscape - ≥992px */
 @media (min-width: 992px) {
     .pv2-one-image-layout-container {
-        padding-top: 0;
+        display: none;
     }
+}
 
-    .pv2-one-image-layout-image {
-        height: 100vh;
-        min-height: auto;
+/* Desktop - ≥1200px */
+@media (min-width: 1200px) {
+    .pv2-one-image-layout-container {
+        display: none;
+    }
+}
+
+/* Large Desktop - ≥1400px */
+@media (min-width: 1400px) {
+    .pv2-one-image-layout-container {
+        display: none;
     }
 }

@@ -317,6 +317,12 @@ const Section3 = () => {
                     alt="Product Image 3"
                   />
                 </div>
+                <div className="pv2-section3-carousel-item">
+                  <img
+                    src="/products/placeholder4.png"
+                    alt="Product Image 4"
+                  />
+                </div>
               </React.Fragment>
             ))}
           </div>

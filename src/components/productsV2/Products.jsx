@@ -3,6 +3,7 @@ import './Products.css';
 import LeftContainer from './LeftContainer';
 import RightConfiguration from './RightConfiguration';
 import MobileProductBar from './MobileProductBar';
+import Section4 from './Section4';
 import ViewAllProduct from '../viewAllProduct/ViewAllProduct';
 import Contact from '../contactUs/ContactUs';
 import OrderFormModal from './OrderFormModal';
@@ -387,6 +388,9 @@ const Products = () => {
                         />
                     </div>
                 </div>
+
+                {/* Section4 - You May Also Like - Full width after LeftContainer + RightConfiguration */}
+                <Section4 />
 
                 {/* Contact Section */}
                 <Contact />

@@ -115,33 +115,75 @@
 }
 
 /* ========================================
-   TABLET LANDSCAPE - ≥992px
+   TABLET LANDSCAPE - ≥992px - DESKTOP STATIC LAYOUT
    ======================================== */
 @media (min-width: 992px) {
   .pv2-section3-container {
-    padding: 200px 0 0 0;
+    padding: 0;
   }
 
   .pv2-section3-wrapper {
-    margin-bottom: 12px;
-    padding-left: 0;
-    padding-right: 0;
+    margin-bottom: 0;
+    padding: 0;
   }
 
+  /* Hide arrow buttons on desktop */
+  .pv2-section3-slider-arrow {
+    display: none;
+  }
+
+  .pv2-section3-carousel-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Disable carousel scroll behavior */
   .pv2-section3-carousel-container {
-    gap: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 0;
+    overflow: hidden;
+    cursor: default;
+    scroll-behavior: auto;
   }
 
+  /* Reset carousel item sizing for grid layout */
   .pv2-section3-carousel-item {
-    width: 654px;
-    height: 818px;
-    flex-shrink: 0;
-    aspect-ratio: 327/409;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
   }
 
-  /* OneImageLayout inside Section3 container */
-  .pv2-section3-container .pv2-one-image-layout-container {
-    padding-top: 0;
+  /* Layout: placeholder1 + placeholder2 side by side */
+  .pv2-section3-carousel-item:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+    height: 848px;
+  }
+
+  .pv2-section3-carousel-item:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    height: 848px;
+  }
+
+  /* Layout: placeholder3 full width */
+  .pv2-section3-carousel-item:nth-child(3) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  /* Layout: placeholder4 full width */
+  .pv2-section3-carousel-item:nth-child(4) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  /* Hide all duplicates (item 5 onwards) */
+  .pv2-section3-carousel-item:nth-child(n+5) {
+    display: none;
   }
 }
 
@@ -149,16 +191,12 @@
    DESKTOP - ≥1200px
    ======================================== */
 @media (min-width: 1200px) {
-  .pv2-section3-container {
-    padding: 120px 80px;
-  }
+  /* Inherits static layout from ≥992px */
 }
 
 /* ========================================
    LARGE DESKTOP - ≥1400px
    ======================================== */
 @media (min-width: 1400px) {
-  .pv2-section3-container {
-    padding: 140px 100px;
-  }
+  /* Inherits static layout from ≥992px */
 }
