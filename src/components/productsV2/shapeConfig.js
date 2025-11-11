@@ -25,6 +25,12 @@ export const SHAPE_CONFIGS = {
     modelId: 'eOcY7UV6TMWbra25hv9dwQ',
     metal: 'Gold 24k',
     band: 'Single band'
+  },
+  Flower: {
+    shape: 'Flower',
+    modelId: 'HB3RidmJSdezIO1T2hdXcQ',
+    metal: 'Gold 24k',
+    band: 'Single band'
   }
 };
 
