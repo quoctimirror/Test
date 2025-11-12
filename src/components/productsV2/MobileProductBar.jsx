@@ -5,7 +5,7 @@ import MobileConfigModal from './MobileConfigModal';
 import greyCaretUp from '../../assets/images/grey-caret-up.svg';
 import { PRODUCT_CONFIG } from './productConfig';
 
-const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSize, onSizeChange }) => {
+const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSize, onSizeChange, metal, band }) => {
     const [showConfigModal, setShowConfigModal] = useState(false);
     const [hasOpenedModal, setHasOpenedModal] = useState(false);
 
@@ -68,6 +68,8 @@ const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSiz
                 onShapeChange={onShapeChange}
                 selectedSize={selectedSize}
                 onSizeChange={onSizeChange}
+                metal={metal}
+                band={band}
             />
         </>
     );

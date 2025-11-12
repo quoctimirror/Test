@@ -248,8 +248,10 @@
 }
 
 .pv2-wishlist-btn-glass .glass-layer {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(0, 0, 0, 0.50) !important;
+    box-shadow: -1px -1px 4px 0 rgba(255, 255, 255, 0.25) inset, 1px 1px 4px 0 rgba(255, 255, 255, 0.50) inset !important;
+    backdrop-filter: blur(6px) !important;
     box-sizing: border-box !important;
     transition: background var(--shine-anim--hover-time) var(--shine-anim--hover-ease) !important;
 }
@@ -266,14 +268,14 @@
 }
 
 .pv2-wishlist-btn-glass svg {
-    color: rgba(255, 255, 255, 0.8);
-    stroke: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0.50);
+    stroke: rgba(0, 0, 0, 0.50);
     transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
 }
 
 .pv2-wishlist-btn-glass .shine-glass-button:hover svg {
-    color: rgba(255, 255, 255, 1);
-    stroke: rgba(255, 255, 255, 1);
+    color: rgba(0, 0, 0, 0.50);
+    stroke: rgba(0, 0, 0, 0.50);
 }
 
 .pv2-wishlist-btn-glass .shine-layer::before {
@@ -310,13 +312,19 @@
 }
 
 .pv2-appointment-btn-glass .glass-layer {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(0, 0, 0, 0.50) !important;
+    box-shadow: -1px -1px 4px 0 rgba(255, 255, 255, 0.25) inset, 1px 1px 4px 0 rgba(255, 255, 255, 0.50) inset !important;
+    backdrop-filter: blur(6px) !important;
     box-sizing: border-box !important;
 }
 
+.pv2-appointment-btn-glass .button-text {
+    color: #000000 !important;
+}
+
 .pv2-appointment-btn-glass .border-layer {
-    display: none !important;
+    display: block !important;
 }
 
 
@@ -356,7 +364,7 @@
 @media (min-width: 992px) {
     .pv2-right-configuration {
         display: block;
-        /* background: #F6F6F6; */
+        background: #F6F6F6;
     }
 
     .pv2-product-title {

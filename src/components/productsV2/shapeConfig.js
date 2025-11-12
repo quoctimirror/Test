@@ -2,24 +2,24 @@
 // Each shape has its own model ID, metal, and band configuration
 
 export const SHAPE_CONFIGS = {
-  Round: {
-    shape: 'Round',
-    modelId: 'U1Jy-K8MR4-qUOC_YIWkWQ',
-    metal: 'Platinum',
-    band: 'Double band'
-  },
+  // Round: {
+  //   shape: 'Round',
+  //   modelId: 'U1Jy-K8MR4-qUOC_YIWkWQ',
+  //   metal: 'Platinum',
+  //   band: 'Double band'
+  // },
   // Pear: {
   //   shape: 'Pear',
   //   modelId: 'OPdq2RjLTsikXl71-YvsJg',
   //   metal: 'Silver',
   //   band: 'Single band'
   // },
-  Emerald: {
-    shape: 'Emerald',
-    modelId: 'cpHdSLPBRlOGSeRzDiA77Q',
-    metal: 'Rose Gold',
-    band: 'Single band'
-  },
+  // Emerald: {
+  //   shape: 'Emerald',
+  //   modelId: 'cpHdSLPBRlOGSeRzDiA77Q',
+  //   metal: 'Rose Gold',
+  //   band: 'Single band'
+  // },
   // Fiston: {
   //   shape: 'Fiston',
   //   modelId: 'eOcY7UV6TMWbra25hv9dwQ',
@@ -34,18 +34,34 @@ export const SHAPE_CONFIGS = {
   },
   Pear: {
     shape: 'Pear-new',
-    modelId: 'BVCcaUMSTFKhP8qZ-ztWLQ',
+    modelId: 'bvWdCTwORE2wavn2XZc8Hw',
     metal: 'Silver',
     band: 'Single band'
   },
   Fiston: {
     shape: 'Fiston-new',
+    modelId: 'AheAiyfpTTyK9P2N-TAJ1A',
+    metal: 'Gold 24k',
+    band: 'Single band'
+  },
+  Myfav: {
+    shape: 'Myfav',
+    modelId: 'ao5z2CTsTtKaKswPYhGoGw',
+    metal: 'Gold 24k',
+    band: 'Single band'
+  },
+  Oval: {
+    shape: 'Oval',
     modelId: 'BVCcaUMSTFKhP8qZ-ztWLQ',
     metal: 'Gold 24k',
     band: 'Single band'
   },
-  MyFav
-
+  Trilogy: {
+    shape: 'Trilogy',
+    modelId: 'DIfwfXYbQgOYRGjaoL0k6g',
+    metal: 'Gold 24k',
+    band: 'Single band'
+  },
 };
 
 // Get list of available shapes
@@ -53,5 +69,5 @@ export const AVAILABLE_SHAPES = Object.keys(SHAPE_CONFIGS);
 
 // Get configuration for a specific shape
 export const getShapeConfig = (shapeName) => {
-  return SHAPE_CONFIGS[shapeName] || SHAPE_CONFIGS.Pear1; // Default to Fiston
+  return SHAPE_CONFIGS[shapeName] || SHAPE_CONFIGS.Trilogy; // Default to Trilogy
 };

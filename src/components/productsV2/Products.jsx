@@ -33,7 +33,7 @@ const Products = () => {
     const [orderDetails, setOrderDetails] = useState(null);
 
     // Product configuration state (shared with RightConfiguration)
-    const defaultShape = getShapeConfig('Pear1'); // Default shape
+    const defaultShape = getShapeConfig('Trilogy'); // Default shape
     const [productConfig, setProductConfig] = useState({
         id: 'PRD000024', // Mirror Custom Ring product ID
         name: 'LUMINA OLIVIA 5',
@@ -374,7 +374,7 @@ const Products = () => {
 
     return (
         <>
-            <div className="pv2-products-main-wrapper">
+            <div className="pv2-products-main-wrapper" data-navbar-theme="black">
                 <div className="pv2-products-container">
                     {/* Left side - LeftContainer chứa Section1 và Section2 */}
                     <LeftContainer productConfig={productConfig} />
@@ -402,6 +402,8 @@ const Products = () => {
                     onShapeChange={handleShapeChange}
                     selectedSize={productConfig.size}
                     onSizeChange={handleSizeChange}
+                    metal={productConfig.metal}
+                    band={productConfig.band}
                 />
 
                 {/* Order Form Modal */}
