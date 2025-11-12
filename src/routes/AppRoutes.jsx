@@ -98,6 +98,8 @@ const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const IJewelARTryOnPage = lazy(() => import("@pages/IJewelARTryOnPage"));
 const ScrollEffectTestPage = lazy(() => import("@pages/ScrollEffectTestPage"));
 const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"));
+const NavbarV2TestPage = lazy(() => import("@pages/NavbarV2TestPage"));
+const NavbarV3TestPage = lazy(() => import("@pages/NavbarV3TestPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -144,6 +146,8 @@ export default function AppRoutes() {
       ROUTES.FORGOT_PASSWORD,
       ROUTES.SCROLL_EFFECT_TEST,
       ROUTES.SCROLL_EFFECT_TEST_V2,
+      ROUTES.NAVBAR_V2_TEST,
+      ROUTES.NAVBAR_V3_TEST,
       ROUTES.IJEWEL_AR_TRYON,
     ];
 
@@ -191,7 +195,9 @@ export default function AppRoutes() {
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.HOME ||
     location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
-    location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2;
+    location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2 ||
+    location.pathname === ROUTES.NAVBAR_V2_TEST ||
+    location.pathname === ROUTES.NAVBAR_V3_TEST;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -211,7 +217,9 @@ export default function AppRoutes() {
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
     location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
     location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
-    location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2;
+    location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2 ||
+    location.pathname === ROUTES.NAVBAR_V2_TEST ||
+    location.pathname === ROUTES.NAVBAR_V3_TEST;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -344,6 +352,18 @@ export default function AppRoutes() {
           <Route
             path={ROUTES.SCROLL_EFFECT_TEST_V2}
             element={<ScrollEffectTestV2Page />}
+          />
+
+          {/* Test route for NavbarV2 */}
+          <Route
+            path={ROUTES.NAVBAR_V2_TEST}
+            element={<NavbarV2TestPage />}
+          />
+
+          {/* Test route for NavbarV3 */}
+          <Route
+            path={ROUTES.NAVBAR_V3_TEST}
+            element={<NavbarV3TestPage />}
           />
 
           <Route

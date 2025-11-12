@@ -1,110 +1,149 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import MediaImage from "@components/common/media/MediaImage";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./ViewAllProduct.css";
 import { ROUTES } from "@/constants/routes";
-
-// Register ScrollTrigger plugin
-gsap.registerPlugin(ScrollTrigger);
 
 const ViewAllProduct = ({ showViewProductButton = false }) => {
   const navigate = useNavigate();
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const scrollContainerRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const [isHovering, setIsHovering] = useState(false);
 
   const products = [
-    { id: 1, name: "Lumina", image: "products/more_r.png" },
-    { id: 2, name: "Lumina", image: "products/more_r.png" },
-    { id: 3, name: "Lumina", image: "products/more_r.png" },
-    { id: 4, name: "Lumina", image: "products/more_r.png" },
-    { id: 5, name: "Lumina", image: "products/more_r.png" },
-    { id: 6, name: "Lumina", image: "products/more_r.png" },
-    { id: 7, name: "Lumina", image: "products/more_r.png" },
-    { id: 8, name: "Lumina", image: "products/more_r.png" },
+    { id: 1, name: "Lumina", image: "products/product_3_fix.png" },
+    { id: 2, name: "Lumina", image: "products/product_3_fix.png" },
+    { id: 3, name: "Lumina", image: "products/product_3_fix.png" },
+    { id: 4, name: "Lumina", image: "products/product_3_fix.png" },
+    { id: 5, name: "Lumina", image: "products/product_3_fix.png" },
+    { id: 6, name: "Lumina", image: "products/product_3_fix.png" },
+    { id: 7, name: "Lumina", image: "products/product_3_fix.png" },
+    { id: 8, name: "Lumina", image: "products/product_3_fix.png" },
   ];
 
   useEffect(() => {
-    // Wait for DOM to be ready
-    const initScrollTrigger = () => {
-      if (!scrollContainerRef.current) return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
 
-      // Kill any existing ScrollTriggers for this component
-      ScrollTrigger.getAll()
-        .filter((trigger) => trigger.trigger === sectionRef.current)
-        .forEach((trigger) => trigger.kill());
+    let isDragging = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let targetScrollLeft = wrapper.scrollLeft;
+    let currentScrollLeft = wrapper.scrollLeft;
+    let animationId = null;
 
-      // Get all product cards
-      const cards =
-        scrollContainerRef.current.querySelectorAll(".product-card");
-      if (cards.length === 0) return;
+    // Smooth scroll animation
+    const smoothScroll = () => {
+      const diff = targetScrollLeft - currentScrollLeft;
+      const delta = diff * 0.15; // Easing factor (lower = smoother but slower)
 
-      // Calculate dimensions
-      const containerWidth = scrollContainerRef.current.scrollWidth;
-      const viewportWidth = window.innerWidth;
-      const scrollAmount = containerWidth - viewportWidth;
+      if (Math.abs(diff) > 0.5) {
+        currentScrollLeft += delta;
+        wrapper.scrollLeft = currentScrollLeft;
+        animationId = requestAnimationFrame(smoothScroll);
+      } else {
+        currentScrollLeft = targetScrollLeft;
+        wrapper.scrollLeft = targetScrollLeft;
+      }
+    };
 
-      // Only create horizontal scroll if container is wider than viewport
-      if (scrollAmount > 0) {
-        // Create the horizontal scroll animation
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            pin: true,
-            scrub: 1,
-            start: "bottom bottom", // Start when section reaches top
-            end: () => `+=${scrollAmount * 1.5}`, // Extra scroll distance to see last image fully
-            invalidateOnRefresh: true,
-          },
-        });
+    // Handle wheel event to scroll horizontally when hovering
+    const handleWheel = (e) => {
+      if (isHovering) {
+        e.preventDefault();
 
-        // Animate the container moving left
-        tl.to(scrollContainerRef.current, {
-          x: -scrollAmount,
-          ease: "none",
-          duration: 1,
-        });
+        // Check if horizontal scroll from trackpad (deltaX) or vertical scroll from mouse (deltaY)
+        // Trackpad horizontal scroll uses deltaX, mouse wheel uses deltaY
+        let scrollDelta = 0;
+
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+          // Horizontal scroll on trackpad
+          scrollDelta = e.deltaX;
+        } else {
+          // Vertical scroll on mouse wheel - convert to horizontal
+          scrollDelta = e.deltaY * 1.5;
+        }
+
+        // Update target scroll position
+        targetScrollLeft += scrollDelta;
+        // Clamp to valid range
+        targetScrollLeft = Math.max(
+          0,
+          Math.min(targetScrollLeft, wrapper.scrollWidth - wrapper.clientWidth)
+        );
+
+        // Start smooth animation if not already running
+        if (!animationId) {
+          currentScrollLeft = wrapper.scrollLeft;
+          animationId = requestAnimationFrame(smoothScroll);
+        }
+      }
+    };
+
+    // Drag to scroll functionality
+    const handleMouseDown = (e) => {
+      // Cancel smooth scroll animation when dragging
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
       }
 
-      // Refresh ScrollTrigger on window resize
-      const handleResize = () => {
-        ScrollTrigger.refresh();
-      };
-      window.addEventListener("resize", handleResize);
-
-      // Cleanup
-      return () => {
-        window.removeEventListener("resize", handleResize);
-        ScrollTrigger.getAll()
-          .filter((trigger) => trigger.trigger === sectionRef.current)
-          .forEach((trigger) => trigger.kill());
-      };
+      isDragging = true;
+      wrapper.classList.add("dragging");
+      wrapper.style.cursor = "grabbing";
+      startX = e.pageX - wrapper.offsetLeft;
+      scrollLeft = wrapper.scrollLeft;
     };
 
-    // Initialize after a short delay to ensure DOM is ready
-    const timer = setTimeout(initScrollTrigger, 100);
-
-    // Listen for page transition complete event to reinitialize
-    const handleTransitionComplete = () => {
-      setTimeout(initScrollTrigger, 200);
+    const handleMouseMove = (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - wrapper.offsetLeft;
+      const walk = (x - startX) * 2; // Multiply by 2 for faster scroll
+      const newScrollLeft = scrollLeft - walk;
+      wrapper.scrollLeft = newScrollLeft;
+      // Update tracking variables
+      currentScrollLeft = newScrollLeft;
+      targetScrollLeft = newScrollLeft;
     };
-    window.addEventListener("pageTransitionComplete", handleTransitionComplete);
+
+    const handleMouseUp = () => {
+      isDragging = false;
+      wrapper.classList.remove("dragging");
+      wrapper.style.cursor = "grab";
+    };
+
+    const handleMouseLeave = () => {
+      if (isDragging) {
+        isDragging = false;
+        wrapper.classList.remove("dragging");
+        wrapper.style.cursor = "grab";
+      }
+    };
+
+    // Add event listeners
+    wrapper.addEventListener("wheel", handleWheel, { passive: false });
+    wrapper.addEventListener("mousedown", handleMouseDown);
+    wrapper.addEventListener("mousemove", handleMouseMove);
+    wrapper.addEventListener("mouseup", handleMouseUp);
+    wrapper.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener(
-        "pageTransitionComplete",
-        handleTransitionComplete
-      );
-      ScrollTrigger.getAll()
-        .filter((trigger) => trigger.trigger === sectionRef.current)
-        .forEach((trigger) => trigger.kill());
+      // Cancel animation frame on cleanup
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+      wrapper.removeEventListener("wheel", handleWheel);
+      wrapper.removeEventListener("mousedown", handleMouseDown);
+      wrapper.removeEventListener("mousemove", handleMouseMove);
+      wrapper.removeEventListener("mouseup", handleMouseUp);
+      wrapper.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, []);
+  }, [isHovering]);
 
   const handleViewAllProducts = async () => {
     await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.ALL_GEMS);
@@ -123,7 +162,12 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
             </p>
           </div>
 
-          <div className="horizontal-scroll-wrapper">
+          <div
+            className="horizontal-scroll-wrapper"
+            ref={wrapperRef}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+          >
             <div className="same-collection-grid-gsap" ref={scrollContainerRef}>
               {products.map((product) => (
                 <div key={product.id} className="product-card">

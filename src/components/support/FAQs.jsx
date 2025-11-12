@@ -174,22 +174,22 @@ const FAQs = () => {
       const target = e.target.closest('a[href^="#"]');
       if (target) {
         e.preventDefault();
-        const id = target.getAttribute('href').slice(1);
+        const id = target.getAttribute("href").slice(1);
         const element = document.getElementById(id);
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+          element.scrollIntoView({ behavior: "smooth" });
         }
       }
     };
 
-    const navElement = document.querySelector('.faq-nav');
+    const navElement = document.querySelector(".faq-nav");
     if (navElement) {
-      navElement.addEventListener('click', handleAnchorClick);
+      navElement.addEventListener("click", handleAnchorClick);
     }
 
     return () => {
       if (navElement) {
-        navElement.removeEventListener('click', handleAnchorClick);
+        navElement.removeEventListener("click", handleAnchorClick);
       }
     };
   }, []);
@@ -244,7 +244,7 @@ const FAQs = () => {
               <input
                 type="text"
                 placeholder="Search"
-                className="search-input bodytext-3--no-margin"
+                className="search-input bodytext-4--no-margin"
               />
               <ShineGlassButton className="search-button" theme="light">
                 Search
@@ -275,9 +275,7 @@ const FAQs = () => {
                         }`}
                         onClick={() => toggleFAQ(`${section.id}-${index}`)}
                       >
-                        <button
-                          className="faq-question"
-                        >
+                        <button className="faq-question">
                           <span>{faq.question}</span>
                           <span
                             className={`faq-icon ${

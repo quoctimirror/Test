@@ -47,6 +47,8 @@ export const ROUTES = {
   NEWS_V2: "/5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
   SCROLL_EFFECT_TEST: "/test-scroll-effect",
   SCROLL_EFFECT_TEST_V2: "/test-scroll-effect-v2",
+  NAVBAR_V2_TEST: "/test-navbar-v2",
+  NAVBAR_V3_TEST: "/test-navbar-v3",
 
   // Dashboard routes (keep original - protected by auth)
   DASHBOARD_ADMIN: "/dashboard/admin",
