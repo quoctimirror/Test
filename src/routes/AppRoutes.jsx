@@ -100,6 +100,7 @@ const ScrollEffectTestPage = lazy(() => import("@pages/ScrollEffectTestPage"));
 const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"));
 const NavbarV2TestPage = lazy(() => import("@pages/NavbarV2TestPage"));
 const NavbarV3TestPage = lazy(() => import("@pages/NavbarV3TestPage"));
+const NavbarV4TestPage = lazy(() => import("@pages/NavbarV4TestPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -364,6 +365,12 @@ export default function AppRoutes() {
           <Route
             path={ROUTES.NAVBAR_V3_TEST}
             element={<NavbarV3TestPage />}
+          />
+
+          {/* Test route for NavbarV4 */}
+          <Route
+            path={ROUTES.NAVBAR_V4_TEST}
+            element={<NavbarV4TestPage />}
           />
 
           <Route

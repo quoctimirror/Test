@@ -10,6 +10,7 @@ const BODMemberV4 = () => {
   const [imageAlignment, setImageAlignment] = useState("center"); // 'top', 'center', 'bottom'
   const rowRefs = useRef([]);
   const sectionRef = useRef(null);
+  const mousePositionRef = useRef({ x: 0, y: 0 });
 
   // Distance threshold for hover detection (px)
   const HOVER_DISTANCE_THRESHOLD = 200;
@@ -153,10 +154,12 @@ const BODMemberV4 = () => {
   }, []);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    let scrollAnimationFrame = null;
+
+    // Function to check hover based on mouse position
+    const checkHover = (mouseY) => {
       if (!isSectionVisible) return;
 
-      const mouseY = e.clientY;
       let closestIndex = null;
       let closestDistance = Infinity;
 
@@ -182,16 +185,36 @@ const BODMemberV4 = () => {
       }
     };
 
+    const handleMouseMove = (e) => {
+      mousePositionRef.current = { x: e.clientX, y: e.clientY };
+      checkHover(e.clientY);
+    };
+
+    const handleScroll = () => {
+      // Throttle with requestAnimationFrame for smooth performance
+      if (scrollAnimationFrame) return;
+
+      scrollAnimationFrame = requestAnimationFrame(() => {
+        checkHover(mousePositionRef.current.y);
+        scrollAnimationFrame = null;
+      });
+    };
+
     const handleMouseLeave = () => {
       setActiveIndex(null);
       setHoveredImage(null);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      if (scrollAnimationFrame) {
+        cancelAnimationFrame(scrollAnimationFrame);
+      }
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [teamMembers, isSectionVisible]);
