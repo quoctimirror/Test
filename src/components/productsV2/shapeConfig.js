@@ -31,7 +31,13 @@ export const SHAPE_CONFIGS = {
     modelId: 'HB3RidmJSdezIO1T2hdXcQ',
     metal: 'Gold 24k',
     band: 'Single band'
-  }
+  },
+  Pear1: {
+    shape: 'Pear1',
+    modelId: 'bvWdCTwORE2wavn2XZc8Hw',
+    metal: 'Silver',
+    band: 'Single band'
+  },
 };
 
 // Get list of available shapes
@@ -39,5 +45,5 @@ export const AVAILABLE_SHAPES = Object.keys(SHAPE_CONFIGS);
 
 // Get configuration for a specific shape
 export const getShapeConfig = (shapeName) => {
-  return SHAPE_CONFIGS[shapeName] || SHAPE_CONFIGS.Fiston; // Default to Fiston
+  return SHAPE_CONFIGS[shapeName] || SHAPE_CONFIGS.Pear1; // Default to Fiston
 };

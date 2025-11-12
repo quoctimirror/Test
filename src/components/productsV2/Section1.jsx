@@ -10,7 +10,7 @@ const Section1 = ({ productConfig }) => {
         }
     };
 
-    const modelId = productConfig?.modelId || 'HB3RidmJSdezIO1T2hdXcQ';
+    const modelId = productConfig?.modelId || 'bvWdCTwORE2wavn2XZc8Hw';
 
     return (
         <div className="pv2-section1">

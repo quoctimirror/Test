@@ -6,6 +6,8 @@ const ProductsLeftDrive = ({ modelId }) => {
   const viewerInstanceRef = useRef(null);
 
   useEffect(() => {
+    let isCancelled = false; // Flag to prevent state updates after unmount
+
     // Load iJewel mini-viewer SDK script
     const loadScript = () => {
       return new Promise((resolve, reject) => {
@@ -26,37 +28,51 @@ const ProductsLeftDrive = ({ modelId }) => {
 
     // Load model from iJewel Drive
     const loadModel = async () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || isCancelled) return;
 
       try {
         // Load SDK script
         await loadScript();
 
-        // Clear container
-        containerRef.current.innerHTML = '';
+        if (isCancelled) return; // Exit if component unmounted during async operation
+
+        // Clear container completely before loading new viewer
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+
+          // Remove any existing iframes/canvases that might be lingering
+          const existingViewers = containerRef.current.querySelectorAll('iframe, canvas');
+          existingViewers.forEach(el => el.remove());
+        }
 
         const driveBasename = 'drive';
-        const modelFileId = modelId || 'HB3RidmJSdezIO1T2hdXcQ';
+        const modelFileId = modelId || 'bvWdCTwORE2wavn2XZc8Hw';
 
-        window.ijewelViewer.loadModelById(
-          modelFileId,
-          driveBasename,
-          containerRef.current,
-          {
-            showCard: true,
-            showLogo: true,
-          }
-        );
+        if (!isCancelled && containerRef.current) {
+          window.ijewelViewer.loadModelById(
+            modelFileId,
+            driveBasename,
+            containerRef.current,
+            {
+              showCard: false,
+              showLogo: true,
+            }
+          );
+        }
 
       } catch (err) {
-        console.error('❌ Error loading model:', err);
+        if (!isCancelled) {
+          console.error('❌ Error loading model:', err);
+        }
       }
     };
 
     // Listen for viewer ready event
     const handleViewerReady = (event) => {
-      console.log("✅ Viewer is ready:", event.detail.viewer);
-      viewerInstanceRef.current = event.detail.viewer;
+      if (!isCancelled) {
+        console.log("✅ Viewer is ready:", event.detail.viewer);
+        viewerInstanceRef.current = event.detail.viewer;
+      }
     };
 
     window.addEventListener("ijewel-viewer-ready", handleViewerReady);
@@ -65,9 +81,32 @@ const ProductsLeftDrive = ({ modelId }) => {
 
     // Cleanup
     return () => {
+      isCancelled = true; // Prevent any pending async operations from updating state
       window.removeEventListener("ijewel-viewer-ready", handleViewerReady);
+
+      // Dispose viewer instance if exists
       if (viewerInstanceRef.current && viewerInstanceRef.current.dispose) {
-        viewerInstanceRef.current.dispose();
+        try {
+          viewerInstanceRef.current.dispose();
+        } catch (err) {
+          console.warn('Error disposing viewer:', err);
+        }
+        viewerInstanceRef.current = null;
+      }
+
+      // Clean up container completely
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+
+        // Remove any lingering iframes/canvases
+        const existingViewers = containerRef.current.querySelectorAll('iframe, canvas');
+        existingViewers.forEach(el => {
+          try {
+            el.remove();
+          } catch (err) {
+            console.warn('Error removing viewer element:', err);
+          }
+        });
       }
     };
   }, [modelId]);
