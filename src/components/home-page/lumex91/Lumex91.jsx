@@ -1,6 +1,7 @@
 import "./Lumex91.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import ShinyText from "@components/common/shiny-text/ShinyText";
+import { MediaImage, MediaVideo } from "@components/common/media";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNewsDetailRoute } from "@/constants/routes";
@@ -22,16 +23,16 @@ const Lumex91 = () => {
       <div className="lumex91-container">
         <div className="lumex91-video-box">
           {videoError ? (
-            <img
+            <MediaImage
               className="lumex91-video"
-              src="/home-page/Mirror-Lumex 91.jpg"
+              src="home-page/Mirror-Lumex 91.jpg"
               alt="Mirror-Lumex 91"
             />
           ) : (
-            <video
+            <MediaVideo
               className="lumex91-video"
-              src="/home-page/MIRROR-LUMEX 91.mp4"
-              poster="/home-page/Mirror-Lumex 91.jpg"
+              src="home-page/MIRROR-LUMEX 91.mp4"
+              poster="home-page/Mirror-Lumex 91.jpg"
               autoPlay
               loop
               muted

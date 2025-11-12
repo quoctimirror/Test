@@ -1,4 +1,5 @@
 import React from "react";
+import { MediaImage } from "@components/common/media";
 import "./contact.css";
 
 const Contact = () => {
@@ -15,8 +16,8 @@ const Contact = () => {
         {/* Top gradient box */}
         <div className="cards-gradient-top"></div>
         <div className="contact-card">
-          <img
-            src="/services/img_1_section_6.jpg"
+          <MediaImage
+            src="services/img_1_section_6.jpg"
             alt="Live Chat"
             className="contact-image"
           />
@@ -27,8 +28,8 @@ const Contact = () => {
         </div>
 
         <div className="contact-card">
-          <img
-            src="/services/img_2_section_6.jpg"
+          <MediaImage
+            src="services/img_2_section_6.jpg"
             alt="Phone Call"
             className="contact-image"
           />
@@ -43,8 +44,8 @@ const Contact = () => {
         </div>
 
         <div className="contact-card">
-          <img
-            src="/services/img_3_section_6.jpg"
+          <MediaImage
+            src="services/img_3_section_6.jpg"
             alt="Email"
             className="contact-image"
           />
@@ -59,8 +60,8 @@ const Contact = () => {
         </div>
 
         <div className="contact-card">
-          <img
-            src="/services/img_4_section_6.png"
+          <MediaImage
+            src="services/img_4_section_6.png"
             alt="Appointment"
             className="contact-image"
           />

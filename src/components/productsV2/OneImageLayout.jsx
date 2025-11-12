@@ -1,4 +1,5 @@
 import React from 'react';
+import { MediaImage } from '@components/common/media';
 import './OneImageLayout.css';
 
 const OneImageLayout = ({ imageName }) => {
@@ -6,7 +7,7 @@ const OneImageLayout = ({ imageName }) => {
         <section className="pv2-one-image-layout-container">
             <div className="pv2-one-image-layout-wrapper">
                 <div className="pv2-one-image-layout-image">
-                    <img src={`products/${imageName}`} alt="Image" />
+                    <MediaImage src={`products/${imageName}`} alt="Image" />
                 </div>
             </div>
         </section>

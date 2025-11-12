@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MediaImage } from '@components/common/media';
 import './MobileProductBar.css';
 import ShineGlassButton from '../common/button/ShineGlassButton';
 import MobileConfigModal from './MobileConfigModal';
@@ -25,7 +26,7 @@ const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSiz
         <>
             <div className={`pv2-mobile-product-bar ${isVisible ? 'visible' : 'hidden'} ${showConfigModal ? 'fade-out' : ''}`}>
                 <div className="pv2-mobile-product-content">
-                    <img
+                    <MediaImage
                         src={greyCaretUp}
                         alt=""
                         className="pv2-mobile-bar-caret-up"

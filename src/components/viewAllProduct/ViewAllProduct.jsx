@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import MediaImage from "@components/common/media/MediaImage";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./ViewAllProduct.css";
@@ -17,14 +18,14 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
   const scrollContainerRef = useRef(null);
 
   const products = [
-    { id: 1, name: "Lumina", image: "/products/more_r.png" },
-    { id: 2, name: "Lumina", image: "/products/more_r.png" },
-    { id: 3, name: "Lumina", image: "/products/more_r.png" },
-    { id: 4, name: "Lumina", image: "/products/more_r.png" },
-    { id: 5, name: "Lumina", image: "/products/more_r.png" },
-    { id: 6, name: "Lumina", image: "/products/more_r.png" },
-    { id: 7, name: "Lumina", image: "/products/more_r.png" },
-    { id: 8, name: "Lumina", image: "/products/more_r.png" },
+    { id: 1, name: "Lumina", image: "products/more_r.png" },
+    { id: 2, name: "Lumina", image: "products/more_r.png" },
+    { id: 3, name: "Lumina", image: "products/more_r.png" },
+    { id: 4, name: "Lumina", image: "products/more_r.png" },
+    { id: 5, name: "Lumina", image: "products/more_r.png" },
+    { id: 6, name: "Lumina", image: "products/more_r.png" },
+    { id: 7, name: "Lumina", image: "products/more_r.png" },
+    { id: 8, name: "Lumina", image: "products/more_r.png" },
   ];
 
   useEffect(() => {
@@ -126,7 +127,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
             <div className="same-collection-grid-gsap" ref={scrollContainerRef}>
               {products.map((product) => (
                 <div key={product.id} className="product-card">
-                  <img
+                  <MediaImage
                     src={product.image}
                     alt={`${product.name} Ring`}
                     className="product-image"

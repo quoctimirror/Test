@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MediaImage } from '@components/common/media';
 import './SizeSelector.css'; // Reuse same styling
 import { AVAILABLE_SHAPES, getShapeConfig } from './shapeConfig';
 import ShineGlassButton from '../common/button/ShineGlassButton';
@@ -39,8 +40,8 @@ const ShapeSelector = ({ onClose, onSelectShape, selectedShape }) => {
                         height={32}
                         className="pv2-shape-selector-close-btn"
                     >
-                        <img
-                            src="/universeSection/close-x-icon.svg"
+                        <MediaImage
+                            src="universeSection/close-x-icon.svg"
                             alt="Close"
                             width="14"
                             height="14"

@@ -5,6 +5,7 @@ import UnderlineButton from "@components/common/button/UnderlineButton";
 import ArrowDown from "@components/common/decorative/ArrowDown";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
+import { getImageUrl } from "@utils/cloudflareMediaUtil";
 
 const IntroSubmit = () => {
   const navigate = useNavigate();
@@ -127,9 +128,9 @@ const IntroSubmit = () => {
             <picture>
               <source
                 media="(max-width: 1024px)"
-                srcSet="/submit/kv-milan-on-website-mobile2.png"
+                srcSet={getImageUrl("submit/kv-milan-on-website-mobile2.png")}
               />
-              <img src="/submit/kv MILAN.png" alt="Submit Hero" />
+              <img src={getImageUrl("submit/kv MILAN.png")} alt="Submit Hero" />
             </picture>
             {/* <h3 className="intro-submit-hero-image-caption heading-3--no-margin">
               Collaborate, Innovate, Awaken luxury

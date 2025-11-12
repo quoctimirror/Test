@@ -5,6 +5,7 @@ import ProductCareRepair from "./ProductCareRepair";
 import TradeInUpgrade from "./TradeInUpgrade";
 import ContactUs from "@components/contactUs/ContactUs";
 import { ROUTES } from "@/constants/routes";
+import { getImageUrl } from "@utils/cloudflareMediaUtil";
 
 const ServicesDetailPage = () => {
   const [searchParams] = useSearchParams();
@@ -39,11 +40,11 @@ const ServicesDetailPage = () => {
   const getHeroImage = () => {
     switch (activeTab) {
       case "product-care-repair":
-        return "/services/Product care & Repair_1920x600.jpg";
+        return getImageUrl("services/Product care & Repair_1920x600.jpg");
       case "trade-in-upgrade":
-        return "/services/Trade in_1920x600.jpg";
+        return getImageUrl("services/Trade in_1920x600.jpg");
       default:
-        return "/services/service_detail_img.jpg";
+        return getImageUrl("services/service_detail_img.jpg");
     }
   };
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { MediaImage } from "@components/common/media";
 import "./Section3.css";
 import ArrowButton from "../common/button/ArrowButton";
 
@@ -300,20 +301,20 @@ const Section3 = () => {
             {[...Array(10)].map((_, setIndex) => (
               <React.Fragment key={setIndex}>
                 <div className="pv2-section3-carousel-item">
-                  <img
-                    src="/products/placeholder1.png"
+                  <MediaImage
+                    src="products/placeholder1.png"
                     alt="Product Image 1"
                   />
                 </div>
                 <div className="pv2-section3-carousel-item">
-                  <img
-                    src="/products/placeholder2.png"
+                  <MediaImage
+                    src="products/placeholder2.png"
                     alt="Product Image 2"
                   />
                 </div>
                 <div className="pv2-section3-carousel-item">
-                  <img
-                    src="/products/placeholder3.png"
+                  <MediaImage
+                    src="products/placeholder3.png"
                     alt="Product Image 3"
                   />
                 </div>

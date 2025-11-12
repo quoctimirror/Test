@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
+import { MediaImage } from "@components/common/media";
 import "./BODMemberV2.css";
 import "../../../styles/grid-system.css";
 
@@ -8,25 +9,25 @@ const BODMemberV2 = () => {
     {
       name: "Uyen Dong",
       position: "CMO",
-      image: "/about/BODMember/MsUyen.svg",
+      image: "about/BODMember/MsUyen.svg",
       isMainLeader: true,
     },
     {
       name: "Kenneth Nguyen",
       position: "CSO",
-      image: "/about/BODMember/MrKhanh.svg",
+      image: "about/BODMember/MrKhanh.svg",
       isMainLeader: true,
     },
     {
       name: "Hai Son Dang",
       position: "CEO",
-      image: "/about/BODMember/MrSon.svg",
+      image: "about/BODMember/MrSon.svg",
       isMainLeader: true,
     },
     {
       name: "Kim Ngan Tran",
       position: "CSIR",
-      image: "/about/BODMember/MsNgan.svg",
+      image: "about/BODMember/MsNgan.svg",
       isMainLeader: true,
     },
     {
@@ -187,7 +188,7 @@ const BODMemberV2 = () => {
               } ${member.isHidden ? "hidden-member" : ""}`}
             >
               <div className="member-photo-v2">
-                <img
+                <MediaImage
                   src={member.image}
                   alt={member.name}
                   onError={(e) => {

@@ -2,7 +2,7 @@
   height: 56vh;
   background: linear-gradient(180deg, #000 0%, #bc224c 54.81%, #f6f6f6 100%),
     linear-gradient(180deg, rgba(246, 246, 246, 0) 50%, #f6f6f6 100%),
-    url("/services/section_1.jpg") lightgray 50% / cover no-repeat;
+    url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/section_1.jpg") lightgray 50% / cover no-repeat;
   position: relative;
   display: flex;
   align-items: center;
@@ -72,7 +72,7 @@
 @media screen and (max-width: 1024px) {
   .services-section1 {
     height: 100vh;
-    background-image: url("/services/section_1.jpg");
+    background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/section_1.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -117,7 +117,7 @@
     display: block;
     width: 100%;
     height: 50vh;
-    background-image: url("/services/section_1.jpg");
+    background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/section_1.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getMediaUrl } from "@utils/cloudflareMediaUtil";
 import "./ScavengerHunt.css";
 
 const ScavengerHunt = () => {
@@ -308,7 +309,7 @@ const ScavengerHunt = () => {
           gifPlane.components["animated-gif"].init();
         } else {
           // Force component to be added to the entity
-          gifPlane.setAttribute("animated-gif", "src: /lumex-ar/Lumex91.gif");
+          gifPlane.setAttribute("animated-gif", `src: ${getMediaUrl("lumex-ar/Lumex91.gif")}`);
         }
       }
     }, 500);
@@ -319,11 +320,11 @@ const ScavengerHunt = () => {
       {isLoading && <div className="ar-loading">{status}</div>}
 
       <div className="welcome-logo">
-        <img src="/welcome/welcome_logo.svg" alt="Welcome Logo" />
+        <img src={getMediaUrl("welcome/welcome_logo.svg")} alt="Welcome Logo" />
       </div>
 
       <a-scene
-        mindar-image="imageTargetSrc: /lumex-ar/targets-mirror-hello.mind; autoStart: true; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001;"
+        mindar-image={`imageTargetSrc: ${getMediaUrl("lumex-ar/targets-mirror-hello.mind")}; autoStart: true; uiLoading: no; uiError: no; uiScanning: no; filterMinCF: 0.0001; filterBeta: 0.001;`}
         color-space="sRGB"
         renderer="colorManagement: true, physicallyCorrectLights, antialias: true, alpha: false"
         vr-mode-ui="enabled: false"
@@ -346,7 +347,7 @@ const ScavengerHunt = () => {
             height="0.15"
             width="0.15"
             rotation="0 0 0"
-            animated-gif="src: /lumex-ar/Lumex91.gif"
+            animated-gif={`src: ${getMediaUrl("lumex-ar/Lumex91.gif")}`}
           ></a-plane>
         </a-entity>
       </a-scene>

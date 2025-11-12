@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import { MediaVideo } from "@components/common/media";
 import "./MirrorverseSection.css";
 
 const MirrorverseSection = () => {
@@ -197,15 +198,14 @@ const MirrorverseSection = () => {
 
         {/* Video Section */}
         <div className="mirrorverse-video" ref={videoRef}>
-          <video
+          <MediaVideo
+            src="about/immersive_showroom.mp4"
             autoPlay
             muted
             loop
             playsInline
             className="mirrorverse-video-element"
-          >
-            <source src="/about/immersive_showroom.mp4" type="video/mp4" />
-          </video>
+          />
         </div>
       </div>
     </div>

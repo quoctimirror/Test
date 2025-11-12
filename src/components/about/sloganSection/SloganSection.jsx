@@ -1,19 +1,19 @@
 import React from "react";
+import { MediaVideo } from "@components/common/media";
 import "./SloganSection.css";
 
 const SloganSection = () => {
   return (
     <div className="slogan-section-wrapper">
       <div className="slogan-section">
-        <video
+        <MediaVideo
           className="slogan-background-video"
+          src="about/section1/Top_video.mp4"
           autoPlay
           muted
           loop
           playsInline
-        >
-          <source src="/about/section1/Top_video.mp4" type="video/mp4" />
-        </video>
+        />
 
         <div className="slogan-content">
           {/* Add slogan content here */}

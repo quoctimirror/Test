@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { collectionsAPI } from "@services/api";
+import { MediaImage } from "@components/common/media";
 import "./Section4CollectionDetail.css";
 
 const Section4CollectionDetail = ({
@@ -10,8 +11,8 @@ const Section4CollectionDetail = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const productCards = Array(24).fill("/products/allGems/product_card_1.png");
-  const modelImage = "/products/allGems/flower.png";
+  const productCards = Array(24).fill("products/allGems/product_card_1.png");
+  const modelImage = "products/allGems/flower.png";
 
   // Helper function to convert slug back to name for API lookup
   const slugToName = (slug) => {
@@ -126,7 +127,7 @@ const Section4CollectionDetail = ({
               product.primaryImage ||
               product.thumbnail ||
               product.featuredImage ||
-              "/collections/collectionDetail/collectionDetail_more.png";
+              "collections/collectionDetail/collectionDetail_more.png";
 
             return {
               id: product.id,
@@ -176,7 +177,7 @@ const Section4CollectionDetail = ({
       .map((_, index) => ({
         id: index + 1,
         name: "Lumina",
-        image: "/collections/collectionDetail/collectionDetail_more.png",
+        image: "collections/collectionDetail/collectionDetail_more.png",
       }));
   };
 
@@ -202,7 +203,7 @@ const Section4CollectionDetail = ({
         <div className="section4-collection-row section4-collection-row-4">
           {productCards.slice(0, 4).map((src, index) => (
             <div key={`row1-${index}`} className="section4-collection-item">
-              <img src={src} alt={`Gem ${index + 1}`} />
+              <MediaImage src={src} alt={`Gem ${index + 1}`} />
               <span className="section4-collection-label heading-3--no-margin">
                 Lumina
               </span>
@@ -215,7 +216,7 @@ const Section4CollectionDetail = ({
           <div className="section4-collection-grid-2x2">
             {productCards.slice(4, 8).map((src, index) => (
               <div key={`row2-${index}`} className="section4-collection-item">
-                <img src={src} alt={`Gem ${index + 5}`} />
+                <MediaImage src={src} alt={`Gem ${index + 5}`} />
                 <span className="section4-collection-label heading-3--no-margin">
                   Lumina
                 </span>
@@ -223,7 +224,7 @@ const Section4CollectionDetail = ({
             ))}
           </div>
           <div className="section4-collection-item section4-collection-item-large">
-            <img src={modelImage} alt="Model showcase" />
+            <MediaImage src={modelImage} alt="Model showcase" />
           </div>
         </div>
 
@@ -231,7 +232,7 @@ const Section4CollectionDetail = ({
         <div className="section4-collection-row section4-collection-row-4">
           {productCards.slice(8, 12).map((src, index) => (
             <div key={`row3-${index}`} className="section4-collection-item">
-              <img src={src} alt={`Gem ${index + 9}`} />
+              <MediaImage src={src} alt={`Gem ${index + 9}`} />
               <span className="section4-collection-label heading-3--no-margin">
                 Lumina
               </span>

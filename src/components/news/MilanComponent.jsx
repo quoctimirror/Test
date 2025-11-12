@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import "./MilanComponent.css";
 import "../../styles/grid-system.css";
 import ArrowButton from "@components/common/button/ArrowButton";
+import MediaImage from "@components/common/media/MediaImage";
 
 const MilanComponent = () => {
   const heroRef = useRef(null);
@@ -730,8 +731,8 @@ const MilanComponent = () => {
             </p>
           </div>
           <div className="milan-hero-image">
-            <img
-              src="/news/milan/milan_news_1.png"
+            <MediaImage
+              src="news/milan/milan_news_1.png"
               alt="Digital Jewelry Week Milan"
             />
           </div>
@@ -755,8 +756,8 @@ const MilanComponent = () => {
 
           {/* Feature Image 1 */}
           <div className="milan-feature-image col-8 col-start-3">
-            <img
-              src="/news/milan/milan_news_2.png"
+            <MediaImage
+              src="news/milan/milan_news_2.png"
               alt="Digital Jewelry Experience"
             />
           </div>
@@ -793,26 +794,26 @@ const MilanComponent = () => {
               {[...Array(10)].map((_, setIndex) => (
                 <React.Fragment key={setIndex}>
                   <div className="milan-carousel-item">
-                    <img
-                      src="/news/milan/milan_news_3.png"
+                    <MediaImage
+                      src="news/milan/milan_news_3.png"
                       alt="Milan Experience 1"
                     />
                   </div>
                   <div className="milan-carousel-item">
-                    <img
-                      src="/news/milan/milan_news_4.png"
+                    <MediaImage
+                      src="news/milan/milan_news_4.png"
                       alt="Milan Experience 2"
                     />
                   </div>
                   <div className="milan-carousel-item">
-                    <img
-                      src="/news/milan/milan_news_5.png"
+                    <MediaImage
+                      src="news/milan/milan_news_5.png"
                       alt="Milan Experience 3"
                     />
                   </div>
                   <div className="milan-carousel-item">
-                    <img
-                      src="/news/milan/milan_news_6.png"
+                    <MediaImage
+                      src="news/milan/milan_news_6.png"
                       alt="Milan Experience 4"
                     />
                   </div>
@@ -855,20 +856,20 @@ const MilanComponent = () => {
               {[...Array(10)].map((_, setIndex) => (
                 <React.Fragment key={setIndex}>
                   <div className="milan-large-carousel-item">
-                    <img
-                      src="/news/milan/milan_news_7.png"
+                    <MediaImage
+                      src="news/milan/milan_news_7.png"
                       alt="Exhibition Space 1"
                     />
                   </div>
                   <div className="milan-large-carousel-item">
-                    <img
-                      src="/news/milan/milan_news_8.png"
+                    <MediaImage
+                      src="news/milan/milan_news_8.png"
                       alt="Exhibition Space 2"
                     />
                   </div>
                   <div className="milan-large-carousel-item">
-                    <img
-                      src="/news/milan/milan_news_9.png"
+                    <MediaImage
+                      src="news/milan/milan_news_9.png"
                       alt="Exhibition Space 3"
                     />
                   </div>
@@ -895,8 +896,8 @@ const MilanComponent = () => {
 
           {/* Final Image */}
           <div className="milan-final-image col-8 col-start-3">
-            <img
-              src="/news/milan/milan_news_10.png"
+            <MediaImage
+              src="news/milan/milan_news_10.png"
               alt="Digital Jewelry Week Milan 2025"
             />
           </div>

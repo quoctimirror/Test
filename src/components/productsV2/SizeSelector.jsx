@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MediaImage } from '@components/common/media';
 import './SizeSelector.css';
 import sizeConversionData from '../../assets/sizeConversionBoard.json';
 import CustomDropdown from './CustomDropdown';
@@ -78,8 +79,8 @@ const SizeSelector = ({ onClose, onSelectSize, selectedSize }) => {
                         height={32}
                         className="pv2-size-selector-close-btn"
                     >
-                        <img
-                            src="/universeSection/close-x-icon.svg"
+                        <MediaImage
+                            src="universeSection/close-x-icon.svg"
                             alt="Close"
                             width="14"
                             height="14"

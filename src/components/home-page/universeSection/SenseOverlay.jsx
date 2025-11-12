@@ -1,4 +1,5 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
+import { MediaImage } from '@components/common/media';
 import './SenseOverlay.css';
 import StarlightEffect from './StarlightEffect';
 import ShineGlassButton from '../../common/button/ShineGlassButton';
@@ -128,8 +129,8 @@ const SenseOverlay = ({ isVisible, onClose, origin }) => {
                     height={44}
                     className="sense-overlay__close-btn"
                 >
-                    <img
-                        src="/universeSection/close-x-icon.svg"
+                    <MediaImage
+                        src="universeSection/close-x-icon.svg"
                         alt="Close"
                         width="20"
                         height="20"

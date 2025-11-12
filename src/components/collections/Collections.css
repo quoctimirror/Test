@@ -100,7 +100,7 @@
 .collection-page .section-1 {
   min-height: 100vh;
   width: 100%;
-  background: lightgray url("/collections/orient.gif") no-repeat fixed center /
+  background: lightgray url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/collections/orient.gif") no-repeat fixed center /
     cover;
   position: relative;
 }

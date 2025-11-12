@@ -91,7 +91,6 @@ const ProductsV3 = lazy(() => import("@components/productsV2/Products2.jsx"));
 const ProductsLeft = lazy(() =>
   import("@components/productsV2/ProductsLeft.jsx")
 );
-const BODMemberV2Page = lazy(() => import("@pages/BODMemberV2Page"));
 const ScavengerHunt = lazy(() =>
   import("@components/scavenger-hunt/ScavengerHunt")
 );
@@ -134,7 +133,6 @@ export default function AppRoutes() {
       `${ROUTES.MILAN_SUBMIT}/submit-success`,
       ROUTES.HOVER_EXPAND,
       ROUTES.PRODUCTS_LEFT,
-      ROUTES.BOD_MEMBER_V2,
       ROUTES.VIEW_360,
       ROUTES.USER_PROFILE,
       ROUTES.SCAVENGER_HUNT,
@@ -308,9 +306,6 @@ export default function AppRoutes() {
 
           {/* Test route for ProductsLeft */}
           <Route path={ROUTES.PRODUCTS_LEFT} element={<ProductsLeft />} />
-
-          {/* Test route for BODMemberV2 */}
-          <Route path={ROUTES.BOD_MEMBER_V2} element={<BODMemberV2Page />} />
 
           <Route path={ROUTES.VIEW_360} element={<View360 />} />
 

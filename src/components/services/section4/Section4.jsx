@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
+import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 import "./Section4.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
@@ -258,8 +259,8 @@ const Section4 = () => {
               opacity: scrollProgress < 0.35 ? 1 - scrollProgress * 2.86 : 0,
             }}
           >
-            <img
-              src="/services/b2f5b664-7235-4fe3-b721-c19450d3518a.png"
+            <MediaImage
+              src="services/b2f5b664-7235-4fe3-b721-c19450d3518a.png"
               alt="Return & Exchange"
             />
           </div>
@@ -281,7 +282,7 @@ const Section4 = () => {
                   : 1 - (scrollProgress - 0.7) * 3.33,
             }}
           >
-            <img src="/services/img_2_section_3.jpg" alt="Sizing Guide" />
+            <MediaImage src="services/img_2_section_3.jpg" alt="Sizing Guide" />
           </div>
           <div
             className="section4-image-layer section4-image-3"
@@ -292,7 +293,7 @@ const Section4 = () => {
               opacity: scrollProgress > 0.7 ? (scrollProgress - 0.7) * 3.33 : 0,
             }}
           >
-            <img src="/services/img_2_section_2.jpg" alt="Warranty & Info" />
+            <MediaImage src="services/img_2_section_2.jpg" alt="Warranty & Info" />
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import MediaImage from "@components/common/media/MediaImage";
 import "./NewCutComponent.css";
 
 const NewCutComponent = () => {
@@ -116,7 +117,7 @@ const NewCutComponent = () => {
             </p>
           </div>
           <div className="new-cut-hero-image">
-            <img src="/news/lumex_91.png" alt="Lumex-9 Ring" />
+            <MediaImage src="news/lumex_91.png" alt="Lumex-9 Ring" />
           </div>
         </div>
       </section>
