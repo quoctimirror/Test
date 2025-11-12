@@ -26,16 +26,17 @@ export const SHAPE_CONFIGS = {
   //   metal: 'Gold 24k',
   //   band: 'Single band'
   // },
+  // pear con loi
+  // Pear: {
+  //   shape: 'Pear-new',
+  //   modelId: 'AyjFZ7scSKWL2myrRhXeYg',
+  //   metal: 'Silver',
+  //   band: 'Single band'
+  // },
   Flower: {
     shape: 'Flower',
     modelId: 'HB3RidmJSdezIO1T2hdXcQ',
     metal: 'Gold 24k',
-    band: 'Single band'
-  },
-  Pear: {
-    shape: 'Pear-new',
-    modelId: 'bvWdCTwORE2wavn2XZc8Hw',
-    metal: 'Silver',
     band: 'Single band'
   },
   Fiston: {
