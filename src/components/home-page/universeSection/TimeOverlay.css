@@ -211,19 +211,19 @@
     .time-overlay__title {
         font-size: 60px;
         letter-spacing: -1.2px;
-        top: calc(50% - 10px);
+        top: calc(50% - 30px);
     }
 
     /* Starlight position for desktop */
     .time-overlay__starlight-down {
-        top: calc(50% - 40px);
+        top: calc(50% - 80px);
     }
 
     /* Bottom text font-size for desktop */
     .time-overlay__bottom-text {
-        width: 289px;
+        width: 220px;
         font-size: 14px;
-        top: calc(50% + 220px);
+        top: calc(50% + 180px);
     }
 }
 

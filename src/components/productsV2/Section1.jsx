@@ -1,6 +1,7 @@
 import './Section1.css';
 import ShineGlassButton from '../common/button/ShineGlassButton';
 import ProductsLeftDrive from './ProductsLeftDrive';
+import { PRODUCT_CONFIG } from './productConfig';
 
 const Section1 = ({ productConfig }) => {
     const handleScrollDown = () => {
@@ -10,7 +11,7 @@ const Section1 = ({ productConfig }) => {
         }
     };
 
-    const modelId = productConfig?.modelId || 'bvWdCTwORE2wavn2XZc8Hw';
+    const modelId = productConfig?.modelId || PRODUCT_CONFIG.defaultModelId;
 
     return (
         <div className="pv2-section1">

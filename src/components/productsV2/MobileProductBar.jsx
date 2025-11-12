@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { MediaImage } from '@components/common/media';
 import './MobileProductBar.css';
 import ShineGlassButton from '../common/button/ShineGlassButton';
 import MobileConfigModal from './MobileConfigModal';
 import greyCaretUp from '../../assets/images/grey-caret-up.svg';
+import { PRODUCT_CONFIG } from './productConfig';
 
 const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSize, onSizeChange }) => {
     const [showConfigModal, setShowConfigModal] = useState(false);
@@ -26,13 +26,13 @@ const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSiz
         <>
             <div className={`pv2-mobile-product-bar ${isVisible ? 'visible' : 'hidden'} ${showConfigModal ? 'fade-out' : ''}`}>
                 <div className="pv2-mobile-product-content">
-                    <MediaImage
+                    <img
                         src={greyCaretUp}
                         alt=""
                         className="pv2-mobile-bar-caret-up"
                         onClick={handleOpenModal}
                     />
-                    <h1 className="pv2-mobile-product-title heading-2--no-margin">Lumina Olivia 5</h1>
+                    <h1 className="pv2-mobile-product-title heading-2--no-margin">{PRODUCT_CONFIG.productInfo.name}</h1>
 
                     {/* Mobile: Single Order Now button */}
                     <div className="pv2-mobile-bar-order-btn pv2-mobile-only">

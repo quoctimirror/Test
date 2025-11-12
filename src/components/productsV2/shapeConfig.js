@@ -34,7 +34,7 @@ export const SHAPE_CONFIGS = {
   },
   Pear1: {
     shape: 'Pear1',
-    modelId: 'bvWdCTwORE2wavn2XZc8Hw',
+    modelId: 'BVCcaUMSTFKhP8qZ-ztWLQ',
     metal: 'Silver',
     band: 'Single band'
   },

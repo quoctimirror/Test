@@ -319,8 +319,8 @@ const Section3 = () => {
                   />
                 </div>
                 <div className="pv2-section3-carousel-item">
-                  <img
-                    src="/products/placeholder4.png"
+                  <MediaImage
+                    src="products/placeholder4.png"
                     alt="Product Image 4"
                   />
                 </div>
