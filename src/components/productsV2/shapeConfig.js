@@ -33,6 +33,12 @@ export const SHAPE_CONFIGS = {
   //   metal: 'Silver',
   //   band: 'Single band'
   // },
+  // Twin: {
+  //   shape: 'Twin',
+  //   modelId: 'RlO8g4dzRcm24LCTm7kafw',
+  //   metal: 'Gold 24k',
+  //   band: 'Single band'
+  // },
   Flower: {
     shape: 'Flower',
     modelId: 'HB3RidmJSdezIO1T2hdXcQ',
@@ -60,6 +66,12 @@ export const SHAPE_CONFIGS = {
   Trilogy: {
     shape: 'Trilogy',
     modelId: 'DIfwfXYbQgOYRGjaoL0k6g',
+    metal: 'Gold 24k',
+    band: 'Single band'
+  },
+  Heart: {
+    shape: 'Heart',
+    modelId: 'Omh82cayR9iO1uIBLaDFGQ',
     metal: 'Gold 24k',
     band: 'Single band'
   },
