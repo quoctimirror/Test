@@ -4,12 +4,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 export const optimizedTransitionUtils = {
   // Configuration
   config: {
-    duration: 0.6, // Giảm xuống 600ms cho mượt hơn
-    easing: "power2.inOut",
-    fadeEasing: "power2.out",
+    duration: 0.9, // Tăng lên 900ms cho mượt hơn
+    easing: "power1.out", // Easing tự nhiên hơn
+    fadeEasing: "power1.out",
     enableGPU: true,
     enableWillChange: true,
-    enableRAF: true,
+    enableRAF: true, // Bật lại RAF với easing cải thiện
     prefetchDelay: 100,
     // Performance settings
     isLowPerformance: false, // Will be auto-detected
@@ -403,6 +403,11 @@ export const optimizedTransitionUtils = {
         optimizedTransitionUtils.optimizations.enableGPU(newPageContainer);
       }
 
+      // Improved easing functions for smoother animation
+      const easeOutCubic = (t) => {
+        return 1 - Math.pow(1 - t, 3); // Smoother deceleration curve
+      };
+
       // Perform smooth animation - optimized
       const performAnimation = async () => {
         return new Promise((resolve) => {
@@ -412,25 +417,29 @@ export const optimizedTransitionUtils = {
 
             const animate = (currentTime) => {
               const elapsed = currentTime - startTime;
-              const progress = Math.min(elapsed / animationDuration, 1);
+              const rawProgress = Math.min(elapsed / animationDuration, 1);
+
+              // Apply cubic easing for ultra-smooth animation
+              const progress = easeOutCubic(rawProgress);
 
               // Current page: fade out + scale down
               // Combine opacity and transform in single operation for better performance
               const opacity = Math.max(0, 1 - progress * 1.2); // Faster fade
-              const scale = 1 - progress * 0.05; // Subtle scale: 1 -> 0.95 (giảm từ 0.08 xuống 0.05)
+              const scale = 1 - progress * 0.05; // Subtle scale: 1 -> 0.95
 
               currentPageWrapper.style.opacity = opacity;
               currentPageWrapper.style.transform = `scale(${scale})${
                 optimizedTransitionUtils.config.enableGPU ? " translateZ(0)" : ""
               }`;
 
-              // New page: slide up
-              const translateY = 100 * (1 - progress);
+              // New page: slide up with eased progress
+              // Round to avoid sub-pixel jank for ultra-smooth rendering
+              const translateY = Math.round((100 * (1 - progress)) * 100) / 100;
               newPageContainer.style.transform = `translateY(${translateY}%)${
                 optimizedTransitionUtils.config.enableGPU ? " translateZ(0)" : ""
               }`;
 
-              if (progress < 1) {
+              if (rawProgress < 1) {
                 optimizedTransitionUtils.state.rafId =
                   requestAnimationFrame(animate);
               } else {
@@ -693,7 +702,6 @@ export const optimizedTransitionUtils = {
       onStart = null,
       onComplete = null,
       showLoader = true,
-      duration = optimizedTransitionUtils.config.duration,
     } = options;
 
     optimizedTransitionUtils.state.isTransitioning = true;

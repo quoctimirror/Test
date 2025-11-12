@@ -1,7 +1,6 @@
 import "./BODMemberV4.css";
 import "../../../styles/grid-system.css";
 import { useState, useEffect, useRef } from "react";
-import { MediaImage } from "@components/common/media";
 
 const BODMemberV4 = () => {
   const [hoveredImage, setHoveredImage] = useState(null);
@@ -12,73 +11,84 @@ const BODMemberV4 = () => {
   const rowRefs = useRef([]);
   const sectionRef = useRef(null);
 
+  // Distance threshold for hover detection (px)
+  const HOVER_DISTANCE_THRESHOLD = 200;
+
   const teamMembers = [
     {
       name: "Kenneth Nguyen",
       position: "Chief Strategy Officer",
-      image: "about/BODMember/MrKhanh.svg",
+      image: "/about/BODMember/A KHÁNH.png",
     },
     {
       name: "Dang Hai Son",
       position: "Chief Executive Officer",
-      image: "about/BODMember/MrSon.svg",
+      image: "/about/BODMember/A SƠN.png",
     },
     {
       name: "Tran Kim Ngan",
       position: "CSIR",
-      image: "about/BODMember/MsNgan.svg",
+      image: "/about/BODMember/MsNgan.svg",
     },
     {
       name: "Tran Nhat Minh",
       position: "Chief Technology Officer",
-      image: "about/BODMember/MrMinh.svg",
+      image: "/about/BODMember/A MINH.png",
     },
     {
       name: "Dong Thi Phuong Uyen",
       position: "Chief Marketing Officer",
-      image: "about/BODMember/MsUyen.svg",
+      image: "/about/BODMember/C UYÊN 2.png",
     },
     {
       name: "Minh Khoa",
       position: "Art Director",
-      image: "about/BODMember/MrKhanh.svg",
+      image: "/about/BODMember/A KHOA.png",
     },
     {
       name: "Duy Khanh",
       position: "3D Jewelry Designer",
-      image: "about/BODMember/MrKhanh.svg",
+      image: "/about/BODMember/A KHÁNH.png",
     },
     {
       name: "Le Gia Quoc Ti",
       position: "Creative Developer",
-      image: "about/BODMember/MrKhanh.svg",
+      image: "/about/BODMember/TI.png",
     },
     {
       name: "Dang Phuong Nam",
       position: "Creative Developer",
-      image: "/about/BODMember/MrKhanh.svg",
+      image: "/about/BODMember/NAM.png",
     },
     {
       name: "Pham Ngoc Khanh Doan",
       position: "Designer",
-      image: "/about/BODMember/MrKhanh.svg",
+      image: "/about/BODMember/ĐOAN.png",
     },
     {
       name: "Nguyen Hien",
       position: "Designer",
-      image: "/about/BODMember/MrKhanh.svg",
+      image: "/about/BODMember/HIỀN.png",
     },
     {
       name: "An Khanh Nhat",
       position: "Designer",
-      image: "/about/BODMember/MrKhanh.svg",
+      image: "/about/BODMember/AN.png",
     },
     {
-      name: "Uy Nhi",
+      name: "Uy Nhu",
       position: "Designer",
-      image: "/about/BODMember/MrKhanh.svg",
+      image: "/about/BODMember/NHƯ.png",
     },
   ];
+
+  // Preload all images on mount để tránh delay khi hover
+  useEffect(() => {
+    teamMembers.forEach((member) => {
+      const img = new Image();
+      img.src = member.image;
+    });
+  }, []);
 
   // Check if section is visible in viewport
   useEffect(() => {
@@ -92,7 +102,7 @@ const BODMemberV4 = () => {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.2 }
     );
 
     const currentSection = sectionRef.current;
@@ -163,7 +173,7 @@ const BODMemberV4 = () => {
         }
       });
 
-      if (closestIndex !== null && closestDistance < 200) {
+      if (closestIndex !== null && closestDistance < HOVER_DISTANCE_THRESHOLD) {
         setActiveIndex(closestIndex);
         setHoveredImage(teamMembers[closestIndex].image);
       } else {
@@ -194,7 +204,14 @@ const BODMemberV4 = () => {
 
   return (
     <div className="bod-member-v4-section" ref={sectionRef}>
-      {/* Central image display */}
+      {/* Hidden images for preloading - ensures browser caches all images */}
+      <div style={{ display: "none" }} aria-hidden="true">
+        {teamMembers.map((member, idx) => (
+          <img key={idx} src={member.image} alt="" />
+        ))}
+      </div>
+
+      {/* Central image display - Load from /public folder only */}
       <div
         className={`central-member-image ${
           hoveredImage && isSectionVisible ? "visible" : ""
@@ -204,7 +221,7 @@ const BODMemberV4 = () => {
           transform: getTransform(),
         }}
       >
-        {hoveredImage && <MediaImage src={hoveredImage} alt="Team member" />}
+        {hoveredImage && <img src={hoveredImage} alt="Team member" />}
       </div>
 
       <div className="grid-container">

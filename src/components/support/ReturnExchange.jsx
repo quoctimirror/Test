@@ -8,7 +8,7 @@ const ReturnExchange = () => {
         <h3 className="heading-3--no-margin">
           Created by Science. Crafted for Eternity.
         </h3>
-        <p className="bodytext-3--no-margin">
+        <p className="bodytext-4--no-margin">
           Each Mirror piece is meticulously crafted with rare precision,
           intention, and limited availability. To preserve the integrity and
           exclusivity of our jewelry, we do not accept returns under any
@@ -21,20 +21,20 @@ const ReturnExchange = () => {
         <h3 className="heading-3--no-margin">1. International Orders</h3>
         <ul className="international-orders-list">
           <li>
-            <p className="bodytext-3--no-margin">
+            <p className="bodytext-4--no-margin">
               <span className="bodytext-2">
                 All international sales are final.
               </span>
             </p>
           </li>
           <li>
-            <p className="bodytext-3--no-margin">
+            <p className="bodytext-4--no-margin">
               <span className="bodytext-2">No exchanges or returns</span> are
               accepted for international shipments.
             </p>
           </li>
           <li>
-            <p className="bodytext-3--no-margin">
+            <p className="bodytext-4--no-margin">
               We strongly recommend booking{" "}
               <span className="bodytext-2">a virtual consultation</span> prior
               to purchase to ensure accurate sizing, style selection, and
@@ -55,7 +55,7 @@ const ReturnExchange = () => {
           </h4>
           <ul className="showroom-purchases-list">
             <li>
-              <p className="bodytext-3--no-margin">
+              <p className="bodytext-4--no-margin">
                 Exchanges may be{" "}
                 <span className="bodytext-2">
                   permitted within 3 days of purchase
@@ -64,31 +64,31 @@ const ReturnExchange = () => {
               </p>
             </li>
             <li>
-              <p className="bodytext-3--no-margin">
+              <p className="bodytext-4--no-margin">
                 Items must be returned{" "}
                 <span className="bodytext-2">in person</span> to the original
                 showroom.
               </p>
             </li>
             <li>
-              <p className="bodytext-3--no-margin">Products must be:</p>
+              <p className="bodytext-4--no-margin">Products must be:</p>
             </li>
             <ul>
               <li>
-                <p className="bodytext-3--no-margin">
+                <p className="bodytext-4--no-margin">
                   <span className="bodytext-2">Unworn and in original</span>,
                   pristine condition
                 </p>
               </li>
               <li>
-                <p className="bodytext-3--no-margin">
+                <p className="bodytext-4--no-margin">
                   Accompanied by all original packaging, certificates, and
                   documentation
                 </p>
               </li>
             </ul>
             <li>
-              <p className="bodytext-3--no-margin">
+              <p className="bodytext-4--no-margin">
                 No refunds or store credit will be issued.
               </p>
             </li>
@@ -101,7 +101,7 @@ const ReturnExchange = () => {
           </h4>
           <ul className="nationwide-shipping-list">
             <li>
-              <p className="bodytext-3--no-margin">
+              <p className="bodytext-4--no-margin">
                 Exchange requests{" "}
                 <span className="bodytext-2">
                   may be requested within 5 days
@@ -110,27 +110,27 @@ const ReturnExchange = () => {
               </p>
             </li>
             <li>
-              <p className="bodytext-3--no-margin">
+              <p className="bodytext-4--no-margin">
                 Returned items will undergo a quality review before exchange
                 approval.
               </p>
             </li>
             <li>
-              <p className="bodytext-3--no-margin">Items must be:</p>
+              <p className="bodytext-4--no-margin">Items must be:</p>
             </li>
             <ul>
               <li>
-                <p className="bodytext-3--no-margin">Unused and undamaged</p>
+                <p className="bodytext-4--no-margin">Unused and undamaged</p>
               </li>
               <li>
-                <p className="bodytext-3--no-margin">
+                <p className="bodytext-4--no-margin">
                   Returned with original packaging and all accompanying
                   documents
                 </p>
               </li>
             </ul>
             <li>
-              <p className="bodytext-3--no-margin">
+              <p className="bodytext-4--no-margin">
                 Customers are responsible for{" "}
                 <span className="bodytext-2">shipping and handling costs</span>{" "}
                 associated with the exchange.
@@ -144,25 +144,25 @@ const ReturnExchange = () => {
         <h3 className="heading-3--no-margin">3. Non-Exchangeable Items</h3>
         <ul className="non-exchangeable-items-list">
           <li>
-            <p className="bodytext-3--no-margin">Custom or engraved items</p>
+            <p className="bodytext-4--no-margin">Custom or engraved items</p>
           </li>
           <li>
-            <p className="bodytext-3--no-margin">
+            <p className="bodytext-4--no-margin">
               Earrings (for hygiene reasons)
             </p>
           </li>
           <li>
-            <p className="bodytext-3--no-margin">
+            <p className="bodytext-4--no-margin">
               Promotional or discounted items
             </p>
           </li>
           <li>
-            <p className="bodytext-3--no-margin">
+            <p className="bodytext-4--no-margin">
               Items without original certificates or packaging
             </p>
           </li>
           <li>
-            <p className="bodytext-3--no-margin">
+            <p className="bodytext-4--no-margin">
               Damaged, altered, or worn items
             </p>
           </li>
@@ -171,7 +171,7 @@ const ReturnExchange = () => {
 
       <section className="section why-sales-final-section">
         <h3 className="heading-3--no-margin">4. Why All Sales Are Final</h3>
-        <p className="bodytext-3--no-margin">
+        <p className="bodytext-4--no-margin">
           Every piece Mirror creates represents an exclusive release - crafted
           not only for beauty, but meaning. Limiting returns and minimizing
           exchanges ensure each customer receives a piece that has never been

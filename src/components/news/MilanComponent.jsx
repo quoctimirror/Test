@@ -303,7 +303,10 @@ const MilanComponent = () => {
 
         // Disable scroll behavior temporarily
         carousel.style.scrollBehavior = "auto";
-        carousel.scrollLeft = setSize * 5; // Start ở giữa 10 sets (set thứ 6)
+
+        // Center ảnh đầu tiên: vị trí giữa buffer - offset để center
+        const viewportWidth = window.innerWidth;
+        carousel.scrollLeft = setSize * 5 - (viewportWidth - itemWidth) / 2;
 
         // Reset all animation states
         velocity.current = 0;
@@ -495,7 +498,10 @@ const MilanComponent = () => {
         const setSize = (itemWidth + gap) * 3;
 
         carousel.style.scrollBehavior = "auto";
-        carousel.scrollLeft = setSize * 5;
+
+        // Center ảnh đầu tiên: vị trí giữa buffer - offset để center
+        const viewportWidth = window.innerWidth;
+        carousel.scrollLeft = setSize * 5 - (viewportWidth - itemWidth) / 2;
 
         largeVelocity.current = 0;
         isLargeDragging.current = false;

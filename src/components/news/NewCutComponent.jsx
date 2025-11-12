@@ -98,7 +98,7 @@ const NewCutComponent = () => {
   return (
     <div className="new-cut-page">
       {/* Hero Section */}
-      <section className="new-cut-hero" ref={heroRef} data-navbar-theme="blend">
+      <section className="new-cut-hero" ref={heroRef} data-navbar-theme="black">
         <div className="new-cut-hero-content">
           <div className="new-cut-hero-text">
             <div className="new-cut-hero-text-main">

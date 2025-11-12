@@ -10,7 +10,8 @@ const AllGems = () => {
 
   return (
     <div className="all-gems-page">
-      <div className="gems-header">
+      <div className="gems-header" data-navbar-theme="white">
+        <p className="gems-explore bodytext-4--no-margin">EXPLORE</p>
         <h1 className="gems-title heading-1--no-margin">OUR GEMS</h1>
         <p className="gems-subtitle bodytext-4--no-margin">
           Mirror invites you to step into the era of personalized luxury. Each
@@ -20,7 +21,7 @@ const AllGems = () => {
         </p>
       </div>
 
-      <div className="gems-grid-container">
+      <div className="gems-grid-container" data-navbar-theme="black">
         {/* First row - 4 items */}
         <div className="gems-row gems-row-4">
           {productCards.slice(0, 4).map((src, index) => (

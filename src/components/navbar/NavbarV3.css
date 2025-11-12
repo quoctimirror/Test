@@ -1,0 +1,1656 @@
+/* CSS Custom Properties for rotating border effect */
+@property --angle-1 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -75deg;
+}
+
+@property --angle-2 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -45deg;
+}
+
+:root {
+  --anim--hover-time: 400ms;
+  --anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --border-width: 2px;
+}
+
+/* Navbar Liquid Glass Background */
+.navbar-v3-glass-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  z-index: 200;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Expanded state when menu or account dropdown is open */
+.navbar-v3-glass-background.expanded {
+  opacity: 1;
+}
+
+/* White background sweep animation from left to right - 26% width */
+.navbar-v3-glass-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 26%;
+  height: 100vh;
+  background: white;
+  z-index: 10;
+  transform: translateX(-100%);
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.navbar-v3-glass-background.expanded::before {
+  transform: translateX(0);
+}
+
+/* Liquid Glass Effect Layer - Distortion */
+.liquidGlass-v3-effect {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  filter: url(#navbar-glass-distortion);
+  overflow: hidden;
+}
+
+/* Liquid Glass Tint Layer - Color overlay */
+.liquidGlass-v3-tint {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.01);
+  transition: background 0.35s ease-out;
+}
+
+/* Liquid Glass Shine Layer - Glossy highlights */
+.liquidGlass-v3-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+    inset 0 -0.5px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Logo container riêng cho blend mode */
+.logo-v3-fixed-container {
+  position: fixed;
+  top: 23px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 201;
+  mix-blend-mode: difference;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Submit page: absolute on mobile/tablet (no sticky), fixed on desktop (prevent pin) */
+@media screen and (max-width: 1023px) {
+  body:has(.submit-page) .logo-v3-fixed-container,
+  body:has(.submit-page) .menu-v3-fixed-container,
+  body:has(.submit-page) .account-v3-fixed-container,
+  body:has(.submit-page) .immersive-v3-fixed-container,
+  body:has(.submit-page) .immersive-v3-border-container,
+  body:has(.submit-page) .immersive-v3-text-container {
+    position: absolute !important;
+  }
+}
+
+.logo-v3-fixed-container.no-click {
+  cursor: default;
+  pointer-events: none;
+}
+
+.logo-v3-fixed-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.logo-v3-fixed-container.no-blend .navbar-v3-logo-svg path {
+  fill: rgba(255, 255, 255, 1);
+}
+
+/* Scrolled state - white color during scroll-container section */
+.logo-v3-fixed-container.scrolled .navbar-v3-logo-svg {
+  filter: none !important;
+}
+
+.logo-v3-fixed-container.scrolled .navbar-v3-logo-svg path,
+.logo-v3-fixed-container.scrolled .navbar-v3-logo-svg g path,
+.logo-v3-fixed-container.scrolled .navbar-v3-logo-svg * {
+  fill: rgba(255, 255, 255, 1) !important;
+}
+
+/* Override the default white fill for scrolled state */
+.logo-v3-fixed-container.no-blend.scrolled .navbar-v3-logo-svg {
+  filter: none !important;
+}
+
+.logo-v3-fixed-container.no-blend.scrolled .navbar-v3-logo-svg path,
+.logo-v3-fixed-container.no-blend.scrolled .navbar-v3-logo-svg g path,
+.logo-v3-fixed-container.no-blend.scrolled .navbar-v3-logo-svg * {
+  fill: rgba(255, 255, 255, 1) !important;
+}
+
+.logo-v3-fixed-container .navbar-v3-logo-svg {
+  width: auto;
+  height: 32px;
+  display: block;
+}
+
+.logo-v3-fixed-container .navbar-v3-logo-svg path {
+  fill: white;
+}
+
+/* Submit page logo override - must be after default styles */
+.logo-v3-fixed-container.submit-page-logo {
+  mix-blend-mode: normal !important;
+}
+
+/* Desktop: black logo - invert white to black */
+@media screen and (min-width: 1024px) {
+  .logo-v3-fixed-container.submit-page-logo .navbar-v3-logo-svg {
+    filter: invert(1) !important;
+  }
+}
+
+/* Mobile and tablet: white logo - ensure white color */
+@media screen and (max-width: 1023px) {
+  .logo-v3-fixed-container.submit-page-logo .navbar-v3-logo-svg {
+    filter: brightness(0) invert(1) !important;
+  }
+}
+
+/* IntroSubmit section logo (in immersive showroom page) - same as submit page */
+.logo-v3-fixed-container.intro-submit-logo {
+  mix-blend-mode: normal !important;
+}
+
+/* Desktop: black logo - invert white to black */
+@media screen and (min-width: 1024px) {
+  .logo-v3-fixed-container.intro-submit-logo .navbar-v3-logo-svg {
+    filter: invert(1) !important;
+  }
+}
+
+/* Mobile and tablet: white logo - ensure white color */
+@media screen and (max-width: 1023px) {
+  .logo-v3-fixed-container.intro-submit-logo .navbar-v3-logo-svg {
+    filter: brightness(0) invert(1) !important;
+  }
+}
+
+/* Menu container với blend mode */
+.menu-v3-fixed-container {
+  position: fixed;
+  top: 11.5px;
+  left: 2.5%;
+  right: 2.5%;
+  z-index: 201;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  /* opacity: 1; */
+  color: rgba(255, 255, 255, 0.7); /* Start dimmed */
+  transition: opacity 0.3s ease;
+  height: 57px;
+  display: flex;
+  align-items: center;
+}
+
+.menu-v3-fixed-container:hover {
+  /* opacity: 1; */
+  color: rgba(255, 255, 255, 1); /* Full brightness */
+}
+
+.menu-v3-fixed-container.scrolled:hover {
+  color: rgba(255, 255, 255, 1) !important; /* White color when scrolled */
+}
+
+.menu-v3-fixed-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.menu-v3-fixed-container.no-blend .menu-v3-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.menu-v3-fixed-container.scrolled .menu-v3-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Account link container với blend mode */
+.account-v3-fixed-container {
+  position: fixed;
+  top: 11.5px;
+  right: calc(
+    2.5% + 242px + 48px
+  ); /* 2.5% (immersive margin) + 242px (button width) + 48px (gap) */
+  z-index: 201;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.account-v3-fixed-container:hover {
+  opacity: 1;
+}
+
+.account-v3-fixed-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.account-v3-fixed-container.no-blend .account-v3-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.account-v3-fixed-container.scrolled .account-v3-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Immersive button container KHÔNG có blend mode cho background */
+.immersive-v3-fixed-container {
+  position: fixed;
+  top: 12.5px;
+  right: 2.5%;
+  z-index: 201;
+  pointer-events: auto;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  /* opacity: 0.75; */
+  transition: opacity 0.3s ease;
+}
+
+/* .immersive-v3-fixed-container:hover {
+  opacity: 1;
+} */
+
+.menu-v3-container {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+}
+
+.menu-v3-container::after,
+.menu-v3-container::before {
+  display: none !important;
+}
+
+.menu-v3-button {
+  position: relative;
+  background: unset;
+  color: white;
+  border: none;
+  padding: 0;
+  pointer-events: none; /* Desktop: disable click, only hover works */
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 2;
+  transition: all 0.3s;
+  margin-left: 0;
+  opacity: 1;
+  gap: 10px;
+}
+
+.menu-v3-icon-container {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+
+.menu-v3-icon {
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  opacity: 1;
+  filter: brightness(0) invert(1);
+}
+
+.menu-v3-icon-close {
+  color: white;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5px;
+}
+
+/* Show close icon when menu is open */
+.menu-v3-container.menu-v3-open .menu-v3-icon {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.menu-v3-container.menu-v3-open .menu-v3-icon-close {
+  opacity: 1;
+  transform: rotate(0deg);
+  color: white;
+}
+
+/* Show close icon on hover (desktop only) */
+@media screen and (min-width: 1024px) {
+  .menu-v3-container:hover .menu-v3-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  .menu-v3-container:hover .menu-v3-icon-close {
+    opacity: 1;
+    transform: rotate(0deg);
+    color: white;
+  }
+}
+
+.menu-v3-fixed-container.scrolled .menu-v3-icon {
+  filter: brightness(0) invert(1) !important;
+}
+
+.menu-v3-fixed-container.scrolled .menu-v3-icon-close {
+  color: #fff !important;
+}
+
+.menu-v3-fixed-container.scrolled .menu-v3-container:hover .menu-v3-icon-close {
+  color: #fff !important;
+}
+
+.menu-v3-fixed-container.scrolled .menu-v3-container.menu-v3-open .menu-v3-icon-close {
+  color: #fff !important;
+}
+
+.menu-v3-text {
+  color: white;
+  letter-spacing: 1px;
+  text-align: center;
+  pointer-events: auto;
+  display: inline-block;
+}
+
+/* Show underline when menu is open */
+.menu-v3-container.menu-v3-open .menu-v3-text .underline-button-text::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.immersive-v3-button {
+  font-family: "BT Beau Sans", sans-serif;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 100px;
+  border: none;
+  pointer-events: auto;
+  /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05); */
+  color: transparent;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  text-transform: capitalize;
+  width: 242px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+  margin-right: 0;
+  /* CRITICAL: Tạo isolation để text không bị ảnh hưởng bởi backdrop-filter */
+  isolation: isolate;
+}
+
+/* Container riêng cho text với blend mode */
+.immersive-v3-text-container {
+  position: fixed;
+  top: 12.5px;
+  right: 2.5%;
+  width: 242px;
+  height: 55px;
+  z-index: 203; /* Cao nhất để ở trên cùng */
+  mix-blend-mode: difference;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.immersive-v3-text-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.immersive-v3-text-container.no-blend .immersive-v3-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.immersive-v3-text-container.scrolled .immersive-v3-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Border hover - rotating animation when hovering button */
+.immersive-v3-fixed-container:hover
+  ~ .immersive-v3-border-container
+  .immersive-v3-border::after {
+  --angle-1: -125deg;
+}
+
+.immersive-v3-fixed-container:active
+  ~ .immersive-v3-border-container
+  .immersive-v3-border::after {
+  --angle-1: -75deg;
+}
+
+/* Border hover - phải hover vào button background bên dưới */
+.immersive-v3-fixed-container:hover ~ .immersive-v3-border-container {
+  opacity: 1;
+}
+
+/* Text hover - phải hover vào button background bên dưới */
+.immersive-v3-fixed-container:hover ~ .immersive-v3-text-container {
+  opacity: 1;
+}
+
+/* Text element */
+.immersive-v3-text {
+  color: white;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* Container riêng cho border với blend mode */
+.immersive-v3-border-container {
+  position: fixed;
+  top: 12.5px;
+  right: 2.5%;
+  width: 242px;
+  height: 55px;
+  z-index: 202; /* Cao hơn button nhưng thấp hơn text */
+  mix-blend-mode: difference;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.immersive-v3-border-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.immersive-v3-border-container.no-blend .immersive-v3-border::after {
+  background: conic-gradient(
+    from var(--angle-1) at 50% 50%,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.3) 5% 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.3) 60% 95%,
+    rgba(255, 255, 255, 0.8)
+  );
+}
+
+.immersive-v3-border-container.scrolled .immersive-v3-border::after {
+  background: conic-gradient(
+    from var(--angle-1) at 50% 50%,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.3) 5% 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.3) 60% 95%,
+    rgba(255, 255, 255, 0.8)
+  ) !important;
+}
+
+/* Border element with rotating effect */
+.immersive-v3-border {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+  background: transparent;
+  padding: var(--border-width);
+  box-sizing: border-box;
+}
+
+/* Rotating border outline */
+.immersive-v3-border::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: 100px;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.3) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0.3) 60% 95%,
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  transition: all var(--anim--hover-time) var(--anim--hover-ease),
+    --angle-1 500ms ease;
+}
+
+.immersive-v3-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  /* Box-shadow removed - chỉ tăng background opacity khi hover */
+}
+
+.menu-v3-popup {
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  background: transparent;
+  padding: 36px 20px 20px 20px;
+  box-sizing: border-box;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  display: none;
+}
+
+.menu-v3-popup.active {
+  display: block;
+  transform: scaleY(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-v3-container:hover .menu-v3-button {
+  background: none;
+}
+
+.menu-v3-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.menu-v3-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-v3-popup .menu-v3-list li {
+  display: inline-block;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+/* Active menu item - show underline */
+.menu-v3-popup .menu-v3-list li.active .underline-button-text::after {
+  transform: scaleX(1) scaleY(0.75);
+  transform-origin: left center;
+}
+
+/* Hide account button in menu on desktop (when navbar account button is visible) */
+.menu-v3-popup .menu-v3-list li.account-v3-menu-item {
+  display: none;
+}
+
+.menu-v3-divider {
+  width: 18px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 1);
+  cursor: default !important;
+  margin: 0;
+}
+
+/* Xóa các class cũ không còn sử dụng */
+
+.navbar-v3-right {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  justify-self: end;
+}
+
+.account-v3-link {
+  color: white;
+  text-decoration: none;
+  background: none;
+  border: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  pointer-events: auto;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.account-v3-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
+}
+
+.account-v3-link:hover {
+  color: white;
+}
+
+.account-v3-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Re-enable mouse events for interactive areas */
+.navbar {
+  pointer-events: auto;
+}
+
+/* Media Queries for Responsive Design */
+
+/* Responsive Glass Background - Always 100vh with opacity fade */
+
+/* Tablet (426px-1023px) - Icon menu but keep immersive button */
+@media screen and (max-width: 1023px) {
+  /* Glassmorphism menu button for tablet */
+  .menu-v3-button {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    padding: 3px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto; /* Tablet: enable click */
+  }
+
+  .menu-v3-text {
+    display: none;
+  }
+
+  /* Hide immersive button in menu since main button is visible */
+  .immersive-v3-menu-item {
+    display: none !important;
+  }
+
+  /* Icon color white for tablet */
+  .menu-v3-icon {
+    filter: brightness(0) invert(1) !important;
+  }
+
+  .menu-v3-icon-close {
+    color: #fff !important;
+  }
+
+  /* Scrolled state for tablet menu button */
+  .menu-v3-fixed-container.scrolled .menu-v3-button {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  .menu-v3-fixed-container.scrolled .menu-v3-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  /* When menu is open on tablet */
+  .menu-v3-container.menu-v3-open .menu-v3-button {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  .menu-v3-container.menu-v3-open .menu-v3-icon-close {
+    color: #fff !important;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  /* Adjust immersive button position */
+  .immersive-v3-fixed-container {
+    /* top: 18px; */
+    right: 19px;
+    height: 49px;
+  }
+
+  .immersive-v3-text-container,
+  .immersive-v3-border-container {
+    right: 20px;
+  }
+
+  .account-v3-fixed-container {
+    right: calc(20px + 221px + 30px);
+  }
+
+  .menu-v3-fixed-container {
+    left: 20px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  /* Adjust button sizes and positions */
+  .immersive-v3-button {
+    width: 180px;
+    height: 50px;
+  }
+
+  .immersive-v3-text-container,
+  .immersive-v3-border-container {
+    width: 180px;
+    height: 50px;
+  }
+
+  .account-v3-fixed-container {
+    right: calc(20px + 180px + 25px);
+    height: 50px;
+  }
+
+  .menu-v3-fixed-container {
+    height: 50px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Mobile layout adjustments */
+  .logo-v3-fixed-container {
+    top: 20px;
+  }
+
+  .logo-v3-fixed-container .navbar-v3-logo-svg {
+    width: 130px;
+    height: 50px;
+  }
+
+  .menu-v3-fixed-container {
+    top: 20px;
+    height: 45px;
+  }
+
+  .immersive-v3-fixed-container {
+    top: 20px;
+    right: 15px;
+  }
+
+  .immersive-v3-button {
+    width: 150px;
+    height: 45px;
+  }
+
+  .immersive-v3-text-container,
+  .immersive-v3-border-container {
+    top: 20px;
+    right: 15px;
+    width: 150px;
+    height: 45px;
+  }
+
+  .account-v3-fixed-container {
+    display: none; /* Hide account link on mobile */
+  }
+
+  /* Show account button in menu when navbar account button is hidden */
+  .menu-v3-popup .menu-v3-list li.account-v3-menu-item {
+    display: inline-block !important;
+  }
+
+  .menu-v3-popup {
+    width: 90vw;
+    max-width: 400px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  /* Small mobile adjustments */
+  .logo-v3-fixed-container {
+    top: 27px;
+  }
+
+  .logo-v3-fixed-container .navbar-v3-logo-svg {
+    width: 90px;
+    height: 20px;
+  }
+
+  .menu-v3-fixed-container {
+    top: 15px;
+    left: 10px;
+    height: 40px;
+  }
+
+  .immersive-v3-fixed-container {
+    top: 15px;
+    right: 10px;
+    height: 40px;
+  }
+
+  .immersive-v3-button {
+    width: 120px;
+    height: 40px;
+  }
+
+  .immersive-v3-text-container,
+  .immersive-v3-border-container {
+    top: 15px;
+    right: 10px;
+    width: 120px;
+    height: 40px;
+  }
+
+  .menu-v3-popup {
+    width: 95vw;
+    max-width: 350px;
+  }
+}
+
+/* Account Container - Same pattern as menu */
+.account-v3-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.account-v3-button-wrapper {
+  pointer-events: auto;
+  z-index: 2;
+}
+
+/* Account Popup - Exact same style as menu-popup */
+.account-v3-popup {
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  background: transparent;
+  padding: 36px 20px 20px 20px;
+  box-sizing: border-box;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  display: none;
+}
+
+.account-v3-popup.active {
+  display: block;
+  transform: scaleY(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.account-v3-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.account-v3-user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.account-v3-user-info span {
+  color: white;
+}
+
+.account-v3-fixed-container.scrolled .account-v3-user-info span {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.admin-v3-badge {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.account-v3-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-v3-popup .account-v3-list li {
+  display: inline-block;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+/* Immersive showroom in menu - only show on mobile */
+.immersive-v3-menu-item {
+  display: none; /* Hidden by default */
+  width: fit-content;
+}
+
+/* Mobile menu overlay */
+.mobile-v3-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 110vh;
+  background: var(
+    --Gradient-5,
+    linear-gradient(180deg, #000 17.79%, #ec3667 55.29%, #f6f6f6 100%)
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+}
+
+/* Mobile specific styles */
+@media screen and (max-width: 600px) {
+  /* Hide immersive showroom button when width <= 600px */
+  .immersive-v3-fixed-container,
+  .immersive-v3-text-container,
+  .immersive-v3-border-container {
+    display: none;
+  }
+
+  /* Show immersive button in menu only when main button is hidden */
+  .immersive-v3-menu-item {
+    display: block !important;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  /* Move menu container to right on mobile */
+  .menu-v3-fixed-container {
+    left: auto;
+    right: 2.5%;
+    justify-content: flex-end;
+  }
+
+  /* Center align menu list text on mobile */
+  .menu-v3-popup .menu-v3-groups {
+    gap: 72px;
+    align-items: center;
+  }
+
+  .menu-v3-popup .menu-v3-list {
+    text-align: center;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .menu-v3-popup .menu-v3-list li {
+    text-align: center;
+    display: inline-block;
+    width: fit-content;
+  }
+
+  /* Adjust underline for menu text on mobile if shown */
+  .menu-v3-text::after {
+    bottom: -3px; /* 3px gap from text on mobile */
+    height: 1.5px; /* Thinner on mobile */
+  }
+  /* Show overlay only on mobile */
+  .mobile-v3-menu-overlay {
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Adjust menu popup for mobile with overlay */
+  .menu-v3-container.menu-v3-open .menu-v3-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    max-width: none;
+    background: transparent;
+    z-index: 202;
+    padding: 32px 0 20px 0;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Ensure menu button stays visible above overlay */
+  .menu-v3-fixed-container {
+    z-index: 203;
+  }
+
+  .menu-v3-text {
+    display: none;
+  }
+
+  .menu-v3-icon-container {
+    display: block;
+  }
+
+  .immersive-v3-fixed-container {
+    display: none;
+  }
+
+  .immersive-v3-text-container,
+  .immersive-v3-border-container {
+    display: none;
+  }
+
+  /* Glassmorphism menu button for mobile */
+  .menu-v3-button {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    padding: 3px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto; /* Mobile: enable click */
+  }
+
+  .menu-v3-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+  }
+
+  /* Scrolled state for mobile menu button */
+  .menu-v3-fixed-container.scrolled .menu-v3-button {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .menu-v3-fixed-container.scrolled .menu-v3-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  /* When menu is open on mobile */
+  .menu-v3-container.menu-v3-open .menu-v3-button {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .menu-v3-container.menu-v3-open .menu-v3-icon-close {
+    color: white !important;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  /* Tablet specific styles */
+
+  /* Center align menu list text on tablet */
+  .menu-v3-popup .menu-v3-groups {
+    gap: 72px;
+    align-items: center;
+  }
+
+  .menu-v3-popup .menu-v3-list {
+    text-align: center;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .menu-v3-popup .menu-v3-list li {
+    text-align: center;
+    display: inline-block;
+    width: fit-content;
+  }
+
+  /* Adjust underline for menu text on tablet */
+  .menu-v3-text::after {
+    bottom: -1px; /* Slightly closer for tablet */
+  }
+
+  /* Show overlay on tablet */
+  .mobile-v3-menu-overlay {
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  /* Adjust menu popup for tablet with overlay */
+  .menu-v3-container.menu-v3-open .menu-v3-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    max-width: none;
+    background: transparent;
+    z-index: 202;
+    padding: 32px 0 20px 0;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Ensure menu button stays visible above overlay */
+  .menu-v3-container.menu-v3-open .menu-v3-fixed-container {
+    z-index: 203;
+  }
+
+  .immersive-v3-button {
+    width: 216px;
+    height: 49px;
+  }
+
+  .immersive-v3-text-container,
+  .immersive-v3-border-container {
+    width: 216px;
+    height: 49px;
+  }
+
+  /* Hide account button on tablet */
+  .account-v3-fixed-container {
+    display: none;
+  }
+
+  /* Show account button in menu when navbar account button is hidden */
+  .menu-v3-popup .menu-v3-list li.account-v3-menu-item {
+    display: inline-block !important;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .menu-v3-icon-container {
+    display: none;
+  }
+
+  .menu-v3-text {
+    display: inline-block;
+  }
+
+  /* Hide immersive button in menu on desktop */
+  .immersive-v3-menu-item {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   NAVBAR THEME SYSTEM
+   Apply these classes dynamically based on section data attributes:
+   - data-navbar-theme="white" for white text/icons (dark backgrounds)
+   - data-navbar-theme="black" for black text/icons (light backgrounds)
+   - data-navbar-theme="blend" for mix-blend-mode (default)
+
+   Theme affects ALL navbar elements: logo, menu, account, immersive button
+======================================== */
+
+/* ========== LOGO THEME ========== */
+
+/* White Theme - White logo for dark background sections */
+.logo-v3-fixed-container.navbar-v3-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.logo-v3-fixed-container.navbar-v3-theme-white .navbar-v3-logo-svg {
+  filter: none !important;
+}
+
+.logo-v3-fixed-container.navbar-v3-theme-white .navbar-v3-logo-svg path {
+  fill: rgba(255, 255, 255, 1) !important;
+}
+
+/* Black Theme - Black logo for light background sections */
+.logo-v3-fixed-container.navbar-v3-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.logo-v3-fixed-container.navbar-v3-theme-black .navbar-v3-logo-svg {
+  filter: invert(1) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for logo */
+.logo-v3-fixed-container.navbar-v3-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* ========== MENU BUTTON THEME ========== */
+
+/* White Theme - White menu text and icons */
+.menu-v3-fixed-container.navbar-v3-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-white .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-white .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-icon {
+  filter: brightness(0) invert(1) !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-icon-close {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Black Theme - Black menu text and icons */
+.menu-v3-fixed-container.navbar-v3-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-black .underline-button-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-black .underline-button-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-icon {
+  filter: brightness(0) !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-icon-close {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for menu */
+.menu-v3-fixed-container.navbar-v3-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* ========== MENU HOVER/OPEN - Override theme to blend mode ========== */
+/* When menu is hovered or opened, force blend mode regardless of theme */
+
+.menu-v3-fixed-container:hover,
+.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) {
+  mix-blend-mode: difference !important;
+}
+
+/* Reset all text to white for blend mode */
+.menu-v3-fixed-container:hover .menu-v3-text,
+.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-text,
+.menu-v3-fixed-container:hover .underline-button-text,
+.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Reset all underlines to white for blend mode */
+.menu-v3-fixed-container:hover .underline-button-text::after,
+.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+  .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Reset icons to white for blend mode */
+.menu-v3-fixed-container:hover .menu-v3-icon,
+.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon {
+  filter: brightness(0) invert(1) !important;
+}
+
+.menu-v3-fixed-container:hover .menu-v3-icon-close,
+.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon-close {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Reset menu divider to white for blend mode */
+.menu-v3-fixed-container:hover .menu-v3-divider,
+.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-divider {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Menu button glassmorphism background theme (mobile/tablet) */
+@media screen and (max-width: 1023px) {
+  .menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-button {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  .menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-button:hover,
+  .menu-v3-fixed-container.navbar-v3-theme-white
+    .menu-v3-container.menu-v3-open
+    .menu-v3-button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+  }
+
+  .menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-button {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-button:hover,
+  .menu-v3-fixed-container.navbar-v3-theme-black
+    .menu-v3-container.menu-v3-open
+    .menu-v3-button {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(0, 0, 0, 0.35) !important;
+  }
+
+  /* Override to white when hovered/opened (for blend mode) */
+  .menu-v3-fixed-container:hover .menu-v3-button,
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-button {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  .menu-v3-fixed-container:hover .menu-v3-button:hover,
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-button,
+  .menu-v3-fixed-container .menu-v3-container.menu-v3-open .menu-v3-button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+  }
+}
+
+/* ========== ACCOUNT BUTTON THEME ========== */
+
+/* White Theme - White account text */
+.account-v3-fixed-container.navbar-v3-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.account-v3-fixed-container.navbar-v3-theme-white .account-v3-text,
+.account-v3-fixed-container.navbar-v3-theme-white .account-v3-button-wrapper {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.account-v3-fixed-container.navbar-v3-theme-white .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.account-v3-fixed-container.navbar-v3-theme-white .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Black Theme - Black account text */
+.account-v3-fixed-container.navbar-v3-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.account-v3-fixed-container.navbar-v3-theme-black .account-v3-text,
+.account-v3-fixed-container.navbar-v3-theme-black .account-v3-button-wrapper {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.account-v3-fixed-container.navbar-v3-theme-black .underline-button-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.account-v3-fixed-container.navbar-v3-theme-black .underline-button-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for account */
+.account-v3-fixed-container.navbar-v3-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* ========== ACCOUNT HOVER/OPEN - Override theme to blend mode ========== */
+/* When account is hovered or dropdown opened, force blend mode regardless of theme */
+
+.account-v3-fixed-container:hover,
+.account-v3-fixed-container:has(.account-v3-popup.active) {
+  mix-blend-mode: difference !important;
+}
+
+/* Reset all text to white for blend mode */
+.account-v3-fixed-container:hover .account-v3-text,
+.account-v3-fixed-container:has(.account-v3-popup.active) .account-v3-text,
+.account-v3-fixed-container:hover .underline-button-text,
+.account-v3-fixed-container:has(.account-v3-popup.active) .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Reset all underlines to white for blend mode */
+.account-v3-fixed-container:hover .underline-button-text::after,
+.account-v3-fixed-container:has(.account-v3-popup.active)
+  .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.account-v3-fixed-container:hover .account-v3-user-info span,
+.account-v3-fixed-container:has(.account-v3-popup.active) .account-v3-user-info span {
+  color: white !important;
+}
+
+/* Reset account divider to white for blend mode */
+.account-v3-fixed-container:hover .menu-v3-divider,
+.account-v3-fixed-container:has(.account-v3-popup.active) .menu-v3-divider {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* ========== IMMERSIVE BUTTON THEME ========== */
+
+/* White Theme - White text and border */
+.immersive-v3-text-container.navbar-v3-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-v3-text-container.navbar-v3-theme-white .immersive-v3-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.immersive-v3-border-container.navbar-v3-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-v3-border-container.navbar-v3-theme-white .immersive-v3-border::after {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.3) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0.3) 60% 95%,
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+}
+
+/* Black Theme - Black text and border */
+.immersive-v3-text-container.navbar-v3-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-v3-text-container.navbar-v3-theme-black .immersive-v3-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.immersive-v3-border-container.navbar-v3-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-v3-border-container.navbar-v3-theme-black .immersive-v3-border::after {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.3) 5% 40%,
+      rgba(0, 0, 0, 0.8) 50%,
+      rgba(0, 0, 0, 0.3) 60% 95%,
+      rgba(0, 0, 0, 0.8)
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for immersive button */
+.immersive-v3-text-container.navbar-v3-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+.immersive-v3-border-container.navbar-v3-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* Immersive button background theme - subtle tint changes */
+.immersive-v3-fixed-container .immersive-v3-button {
+  /* Default: white subtle background */
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.navbar-v3-theme-black
+  ~ .immersive-v3-border-container
+  ~ .immersive-v3-fixed-container
+  .immersive-v3-button,
+body:has(.navbar-v3-theme-black) .immersive-v3-button {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.navbar-v3-theme-black
+  ~ .immersive-v3-border-container
+  ~ .immersive-v3-fixed-container
+  .immersive-v3-button:hover,
+body:has(.navbar-v3-theme-black) .immersive-v3-button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.navbar-v3-theme-white
+  ~ .immersive-v3-border-container
+  ~ .immersive-v3-fixed-container
+  .immersive-v3-button,
+body:has(.navbar-v3-theme-white) .immersive-v3-button {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.navbar-v3-theme-white
+  ~ .immersive-v3-border-container
+  ~ .immersive-v3-fixed-container
+  .immersive-v3-button:hover,
+body:has(.navbar-v3-theme-white) .immersive-v3-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   NAVBARV3: DISABLE ALL HOVER EFFECTS FOR MENU
+   Only click interactions allowed
+   ======================================== */
+
+/* Disable menu container hover effects */
+.menu-v3-container:hover .menu-v3-icon {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: inherit !important;
+}
+
+.menu-v3-container:hover .menu-v3-icon-close {
+  opacity: 0 !important;
+  transform: none !important;
+  color: inherit !important;
+}
+
+.menu-v3-container:hover .menu-v3-button {
+  background: none !important;
+  transform: none !important;
+}
+
+.menu-v3-button:hover {
+  background: none !important;
+  transform: none !important;
+  border-color: inherit !important;
+}
+
+/* Disable hover for menu fixed container - only when menu is NOT open */
+.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) {
+  mix-blend-mode: inherit !important;
+}
+
+.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .menu-v3-text,
+.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .underline-button-text {
+  color: inherit !important;
+}
+
+.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .underline-button-text::after {
+  width: 0 !important;
+  background: inherit !important;
+}
+
+.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .menu-v3-icon {
+  filter: inherit !important;
+}
+
+.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .menu-v3-icon-close {
+  color: inherit !important;
+}
+
+.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .menu-v3-divider {
+  background: inherit !important;
+}
+
+/* Keep cursor pointer for clickability */
+.menu-v3-button {
+  cursor: pointer !important;
+}
+
+.menu-v3-text {
+  cursor: pointer !important;
+}
+
+/* End of NavbarV3 hover disable */

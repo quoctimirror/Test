@@ -14,12 +14,29 @@
   background: rgba(246, 246, 246, 1);
   box-sizing: border-box;
   position: relative;
-  overflow: hidden;
 }
 
 .horizontal-scroll-wrapper {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  /* Hide scrollbar but keep functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.horizontal-scroll-wrapper:active {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.horizontal-scroll-wrapper.dragging .product-card {
+  pointer-events: none;
 }
 
 .same-collection-grid-gsap {
@@ -113,7 +130,7 @@
   position: absolute;
   bottom: 24px;
   left: 24px;
-  color: rgba(255, 255, 255, 1) !important;
+  color: #000 !important;
   text-align: left;
   margin: 0 !important;
   z-index: 2;

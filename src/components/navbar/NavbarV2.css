@@ -1,0 +1,1759 @@
+/* NavbarV2 - Click-only version (No hover effects) */
+
+/* CSS Custom Properties for rotating border effect */
+@property --angle-1 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -75deg;
+}
+
+@property --angle-2 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -45deg;
+}
+
+:root {
+  --anim--hover-time: 400ms;
+  --anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --border-width: 2px;
+}
+
+/* Navbar Liquid Glass Background - Fixed 80px height */
+.navbar-v2-glass-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  z-index: 200;
+  pointer-events: none;
+  overflow: visible;
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.05), 0 0 20px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.5s ease-out;
+}
+
+/* Remove box-shadow when expanded */
+.navbar-v2-glass-background.expanded {
+  box-shadow: none;
+}
+
+/* Liquid Glass Effect Layer - Distortion (visible in top 80px) */
+.liquidGlass-v2-effect {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  filter: url(#navbar-glass-distortion);
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Liquid Glass Tint Layer - Color overlay (top 80px only) */
+.liquidGlass-v2-tint {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.01);
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Liquid Glass Shine Layer - Glossy highlights */
+.liquidGlass-v2-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+    inset 0 -0.5px 0 0 rgba(255, 255, 255, 0.2);
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Bottom gradient layer - always behind, shows through when top layer is masked */
+.navbar-v2-glass-background::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3;
+  background: linear-gradient(
+    180deg,
+    rgba(188, 34, 76, 0.05) 0%,
+    rgba(188, 34, 76, 0.1) 100%
+  );
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Top gradient layer - fades in when expanded */
+.navbar-v2-glass-background::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 4;
+  background: linear-gradient(180deg, #bb234c 0%, #000 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-out;
+}
+
+/* NavbarV2: Fade in full screen gradients + hide glass when expanded */
+.navbar-v2-glass-background.expanded::before {
+  opacity: 1;
+}
+
+.navbar-v2-glass-background.expanded::after {
+  opacity: 1;
+}
+
+.navbar-v2-glass-background.expanded .liquidGlass-v2-effect {
+  opacity: 0;
+}
+
+.navbar-v2-glass-background.expanded .liquidGlass-v2-tint {
+  opacity: 0;
+}
+
+.navbar-v2-glass-background.expanded .liquidGlass-v2-shine {
+  opacity: 0;
+}
+
+/* Logo container riêng cho blend mode */
+.logo-v2-fixed-container {
+  position: fixed;
+  top: 23px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 201;
+  mix-blend-mode: difference;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Submit page: absolute on mobile/tablet (no sticky), fixed on desktop (prevent pin) */
+@media screen and (max-width: 1023px) {
+  body:has(.submit-page) .logo-v2-fixed-container,
+  body:has(.submit-page) .menu-v2-fixed-container,
+  body:has(.submit-page) .account-v2-fixed-container,
+  body:has(.submit-page) .immersive-v2-fixed-container,
+  body:has(.submit-page) .immersive-v2-border-container,
+  body:has(.submit-page) .immersive-v2-text-container {
+    position: absolute !important;
+  }
+}
+
+.logo-v2-fixed-container.no-click {
+  cursor: default;
+  pointer-events: none;
+}
+
+.logo-v2-fixed-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.logo-v2-fixed-container.no-blend .navbar-v2-logo-svg path {
+  fill: rgba(255, 255, 255, 1);
+}
+
+/* Scrolled state - white color during scroll-container section */
+.logo-v2-fixed-container.scrolled .navbar-v2-logo-svg {
+  filter: none !important;
+}
+
+.logo-v2-fixed-container.scrolled .navbar-v2-logo-svg path,
+.logo-v2-fixed-container.scrolled .navbar-v2-logo-svg g path,
+.logo-v2-fixed-container.scrolled .navbar-v2-logo-svg * {
+  fill: rgba(255, 255, 255, 1) !important;
+}
+
+/* Override the default white fill for scrolled state */
+.logo-v2-fixed-container.no-blend.scrolled .navbar-v2-logo-svg {
+  filter: none !important;
+}
+
+.logo-v2-fixed-container.no-blend.scrolled .navbar-v2-logo-svg path,
+.logo-v2-fixed-container.no-blend.scrolled .navbar-v2-logo-svg g path,
+.logo-v2-fixed-container.no-blend.scrolled .navbar-v2-logo-svg * {
+  fill: rgba(255, 255, 255, 1) !important;
+}
+
+.logo-v2-fixed-container .navbar-v2-logo-svg {
+  width: auto;
+  height: 32px;
+  display: block;
+}
+
+.logo-v2-fixed-container .navbar-v2-logo-svg path {
+  fill: white;
+}
+
+/* Submit page logo override - must be after default styles */
+.logo-v2-fixed-container.submit-page-logo {
+  mix-blend-mode: normal !important;
+}
+
+/* Desktop: black logo - invert white to black */
+@media screen and (min-width: 1024px) {
+  .logo-v2-fixed-container.submit-page-logo .navbar-v2-logo-svg {
+    filter: invert(1) !important;
+  }
+}
+
+/* Mobile and tablet: white logo - ensure white color */
+@media screen and (max-width: 1023px) {
+  .logo-v2-fixed-container.submit-page-logo .navbar-v2-logo-svg {
+    filter: brightness(0) invert(1) !important;
+  }
+}
+
+/* IntroSubmit section logo (in immersive showroom page) - same as submit page */
+.logo-v2-fixed-container.intro-submit-logo {
+  mix-blend-mode: normal !important;
+}
+
+/* Desktop: black logo - invert white to black */
+@media screen and (min-width: 1024px) {
+  .logo-v2-fixed-container.intro-submit-logo .navbar-v2-logo-svg {
+    filter: invert(1) !important;
+  }
+}
+
+/* Mobile and tablet: white logo - ensure white color */
+@media screen and (max-width: 1023px) {
+  .logo-v2-fixed-container.intro-submit-logo .navbar-v2-logo-svg {
+    filter: brightness(0) invert(1) !important;
+  }
+}
+
+/* Menu container với blend mode */
+.menu-v2-fixed-container {
+  position: fixed;
+  top: 11.5px;
+  left: 2.5%;
+  right: 2.5%;
+  z-index: 201;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  /* opacity: 1; */
+  color: rgba(255, 255, 255, 0.7); /* Start dimmed */
+  transition: opacity 0.3s ease;
+  height: 57px;
+  display: flex;
+  align-items: center;
+}
+
+.menu-v2-fixed-container:hover {
+  /* opacity: 1; */
+  color: rgba(255, 255, 255, 1); /* Full brightness */
+}
+
+.menu-v2-fixed-container.scrolled:hover {
+  color: rgba(255, 255, 255, 1) !important; /* White color when scrolled */
+}
+
+.menu-v2-fixed-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.menu-v2-fixed-container.no-blend .menu-v2-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.menu-v2-fixed-container.scrolled .menu-v2-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Account link container với blend mode */
+.account-v2-fixed-container {
+  position: fixed;
+  top: 11.5px;
+  right: calc(
+    2.5% + 242px + 48px
+  ); /* 2.5% (immersive margin) + 242px (button width) + 48px (gap) */
+  z-index: 201;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.account-v2-fixed-container:hover {
+  opacity: 1;
+}
+
+.account-v2-fixed-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.account-v2-fixed-container.no-blend .account-v2-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.account-v2-fixed-container.scrolled .account-v2-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Immersive button container KHÔNG có blend mode cho background */
+.immersive-v2-fixed-container {
+  position: fixed;
+  top: 12.5px;
+  right: 2.5%;
+  z-index: 201;
+  pointer-events: auto;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  /* opacity: 0.75; */
+  transition: opacity 0.3s ease;
+}
+
+/* .immersive-v2-fixed-container:hover {
+  opacity: 1;
+} */
+
+.menu-v2-container {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+}
+
+.menu-v2-container::after,
+.menu-v2-container::before {
+  display: none !important;
+}
+
+.menu-v2-button {
+  position: relative;
+  background: unset;
+  color: white;
+  border: none;
+  padding: 0;
+  pointer-events: none; /* Desktop: disable click, only hover works */
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 2;
+  transition: all 0.3s;
+  margin-left: 0;
+  opacity: 1;
+  gap: 10px;
+}
+
+.menu-v2-icon-container {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+}
+
+.menu-v2-icon {
+  transition: all 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  opacity: 1;
+  filter: brightness(0) invert(1);
+}
+
+.menu-v2-icon-close {
+  color: white;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5px;
+}
+
+/* Show close icon when menu is open */
+.menu-v2-container.menu-v2-open .menu-v2-icon {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.menu-v2-container.menu-v2-open .menu-v2-icon-close {
+  opacity: 1;
+  transform: rotate(0deg);
+  color: white;
+}
+
+/* Show close icon on hover (desktop only) */
+@media screen and (min-width: 1024px) {
+  .menu-v2-container:hover .menu-v2-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  .menu-v2-container:hover .menu-v2-icon-close {
+    opacity: 1;
+    transform: rotate(0deg);
+    color: white;
+  }
+}
+
+.menu-v2-fixed-container.scrolled .menu-v2-icon {
+  filter: brightness(0) invert(1) !important;
+}
+
+.menu-v2-fixed-container.scrolled .menu-v2-icon-close {
+  color: #fff !important;
+}
+
+.menu-v2-fixed-container.scrolled .menu-v2-container:hover .menu-v2-icon-close {
+  color: #fff !important;
+}
+
+.menu-v2-fixed-container.scrolled
+  .menu-v2-container.menu-v2-open
+  .menu-v2-icon-close {
+  color: #fff !important;
+}
+
+.menu-v2-text {
+  color: white;
+  letter-spacing: 1px;
+  text-align: center;
+  pointer-events: auto;
+  display: inline-block;
+}
+
+.immersive-v2-button {
+  font-family: "BT Beau Sans", sans-serif;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 100px;
+  border: none;
+  pointer-events: auto;
+  /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 12px 6px rgba(255, 255, 255, 0.05); */
+  color: transparent;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  text-transform: capitalize;
+  width: 242px;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  position: relative;
+  overflow: hidden;
+  margin-right: 0;
+  /* CRITICAL: Tạo isolation để text không bị ảnh hưởng bởi backdrop-filter */
+  isolation: isolate;
+}
+
+/* Container riêng cho text với blend mode */
+.immersive-v2-text-container {
+  position: fixed;
+  top: 12.5px;
+  right: 2.5%;
+  width: 242px;
+  height: 55px;
+  z-index: 203; /* Cao nhất để ở trên cùng */
+  mix-blend-mode: difference;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.immersive-v2-text-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.immersive-v2-text-container.no-blend .immersive-v2-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.immersive-v2-text-container.scrolled .immersive-v2-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Border hover - rotating animation when hovering button */
+.immersive-v2-fixed-container:hover
+  ~ .immersive-v2-border-container
+  .immersive-v2-border::after {
+  --angle-1: -125deg;
+}
+
+.immersive-v2-fixed-container:active
+  ~ .immersive-v2-border-container
+  .immersive-v2-border::after {
+  --angle-1: -75deg;
+}
+
+/* Border hover - phải hover vào button background bên dưới */
+.immersive-v2-fixed-container:hover ~ .immersive-v2-border-container {
+  opacity: 1;
+}
+
+/* Text hover - phải hover vào button background bên dưới */
+.immersive-v2-fixed-container:hover ~ .immersive-v2-text-container {
+  opacity: 1;
+}
+
+/* Text element */
+.immersive-v2-text {
+  color: white;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* Container riêng cho border với blend mode */
+.immersive-v2-border-container {
+  position: fixed;
+  top: 12.5px;
+  right: 2.5%;
+  width: 242px;
+  height: 55px;
+  z-index: 202; /* Cao hơn button nhưng thấp hơn text */
+  mix-blend-mode: difference;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.immersive-v2-border-container.no-blend {
+  mix-blend-mode: normal;
+}
+
+.immersive-v2-border-container.no-blend .immersive-v2-border::after {
+  background: conic-gradient(
+    from var(--angle-1) at 50% 50%,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.3) 5% 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.3) 60% 95%,
+    rgba(255, 255, 255, 0.8)
+  );
+}
+
+.immersive-v2-border-container.scrolled .immersive-v2-border::after {
+  background: conic-gradient(
+    from var(--angle-1) at 50% 50%,
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.3) 5% 40%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.3) 60% 95%,
+    rgba(255, 255, 255, 0.8)
+  ) !important;
+}
+
+/* Border element with rotating effect */
+.immersive-v2-border {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+  background: transparent;
+  padding: var(--border-width);
+  box-sizing: border-box;
+}
+
+/* Rotating border outline */
+.immersive-v2-border::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: 100px;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.3) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0.3) 60% 95%,
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  transition: all var(--anim--hover-time) var(--anim--hover-ease),
+    --angle-1 500ms ease;
+}
+
+.immersive-v2-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  /* Box-shadow removed - chỉ tăng background opacity khi hover */
+}
+
+.menu-v2-popup {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+  transition: opacity 0.5s ease;
+  z-index: 201;
+  opacity: 0;
+  pointer-events: none;
+  display: none !important;
+  overflow: visible !important;
+}
+
+.menu-v2-popup.active {
+  display: flex !important;
+  opacity: 1;
+  pointer-events: auto;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Force white color for all buttons in menu popup */
+.menu-v2-popup .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v2-popup .menu-v2-list .underline-button .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+  transform: scaleX(0) scaleY(0.75) !important;
+  transform-origin: right center !important;
+  transition: transform 0.3s linear !important;
+}
+
+.menu-v2-container:hover .menu-v2-button {
+  background: none;
+}
+
+.menu-v2-groups {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 48px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+.menu-v2-list {
+  list-style: none;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+.menu-v2-popup .menu-v2-list li {
+  display: inline-block;
+  width: fit-content;
+  white-space: nowrap;
+  text-align: center;
+  padding: 12px 0;
+  position: relative;
+  z-index: 202;
+}
+
+/* Menu hover gradient overlay - positioned outside menu-v2-popup to avoid transform issues */
+.menu-hover-gradient-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  bottom: 0;
+  z-index: 200;
+  pointer-events: none;
+  /* Pink gradient overlay that visually replaces the red-black gradient below hover point */
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(188, 34, 76, 0.2) 20px,
+    rgba(188, 34, 76, 0.3) 50px,
+    rgba(188, 34, 76, 0.4) 80px,
+    rgba(188, 34, 76, 0.5) 120px,
+    rgba(188, 34, 76, 0.6) 200px,
+    rgba(188, 34, 76, 0.6) 100%
+  );
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: fadeInOverlay 0.3s ease;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Hover menu item - show underline */
+.menu-v2-popup
+  .menu-v2-list
+  li:hover
+  .underline-button
+  .underline-button-text::after {
+  transform: scaleX(1) scaleY(0.75) !important;
+  transform-origin: left center !important;
+}
+
+/* Active menu item - show underline */
+.menu-v2-popup
+  .menu-v2-list
+  li.active
+  .underline-button
+  .underline-button-text::after {
+  transform: scaleX(1) scaleY(0.75) !important;
+  transform-origin: left center !important;
+}
+
+/* Hide account button in menu on desktop (when navbar account button is visible) */
+.menu-v2-popup .menu-v2-list li.account-v2-menu-item {
+  display: none;
+}
+
+.menu-v2-divider {
+  width: 18px;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 1);
+  cursor: default !important;
+  margin: 0 auto;
+}
+
+/* Xóa các class cũ không còn sử dụng */
+
+.navbar-v2-right {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  justify-self: end;
+}
+
+.account-v2-link {
+  color: white;
+  text-decoration: none;
+  background: none;
+  border: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  pointer-events: auto;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.account-v2-link::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  bottom: -2px;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s ease-out;
+}
+
+.account-v2-link:hover {
+  color: white;
+}
+
+.account-v2-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Re-enable mouse events for interactive areas */
+.navbar-v2 {
+  pointer-events: auto;
+}
+
+/* Media Queries for Responsive Design */
+
+/* Responsive Glass Background - Fixed heights, gradient fades in */
+/* Tablet - Large (769px-1023px) */
+@media screen and (min-width: 769px) and (max-width: 1023px) {
+  .navbar-v2-glass-background {
+    height: 78px; /* immersive height: 49px at top default position */
+  }
+}
+
+/* Tablet - Medium (426px-768px) */
+@media screen and (min-width: 426px) and (max-width: 768px) {
+  .navbar-v2-glass-background {
+    height: 85px; /* button height: 45px, top: 20px => 20 + 45 + 20 = 85px */
+  }
+}
+
+/* Mobile - 425px and below */
+@media screen and (max-width: 425px) {
+  .navbar-v2-glass-background {
+    height: 70px; /* button height: 40px, top: 15px => 15 + 40 + 15 = 70px */
+  }
+}
+
+/* Tablet (426px-1023px) - Icon menu but keep immersive button */
+@media screen and (max-width: 1023px) {
+  /* Glassmorphism menu button for tablet */
+  .menu-v2-button {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    padding: 3px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto; /* Tablet: enable click */
+  }
+
+  .menu-v2-text {
+    display: none;
+  }
+
+  /* Hide immersive button in menu since main button is visible */
+  .immersive-v2-menu-item {
+    display: none !important;
+  }
+
+  /* Icon color white for tablet */
+  .menu-v2-icon {
+    filter: brightness(0) invert(1) !important;
+  }
+
+  .menu-v2-icon-close {
+    color: #fff !important;
+  }
+
+  /* Scrolled state for tablet menu button */
+  .menu-v2-fixed-container.scrolled .menu-v2-button {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  .menu-v2-fixed-container.scrolled .menu-v2-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  /* When menu is open on tablet */
+  .menu-v2-container.menu-v2-open .menu-v2-button {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  .menu-v2-container.menu-v2-open .menu-v2-icon-close {
+    color: #fff !important;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  /* Adjust immersive button position */
+  .immersive-v2-fixed-container {
+    /* top: 18px; */
+    right: 19px;
+    height: 49px;
+  }
+
+  .immersive-v2-text-container,
+  .immersive-v2-border-container {
+    right: 20px;
+  }
+
+  .account-v2-fixed-container {
+    right: calc(20px + 221px + 30px);
+  }
+
+  .menu-v2-fixed-container {
+    left: 20px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  /* Adjust button sizes and positions */
+  .immersive-v2-button {
+    width: 180px;
+    height: 50px;
+  }
+
+  .immersive-v2-text-container,
+  .immersive-v2-border-container {
+    width: 180px;
+    height: 50px;
+  }
+
+  .account-v2-fixed-container {
+    right: calc(20px + 180px + 25px);
+    height: 50px;
+  }
+
+  .menu-v2-fixed-container {
+    height: 50px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Mobile layout adjustments */
+  .logo-v2-fixed-container {
+    top: 20px;
+  }
+
+  .logo-v2-fixed-container .navbar-v2-logo-svg {
+    width: 130px;
+    height: 50px;
+  }
+
+  .menu-v2-fixed-container {
+    top: 20px;
+    height: 45px;
+  }
+
+  .immersive-v2-fixed-container {
+    top: 20px;
+    right: 15px;
+  }
+
+  .immersive-v2-button {
+    width: 150px;
+    height: 45px;
+  }
+
+  .immersive-v2-text-container,
+  .immersive-v2-border-container {
+    top: 20px;
+    right: 15px;
+    width: 150px;
+    height: 45px;
+  }
+
+  .account-v2-fixed-container {
+    display: none; /* Hide account link on mobile */
+  }
+
+  /* Show account button in menu when navbar account button is hidden */
+  .menu-v2-popup .menu-v2-list li.account-v2-menu-item {
+    display: inline-block !important;
+  }
+
+  .menu-v2-popup {
+    width: 90vw;
+    max-width: 400px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  /* Small mobile adjustments */
+  .logo-v2-fixed-container {
+    top: 27px;
+  }
+
+  .logo-v2-fixed-container .navbar-v2-logo-svg {
+    width: 90px;
+    height: 20px;
+  }
+
+  .menu-v2-fixed-container {
+    top: 15px;
+    left: 10px;
+    height: 40px;
+  }
+
+  .immersive-v2-fixed-container {
+    top: 15px;
+    right: 10px;
+    height: 40px;
+  }
+
+  .immersive-v2-button {
+    width: 120px;
+    height: 40px;
+  }
+
+  .immersive-v2-text-container,
+  .immersive-v2-border-container {
+    top: 15px;
+    right: 10px;
+    width: 120px;
+    height: 40px;
+  }
+
+  .menu-v2-popup {
+    width: 95vw;
+    max-width: 350px;
+  }
+}
+
+/* Account Container - Same pattern as menu */
+.account-v2-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.account-v2-button-wrapper {
+  pointer-events: auto;
+  z-index: 2;
+}
+
+/* Account Popup - Exact same style as menu-popup */
+.account-v2-popup {
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  background: transparent;
+  padding: 36px 20px 20px 20px;
+  box-sizing: border-box;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  display: none;
+}
+
+.account-v2-popup.active {
+  display: block;
+  transform: scaleY(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.account-v2-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.account-v2-user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.account-v2-user-info span {
+  color: white;
+}
+
+.account-v2-fixed-container.scrolled .account-v2-user-info span {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.admin-v2-badge {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.account-v2-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-v2-popup .account-v2-list li {
+  display: inline-block;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+/* Immersive showroom in menu - only show on mobile */
+.immersive-v2-menu-item {
+  display: none; /* Hidden by default */
+  width: fit-content;
+}
+
+/* Mobile menu overlay */
+.mobile-v2-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 110vh;
+  background: var(
+    --Gradient-5,
+    linear-gradient(180deg, #000 17.79%, #ec3667 55.29%, #f6f6f6 100%)
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+}
+
+/* Mobile specific styles */
+@media screen and (max-width: 600px) {
+  /* Hide immersive showroom button when width <= 600px */
+  .immersive-v2-fixed-container,
+  .immersive-v2-text-container,
+  .immersive-v2-border-container {
+    display: none;
+  }
+
+  /* Show immersive button in menu only when main button is hidden */
+  .immersive-v2-menu-item {
+    display: block !important;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  /* Move menu container to right on mobile */
+  .menu-v2-fixed-container {
+    left: auto;
+    right: 2.5%;
+    justify-content: flex-end;
+  }
+
+  /* Center align menu list text on mobile */
+  .menu-v2-popup .menu-v2-groups {
+    gap: 48px !important;
+    align-items: center !important;
+  }
+
+  .menu-v2-popup .menu-v2-list {
+    text-align: center;
+    align-items: center !important;
+    gap: 24px !important;
+  }
+
+  .menu-v2-popup .menu-v2-list li {
+    text-align: center;
+    display: inline-block;
+    width: fit-content;
+  }
+
+  /* Adjust underline for menu text on mobile if shown */
+  .menu-v2-text::after {
+    bottom: -3px; /* 3px gap from text on mobile */
+    height: 1.5px; /* Thinner on mobile */
+  }
+  /* Show overlay only on mobile */
+  .mobile-v2-menu-overlay {
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Adjust menu popup for mobile with overlay */
+  .menu-v2-container.menu-v2-open .menu-v2-popup {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: auto !important;
+    max-width: none !important;
+    background: transparent !important;
+    z-index: 202 !important;
+    padding: 0 !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  /* Ensure menu button stays visible above overlay */
+  .menu-v2-fixed-container {
+    z-index: 203;
+  }
+
+  .menu-v2-text {
+    display: none;
+  }
+
+  .menu-v2-icon-container {
+    display: block;
+  }
+
+  .immersive-v2-fixed-container {
+    display: none;
+  }
+
+  .immersive-v2-text-container,
+  .immersive-v2-border-container {
+    display: none;
+  }
+
+  /* Glassmorphism menu button for mobile */
+  .menu-v2-button {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    padding: 3px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto; /* Mobile: enable click */
+  }
+
+  .menu-v2-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+  }
+
+  /* Scrolled state for mobile menu button */
+  .menu-v2-fixed-container.scrolled .menu-v2-button {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+
+  .menu-v2-fixed-container.scrolled .menu-v2-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  /* When menu is open on mobile */
+  .menu-v2-container.menu-v2-open .menu-v2-button {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .menu-v2-container.menu-v2-open .menu-v2-icon-close {
+    color: white !important;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  /* Tablet specific styles */
+
+  /* Center align menu list text on tablet */
+  .menu-v2-popup .menu-v2-groups {
+    gap: 48px !important;
+    align-items: center !important;
+  }
+
+  .menu-v2-popup .menu-v2-list {
+    text-align: center;
+    align-items: center !important;
+    gap: 24px !important;
+  }
+
+  .menu-v2-popup .menu-v2-list li {
+    text-align: center;
+    display: inline-block;
+    width: fit-content;
+  }
+
+  /* Adjust underline for menu text on tablet */
+  .menu-v2-text::after {
+    bottom: -1px; /* Slightly closer for tablet */
+  }
+
+  /* Show overlay on tablet */
+  .mobile-v2-menu-overlay {
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  /* Adjust menu popup for tablet with overlay */
+  .menu-v2-container.menu-v2-open .menu-v2-popup {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: auto !important;
+    max-width: none !important;
+    background: transparent !important;
+    z-index: 202 !important;
+    padding: 0 !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  /* Ensure menu button stays visible above overlay */
+  .menu-v2-container.menu-v2-open .menu-v2-fixed-container {
+    z-index: 203;
+  }
+
+  .immersive-v2-button {
+    width: 216px;
+    height: 49px;
+  }
+
+  .immersive-v2-text-container,
+  .immersive-v2-border-container {
+    width: 216px;
+    height: 49px;
+  }
+
+  /* Hide account button on tablet */
+  .account-v2-fixed-container {
+    display: none;
+  }
+
+  /* Show account button in menu when navbar account button is hidden */
+  .menu-v2-popup .menu-v2-list li.account-v2-menu-item {
+    display: inline-block !important;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .menu-v2-icon-container {
+    display: none;
+  }
+
+  .menu-v2-text {
+    display: inline-block;
+  }
+
+  /* Hide immersive button in menu on desktop */
+  .immersive-v2-menu-item {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   NAVBAR THEME SYSTEM
+   Apply these classes dynamically based on section data attributes:
+   - data-navbar-theme="white" for white text/icons (dark backgrounds)
+   - data-navbar-theme="black" for black text/icons (light backgrounds)
+   - data-navbar-theme="blend" for mix-blend-mode (default)
+
+   Theme affects ALL navbar elements: logo, menu, account, immersive button
+======================================== */
+
+/* ========== LOGO THEME ========== */
+
+/* White Theme - White logo for dark background sections */
+.logo-v2-fixed-container.navbar-v2-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.logo-v2-fixed-container.navbar-v2-theme-white .navbar-v2-logo-svg {
+  filter: none !important;
+}
+
+.logo-v2-fixed-container.navbar-v2-theme-white .navbar-v2-logo-svg path {
+  fill: rgba(255, 255, 255, 1) !important;
+}
+
+/* Black Theme - Black logo for light background sections */
+.logo-v2-fixed-container.navbar-v2-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.logo-v2-fixed-container.navbar-v2-theme-black .navbar-v2-logo-svg {
+  filter: invert(1) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for logo */
+.logo-v2-fixed-container.navbar-v2-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* ========== MENU BUTTON THEME ========== */
+
+/* White Theme - White menu text and icons */
+.menu-v2-fixed-container.navbar-v2-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-white .menu-v2-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-white .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-white .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-white .menu-v2-icon {
+  filter: brightness(0) invert(1) !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-white .menu-v2-icon-close {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Black Theme - Black menu text and icons */
+.menu-v2-fixed-container.navbar-v2-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-black .menu-v2-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-black .underline-button-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-black .underline-button-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-black .menu-v2-icon {
+  filter: brightness(0) !important;
+}
+
+.menu-v2-fixed-container.navbar-v2-theme-black .menu-v2-icon-close {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for menu */
+.menu-v2-fixed-container.navbar-v2-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* ========== MENU HOVER/OPEN - Override theme to blend mode ========== */
+/* When menu is hovered or opened, force blend mode regardless of theme */
+
+/* NavbarV2: Force normal blend mode (no difference) when menu open */
+.menu-v2-fixed-container:hover,
+.menu-v2-fixed-container:has(.menu-v2-container.menu-v2-open) {
+  mix-blend-mode: normal !important;
+}
+
+/* Force white color when menu open */
+.menu-v2-fixed-container:hover .menu-v2-text,
+.menu-v2-fixed-container:has(.menu-v2-container.menu-v2-open) .menu-v2-text,
+.menu-v2-fixed-container:hover .underline-button-text,
+.menu-v2-fixed-container:has(.menu-v2-container.menu-v2-open)
+  .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Force white underlines when menu open */
+.menu-v2-fixed-container:hover .underline-button-text::after,
+.menu-v2-fixed-container:has(.menu-v2-container.menu-v2-open)
+  .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Force white icons when menu open */
+.menu-v2-fixed-container:hover .menu-v2-icon,
+.menu-v2-fixed-container:has(.menu-v2-container.menu-v2-open) .menu-v2-icon {
+  filter: brightness(0) invert(1) !important;
+}
+
+.menu-v2-fixed-container:hover .menu-v2-icon-close,
+.menu-v2-fixed-container:has(.menu-v2-container.menu-v2-open)
+  .menu-v2-icon-close {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Force white divider when menu open */
+.menu-v2-fixed-container:hover .menu-v2-divider,
+.menu-v2-fixed-container:has(.menu-v2-container.menu-v2-open) .menu-v2-divider {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Menu button glassmorphism background theme (mobile/tablet) */
+@media screen and (max-width: 1023px) {
+  .menu-v2-fixed-container.navbar-v2-theme-white .menu-v2-button {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  .menu-v2-fixed-container.navbar-v2-theme-white .menu-v2-button:hover,
+  .menu-v2-fixed-container.navbar-v2-theme-white
+    .menu-v2-container.menu-v2-open
+    .menu-v2-button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+  }
+
+  .menu-v2-fixed-container.navbar-v2-theme-black .menu-v2-button {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .menu-v2-fixed-container.navbar-v2-theme-black .menu-v2-button:hover,
+  .menu-v2-fixed-container.navbar-v2-theme-black
+    .menu-v2-container.menu-v2-open
+    .menu-v2-button {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(0, 0, 0, 0.35) !important;
+  }
+
+  /* Override to white when hovered/opened (for blend mode) */
+  .menu-v2-fixed-container:hover .menu-v2-button,
+  .menu-v2-fixed-container:has(.menu-v2-container.menu-v2-open)
+    .menu-v2-button {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  .menu-v2-fixed-container:hover .menu-v2-button:hover,
+  .menu-v2-fixed-container:has(.menu-v2-container.menu-v2-open) .menu-v2-button,
+  .menu-v2-fixed-container .menu-v2-container.menu-v2-open .menu-v2-button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+  }
+}
+
+/* ========== ACCOUNT BUTTON THEME ========== */
+
+/* White Theme - White account text */
+.account-v2-fixed-container.navbar-v2-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.account-v2-fixed-container.navbar-v2-theme-white .account-v2-text,
+.account-v2-fixed-container.navbar-v2-theme-white .account-v2-button-wrapper {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.account-v2-fixed-container.navbar-v2-theme-white .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.account-v2-fixed-container.navbar-v2-theme-white
+  .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Black Theme - Black account text */
+.account-v2-fixed-container.navbar-v2-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.account-v2-fixed-container.navbar-v2-theme-black .account-v2-text,
+.account-v2-fixed-container.navbar-v2-theme-black .account-v2-button-wrapper {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.account-v2-fixed-container.navbar-v2-theme-black .underline-button-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.account-v2-fixed-container.navbar-v2-theme-black
+  .underline-button-text::after {
+  background: rgba(0, 0, 0, 1) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for account */
+.account-v2-fixed-container.navbar-v2-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* ========== ACCOUNT HOVER/OPEN - Override theme to blend mode ========== */
+/* When account is hovered or dropdown opened, force blend mode regardless of theme */
+
+.account-v2-fixed-container:hover,
+.account-v2-fixed-container:has(.account-v2-popup.active) {
+  mix-blend-mode: difference !important;
+}
+
+/* Reset all text to white for blend mode */
+.account-v2-fixed-container:hover .account-v2-text,
+.account-v2-fixed-container:has(.account-v2-popup.active) .account-v2-text,
+.account-v2-fixed-container:hover .underline-button-text,
+.account-v2-fixed-container:has(.account-v2-popup.active)
+  .underline-button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Reset all underlines to white for blend mode */
+.account-v2-fixed-container:hover .underline-button-text::after,
+.account-v2-fixed-container:has(.account-v2-popup.active)
+  .underline-button-text::after {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.account-v2-fixed-container:hover .account-v2-user-info span,
+.account-v2-fixed-container:has(.account-v2-popup.active)
+  .account-v2-user-info
+  span {
+  color: white !important;
+}
+
+/* Reset account divider to white for blend mode */
+.account-v2-fixed-container:hover .menu-v2-divider,
+.account-v2-fixed-container:has(.account-v2-popup.active) .menu-v2-divider {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* ========== IMMERSIVE BUTTON THEME ========== */
+
+/* White Theme - White text and border */
+.immersive-v2-text-container.navbar-v2-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-v2-text-container.navbar-v2-theme-white .immersive-v2-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.immersive-v2-border-container.navbar-v2-theme-white {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-v2-border-container.navbar-v2-theme-white
+  .immersive-v2-border::after {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.3) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0.3) 60% 95%,
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+}
+
+/* Black Theme - Black text and border */
+.immersive-v2-text-container.navbar-v2-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-v2-text-container.navbar-v2-theme-black .immersive-v2-text {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.immersive-v2-border-container.navbar-v2-theme-black {
+  mix-blend-mode: normal !important;
+}
+
+.immersive-v2-border-container.navbar-v2-theme-black
+  .immersive-v2-border::after {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.3) 5% 40%,
+      rgba(0, 0, 0, 0.8) 50%,
+      rgba(0, 0, 0, 0.3) 60% 95%,
+      rgba(0, 0, 0, 0.8)
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) !important;
+}
+
+/* Blend Theme - Default mix-blend-mode for immersive button */
+.immersive-v2-text-container.navbar-v2-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+.immersive-v2-border-container.navbar-v2-theme-blend {
+  mix-blend-mode: difference !important;
+}
+
+/* Immersive button background theme - subtle tint changes */
+.immersive-v2-fixed-container .immersive-v2-button {
+  /* Default: white subtle background */
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.navbar-v2-theme-black
+  ~ .immersive-v2-border-container
+  ~ .immersive-v2-fixed-container
+  .immersive-v2-button,
+body:has(.navbar-v2-theme-black) .immersive-v2-button {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.navbar-v2-theme-black
+  ~ .immersive-v2-border-container
+  ~ .immersive-v2-fixed-container
+  .immersive-v2-button:hover,
+body:has(.navbar-v2-theme-black) .immersive-v2-button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.navbar-v2-theme-white
+  ~ .immersive-v2-border-container
+  ~ .immersive-v2-fixed-container
+  .immersive-v2-button,
+body:has(.navbar-v2-theme-white) .immersive-v2-button {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.navbar-v2-theme-white
+  ~ .immersive-v2-border-container
+  ~ .immersive-v2-fixed-container
+  .immersive-v2-button:hover,
+body:has(.navbar-v2-theme-white) .immersive-v2-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   NavbarV2: Menu button styles
+   ======================================== */
+
+/* Keep cursor pointer for clickability */
+.menu-v2-button {
+  cursor: pointer !important;
+}
+
+.menu-v2-text {
+  cursor: pointer !important;
+}
+
+/* Keep only click (menu-open) styles active */
+.menu-v2-container.menu-v2-open .menu-v2-icon {
+  opacity: 0 !important;
+}
+
+.menu-v2-container.menu-v2-open .menu-v2-icon-close {
+  opacity: 1 !important;
+  color: #fff !important;
+}
+
+/* End of NavbarV2 custom overrides */

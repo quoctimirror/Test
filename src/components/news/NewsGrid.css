@@ -129,11 +129,6 @@
 /* Disabled state */
 .news-item:has(.news-item-button:disabled) {
   cursor: default;
-  opacity: 0.6;
-}
-
-.news-item:has(.news-item-button:disabled):hover {
-  opacity: 0.6;
 }
 
 .view-more-section {

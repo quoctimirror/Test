@@ -57,12 +57,12 @@ export const useNavbarTheme = () => {
       const sections = document.querySelectorAll("[data-navbar-theme]");
       if (sections.length === 0) return;
 
-      const navbarPosition = 80; // Navbar position from top
+      const navbarPosition = 40; // Navbar position from top
       let activeSection = null;
 
       // Find the LAST section whose bottom hasn't passed the navbar yet
       // This means: keep the current section's theme until we completely scroll past it
-      sections.forEach(section => {
+      sections.forEach((section) => {
         const rect = section.getBoundingClientRect();
 
         // If section's bottom is still below navbar position,
@@ -81,7 +81,7 @@ export const useNavbarTheme = () => {
         let closestSection = null;
         let minDistance = Infinity;
 
-        sections.forEach(section => {
+        sections.forEach((section) => {
           const rect = section.getBoundingClientRect();
 
           // Find section that's coming up (top is below navbar)
@@ -141,7 +141,10 @@ export const useNavbarTheme = () => {
         intersectionObserver.disconnect();
       }
 
-      const newObserver = new IntersectionObserver(observerCallback, observerOptions);
+      const newObserver = new IntersectionObserver(
+        observerCallback,
+        observerOptions
+      );
 
       sections.forEach((section) => {
         newObserver.observe(section);
@@ -152,7 +155,7 @@ export const useNavbarTheme = () => {
 
     // Setup with fewer retries for faster initialization
     const retryDelays = [0, 100, 300];
-    retryDelays.forEach(delay => {
+    retryDelays.forEach((delay) => {
       const timeoutId = setTimeout(() => {
         intersectionObserver = setupIntersectionObserver();
       }, delay);
@@ -182,7 +185,7 @@ export const useNavbarTheme = () => {
     });
 
     // Add scroll listener for instant feedback
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     // Initial check immediately
     checkVisibleSection();
@@ -193,7 +196,7 @@ export const useNavbarTheme = () => {
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
       }
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
       if (intersectionObserver) {
         intersectionObserver.disconnect();
       }
