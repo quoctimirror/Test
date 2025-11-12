@@ -352,7 +352,7 @@
     /* StarlightEffect pointing down - copy from desktop */
     .time-overlay__starlight-down {
         position: fixed;
-        top: calc(50% - 110px);
+        top: calc(50% - 150px);
         left: 50%;
         transform: translateX(-50%);
         z-index: 100;
@@ -362,10 +362,10 @@
     /* Bottom text section - copy from desktop */
     .time-overlay__bottom-text {
         position: absolute;
-        top: calc(50% + 150px);
+        top: calc(50% + 90px);
         left: 50%;
         transform: translateX(-50%);
-        width: 284px;
+        width: 200px;
         height: 72px;
         flex-shrink: 0;
         color: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
@@ -425,8 +425,8 @@
     }
 
     .time-overlay__bottom-text {
-        top: calc(50% + 115px);
-        width: 250px;
+        top: calc(50% + 40px);
+        width: 160px;
         height: 72px;
         text-align: center;
         line-height: 100%;

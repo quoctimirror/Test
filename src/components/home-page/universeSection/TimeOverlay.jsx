@@ -7,6 +7,9 @@ import DropletTimeSVG from './svg/DropletTimeSVG';
 
 const TimeOverlay = ({ isVisible, onClose, origin }) => {
     const [isClosing, setIsClosing] = useState(false);
+    const [starlightHeight, setStarlightHeight] = useState(
+        typeof window !== 'undefined' && window.innerWidth <= 480 ? 80 : 160
+    );
 
     const closeTimeoutRef = useRef(null);
 
@@ -23,6 +26,15 @@ const TimeOverlay = ({ isVisible, onClose, origin }) => {
             handleClose();
         }
     }, [handleClose]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setStarlightHeight(window.innerWidth <= 480 ? 120 : 160);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         if (isVisible) {
@@ -103,7 +115,7 @@ const TimeOverlay = ({ isVisible, onClose, origin }) => {
                 <DropletTimeSVG className="time-overlay__svg" />
                 <h2 className="time-overlay__title heading2--no-margin">Time</h2>
                 <div className="time-overlay__starlight-down">
-                    <StarlightEffect direction="falling" height={160} />
+                    <StarlightEffect direction="falling" height={starlightHeight} />
                 </div>
                 <div className="time-overlay__bottom-text">
                     <span className="bodytext-6--no-margin">

@@ -8,36 +8,44 @@ export const SHAPE_CONFIGS = {
     metal: 'Platinum',
     band: 'Double band'
   },
-  Pear: {
-    shape: 'Pear',
-    modelId: 'OPdq2RjLTsikXl71-YvsJg',
-    metal: 'Silver',
-    band: 'Single band'
-  },
+  // Pear: {
+  //   shape: 'Pear',
+  //   modelId: 'OPdq2RjLTsikXl71-YvsJg',
+  //   metal: 'Silver',
+  //   band: 'Single band'
+  // },
   Emerald: {
     shape: 'Emerald',
     modelId: 'cpHdSLPBRlOGSeRzDiA77Q',
     metal: 'Rose Gold',
     band: 'Single band'
   },
-  Fiston: {
-    shape: 'Fiston',
-    modelId: 'eOcY7UV6TMWbra25hv9dwQ',
-    metal: 'Gold 24k',
-    band: 'Single band'
-  },
+  // Fiston: {
+  //   shape: 'Fiston',
+  //   modelId: 'eOcY7UV6TMWbra25hv9dwQ',
+  //   metal: 'Gold 24k',
+  //   band: 'Single band'
+  // },
   Flower: {
     shape: 'Flower',
     modelId: 'HB3RidmJSdezIO1T2hdXcQ',
     metal: 'Gold 24k',
     band: 'Single band'
   },
-  Pear1: {
-    shape: 'Pear1',
+  Pear: {
+    shape: 'Pear-new',
     modelId: 'BVCcaUMSTFKhP8qZ-ztWLQ',
     metal: 'Silver',
     band: 'Single band'
   },
+  Fiston: {
+    shape: 'Fiston-new',
+    modelId: 'BVCcaUMSTFKhP8qZ-ztWLQ',
+    metal: 'Gold 24k',
+    band: 'Single band'
+  },
+  MyFav
+
 };
 
 // Get list of available shapes
