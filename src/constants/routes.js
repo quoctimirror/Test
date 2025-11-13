@@ -49,6 +49,7 @@ export const ROUTES = {
   SCROLL_EFFECT_TEST_V2: "/test-scroll-effect-v2",
   NAVBAR_V2_TEST: "/test-navbar-v2",
   NAVBAR_V3_TEST: "/test-navbar-v3",
+  TEST_VIEWER: "/test-ijewel-viewer",
 
   // Dashboard routes (keep original - protected by auth)
   DASHBOARD_ADMIN: "/dashboard/admin",
