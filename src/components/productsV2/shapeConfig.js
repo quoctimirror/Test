@@ -88,5 +88,5 @@ export const AVAILABLE_SHAPES = Object.keys(SHAPE_CONFIGS);
 
 // Get configuration for a specific shape
 export const getShapeConfig = (shapeName) => {
-  return SHAPE_CONFIGS[shapeName] || SHAPE_CONFIGS.Trilogy; // Default to Trilogy
+  return SHAPE_CONFIGS[shapeName] || SHAPE_CONFIGS.Example; // Default to Trilogy
 };
