@@ -261,7 +261,6 @@
 
 .pv2-size-row {
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .pv2-size-row .pv2-size-cell {
@@ -293,6 +292,15 @@
 
 .pv2-size-row:first-child.selected .pv2-size-cell {
     border-top: 1px solid #BC224C;
+}
+
+/* Fix double border when selected and hovered rows are adjacent */
+.pv2-size-row.selected + .pv2-size-row:hover .pv2-size-cell {
+    border-top: none;
+}
+
+.pv2-size-row:hover + .pv2-size-row.selected .pv2-size-cell {
+    border-top: none;
 }
 
 .pv2-size-cell {

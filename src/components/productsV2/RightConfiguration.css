@@ -20,7 +20,6 @@
 
 .pv2-product-info {
     width: 100%;
-    max-width: 400px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -343,6 +342,7 @@
 
 .pv2-order-btn:hover {
     background: rgba(255, 255, 255, 0.95);
+    color: rgba(0, 0, 0, 0.75);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
@@ -365,6 +365,18 @@
     .pv2-right-configuration {
         display: block;
         background: #F6F6F6;
+        padding-left: 48px;
+        padding-right: 48px;
+    }
+
+    .pv2-product-info {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .pv2-config-container {
+        width: 100%;
+        margin: 0 auto;
     }
 
     .pv2-product-title {
