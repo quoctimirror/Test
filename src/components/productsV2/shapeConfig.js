@@ -75,6 +75,12 @@ export const SHAPE_CONFIGS = {
     metal: 'Gold 24k',
     band: 'Single band'
   },
+  Example: {
+    shape: 'Example',
+    modelId: 'RUsrBi-vQey2vExitZOYig',
+    metal: 'Gold 24k',
+    band: 'Single band'
+  },
 };
 
 // Get list of available shapes
