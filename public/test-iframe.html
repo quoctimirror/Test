@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iJewel Viewer - iFrame Embed</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe
+    id="ijewel-iframe"
+    title="demo_tryon.glb"
+    frameborder="0"
+    mozallowfullscreen="true"
+    webkitallowfullscreen="true"
+    xr-spatial-tracking
+    execution-while-out-of-viewport
+    execution-while-not-rendered
+    web-share
+    allow="camera; autoplay; fullscreen; xr-spatial-tracking; web-share"
+    src="https://drive.ijewel3d.com/drive/files/RUsrBi-vQey2vExitZOYig/embedded?slug=RUsrBi-vQey2vExitZOYig&isRemoveHologram=true&isRemoveLogo=true&isRemoveLogoLink=true&isAutoplay=true&isConfigurator=false&isEnabledZoom=false&isShare=false&isResetView=false&isRotateCamera=false&isPlayCameraViews=false&isPlayAnimations=false&isFullScreen=false">
+  </iframe>
+
+  <script>
+    // Try to auto-click the play button inside iframe if it exists
+    window.addEventListener('load', () => {
+      const iframe = document.getElementById('ijewel-iframe');
+
+      // Try to access iframe content and click play button
+      setTimeout(() => {
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          const playButton = iframeDoc.querySelector('button[aria-label="Play"], .play-button, [class*="play"]');
+          if (playButton) {
+            playButton.click();
+            console.log('Auto-clicked play button');
+          }
+        } catch (e) {
+          console.log('Cannot auto-click due to CORS:', e.message);
+        }
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

@@ -42,7 +42,7 @@ const TestViewer = () => {
         }
 
         const modelFileId = 'RUsrBi-vQey2vExitZOYig';
-        const driveBasename = 'https://drive.ijewel3d.com';
+        const driveBasename = 'drive'; // Default basename for iJewel Drive
 
         if (!isCancelled && containerRef.current) {
           console.log('🔄 Loading model:', modelFileId);
@@ -50,7 +50,10 @@ const TestViewer = () => {
             modelFileId,
             driveBasename,
             containerRef.current,
-            { showCard: false } // viewer options
+            {
+              showCard: false,
+              showLogo: true
+            } // viewer options
           );
         }
 
