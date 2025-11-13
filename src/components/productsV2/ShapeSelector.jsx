@@ -65,7 +65,7 @@ const ShapeSelector = ({ onClose, onSelectShape, selectedShape }) => {
                         <tbody>
                             {AVAILABLE_SHAPES.map((shapeName) => {
                                 const shapeConfig = getShapeConfig(shapeName);
-                                const isSelected = selectedShape && shapeName === selectedShape;
+                                const isSelected = selectedShape && shapeConfig.shape === selectedShape;
 
                                 return (
                                     <tr

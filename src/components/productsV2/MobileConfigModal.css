@@ -219,7 +219,7 @@
 /* 3️⃣ ADDITIONAL INFO */
 .pv2-mobile-additional-info {
     margin: 0;
-    margin-top: 3.33vh;
+    margin-top: 24px;
     /* 24/720 for mobile */
     padding: 0;
     flex-shrink: 1;
@@ -382,7 +382,6 @@
 .pv2-mobile-modal-appointment-btn .button-text {
     text-align: center !important;
     padding: 0 4px !important;
-    font-size: 13px !important;
     color: rgba(255, 255, 255, 0.8) !important;
 }
 
@@ -401,23 +400,22 @@
     width: 100%;
     height: 49px;
     min-height: 49px;
-    background: #FFFFFF;
-    border: none;
-    color: black;
+    background: rgba(255, 255, 255, 0.75);
+    border: 0.5px solid #FFF;
+    color: #000000;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 24.5px;
+    border-radius: 100px;
+    box-shadow: -1px -1px 4px 0 rgba(255, 255, 255, 0.25) inset, 1px 1px 4px 0 rgba(255, 255, 255, 0.50) inset;
+    backdrop-filter: blur(6px);
     box-sizing: border-box;
-    font-family: var(--font-bt-beau-sans);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.2;
     padding: 16px 20px;
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    font-size: 14px !important;
 }
 
 .pv2-mobile-modal-order-btn:hover {
@@ -523,8 +521,8 @@
     }
 
     .pv2-mobile-config-content {
-        left: 10vw;
-        right: 10vw;
+        left: 0;
+        right: 0;
     }
 
     /* Option rows - cách đều với đơn vị tương đối */
@@ -539,7 +537,7 @@
 
     /* Additional info spacing */
     .pv2-mobile-additional-info {
-        padding-top: 2.5vh;
+        /* padding-top: 2.5vh; */
         /* 24/960 */
     }
 

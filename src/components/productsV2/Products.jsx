@@ -3,6 +3,7 @@ import './Products.css';
 import LeftContainer from './LeftContainer';
 import RightConfiguration from './RightConfiguration';
 import MobileProductBar from './MobileProductBar';
+import Section4 from './Section4';
 import ViewAllProduct from '../viewAllProduct/ViewAllProduct';
 import Contact from '../contactUs/ContactUs';
 import OrderFormModal from './OrderFormModal';
@@ -32,7 +33,7 @@ const Products = () => {
     const [orderDetails, setOrderDetails] = useState(null);
 
     // Product configuration state (shared with RightConfiguration)
-    const defaultShape = getShapeConfig('Fiston'); // Default shape
+    const defaultShape = getShapeConfig('Trilogy'); // Default shape
     const [productConfig, setProductConfig] = useState({
         id: 'PRD000024', // Mirror Custom Ring product ID
         name: 'LUMINA OLIVIA 5',
@@ -190,22 +191,22 @@ const Products = () => {
     // Handle scroll to show/hide MobileProductBar
     useEffect(() => {
         const handleScroll = () => {
-            // Get Section4 button container position (last element)
-            const section4Button = document.querySelector('.pv2-section4-button-container');
-            if (section4Button) {
-                const rect = section4Button.getBoundingClientRect();
+            // Get Section4 container (You May Also Like section)
+            const section4Container = document.querySelector('.pv2-section4-container');
+
+            if (section4Container) {
+                const rect = section4Container.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
 
-                // Hide mobile bar if we've scrolled past Section4 button (bottom is above viewport)
-                if (rect.bottom <= 0) {
+                // Hide mobile bar when Section4 starts entering viewport
+                // Check if top of Section4 is visible (has entered from bottom)
+                if (rect.top < windowHeight) {
                     setShowMobileBar(false);
-                }
-                // Show mobile bar if we're still viewing Section4 or above
-                else {
+                } else {
                     setShowMobileBar(true);
                 }
             } else {
-                // Fallback to products-container if Section4 button not found
+                // Fallback: hide when scrolled past products-container
                 const productsContainer = document.querySelector('.pv2-products-container');
                 if (productsContainer) {
                     const rect = productsContainer.getBoundingClientRect();
@@ -373,7 +374,7 @@ const Products = () => {
 
     return (
         <>
-            <div className="pv2-products-main-wrapper">
+            <div className="pv2-products-main-wrapper" data-navbar-theme="black">
                 <div className="pv2-products-container">
                     {/* Left side - LeftContainer chứa Section1 và Section2 */}
                     <LeftContainer productConfig={productConfig} />
@@ -388,6 +389,9 @@ const Products = () => {
                     </div>
                 </div>
 
+                {/* Section4 - You May Also Like - Full width after LeftContainer + RightConfiguration */}
+                <Section4 />
+
                 {/* Contact Section */}
                 <Contact />
 
@@ -398,6 +402,8 @@ const Products = () => {
                     onShapeChange={handleShapeChange}
                     selectedSize={productConfig.size}
                     onSizeChange={handleSizeChange}
+                    metal={productConfig.metal}
+                    band={productConfig.band}
                 />
 
                 {/* Order Form Modal */}

@@ -1,7 +1,8 @@
 /* ===== BASE STYLES - MOBILE FIRST (320px+) ===== */
 .pv2-section2-container {
     /* border: 2px solid #000; */
-    background: #FF6B6B;
+    /* background: #FF6B6B; */
+    background: #F6F6F6;
     /* DEBUG: Red background to see section area */
     margin-top: 0;
     width: 100%;
@@ -29,7 +30,8 @@
     max-width: 600px;
     /* Prevent content from being too wide */
     margin: 0 auto;
-    background: yellow;
+    /* background: yellow; */
+    background: #F6F6F6;
 }
 
 .pv2-section2-header {
@@ -43,15 +45,7 @@
 .pv2-section2-collection {
     color: var(--gray-3, #797979);
     text-align: center;
-    font-family: "BT Beau Sans";
-    font-size: 16px;
-    /* Mobile: font nhỏ nhất */
-    font-style: normal;
-    font-weight: 400;
     align-self: stretch;
-    letter-spacing: 0.5px;
-    line-height: 120%;
-    /* 19.2px */
 }
 
 .pv2-section2-title {
@@ -172,12 +166,19 @@
         line-height: 130%;
         color: var(--gray-3, #797979);
         text-align: center;
-        margin: 0 auto !important;
+        margin: 0 auto 60px auto !important;
         padding: 0 !important;
-        width: 520px;
+        width: 522px;
         max-width: calc(100% - 32px);
-        height: auto;
         box-sizing: border-box;
+    }
+
+    .pv2-section2-config-details {
+        max-width: 522px;
+    }
+
+    .pv2-section2-config-row {
+        width: 100%;
     }
 }
 
@@ -187,7 +188,7 @@
 @media (min-width: 992px) {
     .pv2-section2-container {
         margin-top: 0;
-        padding: 50px 20px;
+        padding: 120px 0;
     }
 
     .pv2-section2-content {
@@ -200,20 +201,20 @@
     }
 
     .pv2-section2-subtitle {
-        font-family: "BT Beau Sans";
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 130%;
-        color: var(--gray-3, #797979);
         text-align: center;
-        margin: 0 auto !important;
+        margin: 0 auto 60px auto !important;
         padding: 0 !important;
-        width: 692px;
-        max-width: calc(100% - 40px);
-        min-height: 92px;
+        width: 600px;
         height: auto;
         box-sizing: border-box;
+    }
+
+    .pv2-section2-config-details {
+        display: none;
+    }
+
+    .pv2-section2-config-row {
+        width: 100%;
     }
 }
 
@@ -223,7 +224,7 @@
 @media (min-width: 1200px) {
     .pv2-section2-container {
         margin-top: 0;
-        padding: 60px 20px;
+        padding: 120px 0;
     }
 
     .pv2-section2-collection {
@@ -231,9 +232,8 @@
     }
 
     .pv2-section2-subtitle {
-        font-size: 20px;
-        line-height: 1.7;
-        max-width: 900px;
+        width: 600px;
+        height: auto;
     }
 }
 
@@ -242,7 +242,7 @@
    ======================================== */
 @media (min-width: 1400px) {
     .pv2-section2-container {
-        padding: 70px 24px;
+        padding: 120px 0;
     }
 
     .pv2-section2-collection {
@@ -250,8 +250,7 @@
     }
 
     .pv2-section2-subtitle {
-        font-size: 22px;
-        line-height: 1.8;
-        max-width: 1000px;
+        width: 600px;
+        height: auto;
     }
 }

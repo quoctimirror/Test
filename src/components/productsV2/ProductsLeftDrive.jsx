@@ -1,13 +1,15 @@
 import { useEffect, useRef } from "react";
+import { PRODUCT_CONFIG } from "./productConfig";
 import "./ProductsLeft.css";
 
 const ProductsLeftDrive = ({ modelId }) => {
   const containerRef = useRef(null);
   const viewerInstanceRef = useRef(null);
-  const scriptLoadedRef = useRef(false);
 
   useEffect(() => {
-    // Load iJewel mini-viewer SDK script
+    let isCancelled = false;
+
+    // Load iJewel mini-viewer SDK script from CDN
     const loadScript = () => {
       return new Promise((resolve, reject) => {
         // Check if script already loaded
@@ -16,96 +18,76 @@ const ProductsLeftDrive = ({ modelId }) => {
           return;
         }
 
-        // Check if script tag already exists
-        if (scriptLoadedRef.current) {
-          const checkInterval = setInterval(() => {
-            if (window.ijewelViewer && window.ijewelViewer.loadModelById) {
-              clearInterval(checkInterval);
-              resolve();
-            }
-          }, 100);
-          return;
-        }
-
         const script = document.createElement('script');
         script.src = 'https://releases.ijewel3d.com/libs/mini-viewer/0.3.20/bundle.iife.js';
         script.async = true;
-        script.onload = () => {
-          scriptLoadedRef.current = true;
-          resolve();
-        };
-        script.onerror = () => {
-          reject(new Error('Failed to load iJewel mini-viewer SDK'));
-        };
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('Failed to load iJewel mini-viewer SDK'));
         document.body.appendChild(script);
       });
     };
 
-    // Load model from iJewel Drive with fallback to local
+    // Load model from iJewel Drive
     const loadModel = async () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || isCancelled) return;
 
       try {
-        console.log('Loading iJewel Drive SDK...');
-
         // Load SDK script
         await loadScript();
 
-        console.log('SDK loaded, loading local model...');
-
-        // Wait a bit for container to be ready
-        await new Promise(resolve => setTimeout(resolve, 100));
+        if (isCancelled) return;
 
         // Clear container
         if (containerRef.current) {
           containerRef.current.innerHTML = '';
         }
 
-        const containerElement = containerRef.current;
+        const driveBasename = PRODUCT_CONFIG.driveBasename;
+        const modelFileId = modelId || PRODUCT_CONFIG.defaultModelId;
 
-        // Load model from iJewel Drive
-        const driveBasename = 'drive';
-        const modelFileId = modelId || 'eOcY7UV6TMWbra25hv9dwQ'; // Default model
-
-        window.ijewelViewer.loadModelById(
-          modelFileId,
-          driveBasename,
-          containerElement,
-          {
-            showCard: false,
-            showLogo: false
-          }
-        );
-
-        console.log('✅ Loading model from iJewel Drive:', modelFileId);
+        if (!isCancelled && containerRef.current) {
+          window.ijewelViewer.loadModelById(
+            modelFileId,
+            driveBasename,
+            containerRef.current,
+            PRODUCT_CONFIG.viewerOptions
+          );
+        }
 
       } catch (err) {
-        console.error('❌ Error loading model:', err);
+        if (!isCancelled) {
+          console.error('❌ Error loading model:', err);
+        }
       }
     };
 
-    // Event listener for viewer ready
+    // Listen for viewer ready event
     const handleViewerReady = (event) => {
-      console.log("✅ iJewel Drive Viewer is ready:", event.detail.viewer);
-      viewerInstanceRef.current = event.detail.viewer;
+      if (!isCancelled) {
+        console.log("✅ Viewer is ready:", event.detail.viewer);
+        viewerInstanceRef.current = event.detail.viewer;
+      }
     };
 
     window.addEventListener("ijewel-viewer-ready", handleViewerReady);
-
     loadModel();
 
     // Cleanup
     return () => {
+      isCancelled = true;
       window.removeEventListener("ijewel-viewer-ready", handleViewerReady);
-      if (viewerInstanceRef.current) {
+
+      if (viewerInstanceRef.current && viewerInstanceRef.current.dispose) {
         try {
-          if (viewerInstanceRef.current.dispose) {
-            viewerInstanceRef.current.dispose();
-          }
-        } catch (e) {
-          console.warn('Error disposing viewer:', e);
+          viewerInstanceRef.current.dispose();
+        } catch (err) {
+          console.warn('Error disposing viewer:', err);
         }
         viewerInstanceRef.current = null;
+      }
+
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
       }
     };
   }, [modelId]);

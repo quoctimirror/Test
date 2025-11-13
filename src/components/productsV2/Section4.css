@@ -29,8 +29,9 @@
 .pv2-section4-description {
   text-align: center;
   color: #797979;
-  margin: 0 !important;
-  width: 100%;
+  margin: 0 auto !important;
+  width: 304px;
+  height: 85px;
 }
 
 .pv2-section4-scroll-wrapper {
@@ -115,7 +116,10 @@
    ======================================== */
 @media (min-width: 768px) {
   .pv2-section4-container {
-    padding: 100px 0;
+    padding-top: 240px;
+    padding-bottom: 24px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
 
   .pv2-section4-wrapper {
@@ -124,7 +128,18 @@
 
   .pv2-section4-header {
     width: 70%;
-    margin-bottom: 60px;
+    margin-bottom: 120px;
+  }
+
+  .pv2-section4-description {
+    width: 520px;
+    height: auto;
+    margin: 0 auto !important;
+  }
+
+  .pv2-section4-product-card {
+    width: 387px;
+    height: 484px;
   }
 }
 
@@ -133,12 +148,26 @@
    ======================================== */
 @media (min-width: 992px) {
   .pv2-section4-container {
-    padding: 120px 0;
+    padding-top: 120px;
+    padding-bottom: 24px;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .pv2-section4-header {
     width: 65%;
-    margin-bottom: 80px;
+    margin-bottom: 120px;
+  }
+
+  .pv2-section4-description {
+    width: 520px;
+    height: auto;
+    margin: 0 auto !important;
+  }
+
+  .pv2-section4-product-card {
+    width: 387px;
+    height: 484px;
   }
 }
 
