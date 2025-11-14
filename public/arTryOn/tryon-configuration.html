@@ -468,10 +468,13 @@
             <!-- code gốc  -->
             <option value="demo_tryon">Demo Try-On</option>
 
+            <!-- Simple models -->
+            <option value="heart" selected>heart (simple)</option>
+
             <!-- Mirror models -->
             <option value="refined_mirror_fistion">fiston</option>
             <option value="refined_mirror_flower">flower</option>
-            <option value="refined_mirror_heart" selected>heart</option>
+            <option value="refined_mirror_heart">heart (refined)</option>
             <option value="refined_mirror_myfav">myfav</option>
             <option value="refined_mirror_oval">oval</option>
             <option value="refined_mirror_pear">pear</option>
@@ -493,6 +496,10 @@
             demo_tryon: {
                 glb: "/models/rings/demo_tryon.glb",
                 json: "https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.json"
+            },
+            heart: {
+                glb: "/models/rings/heart.glb",
+                json: "/arTryOn/standard.json"
             },
             refined_mirror_fistion: {
                 glb: "/models/rings/refined_mirror_fistion.glb",
@@ -536,7 +543,7 @@
         // Will be populated with actual values from loaded models
         const modelTransforms = {};
 
-        let currentModel = "refined_mirror_heart";
+        let currentModel = "heart";
         let currentModelObject = null;
         let viewer = null;
         let tryon = null; // Store tryon plugin reference for API access
