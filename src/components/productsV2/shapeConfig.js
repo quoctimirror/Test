@@ -50,7 +50,6 @@ export const SHAPE_CONFIGS = {
     metal: 'Silver',
     band: 'Single band'
   },
-
   Example: {
     shape: 'Example',
     modelId: 'RUsrBi-vQey2vExitZOYig',
