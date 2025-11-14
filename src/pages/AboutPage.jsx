@@ -93,7 +93,7 @@ const AboutPage = () => {
         <IntroBOD />
       </div>
 
-      <div data-section="bod-member" data-navbar-theme="white">
+      <div data-section="bod-member" data-navbar-theme="black">
         <BODMemberV4 />
       </div>
 

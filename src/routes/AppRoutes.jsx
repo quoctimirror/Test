@@ -100,6 +100,7 @@ const ScrollEffectTestPage = lazy(() => import("@pages/ScrollEffectTestPage"));
 const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"));
 const NavbarV2TestPage = lazy(() => import("@pages/NavbarV2TestPage"));
 const NavbarV3TestPage = lazy(() => import("@pages/NavbarV3TestPage"));
+const NavbarV4TestPage = lazy(() => import("@pages/NavbarV4TestPage"));
 const TestViewer = lazy(() => import("@components/productsV2/TestViewer.jsx"));
 
 export default function AppRoutes() {
@@ -149,6 +150,7 @@ export default function AppRoutes() {
       ROUTES.SCROLL_EFFECT_TEST_V2,
       ROUTES.NAVBAR_V2_TEST,
       ROUTES.NAVBAR_V3_TEST,
+      ROUTES.NAVBAR_V4_TEST,
       ROUTES.TEST_VIEWER,
       ROUTES.IJEWEL_AR_TRYON,
     ];
@@ -200,6 +202,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2 ||
     location.pathname === ROUTES.NAVBAR_V2_TEST ||
     location.pathname === ROUTES.NAVBAR_V3_TEST ||
+    location.pathname === ROUTES.NAVBAR_V4_TEST ||
     location.pathname === ROUTES.TEST_VIEWER;
 
   const staticRoutesToHideFooter =
@@ -223,6 +226,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2 ||
     location.pathname === ROUTES.NAVBAR_V2_TEST ||
     location.pathname === ROUTES.NAVBAR_V3_TEST ||
+    location.pathname === ROUTES.NAVBAR_V4_TEST ||
     location.pathname === ROUTES.TEST_VIEWER;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
@@ -368,6 +372,12 @@ export default function AppRoutes() {
           <Route
             path={ROUTES.NAVBAR_V3_TEST}
             element={<NavbarV3TestPage />}
+          />
+
+          {/* Test route for NavbarV4 */}
+          <Route
+            path={ROUTES.NAVBAR_V4_TEST}
+            element={<NavbarV4TestPage />}
           />
 
           {/* Test route for iJewel Viewer */}
