@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!--
+    iJewel Ring TryOn - Configuration Tool
+
+    Usage:
+    1. Normal mode with custom Debug Panel:
+       http://localhost:5173/arTryOn/tryon-configuration.html
+
+    2. Edit mode with Tweakpane UI (Official iJewel UI):
+       http://localhost:5173/arTryOn/tryon-configuration.html?edit
+
+    Features:
+    - ?edit mode: Uses TweakpaneUiPlugin (official iJewel setup UI)
+    - Normal mode: Uses custom Debug Panel with position/rotation/scale controls
+    - Model selector: Choose from multiple ring models
+    - Export configuration: Download JSON config files
+-->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -202,8 +219,8 @@
         @media (min-width: 768px) {
             #model-selector {
                 top: 50px;
-                right: 20px;
-                left: auto;
+                left: 20px;
+                right: auto;
                 padding: 15px;
             }
 
@@ -643,6 +660,26 @@
 
                 await viewer.addPlugin(ij_vto.RingTryonUIPlugin);
 
+                // Check if ?edit parameter is present in URL
+                const url = new URL(window.location);
+                let params = new URLSearchParams(url.search);
+
+                if(params.get("edit") !== null) {
+                    const uiPlugin = await viewer.addPlugin(TweakpaneUiPlugin);
+                    uiPlugin.setupPlugins(ij_vto.RingTryonPlugin);
+                    // Update header to show Edit mode
+                    document.getElementById("header-text").textContent = "iJewel Configuration - Edit Mode (Tweakpane UI)";
+                    console.log('✅ Edit Mode Enabled - Using Tweakpane UI Plugin');
+                    console.log('📋 Use the UI panel on the right to adjust ring position, rotation, and scale');
+                    console.log('💾 Click "Download Ring Config" to save your configuration');
+                } else {
+                    // Update header to show Debug mode
+                    document.getElementById("header-text").textContent = "iJewel Configuration - Debug Mode";
+                    console.log('🔧 Debug Mode Enabled - Using Custom Debug Panel');
+                    console.log('📋 Click the "🔧 Debug" button to open the debug panel');
+                    console.log('💾 Use "Export Configuration" or "Copy to Clipboard" to save your settings');
+                }
+
                 // OPTIMIZATION 5: Lazy load models on demand instead of preloading all (prevents memory overflow)
                 // preloadAllModels(); // DISABLED - was causing memory issues on mobile
 
@@ -863,15 +900,22 @@
                     }
                 });
 
-                // Debug toggle
+                // Debug toggle - only show if NOT in ?edit mode
                 const debugToggle = document.getElementById("debug-toggle");
                 const debugPanel = document.getElementById("debug-panel");
-                debugToggle.onclick = () => {
-                    debugPanel.classList.toggle("active");
-                };
 
-                // Setup control listeners
-                setupControls();
+                if(params.get("edit") !== null) {
+                    // Hide debug panel when using Tweakpane UI (?edit mode)
+                    debugToggle.style.display = "none";
+                    debugPanel.style.display = "none";
+                } else {
+                    // Show debug panel in normal mode
+                    debugToggle.onclick = () => {
+                        debugPanel.classList.toggle("active");
+                    };
+                    // Setup control listeners
+                    setupControls();
+                }
 
                 // OPTIMIZATION 6: Add Page Visibility API to pause rendering when hidden (critical for iOS)
                 document.addEventListener('visibilitychange', async function() {
