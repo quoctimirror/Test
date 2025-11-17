@@ -57,7 +57,7 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       json: "/arTryOn/refined_mirror_oval_config.json"
     },
     refined_mirror_pear: {
-      glb: "/models/rings/refined_mirror_pear.glb",
+      glb: "/models/rings/pear.glb",
       json: "/arTryOn/standard.json"
     },
     refined_mirror_trilogy: {
@@ -142,8 +142,8 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
         attempts++;
 
         if (typeof window.ViewerApp !== 'undefined' &&
-            typeof window.DiamondPlugin !== 'undefined' &&
-            typeof window.ij_vto !== 'undefined') {
+          typeof window.DiamondPlugin !== 'undefined' &&
+          typeof window.ij_vto !== 'undefined') {
           console.log('✅ All SDK scripts loaded');
           resolve();
         } else if (attempts >= maxAttempts) {
@@ -159,19 +159,19 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
   };
 
   const setupIOSHandlers = (canvas, viewer, tryon) => {
-    canvas.addEventListener('webglcontextlost', function(event) {
+    canvas.addEventListener('webglcontextlost', function (event) {
       event.preventDefault();
       console.error('⚠️ WebGL context lost!');
-      if (tryon && tryon.running) tryon.stop().catch(() => {});
+      if (tryon && tryon.running) tryon.stop().catch(() => { });
       alert('Memory issue detected. The page will reload.');
       setTimeout(() => window.location.reload(), 1000);
     }, false);
 
-    canvas.addEventListener('webglcontextrestored', function() {
+    canvas.addEventListener('webglcontextrestored', function () {
       console.log('✅ WebGL context restored');
     }, false);
 
-    document.addEventListener('visibilitychange', async function() {
+    document.addEventListener('visibilitychange', async function () {
       if (document.hidden) {
         console.log('📱 Page hidden - stopping rendering');
         if (viewer) viewer.renderEnabled = false;
@@ -189,10 +189,10 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       }
     });
 
-    window.addEventListener('pagehide', function() {
+    window.addEventListener('pagehide', function () {
       console.log('📱 Page hiding - cleanup');
       if (viewer) viewer.renderEnabled = false;
-      if (tryon && tryon.running) tryon.stop().catch(() => {});
+      if (tryon && tryon.running) tryon.stop().catch(() => { });
     });
 
     console.log('🛡️ iOS handlers installed');
@@ -348,7 +348,7 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       const tryon = tryonRef.current;
 
       if (tryon && tryon.running) {
-        tryon.stop().catch(() => {});
+        tryon.stop().catch(() => { });
       }
 
       if (viewer) {
