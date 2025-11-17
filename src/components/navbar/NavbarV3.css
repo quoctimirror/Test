@@ -17,41 +17,102 @@
   --border-width: 2px;
 }
 
-/* Navbar Liquid Glass Background */
+/* Navbar Liquid Glass Background - Always visible 80px bar */
 .navbar-v3-glass-background {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 100vh;
+  height: 80px;
   z-index: 200;
   pointer-events: none;
-  overflow: hidden;
-  opacity: 0;
-  transition: opacity 0.5s ease-out;
+  overflow: visible;
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.05), 0 0 20px rgba(0, 0, 0, 0.05);
+  transition: all 0.35s ease-out;
 }
 
-/* Expanded state when menu or account dropdown is open */
-.navbar-v3-glass-background.expanded {
-  opacity: 1;
-}
-
-/* White background sweep animation from left to right - 26% width */
-.navbar-v3-glass-background::before {
+/* Full screen overlay - fades in when expanded */
+.navbar-v3-glass-background::after {
   content: "";
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 26%;
+  right: 0;
   height: 100vh;
-  background: white;
-  z-index: 10;
-  transform: translateX(-100%);
-  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 199;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-out;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 }
 
-.navbar-v3-glass-background.expanded::before {
-  transform: translateX(0);
+.navbar-v3-glass-background.expanded::after {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Gradient background sweep animation from left to right - 26% width - DESKTOP ONLY - MENU ONLY */
+@media screen and (min-width: 1024px) {
+  .navbar-v3-glass-background::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 26%;
+    height: 100vh;
+    background: linear-gradient(0deg, #000 0%, #bc224c 5%, #f6f6f6 15%);
+    z-index: 201;
+    transform: translateX(-100%);
+    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  /* Only show gradient sweep when menu is opened, not account */
+  .navbar-v3-glass-background.menu-expanded::before {
+    transform: translateX(0);
+  }
+
+  /* Bottom button on gradient sweep - Desktop only */
+  .menu-v3-gradient-bottom-button {
+    position: fixed;
+    bottom: 24px;
+    left: 2.5%;
+    z-index: 202;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    animation: fadeInButton 0.3s ease 0.8s forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInButton {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .menu-v3-gradient-bottom-button .underline-button-text {
+    color: white;
+  }
+
+  .menu-v3-gradient-bottom-button .underline-button-text::after {
+    background: white;
+  }
+}
+
+/* Hide gradient sweep and button on mobile/tablet */
+@media screen and (max-width: 1023px) {
+  .navbar-v3-glass-background::before {
+    display: none;
+  }
+
+  .menu-v3-gradient-bottom-button {
+    display: none;
+  }
 }
 
 /* Liquid Glass Effect Layer - Distortion */
@@ -200,21 +261,11 @@
   z-index: 201;
   mix-blend-mode: difference;
   pointer-events: none;
-  /* opacity: 1; */
-  color: rgba(255, 255, 255, 0.7); /* Start dimmed */
+  color: rgba(255, 255, 255, 0.7);
   transition: opacity 0.3s ease;
   height: 57px;
   display: flex;
   align-items: center;
-}
-
-.menu-v3-fixed-container:hover {
-  /* opacity: 1; */
-  color: rgba(255, 255, 255, 1); /* Full brightness */
-}
-
-.menu-v3-fixed-container.scrolled:hover {
-  color: rgba(255, 255, 255, 1) !important; /* White color when scrolled */
 }
 
 .menu-v3-fixed-container.no-blend {
@@ -227,6 +278,14 @@
 
 .menu-v3-fixed-container.scrolled .menu-v3-text {
   color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v3-fixed-container.scrolled .menu-v3-page-name {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v3-fixed-container.scrolled .menu-v3-page-separator path {
+  stroke: white !important;
 }
 
 /* Account link container với blend mode */
@@ -272,13 +331,8 @@
   height: 57px;
   display: flex;
   align-items: center;
-  /* opacity: 0.75; */
   transition: opacity 0.3s ease;
 }
-
-/* .immersive-v3-fixed-container:hover {
-  opacity: 1;
-} */
 
 .menu-v3-container {
   position: relative;
@@ -297,7 +351,7 @@
   color: white;
   border: none;
   padding: 0;
-  pointer-events: none; /* Desktop: disable click, only hover works */
+  pointer-events: none;
   cursor: default;
   display: flex;
   align-items: center;
@@ -306,7 +360,6 @@
   transition: all 0.3s;
   margin-left: 0;
   opacity: 1;
-  gap: 10px;
 }
 
 .menu-v3-icon-container {
@@ -317,7 +370,7 @@
 }
 
 .menu-v3-icon {
-  transition: all 0.3s ease;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   position: absolute;
   top: 0;
   left: 0;
@@ -327,58 +380,74 @@
   filter: brightness(0) invert(1);
 }
 
+/* Desktop SVG icon specific styles */
+.menu-v3-icon-desktop {
+  width: 32px;
+  height: 26px;
+  display: block;
+}
+
+.menu-v3-icon-mobile {
+  display: none;
+}
+
+.menu-v3-icon-desktop path {
+  stroke: white;
+  transition: stroke 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .menu-v3-icon-close {
-  color: white;
   position: absolute;
   left: 0;
   top: 0;
   opacity: 0;
-  transition: all 0.3s ease;
-  width: 24px;
-  height: 24px;
-  stroke-width: 1.5px;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 37px;
+  height: 26px;
+}
+
+.menu-v3-icon-close path {
+  stroke: white;
+  transition: stroke 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Show close icon when menu is open */
 .menu-v3-container.menu-v3-open .menu-v3-icon {
   opacity: 0;
-  transform: rotate(90deg);
+  transform: rotate(180deg) scale(0.8);
 }
 
 .menu-v3-container.menu-v3-open .menu-v3-icon-close {
   opacity: 1;
-  transform: rotate(0deg);
+  transform: rotate(0deg) scale(1);
   color: white;
 }
 
-/* Show close icon on hover (desktop only) */
-@media screen and (min-width: 1024px) {
-  .menu-v3-container:hover .menu-v3-icon {
-    opacity: 0;
-    transform: rotate(90deg);
-  }
-
-  .menu-v3-container:hover .menu-v3-icon-close {
-    opacity: 1;
-    transform: rotate(0deg);
-    color: white;
-  }
+/* Initial state for close icon - scaled down and rotated */
+.menu-v3-icon-close {
+  transform: rotate(-180deg) scale(0.8);
 }
 
 .menu-v3-fixed-container.scrolled .menu-v3-icon {
   filter: brightness(0) invert(1) !important;
 }
 
-.menu-v3-fixed-container.scrolled .menu-v3-icon-close {
-  color: #fff !important;
+.menu-v3-fixed-container.scrolled .menu-v3-icon-close path {
+  stroke: white !important;
 }
 
-.menu-v3-fixed-container.scrolled .menu-v3-container:hover .menu-v3-icon-close {
-  color: #fff !important;
+.menu-v3-fixed-container.scrolled
+  .menu-v3-container:hover
+  .menu-v3-icon-close
+  path {
+  stroke: white !important;
 }
 
-.menu-v3-fixed-container.scrolled .menu-v3-container.menu-v3-open .menu-v3-icon-close {
-  color: #fff !important;
+.menu-v3-fixed-container.scrolled
+  .menu-v3-container.menu-v3-open
+  .menu-v3-icon-close
+  path {
+  stroke: white !important;
 }
 
 .menu-v3-text {
@@ -387,6 +456,30 @@
   text-align: center;
   pointer-events: auto;
   display: inline-block;
+}
+
+/* Separator between menu button and page name */
+.menu-v3-page-separator {
+  margin-left: 48px;
+  margin-right: 12px;
+  display: inline-block;
+  vertical-align: middle;
+  pointer-events: none;
+}
+
+.menu-v3-page-separator path {
+  stroke: white;
+  stroke-opacity: 0.5;
+  transition: stroke 0.3s ease;
+}
+
+/* Page name that appears next to menu button on specific pages */
+.menu-v3-page-name {
+  color: white;
+  display: inline-block;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 /* Show underline when menu is open */
@@ -403,10 +496,6 @@
   border-radius: 100px;
   border: none;
   pointer-events: auto;
-  /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 0 12px 6px rgba(255, 255, 255, 0.05); */
   color: transparent;
   cursor: pointer;
   transition: all 0.5s ease;
@@ -420,7 +509,6 @@
   position: relative;
   overflow: hidden;
   margin-right: 0;
-  /* CRITICAL: Tạo isolation để text không bị ảnh hưởng bởi backdrop-filter */
   isolation: isolate;
 }
 
@@ -569,7 +657,6 @@
 
 .immersive-v3-button:hover {
   background: rgba(255, 255, 255, 0.1);
-  /* Box-shadow removed - chỉ tăng background opacity khi hover */
 }
 
 .menu-v3-popup {
@@ -595,14 +682,54 @@
   pointer-events: auto;
 }
 
-.menu-v3-container:hover .menu-v3-button {
-  background: none;
+/* Fade out menu popup when closing */
+.menu-v3-popup.closing {
+  animation: fadeOutMenuV3 0.3s ease forwards;
+}
+
+@keyframes fadeOutMenuV3 {
+  from {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  to {
+    opacity: 0;
+    transform: scaleY(0.95);
+  }
 }
 
 .menu-v3-groups {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  animation: slideInFromLeftV3 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  gap: 36px;
+}
+
+@keyframes slideInFromLeftV3 {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToLeftV3 {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+}
+
+/* Slide out animation when closing - Desktop only */
+.menu-v3-popup.closing .menu-v3-groups {
+  animation: slideOutToLeftV3 0.3s cubic-bezier(0.64, 0, 0.78, 0) forwards;
 }
 
 .menu-v3-list {
@@ -620,26 +747,36 @@
   white-space: nowrap;
 }
 
-/* Active menu item - show underline */
-.menu-v3-popup .menu-v3-list li.active .underline-button-text::after {
-  transform: scaleX(1) scaleY(0.75);
-  transform-origin: left center;
-}
-
 /* Hide account button in menu on desktop (when navbar account button is visible) */
 .menu-v3-popup .menu-v3-list li.account-v3-menu-item {
   display: none;
 }
 
-.menu-v3-divider {
-  width: 18px;
-  height: 1.5px;
-  background: rgba(255, 255, 255, 1);
-  cursor: default !important;
+.menu-v3-divider-wrapper {
+  isolation: isolate;
+  mix-blend-mode: normal;
   margin: 0;
+  padding: 0;
 }
 
-/* Xóa các class cũ không còn sử dụng */
+.menu-v3-divider {
+  width: 36px;
+  height: 0;
+  border: none;
+  border-top: 1.5px solid rgba(224, 224, 224, 1);
+  cursor: default !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Section headers for menu groups */
+.menu-v3-section-header.bodytext-6--no-margin {
+  color: rgba(224, 224, 224, 0.2);
+  pointer-events: none;
+  text-transform: uppercase;
+  margin-top: 48px;
+  margin-bottom: 12px;
+}
 
 .navbar-v3-right {
   display: flex;
@@ -702,20 +839,20 @@
 @media screen and (max-width: 1023px) {
   /* Glassmorphism menu button for tablet */
   .menu-v3-button {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    padding: 3px;
-    width: 48px;
-    height: 48px;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    width: auto;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     cursor: pointer;
-    pointer-events: auto; /* Tablet: enable click */
+    pointer-events: auto;
   }
 
   .menu-v3-text {
@@ -732,34 +869,27 @@
     filter: brightness(0) invert(1) !important;
   }
 
-  .menu-v3-icon-close {
-    color: #fff !important;
+  .menu-v3-icon-close path {
+    stroke: white !important;
   }
 
   /* Scrolled state for tablet menu button */
   .menu-v3-fixed-container.scrolled .menu-v3-button {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.25);
-  }
-  .menu-v3-fixed-container.scrolled .menu-v3-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.35);
+    background: transparent;
   }
 
   /* When menu is open on tablet */
   .menu-v3-container.menu-v3-open .menu-v3-button {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: transparent;
   }
-  .menu-v3-container.menu-v3-open .menu-v3-icon-close {
-    color: #fff !important;
+  .menu-v3-container.menu-v3-open .menu-v3-icon-close path {
+    stroke: white !important;
   }
 }
 
 @media screen and (max-width: 1023px) {
   /* Adjust immersive button position */
   .immersive-v3-fixed-container {
-    /* top: 18px; */
     right: 19px;
     height: 49px;
   }
@@ -890,6 +1020,9 @@
     width: 95vw;
     max-width: 350px;
   }
+  .menu-v3-icon {
+    left: -12px;
+  }
 }
 
 /* Account Container - Same pattern as menu */
@@ -980,7 +1113,7 @@
 
 /* Immersive showroom in menu - only show on mobile */
 .immersive-v3-menu-item {
-  display: none; /* Hidden by default */
+  display: none;
   width: fit-content;
 }
 
@@ -1027,10 +1160,54 @@
     justify-content: flex-end;
   }
 
+  /* Flip icon horizontally on mobile */
+  .menu-v3-icon-desktop {
+    transform: scaleX(-1);
+  }
+
+  .menu-v3-icon-close {
+    transform: scaleX(-1) rotate(-180deg) scale(0.8);
+    left: -16px;
+  }
+
+  .menu-v3-container.menu-v3-open .menu-v3-icon-close {
+    transform: scaleX(-1) rotate(0deg) scale(1);
+  }
+
   /* Center align menu list text on mobile */
   .menu-v3-popup .menu-v3-groups {
-    gap: 72px;
+    gap: 48px !important;
     align-items: center;
+    animation: fadeInMenuMobile 0.3s ease forwards;
+  }
+
+  @keyframes fadeInMenuMobile {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Override closing animation for mobile */
+  .menu-v3-popup.closing {
+    animation: none !important;
+  }
+
+  .menu-v3-popup.closing .menu-v3-groups {
+    animation: fadeOutMenuMobile 0.3s ease forwards !important;
+  }
+
+  @keyframes fadeOutMenuMobile {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: none;
+    }
   }
 
   .menu-v3-popup .menu-v3-list {
@@ -1102,47 +1279,34 @@
 
   /* Glassmorphism menu button for mobile */
   .menu-v3-button {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    padding: 3px;
-    width: 48px;
-    height: 48px;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    width: auto;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     cursor: pointer;
-    pointer-events: auto; /* Mobile: enable click */
-  }
-
-  .menu-v3-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.35);
-    transform: translateY(-1px);
+    pointer-events: auto;
   }
 
   /* Scrolled state for mobile menu button */
   .menu-v3-fixed-container.scrolled .menu-v3-button {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.25);
-  }
-
-  .menu-v3-fixed-container.scrolled .menu-v3-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.35);
+    background: transparent;
   }
 
   /* When menu is open on mobile */
   .menu-v3-container.menu-v3-open .menu-v3-button {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: transparent;
   }
 
-  .menu-v3-container.menu-v3-open .menu-v3-icon-close {
-    color: white !important;
+  .menu-v3-container.menu-v3-open .menu-v3-icon-close path {
+    stroke: white !important;
   }
 }
 
@@ -1151,14 +1315,44 @@
 
   /* Center align menu list text on tablet */
   .menu-v3-popup .menu-v3-groups {
-    gap: 72px;
+    gap: 60px;
     align-items: center;
+    animation: fadeInMenuTablet 0.3s ease forwards;
+  }
+
+  @keyframes fadeInMenuTablet {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Override closing animation for tablet */
+  .menu-v3-popup.closing {
+    animation: none !important;
+  }
+
+  .menu-v3-popup.closing .menu-v3-groups {
+    animation: fadeOutMenuTablet 0.3s ease forwards !important;
+  }
+
+  @keyframes fadeOutMenuTablet {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: none;
+    }
   }
 
   .menu-v3-popup .menu-v3-list {
     text-align: center;
     align-items: center;
-    gap: 24px;
+    gap: 12px;
   }
 
   .menu-v3-popup .menu-v3-list li {
@@ -1219,16 +1413,50 @@
 }
 
 @media screen and (min-width: 1024px) {
+  /* Show icon container on desktop */
   .menu-v3-icon-container {
+    display: block;
+  }
+
+  /* Hide text on desktop */
+  .menu-v3-text {
     display: none;
   }
 
-  .menu-v3-text {
+  /* Show page name on desktop */
+  .menu-v3-page-name {
     display: inline-block;
+  }
+
+  /* Enable click on menu button when showing icon on desktop */
+  .menu-v3-button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
   }
 
   /* Hide immersive button in menu on desktop */
   .immersive-v3-menu-item {
+    display: none !important;
+  }
+
+  /* Hide PROFILE section and divider when not logged in on desktop */
+  .menu-v3-profile-section-guest {
+    display: none !important;
+  }
+
+  /* Hide profile divider when guest section exists (not logged in) */
+  .menu-v3-popup:has(.menu-v3-profile-section-guest) .menu-v3-profile-divider {
+    display: none !important;
+  }
+}
+
+/* Hide page name and separator on mobile/tablet */
+@media screen and (max-width: 1023px) {
+  .menu-v3-page-name {
+    display: none !important;
+  }
+
+  .menu-v3-page-separator {
     display: none !important;
   }
 }
@@ -1295,8 +1523,20 @@
   filter: brightness(0) invert(1) !important;
 }
 
-.menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-icon-close {
-  color: rgba(255, 255, 255, 1) !important;
+.menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-icon-desktop path {
+  stroke: white !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-icon-close path {
+  stroke: white !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-page-name {
+  color: white !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-page-separator path {
+  stroke: white !important;
 }
 
 /* Black Theme - Black menu text and icons */
@@ -1320,8 +1560,20 @@
   filter: brightness(0) !important;
 }
 
-.menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-icon-close {
-  color: rgba(0, 0, 0, 1) !important;
+.menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-icon-desktop path {
+  stroke: black !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-icon-close path {
+  stroke: black !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-page-name {
+  color: black !important;
+}
+
+.menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-page-separator path {
+  stroke: black !important;
 }
 
 /* Blend Theme - Default mix-blend-mode for menu */
@@ -1329,86 +1581,182 @@
   mix-blend-mode: difference !important;
 }
 
-/* ========== MENU HOVER/OPEN - Override theme to blend mode ========== */
-/* When menu is hovered or opened, force blend mode regardless of theme */
+/* ========== MENU HOVER/OPEN - Override all to blend mode ========== */
+/* When menu is opened, force blend mode + white colors for all navbar elements - Desktop only */
 
-.menu-v3-fixed-container:hover,
-.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) {
-  mix-blend-mode: difference !important;
+@media screen and (min-width: 1024px) {
+  /* Logo */
+  body:has(.menu-v3-container.menu-v3-open) .logo-v3-fixed-container {
+    mix-blend-mode: difference !important;
+  }
+
+  body:has(.menu-v3-container.menu-v3-open) .logo-v3-fixed-container .navbar-v3-logo-svg {
+    filter: none !important;
+  }
+
+  body:has(.menu-v3-container.menu-v3-open) .logo-v3-fixed-container .navbar-v3-logo-svg path {
+    fill: white !important;
+  }
+
+  /* Menu button */
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) {
+    mix-blend-mode: difference !important;
+  }
+
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-text {
+    color: white !important;
+  }
+
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-text::after {
+    background: white !important;
+  }
+
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon-desktop path,
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon-close path {
+    stroke: white !important;
+  }
+
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-page-name {
+    color: white !important;
+  }
+
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-page-separator path {
+    stroke: white !important;
+  }
+
+  /* Account button */
+  body:has(.menu-v3-container.menu-v3-open) .account-v3-fixed-container {
+    mix-blend-mode: difference !important;
+  }
+
+  body:has(.menu-v3-container.menu-v3-open) .account-v3-fixed-container .underline-button-text {
+    color: white !important;
+  }
+
+  body:has(.menu-v3-container.menu-v3-open) .account-v3-fixed-container .underline-button-text::after {
+    background: white !important;
+  }
+
+  /* Immersive button */
+  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-text-container {
+    mix-blend-mode: difference !important;
+  }
+
+  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-border-container {
+    mix-blend-mode: difference !important;
+  }
+
+  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-text-container .immersive-v3-text {
+    color: white !important;
+  }
+
+  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-border-container .immersive-v3-border::after {
+    background: conic-gradient(
+        from var(--angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.3) 5% 40%,
+        rgba(255, 255, 255, 0.8) 50%,
+        rgba(255, 255, 255, 0.3) 60% 95%,
+        rgba(255, 255, 255, 0.8)
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+  }
+
+  /* Menu popup items */
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-popup {
+    mix-blend-mode: difference !important;
+  }
+
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-popup .underline-button-text {
+    color: white !important;
+  }
+
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-popup .underline-button-text::after {
+    background: white !important;
+  }
 }
 
-/* Reset all text to white for blend mode */
-.menu-v3-fixed-container:hover .menu-v3-text,
-.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-text,
-.menu-v3-fixed-container:hover .underline-button-text,
-.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .underline-button-text {
-  color: rgba(255, 255, 255, 1) !important;
-}
+/* ========== MOBILE/TABLET - White theme when menu open ========== */
+@media screen and (max-width: 1023px) {
+  /* Logo */
+  body:has(.menu-v3-container.menu-v3-open) .logo-v3-fixed-container .navbar-v3-logo-svg {
+    filter: none !important;
+  }
 
-/* Reset all underlines to white for blend mode */
-.menu-v3-fixed-container:hover .underline-button-text::after,
-.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
-  .underline-button-text::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
+  body:has(.menu-v3-container.menu-v3-open) .logo-v3-fixed-container .navbar-v3-logo-svg path {
+    fill: white !important;
+  }
 
-/* Reset icons to white for blend mode */
-.menu-v3-fixed-container:hover .menu-v3-icon,
-.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon {
-  filter: brightness(0) invert(1) !important;
-}
+  /* Menu button */
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-text {
+    color: white !important;
+  }
 
-.menu-v3-fixed-container:hover .menu-v3-icon-close,
-.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon-close {
-  color: rgba(255, 255, 255, 1) !important;
-}
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon-close path {
+    stroke: white !important;
+  }
 
-/* Reset menu divider to white for blend mode */
-.menu-v3-fixed-container:hover .menu-v3-divider,
-.menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-divider {
-  background: rgba(255, 255, 255, 1) !important;
+  /* Account button (if visible on tablet) */
+  body:has(.menu-v3-container.menu-v3-open) .account-v3-fixed-container .underline-button-text {
+    color: white !important;
+  }
+
+  body:has(.menu-v3-container.menu-v3-open) .account-v3-fixed-container .underline-button-text::after {
+    background: white !important;
+  }
+
+  /* Immersive button */
+  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-text-container .immersive-v3-text {
+    color: white !important;
+  }
+
+  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-border-container .immersive-v3-border::after {
+    background: conic-gradient(
+        from var(--angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.3) 5% 40%,
+        rgba(255, 255, 255, 0.8) 50%,
+        rgba(255, 255, 255, 0.3) 60% 95%,
+        rgba(255, 255, 255, 0.8)
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+  }
+
+  /* Menu popup items */
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-popup .underline-button-text {
+    color: white !important;
+  }
+
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-popup .underline-button-text::after {
+    background: white !important;
+  }
 }
 
 /* Menu button glassmorphism background theme (mobile/tablet) */
 @media screen and (max-width: 1023px) {
   .menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-button {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.25) !important;
+    background: transparent !important;
   }
 
-  .menu-v3-fixed-container.navbar-v3-theme-white .menu-v3-button:hover,
   .menu-v3-fixed-container.navbar-v3-theme-white
     .menu-v3-container.menu-v3-open
     .menu-v3-button {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.35) !important;
+    background: transparent !important;
   }
 
   .menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-button {
-    background: rgba(0, 0, 0, 0.05) !important;
-    border-color: rgba(0, 0, 0, 0.25) !important;
+    background: transparent !important;
   }
 
-  .menu-v3-fixed-container.navbar-v3-theme-black .menu-v3-button:hover,
   .menu-v3-fixed-container.navbar-v3-theme-black
     .menu-v3-container.menu-v3-open
     .menu-v3-button {
-    background: rgba(0, 0, 0, 0.1) !important;
-    border-color: rgba(0, 0, 0, 0.35) !important;
+    background: transparent !important;
   }
 
-  /* Override to white when hovered/opened (for blend mode) */
-  .menu-v3-fixed-container:hover .menu-v3-button,
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-button {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.25) !important;
-  }
-
-  .menu-v3-fixed-container:hover .menu-v3-button:hover,
   .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-button,
   .menu-v3-fixed-container .menu-v3-container.menu-v3-open .menu-v3-button {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.35) !important;
+    background: transparent !important;
   }
 }
 
@@ -1428,7 +1776,8 @@
   color: rgba(255, 255, 255, 1) !important;
 }
 
-.account-v3-fixed-container.navbar-v3-theme-white .underline-button-text::after {
+.account-v3-fixed-container.navbar-v3-theme-white
+  .underline-button-text::after {
   background: rgba(255, 255, 255, 1) !important;
 }
 
@@ -1446,7 +1795,8 @@
   color: rgba(0, 0, 0, 1) !important;
 }
 
-.account-v3-fixed-container.navbar-v3-theme-black .underline-button-text::after {
+.account-v3-fixed-container.navbar-v3-theme-black
+  .underline-button-text::after {
   background: rgba(0, 0, 0, 1) !important;
 }
 
@@ -1467,7 +1817,8 @@
 .account-v3-fixed-container:hover .account-v3-text,
 .account-v3-fixed-container:has(.account-v3-popup.active) .account-v3-text,
 .account-v3-fixed-container:hover .underline-button-text,
-.account-v3-fixed-container:has(.account-v3-popup.active) .underline-button-text {
+.account-v3-fixed-container:has(.account-v3-popup.active)
+  .underline-button-text {
   color: rgba(255, 255, 255, 1) !important;
 }
 
@@ -1479,7 +1830,9 @@
 }
 
 .account-v3-fixed-container:hover .account-v3-user-info span,
-.account-v3-fixed-container:has(.account-v3-popup.active) .account-v3-user-info span {
+.account-v3-fixed-container:has(.account-v3-popup.active)
+  .account-v3-user-info
+  span {
   color: white !important;
 }
 
@@ -1504,7 +1857,8 @@
   mix-blend-mode: normal !important;
 }
 
-.immersive-v3-border-container.navbar-v3-theme-white .immersive-v3-border::after {
+.immersive-v3-border-container.navbar-v3-theme-white
+  .immersive-v3-border::after {
   background: conic-gradient(
       from var(--angle-1) at 50% 50%,
       rgba(255, 255, 255, 0.8),
@@ -1529,7 +1883,8 @@
   mix-blend-mode: normal !important;
 }
 
-.immersive-v3-border-container.navbar-v3-theme-black .immersive-v3-border::after {
+.immersive-v3-border-container.navbar-v3-theme-black
+  .immersive-v3-border::after {
   background: conic-gradient(
       from var(--angle-1) at 50% 50%,
       rgba(0, 0, 0, 0.8),
@@ -1588,62 +1943,6 @@ body:has(.navbar-v3-theme-white) .immersive-v3-button:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* ========================================
-   NAVBARV3: DISABLE ALL HOVER EFFECTS FOR MENU
-   Only click interactions allowed
-   ======================================== */
-
-/* Disable menu container hover effects */
-.menu-v3-container:hover .menu-v3-icon {
-  opacity: 1 !important;
-  transform: none !important;
-  filter: inherit !important;
-}
-
-.menu-v3-container:hover .menu-v3-icon-close {
-  opacity: 0 !important;
-  transform: none !important;
-  color: inherit !important;
-}
-
-.menu-v3-container:hover .menu-v3-button {
-  background: none !important;
-  transform: none !important;
-}
-
-.menu-v3-button:hover {
-  background: none !important;
-  transform: none !important;
-  border-color: inherit !important;
-}
-
-/* Disable hover for menu fixed container - only when menu is NOT open */
-.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) {
-  mix-blend-mode: inherit !important;
-}
-
-.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .menu-v3-text,
-.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .underline-button-text {
-  color: inherit !important;
-}
-
-.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .underline-button-text::after {
-  width: 0 !important;
-  background: inherit !important;
-}
-
-.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .menu-v3-icon {
-  filter: inherit !important;
-}
-
-.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .menu-v3-icon-close {
-  color: inherit !important;
-}
-
-.menu-v3-fixed-container:hover:not(:has(.menu-v3-container.menu-v3-open)) .menu-v3-divider {
-  background: inherit !important;
-}
-
 /* Keep cursor pointer for clickability */
 .menu-v3-button {
   cursor: pointer !important;
@@ -1652,5 +1951,3 @@ body:has(.navbar-v3-theme-white) .immersive-v3-button:hover {
 .menu-v3-text {
   cursor: pointer !important;
 }
-
-/* End of NavbarV3 hover disable */

@@ -2,18 +2,28 @@ import "./ContactUs.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import UnderlineButton from "@components/common/button/UnderlineButton";
 import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 
 const ContactUs = () => {
   const navigate = useNavigate();
 
-  const handleContactUsClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.CONTACT);
+  const handleBookAppointmentClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.BOOK_APPOINTMENT);
+  };
+
+  const handleLiveChatClick = () => {
+    // TODO: Implement live chat functionality
+    console.log("Start a live chat");
+  };
+
+  const handlePhoneCallClick = () => {
+    window.location.href = "tel:+442077589780";
   };
 
   return (
-    <section className="contact-us-hero" data-navbar-theme="white">
+    <section className="contact-us-hero">
       <MediaImage
         src="contactUs/ReachOut.svg"
         alt="Contact Us Background"
@@ -30,11 +40,26 @@ const ContactUs = () => {
         <div className="contact-us-button-wrapper">
           <ShineGlassButton
             theme="footer"
-            onClick={handleContactUsClick}
+            onClick={handleBookAppointmentClick}
             className="contact-us-button"
           >
-            Contact us
+            Book an Appointment
           </ShineGlassButton>
+        </div>
+        <div className="contact-us-actions">
+          <UnderlineButton
+            onClick={handleLiveChatClick}
+            textClassName="bodytext-4--no-margin"
+          >
+            Start a live chat
+          </UnderlineButton>
+          <span className="contact-us-separator bodytext-4--no-margin">or</span>
+          <UnderlineButton
+            onClick={handlePhoneCallClick}
+            textClassName="bodytext-4--no-margin"
+          >
+            Make a phone call
+          </UnderlineButton>
         </div>
       </div>
     </section>

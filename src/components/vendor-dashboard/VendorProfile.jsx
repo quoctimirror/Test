@@ -26,8 +26,8 @@ const VendorProfile = ({ vendorInfo }) => {
       <div className="vendor-card">
         <div className="vendor-card-body" style={{ textAlign: "center", padding: "3rem", color: "#666" }}>
           <div style={{ fontSize: "48px", marginBottom: "1rem" }}>🏢</div>
-          <h3>No Vendor Profile</h3>
-          <p>Unable to load vendor profile information.</p>
+          <h3 className="heading-3--no-margin">No Vendor Profile</h3>
+          <p className="bodytext-4--no-margin">Unable to load vendor profile information.</p>
         </div>
       </div>
     );
@@ -52,35 +52,33 @@ const VendorProfile = ({ vendorInfo }) => {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "2rem" }}>
             {/* Basic Information */}
             <div>
-              <h4 style={{ marginBottom: "1rem", color: "#333", borderBottom: "2px solid #f0f0f0", paddingBottom: "0.5rem" }}>
+              <h4 className="heading-3--no-margin" style={{ marginBottom: "1rem", color: "#333", borderBottom: "2px solid #f0f0f0", paddingBottom: "0.5rem" }}>
                 Basic Information
               </h4>
               <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div>
-                  <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Vendor Code</label>
-                  <div style={{ fontSize: "16px", marginTop: "0.25rem" }}>
+                  <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Vendor Code</label>
+                  <div className="bodytext-4--no-margin" style={{ marginTop: "0.25rem" }}>
                     <code style={{ background: "#f8f9fa", padding: "4px 8px", borderRadius: "4px" }}>
                       {vendorInfo.code}
                     </code>
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Company Name</label>
-                  <div style={{ fontSize: "16px", marginTop: "0.25rem", fontWeight: "500" }}>
+                  <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Company Name</label>
+                  <div className="bodytext-4--no-margin" style={{ marginTop: "0.25rem" }}>
                     {vendorInfo.name}
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Vendor Type</label>
-                  <div style={{ fontSize: "16px", marginTop: "0.25rem" }}>
-                    <span style={{
+                  <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Vendor Type</label>
+                  <div className="bodytext-4--no-margin" style={{ marginTop: "0.25rem" }}>
+                    <span className="bodytext-6--no-margin" style={{
                       padding: "4px 12px",
                       borderRadius: "12px",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                      backgroundColor: vendorInfo.vendorType === "BOTH" ? "#e7f3ff" : 
+                      backgroundColor: vendorInfo.vendorType === "BOTH" ? "#e7f3ff" :
                                      vendorInfo.vendorType === "PARTS_ONLY" ? "#fff3cd" : "#d4edda",
-                      color: vendorInfo.vendorType === "BOTH" ? "#0066cc" : 
+                      color: vendorInfo.vendorType === "BOTH" ? "#0066cc" :
                              vendorInfo.vendorType === "PARTS_ONLY" ? "#856404" : "#155724",
                     }}>
                       {getVendorTypeLabel(vendorInfo.vendorType)}
@@ -92,33 +90,33 @@ const VendorProfile = ({ vendorInfo }) => {
 
             {/* Location Information */}
             <div>
-              <h4 style={{ marginBottom: "1rem", color: "#333", borderBottom: "2px solid #f0f0f0", paddingBottom: "0.5rem" }}>
+              <h4 className="heading-3--no-margin" style={{ marginBottom: "1rem", color: "#333", borderBottom: "2px solid #f0f0f0", paddingBottom: "0.5rem" }}>
                 Location & Contact
               </h4>
               <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div>
-                  <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Country</label>
-                  <div style={{ fontSize: "16px", marginTop: "0.25rem" }}>
+                  <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Country</label>
+                  <div className="bodytext-4--no-margin" style={{ marginTop: "0.25rem" }}>
                     {vendorInfo.country}
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Contact Person</label>
-                  <div style={{ fontSize: "16px", marginTop: "0.25rem" }}>
+                  <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Contact Person</label>
+                  <div className="bodytext-4--no-margin" style={{ marginTop: "0.25rem" }}>
                     {vendorInfo.contactPerson}
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Email</label>
-                  <div style={{ fontSize: "16px", marginTop: "0.25rem" }}>
+                  <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Email</label>
+                  <div className="bodytext-4--no-margin" style={{ marginTop: "0.25rem" }}>
                     <a href={`mailto:${vendorInfo.contactEmail}`} style={{ color: "#0066cc", textDecoration: "none" }}>
                       {vendorInfo.contactEmail}
                     </a>
                   </div>
                 </div>
                 <div>
-                  <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Phone</label>
-                  <div style={{ fontSize: "16px", marginTop: "0.25rem" }}>
+                  <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Phone</label>
+                  <div className="bodytext-4--no-margin" style={{ marginTop: "0.25rem" }}>
                     <a href={`tel:${vendorInfo.contactPhone}`} style={{ color: "#0066cc", textDecoration: "none" }}>
                       {vendorInfo.contactPhone}
                     </a>
@@ -130,10 +128,10 @@ const VendorProfile = ({ vendorInfo }) => {
 
           {/* Address */}
           <div style={{ marginTop: "2rem" }}>
-            <h4 style={{ marginBottom: "1rem", color: "#333", borderBottom: "2px solid #f0f0f0", paddingBottom: "0.5rem" }}>
+            <h4 className="heading-3--no-margin" style={{ marginBottom: "1rem", color: "#333", borderBottom: "2px solid #f0f0f0", paddingBottom: "0.5rem" }}>
               Address
             </h4>
-            <div style={{ fontSize: "16px", lineHeight: "1.5", color: "#555" }}>
+            <div className="bodytext-4--no-margin" style={{ lineHeight: "1.5", color: "#555" }}>
               {vendorInfo.address}
             </div>
           </div>
@@ -148,20 +146,20 @@ const VendorProfile = ({ vendorInfo }) => {
         <div className="vendor-card-body">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "2rem" }}>
             <div>
-              <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Payment Terms</label>
-              <div style={{ fontSize: "16px", marginTop: "0.5rem", padding: "1rem", background: "#f8f9fa", borderRadius: "8px" }}>
+              <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Payment Terms</label>
+              <div className="bodytext-4--no-margin" style={{ marginTop: "0.5rem", padding: "1rem", background: "#f8f9fa", borderRadius: "8px" }}>
                 {vendorInfo.paymentTerms || "Not specified"}
               </div>
             </div>
             <div>
-              <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Average Product Cost</label>
-              <div style={{ fontSize: "20px", marginTop: "0.5rem", fontWeight: "600", color: "#28a745" }}>
+              <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Average Product Cost</label>
+              <div className="heading-3--no-margin" style={{ marginTop: "0.5rem", color: "#28a745" }}>
                 {formatCurrency(vendorInfo.avgProductCost)}
               </div>
             </div>
             <div>
-              <label style={{ fontWeight: "500", color: "#666", fontSize: "14px" }}>Production Lead Time</label>
-              <div style={{ fontSize: "20px", marginTop: "0.5rem", fontWeight: "600", color: "#0066cc" }}>
+              <label className="bodytext-5--no-margin" style={{ color: "#666" }}>Production Lead Time</label>
+              <div className="heading-3--no-margin" style={{ marginTop: "0.5rem", color: "#0066cc" }}>
                 {vendorInfo.productionLeadTimeDays ? `${vendorInfo.productionLeadTimeDays} days` : "Not specified"}
               </div>
             </div>

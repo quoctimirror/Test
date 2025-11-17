@@ -105,8 +105,21 @@ const Footer = () => {
     );
   };
 
+  const handleBookAppointmentClick = async (e) => {
+    e.preventDefault();
+    if (window.location.pathname === ROUTES.BOOK_APPOINTMENT) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    sessionStorage.setItem("scrollToTop", "true");
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      ROUTES.BOOK_APPOINTMENT
+    );
+  };
+
   return (
-    <footer className="footer">
+    <footer className="footer" data-navbar-theme="white">
       <div className="footer-container">
         <div className="footer-content">
           <div className="footer-left">
@@ -117,7 +130,7 @@ const Footer = () => {
                     onClick={handleHomeClick}
                     className="footer-link-button"
                   >
-                    Homepage
+                    Home
                   </UnderlineButton>
                 </li>
                 <li>
@@ -149,7 +162,7 @@ const Footer = () => {
                     onClick={handleAboutClick}
                     className="footer-link-button"
                   >
-                    About Mirror
+                    About
                   </UnderlineButton>
                 </li>
                 <li>
@@ -169,6 +182,15 @@ const Footer = () => {
               <ul className="contact-info">
                 <li>
                   <UnderlineButton
+                    onClick={handleLocationClick}
+                    className="contact-link-button"
+                    textClassName="bodytext-4--no-margin"
+                  >
+                    Location
+                  </UnderlineButton>
+                </li>
+                <li>
+                  <UnderlineButton
                     onClick={handleContactClick}
                     className="contact-link-button"
                     textClassName="bodytext-4--no-margin"
@@ -177,28 +199,8 @@ const Footer = () => {
                   </UnderlineButton>
                 </li>
                 <li>
-                  <a href="mailto:support@mirrorfuturediamond.com">
-                    <UnderlineButton
-                      className="contact-link-button"
-                      textClassName="bodytext-4--no-margin"
-                    >
-                      info@mirrorfuturediamond.com
-                    </UnderlineButton>
-                  </a>
-                </li>
-                {/* <li>
-                  <a href="tel:+97.130.0938">
-                    <UnderlineButton
-                      className="contact-link-button"
-                      textClassName="bodytext-3--no-margin"
-                    >
-                      +97.130.0938
-                    </UnderlineButton>
-                  </a>
-                </li> */}
-                <li>
                   <UnderlineButton
-                    onClick={handleContactClick}
+                    onClick={handleBookAppointmentClick}
                     className="contact-link-button"
                     textClassName="bodytext-4--no-margin"
                   >
@@ -206,13 +208,24 @@ const Footer = () => {
                   </UnderlineButton>
                 </li>
                 <li>
-                  <UnderlineButton
-                    onClick={handleLocationClick}
-                    className="contact-link-button"
-                    textClassName="bodytext-4--no-margin"
-                  >
-                    Location
-                  </UnderlineButton>
+                  <a href="mailto:support@mirrorfuturediamond.com">
+                    <UnderlineButton
+                      className="contact-link-button"
+                      textClassName="bodytext-4--no-margin"
+                    >
+                      support@mirrorfuturediamond.com
+                    </UnderlineButton>
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+97.130.0938">
+                    <UnderlineButton
+                      className="contact-link-button"
+                      textClassName="bodytext-4--no-margin"
+                    >
+                      +97.130.0938
+                    </UnderlineButton>
+                  </a>
                 </li>
               </ul>
             </div>

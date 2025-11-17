@@ -47,8 +47,8 @@ const VendorProducts = ({ vendorInfo }) => {
       <div className="vendor-card">
         <div className="vendor-card-body" style={{ textAlign: "center", padding: "3rem", color: "#666" }}>
           <div style={{ fontSize: "48px", marginBottom: "1rem" }}>🏢</div>
-          <h3>No Vendor Account</h3>
-          <p>Unable to load products without vendor information.</p>
+          <h3 className="heading-3--no-margin">No Vendor Account</h3>
+          <p className="bodytext-4--no-margin">Unable to load products without vendor information.</p>
         </div>
       </div>
     );
@@ -57,7 +57,7 @@ const VendorProducts = ({ vendorInfo }) => {
   if (loading) {
     return (
       <div className="vendor-card">
-        <div className="vendor-card-body" style={{ textAlign: "center", padding: "3rem" }}>
+        <div className="vendor-card-body bodytext-4--no-margin" style={{ textAlign: "center", padding: "3rem" }}>
           Loading your products...
         </div>
       </div>
@@ -68,7 +68,7 @@ const VendorProducts = ({ vendorInfo }) => {
     <div>
       {error && (
         <div className="vendor-card" style={{ marginBottom: "1rem", backgroundColor: "#fee" }}>
-          <div className="vendor-card-body" style={{ color: "#c53030" }}>
+          <div className="vendor-card-body bodytext-4--no-margin" style={{ color: "#c53030" }}>
             {error}
           </div>
         </div>
@@ -102,7 +102,7 @@ const VendorProducts = ({ vendorInfo }) => {
         </div>
         <div className="vendor-card-body" style={{ padding: 0 }}>
           {filteredProducts.length === 0 ? (
-            <div style={{ padding: "3rem", textAlign: "center", color: "#6c757d" }}>
+            <div className="bodytext-4--no-margin" style={{ padding: "3rem", textAlign: "center", color: "#6c757d" }}>
               {searchTerm ? "No products found matching your search." : "You don't have any products yet."}
             </div>
           ) : (

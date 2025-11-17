@@ -1,19 +1,20 @@
 import "./NavbarV3.css";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
-import MenuIcon from "@assets/images/icons/3gach.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import UnderlineButton from "@/components/common/button/UnderlineButton";
 import { ROUTES } from "@/constants/routes";
 import { useNavbarTheme } from "@/hooks/useNavbarTheme";
+import DiamondFallingEffect from "@/utils/diamondFallingEffect";
 
 export default function NavbarV3() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+  const [isMenuClosing, setIsMenuClosing] = useState(false);
+
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 425);
   const [isTablet, setIsTablet] = useState(
     window.innerWidth > 425 && window.innerWidth <= 1023
@@ -22,7 +23,17 @@ export default function NavbarV3() {
   const [isInScrollContainer, setIsInScrollContainer] = useState(false);
   const [isInIntroSubmitSection, setIsInIntroSubmitSection] = useState(false);
   const logoRef = useRef(null);
+  const diamondEffectRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
+
+  // Helper function to close menu with animation
+  const closeMenuWithAnimation = useCallback(() => {
+    setIsMenuClosing(true);
+    setTimeout(() => {
+      setIsMenuOpen(false);
+      setIsMenuClosing(false);
+    }, 300); // Match animation duration
+  }, []);
 
   // Get current navbar theme from hook
   const { theme: navbarTheme } = useNavbarTheme();
@@ -50,6 +61,22 @@ export default function NavbarV3() {
   useEffect(() => {
     // Initialize optimized transition system
     optimizedTransitionUtils.init();
+
+    // Initialize diamond falling effect
+    diamondEffectRef.current = new DiamondFallingEffect("navbar-diamond-container", {
+      count: 40,
+      speed: 2.5,
+      size: 12,
+      sway: 6,
+      rotation: 4,
+    });
+
+    // Cleanup on unmount
+    return () => {
+      if (diamondEffectRef.current) {
+        diamondEffectRef.current.stop();
+      }
+    };
   }, []);
 
   // Set initial state for homepage on mount
@@ -78,38 +105,34 @@ export default function NavbarV3() {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".menu-v3-container")) {
-        setIsMenuOpen(false);
+        if (isMenuOpen && !isMenuClosing) {
+          closeMenuWithAnimation();
+        }
       }
     };
 
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+  }, [isMenuOpen, isMenuClosing, closeMenuWithAnimation]);
 
-  // Reset menu state when route changes
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location.pathname]);
 
-  // Prevent body scroll when menu is open on mobile/tablet
+  // Prevent body scroll when menu or account is open on all devices
   useEffect(() => {
-    if ((isMobile || isTablet) && isMenuOpen) {
-      // Save current scroll position
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
+    if (isMenuOpen || isAccountMenuOpen) {
+      document.body.style.overflow = "hidden";
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
-      }
+      document.body.style.overflow = "";
     }
-  }, [isMenuOpen, isMobile, isTablet]);
+  }, [isMenuOpen, isAccountMenuOpen]);
+
+  // Control diamond falling effect based on menu state
+  useEffect(() => {
+    if (isMenuOpen && diamondEffectRef.current) {
+      diamondEffectRef.current.start();
+    } else if (!isMenuOpen && diamondEffectRef.current) {
+      diamondEffectRef.current.stop();
+    }
+  }, [isMenuOpen]);
 
   useEffect(() => {
     if (!isHomePage) return;
@@ -184,6 +207,14 @@ export default function NavbarV3() {
   }, [location.pathname]);
 
   const performTransition = async (route, options = {}) => {
+    // Close menu immediately before transition to prevent animation loop
+    if (isMenuOpen || isMenuClosing) {
+      setIsMenuOpen(false);
+      setIsMenuClosing(false);
+      // Wait for DOM to update before capturing originalContent
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+
     // Sử dụng optimized transition system
     await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
   };
@@ -192,6 +223,12 @@ export default function NavbarV3() {
     // Disable logo click on Milan and Immersive Showroom pages
     if (shouldDisableLogoClick) {
       return;
+    }
+
+    // Close menu immediately if open
+    if (isMenuOpen || isMenuClosing) {
+      setIsMenuOpen(false);
+      setIsMenuClosing(false);
     }
 
     if (window.location.pathname === ROUTES.HOME_PAGE) {
@@ -203,6 +240,19 @@ export default function NavbarV3() {
       sessionStorage.setItem("scrollToTop", "true");
       await performTransition(ROUTES.HOME_PAGE);
     }
+  };
+
+  const handleHomeClick = async () => {
+    if (
+      window.location.pathname === ROUTES.HOME ||
+      window.location.pathname === ROUTES.HOME_PAGE
+    ) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition(ROUTES.HOME_PAGE);
   };
 
   const handleProductsClick = async () => {
@@ -280,6 +330,30 @@ export default function NavbarV3() {
     return user && user.roles && user.roles.includes("DESIGNER");
   };
 
+  // Helper function to get current page name for display
+  const getCurrentPageName = () => {
+    const path = location.pathname;
+    if (path === ROUTES.HOME || path === ROUTES.HOME_PAGE) return "Home";
+    // User profile pages - check active tab from location state
+    if (path === ROUTES.USER_PROFILE) {
+      const activeTab = location.state?.activeTab;
+      if (activeTab === "Orders") return "Orders";
+      if (activeTab === "Services") return "Services";
+      if (activeTab === "Wishlist") return "Wishlist";
+      return "My Passport"; // Default to My Passport if no tab specified
+    }
+    // Use startsWith for pages with detail/sub-pages
+    if (path.startsWith(ROUTES.COLLECTIONS)) return "Products";
+    if (path.startsWith(ROUTES.SERVICES)) return "Services";
+    if (path.startsWith(ROUTES.SUPPORT)) return "Support";
+    if (path.startsWith(ROUTES.NEWS)) return "News";
+    // Exact match for pages without sub-pages
+    if (path === ROUTES.ABOUT) return "About Mirror";
+    if (path === ROUTES.LOCATIONS) return "Location";
+    if (path === ROUTES.CONTACT) return "Contact us";
+    return null; // No page name for other routes
+  };
+
   const handleProfileClick = async (tab = "My Passport") => {
     setIsAccountMenuOpen(false);
 
@@ -287,10 +361,12 @@ export default function NavbarV3() {
     if (location.pathname === ROUTES.USER_PROFILE) {
       navigate(ROUTES.USER_PROFILE, {
         state: { activeTab: tab, timestamp: Date.now() },
-        replace: true
+        replace: true,
       });
     } else {
-      await performTransition(ROUTES.USER_PROFILE, { state: { activeTab: tab, timestamp: Date.now() } });
+      await performTransition(ROUTES.USER_PROFILE, {
+        state: { activeTab: tab, timestamp: Date.now() },
+      });
     }
   };
 
@@ -335,6 +411,26 @@ export default function NavbarV3() {
     await performTransition(ROUTES.LOCATIONS);
   };
 
+  const handleImmersiveShowroomClick = async () => {
+    if (window.location.pathname === ROUTES.IMMERSIVE_SHOWROOM) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition(ROUTES.IMMERSIVE_SHOWROOM);
+  };
+
+  const handleBookAppointmentClick = async () => {
+    if (window.location.pathname === ROUTES.BOOK_APPOINTMENT) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    sessionStorage.setItem("scrollToTop", "true");
+    await performTransition(ROUTES.BOOK_APPOINTMENT);
+  };
+
   const handleAccountMenuClick = async () => {
     // Check if user is authenticated
     const hasToken = localStorage.getItem("accessToken");
@@ -365,7 +461,7 @@ export default function NavbarV3() {
       <div
         className={`navbar-v3-glass-background navbar-v3-theme-${navbarTheme} ${
           isMenuOpen || isAccountMenuOpen ? "expanded" : ""
-        }`}
+        } ${isMenuOpen ? "menu-expanded" : ""}`}
       >
         <div className="liquidGlass-v3-effect"></div>
         <div className="liquidGlass-v3-tint"></div>
@@ -466,160 +562,215 @@ export default function NavbarV3() {
           }`}
         >
           <div
-            className={`menu-v3-container ${
-              isMenuOpen ? "menu-v3-open" : ""
-            }`}
+            className={`menu-v3-container ${isMenuOpen ? "menu-v3-open" : ""}`}
           >
             <div
               className="menu-v3-button"
               onClick={(e) => {
                 e.stopPropagation();
-                setIsMenuOpen(!isMenuOpen);
+                if (isMenuOpen) {
+                  closeMenuWithAnimation();
+                } else {
+                  setIsMenuOpen(true);
+                }
               }}
             >
               <div className="menu-v3-icon-container">
-                <img className="menu-v3-icon" src={MenuIcon} alt="Menu" />
+                <svg
+                  className="menu-v3-icon menu-v3-icon-desktop"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="26"
+                  viewBox="0 0 32 26"
+                  fill="none"
+                >
+                  <path d="M32 18H0" stroke="white" strokeWidth="1.5" />
+                  <path
+                    d="M20 8.00001L0 8.00001"
+                    stroke="white"
+                    strokeWidth="1.5"
+                  />
+                </svg>
                 <svg
                   className="menu-v3-icon-close"
-                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="37"
+                  height="26"
+                  viewBox="0 0 37 26"
                   fill="none"
-                  stroke="currentColor"
                 >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                  <path
+                    d="M18.915 22.3848L0.530273 4.00001"
+                    stroke="white"
+                    strokeWidth="1.5"
+                  />
+                  <path
+                    d="M18.915 3.61523L0.530273 22"
+                    stroke="white"
+                    strokeWidth="1.5"
+                  />
                 </svg>
               </div>
               <span className="menu-v3-text">
                 <UnderlineButton>Menu</UnderlineButton>
               </span>
+              {/* Show separator and page name for all pages */}
+              {getCurrentPageName() && !isMenuOpen && (
+                <>
+                  <svg
+                    className="menu-v3-page-separator"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="7"
+                    height="20"
+                    viewBox="0 0 7 20"
+                    fill="none"
+                  >
+                    <path
+                      d="M5.90039 0.195312L0.72401 19.5138"
+                      stroke="white"
+                      strokeOpacity="0.5"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                  <span className="menu-v3-page-name bodytext-6--no-margin">
+                    {getCurrentPageName()}
+                  </span>
+                </>
+              )}
             </div>
             <div
               className={`menu-v3-popup ${
-                isMenuOpen ? "active" : ""
-              }`}
+                isMenuOpen || isMenuClosing ? "active" : ""
+              } ${isMenuClosing ? "closing" : ""}`}
             >
               <div className="menu-v3-groups">
+                {/* First group - Main navigation */}
                 <ul className="menu-v3-list">
+                  <li>
+                    <UnderlineButton onClick={handleHomeClick}>
+                      Home
+                    </UnderlineButton>
+                  </li>
                   <li
-                    className={location.pathname === ROUTES.COLLECTIONS ? "active" : ""}
+                    className={
+                      location.pathname === ROUTES.COLLECTIONS ? "active" : ""
+                    }
                   >
                     <UnderlineButton onClick={handleProductsClick}>
                       Products
                     </UnderlineButton>
                   </li>
                   <li
-                    className={location.pathname === ROUTES.SERVICES ? "active" : ""}
+                    className={
+                      location.pathname === ROUTES.SERVICES ? "active" : ""
+                    }
                   >
                     <UnderlineButton onClick={handleServicesClick}>
                       Services
                     </UnderlineButton>
                   </li>
                   <li
-                    className={location.pathname === ROUTES.SUPPORT ? "active" : ""}
+                    className={
+                      location.pathname === ROUTES.SUPPORT ? "active" : ""
+                    }
                   >
                     <UnderlineButton onClick={handleSupportClick}>
                       Support
                     </UnderlineButton>
                   </li>
                   <li
-                    className={location.pathname === ROUTES.ABOUT ? "active" : ""}
+                    className={
+                      location.pathname === ROUTES.ABOUT ? "active" : ""
+                    }
                   >
                     <UnderlineButton onClick={handleAboutClick}>
-                      About Mirror
+                      About
                     </UnderlineButton>
                   </li>
                   <li
-                    className={location.pathname === ROUTES.NEWS ? "active" : ""}
+                    className={
+                      location.pathname === ROUTES.NEWS ? "active" : ""
+                    }
                   >
                     <UnderlineButton onClick={handleNewsClick}>
                       News
                     </UnderlineButton>
                   </li>
-                  <li className={`immersive-v3-menu-item ${location.pathname === ROUTES.IMMERSIVE_SHOWROOM ? "active" : ""}`}>
-                    <UnderlineButton>Immersive Showroom</UnderlineButton>
-                  </li>
                 </ul>
-                <div className="menu-v3-divider"></div>
+                <div className="menu-v3-divider-wrapper">
+                  <hr className="menu-v3-divider" />
+                </div>
+
+                {/* FIND US section */}
                 <ul className="menu-v3-list">
                   <li
-                    className={location.pathname === ROUTES.LOCATIONS ? "active" : ""}
+                    className={
+                      location.pathname === ROUTES.LOCATIONS ? "active" : ""
+                    }
                   >
                     <UnderlineButton onClick={handleLocationClick}>
                       Location
                     </UnderlineButton>
                   </li>
                   <li
-                    className={location.pathname === ROUTES.CONTACT ? "active" : ""}
+                    className={
+                      location.pathname === ROUTES.CONTACT ? "active" : ""
+                    }
                   >
                     <UnderlineButton onClick={handleContactClick}>
-                      Contact us
-                    </UnderlineButton>
-                  </li>
-                  <li className="account-v3-menu-item">
-                    <UnderlineButton onClick={handleAccountMenuClick}>
-                      Account
+                      Contact
                     </UnderlineButton>
                   </li>
                 </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {!shouldHideButtons && (
-        <div
-          className={`account-v3-fixed-container navbar-v3-theme-${navbarTheme} ${
-            isHomePage && !isMenuOpen ? "no-blend" : ""
-          } ${
-            isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
-          }`}
-        >
-          <div className="account-v3-container">
-            {isAuthenticated ? (
-              // Logged in: Show "Account" with hover dropdown
-              <>
-                <div
-                  className="account-v3-button-wrapper"
-                  onMouseEnter={() => setIsAccountMenuOpen(true)}
-                  onMouseLeave={() => setIsAccountMenuOpen(false)}
-                >
-                  <UnderlineButton>Account</UnderlineButton>
+                <div className="menu-v3-divider-wrapper menu-v3-profile-divider">
+                  <hr className="menu-v3-divider" />
                 </div>
 
-                {/* Account Dropdown Menu - Only for authenticated users */}
-                <div
-                  className={`account-v3-popup ${isAccountMenuOpen ? "active" : ""}`}
-                  onMouseEnter={() => setIsAccountMenuOpen(true)}
-                  onMouseLeave={() => setIsAccountMenuOpen(false)}
-                >
-                  <div className="account-v3-groups">
-                    <div className="account-v3-user-info">
-                      <span className="bodytext-4--no-margin">
-                        {user?.username || "User"}
-                      </span>
-                    </div>
-                    <div className="menu-v3-divider"></div>
-
-                    <ul className="account-v3-list">
+                {/* PROFILE section */}
+                {!isAuthenticated ? (
+                  <>
+                    <ul className="menu-v3-list menu-v3-profile-section-guest">
                       <li>
-                        <UnderlineButton onClick={() => handleProfileClick("My Passport")}>
+                        <UnderlineButton onClick={handleAccountMenuClick}>
+                          Mirror Passport
+                        </UnderlineButton>
+                      </li>
+                      <li>
+                        <UnderlineButton onClick={handleLoginClick}>
+                          Log in
+                        </UnderlineButton>
+                      </li>
+                    </ul>
+                  </>
+                ) : (
+                  <>
+                    <ul className="menu-v3-list">
+                      <li>
+                        <UnderlineButton
+                          onClick={() => handleProfileClick("My Passport")}
+                        >
                           My Passport
                         </UnderlineButton>
                       </li>
                       <li>
-                        <UnderlineButton onClick={() => handleProfileClick("Orders")}>
-                          Orders
+                        <UnderlineButton
+                          onClick={() => handleProfileClick("Orders")}
+                        >
+                          My Orders
                         </UnderlineButton>
                       </li>
                       <li>
-                        <UnderlineButton onClick={() => handleProfileClick("Services")}>
-                          Services
+                        <UnderlineButton
+                          onClick={() => handleProfileClick("Services")}
+                        >
+                          My Services
                         </UnderlineButton>
                       </li>
                       <li>
-                        <UnderlineButton onClick={() => handleProfileClick("Wishlist")}>
-                          Wishlist
+                        <UnderlineButton
+                          onClick={() => handleProfileClick("Wishlist")}
+                        >
+                          My Wishlist
                         </UnderlineButton>
                       </li>
 
@@ -648,25 +799,42 @@ export default function NavbarV3() {
                           </UnderlineButton>
                         </li>
                       )}
-                    </ul>
 
-                    <div className="menu-v3-divider"></div>
-
-                    <ul className="account-v3-list">
                       <li className="logout-v3-item">
                         <UnderlineButton onClick={handleLogoutClick}>
-                          Logout
+                          Log out
                         </UnderlineButton>
                       </li>
                     </ul>
-                  </div>
-                </div>
-              </>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!shouldHideButtons && (
+        <div
+          className={`account-v3-fixed-container navbar-v3-theme-${navbarTheme} ${
+            isHomePage && !isMenuOpen ? "no-blend" : ""
+          } ${
+            isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
+          }`}
+        >
+          <div className="account-v3-container">
+            {isAuthenticated ? (
+              // Logged in: Show "My Passport" without dropdown
+              <div className="account-v3-button-wrapper">
+                <UnderlineButton onClick={handleAccountMenuClick}>
+                  My Passport
+                </UnderlineButton>
+              </div>
             ) : (
-              // Not logged in: Show "Login" button, no dropdown
+              // Not logged in: Show "Log in" button
               <div className="account-v3-button-wrapper">
                 <UnderlineButton onClick={handleLoginClick}>
-                  Login
+                  Log in
                 </UnderlineButton>
               </div>
             )}
@@ -678,7 +846,7 @@ export default function NavbarV3() {
       {!shouldHideButtons && (
         <>
           <div className="immersive-v3-fixed-container">
-            <button className="immersive-v3-button"></button>
+            <button className="immersive-v3-button" onClick={handleBookAppointmentClick}></button>
           </div>
 
           {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
@@ -701,10 +869,22 @@ export default function NavbarV3() {
             }`}
           >
             <span className="immersive-v3-text bodytext-4--no-margin">
-              Immersive Showroom
+              Book an Appointment
             </span>
           </div>
         </>
+      )}
+
+      {/* Diamond Falling Effect Container */}
+      <div id="navbar-diamond-container"></div>
+
+      {/* Bottom button on gradient sweep - Desktop only */}
+      {isMenuOpen && (
+        <div className="menu-v3-gradient-bottom-button">
+          <UnderlineButton onClick={handleImmersiveShowroomClick}>
+            Explore Immersive showroom
+          </UnderlineButton>
+        </div>
       )}
     </>
   );

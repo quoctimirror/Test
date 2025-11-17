@@ -36,11 +36,43 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
   background: var(--Gray-1, #f6f6f6);
   transition: background 0.3s ease;
-  aspect-ratio: 1;
+  position: relative;
+  padding: 60px 20px;
+  min-height: 400px;
+}
+
+.contact-v2-card-icon-wrapper {
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #e0e0e0 89.9%,
+    rgba(246, 246, 246, 0) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  margin-bottom: 36px;
+}
+
+.contact-v2-card:hover .contact-v2-card-icon-wrapper {
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #bc224c 89.9%,
+    rgba(188, 34, 76, 0) 100%
+  );
+}
+
+.contact-v2-card-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .contact-v2-card.clickable {
@@ -92,6 +124,17 @@
   .contact-v2-card {
     padding: 30px 20px;
   }
+
+  .contact-v2-card-icon-wrapper {
+    width: 70px;
+    height: 70px;
+  }
+
+  .contact-v2-card-icon {
+    width: 36px;
+    height: 36px;
+  }
+
   .contact-v2-subtitle {
     max-width: 62%;
   }
@@ -105,7 +148,7 @@
 
   .contact-v2-header {
     height: auto;
-    min-height: 30vh;
+    min-height: 40vh;
     max-width: 100%;
     margin: 0 auto;
   }
@@ -128,6 +171,10 @@
     padding: 36px 14px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     background: #fff;
+  }
+
+  .contact-v2-card-icon-wrapper {
+    display: none;
   }
 
   .contact-v2-card:hover {

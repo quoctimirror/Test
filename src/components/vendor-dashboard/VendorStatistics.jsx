@@ -95,8 +95,8 @@ const VendorStatistics = ({ vendorInfo }) => {
       <div className="vendor-card">
         <div className="vendor-card-body" style={{ textAlign: "center", padding: "3rem", color: "#666" }}>
           <div style={{ fontSize: "48px", marginBottom: "1rem" }}></div>
-          <h3>No Vendor Data</h3>
-          <p>Unable to load statistics without vendor information.</p>
+          <h3 className="heading-3--no-margin">No Vendor Data</h3>
+          <p className="bodytext-4--no-margin">Unable to load statistics without vendor information.</p>
         </div>
       </div>
     );
@@ -105,7 +105,7 @@ const VendorStatistics = ({ vendorInfo }) => {
   if (loading) {
     return (
       <div className="vendor-card">
-        <div className="vendor-card-body" style={{ textAlign: "center", padding: "3rem" }}>
+        <div className="vendor-card-body bodytext-4--no-margin" style={{ textAlign: "center", padding: "3rem" }}>
           Loading statistics...
         </div>
       </div>
@@ -115,7 +115,7 @@ const VendorStatistics = ({ vendorInfo }) => {
   if (error) {
     return (
       <div className="vendor-card">
-        <div className="vendor-card-body" style={{ textAlign: "center", padding: "3rem", color: "#dc3545" }}>
+        <div className="vendor-card-body bodytext-4--no-margin" style={{ textAlign: "center", padding: "3rem", color: "#dc3545" }}>
           Error: {error}
         </div>
       </div>
@@ -144,18 +144,17 @@ const VendorStatistics = ({ vendorInfo }) => {
                 {vendorInfo.name ? vendorInfo.name.charAt(0).toUpperCase() : "V"}
               </div>
               <div>
-                <h2 style={{ margin: "0 0 0.25rem 0", fontSize: "20px", fontWeight: "600" }}>
+                <h2 className="heading-3--no-margin">
                   {vendorInfo.name}
                 </h2>
-                <p style={{ margin: 0, color: "#666", fontSize: "14px" }}>
+                <p className="bodytext-5--no-margin" style={{ color: "#666" }}>
                   {vendorInfo.code} • {vendorInfo.country}
                   {vendorInfo.vendorType && (
-                    <span style={{ marginLeft: "0.5rem", 
-                      padding: "2px 8px", 
-                      background: "#e7f3ff", 
-                      color: "#0066cc", 
-                      borderRadius: "8px",
-                      fontSize: "12px"
+                    <span className="bodytext-6--no-margin" style={{ marginLeft: "0.5rem",
+                      padding: "2px 8px",
+                      background: "#e7f3ff",
+                      color: "#0066cc",
+                      borderRadius: "8px"
                     }}>
                       {vendorInfo.vendorType}
                     </span>
@@ -237,7 +236,7 @@ const VendorStatistics = ({ vendorInfo }) => {
           <h3 className="vendor-card-title">Recent Activity</h3>
         </div>
         <div className="vendor-card-body">
-          <div style={{ color: "#666", fontStyle: "italic", textAlign: "center", padding: "2rem" }}>
+          <div className="bodytext-4--no-margin" style={{ color: "#666", fontStyle: "italic", textAlign: "center", padding: "2rem" }}>
             No recent activity to display
           </div>
         </div>

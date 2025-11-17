@@ -719,7 +719,7 @@ const MilanComponent = () => {
   return (
     <div className="milan-page">
       {/* Hero Section */}
-      <section className="milan-hero" ref={heroRef}>
+      <section className="milan-hero" ref={heroRef} data-navbar-theme="black">
         <div className="milan-hero-content">
           <div className="milan-hero-text">
             <div className="milan-hero-text-main">
@@ -746,7 +746,7 @@ const MilanComponent = () => {
       </section>
 
       {/* Article Content */}
-      <section className="milan-article-content">
+      <section className="milan-article-content" data-navbar-theme="black">
         <div className="milan-article-container grid-container">
           {/* Introduction Section */}
           <div className="milan-intro-section col-12">
