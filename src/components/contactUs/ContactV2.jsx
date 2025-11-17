@@ -5,11 +5,20 @@ import { ROUTES } from "@/constants/routes";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import "./ContactV2.css";
 
+// Import icons
+import chatIcon from "@assets/images/button/chat.png";
+import callIcon from "@assets/images/button/call.png";
+import mailIcon from "@assets/images/button/mail.png";
+import bookingIcon from "@assets/images/button/appartment.png";
+
 const ContactV2 = () => {
   const navigate = useNavigate();
 
   const handleBookAppointment = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.BOOK_APPOINTMENT);
+    await optimizedTransitionUtils.transitionToRoute(
+      navigate,
+      ROUTES.BOOK_APPOINTMENT
+    );
   };
 
   return (
@@ -23,6 +32,9 @@ const ContactV2 = () => {
 
       <div className="contact-v2-cards" data-navbar-theme="black">
         <div className="contact-v2-card">
+          <div className="contact-v2-card-icon-wrapper">
+            <img src={chatIcon} alt="Chat" className="contact-v2-card-icon" />
+          </div>
           <div className="contact-v2-card-content">
             <h3 className="contact-v2-card-title bodytext-1--no-margin">
               LIVE CHAT
@@ -41,6 +53,9 @@ const ContactV2 = () => {
         </div>
 
         <div className="contact-v2-card">
+          <div className="contact-v2-card-icon-wrapper">
+            <img src={callIcon} alt="Call" className="contact-v2-card-icon" />
+          </div>
           <div className="contact-v2-card-content">
             <h3 className="contact-v2-card-title bodytext-1--no-margin">
               PHONE CALL
@@ -63,8 +78,13 @@ const ContactV2 = () => {
         </div>
 
         <div className="contact-v2-card">
+          <div className="contact-v2-card-icon-wrapper">
+            <img src={mailIcon} alt="Email" className="contact-v2-card-icon" />
+          </div>
           <div className="contact-v2-card-content">
-            <h3 className="contact-v2-card-title bodytext-1--no-margin">EMAIL</h3>
+            <h3 className="contact-v2-card-title bodytext-1--no-margin">
+              EMAIL
+            </h3>
             <p className="contact-v2-card-details bodytext-4--no-margin">
               support@mirrorfuturediamond.com
               <br />
@@ -82,15 +102,24 @@ const ContactV2 = () => {
           <span className="contact-v2-card-arrow">›</span>
         </div>
 
-        <div className="contact-v2-card clickable" onClick={handleBookAppointment}>
+        <div
+          className="contact-v2-card clickable"
+          onClick={handleBookAppointment}
+        >
+          <div className="contact-v2-card-icon-wrapper">
+            <img
+              src={bookingIcon}
+              alt="Booking"
+              className="contact-v2-card-icon"
+            />
+          </div>
           <div className="contact-v2-card-content">
             <h3 className="contact-v2-card-title bodytext-1--no-margin">
               APPOINTMENT
             </h3>
             <p className="contact-v2-card-details bodytext-4--no-margin">
-              In-store Appointments or Virtual Consultation
-              <br />
-              Available Mon - Fri 09:00-19:00
+              Book an in-store appointments <br />
+              Available: Mon – Fri 09:00-19:00
             </p>
             <UnderlineButton
               className="contact-v2-card-link"

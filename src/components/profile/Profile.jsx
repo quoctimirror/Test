@@ -431,7 +431,7 @@ const Profile = () => {
         </div>
 
         {/* Form Content */}
-        <div className="profile-form-content">
+        <div className="profile-form-content" data-navbar-theme="black">
           {activeNavItem === "My Passport" && (
             <form className="profile-form" onSubmit={handleSubmit} noValidate>
               {/* Title */}

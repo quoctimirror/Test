@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
@@ -12,7 +12,6 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
   const containerRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const wrapperRef = useRef(null);
-  const [isHovering, setIsHovering] = useState(false);
 
   const products = [
     { id: 1, name: "Lumina", image: "products/product_3_fix.png" },
@@ -35,6 +34,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
     let targetScrollLeft = wrapper.scrollLeft;
     let currentScrollLeft = wrapper.scrollLeft;
     let animationId = null;
+    let isHoveringLocal = false;
 
     // Smooth scroll animation
     const smoothScroll = () => {
@@ -48,12 +48,13 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
       } else {
         currentScrollLeft = targetScrollLeft;
         wrapper.scrollLeft = targetScrollLeft;
+        animationId = null;
       }
     };
 
     // Handle wheel event to scroll horizontally when hovering
     const handleWheel = (e) => {
-      if (isHovering) {
+      if (isHoveringLocal) {
         e.preventDefault();
 
         // Check if horizontal scroll from trackpad (deltaX) or vertical scroll from mouse (deltaY)
@@ -118,11 +119,16 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
     };
 
     const handleMouseLeave = () => {
+      isHoveringLocal = false;
       if (isDragging) {
         isDragging = false;
         wrapper.classList.remove("dragging");
         wrapper.style.cursor = "grab";
       }
+    };
+
+    const handleMouseEnter = () => {
+      isHoveringLocal = true;
     };
 
     // Add event listeners
@@ -131,6 +137,7 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
     wrapper.addEventListener("mousemove", handleMouseMove);
     wrapper.addEventListener("mouseup", handleMouseUp);
     wrapper.addEventListener("mouseleave", handleMouseLeave);
+    wrapper.addEventListener("mouseenter", handleMouseEnter);
 
     return () => {
       // Cancel animation frame on cleanup
@@ -142,8 +149,9 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
       wrapper.removeEventListener("mousemove", handleMouseMove);
       wrapper.removeEventListener("mouseup", handleMouseUp);
       wrapper.removeEventListener("mouseleave", handleMouseLeave);
+      wrapper.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [isHovering]);
+  }, []);
 
   const handleViewAllProducts = async () => {
     await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.ALL_GEMS);
@@ -165,8 +173,6 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
           <div
             className="horizontal-scroll-wrapper"
             ref={wrapperRef}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
           >
             <div className="same-collection-grid-gsap" ref={scrollContainerRef}>
               {products.map((product) => (

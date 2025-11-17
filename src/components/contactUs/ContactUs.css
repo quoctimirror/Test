@@ -70,17 +70,32 @@
   margin: 0;
 }
 
-/* Button styles moved to common Button component */
+.contact-us-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.contact-us-separator {
+  color: rgba(224, 224, 224, 1);
+}
 
 /* Responsive Design */
 
 /* Tablet - 426px to 1023px */
 @media screen and (max-width: 1023px) {
   .contact-us-hero-content {
-    width: 49%;
+    width: 62%;
   }
   .contact-us-hero {
     min-height: 60vh;
+  }
+
+  /* Show underline by default on tablet (no hover available) */
+  .contact-us-actions .underline-button-text::after {
+    transform: scaleX(1) scaleY(0.75) !important;
   }
 }
 
@@ -108,5 +123,19 @@
 @media screen and (max-width: 425px) {
   .contact-us-hero-content {
     width: 93%;
+  }
+
+  .contact-us-actions {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .contact-us-separator {
+    display: none;
+  }
+
+  /* Show underline by default on mobile (no hover available) */
+  .contact-us-actions .underline-button-text::after {
+    transform: scaleX(1) scaleY(0.75) !important;
   }
 }

@@ -5,19 +5,32 @@ import "./BookAppointment.css";
 import "@styles/grid-system.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import EditIcon from "@assets/images/icons/LT_Edit button.svg";
+import { locationsAPI, handleAPIError } from "@services/api";
 
 const BookAppointment = () => {
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState({});
   const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
+  const [locations, setLocations] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("All Cities");
+  const [loading, setLoading] = useState(true);
   const timePickerRef = useRef(null);
   const datePickerRef = useRef(null);
   const progressBarRef = useRef(null);
+  const cityDropdownRef = useRef(null);
+
+  // Helper function to convert type names for display
+  const getDisplayType = (type) => {
+    if (type === "SHOWROOM") return "LOUNGE";
+    return type;
+  };
   const [formData, setFormData] = useState({
-    showroom: "Sala showroom",
-    address:
-      "74 Nguyen Co Thach street, An Khanh ward, Ho Chi Minh city, Vietnam",
+    showroomId: null,
+    showroom: "",
+    address: "",
     date: null,
     time: "",
     language: "English",
@@ -39,7 +52,49 @@ const BookAppointment = () => {
     { value: "17:00", label: "5:00 PM" },
   ];
 
-  // Close time picker when clicking outside
+  // Load locations data from API
+  useEffect(() => {
+    fetchLocationsData();
+  }, []);
+
+  const fetchLocationsData = async () => {
+    setLoading(true);
+    try {
+      // Fetch locations and filter options like LocationsPage
+      const [locationsResponse, filtersResponse] = await Promise.all([
+        locationsAPI.getAll(),
+        locationsAPI.getFilterOptions(),
+      ]);
+
+      const locationsData = locationsResponse.data || [];
+      const filtersData = filtersResponse.data || {};
+
+      // Filter all types except POD
+      const nonPodLocations = locationsData.filter(
+        (location) => location.type !== "POD"
+      );
+
+      setLocations(nonPodLocations);
+
+      // Set cities from API filter options
+      setCities(["All Cities", ...(filtersData.cities || [])]);
+    } catch (err) {
+      const errorInfo = handleAPIError(err, "Failed to load locations");
+      console.error("Error fetching locations:", errorInfo);
+      setLocations([]);
+      setCities(["All Cities"]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter locations by selected city
+  const filteredLocations = locations.filter((location) => {
+    if (selectedCity === "All Cities") return true;
+    return location.city === selectedCity;
+  });
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -47,6 +102,12 @@ const BookAppointment = () => {
         !timePickerRef.current.contains(event.target)
       ) {
         setIsTimePickerOpen(false);
+      }
+      if (
+        cityDropdownRef.current &&
+        !cityDropdownRef.current.contains(event.target)
+      ) {
+        setIsCityDropdownOpen(false);
       }
     };
 
@@ -111,6 +172,7 @@ const BookAppointment = () => {
 
   const validateStep1 = () => {
     const newErrors = {};
+    if (!formData.showroomId) newErrors.showroom = "Please select a lounge";
     if (!formData.date) newErrors.date = "Please select a date";
     if (!formData.time) newErrors.time = "Please select a time";
 
@@ -175,7 +237,7 @@ const BookAppointment = () => {
       <div className="scroll-progress-bar" ref={progressBarRef}></div>
 
       {/* Hero Section */}
-      <section className="book-hero">
+      <section className="book-hero" data-navbar-theme="white">
         <h1 className="book-hero-title heading-1--no-margin">
           Book an appointment
         </h1>
@@ -183,7 +245,10 @@ const BookAppointment = () => {
 
       {/* Step 1: Schedule Appointment */}
       {step >= 1 && (
-        <section className="book-section-wrapper book-section-wrapper-01">
+        <section
+          className="book-section-wrapper book-section-wrapper-01"
+          data-navbar-theme="black"
+        >
           <div className="grid-container">
             <div className="book-section book-section-01 col-6 col-start-4 col-sm-12">
               <div className="book-section-number bodytext-3--no-margin">
@@ -196,30 +261,101 @@ const BookAppointment = () => {
 
             <div className="book-form-group col-6 col-start-4 col-sm-12">
               <label className="book-label bodytext-6--no-margin">
-                Select a boutique *
+                Select a location *
               </label>
-              <div className="book-showroom-info">
-                <div className="book-showroom-radio">
-                  <input
-                    type="radio"
-                    id="sala-showroom"
-                    name="showroom"
-                    checked={formData.showroom === "Sala showroom"}
-                    onChange={() =>
-                      handleInputChange("showroom", "Sala showroom")
-                    }
-                  />
-                  <label htmlFor="sala-showroom">
-                    <div className="book-showroom-name bodytext-4--no-margin">
-                      Sala showroom
+              <div className="book-city-filter-wrapper">
+                <label className="book-filter-label bodytext-6--no-margin">
+                  Filter by City/Province:
+                </label>
+                <div className="book-city-filter" ref={cityDropdownRef}>
+                  <div
+                    className={`book-dropdown-selected bodytext-6--no-margin ${
+                      isCityDropdownOpen ? "open" : ""
+                    }`}
+                    onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
+                  >
+                    <span className="book-selected-text">
+                      {selectedCity === "All Cities"
+                        ? "All Cities"
+                        : selectedCity}
+                    </span>
+                  </div>
+                  {isCityDropdownOpen && (
+                    <div className="book-dropdown-options">
+                      {cities.map((city) => (
+                        <div
+                          key={city}
+                          className={`book-dropdown-option bodytext-6--no-margin ${
+                            selectedCity === city ? "selected" : ""
+                          }`}
+                          onClick={() => {
+                            setSelectedCity(city);
+                            setIsCityDropdownOpen(false);
+                          }}
+                        >
+                          {city === "All Cities" ? "All Cities" : city}
+                        </div>
+                      ))}
                     </div>
-                    <div className="book-showroom-address bodytext-4--no-margin">
-                      74 Nguyen Co Thach street, An Khanh ward, Ho Chi Minh
-                      city, Vietnam
-                    </div>
-                  </label>
+                  )}
                 </div>
               </div>
+
+              {loading ? (
+                <div className="book-loading bodytext-4--no-margin">
+                  Loading lounges...
+                </div>
+              ) : filteredLocations.length === 0 ? (
+                <div className="book-no-lounges bodytext-4--no-margin">
+                  No lounges available
+                </div>
+              ) : (
+                <div className="book-showroom-info">
+                  {filteredLocations.map((location) => (
+                    <div key={location.id} className="book-showroom-radio">
+                      <input
+                        type="radio"
+                        id={`showroom-${location.id}`}
+                        name="showroom"
+                        checked={formData.showroomId === location.id}
+                        onChange={() => {
+                          setFormData({
+                            ...formData,
+                            showroomId: location.id,
+                            showroom: location.name,
+                            address: `${location.address}, ${location.ward}, ${location.city}, ${location.country}`,
+                          });
+                          if (errors.showroom) {
+                            setErrors({ ...errors, showroom: null });
+                          }
+                        }}
+                      />
+                      <label htmlFor={`showroom-${location.id}`}>
+                        <div className="book-showroom-name bodytext-1--no-margin">
+                          {location.name}
+                        </div>
+                        <div className="book-showroom-type bodytext-4--no-margin">
+                          {getDisplayType(location.type)}
+                        </div>
+                        <div className="book-showroom-address bodytext-4--no-margin">
+                          {location.address}
+                        </div>
+                        <div className="book-showroom-hours bodytext-4--no-margin">
+                          {location.hours}
+                        </div>
+                        <div className="book-showroom-phone bodytext-4--no-margin">
+                          {location.phone}
+                        </div>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {errors.showroom && (
+                <p className="book-error-message bodytext-6--no-margin">
+                  {errors.showroom}
+                </p>
+              )}
             </div>
 
             <div className="book-form-group col-3 col-start-4 col-sm-12">
@@ -339,7 +475,10 @@ const BookAppointment = () => {
 
       {/* Step 2: Personal Information */}
       {step >= 2 && (
-        <section className="book-section-wrapper book-section-wrapper-02">
+        <section
+          className="book-section-wrapper book-section-wrapper-02"
+          data-navbar-theme="black"
+        >
           <div className="grid-container">
             <div className="book-section book-section-02 col-6 col-start-4 col-sm-12">
               <div className="book-section-number bodytext-3--no-margin">
@@ -467,7 +606,10 @@ const BookAppointment = () => {
 
       {/* Step 3: Booking Confirmation */}
       {step >= 3 && (
-        <section className="book-section-wrapper book-section-wrapper-03">
+        <section
+          className="book-section-wrapper book-section-wrapper-03"
+          data-navbar-theme="black"
+        >
           <div className="grid-container">
             <div className="book-section book-section-03 col-6 col-start-4 col-sm-12">
               <div className="book-section-number bodytext-3--no-margin">
@@ -480,7 +622,7 @@ const BookAppointment = () => {
               <div className="book-confirmation">
                 <div className="book-confirmation-row">
                   <label className="book-confirmation-label bodytext-6--no-margin">
-                    Select a boutique *
+                    Select a location *
                   </label>
                   <div className="book-confirmation-value-wrapper">
                     <div className="book-confirmation-value">
@@ -496,7 +638,7 @@ const BookAppointment = () => {
                       alt="Edit"
                       className="book-edit-icon"
                       onClick={() => handleEdit(1)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </div>
@@ -520,7 +662,7 @@ const BookAppointment = () => {
                       alt="Edit"
                       className="book-edit-icon"
                       onClick={() => handleEdit(1)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </div>
@@ -538,7 +680,7 @@ const BookAppointment = () => {
                       alt="Edit"
                       className="book-edit-icon"
                       onClick={() => handleEdit(1)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </div>
@@ -556,7 +698,7 @@ const BookAppointment = () => {
                       alt="Edit"
                       className="book-edit-icon"
                       onClick={() => handleEdit(1)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </div>
@@ -575,7 +717,7 @@ const BookAppointment = () => {
                       alt="Edit"
                       className="book-edit-icon"
                       onClick={() => handleEdit(2)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </div>
@@ -593,7 +735,7 @@ const BookAppointment = () => {
                       alt="Edit"
                       className="book-edit-icon"
                       onClick={() => handleEdit(2)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </div>
@@ -611,7 +753,7 @@ const BookAppointment = () => {
                       alt="Edit"
                       className="book-edit-icon"
                       onClick={() => handleEdit(2)}
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                     />
                   </div>
                 </div>

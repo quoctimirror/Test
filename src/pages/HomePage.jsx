@@ -61,7 +61,7 @@ export default function HomePage() {
         <HoverExpandSection />
       </div>
 
-      <div data-section="contact-us">
+      <div data-section="contact-us" data-navbar-theme="white">
         <ContactUs />
       </div>
     </>

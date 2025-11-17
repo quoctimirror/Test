@@ -20,9 +20,6 @@ const SupportDetail = () => {
     if (tabFromUrl && validTabs.includes(tabFromUrl)) {
       setActiveTab(tabFromUrl);
     }
-
-    // Scroll to top immediately when tab changes (without smooth behavior)
-    window.scrollTo(0, 0);
   }, [searchParams]);
 
   const tabs = [

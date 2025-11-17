@@ -252,9 +252,147 @@ select.book-input option {
   color: rgba(0, 0, 0, 0.4);
 }
 
+/* City Filter - Custom Dropdown Styling */
+.book-city-filter-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.book-filter-label {
+  color: rgba(121, 121, 121, 1);
+  white-space: nowrap;
+}
+
+.book-city-filter {
+  position: relative;
+  flex: 1;
+}
+
+.book-dropdown-selected {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  background: rgba(246, 246, 246, 1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding-right: 40px;
+}
+
+.book-dropdown-selected::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23797979' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 8px;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+.book-dropdown-selected:hover {
+  border-color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book-dropdown-selected.open {
+  border-color: #333;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.book-dropdown-selected.open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.book-selected-text {
+  color: #333;
+}
+
+.book-dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #333;
+  border-top: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.book-dropdown-option {
+  padding: 12px 16px;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.book-dropdown-option:last-child {
+  border-bottom: none;
+}
+
+.book-dropdown-option:hover {
+  background-color: #f6f6f6;
+}
+
+.book-dropdown-option.selected {
+  background-color: #333;
+  color: white;
+  font-weight: 500;
+}
+
+/* Loading and Empty States */
+.book-loading,
+.book-no-lounges {
+  padding: 48px 24px;
+  text-align: center;
+  color: rgba(121, 121, 121, 1);
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
 /* Showroom Radio */
 .book-showroom-info {
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-height: 450px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Custom Scrollbar for Showroom Info */
+.book-showroom-info::-webkit-scrollbar {
+  width: 6px;
+}
+
+.book-showroom-info::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.book-showroom-info::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.book-showroom-info::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .book-showroom-radio {
@@ -297,13 +435,30 @@ select.book-input option {
 }
 
 .book-showroom-name {
-  color: #000000;
-  margin-bottom: 12px;
+  margin: 0 0 12px 0;
+  font-weight: 500;
+  color: #000;
+}
+
+.book-showroom-type {
+  margin: 0 0 6px 0;
+  color: #797979;
 }
 
 .book-showroom-address {
-  color: rgba(121, 121, 121, 1);
-  line-height: 1.5;
+  margin: 0 0 6px 0;
+  color: #797979;
+  font-weight: 500;
+}
+
+.book-showroom-hours {
+  margin: 0 0 6px 0;
+  color: #797979;
+}
+
+.book-showroom-phone {
+  margin: 0;
+  color: #797979;
 }
 
 /* Radio Group */

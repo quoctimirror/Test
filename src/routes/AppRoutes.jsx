@@ -2,7 +2,7 @@
 
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import Navbar from "@components/navbar/Navbar";
+import NavbarV3 from "@components/navbar/NavbarV3";
 import Footer from "@components/footer/Footer";
 import TryOnRingLayout from "@layouts/TryOnRingLayout";
 import { ROUTES } from "@/constants/routes";
@@ -235,7 +235,7 @@ export default function AppRoutes() {
   return (
     <>
       {/* Conditional Navbar */}
-      {shouldShowNavbar && <Navbar />}
+      {shouldShowNavbar && <NavbarV3 />}
 
       {/* Routes */}
       <Suspense

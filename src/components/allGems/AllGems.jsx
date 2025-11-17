@@ -10,7 +10,12 @@ const AllGems = () => {
 
   return (
     <div className="all-gems-page">
-      <div className="gems-header" data-navbar-theme="white">
+      <div
+        className="gems-header"
+        data-navbar-theme="white"
+        data-navbar-theme-mobile="black"
+        data-navbar-theme-tablet="black"
+      >
         <p className="gems-explore bodytext-4--no-margin">EXPLORE</p>
         <h1 className="gems-title heading-1--no-margin">OUR GEMS</h1>
         <p className="gems-subtitle bodytext-4--no-margin">

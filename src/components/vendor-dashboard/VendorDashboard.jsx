@@ -125,8 +125,8 @@ const VendorDashboard = () => {
       {/* Sidebar Navigation */}
       <div className="vendor-sidebar">
         <div className="vendor-sidebar-header">
-          <h1 className="vendor-sidebar-title">Vendor Portal</h1>
-          <p className="vendor-sidebar-subtitle">Partner Dashboard</p>
+          <h1 className="vendor-sidebar-title heading-2--no-margin">Vendor Portal</h1>
+          <p className="vendor-sidebar-subtitle bodytext-4--no-margin">Partner Dashboard</p>
         </div>
 
         <nav className="vendor-sidebar-nav">
@@ -138,24 +138,24 @@ const VendorDashboard = () => {
               }`}
               onClick={() => setActiveTab(item.id)}
             >
-              <span className="vendor-nav-label">{item.label}</span>
+              <span className="vendor-nav-label bodytext-4--no-margin">{item.label}</span>
             </button>
           ))}
         </nav>
 
         <div className="vendor-sidebar-footer">
           <button className="home-nav-button" onClick={handleHomeNavigation}>
-            <span className="home-nav-label">← Back to Home</span>
+            <span className="home-nav-label bodytext-5--no-margin">← Back to Home</span>
           </button>
           <div className="vendor-user-info">
             <div className="vendor-user-avatar">
               {vendorInfo?.name ? vendorInfo.name.charAt(0).toUpperCase() : "V"}
             </div>
             <div className="vendor-user-details">
-              <div className="vendor-user-name">
+              <div className="vendor-user-name bodytext-5--no-margin">
                 {vendorInfo?.name || user?.username || "Vendor User"}
               </div>
-              <div className="vendor-user-role">
+              <div className="vendor-user-role bodytext-6--no-margin">
                 {vendorInfo?.code || "Partner"}
               </div>
             </div>
@@ -166,13 +166,13 @@ const VendorDashboard = () => {
       {/* Main Content */}
       <div className="vendor-main-content">
         <div className="vendor-content-header">
-          <div className="vendor-breadcrumb">
+          <div className="vendor-breadcrumb bodytext-6--no-margin">
             <span>Vendor</span>
             <span className="breadcrumb-separator">›</span>
             <span>{getPageInfo().title}</span>
           </div>
-          <h1 className="vendor-page-title">{getPageInfo().title}</h1>
-          <p className="vendor-page-description">{getPageInfo().description}</p>
+          <h1 className="vendor-page-title heading-1--no-margin">{getPageInfo().title}</h1>
+          <p className="vendor-page-description bodytext-4--no-margin">{getPageInfo().description}</p>
         </div>
 
         <div className="vendor-content-body">{renderActiveTab()}</div>
