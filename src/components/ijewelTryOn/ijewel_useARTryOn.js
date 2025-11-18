@@ -37,8 +37,8 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       json: "https://playground.ijewel3d.com/assets/demo/tryon/demo_tryon.json"
     },
     refined_mirror_fistion: {
-      glb: "/models/rings/refined_mirror_fistion.glb",
-      json: "/arTryOn/standard.json"
+      glb: "/models/rings/fistion.glb",
+      json: "/arTryOn/standard_1.json"
     },
     refined_mirror_flower: {
       glb: "/models/rings/refined_mirror_flower.glb",
