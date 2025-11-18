@@ -48,6 +48,64 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
   }, [tryon, modelName]);
 
   // ==========================================
+  // AUTO APPLY ROTATION Y
+  // ==========================================
+  useEffect(() => {
+    if (!tryon || !tryon.modelRotation) return;
+
+    // Config rotation.y cho mu bàn tay
+    const fingerRotationConfig = {
+      frontCamera: {
+        right: {
+          3: 0.9,
+          4: 0.9
+        }
+      },
+      backCamera: {
+        right: {
+          3: 0.6,
+          4: 0.6
+        },
+        left: {
+          0: 0.19,
+          1: 0.19,
+          3: 0.19,
+          4: 0.19
+        }
+      }
+    };
+
+    // Xác định cam trước hay cam sau
+    const isFrontCamera = (deviceType === 'Desktop') || (currentCamera === 1);
+    const cameraType = isFrontCamera ? 'frontCamera' : 'backCamera';
+
+    // Xác định tay trái/phải
+    const handType = currentHand === 0 ? 'left' : currentHand === 1 ? 'right' : null;
+
+    // Mặc định rotation.y = 0
+    let rotationY = 0;
+
+    if (handType) {
+      const cameraConfig = fingerRotationConfig[cameraType];
+
+      if (cameraConfig && cameraConfig[handType]) {
+        const fingerConfig = cameraConfig[handType][currentFinger];
+
+        if (fingerConfig !== undefined) {
+          rotationY = fingerConfig;
+        }
+      }
+    }
+
+    // Apply rotation.y
+    tryon.modelRotation.y = rotationY;
+    setRotation(prev => ({ ...prev, y: rotationY }));
+
+    console.log(`🔄 Auto rotation.y: ${rotationY} (${cameraType}, ${handType}, finger ${currentFinger})`);
+
+  }, [tryon, currentCamera, currentHand, currentFinger, deviceType]);
+
+  // ==========================================
   // UPDATE FUNCTIONS
   // ==========================================
 
