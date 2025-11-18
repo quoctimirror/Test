@@ -1,5 +1,5 @@
 import './Section1.css';
-import ShineGlassButton from '../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import ProductsLeftDrive from './ProductsLeftDrive';
 import { PRODUCT_CONFIG } from './productConfig';
 

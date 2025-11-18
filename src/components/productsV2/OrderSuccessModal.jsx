@@ -1,6 +1,6 @@
 import React from 'react';
 import './OrderSuccessModal.css';
-import ShineGlassButton from '../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 
 const OrderSuccessModal = ({ isOpen, onClose, orderDetails }) => {
     if (!isOpen || !orderDetails) return null;

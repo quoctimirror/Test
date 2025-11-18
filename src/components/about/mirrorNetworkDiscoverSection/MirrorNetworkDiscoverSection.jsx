@@ -4,7 +4,7 @@ import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransit
 import { ROUTES } from "@/constants/routes";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { MediaImage } from "@components/common/media";
-import "../../../styles/grid-system.css";
+import "@styles/grid-system.css";
 import "./MirrorNetworkDiscoverSection.css";
 
 const MirrorNetworkDiscoverSection = () => {

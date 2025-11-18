@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './MobileConfigModal.css';
-import opaqueIcon from '../../assets/images/opaque_gts.svg';
-import whiteIcon from '../../assets/images/white_gts.svg';
-import greyCaretUp from '../../assets/images/grey-caret-up.svg';
-import ShineGlassButton from '../common/button/ShineGlassButton';
+import opaqueIcon from '@assets/images/opaque_gts.svg';
+import whiteIcon from '@assets/images/white_gts.svg';
+import greyCaretUp from '@assets/images/grey-caret-up.svg';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import SizeSelector from './SizeSelector';
 import ShapeSelector from './ShapeSelector';
 import { getShapeConfig } from './shapeConfig';

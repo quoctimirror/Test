@@ -104,9 +104,9 @@
 }
 
 /* Mobile - 425px and below */
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 480px) {
   .lumex91-container {
-    max-width: 77%;
+    max-width: 300px;
     gap: 30px;
   }
 

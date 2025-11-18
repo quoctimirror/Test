@@ -28,7 +28,7 @@ const Lumex91 = () => {
         });
       },
       {
-        rootMargin: '200px', // Start loading 200px before entering viewport
+        rootMargin: "200px", // Start loading 200px before entering viewport
         threshold: 0.1,
       }
     );
@@ -58,7 +58,9 @@ const Lumex91 = () => {
         <div className="lumex91-video-box" ref={videoBoxRef}>
           {/* Image placeholder - fades out when video loads */}
           <MediaImage
-            className={`lumex91-video lumex91-placeholder ${videoLoaded && !videoError ? 'lumex91-placeholder-hide' : ''}`}
+            className={`lumex91-video lumex91-placeholder ${
+              videoLoaded && !videoError ? "lumex91-placeholder-hide" : ""
+            }`}
             src="home-page/Mirror-Lumex 91.jpg"
             alt="Mirror-Lumex 91"
           />
@@ -66,7 +68,9 @@ const Lumex91 = () => {
           {/* Load video when in viewport, hide until ready */}
           {shouldLoadVideo && !videoError && (
             <MediaVideo
-              className={`lumex91-video ${videoLoaded ? 'lumex91-video-loaded' : 'lumex91-video-loading'}`}
+              className={`lumex91-video ${
+                videoLoaded ? "lumex91-video-loaded" : "lumex91-video-loading"
+              }`}
               src="home-page/MIRROR-LUMEX 91.mp4"
               poster="home-page/Mirror-Lumex 91.jpg"
               autoPlay

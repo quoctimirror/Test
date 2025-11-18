@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { MediaImage } from '@components/common/media';
 import './SizeSelector.css'; // Reuse same styling
 import { AVAILABLE_SHAPES, getShapeConfig } from './shapeConfig';
-import ShineGlassButton from '../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 
 const ShapeSelector = ({ onClose, onSelectShape, selectedShape }) => {
     const [isClosing, setIsClosing] = useState(false);

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './MobileProductBar.css';
-import ShineGlassButton from '../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import MobileConfigModal from './MobileConfigModal';
-import greyCaretUp from '../../assets/images/grey-caret-up.svg';
+import greyCaretUp from '@assets/images/grey-caret-up.svg';
 import { PRODUCT_CONFIG } from './productConfig';
 
 const MobileProductBar = ({ isVisible, selectedShape, onShapeChange, selectedSize, onSizeChange, metal, band }) => {

@@ -1,5 +1,5 @@
 import './Section1.css';
-import ShineGlassButton from '../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import ProductsLeft2 from './ProductsLeft2'; // quocti_dancefloor viewer (realistic rendering)
 
 const Section1_v2 = () => {
