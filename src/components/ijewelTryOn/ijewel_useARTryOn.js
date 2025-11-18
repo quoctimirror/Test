@@ -393,14 +393,7 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
     flipCamera: () => tryonRef.current?.flipCamera(),
     switchFinger: () => {
       const tryon = tryonRef.current;
-      if (tryon) {
-        let newFinger = (tryon.finger + 1) % 5;
-        // Skip ngón cái (index 2)
-        if (newFinger === 2) {
-          newFinger = 3;
-        }
-        tryon.finger = newFinger;
-      }
+      if (tryon) tryon.finger = (tryon.finger + 1) % 5;
     },
     saveImage: () => tryonRef.current?.saveImage(),
     viewer: viewerRef.current,

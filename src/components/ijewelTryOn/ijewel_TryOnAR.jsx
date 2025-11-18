@@ -134,17 +134,9 @@ const IJewelTryOnAR = ({
   }, [detectedHand]);
 
   const handleSwitchFinger = () => {
-    let newFinger = (currentFinger + 1) % 5;
-    // Skip ngón cái (index 2)
-    if (newFinger === 2) {
-      newFinger = 3;
-    }
+    const newFinger = (currentFinger + 1) % 5;
     setCurrentFinger(newFinger);
-
-    // Đồng bộ trực tiếp vào tryon.finger
-    if (tryon) {
-      tryon.finger = newFinger;
-    }
+    switchFinger();
   };
 
   const handleFlipCamera = () => {
