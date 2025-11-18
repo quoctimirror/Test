@@ -70,36 +70,23 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
   }, [currentCamera, currentHand, currentFinger, deviceType]);
 
   // ==========================================
-  // LOAD TRANSFORMS
+  // LOAD SCALE ONLY (không đụng position/rotation)
   // ==========================================
   useEffect(() => {
     if (!tryon) return;
 
-    // Delay để đảm bảo config đã load xong
-    const loadTransforms = () => {
-      const pos = tryon.modelPosition || { x: 0, y: 0, z: 0 };
-      let rot = tryon.modelRotation || { x: 0, y: 0, z: 0 };
+    // Chỉ load scale từ config, giữ nguyên position/rotation
+    const loadScale = () => {
       const scl = tryon.modelScaleFactor !== undefined ? tryon.modelScaleFactor : 1;
-
-      // Tính rotation.y tự động
-      const rotationY = calculateRotationY();
-
-      setPosition({ x: pos.x, y: pos.y, z: pos.z });
-      setRotation({ x: rot.x, y: rotationY, z: rot.z });
       setScale(scl);
-
-      console.log('📊 Loaded transforms for', modelName);
-      console.log('   Position:', pos);
-      console.log('   Rotation:', { x: rot.x, y: rotationY, z: rot.z });
-      console.log('   Scale:', scl);
+      console.log('📊 Loaded scale for', modelName, ':', scl);
     };
 
-    // Load ngay lập tức và sau 500ms để đảm bảo config đã load
-    loadTransforms();
-    const timer = setTimeout(loadTransforms, 500);
+    loadScale();
+    const timer = setTimeout(loadScale, 500);
 
     return () => clearTimeout(timer);
-  }, [tryon, modelName, calculateRotationY]);
+  }, [tryon, modelName]);
 
   // ==========================================
   // AUTO APPLY ROTATION Y khi thay đổi camera/hand/finger
