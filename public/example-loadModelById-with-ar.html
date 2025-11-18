@@ -31,8 +31,22 @@
             font-size: 20px;
         }
 
-        #flip-btn {
+        #flip-btn, #switch-finger-btn {
             display: none;
+        }
+
+        #finger-display {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            display: none;
+            z-index: 1000;
         }
     </style>
 </head>
@@ -42,7 +56,9 @@
     <div id="controls">
         <button id="ar-btn">Start AR</button>
         <button id="flip-btn">Flip Camera</button>
+        <button id="switch-finger-btn">Switch Finger</button>
     </div>
+    <div id="finger-display">Ngón áp út</div>
 
     <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js"> </script>
     <script src="https://releases.ijewel3d.com/libs/mini-viewer/0.5.0/bundle.nowebgi.iife.js"></script>
@@ -58,12 +74,21 @@
         const container = document.getElementById('viewer-container');
         const arBtn = document.getElementById('ar-btn');
         const flipBtn = document.getElementById('flip-btn');
+        const switchFingerBtn = document.getElementById('switch-finger-btn');
+        const fingerDisplay = document.getElementById('finger-display');
 
         let viewerInstance;
         let viewerApp;
         let arPlugin;
         let inAR = false;
         let fileConfig;
+        let currentFinger = 0;
+
+        const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+
+        function updateFingerDisplay() {
+            fingerDisplay.textContent = fingerNames[currentFinger];
+        }
 
         async function initViewer() {
 
@@ -114,6 +139,8 @@
                 inAR = false;
                 arBtn.textContent = 'Start AR';
                 flipBtn.style.display = 'none';
+                switchFingerBtn.style.display = 'none';
+                fingerDisplay.style.display = 'none';
                 return;
             }
 
@@ -123,6 +150,9 @@
                 inAR = true;
                 arBtn.textContent = 'Exit AR';
                 flipBtn.style.display = 'block';
+                switchFingerBtn.style.display = 'block';
+                fingerDisplay.style.display = 'block';
+                updateFingerDisplay();
             } catch (error) {
                 console.error('AR error:', error);
                 arBtn.textContent = 'Start AR';
@@ -141,6 +171,21 @@
             } finally {
                 flipBtn.disabled = false;
             }
+        });
+
+        switchFingerBtn.addEventListener('click', () => {
+            if (!arPlugin || !inAR) return;
+
+            // Switch to next finger (0-4)
+            currentFinger = (currentFinger + 1) % 5;
+
+            // Update SDK
+            arPlugin.finger = currentFinger;
+
+            // Update display
+            updateFingerDisplay();
+
+            console.log('Switched to finger:', currentFinger, fingerNames[currentFinger]);
         });
 
         initViewer();
