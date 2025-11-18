@@ -3,6 +3,7 @@ import styles from './ijewel_TryOnAR.module.css';
 import { useIJewelARTryOn } from './ijewel_useARTryOn';
 import { useIJewelDebugControls } from './ijewel_useDebugControls';
 import { useMediaPipeHands } from './ijewel_useMediaPipeHands';
+import { useFingerRotationOverride } from './ijewel_useFingerRotationOverride';
 
 /**
  * IJewel TryOnAR Component - Component chính cho AR Try-On nhẫn
@@ -84,6 +85,17 @@ const IJewelTryOnAR = ({
   });
 
   // ==========================================
+  // CUSTOM HOOKS - Auto Finger Rotation Override
+  // ==========================================
+  useFingerRotationOverride({
+    tryon,
+    currentCamera,
+    currentHand,
+    currentFinger,
+    deviceType
+  });
+
+  // ==========================================
   // DETECT DEVICE TYPE
   // ==========================================
   useEffect(() => {
@@ -122,7 +134,11 @@ const IJewelTryOnAR = ({
   }, [detectedHand]);
 
   const handleSwitchFinger = () => {
-    const newFinger = (currentFinger + 1) % 5;
+    let newFinger = (currentFinger + 1) % 5;
+    // Skip ngón cái (index 2)
+    if (newFinger === 2) {
+      newFinger = 3;
+    }
     setCurrentFinger(newFinger);
     switchFinger();
   };

@@ -1,5 +1,25 @@
 {
-    "modelScaleFactor": 0.6,
+    "modelScaleFactor": 0.8,
     "occluderScaleFactor": 1,
-    "type": "RingTryonPlugin"
+    "type": "RingTryonPlugin",
+    "fingerRotationY": {
+        "frontCamera": {
+            "right": {
+                "3": 0.9,
+                "4": 0.9
+            }
+        },
+        "backCamera": {
+            "right": {
+                "3": 0.6,
+                "4": 0.6
+            },
+            "left": {
+                "0": 0.19,
+                "1": 0.19,
+                "3": 0.19,
+                "4": 0.19
+            }
+        }
+    }
 }
