@@ -12,16 +12,18 @@ import { useState, useCallback, useEffect } from 'react';
  */
 export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentCamera, currentFinger, deviceType }) => {
   // ==========================================
-  // STATES
+  // STATES - Hoàn toàn độc lập, KHÔNG đọc từ SDK
   // ==========================================
   const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
   const [rotation, setRotation] = useState({ x: 0, y: 0, z: 0 });
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.8); // Default từ standard_1.json
 
   // ==========================================
-  // HELPER: Calculate rotation.y based on camera/hand/finger
+  // AUTO APPLY ROTATION Y khi thay đổi camera/hand/finger
   // ==========================================
-  const calculateRotationY = useCallback(() => {
+  useEffect(() => {
+    if (!tryon || !tryon.modelRotation) return;
+
     // Config rotation.y cho mu bàn tay
     const fingerRotationConfig = {
       frontCamera: {
@@ -66,43 +68,15 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
       }
     }
 
-    return rotationY;
-  }, [currentCamera, currentHand, currentFinger, deviceType]);
-
-  // ==========================================
-  // LOAD SCALE ONLY (không đụng position/rotation)
-  // ==========================================
-  useEffect(() => {
-    if (!tryon) return;
-
-    // Chỉ load scale từ config, giữ nguyên position/rotation
-    const loadScale = () => {
-      const scl = tryon.modelScaleFactor !== undefined ? tryon.modelScaleFactor : 1;
-      setScale(scl);
-      console.log('📊 Loaded scale for', modelName, ':', scl);
-    };
-
-    loadScale();
-    const timer = setTimeout(loadScale, 500);
-
-    return () => clearTimeout(timer);
-  }, [tryon, modelName]);
-
-  // ==========================================
-  // AUTO APPLY ROTATION Y khi thay đổi camera/hand/finger
-  // ==========================================
-  useEffect(() => {
-    if (!tryon || !tryon.modelRotation) return;
-
-    const rotationY = calculateRotationY();
-
-    // Apply rotation.y
+    // Apply rotation.y vào SDK
     tryon.modelRotation.y = rotationY;
+
+    // Update debug state để hiển thị
     setRotation(prev => ({ ...prev, y: rotationY }));
 
-    console.log(`🔄 Auto rotation.y: ${rotationY}`);
+    console.log(`🔄 Auto rotation.y: ${rotationY} (${cameraType}, ${handType}, finger ${currentFinger})`);
 
-  }, [tryon, calculateRotationY]);
+  }, [tryon, currentCamera, currentHand, currentFinger, deviceType]);
 
   // ==========================================
   // UPDATE FUNCTIONS
