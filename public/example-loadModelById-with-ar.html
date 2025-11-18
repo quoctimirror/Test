@@ -31,11 +31,9 @@
             font-size: 20px;
         }
 
-        #flip-btn {
+        #flip-btn, #switch-finger-btn {
             display: none;
         }
-
-        /* Switch finger button luôn hiển thị */
 
         #finger-display {
             position: absolute;
@@ -123,11 +121,31 @@
             //load ar plugin
             arPlugin = await viewerApp.addPlugin(ij_vto.RingTryonPlugin);
 
+            // Load standard_1.json config
+            try {
+                const response = await fetch('/arTryOn/standard_1.json');
+                const standard1Config = await response.json();
+                console.log('📦 Loaded standard_1.json:', standard1Config);
 
-            //load saved tryon config from editor 
+                // Apply config to plugin
+                if (standard1Config) {
+                    if (standard1Config.modelScaleFactor !== undefined) {
+                        arPlugin.modelScaleFactor = standard1Config.modelScaleFactor;
+                    }
+                    if (standard1Config.occluderScaleFactor !== undefined) {
+                        arPlugin.occluderScaleFactor = standard1Config.occluderScaleFactor;
+                    }
+                    console.log('✅ Applied standard_1.json config');
+                }
+            } catch (error) {
+                console.error('❌ Failed to load standard_1.json:', error);
+            }
+
+            //load saved tryon config from editor (override nếu có)
             if (fileConfig?.tryonConfig) {
                 fileConfig.tryonConfig.type = 'RingTryonPlugin';
                 arPlugin.fromJSON(fileConfig?.tryonConfig);
+                console.log('✅ Applied Drive config (override)');
             }
 
             //start ar
@@ -141,6 +159,7 @@
                 inAR = false;
                 arBtn.textContent = 'Start AR';
                 flipBtn.style.display = 'none';
+                switchFingerBtn.style.display = 'none';
                 fingerDisplay.style.display = 'none';
                 return;
             }
@@ -151,6 +170,7 @@
                 inAR = true;
                 arBtn.textContent = 'Exit AR';
                 flipBtn.style.display = 'block';
+                switchFingerBtn.style.display = 'block';
                 fingerDisplay.style.display = 'block';
                 updateFingerDisplay();
             } catch (error) {
