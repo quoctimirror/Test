@@ -31,9 +31,11 @@
             font-size: 20px;
         }
 
-        #flip-btn, #switch-finger-btn {
+        #flip-btn {
             display: none;
         }
+
+        /* Switch finger button luôn hiển thị */
 
         #finger-display {
             position: absolute;
@@ -139,7 +141,6 @@
                 inAR = false;
                 arBtn.textContent = 'Start AR';
                 flipBtn.style.display = 'none';
-                switchFingerBtn.style.display = 'none';
                 fingerDisplay.style.display = 'none';
                 return;
             }
@@ -150,7 +151,6 @@
                 inAR = true;
                 arBtn.textContent = 'Exit AR';
                 flipBtn.style.display = 'block';
-                switchFingerBtn.style.display = 'block';
                 fingerDisplay.style.display = 'block';
                 updateFingerDisplay();
             } catch (error) {
