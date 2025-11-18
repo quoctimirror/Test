@@ -61,8 +61,8 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       json: "/arTryOn/standard_1.json"
     },
     refined_mirror_trilogy: {
-      glb: "/models/rings/refined_mirror_trilogy.glb",
-      json: "/arTryOn/standard.json"
+      glb: "/models/rings/trilogy.glb",
+      json: "/arTryOn/standard_1.json"
     },
     refined_mirror_twin: {
       glb: "/models/rings/refined_mirror_twin.glb",
