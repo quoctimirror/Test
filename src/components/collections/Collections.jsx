@@ -101,7 +101,7 @@ function Collection() {
     fetchCollections();
   }, []);
 
-  // Auto-rotate images every 3 seconds
+  // Auto-rotate images every 3 seconds - reset khi user click arrow
   useEffect(() => {
     const interval = setInterval(() => {
       setSlideDirection("right");
@@ -109,12 +109,13 @@ function Collection() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentIndex]); // Thêm currentIndex vào dependency để reset interval khi index thay đổi
 
   // MỚI: Hàm handleNext được đơn giản hóa tối đa
   const handleNext = () => {
     setSlideDirection("right");
     setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
+    // Interval sẽ tự động reset nhờ useEffect dependency [currentIndex]
   };
 
   // MỚI: Hàm handlePrevious được đơn giản hóa tối đa
@@ -123,6 +124,7 @@ function Collection() {
     setCurrentIndex(
       (prevIndex) => (prevIndex - 1 + products.length) % products.length
     );
+    // Interval sẽ tự động reset nhờ useEffect dependency [currentIndex]
   };
 
   const currentProduct = products[currentIndex];

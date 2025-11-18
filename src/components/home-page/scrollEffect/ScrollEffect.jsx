@@ -121,12 +121,12 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
     {
       title: "Reflection of Self",
       subtitle:
-        "A quiet moment of encounter — where you face yourself in all dimensions: past, present, and becoming.",
+        "A quiet moment of encounter - where you face yourself in all dimensions: past, present, and becoming.",
     },
     {
       title: "Reflection of Artistry and Innovation",
       subtitle:
-        "Each creation is shaped with technological precision and human soul — where machine intelligence and intuition craft in unison.",
+        "Each creation is shaped with technological precision and human soul - where machine intelligence and intuition craft in unison.",
     },
   ];
 
@@ -197,7 +197,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
     preloadImages();
   }, []);
 
-  // Auto-scroll to mirror introduce when user scrolls in Phase 1
+  // Auto-scroll in Phase 1: scroll down -> go to Phase 2, scroll up -> go to top
   useEffect(() => {
     let autoScrollTimeout = null;
 
@@ -206,15 +206,18 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
       const windowHeight = window.innerHeight;
       const scrollEffectEnd = (scrollEffectHeight / 100) * windowHeight;
 
-      // Check if scrolling down (not up)
+      // Check if scrolling down or up
       const isScrollingDown = scrollY > lastScrollYRef.current;
       const previousScrollY = lastScrollYRef.current;
       lastScrollYRef.current = scrollY;
 
-      // If auto-scroll is running, check if user is manually scrolling
+      // If auto-scroll is running, check if user is manually scrolling against auto-scroll direction
       if (isAutoScrollingRef.current) {
-        // If user scrolls up during auto-scroll, cancel it
-        if (!isScrollingDown) {
+        // Cancel auto-scroll if user scrolls in opposite direction
+        const autoScrollingDown = isAutoScrollingRef.current === 'down';
+        const autoScrollingUp = isAutoScrollingRef.current === 'up';
+
+        if ((autoScrollingDown && !isScrollingDown) || (autoScrollingUp && isScrollingDown)) {
           isAutoScrollingRef.current = false;
           if (autoScrollTimeout) {
             clearTimeout(autoScrollTimeout);
@@ -224,19 +227,20 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
         return;
       }
 
-      // Only trigger if user was near the top of Phase 1 (< 50% of Phase 1)
-      // This prevents auto-scroll from triggering when user scrolls back up from Phase 2
-      const wasInEarlyPhase1 = previousScrollY < scrollEffectEnd * 0.5;
+      // Check if user is in Phase 1
+      const isInPhase1 = scrollY > 0 && scrollY < scrollEffectEnd;
 
-      // If user is in Phase 1 (0 < scrollY < 250vh) and scrolling down
-      // AND they were in early Phase 1 (not coming back from Phase 2)
-      if (
-        scrollY > 0 &&
-        scrollY < scrollEffectEnd &&
-        isScrollingDown &&
-        wasInEarlyPhase1
-      ) {
-        isAutoScrollingRef.current = true;
+      if (!isInPhase1) return;
+
+      // Determine which half of Phase 1 user is in
+      const phase1MidPoint = scrollEffectEnd * 0.5;
+      const isInLowerHalf = scrollY >= phase1MidPoint;
+      const isInUpperHalf = scrollY < phase1MidPoint;
+
+      // SCROLLING DOWN: Auto-scroll to Phase 2 (text start position)
+      if (isScrollingDown && isInUpperHalf) {
+        // Only trigger if user was near the top (< 50% of Phase 1)
+        isAutoScrollingRef.current = 'down';
 
         // Auto-scroll to where text 1 appears (250vh + 50vh buffer)
         const textStartPosition = scrollEffectEnd + windowHeight * 0.5;
@@ -247,6 +251,22 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
         });
 
         // Reset flag after scroll completes (smooth scroll takes ~1.5s)
+        autoScrollTimeout = setTimeout(() => {
+          isAutoScrollingRef.current = false;
+        }, 1500);
+      }
+      // SCROLLING UP: Auto-scroll to top
+      else if (!isScrollingDown && isInLowerHalf) {
+        // Only trigger if user is in lower half scrolling up
+        isAutoScrollingRef.current = 'up';
+
+        // Auto-scroll to top
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+
+        // Reset flag after scroll completes
         autoScrollTimeout = setTimeout(() => {
           isAutoScrollingRef.current = false;
         }, 1500);
