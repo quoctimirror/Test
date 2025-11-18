@@ -19,40 +19,9 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
   const [scale, setScale] = useState(1);
 
   // ==========================================
-  // LOAD TRANSFORMS
+  // HELPER: Calculate rotation.y based on camera/hand/finger
   // ==========================================
-  useEffect(() => {
-    if (!tryon) return;
-
-    // Delay để đảm bảo config đã load xong
-    const loadTransforms = () => {
-      const pos = tryon.modelPosition || { x: 0, y: 0, z: 0 };
-      let rot = tryon.modelRotation || { x: 0, y: 0, z: 0 };
-      const scl = tryon.modelScaleFactor !== undefined ? tryon.modelScaleFactor : 1;
-
-      setPosition({ x: pos.x, y: pos.y, z: pos.z });
-      setRotation({ x: rot.x, y: rot.y, z: rot.z });
-      setScale(scl);
-
-      console.log('📊 Loaded transforms for', modelName);
-      console.log('   Position:', pos);
-      console.log('   Rotation:', rot);
-      console.log('   Scale:', scl);
-    };
-
-    // Load ngay lập tức và sau 500ms để đảm bảo config đã load
-    loadTransforms();
-    const timer = setTimeout(loadTransforms, 500);
-
-    return () => clearTimeout(timer);
-  }, [tryon, modelName]);
-
-  // ==========================================
-  // AUTO APPLY ROTATION Y
-  // ==========================================
-  useEffect(() => {
-    if (!tryon || !tryon.modelRotation) return;
-
+  const calculateRotationY = useCallback(() => {
     // Config rotation.y cho mu bàn tay
     const fingerRotationConfig = {
       frontCamera: {
@@ -97,13 +66,56 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
       }
     }
 
+    return rotationY;
+  }, [currentCamera, currentHand, currentFinger, deviceType]);
+
+  // ==========================================
+  // LOAD TRANSFORMS
+  // ==========================================
+  useEffect(() => {
+    if (!tryon) return;
+
+    // Delay để đảm bảo config đã load xong
+    const loadTransforms = () => {
+      const pos = tryon.modelPosition || { x: 0, y: 0, z: 0 };
+      let rot = tryon.modelRotation || { x: 0, y: 0, z: 0 };
+      const scl = tryon.modelScaleFactor !== undefined ? tryon.modelScaleFactor : 1;
+
+      // Tính rotation.y tự động
+      const rotationY = calculateRotationY();
+
+      setPosition({ x: pos.x, y: pos.y, z: pos.z });
+      setRotation({ x: rot.x, y: rotationY, z: rot.z });
+      setScale(scl);
+
+      console.log('📊 Loaded transforms for', modelName);
+      console.log('   Position:', pos);
+      console.log('   Rotation:', { x: rot.x, y: rotationY, z: rot.z });
+      console.log('   Scale:', scl);
+    };
+
+    // Load ngay lập tức và sau 500ms để đảm bảo config đã load
+    loadTransforms();
+    const timer = setTimeout(loadTransforms, 500);
+
+    return () => clearTimeout(timer);
+  }, [tryon, modelName, calculateRotationY]);
+
+  // ==========================================
+  // AUTO APPLY ROTATION Y khi thay đổi camera/hand/finger
+  // ==========================================
+  useEffect(() => {
+    if (!tryon || !tryon.modelRotation) return;
+
+    const rotationY = calculateRotationY();
+
     // Apply rotation.y
     tryon.modelRotation.y = rotationY;
     setRotation(prev => ({ ...prev, y: rotationY }));
 
-    console.log(`🔄 Auto rotation.y: ${rotationY} (${cameraType}, ${handType}, finger ${currentFinger})`);
+    console.log(`🔄 Auto rotation.y: ${rotationY}`);
 
-  }, [tryon, currentCamera, currentHand, currentFinger, deviceType]);
+  }, [tryon, calculateRotationY]);
 
   // ==========================================
   // UPDATE FUNCTIONS
