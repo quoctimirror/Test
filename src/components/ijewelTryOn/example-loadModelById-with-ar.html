@@ -65,6 +65,9 @@
     <script>window.webgi = window;</script> <!-- Required for ij_vto to work(for now) -->
     <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.37/web-vto.js"> </script>
 
+    <!-- MediaPipe Hands for hand detection -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
 
     <script>
         const { loadModelById } = window.ijewelViewer;
@@ -83,11 +86,142 @@
         let inAR = false;
         let fileConfig;
         let currentFinger = 0;
+        let currentCamera = 0; // 0 = back camera (mobile) / front camera (desktop), 1 = front camera (mobile)
+        let currentHand = -1; // -1 = not detected, 0 = left hand, 1 = right hand
+        let deviceType = 'Unknown';
+        let mediaPipeHands = null;
 
         const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
 
+        // Detect device type
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        deviceType = isMobile ? 'Mobile' : 'Desktop';
+        console.log('📱 Device type:', deviceType);
+
         function updateFingerDisplay() {
             fingerDisplay.textContent = fingerNames[currentFinger];
+        }
+
+        // Calculate rotation.y based on camera/hand/finger (giống useDebugControls.js)
+        function calculateRotationY() {
+            const fingerRotationConfig = {
+                frontCamera: {
+                    right: {
+                        3: 0.9,
+                        4: 0.9
+                    }
+                },
+                backCamera: {
+                    right: {
+                        3: 0.6,
+                        4: 0.6
+                    },
+                    left: {
+                        0: 0.19,
+                        1: 0.19,
+                        3: 0.19,
+                        4: 0.19
+                    }
+                }
+            };
+
+            // Xác định cam trước hay cam sau
+            const isFrontCamera = (deviceType === 'Desktop') || (currentCamera === 1);
+            const cameraType = isFrontCamera ? 'frontCamera' : 'backCamera';
+
+            // Xác định tay trái/phải
+            const handType = currentHand === 0 ? 'left' : currentHand === 1 ? 'right' : null;
+
+            // Mặc định rotation.y = 0
+            let rotationY = 0;
+
+            if (handType) {
+                const cameraConfig = fingerRotationConfig[cameraType];
+                if (cameraConfig && cameraConfig[handType]) {
+                    const fingerConfig = cameraConfig[handType][currentFinger];
+                    if (fingerConfig !== undefined) {
+                        rotationY = fingerConfig;
+                    }
+                }
+            }
+
+            console.log(`🔄 Rotation.y: ${rotationY} (${cameraType}, ${handType}, finger ${currentFinger})`);
+            return rotationY;
+        }
+
+        // Apply rotation.y to AR plugin
+        function applyRotationY() {
+            if (!arPlugin || !arPlugin.modelRotation) return;
+
+            const rotationY = calculateRotationY();
+            arPlugin.modelRotation.y = rotationY;
+        }
+
+        // Initialize MediaPipe Hands
+        async function initMediaPipeHands() {
+            if (!window.Hands) {
+                console.warn('⚠️ MediaPipe Hands not loaded');
+                return;
+            }
+
+            try {
+                const hands = new window.Hands({
+                    locateFile: (file) => {
+                        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+                    }
+                });
+
+                hands.setOptions({
+                    maxNumHands: 1,
+                    modelComplexity: 1,
+                    minDetectionConfidence: 0.5,
+                    minTrackingConfidence: 0.5
+                });
+
+                hands.onResults((results) => {
+                    if (results.multiHandedness && results.multiHandedness.length > 0) {
+                        const handLabel = results.multiHandedness[0].label;
+                        const handIndex = handLabel === 'Left' ? 0 : 1;
+
+                        if (currentHand !== handIndex) {
+                            currentHand = handIndex;
+                            console.log('✋ Detected hand:', handLabel, '→', handIndex);
+                            applyRotationY();
+                        }
+                    } else {
+                        if (currentHand !== -1) {
+                            currentHand = -1;
+                            applyRotationY();
+                        }
+                    }
+                });
+
+                await hands.initialize();
+                mediaPipeHands = hands;
+                console.log('✅ MediaPipe Hands initialized');
+
+                // Start detecting from canvas
+                const detect = async () => {
+                    if (!inAR || !mediaPipeHands) return;
+
+                    const canvas = document.querySelector('canvas');
+                    if (canvas) {
+                        try {
+                            await mediaPipeHands.send({ image: canvas });
+                        } catch (err) {
+                            console.error('MediaPipe detect error:', err);
+                        }
+                    }
+
+                    if (inAR) {
+                        requestAnimationFrame(detect);
+                    }
+                };
+
+                detect();
+            } catch (err) {
+                console.error('❌ MediaPipe Hands init error:', err);
+            }
         }
 
         async function initViewer() {
@@ -150,6 +284,12 @@
 
             //start ar
             await arPlugin.start();
+
+            // Initialize MediaPipe for hand detection
+            initMediaPipeHands();
+
+            // Apply initial rotation.y
+            applyRotationY();
         }
 
         arBtn.addEventListener('click', async () => {
@@ -186,6 +326,13 @@
             flipBtn.disabled = true;
             try {
                 await arPlugin.flipCamera();
+
+                // Update camera state (toggle between 0 and 1)
+                currentCamera = (currentCamera + 1) % 2;
+                console.log('📷 Camera flipped:', currentCamera === 0 ? 'Back/Default' : 'Front');
+
+                // Apply rotation.y with new camera
+                applyRotationY();
             } catch (error) {
                 console.error('Flip camera error:', error);
             } finally {
@@ -204,6 +351,9 @@
 
             // Update display
             updateFingerDisplay();
+
+            // Apply rotation.y for new finger
+            applyRotationY();
 
             console.log('Switched to finger:', currentFinger, fingerNames[currentFinger]);
         });
