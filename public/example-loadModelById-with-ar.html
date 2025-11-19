@@ -654,12 +654,26 @@
             if (!arPlugin || !inAR) return;
             flipBtn.disabled = true;  // Disable nút để tránh click nhiều lần
             try {
+                console.log('🔄 Flipping camera...');
+
                 // Gọi hàm flip camera của plugin
                 await arPlugin.flipCamera();
 
                 // Cập nhật trạng thái camera (0 <-> 1)
                 currentCamera = (currentCamera + 1) % 2;
-                console.log('📷 Camera flipped:', currentCamera === 0 ? 'Front Camera' : 'Back Camera');
+                console.log('📷 Camera flipped to:', currentCamera === 0 ? 'Front Camera (0)' : 'Back Camera (1)');
+
+                // QUAN TRỌNG: Reset detectedSourceElement để detection loop tìm lại element mới
+                detectedSourceElement = null;
+                console.log('🔄 Reset detectedSourceElement - will search for new video/canvas element');
+
+                // Reset currentHand để detection bắt đầu lại
+                currentHand = -1;
+                console.log('🔄 Reset currentHand to -1');
+
+                // Đợi 300ms để camera mới sẵn sàng
+                await new Promise(resolve => setTimeout(resolve, 300));
+                console.log('✅ Camera flip completed, detection loop will find new element');
 
                 // Cập nhật debug info
                 updateDebugInfo();
