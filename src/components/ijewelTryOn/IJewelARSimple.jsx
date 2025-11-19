@@ -20,6 +20,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const [fileConfig, setFileConfig] = useState(null);
   const [currentCamera, setCurrentCamera] = useState(0); // 0 = back camera (mobile) / front camera (desktop), 1 = front camera (mobile)
   const [currentHand, setCurrentHand] = useState(-1); // -1 = not detected, 0 = left hand, 1 = right hand
+  const [currentFinger, setCurrentFinger] = useState(0); // 0: áp út, 1: út, 2: cái, 3: trỏ, 4: giữa
   const [deviceType, setDeviceType] = useState('Unknown');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -312,6 +313,35 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   };
 
   // ==========================================
+  // SWITCH FINGER
+  // ==========================================
+  const handleSwitchFinger = async () => {
+    const arPlugin = arPluginRef.current;
+    if (!arPlugin || !inAR) return;
+
+    try {
+      await arPlugin.switchFinger();
+
+      // Update finger state (cycle through 0-4)
+      const newFinger = (currentFinger + 1) % 5;
+      setCurrentFinger(newFinger);
+
+      const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+      console.log('👆 Switched to:', fingerNames[newFinger]);
+    } catch (error) {
+      console.error('Switch finger error:', error);
+    }
+  };
+
+  // ==========================================
+  // GET FINGER NAME
+  // ==========================================
+  const getFingerName = (index) => {
+    const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+    return fingerNames[index] || 'Unknown';
+  };
+
+  // ==========================================
   // RENDER
   // ==========================================
   return (
@@ -329,11 +359,23 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
           {isLoading ? 'Loading...' : inAR ? 'Exit AR' : 'Start AR'}
         </button>
         {inAR && (
-          <button onClick={handleFlipCamera} style={styles.button}>
-            Flip Camera
-          </button>
+          <>
+            <button onClick={handleFlipCamera} style={styles.button}>
+              Flip Camera
+            </button>
+            <button onClick={handleSwitchFinger} style={styles.button}>
+              Switch Finger
+            </button>
+          </>
         )}
       </div>
+
+      {/* Finger Info */}
+      {inAR && (
+        <div style={styles.fingerInfo}>
+          <span>👆 {getFingerName(currentFinger)}</span>
+        </div>
+      )}
     </div>
   );
 };
@@ -371,6 +413,19 @@ const styles = {
     borderRadius: '5px',
     backgroundColor: '#007bff',
     color: 'white'
+  },
+  fingerInfo: {
+    position: 'absolute',
+    top: '80px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    color: 'white',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    zIndex: 1000
   }
 };
 

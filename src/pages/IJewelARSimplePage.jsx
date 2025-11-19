@@ -6,7 +6,7 @@ import { IJewelARSimple } from '../components/ijewelTryOn';
 const IJewelARSimplePage = () => {
   return (
     <IJewelARSimple
-      fileId="MKyTIlEyRbi89oT6bH76yA"
+      fileId="Cs9yFentQsiL9VOyTa8Rdw"
       basename="drive"
     />
   );
