@@ -35,25 +35,11 @@
             font-size: 20px;
         }
 
-        /* Ẩn 2 nút Flip và Switch Finger khi chưa vào AR */
-        #flip-btn, #switch-finger-btn {
+        /* Ẩn nút Flip khi chưa vào AR */
+        #flip-btn {
             display: none;
         }
 
-        /* Khung hiển thị tên ngón tay */
-        #finger-display {
-            position: absolute;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7);  /* Nền đen trong suốt */
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 18px;
-            display: none;  /* Ẩn khi chưa vào AR */
-            z-index: 1000;
-        }
 
         /* Debug Info Panel */
         #debug-info {
@@ -147,11 +133,7 @@
     <div id="controls">
         <button id="ar-btn">Start AR</button>
         <button id="flip-btn">Flip Camera</button>
-        <button id="switch-finger-btn">Switch Finger</button>
     </div>
-
-    <!-- Hiển thị tên ngón tay hiện tại -->
-    <div id="finger-display">Ngón áp út</div>
 
     <!-- Debug Info Panel -->
     <div id="debug-info">
@@ -197,8 +179,6 @@
         const container = document.getElementById('viewer-container');
         const arBtn = document.getElementById('ar-btn');
         const flipBtn = document.getElementById('flip-btn');
-        const switchFingerBtn = document.getElementById('switch-finger-btn');
-        const fingerDisplay = document.getElementById('finger-display');
 
         // Debug info elements
         const debugInfo = document.getElementById('debug-info');
@@ -228,11 +208,6 @@
         deviceType = isMobile ? 'Mobile' : 'Desktop';
         console.log('📱 Device type:', deviceType);
         console.log('📷 Default camera: Front Camera (index 0) for both Mobile and Desktop');
-
-        // Hàm cập nhật hiển thị tên ngón tay trên màn hình
-        function updateFingerDisplay() {
-            fingerDisplay.textContent = fingerNames[currentFinger];
-        }
 
         // Hàm cập nhật debug info panel
         function updateDebugInfo() {
@@ -612,8 +587,6 @@
                 arBtn.textContent = 'Start AR';
                 // Ẩn các nút điều khiển
                 flipBtn.style.display = 'none';
-                switchFingerBtn.style.display = 'none';
-                fingerDisplay.style.display = 'none';
                 debugInfo.style.display = 'none';
 
                 // Clear interval update debug info
@@ -637,10 +610,7 @@
                 arBtn.textContent = 'Exit AR';
                 // Hiện các nút điều khiển
                 flipBtn.style.display = 'block';
-                switchFingerBtn.style.display = 'block';
-                fingerDisplay.style.display = 'block';
                 debugInfo.style.display = 'block';
-                updateFingerDisplay();  // Cập nhật tên ngón tay
                 updateDebugInfo();  // Cập nhật debug info
 
                 // Bật interval để update debug info liên tục
@@ -675,33 +645,6 @@
             } finally {
                 flipBtn.disabled = false;  // Enable lại nút
             }
-        });
-
-        // Event listener cho nút "Switch Finger" - Chuyển ngón tay
-        switchFingerBtn.addEventListener('click', () => {
-            // Kiểm tra AR plugin đã sẵn sàng và đang trong AR
-            if (!arPlugin || !inAR) return;
-
-            // Chuyển sang ngón tay tiếp theo (0->1->2->3->4->0)
-            currentFinger = (currentFinger + 1) % 5;
-
-            console.log('🔍 === SWITCHING FINGER DEBUG ===');
-            console.log('   currentFinger INDEX:', currentFinger);
-            console.log('   fingerNames[' + currentFinger + ']:', fingerNames[currentFinger]);
-
-            // Cập nhật ngón tay trong SDK
-            arPlugin.finger = currentFinger;
-            console.log('   arPlugin.finger set to:', arPlugin.finger);
-
-            // Kiểm tra xem SDK có property nào liên quan đến finger không
-            console.log('   arPlugin finger-related properties:', {
-                finger: arPlugin.finger,
-                fingerIndex: arPlugin.fingerIndex,
-                fingerName: arPlugin.fingerName
-            });
-
-            // Cập nhật hiển thị tên ngón tay trên màn hình
-            updateFingerDisplay();
         });
 
         // Khởi tạo viewer khi trang load
