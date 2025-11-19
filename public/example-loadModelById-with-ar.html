@@ -334,27 +334,45 @@
                     }
 
                     try {
-                        // CHỈ DETECT TỪ CANVAS (giống file JSX)
+                        // TÌM CẢ VIDEO VÀ CANVAS ĐỂ KIỂM TRA
+                        const video = document.querySelector('video');
                         const canvas = document.querySelector('canvas');
 
-                        if (!canvas) {
+                        // Log info lần đầu để debug
+                        if (logCount === 0) {
+                            console.log('🔍 === CHECKING ELEMENTS ===');
+                            console.log('   Video element:', video);
+                            if (video) {
+                                console.log('   Video size:', video.videoWidth, 'x', video.videoHeight);
+                                console.log('   Video readyState:', video.readyState);
+                                console.log('   Video paused:', video.paused);
+                            }
+                            console.log('   Canvas element:', canvas);
+                            if (canvas) {
+                                console.log('   Canvas size:', canvas.width, 'x', canvas.height);
+                                console.log('   Canvas style:', canvas.style.width, 'x', canvas.style.height);
+                            }
+                        }
+
+                        // Ưu tiên dùng VIDEO nếu có, nếu không thì dùng CANVAS
+                        const sourceElement = video || canvas;
+
+                        if (!sourceElement) {
                             if (logCount === 0) {
-                                console.warn('⚠️ Canvas element not found!');
+                                console.warn('⚠️ No video or canvas element found!');
                             }
                             logCount++;
                             requestAnimationFrame(detect);
                             return;
                         }
 
-                        // Log info lần đầu
+                        // Log lần đầu xem đang dùng element nào
                         if (logCount === 0) {
-                            console.log('🖼️ Canvas found:', canvas);
-                            console.log('   Canvas size:', canvas.width, 'x', canvas.height);
-                            console.log('   Canvas style:', canvas.style.width, 'x', canvas.style.height);
+                            console.log('✅ Using element for MediaPipe:', sourceElement.tagName);
                         }
 
-                        // Gửi canvas frame tới MediaPipe
-                        await mediaPipeHands.send({ image: canvas });
+                        // Gửi frame tới MediaPipe
+                        await mediaPipeHands.send({ image: sourceElement });
 
                         if (logCount === 0) {
                             console.log('✅ First frame sent to MediaPipe successfully');
