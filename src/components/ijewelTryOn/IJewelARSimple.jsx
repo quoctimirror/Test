@@ -315,22 +315,19 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   // ==========================================
   // SWITCH FINGER
   // ==========================================
-  const handleSwitchFinger = async () => {
+  const handleSwitchFinger = () => {
     const arPlugin = arPluginRef.current;
     if (!arPlugin || !inAR) return;
 
-    try {
-      await arPlugin.switchFinger();
+    // Update finger state (cycle through 0-4)
+    const newFinger = (currentFinger + 1) % 5;
+    setCurrentFinger(newFinger);
 
-      // Update finger state (cycle through 0-4)
-      const newFinger = (currentFinger + 1) % 5;
-      setCurrentFinger(newFinger);
+    // Update SDK
+    arPlugin.finger = newFinger;
 
-      const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
-      console.log('👆 Switched to:', fingerNames[newFinger]);
-    } catch (error) {
-      console.error('Switch finger error:', error);
-    }
+    const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+    console.log('👆 Switched to:', fingerNames[newFinger], '(Index:', newFinger, ')');
   };
 
   // ==========================================
