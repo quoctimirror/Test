@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './RightConfiguration.css';
-import opaqueIcon from '../../assets/images/opaque_gts.svg';
-import whiteIcon from '../../assets/images/white_gts.svg';
-import editPenIcon from '../../assets/images/icons/edit_pen.svg';
-import ShineGlassButton from '../common/button/ShineGlassButton';
+import opaqueIcon from '@assets/images/opaque_gts.svg';
+import whiteIcon from '@assets/images/white_gts.svg';
+import editPenIcon from '@assets/images/icons/edit_pen.svg';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import SizeSelector from './SizeSelector';
 import ShapeSelector from './ShapeSelector';
 

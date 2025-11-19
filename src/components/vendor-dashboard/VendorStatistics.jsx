@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { productsAPI, handleAPIError } from "@services/api";
 import { ROUTES } from "@/constants/routes";
-import LineChart from "../charts/LineChart";
-import BarChart from "../charts/BarChart";
-import PieChart from "../charts/PieChart";
-import AreaChart from "../charts/AreaChart";
+import LineChart from "@components/charts/LineChart";
+import BarChart from "@components/charts/BarChart";
+import PieChart from "@components/charts/PieChart";
+import AreaChart from "@components/charts/AreaChart";
 
 const VendorStatistics = ({ vendorInfo }) => {
   const [stats, setStats] = useState({

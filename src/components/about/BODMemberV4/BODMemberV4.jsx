@@ -1,5 +1,5 @@
 import "./BODMemberV4.css";
-import "../../../styles/grid-system.css";
+import "@styles/grid-system.css";
 import { useState, useEffect, useRef } from "react";
 
 const BODMemberV4 = () => {

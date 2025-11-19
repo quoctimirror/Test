@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useRef } from 'react';
 import { MediaImage } from '@components/common/media';
 import './SpaceOverlay.css';
 import StarlightEffect from './StarlightEffect';
-import ShineGlassButton from '../../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import RectSpaceSVG from './svg/RectSpaceSVG';
 
 const SpaceOverlay = ({ isVisible, onClose, origin }) => {

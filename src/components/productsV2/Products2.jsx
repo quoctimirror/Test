@@ -3,8 +3,8 @@ import './Products.css';
 import LeftContainer_v2 from './LeftContainer_v2';
 import RightConfiguration from './RightConfiguration';
 import MobileProductBar from './MobileProductBar';
-import ViewAllProduct from '../viewAllProduct/ViewAllProduct';
-import Contact from '../contactUs/ContactUs';
+import ViewAllProduct from '@components/viewAllProduct/ViewAllProduct';
+import Contact from '@components/contactUs/ContactUs';
 
 
 const Products2 = () => {

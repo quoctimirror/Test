@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import "./MilanComponent.css";
-import "../../styles/grid-system.css";
+import "@styles/grid-system.css";
 import ArrowButton from "@components/common/button/ArrowButton";
 import MediaImage from "@components/common/media/MediaImage";
 

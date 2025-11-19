@@ -13,7 +13,7 @@ const ProductCareRepair = () => {
       </div>
 
       <div className="service-section">
-        <h3 className="heading-4--no-margin">
+        <h3 className="heading-3--no-margin">
           1. Complimentary Lifetime Cleaning & Inspection
         </h3>
         <p className="bodytext-4--no-margin">
@@ -156,7 +156,7 @@ const ProductCareRepair = () => {
       </div>
 
       <div className="service-section last-section">
-        <h3 className="heading-4--no-margin">3. Jewelry Care Tips</h3>
+        <h3 className="heading-3--no-margin">3. Jewelry Care Tips</h3>
         <p className="bodytext-4--no-margin">
           Maintain your jewelry's brilliance and longevity with these expert
           tips:

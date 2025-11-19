@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useRef } from 'react';
 import { MediaImage } from '@components/common/media';
 import './TimeOverlay.css';
 import StarlightEffect from './StarlightEffect';
-import ShineGlassButton from '../../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import DropletTimeSVG from './svg/DropletTimeSVG';
 
 const TimeOverlay = ({ isVisible, onClose, origin }) => {

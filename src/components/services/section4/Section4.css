@@ -95,7 +95,7 @@
 .section4-description {
   text-align: center;
   color: #797979;
-  max-width: 400px;
+  max-width: 380px;
 }
 
 /* Button styles now handled by ShineGlassButton component */

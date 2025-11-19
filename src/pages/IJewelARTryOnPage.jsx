@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import IJewelTryOnAR from '../components/ijewelTryOn';
+import IJewelTryOnAR from '@components/ijewelTryOn';
 
 /**
  * IJewel AR Try-On Page

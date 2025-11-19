@@ -198,6 +198,11 @@ const Profile = () => {
 
   const handleNavClick = (navItem) => {
     setActiveNavItem(navItem);
+    // Update location.state so navbar can read the active tab
+    navigate(location.pathname, {
+      state: { activeTab: navItem },
+      replace: true,
+    });
   };
 
   const handleLogout = () => {

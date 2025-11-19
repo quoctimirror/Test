@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { MediaImage } from "@components/common/media";
 import "./BODMemberV2.css";
-import "../../../styles/grid-system.css";
+import "@styles/grid-system.css";
 
 const BODMemberV2 = () => {
   const teamMembers = [

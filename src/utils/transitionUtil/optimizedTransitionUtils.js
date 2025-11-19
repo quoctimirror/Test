@@ -315,9 +315,9 @@ export const optimizedTransitionUtils = {
         while (retries < maxRetries) {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          // Check if React has rendered
-          if (root.children.length > 0) {
-            // Content rendered, wait a bit more for JS to settle
+          // Check if React has rendered NEW content (not old content)
+          if (root.children.length > 0 && root.innerHTML !== originalContent) {
+            // Content has changed, wait a bit more for JS to settle
             await new Promise((resolve) => setTimeout(resolve, 150));
             break;
           }

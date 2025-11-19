@@ -392,7 +392,6 @@ export default function NavbarV3() {
 
   const handleLoginClick = async () => {
     setIsAccountMenuOpen(false);
-    navigate(ROUTES.AUTH_LOGIN);
     if (window.location.pathname === ROUTES.AUTH_LOGIN) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;

@@ -24,6 +24,7 @@
   background: #111;
   overflow: hidden;
   position: relative;
+  /* Stack image and video on top of each other */
 }
 
 .lumex91-video-box::after {
@@ -37,7 +38,7 @@
     rgba(0, 0, 0, 0.9) 100%
   );
   pointer-events: none;
-  z-index: 1;
+  z-index: 10; /* Above video and placeholder */
 }
 
 .lumex91-video {
@@ -47,6 +48,34 @@
   display: block;
   outline: none;
   border: none;
+}
+
+/* Placeholder image - shown while video is loading */
+.lumex91-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+  pointer-events: none;
+}
+
+/* Hide placeholder when video is loaded */
+.lumex91-placeholder-hide {
+  opacity: 0;
+  z-index: 1;
+}
+
+/* Video while loading - hidden */
+.lumex91-video-loading {
+  opacity: 0;
+}
+
+/* Video when loaded - fade in */
+.lumex91-video-loaded {
+  opacity: 1;
+  transition: opacity 0.5s ease-in;
 }
 
 .lumex91-content {
@@ -75,9 +104,9 @@
 }
 
 /* Mobile - 425px and below */
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 480px) {
   .lumex91-container {
-    max-width: 77%;
+    max-width: 300px;
     gap: 30px;
   }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { MediaImage } from "@components/common/media";
 import "./Section3.css";
-import ArrowButton from "../common/button/ArrowButton";
+import ArrowButton from "@components/common/button/ArrowButton";
 
 const Section3 = () => {
   const carouselRef = useRef(null);

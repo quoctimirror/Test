@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { MediaImage } from "@components/common/media";
 import "./BODMemberV3.css";
-import "../../../styles/grid-system.css";
+import "@styles/grid-system.css";
 
 const BODMemberV3 = () => {
   const teamMembers = [

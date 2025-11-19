@@ -19,7 +19,7 @@ const TradeInUpgrade = () => {
       </div>
 
       <div className="how-it-works-section">
-        <h3 className="heading-4--no-margin">How it works</h3>
+        <h3 className="heading-3--no-margin">How it works</h3>
 
         <div className="process-item">
           <ul>

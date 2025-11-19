@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import MetaballBackground from "@components/specialEffect/MetaballBackground/MetaballBackground";
-import StarlightEffect from "../universeSection/StarlightEffect";
+import StarlightEffect from "@components/home-page/universeSection/StarlightEffect";
 import "./BrandPillars.css";
 
 const BrandPillars = () => {

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { MediaImage } from '@components/common/media';
 import './SizeSelector.css';
-import sizeConversionData from '../../assets/sizeConversionBoard.json';
+import sizeConversionData from '@assets/sizeConversionBoard.json';
 import CustomDropdown from './CustomDropdown';
-import ShineGlassButton from '../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 
 const SizeSelector = ({ onClose, onSelectSize, selectedSize }) => {
     const [activeTab, setActiveTab] = useState('select'); // 'select' or 'find'

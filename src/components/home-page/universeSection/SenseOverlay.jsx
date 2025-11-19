@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useRef } from 'react';
 import { MediaImage } from '@components/common/media';
 import './SenseOverlay.css';
 import StarlightEffect from './StarlightEffect';
-import ShineGlassButton from '../../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import HeartSenseSVG from './svg/HeartSenseSVG';
 
 // Sense descriptions - moved outside component to avoid recreation on every render

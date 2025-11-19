@@ -9,8 +9,8 @@
 
 import React, { Suspense, useState, useCallback, useRef, useEffect } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import { Scene3D } from '../arTryOn/quocti_dancefloor/components/Scene3D';
-import { ErrorBoundary } from '../arTryOn/quocti_dancefloor/components/ErrorBoundary';
+import { Scene3D } from '@components/arTryOn/quocti_dancefloor/components/Scene3D';
+import { ErrorBoundary } from '@components/arTryOn/quocti_dancefloor/components/ErrorBoundary';
 import "./ProductsLeft.css";
 
 // Component để điều chỉnh camera target

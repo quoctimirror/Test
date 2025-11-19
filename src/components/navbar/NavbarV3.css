@@ -1590,11 +1590,16 @@
     mix-blend-mode: difference !important;
   }
 
-  body:has(.menu-v3-container.menu-v3-open) .logo-v3-fixed-container .navbar-v3-logo-svg {
+  body:has(.menu-v3-container.menu-v3-open)
+    .logo-v3-fixed-container
+    .navbar-v3-logo-svg {
     filter: none !important;
   }
 
-  body:has(.menu-v3-container.menu-v3-open) .logo-v3-fixed-container .navbar-v3-logo-svg path {
+  body:has(.menu-v3-container.menu-v3-open)
+    .logo-v3-fixed-container
+    .navbar-v3-logo-svg
+    path {
     fill: white !important;
   }
 
@@ -1607,20 +1612,28 @@
     color: white !important;
   }
 
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-text::after {
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-text::after {
     background: white !important;
   }
 
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon-desktop path,
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon-close path {
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-icon-desktop
+    path,
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-icon-close
+    path {
     stroke: white !important;
   }
 
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-page-name {
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-page-name {
     color: white !important;
   }
 
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-page-separator path {
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-page-separator
+    path {
     stroke: white !important;
   }
 
@@ -1629,11 +1642,15 @@
     mix-blend-mode: difference !important;
   }
 
-  body:has(.menu-v3-container.menu-v3-open) .account-v3-fixed-container .underline-button-text {
+  body:has(.menu-v3-container.menu-v3-open)
+    .account-v3-fixed-container
+    .underline-button-text {
     color: white !important;
   }
 
-  body:has(.menu-v3-container.menu-v3-open) .account-v3-fixed-container .underline-button-text::after {
+  body:has(.menu-v3-container.menu-v3-open)
+    .account-v3-fixed-container
+    .underline-button-text::after {
     background: white !important;
   }
 
@@ -1646,11 +1663,15 @@
     mix-blend-mode: difference !important;
   }
 
-  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-text-container .immersive-v3-text {
+  body:has(.menu-v3-container.menu-v3-open)
+    .immersive-v3-text-container
+    .immersive-v3-text {
     color: white !important;
   }
 
-  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-border-container .immersive-v3-border::after {
+  body:has(.menu-v3-container.menu-v3-open)
+    .immersive-v3-border-container
+    .immersive-v3-border::after {
     background: conic-gradient(
         from var(--angle-1) at 50% 50%,
         rgba(255, 255, 255, 0.8),
@@ -1659,7 +1680,11 @@
         rgba(255, 255, 255, 0.3) 60% 95%,
         rgba(255, 255, 255, 0.8)
       ),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.5),
+        rgba(255, 255, 255, 0.5)
+      ) !important;
   }
 
   /* Menu popup items */
@@ -1667,11 +1692,15 @@
     mix-blend-mode: difference !important;
   }
 
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-popup .underline-button-text {
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-popup
+    .underline-button-text {
     color: white !important;
   }
 
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-popup .underline-button-text::after {
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-popup
+    .underline-button-text::after {
     background: white !important;
   }
 }
@@ -1679,11 +1708,16 @@
 /* ========== MOBILE/TABLET - White theme when menu open ========== */
 @media screen and (max-width: 1023px) {
   /* Logo */
-  body:has(.menu-v3-container.menu-v3-open) .logo-v3-fixed-container .navbar-v3-logo-svg {
+  body:has(.menu-v3-container.menu-v3-open)
+    .logo-v3-fixed-container
+    .navbar-v3-logo-svg {
     filter: none !important;
   }
 
-  body:has(.menu-v3-container.menu-v3-open) .logo-v3-fixed-container .navbar-v3-logo-svg path {
+  body:has(.menu-v3-container.menu-v3-open)
+    .logo-v3-fixed-container
+    .navbar-v3-logo-svg
+    path {
     fill: white !important;
   }
 
@@ -1692,25 +1726,35 @@
     color: white !important;
   }
 
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-icon-close path {
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-icon-close
+    path {
     stroke: white !important;
   }
 
   /* Account button (if visible on tablet) */
-  body:has(.menu-v3-container.menu-v3-open) .account-v3-fixed-container .underline-button-text {
+  body:has(.menu-v3-container.menu-v3-open)
+    .account-v3-fixed-container
+    .underline-button-text {
     color: white !important;
   }
 
-  body:has(.menu-v3-container.menu-v3-open) .account-v3-fixed-container .underline-button-text::after {
+  body:has(.menu-v3-container.menu-v3-open)
+    .account-v3-fixed-container
+    .underline-button-text::after {
     background: white !important;
   }
 
   /* Immersive button */
-  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-text-container .immersive-v3-text {
+  body:has(.menu-v3-container.menu-v3-open)
+    .immersive-v3-text-container
+    .immersive-v3-text {
     color: white !important;
   }
 
-  body:has(.menu-v3-container.menu-v3-open) .immersive-v3-border-container .immersive-v3-border::after {
+  body:has(.menu-v3-container.menu-v3-open)
+    .immersive-v3-border-container
+    .immersive-v3-border::after {
     background: conic-gradient(
         from var(--angle-1) at 50% 50%,
         rgba(255, 255, 255, 0.8),
@@ -1719,15 +1763,23 @@
         rgba(255, 255, 255, 0.3) 60% 95%,
         rgba(255, 255, 255, 0.8)
       ),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) !important;
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.5),
+        rgba(255, 255, 255, 0.5)
+      ) !important;
   }
 
   /* Menu popup items */
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-popup .underline-button-text {
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-popup
+    .underline-button-text {
     color: white !important;
   }
 
-  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open) .menu-v3-popup .underline-button-text::after {
+  .menu-v3-fixed-container:has(.menu-v3-container.menu-v3-open)
+    .menu-v3-popup
+    .underline-button-text::after {
     background: white !important;
   }
 }
@@ -1805,42 +1857,8 @@
   mix-blend-mode: difference !important;
 }
 
-/* ========== ACCOUNT HOVER/OPEN - Override theme to blend mode ========== */
-/* When account is hovered or dropdown opened, force blend mode regardless of theme */
-
-.account-v3-fixed-container:hover,
-.account-v3-fixed-container:has(.account-v3-popup.active) {
-  mix-blend-mode: difference !important;
-}
-
-/* Reset all text to white for blend mode */
-.account-v3-fixed-container:hover .account-v3-text,
-.account-v3-fixed-container:has(.account-v3-popup.active) .account-v3-text,
-.account-v3-fixed-container:hover .underline-button-text,
-.account-v3-fixed-container:has(.account-v3-popup.active)
-  .underline-button-text {
-  color: rgba(255, 255, 255, 1) !important;
-}
-
-/* Reset all underlines to white for blend mode */
-.account-v3-fixed-container:hover .underline-button-text::after,
-.account-v3-fixed-container:has(.account-v3-popup.active)
-  .underline-button-text::after {
-  background: rgba(255, 255, 255, 1) !important;
-}
-
-.account-v3-fixed-container:hover .account-v3-user-info span,
-.account-v3-fixed-container:has(.account-v3-popup.active)
-  .account-v3-user-info
-  span {
-  color: white !important;
-}
-
-/* Reset account divider to white for blend mode */
-.account-v3-fixed-container:hover .menu-v3-divider,
-.account-v3-fixed-container:has(.account-v3-popup.active) .menu-v3-divider {
-  background: rgba(255, 255, 255, 1) !important;
-}
+/* ========== ACCOUNT HOVER/OPEN - Keep current theme ========== */
+/* Account button maintains its current theme when hovered or dropdown opened */
 
 /* ========== IMMERSIVE BUTTON THEME ========== */
 

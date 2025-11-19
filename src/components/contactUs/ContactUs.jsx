@@ -13,13 +13,12 @@ const ContactUs = () => {
     await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.BOOK_APPOINTMENT);
   };
 
-  const handleLiveChatClick = () => {
-    // TODO: Implement live chat functionality
-    console.log("Start a live chat");
+  const handleLiveChatClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.CONTACT);
   };
 
-  const handlePhoneCallClick = () => {
-    window.location.href = "tel:+442077589780";
+  const handlePhoneCallClick = async () => {
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.CONTACT);
   };
 
   return (

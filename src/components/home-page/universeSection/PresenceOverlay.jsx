@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useRef } from 'react';
 import { MediaImage } from '@components/common/media';
 import './PresenceOverlay.css';
 import StarlightEffect from './StarlightEffect';
-import ShineGlassButton from '../../common/button/ShineGlassButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import CirclePresenceSVG from './svg/CirclePresenceSVG';
 
 const PresenceOverlay = ({ isVisible, onClose, origin }) => {
