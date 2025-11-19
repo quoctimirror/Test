@@ -231,19 +231,17 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
         setupIOSHandlers(canvasRef.current, viewer, tryon);
       }
 
+      // Keep viewer disabled - no 3D view before AR
       viewer.renderEnabled = false;
-      const modelKey = getModelKey(modelName);
-      await loadModelProgressive(modelKey);
-      viewer.renderEnabled = true;
 
-      await new Promise(resolve => {
-        requestAnimationFrame(() => requestAnimationFrame(resolve));
-      });
+      // Don't load model here - will load when starting AR
+      // const modelKey = getModelKey(modelName);
+      // await loadModelProgressive(modelKey);
 
       setIsLoading(false);
       isInitializedRef.current = true;
 
-      console.log('✅ iJewel SDK initialized successfully');
+      console.log('✅ iJewel SDK initialized - 3D view disabled');
       if (isIOS) {
         console.log('🍎 iOS: FULL QUALITY - Canvas 1.0, No throttling, MSAA enabled');
       }
@@ -260,29 +258,30 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
     const tryon = tryonRef.current;
     const viewer = viewerRef.current;
     const canvas = canvasRef.current;
-    if (!tryon || !canvas) return;
+    if (!tryon || !canvas || !viewer) return;
 
     try {
       if (tryon.running) {
         await tryon.stop();
         setIsARRunning(false);
 
-        // Re-enable 3D viewer rendering when exiting AR
-        if (viewer) {
-          viewer.renderEnabled = true;
-        }
+        // Keep viewer disabled - no 3D view after exiting AR
+        viewer.renderEnabled = false;
 
         canvas.style.opacity = '1';
-        console.log('🔙 Exited AR mode, viewer enabled');
+        console.log('🔙 Exited AR mode');
       } else {
-        // Hide canvas before starting to avoid showing front camera
+        // Hide canvas before starting
         canvas.style.opacity = '0';
 
-        // Disable 3D viewer rendering when entering AR mode
-        if (viewer) {
-          viewer.renderEnabled = false;
-          console.log('🎥 Entering AR mode, viewer disabled');
-        }
+        // Load model before starting AR
+        console.log('📦 Loading model before AR...');
+        const modelKey = getModelKey(modelName);
+        await loadModelProgressive(modelKey);
+
+        // Keep viewer disabled, start AR mode
+        viewer.renderEnabled = false;
+        console.log('🎥 Starting AR mode...');
 
         await tryon.start();
         setIsARRunning(true);
@@ -293,7 +292,7 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
             tryon.flipCamera();
             console.log('📷 Flipping to back camera...');
 
-            // Show canvas immediately after flip (total 500ms from start)
+            // Show canvas immediately after flip
             setTimeout(() => {
               canvas.style.opacity = '1';
               console.log('✅ Back camera ready, showing canvas');
@@ -307,8 +306,8 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       }
     } catch (err) {
       console.error('❌ AR toggle error:', err);
-      // Re-enable viewer and show canvas even on error
-      if (viewer) viewer.renderEnabled = true;
+      // Keep viewer disabled even on error
+      if (viewer) viewer.renderEnabled = false;
       if (canvas) canvas.style.opacity = '1';
 
       let errorMsg = 'Failed to start AR try-on.\n\n';
@@ -325,7 +324,7 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
       setError(errorMsg);
       if (onError) onError(err);
     }
-  }, [onError]);
+  }, [onError, modelName, getModelKey, loadModelProgressive]);
 
   const hideWatermarks = () => {
     console.log('🔍 Hiding watermarks...');
@@ -359,28 +358,23 @@ export const useIJewelARTryOn = ({ canvasRef, modelName, onError, onModelLoad })
     };
   }, [initializeViewer]);
 
-  useEffect(() => {
-    const viewer = viewerRef.current;
-    if (!viewer || !isInitializedRef.current) return;
-
-    const reloadModel = async () => {
-      setIsLoading(true);
-
-      // Disable render while loading to hide old model
-      viewer.renderEnabled = false;
-
-      const modelKey = getModelKey(modelName);
-      await loadModelProgressive(modelKey);
-
-      // Re-enable render after new model is loaded
-      viewer.renderEnabled = true;
-
-      setIsLoading(false);
-      console.log(`✅ Model switched to: ${modelKey}`);
-    };
-
-    reloadModel();
-  }, [modelName, getModelKey, loadModelProgressive]);
+  // Model will be loaded when starting AR, not on modelName change
+  // useEffect(() => {
+  //   const viewer = viewerRef.current;
+  //   if (!viewer || !isInitializedRef.current) return;
+  //
+  //   const reloadModel = async () => {
+  //     setIsLoading(true);
+  //     viewer.renderEnabled = false;
+  //     const modelKey = getModelKey(modelName);
+  //     await loadModelProgressive(modelKey);
+  //     viewer.renderEnabled = true;
+  //     setIsLoading(false);
+  //     console.log(`✅ Model switched to: ${modelKey}`);
+  //   };
+  //
+  //   reloadModel();
+  // }, [modelName, getModelKey, loadModelProgressive]);
 
   return {
     isLoading,
