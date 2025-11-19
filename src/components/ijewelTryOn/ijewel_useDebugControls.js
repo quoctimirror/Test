@@ -34,8 +34,8 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
       },
       backCamera: {
         right: {
-          3: 0.6,
-          4: 0.6
+          3: 0.4,
+          4: 0.4
         },
         left: {
           0: 0.19,
