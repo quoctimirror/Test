@@ -96,6 +96,7 @@ const ScavengerHunt = lazy(() =>
 );
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const IJewelARTryOnPage = lazy(() => import("@pages/IJewelARTryOnPage"));
+const IJewelARSimplePage = lazy(() => import("@pages/IJewelARSimplePage"));
 const ScrollEffectTestPage = lazy(() => import("@pages/ScrollEffectTestPage"));
 const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"));
 const NavbarV2TestPage = lazy(() => import("@pages/NavbarV2TestPage"));
@@ -153,6 +154,7 @@ export default function AppRoutes() {
       ROUTES.NAVBAR_V4_TEST,
       ROUTES.TEST_VIEWER,
       ROUTES.IJEWEL_AR_TRYON,
+      ROUTES.IJEWEL_AR_SIMPLE,
     ];
 
     // Check exact matches
@@ -204,7 +206,8 @@ export default function AppRoutes() {
     location.pathname === ROUTES.NAVBAR_V3_TEST ||
     location.pathname === ROUTES.NAVBAR_V4_TEST ||
     location.pathname === ROUTES.TEST_VIEWER ||
-    location.pathname === ROUTES.IJEWEL_AR_TRYON;
+    location.pathname === ROUTES.IJEWEL_AR_TRYON ||
+    location.pathname === ROUTES.IJEWEL_AR_SIMPLE;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -229,7 +232,8 @@ export default function AppRoutes() {
     location.pathname === ROUTES.NAVBAR_V3_TEST ||
     location.pathname === ROUTES.NAVBAR_V4_TEST ||
     location.pathname === ROUTES.TEST_VIEWER ||
-    location.pathname === ROUTES.IJEWEL_AR_TRYON;
+    location.pathname === ROUTES.IJEWEL_AR_TRYON ||
+    location.pathname === ROUTES.IJEWEL_AR_SIMPLE;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -340,6 +344,9 @@ export default function AppRoutes() {
 
           {/* IJewel AR Try-On Route - Support query params: ?model=oval */}
           <Route path={ROUTES.IJEWEL_AR_TRYON} element={<IJewelARTryOnPage />} />
+
+          {/* IJewel AR Simple Route - Converted from HTML */}
+          <Route path={ROUTES.IJEWEL_AR_SIMPLE} element={<IJewelARSimplePage />} />
 
           <Route
             path="/ar/quoc-ti"

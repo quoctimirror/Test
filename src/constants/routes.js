@@ -36,6 +36,7 @@ export const ROUTES = {
   AR_RINGS: "/f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c/:ringId",
   AR_RINGS_HQ: "/ar/rings-hq/:ringId", // High Quality Studio Mode
   IJEWEL_AR_TRYON: "/ijewel-tryon", // IJewel AR Try-On page
+  IJEWEL_AR_SIMPLE: "/ijewel-ar-simple", // IJewel AR Simple (from HTML)
 
   // Test routes
   PRODUCTS_V2: "/7b8e9f0a-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
