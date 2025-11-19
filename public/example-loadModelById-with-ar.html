@@ -164,6 +164,10 @@
             <span class="debug-label">Camera:</span>
             <span class="debug-value" id="debug-camera">Back</span>
         </div>
+        <div class="debug-item">
+            <span class="debug-label">Hand:</span>
+            <span class="debug-value" id="debug-hand">Not detected</span>
+        </div>
     </div>
 
     <!-- Load thư viện WebGI - Engine 3D của iJewel -->
@@ -177,6 +181,9 @@
 
     <!-- Load thư viện Web VTO - Virtual Try-On (AR thử nhẫn) -->
     <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.37/web-vto.js"> </script>
+
+    <!-- Load MediaPipe Hands để phát hiện bàn tay trái/phải -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
     <script>
         // Lấy hàm loadModelById từ SDK iJewel để load model 3D
@@ -197,6 +204,7 @@
         const debugInfo = document.getElementById('debug-info');
         const debugDevice = document.getElementById('debug-device');
         const debugCamera = document.getElementById('debug-camera');
+        const debugHand = document.getElementById('debug-hand');
 
         // Khai báo các biến toàn cục
         let viewerInstance;  // Instance của viewer
@@ -206,7 +214,9 @@
         let fileConfig;      // Config của file từ server
         let currentFinger = 0;  // Ngón tay hiện tại (0-4)
         let currentCamera = 0;  // Camera hiện tại: 0 = back/default, 1 = front
+        let currentHand = -1;   // Tay được detect: -1 = chưa detect, 0 = trái, 1 = phải
         let deviceType = 'Unknown';  // Loại thiết bị
+        let mediaPipeHands = null;   // Instance MediaPipe để detect tay
         let debugUpdateInterval = null;  // Interval để update debug info định kỳ
 
         // Mảng tên các ngón tay
@@ -237,8 +247,98 @@
                 cameraName = '🤳 Front Camera (0)';
             }
             debugCamera.textContent = cameraName;
+
+            // Update Hand
+            let handName = '❌ Not detected';
+            if (currentHand === 0) handName = '🖐️ Left Hand';
+            else if (currentHand === 1) handName = '🖐️ Right Hand';
+            debugHand.textContent = handName;
         }
 
+        // Khởi tạo MediaPipe Hands để phát hiện tay trái/phải
+        async function initMediaPipeHands() {
+            // Kiểm tra thư viện MediaPipe đã load chưa
+            if (!window.Hands) {
+                console.warn('⚠️ MediaPipe Hands not loaded');
+                return;
+            }
+
+            try {
+                console.log('🤚 Initializing MediaPipe Hands...');
+
+                // Khởi tạo MediaPipe Hands
+                const hands = new window.Hands({
+                    locateFile: (file) => {
+                        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+                    }
+                });
+
+                // Cấu hình MediaPipe
+                hands.setOptions({
+                    maxNumHands: 1,              // Chỉ detect 1 bàn tay
+                    modelComplexity: 1,          // Độ phức tạp model (0-2)
+                    minDetectionConfidence: 0.5, // Ngưỡng tin cậy phát hiện
+                    minTrackingConfidence: 0.5   // Ngưỡng tin cậy tracking
+                });
+
+                // Callback khi MediaPipe detect được tay
+                hands.onResults((results) => {
+                    if (results.multiHandedness && results.multiHandedness.length > 0) {
+                        // Lấy label tay: "Left" hoặc "Right"
+                        const handLabel = results.multiHandedness[0].label;
+                        const handIndex = handLabel === 'Left' ? 0 : 1;
+
+                        // Nếu tay thay đổi
+                        if (currentHand !== handIndex) {
+                            currentHand = handIndex;
+                            console.log('✋ Detected hand:', handLabel, '→', handIndex);
+                        }
+                    } else {
+                        // Không detect được tay nào
+                        if (currentHand !== -1) {
+                            currentHand = -1;
+                            console.log('❌ Hand lost');
+                        }
+                    }
+                });
+
+                // Khởi tạo MediaPipe
+                await hands.initialize();
+                mediaPipeHands = hands;
+                console.log('✅ MediaPipe Hands initialized');
+
+                // Hàm detect liên tục từ canvas
+                const detect = async () => {
+                    // Chỉ chạy khi đang ở chế độ AR
+                    if (!inAR || !mediaPipeHands) return;
+
+                    try {
+                        // Lấy canvas element
+                        const canvas = document.querySelector('canvas');
+                        if (canvas) {
+                            // Gửi canvas frame tới MediaPipe
+                            await mediaPipeHands.send({ image: canvas });
+                        }
+                    } catch (err) {
+                        console.error('MediaPipe detect error:', err);
+                    }
+
+                    // Loop liên tục khi vẫn còn trong AR
+                    if (inAR) {
+                        requestAnimationFrame(detect);
+                    }
+                };
+
+                // Đợi 1 giây để AR plugin khởi động xong
+                setTimeout(() => {
+                    console.log('🚀 Starting MediaPipe hand detection...');
+                    detect();
+                }, 1000);
+
+            } catch (err) {
+                console.error('❌ MediaPipe Hands init error:', err);
+            }
+        }
 
         // Khởi tạo viewer để hiển thị model 3D
         async function initViewer() {
@@ -305,7 +405,21 @@
             }
 
             // Khởi động AR plugin (bật camera)
-            await arPlugin.start();
+            // Mobile: mặc định Back Camera (environment)
+            // Desktop: mặc định Front Camera (user)
+            const isMobile = deviceType === 'Mobile';
+            const facingMode = isMobile ? 'environment' : 'user';
+
+            console.log('📷 Starting camera with facingMode:', facingMode, '(Device:', deviceType + ')');
+
+            await arPlugin.start({
+                video: {
+                    facingMode: facingMode
+                }
+            });
+
+            // Khởi tạo MediaPipe để phát hiện tay trái/phải
+            initMediaPipeHands();
         }
 
         // Event listener cho nút "Start AR" / "Exit AR"
@@ -327,6 +441,14 @@
                     clearInterval(debugUpdateInterval);
                     debugUpdateInterval = null;
                 }
+
+                // Cleanup MediaPipe và reset hand detection
+                if (mediaPipeHands) {
+                    mediaPipeHands.close();
+                    mediaPipeHands = null;
+                }
+                currentHand = -1;
+                console.log('🛑 MediaPipe Hands stopped');
 
                 return;
             }
