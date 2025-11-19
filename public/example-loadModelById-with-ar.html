@@ -6,135 +6,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR Viewer Example</title>
     <style>
+        /* Reset margin/padding cho toàn trang */
         body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
         }
 
+        /* Container chứa viewer 3D - chiếm toàn màn hình */
         #viewer-container {
-            width: 100vw;
-            height: 100vh;
+            width: 100vw;   /* 100% viewport width */
+            height: 100vh;  /* 100% viewport height */
         }
 
+        /* Khung chứa các nút điều khiển - đặt ở trên cùng giữa màn hình */
         #controls {
             position: absolute;
             top: 20px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%);  /* Center theo chiều ngang */
             display: flex;
-            gap: 10px;
-            z-index: 1000;
+            gap: 10px;  /* Khoảng cách giữa các nút */
+            z-index: 1000;  /* Hiển thị trên cùng */
         }
 
+        /* Style cho tất cả các button */
         button {
             font-size: 20px;
         }
 
+        /* Ẩn 2 nút Flip và Switch Finger khi chưa vào AR */
         #flip-btn, #switch-finger-btn {
             display: none;
         }
 
+        /* Khung hiển thị tên ngón tay */
         #finger-display {
             position: absolute;
             top: 80px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.7);  /* Nền đen trong suốt */
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
             font-size: 18px;
-            display: none;
+            display: none;  /* Ẩn khi chưa vào AR */
             z-index: 1000;
         }
     </style>
 </head>
 
 <body>
+    <!-- Container chính để hiển thị model 3D và AR -->
     <div id="viewer-container"></div>
+
+    <!-- Các nút điều khiển -->
     <div id="controls">
         <button id="ar-btn">Start AR</button>
         <button id="flip-btn">Flip Camera</button>
         <button id="switch-finger-btn">Switch Finger</button>
     </div>
+
+    <!-- Hiển thị tên ngón tay hiện tại -->
     <div id="finger-display">Ngón áp út</div>
 
+    <!-- Load thư viện WebGI - Engine 3D của iJewel -->
     <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js"> </script>
+
+    <!-- Load thư viện Mini Viewer - SDK để hiển thị model 3D -->
     <script src="https://releases.ijewel3d.com/libs/mini-viewer/0.5.0/bundle.nowebgi.iife.js"></script>
-    <script>window.webgi = window;</script> <!-- Required for ij_vto to work(for now) -->
+
+    <!-- Thiết lập window.webgi cho ij_vto hoạt động -->
+    <script>window.webgi = window;</script>
+
+    <!-- Load thư viện Web VTO - Virtual Try-On (AR thử nhẫn) -->
     <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.37/web-vto.js"> </script>
 
-    <!-- MediaPipe Hands for hand detection -->
+    <!-- Load MediaPipe Hands để phát hiện bàn tay trái/phải -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
 
     <script>
+        // Lấy hàm loadModelById từ SDK iJewel để load model 3D
         const { loadModelById } = window.ijewelViewer;
+
+        // ID của file model nhẫn trên server
         const fileId = 'HB3RidmJSdezIO1T2hdXcQ';
         const basename = 'drive';
 
+        // Lấy các element HTML để tương tác
         const container = document.getElementById('viewer-container');
         const arBtn = document.getElementById('ar-btn');
         const flipBtn = document.getElementById('flip-btn');
         const switchFingerBtn = document.getElementById('switch-finger-btn');
         const fingerDisplay = document.getElementById('finger-display');
 
-        let viewerInstance;
-        let viewerApp;
-        let arPlugin;
-        let inAR = false;
-        let fileConfig;
-        let currentFinger = 0;
-        let currentCamera = 0; // 0 = back camera (mobile) / front camera (desktop), 1 = front camera (mobile)
-        let currentHand = -1; // -1 = not detected, 0 = left hand, 1 = right hand
-        let deviceType = 'Unknown';
-        let mediaPipeHands = null;
+        // Khai báo các biến toàn cục
+        let viewerInstance;  // Instance của viewer
+        let viewerApp;       // App viewer chính
+        let arPlugin;        // Plugin AR để thử nhẫn
+        let inAR = false;    // Trạng thái có đang trong chế độ AR không
+        let fileConfig;      // Config của file từ server
+        let currentFinger = 0;  // Ngón tay hiện tại (0-4)
+        let currentCamera = 0;  // Camera hiện tại: 0 = back/default, 1 = front
+        let currentHand = -1;   // Tay được detect: -1 = chưa detect, 0 = trái, 1 = phải
+        let deviceType = 'Unknown';  // Loại thiết bị
+        let mediaPipeHands = null;   // Instance MediaPipe để detect tay
 
+        // Mảng tên các ngón tay
         const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
 
-        // Detect device type
+        // Phát hiện loại thiết bị (Mobile hay Desktop)
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         deviceType = isMobile ? 'Mobile' : 'Desktop';
         console.log('📱 Device type:', deviceType);
 
+        // Hàm cập nhật hiển thị tên ngón tay trên màn hình
         function updateFingerDisplay() {
             fingerDisplay.textContent = fingerNames[currentFinger];
         }
 
-        // Calculate rotation.y based on camera/hand/finger (giống useDebugControls.js)
+        // Tính toán góc xoay rotation.y dựa vào camera/hand/finger
+        // Để nhẫn hiển thị đúng hướng trên các ngón tay khác nhau
         function calculateRotationY() {
+            // Config góc xoay cho từng trường hợp: camera + tay + ngón
             const fingerRotationConfig = {
-                frontCamera: {
-                    right: {
-                        3: 0.9,
-                        4: 0.9
+                frontCamera: {  // Camera trước
+                    right: {    // Tay phải
+                        3: 0.9, // Ngón trỏ
+                        4: 0.9  // Ngón giữa
                     }
                 },
-                backCamera: {
-                    right: {
+                backCamera: {   // Camera sau
+                    right: {    // Tay phải
                         3: 0.6,
                         4: 0.6
                     },
-                    left: {
-                        0: 0.19,
-                        1: 0.19,
-                        3: 0.19,
-                        4: 0.19
+                    left: {     // Tay trái
+                        0: 0.19,  // Ngón áp út
+                        1: 0.19,  // Ngón út
+                        3: 0.19,  // Ngón trỏ
+                        4: 0.19   // Ngón giữa
                     }
                 }
             };
 
-            // Xác định cam trước hay cam sau
+            // Xác định đang dùng camera trước hay sau
+            // Desktop luôn dùng front camera, Mobile thì tùy currentCamera
             const isFrontCamera = (deviceType === 'Desktop') || (currentCamera === 1);
             const cameraType = isFrontCamera ? 'frontCamera' : 'backCamera';
 
-            // Xác định tay trái/phải
+            // Xác định đang là tay trái hay tay phải
             const handType = currentHand === 0 ? 'left' : currentHand === 1 ? 'right' : null;
 
-            // Mặc định rotation.y = 0
+            // Mặc định không xoay (rotation.y = 0)
             let rotationY = 0;
 
+            // Tìm góc xoay phù hợp từ config
             if (handType) {
                 const cameraConfig = fingerRotationConfig[cameraType];
                 if (cameraConfig && cameraConfig[handType]) {
@@ -149,46 +178,57 @@
             return rotationY;
         }
 
-        // Apply rotation.y to AR plugin
+        // Áp dụng góc xoay rotation.y vào model nhẫn trong AR
         function applyRotationY() {
+            // Kiểm tra AR plugin đã sẵn sàng chưa
             if (!arPlugin || !arPlugin.modelRotation) return;
 
             const rotationY = calculateRotationY();
             arPlugin.modelRotation.y = rotationY;
         }
 
-        // Initialize MediaPipe Hands
+        // Khởi tạo MediaPipe Hands để phát hiện tay trái/phải
         async function initMediaPipeHands() {
+            // Kiểm tra thư viện MediaPipe đã load chưa
             if (!window.Hands) {
                 console.warn('⚠️ MediaPipe Hands not loaded');
                 return;
             }
 
             try {
+                // Tạo instance MediaPipe Hands
                 const hands = new window.Hands({
                     locateFile: (file) => {
+                        // Đường dẫn tới các file model của MediaPipe
                         return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
                     }
                 });
 
+                // Cấu hình MediaPipe
                 hands.setOptions({
-                    maxNumHands: 1,
-                    modelComplexity: 1,
-                    minDetectionConfidence: 0.5,
-                    minTrackingConfidence: 0.5
+                    maxNumHands: 1,              // Chỉ detect 1 bàn tay
+                    modelComplexity: 1,          // Độ phức tạp model (0-2)
+                    minDetectionConfidence: 0.5, // Ngưỡng tin cậy phát hiện
+                    minTrackingConfidence: 0.5   // Ngưỡng tin cậy tracking
                 });
 
+                // Callback khi MediaPipe detect được tay
                 hands.onResults((results) => {
+                    // Kiểm tra có detect được tay không
                     if (results.multiHandedness && results.multiHandedness.length > 0) {
+                        // Lấy label tay: "Left" hoặc "Right"
                         const handLabel = results.multiHandedness[0].label;
                         const handIndex = handLabel === 'Left' ? 0 : 1;
 
+                        // Nếu tay thay đổi (từ trái sang phải hoặc ngược lại)
                         if (currentHand !== handIndex) {
                             currentHand = handIndex;
                             console.log('✋ Detected hand:', handLabel, '→', handIndex);
+                            // Cập nhật lại góc xoay nhẫn
                             applyRotationY();
                         }
                     } else {
+                        // Không detect được tay nào
                         if (currentHand !== -1) {
                             currentHand = -1;
                             applyRotationY();
@@ -196,76 +236,88 @@
                     }
                 });
 
+                // Khởi tạo MediaPipe
                 await hands.initialize();
                 mediaPipeHands = hands;
                 console.log('✅ MediaPipe Hands initialized');
 
-                // Start detecting from canvas
+                // Hàm detect liên tục từ canvas
                 const detect = async () => {
+                    // Chỉ chạy khi đang ở chế độ AR
                     if (!inAR || !mediaPipeHands) return;
 
+                    // Lấy canvas element (video từ camera)
                     const canvas = document.querySelector('canvas');
                     if (canvas) {
                         try {
+                            // Gửi ảnh từ canvas cho MediaPipe phân tích
                             await mediaPipeHands.send({ image: canvas });
                         } catch (err) {
                             console.error('MediaPipe detect error:', err);
                         }
                     }
 
+                    // Loop liên tục khi vẫn còn trong AR
                     if (inAR) {
                         requestAnimationFrame(detect);
                     }
                 };
 
+                // Bắt đầu detect
                 detect();
             } catch (err) {
                 console.error('❌ MediaPipe Hands init error:', err);
             }
         }
 
+        // Khởi tạo viewer để hiển thị model 3D
         async function initViewer() {
 
+            // Lắng nghe event khi data từ server trả về
             window.addEventListener('ijewel-file-data', (event) => {
+                // Lấy config từ event (chứa settings của model)
                 const fileData = event.detail.iJewelFileData?.config;
                 fileConfig = JSON.parse(fileData)
             });
 
-
+            // Load model bằng ID từ server iJewel
             await loadModelById(fileId, basename, container, {
-                showUiButtons: false,
-                hideTryOn: true
+                showUiButtons: false,  // Ẩn các nút UI mặc định
+                hideTryOn: true        // Ẩn nút Try On mặc định
             });
 
-
+            // Lắng nghe event khi viewer đã sẵn sàng
             window.addEventListener('ijewel-viewer-ready', async (event) => {
-                viewerApp = event.detail.viewer;
+                viewerApp = event.detail.viewer;  // Lưu instance viewer
                 console.log('Viewer ready');
             });
 
-
         }
 
+        // Bắt đầu chế độ AR
         async function startAR() {
+            // Kiểm tra thư viện WebVTO đã load chưa
             if (!window.ij_vto) {
                 console.error('WebVTO is not loaded');
                 return;
             }
 
-            //load ar plugin
+            // Load plugin AR (RingTryonPlugin) vào viewer
             arPlugin = await viewerApp.addPlugin(ij_vto.RingTryonPlugin);
 
-            // Load standard_1.json config
+            // Load config mặc định từ file standard_1.json
             try {
                 const response = await fetch('/arTryOn/standard_1.json');
                 const standard1Config = await response.json();
                 console.log('📦 Loaded standard_1.json:', standard1Config);
 
-                // Apply config to plugin
+                // Áp dụng config vào plugin
                 if (standard1Config) {
+                    // Tỷ lệ scale của model nhẫn
                     if (standard1Config.modelScaleFactor !== undefined) {
                         arPlugin.modelScaleFactor = standard1Config.modelScaleFactor;
                     }
+                    // Tỷ lệ scale của occluder (vật che ngón tay)
                     if (standard1Config.occluderScaleFactor !== undefined) {
                         arPlugin.occluderScaleFactor = standard1Config.occluderScaleFactor;
                     }
@@ -275,44 +327,49 @@
                 console.error('❌ Failed to load standard_1.json:', error);
             }
 
-            //load saved tryon config from editor (override nếu có)
+            // Load config đã lưu từ editor (nếu có) - sẽ override config standard_1
             if (fileConfig?.tryonConfig) {
                 fileConfig.tryonConfig.type = 'RingTryonPlugin';
                 arPlugin.fromJSON(fileConfig?.tryonConfig);
                 console.log('✅ Applied Drive config (override)');
             }
 
-            //start ar
+            // Khởi động AR plugin (bật camera)
             await arPlugin.start();
 
-            // Initialize MediaPipe for hand detection
+            // Khởi tạo MediaPipe để phát hiện tay trái/phải
             initMediaPipeHands();
 
-            // Apply initial rotation.y
+            // Áp dụng góc xoay ban đầu cho nhẫn
             applyRotationY();
         }
 
+        // Event listener cho nút "Start AR" / "Exit AR"
         arBtn.addEventListener('click', async () => {
 
+            // Nếu đang ở trong AR -> Thoát AR
             if (inAR) {
-                await arPlugin.stop();
+                await arPlugin.stop();  // Dừng AR plugin
                 inAR = false;
                 arBtn.textContent = 'Start AR';
+                // Ẩn các nút điều khiển
                 flipBtn.style.display = 'none';
                 switchFingerBtn.style.display = 'none';
                 fingerDisplay.style.display = 'none';
                 return;
             }
 
+            // Nếu chưa vào AR -> Bắt đầu AR
             try {
-                await startAR()
+                await startAR()  // Gọi hàm startAR
 
                 inAR = true;
                 arBtn.textContent = 'Exit AR';
+                // Hiện các nút điều khiển
                 flipBtn.style.display = 'block';
                 switchFingerBtn.style.display = 'block';
                 fingerDisplay.style.display = 'block';
-                updateFingerDisplay();
+                updateFingerDisplay();  // Cập nhật tên ngón tay
             } catch (error) {
                 console.error('AR error:', error);
                 arBtn.textContent = 'Start AR';
@@ -321,43 +378,49 @@
             }
         });
 
+        // Event listener cho nút "Flip Camera" - Đổi camera trước/sau
         flipBtn.addEventListener('click', async () => {
+            // Kiểm tra AR plugin đã sẵn sàng và đang trong AR
             if (!arPlugin || !inAR) return;
-            flipBtn.disabled = true;
+            flipBtn.disabled = true;  // Disable nút để tránh click nhiều lần
             try {
+                // Gọi hàm flip camera của plugin
                 await arPlugin.flipCamera();
 
-                // Update camera state (toggle between 0 and 1)
+                // Cập nhật trạng thái camera (0 <-> 1)
                 currentCamera = (currentCamera + 1) % 2;
                 console.log('📷 Camera flipped:', currentCamera === 0 ? 'Back/Default' : 'Front');
 
-                // Apply rotation.y with new camera
+                // Áp dụng lại góc xoay với camera mới
                 applyRotationY();
             } catch (error) {
                 console.error('Flip camera error:', error);
             } finally {
-                flipBtn.disabled = false;
+                flipBtn.disabled = false;  // Enable lại nút
             }
         });
 
+        // Event listener cho nút "Switch Finger" - Chuyển ngón tay
         switchFingerBtn.addEventListener('click', () => {
+            // Kiểm tra AR plugin đã sẵn sàng và đang trong AR
             if (!arPlugin || !inAR) return;
 
-            // Switch to next finger (0-4)
+            // Chuyển sang ngón tay tiếp theo (0->1->2->3->4->0)
             currentFinger = (currentFinger + 1) % 5;
 
-            // Update SDK
+            // Cập nhật ngón tay trong SDK
             arPlugin.finger = currentFinger;
 
-            // Update display
+            // Cập nhật hiển thị tên ngón tay trên màn hình
             updateFingerDisplay();
 
-            // Apply rotation.y for new finger
+            // Áp dụng góc xoay cho ngón tay mới
             applyRotationY();
 
             console.log('Switched to finger:', currentFinger, fingerNames[currentFinger]);
         });
 
+        // Khởi tạo viewer khi trang load
         initViewer();
     </script>
 </body>
