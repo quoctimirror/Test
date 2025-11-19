@@ -13,7 +13,7 @@ import { useMediaPipeHands } from './ijewel_useMediaPipeHands';
  * - onModelLoad: Callback khi model load xong
  */
 const IJewelTryOnAR = ({
-  modelName = 'oval',
+  modelName = 'pear',
   onError,
   onModelLoad
 }) => {
@@ -178,14 +178,6 @@ const IJewelTryOnAR = ({
           id="webgi-canvas"
           className={styles.canvas}
         />
-
-        {/* Loading Screen */}
-        {isLoading && (
-          <LoadingScreen
-            progress={loadingProgress}
-            text={loadingText}
-          />
-        )}
       </div>
 
       {/* Debug Toggle Button */}
@@ -311,26 +303,6 @@ const ShineButton = ({
       <span className={styles.buttonText}>{children}</span>
       <div className={styles.borderLayer} />
     </button>
-  );
-};
-
-// ==========================================
-// LOADING SCREEN COMPONENT
-// ==========================================
-const LoadingScreen = ({ progress, text }) => {
-  return (
-    <div className={styles.loadingScreen}>
-      <div className={styles.loadingContent}>
-        <h1 className={styles.loadingTitle}>Loading...</h1>
-        <p className={styles.loadingText}>{text}</p>
-        <div className={styles.loadingProgressContainer}>
-          <div
-            className={styles.loadingProgressBar}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </div>
-    </div>
   );
 };
 
