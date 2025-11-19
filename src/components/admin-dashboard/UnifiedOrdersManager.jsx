@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ordersAPI, vendorsAPI } from '@services/api';
+import { useAuth } from '@/context/AuthContext';
 import {
   Package,
   Truck,
@@ -15,19 +16,34 @@ import {
   Send
 } from 'lucide-react';
 
-const OrderWorkflow = () => {
+const UnifiedOrdersManager = () => {
+  const { user } = useAuth();
+  const roles = user?.roles || [];
+
+  // Role checks
+  const isFinance = roles.includes('FINANCE') || roles.includes('ADMIN') || roles.includes('IT_ADMIN');
+  const isProduction = roles.includes('PRODUCTION_OPS') || roles.includes('ADMIN') || roles.includes('IT_ADMIN');
+  const isSales = roles.includes('SALES_CUSTOMER_OPS') || roles.includes('ADMIN') || roles.includes('IT_ADMIN');
+
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(null);
   const [pendingMisaCount, setPendingMisaCount] = useState(0);
-  const [activeTab, setActiveTab] = useState('ALL'); // ALL, NEW, PENDING, CONFIRMED, IN_PRODUCTION, SHIPPED, COMPLETED
-  const [assigning, setAssigning] = useState(false);
-  const [assignError, setAssignError] = useState(null);
-  const [assignPayload, setAssignPayload] = useState({ orderId: '', vendorId: '' });
+  const [activeTab, setActiveTab] = useState('ALL');
   const [vendors, setVendors] = useState([]);
 
+  // Finance-related state
+  const [confirmForm, setConfirmForm] = useState({
+    depositAmount: '',
+    depositDueDate: '',
+    finalDueDate: '',
+    paymentTerms: '50% deposit, remainder prior to delivery',
+    notes: ''
+  });
+
+  // Production-related state
   const [shipData, setShipData] = useState({
     trackingNumber: '',
     shippingCarrier: '',
@@ -79,6 +95,84 @@ const OrderWorkflow = () => {
     }
   };
 
+  // Finance: Confirm order with payment schedule
+  const handleConfirmOrder = async (e) => {
+    e.preventDefault();
+    if (!selectedOrder) return;
+
+    const total = Number(selectedOrder.totalAmount || 0);
+    const depositValue = Number(confirmForm.depositAmount);
+    const depositDue = toStartOfDayISO(confirmForm.depositDueDate);
+    const finalDue = toStartOfDayISO(confirmForm.finalDueDate);
+
+    if (!depositValue || depositValue <= 0) {
+      setError('Deposit amount must be greater than 0.');
+      return;
+    }
+
+    if (depositValue > total) {
+      setError('Deposit cannot exceed total order amount.');
+      return;
+    }
+
+    if (!depositDue || !finalDue) {
+      setError('Please provide deposit and final payment due dates.');
+      return;
+    }
+
+    const remaining = Math.max(total - depositValue, 0);
+    const paymentSchedule = [
+      {
+        dueDate: depositDue,
+        amountDue: depositValue,
+        amountPaid: 0,
+        notes: confirmForm.notes || 'Deposit',
+      },
+    ];
+
+    if (remaining > 0) {
+      paymentSchedule.push({
+        dueDate: finalDue,
+        amountDue: remaining,
+        amountPaid: 0,
+        notes: 'Final balance',
+      });
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await ordersAPI.updatePaymentTerms(selectedOrder.id, {
+        paymentTermsType: 'FIXED_SCHEDULE',
+        paymentTerms: confirmForm.paymentTerms,
+        paymentSchedule,
+      });
+
+      await ordersAPI.updateStatus(selectedOrder.id, {
+        status: 'CONFIRMED',
+        changedBy: 'admin-dashboard'
+      });
+
+      alert('Order confirmed successfully with payment schedule!');
+      setShowModal(null);
+      setConfirmForm({
+        depositAmount: '',
+        depositDueDate: '',
+        finalDueDate: '',
+        paymentTerms: '50% deposit, remainder prior to delivery',
+        notes: ''
+      });
+      loadOrders();
+      loadPendingMisaCount();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to confirm order');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Production: MISA SKU creation
   const handleMisaSkuCreation = async (e) => {
     e.preventDefault();
     if (!selectedOrder || !misaItemId.trim()) {
@@ -102,6 +196,7 @@ const OrderWorkflow = () => {
     }
   };
 
+  // Production: Start production
   const handleStartProduction = async (orderId) => {
     if (!window.confirm('Start production for this order?')) return;
 
@@ -119,6 +214,7 @@ const OrderWorkflow = () => {
     }
   };
 
+  // Production: Ship order
   const handleShip = async (e) => {
     e.preventDefault();
     if (!selectedOrder) return;
@@ -138,6 +234,7 @@ const OrderWorkflow = () => {
     }
   };
 
+  // Finance/Production: Complete order
   const handleComplete = async (e) => {
     e.preventDefault();
     if (!selectedOrder) return;
@@ -163,25 +260,14 @@ const OrderWorkflow = () => {
     }
   };
 
-  const handleAssignVendor = async (e) => {
-    e.preventDefault();
-    if (!assignPayload.orderId || !assignPayload.vendorId) {
-      setAssignError('Order ID and Vendor ID are required');
-      return;
-    }
-    setAssigning(true);
-    setAssignError(null);
-    try {
-      await ordersAPI.assignVendor(assignPayload.orderId.trim(), assignPayload.vendorId.trim());
-      alert('Vendor assigned successfully');
-      setAssignPayload({ orderId: '', vendorId: '' });
-      loadOrders();
-    } catch (err) {
-      setAssignError(err.response?.data?.message || 'Failed to assign vendor');
-    } finally {
-      setAssigning(false);
-    }
+  const toStartOfDayISO = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(`${dateString}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return null;
+    return date.toISOString();
   };
+
+  const toISODateInput = (date) => date.toISOString().slice(0, 10);
 
   const getStatusConfig = (status) => {
     const configs = {
@@ -285,10 +371,105 @@ const OrderWorkflow = () => {
   const orderCounts = getOrderCounts();
   const filteredOrders = getFilteredOrders();
 
+  // Role-based action buttons
+  const getOrderActions = (order) => {
+    const actions = [];
+
+    // Finance: Confirm Order (NEW/PENDING orders)
+    if (isFinance && (order.status === 'NEW' || order.status === 'PENDING')) {
+      actions.push(
+        <button
+          key="confirm"
+          onClick={() => {
+            const total = Number(order.totalAmount || 0);
+            const defaultDeposit = total ? Math.round(total * 0.5) : '';
+            const today = new Date();
+            const finalDate = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+            setConfirmForm({
+              depositAmount: defaultDeposit ? defaultDeposit.toString() : '',
+              depositDueDate: toISODateInput(today),
+              finalDueDate: toISODateInput(finalDate),
+              paymentTerms: '50% deposit, remainder prior to delivery',
+              notes: ''
+            });
+            setSelectedOrder(order);
+            setShowModal('confirm');
+          }}
+          className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-900 border-2 border-blue-600 rounded-lg hover:bg-blue-100 active:bg-blue-200 transition-colors text-xs font-semibold shadow-sm"
+        >
+          <CheckCircle size={14} />
+          Confirm Order
+        </button>
+      );
+    }
+
+    // Production: Create MISA SKU (CONFIRMED orders without MISA)
+    if (isProduction && order.status === 'CONFIRMED' && !order.misaItemCreated) {
+      actions.push(
+        <button
+          key="create-misa"
+          onClick={() => { setSelectedOrder(order); setShowModal('misaSku'); }}
+          className="flex items-center gap-1 px-3 py-1.5 bg-orange-50 text-orange-900 border-2 border-orange-600 rounded-lg hover:bg-orange-100 active:bg-orange-200 transition-colors text-xs font-semibold shadow-sm"
+        >
+          <AlertTriangle size={14} />
+          Create MISA SKU
+        </button>
+      );
+    }
+
+    // Production: Start Production (CONFIRMED orders with MISA)
+    if (isProduction && order.status === 'CONFIRMED' && order.misaItemCreated) {
+      actions.push(
+        <button
+          key="start-production"
+          onClick={() => handleStartProduction(order.id)}
+          className="flex items-center gap-1 px-3 py-1.5 bg-indigo-50 text-indigo-900 border-2 border-indigo-600 rounded-lg hover:bg-indigo-100 active:bg-indigo-200 transition-colors text-xs font-semibold shadow-sm"
+        >
+          <Play size={14} />
+          Start Production
+        </button>
+      );
+    }
+
+    // Production: Ship Order (IN_PRODUCTION orders)
+    if (isProduction && order.status === 'IN_PRODUCTION') {
+      actions.push(
+        <button
+          key="ship"
+          onClick={() => { setSelectedOrder(order); setShowModal('ship'); }}
+          className="flex items-center gap-1 px-3 py-1.5 bg-purple-50 text-purple-900 border-2 border-purple-600 rounded-lg hover:bg-purple-100 active:bg-purple-200 transition-colors text-xs font-semibold shadow-sm"
+        >
+          <Send size={14} />
+          Ship Order
+        </button>
+      );
+    }
+
+    // Finance/Production: Complete Order (SHIPPED orders)
+    if ((isFinance || isProduction) && order.status === 'SHIPPED') {
+      actions.push(
+        <button
+          key="complete"
+          onClick={() => { setSelectedOrder(order); setShowModal('complete'); }}
+          className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-900 border-2 border-green-600 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors text-xs font-semibold shadow-sm"
+        >
+          <CheckCircle size={14} />
+          Complete Order
+        </button>
+      );
+    }
+
+    return actions;
+  };
+
+  // Vendor assignment component (Production only)
   const AssignVendorInline = ({ order }) => {
     const [localVendorId, setLocalVendorId] = useState(order.vendorId || '');
     const [localError, setLocalError] = useState(null);
     const [localAssigning, setLocalAssigning] = useState(false);
+
+    if (!isProduction) return null;
 
     const handleAssign = async () => {
       if (!localVendorId) {
@@ -332,64 +513,6 @@ const OrderWorkflow = () => {
     );
   };
 
-  const getOrderActions = (order) => {
-    const actions = [];
-
-    if (order.status === 'CONFIRMED' && !order.misaItemCreated) {
-      actions.push(
-        <button
-          key="create-misa"
-          onClick={() => { setSelectedOrder(order); setShowModal('misaSku'); }}
-          className="flex items-center gap-1 px-3 py-1.5 bg-orange-50 text-orange-900 border-2 border-orange-600 rounded-lg hover:bg-orange-100 active:bg-orange-200 transition-colors text-xs font-semibold shadow-sm"
-        >
-          <AlertTriangle size={14} />
-          Create MISA SKU
-        </button>
-      );
-    }
-
-    if (order.status === 'CONFIRMED' && order.misaItemCreated) {
-      actions.push(
-        <button
-          key="start-production"
-          onClick={() => handleStartProduction(order.id)}
-          className="flex items-center gap-1 px-3 py-1.5 bg-indigo-50 text-indigo-900 border-2 border-indigo-600 rounded-lg hover:bg-indigo-100 active:bg-indigo-200 transition-colors text-xs font-semibold shadow-sm"
-        >
-          <Play size={14} />
-          Start Production
-        </button>
-      );
-    }
-
-    if (order.status === 'IN_PRODUCTION') {
-      actions.push(
-        <button
-          key="ship"
-          onClick={() => { setSelectedOrder(order); setShowModal('ship'); }}
-          className="flex items-center gap-1 px-3 py-1.5 bg-purple-50 text-purple-900 border-2 border-purple-600 rounded-lg hover:bg-purple-100 active:bg-purple-200 transition-colors text-xs font-semibold shadow-sm"
-        >
-          <Send size={14} />
-          Ship Order
-        </button>
-      );
-    }
-
-    if (order.status === 'SHIPPED') {
-      actions.push(
-        <button
-          key="complete"
-          onClick={() => { setSelectedOrder(order); setShowModal('complete'); }}
-          className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-900 border-2 border-green-600 rounded-lg hover:bg-green-100 active:bg-green-200 transition-colors text-xs font-semibold shadow-sm"
-        >
-          <CheckCircle size={14} />
-          Complete Order
-        </button>
-      );
-    }
-
-    return actions;
-  };
-
   const OrderCard = ({ order }) => {
     const statusConfig = getStatusConfig(order.status);
     const StatusIcon = statusConfig.icon;
@@ -398,70 +521,75 @@ const OrderWorkflow = () => {
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
         <div className="p-5">
-          {/* Header Section: Order Info */}
-          <div className="flex items-start justify-between gap-4 mb-4">
-            {/* Left: Order ID & Status */}
-            <div className="flex items-center gap-3">
-              <h3 className="text-xl font-bold text-gray-900">
-                {order.id}
-              </h3>
-              <span className={`${statusConfig.badgeColor} px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm border ${statusConfig.borderColor}`}>
-                <StatusIcon size={14} strokeWidth={2.5} />
-                {statusConfig.label}
-              </span>
-            </div>
-          </div>
-
-          {/* Order Details Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4 pb-4 border-b border-gray-100">
-            {/* Customer */}
-            <div>
-              <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
-                <User size={12} />
-                <span>Customer</span>
+          {/* Main Layout: Info on Left, Actions on Right */}
+          <div className="flex items-start justify-between gap-6">
+            {/* Left Side: Order Info */}
+            <div className="flex-1 min-w-0 space-y-2">
+              {/* Order ID & Status */}
+              <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-500">Order ID:</span>
+                  <h3 className="text-lg font-bold text-gray-900">{order.id}</h3>
+                </div>
+                <span className={`${statusConfig.badgeColor} px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm border ${statusConfig.borderColor}`}>
+                  <StatusIcon size={14} strokeWidth={2.5} />
+                  {statusConfig.label}
+                </span>
               </div>
-              <p className="font-medium text-gray-900 text-sm">{order.customerName || 'N/A'}</p>
-            </div>
 
-            {/* Amount */}
-            <div>
-              <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
-                <DollarSign size={12} />
-                <span>Amount</span>
+              {/* Customer */}
+              <div className="flex items-center gap-2">
+                <User size={14} className="text-gray-400 flex-shrink-0" />
+                <span className="text-sm font-medium text-gray-500">Customer:</span>
+                <span className="text-sm font-semibold text-gray-900">{order.customerName || 'N/A'}</span>
               </div>
-              <p className="font-semibold text-gray-900 text-sm">
-                {formatCurrency(order.totalAmount, order.currency)}
-              </p>
-            </div>
 
-            {/* Created Date */}
-            <div>
-              <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
-                <Calendar size={12} />
-                <span>Created</span>
+              {/* Amount & Created */}
+              <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <DollarSign size={14} className="text-gray-400 flex-shrink-0" />
+                  <span className="text-sm font-medium text-gray-500">Amount:</span>
+                  <span className="text-sm font-bold text-gray-900">
+                    {formatCurrency(order.totalAmount, order.currency)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar size={14} className="text-gray-400 flex-shrink-0" />
+                  <span className="text-sm font-medium text-gray-500">Created:</span>
+                  <span className="text-sm font-semibold text-gray-900">{formatDate(order.createdAt)}</span>
+                </div>
               </div>
-              <p className="font-medium text-gray-900 text-sm">{formatDate(order.createdAt)}</p>
-            </div>
-          </div>
 
-          {/* Actions Section */}
-          {(actions.length > 0 || true) && (
-            <div className="space-y-3">
-              {/* Action Buttons */}
-              {actions.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {actions}
+              {/* Finance: Payment Outstanding */}
+              {isFinance && order.paymentOutstanding > 0 && (
+                <div className="flex items-center gap-2">
+                  <AlertTriangle size={14} className="text-orange-500 flex-shrink-0" />
+                  <span className="text-sm font-medium text-orange-500">Outstanding:</span>
+                  <span className="text-sm font-bold text-orange-600">
+                    {formatCurrency(order.paymentOutstanding, order.currency)}
+                  </span>
                 </div>
               )}
 
-              {/* Vendor Assignment */}
-              <AssignVendorInline order={order} />
+              {/* Production: Vendor Assignment */}
+              {isProduction && (
+                <div className="pt-2">
+                  <AssignVendorInline order={order} />
+                </div>
+              )}
             </div>
-          )}
+
+            {/* Right Side: Action Buttons */}
+            {actions.length > 0 && (
+              <div className="flex flex-col gap-2 flex-shrink-0">
+                {actions}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* MISA SKU Warning - URGENT */}
-        {order.status === 'CONFIRMED' && !order.misaItemCreated && (
+        {/* Production: MISA SKU Warning - URGENT */}
+        {isProduction && order.status === 'CONFIRMED' && !order.misaItemCreated && (
           <div className="px-6 py-5 bg-red-50 border-l-8 border-red-600 shadow-lg animate-pulse">
             <div className="flex items-start gap-4">
               <AlertTriangle className="text-red-600 flex-shrink-0 mt-1 animate-bounce" size={32} strokeWidth={2.5} />
@@ -495,47 +623,33 @@ const OrderWorkflow = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Order Workflow Management
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Orders Management
               </h1>
               <p className="text-gray-600 mb-3">
-                Track and manage order lifecycle from confirmation to completion
+                Unified order management for Finance, Sales, and Production teams
               </p>
 
-              {/* Workflow Steps Guide */}
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 bg-gray-500 rounded-full"></span>
-                  New
-                </span>
-                <span>→</span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                  Confirm
-                </span>
-                <span>→</span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                  Create MISA SKU
-                </span>
-                <span>→</span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
-                  Production
-                </span>
-                <span>→</span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-                  Ship
-                </span>
-                <span>→</span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                  Complete
-                </span>
+              {/* Role Badge */}
+              <div className="flex items-center gap-2 text-sm">
+                {isFinance && (
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-medium">
+                    💰 Finance Access
+                  </span>
+                )}
+                {isProduction && (
+                  <span className="px-3 py-1 bg-orange-100 text-orange-800 rounded-full font-medium">
+                    🔧 Production Access
+                  </span>
+                )}
+                {isSales && (
+                  <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full font-medium">
+                    🤝 Sales Access
+                  </span>
+                )}
               </div>
             </div>
             <button
@@ -548,8 +662,8 @@ const OrderWorkflow = () => {
             </button>
           </div>
 
-          {/* MISA Alert Badge */}
-          {pendingMisaCount > 0 && (
+          {/* MISA Alert Badge (Production only) */}
+          {isProduction && pendingMisaCount > 0 && (
             <div className="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 px-4 py-2.5 rounded-lg">
               <AlertTriangle className="text-amber-600" size={20} />
               <span className="text-sm font-semibold text-amber-900">
@@ -611,8 +725,97 @@ const OrderWorkflow = () => {
       {/* Modals */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
-            {showModal === 'misaSku' && (
+          <div className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+            {/* Finance: Confirm Order Modal */}
+            {showModal === 'confirm' && isFinance && (
+              <form onSubmit={handleConfirmOrder}>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Confirm Order & Set Payment Schedule</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Order {selectedOrder?.id} — {formatCurrency(selectedOrder?.totalAmount, selectedOrder?.currency)}
+                </p>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Deposit Amount</label>
+                    <input
+                      type="number"
+                      min="1"
+                      step="1"
+                      value={confirmForm.depositAmount}
+                      onChange={(e) => setConfirmForm({ ...confirmForm, depositAmount: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Deposit Due Date</label>
+                    <input
+                      type="date"
+                      value={confirmForm.depositDueDate}
+                      onChange={(e) => setConfirmForm({ ...confirmForm, depositDueDate: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Final Payment Due Date</label>
+                    <input
+                      type="date"
+                      value={confirmForm.finalDueDate}
+                      onChange={(e) => setConfirmForm({ ...confirmForm, finalDueDate: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Payment Terms</label>
+                    <input
+                      type="text"
+                      value={confirmForm.paymentTerms}
+                      onChange={(e) => setConfirmForm({ ...confirmForm, paymentTerms: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Notes (optional)</label>
+                    <textarea
+                      value={confirmForm.notes}
+                      onChange={(e) => setConfirmForm({ ...confirmForm, notes: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      rows={2}
+                    />
+                  </div>
+                  <div className="bg-blue-50 p-3 rounded-lg text-sm">
+                    <p className="text-gray-700">
+                      <strong>Remaining:</strong> {formatCurrency(
+                        Number(selectedOrder?.totalAmount || 0) - Number(confirmForm.depositAmount || 0),
+                        selectedOrder?.currency
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 mt-6">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
+                  >
+                    {loading ? 'Confirming...' : 'Confirm Order'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(null)}
+                    className="px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* Production: MISA SKU Modal */}
+            {showModal === 'misaSku' && isProduction && (
               <form onSubmit={handleMisaSkuCreation}>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Create MISA SKU</h3>
                 <div className="mb-4">
@@ -648,7 +851,8 @@ const OrderWorkflow = () => {
               </form>
             )}
 
-            {showModal === 'ship' && (
+            {/* Production: Ship Order Modal */}
+            {showModal === 'ship' && isProduction && (
               <form onSubmit={handleShip}>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Ship Order</h3>
                 <div className="space-y-4">
@@ -699,7 +903,8 @@ const OrderWorkflow = () => {
               </form>
             )}
 
-            {showModal === 'complete' && (
+            {/* Finance/Production: Complete Order Modal */}
+            {showModal === 'complete' && (isFinance || isProduction) && (
               <form onSubmit={handleComplete}>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Complete Order</h3>
                 <div className="space-y-4">
@@ -778,4 +983,4 @@ const OrderWorkflow = () => {
   );
 };
 
-export default OrderWorkflow;
+export default UnifiedOrdersManager;

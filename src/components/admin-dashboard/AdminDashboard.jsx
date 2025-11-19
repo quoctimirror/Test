@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ProductsManager from "./ProductsManager";
-import OrdersManager from "./OrdersManager";
-import OrderWorkflow from "./OrderWorkflow";
+import UnifiedOrdersManager from "./UnifiedOrdersManager";
 import ProductFulfillment from "./ProductFulfillment";
 import VendorMatching from "./VendorMatching";
 import VendorOptimization from "./VendorOptimization";
@@ -23,10 +22,16 @@ import JewelrySpecificationManager from "./JewelrySpecificationManager";
 import MarketTrendDashboard from "./MarketTrendDashboard";
 import PurchaseOrderSummary from "./PurchaseOrderSummary";
 import VendorSelectionWizard from "./VendorSelectionWizard";
+import RBACMatrix from "./RBACMatrix";
 import "./AdminDashboard.css";
 import { ROUTES } from "@/constants/routes";
+import { useAuth } from "@/context/AuthContext";
 
 const AdminDashboard = () => {
+  const { user } = useAuth();
+  const roles = user?.roles || [];
+  const isAdminLike = roles.includes("ADMIN") || roles.includes("IT_ADMIN");
+
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const menuItems = [
@@ -35,7 +40,6 @@ const AdminDashboard = () => {
     { id: "product-fulfillment", label: "Product Fulfillment" },
     { id: "sku-codes", label: "SKU Codes" },
     { id: "orders", label: "Orders" },
-    { id: "order-workflow", label: "Order Workflow" },
     { id: "payments", label: "Payment schedules" },
     { id: "categories", label: "Categories" },
     { id: "collections", label: "Collections" },
@@ -54,7 +58,51 @@ const AdminDashboard = () => {
     { id: "customs-compliance", label: "Customs & Compliance" },
     // { id: "components", label: "Components" },
     { id: "users", label: "Users" },
+    { id: "rbac-matrix", label: "RBAC Matrix" },
   ];
+
+  const tabAccess = useMemo(
+    () => ({
+      dashboard: roles,
+      products: ["CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      "product-fulfillment": ["CREATIVE_DESIGN", "MARKETING", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "sku-codes": ["CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      orders: ["SALES_CUSTOMER_OPS", "FINANCE", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      payments: ["FINANCE", "SALES_CUSTOMER_OPS", "ADMIN", "IT_ADMIN"],
+      categories: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      collections: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      locations: ["ADMIN", "IT_ADMIN"],
+      vendors: ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "vendor-matching": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "vendor-optimization": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "vendor-selection-wizard": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "currency-calculator": ["FINANCE", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "metal-prices": ["FINANCE", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "unit-converter": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "collection-plan-wizard": ["PRODUCTION_OPS", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      "jewelry-specifications": ["PRODUCTION_OPS", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      "purchase-orders": ["PRODUCTION_OPS", "FINANCE", "ADMIN", "IT_ADMIN"],
+      "market-trends": ["MARKETING", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "customs-compliance": ["PRODUCTION_OPS", "LEGAL", "ADMIN", "IT_ADMIN"],
+      users: ["ADMIN", "IT_ADMIN"],
+      "rbac-matrix": ["ADMIN", "IT_ADMIN"],
+    }),
+    [roles]
+  );
+
+  const isTabAllowed = (id) => {
+    const allowed = tabAccess[id];
+    if (!allowed || allowed.length === 0) return isAdminLike;
+    return isAdminLike || roles.some((r) => allowed.includes(r));
+  };
+
+  const visibleMenuItems = menuItems.filter((item) => isTabAllowed(item.id));
+
+  useEffect(() => {
+    if (!isTabAllowed(activeTab) && visibleMenuItems.length > 0) {
+      setActiveTab(visibleMenuItems[0].id);
+    }
+  }, [activeTab, visibleMenuItems]);
 
   const handleHomeNavigation = () => {
     window.location.href = ROUTES.HOME_PAGE;
@@ -71,9 +119,7 @@ const AdminDashboard = () => {
       case "sku-codes":
         return <SkuCodesManager />;
       case "orders":
-        return <OrdersManager />;
-      case "order-workflow":
-        return <OrderWorkflow />;
+        return <UnifiedOrdersManager />;
       case "payments":
         return <PaymentSchedulesManager />;
       case "categories":
@@ -110,6 +156,8 @@ const AdminDashboard = () => {
         return <ComponentsManager />;
       case "users":
         return <UsersManager />;
+      case "rbac-matrix":
+        return <RBACMatrix />;
       default:
         return <DashboardHome />;
     }
@@ -218,6 +266,10 @@ const AdminDashboard = () => {
         title: "Customs & Compliance",
         description: "Research duty rates and manage regulatory compliance for jewelry imports",
       },
+      "rbac-matrix": {
+        title: "RBAC Matrix",
+        description: "View role purposes, UI access, and allowed actions",
+      },
     };
     return pageMap[activeTab] || pageMap.dashboard;
   };
@@ -232,7 +284,7 @@ const AdminDashboard = () => {
         </div>
 
         <nav className="admin-sidebar-nav">
-          {menuItems.map((item) => (
+          {visibleMenuItems.map((item) => (
             <button
               key={item.id}
               className={`admin-nav-button ${
