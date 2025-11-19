@@ -312,6 +312,14 @@
                         // Lấy label tay: "Left" hoặc "Right"
                         const handLabel = results.multiHandedness[0].label;
 
+                        // DEBUG: Log RAW MediaPipe output
+                        if (callbackCount % 30 === 0) {
+                            console.log('🔍 === MEDIAPIPE RAW OUTPUT ===');
+                            console.log('   MediaPipe handLabel:', handLabel);
+                            console.log('   currentCamera:', currentCamera);
+                            console.log('   Confidence:', results.multiHandedness[0].score.toFixed(2));
+                        }
+
                         // QUAN TRỌNG: ĐẢO NGƯỢC KẾT QUẢ vì camera mirror effect
                         // Front camera (currentCamera = 0 hoặc facingMode = 'user'):
                         //   - MediaPipe trả "Left" → thực tế là tay PHẢI (vì bị mirror)
@@ -333,8 +341,12 @@
                         if (currentHand !== handIndex) {
                             currentHand = handIndex;
                             const realHandName = handIndex === 0 ? 'Tay trái' : 'Tay phải';
-                            console.log('✋ HAND DETECTED:', handLabel, '(MediaPipe) →', realHandName, '(after mirror correction)');
-                            console.log('   Camera:', isFrontCamera ? 'Front' : 'Back', '| Confidence:', results.multiHandedness[0].score.toFixed(2));
+                            console.log('✋ HAND DETECTED CHANGE:');
+                            console.log('   MediaPipe label:', handLabel);
+                            console.log('   Camera:', isFrontCamera ? 'Front (0)' : 'Back (1)', '| currentCamera =', currentCamera);
+                            console.log('   handIndex:', handIndex);
+                            console.log('   Result:', realHandName);
+                            console.log('   Confidence:', results.multiHandedness[0].score.toFixed(2));
                         }
                     } else {
                         // Không detect được tay nào
