@@ -75,7 +75,7 @@
         @media (max-width: 768px) {
             #debug-info {
                 top: auto;
-                bottom: 120px;  /* Để tránh đè lên các nút điều khiển */
+                bottom: 20px;  /* Thấp hơn, gần bottom của màn hình */
                 left: 10px;
                 right: 10px;
                 min-width: auto;
@@ -219,8 +219,9 @@
         let mediaPipeHands = null;   // Instance MediaPipe để detect tay
         let debugUpdateInterval = null;  // Interval để update debug info định kỳ
 
-        // Mảng tên các ngón tay
-        const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+        // Mảng tên các ngón tay (theo mapping của SDK)
+        // SDK mapping: 0=Thumb, 1=Index, 2=Middle, 3=Ring, 4=Pinky
+        const fingerNames = ['Ngón cái', 'Ngón trỏ', 'Ngón giữa', 'Ngón áp út', 'Ngón út'];
 
         // Phát hiện loại thiết bị (Mobile hay Desktop)
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -254,6 +255,38 @@
             debugHand.textContent = handName;
         }
 
+        // Biến để lưu video/canvas element tìm được
+        let detectedSourceElement = null;
+
+        // MutationObserver để track khi AR plugin tạo video/canvas element mới
+        function startElementObserver() {
+            console.log('👁️ Starting MutationObserver to detect video/canvas elements...');
+
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.tagName === 'VIDEO' || node.tagName === 'CANVAS') {
+                            console.log('🎯 NEW ELEMENT DETECTED:', node.tagName, node);
+                            if (node.tagName === 'VIDEO') {
+                                detectedSourceElement = node;
+                                console.log('✅ Video element captured for MediaPipe');
+                            } else if (node.tagName === 'CANVAS' && !detectedSourceElement) {
+                                detectedSourceElement = node;
+                                console.log('✅ Canvas element captured for MediaPipe');
+                            }
+                        }
+                    });
+                });
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            console.log('✅ MutationObserver started');
+        }
+
         // Khởi tạo MediaPipe Hands để phát hiện tay trái/phải
         async function initMediaPipeHands() {
             // Kiểm tra thư viện MediaPipe đã load chưa
@@ -275,14 +308,14 @@
                     }
                 });
 
-                // Cấu hình MediaPipe - GIẢM CONFIDENCE ĐỂ DỄ DETECT HƠN
+                // Cấu hình MediaPipe - SỬ DỤNG SETTINGS GIỐNG JSX (ĐANG HOẠT ĐỘNG)
                 hands.setOptions({
                     maxNumHands: 1,              // Chỉ detect 1 bàn tay
-                    modelComplexity: 0,          // Độ phức tạp model (0 = nhanh nhất, dễ detect nhất)
-                    minDetectionConfidence: 0.3, // Giảm xuống 0.3 để dễ phát hiện
-                    minTrackingConfidence: 0.3   // Giảm xuống 0.3 để dễ tracking
+                    modelComplexity: 1,          // Model complexity 1 (cân bằng giữa tốc độ và độ chính xác)
+                    minDetectionConfidence: 0.5, // Confidence 0.5 (giống JSX)
+                    minTrackingConfidence: 0.5   // Tracking 0.5 (giống JSX)
                 });
-                console.log('⚙️ MediaPipe config: modelComplexity=0, confidence=0.3');
+                console.log('⚙️ MediaPipe config: modelComplexity=1, confidence=0.5');
 
                 // Callback khi MediaPipe detect được tay
                 let callbackCount = 0;
@@ -303,13 +336,30 @@
                     if (results.multiHandedness && results.multiHandedness.length > 0) {
                         // Lấy label tay: "Left" hoặc "Right"
                         const handLabel = results.multiHandedness[0].label;
-                        const handIndex = handLabel === 'Left' ? 0 : 1;
+
+                        // QUAN TRỌNG: ĐẢO NGƯỢC KẾT QUẢ vì camera mirror effect
+                        // Front camera (currentCamera = 0 hoặc facingMode = 'user'):
+                        //   - MediaPipe trả "Left" → thực tế là tay PHẢI (vì bị mirror)
+                        //   - MediaPipe trả "Right" → thực tế là tay TRÁI
+                        // Nên cần đảo ngược: Left → 1 (phải), Right → 0 (trái)
+
+                        const isFrontCamera = (currentCamera === 0);
+                        let handIndex;
+
+                        if (isFrontCamera) {
+                            // Front camera: ĐẢO NGƯỢC
+                            handIndex = handLabel === 'Left' ? 1 : 0;
+                        } else {
+                            // Back camera: GIỮ NGUYÊN
+                            handIndex = handLabel === 'Left' ? 0 : 1;
+                        }
 
                         // Nếu tay thay đổi
                         if (currentHand !== handIndex) {
                             currentHand = handIndex;
-                            console.log('✋ HAND DETECTED:', handLabel, '→', handIndex);
-                            console.log('   Confidence:', results.multiHandedness[0].score);
+                            const realHandName = handIndex === 0 ? 'Tay trái' : 'Tay phải';
+                            console.log('✋ HAND DETECTED:', handLabel, '(MediaPipe) →', realHandName, '(after mirror correction)');
+                            console.log('   Camera:', isFrontCamera ? 'Front' : 'Back', '| Confidence:', results.multiHandedness[0].score.toFixed(2));
                         }
                     } else {
                         // Không detect được tay nào
@@ -334,52 +384,106 @@
                     }
 
                     try {
-                        // TÌM CẢ VIDEO VÀ CANVAS ĐỂ KIỂM TRA
-                        const video = document.querySelector('video');
-                        const canvas = document.querySelector('canvas');
+                        // Ưu tiên dùng element đã detect từ MutationObserver
+                        let sourceElement = detectedSourceElement;
 
-                        // Log info lần đầu để debug
-                        if (logCount === 0) {
-                            console.log('🔍 === CHECKING ELEMENTS ===');
-                            console.log('   Video element:', video);
-                            if (video) {
-                                console.log('   Video size:', video.videoWidth, 'x', video.videoHeight);
-                                console.log('   Video readyState:', video.readyState);
-                                console.log('   Video paused:', video.paused);
+                        // Nếu chưa có, tìm thủ công
+                        if (!sourceElement) {
+                            // Tìm tất cả video và canvas
+                            const allVideos = document.querySelectorAll('video');
+                            const allCanvases = document.querySelectorAll('canvas');
+
+                            // Ưu tiên VIDEO
+                            for (const v of allVideos) {
+                                if (v.videoWidth > 0 && v.videoHeight > 0 && v.readyState >= 2) {
+                                    sourceElement = v;
+                                    detectedSourceElement = v;
+                                    break;
+                                }
                             }
-                            console.log('   Canvas element:', canvas);
-                            if (canvas) {
-                                console.log('   Canvas size:', canvas.width, 'x', canvas.height);
-                                console.log('   Canvas style:', canvas.style.width, 'x', canvas.style.height);
+
+                            // Nếu không có video, dùng CANVAS
+                            if (!sourceElement) {
+                                for (const c of allCanvases) {
+                                    if (c.width > 0 && c.height > 0) {
+                                        sourceElement = c;
+                                        detectedSourceElement = c;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Log info lần đầu để debug
+                            if (logCount === 0 || logCount % 60 === 0) {
+                                console.log('🔍 === CHECKING ELEMENTS ===');
+                                console.log('   All videos:', allVideos.length);
+                                console.log('   All canvases:', allCanvases.length);
+                                if (allVideos.length > 0) {
+                                    allVideos.forEach((v, i) => {
+                                        console.log(`   Video[${i}]:`, v.videoWidth + 'x' + v.videoHeight, 'readyState:', v.readyState);
+                                    });
+                                }
+                                if (allCanvases.length > 0) {
+                                    allCanvases.forEach((c, i) => {
+                                        console.log(`   Canvas[${i}]:`, c.width + 'x' + c.height, c.id || '(no id)');
+                                    });
+                                }
+                                console.log('   Selected element:', sourceElement?.tagName, sourceElement);
                             }
                         }
-
-                        // Ưu tiên dùng VIDEO nếu có, nếu không thì dùng CANVAS
-                        const sourceElement = video || canvas;
 
                         if (!sourceElement) {
                             if (logCount === 0) {
                                 console.warn('⚠️ No video or canvas element found!');
+                                console.warn('⚠️ Attempting to create video element from camera stream...');
+
+                                // TỰ TẠO VIDEO ELEMENT từ camera (fallback)
+                                try {
+                                    const video = document.createElement('video');
+                                    video.style.display = 'none';
+                                    video.autoplay = true;
+                                    video.playsInline = true;
+                                    document.body.appendChild(video);
+
+                                    navigator.mediaDevices.getUserMedia({
+                                        video: { facingMode: 'user' },
+                                        audio: false
+                                    }).then(stream => {
+                                        video.srcObject = stream;
+                                        detectedSourceElement = video;
+                                        console.log('✅ Created video element from camera stream');
+                                    }).catch(err => {
+                                        console.error('❌ Failed to access camera:', err);
+                                    });
+                                } catch (err) {
+                                    console.error('❌ Failed to create video element:', err);
+                                }
                             }
-                            logCount++;
                             requestAnimationFrame(detect);
                             return;
                         }
 
-                        // Log lần đầu xem đang dùng element nào
-                        if (logCount === 0) {
-                            console.log('✅ Using element for MediaPipe:', sourceElement.tagName);
+                        // Check if video is ready (có width/height)
+                        if (sourceElement.tagName === 'VIDEO') {
+                            if (sourceElement.videoWidth === 0 || sourceElement.videoHeight === 0) {
+                                if (logCount === 0) {
+                                    console.warn('⚠️ Video not ready yet (width/height = 0), waiting...');
+                                }
+                                requestAnimationFrame(detect);
+                                return;
+                            }
                         }
 
                         // Gửi frame tới MediaPipe
                         await mediaPipeHands.send({ image: sourceElement });
 
                         if (logCount === 0) {
-                            console.log('✅ First frame sent to MediaPipe successfully');
+                            console.log('✅ First frame sent to MediaPipe from:', sourceElement.tagName);
+                            console.log('✅ Using element for MediaPipe:', sourceElement);
                         }
 
-                        if (logCount === 60 || logCount === 120) {
-                            console.log(`📊 Detection loop running... (frame ${logCount})`);
+                        if (logCount % 120 === 0 && logCount > 0) {
+                            console.log(`📊 Detection running... frame ${logCount}`);
                         }
 
                         logCount++;
@@ -479,9 +583,23 @@
             await arPlugin.start();
             console.log('✅ arPlugin.start() completed');
 
-            // Khởi tạo MediaPipe SAU KHI AR đã start (lúc này canvas đã có)
-            console.log('📍 Initializing MediaPipe after AR started...');
-            initMediaPipeHands();
+            // DEBUG: Check finger index mapping của SDK
+            console.log('🔍 === DEFAULT FINGER CHECK ===');
+            console.log('   currentFinger (our code):', currentFinger);
+            console.log('   arPlugin.finger (SDK):', arPlugin.finger);
+            console.log('   fingerNames[0]:', fingerNames[0], '(Ngón cái / Thumb)');
+            console.log('   Expected: Ngón cái should be shown on AR');
+
+            // Start observer NGAY LẬP TỨC (trước khi AR tạo element)
+            console.log('👁️ Starting element observer BEFORE MediaPipe init...');
+            startElementObserver();
+
+            // ĐỢI 1000MS ĐỂ AR CAMERA/VIDEO ELEMENT SẴN SÀNG
+            console.log('📍 Waiting for AR camera to stabilize...');
+            setTimeout(() => {
+                console.log('📍 Now initializing MediaPipe after AR started...');
+                initMediaPipeHands();
+            }, 1000);
         }
 
         // Event listener cho nút "Start AR" / "Exit AR"
@@ -567,13 +685,23 @@
             // Chuyển sang ngón tay tiếp theo (0->1->2->3->4->0)
             currentFinger = (currentFinger + 1) % 5;
 
+            console.log('🔍 === SWITCHING FINGER DEBUG ===');
+            console.log('   currentFinger INDEX:', currentFinger);
+            console.log('   fingerNames[' + currentFinger + ']:', fingerNames[currentFinger]);
+
             // Cập nhật ngón tay trong SDK
             arPlugin.finger = currentFinger;
+            console.log('   arPlugin.finger set to:', arPlugin.finger);
+
+            // Kiểm tra xem SDK có property nào liên quan đến finger không
+            console.log('   arPlugin finger-related properties:', {
+                finger: arPlugin.finger,
+                fingerIndex: arPlugin.fingerIndex,
+                fingerName: arPlugin.fingerName
+            });
 
             // Cập nhật hiển thị tên ngón tay trên màn hình
             updateFingerDisplay();
-
-            console.log('Switched to finger:', currentFinger, fingerNames[currentFinger]);
         });
 
         // Khởi tạo viewer khi trang load

@@ -40,7 +40,7 @@ export const SHAPE_CONFIGS = {
   },
   Pear: {
     shape: 'Pear',
-    modelId: 'Szx6zKIcRNqn4YPzHVxa1Q',
+    modelId: 'MKyTIlEyRbi89oT6bH76yA',
     metal: 'Silver',
     band: 'Single band'
   },
