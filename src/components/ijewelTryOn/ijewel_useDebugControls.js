@@ -19,12 +19,12 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
   const [scale, setScale] = useState(0.8); // Default từ standard_1.json
 
   // ==========================================
-  // AUTO APPLY ROTATION Z khi thay đổi camera/hand/finger
+  // AUTO APPLY ROTATION Y khi thay đổi camera/hand/finger
   // ==========================================
   useEffect(() => {
     if (!tryon || !tryon.modelRotation) return;
 
-    // Config rotation.z cho mu bàn tay
+    // Config rotation.y cho mu bàn tay
     const fingerRotationConfig = {
       frontCamera: {
         right: {
@@ -34,8 +34,8 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
       },
       backCamera: {
         right: {
-          3: 0.8,
-          4: 0.8
+          3: 0.5,
+          4: 0.5
         },
         left: {
           0: 0.19,
@@ -53,8 +53,8 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
     // Xác định tay trái/phải
     const handType = currentHand === 0 ? 'left' : currentHand === 1 ? 'right' : null;
 
-    // Mặc định rotation.z = 0
-    let rotationZ = 0;
+    // Mặc định rotation.y = 0
+    let rotationY = 0;
 
     if (handType) {
       const cameraConfig = fingerRotationConfig[cameraType];
@@ -63,18 +63,18 @@ export const useIJewelDebugControls = ({ tryon, modelName, currentHand, currentC
         const fingerConfig = cameraConfig[handType][currentFinger];
 
         if (fingerConfig !== undefined) {
-          rotationZ = fingerConfig;
+          rotationY = fingerConfig;
         }
       }
     }
 
-    // Apply rotation.z vào SDK
-    tryon.modelRotation.z = rotationZ;
+    // Apply rotation.y vào SDK
+    tryon.modelRotation.y = rotationY;
 
     // Update debug state để hiển thị
-    setRotation(prev => ({ ...prev, z: rotationZ }));
+    setRotation(prev => ({ ...prev, y: rotationY }));
 
-    console.log(`🔄 Auto rotation.z: ${rotationZ} (${cameraType}, ${handType}, finger ${currentFinger})`);
+    console.log(`🔄 Auto rotation.y: ${rotationY} (${cameraType}, ${handType}, finger ${currentFinger})`);
 
   }, [tryon, currentCamera, currentHand, currentFinger, deviceType]);
 
