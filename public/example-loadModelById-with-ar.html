@@ -71,6 +71,41 @@
             min-width: 250px;
         }
 
+        /* Responsive cho Mobile */
+        @media (max-width: 768px) {
+            #debug-info {
+                top: auto;
+                bottom: 120px;  /* Để tránh đè lên các nút điều khiển */
+                left: 10px;
+                right: 10px;
+                min-width: auto;
+                max-width: calc(100vw - 20px);
+                padding: 10px;
+                font-size: 11px;
+            }
+
+            #debug-info h3 {
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            .debug-item {
+                grid-template-columns: 80px 1fr;
+                gap: 5px;
+                margin: 5px 0;
+                padding: 4px;
+                font-size: 10px;
+            }
+
+            .debug-label {
+                font-size: 10px;
+            }
+
+            .debug-value {
+                font-size: 11px;
+            }
+        }
+
         #debug-info h3 {
             margin: 0 0 10px 0;
             font-size: 16px;
@@ -80,22 +115,26 @@
         }
 
         .debug-item {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 10px;
             margin: 8px 0;
             padding: 5px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 4px;
+            align-items: center;
         }
 
         .debug-label {
             color: #aaa;
             font-weight: bold;
+            font-size: 12px;
         }
 
         .debug-value {
             color: #0f0;
             font-weight: bold;
+            text-align: right;
         }
     </style>
 </head>
@@ -125,18 +164,6 @@
             <span class="debug-label">Camera:</span>
             <span class="debug-value" id="debug-camera">Back</span>
         </div>
-        <div class="debug-item">
-            <span class="debug-label">Hand:</span>
-            <span class="debug-value" id="debug-hand">Not detected</span>
-        </div>
-        <div class="debug-item">
-            <span class="debug-label">Finger:</span>
-            <span class="debug-value" id="debug-finger">Ngón áp út (0)</span>
-        </div>
-        <div class="debug-item">
-            <span class="debug-label">Rotation.y:</span>
-            <span class="debug-value" id="debug-rotation">0.00</span>
-        </div>
     </div>
 
     <!-- Load thư viện WebGI - Engine 3D của iJewel -->
@@ -150,10 +177,6 @@
 
     <!-- Load thư viện Web VTO - Virtual Try-On (AR thử nhẫn) -->
     <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.37/web-vto.js"> </script>
-
-    <!-- Load MediaPipe Hands để phát hiện bàn tay trái/phải -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-
 
     <script>
         // Lấy hàm loadModelById từ SDK iJewel để load model 3D
@@ -174,9 +197,6 @@
         const debugInfo = document.getElementById('debug-info');
         const debugDevice = document.getElementById('debug-device');
         const debugCamera = document.getElementById('debug-camera');
-        const debugHand = document.getElementById('debug-hand');
-        const debugFinger = document.getElementById('debug-finger');
-        const debugRotation = document.getElementById('debug-rotation');
 
         // Khai báo các biến toàn cục
         let viewerInstance;  // Instance của viewer
@@ -186,9 +206,7 @@
         let fileConfig;      // Config của file từ server
         let currentFinger = 0;  // Ngón tay hiện tại (0-4)
         let currentCamera = 0;  // Camera hiện tại: 0 = back/default, 1 = front
-        let currentHand = -1;   // Tay được detect: -1 = chưa detect, 0 = trái, 1 = phải
         let deviceType = 'Unknown';  // Loại thiết bị
-        let mediaPipeHands = null;   // Instance MediaPipe để detect tay
         let debugUpdateInterval = null;  // Interval để update debug info định kỳ
 
         // Mảng tên các ngón tay
@@ -198,6 +216,7 @@
         const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         deviceType = isMobile ? 'Mobile' : 'Desktop';
         console.log('📱 Device type:', deviceType);
+        console.log('📷 Default camera:', isMobile ? 'Back Camera (index 0)' : 'Front Camera (index 0)');
 
         // Hàm cập nhật hiển thị tên ngón tay trên màn hình
         function updateFingerDisplay() {
@@ -207,197 +226,19 @@
         // Hàm cập nhật debug info panel
         function updateDebugInfo() {
             // Update Device
-            debugDevice.textContent = deviceType;
+            debugDevice.textContent = deviceType === 'Mobile' ? '📱 Mobile' : '💻 Desktop';
 
             // Update Camera
             const isMobile = deviceType === 'Mobile';
-            const cameraName = isMobile
-                ? (currentCamera === 0 ? 'Back Camera' : 'Front Camera')
-                : 'Front Camera (Desktop)';
+            let cameraName = '';
+            if (isMobile) {
+                cameraName = currentCamera === 0 ? '📷 Back Camera (0)' : '🤳 Front Camera (1)';
+            } else {
+                cameraName = '🤳 Front Camera (0)';
+            }
             debugCamera.textContent = cameraName;
-
-            // Update Hand
-            let handName = 'Not detected';
-            if (currentHand === 0) handName = 'Left Hand';
-            else if (currentHand === 1) handName = 'Right Hand';
-            debugHand.textContent = handName;
-
-            // Update Finger
-            debugFinger.textContent = `${fingerNames[currentFinger]} (${currentFinger})`;
-
-            // Update Rotation.y
-            const rotationY = calculateRotationY();
-            debugRotation.textContent = rotationY.toFixed(2);
         }
 
-        // Tính toán góc xoay rotation.y dựa vào camera/hand/finger
-        // Để nhẫn hiển thị đúng hướng trên các ngón tay khác nhau
-        function calculateRotationY() {
-            // Config góc xoay cho từng trường hợp: camera + tay + ngón
-            const fingerRotationConfig = {
-                frontCamera: {  // Camera trước
-                    right: {    // Tay phải
-                        3: 0.9, // Ngón trỏ
-                        4: 0.9  // Ngón giữa
-                    }
-                },
-                backCamera: {   // Camera sau
-                    right: {    // Tay phải
-                        3: 0.6,
-                        4: 0.6
-                    },
-                    left: {     // Tay trái
-                        0: 0.19,  // Ngón áp út
-                        1: 0.19,  // Ngón út
-                        3: 0.19,  // Ngón trỏ
-                        4: 0.19   // Ngón giữa
-                    }
-                }
-            };
-
-            // Xác định đang dùng camera trước hay sau
-            // Desktop luôn dùng front camera, Mobile thì tùy currentCamera
-            const isFrontCamera = (deviceType === 'Desktop') || (currentCamera === 1);
-            const cameraType = isFrontCamera ? 'frontCamera' : 'backCamera';
-
-            // Xác định đang là tay trái hay tay phải
-            const handType = currentHand === 0 ? 'left' : currentHand === 1 ? 'right' : null;
-
-            // Mặc định không xoay (rotation.y = 0)
-            let rotationY = 0;
-
-            // Tìm góc xoay phù hợp từ config
-            if (handType) {
-                const cameraConfig = fingerRotationConfig[cameraType];
-                if (cameraConfig && cameraConfig[handType]) {
-                    const fingerConfig = cameraConfig[handType][currentFinger];
-                    if (fingerConfig !== undefined) {
-                        rotationY = fingerConfig;
-                    }
-                }
-            }
-
-            console.log(`🔄 Rotation.y: ${rotationY} (${cameraType}, ${handType}, finger ${currentFinger})`);
-            return rotationY;
-        }
-
-        // Áp dụng góc xoay rotation.y vào model nhẫn trong AR
-        function applyRotationY() {
-            // Kiểm tra AR plugin đã sẵn sàng chưa
-            if (!arPlugin || !arPlugin.modelRotation) return;
-
-            const rotationY = calculateRotationY();
-            arPlugin.modelRotation.y = rotationY;
-
-            // Update debug info
-            updateDebugInfo();
-        }
-
-        // Khởi tạo MediaPipe Hands để phát hiện tay trái/phải
-        async function initMediaPipeHands() {
-            // Kiểm tra thư viện MediaPipe đã load chưa
-            if (!window.Hands) {
-                console.warn('⚠️ MediaPipe Hands not loaded');
-                return;
-            }
-
-            try {
-                // Tạo instance MediaPipe Hands
-                const hands = new window.Hands({
-                    locateFile: (file) => {
-                        // Đường dẫn tới các file model của MediaPipe
-                        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-                    }
-                });
-
-                // Cấu hình MediaPipe
-                hands.setOptions({
-                    maxNumHands: 1,              // Chỉ detect 1 bàn tay
-                    modelComplexity: 1,          // Độ phức tạp model (0-2)
-                    minDetectionConfidence: 0.5, // Ngưỡng tin cậy phát hiện
-                    minTrackingConfidence: 0.5   // Ngưỡng tin cậy tracking
-                });
-
-                // Callback khi MediaPipe detect được tay
-                let lastLoggedHand = null;
-                hands.onResults((results) => {
-                    // Kiểm tra có detect được tay không
-                    if (results.multiHandedness && results.multiHandedness.length > 0) {
-                        // Lấy label tay: "Left" hoặc "Right"
-                        const handLabel = results.multiHandedness[0].label;
-                        const handIndex = handLabel === 'Left' ? 0 : 1;
-
-                        // Nếu tay thay đổi (từ trái sang phải hoặc ngược lại)
-                        if (currentHand !== handIndex) {
-                            currentHand = handIndex;
-                            console.log('🔄 HAND CHANGED! New hand:', handLabel, '→', handIndex);
-                            // Cập nhật lại góc xoay nhẫn
-                            applyRotationY();
-                            lastLoggedHand = handIndex;
-                        }
-                    } else {
-                        // Không detect được tay nào
-                        if (currentHand !== -1) {
-                            console.log('🔄 Hand lost! Resetting to -1');
-                            currentHand = -1;
-                            applyRotationY();
-                            lastLoggedHand = -1;
-                        }
-                    }
-                });
-
-                // Khởi tạo MediaPipe
-                await hands.initialize();
-                mediaPipeHands = hands;
-                console.log('✅ MediaPipe Hands initialized');
-
-                // Hàm detect liên tục từ video stream
-                let frameCount = 0;
-                const detect = async () => {
-                    // Chỉ chạy khi đang ở chế độ AR
-                    if (!inAR || !mediaPipeHands) return;
-
-                    try {
-                        // Lấy video element từ AR plugin
-                        const video = document.querySelector('video');
-
-                        // Nếu không có video, thử lấy canvas
-                        if (video && video.readyState >= 2) {
-                            // Video đã sẵn sàng để phân tích
-                            await mediaPipeHands.send({ image: video });
-                            if (frameCount === 0) {
-                                console.log('📹 MediaPipe detecting from video...');
-                            }
-                        } else {
-                            // Fallback sang canvas nếu không có video
-                            const canvas = document.querySelector('canvas');
-                            if (canvas) {
-                                await mediaPipeHands.send({ image: canvas });
-                                if (frameCount === 0) {
-                                    console.log('🖼️ MediaPipe detecting from canvas...');
-                                }
-                            }
-                        }
-                        frameCount++;
-                    } catch (err) {
-                        console.error('MediaPipe detect error:', err);
-                    }
-
-                    // Loop liên tục khi vẫn còn trong AR
-                    if (inAR) {
-                        requestAnimationFrame(detect);
-                    }
-                };
-
-                // Đợi 1 giây để AR plugin khởi động xong, rồi mới bắt đầu detect
-                setTimeout(() => {
-                    console.log('🚀 Starting MediaPipe detection...');
-                    detect();
-                }, 1000);
-            } catch (err) {
-                console.error('❌ MediaPipe Hands init error:', err);
-            }
-        }
 
         // Khởi tạo viewer để hiển thị model 3D
         async function initViewer() {
@@ -465,12 +306,6 @@
 
             // Khởi động AR plugin (bật camera)
             await arPlugin.start();
-
-            // Khởi tạo MediaPipe để phát hiện tay trái/phải
-            initMediaPipeHands();
-
-            // Áp dụng góc xoay ban đầu cho nhẫn
-            applyRotationY();
         }
 
         // Event listener cho nút "Start AR" / "Exit AR"
@@ -535,8 +370,7 @@
                 currentCamera = (currentCamera + 1) % 2;
                 console.log('📷 Camera flipped:', currentCamera === 0 ? 'Back/Default' : 'Front');
 
-                // Áp dụng lại góc xoay với camera mới
-                applyRotationY();
+                // Cập nhật debug info
                 updateDebugInfo();
             } catch (error) {
                 console.error('Flip camera error:', error);
@@ -558,10 +392,6 @@
 
             // Cập nhật hiển thị tên ngón tay trên màn hình
             updateFingerDisplay();
-
-            // Áp dụng góc xoay cho ngón tay mới
-            applyRotationY();
-            updateDebugInfo();
 
             console.log('Switched to finger:', currentFinger, fingerNames[currentFinger]);
         });
