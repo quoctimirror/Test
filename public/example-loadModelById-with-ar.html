@@ -230,36 +230,28 @@
             debugHand.textContent = handName;
         }
 
-        // Biến để lưu video/canvas element tìm được
-        let detectedSourceElement = null;
+        // Hàm tìm video/canvas element để gửi tới MediaPipe
+        // LUÔN tìm lại mỗi lần gọi để đảm bảo lấy element mới nhất (đặc biệt sau khi flip camera)
+        function findMediaElement() {
+            // Tìm tất cả video và canvas
+            const allVideos = document.querySelectorAll('video');
+            const allCanvases = document.querySelectorAll('canvas');
 
-        // MutationObserver để track khi AR plugin tạo video/canvas element mới
-        function startElementObserver() {
-            console.log('👁️ Starting MutationObserver to detect video/canvas elements...');
+            // Ưu tiên VIDEO (camera stream)
+            for (const v of allVideos) {
+                if (v.videoWidth > 0 && v.videoHeight > 0 && v.readyState >= 2) {
+                    return v;
+                }
+            }
 
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    mutation.addedNodes.forEach((node) => {
-                        if (node.tagName === 'VIDEO' || node.tagName === 'CANVAS') {
-                            console.log('🎯 NEW ELEMENT DETECTED:', node.tagName, node);
-                            if (node.tagName === 'VIDEO') {
-                                detectedSourceElement = node;
-                                console.log('✅ Video element captured for MediaPipe');
-                            } else if (node.tagName === 'CANVAS' && !detectedSourceElement) {
-                                detectedSourceElement = node;
-                                console.log('✅ Canvas element captured for MediaPipe');
-                            }
-                        }
-                    });
-                });
-            });
+            // Nếu không có video ready, dùng CANVAS
+            for (const c of allCanvases) {
+                if (c.width > 0 && c.height > 0) {
+                    return c;
+                }
+            }
 
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-
-            console.log('✅ MutationObserver started');
+            return null;
         }
 
         // Khởi tạo MediaPipe Hands để phát hiện tay trái/phải
@@ -362,134 +354,52 @@
                 mediaPipeHands = hands;
                 console.log('✅ MediaPipe Hands initialized');
 
-                // Hàm detect liên tục từ CANVAS (giống JSX)
+                // Detection loop - CLEAN & SIMPLE
                 let logCount = 0;
-                let waitCount = 0;
+                let lastElementType = null; // Track element type để log khi đổi
+
                 const detect = async () => {
                     // CHỈ detect khi inAR = true VÀ mediaPipeHands ready
                     if (inAR && mediaPipeHands) {
                         try {
-                            // Ưu tiên dùng element đã detect từ MutationObserver
-                            let sourceElement = detectedSourceElement;
+                            // LUÔN tìm lại element mỗi frame (không cache)
+                            const sourceElement = findMediaElement();
 
-                            // Nếu chưa có, tìm thủ công
-                            if (!sourceElement) {
-                                // Tìm tất cả video và canvas
-                                const allVideos = document.querySelectorAll('video');
-                                const allCanvases = document.querySelectorAll('canvas');
-
-                                // Ưu tiên VIDEO
-                                for (const v of allVideos) {
-                                    if (v.videoWidth > 0 && v.videoHeight > 0 && v.readyState >= 2) {
-                                        sourceElement = v;
-                                        detectedSourceElement = v;
-                                        break;
-                                    }
-                                }
-
-                                // Nếu không có video, dùng CANVAS
-                                if (!sourceElement) {
-                                    for (const c of allCanvases) {
-                                        if (c.width > 0 && c.height > 0) {
-                                            sourceElement = c;
-                                            detectedSourceElement = c;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                // Log info lần đầu hoặc mỗi 60 frames khi đang tìm
-                                if (logCount === 0 || (waitCount > 0 && waitCount % 60 === 0)) {
-                                    console.log('🔍 === CHECKING ELEMENTS ===');
-                                    console.log('   All videos:', allVideos.length);
-                                    console.log('   All canvases:', allCanvases.length);
-                                    if (allVideos.length > 0) {
-                                        allVideos.forEach((v, i) => {
-                                            console.log(`   Video[${i}]:`, v.videoWidth + 'x' + v.videoHeight, 'readyState:', v.readyState);
-                                        });
-                                    }
-                                    if (allCanvases.length > 0) {
-                                        allCanvases.forEach((c, i) => {
-                                            console.log(`   Canvas[${i}]:`, c.width + 'x' + c.height, c.id || '(no id)');
-                                        });
-                                    }
-                                    console.log('   Selected element:', sourceElement?.tagName, sourceElement);
-                                }
-                            }
-
-                            // CHỈ send frame nếu có sourceElement VÀ ready
                             if (sourceElement) {
-                                let canSend = false;
-
-                                // Check nếu là VIDEO - phải có kích thước
-                                if (sourceElement.tagName === 'VIDEO') {
-                                    if (sourceElement.videoWidth > 0 && sourceElement.videoHeight > 0) {
-                                        canSend = true;
-                                        waitCount = 0; // Reset wait counter
-                                    } else {
-                                        waitCount++;
-                                        if (waitCount === 1) {
-                                            console.warn('⚠️ Video not ready yet (width/height = 0), waiting...');
-                                        }
-                                    }
-                                } else {
-                                    // CANVAS - send luôn
-                                    canSend = true;
-                                    waitCount = 0;
+                                // Check nếu element type thay đổi (ví dụ sau flip camera)
+                                const currentElementType = sourceElement.tagName + '_' + (sourceElement.videoWidth || sourceElement.width);
+                                if (currentElementType !== lastElementType) {
+                                    console.log('🔄 Element changed - using:', sourceElement.tagName, sourceElement);
+                                    console.log('   Size:', sourceElement.videoWidth || sourceElement.width, 'x', sourceElement.videoHeight || sourceElement.height);
+                                    lastElementType = currentElementType;
                                 }
 
                                 // Gửi frame tới MediaPipe
-                                if (canSend) {
-                                    await mediaPipeHands.send({ image: sourceElement });
+                                await mediaPipeHands.send({ image: sourceElement });
 
-                                    if (logCount === 0) {
-                                        console.log('✅ First frame sent to MediaPipe from:', sourceElement.tagName);
-                                        console.log('✅ Using element for MediaPipe:', sourceElement);
-                                    }
-
-                                    if (logCount % 120 === 0 && logCount > 0) {
-                                        console.log(`📊 Detection running... frame ${logCount}`);
-                                    }
-
-                                    logCount++;
+                                // Log lần đầu
+                                if (logCount === 0) {
+                                    console.log('✅ MediaPipe detection started');
                                 }
+
+                                // Log định kỳ
+                                if (logCount % 120 === 0 && logCount > 0) {
+                                    console.log(`📊 Frame ${logCount}`);
+                                }
+
+                                logCount++;
                             } else {
-                                // Không tìm thấy element - log warning và tạo fallback
-                                waitCount++;
-                                if (waitCount === 1) {
-                                    console.warn('⚠️ No video or canvas element found!');
-                                    console.warn('⚠️ Attempting to create video element from camera stream...');
-
-                                    // TỰ TẠO VIDEO ELEMENT từ camera (fallback)
-                                    try {
-                                        const video = document.createElement('video');
-                                        video.style.display = 'none';
-                                        video.autoplay = true;
-                                        video.playsInline = true;
-                                        document.body.appendChild(video);
-
-                                        navigator.mediaDevices.getUserMedia({
-                                            video: { facingMode: 'user' },
-                                            audio: false
-                                        }).then(stream => {
-                                            video.srcObject = stream;
-                                            detectedSourceElement = video;
-                                            waitCount = 0;
-                                            console.log('✅ Created video element from camera stream');
-                                        }).catch(err => {
-                                            console.error('❌ Failed to access camera:', err);
-                                        });
-                                    } catch (err) {
-                                        console.error('❌ Failed to create video element:', err);
-                                    }
+                                // Không tìm thấy element - log mỗi 60 frames
+                                if (logCount % 60 === 0) {
+                                    console.warn('⚠️ No ready video/canvas found');
                                 }
                             }
                         } catch (err) {
-                            console.error('❌ MediaPipe detect error:', err);
+                            console.error('❌ MediaPipe error:', err);
                         }
                     }
 
-                    // LUÔN LUÔN schedule frame tiếp theo (nếu vẫn còn trong AR)
+                    // LUÔN schedule frame tiếp theo
                     if (inAR) {
                         requestAnimationFrame(detect);
                     }
@@ -588,10 +498,6 @@
             console.log('   fingerNames[0]:', fingerNames[0], '(Ngón cái / Thumb)');
             console.log('   Expected: Ngón cái should be shown on AR');
 
-            // Start observer NGAY LẬP TỨC (trước khi AR tạo element)
-            console.log('👁️ Starting element observer BEFORE MediaPipe init...');
-            startElementObserver();
-
             // ĐỢI 1000MS ĐỂ AR CAMERA/VIDEO ELEMENT SẴN SÀNG
             console.log('📍 Waiting for AR camera to stabilize...');
             setTimeout(() => {
@@ -663,17 +569,13 @@
                 currentCamera = (currentCamera + 1) % 2;
                 console.log('📷 Camera flipped to:', currentCamera === 0 ? 'Front Camera (0)' : 'Back Camera (1)');
 
-                // QUAN TRỌNG: Reset detectedSourceElement để detection loop tìm lại element mới
-                detectedSourceElement = null;
-                console.log('🔄 Reset detectedSourceElement - will search for new video/canvas element');
-
                 // Reset currentHand để detection bắt đầu lại
                 currentHand = -1;
                 console.log('🔄 Reset currentHand to -1');
 
-                // Đợi 300ms để camera mới sẵn sàng
-                await new Promise(resolve => setTimeout(resolve, 300));
-                console.log('✅ Camera flip completed, detection loop will find new element');
+                // Đợi 500ms để camera mới sẵn sàng
+                await new Promise(resolve => setTimeout(resolve, 500));
+                console.log('✅ Camera flip completed - detection loop will auto-find new element');
 
                 // Cập nhật debug info
                 updateDebugInfo();
