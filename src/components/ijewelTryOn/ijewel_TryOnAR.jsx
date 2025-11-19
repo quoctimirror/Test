@@ -6,11 +6,7 @@ import { useMediaPipeHands } from './ijewel_useMediaPipeHands';
 
 /**
  * IJewel TryOnAR Component - Component chính cho AR Try-On nhẫn
- *
- * Props:
- * - modelName: Tên model cần load (vd: "heart", "oval", "refined_mirror_heart")
- * - onError: Callback khi có lỗi
- * - onModelLoad: Callback khi model load xong
+ * Clean loading - load thẳng vào AR try-on
  */
 const IJewelTryOnAR = ({
   modelName = 'pear',
@@ -18,7 +14,7 @@ const IJewelTryOnAR = ({
   onModelLoad
 }) => {
   // ==========================================
-  // REFS - Tham chiếu đến DOM elements
+  // REFS
   // ==========================================
   const canvasRef = useRef(null);
   const debugPanelRef = useRef(null);
@@ -28,17 +24,14 @@ const IJewelTryOnAR = ({
   // ==========================================
   const [debugPanelOpen, setDebugPanelOpen] = useState(false);
   const [currentFinger, setCurrentFinger] = useState(0);
-  const [currentCamera, setCurrentCamera] = useState(0); // 0 = cam sau (mobile) / cam trước (desktop), 1 = cam trước (mobile)
-  const [currentHand, setCurrentHand] = useState(-1); // -1 = chưa phát hiện, 0 = tay trái, 1 = tay phải
+  const [currentCamera, setCurrentCamera] = useState(0);
+  const [currentHand, setCurrentHand] = useState(-1);
   const [deviceType, setDeviceType] = useState('Unknown');
 
   // ==========================================
-  // CUSTOM HOOKS - Logic AR Try-On
+  // CUSTOM HOOKS
   // ==========================================
   const {
-    isLoading,
-    loadingProgress,
-    loadingText,
     isARRunning,
     error,
     startAR,
@@ -54,9 +47,6 @@ const IJewelTryOnAR = ({
     onModelLoad
   });
 
-  // ==========================================
-  // CUSTOM HOOKS - Debug Controls
-  // ==========================================
   const {
     position,
     rotation,
@@ -75,9 +65,6 @@ const IJewelTryOnAR = ({
     deviceType
   });
 
-  // ==========================================
-  // CUSTOM HOOKS - MediaPipe Hand Detection
-  // ==========================================
   const { detectedHand } = useMediaPipeHands({
     canvasRef,
     isARRunning
@@ -89,7 +76,6 @@ const IJewelTryOnAR = ({
   useEffect(() => {
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     setDeviceType(isMobile ? 'Mobile' : 'Desktop');
-    // Desktop/Laptop mặc định cam trước (0), Mobile mặc định cam sau (0)
   }, []);
 
   // ==========================================
@@ -105,7 +91,7 @@ const IJewelTryOnAR = ({
     if (isMobile) {
       return currentCamera === 0 ? 'Cam sau' : 'Cam trước';
     } else {
-      return 'Cam trước'; // Desktop/Laptop chỉ có cam trước
+      return 'Cam trước';
     }
   };
 
@@ -141,7 +127,6 @@ const IJewelTryOnAR = ({
       if (debugPanelOpen &&
           debugPanelRef.current &&
           !debugPanelRef.current.contains(event.target)) {
-        // Check if click is not on debug toggle button
         const debugToggle = document.querySelector(`.${styles.debugToggle}`);
         if (debugToggle && !debugToggle.contains(event.target)) {
           setDebugPanelOpen(false);
@@ -163,16 +148,8 @@ const IJewelTryOnAR = ({
   // ==========================================
   return (
     <div className={styles.container}>
-      {/* Canvas Container */}
+      {/* Canvas Container - No loading screen */}
       <div className={styles.canvasContainer}>
-        {/* Header */}
-        <div className={styles.headerText}>
-          <span className={styles.modelName}>
-            {modelName.replace(/_/g, ' ').toUpperCase()}
-          </span>
-        </div>
-
-        {/* Canvas */}
         <canvas
           ref={canvasRef}
           id="webgi-canvas"
@@ -207,15 +184,12 @@ const IJewelTryOnAR = ({
 
       {/* Main Try-On Button */}
       <div className={styles.shineButtonWrap}>
-        <ShineButton
-          onClick={isARRunning ? stopAR : startAR}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Loading...' : isARRunning ? 'Stop' : 'TryOn'}
+        <ShineButton onClick={isARRunning ? stopAR : startAR}>
+          {isARRunning ? 'Stop' : 'TryOn'}
         </ShineButton>
       </div>
 
-      {/* Info Panel - Always visible on top left */}
+      {/* Info Panel */}
       <div className={styles.infoPanel}>
         <div className={styles.infoItem}>
           <span className={styles.infoLabel}>Thiết bị:</span>
@@ -321,10 +295,6 @@ const DebugPanel = React.forwardRef(({
   onExport,
   onCopy
 }, ref) => {
-  const [positionStep, setPositionStep] = useState(0.01);
-  const [rotationStep, setRotationStep] = useState(0.01);
-  const [scaleStep, setScaleStep] = useState(0.001);
-
   return (
     <div ref={ref} className={styles.debugPanel}>
       <DebugSection title="👆 Current Finger">
@@ -337,13 +307,13 @@ const DebugPanel = React.forwardRef(({
         <AxisControl
           label="X Axis"
           value={position.x}
-          step={positionStep}
+          step={0.01}
           onChange={(val) => onPositionChange('x', val)}
         />
         <AxisControl
           label="Y Axis"
           value={position.y}
-          step={positionStep}
+          step={0.01}
           onChange={(val) => onPositionChange('y', val)}
         />
         <AxisControl
@@ -358,13 +328,13 @@ const DebugPanel = React.forwardRef(({
         <AxisControl
           label="X Axis (degrees)"
           value={rotation.x}
-          step={rotationStep}
+          step={0.01}
           onChange={(val) => onRotationChange('x', val)}
         />
         <AxisControl
           label="Y Axis (degrees)"
           value={rotation.y}
-          step={rotationStep}
+          step={0.01}
           onChange={(val) => onRotationChange('y', val)}
         />
         <AxisControl
@@ -379,7 +349,7 @@ const DebugPanel = React.forwardRef(({
         <AxisControl
           label="Uniform Scale"
           value={scale}
-          step={scaleStep}
+          step={0.001}
           onChange={onScaleChange}
         />
       </DebugSection>
@@ -400,20 +370,6 @@ const DebugSection = ({ title, children }) => (
   <div className={styles.debugSection}>
     <h3>{title}</h3>
     {children}
-  </div>
-);
-
-const StepSizeControl = ({ value, onChange, label }) => (
-  <div className={styles.controlGroup}>
-    <label className={styles.controlLabel}>{label}</label>
-    <input
-      type="number"
-      className={styles.controlInput}
-      value={value}
-      onChange={(e) => onChange(parseFloat(e.target.value))}
-      step="0.001"
-      min="0.0001"
-    />
   </div>
 );
 
