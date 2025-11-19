@@ -364,121 +364,132 @@
 
                 // Hàm detect liên tục từ CANVAS (giống JSX)
                 let logCount = 0;
+                let waitCount = 0;
                 const detect = async () => {
-                    // Chỉ chạy khi đang ở chế độ AR
-                    if (!inAR || !mediaPipeHands) {
-                        return;
-                    }
+                    // CHỈ detect khi inAR = true VÀ mediaPipeHands ready
+                    if (inAR && mediaPipeHands) {
+                        try {
+                            // Ưu tiên dùng element đã detect từ MutationObserver
+                            let sourceElement = detectedSourceElement;
 
-                    try {
-                        // Ưu tiên dùng element đã detect từ MutationObserver
-                        let sourceElement = detectedSourceElement;
-
-                        // Nếu chưa có, tìm thủ công
-                        if (!sourceElement) {
-                            // Tìm tất cả video và canvas
-                            const allVideos = document.querySelectorAll('video');
-                            const allCanvases = document.querySelectorAll('canvas');
-
-                            // Ưu tiên VIDEO
-                            for (const v of allVideos) {
-                                if (v.videoWidth > 0 && v.videoHeight > 0 && v.readyState >= 2) {
-                                    sourceElement = v;
-                                    detectedSourceElement = v;
-                                    break;
-                                }
-                            }
-
-                            // Nếu không có video, dùng CANVAS
+                            // Nếu chưa có, tìm thủ công
                             if (!sourceElement) {
-                                for (const c of allCanvases) {
-                                    if (c.width > 0 && c.height > 0) {
-                                        sourceElement = c;
-                                        detectedSourceElement = c;
+                                // Tìm tất cả video và canvas
+                                const allVideos = document.querySelectorAll('video');
+                                const allCanvases = document.querySelectorAll('canvas');
+
+                                // Ưu tiên VIDEO
+                                for (const v of allVideos) {
+                                    if (v.videoWidth > 0 && v.videoHeight > 0 && v.readyState >= 2) {
+                                        sourceElement = v;
+                                        detectedSourceElement = v;
                                         break;
                                     }
                                 }
-                            }
 
-                            // Log info lần đầu để debug
-                            if (logCount === 0 || logCount % 60 === 0) {
-                                console.log('🔍 === CHECKING ELEMENTS ===');
-                                console.log('   All videos:', allVideos.length);
-                                console.log('   All canvases:', allCanvases.length);
-                                if (allVideos.length > 0) {
-                                    allVideos.forEach((v, i) => {
-                                        console.log(`   Video[${i}]:`, v.videoWidth + 'x' + v.videoHeight, 'readyState:', v.readyState);
-                                    });
+                                // Nếu không có video, dùng CANVAS
+                                if (!sourceElement) {
+                                    for (const c of allCanvases) {
+                                        if (c.width > 0 && c.height > 0) {
+                                            sourceElement = c;
+                                            detectedSourceElement = c;
+                                            break;
+                                        }
+                                    }
                                 }
-                                if (allCanvases.length > 0) {
-                                    allCanvases.forEach((c, i) => {
-                                        console.log(`   Canvas[${i}]:`, c.width + 'x' + c.height, c.id || '(no id)');
-                                    });
-                                }
-                                console.log('   Selected element:', sourceElement?.tagName, sourceElement);
-                            }
-                        }
 
-                        if (!sourceElement) {
-                            if (logCount === 0) {
-                                console.warn('⚠️ No video or canvas element found!');
-                                console.warn('⚠️ Attempting to create video element from camera stream...');
-
-                                // TỰ TẠO VIDEO ELEMENT từ camera (fallback)
-                                try {
-                                    const video = document.createElement('video');
-                                    video.style.display = 'none';
-                                    video.autoplay = true;
-                                    video.playsInline = true;
-                                    document.body.appendChild(video);
-
-                                    navigator.mediaDevices.getUserMedia({
-                                        video: { facingMode: 'user' },
-                                        audio: false
-                                    }).then(stream => {
-                                        video.srcObject = stream;
-                                        detectedSourceElement = video;
-                                        console.log('✅ Created video element from camera stream');
-                                    }).catch(err => {
-                                        console.error('❌ Failed to access camera:', err);
-                                    });
-                                } catch (err) {
-                                    console.error('❌ Failed to create video element:', err);
+                                // Log info lần đầu hoặc mỗi 60 frames khi đang tìm
+                                if (logCount === 0 || (waitCount > 0 && waitCount % 60 === 0)) {
+                                    console.log('🔍 === CHECKING ELEMENTS ===');
+                                    console.log('   All videos:', allVideos.length);
+                                    console.log('   All canvases:', allCanvases.length);
+                                    if (allVideos.length > 0) {
+                                        allVideos.forEach((v, i) => {
+                                            console.log(`   Video[${i}]:`, v.videoWidth + 'x' + v.videoHeight, 'readyState:', v.readyState);
+                                        });
+                                    }
+                                    if (allCanvases.length > 0) {
+                                        allCanvases.forEach((c, i) => {
+                                            console.log(`   Canvas[${i}]:`, c.width + 'x' + c.height, c.id || '(no id)');
+                                        });
+                                    }
+                                    console.log('   Selected element:', sourceElement?.tagName, sourceElement);
                                 }
                             }
-                            requestAnimationFrame(detect);
-                            return;
-                        }
 
-                        // Check if video is ready (có width/height)
-                        if (sourceElement.tagName === 'VIDEO') {
-                            if (sourceElement.videoWidth === 0 || sourceElement.videoHeight === 0) {
-                                if (logCount === 0) {
-                                    console.warn('⚠️ Video not ready yet (width/height = 0), waiting...');
+                            // CHỈ send frame nếu có sourceElement VÀ ready
+                            if (sourceElement) {
+                                let canSend = false;
+
+                                // Check nếu là VIDEO - phải có kích thước
+                                if (sourceElement.tagName === 'VIDEO') {
+                                    if (sourceElement.videoWidth > 0 && sourceElement.videoHeight > 0) {
+                                        canSend = true;
+                                        waitCount = 0; // Reset wait counter
+                                    } else {
+                                        waitCount++;
+                                        if (waitCount === 1) {
+                                            console.warn('⚠️ Video not ready yet (width/height = 0), waiting...');
+                                        }
+                                    }
+                                } else {
+                                    // CANVAS - send luôn
+                                    canSend = true;
+                                    waitCount = 0;
                                 }
-                                requestAnimationFrame(detect);
-                                return;
+
+                                // Gửi frame tới MediaPipe
+                                if (canSend) {
+                                    await mediaPipeHands.send({ image: sourceElement });
+
+                                    if (logCount === 0) {
+                                        console.log('✅ First frame sent to MediaPipe from:', sourceElement.tagName);
+                                        console.log('✅ Using element for MediaPipe:', sourceElement);
+                                    }
+
+                                    if (logCount % 120 === 0 && logCount > 0) {
+                                        console.log(`📊 Detection running... frame ${logCount}`);
+                                    }
+
+                                    logCount++;
+                                }
+                            } else {
+                                // Không tìm thấy element - log warning và tạo fallback
+                                waitCount++;
+                                if (waitCount === 1) {
+                                    console.warn('⚠️ No video or canvas element found!');
+                                    console.warn('⚠️ Attempting to create video element from camera stream...');
+
+                                    // TỰ TẠO VIDEO ELEMENT từ camera (fallback)
+                                    try {
+                                        const video = document.createElement('video');
+                                        video.style.display = 'none';
+                                        video.autoplay = true;
+                                        video.playsInline = true;
+                                        document.body.appendChild(video);
+
+                                        navigator.mediaDevices.getUserMedia({
+                                            video: { facingMode: 'user' },
+                                            audio: false
+                                        }).then(stream => {
+                                            video.srcObject = stream;
+                                            detectedSourceElement = video;
+                                            waitCount = 0;
+                                            console.log('✅ Created video element from camera stream');
+                                        }).catch(err => {
+                                            console.error('❌ Failed to access camera:', err);
+                                        });
+                                    } catch (err) {
+                                        console.error('❌ Failed to create video element:', err);
+                                    }
+                                }
                             }
+                        } catch (err) {
+                            console.error('❌ MediaPipe detect error:', err);
                         }
-
-                        // Gửi frame tới MediaPipe
-                        await mediaPipeHands.send({ image: sourceElement });
-
-                        if (logCount === 0) {
-                            console.log('✅ First frame sent to MediaPipe from:', sourceElement.tagName);
-                            console.log('✅ Using element for MediaPipe:', sourceElement);
-                        }
-
-                        if (logCount % 120 === 0 && logCount > 0) {
-                            console.log(`📊 Detection running... frame ${logCount}`);
-                        }
-
-                        logCount++;
-                    } catch (err) {
-                        console.error('❌ MediaPipe detect error:', err);
                     }
 
-                    // Loop liên tục khi vẫn còn trong AR
+                    // LUÔN LUÔN schedule frame tiếp theo (nếu vẫn còn trong AR)
                     if (inAR) {
                         requestAnimationFrame(detect);
                     }
