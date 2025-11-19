@@ -54,6 +54,49 @@
             display: none;  /* Ẩn khi chưa vào AR */
             z-index: 1000;
         }
+
+        /* Debug Info Panel */
+        #debug-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            display: none;  /* Ẩn khi chưa vào AR */
+            z-index: 1000;
+            min-width: 250px;
+        }
+
+        #debug-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .debug-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .debug-label {
+            color: #aaa;
+            font-weight: bold;
+        }
+
+        .debug-value {
+            color: #0f0;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -70,6 +113,31 @@
 
     <!-- Hiển thị tên ngón tay hiện tại -->
     <div id="finger-display">Ngón áp út</div>
+
+    <!-- Debug Info Panel -->
+    <div id="debug-info">
+        <h3>🔍 DEBUG INFO</h3>
+        <div class="debug-item">
+            <span class="debug-label">Device:</span>
+            <span class="debug-value" id="debug-device">Unknown</span>
+        </div>
+        <div class="debug-item">
+            <span class="debug-label">Camera:</span>
+            <span class="debug-value" id="debug-camera">Back</span>
+        </div>
+        <div class="debug-item">
+            <span class="debug-label">Hand:</span>
+            <span class="debug-value" id="debug-hand">Not detected</span>
+        </div>
+        <div class="debug-item">
+            <span class="debug-label">Finger:</span>
+            <span class="debug-value" id="debug-finger">Ngón áp út (0)</span>
+        </div>
+        <div class="debug-item">
+            <span class="debug-label">Rotation.y:</span>
+            <span class="debug-value" id="debug-rotation">0.00</span>
+        </div>
+    </div>
 
     <!-- Load thư viện WebGI - Engine 3D của iJewel -->
     <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js"> </script>
@@ -102,6 +170,14 @@
         const switchFingerBtn = document.getElementById('switch-finger-btn');
         const fingerDisplay = document.getElementById('finger-display');
 
+        // Debug info elements
+        const debugInfo = document.getElementById('debug-info');
+        const debugDevice = document.getElementById('debug-device');
+        const debugCamera = document.getElementById('debug-camera');
+        const debugHand = document.getElementById('debug-hand');
+        const debugFinger = document.getElementById('debug-finger');
+        const debugRotation = document.getElementById('debug-rotation');
+
         // Khai báo các biến toàn cục
         let viewerInstance;  // Instance của viewer
         let viewerApp;       // App viewer chính
@@ -113,6 +189,7 @@
         let currentHand = -1;   // Tay được detect: -1 = chưa detect, 0 = trái, 1 = phải
         let deviceType = 'Unknown';  // Loại thiết bị
         let mediaPipeHands = null;   // Instance MediaPipe để detect tay
+        let debugUpdateInterval = null;  // Interval để update debug info định kỳ
 
         // Mảng tên các ngón tay
         const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
@@ -125,6 +202,32 @@
         // Hàm cập nhật hiển thị tên ngón tay trên màn hình
         function updateFingerDisplay() {
             fingerDisplay.textContent = fingerNames[currentFinger];
+        }
+
+        // Hàm cập nhật debug info panel
+        function updateDebugInfo() {
+            // Update Device
+            debugDevice.textContent = deviceType;
+
+            // Update Camera
+            const isMobile = deviceType === 'Mobile';
+            const cameraName = isMobile
+                ? (currentCamera === 0 ? 'Back Camera' : 'Front Camera')
+                : 'Front Camera (Desktop)';
+            debugCamera.textContent = cameraName;
+
+            // Update Hand
+            let handName = 'Not detected';
+            if (currentHand === 0) handName = 'Left Hand';
+            else if (currentHand === 1) handName = 'Right Hand';
+            debugHand.textContent = handName;
+
+            // Update Finger
+            debugFinger.textContent = `${fingerNames[currentFinger]} (${currentFinger})`;
+
+            // Update Rotation.y
+            const rotationY = calculateRotationY();
+            debugRotation.textContent = rotationY.toFixed(2);
         }
 
         // Tính toán góc xoay rotation.y dựa vào camera/hand/finger
@@ -185,6 +288,9 @@
 
             const rotationY = calculateRotationY();
             arPlugin.modelRotation.y = rotationY;
+
+            // Update debug info
+            updateDebugInfo();
         }
 
         // Khởi tạo MediaPipe Hands để phát hiện tay trái/phải
@@ -213,6 +319,7 @@
                 });
 
                 // Callback khi MediaPipe detect được tay
+                let lastLoggedHand = null;
                 hands.onResults((results) => {
                     // Kiểm tra có detect được tay không
                     if (results.multiHandedness && results.multiHandedness.length > 0) {
@@ -223,15 +330,18 @@
                         // Nếu tay thay đổi (từ trái sang phải hoặc ngược lại)
                         if (currentHand !== handIndex) {
                             currentHand = handIndex;
-                            console.log('✋ Detected hand:', handLabel, '→', handIndex);
+                            console.log('🔄 HAND CHANGED! New hand:', handLabel, '→', handIndex);
                             // Cập nhật lại góc xoay nhẫn
                             applyRotationY();
+                            lastLoggedHand = handIndex;
                         }
                     } else {
                         // Không detect được tay nào
                         if (currentHand !== -1) {
+                            console.log('🔄 Hand lost! Resetting to -1');
                             currentHand = -1;
                             applyRotationY();
+                            lastLoggedHand = -1;
                         }
                     }
                 });
@@ -241,20 +351,36 @@
                 mediaPipeHands = hands;
                 console.log('✅ MediaPipe Hands initialized');
 
-                // Hàm detect liên tục từ canvas
+                // Hàm detect liên tục từ video stream
+                let frameCount = 0;
                 const detect = async () => {
                     // Chỉ chạy khi đang ở chế độ AR
                     if (!inAR || !mediaPipeHands) return;
 
-                    // Lấy canvas element (video từ camera)
-                    const canvas = document.querySelector('canvas');
-                    if (canvas) {
-                        try {
-                            // Gửi ảnh từ canvas cho MediaPipe phân tích
-                            await mediaPipeHands.send({ image: canvas });
-                        } catch (err) {
-                            console.error('MediaPipe detect error:', err);
+                    try {
+                        // Lấy video element từ AR plugin
+                        const video = document.querySelector('video');
+
+                        // Nếu không có video, thử lấy canvas
+                        if (video && video.readyState >= 2) {
+                            // Video đã sẵn sàng để phân tích
+                            await mediaPipeHands.send({ image: video });
+                            if (frameCount === 0) {
+                                console.log('📹 MediaPipe detecting from video...');
+                            }
+                        } else {
+                            // Fallback sang canvas nếu không có video
+                            const canvas = document.querySelector('canvas');
+                            if (canvas) {
+                                await mediaPipeHands.send({ image: canvas });
+                                if (frameCount === 0) {
+                                    console.log('🖼️ MediaPipe detecting from canvas...');
+                                }
+                            }
                         }
+                        frameCount++;
+                    } catch (err) {
+                        console.error('MediaPipe detect error:', err);
                     }
 
                     // Loop liên tục khi vẫn còn trong AR
@@ -263,8 +389,11 @@
                     }
                 };
 
-                // Bắt đầu detect
-                detect();
+                // Đợi 1 giây để AR plugin khởi động xong, rồi mới bắt đầu detect
+                setTimeout(() => {
+                    console.log('🚀 Starting MediaPipe detection...');
+                    detect();
+                }, 1000);
             } catch (err) {
                 console.error('❌ MediaPipe Hands init error:', err);
             }
@@ -356,6 +485,14 @@
                 flipBtn.style.display = 'none';
                 switchFingerBtn.style.display = 'none';
                 fingerDisplay.style.display = 'none';
+                debugInfo.style.display = 'none';
+
+                // Clear interval update debug info
+                if (debugUpdateInterval) {
+                    clearInterval(debugUpdateInterval);
+                    debugUpdateInterval = null;
+                }
+
                 return;
             }
 
@@ -369,7 +506,14 @@
                 flipBtn.style.display = 'block';
                 switchFingerBtn.style.display = 'block';
                 fingerDisplay.style.display = 'block';
+                debugInfo.style.display = 'block';
                 updateFingerDisplay();  // Cập nhật tên ngón tay
+                updateDebugInfo();  // Cập nhật debug info
+
+                // Bật interval để update debug info liên tục
+                debugUpdateInterval = setInterval(() => {
+                    updateDebugInfo();
+                }, 500);  // Update mỗi 500ms
             } catch (error) {
                 console.error('AR error:', error);
                 arBtn.textContent = 'Start AR';
@@ -393,6 +537,7 @@
 
                 // Áp dụng lại góc xoay với camera mới
                 applyRotationY();
+                updateDebugInfo();
             } catch (error) {
                 console.error('Flip camera error:', error);
             } finally {
@@ -416,6 +561,7 @@
 
             // Áp dụng góc xoay cho ngón tay mới
             applyRotationY();
+            updateDebugInfo();
 
             console.log('Switched to finger:', currentFinger, fingerNames[currentFinger]);
         });
