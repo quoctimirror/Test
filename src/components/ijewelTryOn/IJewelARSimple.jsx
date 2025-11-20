@@ -319,12 +319,12 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     const arPlugin = arPluginRef.current;
     if (!arPlugin || !inAR) return;
 
-    // Update finger state (cycle through 0-4)
+    // Update local state first (cycle through 0-4)
     const newFinger = (currentFinger + 1) % 5;
     setCurrentFinger(newFinger);
 
-    // Update SDK
-    arPlugin.finger = newFinger;
+    // Update SDK using current SDK finger value (like ijewel_useARTryOn.js)
+    arPlugin.finger = (arPlugin.finger + 1) % 5;
 
     const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
     console.log('👆 Switched to:', fingerNames[newFinger], '(Index:', newFinger, ')');
