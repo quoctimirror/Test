@@ -102,7 +102,7 @@
 }
 
 .contact-v2-card:hover .contact-v2-card-link .underline-button-text::after {
-  transform: scaleX(1) scaleY(0.75);
+  transform: scaleX(1);
   transform-origin: left center;
 }
 

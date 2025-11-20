@@ -57,7 +57,7 @@
   height: 100%;
   contain: layout;
   isolation: isolate;
-  background: #f6f6f6;
+  background: #000;
 }
 
 .new-cut-hero-text {
@@ -96,7 +96,6 @@
 
 .new-cut-hero-title {
   color: #000000;
-  text-transform: uppercase;
   margin: 0;
   padding: 0;
   white-space: normal;
@@ -430,8 +429,8 @@
 .new-cut-page .new-cut-hero-content .new-cut-hero-title.heading-1--no-margin,
 .new-cut-hero .new-cut-hero-title.heading-1--no-margin,
 .new-cut-hero-content .new-cut-hero-title.heading-1--no-margin {
-  color: #000000;
-  text-transform: uppercase;
+  color: #fff;
+  /* text-transform: uppercase; */
   margin: 0;
   padding: 0;
   white-space: normal;
@@ -446,7 +445,7 @@
   .new-cut-hero-description.bodytext-5--no-margin,
 .new-cut-hero .new-cut-hero-description.bodytext-5--no-margin,
 .new-cut-hero-content .new-cut-hero-description.bodytext-5--no-margin {
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(224, 224, 224, 1);
   margin: 0 0 36px 0;
   padding: 0;
   text-align: center;
@@ -470,7 +469,7 @@
 .new-cut-page .new-cut-hero-content .new-cut-hero-date.bodytext-4--no-margin,
 .new-cut-hero .new-cut-hero-date.bodytext-4--no-margin,
 .new-cut-hero-content .new-cut-hero-date.bodytext-4--no-margin {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(121, 121, 121, 1);
   text-transform: uppercase;
   margin-bottom: 12px;
   display: block;

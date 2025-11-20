@@ -98,7 +98,7 @@ const NewCutComponent = () => {
   return (
     <div className="new-cut-page">
       {/* Hero Section */}
-      <section className="new-cut-hero" ref={heroRef} data-navbar-theme="black">
+      <section className="new-cut-hero" ref={heroRef} data-navbar-theme="white">
         <div className="new-cut-hero-content">
           <div className="new-cut-hero-text">
             <div className="new-cut-hero-text-main">
@@ -106,7 +106,7 @@ const NewCutComponent = () => {
                 June 2024
               </span>
               <h1 className="new-cut-hero-title heading-1--no-margin">
-                Mirror-Lumex 91™ - The next star has arrived
+                Mirror Lumex - 91™ The next star has arrived
               </h1>
             </div>
             <p className="new-cut-hero-description bodytext-5--no-margin">
@@ -123,7 +123,7 @@ const NewCutComponent = () => {
       </section>
 
       {/* Article Content */}
-      <section className="new-cut-article-content">
+      <section className="new-cut-article-content" data-navbar-theme="black">
         <div className="new-cut-article-container">
           {/* Section 1 */}
           <div className="new-cut-article-section">

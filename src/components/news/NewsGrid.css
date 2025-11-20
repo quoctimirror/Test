@@ -122,7 +122,7 @@
 }
 
 .news-item:hover .news-item-button .underline-button-text::after {
-  transform: scaleX(1) scaleY(0.75);
+  transform: scaleX(1);
   transform-origin: left center;
 }
 

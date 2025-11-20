@@ -95,7 +95,7 @@
 
   /* Show underline by default on tablet (no hover available) */
   .contact-us-actions .underline-button-text::after {
-    transform: scaleX(1) scaleY(0.75) !important;
+    transform: scaleX(1) !important;
   }
 }
 
@@ -136,6 +136,6 @@
 
   /* Show underline by default on mobile (no hover available) */
   .contact-us-actions .underline-button-text::after {
-    transform: scaleX(1) scaleY(0.75) !important;
+    transform: scaleX(1) !important;
   }
 }

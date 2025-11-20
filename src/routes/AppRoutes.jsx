@@ -237,7 +237,7 @@ export default function AppRoutes() {
         }
       >
         <Routes>
-          <Route path={ROUTES.HOME} element={<WelcomePage />} />
+          <Route path={ROUTES.HOME} element={<HomePage />} />
 
           <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
           <Route path={ROUTES.WELCOME} element={<WelcomePage />} />

@@ -293,8 +293,8 @@
 
 /* Button sizes - matching design system */
 .milan-slider-arrow button {
-  width: 57px !important;
-  height: 57px !important;
+  width: 54px !important;
+  height: 54px !important;
 }
 
 .milan-carousel-container {

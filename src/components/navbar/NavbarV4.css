@@ -886,7 +886,7 @@
 
 /* Active menu item - show underline */
 .menu-v4-popup .menu-v4-list li.active .underline-button-text::after {
-  transform: scaleX(1) scaleY(0.75);
+  transform: scaleX(1);
   transform-origin: left center;
 }
 
