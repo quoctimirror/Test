@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDeviceCamera } from './ijewel_useDeviceCamera';
 
 /**
  * IJewel AR Simple Component - Converted from example-loadModelById-with-ar.html
@@ -14,25 +15,29 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const mediaPipeHandsRef = useRef(null);
 
   // ==========================================
+  // CUSTOM HOOKS
+  // ==========================================
+  const {
+    deviceType,
+    isMobile,
+    isDesktop,
+    currentCamera,
+    cameraType,
+    isFrontCamera,
+    isBackCamera,
+    getCameraName,
+    updateCamera,
+    toggleCamera
+  } = useDeviceCamera();
+
+  // ==========================================
   // STATES
   // ==========================================
   const [inAR, setInAR] = useState(false);
   const [fileConfig, setFileConfig] = useState(null);
-  const [currentCamera, setCurrentCamera] = useState(0); // 0 = back camera (mobile) / front camera (desktop), 1 = front camera (mobile)
   const [currentHand, setCurrentHand] = useState(-1); // -1 = not detected, 0 = left hand, 1 = right hand
   const [currentFinger, setCurrentFinger] = useState(0); // 0: áp út, 1: út, 2: cái, 3: trỏ, 4: giữa
-  const [deviceType, setDeviceType] = useState('Unknown');
   const [isLoading, setIsLoading] = useState(false);
-
-  // ==========================================
-  // DETECT DEVICE TYPE
-  // ==========================================
-  useEffect(() => {
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const type = isMobile ? 'Mobile' : 'Desktop';
-    setDeviceType(type);
-    console.log('📱 Device type:', type);
-  }, []);
 
   // ==========================================
   // CALCULATE ROTATION Y
@@ -59,14 +64,13 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       }
     };
 
-    const isFrontCamera = (deviceType === 'Desktop') || (currentCamera === 1);
-    const cameraType = isFrontCamera ? 'frontCamera' : 'backCamera';
+    const currentCameraType = isFrontCamera ? 'frontCamera' : 'backCamera';
     const handType = currentHand === 0 ? 'left' : currentHand === 1 ? 'right' : null;
 
     let rotationY = 0;
 
     if (handType) {
-      const cameraConfig = fingerRotationConfig[cameraType];
+      const cameraConfig = fingerRotationConfig[currentCameraType];
       if (cameraConfig && cameraConfig[handType]) {
         // Default to finger 3 (ring finger)
         const fingerConfig = cameraConfig[handType][3];
@@ -76,7 +80,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       }
     }
 
-    console.log(`🔄 Rotation.y: ${rotationY} (${cameraType}, ${handType})`);
+    console.log(`🔄 Rotation.y: ${rotationY} (${currentCameraType}, ${handType})`);
     return rotationY;
   };
 
@@ -300,10 +304,8 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     try {
       await arPlugin.flipCamera();
 
-      // Update camera state
-      const newCamera = (currentCamera + 1) % 2;
-      setCurrentCamera(newCamera);
-      console.log('📷 Camera flipped:', newCamera === 0 ? 'Back/Default' : 'Front');
+      // Update camera state using hook
+      toggleCamera();
 
       // Apply rotation.y with new camera
       applyRotationY();
@@ -367,12 +369,36 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
         )}
       </div>
 
-      {/* Finger Info */}
-      {inAR && (
-        <div style={styles.fingerInfo}>
-          <span>👆 {getFingerName(currentFinger)}</span>
+      {/* Debug Info Panel */}
+      <div style={styles.debugInfoPanel}>
+        <div style={styles.debugInfoTitle}>🔍 Debug Info</div>
+        <div style={styles.debugInfoItem}>
+          <span style={styles.debugInfoLabel}>Thiết bị:</span>
+          <span style={styles.debugInfoValue}>{deviceType}</span>
         </div>
-      )}
+        <div style={styles.debugInfoItem}>
+          <span style={styles.debugInfoLabel}>Camera:</span>
+          <span style={styles.debugInfoValue}>{getCameraName()}</span>
+        </div>
+        <div style={styles.debugInfoItem}>
+          <span style={styles.debugInfoLabel}>Camera Type:</span>
+          <span style={styles.debugInfoValue}>{cameraType}</span>
+        </div>
+        <div style={styles.debugInfoItem}>
+          <span style={styles.debugInfoLabel}>Bàn tay:</span>
+          <span style={styles.debugInfoValue}>
+            {currentHand === -1 ? 'Chưa phát hiện' : currentHand === 0 ? 'Tay trái' : 'Tay phải'}
+          </span>
+        </div>
+        <div style={styles.debugInfoItem}>
+          <span style={styles.debugInfoLabel}>Ngón tay:</span>
+          <span style={styles.debugInfoValue}>{getFingerName(currentFinger)}</span>
+        </div>
+        <div style={styles.debugInfoItem}>
+          <span style={styles.debugInfoLabel}>AR Status:</span>
+          <span style={styles.debugInfoValue}>{inAR ? '✅ Running' : '⭕ Stopped'}</span>
+        </div>
+      </div>
     </div>
   );
 };
@@ -423,6 +449,40 @@ const styles = {
     fontSize: '18px',
     fontWeight: 'bold',
     zIndex: 1000
+  },
+  debugInfoPanel: {
+    position: 'absolute',
+    bottom: '20px',
+    left: '20px',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    color: 'white',
+    padding: '15px 20px',
+    borderRadius: '10px',
+    fontSize: '14px',
+    zIndex: 1000,
+    minWidth: '250px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)'
+  },
+  debugInfoTitle: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    marginBottom: '10px',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
+    paddingBottom: '8px'
+  },
+  debugInfoItem: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '5px 0',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+  },
+  debugInfoLabel: {
+    fontWeight: '600',
+    color: '#aaa'
+  },
+  debugInfoValue: {
+    fontWeight: 'bold',
+    color: '#fff'
   }
 };
 
