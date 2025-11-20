@@ -194,7 +194,6 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
     location.pathname === ROUTES.WELCOME ||
-    location.pathname === ROUTES.HOME ||
     location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
     location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2 ||
     location.pathname === ROUTES.NAVBAR_V2_TEST ||
@@ -214,7 +213,6 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
     location.pathname === ROUTES.WELCOME ||
-    location.pathname === ROUTES.HOME ||
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
     location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
     location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
