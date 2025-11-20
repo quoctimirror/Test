@@ -253,6 +253,14 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       // Start AR
       await arPlugin.start();
 
+      // Mobile: Flip to back camera immediately after start (SDK defaults to front camera)
+      if (isMobile) {
+        console.log('📱 Mobile detected - flipping to back camera...');
+        await arPlugin.flipCamera();
+        updateCamera(0); // Update state to back camera (0)
+        console.log('✅ Flipped to back camera');
+      }
+
       // Initialize MediaPipe for hand detection
       await initMediaPipeHands();
 
