@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useDeviceCamera } from './ijewel_useDeviceCamera';
 
 /**
@@ -44,7 +44,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   // ==========================================
   // CALCULATE ROTATION Y
   // ==========================================
-  const calculateRotationY = () => {
+  const calculateRotationY = useCallback(() => {
     const fingerRotationConfig = {
       frontCamera: {
         right: {
@@ -88,18 +88,18 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
 
     console.log(`🔄 Rotation.y: base=${baseRotationY.toFixed(2)}, manual=${manualRotationRad.toFixed(2)}, total=${totalRotationY.toFixed(2)} (${currentCameraType}, ${handType})`);
     return totalRotationY;
-  };
+  }, [manualRotationY, currentHand, isFrontCamera]);
 
   // ==========================================
   // APPLY ROTATION Y
   // ==========================================
-  const applyRotationY = () => {
+  const applyRotationY = useCallback(() => {
     const arPlugin = arPluginRef.current;
     if (!arPlugin || !arPlugin.modelRotation) return;
 
     const rotationY = calculateRotationY();
     arPlugin.modelRotation.y = rotationY;
-  };
+  }, [calculateRotationY]);
 
   // ==========================================
   // INITIALIZE MEDIAPIPE HANDS
@@ -341,18 +341,31 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   };
 
   // ==========================================
+  // AUTO-APPLY ROTATION WHEN MANUAL ROTATION CHANGES
+  // ==========================================
+  useEffect(() => {
+    if (inAR && arPluginRef.current) {
+      applyRotationY();
+    }
+  }, [inAR, manualRotationY, currentHand, isFrontCamera, applyRotationY]);
+
+  // ==========================================
   // ROTATION Y CONTROLS
   // ==========================================
   const handleRotationYChange = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     const newRotation = parseFloat(e.target.value);
     setManualRotationY(newRotation);
-    applyRotationY();
   };
 
   const adjustRotationY = (degrees) => {
-    const newRotation = (manualRotationY + degrees) % 360;
-    setManualRotationY(newRotation < 0 ? newRotation + 360 : newRotation);
-    applyRotationY();
+    return (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const newRotation = (manualRotationY + degrees) % 360;
+      setManualRotationY(newRotation < 0 ? newRotation + 360 : newRotation);
+    };
   };
 
   // ==========================================
