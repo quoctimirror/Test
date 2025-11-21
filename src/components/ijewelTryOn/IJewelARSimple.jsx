@@ -12,6 +12,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const containerRef = useRef(null);
   const viewerAppRef = useRef(null);
   const arPluginRef = useRef(null);
+  const isInitializedRef = useRef(false); // Track initialization to prevent double loading
   // const mediaPipeHandsRef = useRef(null); // COMMENTED OUT - MediaPipe disabled
 
   // ==========================================
@@ -50,8 +51,8 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       right: {
         0: { y: 5, z: 0 },      // Ngón áp út
         1: { y: 10, z: 0 },     // Ngón út
-        3: { y: 45, z: 0 },     // Ngón trỏ
-        4: { y: 48, z: 350 }    // Ngón giữa
+        3: { y: 42, z: 0 },     // Ngón trỏ
+        4: { y: 42, z: 350 }    // Ngón giữa
       }
     }
   };
@@ -216,7 +217,14 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   // ==========================================
   useEffect(() => {
     const initViewer = async () => {
-      if (!containerRef.current) return;
+      // Prevent double initialization (React Strict Mode runs effects twice)
+      if (isInitializedRef.current || !containerRef.current) {
+        console.log('⏭️ Skipping initialization - already initialized or no container');
+        return;
+      }
+
+      isInitializedRef.current = true;
+      console.log('🚀 Initializing iJewel Viewer...');
 
       // Listen for file data
       const handleFileData = (event) => {
@@ -235,7 +243,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       // Listen for viewer ready
       const handleViewerReady = (event) => {
         viewerAppRef.current = event.detail.viewer;
-        console.log('Viewer ready');
+        console.log('✅ Viewer ready');
       };
 
       window.addEventListener('ijewel-viewer-ready', handleViewerReady);
