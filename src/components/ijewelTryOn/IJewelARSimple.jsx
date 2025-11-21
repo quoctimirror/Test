@@ -424,26 +424,22 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   // APPLY ROTATION CONFIG
   // ==========================================
   const applyRotationConfig = (hand = currentHand, finger = currentFinger) => {
-    // Only apply for back camera + right hand
-    if (!isBackCamera || hand !== 1) {
-      console.log('⏭️ Skipping config - not (back camera + right hand)');
-      return;
-    }
-
-    // Check if config exists for current finger
+    // Check if config exists for current combination
     const fingerConfig = rotationConfig.backCamera?.right?.[finger];
-
-    if (!fingerConfig) {
-      console.log(`⏭️ No config for finger ${finger}`);
-      return;
-    }
-
-    // Apply config to state (useEffect will apply to SDK)
-    setRotationY(fingerConfig.y);
-    setRotationZ(fingerConfig.z);
-
     const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
-    console.log(`✅ Applied config for ${fingerNames[finger]}: Y=${fingerConfig.y}°, Z=${fingerConfig.z}°`);
+
+    // CASE 1: Back camera + Right hand + Config exists → Apply config
+    if (isBackCamera && hand === 1 && fingerConfig) {
+      setRotationY(fingerConfig.y);
+      setRotationZ(fingerConfig.z);
+      console.log(`✅ Applied config for ${fingerNames[finger]}: Y=${fingerConfig.y}°, Z=${fingerConfig.z}°`);
+    }
+    // CASE 2: No config (left hand, front camera, or finger without config) → Reset to default
+    else {
+      setRotationY(0);
+      setRotationZ(0);
+      console.log('🔄 Reset rotation to default: Y=0°, Z=0°');
+    }
   };
 
   // ==========================================
