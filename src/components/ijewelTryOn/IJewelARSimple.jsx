@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDeviceCamera } from './ijewel_useDeviceCamera';
 
 /**
@@ -12,7 +12,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const containerRef = useRef(null);
   const viewerAppRef = useRef(null);
   const arPluginRef = useRef(null);
-  const mediaPipeHandsRef = useRef(null);
+  // const mediaPipeHandsRef = useRef(null); // COMMENTED OUT - MediaPipe disabled
 
   // ==========================================
   // CUSTOM HOOKS
@@ -39,6 +39,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const [currentFinger, setCurrentFinger] = useState(0); // 0: áp út, 1: út, 2: cái, 3: trỏ, 4: giữa
   const [isLoading, setIsLoading] = useState(false);
   const [isDebugExpanded, setIsDebugExpanded] = useState(true); // Debug panel expanded state
+  const [rotationY, setRotationY] = useState(0); // Manual rotation Y in degrees (0-360)
 
   // ==========================================
   // CALCULATE ROTATION Y - COMMENTED OUT (not overriding rotation)
@@ -110,8 +111,21 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   */
 
   // ==========================================
-  // INITIALIZE MEDIAPIPE HANDS
+  // APPLY ROTATION Y (SIMPLE, NO CRASH)
   // ==========================================
+  useEffect(() => {
+    if (inAR && arPluginRef.current?.modelRotation) {
+      // Convert degrees to radians
+      const rotationRad = (rotationY * Math.PI) / 180;
+      arPluginRef.current.modelRotation.y = rotationRad;
+      console.log(`🔄 Applied rotation Y: ${rotationY}° (${rotationRad.toFixed(2)} rad)`);
+    }
+  }, [inAR, rotationY]); // Simple dependencies - no crash
+
+  // ==========================================
+  // INITIALIZE MEDIAPIPE HANDS - COMMENTED OUT (causes crash on iPhone)
+  // ==========================================
+  /*
   const initMediaPipeHands = async () => {
     if (!window.Hands) {
       console.warn('⚠️ MediaPipe Hands not loaded');
@@ -135,7 +149,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       hands.onResults((results) => {
         // MediaPipe hand detection disabled - using manual hand selection instead
         // Uncomment below if you want to re-enable auto detection
-        /*
+
         if (results.multiHandedness && results.multiHandedness.length > 0) {
           const handLabel = results.multiHandedness[0].label;
           const handIndex = handLabel === 'Left' ? 0 : 1;
@@ -146,7 +160,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
             applyRotationY();
           }
         }
-        */
+
       });
 
       await hands.initialize();
@@ -176,6 +190,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       console.error('❌ MediaPipe Hands init error:', err);
     }
   };
+  */
 
   // ==========================================
   // INITIALIZE VIEWER
@@ -260,8 +275,8 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
         console.log('✅ Flipped to back camera');
       }
 
-      // Initialize MediaPipe for hand detection
-      await initMediaPipeHands();
+      // Initialize MediaPipe for hand detection - COMMENTED OUT (causes crash)
+      // await initMediaPipeHands();
 
       // Apply initial rotation.y - COMMENTED OUT (not overriding rotation)
       // applyRotationY();
@@ -386,6 +401,23 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       {/* Viewer Container */}
       <div ref={containerRef} style={styles.viewerContainer}></div>
 
+      {/* Rotation Y Slider */}
+      {inAR && (
+        <div style={styles.rotationSliderPanel} onClick={(e) => e.stopPropagation()}>
+          <div style={styles.rotationLabel}>
+            🔄 Rotation Y: {rotationY}°
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="360"
+            value={rotationY}
+            onChange={(e) => setRotationY(Number(e.target.value))}
+            style={styles.rotationSlider}
+          />
+        </div>
+      )}
+
       {/* Controls */}
       <div style={styles.controls} onClick={(e) => e.stopPropagation()}>
         <button
@@ -486,6 +518,30 @@ const styles = {
     borderRadius: '5px',
     backgroundColor: '#007bff',
     color: 'white'
+  },
+  rotationSliderPanel: {
+    position: 'absolute',
+    bottom: '90px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    color: 'white',
+    padding: '15px 20px',
+    borderRadius: '10px',
+    zIndex: 1000,
+    minWidth: '300px',
+    textAlign: 'center'
+  },
+  rotationLabel: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    marginBottom: '10px'
+  },
+  rotationSlider: {
+    width: '100%',
+    height: '8px',
+    cursor: 'pointer',
+    accentColor: '#007bff'
   },
   fingerInfo: {
     position: 'absolute',
