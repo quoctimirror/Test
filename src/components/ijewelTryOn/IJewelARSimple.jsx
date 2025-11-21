@@ -5,7 +5,17 @@ import { useDeviceCamera } from './ijewel_useDeviceCamera';
  * IJewel AR Simple Component - Converted from example-loadModelById-with-ar.html
  * Clean AR viewer using loadModelById
  */
-const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' }) => {
+
+// ==========================================
+// MODELS CONFIG
+// ==========================================
+const MODELS = [
+  { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' },
+  { id: 'HB3RidmJSdezIO1T2hdXcQ', name: 'Flower', basename: 'drive' },
+  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }
+];
+
+const IJewelARSimple = () => {
   // ==========================================
   // REFS
   // ==========================================
@@ -34,6 +44,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   // ==========================================
   // STATES
   // ==========================================
+  const [currentModelId, setCurrentModelId] = useState(MODELS[0].id); // Default: Fistion
   const [inAR, setInAR] = useState(false);
   const [fileConfig, setFileConfig] = useState(null);
   const [currentHand, setCurrentHand] = useState(0); // 0 = left hand (default), 1 = right hand
@@ -226,8 +237,15 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
         return;
       }
 
+      // Get current model config
+      const currentModel = MODELS.find(m => m.id === currentModelId);
+      if (!currentModel) {
+        console.error('❌ Model not found:', currentModelId);
+        return;
+      }
+
       isInitializedRef.current = true;
-      console.log('🚀 Initializing iJewel Viewer...');
+      console.log(`🚀 Initializing iJewel Viewer with model: ${currentModel.name}`);
 
       // Listen for file data
       const handleFileData = (event) => {
@@ -238,7 +256,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       window.addEventListener('ijewel-file-data', handleFileData);
 
       // Load model by ID
-      await window.ijewelViewer.loadModelById(fileId, basename, containerRef.current, {
+      await window.ijewelViewer.loadModelById(currentModel.id, currentModel.basename, containerRef.current, {
         showUiButtons: false,
         hideTryOn: true
       });
@@ -258,7 +276,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     };
 
     initViewer();
-  }, [fileId, basename]);
+  }, [currentModelId]);
 
   // ==========================================
   // START AR
@@ -460,6 +478,28 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   };
 
   // ==========================================
+  // HANDLE MODEL CHANGE
+  // ==========================================
+  const handleModelChange = async (newModelId) => {
+    if (newModelId === currentModelId) return;
+
+    const newModel = MODELS.find(m => m.id === newModelId);
+    console.log(`🔄 Switching to model: ${newModel?.name}`);
+
+    // Stop AR if running
+    if (inAR) {
+      console.log('⏸️ Stopping AR before model change...');
+      await stopAR();
+    }
+
+    // Reset initialization flag to allow reload
+    isInitializedRef.current = false;
+
+    // Update model ID → will trigger useEffect to reload
+    setCurrentModelId(newModelId);
+  };
+
+  // ==========================================
   // TOGGLE DEBUG PANEL
   // ==========================================
   const handleContainerClick = () => {
@@ -482,6 +522,23 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     <div style={styles.container} onClick={handleContainerClick}>
       {/* Viewer Container */}
       <div ref={containerRef} style={styles.viewerContainer}></div>
+
+      {/* Model Selector */}
+      <div style={styles.modelSelectorContainer} onClick={(e) => e.stopPropagation()}>
+        <label style={styles.modelLabel}>Model:</label>
+        <select
+          value={currentModelId}
+          onChange={(e) => handleModelChange(e.target.value)}
+          disabled={isLoading}
+          style={styles.modelSelector}
+        >
+          {MODELS.map(model => (
+            <option key={model.id} value={model.id}>
+              {model.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* Rotation Y Slider */}
       {inAR && (
@@ -627,6 +684,32 @@ const styles = {
   viewerContainer: {
     width: '100vw',
     height: '100vh'
+  },
+  modelSelectorContainer: {
+    position: 'absolute',
+    top: '20px',
+    right: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    padding: '10px 15px',
+    borderRadius: '8px',
+    zIndex: 1000
+  },
+  modelLabel: {
+    color: 'white',
+    fontSize: '14px',
+    fontWeight: 'bold'
+  },
+  modelSelector: {
+    fontSize: '14px',
+    padding: '5px 10px',
+    borderRadius: '5px',
+    border: '1px solid #ccc',
+    backgroundColor: 'white',
+    cursor: 'pointer',
+    minWidth: '120px'
   },
   controls: {
     position: 'absolute',
