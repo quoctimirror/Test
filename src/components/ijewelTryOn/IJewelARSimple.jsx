@@ -35,7 +35,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   // ==========================================
   const [inAR, setInAR] = useState(false);
   const [fileConfig, setFileConfig] = useState(null);
-  const [currentHand, setCurrentHand] = useState(-1); // -1 = not detected, 0 = left hand, 1 = right hand
+  const [currentHand, setCurrentHand] = useState(0); // 0 = left hand (default), 1 = right hand
   const [currentFinger, setCurrentFinger] = useState(0); // 0: áp út, 1: út, 2: cái, 3: trỏ, 4: giữa
   const [isLoading, setIsLoading] = useState(false);
   const [isDebugExpanded, setIsDebugExpanded] = useState(true); // Debug panel expanded state
@@ -67,18 +67,16 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     };
 
     const currentCameraType = isFrontCamera ? 'frontCamera' : 'backCamera';
-    const handType = currentHand === 0 ? 'left' : currentHand === 1 ? 'right' : null;
+    const handType = currentHand === 0 ? 'left' : 'right';
 
     let baseRotationY = 0;
 
-    if (handType) {
-      const cameraConfig = fingerRotationConfig[currentCameraType];
-      if (cameraConfig && cameraConfig[handType]) {
-        // Default to finger 3 (ring finger)
-        const fingerConfig = cameraConfig[handType][3];
-        if (fingerConfig !== undefined) {
-          baseRotationY = fingerConfig;
-        }
+    const cameraConfig = fingerRotationConfig[currentCameraType];
+    if (cameraConfig && cameraConfig[handType]) {
+      // Default to finger 3 (ring finger)
+      const fingerConfig = cameraConfig[handType][3];
+      if (fingerConfig !== undefined) {
+        baseRotationY = fingerConfig;
       }
     }
 
@@ -125,6 +123,9 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       });
 
       hands.onResults((results) => {
+        // MediaPipe hand detection disabled - using manual hand selection instead
+        // Uncomment below if you want to re-enable auto detection
+        /*
         if (results.multiHandedness && results.multiHandedness.length > 0) {
           const handLabel = results.multiHandedness[0].label;
           const handIndex = handLabel === 'Left' ? 0 : 1;
@@ -134,12 +135,8 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
             console.log('✋ Detected hand:', handLabel, '→', handIndex);
             applyRotationY();
           }
-        } else {
-          if (currentHand !== -1) {
-            setCurrentHand(-1);
-            applyRotationY();
-          }
         }
+        */
       });
 
       await hands.initialize();
@@ -333,6 +330,20 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   };
 
   // ==========================================
+  // SWITCH HAND (LEFT/RIGHT)
+  // ==========================================
+  const handleSwitchHand = () => {
+    if (!inAR) return;
+
+    // Toggle between 0 (left) and 1 (right)
+    const newHand = currentHand === 0 ? 1 : 0;
+    setCurrentHand(newHand);
+
+    const handNames = ['Tay trái', 'Tay phải'];
+    console.log('✋ Switched to:', handNames[newHand]);
+  };
+
+  // ==========================================
   // GET FINGER NAME
   // ==========================================
   const getFingerName = (index) => {
@@ -440,6 +451,9 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
             <button onClick={handleSwitchFinger} style={styles.button}>
               Switch Finger
             </button>
+            <button onClick={handleSwitchHand} style={styles.button}>
+              {currentHand === 0 ? 'Left Hand' : 'Right Hand'}
+            </button>
           </>
         )}
       </div>
@@ -469,7 +483,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
             <div style={styles.debugInfoItem}>
               <span style={styles.debugInfoLabel}>Bàn tay:</span>
               <span style={styles.debugInfoValue}>
-                {currentHand === -1 ? 'Chưa phát hiện' : currentHand === 0 ? 'Tay trái' : 'Tay phải'}
+                {currentHand === 0 ? 'Tay trái' : 'Tay phải'}
               </span>
             </div>
             <div style={styles.debugInfoItem}>
