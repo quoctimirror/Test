@@ -43,6 +43,20 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const [rotationZ, setRotationZ] = useState(0); // Manual rotation Z in degrees (0-360)
 
   // ==========================================
+  // ROTATION CONFIG (HARDCODED - DEGREES)
+  // ==========================================
+  const rotationConfig = {
+    backCamera: {
+      right: {
+        0: { y: 5, z: 0 },      // Ngón áp út
+        1: { y: 10, z: 0 },     // Ngón út
+        3: { y: 45, z: 0 },     // Ngón trỏ
+        4: { y: 48, z: 350 }    // Ngón giữa
+      }
+    }
+  };
+
+  // ==========================================
   // CALCULATE ROTATION Y - COMMENTED OUT (not overriding rotation)
   // ==========================================
   /*
@@ -334,8 +348,11 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       // Update camera state using hook
       toggleCamera();
 
-      // Apply rotation.y with new camera - COMMENTED OUT (not overriding rotation)
-      // applyRotationY();
+      // Apply rotation config if applicable (back camera + right hand)
+      // Note: toggleCamera() updates state asynchronously, so we use a small delay
+      setTimeout(() => {
+        applyRotationConfig();
+      }, 100);
     } catch (error) {
       console.error('Flip camera error:', error);
     }
@@ -357,6 +374,9 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
 
     const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
     console.log('👆 Switched to:', fingerNames[newFinger], '(Index:', newFinger, ')');
+
+    // Apply rotation config if applicable
+    applyRotationConfig(currentHand, newFinger);
   };
 
   // ==========================================
@@ -371,6 +391,9 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
 
     const handNames = ['Tay trái', 'Tay phải'];
     console.log('✋ Switched to:', handNames[newHand]);
+
+    // Apply rotation config if applicable
+    applyRotationConfig(newHand, currentFinger);
   };
 
   // ==========================================
@@ -395,6 +418,32 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const adjustRotationZ = (degrees) => {
     const newValue = (rotationZ + degrees + 360) % 360;
     setRotationZ(newValue);
+  };
+
+  // ==========================================
+  // APPLY ROTATION CONFIG
+  // ==========================================
+  const applyRotationConfig = (hand = currentHand, finger = currentFinger) => {
+    // Only apply for back camera + right hand
+    if (!isBackCamera || hand !== 1) {
+      console.log('⏭️ Skipping config - not (back camera + right hand)');
+      return;
+    }
+
+    // Check if config exists for current finger
+    const fingerConfig = rotationConfig.backCamera?.right?.[finger];
+
+    if (!fingerConfig) {
+      console.log(`⏭️ No config for finger ${finger}`);
+      return;
+    }
+
+    // Apply config to state (useEffect will apply to SDK)
+    setRotationY(fingerConfig.y);
+    setRotationZ(fingerConfig.z);
+
+    const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+    console.log(`✅ Applied config for ${fingerNames[finger]}: Y=${fingerConfig.y}°, Z=${fingerConfig.z}°`);
   };
 
   // ==========================================
