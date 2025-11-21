@@ -41,8 +41,9 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const [isDebugExpanded, setIsDebugExpanded] = useState(true); // Debug panel expanded state
 
   // ==========================================
-  // CALCULATE ROTATION Y
+  // CALCULATE ROTATION Y - COMMENTED OUT (not overriding rotation)
   // ==========================================
+  /*
   const calculateRotationY = useCallback(() => {
     const fingerRotationConfig = {
       frontCamera: {
@@ -53,8 +54,8 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       },
       backCamera: {
         right: {
-          3: 0.5,
-          4: 0.5
+          3: 0.9,
+          4: 0.9
         },
         left: {
           0: 0.19,
@@ -82,10 +83,12 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     console.log(`🔄 Rotation.y: ${rotationY.toFixed(2)} (${currentCameraType}, ${handType})`);
     return rotationY;
   }, [currentHand, isFrontCamera]);
+  */
 
   // ==========================================
-  // APPLY ROTATION Y
+  // APPLY ROTATION Y - COMMENTED OUT (not overriding rotation)
   // ==========================================
+  /*
   const applyRotationY = useCallback(() => {
     const arPlugin = arPluginRef.current;
     if (!arPlugin || !arPlugin.modelRotation) return;
@@ -93,15 +96,18 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     const rotationY = calculateRotationY();
     arPlugin.modelRotation.y = rotationY;
   }, [calculateRotationY]);
+  */
 
   // ==========================================
-  // AUTO-APPLY ROTATION WHEN HAND OR CAMERA CHANGES
+  // AUTO-APPLY ROTATION WHEN HAND OR CAMERA CHANGES - COMMENTED OUT
   // ==========================================
+  /*
   useEffect(() => {
     if (inAR && arPluginRef.current) {
       applyRotationY();
     }
   }, [inAR, currentHand, isFrontCamera, applyRotationY]);
+  */
 
   // ==========================================
   // INITIALIZE MEDIAPIPE HANDS
@@ -257,8 +263,8 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       // Initialize MediaPipe for hand detection
       await initMediaPipeHands();
 
-      // Apply initial rotation.y
-      applyRotationY();
+      // Apply initial rotation.y - COMMENTED OUT (not overriding rotation)
+      // applyRotationY();
 
       setInAR(true);
     } catch (error) {
@@ -308,8 +314,8 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       // Update camera state using hook
       toggleCamera();
 
-      // Apply rotation.y with new camera
-      applyRotationY();
+      // Apply rotation.y with new camera - COMMENTED OUT (not overriding rotation)
+      // applyRotationY();
     } catch (error) {
       console.error('Flip camera error:', error);
     }
