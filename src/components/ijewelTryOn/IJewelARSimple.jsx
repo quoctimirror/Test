@@ -95,6 +95,15 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   }, [calculateRotationY]);
 
   // ==========================================
+  // AUTO-APPLY ROTATION WHEN HAND OR CAMERA CHANGES
+  // ==========================================
+  useEffect(() => {
+    if (inAR && arPluginRef.current) {
+      applyRotationY();
+    }
+  }, [inAR, currentHand, isFrontCamera, applyRotationY]);
+
+  // ==========================================
   // INITIALIZE MEDIAPIPE HANDS
   // ==========================================
   const initMediaPipeHands = async () => {
