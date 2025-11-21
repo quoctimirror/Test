@@ -53,7 +53,10 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
         1: { y: 10, z: 0 },     // Ngón út
         3: { y: 42, z: 0 },     // Ngón trỏ
         4: { y: 42, z: 350 }    // Ngón giữa
-      }
+      },
+      left: {
+        3: { y: 15, z: 0 },     // Ngón trỏ
+      },
     }
   };
 
@@ -432,17 +435,23 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   // APPLY ROTATION CONFIG
   // ==========================================
   const applyRotationConfig = (hand = currentHand, finger = currentFinger) => {
-    // Check if config exists for current combination
-    const fingerConfig = rotationConfig.backCamera?.right?.[finger];
     const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+    const handNames = ['left', 'right'];
 
-    // CASE 1: Back camera + Right hand + Config exists → Apply config
-    if (isBackCamera && hand === 1 && fingerConfig) {
+    // Determine hand type from hand index (0 = left, 1 = right)
+    const handType = handNames[hand];
+
+    // Get config for current hand + finger combination
+    const fingerConfig = rotationConfig.backCamera?.[handType]?.[finger];
+
+    // CASE 1: Back camera + Config exists for current hand/finger → Apply config
+    if (isBackCamera && fingerConfig) {
       setRotationY(fingerConfig.y);
       setRotationZ(fingerConfig.z);
-      console.log(`✅ Applied config for ${fingerNames[finger]}: Y=${fingerConfig.y}°, Z=${fingerConfig.z}°`);
+      const handLabel = hand === 0 ? 'Tay trái' : 'Tay phải';
+      console.log(`✅ Applied config (${handLabel}, ${fingerNames[finger]}): Y=${fingerConfig.y}°, Z=${fingerConfig.z}°`);
     }
-    // CASE 2: No config (left hand, front camera, or finger without config) → Reset to default
+    // CASE 2: No config (front camera, or no config for current hand/finger) → Reset to default
     else {
       setRotationY(0);
       setRotationZ(0);
