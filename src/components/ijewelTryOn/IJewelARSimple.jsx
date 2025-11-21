@@ -38,6 +38,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const [currentHand, setCurrentHand] = useState(-1); // -1 = not detected, 0 = left hand, 1 = right hand
   const [currentFinger, setCurrentFinger] = useState(0); // 0: áp út, 1: út, 2: cái, 3: trỏ, 4: giữa
   const [isLoading, setIsLoading] = useState(false);
+  const [isDebugExpanded, setIsDebugExpanded] = useState(true); // Debug panel expanded state
 
   // ==========================================
   // CALCULATE ROTATION Y
@@ -349,15 +350,31 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   };
 
   // ==========================================
+  // TOGGLE DEBUG PANEL
+  // ==========================================
+  const handleContainerClick = () => {
+    // Click anywhere on container -> collapse debug panel
+    if (isDebugExpanded) {
+      setIsDebugExpanded(false);
+    }
+  };
+
+  const handleDebugPanelClick = (e) => {
+    e.stopPropagation(); // Prevent container click
+    // Toggle panel state
+    setIsDebugExpanded(!isDebugExpanded);
+  };
+
+  // ==========================================
   // RENDER
   // ==========================================
   return (
-    <div style={styles.container}>
+    <div style={styles.container} onClick={handleContainerClick}>
       {/* Viewer Container */}
       <div ref={containerRef} style={styles.viewerContainer}></div>
 
       {/* Controls */}
-      <div style={styles.controls}>
+      <div style={styles.controls} onClick={(e) => e.stopPropagation()}>
         <button
           onClick={handleToggleAR}
           disabled={isLoading}
@@ -378,34 +395,43 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       </div>
 
       {/* Debug Info Panel */}
-      <div style={styles.debugInfoPanel}>
-        <div style={styles.debugInfoTitle}>🔍 Debug Info</div>
-        <div style={styles.debugInfoItem}>
-          <span style={styles.debugInfoLabel}>Thiết bị:</span>
-          <span style={styles.debugInfoValue}>{deviceType}</span>
+      <div
+        style={isDebugExpanded ? styles.debugInfoPanel : styles.debugInfoPanelCollapsed}
+        onClick={handleDebugPanelClick}
+      >
+        <div style={isDebugExpanded ? styles.debugInfoTitle : styles.debugInfoTitleCollapsed}>
+          🔍 Debug Info
         </div>
-        <div style={styles.debugInfoItem}>
-          <span style={styles.debugInfoLabel}>Camera:</span>
-          <span style={styles.debugInfoValue}>{getCameraName()}</span>
-        </div>
-        <div style={styles.debugInfoItem}>
-          <span style={styles.debugInfoLabel}>Camera Type:</span>
-          <span style={styles.debugInfoValue}>{cameraType}</span>
-        </div>
-        <div style={styles.debugInfoItem}>
-          <span style={styles.debugInfoLabel}>Bàn tay:</span>
-          <span style={styles.debugInfoValue}>
-            {currentHand === -1 ? 'Chưa phát hiện' : currentHand === 0 ? 'Tay trái' : 'Tay phải'}
-          </span>
-        </div>
-        <div style={styles.debugInfoItem}>
-          <span style={styles.debugInfoLabel}>Ngón tay:</span>
-          <span style={styles.debugInfoValue}>{getFingerName(currentFinger)}</span>
-        </div>
-        <div style={styles.debugInfoItem}>
-          <span style={styles.debugInfoLabel}>AR Status:</span>
-          <span style={styles.debugInfoValue}>{inAR ? '✅ Running' : '⭕ Stopped'}</span>
-        </div>
+        {isDebugExpanded && (
+          <>
+            <div style={styles.debugInfoItem}>
+              <span style={styles.debugInfoLabel}>Thiết bị:</span>
+              <span style={styles.debugInfoValue}>{deviceType}</span>
+            </div>
+            <div style={styles.debugInfoItem}>
+              <span style={styles.debugInfoLabel}>Camera:</span>
+              <span style={styles.debugInfoValue}>{getCameraName()}</span>
+            </div>
+            <div style={styles.debugInfoItem}>
+              <span style={styles.debugInfoLabel}>Camera Type:</span>
+              <span style={styles.debugInfoValue}>{cameraType}</span>
+            </div>
+            <div style={styles.debugInfoItem}>
+              <span style={styles.debugInfoLabel}>Bàn tay:</span>
+              <span style={styles.debugInfoValue}>
+                {currentHand === -1 ? 'Chưa phát hiện' : currentHand === 0 ? 'Tay trái' : 'Tay phải'}
+              </span>
+            </div>
+            <div style={styles.debugInfoItem}>
+              <span style={styles.debugInfoLabel}>Ngón tay:</span>
+              <span style={styles.debugInfoValue}>{getFingerName(currentFinger)}</span>
+            </div>
+            <div style={styles.debugInfoItem}>
+              <span style={styles.debugInfoLabel}>AR Status:</span>
+              <span style={styles.debugInfoValue}>{inAR ? '✅ Running' : '⭕ Stopped'}</span>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -429,7 +455,7 @@ const styles = {
   },
   controls: {
     position: 'absolute',
-    top: '20px',
+    bottom: '20px',
     left: '50%',
     transform: 'translateX(-50%)',
     display: 'flex',
@@ -469,14 +495,38 @@ const styles = {
     fontSize: '14px',
     zIndex: 1000,
     minWidth: '250px',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)'
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease'
+  },
+  debugInfoPanelCollapsed: {
+    position: 'absolute',
+    bottom: '20px',
+    left: '20px',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    color: 'white',
+    padding: '10px 15px',
+    borderRadius: '10px',
+    fontSize: '14px',
+    zIndex: 1000,
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease'
   },
   debugInfoTitle: {
     fontSize: '16px',
     fontWeight: 'bold',
     marginBottom: '10px',
     borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
-    paddingBottom: '8px'
+    paddingBottom: '8px',
+    cursor: 'pointer'
+  },
+  debugInfoTitleCollapsed: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    marginBottom: 0,
+    paddingBottom: 0
   },
   debugInfoItem: {
     display: 'flex',
