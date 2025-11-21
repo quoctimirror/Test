@@ -40,6 +40,7 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const [isLoading, setIsLoading] = useState(false);
   const [isDebugExpanded, setIsDebugExpanded] = useState(true); // Debug panel expanded state
   const [rotationY, setRotationY] = useState(0); // Manual rotation Y in degrees (0-360)
+  const [rotationZ, setRotationZ] = useState(0); // Manual rotation Z in degrees (0-360)
 
   // ==========================================
   // CALCULATE ROTATION Y - COMMENTED OUT (not overriding rotation)
@@ -111,16 +112,20 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   */
 
   // ==========================================
-  // APPLY ROTATION Y (SIMPLE, NO CRASH)
+  // APPLY ROTATION Y & Z (SIMPLE, NO CRASH)
   // ==========================================
   useEffect(() => {
     if (inAR && arPluginRef.current?.modelRotation) {
       // Convert degrees to radians
-      const rotationRad = (rotationY * Math.PI) / 180;
-      arPluginRef.current.modelRotation.y = rotationRad;
-      console.log(`🔄 Applied rotation Y: ${rotationY}° (${rotationRad.toFixed(2)} rad)`);
+      const rotationYRad = (rotationY * Math.PI) / 180;
+      const rotationZRad = (rotationZ * Math.PI) / 180;
+
+      arPluginRef.current.modelRotation.y = rotationYRad;
+      arPluginRef.current.modelRotation.z = rotationZRad;
+
+      console.log(`🔄 Applied rotation - Y: ${rotationY}°, Z: ${rotationZ}°`);
     }
-  }, [inAR, rotationY]); // Simple dependencies - no crash
+  }, [inAR, rotationY, rotationZ]); // Simple dependencies - no crash
 
   // ==========================================
   // INITIALIZE MEDIAPIPE HANDS - COMMENTED OUT (causes crash on iPhone)
@@ -376,6 +381,21 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     return fingerNames[index] || 'Unknown';
   };
 
+  // ==========================================
+  // ADJUST ROTATION Y
+  // ==========================================
+  const adjustRotation = (degrees) => {
+    const newValue = (rotationY + degrees + 360) % 360;
+    setRotationY(newValue);
+  };
+
+  // ==========================================
+  // ADJUST ROTATION Z
+  // ==========================================
+  const adjustRotationZ = (degrees) => {
+    const newValue = (rotationZ + degrees + 360) % 360;
+    setRotationZ(newValue);
+  };
 
   // ==========================================
   // TOGGLE DEBUG PANEL
@@ -407,14 +427,59 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
           <div style={styles.rotationLabel}>
             🔄 Rotation Y: {rotationY}°
           </div>
-          <input
-            type="range"
-            min="0"
-            max="360"
-            value={rotationY}
-            onChange={(e) => setRotationY(Number(e.target.value))}
-            style={styles.rotationSlider}
-          />
+          <div style={styles.sliderRow}>
+            <button onClick={() => adjustRotation(-5)} style={styles.smallButton}>
+              -5°
+            </button>
+            <button onClick={() => adjustRotation(-1)} style={styles.smallButton}>
+              -1°
+            </button>
+            <input
+              type="range"
+              min="0"
+              max="360"
+              value={rotationY}
+              onChange={(e) => setRotationY(Number(e.target.value))}
+              style={styles.rotationSlider}
+            />
+            <button onClick={() => adjustRotation(1)} style={styles.smallButton}>
+              +1°
+            </button>
+            <button onClick={() => adjustRotation(5)} style={styles.smallButton}>
+              +5°
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Rotation Z Slider */}
+      {inAR && (
+        <div style={styles.rotationSliderPanelZ} onClick={(e) => e.stopPropagation()}>
+          <div style={styles.rotationLabel}>
+            🔄 Rotation Z: {rotationZ}°
+          </div>
+          <div style={styles.sliderRow}>
+            <button onClick={() => adjustRotationZ(-5)} style={styles.smallButton}>
+              -5°
+            </button>
+            <button onClick={() => adjustRotationZ(-1)} style={styles.smallButton}>
+              -1°
+            </button>
+            <input
+              type="range"
+              min="0"
+              max="360"
+              value={rotationZ}
+              onChange={(e) => setRotationZ(Number(e.target.value))}
+              style={styles.rotationSlider}
+            />
+            <button onClick={() => adjustRotationZ(1)} style={styles.smallButton}>
+              +1°
+            </button>
+            <button onClick={() => adjustRotationZ(5)} style={styles.smallButton}>
+              +5°
+            </button>
+          </div>
         </div>
       )}
 
@@ -532,16 +597,44 @@ const styles = {
     minWidth: '300px',
     textAlign: 'center'
   },
+  rotationSliderPanelZ: {
+    position: 'absolute',
+    bottom: '170px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    color: 'white',
+    padding: '15px 20px',
+    borderRadius: '10px',
+    zIndex: 1000,
+    minWidth: '300px',
+    textAlign: 'center'
+  },
   rotationLabel: {
     fontSize: '16px',
     fontWeight: 'bold',
     marginBottom: '10px'
   },
+  sliderRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px'
+  },
   rotationSlider: {
-    width: '100%',
+    flex: 1,
     height: '8px',
     cursor: 'pointer',
     accentColor: '#007bff'
+  },
+  smallButton: {
+    fontSize: '14px',
+    padding: '5px 10px',
+    cursor: 'pointer',
+    border: 'none',
+    borderRadius: '5px',
+    backgroundColor: '#28a745',
+    color: 'white',
+    minWidth: '45px'
   },
   fingerInfo: {
     position: 'absolute',
