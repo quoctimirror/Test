@@ -39,7 +39,6 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
   const [currentFinger, setCurrentFinger] = useState(0); // 0: áp út, 1: út, 2: cái, 3: trỏ, 4: giữa
   const [isLoading, setIsLoading] = useState(false);
   const [isDebugExpanded, setIsDebugExpanded] = useState(true); // Debug panel expanded state
-  const [manualRotationY, setManualRotationY] = useState(0); // Manual rotation Y adjustment (0-360 degrees)
 
   // ==========================================
   // CALCULATE ROTATION Y
@@ -69,24 +68,20 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     const currentCameraType = isFrontCamera ? 'frontCamera' : 'backCamera';
     const handType = currentHand === 0 ? 'left' : 'right';
 
-    let baseRotationY = 0;
+    let rotationY = 0;
 
     const cameraConfig = fingerRotationConfig[currentCameraType];
     if (cameraConfig && cameraConfig[handType]) {
       // Default to finger 3 (ring finger)
       const fingerConfig = cameraConfig[handType][3];
       if (fingerConfig !== undefined) {
-        baseRotationY = fingerConfig;
+        rotationY = fingerConfig;
       }
     }
 
-    // Add manual rotation adjustment (convert degrees to radians: deg * Math.PI / 180)
-    const manualRotationRad = (manualRotationY * Math.PI) / 180;
-    const totalRotationY = baseRotationY + manualRotationRad;
-
-    console.log(`🔄 Rotation.y: base=${baseRotationY.toFixed(2)}, manual=${manualRotationRad.toFixed(2)}, total=${totalRotationY.toFixed(2)} (${currentCameraType}, ${handType})`);
-    return totalRotationY;
-  }, [manualRotationY, currentHand, isFrontCamera]);
+    console.log(`🔄 Rotation.y: ${rotationY.toFixed(2)} (${currentCameraType}, ${handType})`);
+    return rotationY;
+  }, [currentHand, isFrontCamera]);
 
   // ==========================================
   // APPLY ROTATION Y
@@ -351,33 +346,6 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     return fingerNames[index] || 'Unknown';
   };
 
-  // ==========================================
-  // AUTO-APPLY ROTATION WHEN MANUAL ROTATION CHANGES
-  // ==========================================
-  useEffect(() => {
-    if (inAR && arPluginRef.current) {
-      applyRotationY();
-    }
-  }, [inAR, manualRotationY, currentHand, isFrontCamera, applyRotationY]);
-
-  // ==========================================
-  // ROTATION Y CONTROLS
-  // ==========================================
-  const handleRotationYChange = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const newRotation = parseFloat(e.target.value);
-    setManualRotationY(newRotation);
-  };
-
-  const adjustRotationY = (degrees) => {
-    return (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const newRotation = (manualRotationY + degrees) % 360;
-      setManualRotationY(newRotation < 0 ? newRotation + 360 : newRotation);
-    };
-  };
 
   // ==========================================
   // TOGGLE DEBUG PANEL
@@ -402,37 +370,6 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
     <div style={styles.container} onClick={handleContainerClick}>
       {/* Viewer Container */}
       <div ref={containerRef} style={styles.viewerContainer}></div>
-
-      {/* Rotation Y Slider */}
-      {inAR && (
-        <div style={styles.rotationPanel} onClick={(e) => e.stopPropagation()}>
-          <div style={styles.rotationHeader}>
-            <span style={styles.rotationLabel}>🔄 Rotation Y: {manualRotationY}°</span>
-          </div>
-          <div style={styles.rotationControls}>
-            <button onClick={() => adjustRotationY(-5)} style={styles.smallButton}>
-              -5°
-            </button>
-            <button onClick={() => adjustRotationY(-1)} style={styles.smallButton}>
-              -1°
-            </button>
-            <input
-              type="range"
-              min="0"
-              max="360"
-              value={manualRotationY}
-              onChange={handleRotationYChange}
-              style={styles.slider}
-            />
-            <button onClick={() => adjustRotationY(1)} style={styles.smallButton}>
-              +1°
-            </button>
-            <button onClick={() => adjustRotationY(5)} style={styles.smallButton}>
-              +5°
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Controls */}
       <div style={styles.controls} onClick={(e) => e.stopPropagation()}>
@@ -534,48 +471,6 @@ const styles = {
     borderRadius: '5px',
     backgroundColor: '#007bff',
     color: 'white'
-  },
-  rotationPanel: {
-    position: 'absolute',
-    bottom: '90px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    color: 'white',
-    padding: '15px 20px',
-    borderRadius: '10px',
-    zIndex: 1000,
-    minWidth: '400px',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)'
-  },
-  rotationHeader: {
-    marginBottom: '10px',
-    textAlign: 'center'
-  },
-  rotationLabel: {
-    fontSize: '16px',
-    fontWeight: 'bold'
-  },
-  rotationControls: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px'
-  },
-  slider: {
-    flex: 1,
-    height: '8px',
-    cursor: 'pointer',
-    accentColor: '#007bff'
-  },
-  smallButton: {
-    fontSize: '14px',
-    padding: '5px 10px',
-    cursor: 'pointer',
-    border: 'none',
-    borderRadius: '5px',
-    backgroundColor: '#28a745',
-    color: 'white',
-    minWidth: '45px'
   },
   fingerInfo: {
     position: 'absolute',
