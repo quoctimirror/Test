@@ -225,24 +225,10 @@ const IJewelARSimple = ({ fileId = 'Cs9yFentQsiL9VOyTa8Rdw', basename = 'drive' 
       const arPlugin = await viewerApp.addPlugin(window.ij_vto.RingTryonPlugin);
       arPluginRef.current = arPlugin;
 
-      // Load standard_1.json config
-      try {
-        const response = await fetch('/arTryOn/standard_1.json');
-        const standard1Config = await response.json();
-        console.log('📦 Loaded standard_1.json:', standard1Config);
-
-        if (standard1Config) {
-          if (standard1Config.modelScaleFactor !== undefined) {
-            arPlugin.modelScaleFactor = standard1Config.modelScaleFactor;
-          }
-          if (standard1Config.occluderScaleFactor !== undefined) {
-            arPlugin.occluderScaleFactor = standard1Config.occluderScaleFactor;
-          }
-          console.log('✅ Applied standard_1.json config');
-        }
-      } catch (error) {
-        console.error('❌ Failed to load standard_1.json:', error);
-      }
+      // Set scale factors directly
+      arPlugin.modelScaleFactor = 0.6;
+      arPlugin.occluderScaleFactor = 1;
+      console.log('✅ Applied scale factors');
 
       // Load saved tryon config from editor (override nếu có)
       if (fileConfig?.tryonConfig) {
