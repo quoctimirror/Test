@@ -11,7 +11,7 @@ import { useDeviceCamera } from './ijewel_useDeviceCamera';
 // ==========================================
 const MODELS = [
   { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' },
-  { id: 'HB3RidmJSdezIO1T2hdXcQ', name: 'Flower', basename: 'drive' },
+  { id: 'HbTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' },
   { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }
 ];
 
