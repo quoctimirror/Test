@@ -31,6 +31,7 @@ const Premium = () => {
   const [currentFinger, setCurrentFinger] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isDebugExpanded, setIsDebugExpanded] = useState(true);
+  const [isRotationExpanded, setIsRotationExpanded] = useState(true);
   const [rotationY, setRotationY] = useState(0);
   const [rotationZ, setRotationZ] = useState(0);
 
@@ -266,11 +267,19 @@ const Premium = () => {
     if (isDebugExpanded) {
       setIsDebugExpanded(false);
     }
+    if (isRotationExpanded) {
+      setIsRotationExpanded(false);
+    }
   };
 
   const handleDebugPanelClick = (e) => {
     e.stopPropagation();
     setIsDebugExpanded(!isDebugExpanded);
+  };
+
+  const handleRotationPanelClick = (e) => {
+    e.stopPropagation();
+    setIsRotationExpanded(!isRotationExpanded);
   };
 
   return (
@@ -294,62 +303,68 @@ const Premium = () => {
       </div>
 
       {inAR && (
-        <div className={styles.rotationSliderPanel} onClick={(e) => e.stopPropagation()}>
-          <div className={styles.rotationLabel}>
-            🔄 Rotation Y: {rotationY}°
+        <div
+          className={isRotationExpanded ? styles.rotationSliderPanel : styles.rotationSliderPanelCollapsed}
+          onClick={handleRotationPanelClick}
+        >
+          <div className={isRotationExpanded ? styles.rotationPanelTitle : styles.rotationPanelTitleCollapsed}>
+            🔄 Rotation Controls
           </div>
-          <div className={styles.sliderRow}>
-            <button onClick={() => adjustRotation(-5)} className={styles.smallButton}>
-              -5°
-            </button>
-            <button onClick={() => adjustRotation(-1)} className={styles.smallButton}>
-              -1°
-            </button>
-            <input
-              type="range"
-              min="0"
-              max="360"
-              value={rotationY}
-              onChange={(e) => setRotationY(Number(e.target.value))}
-              className={styles.rotationSlider}
-            />
-            <button onClick={() => adjustRotation(1)} className={styles.smallButton}>
-              +1°
-            </button>
-            <button onClick={() => adjustRotation(5)} className={styles.smallButton}>
-              +5°
-            </button>
-          </div>
-        </div>
-      )}
+          {isRotationExpanded && (
+            <>
+              <div className={styles.rotationLabel}>
+                Rotation Y: {rotationY}°
+              </div>
+              <div className={styles.sliderRow} onClick={(e) => e.stopPropagation()}>
+                <button onClick={() => adjustRotation(-5)} className={styles.smallButton}>
+                  -5°
+                </button>
+                <button onClick={() => adjustRotation(-1)} className={styles.smallButton}>
+                  -1°
+                </button>
+                <input
+                  type="range"
+                  min="0"
+                  max="360"
+                  value={rotationY}
+                  onChange={(e) => setRotationY(Number(e.target.value))}
+                  className={styles.rotationSlider}
+                />
+                <button onClick={() => adjustRotation(1)} className={styles.smallButton}>
+                  +1°
+                </button>
+                <button onClick={() => adjustRotation(5)} className={styles.smallButton}>
+                  +5°
+                </button>
+              </div>
 
-      {inAR && (
-        <div className={styles.rotationSliderPanelZ} onClick={(e) => e.stopPropagation()}>
-          <div className={styles.rotationLabel}>
-            🔄 Rotation Z: {rotationZ}°
-          </div>
-          <div className={styles.sliderRow}>
-            <button onClick={() => adjustRotationZ(-5)} className={styles.smallButton}>
-              -5°
-            </button>
-            <button onClick={() => adjustRotationZ(-1)} className={styles.smallButton}>
-              -1°
-            </button>
-            <input
-              type="range"
-              min="0"
-              max="360"
-              value={rotationZ}
-              onChange={(e) => setRotationZ(Number(e.target.value))}
-              className={styles.rotationSlider}
-            />
-            <button onClick={() => adjustRotationZ(1)} className={styles.smallButton}>
-              +1°
-            </button>
-            <button onClick={() => adjustRotationZ(5)} className={styles.smallButton}>
-              +5°
-            </button>
-          </div>
+              <div className={styles.rotationLabel} style={{ marginTop: '15px' }}>
+                Rotation Z: {rotationZ}°
+              </div>
+              <div className={styles.sliderRow} onClick={(e) => e.stopPropagation()}>
+                <button onClick={() => adjustRotationZ(-5)} className={styles.smallButton}>
+                  -5°
+                </button>
+                <button onClick={() => adjustRotationZ(-1)} className={styles.smallButton}>
+                  -1°
+                </button>
+                <input
+                  type="range"
+                  min="0"
+                  max="360"
+                  value={rotationZ}
+                  onChange={(e) => setRotationZ(Number(e.target.value))}
+                  className={styles.rotationSlider}
+                />
+                <button onClick={() => adjustRotationZ(1)} className={styles.smallButton}>
+                  +1°
+                </button>
+                <button onClick={() => adjustRotationZ(5)} className={styles.smallButton}>
+                  +5°
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
 
