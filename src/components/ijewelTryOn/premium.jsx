@@ -1,103 +1,47 @@
-import React, { useEffect, useRef, useState } from 'react';
 import styles from './premium.module.css';
 
 /**
- * Premium Component - Simple 3D Viewer (NO AR)
- * Chỉ load model và hiển thị 360° viewer
+ * Premium Component - iJewel3D SDK Integration
+ * Sử dụng thuần túy iJewel3D SDK API
  */
 
-// ==========================================
-// MODELS CONFIG
-// ==========================================
 const MODELS = [
-  { id: "Cs9yFentQsiL9VOyTa8Rdw", name: "Fistion", basename: 'drive' },
-  { id: "bTfEBf0fSHaflMHTd4scxw", name: "Myfav", basename: 'drive' },
-  { id: "MKyTIlEyRbi89oT6bH76yA", name: "Pear", basename: 'drive' },
+  { id: "Cs9yFentQsiL9VOyTa8Rdw", name: "Fistion" },
+  { id: "bTfEBf0fSHaflMHTd4scxw", name: "Myfav" },
+  { id: "MKyTIlEyRbi89oT6bH76yA", name: "Pear" },
 ];
 
 const Premium = () => {
-  // ==========================================
-  // REFS
-  // ==========================================
   const containerRef = useRef(null);
-  const isInitializedRef = useRef(false);
+  const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
 
-  // ==========================================
-  // STATES
-  // ==========================================
-  const [currentModelId, setCurrentModelId] = useState(MODELS[0].id);
-
-  // ==========================================
-  // INITIALIZE VIEWER
-  // ==========================================
   useEffect(() => {
-    const initViewer = async () => {
-      // Prevent double initialization
-      if (isInitializedRef.current || !containerRef.current) {
-        return;
+    if (!containerRef.current) return;
+
+    // Load model using iJewel3D SDK
+    window.ijewelViewer.loadModelById(
+      selectedModel,
+      'drive',
+      containerRef.current,
+      {
+        showUiButtons: false,
+        showLogo: false,
+        showCard: false,
+        enableZoom: true,
+        enableScrollWheel: true,
       }
+    );
+  }, [selectedModel]);
 
-      // Get current model config
-      const currentModel = MODELS.find(m => m.id === currentModelId);
-      if (!currentModel) {
-        console.error('❌ Model not found:', currentModelId);
-        return;
-      }
-
-      isInitializedRef.current = true;
-      console.log(`🚀 Loading model: ${currentModel.name}`);
-
-      try {
-        // Load model by ID
-        await window.ijewelViewer.loadModelById(
-          currentModel.id,
-          currentModel.basename,
-          containerRef.current,
-          {
-            showUiButtons: false,
-            hideTryOn: true
-          }
-        );
-
-        console.log('✅ Model loaded successfully');
-      } catch (error) {
-        console.error('❌ Error loading model:', error);
-      }
-    };
-
-    initViewer();
-  }, [currentModelId]);
-
-  // ==========================================
-  // HANDLE MODEL CHANGE
-  // ==========================================
-  const handleModelChange = (newModelId) => {
-    if (newModelId === currentModelId) return;
-
-    const newModel = MODELS.find(m => m.id === newModelId);
-    console.log(`🔄 Switching to model: ${newModel?.name}`);
-
-    // Reset initialization flag to allow reload
-    isInitializedRef.current = false;
-
-    // Update model ID → will trigger useEffect to reload
-    setCurrentModelId(newModelId);
-  };
-
-  // ==========================================
-  // RENDER
-  // ==========================================
   return (
     <div className={styles.container}>
-      {/* Viewer Container */}
       <div ref={containerRef} className={styles.viewerContainer}></div>
 
-      {/* Model Selector */}
       <div className={styles.modelSelectorContainer}>
         <label className={styles.modelLabel}>Model:</label>
         <select
-          value={currentModelId}
-          onChange={(e) => handleModelChange(e.target.value)}
+          value={selectedModel}
+          onChange={(e) => setSelectedModel(e.target.value)}
           className={styles.modelSelector}
         >
           {MODELS.map(model => (
