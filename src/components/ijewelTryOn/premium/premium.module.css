@@ -163,13 +163,14 @@
   left: 20px;
   background-color: rgba(0, 0, 0, 0.85);
   color: white;
-  padding: 10px 15px;
-  border-radius: 10px;
-  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
   z-index: 1000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .debugInfoTitle {
@@ -182,11 +183,12 @@
 }
 
 .debugInfoTitleCollapsed {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
   margin-bottom: 0;
   padding-bottom: 0;
+  line-height: 1.2;
 }
 
 .debugInfoItem {
@@ -266,18 +268,27 @@
     min-width: 40px;
   }
 
-  .debugInfoPanel,
+  .debugInfoPanel {
+    bottom: 10px;
+    left: 10px;
+    min-width: 180px;
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
   .debugInfoPanelCollapsed {
     bottom: 10px;
     left: 10px;
-    min-width: 200px;
+    padding: 6px 10px;
     font-size: 12px;
-    padding: 12px 15px;
   }
 
-  .debugInfoTitle,
+  .debugInfoTitle {
+    font-size: 13px;
+  }
+
   .debugInfoTitleCollapsed {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .debugInfoItem {
