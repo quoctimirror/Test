@@ -50,6 +50,16 @@ const Premium = () => {
     }
   };
 
+  // Track currentModelId changes
+  useEffect(() => {
+    console.log('📦 currentModelId changed to:', currentModelId);
+  }, [currentModelId]);
+
+  // Track isLoading changes
+  useEffect(() => {
+    console.log('⏳ isLoading changed to:', isLoading);
+  }, [isLoading]);
+
   // apply rotation when rotationY or rotationZ changes when user slides the slider
   useEffect(() => {
     if (inAR && arPluginRef.current?.modelRotation) {
@@ -66,7 +76,7 @@ const Premium = () => {
   useEffect(() => {
     const initViewer = async () => {
       if (isInitializedRef.current || !containerRef.current) {
-        // console.log('⏭️ Skipping initialization - already initialized or no container');
+        console.log('⏭️ Skipping - initialized:', isInitializedRef.current, 'container:', !!containerRef.current);
         return;
       }
 
@@ -77,7 +87,7 @@ const Premium = () => {
       }
 
       isInitializedRef.current = true;
-      // console.log(`🚀 Initializing iJewel Viewer with model: ${currentModel.name}`);
+      console.log(`🚀 Loading model: ${currentModel.name} (${currentModel.id})`);
 
       const handleFileData = (event) => {
         const fileData = event.detail.iJewelFileData?.config;
@@ -93,16 +103,38 @@ const Premium = () => {
 
       const handleViewerReady = (event) => {
         viewerAppRef.current = event.detail.viewer;
-        // console.log('✅ Viewer ready');
+        console.log('✅ Viewer ready:', currentModel.name);
       };
 
       window.addEventListener('ijewel-viewer-ready', handleViewerReady);
 
       return () => {
+        console.log('🧹 Cleanup - disposing viewer...');
+
+        // Remove listeners
         window.removeEventListener('ijewel-file-data', handleFileData);
         window.removeEventListener('ijewel-viewer-ready', handleViewerReady);
-        // Reset flag để cho phép init lại khi model thay đổi
+
+        // Dispose viewer cũ nếu có
+        if (viewerAppRef.current) {
+          try {
+            viewerAppRef.current.dispose?.();
+            console.log('✅ Viewer disposed');
+          } catch (err) {
+            console.warn('⚠️ Viewer dispose error:', err);
+          }
+          viewerAppRef.current = null;
+        }
+
+        // Clear container
+        if (containerRef.current) {
+          containerRef.current.innerHTML = '';
+          console.log('✅ Container cleared');
+        }
+
+        // Reset flag để cho phép init lại
         isInitializedRef.current = false;
+        console.log('✅ Flag reset');
       };
     };
 
@@ -252,14 +284,43 @@ const Premium = () => {
   };
 
   const handleModelChange = async (newModelId) => {
-    if (newModelId === currentModelId) return;
+    console.log('🔄 handleModelChange called:', { old: currentModelId, new: newModelId });
+
+    if (newModelId === currentModelId) {
+      console.log('⏭️ Same model, skipping');
+      return;
+    }
 
     if (inAR) {
+      console.log('⏸️ Stopping AR before model change...');
       await stopAR();
     }
 
-    // Khi setCurrentModelId, useEffect sẽ chạy lại
-    // Cleanup sẽ tự động reset isInitializedRef
+    // Manual cleanup BEFORE setting new model
+    console.log('🧹 Manual cleanup - disposing viewer...');
+
+    // Dispose viewer
+    if (viewerAppRef.current) {
+      try {
+        viewerAppRef.current.dispose?.();
+        console.log('✅ Viewer disposed');
+      } catch (err) {
+        console.warn('⚠️ Viewer dispose error:', err);
+      }
+      viewerAppRef.current = null;
+    }
+
+    // Clear container
+    if (containerRef.current) {
+      containerRef.current.innerHTML = '';
+      console.log('✅ Container cleared');
+    }
+
+    // Reset flag
+    isInitializedRef.current = false;
+    console.log('✅ Flag reset');
+
+    console.log('📝 Setting new model ID:', newModelId);
     setCurrentModelId(newModelId);
   };
 
@@ -290,7 +351,11 @@ const Premium = () => {
         <label className={styles.modelLabel}>Model:</label>
         <select
           value={currentModelId}
-          onChange={(e) => handleModelChange(e.target.value)}
+          onChange={(e) => {
+            console.log('🎯 Dropdown onChange fired! New value:', e.target.value);
+            console.log('🔒 isLoading:', isLoading);
+            handleModelChange(e.target.value);
+          }}
           disabled={isLoading}
           className={styles.modelSelector}
         >
