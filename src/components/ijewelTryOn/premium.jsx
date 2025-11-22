@@ -26,7 +26,6 @@ const Premium = () => {
   // STATES
   // ==========================================
   const [currentModelId, setCurrentModelId] = useState(MODELS[0].id);
-  const [isLoading, setIsLoading] = useState(true);
 
   // ==========================================
   // INITIALIZE VIEWER
@@ -46,7 +45,6 @@ const Premium = () => {
       }
 
       isInitializedRef.current = true;
-      setIsLoading(true);
       console.log(`🚀 Loading model: ${currentModel.name}`);
 
       try {
@@ -62,10 +60,8 @@ const Premium = () => {
         );
 
         console.log('✅ Model loaded successfully');
-        setIsLoading(false);
       } catch (error) {
         console.error('❌ Error loading model:', error);
-        setIsLoading(false);
       }
     };
 
@@ -96,20 +92,12 @@ const Premium = () => {
       {/* Viewer Container */}
       <div ref={containerRef} className={styles.viewerContainer}></div>
 
-      {/* Loading Indicator */}
-      {isLoading && (
-        <div className={styles.loadingOverlay}>
-          <div className={styles.loadingText}>Loading model...</div>
-        </div>
-      )}
-
       {/* Model Selector */}
       <div className={styles.modelSelectorContainer}>
         <label className={styles.modelLabel}>Model:</label>
         <select
           value={currentModelId}
           onChange={(e) => handleModelChange(e.target.value)}
-          disabled={isLoading}
           className={styles.modelSelector}
         >
           {MODELS.map(model => (
@@ -118,14 +106,6 @@ const Premium = () => {
             </option>
           ))}
         </select>
-      </div>
-
-      {/* Info Panel */}
-      <div className={styles.infoPanel}>
-        <div className={styles.infoTitle}>🎨 Premium 3D Viewer</div>
-        <div className={styles.infoText}>
-          Drag để xoay • Scroll để zoom • Right-click để pan
-        </div>
       </div>
     </div>
   );

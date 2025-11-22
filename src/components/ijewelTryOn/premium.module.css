@@ -1,37 +1,24 @@
 /* Premium 3D Viewer Styles */
 
 .container {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
-  background-color: #f5f5f5;
+  background-color: #000;
+  overflow: hidden;
 }
 
 .viewerContainer {
-  width: 100vw;
-  height: 100vh;
-}
-
-.loadingOverlay {
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-
-.loadingText {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
 }
 
 .modelSelectorContainer {
@@ -67,29 +54,4 @@
 .modelSelector:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.infoPanel {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.85);
-  color: white;
-  padding: 15px 30px;
-  border-radius: 10px;
-  text-align: center;
-  z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-.infoTitle {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.infoText {
-  font-size: 14px;
-  color: #ccc;
 }

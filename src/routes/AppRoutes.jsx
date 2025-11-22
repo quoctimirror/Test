@@ -209,7 +209,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.NAVBAR_V4_TEST ||
     location.pathname === ROUTES.TEST_VIEWER ||
     location.pathname === ROUTES.IJEWEL_AR_TRYON ||
-    location.pathname === ROUTES.IJEWEL_AR_SIMPLE;
+    location.pathname === ROUTES.IJEWEL_AR_SIMPLE ||
     location.pathname === ROUTES.PREMIUM;
 
   const staticRoutesToHideFooter =
@@ -236,7 +236,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.NAVBAR_V4_TEST ||
     location.pathname === ROUTES.TEST_VIEWER ||
     location.pathname === ROUTES.IJEWEL_AR_TRYON ||
-    location.pathname === ROUTES.IJEWEL_AR_SIMPLE;
+    location.pathname === ROUTES.IJEWEL_AR_SIMPLE ||
     location.pathname === ROUTES.PREMIUM;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
