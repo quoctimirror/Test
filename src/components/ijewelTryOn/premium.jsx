@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './premium.module.css';
 
 /**
@@ -36,7 +37,7 @@ const Premium = () => {
   return (
     <div className={styles.container}>
       <div ref={containerRef} className={styles.viewerContainer}></div>
-
+      
       <div className={styles.modelSelectorContainer}>
         <label className={styles.modelLabel}>Model:</label>
         <select
