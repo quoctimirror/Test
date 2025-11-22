@@ -4,7 +4,7 @@ import styles from './premium.module.css';
 
 const MODELS = [
   { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' },
-  { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' },
+  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' },
   { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }
 ];
 
@@ -100,6 +100,8 @@ const Premium = () => {
       return () => {
         window.removeEventListener('ijewel-file-data', handleFileData);
         window.removeEventListener('ijewel-viewer-ready', handleViewerReady);
+        // Reset flag để cho phép init lại khi model thay đổi
+        isInitializedRef.current = false;
       };
     };
 
@@ -251,15 +253,12 @@ const Premium = () => {
   const handleModelChange = async (newModelId) => {
     if (newModelId === currentModelId) return;
 
-    const newModel = MODELS.find(m => m.id === newModelId);
-    // console.log(`🔄 Switching to model: ${newModel?.name}`);
-
     if (inAR) {
-      // console.log('⏸️ Stopping AR before model change...');
       await stopAR();
     }
 
-    isInitializedRef.current = false;
+    // Khi setCurrentModelId, useEffect sẽ chạy lại
+    // Cleanup sẽ tự động reset isInitializedRef
     setCurrentModelId(newModelId);
   };
 
