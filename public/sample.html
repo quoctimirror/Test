@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Viewer Example</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        #viewer-container {
+            width: 100vw;
+            height: 100vh;
+        }
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        button{
+            font-size: 20px;
+        }
+        #flip-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewer-container"></div>
+    <div id="controls">
+        <button id="ar-btn">Start AR</button>
+        <button id="flip-btn">Flip Camera</button>
+    </div>
+
+    <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js" > </script>
+    <script src="https://releases.ijewel3d.com/libs/mini-viewer/0.5.0/bundle.nowebgi.iife.js" ></script>
+    <script>window.webgi = window;</script> <!-- Required for ij_vto to work(for now) -->
+    <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.37/web-vto.js" > </script>
+  
+
+    <script >
+        const { loadModelById } = window.ijewelViewer;
+        const fileId = 'NhxeWOUnQdOZPoQKTeD0Eg';
+        const basename = 'drive';
+
+        const container = document.getElementById('viewer-container');
+        const arBtn = document.getElementById('ar-btn');
+        const flipBtn = document.getElementById('flip-btn');
+
+        let viewerInstance;
+        let viewerApp;
+        let arPlugin;
+        let inAR = false;
+        let fileConfig;
+
+        async function initViewer() {
+
+            window.addEventListener('ijewel-file-data', (event) => {
+                const fileData = event.detail.iJewelFileData?.config;
+                fileConfig =  JSON.parse(fileData)
+            });
+
+
+            await loadModelById(fileId, basename, container, {
+                showUiButtons: false,
+                hideTryOn: true
+            });
+
+
+            window.addEventListener('ijewel-viewer-ready', async (event) => {
+                viewerApp = event.detail.viewer;
+                console.log('Viewer ready');
+            });
+
+
+        }
+
+        async function startAR() {
+            if (!window.ij_vto){
+                console.error('WebVTO is not loaded');
+                return;
+            }
+
+            //load ar plugin
+            arPlugin = await viewerApp.addPlugin(ij_vto.RingTryonPlugin);
+
+
+            //load saved tryon config from editor 
+            if (fileConfig?.tryonConfig) {
+                fileConfig.tryonConfig.type = 'RingTryonPlugin';
+                arPlugin.fromJSON(fileConfig?.tryonConfig);
+            }
+
+            //start ar
+            await arPlugin.start();
+        }
+
+        arBtn.addEventListener('click', async () => {
+
+            if (inAR) {
+                await arPlugin.stop();
+                inAR = false;
+                arBtn.textContent = 'Start AR';
+                flipBtn.style.display = 'none';
+                return;
+            }
+            
+            try {
+                await startAR()
+
+                inAR = true;
+                arBtn.textContent = 'Exit AR';
+                flipBtn.style.display = 'block';
+            } catch (error) {
+                console.error('AR error:', error);
+                arBtn.textContent = 'Start AR';
+            } finally {
+                arBtn.disabled = false;
+            }
+        });
+
+        flipBtn.addEventListener('click', async () => {
+            if (!arPlugin || !inAR) return;
+            flipBtn.disabled = true;
+            try {
+                await arPlugin.flipCamera();
+            } catch (error) {
+                console.error('Flip camera error:', error);
+            } finally {
+                flipBtn.disabled = false;
+            }
+        });
+
+        initViewer();
+    </script>
+</body>
+</html>
+

@@ -6,7 +6,6 @@ import NavbarV3 from "@components/navbar/NavbarV3";
 import Footer from "@components/footer/Footer";
 import TryOnRingLayout from "@layouts/TryOnRingLayout";
 import { ROUTES } from "@/constants/routes";
-import PremiumPage from "@pages/PremiumPage";
 // Lazy-load components
 const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
@@ -156,7 +155,6 @@ export default function AppRoutes() {
       ROUTES.TEST_VIEWER,
       ROUTES.IJEWEL_AR_TRYON,
       ROUTES.IJEWEL_AR_SIMPLE,
-      ROUTES.PREMIUM,
     ];
 
     // Check exact matches
@@ -209,8 +207,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.NAVBAR_V4_TEST ||
     location.pathname === ROUTES.TEST_VIEWER ||
     location.pathname === ROUTES.IJEWEL_AR_TRYON ||
-    location.pathname === ROUTES.IJEWEL_AR_SIMPLE ||
-    location.pathname === ROUTES.PREMIUM;
+    location.pathname === ROUTES.IJEWEL_AR_SIMPLE;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -236,8 +233,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.NAVBAR_V4_TEST ||
     location.pathname === ROUTES.TEST_VIEWER ||
     location.pathname === ROUTES.IJEWEL_AR_TRYON ||
-    location.pathname === ROUTES.IJEWEL_AR_SIMPLE ||
-    location.pathname === ROUTES.PREMIUM;
+    location.pathname === ROUTES.IJEWEL_AR_SIMPLE;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -351,9 +347,6 @@ export default function AppRoutes() {
 
           {/* IJewel AR Simple Route - Converted from HTML */}
           <Route path={ROUTES.IJEWEL_AR_SIMPLE} element={<IJewelARSimplePage />} />
-
-          {/* Premium 3D Viewer Route - NO AR */}
-          <Route path={ROUTES.PREMIUM} element={<PremiumPage />} />
 
           <Route
             path="/ar/quoc-ti"
