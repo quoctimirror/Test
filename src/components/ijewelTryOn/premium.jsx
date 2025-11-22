@@ -15,9 +15,31 @@ const MODELS = [
 const Premium = () => {
   const containerRef = useRef(null);
   const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
+  const isInitializedRef = useRef(false);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || isInitializedRef.current) return;
+
+    isInitializedRef.current = true;
+
+    // Clear previous viewer instance
+    containerRef.current.innerHTML = '';
+
+    // Listen for file data event
+    const handleFileData = (event) => {
+      const fileData = event.detail.iJewelFileData?.config;
+      console.log('iJewel file data loaded:', fileData);
+    };
+
+    // Listen for viewer ready event
+    const handleViewerReady = (event) => {
+      const viewer = event.detail.viewer;
+      console.log('iJewel viewer ready:', viewer);
+    };
+
+    // Register event listeners BEFORE loading model
+    window.addEventListener('ijewel-file-data', handleFileData);
+    window.addEventListener('ijewel-viewer-ready', handleViewerReady);
 
     // Load model using iJewel3D SDK
     window.ijewelViewer.loadModelById(
@@ -32,6 +54,13 @@ const Premium = () => {
         enableScrollWheel: true,
       }
     );
+
+    // Cleanup function
+    return () => {
+      isInitializedRef.current = false;
+      window.removeEventListener('ijewel-file-data', handleFileData);
+      window.removeEventListener('ijewel-viewer-ready', handleViewerReady);
+    };
   }, [selectedModel]);
 
   return (

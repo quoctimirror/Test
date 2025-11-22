@@ -6,6 +6,7 @@ import NavbarV3 from "@components/navbar/NavbarV3";
 import Footer from "@components/footer/Footer";
 import TryOnRingLayout from "@layouts/TryOnRingLayout";
 import { ROUTES } from "@/constants/routes";
+import PremiumPage from "@pages/PremiumPage";
 // Lazy-load components
 const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
@@ -97,7 +98,6 @@ const ScavengerHunt = lazy(() =>
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const IJewelARTryOnPage = lazy(() => import("@pages/IJewelARTryOnPage"));
 const IJewelARSimplePage = lazy(() => import("@pages/IJewelARSimplePage"));
-const PremiumPage = lazy(() => import("@pages/PremiumPage"));
 const ScrollEffectTestPage = lazy(() => import("@pages/ScrollEffectTestPage"));
 const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"));
 const NavbarV2TestPage = lazy(() => import("@pages/NavbarV2TestPage"));
