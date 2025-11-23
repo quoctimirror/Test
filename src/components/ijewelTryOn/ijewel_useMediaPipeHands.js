@@ -68,7 +68,11 @@ export const useMediaPipeHands = ({ canvasRef, isARRunning }) => {
 
         // Bắt đầu detect từ canvas
         const detect = async () => {
-          if (!canvasRef.current || !handsRef.current || !isARRunning) return;
+          if (!canvasRef.current) {
+            console.warn('⚠️ canvasRef.current is NULL - cannot detect');
+            return;
+          }
+          if (!handsRef.current || !isARRunning) return;
 
           try {
             // Gửi canvas frame tới MediaPipe
@@ -80,6 +84,8 @@ export const useMediaPipeHands = ({ canvasRef, isARRunning }) => {
           rafIdRef.current = requestAnimationFrame(detect);
         };
 
+        console.log('🎯 Starting hand detection loop...');
+        console.log('🎯 canvasRef.current:', canvasRef.current);
         detect();
 
       } catch (err) {
