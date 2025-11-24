@@ -320,8 +320,8 @@ const Premium = () => {
 
       // Read and apply initial rotation from config (assume right hand)
       const initialRotation = getInitialRotationFromConfig();
-      setRotationY(initialRotation.y);
-      setRotationZ(initialRotation.z);
+      rotationYRef.current = initialRotation.y;
+      rotationZRef.current = initialRotation.z;
 
       setInAR(true);
     } catch (error) {
