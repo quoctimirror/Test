@@ -66,7 +66,7 @@ const Premium = () => {
   const [isManualRotation, setIsManualRotation] = useState(false); // Track manual rotation adjustments
 
   // MediaPipe hand detection
-  const { detectedHand } = useMediaPipeHands({
+  const { detectedHand, detectedHandRef } = useMediaPipeHands({
     canvasRef: arCanvasRef,
     isARRunning: inAR
   });
@@ -104,14 +104,17 @@ const Premium = () => {
       return;
     }
 
+    // Read from ref for real-time detection (no re-render)
+    const currentHand = detectedHandRef.current;
+
     // No hand detected - keep current rotation (don't reset)
-    if (detectedHand === -1) {
+    if (currentHand === -1) {
       return;
     }
 
     // Use detected hand directly (MediaPipe already handles mirroring correctly)
     const handNames = ['left', 'right'];
-    const handType = handNames[detectedHand];
+    const handType = handNames[currentHand];
 
     // Select config based on camera type
     const cameraConfig = isBackCamera ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
@@ -139,7 +142,7 @@ const Premium = () => {
         arPluginRef.current.modelRotation.z = 0;
       }
     }
-  }, [detectedHand, currentFinger, isBackCamera, isManualRotation]);
+  }, [detectedHandRef, currentFinger, isBackCamera, isManualRotation]);
 
   // Auto-apply rotation config when hand detected, camera changed, or finger switched
   useEffect(() => {

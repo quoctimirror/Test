@@ -14,6 +14,8 @@ export const useMediaPipeHands = ({ canvasRef, isARRunning }) => {
   const videoRef = useRef(null);
   const rafIdRef = useRef(null);
   const prevHandRef = useRef(-1); // Track previous hand to prevent unnecessary state updates
+  const detectedHandRef = useRef(-1); // Real-time hand detection (no re-render)
+  const lastStateUpdateRef = useRef(0); // Timestamp of last state update for throttling
 
   useEffect(() => {
     if (!isARRunning || !window.Hands) return;
@@ -43,21 +45,31 @@ export const useMediaPipeHands = ({ canvasRef, isARRunning }) => {
         });
 
         hands.onResults((results) => {
+          const now = performance.now();
+
           if (results.multiHandedness && results.multiHandedness.length > 0) {
             // MediaPipe trả về label: "Left" hoặc "Right"
             const handLabel = results.multiHandedness[0].label;
             const handIndex = handLabel === 'Left' ? 0 : 1;
 
-            // Only update state if hand actually changed
-            if (handIndex !== prevHandRef.current) {
+            // Always update ref immediately (real-time, no re-render)
+            detectedHandRef.current = handIndex;
+
+            // Throttle state updates to 500ms (for UI only)
+            if (handIndex !== prevHandRef.current || now - lastStateUpdateRef.current > 500) {
               setDetectedHand(handIndex);
               prevHandRef.current = handIndex;
+              lastStateUpdateRef.current = now;
             }
           } else {
             // No hand detected
-            if (prevHandRef.current !== -1) {
+            detectedHandRef.current = -1;
+
+            // Throttle state updates
+            if (prevHandRef.current !== -1 || now - lastStateUpdateRef.current > 500) {
               setDetectedHand(-1);
               prevHandRef.current = -1;
+              lastStateUpdateRef.current = now;
             }
           }
         });
@@ -108,6 +120,7 @@ export const useMediaPipeHands = ({ canvasRef, isARRunning }) => {
 
   return {
     detectedHand,
+    detectedHandRef,
     isInitialized
   };
 };
