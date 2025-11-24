@@ -295,3 +295,164 @@
     font-size: 12px;
   }
 }
+
+/* ==========================================
+   SHINE BUTTON STYLES
+   ========================================== */
+.shineButton {
+  --border-width: clamp(1px, 0.0625em, 4px);
+  all: unset;
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  pointer-events: auto;
+  z-index: 3;
+  border-radius: 999vw;
+  transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+  padding: 0;
+  height: 36px;
+  font-size: 12px;
+}
+
+.shineButton:hover {
+  transform: scale(1.05);
+}
+
+.shineButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.shineButton:disabled:hover {
+  transform: none;
+}
+
+/* Small button variant */
+.shineButton.small {
+  height: 28px;
+  font-size: 10px;
+  --border-width: 1px;
+}
+
+@media (min-width: 768px) {
+  .shineButton.small {
+    height: 32px;
+    font-size: 11px;
+  }
+}
+
+/* Glass layer */
+.glassLayer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  border-radius: 999vw;
+  z-index: 0;
+  transition: backdrop-filter 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shineButton:hover .glassLayer {
+  backdrop-filter: blur(0.01em);
+  -webkit-backdrop-filter: blur(0.01em);
+}
+
+/* Shine layer */
+.shineLayer {
+  position: absolute;
+  inset: 0;
+  border-radius: 999vw;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.shineButton:hover .shineLayer {
+  opacity: 1;
+}
+
+.shineLayer::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.25) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%);
+  mix-blend-mode: screen;
+}
+
+/* Button text */
+.buttonText {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  color: #bc224c;
+  -webkit-font-smoothing: antialiased;
+  transition: all 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 12px 24px;
+  pointer-events: none;
+  z-index: 2;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.shineButton.small .buttonText {
+  padding: 4px 10px;
+}
+
+@media (min-width: 768px) {
+  .shineButton.small .buttonText {
+    padding: 6px 12px;
+  }
+}
+
+.shineButton:disabled .buttonText {
+  color: rgba(188, 34, 76, 0.4);
+}
+
+/* Border layer */
+.borderLayer {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border-radius: 999vw;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
+  background: conic-gradient(from 75deg at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0) 60% 95%,
+      rgba(255, 255, 255, 0.8)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}

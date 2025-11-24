@@ -34,7 +34,7 @@ const Premium = () => {
   const [currentFinger, setCurrentFinger] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isDebugExpanded, setIsDebugExpanded] = useState(true);
-  // const [isRotationExpanded, setIsRotationExpanded] = useState(true); // Manual rotation UI - disabled
+  const [isRotationExpanded, setIsRotationExpanded] = useState(true);
   const [rotationY, setRotationY] = useState(0);
   const [rotationZ, setRotationZ] = useState(0);
 
@@ -320,18 +320,18 @@ const Premium = () => {
   };
 
   // ============================================================================
-  // ROTATION HELPERS - Manual UI controls (disabled)
+  // ROTATION HELPERS
   // ============================================================================
 
-  // const adjustRotation = (degrees) => {
-  //   const newValue = (rotationY + degrees + 360) % 360;
-  //   setRotationY(newValue);
-  // };
+  const adjustRotation = (degrees) => {
+    const newValue = (rotationY + degrees + 360) % 360;
+    setRotationY(newValue);
+  };
 
-  // const adjustRotationZ = (degrees) => {
-  //   const newValue = (rotationZ + degrees + 360) % 360;
-  //   setRotationZ(newValue);
-  // };
+  const adjustRotationZ = (degrees) => {
+    const newValue = (rotationZ + degrees + 360) % 360;
+    setRotationZ(newValue);
+  };
 
   // ============================================================================
   // MODEL MANAGEMENT
@@ -367,9 +367,9 @@ const Premium = () => {
     if (isDebugExpanded) {
       setIsDebugExpanded(false);
     }
-    // if (isRotationExpanded) {
-    //   setIsRotationExpanded(false);
-    // }
+    if (isRotationExpanded) {
+      setIsRotationExpanded(false);
+    }
   };
 
   const handleDebugPanelClick = (e) => {
@@ -377,10 +377,10 @@ const Premium = () => {
     setIsDebugExpanded(!isDebugExpanded);
   };
 
-  // const handleRotationPanelClick = (e) => {
-  //   e.stopPropagation();
-  //   setIsRotationExpanded(!isRotationExpanded);
-  // };
+  const handleRotationPanelClick = (e) => {
+    e.stopPropagation();
+    setIsRotationExpanded(!isRotationExpanded);
+  };
 
   // ============================================================================
   // UTILITIES
@@ -422,7 +422,6 @@ const Premium = () => {
         </select>
       </div>
 
-      {/* Manual Rotation Controls UI - Disabled (using auto-detection)
       {inAR && (
         <div
           className={isRotationExpanded ? styles.rotationSliderPanel : styles.rotationSliderPanelCollapsed}
@@ -488,29 +487,19 @@ const Premium = () => {
           )}
         </div>
       )}
-      */}
 
       <div className={styles.controls} onClick={(e) => e.stopPropagation()}>
-        <button
-          onClick={handleToggleAR}
-          disabled={isLoading}
-          className={styles.button}
-        >
+        <ShineButton onClick={handleToggleAR} disabled={isLoading}>
           {isLoading ? 'Loading...' : inAR ? 'Exit AR' : 'Start AR'}
-        </button>
+        </ShineButton>
         {inAR && (
           <>
-            <button onClick={handleFlipCamera} className={styles.button}>
+            <ShineButton onClick={handleFlipCamera} small>
               Flip Camera
-            </button>
-            <button onClick={handleSwitchFinger} className={styles.button}>
+            </ShineButton>
+            <ShineButton onClick={handleSwitchFinger} small>
               Switch Finger
-            </button>
-            {/* Manual hand switch - commented out, using auto-detection instead
-            <button onClick={handleSwitchHand} className={styles.button}>
-              {currentHand === 0 ? 'Left Hand' : 'Right Hand'}
-            </button>
-            */}
+            </ShineButton>
           </>
         )}
       </div>
@@ -558,6 +547,54 @@ const Premium = () => {
         )}
       </div>
     </div>
+  );
+};
+
+// ==========================================
+// SHINE BUTTON COMPONENT
+// ==========================================
+const ShineButton = ({
+  children,
+  onClick,
+  disabled = false,
+  className = '',
+  small = false
+}) => {
+  const buttonRef = useRef(null);
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+
+  const handleMouseMove = (e) => {
+    if (!buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setMousePos({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setMousePos({ x: 50, y: 50 });
+  };
+
+  return (
+    <button
+      ref={buttonRef}
+      className={`${styles.shineButton} ${small ? styles.small : ''} ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className={styles.glassLayer} />
+      <div
+        className={styles.shineLayer}
+        style={{
+          '--mouse-x': `${mousePos.x}%`,
+          '--mouse-y': `${mousePos.y}%`
+        }}
+      />
+      <span className={styles.buttonText}>{children}</span>
+      <div className={styles.borderLayer} />
+    </button>
   );
 };
 
