@@ -42,6 +42,7 @@ const Premium = () => {
   const [isRotationExpanded, setIsRotationExpanded] = useState(true);
   const [rotationY, setRotationY] = useState(0);
   const [rotationZ, setRotationZ] = useState(0);
+  const [isManualRotation, setIsManualRotation] = useState(false); // Track manual rotation adjustments
 
   // MediaPipe hand detection
   const { detectedHand } = useMediaPipeHands({
@@ -61,6 +62,12 @@ const Premium = () => {
       left: {
         3: { y: 15, z: 0 }
       }
+    },
+    frontCamera: {
+      right: {
+        3: { y: 50, z: 350 },
+        4: { y: 60, z: 350 }
+      },
     }
   };
 
@@ -69,10 +76,16 @@ const Premium = () => {
    * Uses detectedHand from MediaPipe (auto-detection)
    *
    * Retrieves rotation angles from rotationConfig and applies to ring model.
-   * Only works with back camera. Resets to 0 for front camera or missing config.
+   * Supports both front and back camera configs.
+   * Skips auto-apply when user is manually adjusting rotation.
    */
   const applyRotationConfig = useCallback(() => {
-    // No hand detected - reset rotation
+    // Skip auto-apply when user is manually adjusting rotation
+    if (isManualRotation) {
+      return;
+    }
+
+    // No hand detected - only reset if not in manual mode
     if (detectedHand === -1) {
       setRotationY(0);
       setRotationZ(0);
@@ -88,16 +101,19 @@ const Premium = () => {
 
     const handNames = ['left', 'right'];
     const handType = handNames[finalHand];
-    const fingerConfig = rotationConfig.backCamera?.[handType]?.[currentFinger];
 
-    if (isBackCamera && fingerConfig) {
+    // Select config based on camera type
+    const cameraConfig = isBackCamera ? rotationConfig.backCamera : rotationConfig.frontCamera;
+    const fingerConfig = cameraConfig?.[handType]?.[currentFinger];
+
+    if (fingerConfig) {
       setRotationY(fingerConfig.y);
       setRotationZ(fingerConfig.z);
     } else {
       setRotationY(0);
       setRotationZ(0);
     }
-  }, [detectedHand, currentFinger, rotationConfig, isBackCamera]);
+  }, [detectedHand, currentFinger, rotationConfig, isBackCamera, isManualRotation]);
 
   // Auto-apply rotation config when hand detected, camera changed, or finger switched
   useEffect(() => {
@@ -110,6 +126,8 @@ const Premium = () => {
 
     // Only apply config when there's an actual change
     if (handChanged || fingerChanged || cameraChanged) {
+      // Reset manual mode when hand/finger/camera changes
+      setIsManualRotation(false);
       applyRotationConfig();
 
       // Update refs to current values
@@ -262,6 +280,10 @@ const Premium = () => {
       };
 
       await assignCanvas();
+
+      // Apply initial rotation config before showing AR to prevent jump
+      applyRotationConfig();
+
       setInAR(true);
     } catch (error) {
       console.error('AR error:', error);
@@ -342,11 +364,13 @@ const Premium = () => {
   // ============================================================================
 
   const adjustRotation = (degrees) => {
+    setIsManualRotation(true); // Enter manual mode
     const newValue = (rotationY + degrees + 360) % 360;
     setRotationY(newValue);
   };
 
   const adjustRotationZ = (degrees) => {
+    setIsManualRotation(true); // Enter manual mode
     const newValue = (rotationZ + degrees + 360) % 360;
     setRotationZ(newValue);
   };
@@ -465,7 +489,10 @@ const Premium = () => {
                   min="0"
                   max="360"
                   value={rotationY}
-                  onChange={(e) => setRotationY(Number(e.target.value))}
+                  onChange={(e) => {
+                    setIsManualRotation(true); // Enter manual mode
+                    setRotationY(Number(e.target.value));
+                  }}
                   className={styles.rotationSlider}
                 />
                 <button onClick={() => adjustRotation(1)} className={styles.smallButton}>
@@ -491,7 +518,10 @@ const Premium = () => {
                   min="0"
                   max="360"
                   value={rotationZ}
-                  onChange={(e) => setRotationZ(Number(e.target.value))}
+                  onChange={(e) => {
+                    setIsManualRotation(true); // Enter manual mode
+                    setRotationZ(Number(e.target.value));
+                  }}
                   className={styles.rotationSlider}
                 />
                 <button onClick={() => adjustRotationZ(1)} className={styles.smallButton}>
@@ -512,10 +542,10 @@ const Premium = () => {
         </ShineButton>
         {inAR && (
           <>
-            <ShineButton onClick={handleFlipCamera} small>
+            <ShineButton onClick={handleFlipCamera}>
               Flip Camera
             </ShineButton>
-            <ShineButton onClick={handleSwitchFinger} small>
+            <ShineButton onClick={handleSwitchFinger}>
               Switch Finger
             </ShineButton>
           </>
