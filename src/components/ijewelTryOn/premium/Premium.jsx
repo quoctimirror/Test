@@ -59,6 +59,27 @@ const Premium = () => {
     }
   };
 
+  /**
+   * Applies rotation config based on hand and finger
+   * @param {number} hand - 0 for left, 1 for right
+   * @param {number} finger - Finger index (0-4)
+   *
+   * Retrieves rotation angles from rotationConfig and applies to ring model.
+   * Only works with back camera. Resets to 0 for front camera or missing config.
+   */
+  const applyRotationConfig = useCallback((hand = currentHand, finger = currentFinger) => {
+    const handNames = ['left', 'right'];
+    const handType = handNames[hand];
+    const fingerConfig = rotationConfig.backCamera?.[handType]?.[finger];
+
+    if (isBackCamera && fingerConfig) {
+      setRotationY(fingerConfig.y);
+      setRotationZ(fingerConfig.z);
+    } else {
+      setRotationY(0);
+      setRotationZ(0);
+    }
+  }, [currentHand, currentFinger, rotationConfig, isBackCamera]);
 
   // Auto-apply rotation config when camera type changes
   useEffect(() => {
@@ -307,28 +328,6 @@ const Premium = () => {
 
     applyRotationConfig(currentHand, newFinger);
   };
-
-  /**
-   * Applies rotation config based on hand and finger
-   * @param {number} hand - 0 for left, 1 for right
-   * @param {number} finger - Finger index (0-4)
-   *
-   * Retrieves rotation angles from rotationConfig and applies to ring model.
-   * Only works with back camera. Resets to 0 for front camera or missing config.
-   */
-  const applyRotationConfig = useCallback((hand = currentHand, finger = currentFinger) => {
-    const handNames = ['left', 'right'];
-    const handType = handNames[hand];
-    const fingerConfig = rotationConfig.backCamera?.[handType]?.[finger];
-
-    if (isBackCamera && fingerConfig) {
-      setRotationY(fingerConfig.y);
-      setRotationZ(fingerConfig.z);
-    } else {
-      setRotationY(0);
-      setRotationZ(0);
-    }
-  }, [currentHand, currentFinger, rotationConfig, isBackCamera]);
 
   // ============================================================================
   // ROTATION HELPERS - Manual UI controls (disabled)
