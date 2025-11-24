@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useDeviceCamera } from '../ijewel_useDeviceCamera';
 import { useMediaPipeHands } from '../ijewel_useMediaPipeHands';
 import styles from './premium.module.css';
@@ -34,7 +34,7 @@ const Premium = () => {
   const [currentFinger, setCurrentFinger] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isDebugExpanded, setIsDebugExpanded] = useState(true);
-  const [isRotationExpanded, setIsRotationExpanded] = useState(true);
+  // const [isRotationExpanded, setIsRotationExpanded] = useState(true); // Manual rotation UI - disabled
   const [rotationY, setRotationY] = useState(0);
   const [rotationZ, setRotationZ] = useState(0);
 
@@ -59,6 +59,13 @@ const Premium = () => {
     }
   };
 
+
+  // Auto-apply rotation config when camera type changes
+  useEffect(() => {
+    if (inAR) {
+      applyRotationConfig();
+    }
+  }, [isBackCamera, inAR, applyRotationConfig]);
 
   // Sync MediaPipe hand detection to state (with camera flip logic)
   useEffect(() => {
@@ -265,7 +272,7 @@ const Premium = () => {
    * Flips between front and back camera
    * - Toggles camera via AR plugin
    * - Updates camera type state
-   * - Reapplies rotation config after 100ms delay
+   * - Rotation config auto-applied by useEffect
    */
   const handleFlipCamera = async () => {
     const arPlugin = arPluginRef.current;
@@ -274,10 +281,7 @@ const Premium = () => {
     try {
       await arPlugin.flipCamera();
       toggleCamera();
-
-      setTimeout(() => {
-        applyRotationConfig();
-      }, 100);
+      // Rotation config auto-applied by useEffect when isBackCamera changes
     } catch (error) {
       console.error('Flip camera error:', error);
     }
@@ -312,7 +316,7 @@ const Premium = () => {
    * Retrieves rotation angles from rotationConfig and applies to ring model.
    * Only works with back camera. Resets to 0 for front camera or missing config.
    */
-  const applyRotationConfig = (hand = currentHand, finger = currentFinger) => {
+  const applyRotationConfig = useCallback((hand = currentHand, finger = currentFinger) => {
     const handNames = ['left', 'right'];
     const handType = handNames[hand];
     const fingerConfig = rotationConfig.backCamera?.[handType]?.[finger];
@@ -324,21 +328,21 @@ const Premium = () => {
       setRotationY(0);
       setRotationZ(0);
     }
-  };
+  }, [currentHand, currentFinger, rotationConfig, isBackCamera]);
 
   // ============================================================================
-  // ROTATION HELPERS
+  // ROTATION HELPERS - Manual UI controls (disabled)
   // ============================================================================
 
-  const adjustRotation = (degrees) => {
-    const newValue = (rotationY + degrees + 360) % 360;
-    setRotationY(newValue);
-  };
+  // const adjustRotation = (degrees) => {
+  //   const newValue = (rotationY + degrees + 360) % 360;
+  //   setRotationY(newValue);
+  // };
 
-  const adjustRotationZ = (degrees) => {
-    const newValue = (rotationZ + degrees + 360) % 360;
-    setRotationZ(newValue);
-  };
+  // const adjustRotationZ = (degrees) => {
+  //   const newValue = (rotationZ + degrees + 360) % 360;
+  //   setRotationZ(newValue);
+  // };
 
   // ============================================================================
   // MODEL MANAGEMENT
@@ -374,9 +378,9 @@ const Premium = () => {
     if (isDebugExpanded) {
       setIsDebugExpanded(false);
     }
-    if (isRotationExpanded) {
-      setIsRotationExpanded(false);
-    }
+    // if (isRotationExpanded) {
+    //   setIsRotationExpanded(false);
+    // }
   };
 
   const handleDebugPanelClick = (e) => {
@@ -384,10 +388,10 @@ const Premium = () => {
     setIsDebugExpanded(!isDebugExpanded);
   };
 
-  const handleRotationPanelClick = (e) => {
-    e.stopPropagation();
-    setIsRotationExpanded(!isRotationExpanded);
-  };
+  // const handleRotationPanelClick = (e) => {
+  //   e.stopPropagation();
+  //   setIsRotationExpanded(!isRotationExpanded);
+  // };
 
   // ============================================================================
   // UTILITIES
@@ -429,6 +433,7 @@ const Premium = () => {
         </select>
       </div>
 
+      {/* Manual Rotation Controls UI - Disabled (using auto-detection)
       {inAR && (
         <div
           className={isRotationExpanded ? styles.rotationSliderPanel : styles.rotationSliderPanelCollapsed}
@@ -494,6 +499,7 @@ const Premium = () => {
           )}
         </div>
       )}
+      */}
 
       <div className={styles.controls} onClick={(e) => e.stopPropagation()}>
         <button
