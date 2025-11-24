@@ -68,7 +68,7 @@
   bottom: 90px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.95); /* Darker for better visibility without blur */
   color: white;
   padding: 15px 20px;
   border-radius: 10px;
@@ -77,8 +77,8 @@
   max-width: 90vw;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  /* transition removed for performance */
+  /* box-shadow removed for performance */
 }
 
 .rotationSliderPanelCollapsed {
@@ -86,14 +86,14 @@
   bottom: 90px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.95); /* Darker for better visibility without blur */
   color: white;
   padding: 10px 15px;
   border-radius: 10px;
   z-index: 1000;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  /* transition removed for performance */
+  /* box-shadow removed for performance */
 }
 
 .rotationPanelTitle {
@@ -147,31 +147,31 @@
   position: absolute;
   bottom: 20px;
   left: 20px;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.95); /* Darker for better visibility without blur */
   color: white;
   padding: 15px 20px;
   border-radius: 10px;
   font-size: 14px;
   z-index: 1000;
   min-width: 250px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  /* box-shadow removed for performance */
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* transition removed for performance */
 }
 
 .debugInfoPanelCollapsed {
   position: absolute;
   bottom: 20px;
   left: 20px;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.95); /* Darker for better visibility without blur */
   color: white;
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 13px;
   z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  /* box-shadow removed for performance */
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* transition removed for performance */
   white-space: nowrap;
 }
 
