@@ -562,17 +562,17 @@ const Premium = () => {
       )}
 
       <div className={styles.controls} onClick={(e) => e.stopPropagation()}>
-        <ShineButton onClick={handleToggleAR} disabled={isLoading}>
+        <button className={styles.button} onClick={handleToggleAR} disabled={isLoading}>
           {isLoading ? 'Loading...' : inAR ? 'Exit AR' : 'Start AR'}
-        </ShineButton>
+        </button>
         {inAR && (
           <>
-            <ShineButton onClick={handleFlipCamera}>
+            <button className={styles.button} onClick={handleFlipCamera}>
               Flip Camera
-            </ShineButton>
-            <ShineButton onClick={handleSwitchFinger}>
+            </button>
+            <button className={styles.button} onClick={handleSwitchFinger}>
               Switch Finger
-            </ShineButton>
+            </button>
           </>
         )}
       </div>
