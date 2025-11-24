@@ -30,7 +30,7 @@ const Premium = () => {
   const [currentModelId, setCurrentModelId] = useState(MODELS[0].id);
   const [inAR, setInAR] = useState(false);
   const [fileConfig, setFileConfig] = useState(null);
-  const [currentHand, setCurrentHand] = useState(0);
+  // const [currentHand, setCurrentHand] = useState(0); // Removed - using detectedHand from MediaPipe
   const [currentFinger, setCurrentFinger] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isDebugExpanded, setIsDebugExpanded] = useState(true);
@@ -60,17 +60,30 @@ const Premium = () => {
   };
 
   /**
-   * Applies rotation config based on hand and finger
-   * @param {number} hand - 0 for left, 1 for right
-   * @param {number} finger - Finger index (0-4)
+   * Applies rotation config based on detected hand and finger
+   * Uses detectedHand from MediaPipe (auto-detection)
    *
    * Retrieves rotation angles from rotationConfig and applies to ring model.
    * Only works with back camera. Resets to 0 for front camera or missing config.
    */
-  const applyRotationConfig = useCallback((hand = currentHand, finger = currentFinger) => {
+  const applyRotationConfig = useCallback(() => {
+    // No hand detected - reset rotation
+    if (detectedHand === -1) {
+      setRotationY(0);
+      setRotationZ(0);
+      return;
+    }
+
+    // Apply camera flip logic
+    let finalHand = detectedHand;
+    if (!isBackCamera) {
+      // Front camera (selfie mode): reverse detection
+      finalHand = detectedHand === 0 ? 1 : 0;
+    }
+
     const handNames = ['left', 'right'];
-    const handType = handNames[hand];
-    const fingerConfig = rotationConfig.backCamera?.[handType]?.[finger];
+    const handType = handNames[finalHand];
+    const fingerConfig = rotationConfig.backCamera?.[handType]?.[currentFinger];
 
     if (isBackCamera && fingerConfig) {
       setRotationY(fingerConfig.y);
@@ -79,36 +92,14 @@ const Premium = () => {
       setRotationY(0);
       setRotationZ(0);
     }
-  }, [currentHand, currentFinger, rotationConfig, isBackCamera]);
+  }, [detectedHand, currentFinger, rotationConfig, isBackCamera]);
 
-  // Auto-apply rotation config when camera type changes
+  // Auto-apply rotation config when hand detected, camera changed, or finger switched
   useEffect(() => {
     if (inAR) {
       applyRotationConfig();
     }
-  }, [isBackCamera, inAR, applyRotationConfig]);
-
-  // Sync MediaPipe hand detection to state (with camera flip logic)
-  useEffect(() => {
-    if (detectedHand === -1) {
-      // No hand detected - handled in debug panel
-      return;
-    }
-
-    // Camera flip logic: Front camera needs reverse
-    let finalHand = detectedHand;
-    if (!isBackCamera) {
-      // Front camera (selfie mode): reverse detection
-      // MediaPipe says "Left" → actually Right hand, vice versa
-      finalHand = detectedHand === 0 ? 1 : 0;
-    }
-
-    if (finalHand !== currentHand) {
-      setCurrentHand(finalHand);
-      // Apply rotation config for the detected hand
-      applyRotationConfig(finalHand, currentFinger);
-    }
-  }, [detectedHand, isBackCamera, currentHand, currentFinger]);
+  }, [detectedHand, isBackCamera, currentFinger, inAR, applyRotationConfig]);
 
   // apply rotation when rotationY or rotationZ changes when user slides the slider
   useEffect(() => {
@@ -325,8 +316,7 @@ const Premium = () => {
     setCurrentFinger(newFinger);
 
     arPlugin.finger = (arPlugin.finger + 1) % 5;
-
-    applyRotationConfig(currentHand, newFinger);
+    // Rotation config auto-applied by useEffect when currentFinger changes
   };
 
   // ============================================================================
@@ -546,15 +536,9 @@ const Premium = () => {
               <span className={styles.debugInfoLabel}>Camera Type:</span>
               <span className={styles.debugInfoValue}>{cameraType}</span>
             </div>
-            <div className={styles.debugInfoItem}>
-              <span className={styles.debugInfoLabel}>Bàn tay:</span>
-              <span className={styles.debugInfoValue}>
-                {currentHand === 0 ? 'Tay trái' : 'Tay phải'}
-              </span>
-            </div>
             {inAR && (
               <div className={styles.debugInfoItem}>
-                <span className={styles.debugInfoLabel}>Hand Detection:</span>
+                <span className={styles.debugInfoLabel}>Bàn tay (Auto):</span>
                 <span className={styles.debugInfoValue}>
                   {detectedHand === -1
                     ? '⚠️ Không phát hiện'
