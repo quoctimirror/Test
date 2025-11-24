@@ -16,6 +16,11 @@ const Premium = () => {
   const isInitializedRef = useRef(false);
   const arCanvasRef = useRef(null); // Canvas for MediaPipe hand detection
 
+  // Track previous values to prevent unnecessary rotation config updates
+  const prevDetectedHandRef = useRef(-1);
+  const prevFingerRef = useRef(0);
+  const prevCameraRef = useRef(true);
+
   const {
     deviceType,
     isMobile,
@@ -96,8 +101,21 @@ const Premium = () => {
 
   // Auto-apply rotation config when hand detected, camera changed, or finger switched
   useEffect(() => {
-    if (inAR) {
+    if (!inAR) return;
+
+    // Check if values actually changed
+    const handChanged = detectedHand !== prevDetectedHandRef.current;
+    const fingerChanged = currentFinger !== prevFingerRef.current;
+    const cameraChanged = isBackCamera !== prevCameraRef.current;
+
+    // Only apply config when there's an actual change
+    if (handChanged || fingerChanged || cameraChanged) {
       applyRotationConfig();
+
+      // Update refs to current values
+      prevDetectedHandRef.current = detectedHand;
+      prevFingerRef.current = currentFinger;
+      prevCameraRef.current = isBackCamera;
     }
   }, [detectedHand, isBackCamera, currentFinger, inAR, applyRotationConfig]);
 
