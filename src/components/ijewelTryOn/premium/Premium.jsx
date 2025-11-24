@@ -120,10 +120,24 @@ const Premium = () => {
     if (fingerConfig) {
       setRotationY(fingerConfig.y);
       setRotationZ(fingerConfig.z);
+
+      // Apply rotation immediately (don't wait for useEffect)
+      if (arPluginRef.current?.modelRotation) {
+        const rotationYRad = (fingerConfig.y * Math.PI) / 180;
+        const rotationZRad = (fingerConfig.z * Math.PI) / 180;
+        arPluginRef.current.modelRotation.y = rotationYRad;
+        arPluginRef.current.modelRotation.z = rotationZRad;
+      }
     } else {
       // No config found - reset to 0 (default)
       setRotationY(0);
       setRotationZ(0);
+
+      // Apply rotation immediately
+      if (arPluginRef.current?.modelRotation) {
+        arPluginRef.current.modelRotation.y = 0;
+        arPluginRef.current.modelRotation.z = 0;
+      }
     }
   }, [detectedHand, currentFinger, isBackCamera, isManualRotation]);
 
