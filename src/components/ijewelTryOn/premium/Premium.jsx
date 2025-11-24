@@ -109,15 +109,9 @@ const Premium = () => {
       return;
     }
 
-    // Apply camera flip logic
-    let finalHand = detectedHand;
-    if (!isBackCamera) {
-      // Front camera (selfie mode): reverse detection
-      finalHand = detectedHand === 0 ? 1 : 0;
-    }
-
+    // Use detected hand directly (MediaPipe already handles mirroring correctly)
     const handNames = ['left', 'right'];
-    const handType = handNames[finalHand];
+    const handType = handNames[detectedHand];
 
     // Select config based on camera type
     const cameraConfig = isBackCamera ? rotationConfig.backCamera : rotationConfig.frontCamera;
