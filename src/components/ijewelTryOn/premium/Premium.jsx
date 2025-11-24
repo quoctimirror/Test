@@ -72,6 +72,25 @@ const Premium = () => {
   };
 
   /**
+   * Gets initial rotation from config when entering AR
+   * Assumes right hand by default (most common case)
+   * Returns {y: 0, z: 0} if no config found
+   */
+  const getInitialRotationFromConfig = useCallback(() => {
+    // Select config based on camera type
+    const cameraConfig = isBackCamera ? rotationConfig.backCamera : rotationConfig.frontCamera;
+
+    // Assume right hand (most common)
+    const fingerConfig = cameraConfig?.right?.[currentFinger];
+
+    if (fingerConfig) {
+      return { y: fingerConfig.y, z: fingerConfig.z };
+    } else {
+      return { y: 0, z: 0 };
+    }
+  }, [currentFinger, isBackCamera, rotationConfig]);
+
+  /**
    * Applies rotation config based on detected hand and finger
    * Uses detectedHand from MediaPipe (auto-detection)
    *
@@ -85,10 +104,8 @@ const Premium = () => {
       return;
     }
 
-    // No hand detected - only reset if not in manual mode
+    // No hand detected - keep current rotation (don't reset)
     if (detectedHand === -1) {
-      setRotationY(0);
-      setRotationZ(0);
       return;
     }
 
@@ -109,10 +126,8 @@ const Premium = () => {
     if (fingerConfig) {
       setRotationY(fingerConfig.y);
       setRotationZ(fingerConfig.z);
-    } else {
-      setRotationY(0);
-      setRotationZ(0);
     }
+    // If no config found, keep current rotation (don't reset to 0)
   }, [detectedHand, currentFinger, rotationConfig, isBackCamera, isManualRotation]);
 
   // Auto-apply rotation config when hand detected, camera changed, or finger switched
@@ -281,8 +296,10 @@ const Premium = () => {
 
       await assignCanvas();
 
-      // Apply initial rotation config before showing AR to prevent jump
-      applyRotationConfig();
+      // Read and apply initial rotation from config (assume right hand)
+      const initialRotation = getInitialRotationFromConfig();
+      setRotationY(initialRotation.y);
+      setRotationZ(initialRotation.z);
 
       setInAR(true);
     } catch (error) {
