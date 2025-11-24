@@ -126,8 +126,11 @@ const Premium = () => {
     if (fingerConfig) {
       setRotationY(fingerConfig.y);
       setRotationZ(fingerConfig.z);
+    } else {
+      // No config found - reset to 0 (default)
+      setRotationY(0);
+      setRotationZ(0);
     }
-    // If no config found, keep current rotation (don't reset to 0)
   }, [detectedHand, currentFinger, rotationConfig, isBackCamera, isManualRotation]);
 
   // Auto-apply rotation config when hand detected, camera changed, or finger switched
