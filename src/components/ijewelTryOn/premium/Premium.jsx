@@ -59,11 +59,18 @@ const Premium = () => {
   // const [currentHand, setCurrentHand] = useState(0); // Removed - using detectedHand from MediaPipe
   const [currentFinger, setCurrentFinger] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDebugExpanded, setIsDebugExpanded] = useState(true);
-  const [isRotationExpanded, setIsRotationExpanded] = useState(true);
-  const [rotationY, setRotationY] = useState(0);
-  const [rotationZ, setRotationZ] = useState(0);
-  const [isManualRotation, setIsManualRotation] = useState(false); // Track manual rotation adjustments
+
+  // COMMENTED FOR PERFORMANCE - These don't need to trigger re-renders
+  // const [isDebugExpanded, setIsDebugExpanded] = useState(true);
+  // const [isRotationExpanded, setIsRotationExpanded] = useState(true);
+  // const [rotationY, setRotationY] = useState(0);
+  // const [rotationZ, setRotationZ] = useState(0);
+  // const [isManualRotation, setIsManualRotation] = useState(false);
+
+  // Use refs instead - no re-render overhead
+  const rotationYRef = useRef(0);
+  const rotationZRef = useRef(0);
+  const isManualRotationRef = useRef(false);
 
   // MediaPipe hand detection
   const { detectedHand, detectedHandRef } = useMediaPipeHands({
@@ -100,7 +107,7 @@ const Premium = () => {
    */
   const applyRotationConfig = useCallback(() => {
     // Skip auto-apply when user is manually adjusting rotation
-    if (isManualRotation) {
+    if (isManualRotationRef.current) {
       return;
     }
 
@@ -121,10 +128,11 @@ const Premium = () => {
     const fingerConfig = cameraConfig?.[handType]?.[currentFinger];
 
     if (fingerConfig) {
-      setRotationY(fingerConfig.y);
-      setRotationZ(fingerConfig.z);
+      // Update ref (no re-render)
+      rotationYRef.current = fingerConfig.y;
+      rotationZRef.current = fingerConfig.z;
 
-      // Apply rotation immediately (don't wait for useEffect)
+      // Apply rotation immediately - DIRECT modification
       if (arPluginRef.current?.modelRotation) {
         const rotationYRad = (fingerConfig.y * Math.PI) / 180;
         const rotationZRad = (fingerConfig.z * Math.PI) / 180;
@@ -133,8 +141,8 @@ const Premium = () => {
       }
     } else {
       // No config found - reset to 0 (default)
-      setRotationY(0);
-      setRotationZ(0);
+      rotationYRef.current = 0;
+      rotationZRef.current = 0;
 
       // Apply rotation immediately
       if (arPluginRef.current?.modelRotation) {
@@ -142,7 +150,7 @@ const Premium = () => {
         arPluginRef.current.modelRotation.z = 0;
       }
     }
-  }, [detectedHandRef, currentFinger, isBackCamera, isManualRotation]);
+  }, [detectedHandRef, currentFinger, isBackCamera]);
 
   // Auto-apply rotation config when hand detected, camera changed, or finger switched
   useEffect(() => {
@@ -155,8 +163,8 @@ const Premium = () => {
 
     // Only apply config when there's an actual change
     if (handChanged || fingerChanged || cameraChanged) {
-      // Reset manual mode when hand/finger/camera changes
-      setIsManualRotation(false);
+      // Reset manual mode when hand/finger/camera changes (use ref - no re-render)
+      isManualRotationRef.current = false;
       applyRotationConfig();
 
       // Update refs to current values
@@ -166,16 +174,16 @@ const Premium = () => {
     }
   }, [detectedHand, isBackCamera, currentFinger, inAR, applyRotationConfig]);
 
-  // apply rotation when rotationY or rotationZ changes when user slides the slider
-  useEffect(() => {
-    if (inAR && arPluginRef.current?.modelRotation) {
-      const rotationYRad = (rotationY * Math.PI) / 180;
-      const rotationZRad = (rotationZ * Math.PI) / 180;
-
-      arPluginRef.current.modelRotation.y = rotationYRad;
-      arPluginRef.current.modelRotation.z = rotationZRad;
-    }
-  }, [inAR, rotationY, rotationZ]);
+  // COMMENTED FOR PERFORMANCE - Rotation applied directly in applyRotationConfig now
+  // No need for useEffect that triggers on state changes
+  // useEffect(() => {
+  //   if (inAR && arPluginRef.current?.modelRotation) {
+  //     const rotationYRad = (rotationY * Math.PI) / 180;
+  //     const rotationZRad = (rotationZ * Math.PI) / 180;
+  //     arPluginRef.current.modelRotation.y = rotationYRad;
+  //     arPluginRef.current.modelRotation.z = rotationZRad;
+  //   }
+  // }, [inAR, rotationY, rotationZ]);
 
   useEffect(() => {
     const initViewer = async () => {
@@ -391,20 +399,26 @@ const Premium = () => {
   };
 
   // ============================================================================
-  // ROTATION HELPERS
+  // ROTATION HELPERS - COMMENTED (not needed without rotation UI)
   // ============================================================================
 
-  const adjustRotation = (degrees) => {
-    setIsManualRotation(true); // Enter manual mode
-    const newValue = (rotationY + degrees + 360) % 360;
-    setRotationY(newValue);
-  };
+  // const adjustRotation = (degrees) => {
+  //   isManualRotationRef.current = true;
+  //   const newValue = (rotationYRef.current + degrees + 360) % 360;
+  //   rotationYRef.current = newValue;
+  //   if (arPluginRef.current?.modelRotation) {
+  //     arPluginRef.current.modelRotation.y = (newValue * Math.PI) / 180;
+  //   }
+  // };
 
-  const adjustRotationZ = (degrees) => {
-    setIsManualRotation(true); // Enter manual mode
-    const newValue = (rotationZ + degrees + 360) % 360;
-    setRotationZ(newValue);
-  };
+  // const adjustRotationZ = (degrees) => {
+  //   isManualRotationRef.current = true;
+  //   const newValue = (rotationZRef.current + degrees + 360) % 360;
+  //   rotationZRef.current = newValue;
+  //   if (arPluginRef.current?.modelRotation) {
+  //     arPluginRef.current.modelRotation.z = (newValue * Math.PI) / 180;
+  //   }
+  // };
 
   // ============================================================================
   // MODEL MANAGEMENT
@@ -433,27 +447,22 @@ const Premium = () => {
   };
 
   // ============================================================================
-  // UI HANDLERS
+  // UI HANDLERS - COMMENTED (not needed without debug/rotation panels)
   // ============================================================================
 
-  const handleContainerClick = () => {
-    if (isDebugExpanded) {
-      setIsDebugExpanded(false);
-    }
-    if (isRotationExpanded) {
-      setIsRotationExpanded(false);
-    }
-  };
+  // const handleContainerClick = () => {
+  //   // Collapsed - not needed
+  // };
 
-  const handleDebugPanelClick = (e) => {
-    e.stopPropagation();
-    setIsDebugExpanded(!isDebugExpanded);
-  };
+  // const handleDebugPanelClick = (e) => {
+  //   e.stopPropagation();
+  //   // Toggle debug panel
+  // };
 
-  const handleRotationPanelClick = (e) => {
-    e.stopPropagation();
-    setIsRotationExpanded(!isRotationExpanded);
-  };
+  // const handleRotationPanelClick = (e) => {
+  //   e.stopPropagation();
+  //   // Toggle rotation panel
+  // };
 
   // ============================================================================
   // UTILITIES
@@ -465,7 +474,7 @@ const Premium = () => {
   };
 
   return (
-    <div className={styles.container} onClick={handleContainerClick}>
+    <div className={styles.container}>
       <div
         ref={containerRef}
         className={styles.viewerContainer}
@@ -565,7 +574,7 @@ const Premium = () => {
       )}
       */}
 
-      <div className={styles.controls} onClick={(e) => e.stopPropagation()}>
+      <div className={styles.controls}>
         <button className={styles.button} onClick={handleToggleAR} disabled={isLoading}>
           {isLoading ? 'Loading...' : inAR ? 'Exit AR' : 'Start AR'}
         </button>
