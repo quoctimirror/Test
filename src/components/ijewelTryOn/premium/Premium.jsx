@@ -467,13 +467,7 @@ const Premium = () => {
         ref={containerRef}
         className={styles.viewerContainer}
       >
-        <canvas
-          id="webgi-canvas"
-          style={{
-            width: '100%',
-            height: '100%'
-          }}
-        ></canvas>
+        {/* SDK will create canvas here automatically */}
       </div>
 
       <div className={styles.modelSelectorContainer} onClick={(e) => e.stopPropagation()}>
