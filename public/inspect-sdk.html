@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDK Inspector</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        #viewer-container {
+            width: 100vw;
+            height: 50vh;
+            background: #000;
+        }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        .info {
+            margin: 20px 0;
+            padding: 10px;
+            background: #252526;
+            border-left: 3px solid #4ec9b0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 iJewel SDK Inspector</h1>
+    <p class="info">Mở Console (F12) để xem kết quả chi tiết</p>
+
+    <div id="viewer-container"></div>
+
+    <button id="inspect-btn">1. Inspect SDK Structure</button>
+    <button id="ar-btn">2. Start AR & Monitor</button>
+
+    <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js"></script>
+    <script src="https://releases.ijewel3d.com/libs/mini-viewer/0.5.0/bundle.nowebgi.iife.js"></script>
+    <script>window.webgi = window;</script>
+    <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.37/web-vto.js"></script>
+
+    <script>
+        const fileId = 'dY4BIhDDQNmCVTRrEpV2QQ';
+        const basename = 'drive';
+        const container = document.getElementById('viewer-container');
+        const arBtn = document.getElementById('ar-btn');
+        const inspectBtn = document.getElementById('inspect-btn');
+
+        let viewerApp;
+        let arPlugin;
+        let inAR = false;
+        const networkRequests = [];
+
+        // ============================================
+        // INTERCEPT NETWORK REQUESTS
+        // ============================================
+        const originalFetch = window.fetch;
+        window.fetch = function(...args) {
+            const url = args[0];
+            if (typeof url === 'string') {
+                const keywords = ['.wasm', '.tflite', 'mediapipe', 'tfjs', 'hands', 'pose', '.bin', 'model', 'detector', 'tracker'];
+                if (keywords.some(k => url.toLowerCase().includes(k))) {
+                    networkRequests.push(url);
+                    console.log('%c🌐 NETWORK REQUEST:', 'color: orange; font-weight: bold; font-size: 14px', url);
+                }
+            }
+            return originalFetch.apply(this, args);
+        };
+
+        // ============================================
+        // HELPER: Recursive deep inspection
+        // ============================================
+        let inspected = new WeakSet(); // Use 'let' so we can recreate it
+        const trackingKeywords = ['hand', 'track', 'detect', 'finger', 'media', 'pose', 'tensor', 'model', 'wasm', 'ml'];
+
+        function isTrackingRelated(key) {
+            const keyLower = key.toLowerCase();
+            return trackingKeywords.some(keyword => keyLower.includes(keyword));
+        }
+
+        function recursiveInspect(obj, name, depth = 0, maxDepth = 3) {
+            if (depth > maxDepth) return;
+            if (!obj || typeof obj !== 'object' && typeof obj !== 'function') return;
+            if (inspected.has(obj)) return;
+
+            inspected.add(obj);
+
+            const indent = '  '.repeat(depth);
+            const keys = [];
+
+            // Get all keys (own + prototype)
+            try {
+                keys.push(...Object.getOwnPropertyNames(obj));
+                if (obj.constructor && obj.constructor.prototype) {
+                    keys.push(...Object.getOwnPropertyNames(obj.constructor.prototype));
+                }
+            } catch (e) {
+                // ignore
+            }
+
+            const uniqueKeys = [...new Set(keys)].filter(k => k !== '__proto__' && k !== 'constructor');
+
+            uniqueKeys.forEach(key => {
+                try {
+                    const value = obj[key];
+                    const type = typeof value;
+                    const isTracking = isTrackingRelated(key);
+                    const emoji = isTracking ? '🎯' : type === 'function' ? '🔧' : type === 'object' ? '📦' : '•';
+                    const color = isTracking ? 'color: orange; font-weight: bold' : '';
+
+                    if (isTracking || depth < 2) {
+                        if (type === 'function') {
+                            console.log(`%c${indent}${emoji} ${key}()`, color);
+                        } else if (type === 'object' && value !== null) {
+                            const constructorName = value.constructor?.name || 'Object';
+                            console.log(`%c${indent}${emoji} ${key}: ${constructorName}`, color, value);
+
+                            // Recursively inspect tracking-related objects
+                            if (isTracking || depth < 1) {
+                                recursiveInspect(value, key, depth + 1, maxDepth);
+                            }
+                        } else {
+                            console.log(`%c${indent}${emoji} ${key}: ${type}`, color);
+                        }
+                    }
+                } catch (e) {
+                    // Can't access property
+                }
+            });
+        }
+
+        function deepInspectPlugin(pluginClass, pluginName) {
+            console.log(`\n%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'color: #666');
+            console.log(`%c🔎 ${pluginName}`, 'font-size: 18px; font-weight: bold; color: #FF6B6B; background: #000; padding: 5px');
+            console.log(`%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'color: #666');
+
+            if (!pluginClass) {
+                console.log('❌ Plugin not found');
+                return;
+            }
+
+            console.log('📦 Class:', pluginClass);
+
+            // Clear inspected set for each plugin
+            inspected = new WeakSet();
+
+            console.log('\n🔍 RECURSIVE INSPECTION (depth 3):');
+            recursiveInspect(pluginClass, pluginName, 0, 3);
+
+            console.log('\n🔍 PROTOTYPE INSPECTION:');
+            if (pluginClass.prototype) {
+                recursiveInspect(pluginClass.prototype, `${pluginName}.prototype`, 0, 2);
+            }
+        }
+
+        // ============================================
+        // STEP 1: INSPECT SDK
+        // ============================================
+        inspectBtn.addEventListener('click', () => {
+            console.clear();
+            console.log('%c🔍 iJEWEL SDK DEEP INSPECTION REPORT', 'font-size: 24px; font-weight: bold; color: #4CAF50; background: #000; padding: 10px');
+            console.log('═'.repeat(100));
+
+            // Check ij_vto
+            console.log('\n%c📦 1. SDK GLOBAL OBJECTS', 'font-size: 18px; font-weight: bold; color: #2196F3');
+            console.log('─'.repeat(100));
+
+            if (window.ij_vto) {
+                console.log('✅ window.ij_vto =>', window.ij_vto);
+                const keys = Object.keys(window.ij_vto);
+                console.log(`   Found ${keys.length} plugins:`, keys);
+
+                // Deep inspect each plugin
+                console.log('\n%c═══ DEEP INSPECTION OF EACH PLUGIN ═══', 'font-size: 18px; font-weight: bold; color: #E91E63');
+
+                keys.forEach(key => {
+                    deepInspectPlugin(window.ij_vto[key], key);
+                });
+
+            } else {
+                console.log('❌ window.ij_vto NOT FOUND');
+            }
+
+            // Check external libraries
+            console.log('\n%c🤖 2. EXTERNAL TRACKING LIBRARIES', 'font-size: 18px; font-weight: bold; color: #2196F3');
+            console.log('─'.repeat(100));
+            console.log('MediaPipe Hands (window.Hands):', window.Hands ? '✅ LOADED' : '❌ Not loaded');
+            console.log('TensorFlow.js (window.tf):', window.tf ? `✅ LOADED (version ${window.tf?.version?.tfjs})` : '❌ Not loaded');
+
+            // Check webgi
+            console.log('\n%c🎨 3. WEBGI ENGINE', 'font-size: 18px; font-weight: bold; color: #2196F3');
+            console.log('─'.repeat(100));
+            console.log('window.webgi =>', window.webgi ? '✅ Available' : '❌ Not found');
+            if (window.webgi) {
+                const webgiKeys = Object.keys(window.webgi).filter(k => !k.startsWith('_'));
+                console.log('   Keys (first 20):', webgiKeys.slice(0, 20));
+            }
+
+            console.log('\n%c💡 NEXT STEP:', 'font-size: 16px; font-weight: bold; color: #FF9800');
+            console.log('─'.repeat(100));
+            console.log('Click "2. Start AR & Monitor" to see what models are loaded during AR startup');
+            console.log('═'.repeat(100));
+        });
+
+        // ============================================
+        // INIT VIEWER
+        // ============================================
+        async function initViewer() {
+            console.log('%c🎬 Initializing viewer...', 'color: cyan; font-weight: bold');
+
+            window.addEventListener('ijewel-file-data', (event) => {
+                console.log('📦 File data received:', event.detail.iJewelFileData?.config);
+            });
+
+            await window.ijewelViewer.loadModelById(fileId, basename, container, {
+                showUiButtons: false,
+                hideTryOn: true
+            });
+
+            window.addEventListener('ijewel-viewer-ready', async (event) => {
+                viewerApp = event.detail.viewer;
+                console.log('✅ Viewer ready:', viewerApp);
+
+                // Enable AR button
+                arBtn.disabled = false;
+                arBtn.style.opacity = '1';
+                arBtn.textContent = '2. Start AR & Monitor';
+
+                console.log('%c✅ Ready! Click "2. Start AR & Monitor" to begin inspection', 'color: #4CAF50; font-weight: bold; font-size: 14px');
+            });
+        }
+
+        // ============================================
+        // START AR
+        // ============================================
+        async function startAR() {
+            if (!window.ij_vto) {
+                console.error('❌ WebVTO not loaded');
+                alert('❌ WebVTO not loaded');
+                return;
+            }
+
+            if (!viewerApp) {
+                console.error('❌ Viewer not ready yet. Wait a few seconds and try again.');
+                alert('❌ Viewer chưa sẵn sàng!\nĐợi 2-3 giây rồi bấm lại.');
+                return;
+            }
+
+            console.log('\n\n');
+            console.log('%c🚀 STARTING AR - MONITORING PLUGIN', 'font-size: 20px; font-weight: bold; color: #E91E63; background: #000; padding: 10px');
+            console.log('═'.repeat(100));
+
+            // Clear previous requests
+            networkRequests.length = 0;
+
+            console.log('%c⏳ Loading AR plugin...', 'font-size: 16px; color: yellow');
+            arPlugin = await viewerApp.addPlugin(window.ij_vto.RingTryonPlugin);
+
+            console.log('\n%c✅ AR PLUGIN LOADED', 'font-size: 18px; font-weight: bold; color: #4CAF50');
+            console.log('─'.repeat(100));
+            console.log('arPlugin instance =>', arPlugin);
+
+            // ============================================
+            // DEEP RECURSIVE INSPECTION OF AR PLUGIN INSTANCE
+            // ============================================
+            console.log('\n%c🔬 DEEP RECURSIVE INSPECTION OF AR PLUGIN INSTANCE:', 'font-size: 18px; font-weight: bold; color: #E91E63; background: #000; padding: 5px');
+            console.log('═'.repeat(100));
+
+            inspected = new WeakSet();
+            recursiveInspect(arPlugin, 'arPlugin', 0, 4);
+
+            // ============================================
+            // INSPECT VIEWER APP
+            // ============================================
+            console.log('\n%c🔬 VIEWER APP INSPECTION:', 'font-size: 18px; font-weight: bold; color: #9C27B0; background: #000; padding: 5px');
+            console.log('═'.repeat(100));
+            console.log('viewerApp =>', viewerApp);
+
+            inspected = new WeakSet();
+            recursiveInspect(viewerApp, 'viewerApp', 0, 3);
+
+            // ============================================
+            // INSPECT ALL PLUGINS IN VIEWER
+            // ============================================
+            console.log('\n%c🔬 ALL PLUGINS IN VIEWER:', 'font-size: 18px; font-weight: bold; color: #FF9800; background: #000; padding: 5px');
+            console.log('═'.repeat(100));
+
+            if (viewerApp.plugins) {
+                console.log('Plugins:', viewerApp.plugins);
+
+                // Check if it's an array or object
+                if (Array.isArray(viewerApp.plugins)) {
+                    viewerApp.plugins.forEach((plugin, i) => {
+                        console.log(`\n📦 Plugin ${i}:`, plugin);
+                        inspected = new WeakSet();
+                        recursiveInspect(plugin, `plugin[${i}]`, 0, 3);
+                    });
+                } else {
+                    console.log('Plugins is not an array, inspecting as object:');
+                    inspected = new WeakSet();
+                    recursiveInspect(viewerApp.plugins, 'viewerApp.plugins', 0, 3);
+                }
+            } else {
+                console.log('⚠️ viewerApp.plugins not found');
+            }
+
+            // ============================================
+            // INSPECT CANVAS ELEMENTS
+            // ============================================
+            console.log('\n%c🔬 CANVAS ELEMENTS INSPECTION:', 'font-size: 18px; font-weight: bold; color: #00BCD4; background: #000; padding: 5px');
+            console.log('═'.repeat(100));
+
+            const canvases = document.querySelectorAll('canvas');
+            console.log(`Found ${canvases.length} canvas element(s)`);
+
+            canvases.forEach((canvas, i) => {
+                console.log(`\n🎨 Canvas ${i}:`, canvas);
+                console.log(`   Width: ${canvas.width}x${canvas.height}`);
+                console.log(`   Style: ${canvas.style.cssText}`);
+
+                // Try to get WebGL context info
+                try {
+                    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+                    if (gl) {
+                        console.log('   WebGL Context:', gl);
+                        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                        if (debugInfo) {
+                            console.log('   GPU:', gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
+                        }
+                    }
+                } catch (e) {
+                    // ignore
+                }
+
+                inspected = new WeakSet();
+                recursiveInspect(canvas, `canvas[${i}]`, 0, 2);
+            });
+
+            console.log('\n%c⏳ Starting AR camera...', 'font-size: 16px; color: yellow');
+            await arPlugin.start();
+
+            console.log('\n%c✅ AR STARTED - Waiting 3s for tracking to initialize...', 'font-size: 18px; font-weight: bold; color: #4CAF50');
+            console.log('─'.repeat(100));
+
+            // Wait for tracking to initialize
+            setTimeout(() => {
+                console.log('\n\n');
+                console.log('%c═════════════════════════════════════════════════════════════════════════════════════════════', 'color: #FFD700');
+                console.log('%c🔬 POST-AR-START INSPECTION (After 3 seconds)', 'font-size: 20px; font-weight: bold; color: #FFD700; background: #000; padding: 10px');
+                console.log('%c═════════════════════════════════════════════════════════════════════════════════════════════', 'color: #FFD700');
+
+                // ============================================
+                // NETWORK REQUESTS
+                // ============================================
+                console.log('\n%c📊 NETWORK REQUESTS SUMMARY:', 'font-size: 16px; font-weight: bold; color: #2196F3');
+                console.log('─'.repeat(100));
+                if (networkRequests.length > 0) {
+                    console.log(`%c⚠️ Found ${networkRequests.length} tracking-related network requests:`, 'color: orange; font-weight: bold');
+                    networkRequests.forEach((url, i) => {
+                        const isTFLite = url.includes('.tflite');
+                        const isWasm = url.includes('.wasm');
+                        const isMediaPipe = url.includes('mediapipe');
+                        const emoji = isTFLite ? '🧠' : isWasm ? '⚙️' : isMediaPipe ? '🤖' : '📦';
+                        console.log(`   ${emoji} ${i + 1}. ${url}`);
+                    });
+                } else {
+                    console.log('✅ NO external tracking model requests detected');
+                    console.log('   → SDK likely uses built-in tracking OR lazy-loads on demand');
+                }
+
+                // ============================================
+                // RE-INSPECT PLUGIN AFTER START
+                // ============================================
+                console.log('\n%c🔬 AR PLUGIN STATE AFTER START:', 'font-size: 16px; font-weight: bold; color: #E91E63');
+                console.log('─'.repeat(100));
+                console.log('arPlugin instance =>', arPlugin);
+
+                inspected = new WeakSet();
+                console.log('\n🔍 Tracking-related properties only:');
+                recursiveInspect(arPlugin, 'arPlugin', 0, 5); // Depth 5 for thorough search
+
+                // ============================================
+                // CHECK FOR COMMON TRACKING PROPERTIES
+                // ============================================
+                console.log('\n%c🎯 CHECKING COMMON TRACKING PROPERTY NAMES:', 'font-size: 16px; font-weight: bold; color: #FF9800');
+                console.log('─'.repeat(100));
+
+                const commonTrackingProps = [
+                    'handTracker', 'handDetector', 'handTracking',
+                    'tracker', 'detector', 'tracking',
+                    'mediaPipe', 'mediapipe', 'mp',
+                    'tensorFlow', 'tensorflow', 'tfjs', 'tf',
+                    'model', 'models', 'mlModel',
+                    'handLandmarks', 'landmarks',
+                    'camera', 'video', 'stream',
+                    'fingerTracker', 'fingerDetector'
+                ];
+
+                const foundTracking = [];
+                commonTrackingProps.forEach(prop => {
+                    if (arPlugin[prop] !== undefined) {
+                        foundTracking.push({ prop, value: arPlugin[prop], type: typeof arPlugin[prop] });
+                    }
+                    // Also check with underscore prefix (private props)
+                    if (arPlugin['_' + prop] !== undefined) {
+                        foundTracking.push({ prop: '_' + prop, value: arPlugin['_' + prop], type: typeof arPlugin['_' + prop] });
+                    }
+                });
+
+                if (foundTracking.length > 0) {
+                    console.log('%c🎯 FOUND TRACKING PROPERTIES:', 'color: orange; font-weight: bold; font-size: 14px');
+                    foundTracking.forEach(({ prop, value, type }) => {
+                        console.log(`   • ${prop}:`, type, value);
+                        if (type === 'object' && value !== null) {
+                            inspected = new WeakSet();
+                            recursiveInspect(value, prop, 1, 3);
+                        }
+                    });
+                } else {
+                    console.log('ℹ️ No common tracking property names found');
+                    console.log('   Tracking may be abstracted behind SDK internal methods');
+                }
+
+                // ============================================
+                // EXPOSE GLOBALS
+                // ============================================
+                window.arPlugin = arPlugin;
+                window.viewerApp = viewerApp;
+
+                console.log('\n%c💡 EXPOSED TO WINDOW:', 'font-size: 16px; font-weight: bold; color: #4CAF50');
+                console.log('─'.repeat(100));
+                console.log('   window.arPlugin =>', arPlugin);
+                console.log('   window.viewerApp =>', viewerApp);
+                console.log('\n   Try in console:');
+                console.log('   • arPlugin.finger');
+                console.log('   • arPlugin.modelRotation');
+                console.log('   • Object.keys(arPlugin)');
+                console.log('   • for (let k in arPlugin) { console.log(k, arPlugin[k]) }');
+
+                console.log('\n%c═════════════════════════════════════════════════════════════════════════════════════════════', 'color: #FFD700');
+                console.log('%c✅ INSPECTION COMPLETE', 'font-size: 20px; font-weight: bold; color: #4CAF50; background: #000; padding: 10px');
+                console.log('%c═════════════════════════════════════════════════════════════════════════════════════════════', 'color: #FFD700');
+            }, 3000);
+
+            inAR = true;
+        }
+
+        async function stopAR() {
+            if (arPlugin) {
+                await arPlugin.stop();
+                inAR = false;
+                console.log('⏹️ AR stopped');
+            }
+        }
+
+        // ============================================
+        // EVENT HANDLERS
+        // ============================================
+        arBtn.addEventListener('click', async () => {
+            if (inAR) {
+                arBtn.disabled = true;
+                arBtn.textContent = 'Stopping...';
+                await stopAR();
+                arBtn.textContent = '2. Start AR & Monitor';
+                arBtn.disabled = false;
+            } else {
+                arBtn.disabled = true;
+                arBtn.textContent = 'Starting AR...';
+                try {
+                    await startAR();
+                    arBtn.textContent = 'Stop AR';
+                } catch (err) {
+                    console.error('❌ AR start failed:', err);
+                    alert('❌ Lỗi khi start AR: ' + err.message);
+                    arBtn.textContent = '2. Start AR & Monitor';
+                } finally {
+                    arBtn.disabled = false;
+                }
+            }
+        });
+
+        // Disable AR button until viewer ready
+        arBtn.disabled = true;
+        arBtn.style.opacity = '0.5';
+        arBtn.textContent = '2. Start AR (Loading...)';
+
+        // Auto init viewer
+        initViewer();
+
+        // Welcome message
+        console.log('%c🔍 SDK INSPECTOR LOADED', 'font-size: 20px; font-weight: bold; color: #4CAF50');
+        console.log('Click "1. Inspect SDK Structure" to start inspection');
+        console.log('⏳ Waiting for 3D viewer to load...');
+    </script>
+</body>
+</html>

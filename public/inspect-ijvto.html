@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ij_vto Inspector</title>
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 10px;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+        .info {
+            margin: 20px 0;
+            padding: 10px;
+            background: #252526;
+            border-left: 3px solid #4ec9b0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 ij_vto Deep Inspector</h1>
+    <p class="info">Mở Console (F12) để xem kết quả</p>
+
+    <button onclick="inspectIjVto()">Inspect ij_vto</button>
+
+    <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js"></script>
+    <script src="https://releases.ijewel3d.com/libs/mini-viewer/0.5.0/bundle.nowebgi.iife.js"></script>
+    <script>window.webgi = window;</script>
+    <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.37/web-vto.js"></script>
+
+    <script>
+        // ============================================
+        // RECURSIVE INSPECTOR
+        // ============================================
+        const trackingKeywords = ['hand', 'track', 'detect', 'finger', 'media', 'pose', 'tensor', 'model', 'wasm', 'ml', 'camera', 'video'];
+
+        function isTrackingRelated(key) {
+            const keyLower = key.toLowerCase();
+            return trackingKeywords.some(keyword => keyLower.includes(keyword));
+        }
+
+        function deepInspect(obj, name, depth = 0, maxDepth = 5, visited = new WeakSet()) {
+            if (depth > maxDepth) return;
+            if (!obj) return;
+            if (typeof obj !== 'object' && typeof obj !== 'function') return;
+            if (visited.has(obj)) return;
+
+            visited.add(obj);
+
+            const indent = '  '.repeat(depth);
+
+            try {
+                // Get all property names
+                const keys = Object.getOwnPropertyNames(obj);
+
+                keys.forEach(key => {
+                    if (key === '__proto__' || key === 'constructor') return;
+
+                    try {
+                        const value = obj[key];
+                        const type = typeof value;
+                        const isTracking = isTrackingRelated(key);
+
+                        if (isTracking) {
+                            // HIGHLIGHT tracking-related
+                            if (type === 'function') {
+                                console.log(`%c${indent}🎯 ${key}()`, 'color: orange; font-weight: bold');
+                            } else if (type === 'object' && value !== null) {
+                                const constructorName = value.constructor?.name || 'Object';
+                                console.log(`%c${indent}🎯 ${key}: ${constructorName}`, 'color: orange; font-weight: bold', value);
+                                // Dig deeper into tracking objects
+                                deepInspect(value, key, depth + 1, maxDepth, visited);
+                            } else {
+                                console.log(`%c${indent}🎯 ${key}: ${type}`, 'color: orange; font-weight: bold');
+                            }
+                        } else if (depth < 2) {
+                            // Show all at top levels
+                            if (type === 'function') {
+                                console.log(`${indent}• ${key}()`);
+                            } else if (type === 'object' && value !== null) {
+                                const constructorName = value.constructor?.name || 'Object';
+                                console.log(`${indent}• ${key}: ${constructorName}`);
+                                // Recurse into objects at shallow depth
+                                deepInspect(value, key, depth + 1, maxDepth, visited);
+                            }
+                        }
+                    } catch (e) {
+                        // Can't access property
+                    }
+                });
+
+                // Also check prototype
+                if (depth < 2 && obj.prototype) {
+                    console.log(`${indent}📋 [prototype]`);
+                    deepInspect(obj.prototype, `${name}.prototype`, depth + 1, maxDepth, visited);
+                }
+            } catch (e) {
+                console.error(`Error inspecting ${name}:`, e);
+            }
+        }
+
+        // ============================================
+        // INSPECT IJ_VTO
+        // ============================================
+        function inspectIjVto() {
+            console.clear();
+            console.log('%c═════════════════════════════════════════════════════════════════════════════', 'color: #4CAF50');
+            console.log('%c🔍 ij_vto DEEP INSPECTION', 'font-size: 24px; font-weight: bold; color: #4CAF50; background: #000; padding: 10px');
+            console.log('%c═════════════════════════════════════════════════════════════════════════════', 'color: #4CAF50');
+
+            if (!window.ij_vto) {
+                console.error('❌ window.ij_vto NOT FOUND');
+                return;
+            }
+
+            console.log('\n📦 window.ij_vto =>', window.ij_vto);
+            console.log('\n📋 Top-level keys:', Object.keys(window.ij_vto));
+
+            // Inspect each plugin
+            const plugins = Object.keys(window.ij_vto);
+
+            plugins.forEach(pluginName => {
+                console.log('\n\n');
+                console.log('%c─────────────────────────────────────────────────────────────────────────────', 'color: #666');
+                console.log(`%c🔎 ${pluginName}`, 'font-size: 18px; font-weight: bold; color: #FF6B6B; background: #000; padding: 5px');
+                console.log('%c─────────────────────────────────────────────────────────────────────────────', 'color: #666');
+
+                const plugin = window.ij_vto[pluginName];
+                console.log('Plugin object =>', plugin);
+
+                console.log('\n🔍 Deep inspection (depth 5):');
+                deepInspect(plugin, pluginName, 0, 5);
+            });
+
+            console.log('\n\n');
+            console.log('%c═════════════════════════════════════════════════════════════════════════════', 'color: #4CAF50');
+            console.log('%c✅ INSPECTION COMPLETE', 'font-size: 20px; font-weight: bold; color: #4CAF50; background: #000; padding: 10px');
+            console.log('%c═════════════════════════════════════════════════════════════════════════════', 'color: #4CAF50');
+
+            console.log('\n%c💡 TÌM GÌ:', 'font-size: 16px; font-weight: bold; color: #FF9800');
+            console.log('   Look for 🎯 (orange/bold) - these are tracking-related');
+            console.log('   Keywords: hand, track, detect, finger, media, pose, tensor, model, wasm, ml');
+
+            // Expose for manual inspection
+            window.inspectObject = (obj, name = 'object', depth = 5) => {
+                console.log(`\n🔬 Inspecting ${name}:`);
+                deepInspect(obj, name, 0, depth);
+            };
+
+            console.log('\n%c💡 MANUAL INSPECTION:', 'font-size: 16px; font-weight: bold; color: #4CAF50');
+            console.log('   window.inspectObject(ij_vto.RingTryonPlugin, "RingTryonPlugin", 10)');
+            console.log('   window.inspectObject(ij_vto.WebCameraPlugin, "WebCameraPlugin", 10)');
+        }
+
+        // Auto-run on load
+        setTimeout(() => {
+            console.log('%c🔍 Inspector loaded. Click the button to start.', 'font-size: 16px; color: cyan; font-weight: bold');
+            console.log('Or run: inspectIjVto()');
+        }, 1000);
+    </script>
+</body>
+</html>

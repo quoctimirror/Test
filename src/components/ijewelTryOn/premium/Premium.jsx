@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useDeviceCamera } from '../ijewel_useDeviceCamera';
-import { useMediaPipeHands } from '../ijewel_useMediaPipeHands';
+// COMMENTED FOR PERFORMANCE - Use SDK internal hand detection instead of external MediaPipe
+// import { useMediaPipeHands } from '../ijewel_useMediaPipeHands';
+import { useSDKHandDetection } from '../useSDKHandDetection';
 import styles from './premium.module.css';
 
 const MODELS = [
@@ -35,7 +37,8 @@ const Premium = () => {
   const viewerAppRef = useRef(null);
   const arPluginRef = useRef(null);
   const isInitializedRef = useRef(false);
-  const arCanvasRef = useRef(null); // Canvas for MediaPipe hand detection
+  // COMMENTED - Not needed anymore, SDK handles hand detection internally
+  // const arCanvasRef = useRef(null); // Canvas for MediaPipe hand detection
 
   // Track previous values to prevent unnecessary rotation config updates
   const prevDetectedHandRef = useRef(-1);
@@ -72,9 +75,14 @@ const Premium = () => {
   const rotationZRef = useRef(0);
   const isManualRotationRef = useRef(false);
 
-  // MediaPipe hand detection
-  const { detectedHand, detectedHandRef } = useMediaPipeHands({
-    canvasRef: arCanvasRef,
+  // SDK hand detection - reads from arPlugin.handDetector.lastResult.handedness
+  // No external MediaPipe needed - SDK already has hand tracking built-in!
+  // const { detectedHand, detectedHandRef } = useMediaPipeHands({
+  //   canvasRef: arCanvasRef,
+  //   isARRunning: inAR
+  // });
+  const { detectedHand, detectedHandRef } = useSDKHandDetection({
+    arPluginRef: arPluginRef,
     isARRunning: inAR
   });
 
@@ -213,24 +221,22 @@ const Premium = () => {
 
       const handleViewerReady = (event) => {
         viewerAppRef.current = event.detail.viewer;
-        const viewer = event.detail.viewer;
 
-        // Try multiple ways to find canvas
-        let foundCanvas = null;
-
-        if (viewer?.canvas) {
-          foundCanvas = viewer.canvas;
-        } else if (viewer?.renderer?.domElement) {
-          foundCanvas = viewer.renderer.domElement;
-        } else if (viewer?.renderer?.canvas) {
-          foundCanvas = viewer.renderer.canvas;
-        }
-
-        if (foundCanvas) {
-          arCanvasRef.current = foundCanvas;
-        } else {
-          console.error('❌ Could not find canvas from viewer object!');
-        }
+        // COMMENTED - Canvas ref not needed, SDK handles hand detection internally
+        // const viewer = event.detail.viewer;
+        // let foundCanvas = null;
+        // if (viewer?.canvas) {
+        //   foundCanvas = viewer.canvas;
+        // } else if (viewer?.renderer?.domElement) {
+        //   foundCanvas = viewer.renderer.domElement;
+        // } else if (viewer?.renderer?.canvas) {
+        //   foundCanvas = viewer.renderer.canvas;
+        // }
+        // if (foundCanvas) {
+        //   arCanvasRef.current = foundCanvas;
+        // } else {
+        //   console.error('❌ Could not find canvas from viewer object!');
+        // }
       };
 
       window.addEventListener('ijewel-viewer-ready', handleViewerReady);
@@ -302,21 +308,19 @@ const Premium = () => {
         updateCamera(0);
       }
 
-      // Assign canvas for MediaPipe hand detection
-      const assignCanvas = () => {
-        return new Promise((resolve, reject) => {
-          if (arCanvasRef.current) {
-            resolve(true);
-            return;
-          }
-
-          const error = new Error('Canvas not found from viewer object');
-          console.error('❌', error.message);
-          reject(error);
-        });
-      };
-
-      await assignCanvas();
+      // COMMENTED - Canvas assignment not needed, SDK handles hand detection internally
+      // const assignCanvas = () => {
+      //   return new Promise((resolve, reject) => {
+      //     if (arCanvasRef.current) {
+      //       resolve(true);
+      //       return;
+      //     }
+      //     const error = new Error('Canvas not found from viewer object');
+      //     console.error('❌', error.message);
+      //     reject(error);
+      //   });
+      // };
+      // await assignCanvas();
 
       // Read and apply initial rotation from config (assume right hand)
       const initialRotation = getInitialRotationFromConfig();
