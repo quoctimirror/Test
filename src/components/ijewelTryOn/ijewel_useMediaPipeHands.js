@@ -13,14 +13,13 @@ export const useMediaPipeHands = ({ canvasRef, isARRunning }) => {
   const handsRef = useRef(null);
   const videoRef = useRef(null);
   const rafIdRef = useRef(null);
+  const prevHandRef = useRef(-1); // Track previous hand to prevent unnecessary state updates
 
   useEffect(() => {
     if (!isARRunning || !window.Hands) return;
 
     const initMediaPipe = async () => {
       try {
-        console.log('🤚 Initializing MediaPipe Hands...');
-
         // Tạo video element ẩn để capture từ canvas
         const video = document.createElement('video');
         video.style.display = 'none';
@@ -46,17 +45,20 @@ export const useMediaPipeHands = ({ canvasRef, isARRunning }) => {
         hands.onResults((results) => {
           if (results.multiHandedness && results.multiHandedness.length > 0) {
             // MediaPipe trả về label: "Left" hoặc "Right"
-            // Note: "Left" là tay trái của người trong ảnh (nhưng nếu dùng camera trước thì bị mirror)
             const handLabel = results.multiHandedness[0].label;
-
-            // Nếu dùng camera trước (selfie mode), cần đảo ngược
-            // Giả sử AR Try-On dùng camera sau nên không cần đảo
             const handIndex = handLabel === 'Left' ? 0 : 1;
 
-            setDetectedHand(handIndex);
-            console.log('✋ Detected hand:', handLabel, '→', handIndex);
+            // Only update state if hand actually changed
+            if (handIndex !== prevHandRef.current) {
+              setDetectedHand(handIndex);
+              prevHandRef.current = handIndex;
+            }
           } else {
-            setDetectedHand(-1);
+            // No hand detected
+            if (prevHandRef.current !== -1) {
+              setDetectedHand(-1);
+              prevHandRef.current = -1;
+            }
           }
         });
 
@@ -64,15 +66,10 @@ export const useMediaPipeHands = ({ canvasRef, isARRunning }) => {
         await hands.initialize();
 
         setIsInitialized(true);
-        console.log('✅ MediaPipe Hands initialized');
 
         // Bắt đầu detect từ canvas
         const detect = async () => {
-          if (!canvasRef.current) {
-            console.warn('⚠️ canvasRef.current is NULL - cannot detect');
-            return;
-          }
-          if (!handsRef.current || !isARRunning) return;
+          if (!canvasRef.current || !handsRef.current || !isARRunning) return;
 
           try {
             // Gửi canvas frame tới MediaPipe
@@ -84,8 +81,6 @@ export const useMediaPipeHands = ({ canvasRef, isARRunning }) => {
           rafIdRef.current = requestAnimationFrame(detect);
         };
 
-        console.log('🎯 Starting hand detection loop...');
-        console.log('🎯 canvasRef.current:', canvasRef.current);
         detect();
 
       } catch (err) {

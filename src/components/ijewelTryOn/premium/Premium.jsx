@@ -9,6 +9,27 @@ const MODELS = [
   { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }
 ];
 
+// Rotation config constant - moved outside component to prevent recreation on every render
+const ROTATION_CONFIG = {
+  backCamera: {
+    right: {
+      0: { y: 5, z: 0 },
+      1: { y: 10, z: 0 },
+      3: { y: 42, z: 0 },
+      4: { y: 42, z: 0 }
+    },
+    left: {
+      3: { y: 15, z: 0 }
+    }
+  },
+  frontCamera: {
+    right: {
+      3: { y: 50, z: 350 },
+      4: { y: 60, z: 350 }
+    },
+  }
+};
+
 const Premium = () => {
   const containerRef = useRef(null);
   const viewerAppRef = useRef(null);
@@ -50,27 +71,6 @@ const Premium = () => {
     isARRunning: inAR
   });
 
-  // cái này là config rotation theo camera, tay, ngón
-  const rotationConfig = {
-    backCamera: {
-      right: {
-        0: { y: 5, z: 0 },
-        1: { y: 10, z: 0 },
-        3: { y: 42, z: 0 },
-        4: { y: 42, z: 350 }
-      },
-      left: {
-        3: { y: 15, z: 0 }
-      }
-    },
-    frontCamera: {
-      right: {
-        3: { y: 50, z: 350 },
-        4: { y: 60, z: 350 }
-      },
-    }
-  };
-
   /**
    * Gets initial rotation from config when entering AR
    * Assumes right hand by default (most common case)
@@ -78,7 +78,7 @@ const Premium = () => {
    */
   const getInitialRotationFromConfig = useCallback(() => {
     // Select config based on camera type
-    const cameraConfig = isBackCamera ? rotationConfig.backCamera : rotationConfig.frontCamera;
+    const cameraConfig = isBackCamera ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
 
     // Assume right hand (most common)
     const fingerConfig = cameraConfig?.right?.[currentFinger];
@@ -88,7 +88,7 @@ const Premium = () => {
     } else {
       return { y: 0, z: 0 };
     }
-  }, [currentFinger, isBackCamera, rotationConfig]);
+  }, [currentFinger, isBackCamera]);
 
   /**
    * Applies rotation config based on detected hand and finger
@@ -114,7 +114,7 @@ const Premium = () => {
     const handType = handNames[detectedHand];
 
     // Select config based on camera type
-    const cameraConfig = isBackCamera ? rotationConfig.backCamera : rotationConfig.frontCamera;
+    const cameraConfig = isBackCamera ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
     const fingerConfig = cameraConfig?.[handType]?.[currentFinger];
 
     if (fingerConfig) {
@@ -125,7 +125,7 @@ const Premium = () => {
       setRotationY(0);
       setRotationZ(0);
     }
-  }, [detectedHand, currentFinger, rotationConfig, isBackCamera, isManualRotation]);
+  }, [detectedHand, currentFinger, isBackCamera, isManualRotation]);
 
   // Auto-apply rotation config when hand detected, camera changed, or finger switched
   useEffect(() => {
