@@ -473,6 +473,7 @@ const Premium = () => {
         {/* SDK will create canvas here automatically */}
       </div>
 
+      {/* COMMENTED FOR PERFORMANCE - Uncomment to show model selector
       <div className={styles.modelSelectorContainer} onClick={(e) => e.stopPropagation()}>
         <label className={styles.modelLabel}>Model:</label>
         <select
@@ -488,7 +489,9 @@ const Premium = () => {
           ))}
         </select>
       </div>
+      */}
 
+      {/* COMMENTED FOR PERFORMANCE - Uncomment to show rotation controls
       {inAR && (
         <div
           className={isRotationExpanded ? styles.rotationSliderPanel : styles.rotationSliderPanelCollapsed}
@@ -560,6 +563,7 @@ const Premium = () => {
           )}
         </div>
       )}
+      */}
 
       <div className={styles.controls} onClick={(e) => e.stopPropagation()}>
         <button className={styles.button} onClick={handleToggleAR} disabled={isLoading}>
@@ -577,6 +581,7 @@ const Premium = () => {
         )}
       </div>
 
+      {/* COMMENTED FOR PERFORMANCE - Uncomment to show debug panel
       <div
         className={isDebugExpanded ? styles.debugInfoPanel : styles.debugInfoPanelCollapsed}
         onClick={handleDebugPanelClick}
@@ -619,6 +624,7 @@ const Premium = () => {
           </>
         )}
       </div>
+      */}
     </div>
   );
 };
