@@ -38,7 +38,9 @@ const ROTATION_CONFIG = {
   frontCamera: {
     right: {
       1: { y: 50, z: 350 }, // index finger
-      2: { y: 60, z: 350 }  // middle finger
+      2: { y: 60, z: 350 },  // middle finger
+      3: { y: 50, z: 350 }, // index finger
+      4: { y: 60, z: 350 }  // middle finger
     },
   }
 };
