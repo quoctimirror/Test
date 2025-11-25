@@ -7,7 +7,8 @@ import styles from './premium_dev.module.css';
 const MODELS = [
   { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' },
   { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' },
-  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }
+  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' },
+  { id: 'GvQB7nk7TbaiOai0PodLuA', name: 'Heart', basename: 'drive' }
 ];
 
 // Đọc model từ URL param (?model=Fistion, ?model=Twin, ?model=Pear)
