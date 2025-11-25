@@ -175,7 +175,7 @@ const Premium = () => {
     }
   }, [getDetectedHand]);
 
-  // OPTIMIZED: rAF loop with FPS counter
+  // FPS counter only - no heavy logic in rAF loop (same as sample2.html)
   useEffect(() => {
     if (!inAR) return;
 
@@ -194,8 +194,6 @@ const Premium = () => {
         lastTime = now;
       }
 
-      applyRotationConfig();
-
       rafId = requestAnimationFrame(loop);
     };
     rafId = requestAnimationFrame(loop);
@@ -203,6 +201,18 @@ const Premium = () => {
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
     };
+  }, [inAR]);
+
+  // Rotation config check - runs at low frequency (every 150ms) to avoid FPS drop
+  // Separated from rAF loop to keep render smooth
+  useEffect(() => {
+    if (!inAR) return;
+
+    const intervalId = setInterval(() => {
+      applyRotationConfig();
+    }, 150); // 150ms = ~7 checks/second, enough for responsive rotation
+
+    return () => clearInterval(intervalId);
   }, [inAR, applyRotationConfig]);
 
   // COMMENTED FOR PERFORMANCE - Rotation applied directly in applyRotationConfig now
