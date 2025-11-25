@@ -39,8 +39,6 @@ const ROTATION_CONFIG = {
     right: {
       1: { y: 50, z: 350 }, // index finger
       2: { y: 60, z: 350 },  // middle finger
-      3: { y: 50, z: 350 }, // index finger
-      4: { y: 60, z: 350 }  // middle finger
     },
   }
 };
@@ -118,10 +116,15 @@ const Premium = () => {
     }
   }, []);
 
+  // Track previous values to avoid unnecessary updates
+  const prevHandRef = useRef(-1);
+  const prevFingerRef = useRef(-1);
+  const prevCameraRef = useRef(false);
+
   /**
    * OPTIMIZED: Applies rotation config based on detected hand and finger
-   * Reads directly from SDK - no state, no re-renders
-   * Called in rAF loop for smooth performance
+   * - Reads directly from SDK (no state, no re-renders)
+   * - Only updates when values actually change (avoid unnecessary work)
    */
   const applyRotationConfig = useCallback(() => {
     // Skip auto-apply when user is manually adjusting rotation
@@ -130,26 +133,43 @@ const Premium = () => {
     const arPlugin = arPluginRef.current;
     if (!arPlugin?.modelRotation) return;
 
-    // Read hand directly from SDK (no state delay)
+    // Read values directly from SDK
     const currentHand = getDetectedHand();
+    const finger = arPlugin.finger;
+    const isBackCamera = isBackCameraRef.current;
 
-    // No hand detected - keep current rotation (don't reset)
+    // No hand detected - keep current rotation
     if (currentHand === -1) return;
 
-    const handType = currentHand === 0 ? 'left' : 'right';
-    const finger = arPlugin.finger; // Read directly from SDK
+    // PERFORMANCE: Only update if something changed
+    if (currentHand === prevHandRef.current &&
+        finger === prevFingerRef.current &&
+        isBackCamera === prevCameraRef.current) {
+      return; // Nothing changed, skip update
+    }
 
-    // Select config based on camera type (using ref, not state)
-    const cameraConfig = isBackCameraRef.current ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
+    // Update previous values
+    prevHandRef.current = currentHand;
+    prevFingerRef.current = finger;
+    prevCameraRef.current = isBackCamera;
+
+    const handType = currentHand === 0 ? 'left' : 'right';
+    const cameraConfig = isBackCamera ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
     const fingerConfig = cameraConfig?.[handType]?.[finger];
 
     if (fingerConfig) {
+      // Có config → dùng custom rotation
       rotationYRef.current = fingerConfig.y;
       rotationZRef.current = fingerConfig.z;
       arPlugin.modelRotation.y = (fingerConfig.y * Math.PI) / 180;
       arPlugin.modelRotation.z = (fingerConfig.z * Math.PI) / 180;
+    } else {
+      // Không có config → reset về 0 để SDK tự handle
+      rotationYRef.current = 0;
+      rotationZRef.current = 0;
+      arPlugin.modelRotation.y = 0;
+      arPlugin.modelRotation.z = 0;
     }
-    // Note: Don't reset to 0 if no config - keep last valid rotation
   }, [getDetectedHand]);
 
   // OPTIMIZED: rAF loop to apply rotation every frame (60fps)
