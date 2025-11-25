@@ -346,7 +346,7 @@
             // Load an optional scene configuration
             // await viewer.load("https://demo.ijewel3d.com/web-vto/tryon-2-web.json");
 
-            document.querySelector("#loading-text").remove();
+            document.querySelector("#loading-text")?.remove();
             viewer.renderEnabled = true
             const tryonOptions = document.querySelector("#tryon-options");
 
