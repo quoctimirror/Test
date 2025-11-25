@@ -71,6 +71,96 @@
             color: #2196F3;
             font-size: 16px;
         }
+        .api-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1e1e1e;
+            border: 2px solid #9C27B0;
+            border-radius: 8px;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+        }
+        .api-panel.active {
+            display: block;
+        }
+        .api-panel h3 {
+            margin: 0 0 15px 0;
+            color: #9C27B0;
+            font-size: 18px;
+        }
+        .api-summary {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            color: #888;
+        }
+        .api-summary strong {
+            color: #4ec9b0;
+        }
+        .api-filter {
+            margin-bottom: 15px;
+        }
+        .api-filter input {
+            width: 100%;
+            padding: 10px;
+            background: #252526;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #d4d4d4;
+            font-size: 14px;
+        }
+        .api-list {
+            max-height: 50vh;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            background: #252526;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .api-item {
+            padding: 4px 0;
+            border-bottom: 1px solid #333;
+        }
+        .api-item.camera {
+            background: #3d2e00;
+            color: #FF9800;
+            font-weight: bold;
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+        }
+        .api-item .path {
+            color: #9cdcfe;
+        }
+        .api-item .type {
+            color: #4ec9b0;
+            margin-left: 10px;
+        }
+        .api-item .value {
+            color: #ce9178;
+            margin-left: 10px;
+        }
+        .api-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1999;
+            display: none;
+        }
+        .api-overlay.active {
+            display: block;
+        }
         .finger-panel h3 {
             margin: 0 0 15px 0;
             color: #4ec9b0;
@@ -113,6 +203,7 @@
     <button id="switch-finger-btn" disabled style="opacity: 0.5">Switch Finger</button>
     <button id="camera-btn" disabled style="opacity: 0.5">Test Camera API</button>
     <button id="flip-btn" disabled style="opacity: 0.5">Flip Camera</button>
+    <button id="list-api-btn" disabled style="opacity: 0.5">List Camera APIs</button>
 
     <!-- Finger Info Panel -->
     <div id="finger-panel" class="finger-panel">
@@ -144,6 +235,23 @@
         </div>
     </div>
 
+    <!-- Overlay for API Panel -->
+    <div id="api-overlay" class="api-overlay"></div>
+
+    <!-- Camera APIs Panel -->
+    <div id="api-panel" class="api-panel">
+        <button id="api-close" style="position:absolute; top:10px; right:10px; background:#f44336; padding:8px 12px; font-size:14px; margin:0;">✕ Close</button>
+        <h3>📷 Camera APIs (SDK Internal)</h3>
+        <div class="api-summary">
+            <span>Found: <strong id="api-camera">0</strong> camera-related</span>
+            <span>(Total scanned: <strong id="api-total">0</strong>)</span>
+        </div>
+        <div class="api-filter">
+            <input type="text" id="api-search" placeholder="Search APIs..." />
+        </div>
+        <div id="api-list" class="api-list"></div>
+    </div>
+
     <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js"></script>
     <script src="https://releases.ijewel3d.com/libs/mini-viewer/0.5.0/bundle.nowebgi.iife.js"></script>
     <script>window.webgi = window;</script>
@@ -159,6 +267,7 @@
         const switchFingerBtn = document.getElementById('switch-finger-btn');
         const cameraBtn = document.getElementById('camera-btn');
         const flipBtn = document.getElementById('flip-btn');
+        const listApiBtn = document.getElementById('list-api-btn');
         const fingerPanel = document.getElementById('finger-panel');
         const fingerIndexEl = document.getElementById('finger-index');
         const fingerResultEl = document.getElementById('finger-result');
@@ -166,6 +275,17 @@
         const pluginNameEl = document.getElementById('plugin-name');
         const mediaSettingsEl = document.getElementById('media-settings');
         const facingModeEl = document.getElementById('facing-mode');
+
+        // API Panel elements
+        const apiPanel = document.getElementById('api-panel');
+        const apiOverlay = document.getElementById('api-overlay');
+        const apiTotal = document.getElementById('api-total');
+        const apiCamera = document.getElementById('api-camera');
+        const apiSearch = document.getElementById('api-search');
+        const apiList = document.getElementById('api-list');
+
+        // Store all APIs for filtering
+        let allAPIsData = [];
 
         let viewerApp;
         let arPlugin;
@@ -638,6 +758,8 @@
             cameraBtn.style.opacity = '1';
             flipBtn.disabled = false;
             flipBtn.style.opacity = '1';
+            listApiBtn.disabled = false;
+            listApiBtn.style.opacity = '1';
 
             // Show finger panel and update UI
             fingerPanel.classList.add('active');
@@ -667,6 +789,8 @@
                 cameraBtn.style.opacity = '0.5';
                 flipBtn.disabled = true;
                 flipBtn.style.opacity = '0.5';
+                listApiBtn.disabled = true;
+                listApiBtn.style.opacity = '0.5';
 
                 // Hide finger panel
                 fingerPanel.classList.remove('active');
@@ -946,6 +1070,153 @@
 
             // Check if any property changed
             console.log('%c✅ Camera flipped! Check mediaSettings above for changes.', 'color: #4CAF50; font-weight: bold');
+        });
+
+        // ============================================
+        // LIST ALL APIs (Deep Inspect) - Display on UI
+        // ============================================
+        function renderAPIList(filter = '') {
+            const filterLower = filter.toLowerCase();
+            // Only show camera-related APIs by default
+            let filteredAPIs = allAPIsData.filter(api => api.isCameraRelated);
+
+            // If user types in search, search within camera APIs
+            if (filter) {
+                filteredAPIs = filteredAPIs.filter(api =>
+                    api.path.toLowerCase().includes(filterLower) ||
+                    api.value.toLowerCase().includes(filterLower)
+                );
+            }
+
+            // Render to UI
+            apiList.innerHTML = filteredAPIs.map(api => {
+                const indent = '&nbsp;&nbsp;'.repeat(api.depth);
+                const prefix = api.depth > 0 ? '└─ ' : '';
+                const className = api.isCameraRelated ? 'api-item camera' : 'api-item';
+                const emoji = api.isCameraRelated ? '📷 ' : (api.type === 'function' ? '🔧 ' : '');
+
+                return `<div class="${className}">
+                    ${indent}${prefix}${emoji}<span class="path">${api.path}</span>
+                    <span class="type">(${api.type})</span>
+                    ${api.type !== 'function' && api.type !== 'object' ? `<span class="value">${api.value}</span>` : ''}
+                </div>`;
+            }).join('');
+
+            // Update summary
+            apiCamera.textContent = filteredAPIs.length;
+            apiTotal.textContent = allAPIsData.length;
+        }
+
+        function showAPIPanel() {
+            apiOverlay.classList.add('active');
+            apiPanel.classList.add('active');
+            apiSearch.value = '';
+            apiSearch.focus();
+        }
+
+        function hideAPIPanel() {
+            apiOverlay.classList.remove('active');
+            apiPanel.classList.remove('active');
+        }
+
+        // Close panel on overlay click or close button
+        apiOverlay.addEventListener('click', hideAPIPanel);
+        document.getElementById('api-close').addEventListener('click', hideAPIPanel);
+
+        // Search filter
+        apiSearch.addEventListener('input', (e) => {
+            renderAPIList(e.target.value);
+        });
+
+        // ESC to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && apiPanel.classList.contains('active')) {
+                hideAPIPanel();
+            }
+        });
+
+        listApiBtn.addEventListener('click', () => {
+            if (!arPlugin || !inAR) {
+                alert('⚠️ Cần Start AR trước!');
+                return;
+            }
+
+            // Show loading
+            apiList.innerHTML = '<div style="text-align:center;padding:20px;">Loading...</div>';
+            showAPIPanel();
+
+            // Use setTimeout to not block UI - runs ONCE only
+            setTimeout(() => {
+                const visited = new Set(); // Track visited paths to avoid cycles
+                const cameraKeywords = ['camera', 'facing', 'front', 'back', 'video', 'stream', 'environment', 'user', 'media'];
+                allAPIsData = [];
+                const MAX_DEPTH = 4;
+
+                function deepList(obj, path, depth = 0) {
+                    if (depth > MAX_DEPTH) return;
+                    if (!obj || typeof obj !== 'object') return;
+                    if (visited.has(path)) return;
+                    visited.add(path);
+
+                    let keys = [];
+                    try {
+                        keys = Object.getOwnPropertyNames(obj);
+                    } catch (e) { return; }
+
+                    const uniqueKeys = keys.filter(k =>
+                        k !== '__proto__' && k !== 'constructor' && !k.startsWith('_')
+                    );
+
+                    for (const key of uniqueKeys) {
+                        try {
+                            const value = obj[key];
+                            const type = typeof value;
+                            const fullPath = path ? `${path}.${key}` : key;
+                            const isCameraRelated = cameraKeywords.some(kw =>
+                                key.toLowerCase().includes(kw)
+                            );
+
+                            let displayValue = '';
+                            if (type === 'function') {
+                                displayValue = '';
+                            } else if (type === 'object' && value !== null) {
+                                displayValue = Array.isArray(value) ? `[${value.length}]` : '{...}';
+                            } else if (type === 'string') {
+                                displayValue = `"${value.substring(0, 30)}${value.length > 30 ? '...' : ''}"`;
+                            } else {
+                                displayValue = String(value);
+                            }
+
+                            allAPIsData.push({
+                                path: fullPath,
+                                type,
+                                value: displayValue,
+                                depth,
+                                isCameraRelated
+                            });
+
+                            // Recurse into objects (not arrays, not functions)
+                            if (type === 'object' && value !== null && !Array.isArray(value)) {
+                                deepList(value, fullPath, depth + 1);
+                            }
+                        } catch (e) {}
+                    }
+                }
+
+                // Start deep inspection
+                deepList(arPlugin, 'arPlugin', 0);
+
+                // Sort: camera-related first, then alphabetically
+                allAPIsData.sort((a, b) => {
+                    if (a.isCameraRelated && !b.isCameraRelated) return -1;
+                    if (!a.isCameraRelated && b.isCameraRelated) return 1;
+                    return a.path.localeCompare(b.path);
+                });
+
+                // Render
+                renderAPIList();
+                console.log('📋 Found', allAPIsData.length, 'APIs. Camera-related:', allAPIsData.filter(a => a.isCameraRelated).length);
+            }, 50);
         });
 
         // Disable AR button until viewer ready

@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useDeviceCamera } from '../ijewel_useDeviceCamera';
-// COMMENTED FOR PERFORMANCE - Use SDK internal hand detection instead of external MediaPipe
-// import { useMediaPipeHands } from '../ijewel_useMediaPipeHands';
-import { useSDKHandDetection } from '../useSDKHandDetection';
+// REMOVED - Now reading directly from SDK in rAF loop for better performance
+// import { useSDKHandDetection } from '../useSDKHandDetection';
 import styles from './premium.module.css';
 
 const MODELS = [
@@ -52,10 +51,8 @@ const Premium = () => {
   // COMMENTED - Not needed anymore, SDK handles hand detection internally
   // const arCanvasRef = useRef(null); // Canvas for MediaPipe hand detection
 
-  // Track previous values to prevent unnecessary rotation config updates
-  const prevDetectedHandRef = useRef(-1);
-  const prevFingerRef = useRef(0);
-  const prevCameraRef = useRef(true);
+  // Ref for camera state (avoid re-renders)
+  const isBackCameraRef = useRef(false);
 
   const {
     deviceType,
@@ -87,16 +84,17 @@ const Premium = () => {
   const rotationZRef = useRef(0);
   const isManualRotationRef = useRef(false);
 
-  // SDK hand detection - reads from arPlugin.handDetector.lastResult.handedness
-  // No external MediaPipe needed - SDK already has hand tracking built-in!
-  // const { detectedHand, detectedHandRef } = useMediaPipeHands({
-  //   canvasRef: arCanvasRef,
-  //   isARRunning: inAR
-  // });
-  const { detectedHand, detectedHandRef } = useSDKHandDetection({
-    arPluginRef: arPluginRef,
-    isARRunning: inAR
-  });
+  // OPTIMIZED: Read hand detection directly from SDK in rAF loop (no state, no re-renders)
+  // Returns: -1 (no hand), 0 (left), 1 (right)
+  const getDetectedHand = useCallback(() => {
+    const handedness = arPluginRef.current?.handDetector?.lastResult?.handedness;
+    if (handedness?.[0]?.[0]) {
+      const handData = handedness[0][0];
+      const label = handData.categoryName || handData.label || handData.displayName;
+      return label === 'Left' ? 0 : 1;
+    }
+    return -1;
+  }, []);
 
   /**
    * Gets initial rotation from config when entering AR
@@ -104,95 +102,70 @@ const Premium = () => {
    * Returns {y: 0, z: 0} if no config found
    */
   const getInitialRotationFromConfig = useCallback(() => {
-    // Select config based on camera type
-    const cameraConfig = isBackCamera ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
+    // Select config based on camera type (using ref)
+    const cameraConfig = isBackCameraRef.current ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
 
-    // Assume right hand (most common)
-    const fingerConfig = cameraConfig?.right?.[currentFinger];
+    // Assume right hand (most common), read finger from SDK
+    const finger = arPluginRef.current?.finger ?? 3;
+    const fingerConfig = cameraConfig?.right?.[finger];
 
     if (fingerConfig) {
       return { y: fingerConfig.y, z: fingerConfig.z };
     } else {
       return { y: 0, z: 0 };
     }
-  }, [currentFinger, isBackCamera]);
+  }, []);
 
   /**
-   * Applies rotation config based on detected hand and finger
-   * Uses detectedHand from MediaPipe (auto-detection)
-   *
-   * Retrieves rotation angles from rotationConfig and applies to ring model.
-   * Supports both front and back camera configs.
-   * Skips auto-apply when user is manually adjusting rotation.
+   * OPTIMIZED: Applies rotation config based on detected hand and finger
+   * Reads directly from SDK - no state, no re-renders
+   * Called in rAF loop for smooth performance
    */
   const applyRotationConfig = useCallback(() => {
     // Skip auto-apply when user is manually adjusting rotation
-    if (isManualRotationRef.current) {
-      return;
-    }
+    if (isManualRotationRef.current) return;
 
-    // Read from ref for real-time detection (no re-render)
-    const currentHand = detectedHandRef.current;
+    const arPlugin = arPluginRef.current;
+    if (!arPlugin?.modelRotation) return;
+
+    // Read hand directly from SDK (no state delay)
+    const currentHand = getDetectedHand();
 
     // No hand detected - keep current rotation (don't reset)
-    if (currentHand === -1) {
-      return;
-    }
+    if (currentHand === -1) return;
 
-    // Use detected hand directly (MediaPipe already handles mirroring correctly)
-    const handNames = ['left', 'right'];
-    const handType = handNames[currentHand];
+    const handType = currentHand === 0 ? 'left' : 'right';
+    const finger = arPlugin.finger; // Read directly from SDK
 
-    // Select config based on camera type
-    const cameraConfig = isBackCamera ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
-    const fingerConfig = cameraConfig?.[handType]?.[currentFinger];
+    // Select config based on camera type (using ref, not state)
+    const cameraConfig = isBackCameraRef.current ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
+    const fingerConfig = cameraConfig?.[handType]?.[finger];
 
     if (fingerConfig) {
-      // Update ref (no re-render)
       rotationYRef.current = fingerConfig.y;
       rotationZRef.current = fingerConfig.z;
-
-      // Apply rotation immediately - DIRECT modification
-      if (arPluginRef.current?.modelRotation) {
-        const rotationYRad = (fingerConfig.y * Math.PI) / 180;
-        const rotationZRad = (fingerConfig.z * Math.PI) / 180;
-        arPluginRef.current.modelRotation.y = rotationYRad;
-        arPluginRef.current.modelRotation.z = rotationZRad;
-      }
-    } else {
-      // No config found - reset to 0 (default)
-      rotationYRef.current = 0;
-      rotationZRef.current = 0;
-
-      // Apply rotation immediately
-      if (arPluginRef.current?.modelRotation) {
-        arPluginRef.current.modelRotation.y = 0;
-        arPluginRef.current.modelRotation.z = 0;
-      }
+      arPlugin.modelRotation.y = (fingerConfig.y * Math.PI) / 180;
+      arPlugin.modelRotation.z = (fingerConfig.z * Math.PI) / 180;
     }
-  }, [detectedHandRef, currentFinger, isBackCamera]);
+    // Note: Don't reset to 0 if no config - keep last valid rotation
+  }, [getDetectedHand]);
 
-  // Auto-apply rotation config when hand detected, camera changed, or finger switched
+  // OPTIMIZED: rAF loop to apply rotation every frame (60fps)
+  // Much smoother than useEffect chain which has state update delays
   useEffect(() => {
     if (!inAR) return;
 
-    // Check if values actually changed
-    const handChanged = detectedHand !== prevDetectedHandRef.current;
-    const fingerChanged = currentFinger !== prevFingerRef.current;
-    const cameraChanged = isBackCamera !== prevCameraRef.current;
+    let rafId;
+    const loop = () => {
+      applyRotationConfig(); // Apply rotation every frame
+      rafId = requestAnimationFrame(loop);
+    };
+    rafId = requestAnimationFrame(loop);
 
-    // Only apply config when there's an actual change
-    if (handChanged || fingerChanged || cameraChanged) {
-      // Reset manual mode when hand/finger/camera changes (use ref - no re-render)
-      isManualRotationRef.current = false;
-      applyRotationConfig();
-
-      // Update refs to current values
-      prevDetectedHandRef.current = detectedHand;
-      prevFingerRef.current = currentFinger;
-      prevCameraRef.current = isBackCamera;
-    }
-  }, [detectedHand, isBackCamera, currentFinger, inAR, applyRotationConfig]);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [inAR, applyRotationConfig]);
 
   // COMMENTED FOR PERFORMANCE - Rotation applied directly in applyRotationConfig now
   // No need for useEffect that triggers on state changes
@@ -317,7 +290,10 @@ const Premium = () => {
 
       if (isMobile) {
         await arPlugin.flipCamera();
+        isBackCameraRef.current = true; // Mobile starts with back camera after flip
         updateCamera(0);
+      } else {
+        isBackCameraRef.current = false; // Desktop uses front camera
       }
 
       // Set default finger = 3 (ring finger) và sync React state từ SDK
@@ -382,8 +358,8 @@ const Premium = () => {
   /**
    * Flips between front and back camera
    * - Toggles camera via AR plugin
-   * - Updates camera type state
-   * - Rotation config auto-applied by useEffect
+   * - Updates camera ref (for rotation config)
+   * - Updates camera state (for UI)
    */
   const handleFlipCamera = async () => {
     const arPlugin = arPluginRef.current;
@@ -391,8 +367,10 @@ const Premium = () => {
 
     try {
       await arPlugin.flipCamera();
+      // Toggle ref (for rotation config - no re-render)
+      isBackCameraRef.current = !isBackCameraRef.current;
+      // Toggle state (for UI - useDeviceCamera)
       toggleCamera();
-      // Rotation config auto-applied by useEffect when isBackCamera changes
     } catch (error) {
       console.error('Flip camera error:', error);
     }
