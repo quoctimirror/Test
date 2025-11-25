@@ -11,6 +11,17 @@ const MODELS = [
   { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }
 ];
 
+// Đọc model từ URL param (?model=Fistion, ?model=Twin, ?model=Pear)
+const getModelFromURL = () => {
+  const params = new URLSearchParams(window.location.search);
+  const modelName = params.get('model');
+  if (modelName) {
+    const found = MODELS.find(m => m.name.toLowerCase() === modelName.toLowerCase());
+    if (found) return found.id;
+  }
+  return MODELS[0].id; // Default: model đầu tiên
+};
+
 // Rotation config constant - moved outside component to prevent recreation on every render
 // Finger index theo SDK: 0=thumb, 1=index, 2=middle, 3=ring, 4=pinky
 const ROTATION_CONFIG = {
@@ -57,7 +68,7 @@ const Premium = () => {
   } = useDeviceCamera();
 
   // State declarations - must come before useMediaPipeHands
-  const [currentModelId, setCurrentModelId] = useState(MODELS[0].id);
+  const [currentModelId, setCurrentModelId] = useState(() => getModelFromURL());
   const [inAR, setInAR] = useState(false);
   const [fileConfig, setFileConfig] = useState(null);
   // const [currentHand, setCurrentHand] = useState(0); // Removed - using detectedHand from MediaPipe
