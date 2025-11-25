@@ -36,6 +36,49 @@
             background: #252526;
             border-left: 3px solid #4ec9b0;
         }
+        .finger-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #252526;
+            border: 2px solid #4ec9b0;
+            border-radius: 8px;
+            padding: 15px 20px;
+            min-width: 280px;
+            display: none;
+            z-index: 1000;
+        }
+        .finger-panel.active {
+            display: block;
+        }
+        .finger-panel h3 {
+            margin: 0 0 15px 0;
+            color: #4ec9b0;
+            font-size: 16px;
+        }
+        .finger-row {
+            margin: 8px 0;
+        }
+        .finger-label {
+            color: #9cdcfe;
+        }
+        .finger-value {
+            color: #ce9178;
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+        .finger-result {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0 0 0;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
     </style>
 </head>
 <body>
@@ -46,6 +89,21 @@
 
     <button id="inspect-btn">1. Inspect SDK Structure</button>
     <button id="ar-btn">2. Start AR & Monitor</button>
+    <button id="finger-btn" disabled style="opacity: 0.5">3. Test Finger Order</button>
+    <button id="switch-finger-btn" disabled style="opacity: 0.5">Switch Finger</button>
+
+    <!-- Finger Info Panel -->
+    <div id="finger-panel" class="finger-panel">
+        <h3>🖐️ Finger Info</h3>
+        <div class="finger-row">
+            <span class="finger-label">Index:</span>
+            <span id="finger-index" class="finger-value">-</span>
+        </div>
+        <div class="finger-row">
+            <span class="finger-label">getCurrentFinger():</span>
+        </div>
+        <pre id="finger-result" class="finger-result">-</pre>
+    </div>
 
     <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js"></script>
     <script src="https://releases.ijewel3d.com/libs/mini-viewer/0.5.0/bundle.nowebgi.iife.js"></script>
@@ -58,6 +116,11 @@
         const container = document.getElementById('viewer-container');
         const arBtn = document.getElementById('ar-btn');
         const inspectBtn = document.getElementById('inspect-btn');
+        const fingerBtn = document.getElementById('finger-btn');
+        const switchFingerBtn = document.getElementById('switch-finger-btn');
+        const fingerPanel = document.getElementById('finger-panel');
+        const fingerIndexEl = document.getElementById('finger-index');
+        const fingerResultEl = document.getElementById('finger-result');
 
         let viewerApp;
         let arPlugin;
@@ -163,6 +226,36 @@
             console.log('\n🔍 PROTOTYPE INSPECTION:');
             if (pluginClass.prototype) {
                 recursiveInspect(pluginClass.prototype, `${pluginName}.prototype`, 0, 2);
+            }
+        }
+
+        // ============================================
+        // UPDATE FINGER UI
+        // ============================================
+        function updateFingerUI() {
+            if (!arPlugin || !inAR) {
+                fingerIndexEl.textContent = '-';
+                fingerResultEl.textContent = '-';
+                return;
+            }
+
+            // Update finger index
+            fingerIndexEl.textContent = arPlugin.finger;
+
+            // Update getCurrentFinger() result
+            if (typeof arPlugin.getCurrentFinger === 'function') {
+                try {
+                    const result = arPlugin.getCurrentFinger();
+                    if (result && typeof result === 'object') {
+                        fingerResultEl.textContent = JSON.stringify(result, null, 2);
+                    } else {
+                        fingerResultEl.textContent = String(result);
+                    }
+                } catch (e) {
+                    fingerResultEl.textContent = 'Error: ' + e.message;
+                }
+            } else {
+                fingerResultEl.textContent = 'getCurrentFinger() not available';
             }
         }
 
@@ -456,6 +549,18 @@
             }, 3000);
 
             inAR = true;
+
+            // Enable finger test button
+            fingerBtn.disabled = false;
+            fingerBtn.style.opacity = '1';
+
+            // Enable switch finger button
+            switchFingerBtn.disabled = false;
+            switchFingerBtn.style.opacity = '1';
+
+            // Show finger panel and update UI
+            fingerPanel.classList.add('active');
+            updateFingerUI();
         }
 
         async function stopAR() {
@@ -463,6 +568,17 @@
                 await arPlugin.stop();
                 inAR = false;
                 console.log('⏹️ AR stopped');
+
+                // Disable finger test button
+                fingerBtn.disabled = true;
+                fingerBtn.style.opacity = '0.5';
+
+                // Disable switch finger button
+                switchFingerBtn.disabled = true;
+                switchFingerBtn.style.opacity = '0.5';
+
+                // Hide finger panel
+                fingerPanel.classList.remove('active');
             }
         }
 
@@ -490,6 +606,129 @@
                     arBtn.disabled = false;
                 }
             }
+        });
+
+        // ============================================
+        // TEST FINGER ORDER
+        // ============================================
+        fingerBtn.addEventListener('click', async () => {
+            if (!arPlugin || !inAR) {
+                alert('⚠️ Cần Start AR trước!');
+                return;
+            }
+
+            console.clear();
+            console.log('%c🖐️ FINGER ORDER TEST', 'font-size: 24px; font-weight: bold; color: #E91E63; background: #000; padding: 10px');
+            console.log('═'.repeat(100));
+
+            // 1. Check current finger
+            console.log('\n%c📍 CURRENT STATE:', 'font-size: 18px; font-weight: bold; color: #2196F3');
+            console.log('─'.repeat(100));
+            console.log('arPlugin.finger =>', arPlugin.finger);
+
+            if (typeof arPlugin.getCurrentFinger === 'function') {
+                console.log('arPlugin.getCurrentFinger() =>', arPlugin.getCurrentFinger());
+            } else {
+                console.log('⚠️ getCurrentFinger() not available as function');
+            }
+
+            // 2. Test all finger indices
+            console.log('\n%c🔄 TESTING ALL FINGER INDICES (0-4):', 'font-size: 18px; font-weight: bold; color: #FF9800');
+            console.log('─'.repeat(100));
+
+            const originalFinger = arPlugin.finger;
+            const fingerResults = [];
+
+            for (let i = 0; i < 5; i++) {
+                arPlugin.finger = i;
+
+                // Wait a bit for SDK to process
+                await new Promise(r => setTimeout(r, 100));
+
+                const result = {
+                    index: i,
+                    fingerProperty: arPlugin.finger,
+                    getCurrentFinger: typeof arPlugin.getCurrentFinger === 'function' ? arPlugin.getCurrentFinger() : 'N/A'
+                };
+
+                fingerResults.push(result);
+                console.log(`   Finger ${i}:`, result);
+            }
+
+            // 3. Show summary table
+            console.log('\n%c📊 FINGER ORDER SUMMARY:', 'font-size: 18px; font-weight: bold; color: #4CAF50');
+            console.log('─'.repeat(100));
+            console.table(fingerResults);
+
+            // 4. Inspect getCurrentFinger structure
+            console.log('\n%c🔬 getCurrentFinger() INSPECTION:', 'font-size: 18px; font-weight: bold; color: #9C27B0');
+            console.log('─'.repeat(100));
+
+            if (typeof arPlugin.getCurrentFinger === 'function') {
+                // Try to get function source
+                try {
+                    const funcStr = arPlugin.getCurrentFinger.toString();
+                    console.log('Function source (first 500 chars):');
+                    console.log(funcStr.substring(0, 500));
+
+                    // Test what getCurrentFinger returns for each index
+                    console.log('\n📋 getCurrentFinger() return values:');
+                    for (let i = 0; i < 5; i++) {
+                        arPlugin.finger = i;
+                        await new Promise(r => setTimeout(r, 50));
+                        const fingerData = arPlugin.getCurrentFinger();
+                        console.log(`   finger=${i} → getCurrentFinger():`, fingerData);
+
+                        // If it's an object, inspect deeper
+                        if (fingerData && typeof fingerData === 'object') {
+                            console.log('      Properties:', Object.keys(fingerData));
+                            console.log('      Full data:', JSON.stringify(fingerData, null, 2));
+                        }
+                    }
+                } catch (e) {
+                    console.log('❌ Could not inspect:', e.message);
+                }
+            }
+
+            // 5. Check for finger name mapping in SDK
+            console.log('\n%c🏷️ CHECKING FOR FINGER NAME MAPPING:', 'font-size: 18px; font-weight: bold; color: #00BCD4');
+            console.log('─'.repeat(100));
+
+            const possibleFingerProps = ['fingerNames', 'FINGER_NAMES', 'fingerLabels', 'FINGERS', 'fingerMap', 'fingerMapping'];
+            possibleFingerProps.forEach(prop => {
+                if (arPlugin[prop]) {
+                    console.log(`✅ Found arPlugin.${prop}:`, arPlugin[prop]);
+                }
+                if (window.ij_vto?.RingTryonPlugin?.[prop]) {
+                    console.log(`✅ Found RingTryonPlugin.${prop}:`, window.ij_vto.RingTryonPlugin[prop]);
+                }
+            });
+
+            // 6. Restore original finger
+            arPlugin.finger = originalFinger;
+            console.log('\n✅ Restored finger to:', originalFinger);
+
+            console.log('\n%c═════════════════════════════════════════════════════════════════════════════════════════════', 'color: #E91E63');
+            console.log('%c✅ FINGER TEST COMPLETE', 'font-size: 20px; font-weight: bold; color: #4CAF50; background: #000; padding: 10px');
+            console.log('%c═════════════════════════════════════════════════════════════════════════════════════════════', 'color: #E91E63');
+        });
+
+        // ============================================
+        // SWITCH FINGER BUTTON
+        // ============================================
+        switchFingerBtn.addEventListener('click', () => {
+            if (!arPlugin || !inAR) {
+                alert('⚠️ Cần Start AR trước!');
+                return;
+            }
+
+            // Switch to next finger (0 → 1 → 2 → 3 → 4 → 0)
+            arPlugin.finger = (arPlugin.finger + 1) % 5;
+
+            // Update UI
+            updateFingerUI();
+
+            console.log('🖐️ Switched to finger:', arPlugin.finger);
         });
 
         // Disable AR button until viewer ready

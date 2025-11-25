@@ -12,22 +12,23 @@ const MODELS = [
 ];
 
 // Rotation config constant - moved outside component to prevent recreation on every render
+// Finger index theo SDK: 0=thumb, 1=index, 2=middle, 3=ring, 4=pinky
 const ROTATION_CONFIG = {
   backCamera: {
     right: {
-      0: { y: 5, z: 0 },
-      1: { y: 10, z: 0 },
-      3: { y: 42, z: 0 },
-      4: { y: 42, z: 0 }
+      3: { y: 5, z: 0 },    // ring finger
+      4: { y: 10, z: 0 },   // pinky
+      1: { y: 42, z: 0 },   // index finger
+      2: { y: 42, z: 0 }    // middle finger
     },
     left: {
-      3: { y: 15, z: 0 }
+      1: { y: 15, z: 0 }    // index finger
     }
   },
   frontCamera: {
     right: {
-      3: { y: 50, z: 350 },
-      4: { y: 60, z: 350 }
+      1: { y: 50, z: 350 }, // index finger
+      2: { y: 60, z: 350 }  // middle finger
     },
   }
 };
@@ -60,7 +61,7 @@ const Premium = () => {
   const [inAR, setInAR] = useState(false);
   const [fileConfig, setFileConfig] = useState(null);
   // const [currentHand, setCurrentHand] = useState(0); // Removed - using detectedHand from MediaPipe
-  const [currentFinger, setCurrentFinger] = useState(0);
+  const [currentFinger, setCurrentFinger] = useState(3); // Default: ring finger (index 3 theo SDK)
   const [isLoading, setIsLoading] = useState(false);
 
   // COMMENTED FOR PERFORMANCE - These don't need to trigger re-renders
@@ -308,6 +309,10 @@ const Premium = () => {
         updateCamera(0);
       }
 
+      // Set default finger = 3 (ring finger) và sync React state từ SDK
+      arPlugin.finger = 3;
+      setCurrentFinger(arPlugin.finger);
+
       // COMMENTED - Canvas assignment not needed, SDK handles hand detection internally
       // const assignCanvas = () => {
       //   return new Promise((resolve, reject) => {
@@ -387,18 +392,20 @@ const Premium = () => {
   // ============================================================================
 
   /**
-   * Cycles to next finger (0-4: ring finger, pinky, thumb, index, middle)
-   * - Updates state and AR plugin finger
+   * Cycles to next finger (SDK order: 0=thumb, 1=index, 2=middle, 3=ring, 4=pinky)
+   * - Uses arPlugin.finger as source of truth
+   * - Syncs React state from SDK
    * - Reapplies rotation config for new finger
    */
   const handleSwitchFinger = () => {
     const arPlugin = arPluginRef.current;
     if (!arPlugin || !inAR) return;
 
-    const newFinger = (currentFinger + 1) % 5;
-    setCurrentFinger(newFinger);
-
+    // Dùng SDK làm source of truth
     arPlugin.finger = (arPlugin.finger + 1) % 5;
+
+    // Sync React state từ SDK
+    setCurrentFinger(arPlugin.finger);
     // Rotation config auto-applied by useEffect when currentFinger changes
   };
 
@@ -473,7 +480,8 @@ const Premium = () => {
   // ============================================================================
 
   const getFingerName = (index) => {
-    const fingerNames = ['Ngón áp út', 'Ngón út', 'Ngón cái', 'Ngón trỏ', 'Ngón giữa'];
+    // Thứ tự theo SDK: 0=thumb, 1=index, 2=middle, 3=ring, 4=pinky
+    const fingerNames = ['Ngón cái', 'Ngón trỏ', 'Ngón giữa', 'Ngón áp út', 'Ngón út'];
     return fingerNames[index] || 'Unknown';
   };
 
