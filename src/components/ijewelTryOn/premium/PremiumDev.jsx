@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useDeviceCamera } from '../ijewel_useDeviceCamera';
 // REMOVED - Now reading directly from SDK in rAF loop for better performance
 // import { useSDKHandDetection } from '../useSDKHandDetection';
-import styles from './premium.module.css';
+import styles from './premium_dev.module.css';
 
 const MODELS = [
   { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' },
@@ -143,8 +143,8 @@ const Premium = () => {
 
     // PERFORMANCE: Only update if something changed
     if (currentHand === prevHandRef.current &&
-        finger === prevFingerRef.current &&
-        isBackCamera === prevCameraRef.current) {
+      finger === prevFingerRef.current &&
+      isBackCamera === prevCameraRef.current) {
       return; // Nothing changed, skip update
     }
 
@@ -597,72 +597,74 @@ const Premium = () => {
       )}
       */}
 
-      <div className={styles.controls}>
-        <button className={styles.button} onClick={handleToggleAR} disabled={isLoading}>
-          {isLoading ? 'Loading...' : inAR ? 'Exit AR' : 'Start AR'}
-        </button>
-        {inAR && (
-          <>
-            <button className={styles.button} onClick={handleFlipCamera}>
-              Flip Camera
+      {/* SVG Filter for Liquid Glass Effect */}
+      <svg className={styles.svgFilter} aria-hidden="true">
+        <filter id="liquidGlass" primitiveUnits="objectBoundingBox">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="0.02" result="blur" />
+          <feDisplacementMap in="blur" in2="blur" scale="0.3" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
+
+      {/* Footer with liquid glass buttons */}
+      <div className={styles.footer}>
+        {inAR ? (
+          <div className={styles.footerControls}>
+            {/* Exit button - left */}
+            <button
+              className={styles.circleButton}
+              onClick={stopAR}
+              aria-label="Exit AR"
+            >
+              <img
+                src="/placeholder.svg"
+                alt="Exit"
+                className={styles.buttonIcon}
+              />
             </button>
-            <button className={styles.button} onClick={handleSwitchFinger}>
+
+            {/* Switch Finger - center */}
+            <button
+              className={styles.pillButton}
+              onClick={handleSwitchFinger}
+            >
               Switch Finger
             </button>
-          </>
-        )}
-      </div>
 
-      {/* COMMENTED FOR PERFORMANCE - Uncomment to show debug panel
-      <div
-        className={isDebugExpanded ? styles.debugInfoPanel : styles.debugInfoPanelCollapsed}
-        onClick={handleDebugPanelClick}
-      >
-        <div className={isDebugExpanded ? styles.debugInfoTitle : styles.debugInfoTitleCollapsed}>
-          🔍 Debug Info
-        </div>
-        {isDebugExpanded && (
-          <>
-            <div className={styles.debugInfoItem}>
-              <span className={styles.debugInfoLabel}>Thiết bị:</span>
-              <span className={styles.debugInfoValue}>{deviceType}</span>
-            </div>
-            <div className={styles.debugInfoItem}>
-              <span className={styles.debugInfoLabel}>Camera:</span>
-              <span className={styles.debugInfoValue}>{getCameraName()}</span>
-            </div>
-            <div className={styles.debugInfoItem}>
-              <span className={styles.debugInfoLabel}>Camera Type:</span>
-              <span className={styles.debugInfoValue}>{cameraType}</span>
-            </div>
-            {inAR && (
-              <div className={styles.debugInfoItem}>
-                <span className={styles.debugInfoLabel}>Bàn tay (Auto):</span>
-                <span className={styles.debugInfoValue}>
-                  {detectedHand === -1
-                    ? '⚠️ Không phát hiện'
-                    : `✅ ${detectedHand === 0 ? 'Trái' : 'Phải'}`}
-                </span>
-              </div>
-            )}
-            <div className={styles.debugInfoItem}>
-              <span className={styles.debugInfoLabel}>Ngón tay:</span>
-              <span className={styles.debugInfoValue}>{getFingerName(currentFinger)}</span>
-            </div>
-            <div className={styles.debugInfoItem}>
-              <span className={styles.debugInfoLabel}>AR Status:</span>
-              <span className={styles.debugInfoValue}>{inAR ? '✅ Running' : '⭕ Stopped'}</span>
-            </div>
-          </>
+            {/* Camera flip - right */}
+            <button
+              className={styles.circleButton}
+              onClick={handleFlipCamera}
+              aria-label="Flip Camera"
+            >
+              <svg
+                className={styles.buttonIcon}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5" />
+                <path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5" />
+                <circle cx="12" cy="12" r="3" />
+                <path d="m18 22-3-3 3-3" />
+                <path d="m6 2 3 3-3 3" />
+              </svg>
+            </button>
+          </div>
+        ) : (
+          <div className={styles.footerControlsCenter}>
+            {/* Start AR button - center only when not in AR */}
+            <button
+              className={styles.pillButton}
+              onClick={startAR}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Loading...' : 'Start AR'}
+            </button>
+          </div>
         )}
-      </div>
-      */}
-
-      {/* Footer - covers iJewel trademark */}
-      <div className={styles.footer}>
-        <div className={styles.footerContent}>
-          {/* Add content here if needed */}
-        </div>
       </div>
     </div>
   );

@@ -98,6 +98,7 @@ const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const IJewelARTryOnPage = lazy(() => import("@pages/IJewelARTryOnPage"));
 const IJewelARSimplePage = lazy(() => import("@pages/IJewelARSimplePage"));
 const PremiumPage = lazy(() => import("@pages/PremiumPage"));
+const PremiumDevPage = lazy(() => import("@pages/PremiumDevPage"));
 const ScrollEffectTestPage = lazy(() => import("@pages/ScrollEffectTestPage"));
 const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"));
 const NavbarV2TestPage = lazy(() => import("@pages/NavbarV2TestPage"));
@@ -157,6 +158,7 @@ export default function AppRoutes() {
       ROUTES.IJEWEL_AR_TRYON,
       ROUTES.IJEWEL_AR_SIMPLE,
       ROUTES.PREMIUM,
+      ROUTES.PREMIUM_DEV,
     ];
 
     // Check exact matches
@@ -210,7 +212,8 @@ export default function AppRoutes() {
     location.pathname === ROUTES.TEST_VIEWER ||
     location.pathname === ROUTES.IJEWEL_AR_TRYON ||
     location.pathname === ROUTES.IJEWEL_AR_SIMPLE ||
-    location.pathname === ROUTES.PREMIUM;
+    location.pathname === ROUTES.PREMIUM ||
+    location.pathname === ROUTES.PREMIUM_DEV;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -237,7 +240,8 @@ export default function AppRoutes() {
     location.pathname === ROUTES.TEST_VIEWER ||
     location.pathname === ROUTES.IJEWEL_AR_TRYON ||
     location.pathname === ROUTES.IJEWEL_AR_SIMPLE ||
-    location.pathname === ROUTES.PREMIUM;
+    location.pathname === ROUTES.PREMIUM ||
+    location.pathname === ROUTES.PREMIUM_DEV;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -354,6 +358,9 @@ export default function AppRoutes() {
 
           {/* Premium AR Route */}
           <Route path={ROUTES.PREMIUM} element={<PremiumPage />} />
+
+          {/* Premium AR Development Route */}
+          <Route path={ROUTES.PREMIUM_DEV} element={<PremiumDevPage />} />
 
           <Route
             path="/ar/quoc-ti"

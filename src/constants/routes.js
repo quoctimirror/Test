@@ -38,6 +38,7 @@ export const ROUTES = {
   IJEWEL_AR_TRYON: "/ijewel-tryon", // IJewel AR Try-On page
   IJEWEL_AR_SIMPLE: "/ijewel-ar-simple", // IJewel AR Simple (from HTML)
   PREMIUM: "/premium", // Premium AR Try-On
+  PREMIUM_DEV: "/premium-dev", // Premium AR Development
 
   // Test routes
   PRODUCTS_V2: "/7b8e9f0a-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
