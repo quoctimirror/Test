@@ -64,12 +64,10 @@ const Premium = () => {
     toggleCamera
   } = useDeviceCamera();
 
-  // State declarations - must come before useMediaPipeHands
+  // State declarations - minimized to avoid re-renders
   const [currentModelId, setCurrentModelId] = useState(() => getModelFromURL());
   const [inAR, setInAR] = useState(false);
   const [fileConfig, setFileConfig] = useState(null);
-  // const [currentHand, setCurrentHand] = useState(0); // Removed - using detectedHand from MediaPipe
-  const [currentFinger, setCurrentFinger] = useState(3); // Default: ring finger (index 3 theo SDK)
   const [isLoading, setIsLoading] = useState(false);
 
   // COMMENTED FOR PERFORMANCE - These don't need to trigger re-renders
@@ -84,8 +82,8 @@ const Premium = () => {
   const rotationZRef = useRef(0);
   const isManualRotationRef = useRef(false);
 
-  // FPS counter state
-  const [fps, setFps] = useState(0);
+  // FPS counter - use ref instead of state to avoid re-renders (like sample2.html)
+  const fpsRef = useRef(null);
 
   // OPTIMIZED: Read hand detection directly from SDK in rAF loop (no state, no re-renders)
   // Returns: -1 (no hand), 0 (left), 1 (right)
@@ -175,7 +173,7 @@ const Premium = () => {
     }
   }, [getDetectedHand]);
 
-  // FPS counter only - no heavy logic in rAF loop (same as sample2.html)
+  // FPS counter only - DOM manipulation like sample2.html (no React re-render)
   useEffect(() => {
     if (!inAR) return;
 
@@ -187,9 +185,16 @@ const Premium = () => {
       frameCount++;
       const now = performance.now();
 
-      // Cập nhật FPS mỗi giây
+      // Cập nhật FPS mỗi giây - DOM manipulation trực tiếp, không dùng setState
       if (now - lastTime >= 1000) {
-        setFps(frameCount);
+        if (fpsRef.current) {
+          let color = '#4ade80'; // green >= 50
+          if (frameCount < 30) color = '#ef4444'; // red
+          else if (frameCount < 50) color = '#fbbf24'; // yellow
+
+          fpsRef.current.style.color = color;
+          fpsRef.current.textContent = `${frameCount} FPS`;
+        }
         frameCount = 0;
         lastTime = now;
       }
@@ -203,14 +208,13 @@ const Premium = () => {
     };
   }, [inAR]);
 
-  // Rotation config check - runs at low frequency (every 150ms) to avoid FPS drop
-  // Separated from rAF loop to keep render smooth
+  // Rotation config check - low frequency (every 500ms) to detect hand change (left/right)
   useEffect(() => {
     if (!inAR) return;
 
     const intervalId = setInterval(() => {
       applyRotationConfig();
-    }, 150); // 150ms = ~7 checks/second, enough for responsive rotation
+    }, 500); // 500ms = 2 checks/second, minimal overhead
 
     return () => clearInterval(intervalId);
   }, [inAR, applyRotationConfig]);
@@ -344,9 +348,8 @@ const Premium = () => {
         isBackCameraRef.current = false; // Desktop uses front camera
       }
 
-      // Set default finger = 3 (ring finger) và sync React state từ SDK
+      // Set default finger = 3 (ring finger)
       arPlugin.finger = 3;
-      setCurrentFinger(arPlugin.finger);
 
       // COMMENTED - Canvas assignment not needed, SDK handles hand detection internally
       // const assignCanvas = () => {
@@ -366,6 +369,12 @@ const Premium = () => {
       const initialRotation = getInitialRotationFromConfig();
       rotationYRef.current = initialRotation.y;
       rotationZRef.current = initialRotation.z;
+
+      // Apply initial rotation to model
+      if (arPlugin.modelRotation) {
+        arPlugin.modelRotation.y = (initialRotation.y * Math.PI) / 180;
+        arPlugin.modelRotation.z = (initialRotation.z * Math.PI) / 180;
+      }
 
       setInAR(true);
     } catch (error) {
@@ -419,6 +428,8 @@ const Premium = () => {
       isBackCameraRef.current = !isBackCameraRef.current;
       // Toggle state (for UI - useDeviceCamera)
       toggleCamera();
+      // Apply rotation config for new camera
+      applyRotationConfig();
     } catch (error) {
       console.error('Flip camera error:', error);
     }
@@ -441,9 +452,8 @@ const Premium = () => {
     // Dùng SDK làm source of truth
     arPlugin.finger = (arPlugin.finger + 1) % 5;
 
-    // Sync React state từ SDK
-    setCurrentFinger(arPlugin.finger);
-    // Rotation config auto-applied by useEffect when currentFinger changes
+    // Apply rotation config for new finger
+    applyRotationConfig();
   };
 
   // ============================================================================
@@ -623,12 +633,10 @@ const Premium = () => {
       )}
       */}
 
-      {/* FPS Counter - hiển thị khi đang AR */}
+      {/* FPS Counter - hiển thị khi đang AR, dùng ref để tránh re-render */}
       {inAR && (
         <div className={styles.fpsCounter}>
-          <span style={{ color: fps >= 50 ? '#4ade80' : fps >= 30 ? '#fbbf24' : '#ef4444' }}>
-            {fps} FPS
-          </span>
+          <span ref={fpsRef}>0 FPS</span>
         </div>
       )}
 
