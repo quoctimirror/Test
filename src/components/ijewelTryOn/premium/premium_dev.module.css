@@ -531,7 +531,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 100px;
+  height: 12vh;
   /* Solid white background */
   background: #ffffff;
   z-index: 99999;
@@ -705,10 +705,6 @@
 
 /* Responsive - Tablet */
 @media (max-width: 768px) {
-  .footer {
-    height: 90px;
-  }
-
   .footerControls {
     max-width: 360px;
   }
@@ -732,10 +728,6 @@
 
 /* Responsive - Mobile */
 @media (max-width: 480px) {
-  .footer {
-    height: 80px;
-  }
-
   .footerControls {
     max-width: 320px;
     padding: 0 16px;
