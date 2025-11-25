@@ -84,6 +84,12 @@ const Premium = () => {
   const rotationZRef = useRef(0);
   const isManualRotationRef = useRef(false);
 
+  // FPS counter state
+  const [fps, setFps] = useState(0);
+
+  // Throttle config - chỉ xử lý rotation mỗi N frame để giảm tải
+  const FRAME_SKIP = 2; // 2 = 30fps logic, 3 = 20fps logic
+
   // OPTIMIZED: Read hand detection directly from SDK in rAF loop (no state, no re-renders)
   // Returns: -1 (no hand), 0 (left), 1 (right)
   const getDetectedHand = useCallback(() => {
@@ -172,14 +178,34 @@ const Premium = () => {
     }
   }, [getDetectedHand]);
 
-  // OPTIMIZED: rAF loop to apply rotation every frame (60fps)
-  // Much smoother than useEffect chain which has state update delays
+  // OPTIMIZED: rAF loop with FPS counter and throttled logic
+  // Render vẫn 60fps, nhưng logic rotation chỉ chạy mỗi FRAME_SKIP frame
   useEffect(() => {
     if (!inAR) return;
 
     let rafId;
+    let frameCount = 0;
+    let logicFrameCount = 0;
+    let lastTime = performance.now();
+
     const loop = () => {
-      applyRotationConfig(); // Apply rotation every frame
+      frameCount++;
+      logicFrameCount++;
+      const now = performance.now();
+
+      // Cập nhật FPS mỗi giây
+      if (now - lastTime >= 1000) {
+        setFps(frameCount);
+        frameCount = 0;
+        lastTime = now;
+      }
+
+      // Throttle: chỉ xử lý rotation mỗi FRAME_SKIP frame để giảm tải CPU
+      if (logicFrameCount >= FRAME_SKIP) {
+        applyRotationConfig();
+        logicFrameCount = 0;
+      }
+
       rafId = requestAnimationFrame(loop);
     };
     rafId = requestAnimationFrame(loop);
@@ -187,7 +213,7 @@ const Premium = () => {
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [inAR, applyRotationConfig]);
+  }, [inAR, applyRotationConfig, FRAME_SKIP]);
 
   // COMMENTED FOR PERFORMANCE - Rotation applied directly in applyRotationConfig now
   // No need for useEffect that triggers on state changes
@@ -596,6 +622,15 @@ const Premium = () => {
         </div>
       )}
       */}
+
+      {/* FPS Counter - hiển thị khi đang AR */}
+      {inAR && (
+        <div className={styles.fpsCounter}>
+          <span style={{ color: fps >= 50 ? '#4ade80' : fps >= 30 ? '#fbbf24' : '#ef4444' }}>
+            {fps} FPS
+          </span>
+        </div>
+      )}
 
       {/* SVG Filter for Liquid Glass Effect */}
       <svg className={styles.svgFilter} aria-hidden="true">
