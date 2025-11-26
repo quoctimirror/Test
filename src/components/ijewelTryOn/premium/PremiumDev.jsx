@@ -3,11 +3,11 @@ import { useDeviceCamera } from '../ijewel_useDeviceCamera';
 import styles from './premium_dev.module.css';
 
 const MODELS = [
-  { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' },
-  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' },
-  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' },
-  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' },
-  { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
+  { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' }, // alright
+  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' }, // alright
+  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }, // alright
+  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' }, // alright
+  { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' }, // demo
   { id: 'Kdof7H4YT9uh4NsSUfdd5Q', name: 'Trilogy', basename: 'drive' },
   { id: 'HB3RidmJSdezIO1T2hdXcQ', name: 'Flower', basename: 'drive' }, // sai hoan toan lam lai
   { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' }, // standard
@@ -201,8 +201,8 @@ const Premium = () => {
       const arPlugin = await viewerApp.addPlugin(window.ij_vto.RingTryonPlugin);
       arPluginRef.current = arPlugin;
 
-      arPlugin.modelScaleFactor = 0.7;
-      arPlugin.occluderScaleFactor = 1.0;
+      // arPlugin.modelScaleFactor = 0.7;
+      // arPlugin.occluderScaleFactor = 1.0;
 
       if (fileConfig?.tryonConfig) {
         fileConfig.tryonConfig.type = 'RingTryonPlugin';
