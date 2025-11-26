@@ -7,7 +7,7 @@ const MODELS = [
   { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' },
   { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' },
   { id: 'WYzYx15-T7-aLlI25yW2uA', name: 'Heart', basename: 'drive' },
-  { id: 'UMaqSepGRMm0u4m6LaBQ9Q', name: 'New', basename: 'drive' },
+  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' },
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
   { id: 'HB3RidmJSdezIO1T2hdXcQ', name: 'Flower', basename: 'drive' }, // sai hoan toan lam lai
   { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' }, // standard
