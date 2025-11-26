@@ -3,14 +3,14 @@ import { useDeviceCamera } from '../ijewel_useDeviceCamera';
 import styles from './premium_dev.module.css';
 
 const MODELS = [
-  { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' }, // alright
-  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' }, // alright
-  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }, // alright
-  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' }, // alright
-  { id: 'Kdof7H4YT9uh4NsSUfdd5Q', name: 'Trilogy', basename: 'drive' }, // standard
-  { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' }, // standard
+  { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' },
+  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' },
+  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' },
   { id: 'Qteju98xRgKe8y5KylzXIw', name: 'Heart', basename: 'drive' },
+  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' },
+  { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
   { id: 'HB3RidmJSdezIO1T2hdXcQ', name: 'Flower', basename: 'drive' }, // sai hoan toan lam lai
+  { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' }, // standard
   { id: 'LvYj0l_IQeehkfX0ce4Zgw', name: 'Oval', basename: 'drive' }, // sai lech
 ];
 
@@ -56,11 +56,6 @@ const Premium = () => {
   const isBackCameraRef = useRef(false);
   const isManualRotationRef = useRef(false);
 
-  // PERFORMANCE: Track previous values to skip unnecessary updates in rAF loop
-  const prevHandRef = useRef(-1);
-  const prevFingerRef = useRef(-1);
-  const prevCameraRef = useRef(false);
-
   const {
     isMobile,
     updateCamera,
@@ -70,10 +65,8 @@ const Premium = () => {
   const [currentModelId, setCurrentModelId] = useState(() => getModelFromURL());
   const [inAR, setInAR] = useState(false);
   const [fileConfig, setFileConfig] = useState(null);
+  const [currentFinger, setCurrentFinger] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
-
-  // PERFORMANCE: Use ref instead of state (not rendered in UI, no re-render needed)
-  const currentFingerRef = useRef(3);
 
   // Read hand detection directly from SDK (no state, no re-renders)
   const getDetectedHand = useCallback(() => {
@@ -95,24 +88,11 @@ const Premium = () => {
     if (!arPlugin?.modelRotation) return;
 
     const currentHand = getDetectedHand();
-    const finger = fingerOverride ?? arPlugin.finger;
-    const isBackCamera = isBackCameraRef.current;
-
-    // PERFORMANCE: Skip if nothing changed (saves ~95% CPU in rAF loop)
-    if (fingerOverride === undefined &&
-        currentHand === prevHandRef.current &&
-        finger === prevFingerRef.current &&
-        isBackCamera === prevCameraRef.current) {
-      return; // Early exit - no work needed
-    }
-
-    // Update previous values for next comparison
-    prevHandRef.current = currentHand;
-    prevFingerRef.current = finger;
-    prevCameraRef.current = isBackCamera;
-
     // Default to 'right' if no hand detected
     const handType = currentHand === 0 ? 'left' : 'right';
+
+    const finger = fingerOverride ?? arPlugin.finger;
+    const isBackCamera = isBackCameraRef.current;
     const cameraConfig = isBackCamera ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
     const fingerConfig = cameraConfig?.[handType]?.[finger];
 
@@ -135,21 +115,11 @@ const Premium = () => {
     applyRotationConfig(newFinger);
     // Sau đó mới set finger cho SDK
     arPlugin.finger = newFinger;
-    currentFingerRef.current = newFinger; // Use ref instead of state (no re-render)
+    setCurrentFinger(newFinger);
   }, [applyRotationConfig]);
 
   // High performance rAF loop - runs every frame
   const runARLoop = useCallback(() => {
-    const arPlugin = arPluginRef.current;
-    const viewerApp = viewerAppRef.current;
-
-    // Sync modelRoot.visible with arPlugin.visible
-    // arPlugin.visible is automatically true when hand detected, false when no hand
-    const modelRoot = viewerApp?.scene?.modelRoot;
-    if (modelRoot && arPlugin) {
-      modelRoot.visible = arPlugin.visible;
-    }
-
     applyRotationConfig();
     rafIdRef.current = requestAnimationFrame(runARLoop);
   }, [applyRotationConfig]);
@@ -231,21 +201,21 @@ const Premium = () => {
       const arPlugin = await viewerApp.addPlugin(window.ij_vto.RingTryonPlugin);
       arPluginRef.current = arPlugin;
 
+      arPlugin.modelScaleFactor = 0.5;
+      arPlugin.occluderScaleFactor = 1.0;
+
       if (fileConfig?.tryonConfig) {
         fileConfig.tryonConfig.type = 'RingTryonPlugin';
         arPlugin.fromJSON(fileConfig?.tryonConfig);
       }
 
-      // Set scale after fromJSON
-      arPlugin.modelScaleFactor = 0.5;
-
-      // Hide model during AR loading (will show when hand detected via rAF loop)
-      const modelRoot = viewerApp?.scene?.modelRoot;
-      if (modelRoot) {
-        modelRoot.visible = false;
-      }
-
       await arPlugin.start();
+
+      // Ẩn model viewer canvas khi vào AR (chỉ hiện camera feed)
+      const viewerCanvas = containerRef.current?.querySelector('canvas:not([class*="tryon"])');
+      if (viewerCanvas) {
+        viewerCanvas.style.opacity = '0';
+      }
 
       // Set finger after AR started - dùng setFingerWithRotation để tránh giật
       setFingerWithRotation(3);
@@ -283,10 +253,10 @@ const Premium = () => {
       arPluginRef.current = null;
     }
 
-    // Show model viewer again after stopping AR
-    const modelRoot = viewerAppRef.current?.scene?.modelRoot;
-    if (modelRoot) {
-      modelRoot.visible = true;
+    // Hiện lại model viewer canvas khi thoát AR
+    const viewerCanvas = containerRef.current?.querySelector('canvas:not([class*="tryon"])');
+    if (viewerCanvas) {
+      viewerCanvas.style.opacity = '1';
     }
 
     setInAR(false);
