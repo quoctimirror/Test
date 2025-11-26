@@ -61,6 +61,9 @@ const Premium = () => {
   const prevFingerRef = useRef(-1);
   const prevCameraRef = useRef(false);
 
+  // Track if hand has been detected (to hide model until hand appears)
+  const hasHandDetectedRef = useRef(false);
+
   const {
     isMobile,
     updateCamera,
@@ -70,8 +73,10 @@ const Premium = () => {
   const [currentModelId, setCurrentModelId] = useState(() => getModelFromURL());
   const [inAR, setInAR] = useState(false);
   const [fileConfig, setFileConfig] = useState(null);
-  const [currentFinger, setCurrentFinger] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
+
+  // PERFORMANCE: Use ref instead of state (not rendered in UI, no re-render needed)
+  const currentFingerRef = useRef(3);
 
   // Read hand detection directly from SDK (no state, no re-renders)
   const getDetectedHand = useCallback(() => {
@@ -133,14 +138,30 @@ const Premium = () => {
     applyRotationConfig(newFinger);
     // Sau đó mới set finger cho SDK
     arPlugin.finger = newFinger;
-    setCurrentFinger(newFinger);
+    currentFingerRef.current = newFinger; // Use ref instead of state (no re-render)
   }, [applyRotationConfig]);
 
   // High performance rAF loop - runs every frame
   const runARLoop = useCallback(() => {
+    const arPlugin = arPluginRef.current;
+
+    // Hide model until hand is detected (avoid giant ring in center)
+    if (arPlugin?.modelObject) {
+      const handDetected = getDetectedHand() !== -1;
+
+      if (!hasHandDetectedRef.current && handDetected) {
+        // First time hand detected → show model
+        hasHandDetectedRef.current = true;
+        arPlugin.modelObject.visible = true;
+      } else if (!handDetected) {
+        // No hand → hide model
+        arPlugin.modelObject.visible = false;
+      }
+    }
+
     applyRotationConfig();
     rafIdRef.current = requestAnimationFrame(runARLoop);
-  }, [applyRotationConfig]);
+  }, [applyRotationConfig, getDetectedHand]);
 
   // Start/stop loop based on AR state
   useEffect(() => {
@@ -229,6 +250,12 @@ const Premium = () => {
 
       await arPlugin.start();
 
+      // Hide model initially until hand is detected
+      hasHandDetectedRef.current = false;
+      if (arPlugin.modelObject) {
+        arPlugin.modelObject.visible = false;
+      }
+
       // Set finger after AR started - dùng setFingerWithRotation để tránh giật
       setFingerWithRotation(3);
 
@@ -264,6 +291,9 @@ const Premium = () => {
       }
       arPluginRef.current = null;
     }
+
+    // Reset hand detection flag
+    hasHandDetectedRef.current = false;
 
     setInAR(false);
   };
