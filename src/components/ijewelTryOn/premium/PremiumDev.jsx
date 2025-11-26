@@ -61,9 +61,6 @@ const Premium = () => {
   const prevFingerRef = useRef(-1);
   const prevCameraRef = useRef(false);
 
-  // Track if hand has been detected (to hide model until hand appears)
-  const hasHandDetectedRef = useRef(false);
-
   const {
     isMobile,
     updateCamera,
@@ -144,24 +141,18 @@ const Premium = () => {
   // High performance rAF loop - runs every frame
   const runARLoop = useCallback(() => {
     const arPlugin = arPluginRef.current;
+    const viewerApp = viewerAppRef.current;
 
-    // Hide model until hand is detected (avoid giant ring in center)
-    if (arPlugin?.modelObject) {
-      const handDetected = getDetectedHand() !== -1;
-
-      if (!hasHandDetectedRef.current && handDetected) {
-        // First time hand detected → show model
-        hasHandDetectedRef.current = true;
-        arPlugin.modelObject.visible = true;
-      } else if (!handDetected) {
-        // No hand → hide model
-        arPlugin.modelObject.visible = false;
-      }
+    // Sync modelRoot.visible with arPlugin.visible
+    // arPlugin.visible is automatically true when hand detected, false when no hand
+    const modelRoot = viewerApp?.scene?.modelRoot;
+    if (modelRoot && arPlugin) {
+      modelRoot.visible = arPlugin.visible;
     }
 
     applyRotationConfig();
     rafIdRef.current = requestAnimationFrame(runARLoop);
-  }, [applyRotationConfig, getDetectedHand]);
+  }, [applyRotationConfig]);
 
   // Start/stop loop based on AR state
   useEffect(() => {
@@ -248,13 +239,13 @@ const Premium = () => {
         arPlugin.fromJSON(fileConfig?.tryonConfig);
       }
 
-      await arPlugin.start();
-
-      // Hide model initially until hand is detected
-      hasHandDetectedRef.current = false;
-      if (arPlugin.modelObject) {
-        arPlugin.modelObject.visible = false;
+      // Hide model during AR loading (will show when hand detected via rAF loop)
+      const modelRoot = viewerApp?.scene?.modelRoot;
+      if (modelRoot) {
+        modelRoot.visible = false;
       }
+
+      await arPlugin.start();
 
       // Set finger after AR started - dùng setFingerWithRotation để tránh giật
       setFingerWithRotation(3);
@@ -292,8 +283,11 @@ const Premium = () => {
       arPluginRef.current = null;
     }
 
-    // Reset hand detection flag
-    hasHandDetectedRef.current = false;
+    // Show model viewer again after stopping AR
+    const modelRoot = viewerAppRef.current?.scene?.modelRoot;
+    if (modelRoot) {
+      modelRoot.visible = true;
+    }
 
     setInAR(false);
   };
