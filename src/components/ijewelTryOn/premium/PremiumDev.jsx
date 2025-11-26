@@ -6,9 +6,9 @@ const MODELS = [
   { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' },
   { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' },
   { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' },
-  { id: 'WYzYx15-T7-aLlI25yW2uA', name: 'Heart', basename: 'drive' },
   { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' },
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
+  { id: 'Kdof7H4YT9uh4NsSUfdd5Q', name: 'Trilogy', basename: 'drive' },
   { id: 'HB3RidmJSdezIO1T2hdXcQ', name: 'Flower', basename: 'drive' }, // sai hoan toan lam lai
   { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' }, // standard
   { id: 'LvYj0l_IQeehkfX0ce4Zgw', name: 'Oval', basename: 'drive' }, // sai lech
@@ -201,7 +201,7 @@ const Premium = () => {
       const arPlugin = await viewerApp.addPlugin(window.ij_vto.RingTryonPlugin);
       arPluginRef.current = arPlugin;
 
-      arPlugin.modelScaleFactor = 0.5;
+      arPlugin.modelScaleFactor = 0.7;
       arPlugin.occluderScaleFactor = 1.0;
 
       if (fileConfig?.tryonConfig) {
