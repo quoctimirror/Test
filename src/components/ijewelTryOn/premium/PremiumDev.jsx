@@ -231,14 +231,13 @@ const Premium = () => {
       const arPlugin = await viewerApp.addPlugin(window.ij_vto.RingTryonPlugin);
       arPluginRef.current = arPlugin;
 
-      // Default scale, will be overridden by fileConfig if available
-      arPlugin.modelScaleFactor = 0.7;
-      arPlugin.occluderScaleFactor = 1.0;
-
       if (fileConfig?.tryonConfig) {
         fileConfig.tryonConfig.type = 'RingTryonPlugin';
         arPlugin.fromJSON(fileConfig?.tryonConfig);
       }
+
+      // Set scale after fromJSON
+      arPlugin.modelScaleFactor = 0.5;
 
       // Hide model during AR loading (will show when hand detected via rAF loop)
       const modelRoot = viewerApp?.scene?.modelRoot;
