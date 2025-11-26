@@ -120,6 +120,16 @@ const Premium = () => {
 
   // High performance rAF loop - runs every frame
   const runARLoop = useCallback(() => {
+    const arPlugin = arPluginRef.current;
+    const viewerApp = viewerAppRef.current;
+
+    // Sync modelRoot.visible with arPlugin.visible
+    // arPlugin.visible is automatically true when hand detected, false when no hand
+    const modelRoot = viewerApp?.scene?.modelRoot;
+    if (modelRoot && arPlugin) {
+      modelRoot.visible = arPlugin.visible;
+    }
+
     applyRotationConfig();
     rafIdRef.current = requestAnimationFrame(runARLoop);
   }, [applyRotationConfig]);
@@ -209,13 +219,13 @@ const Premium = () => {
         arPlugin.fromJSON(fileConfig?.tryonConfig);
       }
 
-      await arPlugin.start();
-
-      // Ẩn model viewer canvas khi vào AR (chỉ hiện camera feed)
-      const viewerCanvas = containerRef.current?.querySelector('canvas:not([class*="tryon"])');
-      if (viewerCanvas) {
-        viewerCanvas.style.opacity = '0';
+      // Ẩn model trước khi AR start (sẽ hiện lại khi detect được tay via rAF loop)
+      const modelRoot = viewerApp?.scene?.modelRoot;
+      if (modelRoot) {
+        modelRoot.visible = false;
       }
+
+      await arPlugin.start();
 
       // Set finger after AR started - dùng setFingerWithRotation để tránh giật
       setFingerWithRotation(3);
@@ -253,10 +263,10 @@ const Premium = () => {
       arPluginRef.current = null;
     }
 
-    // Hiện lại model viewer canvas khi thoát AR
-    const viewerCanvas = containerRef.current?.querySelector('canvas:not([class*="tryon"])');
-    if (viewerCanvas) {
-      viewerCanvas.style.opacity = '1';
+    // Hiện lại model khi thoát AR
+    const modelRoot = viewerAppRef.current?.scene?.modelRoot;
+    if (modelRoot) {
+      modelRoot.visible = true;
     }
 
     setInAR(false);
