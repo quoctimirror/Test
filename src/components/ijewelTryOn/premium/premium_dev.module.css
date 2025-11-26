@@ -531,7 +531,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 12vh;
+  height: 15vh; /* desktop */
   /* Solid white background */
   background: #ffffff;
   z-index: 99999;
@@ -541,6 +541,13 @@
   padding: 0 20px;
   box-sizing: border-box;
   transform: translateZ(0);
+}
+
+/* Mobile: 12vh */
+@media (max-width: 768px) {
+  .footer {
+    height: 12vh;
+  }
 }
 
 .footerControls {

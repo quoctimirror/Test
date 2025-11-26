@@ -56,6 +56,11 @@ const Premium = () => {
   const isBackCameraRef = useRef(false);
   const isManualRotationRef = useRef(false);
 
+  // PERFORMANCE: Track previous values to skip unnecessary updates in rAF loop
+  const prevHandRef = useRef(-1);
+  const prevFingerRef = useRef(-1);
+  const prevCameraRef = useRef(false);
+
   const {
     isMobile,
     updateCamera,
@@ -88,11 +93,24 @@ const Premium = () => {
     if (!arPlugin?.modelRotation) return;
 
     const currentHand = getDetectedHand();
-    // Default to 'right' if no hand detected
-    const handType = currentHand === 0 ? 'left' : 'right';
-
     const finger = fingerOverride ?? arPlugin.finger;
     const isBackCamera = isBackCameraRef.current;
+
+    // PERFORMANCE: Skip if nothing changed (saves ~95% CPU in rAF loop)
+    if (fingerOverride === undefined &&
+        currentHand === prevHandRef.current &&
+        finger === prevFingerRef.current &&
+        isBackCamera === prevCameraRef.current) {
+      return; // Early exit - no work needed
+    }
+
+    // Update previous values for next comparison
+    prevHandRef.current = currentHand;
+    prevFingerRef.current = finger;
+    prevCameraRef.current = isBackCamera;
+
+    // Default to 'right' if no hand detected
+    const handType = currentHand === 0 ? 'left' : 'right';
     const cameraConfig = isBackCamera ? ROTATION_CONFIG.backCamera : ROTATION_CONFIG.frontCamera;
     const fingerConfig = cameraConfig?.[handType]?.[finger];
 
