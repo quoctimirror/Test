@@ -231,8 +231,9 @@ const Premium = () => {
       const arPlugin = await viewerApp.addPlugin(window.ij_vto.RingTryonPlugin);
       arPluginRef.current = arPlugin;
 
-      // arPlugin.modelScaleFactor = 0.7;
-      // arPlugin.occluderScaleFactor = 1.0;
+      // Default scale, will be overridden by fileConfig if available
+      arPlugin.modelScaleFactor = 0.7;
+      arPlugin.occluderScaleFactor = 1.0;
 
       if (fileConfig?.tryonConfig) {
         fileConfig.tryonConfig.type = 'RingTryonPlugin';
