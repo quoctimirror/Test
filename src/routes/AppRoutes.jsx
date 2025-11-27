@@ -91,7 +91,7 @@ const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"
 const NavbarV2TestPage = lazy(() => import("@pages/NavbarV2TestPage"));
 const NavbarV3TestPage = lazy(() => import("@pages/NavbarV3TestPage"));
 const NavbarV4TestPage = lazy(() => import("@pages/NavbarV4TestPage"));
-const TestViewer = lazy(() => import("@components/productsV2/TestViewer.jsx"));
+// const TestViewer = lazy(() => import("@components/productsV2/TestViewer.jsx"));
 const GlassSurfaceButtonTestPage = lazy(() => import("@pages/GlassSurfaceButtonTestPage"));
 
 export default function AppRoutes() {
@@ -352,10 +352,10 @@ export default function AppRoutes() {
           />
 
           {/* Test route for iJewel Viewer */}
-          <Route
+          {/* <Route
             path={ROUTES.TEST_VIEWER}
             element={<TestViewer />}
-          />
+          /> */}
 
           {/* Test route for GlassSurfaceButton */}
           <Route
