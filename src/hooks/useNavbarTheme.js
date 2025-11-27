@@ -60,28 +60,90 @@ export const useNavbarTheme = () => {
       const navbarPosition = 40; // Navbar position from top
       let activeSection = null;
 
-      // Find the LAST section whose bottom hasn't passed the navbar yet
-      // This means: keep the current section's theme until we completely scroll past it
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
+      // Separate footer from other sections
+      const footerSections = [];
+      const normalSections = [];
 
-        // If section's bottom is still below navbar position,
-        // this section is still "active" (we haven't scrolled past it yet)
-        if (rect.bottom > navbarPosition && rect.top < navbarPosition) {
-          // Navbar is inside this section
-          activeSection = section;
-        } else if (rect.bottom <= navbarPosition && !activeSection) {
-          // This section has completely passed, but no section found yet
-          // Keep looking for the next section
+      Array.from(sections).forEach(section => {
+        if (section.tagName === 'FOOTER' || section.classList.contains('footer')) {
+          footerSections.push(section);
+        } else {
+          normalSections.push(section);
         }
       });
+
+      // Build list of candidates
+      const candidates = [];
+
+      // First, check normal sections (higher priority)
+      normalSections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+
+        // If navbar is within this section's bounds
+        if (rect.top <= navbarPosition && rect.bottom > navbarPosition) {
+          const computedStyle = window.getComputedStyle(section);
+          const position = computedStyle.position;
+          const zIndex = parseInt(computedStyle.zIndex) || 0;
+
+          candidates.push({ section, position, zIndex, isFooter: false });
+        }
+      });
+
+      // If no normal section found, check footer (lowest priority)
+      if (candidates.length === 0) {
+        footerSections.forEach((section) => {
+          const rect = section.getBoundingClientRect();
+
+          // Check if footer is visible in viewport (revealed)
+          // Footer should be considered active when it's revealed (top is in viewport)
+          if (rect.top < window.innerHeight && rect.bottom > navbarPosition) {
+            const computedStyle = window.getComputedStyle(section);
+            const position = computedStyle.position;
+            const zIndex = parseInt(computedStyle.zIndex) || 0;
+
+            candidates.push({ section, position, zIndex, isFooter: true });
+          }
+        });
+      }
+
+      // Sort candidates by priority:
+      // 1. Normal sections first (isFooter: false)
+      // 2. Among normal sections: positioned with higher z-index first
+      // 3. Footer sections last (isFooter: true)
+      if (candidates.length > 0) {
+        candidates.sort((a, b) => {
+          // Footer always loses to normal sections
+          if (!a.isFooter && b.isFooter) return -1;
+          if (a.isFooter && !b.isFooter) return 1;
+
+          // Both are same type, check positioning
+          const aIsPositioned = a.position !== 'static';
+          const bIsPositioned = b.position !== 'static';
+
+          // Both positioned: compare z-index
+          if (aIsPositioned && bIsPositioned) {
+            return b.zIndex - a.zIndex; // Higher z-index first
+          }
+
+          // Only one positioned: positioned wins
+          if (aIsPositioned && !bIsPositioned) return -1;
+          if (!aIsPositioned && bIsPositioned) return 1;
+
+          // Both static: keep DOM order (already sorted)
+          return 0;
+        });
+
+        // Pick first (highest priority)
+        activeSection = candidates[0].section;
+      }
 
       // If no section found (between sections), find the closest upcoming section
       if (!activeSection) {
         let closestSection = null;
         let minDistance = Infinity;
 
-        sections.forEach((section) => {
+        // Check normal sections first
+        normalSections.forEach((section) => {
           const rect = section.getBoundingClientRect();
 
           // Find section that's coming up (top is below navbar)
@@ -93,6 +155,22 @@ export const useNavbarTheme = () => {
             }
           }
         });
+
+        // If no normal section upcoming, check footer
+        if (!closestSection) {
+          footerSections.forEach((section) => {
+            const rect = section.getBoundingClientRect();
+
+            // Find section that's coming up (top is below navbar)
+            if (rect.top >= navbarPosition) {
+              const distance = rect.top - navbarPosition;
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestSection = section;
+              }
+            }
+          });
+        }
 
         activeSection = closestSection;
       }

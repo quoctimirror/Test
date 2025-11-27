@@ -10,6 +10,7 @@
   color: white;
   position: relative;
   overflow: hidden;
+  background: #000000; /* Black background to prevent footer bleed-through */
 }
 
 /* Gradient overlays - dark at top and bottom */

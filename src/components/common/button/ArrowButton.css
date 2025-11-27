@@ -38,19 +38,15 @@
 
 /* Responsive icon sizes */
 .arrow-button svg {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
 }
 
 /* Tablet and Mobile - smaller icons */
 @media (max-width: 1024px) {
-  .arrow-button svg {
-    width: 20px;
-    height: 20px;
-  }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .arrow-button svg {
     width: 20px;
     height: 20px;

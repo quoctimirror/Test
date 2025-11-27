@@ -14,31 +14,16 @@
   align-items: center;
   justify-content: center;
   gap: 0px;
-  max-width: 34%;
+  max-width: 46%;
   width: 100%;
 }
 
 .lumex91-video-box {
   width: 100%;
   aspect-ratio: 1;
-  background: #111;
+  background: #000;
   overflow: hidden;
   position: relative;
-  /* Stack image and video on top of each other */
-}
-
-.lumex91-video-box::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at center,
-    transparent 0%,
-    transparent 90%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
-  pointer-events: none;
-  z-index: 10; /* Above video and placeholder */
 }
 
 .lumex91-video {
@@ -67,15 +52,10 @@
   z-index: 1;
 }
 
-/* Video while loading - hidden */
-.lumex91-video-loading {
-  opacity: 0;
-}
-
-/* Video when loaded - fade in */
-.lumex91-video-loaded {
-  opacity: 1;
-  transition: opacity 0.5s ease-in;
+/* Scroll-controlled frame */
+.lumex91-frame {
+  position: relative;
+  z-index: 1;
 }
 
 .lumex91-content {

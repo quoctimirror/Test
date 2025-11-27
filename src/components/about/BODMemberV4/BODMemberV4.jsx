@@ -5,11 +5,12 @@ import { useState, useEffect, useRef } from "react";
 const BODMemberV4 = () => {
   const [hoveredImage, setHoveredImage] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
-  const [isSectionVisible, setIsSectionVisible] = useState(false);
+  const [isGridVisible, setIsGridVisible] = useState(false);
   const [imagePosition, setImagePosition] = useState(50);
   const [imageAlignment, setImageAlignment] = useState("center"); // 'top', 'center', 'bottom'
   const rowRefs = useRef([]);
   const sectionRef = useRef(null);
+  const membersGridRef = useRef(null);
   const mousePositionRef = useRef({ x: 0, y: 0 });
 
   // Distance threshold for hover detection (px)
@@ -91,39 +92,39 @@ const BODMemberV4 = () => {
     });
   }, []);
 
-  // Check if section is visible in viewport
+  // Check if members grid is visible in viewport
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          setIsSectionVisible(entry.isIntersecting);
+          setIsGridVisible(entry.isIntersecting);
           if (!entry.isIntersecting) {
             setActiveIndex(null);
             setHoveredImage(null);
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
-    const currentSection = sectionRef.current;
-    if (currentSection) {
-      observer.observe(currentSection);
+    const currentGrid = membersGridRef.current;
+    if (currentGrid) {
+      observer.observe(currentGrid);
     }
 
     return () => {
-      if (currentSection) {
-        observer.unobserve(currentSection);
+      if (currentGrid) {
+        observer.unobserve(currentGrid);
       }
     };
   }, []);
 
-  // Calculate image position based on section position
+  // Calculate image position based on members grid position
   useEffect(() => {
     const updateImagePosition = () => {
-      if (!sectionRef.current) return;
+      if (!membersGridRef.current) return;
 
-      const rect = sectionRef.current.getBoundingClientRect();
+      const rect = membersGridRef.current.getBoundingClientRect();
       const viewportMiddle = window.innerHeight / 2;
 
       // If section top is below viewport middle, align image top to section top
@@ -158,7 +159,7 @@ const BODMemberV4 = () => {
 
     // Function to check hover based on mouse position
     const checkHover = (mouseY) => {
-      if (!isSectionVisible) return;
+      if (!isGridVisible) return;
 
       let closestIndex = null;
       let closestDistance = Infinity;
@@ -217,7 +218,7 @@ const BODMemberV4 = () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [teamMembers, isSectionVisible]);
+  }, [teamMembers, isGridVisible]);
 
   const getTransform = () => {
     if (imageAlignment === "top") return "translateY(0)";
@@ -227,6 +228,25 @@ const BODMemberV4 = () => {
 
   return (
     <div className="bod-member-v4-section" ref={sectionRef}>
+      {/* Intro Section */}
+      <div className="bod-intro">
+        <div className="grid-container">
+          <div className="bod-intro-content">
+            <span className="bodytext-4--no-margin bod-intro-header">
+              WHO WE ARE?
+            </span>
+            <h1 className="heading-1--no-margin bod-intro-title">
+              THE MINDS BEHIND MIRROR
+            </h1>
+            <p className="bodytext-4--no-margin bod-intro-desc">
+              Mirror is led by a collective of visionaries - blending
+              innovation, design, and purpose. From strategy to storytelling, we
+              shape a brand that's equal parts emotional and engineered.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Hidden images for preloading - ensures browser caches all images */}
       <div style={{ display: "none" }} aria-hidden="true">
         {teamMembers.map((member, idx) => (
@@ -237,7 +257,7 @@ const BODMemberV4 = () => {
       {/* Central image display - Load from /public folder only */}
       <div
         className={`central-member-image ${
-          hoveredImage && isSectionVisible ? "visible" : ""
+          hoveredImage && isGridVisible ? "visible" : ""
         }`}
         style={{
           top: `${imagePosition}px`,
@@ -247,7 +267,7 @@ const BODMemberV4 = () => {
         {hoveredImage && <img src={hoveredImage} alt="Team member" />}
       </div>
 
-      <div className="grid-container">
+      <div className="grid-container members-grid" ref={membersGridRef}>
         {teamMembers.map((member, index) => (
           <div
             key={index}

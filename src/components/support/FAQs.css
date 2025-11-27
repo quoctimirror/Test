@@ -66,11 +66,11 @@
   content: "";
   position: absolute;
   width: 100%;
-  height: 2px;
+  height: 1px;
   background: #000;
   bottom: -1.5px;
   left: 0;
-  transform: scaleX(0) scaleY(0.75);
+  transform: scaleX(0);
   transform-origin: right center;
   transition: transform 0.3s linear;
 }
@@ -82,7 +82,7 @@
 
 .faq-nav .nav-item.active a::after,
 .faq-nav .nav-item:hover a::after {
-  transform: scaleX(1) scaleY(0.75);
+  transform: scaleX(1);
   transform-origin: left center;
 }
 

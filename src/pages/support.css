@@ -4,7 +4,7 @@
 .support-hero-section {
   width: 100%;
   height: 56vh;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/support/section_1.jpg");
+  background-image: url("__CDN_URL__/support/section_1.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -133,11 +133,11 @@
   content: "";
   position: absolute;
   width: 100%;
-  height: 2px;
+  height: 1px;
   background: #000;
   bottom: -1.5px;
   left: 0;
-  transform: scaleX(0) scaleY(0.75);
+  transform: scaleX(0);
   transform-origin: right center;
   transition: transform 0.3s linear;
 }
@@ -147,7 +147,7 @@
 }
 
 .support-tab:hover::after {
-  transform: scaleX(1) scaleY(0.75);
+  transform: scaleX(1);
   transform-origin: left center;
 }
 
@@ -156,7 +156,7 @@
 }
 
 .support-tab.active::after {
-  transform: scaleX(1) scaleY(0.75);
+  transform: scaleX(1);
 }
 
 /* Tab Content */

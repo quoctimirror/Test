@@ -17,7 +17,7 @@
   --border-width: 2px;
 }
 
-/* Navbar Liquid Glass Background */
+/* Navbar Liquid Glass Background - Always 80px bar */
 .navbar-v4-glass-background {
   position: fixed;
   top: 0;
@@ -26,24 +26,63 @@
   height: 80px;
   z-index: 200;
   pointer-events: none;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 6px 6px rgba(0, 0, 0, 0.05), 0 0 20px rgba(0, 0, 0, 0.05);
   transition: all 0.35s ease-out;
 }
 
-/* Expanded state when menu or account dropdown is open */
-.navbar-v4-glass-background.expanded {
-  height: 100vh;
+/* Full screen backdrop blur overlay - fades in when expanded - Desktop only */
+@media screen and (min-width: 1024px) {
+  .navbar-v4-glass-background::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    z-index: 199;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease-out;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+
+  .navbar-v4-glass-background.expanded::after {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
-/* Liquid Glass Effect Layer - Distortion */
+/* Background sweep animation from left to right - 26% width - DESKTOP ONLY - MENU ONLY */
+@media screen and (min-width: 1024px) {
+  .navbar-v4-glass-background::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 26%;
+    height: 100vh;
+    background: rgba(246, 246, 246, 1);
+    z-index: 201;
+    transform: translateX(-100%);
+    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  /* Only show background sweep when menu is opened */
+  .navbar-v4-glass-background.menu-expanded::before {
+    transform: translateX(0);
+  }
+}
+
+/* Liquid Glass Effect Layer - Chromatic Aberration Distortion */
 .liquidGlass-v4-effect {
   position: absolute;
   z-index: 0;
   inset: 0;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  filter: url(#navbar-glass-distortion);
+  backdrop-filter: var(--navbar-filter-id, blur(5px));
+  -webkit-backdrop-filter: var(--navbar-filter-id, blur(5px));
   overflow: hidden;
 }
 
@@ -211,16 +250,60 @@
   color: rgba(255, 255, 255, 1) !important;
 }
 
-/* Horizontal menu list (shown at top of page) */
-.menu-v4-horizontal-list {
+/* At top: show hamburger icon + horizontal list */
+.menu-v4-fixed-container.at-top {
   display: flex;
   align-items: center;
   gap: 48px;
+}
+
+/* At top: hide "Menu" text, only show icon */
+.menu-v4-fixed-container.at-top .menu-v4-text {
+  display: none;
+}
+
+/* At top: ensure icon container is visible */
+.menu-v4-fixed-container.at-top .menu-v4-icon-container {
+  display: inline-block !important;
+}
+
+/* At top: menu button styling - simple icon without background */
+.menu-v4-fixed-container.at-top .menu-v4-button {
+  background: none;
+  border: none;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  gap: 0;
+}
+
+/* Horizontal menu list (shown at top of page next to hamburger) */
+.menu-v4-horizontal-list {
+  position: absolute;
+  left: calc(24px + 36px); /* Hamburger icon width (24px) + gap (48px) */
+  display: flex;
+  align-items: center;
+  gap: 24px;
   list-style: none;
   padding: 0;
   margin: 0;
   height: 100%;
   color: rgba(255, 255, 255, 1);
+  opacity: 1;
+  pointer-events: auto; /* Enable clicking on horizontal menu items */
+  transform: scaleX(1);
+  transform-origin: left center; /* Collapse towards Home button (left edge stays fixed) */
+  overflow: hidden; /* Clip content during scale animation */
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Collapse with depth effect when scrolled or menu popup opens - collapse to Home button position */
+.menu-v4-horizontal-list.menu-open,
+.menu-v4-horizontal-list.scrolled {
+  transform: scaleX(0);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .menu-v4-horizontal-list li {
@@ -237,6 +320,19 @@
 
 .menu-v4-horizontal-list .underline-button-text {
   color: inherit;
+}
+
+/* Active menu item - show underline */
+.menu-v4-horizontal-list li.active .underline-button-text::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* Hide all underlines when menu is collapsed */
+.menu-v4-horizontal-list.scrolled .underline-button-text::after,
+.menu-v4-horizontal-list.menu-open .underline-button-text::after {
+  opacity: 0 !important;
+  transform: scaleX(0) !important;
 }
 
 /* Account link container với blend mode */
@@ -303,17 +399,16 @@
 
 .menu-v4-button {
   position: relative;
-  background: unset;
+  background: none !important;
   color: white;
-  border: none;
+  border: none !important;
   padding: 0;
-  pointer-events: none; /* Desktop: disable click, only hover works */
-  cursor: default;
+  pointer-events: auto; /* Enable click on all devices */
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   z-index: 2;
-  transition: all 0.3s;
   margin-left: 0;
   opacity: 1;
   gap: 10px;
@@ -327,70 +422,112 @@
 }
 
 .menu-v4-icon {
-  transition: all 0.3s ease;
   position: absolute;
   top: 0;
   left: 0;
   width: 24px;
   height: 24px;
   opacity: 1;
-  filter: brightness(0) invert(1);
+  color: white;
+}
+
+/* Individual line styling - no transition, use animation */
+.menu-v4-icon path:nth-child(1),
+.menu-v4-icon path:nth-child(2) {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/* Keyframes for top line - move down then rotate */
+@keyframes topLineToX {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(3px) rotate(0);
+  }
+  100% {
+    transform: translateY(3px) rotate(45deg);
+  }
+}
+
+/* Keyframes for bottom line - move up then rotate */
+@keyframes bottomLineToX {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-3px) rotate(0);
+  }
+  100% {
+    transform: translateY(-3px) rotate(-45deg);
+  }
+}
+
+/* Reverse animation - rotate back then move to original position */
+@keyframes topLineFromX {
+  0% {
+    transform: translateY(3px) rotate(45deg);
+  }
+  50% {
+    transform: translateY(3px) rotate(0);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
+
+@keyframes bottomLineFromX {
+  0% {
+    transform: translateY(-3px) rotate(-45deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(0);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
+
+/* When menu is open, animate to X */
+.menu-v4-container.menu-v4-open .menu-v4-icon path:nth-child(1) {
+  animation: topLineToX 0.6s ease forwards;
+}
+
+.menu-v4-container.menu-v4-open .menu-v4-icon path:nth-child(2) {
+  animation: bottomLineToX 0.6s ease forwards;
+}
+
+/* When menu is actively closing, reverse animation */
+.menu-v4-container.menu-v4-closing .menu-v4-icon path:nth-child(1) {
+  animation: topLineFromX 0.6s ease forwards;
+}
+
+.menu-v4-container.menu-v4-closing .menu-v4-icon path:nth-child(2) {
+  animation: bottomLineFromX 0.6s ease forwards;
+}
+
+/* Default closed state - no animation on page load */
+.menu-v4-container:not(.menu-v4-open):not(.menu-v4-closing)
+  .menu-v4-icon
+  path:nth-child(1),
+.menu-v4-container:not(.menu-v4-open):not(.menu-v4-closing)
+  .menu-v4-icon
+  path:nth-child(2) {
+  transform: translateY(0) rotate(0);
+}
+
+/* Desktop hover effect - DISABLED, no animation on hover */
+@media screen and (min-width: 1024px) {
+  /* Hover animation removed - icon stays as hamburger on hover */
 }
 
 .menu-v4-icon-close {
-  color: white;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  transition: all 0.3s ease;
-  width: 24px;
-  height: 24px;
-  stroke-width: 1.5px;
-}
-
-/* Show close icon when menu is open */
-.menu-v4-container.menu-v4-open .menu-v4-icon {
-  opacity: 0;
-  transform: rotate(90deg);
-}
-
-.menu-v4-container.menu-v4-open .menu-v4-icon-close {
-  opacity: 1;
-  transform: rotate(0deg);
-  color: white;
-}
-
-/* Show close icon on hover (desktop only) */
-@media screen and (min-width: 1024px) {
-  .menu-v4-container:hover .menu-v4-icon {
-    opacity: 0;
-    transform: rotate(90deg);
-  }
-
-  .menu-v4-container:hover .menu-v4-icon-close {
-    opacity: 1;
-    transform: rotate(0deg);
-    color: white;
-  }
+  display: none !important;
 }
 
 .menu-v4-fixed-container.scrolled .menu-v4-icon {
-  filter: brightness(0) invert(1) !important;
-}
-
-.menu-v4-fixed-container.scrolled .menu-v4-icon-close {
-  color: #fff !important;
-}
-
-.menu-v4-fixed-container.scrolled .menu-v4-container:hover .menu-v4-icon-close {
-  color: #fff !important;
-}
-
-.menu-v4-fixed-container.scrolled
-  .menu-v4-container.menu-v4-open
-  .menu-v4-icon-close {
-  color: #fff !important;
+  color: white !important;
 }
 
 .menu-v4-text {
@@ -409,14 +546,13 @@
 
 .menu-v4-container.scrolled-mode .menu-v4-button {
   gap: 0;
-  padding: 10px;
-  width: 44px;
-  height: 44px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 50%; /* Circular like mobile/tablet */
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
   transition: all 0.3s ease;
   cursor: pointer;
   pointer-events: auto; /* Enable click in scrolled mode */
@@ -425,10 +561,11 @@
   justify-content: center;
 }
 
+/* Remove all hover effects for scrolled-mode - mix-blend-mode only */
 .menu-v4-container.scrolled-mode .menu-v4-button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.35);
-  transform: translateY(-1px);
+  background: none;
+  border: none;
+  transform: none;
 }
 
 .menu-v4-container.scrolled-mode .menu-v4-icon-container {
@@ -436,44 +573,27 @@
   height: 24px;
 }
 
-.menu-v4-container.scrolled-mode .menu-v4-icon,
-.menu-v4-container.scrolled-mode .menu-v4-icon-close {
+.menu-v4-container.scrolled-mode .menu-v4-icon {
   width: 24px;
   height: 24px;
 }
 
-/* Menu popup background when in scrolled mode - transparent like mobile/tablet */
+/* Desktop at-top: Keep default padding like V3 */
+@media screen and (min-width: 1024px) {
+  .menu-v4-fixed-container.at-top .menu-v4-popup {
+    padding: 48px 20px 20px 20px !important;
+  }
+}
+
+/* Menu popup in scrolled mode - same as at-top */
 .menu-v4-container.scrolled-mode .menu-v4-popup {
-  position: fixed !important;
-  top: 50% !important;
-  left: 2.5% !important;
-  width: auto !important;
-  max-width: none !important;
-  background: transparent !important;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-radius: 0;
-  padding: 0 !important;
-  transform: translateY(-50%) !important;
-  z-index: 202 !important;
-}
-
-/* Left align menu list in scrolled mode */
-.menu-v4-container.scrolled-mode .menu-v4-popup .menu-v4-groups {
-  gap: 48px !important;
-  align-items: flex-start !important;
-}
-
-.menu-v4-container.scrolled-mode .menu-v4-popup .menu-v4-list {
-  text-align: left;
-  align-items: flex-start !important;
-  gap: 24px !important;
-}
-
-.menu-v4-container.scrolled-mode .menu-v4-popup .menu-v4-list li {
-  text-align: left;
-  display: inline-block;
-  width: fit-content;
+  /* Keep same position setup as at-top */
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  background: transparent;
+  padding: 48px 20px 20px 20px;
+  box-sizing: border-box;
 }
 
 /* Ensure menu button stays visible above overlay in scrolled mode */
@@ -481,93 +601,21 @@
   z-index: 203;
 }
 
-/* Show overlay when scrolled mode menu is open */
+/* Desktop - no mobile overlay */
 @media screen and (min-width: 1024px) {
   .mobile-v4-menu-overlay {
-    display: none;
-  }
-
-  /* Show overlay when scrolled and menu open on desktop */
-  body:has(.menu-v4-container.scrolled-mode.menu-v4-open)
-    .mobile-v4-menu-overlay {
-    display: block !important;
-    animation: fadeInScrolledOverlay 0.3s ease forwards;
-  }
-
-  @keyframes fadeInScrolledOverlay {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes fadeOutScrolledOverlay {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-
-  /* Apply fade out animation when closing */
-  .mobile-v4-menu-overlay.closing {
-    animation: fadeOutScrolledOverlay 0.3s ease forwards !important;
-  }
-
-  /* Fade out menu popup when closing */
-  .menu-v4-popup.closing {
-    animation: fadeOutScrolledOverlay 0.3s ease forwards !important;
-  }
-
-  /* Slide out menu groups when closing */
-  .menu-v4-popup.closing .menu-v4-groups {
-    animation: slideOutToLeft 0.3s cubic-bezier(0.64, 0, 0.78, 0) forwards;
-  }
-
-  @keyframes slideOutToLeft {
-    from {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateX(-100px);
-    }
+    display: none !important;
   }
 }
 
 .menu-v4-container.scrolled-mode.menu-v4-open .menu-v4-button {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: none;
+  border: none;
 }
 
-.menu-v4-container.scrolled-mode.menu-v4-open .menu-v4-icon-close {
-  color: #fff !important;
-}
-
-/* Disable hover behavior when scrolled (use click instead) - only when menu NOT open */
-.menu-v4-container.scrolled-mode:not(.menu-v4-open):hover .menu-v4-icon {
+/* Hamburger icon always visible in scrolled mode */
+.menu-v4-container.scrolled-mode .menu-v4-icon {
   opacity: 1;
-  transform: none;
-}
-
-.menu-v4-container.scrolled-mode:not(.menu-v4-open):hover .menu-v4-icon-close {
-  opacity: 0;
-  transform: rotate(-90deg);
-}
-
-/* When menu is open in scrolled mode, show X icon */
-.menu-v4-container.scrolled-mode.menu-v4-open .menu-v4-icon {
-  opacity: 0;
-  transform: rotate(90deg);
-}
-
-.menu-v4-container.scrolled-mode.menu-v4-open .menu-v4-icon-close {
-  opacity: 1;
-  transform: rotate(0deg);
 }
 
 /* Scrolled mode theme colors (desktop only) */
@@ -575,8 +623,8 @@
   .menu-v4-fixed-container.navbar-v4-theme-white
     .menu-v4-container.scrolled-mode
     .menu-v4-button {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.25) !important;
+    background: none !important;
+    border: none !important;
   }
 
   .menu-v4-fixed-container.navbar-v4-theme-white
@@ -585,15 +633,15 @@
   .menu-v4-fixed-container.navbar-v4-theme-white
     .menu-v4-container.scrolled-mode.menu-v4-open
     .menu-v4-button {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.35) !important;
+    background: none !important;
+    border: none !important;
   }
 
   .menu-v4-fixed-container.navbar-v4-theme-black
     .menu-v4-container.scrolled-mode
     .menu-v4-button {
-    background: rgba(0, 0, 0, 0.05) !important;
-    border-color: rgba(0, 0, 0, 0.25) !important;
+    background: none !important;
+    border: none !important;
   }
 
   .menu-v4-fixed-container.navbar-v4-theme-black
@@ -602,16 +650,16 @@
   .menu-v4-fixed-container.navbar-v4-theme-black
     .menu-v4-container.scrolled-mode.menu-v4-open
     .menu-v4-button {
-    background: rgba(0, 0, 0, 0.1) !important;
-    border-color: rgba(0, 0, 0, 0.35) !important;
+    background: none !important;
+    border: none !important;
   }
 
   /* Override to white when opened (for blend mode) */
   .menu-v4-fixed-container
     .menu-v4-container.scrolled-mode.menu-v4-open
     .menu-v4-button {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: none !important;
+    border: none !important;
   }
 }
 
@@ -806,6 +854,7 @@
   opacity: 0;
   pointer-events: none;
   display: none;
+  min-height: calc(100vh - 40px); /* Full height minus top offset */
 }
 
 .menu-v4-popup.active {
@@ -831,18 +880,92 @@
   }
 }
 
-.menu-v4-container:hover .menu-v4-button {
-  background: none;
-}
+/* Menu button hover removed - click only mode */
 
 .menu-v4-groups {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  animation: slideInFromLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  gap: 36px;
+  /* Initial hidden state */
+  opacity: 0;
+  transform: translateX(-100px);
 }
 
-@keyframes slideInFromLeft {
+/* Only animate when menu is opening (not on every re-render) */
+.menu-v4-popup.opening .menu-v4-groups {
+  animation: navbarV4SlideInFromLeft 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* After animation completes, ensure groups stay visible - but NOT during opening */
+.menu-v4-popup.active:not(.opening):not(.closing) .menu-v4-groups {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Desktop: menu groups width = 80% of white background (26% * 0.8 = 20.8vw) */
+@media screen and (min-width: 1024px) {
+  .menu-v4-groups {
+    width: 20.8vw;
+    max-width: 20.8vw;
+  }
+}
+
+/* Bottom shine glass buttons */
+.menu-v4-bottom-buttons {
+  display: none; /* Hidden by default */
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  opacity: 0;
+}
+
+/* Show buttons when menu popup is active */
+.menu-v4-popup.active .menu-v4-bottom-buttons {
+  display: flex;
+}
+
+/* Fade in animation when menu is opening */
+.menu-v4-popup.opening .menu-v4-bottom-buttons {
+  animation: fadeInBottomButtons 0.6s ease 0.3s forwards; /* 0.3s delay after menu starts */
+}
+
+/* Keep visible after animation completes */
+.menu-v4-popup.active:not(.opening):not(.closing) .menu-v4-bottom-buttons {
+  opacity: 1;
+}
+
+@keyframes fadeInBottomButtons {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Desktop: position at bottom of menu-v4-popup (white background) */
+@media screen and (min-width: 1024px) {
+  .menu-v4-bottom-buttons {
+    position: absolute;
+    bottom: 24px;
+    left: 20px; /* Same as popup horizontal padding */
+    right: 20px;
+    width: auto; /* Auto width to account for padding */
+  }
+}
+
+/* Force shine glass buttons to be full width */
+.menu-v4-bottom-buttons .shine-button-wrap {
+  width: 100%;
+}
+
+.menu-v4-bottom-buttons .shine-glass-button {
+  width: 100%;
+}
+
+@keyframes navbarV4SlideInFromLeft {
   from {
     opacity: 0;
     transform: translateX(-100px);
@@ -853,7 +976,7 @@
   }
 }
 
-@keyframes slideOutToLeft {
+@keyframes navbarV4SlideOutToLeft {
   from {
     opacity: 1;
     transform: translateX(0);
@@ -864,9 +987,9 @@
   }
 }
 
-/* Slide out animation when closing */
+/* Slide out animation when closing - Desktop only */
 .menu-v4-popup.closing .menu-v4-groups {
-  animation: slideOutToLeft 0.3s cubic-bezier(0.64, 0, 0.78, 0) forwards;
+  animation: navbarV4SlideOutToLeft 0.3s cubic-bezier(0.64, 0, 0.78, 0) forwards;
 }
 
 .menu-v4-list {
@@ -878,6 +1001,24 @@
   gap: 12px;
 }
 
+/* Profile list - 2 column layout on desktop */
+@media screen and (min-width: 1024px) {
+  .menu-v4-list-profile {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .menu-v4-popup .menu-v4-list-profile li {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  /* Logout button should span full width at the bottom */
+  .menu-v4-list-profile li.logout-v4-item {
+    grid-column: 1 / -1;
+  }
+}
+
 .menu-v4-popup .menu-v4-list li {
   display: inline-block;
   width: fit-content;
@@ -886,7 +1027,7 @@
 
 /* Active menu item - show underline */
 .menu-v4-popup .menu-v4-list li.active .underline-button-text::after {
-  transform: scaleX(1) scaleY(0.75);
+  transform: scaleX(1);
   transform-origin: left center;
 }
 
@@ -896,11 +1037,23 @@
 }
 
 .menu-v4-divider {
-  width: 18px;
-  height: 1.5px;
+  width: 100%;
+  height: 1px;
   background: rgba(255, 255, 255, 1);
   cursor: default !important;
   margin: 0;
+}
+
+/* Icon + text button styling */
+.menu-v4-button-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-v4-button-with-icon svg {
+  flex-shrink: 0;
+  color: inherit;
 }
 
 /* Xóa các class cũ không còn sử dụng */
@@ -1013,11 +1166,7 @@
 
   /* Icon color white for tablet */
   .menu-v4-icon {
-    filter: brightness(0) invert(1) !important;
-  }
-
-  .menu-v4-icon-close {
-    color: #fff !important;
+    color: white !important;
   }
 
   /* Scrolled state for tablet menu button */
@@ -1025,18 +1174,11 @@
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.25);
   }
-  .menu-v4-fixed-container.scrolled .menu-v4-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.35);
-  }
 
   /* When menu is open on tablet */
   .menu-v4-container.menu-v4-open .menu-v4-button {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.4);
-  }
-  .menu-v4-container.menu-v4-open .menu-v4-icon-close {
-    color: #fff !important;
   }
 }
 
@@ -1268,7 +1410,7 @@
   width: fit-content;
 }
 
-/* Mobile menu overlay */
+/* Mobile menu overlay - Only on mobile/tablet, hidden on desktop */
 .mobile-v4-menu-overlay {
   display: none;
   position: fixed;
@@ -1276,13 +1418,25 @@
   left: 0;
   width: 100vw;
   height: 110vh;
-  background: linear-gradient(288deg, #f6f6f6 0%, #bc224c 50%, #000 100%);
+  background: linear-gradient(
+    180deg,
+    #000 17.79%,
+    #ec3667 55.29%,
+    #f6f6f6 100%
+  );
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 200;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: auto;
+}
+
+/* Hide gradient sweep and mobile overlay on desktop */
+@media screen and (min-width: 1024px) {
+  .mobile-v4-menu-overlay {
+    display: none !important;
+  }
 }
 
 /* Mobile specific styles */
@@ -1310,8 +1464,58 @@
 
   /* Center align menu list text on mobile */
   .menu-v4-popup .menu-v4-groups {
-    gap: 72px;
+    gap: 48px !important;
     align-items: center;
+  }
+
+  /* Bottom buttons on mobile - relative positioning below menu groups */
+  .menu-v4-bottom-buttons {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 90vw;
+    max-width: 400px;
+    margin-top: 36px;
+    gap: 16px;
+  }
+
+  /* Only animate when opening */
+  .menu-v4-popup.opening .menu-v4-groups {
+    animation: fadeInMenuMobile 0.3s ease forwards;
+  }
+
+  /* After animation, keep visible */
+  .menu-v4-popup.active:not(.opening):not(.closing) .menu-v4-groups {
+    opacity: 1;
+  }
+
+  @keyframes fadeInMenuMobile {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Override closing animation for mobile */
+  .menu-v4-popup.closing {
+    animation: none !important;
+  }
+
+  .menu-v4-popup.closing .menu-v4-groups {
+    animation: fadeOutMenuMobile 0.3s ease forwards !important;
+  }
+
+  @keyframes fadeOutMenuMobile {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: none;
+    }
   }
 
   .menu-v4-popup .menu-v4-list {
@@ -1363,22 +1567,6 @@
   /* Fade out menu popup when closing */
   .menu-v4-popup.closing {
     animation: fadeOut 0.3s ease forwards !important;
-  }
-
-  /* Slide out menu groups when closing */
-  .menu-v4-popup.closing .menu-v4-groups {
-    animation: slideOutToLeft 0.3s cubic-bezier(0.64, 0, 0.78, 0) forwards;
-  }
-
-  @keyframes slideOutToLeft {
-    from {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateX(-100px);
-    }
   }
 
   /* Adjust menu popup for mobile with overlay */
@@ -1434,31 +1622,16 @@
     pointer-events: auto; /* Mobile: enable click */
   }
 
-  .menu-v4-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.35);
-    transform: translateY(-1px);
-  }
-
   /* Scrolled state for mobile menu button */
   .menu-v4-fixed-container.scrolled .menu-v4-button {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.25);
   }
 
-  .menu-v4-fixed-container.scrolled .menu-v4-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.35);
-  }
-
   /* When menu is open on mobile */
   .menu-v4-container.menu-v4-open .menu-v4-button {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.4);
-  }
-
-  .menu-v4-container.menu-v4-open .menu-v4-icon-close {
-    color: white !important;
   }
 }
 
@@ -1467,14 +1640,64 @@
 
   /* Center align menu list text on tablet */
   .menu-v4-popup .menu-v4-groups {
-    gap: 72px;
+    gap: 60px;
     align-items: center;
+  }
+
+  /* Bottom buttons on tablet - relative positioning below menu groups */
+  .menu-v4-bottom-buttons {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 80vw;
+    max-width: 500px;
+    margin-top: 48px;
+    gap: 16px;
+  }
+
+  /* Only animate when opening */
+  .menu-v4-popup.opening .menu-v4-groups {
+    animation: fadeInMenuTablet 0.3s ease forwards;
+  }
+
+  /* After animation, keep visible */
+  .menu-v4-popup.active:not(.opening):not(.closing) .menu-v4-groups {
+    opacity: 1;
+  }
+
+  @keyframes fadeInMenuTablet {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Override closing animation for tablet */
+  .menu-v4-popup.closing {
+    animation: none !important;
+  }
+
+  .menu-v4-popup.closing .menu-v4-groups {
+    animation: fadeOutMenuTablet 0.3s ease forwards !important;
+  }
+
+  @keyframes fadeOutMenuTablet {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: none;
+    }
   }
 
   .menu-v4-popup .menu-v4-list {
     text-align: center;
     align-items: center;
-    gap: 24px;
+    gap: 12px;
   }
 
   .menu-v4-popup .menu-v4-list li {
@@ -1503,6 +1726,11 @@
     }
   }
 
+  /* Apply fade out animation when closing */
+  .mobile-v4-menu-overlay.closing {
+    animation: fadeOut 0.3s ease forwards !important;
+  }
+
   @keyframes fadeOut {
     from {
       opacity: 1;
@@ -1512,30 +1740,9 @@
     }
   }
 
-  /* Apply fade out animation when closing */
-  .mobile-v4-menu-overlay.closing {
-    animation: fadeOut 0.3s ease forwards !important;
-  }
-
   /* Fade out menu popup when closing */
   .menu-v4-popup.closing {
     animation: fadeOut 0.3s ease forwards !important;
-  }
-
-  /* Slide out menu groups when closing */
-  .menu-v4-popup.closing .menu-v4-groups {
-    animation: slideOutToLeft 0.3s cubic-bezier(0.64, 0, 0.78, 0) forwards;
-  }
-
-  @keyframes slideOutToLeft {
-    from {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateX(-100px);
-    }
   }
 
   /* Adjust menu popup for tablet with overlay */
@@ -1657,11 +1864,7 @@
 }
 
 .menu-v4-fixed-container.navbar-v4-theme-white .menu-v4-icon {
-  filter: brightness(0) invert(1) !important;
-}
-
-.menu-v4-fixed-container.navbar-v4-theme-white .menu-v4-icon-close {
-  color: rgba(255, 255, 255, 1) !important;
+  color: white !important;
 }
 
 /* Black Theme - Black menu text and icons */
@@ -1682,11 +1885,7 @@
 }
 
 .menu-v4-fixed-container.navbar-v4-theme-black .menu-v4-icon {
-  filter: brightness(0) !important;
-}
-
-.menu-v4-fixed-container.navbar-v4-theme-black .menu-v4-icon-close {
-  color: rgba(0, 0, 0, 1) !important;
+  color: black !important;
 }
 
 /* Horizontal menu theme colors */
@@ -1727,46 +1926,146 @@
   mix-blend-mode: difference !important;
 }
 
-/* ========== MENU HOVER/OPEN - Override theme to blend mode ========== */
-/* When menu is hovered or opened, force blend mode regardless of theme */
+/* Force button text color for ShineGlassButton light theme in menu */
+.menu-v4-fixed-container
+  .menu-v4-popup
+  .menu-v4-bottom-buttons
+  .shine-glass-button--light
+  .button-text,
+.menu-v4-fixed-container
+  .menu-v4-popup
+  .menu-v4-bottom-buttons
+  .shine-glass-button--light
+  .button-text.bodytext-4--no-margin {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
 
-.menu-v4-fixed-container:hover,
+.menu-v4-fixed-container
+  .menu-v4-popup
+  .menu-v4-bottom-buttons
+  .shine-glass-button--light:hover
+  .button-text,
+.menu-v4-fixed-container
+  .menu-v4-popup
+  .menu-v4-bottom-buttons
+  .shine-glass-button--light:hover
+  .button-text.bodytext-4--no-margin {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Custom style for second button (Explore Mirror Passport) - black background */
+.menu-v4-fixed-container
+  .menu-v4-popup
+  .menu-v4-bottom-buttons
+  .shine-glass-button--shine
+  .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.95),
+    rgba(0, 0, 0, 0.98),
+    rgba(0, 0, 0, 0.95)
+  ) !important;
+}
+
+.menu-v4-fixed-container
+  .menu-v4-popup
+  .menu-v4-bottom-buttons
+  .shine-glass-button--shine
+  .button-text {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.menu-v4-fixed-container
+  .menu-v4-popup
+  .menu-v4-bottom-buttons
+  .shine-glass-button--shine:hover
+  .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(140, 140, 140, 0.95),
+    rgba(160, 160, 160, 0.95),
+    rgba(140, 140, 140, 0.95)
+  ) !important;
+}
+
+.menu-v4-fixed-container
+  .menu-v4-popup
+  .menu-v4-bottom-buttons
+  .shine-glass-button--shine:hover
+  .button-text {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* ========== MENU OPEN - Apply to all themes ========== */
+/* Disable blend mode when menu is open - override all themes */
 .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open) {
-  mix-blend-mode: difference !important;
+  mix-blend-mode: normal !important;
 }
 
-/* Reset all text to white for blend mode */
-.menu-v4-fixed-container:hover .menu-v4-text,
-.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open) .menu-v4-text,
-.menu-v4-fixed-container:hover .underline-button-text,
+/* Menu button text and icon - black when menu is open */
+.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open) .menu-v4-text {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+
 .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+  .menu-v4-text
   .underline-button-text {
-  color: rgba(255, 255, 255, 1) !important;
+  color: rgba(0, 0, 0, 0.75) !important;
 }
 
-/* Reset all underlines to white for blend mode */
-.menu-v4-fixed-container:hover .underline-button-text::after,
 .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+  .menu-v4-text
   .underline-button-text::after {
-  background: rgba(255, 255, 255, 1) !important;
+  background: rgba(0, 0, 0, 0.75) !important;
 }
 
-/* Reset icons to white for blend mode */
-.menu-v4-fixed-container:hover .menu-v4-icon,
-.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open) .menu-v4-icon {
-  filter: brightness(0) invert(1) !important;
-}
-
-.menu-v4-fixed-container:hover .menu-v4-icon-close,
+/* Menu popup items - black text */
 .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
-  .menu-v4-icon-close {
-  color: rgba(255, 255, 255, 1) !important;
+  .menu-v4-popup
+  .underline-button-text {
+  color: rgba(0, 0, 0, 0.75) !important;
 }
 
-/* Reset menu divider to white for blend mode */
-.menu-v4-fixed-container:hover .menu-v4-divider,
-.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open) .menu-v4-divider {
-  background: rgba(255, 255, 255, 1) !important;
+/* Menu popup underlines - black */
+.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+  .menu-v4-popup
+  .underline-button-text::after {
+  background: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Menu button icon - black when menu is open */
+.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+  .menu-v4-button
+  .menu-v4-icon {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+
+.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+  .menu-v4-icon-container
+  svg
+  path {
+  stroke: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Menu popup icons (svg in menu items) - black */
+.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+  .menu-v4-popup
+  svg {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+
+.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+  .menu-v4-popup
+  svg
+  path {
+  stroke: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Menu divider - black */
+.menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+  .menu-v4-popup
+  .menu-v4-divider {
+  background: rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Menu button glassmorphism background theme (mobile/tablet) */
@@ -1776,40 +2075,16 @@
     border-color: rgba(255, 255, 255, 0.25) !important;
   }
 
-  .menu-v4-fixed-container.navbar-v4-theme-white .menu-v4-button:hover,
-  .menu-v4-fixed-container.navbar-v4-theme-white
-    .menu-v4-container.menu-v4-open
-    .menu-v4-button {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.35) !important;
-  }
-
   .menu-v4-fixed-container.navbar-v4-theme-black .menu-v4-button {
     background: rgba(0, 0, 0, 0.05) !important;
     border-color: rgba(0, 0, 0, 0.25) !important;
   }
 
-  .menu-v4-fixed-container.navbar-v4-theme-black .menu-v4-button:hover,
-  .menu-v4-fixed-container.navbar-v4-theme-black
-    .menu-v4-container.menu-v4-open
-    .menu-v4-button {
-    background: rgba(0, 0, 0, 0.1) !important;
-    border-color: rgba(0, 0, 0, 0.35) !important;
-  }
-
-  /* Override to white when hovered/opened (for blend mode) */
-  .menu-v4-fixed-container:hover .menu-v4-button,
+  /* Keep base styles when menu opened (no hover effect) */
   .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
     .menu-v4-button {
     background: rgba(255, 255, 255, 0.05) !important;
     border-color: rgba(255, 255, 255, 0.25) !important;
-  }
-
-  .menu-v4-fixed-container:hover .menu-v4-button:hover,
-  .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open) .menu-v4-button,
-  .menu-v4-fixed-container .menu-v4-container.menu-v4-open .menu-v4-button {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.35) !important;
   }
 }
 
@@ -1858,39 +2133,33 @@
   mix-blend-mode: difference !important;
 }
 
-/* ========== ACCOUNT HOVER/OPEN - Override theme to blend mode ========== */
-/* When account is hovered or dropdown opened, force blend mode regardless of theme */
+/* ========== ACCOUNT OPEN - Override theme to blend mode ========== */
+/* When account dropdown opened, force blend mode regardless of theme (NO hover effect) */
 
-.account-v4-fixed-container:hover,
 .account-v4-fixed-container:has(.account-v4-popup.active) {
   mix-blend-mode: difference !important;
 }
 
-/* Reset all text to white for blend mode */
-.account-v4-fixed-container:hover .account-text,
+/* Reset all text to white for blend mode when dropdown is open */
 .account-v4-fixed-container:has(.account-v4-popup.active) .account-text,
-.account-v4-fixed-container:hover .underline-button-text,
 .account-v4-fixed-container:has(.account-v4-popup.active)
   .underline-button-text {
   color: rgba(255, 255, 255, 1) !important;
 }
 
-/* Reset all underlines to white for blend mode */
-.account-v4-fixed-container:hover .underline-button-text::after,
+/* Reset all underlines to white for blend mode when dropdown is open */
 .account-v4-fixed-container:has(.account-v4-popup.active)
   .underline-button-text::after {
   background: rgba(255, 255, 255, 1) !important;
 }
 
-.account-v4-fixed-container:hover .account-v4-user-info span,
 .account-v4-fixed-container:has(.account-v4-popup.active)
   .account-v4-user-info
   span {
   color: white !important;
 }
 
-/* Reset account divider to white for blend mode */
-.account-v4-fixed-container:hover .menu-v4-divider,
+/* Reset account divider to white for blend mode when dropdown is open */
 .account-v4-fixed-container:has(.account-v4-popup.active) .menu-v4-divider {
   background: rgba(255, 255, 255, 1) !important;
 }
@@ -1994,4 +2263,21 @@ body:has(.navbar-v4-theme-white) .immersive-v4-button {
   .immersive-v4-button:hover,
 body:has(.navbar-v4-theme-white) .immersive-v4-button:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Override all menu button backgrounds and borders - EXCEPT scrolled-mode */
+/* At top with horizontal menu: no background/border */
+.menu-v4-fixed-container.at-top .menu-v4-button,
+.menu-v4-fixed-container.at-top .menu-v4-button:hover,
+.menu-v4-fixed-container.at-top.menu-v4-open .menu-v4-button,
+.menu-v4-fixed-container.at-top:hover .menu-v4-button,
+.menu-v4-fixed-container.at-top:has(.menu-v4-container.menu-v4-open)
+  .menu-v4-button,
+.menu-v4-fixed-container.at-top
+  .menu-v4-container.menu-v4-open
+  .menu-v4-button {
+  background: none !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }

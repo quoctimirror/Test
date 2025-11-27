@@ -4,6 +4,7 @@ import "./NewCutComponent.css";
 
 const NewCutComponent = () => {
   const heroRef = useRef(null);
+  const backgroundLayerRef = useRef(null);
   const isScrolling = useRef(false);
 
   useEffect(() => {
@@ -51,6 +52,17 @@ const NewCutComponent = () => {
 
         heroRef.current.style.opacity = opacity;
         heroRef.current.style.transform = `scale(${scale})`;
+
+        // Keep background layer visible ONLY when in hero section to block footer
+        if (backgroundLayerRef.current) {
+          // Show background when we're in hero section (scroll < 100vh)
+          // Hide when scrolled past hero to let article show
+          if (scrolled < windowHeight) {
+            backgroundLayerRef.current.style.display = 'block';
+          } else {
+            backgroundLayerRef.current.style.display = 'none';
+          }
+        }
       }
 
       // Auto-scroll effects only on desktop
@@ -97,8 +109,11 @@ const NewCutComponent = () => {
 
   return (
     <div className="new-cut-page">
+      {/* Solid background layer - stays solid to block footer */}
+      <div className="new-cut-hero-background-layer" ref={backgroundLayerRef} />
+
       {/* Hero Section */}
-      <section className="new-cut-hero" ref={heroRef} data-navbar-theme="black">
+      <section className="new-cut-hero" ref={heroRef} data-navbar-theme="white">
         <div className="new-cut-hero-content">
           <div className="new-cut-hero-text">
             <div className="new-cut-hero-text-main">
@@ -106,7 +121,7 @@ const NewCutComponent = () => {
                 June 2024
               </span>
               <h1 className="new-cut-hero-title heading-1--no-margin">
-                Mirror-Lumex 91™ - The next star has arrived
+                Mirror Lumex - 91™ The next star has arrived
               </h1>
             </div>
             <p className="new-cut-hero-description bodytext-5--no-margin">
@@ -123,7 +138,7 @@ const NewCutComponent = () => {
       </section>
 
       {/* Article Content */}
-      <section className="new-cut-article-content">
+      <section className="new-cut-article-content" data-navbar-theme="black">
         <div className="new-cut-article-container">
           {/* Section 1 */}
           <div className="new-cut-article-section">

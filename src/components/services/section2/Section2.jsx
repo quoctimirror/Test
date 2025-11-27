@@ -232,8 +232,8 @@ const Section2 = () => {
                     <span className="section2-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
-                    <h2 className="section2-title heading-1--no-margin">
-                      PRODUCT CARE & REPAIR
+                    <h2 className="section2-title heading-2--no-margin">
+                      Product Care and Repair
                     </h2>
                   </div>
                   <p className="section2-description bodytext-4--no-margin">
@@ -267,8 +267,8 @@ const Section2 = () => {
                     <span className="section2-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
-                    <h2 className="section2-title heading-1--no-margin">
-                      TRADE IN
+                    <h2 className="section2-title heading-2--no-margin">
+                      Trade in
                     </h2>
                   </div>
                   <p className="section2-description bodytext-4--no-margin">

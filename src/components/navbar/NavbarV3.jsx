@@ -64,11 +64,13 @@ export default function NavbarV3() {
 
     // Initialize diamond falling effect
     diamondEffectRef.current = new DiamondFallingEffect("navbar-diamond-container", {
-      count: 40,
+      count: 20, // Reduced from 40 to 20
       speed: 2.5,
       size: 12,
       sway: 6,
       rotation: 4,
+      fallAreaWidth: 0.26, // 26% of screen width (matching gradient background)
+      fallAreaAlign: 'left', // Align to left side
     });
 
     // Cleanup on unmount
@@ -126,12 +128,28 @@ export default function NavbarV3() {
   }, [isMenuOpen, isAccountMenuOpen]);
 
   // Control diamond falling effect based on menu state
+  // Delay diamond effect until gradient background finishes sweeping (0.8s)
   useEffect(() => {
+    let diamondTimeout;
+
     if (isMenuOpen && diamondEffectRef.current) {
-      diamondEffectRef.current.start();
+      // Wait for gradient sweep animation to complete (0.8s) before starting diamonds
+      diamondTimeout = setTimeout(() => {
+        if (diamondEffectRef.current) {
+          diamondEffectRef.current.start();
+        }
+      }, 800); // Match gradient transition duration
     } else if (!isMenuOpen && diamondEffectRef.current) {
+      // Stop immediately when menu closes
       diamondEffectRef.current.stop();
     }
+
+    // Cleanup timeout if menu closes before diamond effect starts
+    return () => {
+      if (diamondTimeout) {
+        clearTimeout(diamondTimeout);
+      }
+    };
   }, [isMenuOpen]);
 
   useEffect(() => {

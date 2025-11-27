@@ -214,17 +214,17 @@
   content: "";
   position: absolute;
   width: 100%;
-  height: 2px;
+  height: 1px;
   background: #000;
   bottom: -3px;
   left: 0;
-  transform: scaleX(0) scaleY(0.75);
+  transform: scaleX(0);
   transform-origin: right center;
   transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
 }
 
 .return-login-link:hover::after {
-  transform: scaleX(1) scaleY(0.75);
+  transform: scaleX(1);
   transform-origin: left center;
 }
 
@@ -822,17 +822,17 @@
   content: "";
   position: absolute;
   width: 100%;
-  height: 2px;
+  height: 1px;
   background: #000;
   bottom: -3px;
   left: 0;
-  transform: scaleX(0) scaleY(0.75);
+  transform: scaleX(0);
   transform-origin: right center;
   transition: transform 0.5s cubic-bezier(0.95, 0.05, 0.1, 1);
 }
 
 .resend-email-button:hover:not(:disabled)::after {
-  transform: scaleX(1) scaleY(0.75);
+  transform: scaleX(1);
   transform-origin: left center;
 }
 

@@ -36,3 +36,5 @@ dist-ssr
 
 # macOS system files
 __MACOSX/
+
+.claude/*

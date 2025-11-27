@@ -1,0 +1,1158 @@
+/* Booking Modal Overlay */
+.booking-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Container */
+.booking-modal-container {
+  position: relative;
+  background: white;
+  width: 90vw;
+  max-width: 1400px;
+  height: 90vh;
+  max-height: 900px;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Close Button */
+.booking-modal-close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #000;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.booking-modal-close:hover {
+  transform: rotate(90deg);
+}
+
+/* Modal Content - Container with overflow hidden */
+.booking-modal-content {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Carousel - horizontal slider containing 3 panels */
+.booking-carousel {
+  display: flex;
+  height: 100%;
+  width: 150%; /* 3 panels × 50% modal each */
+  transform: translateX(0);
+  will-change: transform;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+}
+
+/* During animation, carousel slides left by 33.333% (which is 50% of modal) */
+.booking-carousel.sliding {
+  transform: translateX(
+    -33.333%
+  ); /* 50% of modal = 33.333% of carousel (150%) */
+}
+
+/* Show confirmation page - slide entire carousel out to the left */
+.booking-carousel.show-confirmation {
+  transform: translateX(-150%); /* Slide entire carousel completely out */
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Disable transition when snapping back to position 0 */
+.booking-carousel.no-transition {
+  transition: none !important;
+}
+
+/* Each panel - 50% of modal width */
+.booking-panel {
+  width: 33.333%; /* 50% of modal = 33.333% of carousel (150%) */
+  height: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Confirmation panel - positioned outside on the right, slides in when shown */
+.booking-panel-confirmation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  transform: translateX(100%); /* Start position: outside on the right */
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+}
+
+/* When showing confirmation, slide it into view */
+.booking-panel-confirmation.show {
+  transform: translateX(0); /* Slide to center */
+}
+
+/* Right panel background to match footer */
+.booking-panel-right,
+.booking-panel-next {
+  background: #f6f6f6;
+}
+
+/* Panel Tab Row - contains back button + tab */
+.booking-panel-tab-row {
+  display: flex;
+  align-items: stretch;
+  background: white;
+  flex-shrink: 0;
+  position: relative;
+  min-height: 60px;
+}
+
+/* Back Button - at far left */
+.booking-back-btn {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  color: #000;
+  z-index: 1;
+  transition: all 0.2s ease;
+  line-height: 1;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.booking-back-btn:hover {
+  transform: translateY(-50%) translateX(-2px);
+}
+
+/* Panel Tab - centered */
+.booking-panel-tab {
+  text-align: center;
+  padding: 20px 60px;
+  white-space: nowrap;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Panel Content - scrollable area, no background */
+.booking-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0; /* Padding handled by content */
+}
+
+/* Force show scrollbar in BookingModal */
+.booking-panel-content::-webkit-scrollbar {
+  width: 8px;
+  display: block;
+}
+
+.booking-panel-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.booking-panel-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.booking-panel-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* For Firefox */
+.booking-panel-content {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* Panel Footer - fixed at bottom with continue button */
+.booking-panel-footer {
+  flex-shrink: 0;
+  padding: 30px 50px;
+  background: #f6f6f6;
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Footer animation when carousel is sliding */
+.booking-panel-footer.animating {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+/* Left panel border */
+
+/* Booking Step Info - white background for Book an Appointment */
+.booking-step-info {
+  background: #fff;
+  padding: 24px 48px;
+  min-height: 100%;
+}
+
+.booking-step-info-title {
+  font-family: "Orpheus Pro", serif;
+  font-size: 36px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.booking-step-info-subtitle {
+  margin-bottom: 40px;
+}
+
+.booking-step-info-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.booking-step-info-detail-item svg {
+  color: #000;
+}
+
+.booking-step-info-details h4 {
+  margin-bottom: 12px;
+  margin-top: 36px;
+}
+
+.booking-step-info-details p {
+  margin-bottom: 12px;
+}
+
+.booking-step-info-details ul {
+  list-style: disc;
+  margin-left: 20px;
+  margin-bottom: 12px;
+}
+
+.booking-step-info-details ul li {
+  margin-bottom: 8px;
+}
+
+/* Readonly mode - keep interactive */
+.booking-step.readonly {
+  opacity: 0.9;
+}
+
+/* Booking Step - white background that travels with content */
+.booking-step {
+  max-width: 700px;
+  margin: 0 auto;
+  background: #f6f6f6;
+  padding: 24px 48px;
+  min-height: 100%;
+}
+
+/* Review step has white background */
+.booking-step.review-step {
+  background: #fff;
+}
+
+.booking-step-title {
+  display: none; /* Hidden because tab shows step name */
+}
+
+.booking-step-subtitle {
+  margin-bottom: 36px !important;
+  color: #666;
+}
+
+.booking-time-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.booking-time-header .booking-step-subtitle {
+  margin-bottom: 0 !important;
+  color: #000;
+}
+
+.booking-timezone {
+  color: #999;
+}
+
+.booking-time-header + .time-grid {
+  margin-top: 36px;
+}
+
+/* Back Button */
+.booking-back-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 0;
+  color: #000;
+}
+
+/* Continue Button - ShineGlassButton with custom width/padding */
+.booking-continue-btn {
+  width: 100% !important;
+}
+
+.booking-continue-btn .glass-layer {
+  padding: 18px 26px !important;
+  border-radius: 999px !important;
+}
+
+.booking-continue-btn .button-text {
+  font-size: 16px !important;
+}
+
+/* Disabled state */
+.booking-continue-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.booking-continue-btn:disabled .glass-layer {
+  background: rgba(204, 204, 204, 0.8) !important;
+}
+
+.booking-continue-btn:disabled .button-text {
+  color: rgba(136, 136, 136, 1) !important;
+}
+
+/* Filter Section */
+.filter-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.filter-section .filter-label {
+  color: rgba(121, 121, 121, 1);
+  white-space: nowrap;
+}
+
+.filter-section .city-filter {
+  position: relative;
+  flex: 1;
+}
+
+.filter-section .dropdown-selected {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  background: rgba(246, 246, 246, 1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding-right: 40px;
+}
+
+.filter-section .dropdown-selected::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23797979' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 8px;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+.filter-section .dropdown-selected:hover {
+  border-color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-section .dropdown-selected.open {
+  border-color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.filter-section .dropdown-selected.open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.filter-section .selected-text.default {
+  color: rgba(121, 121, 121, 1);
+}
+
+.filter-section .dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #333;
+  border-top: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Force show scrollbar for dropdown */
+.filter-section .dropdown-options::-webkit-scrollbar {
+  width: 6px;
+  display: block;
+}
+
+.filter-section .dropdown-options::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.filter-section .dropdown-options::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.filter-section .dropdown-options::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.filter-section .dropdown-options {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.filter-section .dropdown-option {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.filter-section .dropdown-option:hover {
+  background: rgba(246, 246, 246, 1);
+}
+
+.filter-section .dropdown-option.selected {
+  background: rgba(246, 246, 246, 1);
+  font-weight: 600;
+}
+
+/* Loading and No Venues Messages */
+.loading-message,
+.no-venues-message {
+  padding: 24px;
+  text-align: center;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  color: #666;
+  background: #f9f9f9;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+/* Venue List */
+.venue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  margin-bottom: 24px;
+}
+
+.venue-item {
+  padding-left: 12px;
+  border-left: 1px solid var(--Gray-2, #e0e0e0);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.venue-item:hover {
+  border-left-color: rgba(188, 34, 76, 1);
+}
+
+.venue-item.selected {
+  border-left-color: rgba(188, 34, 76, 1);
+  border-left-width: 2px;
+}
+
+.venue-item h3 {
+  margin-bottom: 12px;
+  color: #000;
+  transition: transform 0.3s ease;
+}
+
+.venue-item p {
+  color: #797979;
+  transition: transform 0.3s ease;
+}
+
+.venue-item:hover h3,
+.venue-item:hover p,
+.venue-item.selected h3,
+.venue-item.selected p {
+  transform: translateX(6px);
+}
+
+.venue-item:hover h3,
+.venue-item.selected h3 {
+  color: rgba(188, 34, 76, 1);
+}
+
+/* Service List */
+.service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  margin-bottom: 24px;
+}
+
+.service-item {
+  padding-left: 12px;
+  border-left: 1px solid var(--Gray-2, #e0e0e0);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.service-item:hover {
+  border-left-color: rgba(188, 34, 76, 1);
+}
+
+.service-item.selected {
+  border-left-color: rgba(188, 34, 76, 1);
+  border-left-width: 2px;
+}
+
+.service-item h3 {
+  margin-bottom: 12px;
+  color: #000;
+  transition: transform 0.3s ease;
+}
+
+.service-item p {
+  color: #797979;
+  transition: transform 0.3s ease;
+}
+
+.service-item:hover h3,
+.service-item:hover p,
+.service-item.selected h3,
+.service-item.selected p {
+  transform: translateX(6px);
+}
+
+.service-item:hover h3,
+.service-item.selected h3 {
+  color: rgba(188, 34, 76, 1);
+}
+
+.service-item input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: "BT Beau Sans", sans-serif;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+/* Calendar */
+.calendar-container {
+  margin-bottom: 24px;
+}
+
+/* Custom react-datepicker styling */
+.calendar-container .react-datepicker {
+  border: 1px solid #ddd;
+  border-radius: 0;
+  font-family: "BT Beau Sans", sans-serif;
+  width: 100%;
+  background: white;
+}
+
+.calendar-container .react-datepicker__month-container {
+  width: 100%;
+  border-radius: 0;
+}
+
+.calendar-container .react-datepicker__header {
+  background-color: transparent;
+  border-bottom: none;
+  padding: 0;
+}
+
+.calendar-container .react-datepicker__current-month {
+  display: none;
+}
+
+.calendar-container .react-datepicker__navigation {
+  display: none;
+}
+
+/* Custom Calendar Header */
+.custom-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.custom-month-year {
+  font-family: "Orpheus Pro", serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000;
+}
+
+.custom-nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.custom-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.custom-nav-prev:hover:not(:disabled) {
+  transform: translateX(-2px);
+}
+
+.custom-nav-next:hover:not(:disabled) {
+  transform: translateX(2px);
+}
+
+.calendar-container .react-datepicker__day-names {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 0 16px;
+  margin-top: 0;
+}
+
+.calendar-container .react-datepicker__day-name {
+  text-align: center;
+  color: #000;
+  text-transform: lowercase;
+  width: auto;
+  margin: 0;
+}
+
+.calendar-container .react-datepicker__month {
+  margin: 0;
+  padding: 0 16px 16px;
+}
+
+.calendar-container .react-datepicker__week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.calendar-container .react-datepicker__week:last-child {
+  margin-bottom: 0;
+}
+
+.calendar-container .react-datepicker__day {
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 100px;
+  margin: 0 auto;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+}
+
+.calendar-container .react-datepicker__day:hover {
+  background: #000 !important;
+  color: white !important;
+  border-radius: 100px !important;
+}
+
+.calendar-container .react-datepicker__day--selected {
+  background: #000 !important;
+  color: white !important;
+  border-radius: 100px;
+}
+
+.calendar-container .react-datepicker__day--today {
+  font-weight: normal;
+}
+
+.calendar-container
+  .react-datepicker__day--today.react-datepicker__day--selected {
+  background: #000 !important;
+  color: white !important;
+  border-radius: 100px;
+}
+
+.calendar-container .react-datepicker__day--keyboard-selected {
+  background: transparent;
+}
+
+.calendar-container .react-datepicker__day--disabled {
+  color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.calendar-container .react-datepicker__day--disabled:hover {
+  background: none !important;
+  color: #e0e0e0 !important;
+}
+
+.calendar-container .react-datepicker__day--outside-month {
+  color: #e0e0e0;
+}
+
+/* Time Grid */
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 36px 24px;
+  margin-bottom: 24px;
+}
+
+.time-slot {
+  padding-left: 12px;
+  border: none;
+  border-left: 1px solid var(--Gray-2, #e0e0e0);
+  background: none;
+  cursor: pointer;
+  transition: border-left-color 0.3s ease, border-left-width 0.3s ease;
+  text-align: left;
+  color: #000;
+}
+
+.time-slot span {
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.time-slot:hover {
+  border-left-color: rgba(188, 34, 76, 1);
+}
+
+.time-slot:hover span {
+  transform: translateX(6px);
+}
+
+.time-slot.selected {
+  border-left-color: rgba(188, 34, 76, 1);
+  border-left-width: 2px;
+}
+
+.time-slot.selected span {
+  transform: translateX(6px);
+}
+
+.time-slot:hover,
+.time-slot.selected {
+  color: rgba(188, 34, 76, 1);
+}
+
+/* Form */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+/* Title Selection */
+.form-title-group {
+  margin-bottom: 36px;
+}
+
+.form-title-group label {
+  display: block;
+  margin-bottom: 12px;
+  color: rgba(121, 121, 121, 1);
+}
+
+.form-title-options {
+  display: flex;
+  gap: 36px;
+}
+
+.form-title-option {
+  cursor: pointer;
+  padding-bottom: 1.5px;
+  border-bottom: 2px solid transparent;
+  color: #797979;
+  transition: all 0.2s ease;
+}
+
+.form-title-option:hover {
+  color: #000;
+}
+
+.form-title-option.active {
+  color: #000;
+  border-bottom-color: #000;
+}
+
+/* Form Fields */
+.booking-form-field {
+  margin-bottom: 36px;
+  position: relative;
+}
+
+.booking-form-field label {
+  display: block;
+  color: rgba(121, 121, 121, 1);
+}
+
+.booking-form-input,
+.booking-form-textarea {
+  width: 100%;
+  padding: 12px 0 6px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 0;
+  background-color: transparent;
+  outline: none;
+  color: #333;
+  transition: border-bottom-color 0.3s ease;
+}
+
+.booking-form-input:focus,
+.booking-form-input:hover,
+.booking-form-textarea:focus,
+.booking-form-textarea:hover {
+  outline: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.booking-form-textarea {
+  resize: none;
+  min-height: auto;
+  max-height: 96px;
+  overflow-y: auto;
+}
+
+/* Hide scrollbar for textarea */
+.booking-form-textarea::-webkit-scrollbar {
+  display: none;
+}
+
+.booking-form-textarea {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.booking-form-input:read-only,
+.booking-form-textarea:read-only {
+  background-color: transparent;
+  cursor: default;
+}
+
+/* Review Step */
+.review-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.review-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.review-item h4 {
+  margin-bottom: 6px;
+  color: #797979;
+}
+
+.review-item p {
+  color: #0b0b0b;
+}
+
+/* Override UnderlineButton colors for review edit buttons */
+.review-edit-btn .underline-button-text {
+  color: #000;
+}
+
+.review-edit-btn .underline-button-text::after {
+  background: #000;
+}
+
+.privacy-policy {
+  margin-top: 36px;
+}
+
+.privacy-policy h4 {
+  margin-bottom: 24px;
+  color: #000;
+}
+
+.privacy-policy p {
+  color: #797979;
+}
+
+/* Review Checkboxes */
+.review-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.review-checkbox-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 1px solid #797979;
+  border-radius: 2px;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.review-checkbox-item input[type="checkbox"]:checked {
+  background: #000;
+  border-color: #000;
+}
+
+.review-checkbox-item:has(input[type="checkbox"]:checked) span {
+  color: #000;
+}
+
+.review-checkbox-item span {
+  color: #797979;
+  flex: 1;
+}
+
+.review-link {
+  color: #797979;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.review-link:hover {
+  color: #000;
+}
+
+/* Confirmation Text */
+.review-confirmation-text {
+  margin-top: 36px;
+  text-align: center;
+}
+
+.review-confirmation-text p {
+  color: #797979;
+}
+
+/* Confirmation Page - white background that travels with content */
+.confirmation-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100%;
+  padding: 60px;
+  background: white;
+}
+
+.confirmation-page .heading-2--no-margin {
+  margin-bottom: 12px;
+}
+
+.confirmation-subtitle {
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.confirmation-text {
+  margin-bottom: 48px;
+  color: #000;
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+/* Back to homepage button - theme light (default) */
+.confirmation-btn-back {
+  width: 274px !important;
+}
+
+.confirmation-btn-back .glass-layer {
+  padding: 18px 36px !important;
+  border-radius: 999px !important;
+}
+
+.confirmation-btn-back .button-text {
+  font-size: 16px !important;
+}
+
+/* Continue scrolling button - same as Explore Mirror Passport */
+.confirmation-btn-continue {
+  width: 274px !important;
+}
+
+.confirmation-btn-continue .glass-layer {
+  padding: 18px 36px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.95),
+    rgba(0, 0, 0, 0.98),
+    rgba(0, 0, 0, 0.95)
+  ) !important;
+}
+
+.confirmation-btn-continue .button-text {
+  font-size: 16px !important;
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.confirmation-btn-continue:hover .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(140, 140, 140, 0.95),
+    rgba(160, 160, 160, 0.95),
+    rgba(140, 140, 140, 0.95)
+  ) !important;
+}
+
+.confirmation-btn-continue:hover .button-text {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+  .booking-modal-container {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+  }
+
+  /* Panel tabs on mobile */
+  .booking-panel-tab {
+    font-size: 16px;
+    padding: 16px 12px;
+  }
+
+  /* Content padding on mobile */
+  .booking-step-info,
+  .booking-step,
+  .confirmation-page {
+    padding: 40px 24px;
+  }
+
+  /* Hide left panel on mobile */
+  .booking-panel-left {
+    display: none;
+  }
+
+  /* Adjust carousel width - only 2 panels (right + next) */
+  .booking-carousel {
+    width: 200%; /* 2 panels × 100% each */
+  }
+
+  /* Each panel takes full width on mobile */
+  .booking-panel {
+    width: 50%; /* 100% of modal = 50% of carousel (200%) */
+    padding: 40px 24px;
+  }
+
+  /* Carousel slides by 100% on mobile (not 50%) */
+  .booking-carousel.sliding {
+    transform: translateX(-100%);
+  }
+
+  .booking-step {
+    max-width: 100%;
+  }
+
+  .time-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .confirmation-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .confirmation-btn {
+    width: 100%;
+  }
+}

@@ -14,7 +14,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 0; /* Above background but below content */
+  z-index: -1; /* Below all content and footer for reveal effect */
+}
+
+.slogan-section.hidden {
+  display: none; /* Hide immediately, no transition */
 }
 
 .slogan-spacer {
@@ -34,12 +38,22 @@
 }
 
 .slogan-content {
-  position: relative;
+  position: absolute;
+  bottom: 160px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1;
   text-align: center;
-  color: white;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
+.slogan-text {
+  color: #fff;
+  max-width: 600px;
+  margin: 0 auto;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

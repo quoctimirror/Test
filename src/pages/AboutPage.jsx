@@ -1,16 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SloganSection from "@components/about/sloganSection/SloganSection";
 import StartingPlaceSection from "@components/about/startingPlaceSection/StartingPlaceSection";
-import IntroBOD from "@components/about/introBOD/IntroBOD";
 import BODMemberV4 from "@components/about/BODMemberV4/BODMemberV4";
 import MirrorNetworkDiscoverSection from "@components/about/mirrorNetworkDiscoverSection/MirrorNetworkDiscoverSection";
 import MirrorverseSection from "@components/about/mirrorverseSection/MirrorverseSection";
 import AtMirror from "@components/about/atMirror/AtMirror";
+import MirrorPassportSection from "@components/about/mirrorPassportSection/MirrorPassportSection";
+import MirrorNetworkV2 from "@components/about/mirrorNetworkV2/MirrorNetworkV2";
 import SharedSection from "@components/about/sharedSection/SharedSection";
 import ScrollDownArrow from "@components/common/button/ScrollDownArrow";
+import ImmersiveButton from "@components/common/button/ImmersiveButton";
 import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
+import { useBottomTheme } from "@/hooks/useBottomTheme";
 import "@components/home-page/scrollEffect/ScrollEffect.css"; // Import CSS for arrow styling
 import "./AboutPage.css";
 
@@ -22,6 +25,24 @@ const AboutPage = () => {
     scrollToEnd: true, // Scroll to end of each section instead of start
     scrollToStartSections: ["bod-member"], // BOD Member section should scroll to start instead of end
   });
+  const { theme: arrowTheme } = useBottomTheme();
+  const [isImmersiveCollapsed, setIsImmersiveCollapsed] = useState(false);
+
+  // Handle immersive button click
+  const handleImmersiveClick = () => {
+    // TODO: Navigate to immersive showroom or open immersive experience
+    console.log("Immersive button clicked");
+  };
+
+  // Detect scroll to collapse immersive button
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsImmersiveCollapsed(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const setupScrollTriggers = () => {
     // Kill existing triggers first
@@ -89,9 +110,6 @@ const AboutPage = () => {
         <StartingPlaceSection />
         {/* </section> */}
       </div>
-      <div data-section="intro-bod" data-navbar-theme="black">
-        <IntroBOD />
-      </div>
 
       <div data-section="bod-member" data-navbar-theme="black">
         <BODMemberV4 />
@@ -102,21 +120,40 @@ const AboutPage = () => {
       </section> */}
 
       <div data-section="mirrorverse" data-navbar-theme="white">
-        <MirrorverseSection />
+        <section className="panel" data-section="mirrorverse">
+          <MirrorverseSection />
+        </section>
       </div>
 
-      <section data-section="mirror-network-discover" data-navbar-theme="white">
+      {/* <section data-section="mirror-network-discover" data-navbar-theme="white">
         <MirrorNetworkDiscoverSection />
-      </section>
+      </section> */}
 
-      <div data-section="shared-section" data-navbar-theme="white">
+      <div data-section="mirror-network-v2" data-navbar-theme="white">
+        <MirrorNetworkV2 />
+      </div>
+
+      <div data-section="mirror-passport" data-navbar-theme="white">
+        <MirrorPassportSection />
+      </div>
+
+      {/* <div data-section="shared-section" data-navbar-theme="white">
         <SharedSection />
+      </div> */}
+
+      {/* Fixed Immersive Button */}
+      <div className="fixed-immersive-container">
+        <ImmersiveButton
+          theme={arrowTheme}
+          isCollapsed={isImmersiveCollapsed}
+          onClick={handleImmersiveClick}
+        />
       </div>
 
       {/* Fixed Arrow Button */}
       {isArrowVisible && (
         <div className="fixed-arrow-container">
-          <ScrollDownArrow onClick={handleArrowClick} />
+          <ScrollDownArrow theme={arrowTheme} onClick={handleArrowClick} />
         </div>
       )}
     </div>

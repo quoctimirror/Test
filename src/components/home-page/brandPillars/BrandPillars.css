@@ -43,7 +43,7 @@
 
 .brand-pillars-quote-line {
   display: block;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(224, 224, 224, 1);
   text-transform: uppercase;
   max-width: 400px;
 }
@@ -136,6 +136,8 @@
   transform: translateX(20px);
   transition: all 0.4s ease;
   pointer-events: none;
+  cursor: default;
+  user-select: none;
 }
 
 .brand-pillars .brand-expand-text .bodytext-6--no-margin {
@@ -220,7 +222,7 @@
 .brand-group:nth-child(3) {
   width: 43.4%;
   height: clamp(150px, 11vh, 214px);
-  margin-left: 14.1%;
+  margin-left: 20%;
 }
 
 .brand-group:nth-child(3) .brand-line:nth-child(1) {
@@ -246,24 +248,51 @@
   transform: translateX(20px);
 }
 
+/* SENSORY - offset 50% from left */
+.brand-line-sensory {
+  margin-left: 50%;
+  justify-content: flex-end;
+}
+
+.brand-line-sensory .brand-expand-text {
+  margin-left: 0;
+  margin-right: 12px;
+  transform: translateX(-20px);
+  text-align: right;
+  order: -1;
+}
+
+.brand-line-sensory:hover .brand-expand-text {
+  transform: translateX(0);
+}
+
 /* Hover effects */
-.brand-group:hover .brand-line {
+.brand-line-with-expand:hover .brand-line {
   color: #ffffff;
 }
 
-.brand-group:hover .brand-expand-text {
+.brand-line-with-expand:hover .brand-expand-text {
   opacity: 1;
+  transform: translateX(0);
 }
 
-.brand-group:nth-child(1):hover .brand-expand-text {
+/* Group 1 (PRECISION TECHNOLOGY) hover - hover anywhere in brand-main-text */
+.brand-group:nth-child(1) .brand-main-text:hover .brand-line {
+  color: #ffffff;
+}
+
+.brand-group:nth-child(1) .brand-main-text:hover .brand-expand-text {
+  opacity: 1;
   transform: translateX(0);
+}
+
+/* Group 2 (SUSTAINABILITY) hover - special case */
+.brand-group:nth-child(2):hover .brand-line {
+  color: #ffffff;
 }
 
 .brand-group:nth-child(2):hover .brand-expand-text {
-  transform: translateX(0);
-}
-
-.brand-group:nth-child(3):hover .brand-expand-text {
+  opacity: 1;
   transform: translateX(0);
 }
 
@@ -278,6 +307,8 @@
   line-height: 80%;
   letter-spacing: clamp(-1.44px, -0.3vw, -3.84px);
   text-transform: uppercase;
+  cursor: default;
+  user-select: none;
   color: var(--Pink, #bc224c);
   margin: 0;
   transition: color 0.3s ease, transform 0.3s ease;

@@ -255,7 +255,7 @@ function Collection() {
       </div>
 
       {/* --- SECTION 3 --- */}
-      <div className="section-3" data-section="collection-other">
+      <div className="section-3" data-section="collection-other" data-navbar-theme="black">
         <div className="other-collections-content">
           <div className="other-collections-subtitle bodytext-4--no-margin">
             OTHER COLLECTIONS

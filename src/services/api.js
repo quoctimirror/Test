@@ -275,6 +275,9 @@ export const ordersAPI = {
   getPaymentSchedule: (id) => api.get(`/api/orders/${id}/payment-schedule`),
   getPaymentSchedules: (params = {}) =>
     api.get(`/api/orders/payment-schedule`, { params }),
+  // Assign or update vendor on an order
+  assignVendor: (id, vendorId) =>
+    api.put(`/api/orders/${id}/vendor`, { vendorId }),
   updateStatus: (id, payload) => api.post(`/api/orders/${id}/status`, payload),
   updatePaymentTerms: (id, payload) =>
     api.put(`/api/orders/${id}/payment-terms`, payload),
@@ -590,6 +593,11 @@ export const usersAPI = {
   updateRole: (id, role) => api.patch(`/api/users/${id}/role`, { role }),
 };
 
+// ===== RBAC MATRIX =====
+export const roleMatrixAPI = {
+  getMatrix: () => api.get("/internal/roles/matrix"),
+};
+
 // ===== UTILITY FUNCTIONS =====
 
 /**
@@ -775,6 +783,19 @@ export const vendorsAPI = {
     vendorsAPI.getCurrentVendorInfo().then((vendorInfo) => {
       if (vendorInfo.hasVendor && vendorInfo.data) {
         return vendorsAPI.getProducts(vendorInfo.data.id);
+      } else {
+        return { data: [] };
+      }
+    }),
+
+  // Get orders for a specific vendor
+  getVendorOrders: (vendorId) => api.get(`/api/vendors/${vendorId}/orders`),
+
+  // Get orders for current user's vendor
+  getCurrentVendorOrders: () =>
+    vendorsAPI.getCurrentVendorInfo().then((vendorInfo) => {
+      if (vendorInfo.hasVendor && vendorInfo.data) {
+        return vendorsAPI.getVendorOrders(vendorInfo.data.id);
       } else {
         return { data: [] };
       }

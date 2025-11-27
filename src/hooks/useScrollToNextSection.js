@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
  * @param {number} options.footerThreshold - Distance from footer to hide button (default: 100)
  * @param {boolean} options.scrollToEnd - If true, scroll to end of section instead of start (default: false)
  * @param {Array<string>} options.scrollToStartSections - Array of section names that should scroll to start even when scrollToEnd is true
+ * @param {Array<string>} options.scrollToEndSections - Array of section names that should scroll to end (e.g., ['contact-us'])
  * @returns {Object} - { isArrowVisible, handleArrowClick }
  */
 export const useScrollToNextSection = (options = {}) => {
@@ -15,6 +16,7 @@ export const useScrollToNextSection = (options = {}) => {
     footerThreshold = 100,
     scrollToEnd = false,
     scrollToStartSections = [],
+    scrollToEndSections = ['contact-us'], // Default: contact-us scrolls to end
   } = options;
 
   const [isArrowVisible, setIsArrowVisible] = useState(true);
@@ -27,14 +29,30 @@ export const useScrollToNextSection = (options = {}) => {
 
       if (footerSections.length > 0) {
         const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
         let shouldHide = false;
 
         footerSections.forEach((footerSection) => {
           const rect = footerSection.getBoundingClientRect();
-          const footerTop = scrollY + rect.top;
+          const computedStyle = window.getComputedStyle(footerSection);
+          const isFixed = computedStyle.position === 'fixed';
 
-          if (scrollY >= footerTop - footerThreshold) {
-            shouldHide = true;
+          if (isFixed) {
+            // For fixed footer: check if near end of document
+            const scrollableHeight = documentHeight - windowHeight;
+            const revealStartPoint = scrollableHeight - windowHeight;
+
+            if (scrollY >= revealStartPoint - footerThreshold) {
+              shouldHide = true;
+            }
+          } else {
+            // For normal footer: use standard calculation
+            const footerTop = scrollY + rect.top;
+
+            if (scrollY >= footerTop - footerThreshold) {
+              shouldHide = true;
+            }
           }
         });
 
@@ -86,20 +104,19 @@ export const useScrollToNextSection = (options = {}) => {
         // Calculate target scroll position
         let targetScroll;
 
-        // Check if this section should scroll to start instead of end
-        if (scrollToStartSections.includes(sectionName)) {
-          // Scroll to start of this section
+        // Determine scroll behavior for this section
+        const shouldScrollToEnd = scrollToEnd || scrollToEndSections.includes(sectionName);
+        const shouldScrollToStart = scrollToStartSections.includes(sectionName);
+
+        if (shouldScrollToStart) {
+          // Explicitly scroll to start of this section
           targetScroll = sectionTop;
-        } else if (rect.height >= windowHeight) {
-          // Section is taller than viewport: scroll to show its bottom
+        } else if (shouldScrollToEnd) {
+          // Scroll to end of section - bottom of section touches bottom of viewport
           targetScroll = sectionBottom - windowHeight;
         } else {
-          // Section is shorter than viewport: scroll so bottom of section is at bottom of viewport
-          targetScroll = sectionBottom - windowHeight;
-          // But make sure we don't go below section top
-          if (targetScroll < sectionTop) {
-            targetScroll = sectionTop;
-          }
+          // Default: scroll to start
+          targetScroll = sectionTop;
         }
 
         window.scrollTo({
@@ -114,7 +131,7 @@ export const useScrollToNextSection = (options = {}) => {
         });
       }
     } else {
-      // Default mode: Scroll to start of next section
+      // Default mode: Scroll to start of next section (unless section is in scrollToEndSections)
       let nextSection = null;
 
       for (let i = 0; i < sections.length; i++) {
@@ -131,7 +148,21 @@ export const useScrollToNextSection = (options = {}) => {
       // If found next section, scroll to it; otherwise scroll one viewport
       if (nextSection) {
         const rect = nextSection.getBoundingClientRect();
-        const targetPosition = scrollY + rect.top;
+        const sectionName = nextSection.dataset.section;
+        const sectionTop = scrollY + rect.top;
+        const sectionBottom = sectionTop + rect.height;
+
+        let targetPosition;
+
+        // Check if this section should scroll to end
+        if (scrollToEndSections.includes(sectionName)) {
+          // Scroll to end of section - bottom of section touches bottom of viewport
+          targetPosition = sectionBottom - windowHeight;
+        } else {
+          // Default: scroll to top
+          targetPosition = sectionTop;
+        }
+
         window.scrollTo({
           top: targetPosition,
           behavior: 'smooth'
@@ -144,7 +175,7 @@ export const useScrollToNextSection = (options = {}) => {
         });
       }
     }
-  }, [scrollToEnd, scrollToStartSections]);
+  }, [scrollToEnd, scrollToStartSections, scrollToEndSections]);
 
   // Hide arrow button when scrolled to footer
   useEffect(() => {
@@ -154,16 +185,36 @@ export const useScrollToNextSection = (options = {}) => {
 
       if (footerSections.length > 0) {
         const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
         let shouldHide = false;
 
         // Check all matching elements
         footerSections.forEach((footerSection) => {
           const rect = footerSection.getBoundingClientRect();
-          const footerTop = scrollY + rect.top;
+          const computedStyle = window.getComputedStyle(footerSection);
+          const isFixed = computedStyle.position === 'fixed';
 
-          // Hide arrow when we're within threshold of any footer top
-          if (scrollY >= footerTop - footerThreshold) {
-            shouldHide = true;
+          let footerTop;
+
+          if (isFixed) {
+            // For fixed footer (reveal effect): hide when scrolled near end of document
+            // Calculate when footer should be fully revealed
+            const scrollableHeight = documentHeight - windowHeight;
+            const revealStartPoint = scrollableHeight - windowHeight; // Start revealing one viewport before end
+
+            // Hide arrow when we're near the reveal point
+            if (scrollY >= revealStartPoint - footerThreshold) {
+              shouldHide = true;
+            }
+          } else {
+            // For normal positioned footer: use standard calculation
+            footerTop = scrollY + rect.top;
+
+            // Hide arrow when we're within threshold of any footer top
+            if (scrollY >= footerTop - footerThreshold) {
+              shouldHide = true;
+            }
           }
         });
 

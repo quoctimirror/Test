@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
@@ -8,16 +8,13 @@ import { ROUTES } from "@/constants/routes";
 import fbIcon from "@assets/images/icons/fb_icon.svg";
 import instaIcon from "@assets/images/icons/insta_icon.svg";
 import tiktokIcon from "@assets/images/icons/tiktok_icon.svg";
+import PrismaticBurst from "@components/common/prismatic-burst/PrismaticBurst";
 
 const Footer = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-
-  const handleSignUp = () => {
-    if (email) {
-      setEmail("");
-    }
-  };
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [shouldRenderBurst, setShouldRenderBurst] = useState(false);
+  const footerRef = useRef(null);
 
   const handleHomeClick = async (e) => {
     e.preventDefault();
@@ -118,11 +115,76 @@ const Footer = () => {
     );
   };
 
+  useEffect(() => {
+    let rafId = null;
+
+    // Detect when footer is visible on screen
+    const handleScroll = () => {
+      if (rafId) return; // Throttle with RAF
+
+      rafId = requestAnimationFrame(() => {
+        const scrollPosition = window.scrollY + window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+
+        // Footer is visible when user is within 1.2 viewport heights from bottom
+        const threshold = documentHeight - window.innerHeight * 1.2;
+        const footerVisible = scrollPosition >= threshold;
+
+        // Update visibility state
+        setIsFooterVisible(footerVisible);
+        rafId = null;
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Don't check on mount - wait for user to scroll
+    // This prevents animation from running on page load
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  // Handle mount/unmount - fade in only
+  useEffect(() => {
+    if (isFooterVisible) {
+      // Mount component immediately for fade-in
+      setShouldRenderBurst(true);
+    } else {
+      // Unmount immediately (no fade-out)
+      setShouldRenderBurst(false);
+    }
+  }, [isFooterVisible]);
+
   return (
-    <footer className="footer" data-navbar-theme="white">
+    <footer className="footer" data-navbar-theme="white" ref={footerRef}>
+      {/* Prismatic Burst Background Effect */}
+      <div
+        className={`footer-background-effect ${
+          isFooterVisible ? "active" : ""
+        }`}
+      >
+        {shouldRenderBurst && (
+          <PrismaticBurst
+            animationType="hover"
+            intensity={3.1}
+            speed={0.15}
+            distort={10}
+            paused={false}
+            offset={{ x: 0, y: 0 }}
+            hoverDampness={0.6}
+            rayCount={0}
+            mixBlendMode="lighten"
+            colors={["#bc224c", "#140039", "#0B0B0B"]}
+          />
+        )}
+      </div>
+
       <div className="footer-container">
         <div className="footer-content">
-          <div className="footer-left">
+          <div className={`footer-left ${isFooterVisible ? "visible" : ""}`}>
             <div className="footer-section">
               <ul className="footer-links">
                 <li>
@@ -177,7 +239,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="footer-right">
+          <div className={`footer-right ${isFooterVisible ? "visible" : ""}`}>
             <div className="footer-section">
               <ul className="contact-info">
                 <li>
@@ -232,35 +294,40 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="footer-center">
+        <div className={`footer-center ${isFooterVisible ? "visible" : ""}`}>
           <div className="newsletter-section">
+            <p className="bodytext-4--no-margin newsletter-tagline">
+              COLLECT. REFLECT. AWAKEN
+            </p>
             <h2 className="heading-1--no-margin newsletter-title">
-              ENTER <br />
-              THE UNIVERSE
+              JOIN OUR
+              <br />
+              MIRROR PASSPORT
             </h2>
             <p className="bodytext-4--no-margin newsletter-subtitle">
-              For a more personalized experience and exclusive news.
+              Your gateway into the Mirrorverse where your journey, your taste,
+              and your stories shape the luxury you receive.
             </p>
-            <div className="newsletter-form">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="email-input bodytext-4--no-margin"
-              />
+            <div className="newsletter-buttons">
               <ShineGlassButton
-                onClick={handleSignUp}
-                className="signup-button"
+                onClick={() => console.log("Explore more clicked")}
+                className="newsletter-btn-explore"
                 theme="footer"
               >
-                Sign up
+                Explore more
+              </ShineGlassButton>
+              <ShineGlassButton
+                onClick={() => console.log("Sign in clicked")}
+                className="newsletter-btn-signin"
+                theme="light"
+              >
+                Sign in
               </ShineGlassButton>
             </div>
           </div>
         </div>
 
-        <div className="footer-bottom">
+        <div className={`footer-bottom ${isFooterVisible ? "visible" : ""}`}>
           <div className="footer-bottom-center">
             <div className="social-icons">
               <a

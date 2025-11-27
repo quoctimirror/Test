@@ -647,7 +647,7 @@
 
 .menu-v2-popup .menu-v2-list .underline-button .underline-button-text::after {
   background: rgba(255, 255, 255, 1) !important;
-  transform: scaleX(0) scaleY(0.75) !important;
+  transform: scaleX(0) !important;
   transform-origin: right center !important;
   transition: transform 0.3s linear !important;
 }
@@ -726,7 +726,7 @@
   li:hover
   .underline-button
   .underline-button-text::after {
-  transform: scaleX(1) scaleY(0.75) !important;
+  transform: scaleX(1) !important;
   transform-origin: left center !important;
 }
 
@@ -736,7 +736,7 @@
   li.active
   .underline-button
   .underline-button-text::after {
-  transform: scaleX(1) scaleY(0.75) !important;
+  transform: scaleX(1) !important;
   transform-origin: left center !important;
 }
 

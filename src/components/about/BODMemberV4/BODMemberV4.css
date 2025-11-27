@@ -5,6 +5,34 @@
   position: relative;
 }
 
+/* Intro Section */
+.bod-intro {
+  padding-top: 240px;
+  padding-bottom: 240px;
+}
+
+.bod-intro-content {
+  grid-column: 4 / span 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+}
+
+.bod-intro-header {
+  color: #797979;
+}
+
+.bod-intro-title {
+  color: #000;
+}
+
+.bod-intro-desc {
+  color: #000;
+  max-width: 600px;
+}
+
 /* Central image that appears in the middle of section vertically, at column 1 span 2 horizontally */
 .central-member-image {
   position: fixed;
@@ -87,6 +115,16 @@
     padding: 0;
   }
 
+  .bod-intro {
+    padding-top: 120px;
+    padding-bottom: 60px;
+  }
+
+  .bod-intro-content {
+    grid-column: 2 / span 10;
+    gap: 20px;
+  }
+
   /* Hide hover image on tablet */
   .central-member-image {
     display: none !important;
@@ -118,6 +156,16 @@
 @media (max-width: 480px) {
   .bod-member-v4-section {
     padding: 0;
+  }
+
+  .bod-intro {
+    padding-top: 80px;
+    padding-bottom: 40px;
+  }
+
+  .bod-intro-content {
+    grid-column: 1 / -1;
+    gap: 16px;
   }
 
   /* Hide hover image on mobile */
