@@ -33,13 +33,11 @@ export const ROUTES = {
   NEWS_DETAIL: "/d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a/:slug",
   ALL_GEMS: "/c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
   USER_PROFILE: "/e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b",
-  AR_RINGS: "/f2a3b4c5-d6e7-8f9a-0b1c-2d3e4f5a6b7c/:ringId",
-  AR_RINGS_HQ: "/ar/rings-hq/:ringId", // High Quality Studio Mode
-  IJEWEL_AR_TRYON: "/ijewel-tryon", // IJewel AR Try-On page
+  PREMIUM: "/premium", // Premium AR Try-On
+  PREMIUM_DEV: "/premium-dev", // Premium AR Development
 
   // Test routes
   PRODUCTS_V2: "/7b8e9f0a-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
-  PRODUCTS_V3: "/3f4a5b6c-7d8e-9f0a-1b2c-3d4e5f6a7b8c",
   PRODUCTS_LEFT: "/4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
   VIEW_360: "/6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
   HOVER_EXPAND: "/2a5f8c9d-4e3b-4a1c-9f7e-8d6c5b4a3e2f",
@@ -50,6 +48,7 @@ export const ROUTES = {
   NAVBAR_V2_TEST: "/test-navbar-v2",
   NAVBAR_V3_TEST: "/test-navbar-v3",
   NAVBAR_V4_TEST: "/test-navbar-v4",
+  TEST_VIEWER: "/test-ijewel-viewer",
   GLASS_BUTTON_TEST: "/test-glass-button",
 
   // Dashboard routes (keep original - protected by auth)
@@ -69,12 +68,3 @@ export const getNewsDetailRoute = (slug) => {
   return ROUTES.NEWS_DETAIL.replace(":slug", slug);
 };
 
-// Helper to get AR ring route with ID
-export const getARRingRoute = (ringId) => {
-  return ROUTES.AR_RINGS.replace(":ringId", ringId);
-};
-
-// Helper to get AR ring HQ route with ID
-export const getARRingHQRoute = (ringId) => {
-  return ROUTES.AR_RINGS_HQ.replace(":ringId", ringId);
-};

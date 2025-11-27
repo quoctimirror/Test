@@ -4,4 +4,15 @@
   display: flex;
   overflow: hidden;
   position: relative;
+
+  /* CSS isolation to prevent backdrop-filter interference from Navbar */
+  isolation: isolate;
+
+  /* Force hardware acceleration and separate compositing layer */
+  transform: translateZ(0);
+  will-change: transform;
+
+  /* Prevent backdrop-filter from parent elements affecting WebGL rendering */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }

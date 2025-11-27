@@ -33,7 +33,7 @@ const Products = () => {
     const [orderDetails, setOrderDetails] = useState(null);
 
     // Product configuration state (shared with RightConfiguration)
-    const defaultShape = getShapeConfig('Trilogy'); // Default shape
+    const defaultShape = getShapeConfig('Flower'); // Default shape
     const [productConfig, setProductConfig] = useState({
         id: 'PRD000024', // Mirror Custom Ring product ID
         name: 'LUMINA OLIVIA 5',

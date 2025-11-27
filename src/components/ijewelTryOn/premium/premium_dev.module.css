@@ -1,0 +1,783 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.viewerContainer {
+  width: 100vw;
+  height: 100vh;
+}
+
+.modelSelectorContainer {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 10px 15px;
+  border-radius: 8px;
+  z-index: 1000;
+}
+
+.modelLabel {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.modelSelector {
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 999999;
+}
+
+.button {
+  position: relative;
+  font-size: 14px;
+  padding: 12px 24px;
+  min-width: 100px;
+  cursor: pointer;
+  border-radius: 999px;
+  color: #bc224c;
+  font-weight: 600;
+  border: 1px solid rgba(188, 34, 76, 0.25);
+  overflow: hidden;
+
+  /* Glass background - crystal clear effect */
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.85) 50%,
+      rgba(255, 255, 255, 0.9) 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  /* Smooth transition - subtle and light */
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+/* Shine sweep effect layer - no separate border needed */
+
+/* Shine sweep effect on hover */
+.button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(188, 34, 76, 0.1),
+      transparent);
+  transition: left 0.4s ease-out;
+  pointer-events: none;
+}
+
+.button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(188, 34, 76, 0.15);
+  border-color: rgba(188, 34, 76, 0.4);
+}
+
+.button:hover::after {
+  left: 100%;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.button:disabled:hover::after {
+  left: -100%;
+}
+
+.rotationSliderPanel {
+  position: absolute;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.95);
+  /* Darker for better visibility without blur */
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  z-index: 1000;
+  min-width: 300px;
+  max-width: 90vw;
+  text-align: center;
+  cursor: pointer;
+  /* transition removed for performance */
+  /* box-shadow removed for performance */
+}
+
+.rotationSliderPanelCollapsed {
+  position: absolute;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.95);
+  /* Darker for better visibility without blur */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  z-index: 1000;
+  cursor: pointer;
+  /* transition removed for performance */
+  /* box-shadow removed for performance */
+}
+
+.rotationPanelTitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+
+.rotationPanelTitleCollapsed {
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.rotationLabel {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rotationSlider {
+  flex: 1;
+  height: 8px;
+  cursor: pointer;
+  accent-color: #007bff;
+}
+
+.smallButton {
+  font-size: 14px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #28a745;
+  color: white;
+  min-width: 45px;
+}
+
+.debugInfoPanel {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.95);
+  /* Darker for better visibility without blur */
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  z-index: 1000;
+  min-width: 250px;
+  /* box-shadow removed for performance */
+  cursor: pointer;
+  /* transition removed for performance */
+}
+
+.debugInfoPanelCollapsed {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.95);
+  /* Darker for better visibility without blur */
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  z-index: 1000;
+  /* box-shadow removed for performance */
+  cursor: pointer;
+  /* transition removed for performance */
+  white-space: nowrap;
+}
+
+.debugInfoTitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+
+.debugInfoTitleCollapsed {
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  line-height: 1.2;
+}
+
+.debugInfoItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.debugInfoLabel {
+  font-weight: 600;
+  color: #aaa;
+}
+
+.debugInfoValue {
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .modelSelectorContainer {
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .modelLabel {
+    font-size: 12px;
+  }
+
+  .modelSelector {
+    font-size: 12px;
+    padding: 4px 8px;
+    min-width: 100px;
+  }
+
+  .controls {
+    bottom: 10px;
+    gap: 6px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    max-width: 95vw;
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 12px;
+  }
+
+  .shineButton {
+    height: 36px;
+    font-size: 11px;
+    min-width: 90px;
+  }
+
+  .buttonText {
+    padding: 8px 14px;
+  }
+
+  .rotationSliderPanel,
+  .rotationSliderPanelCollapsed {
+    bottom: 70px;
+    min-width: 280px;
+    max-width: 95vw;
+    padding: 12px 15px;
+  }
+
+  .rotationPanelTitle,
+  .rotationPanelTitleCollapsed {
+    font-size: 14px;
+  }
+
+  .rotationLabel {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .sliderRow {
+    gap: 6px;
+  }
+
+  .smallButton {
+    font-size: 12px;
+    padding: 4px 8px;
+    min-width: 40px;
+  }
+
+  .debugInfoPanel {
+    bottom: 10px;
+    left: 10px;
+    min-width: 180px;
+    font-size: 12px;
+    padding: 10px 12px;
+  }
+
+  .debugInfoPanelCollapsed {
+    bottom: 10px;
+    left: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .debugInfoTitle {
+    font-size: 13px;
+  }
+
+  .debugInfoTitleCollapsed {
+    font-size: 12px;
+  }
+
+  .debugInfoItem {
+    font-size: 12px;
+  }
+}
+
+/* ==========================================
+   SHINE BUTTON STYLES
+   ========================================== */
+.shineButton {
+  --border-width: clamp(1px, 0.0625em, 4px);
+  all: unset;
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  pointer-events: auto;
+  z-index: 3;
+  border-radius: 999vw;
+  transition: transform 0.2s ease-out;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+  padding: 0;
+  height: 40px;
+  font-size: 13px;
+  min-width: 110px;
+}
+
+.shineButton:hover {
+  transform: scale(1.02);
+}
+
+.shineButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.shineButton:disabled:hover {
+  transform: none;
+}
+
+/* Small button variant - removed, all buttons same size now */
+
+/* Glass layer */
+.glassLayer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  border-radius: 999vw;
+  z-index: 0;
+  transition: backdrop-filter 0.2s ease-out;
+}
+
+.shineButton:hover .glassLayer {
+  backdrop-filter: blur(0.01em);
+  -webkit-backdrop-filter: blur(0.01em);
+}
+
+/* Shine layer */
+.shineLayer {
+  position: absolute;
+  inset: 0;
+  border-radius: 999vw;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.shineButton:hover .shineLayer {
+  opacity: 1;
+}
+
+.shineLayer::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.25) 25%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%);
+  mix-blend-mode: screen;
+}
+
+/* Button text */
+.buttonText {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  color: #bc224c;
+  -webkit-font-smoothing: antialiased;
+  transition: color 0.2s ease-out;
+  padding: 10px 18px;
+  pointer-events: none;
+  z-index: 2;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.shineButton:disabled .buttonText {
+  color: rgba(188, 34, 76, 0.4);
+}
+
+/* Border layer */
+.borderLayer {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border-radius: 999vw;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
+  background: conic-gradient(from 75deg at 50% 50%,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0) 5% 40%,
+      rgba(255, 255, 255, 0.8) 50%,
+      rgba(255, 255, 255, 0) 60% 95%,
+      rgba(255, 255, 255, 0.8)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+/* ==========================================
+   FOOTER - Liquid Glass Effect
+   ========================================== */
+
+/* Hide SVG filter */
+.svgFilter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: -1;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 15vh; /* desktop */
+  /* Solid white background */
+  background: #ffffff;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  transform: translateZ(0);
+}
+
+/* Mobile: 12vh */
+@media (max-width: 768px) {
+  .footer {
+    height: 12vh;
+  }
+}
+
+.footerControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+}
+
+.footerControlsCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Liquid Glass Variables */
+:root {
+  --glass-bg: rgba(187, 187, 188, 0.15);
+  --glass-light: #fff;
+  --glass-dark: #000;
+  --glass-reflex-light: 1;
+  --glass-reflex-dark: 1;
+  --glass-saturation: 150%;
+}
+
+/* Pill button - Switch Finger / Start AR - Liquid Glass */
+.pillButton {
+  position: relative;
+  height: 56px;
+  padding: 0 32px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #BC224C;
+  border: none;
+  white-space: nowrap;
+
+  /* Liquid Glass Effect */
+  background-color: rgba(187, 187, 188, 0.18);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+
+  /* Multi-layer glass reflections */
+  box-shadow:
+    /* Outer glow */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    /* Top highlight */
+    inset 1.8px 3px 0px -2px rgba(255, 255, 255, 0.9),
+    /* Right highlight */
+    inset -2px -2px 0px -2px rgba(255, 255, 255, 0.8),
+    /* Bottom inner glow */
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.6),
+    /* Inner shadow top */
+    inset -0.3px -1px 4px 0px rgba(0, 0, 0, 0.12),
+    /* Inner shadow left */
+    inset -1.5px 2.5px 0px -2px rgba(0, 0, 0, 0.2),
+    /* Inner shadow top deep */
+    inset 0px 3px 4px -2px rgba(0, 0, 0, 0.2),
+    /* Inner shadow bottom */
+    inset 2px -6.5px 1px -4px rgba(0, 0, 0, 0.1),
+    /* Outer shadow soft */
+    0px 1px 5px 0px rgba(0, 0, 0, 0.1),
+    /* Outer shadow deep */
+    0px 6px 16px 0px rgba(0, 0, 0, 0.08);
+
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.pillButton:hover {
+  background-color: rgba(187, 187, 188, 0.25);
+  transform: scale(1.02);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+    inset 1.8px 3px 0px -2px rgba(255, 255, 255, 1),
+    inset -2px -2px 0px -2px rgba(255, 255, 255, 0.9),
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.7),
+    inset -0.3px -1px 4px 0px rgba(0, 0, 0, 0.15),
+    inset -1.5px 2.5px 0px -2px rgba(0, 0, 0, 0.25),
+    inset 0px 3px 4px -2px rgba(0, 0, 0, 0.25),
+    inset 2px -6.5px 1px -4px rgba(0, 0, 0, 0.12),
+    0px 2px 8px 0px rgba(0, 0, 0, 0.12),
+    0px 8px 24px 0px rgba(0, 0, 0, 0.1);
+}
+
+.pillButton:active {
+  transform: scale(0.98);
+  background-color: rgba(187, 187, 188, 0.3);
+}
+
+.pillButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Circle button - Exit / Camera - Liquid Glass */
+.circleButton {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+
+  /* Liquid Glass Effect */
+  background-color: rgba(187, 187, 188, 0.18);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+
+  /* Multi-layer glass reflections */
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 1.8px 3px 0px -2px rgba(255, 255, 255, 0.9),
+    inset -2px -2px 0px -2px rgba(255, 255, 255, 0.8),
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.6),
+    inset -0.3px -1px 4px 0px rgba(0, 0, 0, 0.12),
+    inset -1.5px 2.5px 0px -2px rgba(0, 0, 0, 0.2),
+    inset 0px 3px 4px -2px rgba(0, 0, 0, 0.2),
+    inset 2px -6.5px 1px -4px rgba(0, 0, 0, 0.1),
+    0px 1px 5px 0px rgba(0, 0, 0, 0.1),
+    0px 6px 16px 0px rgba(0, 0, 0, 0.08);
+
+  transition: all 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.circleButton:hover {
+  background-color: rgba(187, 187, 188, 0.25);
+  transform: scale(1.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+    inset 1.8px 3px 0px -2px rgba(255, 255, 255, 1),
+    inset -2px -2px 0px -2px rgba(255, 255, 255, 0.9),
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.7),
+    inset -0.3px -1px 4px 0px rgba(0, 0, 0, 0.15),
+    inset -1.5px 2.5px 0px -2px rgba(0, 0, 0, 0.25),
+    inset 0px 3px 4px -2px rgba(0, 0, 0, 0.25),
+    inset 2px -6.5px 1px -4px rgba(0, 0, 0, 0.12),
+    0px 2px 8px 0px rgba(0, 0, 0, 0.12),
+    0px 8px 24px 0px rgba(0, 0, 0, 0.1);
+}
+
+.circleButton:active {
+  transform: scale(0.95);
+  background-color: rgba(187, 187, 188, 0.3);
+}
+
+/* Button icon */
+.buttonIcon {
+  width: 24px;
+  height: 24px;
+  color: #BC224C;
+  opacity: 0.85;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 768px) {
+  .footerControls {
+    max-width: 360px;
+  }
+
+  .pillButton {
+    height: 52px;
+    padding: 0 28px;
+    font-size: 15px;
+  }
+
+  .circleButton {
+    width: 52px;
+    height: 52px;
+  }
+
+  .buttonIcon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 480px) {
+  .footerControls {
+    max-width: 320px;
+    padding: 0 16px;
+  }
+
+  .pillButton {
+    height: 48px;
+    padding: 0 24px;
+    font-size: 14px;
+  }
+
+  .circleButton {
+    width: 48px;
+    height: 48px;
+  }
+
+  .buttonIcon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Safe area for iPhone X+ notch/home indicator */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .footer {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* ==========================================
+   FPS COUNTER
+   ========================================== */
+.fpsCounter {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  z-index: 10000;
+  pointer-events: none;
+  user-select: none;
+}
