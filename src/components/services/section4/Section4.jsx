@@ -197,8 +197,8 @@ const Section4 = () => {
                 </h2>
               </div>
               <p className="section4-description bodytext-4--no-margin">
-                Activate your warranty to ensure your Future Diamond is
-                protected under our care.
+                All jewelry purchased from Mirror Future Diamond is covered by a
+                12-month limited warranty
               </p>
             </div>
             <ShineGlassButton
@@ -289,8 +289,8 @@ const Section4 = () => {
                   </h2>
                 </div>
                 <p className="section4-description bodytext-4--no-margin">
-                  Activate your warranty to ensure your Future Diamond is
-                  protected under our care.
+                  All jewelry purchased from Mirror Future Diamond is covered by
+                  a 12-month limited warranty
                 </p>
               </div>
               <ShineGlassButton
@@ -323,8 +323,8 @@ const Section4 = () => {
                     <span className="section4-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
-                    <h2 className="section4-title heading-1--no-margin">
-                      RETURN & EXCHANGE
+                    <h2 className="section4-title heading-2--no-margin">
+                      Return and Exchange
                     </h2>
                   </div>
                   <p className="section4-description bodytext-4--no-margin">
@@ -358,8 +358,8 @@ const Section4 = () => {
                     <span className="section4-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
-                    <h2 className="section4-title heading-1--no-margin">
-                      SIZING GUIDE
+                    <h2 className="section4-title heading-2--no-margin">
+                      Sizing Guide
                     </h2>
                   </div>
                   <p className="section4-description bodytext-4--no-margin">
@@ -384,7 +384,7 @@ const Section4 = () => {
         <div className="section4-desktop-screen">
           <div className="section4-desktop-image">
             <MediaImage
-              src="services/catalogue-test-3.png"
+              src="services/Waranty Legacy.png"
               alt="Warranty & Info"
             />
           </div>
@@ -396,13 +396,13 @@ const Section4 = () => {
                     <span className="section4-subtitle bodytext-4--no-margin">
                       EXPLORE OUR
                     </span>
-                    <h2 className="section4-title heading-1--no-margin">
-                      WARRANTY & INFO
+                    <h2 className="section4-title heading-2--no-margin">
+                      Warranty Legacy
                     </h2>
                   </div>
                   <p className="section4-description bodytext-4--no-margin">
-                    Activate your warranty to ensure your Future Diamond is
-                    protected under our care.
+                    All jewelry purchased from Mirror Future Diamond is covered
+                    by a 12-month limited warranty
                   </p>
                 </div>
                 <ShineGlassButton

@@ -51,7 +51,7 @@
 .same-collection-container {
   width: 100%;
   margin: 0;
-  padding: 0 2.5% 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -129,9 +129,10 @@
 .product-label {
   position: absolute;
   bottom: 24px;
-  left: 24px;
-  color: #000 !important;
-  text-align: left;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--color-white) !important;
+  text-align: center;
   margin: 0 !important;
   z-index: 2;
 }

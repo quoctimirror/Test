@@ -2,7 +2,7 @@
 
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import NavbarV3 from "@components/navbar/NavbarV3";
+import NavbarV4 from "@components/navbar/NavbarV4";
 import Footer from "@components/footer/Footer";
 import TryOnRingLayout from "@layouts/TryOnRingLayout";
 import { ROUTES } from "@/constants/routes";
@@ -101,6 +101,7 @@ const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"
 const NavbarV2TestPage = lazy(() => import("@pages/NavbarV2TestPage"));
 const NavbarV3TestPage = lazy(() => import("@pages/NavbarV3TestPage"));
 const NavbarV4TestPage = lazy(() => import("@pages/NavbarV4TestPage"));
+const GlassSurfaceButtonTestPage = lazy(() => import("@pages/GlassSurfaceButtonTestPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -152,6 +153,10 @@ export default function AppRoutes() {
       ROUTES.IJEWEL_AR_TRYON,
     ];
 
+    // Add NAVBAR_V4_TEST to defined routes
+    definedRoutes.push(ROUTES.NAVBAR_V4_TEST);
+    definedRoutes.push(ROUTES.GLASS_BUTTON_TEST);
+
     // Check exact matches
     if (definedRoutes.includes(location.pathname)) {
       return false;
@@ -197,7 +202,9 @@ export default function AppRoutes() {
     location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
     location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2 ||
     location.pathname === ROUTES.NAVBAR_V2_TEST ||
-    location.pathname === ROUTES.NAVBAR_V3_TEST;
+    location.pathname === ROUTES.NAVBAR_V3_TEST ||
+    location.pathname === ROUTES.NAVBAR_V4_TEST ||
+    location.pathname === ROUTES.GLASS_BUTTON_TEST;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -218,7 +225,9 @@ export default function AppRoutes() {
     location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
     location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2 ||
     location.pathname === ROUTES.NAVBAR_V2_TEST ||
-    location.pathname === ROUTES.NAVBAR_V3_TEST;
+    location.pathname === ROUTES.NAVBAR_V3_TEST ||
+    location.pathname === ROUTES.NAVBAR_V4_TEST ||
+    location.pathname === ROUTES.GLASS_BUTTON_TEST;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -226,15 +235,17 @@ export default function AppRoutes() {
   return (
     <>
       {/* Conditional Navbar */}
-      {shouldShowNavbar && <NavbarV3 />}
+      {shouldShowNavbar && <NavbarV4 />}
 
-      {/* Routes */}
-      <Suspense
-        fallback={
-          <div style={{ textAlign: "center", padding: "2rem" }}>Loading...</div>
-        }
-      >
-        <Routes>
+      {/* Main content wrapper for reveal footer effect */}
+      <main className="page-main-content">
+        {/* Routes */}
+        <Suspense
+          fallback={
+            <div style={{ textAlign: "center", padding: "2rem" }}>Loading...</div>
+          }
+        >
+          <Routes>
           <Route path={ROUTES.HOME} element={<HomePage />} />
 
           <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
@@ -371,6 +382,12 @@ export default function AppRoutes() {
             element={<NavbarV4TestPage />}
           />
 
+          {/* Test route for GlassSurfaceButton */}
+          <Route
+            path={ROUTES.GLASS_BUTTON_TEST}
+            element={<GlassSurfaceButtonTestPage />}
+          />
+
           <Route
             path={ROUTES.DASHBOARD_ADMIN_MANAGE}
             element={
@@ -411,8 +428,12 @@ export default function AppRoutes() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
+      </main>
 
-      {/* Conditional Footer */}
+      {/* Spacer to reveal footer */}
+      {shouldShowFooter && <div className="footer-reveal-spacer" />}
+
+      {/* Conditional Footer - Fixed at bottom */}
       {shouldShowFooter && <Footer />}
     </>
   );

@@ -3,11 +3,13 @@ import { useLocation } from "react-router-dom";
 import Logo from "@assets/images/Logo.svg";
 import { ROUTES } from "@/constants/routes";
 import ScrollDownArrow from "@/components/common/button/ScrollDownArrow";
-import SoundButton from "@/components/common/button/SoundButton";
+import ImmersiveButton from "@/components/common/button/ImmersiveButton";
+import { useBottomTheme } from "@/hooks/useBottomTheme";
 import "./ScrollEffectTestV2.css";
 
 export default function ScrollEffectTestV2() {
   const location = useLocation();
+  const { theme: arrowTheme } = useBottomTheme();
   const isImmersiveShowroomPage =
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
@@ -27,7 +29,7 @@ export default function ScrollEffectTestV2() {
   const [hasStartedScrolling, setHasStartedScrolling] = useState(false);
   const lastRenderedFrameRef = useRef(-1);
   const [isArrowVisible, setIsArrowVisible] = useState(true);
-  const [isSoundActive, setIsSoundActive] = useState(false);
+  const [isImmersiveCollapsed, setIsImmersiveCollapsed] = useState(false);
   const isAutoScrollingRef = useRef(false);
   const lastScrollYRef = useRef(0);
 
@@ -35,10 +37,21 @@ export default function ScrollEffectTestV2() {
   const scrollEffectHeight = 250; // vh for scroll effect - reduced to make mirror introduce start earlier
   const mirrorIntroduceHeight = 780; // vh for mirror introduce
 
-  // Handle sound button click - toggle sound state
-  const handleSoundClick = () => {
-    setIsSoundActive((prev) => !prev);
+  // Handle immersive button click
+  const handleImmersiveClick = () => {
+    // TODO: Navigate to immersive showroom or open immersive experience
+    console.log("Immersive button clicked");
   };
+
+  // Detect scroll to collapse immersive button
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsImmersiveCollapsed(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Handle arrow click - scroll to next section
   const handleArrowClick = () => {
@@ -682,17 +695,21 @@ export default function ScrollEffectTestV2() {
         </div>
       </div>
 
-      {/* Fixed Sound Button - visible except in Immersive Showroom */}
+      {/* Fixed Immersive Button - visible except in Immersive Showroom */}
       {!isImmersiveShowroomPage && (
-        <div className="fixed-sound-container">
-          <SoundButton isActive={isSoundActive} onClick={handleSoundClick} />
+        <div className="fixed-immersive-container">
+          <ImmersiveButton
+            theme={arrowTheme}
+            isCollapsed={isImmersiveCollapsed}
+            onClick={handleImmersiveClick}
+          />
         </div>
       )}
 
       {/* Fixed Arrow Button - visible except in footer */}
       {!isImmersiveShowroomPage && isArrowVisible && (
         <div className="fixed-arrow-container">
-          <ScrollDownArrow onClick={handleArrowClick} />
+          <ScrollDownArrow theme={arrowTheme} onClick={handleArrowClick} />
         </div>
       )}
 

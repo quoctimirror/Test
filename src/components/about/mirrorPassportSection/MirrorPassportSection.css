@@ -1,0 +1,119 @@
+/* MirrorPassportSection Component Styles */
+.mirror-passport-section {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  background: #000;
+}
+
+.passport-cards-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  gap: 12px;
+}
+
+.passport-card {
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background image */
+.passport-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("__CDN_URL__/about/Artboard 3.png") lightgray 50% / cover
+    no-repeat;
+  z-index: 0;
+}
+
+/* Dark overlay */
+.passport-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Hover - fade out overlay to show original color */
+.passport-card:hover::after {
+  opacity: 0;
+}
+
+/* Hover - trigger underline button hover state */
+.passport-card:hover .underline-button-text::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.passport-card-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 620px;
+}
+
+.passport-header {
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.passport-title {
+  color: #fff;
+  margin-bottom: 24px;
+}
+
+.passport-description {
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 620px;
+  margin-bottom: 36px;
+}
+
+.passport-button {
+  margin-top: 12px;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .passport-card-content {
+    max-width: 90%;
+    padding: 0 30px;
+  }
+
+  .passport-description {
+    max-width: 100%;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .passport-cards-container {
+    flex-direction: column;
+  }
+
+  .passport-card {
+    min-height: 100vh;
+  }
+
+  .passport-card-content {
+    padding: 0 20px;
+  }
+}

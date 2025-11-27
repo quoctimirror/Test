@@ -55,33 +55,64 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
     // Handle wheel event to scroll horizontally when hovering
     const handleWheel = (e) => {
       if (isHoveringLocal) {
+        // Always prevent default to avoid simultaneous horizontal and vertical scroll
         e.preventDefault();
 
-        // Check if horizontal scroll from trackpad (deltaX) or vertical scroll from mouse (deltaY)
-        // Trackpad horizontal scroll uses deltaX, mouse wheel uses deltaY
-        let scrollDelta = 0;
+        // Calculate max scroll position
+        const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+        const currentScroll = wrapper.scrollLeft;
 
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-          // Horizontal scroll on trackpad
-          scrollDelta = e.deltaX;
-        } else {
-          // Vertical scroll on mouse wheel - convert to horizontal
-          scrollDelta = e.deltaY * 1.5;
+        // Determine scroll direction with threshold to avoid diagonal scrolling
+        const absDeltaX = Math.abs(e.deltaX);
+        const absDeltaY = Math.abs(e.deltaY);
+        const threshold = 10; // Threshold to determine primary scroll direction
+
+        // Determine if this is primarily a horizontal or vertical scroll
+        const isHorizontalScroll = absDeltaX > absDeltaY + threshold;
+        const isVerticalScroll = absDeltaY > absDeltaX + threshold;
+
+        // If it's clearly vertical scroll, check boundaries
+        if (isVerticalScroll || (!isHorizontalScroll && e.deltaY !== 0)) {
+          // This is vertical scroll (or ambiguous but has deltaY)
+          const isScrollingUp = e.deltaY < 0;
+          const isScrollingDown = e.deltaY > 0;
+          const isAtStart = currentScroll <= 1;
+          const isAtEnd = currentScroll >= maxScroll - 1;
+
+          // At boundaries, allow page scroll by manually triggering it
+          if ((isAtStart && isScrollingUp) || (isAtEnd && isScrollingDown)) {
+            // Manually scroll the page
+            window.scrollBy(0, e.deltaY);
+            return;
+          }
+
+          // In the middle, convert vertical to horizontal
+          const scrollDelta = e.deltaY * 1.5;
+          targetScrollLeft += scrollDelta;
+          targetScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScroll));
+
+          if (!animationId) {
+            currentScrollLeft = wrapper.scrollLeft;
+            animationId = requestAnimationFrame(smoothScroll);
+          }
+          return;
         }
 
-        // Update target scroll position
-        targetScrollLeft += scrollDelta;
-        // Clamp to valid range
-        targetScrollLeft = Math.max(
-          0,
-          Math.min(targetScrollLeft, wrapper.scrollWidth - wrapper.clientWidth)
-        );
+        // For horizontal scroll (or when deltaX is dominant)
+        if (isHorizontalScroll) {
+          const scrollDelta = e.deltaX;
+          targetScrollLeft += scrollDelta;
+          targetScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScroll));
 
-        // Start smooth animation if not already running
-        if (!animationId) {
-          currentScrollLeft = wrapper.scrollLeft;
-          animationId = requestAnimationFrame(smoothScroll);
+          if (!animationId) {
+            currentScrollLeft = wrapper.scrollLeft;
+            animationId = requestAnimationFrame(smoothScroll);
+          }
+          return;
         }
+
+        // If we reach here, it's an ambiguous or very small movement
+        // Do nothing to avoid unintended scrolling
       }
     };
 

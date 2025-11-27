@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { collectionsAPI } from "@services/api";
 import { MediaImage } from "@components/common/media";
+import ProductCarouselItem from "./ProductCarouselItem";
 import "./Section4CollectionDetail.css";
 
 const Section4CollectionDetail = ({
@@ -11,7 +12,17 @@ const Section4CollectionDetail = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const productCards = Array(24).fill("products/allGems/product_card_1.png");
+  // Each product has multiple images for carousel
+  const productCards = Array(12)
+    .fill(null)
+    .map(() => ({
+      label: "Lumina",
+      images: [
+        "products/allGems/product_card_1.png",
+        "products/allGems/model_4.png",
+        "products/allGems/toietmoi-product.png",
+      ],
+    }));
   const modelImage = "products/allGems/flower.png";
 
   // Helper function to convert slug back to name for API lookup
@@ -201,26 +212,24 @@ const Section4CollectionDetail = ({
       <div className="section4-collection-grid-container">
         {/* First row - 4 items */}
         <div className="section4-collection-row section4-collection-row-4">
-          {productCards.slice(0, 4).map((src, index) => (
-            <div key={`row1-${index}`} className="section4-collection-item">
-              <MediaImage src={src} alt={`Gem ${index + 1}`} />
-              <span className="section4-collection-label heading-3--no-margin">
-                Lumina
-              </span>
-            </div>
+          {productCards.slice(0, 4).map((product, index) => (
+            <ProductCarouselItem
+              key={`row1-${index}`}
+              images={product.images}
+              label={product.label}
+            />
           ))}
         </div>
 
         {/* Second row - 3 columns (2 columns with 2x2 grid + 1 large) */}
         <div className="section4-collection-row section4-collection-row-3-special">
           <div className="section4-collection-grid-2x2">
-            {productCards.slice(4, 8).map((src, index) => (
-              <div key={`row2-${index}`} className="section4-collection-item">
-                <MediaImage src={src} alt={`Gem ${index + 5}`} />
-                <span className="section4-collection-label heading-3--no-margin">
-                  Lumina
-                </span>
-              </div>
+            {productCards.slice(4, 8).map((product, index) => (
+              <ProductCarouselItem
+                key={`row2-${index}`}
+                images={product.images}
+                label={product.label}
+              />
             ))}
           </div>
           <div className="section4-collection-item section4-collection-item-large">
@@ -230,13 +239,12 @@ const Section4CollectionDetail = ({
 
         {/* Third row - 4 items */}
         <div className="section4-collection-row section4-collection-row-4">
-          {productCards.slice(8, 12).map((src, index) => (
-            <div key={`row3-${index}`} className="section4-collection-item">
-              <MediaImage src={src} alt={`Gem ${index + 9}`} />
-              <span className="section4-collection-label heading-3--no-margin">
-                Lumina
-              </span>
-            </div>
+          {productCards.slice(8, 12).map((product, index) => (
+            <ProductCarouselItem
+              key={`row3-${index}`}
+              images={product.images}
+              label={product.label}
+            />
           ))}
         </div>
       </div>

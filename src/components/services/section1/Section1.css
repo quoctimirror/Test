@@ -1,12 +1,31 @@
 .services-section1 {
   height: 56vh;
-  background: linear-gradient(180deg, #000 0%, #bc224c 54.81%, #f6f6f6 100%),
-    linear-gradient(180deg, rgba(246, 246, 246, 0) 50%, #f6f6f6 100%),
-    url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/section_1.jpg") lightgray 50% / cover no-repeat;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+/* Blurred gradient background layer */
+.services-section1::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: radial-gradient(
+    114.53% 100% at 50% 0%,
+    #0b0b0b 0%,
+    #1b0008 10%,
+    #780a28 30%,
+    #bc224c 50%,
+    #f69ab3 70%,
+    #f6f6f6 85%
+  );
+  filter: blur(50px);
+  z-index: 0;
 }
 
 .section1-background-overlay {
@@ -42,6 +61,7 @@
   color: #ffffff;
   opacity: 1;
   justify-content: center;
+  padding-top: 80px;
 }
 
 .section1-title {
@@ -72,10 +92,15 @@
 @media screen and (max-width: 1024px) {
   .services-section1 {
     height: 100vh;
-    background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/section_1.jpg");
+  }
+
+  /* Override desktop gradient background with image for tablet */
+  .services-section1::before {
+    background: url("__CDN_URL__/services/section_1.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    filter: none;
   }
 
   .section1-background-overlay {
@@ -101,7 +126,6 @@
   /* Reset the main section */
   .services-section1 {
     height: auto;
-    background-image: none;
     display: block;
     position: relative;
   }
@@ -111,16 +135,23 @@
     display: none;
   }
 
-  /* Create image section - 50vh */
+  /* Override desktop background - Create image section - 50vh */
   .services-section1::before {
     content: "";
     display: block;
+    position: relative;
     width: 100%;
     height: 50vh;
-    background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/services/section_1.jpg");
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("__CDN_URL__/services/section_1.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    filter: none;
+    z-index: auto;
   }
 
   /* Content section - 50vh with white background */

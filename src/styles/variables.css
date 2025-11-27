@@ -1,25 +1,48 @@
 :root {
+  /* ============= FONTS ============= */
   --font-primary: "BT Beau Sans", sans-serif;
   --font-secondary: "Saol Display", serif;
 
+  /* ============= COLOR SYSTEM ============= */
+  /* Base Colors */
+  --color-pink: #bc224c;
+  --color-white: #ffffff;
+  --color-gray-1: #f6f6f6;
+  --color-gray-2: #e0e0e0;
+  --color-gray-3: #797979;
+  --color-black: #000000;
+
+  /* Transparent White */
+  --color-transparent-white-25: rgba(255, 255, 255, 0.25);
+  --color-transparent-white-50: rgba(255, 255, 255, 0.5);
+  --color-transparent-white-75: rgba(255, 255, 255, 0.75);
+
+  /* Transparent Black */
+  --color-transparent-black-25: rgba(24, 24, 24, 0.25);
+  --color-transparent-black-50: rgba(24, 24, 24, 0.5);
+  --color-transparent-black-75: rgba(24, 24, 24, 0.75);
+
+  /* Legacy color variables (for backward compatibility) */
+  --dl-color-default-pink: var(--color-pink);
+  --dl-color-default-white: var(--color-white);
+  --dl-color-default-gray1: var(--color-gray-1);
+  --dl-color-default-gray2: var(--color-gray-2);
+  --dl-color-default-gray3: var(--color-gray-3);
+  --dl-color-default-black: var(--color-black);
+  --dl-color-default-transparentwhite25: var(--color-transparent-white-25);
+  --dl-color-default-transparentwhite50: var(--color-transparent-white-50);
+  --dl-color-default-transparentwhite70: var(--color-transparent-white-75);
+  --dl-color-default-transparentblack25: var(--color-transparent-black-25);
+
+  /* ============= LAYOUT & SPACING ============= */
   --dl-layout-size-large: 144px;
   --dl-layout-size-small: 48px;
   --dl-layout-space-unit: 16px;
-  --dl-color-default-pink: rgba(188, 34, 76, 1);
   --dl-layout-size-medium: 96px;
   --dl-layout-size-xlarge: 192px;
   --dl-layout-size-xsmall: 16px;
-  --dl-color-default-black: rgba(0, 0, 0, 1);
-  --dl-color-default-gray1: rgba(246, 246, 246, 1);
-  --dl-color-default-gray2: rgba(223, 223, 223, 1);
-  --dl-color-default-gray3: rgba(120, 120, 120, 1);
-  --dl-color-default-white: rgba(255, 255, 255, 1);
-  --dl-color-theme-accent1: #ffffff;
-  --dl-color-theme-accent2: #f5d1b0;
   --dl-layout-radius-round: 50%;
   --dl-layout-size-xxlarge: 288px;
-  --dl-color-theme-primary1: #bf4408;
-  --dl-color-theme-primary2: #e65103;
   --dl-layout-size-maxwidth: 1400px;
   --dl-layout-radius-radius2: 2px;
   --dl-layout-radius-radius4: 4px;
@@ -27,23 +50,25 @@
   --dl-layout-space-halfunit: 8px;
   --dl-layout-space-sixunits: 96px;
   --dl-layout-space-twounits: 32px;
-  --dl-color-default-gradient: rgba(173, 173, 173, 1);
-  --dl-color-theme-secondary1: #ffffff;
-  --dl-color-theme-secondary2: #fbf1eb;
   --dl-layout-space-fiveunits: 80px;
   --dl-layout-space-fourunits: 64px;
   --dl-layout-space-threeunits: 48px;
-  --dl-color-theme-neutral-dark: #191818;
   --dl-layout-radius-cardradius: 8px;
-  --dl-color-theme-neutral-light: #fbfaf9;
   --dl-layout-radius-imageradius: 8px;
   --dl-layout-radius-inputradius: 24px;
   --dl-layout-radius-buttonradius: 24px;
   --dl-layout-space-oneandhalfunits: 24px;
-  --dl-color-default-transparentblack25: rgba(0, 0, 0, 0.25);
-  --dl-color-default-transparentwhite25: rgba(255, 255, 255, 0.25);
-  --dl-color-default-transparentwhite50: rgba(255, 255, 255, 0.5);
-  --dl-color-default-transparentwhite70: rgba(255, 255, 255, 0.699999988079071);
+
+  /* ============= THEME COLORS ============= */
+  --dl-color-theme-accent1: #ffffff;
+  --dl-color-theme-accent2: #f5d1b0;
+  --dl-color-theme-primary1: #bf4408;
+  --dl-color-theme-primary2: #e65103;
+  --dl-color-theme-secondary1: #ffffff;
+  --dl-color-theme-secondary2: #fbf1eb;
+  --dl-color-theme-neutral-dark: #191818;
+  --dl-color-theme-neutral-light: #fbfaf9;
+  --dl-color-default-gradient: rgba(173, 173, 173, 1);
 }
 
 .button {

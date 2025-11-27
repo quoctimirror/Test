@@ -816,7 +816,8 @@ html {
   position: fixed;
   bottom: 48px;
   left: 50%;
-  z-index: 1000;
+  transform: translateX(-50%);
+  z-index: 1000; /* Very high to ensure it's above all page content */
   pointer-events: auto;
 }
 

@@ -89,7 +89,7 @@
   left: 50%;
   width: 288px;
   height: 288px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer1.png");
+  background-image: url("__CDN_URL__/universeSection/layer1.png");
   background-size: 288px 288px;
   background-position: center;
   background-repeat: no-repeat;
@@ -105,7 +105,7 @@
   left: 50%;
   width: 384px;
   height: 384px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer2.png");
+  background-image: url("__CDN_URL__/universeSection/layer2.png");
   background-size: 384px 384px;
   background-position: center;
   background-repeat: no-repeat;
@@ -121,7 +121,7 @@
   left: 50%;
   width: 480px;
   height: 480px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer3.png");
+  background-image: url("__CDN_URL__/universeSection/layer3.png");
   background-size: 480px 480px;
   background-position: center;
   background-repeat: no-repeat;
@@ -137,7 +137,7 @@
   left: 50%;
   width: 576px;
   height: 576px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer4.png");
+  background-image: url("__CDN_URL__/universeSection/layer4.png");
   background-size: 576px 576px;
   background-position: center;
   background-repeat: no-repeat;
@@ -153,7 +153,7 @@
   left: 50%;
   width: 672px;
   height: 672px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer5.png");
+  background-image: url("__CDN_URL__/universeSection/layer5.png");
   background-size: 672px 672px;
   background-position: center;
   background-repeat: no-repeat;
@@ -169,7 +169,7 @@
   left: 50%;
   width: 132px;
   height: 132px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer0.png");
+  background-image: url("__CDN_URL__/universeSection/layer0.png");
   background-size: 132px 132px;
   background-position: center;
   background-repeat: no-repeat;
@@ -186,7 +186,7 @@
   left: 50%;
   width: 192px;
   height: 192px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer1.png");
+  background-image: url("__CDN_URL__/universeSection/layer1.png");
   background-size: 192px 192px;
   background-position: center;
   background-repeat: no-repeat;
@@ -203,7 +203,7 @@
   left: 50%;
   width: 432px;
   height: 432px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer5.png");
+  background-image: url("__CDN_URL__/universeSection/layer5.png");
   background-size: 432px 432px;
   background-position: center;
   background-repeat: no-repeat;
@@ -220,7 +220,7 @@
   left: 50%;
   width: 372px;
   height: 372px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer4.png");
+  background-image: url("__CDN_URL__/universeSection/layer4.png");
   background-size: 372px 372px;
   background-position: center;
   background-repeat: no-repeat;
@@ -237,7 +237,7 @@
   left: 50%;
   width: 312px;
   height: 312px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer3.png");
+  background-image: url("__CDN_URL__/universeSection/layer3.png");
   background-size: 312px 312px;
   background-position: center;
   background-repeat: no-repeat;
@@ -254,7 +254,7 @@
   left: 50%;
   width: 252px;
   height: 252px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/layer2.png");
+  background-image: url("__CDN_URL__/universeSection/layer2.png");
   background-size: 252px 252px;
   background-position: center;
   background-repeat: no-repeat;
@@ -287,7 +287,7 @@
   /* at edge of orbit container (3 o'clock) */
   width: 20px;
   height: 20px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/meteoroid.svg");
+  background-image: url("__CDN_URL__/universeSection/meteoroid.svg");
   background-size: 20px 20px;
   background-position: center;
   background-repeat: no-repeat;
@@ -319,7 +319,7 @@
   left: 50%;
   width: 20px;
   height: 20px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/meteoroid.svg");
+  background-image: url("__CDN_URL__/universeSection/meteoroid.svg");
   background-size: 20px 20px;
   background-position: center;
   background-repeat: no-repeat;
@@ -351,7 +351,7 @@
   /* cos(0°) = 1, sin(0°) = 0 */
   width: 20px;
   height: 20px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/meteoroid.svg");
+  background-image: url("__CDN_URL__/universeSection/meteoroid.svg");
   background-size: 20px 20px;
   background-position: center;
   background-repeat: no-repeat;
@@ -369,7 +369,7 @@
   /* 50% + radius * cos(120°) = 50% - 93px */
   width: 20px;
   height: 20px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/meteoroid.svg");
+  background-image: url("__CDN_URL__/universeSection/meteoroid.svg");
   background-size: 20px 20px;
   background-position: center;
   background-repeat: no-repeat;
@@ -387,7 +387,7 @@
   /* 50% + radius * cos(240°) = 50% - 93px */
   width: 20px;
   height: 20px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/meteoroid.svg");
+  background-image: url("__CDN_URL__/universeSection/meteoroid.svg");
   background-size: 20px 20px;
   background-position: center;
   background-repeat: no-repeat;
@@ -418,7 +418,7 @@
   content: "";
   width: 45px;
   height: 45px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/heart-senses.png");
+  background-image: url("__CDN_URL__/universeSection/heart-senses.png");
   background-size: 45px 45px;
   background-position: center;
   background-repeat: no-repeat;
@@ -458,7 +458,7 @@
   content: "";
   width: 45px;
   height: 45px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/circle-presence.png");
+  background-image: url("__CDN_URL__/universeSection/circle-presence.png");
   background-size: 45px 45px;
   background-position: center;
   background-repeat: no-repeat;
@@ -498,7 +498,7 @@
   content: "";
   width: 30px;
   height: 46px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/droplet-time.png");
+  background-image: url("__CDN_URL__/universeSection/droplet-time.png");
   background-size: 30px 46px;
   background-position: center;
   background-repeat: no-repeat;
@@ -538,7 +538,7 @@
   content: "";
   width: 52px;
   height: 52px;
-  background-image: url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/universeSection/rect-space.png");
+  background-image: url("__CDN_URL__/universeSection/rect-space.png");
   background-size: 52px 52px;
   background-position: center;
   background-repeat: no-repeat;

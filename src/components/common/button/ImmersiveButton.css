@@ -1,0 +1,220 @@
+/* Immersive Globe Button - Globe icon for immersive experience */
+.immersive-globe-btn {
+  display: inline-flex;
+  height: 54px;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease,
+    border-color 0.3s ease, color 0.3s ease;
+}
+
+.immersive-globe-btn__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: opacity 0.3s ease, width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.immersive-globe-btn__text {
+  transition: opacity 0.3s ease, max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* ========== EXPANDED STATE ========== */
+/* Text only - no icon */
+.immersive-globe-btn--expanded {
+  width: 220px;
+  padding: 0;
+  border-radius: 100px;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Icon và Text đều absolute, chồng lên nhau */
+.immersive-globe-btn--expanded .immersive-globe-btn__icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.3s ease;
+}
+
+.immersive-globe-btn--expanded .immersive-globe-btn__text {
+  position: absolute;
+  white-space: nowrap;
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease;
+}
+
+.immersive-globe-btn.immersive-globe-btn--expanded:hover {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  mix-blend-mode: normal;
+  border-color: rgba(255, 255, 255, 0.8);
+  color: #000000;
+}
+
+/* ========== COLLAPSED STATE ========== */
+/* Icon only - no text */
+.immersive-globe-btn--collapsed {
+  width: 54px;
+  padding: 0;
+  border-radius: 50%;
+  gap: 0;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Icon và Text đều absolute, chồng lên nhau */
+.immersive-globe-btn--collapsed .immersive-globe-btn__icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.3s ease;
+}
+
+.immersive-globe-btn--collapsed .immersive-globe-btn__text {
+  position: absolute;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.3s ease;
+  transition-delay: 0s;
+}
+
+/* Collapsed state hover - expand to show text */
+.immersive-globe-btn.immersive-globe-btn--collapsed:hover {
+  width: 220px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  mix-blend-mode: normal;
+  border-color: rgba(255, 255, 255, 0.8);
+  color: #000000;
+}
+
+.immersive-globe-btn.immersive-globe-btn--collapsed:hover .immersive-globe-btn__icon {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.immersive-globe-btn.immersive-globe-btn--collapsed:hover .immersive-globe-btn__text {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.15s;
+}
+
+/* ========================================
+   IMMERSIVE GLOBE BUTTON THEME SYSTEM
+   - "white": White button for dark backgrounds
+   - "black": Black button for light backgrounds
+   - "blend": Mix-blend-mode difference (default)
+======================================== */
+
+/* ========== BLEND THEME (Default) ========== */
+.immersive-globe-btn--blend {
+  mix-blend-mode: difference;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.immersive-globe-btn--blend:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ========== WHITE THEME ========== */
+/* White button with white icon - for dark background sections */
+.immersive-globe-btn--white {
+  mix-blend-mode: normal;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.immersive-globe-btn--white:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ========== BLACK THEME ========== */
+/* Black button with black icon - for light background sections */
+.immersive-globe-btn--black {
+  mix-blend-mode: normal;
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #000000;
+}
+
+.immersive-globe-btn--black:hover {
+  background: rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* ============= CONTAINER ============= */
+
+/* Fixed Immersive Button Container - right side of viewport */
+.fixed-immersive-container {
+  position: fixed;
+  bottom: 48px;
+  right: 2.5%;
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.fixed-immersive-container .immersive-globe-btn {
+  position: static;
+}
+
+/* ============= RESPONSIVE DESIGN ============= */
+
+/* Tablet and Mobile (768px and below) */
+@media (max-width: 768px) {
+  .immersive-globe-btn {
+    height: 48px;
+  }
+
+  .immersive-globe-btn--collapsed {
+    width: 48px;
+  }
+
+  .immersive-globe-btn--expanded {
+    padding: 0 20px 0 16px;
+  }
+
+  .immersive-globe-btn__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .fixed-immersive-container {
+    bottom: 24px;
+  }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .immersive-globe-btn__icon {
+    width: 14px;
+    height: 14px;
+  }
+}

@@ -93,10 +93,6 @@
     min-height: 60vh;
   }
 
-  /* Show underline by default on tablet (no hover available) */
-  .contact-us-actions .underline-button-text::after {
-    transform: scaleX(1) !important;
-  }
 }
 
 /* Gradient box at bottom of background */
@@ -134,8 +130,4 @@
     display: none;
   }
 
-  /* Show underline by default on mobile (no hover available) */
-  .contact-us-actions .underline-button-text::after {
-    transform: scaleX(1) !important;
-  }
 }

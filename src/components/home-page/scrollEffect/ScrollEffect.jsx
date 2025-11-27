@@ -3,11 +3,13 @@ import { useLocation } from "react-router-dom";
 import Logo from "@assets/images/Logo.svg";
 import { ROUTES } from "@/constants/routes";
 import ScrollDownArrow from "@/components/common/button/ScrollDownArrow";
-import SoundButton from "@/components/common/button/SoundButton";
+import ImmersiveButton from "@/components/common/button/ImmersiveButton";
+import { useBottomTheme } from "@/hooks/useBottomTheme";
 import "./ScrollEffect.css";
 
 export default function ScrollEffect({ isAnyOverlayOpen = false }) {
   const location = useLocation();
+  const { theme: arrowTheme } = useBottomTheme();
   const isImmersiveShowroomPage =
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
@@ -33,7 +35,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
   const [hasStartedScrolling, setHasStartedScrolling] = useState(false);
   const lastRenderedFrameRef = useRef(-1);
   const [isArrowVisible, setIsArrowVisible] = useState(true);
-  const [isSoundActive, setIsSoundActive] = useState(false);
+  const [isImmersiveCollapsed, setIsImmersiveCollapsed] = useState(false);
   const isAutoScrollingRef = useRef(false);
   const lastScrollYRef = useRef(0);
 
@@ -41,10 +43,26 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
   const scrollEffectHeight = 250; // vh for scroll effect - reduced to make mirror introduce start earlier
   const mirrorIntroduceHeight = 600; // vh for mirror introduce
 
-  // Handle sound button click - toggle sound state
-  const handleSoundClick = () => {
-    setIsSoundActive((prev) => !prev);
+  // Handle immersive button click
+  const handleImmersiveClick = () => {
+    // TODO: Navigate to immersive showroom or open immersive experience
+    console.log("Immersive button clicked");
   };
+
+  // Detect scroll to collapse immersive button
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      // Collapse button after scrolling 100px
+      setIsImmersiveCollapsed(scrollY > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Initial check
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Handle arrow click - scroll to next section
   const handleArrowClick = () => {
@@ -90,7 +108,20 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
       // If found next section, scroll to it; otherwise scroll one viewport
       if (nextSection) {
         const rect = nextSection.getBoundingClientRect();
-        const targetPosition = scrollY + rect.top;
+        const sectionName = nextSection.getAttribute("data-section");
+        const sectionTop = scrollY + rect.top;
+        const sectionBottom = sectionTop + rect.height;
+
+        let targetPosition;
+
+        // For contact-us section: scroll to end (bottom of section touches bottom of viewport)
+        if (sectionName === "contact-us") {
+          targetPosition = sectionBottom - windowHeight;
+        } else {
+          // Default: scroll to top of section
+          targetPosition = sectionTop;
+        }
+
         window.scrollTo({
           top: targetPosition,
           behavior: "smooth",
@@ -214,10 +245,13 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
       // If auto-scroll is running, check if user is manually scrolling against auto-scroll direction
       if (isAutoScrollingRef.current) {
         // Cancel auto-scroll if user scrolls in opposite direction
-        const autoScrollingDown = isAutoScrollingRef.current === 'down';
-        const autoScrollingUp = isAutoScrollingRef.current === 'up';
+        const autoScrollingDown = isAutoScrollingRef.current === "down";
+        const autoScrollingUp = isAutoScrollingRef.current === "up";
 
-        if ((autoScrollingDown && !isScrollingDown) || (autoScrollingUp && isScrollingDown)) {
+        if (
+          (autoScrollingDown && !isScrollingDown) ||
+          (autoScrollingUp && isScrollingDown)
+        ) {
           isAutoScrollingRef.current = false;
           if (autoScrollTimeout) {
             clearTimeout(autoScrollTimeout);
@@ -240,7 +274,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
       // SCROLLING DOWN: Auto-scroll to Phase 2 (text start position)
       if (isScrollingDown && isInUpperHalf) {
         // Only trigger if user was near the top (< 50% of Phase 1)
-        isAutoScrollingRef.current = 'down';
+        isAutoScrollingRef.current = "down";
 
         // Auto-scroll to where text 1 appears (250vh + 50vh buffer)
         const textStartPosition = scrollEffectEnd + windowHeight * 0.5;
@@ -258,7 +292,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
       // SCROLLING UP: Auto-scroll to top
       else if (!isScrollingDown && isInLowerHalf) {
         // Only trigger if user is in lower half scrolling up
-        isAutoScrollingRef.current = 'up';
+        isAutoScrollingRef.current = "up";
 
         // Auto-scroll to top
         window.scrollTo({
@@ -881,17 +915,21 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
         </div>
       </div>
 
-      {/* Fixed Sound Button - visible except in Immersive Showroom and when overlay is open */}
+      {/* Fixed Immersive Button - visible except in Immersive Showroom and when overlay is open */}
       {!isImmersiveShowroomPage && !isAnyOverlayOpen && (
-        <div className="fixed-sound-container">
-          <SoundButton isActive={isSoundActive} onClick={handleSoundClick} />
+        <div className="fixed-immersive-container">
+          <ImmersiveButton
+            theme={arrowTheme}
+            isCollapsed={isImmersiveCollapsed}
+            onClick={handleImmersiveClick}
+          />
         </div>
       )}
 
       {/* Fixed Arrow Button - visible except in footer and when overlay is open */}
       {!isImmersiveShowroomPage && !isAnyOverlayOpen && isArrowVisible && (
         <div className="fixed-arrow-container">
-          <ScrollDownArrow onClick={handleArrowClick} />
+          <ScrollDownArrow theme={arrowTheme} onClick={handleArrowClick} />
         </div>
       )}
 

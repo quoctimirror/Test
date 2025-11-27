@@ -134,8 +134,8 @@ const BrandPillars = () => {
           {/* Quote Text - Mobile/Tablet Version */}
           <div className="brand-pillars-quote brand-pillars-quote-mobile">
             <span className="brand-pillars-quote-line bodytext-4--no-margin">
-              MIRROR was never made to follow. It was born to uphold its own
-              code...
+              MIRROR WAS NEVER MADE TO FOLLOW. <br />
+              IT WAS BORN TO REDEFINE LUXURY
             </span>
           </div>
 
@@ -180,10 +180,9 @@ const BrandPillars = () => {
                 </div>
                 <div className="brand-sticky-expand">
                   <p className="bodytext-4--no-margin">
-                    Where human craft meets cutting-edge technology. We shape
-                    diamonds with the world’s most advanced cutting techniques -
-                    each one a fusion of human artistry and scientific
-                    precision.
+                    Every diamond we shape is born from world-leading innovation
+                    - crafted through advanced techniques that fuse intuition,
+                    intention, and engineering accuracy.
                   </p>
                 </div>
               </div>
@@ -226,9 +225,9 @@ const BrandPillars = () => {
                 </div>
                 <div className="brand-sticky-expand">
                   <p className="bodytext-4--no-margin">
-                    Made for the planet, not taken from it. We create with the
-                    future in mind - lab-grown brilliance that honors our
-                    planet, not extracts from it.
+                    Luxury with a conscience. Our work approach honors the
+                    planet, designing beauty that protects the future while
+                    elevating the present.
                   </p>
                 </div>
               </div>
@@ -252,18 +251,18 @@ const BrandPillars = () => {
                   </span>
                   <div className="brand-sticky-lines">
                     <span className="brand-sticky-line heading-2--no-margin">
-                      Redefining
+                      Creativity
                     </span>
                     <span className="brand-sticky-line heading-2--no-margin">
-                      luxury
+                      Sensory
                     </span>
                   </div>
                 </div>
                 <div className="brand-sticky-expand">
                   <p className="bodytext-4--no-margin">
-                    Not defined by excess, but by meaning.You're not just buying
-                    a product - you're entering a space of mindful beauty,
-                    crafted to awaken your senses and reflect your story.
+                    Art in continuous bloom. From design to storytelling, Mirror
+                    transforms imagination into form - blending craft, digital
+                    expression, and experiential emotion.
                   </p>
                 </div>
               </div>
@@ -275,8 +274,8 @@ const BrandPillars = () => {
           {/* Quote Text - Above Brand Pillars */}
           <div className="brand-pillars-quote">
             <span className="brand-pillars-quote-line bodytext-4--no-margin">
-              MIRROR was never made to follow. It was born to uphold its own
-              code...
+              MIRROR WAS NEVER MADE TO FOLLOW. <br />
+              IT WAS BORN TO REDEFINE LUXURY
             </span>
           </div>
 
@@ -291,13 +290,13 @@ const BrandPillars = () => {
                   </div>
                   <div className="brand-expand-text">
                     <p className="bodytext-6--no-margin">
-                      Where human craft meets cutting-edge technology.
+                      Every diamond we shape is born from
                       <br />
-                      We shape diamonds with the world's most advanced
+                      world-leading innovation - crafted through
                       <br />
-                      cutting techniques - each one a fusion of human
+                      advanced techniques that fuse intuition,
                       <br />
-                      artistry and scientific precision.
+                      intention, and engineering accuracy.
                     </p>
                   </div>
                 </div>
@@ -309,12 +308,13 @@ const BrandPillars = () => {
               </div>
               <div className="brand-expand-text">
                 <p className="bodytext-6--no-margin">
-                  Made for the planet, not taken from it.
+                  Luxury with a conscience.
                   <br />
-                  We create with the future in mind -
-                  <br /> lab-grown brilliance that honors our
+                  Our work approach honors the planet,
                   <br />
-                  planet, not extracts from it.
+                  designing beauty that protects the future
+                  <br />
+                  while elevating the present.
                 </p>
               </div>
               <div className="brand-main-text">
@@ -324,22 +324,39 @@ const BrandPillars = () => {
             <div className="brand-group">
               <div className="brand-main-text">
                 <div className="brand-line-with-expand">
-                  <span className="brand-line">REDEFINING</span>
+                  <span className="brand-line">CREATIVITY</span>
                   <div className="starlight-6-oclock-wrapper">
                     <StarlightEffect direction="falling" height={60} />
                   </div>
                   <div className="brand-expand-text">
                     <p className="bodytext-6--no-margin">
-                      True modern luxury is not in price tags.
+                      Art in continuous bloom. From design to
                       <br />
-                      You're not just buying a product - you're entering
-                      <br /> a space of mindful beauty, crafted to awaken
+                      storytelling, Mirror transforms imagination
                       <br />
-                      your senses and reflect your story.
+                      into form - blending craft, digital
+                      <br />
+                      expression, and experiential emotion.
                     </p>
                   </div>
                 </div>
-                <span className="brand-line">LUXURY</span>
+                <div className="brand-line-with-expand brand-line-sensory">
+                  <span className="brand-line">SENSORY</span>
+                  <div className="starlight-6-oclock-wrapper">
+                    <StarlightEffect direction="falling" height={60} />
+                  </div>
+                  <div className="brand-expand-text">
+                    <p className="bodytext-6--no-margin">
+                      Luxury you can feel.
+                      <br />
+                      We awaken beauty through sight, sound, taste,
+                      <br />
+                      scent, touch, and intuition - creating a
+                      <br />
+                      world where every detail resonates.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </h1>

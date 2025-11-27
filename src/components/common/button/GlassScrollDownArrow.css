@@ -1,0 +1,142 @@
+.glass-scroll-arrow {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: glass-bounce 2.5s infinite;
+}
+
+.glass-scroll-arrow:hover {
+  animation-play-state: paused;
+  transform: translateY(-2px);
+}
+
+.glass-scroll-arrow:active {
+  transform: translateY(0);
+}
+
+/* Bounce animation */
+@keyframes glass-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* SVG Filter - hidden but functional */
+.glass-scroll-arrow__filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Arrow icon */
+.glass-scroll-arrow__icon {
+  position: relative;
+  z-index: 2;
+  width: 26px;
+  height: 26px;
+}
+
+/* SVG filter supported */
+.glass-scroll-arrow--svg {
+  backdrop-filter: var(--filter-id);
+  -webkit-backdrop-filter: var(--filter-id);
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Fallback for browsers that don't support SVG backdrop filters */
+.glass-scroll-arrow--fallback {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Hover states */
+.glass-scroll-arrow--svg:hover,
+.glass-scroll-arrow--fallback:hover {
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========== WHITE THEME ========== */
+.glass-scroll-arrow--white {
+  color: #ffffff;
+}
+
+.glass-scroll-arrow--white.glass-scroll-arrow--svg,
+.glass-scroll-arrow--white.glass-scroll-arrow--fallback {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ========== BLACK THEME ========== */
+.glass-scroll-arrow--black {
+  color: #000000;
+}
+
+.glass-scroll-arrow--black.glass-scroll-arrow--svg,
+.glass-scroll-arrow--black.glass-scroll-arrow--fallback {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.glass-scroll-arrow--black:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* ========== BLEND THEME ========== */
+.glass-scroll-arrow--blend {
+  mix-blend-mode: difference;
+  color: #ffffff;
+}
+
+/* Focus state */
+.glass-scroll-arrow:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .glass-scroll-arrow__icon {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-scroll-arrow__icon {
+    width: 20px;
+    height: 20px;
+  }
+}

@@ -50,6 +50,7 @@ export const ROUTES = {
   NAVBAR_V2_TEST: "/test-navbar-v2",
   NAVBAR_V3_TEST: "/test-navbar-v3",
   NAVBAR_V4_TEST: "/test-navbar-v4",
+  GLASS_BUTTON_TEST: "/test-glass-button",
 
   // Dashboard routes (keep original - protected by auth)
   DASHBOARD_ADMIN: "/dashboard/admin",

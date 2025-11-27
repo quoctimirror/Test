@@ -2,7 +2,7 @@ import "./ContactUs.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
-import UnderlineButton from "@components/common/button/UnderlineButton";
+import UnderlineButtonOpposite from "@components/common/button/UnderlineButtonOpposite";
 import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 
@@ -13,12 +13,13 @@ const ContactUs = () => {
     await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.BOOK_APPOINTMENT);
   };
 
-  const handleLiveChatClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.CONTACT);
+  const handleLiveChatClick = () => {
+    // TODO: Open live chat widget
+    console.log("Open live chat");
   };
 
-  const handlePhoneCallClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.CONTACT);
+  const handlePhoneCallClick = () => {
+    window.location.href = "tel:+442077589780";
   };
 
   return (
@@ -46,19 +47,19 @@ const ContactUs = () => {
           </ShineGlassButton>
         </div>
         <div className="contact-us-actions">
-          <UnderlineButton
+          <UnderlineButtonOpposite
             onClick={handleLiveChatClick}
             textClassName="bodytext-4--no-margin"
           >
             Start a live chat
-          </UnderlineButton>
+          </UnderlineButtonOpposite>
           <span className="contact-us-separator bodytext-4--no-margin">or</span>
-          <UnderlineButton
+          <UnderlineButtonOpposite
             onClick={handlePhoneCallClick}
             textClassName="bodytext-4--no-margin"
           >
             Make a phone call
-          </UnderlineButton>
+          </UnderlineButtonOpposite>
         </div>
       </div>
     </section>

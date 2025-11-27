@@ -6,6 +6,7 @@ import MediaImage from "@components/common/media/MediaImage";
 
 const MilanComponent = () => {
   const heroRef = useRef(null);
+  const backgroundLayerRef = useRef(null);
   const isScrolling = useRef(false);
   const carouselRef = useRef(null);
   const isDragging = useRef(false);
@@ -77,6 +78,17 @@ const MilanComponent = () => {
 
         heroRef.current.style.opacity = opacity;
         heroRef.current.style.transform = `scale(${scale})`;
+
+        // Keep background layer visible ONLY when in hero section to block footer
+        if (backgroundLayerRef.current) {
+          // Show background when we're in hero section (scroll < 100vh)
+          // Hide when scrolled past hero to let article show
+          if (scrolled < windowHeight) {
+            backgroundLayerRef.current.style.display = 'block';
+          } else {
+            backgroundLayerRef.current.style.display = 'none';
+          }
+        }
       }
 
       // Auto-scroll effects only on desktop
@@ -499,9 +511,13 @@ const MilanComponent = () => {
 
         carousel.style.scrollBehavior = "auto";
 
-        // Center ảnh đầu tiên: vị trí giữa buffer - offset để center
-        const viewportWidth = window.innerWidth;
-        carousel.scrollLeft = setSize * 5 - (viewportWidth - itemWidth) / 2;
+        // Center an image in the middle of carousel
+        const screenWidth = window.innerWidth;
+        const targetIndex = 15; // Middle of 30 items (10 sets * 3 images)
+        const targetItem = items[targetIndex];
+        // Offset as percentage of screen width
+        const offsetPercent = 25; // 25% of screen width
+        carousel.scrollLeft = targetItem.offsetLeft - (screenWidth * offsetPercent / 100);
 
         largeVelocity.current = 0;
         isLargeDragging.current = false;
@@ -718,6 +734,9 @@ const MilanComponent = () => {
 
   return (
     <div className="milan-page">
+      {/* Solid background layer - stays solid to block footer */}
+      <div className="milan-hero-background-layer" ref={backgroundLayerRef} />
+
       {/* Hero Section */}
       <section className="milan-hero" ref={heroRef} data-navbar-theme="black">
         <div className="milan-hero-content">

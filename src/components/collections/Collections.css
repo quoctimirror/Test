@@ -101,7 +101,7 @@
   min-height: 100vh;
   width: 100%;
   background: lightgray
-    url("https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media/collections/orient.gif")
+    url("__CDN_URL__/collections/orient.gif")
     no-repeat fixed center / cover;
   position: relative;
 }
@@ -199,7 +199,7 @@
   width: 100%;
   min-height: 100vh;
   position: relative;
-  background-color: #000000;
+  background-color: var(--color-black);
   color: #ffffff;
   padding: 0 0;
   z-index: 1;
