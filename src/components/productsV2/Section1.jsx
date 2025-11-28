@@ -1,5 +1,5 @@
 import './Section1.css';
-import ShineGlassButton from '@components/common/button/ShineGlassButton';
+import ScrollDownArrow from '@components/common/button/ScrollDownArrow';
 import ProductsLeftDrive from './ProductsLeftDrive';
 import { PRODUCT_CONFIG } from './productConfig';
 
@@ -20,16 +20,7 @@ const Section1 = ({ productConfig }) => {
             </div>
 
             <div className="pv2-section1-scroll-btn">
-                <ShineGlassButton
-                    variant="circle"
-                    width={46}
-                    height={46}
-                    onClick={handleScrollDown}
-                >
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M10 5L10 15M10 15L6 11M10 15L14 11" stroke="rgba(0, 0, 0, 0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </ShineGlassButton>
+                <ScrollDownArrow theme="black" onClick={handleScrollDown} size={46} />
             </div>
         </div>
     );

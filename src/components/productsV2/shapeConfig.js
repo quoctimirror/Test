@@ -2,12 +2,6 @@
 // Each shape has its own model ID, metal, and band configuration
 
 export const SHAPE_CONFIGS = {
-  Flower: {
-    shape: 'Flower',
-    modelId: 'HB3RidmJSdezIO1T2hdXcQ',
-    metal: 'Gold 24k',
-    band: 'Single band'
-  },
   Fiston: {
     shape: 'Fiston',
     modelId: 'Cs9yFentQsiL9VOyTa8Rdw',
@@ -22,7 +16,7 @@ export const SHAPE_CONFIGS = {
   },
   Oval: {
     shape: 'Oval',
-    modelId: 'LvYj0l_IQeehkfX0ce4Zgw',
+    modelId: 'Hprd00uZRoq8t0Ou1YlWMg',
     metal: 'Gold 24k',
     band: 'Single band'
   },
@@ -34,7 +28,7 @@ export const SHAPE_CONFIGS = {
   },
   Heart: {
     shape: 'Heart',
-    modelId: 'Omh82cayR9iO1uIBLaDFGQ',
+    modelId: 'Qteju98xRgKe8y5KylzXIw',
     metal: 'Gold 24k',
     band: 'Single band'
   },
@@ -47,6 +41,12 @@ export const SHAPE_CONFIGS = {
   Twin: {
     shape: 'Twin',
     modelId: 'dY4BIhDDQNmCVTRrEpV2QQ',
+    metal: 'Silver',
+    band: 'Single band'
+  },
+  New: {
+    shape: 'New',
+    modelId: 'R4Yyjh0QQlmEtazcWf7IGA',
     metal: 'Silver',
     band: 'Single band'
   },
@@ -63,5 +63,5 @@ export const AVAILABLE_SHAPES = Object.keys(SHAPE_CONFIGS);
 
 // Get configuration for a specific shape
 export const getShapeConfig = (shapeName) => {
-  return SHAPE_CONFIGS[shapeName] || SHAPE_CONFIGS.Heart; // Default to Trilogy
+  return SHAPE_CONFIGS[shapeName] || SHAPE_CONFIGS.New;
 };

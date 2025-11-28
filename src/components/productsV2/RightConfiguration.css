@@ -255,11 +255,13 @@
     transition: background var(--shine-anim--hover-time) var(--shine-anim--hover-ease) !important;
 }
 
-.pv2-wishlist-btn-glass .shine-glass-button:hover .glass-layer {
+.pv2-wishlist-btn-glass:hover .glass-layer {
     background: linear-gradient(-75deg,
-            rgba(0, 0, 0, 0.95),
-            rgba(0, 0, 0, 0.98),
-            rgba(0, 0, 0, 0.95)) !important;
+            rgba(140, 140, 140, 0.95),
+            rgba(160, 160, 160, 0.95),
+            rgba(140, 140, 140, 0.95)) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
 }
 
 .pv2-wishlist-btn-glass .border-layer {
@@ -272,9 +274,9 @@
     transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
 }
 
-.pv2-wishlist-btn-glass .shine-glass-button:hover svg {
-    color: rgba(0, 0, 0, 0.50);
-    stroke: rgba(0, 0, 0, 0.50);
+.pv2-wishlist-btn-glass:hover svg {
+    color: #000;
+    stroke: #000;
 }
 
 .pv2-wishlist-btn-glass .shine-layer::before {
@@ -326,6 +328,19 @@
     display: block !important;
 }
 
+/* Hover effect for appointment button - same as footer theme (ContactUs) */
+.pv2-appointment-btn-glass .shine-glass-button:hover .glass-layer {
+    background: linear-gradient(-75deg,
+            rgba(140, 140, 140, 0.95),
+            rgba(160, 160, 160, 0.95),
+            rgba(140, 140, 140, 0.95)) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+.pv2-appointment-btn-glass .shine-glass-button:hover .button-text {
+    color: rgba(0, 0, 0, 0.9) !important;
+}
 
 .pv2-order-btn {
     width: 100%;
