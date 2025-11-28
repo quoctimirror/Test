@@ -10,8 +10,9 @@ const MODELS = [
   { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' },
   { id: 'Hprd00uZRoq8t0Ou1YlWMg', name: 'Oval', basename: 'drive' },
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
-  { id: 'HB3RidmJSdezIO1T2hdXcQ', name: 'Flower', basename: 'drive' }, // sai hoan toan lam lai
-  { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' }, // standard
+  { id: 'dGVcGf5ZSwq20ULDHOeaNQ', name: 'Flower', basename: 'drive' },
+  { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' },
+  { id: 'HjkNylDSRNSbJboRBLBeOQ', name: 'Trilogy', basename: 'drive' }
 ];
 
 const getModelFromURL = () => {
