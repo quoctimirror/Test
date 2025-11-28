@@ -1,5 +1,5 @@
 import "./NavbarV4.css";
-import { useState, useRef, useEffect, useCallback, useId } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -26,16 +26,6 @@ export default function NavbarV4() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false); // Track booking modal
   const logoRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
-
-  // Glass surface effect refs
-  const glassUniqueId = useId().replace(/:/g, '-');
-  const glassFilterId = `navbar-glass-chromatic-${glassUniqueId}`;
-  const glassContainerRef = useRef(null);
-  const feImageRef = useRef(null);
-  const redChannelRef = useRef(null);
-  const greenChannelRef = useRef(null);
-  const blueChannelRef = useRef(null);
-  const gaussianBlurRef = useRef(null);
 
   // Get current navbar theme from hook
   const { theme: navbarTheme } = useNavbarTheme();
@@ -243,85 +233,6 @@ export default function NavbarV4() {
     };
   }, [location.pathname]);
 
-  // Glass surface chromatic aberration effect
-  const glassConfig = {
-    borderWidth: 0.05,
-    brightness: 50,
-    opacity: 0.93,
-    blur: 6,
-    displace: 1,
-    distortionScale: 80,
-    redOffset: 0,
-    greenOffset: 3,
-    blueOffset: 6,
-    mixBlendMode: 'screen'
-  };
-
-  const generateNavbarDisplacementMap = useCallback(() => {
-    const rect = glassContainerRef.current?.getBoundingClientRect();
-    const actualWidth = rect?.width || window.innerWidth;
-    const actualHeight = rect?.height || 80;
-    const edgeSize = Math.min(actualWidth, actualHeight) * (glassConfig.borderWidth * 0.5);
-    const redGradId = `nav-red-grad-${glassUniqueId}`;
-    const blueGradId = `nav-blue-grad-${glassUniqueId}`;
-
-    const svgContent = `
-      <svg viewBox="0 0 ${actualWidth} ${actualHeight}" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="${redGradId}" x1="100%" y1="0%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="#0000"/>
-            <stop offset="100%" stop-color="red"/>
-          </linearGradient>
-          <linearGradient id="${blueGradId}" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#0000"/>
-            <stop offset="100%" stop-color="blue"/>
-          </linearGradient>
-        </defs>
-        <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" fill="black"></rect>
-        <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" fill="url(#${redGradId})" />
-        <rect x="0" y="0" width="${actualWidth}" height="${actualHeight}" fill="url(#${blueGradId})" style="mix-blend-mode: ${glassConfig.mixBlendMode}" />
-        <rect x="${edgeSize}" y="${edgeSize}" width="${actualWidth - edgeSize * 2}" height="${actualHeight - edgeSize * 2}" fill="hsl(0 0% ${glassConfig.brightness}% / ${glassConfig.opacity})" style="filter:blur(${glassConfig.blur}px)" />
-      </svg>
-    `;
-
-    return `data:image/svg+xml,${encodeURIComponent(svgContent)}`;
-  }, [glassUniqueId]);
-
-  const updateNavbarDisplacementMap = useCallback(() => {
-    feImageRef.current?.setAttribute('href', generateNavbarDisplacementMap());
-  }, [generateNavbarDisplacementMap]);
-
-  useEffect(() => {
-    updateNavbarDisplacementMap();
-    [
-      { ref: redChannelRef, offset: glassConfig.redOffset },
-      { ref: greenChannelRef, offset: glassConfig.greenOffset },
-      { ref: blueChannelRef, offset: glassConfig.blueOffset }
-    ].forEach(({ ref, offset }) => {
-      if (ref.current) {
-        ref.current.setAttribute('scale', (glassConfig.distortionScale + offset).toString());
-        ref.current.setAttribute('xChannelSelector', 'R');
-        ref.current.setAttribute('yChannelSelector', 'G');
-      }
-    });
-
-    gaussianBlurRef.current?.setAttribute('stdDeviation', glassConfig.displace.toString());
-  }, [updateNavbarDisplacementMap]);
-
-  useEffect(() => {
-    if (!glassContainerRef.current) return;
-
-    const resizeObserver = new ResizeObserver(() => {
-      setTimeout(updateNavbarDisplacementMap, 0);
-    });
-
-    resizeObserver.observe(glassContainerRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [updateNavbarDisplacementMap]);
-
   const performTransition = async (route, options = {}) => {
     // Close menu immediately before transition to prevent animation loop
     // Set all states to false instantly (no animation)
@@ -516,61 +427,70 @@ export default function NavbarV4() {
     <>
       {/* Navbar Liquid Glass Background */}
       <div
-        ref={glassContainerRef}
         className={`navbar-v4-glass-background navbar-v4-theme-${navbarTheme} ${
           isMenuOpen ? "expanded" : ""
         } ${isMenuOpen && !isMobile && !isTablet ? "menu-expanded" : ""}`}
-        style={{ '--navbar-filter-id': `url(#${glassFilterId})` }}
       >
         <div className="liquidGlass-v4-effect"></div>
         <div className="liquidGlass-v4-tint"></div>
         <div className="liquidGlass-v4-shine"></div>
       </div>
 
-      {/* SVG Filter for Chromatic Aberration Glass Effect */}
-      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-        <defs>
-          <filter id={glassFilterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
-            <feImage ref={feImageRef} x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map" />
+      {/* SVG Filter for Liquid Glass Distortion */}
+      <svg style={{ display: "none" }}>
+        <filter
+          id="navbar-glass-distortion"
+          x="0%"
+          y="0%"
+          width="100%"
+          height="100%"
+          filterUnits="objectBoundingBox"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.000 0.000"
+            numOctaves="1"
+            seed="1"
+            result="turbulence"
+          />
 
-            <feDisplacementMap ref={redChannelRef} in="SourceGraphic" in2="map" result="dispRed" />
-            <feColorMatrix
-              in="dispRed"
-              type="matrix"
-              values="1 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 1 0"
-              result="red"
-            />
+          <feComponentTransfer in="turbulence" result="mapped">
+            <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
+            <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
+            <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
+          </feComponentTransfer>
 
-            <feDisplacementMap ref={greenChannelRef} in="SourceGraphic" in2="map" result="dispGreen" />
-            <feColorMatrix
-              in="dispGreen"
-              type="matrix"
-              values="0 0 0 0 0
-                      0 1 0 0 0
-                      0 0 0 0 0
-                      0 0 0 1 0"
-              result="green"
-            />
+          <feGaussianBlur in="turbulence" stdDeviation="4" result="softMap" />
 
-            <feDisplacementMap ref={blueChannelRef} in="SourceGraphic" in2="map" result="dispBlue" />
-            <feColorMatrix
-              in="dispBlue"
-              type="matrix"
-              values="0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 1 0 0
-                      0 0 0 1 0"
-              result="blue"
-            />
+          <feSpecularLighting
+            in="softMap"
+            surfaceScale="3"
+            specularConstant="0.9"
+            specularExponent="100"
+            lightingColor="white"
+            result="specLight"
+          >
+            <fePointLight x="-200" y="-200" z="300" />
+          </feSpecularLighting>
 
-            <feBlend in="red" in2="green" mode="screen" result="rg" />
-            <feBlend in="rg" in2="blue" mode="screen" result="output" />
-            <feGaussianBlur ref={gaussianBlurRef} in="output" stdDeviation="0.5" />
-          </filter>
-        </defs>
+          <feComposite
+            in="specLight"
+            operator="arithmetic"
+            k1="0"
+            k2="1"
+            k3="1"
+            k4="0"
+            result="litImage"
+          />
+
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="softMap"
+            scale="60"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
       </svg>
 
       {/* Mobile/Tablet menu overlay - only on mobile/tablet, not desktop */}
@@ -757,7 +677,9 @@ export default function NavbarV4() {
                         : ""
                     }`}
                     onMouseEnter={() =>
-                      optimizedTransitionUtils.prefetch(ROUTES.IMMERSIVE_SHOWROOM)
+                      optimizedTransitionUtils.prefetch(
+                        ROUTES.IMMERSIVE_SHOWROOM
+                      )
                     }
                   >
                     <UnderlineButton
@@ -926,7 +848,10 @@ export default function NavbarV4() {
               </div>
 
               {/* Shine Glass Buttons at bottom - outside of groups */}
-              <div className="menu-v4-bottom-buttons" style={{ mixBlendMode: 'normal', isolation: 'isolate' }}>
+              <div
+                className="menu-v4-bottom-buttons"
+                style={{ mixBlendMode: "normal", isolation: "isolate" }}
+              >
                 <ShineGlassButton
                   theme="light"
                   onClick={() => {

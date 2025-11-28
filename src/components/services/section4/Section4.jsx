@@ -33,6 +33,25 @@ const Section4 = () => {
 
   useEffect(() => {
     const handleScroll = () => {
+      const windowHeight = window.innerHeight;
+
+      // Desktop parallax effect (>1024px) - same as mobile background
+      if (window.innerWidth > 1024) {
+        const desktopScreens = document.querySelectorAll(".section4-desktop-screen");
+
+        desktopScreens.forEach((screen) => {
+          const rect = screen.getBoundingClientRect();
+          const scrollDistance = windowHeight - rect.top;
+          const totalDistance = windowHeight + rect.height;
+          const scrollRatio = Math.max(0, Math.min(1, scrollDistance / totalDistance));
+
+          // Image moves DOWN slowly (0% → 30%)
+          const imgParallax = scrollRatio * 30;
+
+          screen.style.setProperty("--parallax-img-offset", `${imgParallax}%`);
+        });
+      }
+
       // Mobile parallax effect - only on mobile screens (<=480px)
       if (window.innerWidth <= 480) {
         const windowHeight = window.innerHeight;

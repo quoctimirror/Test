@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { getNewsDetailRoute } from "@/constants/routes";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 
-const TOTAL_FRAMES = 200;
-const FRAME_PATH = "/home-page/lumex91-frames/frame_";
+const TOTAL_FRAMES = 240;
+const FRAME_PATH = "/home-page/diamond-frames/frame_";
 
 const Lumex91 = () => {
   const [framesLoaded, setFramesLoaded] = useState(false);
@@ -53,7 +53,7 @@ const Lumex91 = () => {
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new Image();
       const frameNum = String(i).padStart(3, "0");
-      img.src = `${FRAME_PATH}${frameNum}.jpg`;
+      img.src = `${FRAME_PATH}${frameNum}.png`;
       img.onload = () => {
         loadedCount++;
         if (loadedCount === TOTAL_FRAMES) {
@@ -108,7 +108,7 @@ const Lumex91 = () => {
   };
 
   // Generate current frame src
-  const currentFrameSrc = `${FRAME_PATH}${String(currentFrame).padStart(3, "0")}.jpg`;
+  const currentFrameSrc = `${FRAME_PATH}${String(currentFrame).padStart(3, "0")}.png`;
 
   return (
     <section className="lumex91">

@@ -1,10 +1,46 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { MediaImage } from "@components/common/media";
+import ProductCarouselItem from "@components/collections/ProductCarouselItem";
 import "./AllGems.css";
 
 const AllGems = () => {
-  const productCards = Array(24).fill("products/allGems/product_card_1.png");
+  const largeItem1Ref = useRef(null);
+  const largeItem2Ref = useRef(null);
+
+  // Parallax effect for large items
+  useEffect(() => {
+    const handleScroll = () => {
+      const windowHeight = window.innerHeight;
+
+      [largeItem1Ref, largeItem2Ref].forEach((ref) => {
+        if (!ref.current) return;
+
+        const rect = ref.current.getBoundingClientRect();
+        const scrollDistance = windowHeight - rect.top;
+        const totalDistance = windowHeight + rect.height;
+        const scrollRatio = Math.max(0, Math.min(1, scrollDistance / totalDistance));
+
+        // Image moves DOWN slowly (0% → 30%)
+        const imgParallax = scrollRatio * 30;
+
+        ref.current.style.setProperty("--parallax-img-offset", `${imgParallax}%`);
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Each gem has multiple images for carousel
+  const gemImages = [
+    "products/allGems/product_card_1.png",
+    "products/allGems/product_card_1.png",
+    "products/allGems/product_card_1.png",
+  ];
+  const productCards = Array(24).fill(gemImages);
   const modelImage1 = "products/allGems/earrings-heart.png";
   const modelImage2 = "products/allGems/flower.png";
 
@@ -29,71 +65,83 @@ const AllGems = () => {
       <div className="gems-grid-container" data-navbar-theme="black">
         {/* First row - 4 items */}
         <div className="gems-row gems-row-4">
-          {productCards.slice(0, 4).map((src, index) => (
-            <div key={`row1-${index}`} className="gem-item">
-              <MediaImage src={src} alt={`Gem ${index + 1}`} />
-              <span className="gem-label heading-3--no-margin">Lumina</span>
-            </div>
+          {productCards.slice(0, 4).map((images, index) => (
+            <ProductCarouselItem
+              key={`row1-${index}`}
+              images={images}
+              label="Lumina"
+              className="gem-item"
+            />
           ))}
         </div>
 
         {/* Second row - 3 columns (2 columns with 2x2 grid + 1 large) */}
         <div className="gems-row gems-row-3-special">
           <div className="gem-grid-2x2">
-            {productCards.slice(4, 8).map((src, index) => (
-              <div key={`row2-${index}`} className="gem-item">
-                <MediaImage src={src} alt={`Gem ${index + 5}`} />
-                <span className="gem-label heading-3--no-margin">Lumina</span>
-              </div>
+            {productCards.slice(4, 8).map((images, index) => (
+              <ProductCarouselItem
+                key={`row2-${index}`}
+                images={images}
+                label="Lumina"
+                className="gem-item"
+              />
             ))}
           </div>
-          <div className="gem-item gem-item-large">
+          <div ref={largeItem1Ref} className="gem-item gem-item-large">
             <MediaImage src={modelImage1} alt="Model showcase 1" />
           </div>
         </div>
 
         {/* Third row - 4 items */}
         <div className="gems-row gems-row-4">
-          {productCards.slice(8, 12).map((src, index) => (
-            <div key={`row3-${index}`} className="gem-item">
-              <MediaImage src={src} alt={`Gem ${index + 9}`} />
-              <span className="gem-label heading-3--no-margin">Lumina</span>
-            </div>
+          {productCards.slice(8, 12).map((images, index) => (
+            <ProductCarouselItem
+              key={`row3-${index}`}
+              images={images}
+              label="Lumina"
+              className="gem-item"
+            />
           ))}
         </div>
 
         {/* Fourth row - 3 columns (1 large + 2 columns with 2x2 grid) */}
         <div className="gems-row gems-row-3-reverse-special">
-          <div className="gem-item gem-item-large">
+          <div ref={largeItem2Ref} className="gem-item gem-item-large">
             <MediaImage src={modelImage2} alt="Model showcase 2" />
           </div>
           <div className="gem-grid-2x2">
-            {productCards.slice(12, 16).map((src, index) => (
-              <div key={`row4-${index}`} className="gem-item">
-                <MediaImage src={src} alt={`Gem ${index + 13}`} />
-                <span className="gem-label heading-3--no-margin">Lumina</span>
-              </div>
+            {productCards.slice(12, 16).map((images, index) => (
+              <ProductCarouselItem
+                key={`row4-${index}`}
+                images={images}
+                label="Lumina"
+                className="gem-item"
+              />
             ))}
           </div>
         </div>
 
         {/* Fifth row - 4 items */}
         <div className="gems-row gems-row-4">
-          {productCards.slice(16, 20).map((src, index) => (
-            <div key={`row5-${index}`} className="gem-item">
-              <MediaImage src={src} alt={`Gem ${index + 17}`} />
-              <span className="gem-label heading-3--no-margin">Lumina</span>
-            </div>
+          {productCards.slice(16, 20).map((images, index) => (
+            <ProductCarouselItem
+              key={`row5-${index}`}
+              images={images}
+              label="Lumina"
+              className="gem-item"
+            />
           ))}
         </div>
 
         {/* Sixth row - 4 items */}
         <div className="gems-row gems-row-4">
-          {productCards.slice(20, 24).map((src, index) => (
-            <div key={`row6-${index}`} className="gem-item">
-              <MediaImage src={src} alt={`Gem ${index + 21}`} />
-              <span className="gem-label heading-3--no-margin">Lumina</span>
-            </div>
+          {productCards.slice(20, 24).map((images, index) => (
+            <ProductCarouselItem
+              key={`row6-${index}`}
+              images={images}
+              label="Lumina"
+              className="gem-item"
+            />
           ))}
         </div>
       </div>

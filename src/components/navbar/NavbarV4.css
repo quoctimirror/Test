@@ -76,13 +76,14 @@
   }
 }
 
-/* Liquid Glass Effect Layer - Chromatic Aberration Distortion */
+/* Liquid Glass Effect Layer - Distortion */
 .liquidGlass-v4-effect {
   position: absolute;
   z-index: 0;
   inset: 0;
-  backdrop-filter: var(--navbar-filter-id, blur(5px));
-  -webkit-backdrop-filter: var(--navbar-filter-id, blur(5px));
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  filter: url(#navbar-glass-distortion);
   overflow: hidden;
 }
 
