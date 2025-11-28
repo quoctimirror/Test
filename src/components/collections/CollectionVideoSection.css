@@ -4,12 +4,17 @@
   height: 100vh;
   position: relative;
   overflow: hidden;
+  --parallax-bg-offset: 0%;
 }
 
 .video-background {
   width: 100%;
-  height: 100%;
-  background: lightgray url("__CDN_URL__/collections/hero_collection.png") no-repeat center /
-    cover;
-  position: relative;
+  height: 120%;
+  background: lightgray url("__CDN_URL__/collections/hero_collection.png")
+    no-repeat center / cover;
+  position: absolute;
+  top: -30%;
+  left: 0;
+  will-change: transform;
+  transform: translateY(var(--parallax-bg-offset));
 }

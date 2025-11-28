@@ -95,49 +95,22 @@
   cursor: pointer;
 }
 
-.gem-item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0) 50%, #f6f6f6 100%);
-  z-index: 1;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.gem-item:hover::before {
-  opacity: 0;
-}
-
-.gem-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.3s ease;
-}
-
-.gem-item:hover img {
-  transform: scale(1.1);
-}
-
-.gem-item-large::before {
-  display: none; /* No gradient overlay on large model images */
-}
-
-.gem-item-large img {
-  transition: none;
-}
-
-.gem-item-large:hover img {
-  transform: none;
-}
-
 .gem-item-large {
   grid-column: span 1;
+  --parallax-img-offset: 0%;
+}
+
+/* Large model images - parallax effect */
+.gem-item-large img {
+  position: relative;
+  top: -30%;
+  width: 100%;
+  height: 120%;
+  object-fit: cover;
+  display: block;
+  will-change: transform;
+  transform: translateY(var(--parallax-img-offset));
+  transition: none;
 }
 
 .gem-label {

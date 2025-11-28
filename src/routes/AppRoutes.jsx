@@ -60,8 +60,8 @@ const NewsDetailWrapper = () => {
 
   // Map slugs to their respective components
   const newsPages = {
-    'milan': MilanPage,
-    'new-cut': NewCutPage,
+    milan: MilanPage,
+    "new-cut": NewCutPage,
     // Add more news article slugs here
   };
 
@@ -86,13 +86,6 @@ const ScavengerHunt = lazy(() =>
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const PremiumPage = lazy(() => import("@pages/PremiumPage"));
 const PremiumDevPage = lazy(() => import("@pages/PremiumDevPage"));
-const ScrollEffectTestPage = lazy(() => import("@pages/ScrollEffectTestPage"));
-const ScrollEffectTestV2Page = lazy(() => import("@pages/ScrollEffectTestV2Page"));
-const NavbarV2TestPage = lazy(() => import("@pages/NavbarV2TestPage"));
-const NavbarV3TestPage = lazy(() => import("@pages/NavbarV3TestPage"));
-const NavbarV4TestPage = lazy(() => import("@pages/NavbarV4TestPage"));
-// const TestViewer = lazy(() => import("@components/productsV2/TestViewer.jsx"));
-const GlassSurfaceButtonTestPage = lazy(() => import("@pages/GlassSurfaceButtonTestPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -136,19 +129,10 @@ export default function AppRoutes() {
       ROUTES.DASHBOARD_DESIGNER,
       ROUTES.UNIVERSE_FINAL,
       ROUTES.FORGOT_PASSWORD,
-      ROUTES.SCROLL_EFFECT_TEST,
-      ROUTES.SCROLL_EFFECT_TEST_V2,
-      ROUTES.NAVBAR_V2_TEST,
-      ROUTES.NAVBAR_V3_TEST,
-      ROUTES.NAVBAR_V4_TEST,
-      ROUTES.TEST_VIEWER,
+      ROUTES.IJEWEL_AR_TRYON,
       ROUTES.PREMIUM,
       ROUTES.PREMIUM_DEV,
     ];
-
-    // Add NAVBAR_V4_TEST to defined routes
-    definedRoutes.push(ROUTES.NAVBAR_V4_TEST);
-    definedRoutes.push(ROUTES.GLASS_BUTTON_TEST);
 
     // Check exact matches
     if (definedRoutes.includes(location.pathname)) {
@@ -183,16 +167,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
-    location.pathname === ROUTES.WELCOME ||
-    location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
-    location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2 ||
-    location.pathname === ROUTES.NAVBAR_V2_TEST ||
-    location.pathname === ROUTES.NAVBAR_V3_TEST ||
-    location.pathname === ROUTES.NAVBAR_V4_TEST ||
-    location.pathname === ROUTES.TEST_VIEWER ||
-    location.pathname === ROUTES.PREMIUM ||
-    location.pathname === ROUTES.PREMIUM_DEV ||
-    location.pathname === ROUTES.GLASS_BUTTON_TEST;
+    location.pathname === ROUTES.WELCOME;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -204,16 +179,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
-    location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
-    location.pathname === ROUTES.SCROLL_EFFECT_TEST ||
-    location.pathname === ROUTES.SCROLL_EFFECT_TEST_V2 ||
-    location.pathname === ROUTES.NAVBAR_V2_TEST ||
-    location.pathname === ROUTES.NAVBAR_V3_TEST ||
-    location.pathname === ROUTES.NAVBAR_V4_TEST ||
-    location.pathname === ROUTES.TEST_VIEWER ||
-    location.pathname === ROUTES.PREMIUM ||
-    location.pathname === ROUTES.PREMIUM_DEV ||
-    location.pathname === ROUTES.GLASS_BUTTON_TEST;
+    location.pathname.startsWith(ROUTES.MILAN_SUBMIT);
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -228,181 +194,144 @@ export default function AppRoutes() {
         {/* Routes */}
         <Suspense
           fallback={
-            <div style={{ textAlign: "center", padding: "2rem" }}>Loading...</div>
+            <div style={{ textAlign: "center", padding: "2rem" }}>
+              Loading...
+            </div>
           }
         >
           <Routes>
-          <Route path={ROUTES.HOME} element={<HomePage />} />
+            <Route path={ROUTES.HOME} element={<HomePage />} />
 
-          <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
-          <Route path={ROUTES.WELCOME} element={<WelcomePage />} />
+            <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
+            <Route path={ROUTES.WELCOME} element={<WelcomePage />} />
 
-          <Route path={ROUTES.AUTH} element={<AuthPage />}>
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-          </Route>
+            <Route path={ROUTES.AUTH} element={<AuthPage />}>
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+            </Route>
 
-          <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
-          <Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
+            <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+            <Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
 
-          <Route path={ROUTES.PRODUCTS} element={<ProductsPage />} />
+            <Route path={ROUTES.PRODUCTS} element={<ProductsPage />} />
 
-          <Route path={ROUTES.PRODUCTS_V2} element={<ProductsV2 />} />
+            <Route path={ROUTES.PRODUCTS_V2} element={<ProductsV2 />} />
 
-          <Route path={ROUTES.ALL_GEMS} element={<AllGemsPage />} />
+            <Route path={ROUTES.ALL_GEMS} element={<AllGemsPage />} />
 
-          <Route path={ROUTES.COLLECTIONS} element={<CollectionPage />} />
+            <Route path={ROUTES.COLLECTIONS} element={<CollectionPage />} />
 
-          <Route
-            path={ROUTES.COLLECTION_DETAIL}
-            element={<CollectionDetailPage />}
-          />
+            <Route
+              path={ROUTES.COLLECTION_DETAIL}
+              element={<CollectionDetailPage />}
+            />
 
-          <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
+            <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
 
-          <Route
-            path={ROUTES.SERVICES_DETAIL}
-            element={<ServicesDetailPage />}
-          />
+            <Route
+              path={ROUTES.SERVICES_DETAIL}
+              element={<ServicesDetailPage />}
+            />
 
-          <Route path={ROUTES.SUPPORT} element={<SupportPage />} />
+            <Route path={ROUTES.SUPPORT} element={<SupportPage />} />
 
-          <Route
-            path={ROUTES.SUPPORT_DETAIL}
-            element={<SupportDetailPage />}
-          />
+            <Route
+              path={ROUTES.SUPPORT_DETAIL}
+              element={<SupportDetailPage />}
+            />
 
-          <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+            <Route path={ROUTES.CONTACT} element={<ContactPage />} />
 
-          <Route path={ROUTES.CONTACT_V2} element={<ContactPageV2 />} />
+            <Route path={ROUTES.CONTACT_V2} element={<ContactPageV2 />} />
 
-          <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+            <Route path={ROUTES.ABOUT} element={<AboutPage />} />
 
-          <Route path={ROUTES.LOCATIONS} element={<LocationsPage />} />
+            <Route path={ROUTES.LOCATIONS} element={<LocationsPage />} />
 
-          <Route path={ROUTES.NEWS} element={<AllNewsPage />} />
+            <Route path={ROUTES.NEWS} element={<AllNewsPage />} />
 
-          <Route path={ROUTES.NEWS_V2} element={<AllNewsPageV2 />} />
+            <Route path={ROUTES.NEWS_V2} element={<AllNewsPageV2 />} />
 
-          <Route path={ROUTES.NEWS_DETAIL} element={<NewsDetailWrapper />} />
+            <Route path={ROUTES.NEWS_DETAIL} element={<NewsDetailWrapper />} />
 
-          <Route
-            path={ROUTES.IMMERSIVE_SHOWROOM}
-            element={<ImmersiveShowroomPage />}
-          />
+            <Route
+              path={ROUTES.IMMERSIVE_SHOWROOM}
+              element={<ImmersiveShowroomPage />}
+            />
 
-          <Route
-            path={ROUTES.BOOK_APPOINTMENT}
-            element={<BookAppointmentPage />}
-          />
+            <Route
+              path={ROUTES.BOOK_APPOINTMENT}
+              element={<BookAppointmentPage />}
+            />
 
-          <Route path={ROUTES.MILAN_SUBMIT}>
-            <Route index element={<SubmitPage />} />
-            <Route path="submit-success" element={<SubmitSuccessPage />} />
-          </Route>
+            <Route path={ROUTES.MILAN_SUBMIT}>
+              <Route index element={<SubmitPage />} />
+              <Route path="submit-success" element={<SubmitSuccessPage />} />
+            </Route>
 
-          {/* for observing UI universe-section final */}
-          <Route path="/universe-section" element={<UniverseSection />} />
+            {/* for observing UI universe-section final */}
+            <Route path="/universe-section" element={<UniverseSection />} />
 
-          <Route path={ROUTES.HOVER_EXPAND} element={<HoverExpandSection />} />
+            <Route
+              path={ROUTES.HOVER_EXPAND}
+              element={<HoverExpandSection />}
+            />
 
-          {/* Test route for ProductsLeft */}
-          <Route path={ROUTES.PRODUCTS_LEFT} element={<ProductsLeft />} />
+            {/* Test route for ProductsLeft */}
+            <Route path={ROUTES.PRODUCTS_LEFT} element={<ProductsLeft />} />
 
-          <Route path={ROUTES.VIEW_360} element={<View360 />} />
+            <Route path={ROUTES.VIEW_360} element={<View360 />} />
 
-          <Route path={ROUTES.USER_PROFILE} element={<Profile />} />
+            <Route path={ROUTES.USER_PROFILE} element={<Profile />} />
 
-          {/* Premium AR Route */}
-          <Route path={ROUTES.PREMIUM} element={<PremiumPage />} />
+            {/* Premium AR Route */}
+            <Route path={ROUTES.PREMIUM} element={<PremiumPage />} />
 
-          {/* Premium AR Development Route */}
-          <Route path={ROUTES.PREMIUM_DEV} element={<PremiumDevPage />} />
+            {/* Premium AR Development Route */}
+            <Route path={ROUTES.PREMIUM_DEV} element={<PremiumDevPage />} />
 
-          <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
+            <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
 
-          {/* Test route for ScrollEffect */}
-          <Route
-            path={ROUTES.SCROLL_EFFECT_TEST}
-            element={<ScrollEffectTestPage />}
-          />
+            <Route
+              path={ROUTES.DASHBOARD_ADMIN_MANAGE}
+              element={
+                <ProtectedRoute requiredRole="ADMIN">
+                  <ManageProducts />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Test route for ScrollEffect V2 */}
-          <Route
-            path={ROUTES.SCROLL_EFFECT_TEST_V2}
-            element={<ScrollEffectTestV2Page />}
-          />
+            <Route
+              path={ROUTES.DASHBOARD_ADMIN}
+              element={
+                <ProtectedRoute requiredRole="ADMIN">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Test route for NavbarV2 */}
-          <Route
-            path={ROUTES.NAVBAR_V2_TEST}
-            element={<NavbarV2TestPage />}
-          />
+            <Route
+              path={ROUTES.DASHBOARD_VENDOR}
+              element={
+                <ProtectedRoute requiredRole="VENDOR">
+                  <VendorDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Test route for NavbarV3 */}
-          <Route
-            path={ROUTES.NAVBAR_V3_TEST}
-            element={<NavbarV3TestPage />}
-          />
+            <Route
+              path={ROUTES.DASHBOARD_DESIGNER}
+              element={
+                <ProtectedRoute requiredRole="DESIGNER">
+                  <DesignerDashboard />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Test route for NavbarV4 */}
-          <Route
-            path={ROUTES.NAVBAR_V4_TEST}
-            element={<NavbarV4TestPage />}
-          />
-
-          {/* Test route for iJewel Viewer */}
-          {/* <Route
-            path={ROUTES.TEST_VIEWER}
-            element={<TestViewer />}
-          /> */}
-
-          {/* Test route for GlassSurfaceButton */}
-          <Route
-            path={ROUTES.GLASS_BUTTON_TEST}
-            element={<GlassSurfaceButtonTestPage />}
-          />
-
-          <Route
-            path={ROUTES.DASHBOARD_ADMIN_MANAGE}
-            element={
-              <ProtectedRoute requiredRole="ADMIN">
-                <ManageProducts />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path={ROUTES.DASHBOARD_ADMIN}
-            element={
-              <ProtectedRoute requiredRole="ADMIN">
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path={ROUTES.DASHBOARD_VENDOR}
-            element={
-              <ProtectedRoute requiredRole="VENDOR">
-                <VendorDashboard />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path={ROUTES.DASHBOARD_DESIGNER}
-            element={
-              <ProtectedRoute requiredRole="DESIGNER">
-                <DesignerDashboard />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* 404 - Catch all route for non-existent paths */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </Suspense>
+            {/* 404 - Catch all route for non-existent paths */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </main>
 
       {/* Spacer to reveal footer */}

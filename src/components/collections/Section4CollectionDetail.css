@@ -121,20 +121,26 @@
   transform: scale(1.1);
 }
 
+.section4-collection-item-large {
+  grid-column: span 1;
+  --parallax-img-offset: 0%;
+}
+
 .section4-collection-item-large::before {
   display: none; /* No gradient overlay on large model images */
 }
 
 .section4-collection-item-large img {
-  transition: none;
+  position: relative;
+  top: -30%;
+  height: 120%;
+  will-change: transform;
+  transform: translateY(var(--parallax-img-offset));
+  transition: none; /* Override inherited transition for smooth parallax */
 }
 
 .section4-collection-item-large:hover img {
-  transform: none;
-}
-
-.section4-collection-item-large {
-  grid-column: span 1;
+  transform: translateY(var(--parallax-img-offset));
 }
 
 .section4-collection-label {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { collectionsAPI } from "@services/api";
 import { MediaImage } from "@components/common/media";
 import ProductCarouselItem from "./ProductCarouselItem";
@@ -11,6 +11,30 @@ const Section4CollectionDetail = ({
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const largeItemRef = useRef(null);
+
+  // Parallax effect for large item
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!largeItemRef.current) return;
+
+      const windowHeight = window.innerHeight;
+      const rect = largeItemRef.current.getBoundingClientRect();
+      const scrollDistance = windowHeight - rect.top;
+      const totalDistance = windowHeight + rect.height;
+      const scrollRatio = Math.max(0, Math.min(1, scrollDistance / totalDistance));
+
+      // Image moves DOWN slowly (0% → 30%)
+      const imgParallax = scrollRatio * 30;
+
+      largeItemRef.current.style.setProperty("--parallax-img-offset", `${imgParallax}%`);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Each product has multiple images for carousel
   const productCards = Array(12)
@@ -232,7 +256,7 @@ const Section4CollectionDetail = ({
               />
             ))}
           </div>
-          <div className="section4-collection-item section4-collection-item-large">
+          <div ref={largeItemRef} className="section4-collection-item section4-collection-item-large">
             <MediaImage src={modelImage} alt="Model showcase" />
           </div>
         </div>
