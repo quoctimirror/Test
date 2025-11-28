@@ -22,7 +22,7 @@ export const SHAPE_CONFIGS = {
   },
   Trilogy: {
     shape: 'Trilogy',
-    modelId: 'Kdof7H4YT9uh4NsSUfdd5Q',
+    modelId: 'HjkNylDSRNSbJboRBLBeOQ',
     metal: 'Gold 24k',
     band: 'Single band'
   },
@@ -50,12 +50,19 @@ export const SHAPE_CONFIGS = {
     metal: 'Silver',
     band: 'Single band'
   },
+  Flower: {
+    shape: 'New',
+    modelId: 'dGVcGf5ZSwq20ULDHOeaNQ',
+    metal: 'Silver',
+    band: 'Single band'
+  },
   Example: {
     shape: 'Example',
     modelId: 'RUsrBi-vQey2vExitZOYig',
     metal: 'Gold 24k',
     band: 'Single band'
   },
+
 };
 
 // Get list of available shapes
