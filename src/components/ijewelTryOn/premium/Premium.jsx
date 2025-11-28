@@ -8,10 +8,10 @@ const MODELS = [
   { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' },
   { id: 'Qteju98xRgKe8y5KylzXIw', name: 'Heart', basename: 'drive' },
   { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' },
+  { id: 'Hprd00uZRoq8t0Ou1YlWMg', name: 'Oval', basename: 'drive' },
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
   { id: 'HB3RidmJSdezIO1T2hdXcQ', name: 'Flower', basename: 'drive' }, // sai hoan toan lam lai
-  { id: 'Hprd00uZRoq8t0Ou1YlWMg', name: 'Myfav', basename: 'drive' }, // standard
-  { id: 'LvYj0l_IQeehkfX0ce4Zgw', name: 'Oval', basename: 'drive' }, // sai lech
+  { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' }, // standard
 ];
 
 const getModelFromURL = () => {
