@@ -17,7 +17,7 @@
     box-sizing: border-box;
     transition: transform 0.5s ease-in-out, z-index 0s 0.5s;
     overflow: hidden;
-    padding: 24px 18px;
+    padding: calc(20 / 652 * 90vh) calc(18 / 652 * 90vh);
 }
 
 .pv2-mobile-config-modal.open {
@@ -51,7 +51,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 2vh;
+    gap: calc(8 / 652 * 90vh);
 
     overflow: hidden;
 }
@@ -63,17 +63,11 @@
     -webkit-text-fill-color: #BC224C !important;
     filter: none !important;
     backdrop-filter: none !important;
-    font-size: 32px !important;
-    font-style: italic !important;
-    font-weight: 300 !important;
-    line-height: 100% !important;
-    letter-spacing: 0 !important;
+    /* font-size kế thừa từ heading-2--no-margin trong typography.css */
     margin: 0 !important;
     padding: 0 !important;
-    flex-shrink: 1;
-    /* Cho phép co lại nếu cần */
+    flex-shrink: 0;
     min-height: 0;
-    /* Cho phép nhỏ hơn nội dung */
 }
 
 /* 2️⃣ CONFIGURATION OPTIONS */
@@ -93,11 +87,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-height: 46px;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    height: calc(40 / 652 * 90vh);
+    min-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    flex-shrink: 1;
+    flex-shrink: 0;
 }
 
 .pv2-mobile-option-label {
@@ -107,7 +102,7 @@
 .pv2-mobile-option-value-container {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: calc(12 / 652 * 90vh);
 }
 
 .pv2-mobile-option-value {
@@ -132,7 +127,7 @@
 .pv2-mobile-size-selector {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: calc(12 / 652 * 90vh);
 }
 
 .pv2-mobile-size-value {
@@ -155,26 +150,22 @@
 .pv2-mobile-quantity-selector {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: calc(8 / 652 * 90vh);
     justify-self: flex-end;
     margin-left: auto;
 }
 
 .pv2-mobile-quantity-btn {
-    width: 32px;
-    height: 32px;
+    width: calc(32 / 652 * 90vh);
+    height: calc(32 / 652 * 90vh);
     border: 1px solid rgba(255, 255, 255, 0.5);
     background: transparent;
     color: #FFFFFF;
-    font-size: 16px;
-    /* Giảm từ 18px */
+    font-size: calc(16 / 652 * 90vh);
     font-weight: 300;
     line-height: 1;
-    /* Đảm bảo text nằm giữa */
     padding: 0;
-    /* Bỏ padding default */
-    padding-bottom: 2px;
-    /* Nâng text lên bằng cách thêm padding dưới */
+    padding-bottom: calc(2 / 652 * 90vh);
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
@@ -194,13 +185,13 @@
 
 .pv2-mobile-quantity-value {
     color: #FFFFFF !important;
-    width: 30px;
+    width: calc(30 / 652 * 90vh);
     text-align: center;
     background: transparent !important;
     border: none !important;
     outline: none !important;
     font-family: var(--font-bt-beau-sans) !important;
-    font-size: 16px !important;
+    font-size: calc(16 / 652 * 90vh) !important;
     font-weight: 400 !important;
     line-height: 1.2 !important;
 }
@@ -219,18 +210,16 @@
 /* 3️⃣ ADDITIONAL INFO */
 .pv2-mobile-additional-info {
     margin: 0;
-    margin-top: 24px;
-    /* 24/720 for mobile */
+    margin-top: calc(12 / 652 * 90vh);
     padding: 0;
-    flex-shrink: 1;
-    /* Cho phép co lại */
+    flex-shrink: 0;
     min-height: 0;
 }
 
 .pv2-mobile-shipping-info {
     color: rgba(255, 255, 255, 0.5) !important;
     text-align: left;
-    margin: 0 0 8px 0;
+    margin: 0 0 calc(8 / 652 * 90vh) 0;
     line-height: 1.2 !important;
 }
 
@@ -263,52 +252,45 @@
     color: #FFFFFF !important;
     text-align: center;
     align-self: stretch;
-    margin-bottom: 10px;
-    /* 24/720 for mobile */
+    margin-bottom: calc(8 / 652 * 90vh);
 }
 
 /* 5️⃣ + 6️⃣ BUTTONS CONTAINER - Chứa cả Action Buttons và Order Button */
 .pv2-mobile-buttons-container {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    /* Giảm gap để fit 60vh */
+    gap: calc(6 / 652 * 90vh);
     margin: 0;
     padding: 0;
     width: 100%;
     flex-shrink: 0;
-    /* KHÔNG co lại - giữ nguyên size */
 }
 
 /* 5️⃣ ACTION BUTTONS (wishlist + appointment) */
 .pv2-mobile-modal-action-buttons {
     display: flex;
-    gap: 6px;
-    /* Giảm gap */
+    gap: calc(6 / 652 * 90vh);
     margin: 0;
     padding: 0;
     width: 100%;
     align-items: center;
     flex-shrink: 0;
-    /* KHÔNG co lại */
-    min-height: 36px;
-    /* Giảm min height để fit 60vh */
+    min-height: calc(44 / 652 * 90vh);
 }
 
 .pv2-mobile-modal-wishlist-btn {
     flex-shrink: 0;
-    width: 36px;
-    /* Giảm từ 40px để fit 60vh */
+    width: calc(44 / 652 * 90vh);
 }
 
 .pv2-mobile-modal-wishlist-btn .shine-button-wrap {
-    width: 36px !important;
-    height: 36px !important;
+    width: calc(44 / 652 * 90vh) !important;
+    height: calc(44 / 652 * 90vh) !important;
 }
 
 .pv2-mobile-modal-wishlist-btn .shine-glass-button {
-    width: 36px !important;
-    height: 36px !important;
+    width: calc(44 / 652 * 90vh) !important;
+    height: calc(44 / 652 * 90vh) !important;
     border: none !important;
     border-radius: 50% !important;
     background: transparent !important;
@@ -355,7 +337,7 @@
 
 .pv2-mobile-modal-appointment-btn {
     flex: 1 1 auto;
-    height: 49px !important;
+    height: calc(44 / 652 * 90vh) !important;
     min-width: 0;
     width: 100%;
     display: flex;
@@ -363,15 +345,15 @@
 
 .pv2-mobile-modal-appointment-btn .shine-button-wrap {
     width: 100% !important;
-    height: 49px !important;
+    height: calc(44 / 652 * 90vh) !important;
     max-width: none !important;
     flex: 1 !important;
 }
 
 .pv2-mobile-modal-appointment-btn .shine-glass-button {
     width: 100% !important;
-    height: 49px !important;
-    padding: 16px 20px !important;
+    height: calc(44 / 652 * 90vh) !important;
+    padding: calc(12 / 652 * 90vh) calc(16 / 652 * 90vh) !important;
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
@@ -414,8 +396,8 @@
 /* 6️⃣ ORDER NOW BUTTON (nằm trong buttons-container) */
 .pv2-mobile-modal-order-btn {
     width: 100%;
-    height: 49px;
-    min-height: 49px;
+    height: calc(44 / 652 * 90vh);
+    min-height: calc(44 / 652 * 90vh);
     background: rgba(255, 255, 255, 0.75);
     border: 0.5px solid #FFF;
     color: #000000;
@@ -425,13 +407,13 @@
     box-shadow: -1px -1px 4px 0 rgba(255, 255, 255, 0.25) inset, 1px 1px 4px 0 rgba(255, 255, 255, 0.50) inset;
     backdrop-filter: blur(6px);
     box-sizing: border-box;
-    padding: 16px 20px;
+    padding: calc(12 / 652 * 90vh) calc(16 / 652 * 90vh);
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 14px !important;
+    font-size: calc(14 / 652 * 90vh) !important;
 }
 
 .pv2-mobile-modal-order-btn:hover {
@@ -444,19 +426,15 @@
 .pv2-mobile-config-caret-down {
     margin: 0;
     padding: 0;
-    width: 20px;
-    /* Giảm từ 24px */
-    height: 20px;
-    /* Giảm từ 24px */
-    min-height: 20px;
-    /* Đảm bảo min height */
+    width: calc(16 / 652 * 90vh);
+    height: calc(16 / 652 * 90vh);
+    min-height: calc(16 / 652 * 90vh);
     opacity: 0.5;
     cursor: pointer;
     transition: opacity 0.2s ease;
     transform: rotate(180deg);
     align-self: center;
     flex-shrink: 0;
-    /* KHÔNG co lại */
 }
 
 .pv2-mobile-config-caret-down:hover {
@@ -523,50 +501,117 @@
 /* ===== TABLET (≥ 768px) - Still visible on tablet ===== */
 @media (min-width: 768px) {
 
-    /* Modal vẫn hiển thị trên tablet, chỉ điều chỉnh sizing */
+    /* Reset về giá trị cố định cho tablet */
+    .pv2-mobile-config-modal {
+        padding: 24px 18px;
+    }
+
     .pv2-mobile-config-modal.open {
         padding-top: 2.5vh;
-        /* 24/960 */
         padding-bottom: 5vh;
-        /* 48/960 */
         padding-left: 5.75vw;
-        /* 48/834 */
         padding-right: 5.75vw;
-        /* 48/834 */
         box-sizing: border-box;
     }
 
     .pv2-mobile-config-content {
         left: 0;
         right: 0;
+        gap: 2vh;
     }
 
-    /* Option rows - cách đều với đơn vị tương đối */
+    /* font-size của title kế thừa từ typography.css */
+
     .pv2-mobile-option-row {
+        height: 46px;
         min-height: 5vh;
-        /* Chiều cao tối thiểu tương đối */
         padding-top: 1.5vh;
-        /* Padding đều phía trên */
         padding-bottom: 1.5vh;
-        /* Padding đều phía dưới */
     }
 
-    /* Additional info spacing */
+    .pv2-mobile-option-value-container {
+        gap: 12px;
+    }
+
+    .pv2-mobile-size-selector {
+        gap: 12px;
+    }
+
+    .pv2-mobile-quantity-selector {
+        gap: 8px;
+    }
+
+    .pv2-mobile-quantity-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        padding-bottom: 2px;
+    }
+
+    .pv2-mobile-quantity-value {
+        width: 30px;
+        font-size: 16px !important;
+    }
+
     .pv2-mobile-additional-info {
-        /* padding-top: 2.5vh; */
-        /* 24/960 */
+        margin-top: 24px;
     }
 
-    /* Price spacing */
+    .pv2-mobile-shipping-info {
+        margin: 0 0 8px 0;
+    }
+
     .pv2-mobile-price {
         margin-bottom: 2.5vh;
-        /* 24/960 */
     }
 
-    /* Action buttons gap */
+    .pv2-mobile-buttons-container {
+        gap: 6px;
+    }
+
     .pv2-mobile-modal-action-buttons {
         gap: 1.04vh;
-        /* 10/960 */
+        min-height: 49px;
+    }
+
+    .pv2-mobile-modal-wishlist-btn {
+        width: 44px;
+    }
+
+    .pv2-mobile-modal-wishlist-btn .shine-button-wrap {
+        width: 44px !important;
+        height: 44px !important;
+    }
+
+    .pv2-mobile-modal-wishlist-btn .shine-glass-button {
+        width: 44px !important;
+        height: 44px !important;
+    }
+
+    .pv2-mobile-modal-appointment-btn {
+        height: 49px !important;
+    }
+
+    .pv2-mobile-modal-appointment-btn .shine-button-wrap {
+        height: 49px !important;
+    }
+
+    .pv2-mobile-modal-appointment-btn .shine-glass-button {
+        height: 49px !important;
+        padding: 16px 20px !important;
+    }
+
+    .pv2-mobile-modal-order-btn {
+        height: 49px;
+        min-height: 49px;
+        padding: 16px 20px;
+        font-size: 14px !important;
+    }
+
+    .pv2-mobile-config-caret-down {
+        width: 20px;
+        height: 20px;
+        min-height: 20px;
     }
 }
 
