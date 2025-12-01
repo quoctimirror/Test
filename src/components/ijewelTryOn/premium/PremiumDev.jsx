@@ -12,7 +12,8 @@ const MODELS = [
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
   // { id: 'dGVcGf5ZSwq20ULDHOeaNQ', name: 'Flower', basename: 'drive' },
   { id: 'ZLwefZohRdatJ2eW7S68Fg', name: 'Myfav', basename: 'drive' }, // chua sai dai
-  { id: 'HjkNylDSRNSbJboRBLBeOQ', name: 'Trilogy', basename: 'drive' } // file nay chua biet co file sua chua
+  { id: 'HjkNylDSRNSbJboRBLBeOQ', name: 'Trilogy', basename: 'drive' }, // file nay chua biet co file sua chua
+  { id: 'MyBwJmwvTnKefdm0WwTsqg', name: 'Bullet', basename: 'drive' }
 ];
 
 const getModelFromURL = () => {
