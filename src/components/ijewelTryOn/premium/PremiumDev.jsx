@@ -6,17 +6,16 @@ const MODELS = [
   { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' }, // chuan
   { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }, // chuan
   { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' }, // chuan, chi co sai luc viewer thoi 
-  { id: 'dGVcGf5ZSwq20ULDHOeaNQ', name: 'Flower', basename: 'drive' },
-  { id: 'Qteju98xRgKe8y5KylzXIw', name: 'Heart', basename: 'drive' },
-  { id: 'HjkNylDSRNSbJboRBLBeOQ', name: 'Triology', basename: 'drive' },
+  { id: 'QyhkCIThTLO_82FRoYJbJA', name: 'Triology', basename: 'drive' },
   // ==============================================================================================================
   // { id: 'dGVcGf5ZSwq20ULDHOeaNQ', name: 'Flower', basename: 'drive' },
+  { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
   { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' }, // sai đai thôi còn lại đúng
   { id: 'ZLwefZohRdatJ2eW7S68Fg', name: 'Myfav', basename: 'drive' }, // sai đai thôi còn lại đúng với file cũ
   { id: 'HjkNylDSRNSbJboRBLBeOQ', name: 'Trilogy', basename: 'drive' }, // file nay chua biet co file sua chua
-  { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
-
-  { id: 'duPabpMCTeu6JohkfH_Btg', name: 'Oval', basename: 'drive' }, // chua duyet
+  { id: 'dGVcGf5ZSwq20ULDHOeaNQ', name: 'Flower', basename: 'drive' }, // chua duyet len production duoc, sai ar
+  { id: 'duPabpMCTeu6JohkfH_Btg', name: 'Oval', basename: 'drive' }, // chua duyet len production duoc, sai ar
+  { id: 'Qteju98xRgKe8y5KylzXIw', name: 'Heart', basename: 'drive' }, // sai ar
 ];
 
 const getModelFromURL = () => {
