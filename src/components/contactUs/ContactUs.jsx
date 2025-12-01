@@ -1,16 +1,15 @@
+import { useState } from "react";
 import "./ContactUs.css";
-import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButtonOpposite from "@components/common/button/UnderlineButtonOpposite";
 import { MediaImage } from "@components/common/media";
-import { ROUTES } from "@/constants/routes";
+import BookingModal from "@components/booking/BookingModal";
 
 const ContactUs = () => {
-  const navigate = useNavigate();
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-  const handleBookAppointmentClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.BOOK_APPOINTMENT);
+  const handleBookAppointmentClick = () => {
+    setIsBookingModalOpen(true);
   };
 
   const handleLiveChatClick = () => {
@@ -62,6 +61,12 @@ const ContactUs = () => {
           </UnderlineButtonOpposite>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </section>
   );
 };

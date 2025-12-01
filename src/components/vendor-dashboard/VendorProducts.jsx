@@ -91,10 +91,10 @@ const VendorProducts = ({ vendorInfo }) => {
       {/* Products Table */}
       <div className="vendor-card">
         <div className="vendor-card-header">
-          <h3 className="vendor-card-title">
+          <h3 className="vendor-card-title heading-3--no-margin">
             My Products ({filteredProducts.length})
             {vendorInfo && (
-              <span style={{ fontSize: "14px", color: "#666", fontWeight: "normal", marginLeft: "0.5rem" }}>
+              <span className="bodytext-5--no-margin" style={{ color: "#666", fontWeight: "normal", marginLeft: "0.5rem" }}>
                 - {vendorInfo.name} ({vendorInfo.code})
               </span>
             )}

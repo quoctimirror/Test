@@ -74,9 +74,9 @@ const Lumex91 = () => {
     const windowHeight = window.innerHeight;
 
     // Start: top of box enters bottom of viewport
-    // End: bottom of box reaches top of viewport
+    // End: box scrolled 30% past top of viewport (slower animation)
     const scrollStart = windowHeight;
-    const scrollEnd = -rect.height;
+    const scrollEnd = -rect.height * 0.3;
     const scrollRange = scrollStart - scrollEnd;
     const currentPosition = rect.top;
 

@@ -84,6 +84,14 @@ export const useNavbarTheme = () => {
           const computedStyle = window.getComputedStyle(section);
           const position = computedStyle.position;
           const zIndex = parseInt(computedStyle.zIndex) || 0;
+          const opacity = parseFloat(computedStyle.opacity);
+          const pointerEvents = computedStyle.pointerEvents;
+          const visibility = computedStyle.visibility;
+
+          // Skip invisible elements (opacity near 0, pointer-events none, or hidden)
+          if (opacity < 0.1 || pointerEvents === 'none' || visibility === 'hidden') {
+            return;
+          }
 
           candidates.push({ section, position, zIndex, isFooter: false });
         }
@@ -108,8 +116,9 @@ export const useNavbarTheme = () => {
 
       // Sort candidates by priority:
       // 1. Normal sections first (isFooter: false)
-      // 2. Among normal sections: positioned with higher z-index first
-      // 3. Footer sections last (isFooter: true)
+      // 2. Fixed positioned sections have highest priority (always on top visually)
+      // 3. Among other positioned sections: higher z-index first
+      // 4. Footer sections last (isFooter: true)
       if (candidates.length > 0) {
         candidates.sort((a, b) => {
           // Footer always loses to normal sections
@@ -117,10 +126,16 @@ export const useNavbarTheme = () => {
           if (a.isFooter && !b.isFooter) return 1;
 
           // Both are same type, check positioning
+          const aIsFixed = a.position === 'fixed';
+          const bIsFixed = b.position === 'fixed';
           const aIsPositioned = a.position !== 'static';
           const bIsPositioned = b.position !== 'static';
 
-          // Both positioned: compare z-index
+          // Fixed position has highest priority (always visible on top)
+          if (aIsFixed && !bIsFixed) return -1;
+          if (!aIsFixed && bIsFixed) return 1;
+
+          // Both fixed or both not fixed: compare z-index
           if (aIsPositioned && bIsPositioned) {
             return b.zIndex - a.zIndex; // Higher z-index first
           }

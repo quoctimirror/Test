@@ -40,7 +40,6 @@
   contain: layout style;
   isolation: isolate;
   transform: translateZ(0);
-  will-change: contents;
   position: relative;
   box-sizing: border-box;
   background: #f6f6f6;
