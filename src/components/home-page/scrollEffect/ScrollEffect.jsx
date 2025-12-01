@@ -926,12 +926,6 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
         </div>
       )}
 
-      {/* Fixed Lumex91 Image */}
-      {!isImmersiveShowroomPage && !isAnyOverlayOpen && (
-        <div className="fixed-lumex91-container">
-          <img src="/lumex91(1).png" alt="Lumex91" className="lumex91-image" />
-        </div>
-      )}
 
       {/* Fixed Arrow Button - visible except in footer and when overlay is open */}
       {!isImmersiveShowroomPage && !isAnyOverlayOpen && isArrowVisible && (
