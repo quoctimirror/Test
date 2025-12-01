@@ -8,16 +8,17 @@ const MODELS = [
   { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' }, // chuan, chi co sai luc viewer thoi 
   { id: 'N1w9lJ3FQfOWsrC7jeeYfA', name: 'Oval', basename: 'drive' }, // chuan
   { id: 'DfRULQ-OSk6TjbYAcB9zkA', name: 'Fistion', basename: 'drive' }, // chuan
+  { id: 'FWV7-qA6QEG_Ju8pjSItuA', name: 'Triology', basename: 'drive' }, // chuan
+  { id: 'QAauSV24QiuM5CxA_1797w', name: 'Myfav', basename: 'drive' }, // chuan
   // ==============================================================================================================
   // đang sửa
-  // { id: 'dGVcGf5ZSwq20ULDHOeaNQ', name: 'Flower', basename: 'drive' },
-  { id: 'QAauSV24QiuM5CxA_1797w', name: 'Myfav', basename: 'drive' }, // sai đai thôi còn lại đúng với file cũ
-  { id: 'FWV7-qA6QEG_Ju8pjSItuA', name: 'Triology', basename: 'drive' }, // sai ar hoàn toàn, chưa biết cứu kiểu gì, sai cam trước tay phải
+  { id: 'YS4Zch2mShSnA-LABIS5wQ', name: 'Flower', basename: 'drive' }, // chua duyet len production duoc, sai ar
+  { id: 'czl3wmsyTDWrV420qcKOew', name: 'Heart', basename: 'drive' }, // sai ar
   // ==============================================================================================================
   // chịu chúa cứu, hữu duyên cứu được thì cứu
-  { id: 'Qteju98xRgKe8y5KylzXIw', name: 'Heart', basename: 'drive' }, // sai ar
+
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
-  { id: 'dGVcGf5ZSwq20ULDHOeaNQ', name: 'Flower', basename: 'drive' }, // chua duyet len production duoc, sai ar
+
 ];
 
 const getModelFromURL = () => {
