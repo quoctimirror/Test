@@ -63,6 +63,48 @@ export const optimizedTransitionUtils = {
 
   // Performance optimizations
   optimizations: {
+    // Disable video autoplay in cloned content to prevent flickering
+    disableClonedVideos: (container) => {
+      if (!container) return;
+
+      // Handle slogan-section specially - it has position:fixed which escapes clone
+      const sloganSection = container.querySelector('.slogan-section');
+      if (sloganSection) {
+        // Change from fixed to absolute so it stays within clone container
+        sloganSection.style.position = 'absolute';
+        sloganSection.style.zIndex = '0';
+      }
+
+      // Replace videos with their poster images
+      const videos = container.querySelectorAll('video');
+      videos.forEach(video => {
+        const posterSrc = video.getAttribute('poster');
+
+        if (posterSrc) {
+          // Create img element with poster
+          const img = document.createElement('img');
+          img.src = posterSrc;
+          img.className = video.className;
+          img.style.cssText = window.getComputedStyle(video).cssText;
+          img.style.objectFit = 'cover';
+          img.style.position = 'absolute';
+          img.style.top = '50%';
+          img.style.left = '50%';
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.transform = 'translate(-50%, -50%)';
+
+          // Replace video with image
+          video.parentNode.replaceChild(img, video);
+        } else {
+          // No poster - just pause and hide
+          video.removeAttribute('autoplay');
+          video.pause();
+          video.muted = true;
+        }
+      });
+    },
+
     // Enable GPU acceleration
     enableGPU: (element) => {
       if (!element) return;
@@ -281,6 +323,7 @@ export const optimizedTransitionUtils = {
       // Create the actual frozen page content
       const frozenPage = document.createElement("div");
       frozenPage.innerHTML = originalContent;
+      optimizedTransitionUtils.optimizations.disableClonedVideos(frozenPage);
       frozenPage.style.cssText = `
         position: absolute;
         top: ${-currentScrollY}px;
@@ -359,6 +402,7 @@ export const optimizedTransitionUtils = {
       // Create the actual page content clone
       const currentPageClone = document.createElement("div");
       currentPageClone.innerHTML = originalContent;
+      optimizedTransitionUtils.optimizations.disableClonedVideos(currentPageClone);
       currentPageClone.style.cssText = `
         position: absolute;
         top: ${-currentScrollY}px;
@@ -374,6 +418,7 @@ export const optimizedTransitionUtils = {
       // Create new page container with slide-up animation
       const newPageContainer = document.createElement("div");
       newPageContainer.innerHTML = root.innerHTML;
+      optimizedTransitionUtils.optimizations.disableClonedVideos(newPageContainer);
       newPageContainer.style.cssText = `
         position: fixed;
         top: 0;
@@ -579,6 +624,7 @@ export const optimizedTransitionUtils = {
         pointer-events: none;
       `;
       overlay.innerHTML = currentContent;
+      optimizedTransitionUtils.optimizations.disableClonedVideos(overlay);
       document.body.appendChild(overlay);
 
       // Navigate in background - Pass options to preserve state
@@ -650,6 +696,7 @@ export const optimizedTransitionUtils = {
         pointer-events: none;
       `;
       newLayer.innerHTML = newContent;
+      optimizedTransitionUtils.optimizations.disableClonedVideos(newLayer);
       document.body.appendChild(newLayer);
 
       // Fade in new content

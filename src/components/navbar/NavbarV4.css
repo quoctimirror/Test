@@ -299,6 +299,20 @@
     opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Default: hide underlines in horizontal list - except hover */
+.menu-v4-horizontal-list .underline-button-text::after {
+  opacity: 0;
+  transform: scaleX(0);
+  transition: transform 0.3s linear, opacity 0.3s linear;
+}
+
+/* Hover: show underline immediately */
+.menu-v4-horizontal-list li:hover .underline-button-text::after {
+  opacity: 1;
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
 /* Collapse with depth effect when scrolled or menu popup opens - collapse to Home button position */
 .menu-v4-horizontal-list.menu-open,
 .menu-v4-horizontal-list.scrolled {
@@ -323,17 +337,12 @@
   color: inherit;
 }
 
-/* Active menu item - show underline */
-.menu-v4-horizontal-list li.active .underline-button-text::after {
+/* Active menu item - show underline with delay to sync with list expand */
+.menu-v4-horizontal-list:not(.scrolled):not(.menu-open) li.active .underline-button-text::after {
+  opacity: 1;
   transform: scaleX(1);
   transform-origin: left center;
-}
-
-/* Hide all underlines when menu is collapsed */
-.menu-v4-horizontal-list.scrolled .underline-button-text::after,
-.menu-v4-horizontal-list.menu-open .underline-button-text::after {
-  opacity: 0 !important;
-  transform: scaleX(0) !important;
+  transition: transform 0.3s ease 0.6s, opacity 0.3s ease 0.6s; /* 0.6s delay matches list expand duration */
 }
 
 /* Account link container với blend mode */
@@ -1493,10 +1502,17 @@
   @keyframes fadeInMenuMobile {
     from {
       opacity: 0;
+      transform: none;
     }
     to {
       opacity: 1;
+      transform: none;
     }
+  }
+
+  /* Override initial transform for mobile */
+  .menu-v4-groups {
+    transform: none;
   }
 
   /* Override closing animation for mobile */
@@ -1612,7 +1628,7 @@
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 50%;
-    padding: 3px;
+    padding: 0px;
     width: 48px;
     height: 48px;
     display: flex;
@@ -1669,10 +1685,17 @@
   @keyframes fadeInMenuTablet {
     from {
       opacity: 0;
+      transform: none;
     }
     to {
       opacity: 1;
+      transform: none;
     }
+  }
+
+  /* Override initial transform for tablet */
+  .menu-v4-groups {
+    transform: none;
   }
 
   /* Override closing animation for tablet */
@@ -2086,6 +2109,54 @@
     .menu-v4-button {
     background: rgba(255, 255, 255, 0.05) !important;
     border-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  /* Force white color for menu items on mobile/tablet (overlay has dark background) */
+  .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+    .menu-v4-popup
+    .underline-button-text {
+    color: rgba(255, 255, 255, 1) !important;
+  }
+
+  .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+    .menu-v4-popup
+    .underline-button-text::after {
+    background: rgba(255, 255, 255, 1) !important;
+  }
+
+  /* Menu icons white on mobile/tablet */
+  .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+    .menu-v4-popup
+    svg {
+    color: rgba(255, 255, 255, 1) !important;
+  }
+
+  .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+    .menu-v4-popup
+    svg
+    path {
+    stroke: rgba(255, 255, 255, 1) !important;
+  }
+
+  /* Menu divider white on mobile/tablet */
+  .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+    .menu-v4-popup
+    .menu-v4-divider {
+    background: rgba(255, 255, 255, 0.3) !important;
+  }
+
+  /* Menu button icon white on mobile/tablet when menu open */
+  .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+    .menu-v4-button
+    .menu-v4-icon {
+    color: rgba(255, 255, 255, 1) !important;
+  }
+
+  .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
+    .menu-v4-icon-container
+    svg
+    path {
+    stroke: rgba(255, 255, 255, 1) !important;
   }
 }
 

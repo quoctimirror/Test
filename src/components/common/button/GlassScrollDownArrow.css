@@ -128,13 +128,11 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .glass-scroll-arrow__icon {
-    width: 22px;
-    height: 22px;
+  .glass-scroll-arrow {
+    width: 48px !important;
+    height: 48px !important;
   }
-}
 
-@media (max-width: 480px) {
   .glass-scroll-arrow__icon {
     width: 20px;
     height: 20px;

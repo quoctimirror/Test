@@ -9,11 +9,13 @@ import fbIcon from "@assets/images/icons/fb_icon.svg";
 import instaIcon from "@assets/images/icons/insta_icon.svg";
 import tiktokIcon from "@assets/images/icons/tiktok_icon.svg";
 import PrismaticBurst from "@components/common/prismatic-burst/PrismaticBurst";
+import BookingModal from "@components/booking/BookingModal";
 
 const Footer = () => {
   const navigate = useNavigate();
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [shouldRenderBurst, setShouldRenderBurst] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const footerRef = useRef(null);
 
   const handleHomeClick = async (e) => {
@@ -102,17 +104,9 @@ const Footer = () => {
     );
   };
 
-  const handleBookAppointmentClick = async (e) => {
+  const handleBookAppointmentClick = (e) => {
     e.preventDefault();
-    if (window.location.pathname === ROUTES.BOOK_APPOINTMENT) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(
-      navigate,
-      ROUTES.BOOK_APPOINTMENT
-    );
+    setIsBookingModalOpen(true);
   };
 
   useEffect(() => {
@@ -123,6 +117,12 @@ const Footer = () => {
       if (rafId) return; // Throttle with RAF
 
       rafId = requestAnimationFrame(() => {
+        // Skip when body is fixed (menu is open) - check INSIDE RAF
+        if (document.body.style.position === 'fixed') {
+          rafId = null;
+          return;
+        }
+
         const scrollPosition = window.scrollY + window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
 
@@ -371,6 +371,12 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </footer>
   );
 };

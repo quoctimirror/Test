@@ -33,11 +33,11 @@ const VendorOrders = () => {
   return (
     <div className="vendor-card">
       <div className="vendor-card-header">
-        <h3 className="vendor-card-title">Orders Management</h3>
+        <h3 className="vendor-card-title heading-3--no-margin">Orders Management</h3>
       </div>
       <div className="vendor-card-body">
-        {loading && <p>Loading orders...</p>}
-        {error && <p className="text-red-600">{error}</p>}
+        {loading && <p className="bodytext-4--no-margin">Loading orders...</p>}
+        {error && <p className="bodytext-4--no-margin" style={{ color: "#dc3545" }}>{error}</p>}
         {!loading && !error && (
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm vendor-table">

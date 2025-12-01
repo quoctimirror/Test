@@ -1,49 +1,78 @@
-import React, { useState, useEffect } from "react";
-import { MediaVideo } from "@components/common/media";
+import { useState, useEffect, useRef } from "react";
+import { getVideoUrl } from "@utils/cloudflareMediaUtil";
 import "./SloganSection.css";
+
+// Video from CDN, poster from public folder
+const VIDEO_SRC = getVideoUrl("about/section1/Top_video.mp4");
+const POSTER_SRC = "/about/media_about_section1_Top_video_poster.jpg";
 
 const SloganSection = () => {
   const [isNearFooter, setIsNearFooter] = useState(false);
+  const videoRef = useRef(null);
+
+  // Handle video playback - only start after transition complete
+  useEffect(() => {
+    let mounted = true;
+
+    const startVideo = () => {
+      if (!mounted || !videoRef.current) return;
+      videoRef.current.play().catch(() => {
+        // Autoplay blocked - video will show poster
+      });
+    };
+
+    const handleTransitionComplete = () => {
+      // Delay slightly to ensure DOM is stable
+      setTimeout(startVideo, 150);
+    };
+
+    // Start video on initial mount
+    setTimeout(startVideo, 100);
+
+    // Also listen for transition complete
+    window.addEventListener("pageTransitionComplete", handleTransitionComplete);
+
+    return () => {
+      mounted = false;
+      window.removeEventListener(
+        "pageTransitionComplete",
+        handleTransitionComplete
+      );
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY + window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
-
-      // Hide slogan very early - when within 3 viewport heights from bottom
-      // This ensures slogan disappears well before footer reveal, even with extremely fast scrolling
-      const threshold = documentHeight - (window.innerHeight * 3);
-      const nearFooter = scrollPosition >= threshold;
-
-      setIsNearFooter(nearFooter);
+      const threshold = documentHeight - window.innerHeight * 3;
+      setIsNearFooter(scrollPosition >= threshold);
     };
 
-    // Check immediately on mount
     handleScroll();
-
-    // Listen to scroll without throttle for immediate response on fast scroll
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <div className="slogan-section-wrapper">
-      <div className={`slogan-section ${isNearFooter ? 'hidden' : ''}`}>
-        <MediaVideo
+      <div className={`slogan-section ${isNearFooter ? "hidden" : ""}`}>
+        <video
+          ref={videoRef}
           className="slogan-background-video"
-          src="about/section1/Top_video.mp4"
-          autoPlay
+          src={VIDEO_SRC}
+          poster={POSTER_SRC}
           muted
           loop
           playsInline
+          preload="auto"
         />
 
         <div className="slogan-content">
           <p className="bodytext-4--no-margin slogan-text">
-            In a world where diamond mines scar the earth, Mirror offers a different reflection - one where science becomes soul, and beauty carries meaning.
+            In a world where diamond mines scar the earth, Mirror offers a
+            different reflection - one where science becomes soul, and beauty
+            carries meaning.
           </p>
         </div>
       </div>

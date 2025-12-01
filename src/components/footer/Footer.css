@@ -409,6 +409,10 @@
     padding: 0;
   }
 
+  .footer-center.visible {
+    transform: none;
+  }
+
   .newsletter-title {
     margin-bottom: 0px !important;
     font-size: 28px;
@@ -529,6 +533,10 @@
     margin: 0 auto 36px;
     order: -1;
     padding: 0;
+  }
+
+  .footer-center.visible {
+    transform: none;
   }
 
   .newsletter-title {

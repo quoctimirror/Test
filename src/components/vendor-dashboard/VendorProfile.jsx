@@ -39,7 +39,7 @@ const VendorProfile = ({ vendorInfo }) => {
       <div className="vendor-card">
         <div className="vendor-card-header">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 className="vendor-card-title">Vendor Information</h3>
+            <h3 className="vendor-card-title heading-3--no-margin">Vendor Information</h3>
             <button
               className="admin-button admin-button-outline"
               onClick={() => setIsEditing(!isEditing)}
@@ -141,7 +141,7 @@ const VendorProfile = ({ vendorInfo }) => {
       {/* Business Information */}
       <div className="vendor-card">
         <div className="vendor-card-header">
-          <h3 className="vendor-card-title">Business Information</h3>
+          <h3 className="vendor-card-title heading-3--no-margin">Business Information</h3>
         </div>
         <div className="vendor-card-body">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "2rem" }}>
@@ -170,7 +170,7 @@ const VendorProfile = ({ vendorInfo }) => {
       {/* Actions */}
       <div className="vendor-card">
         <div className="vendor-card-header">
-          <h3 className="vendor-card-title">Account Actions</h3>
+          <h3 className="vendor-card-title heading-3--no-margin">Account Actions</h3>
         </div>
         <div className="vendor-card-body">
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>

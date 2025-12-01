@@ -141,25 +141,27 @@ export default function NavbarV4() {
     }
   }, [isMenuOpening]);
 
-  // Prevent body scroll when menu is open on mobile/tablet
+  // Prevent body scroll when menu is open (all devices)
   useEffect(() => {
-    if ((isMobile || isTablet) && isMenuOpen) {
+    if (isMenuOpen) {
       // Save current scroll position
       const scrollY = window.scrollY;
       document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = "100%";
+      document.body.style.overflow = "hidden";
     } else {
       // Restore scroll position
       const scrollY = document.body.style.top;
       document.body.style.position = "";
       document.body.style.top = "";
       document.body.style.width = "";
+      document.body.style.overflow = "";
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || "0") * -1);
       }
     }
-  }, [isMenuOpen, isMobile, isTablet]);
+  }, [isMenuOpen]);
 
   useEffect(() => {
     if (!isHomePage) return;

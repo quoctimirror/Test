@@ -66,6 +66,11 @@ const MilanComponent = () => {
     };
 
     const handleScroll = () => {
+      // Skip scroll handling when body is fixed (menu is open)
+      if (document.body.style.position === 'fixed') {
+        return;
+      }
+
       const scrolled = window.pageYOffset;
       const windowHeight = window.innerHeight;
       const scrollDirection = scrolled > lastScrollPosition ? "down" : "up";
@@ -78,6 +83,8 @@ const MilanComponent = () => {
 
         heroRef.current.style.opacity = opacity;
         heroRef.current.style.transform = `scale(${scale})`;
+        // Use pointer-events instead of visibility to not affect theme detection
+        heroRef.current.style.pointerEvents = scrolled >= windowHeight ? 'none' : 'auto';
 
         // Keep background layer visible ONLY when in hero section to block footer
         if (backgroundLayerRef.current) {

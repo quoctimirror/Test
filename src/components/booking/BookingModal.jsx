@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./BookingModal.css";
@@ -246,7 +247,7 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="booking-modal-overlay">
       <div className="booking-modal-container">
         {/* Close button - fixed position, outside carousel */}
@@ -476,7 +477,8 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

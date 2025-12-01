@@ -161,14 +161,11 @@
 
 /* Tablet and Mobile (768px and below) */
 @media (max-width: 768px) {
-  .scroll-down-arrow__icon {
-    width: 22px;
-    height: 22px;
+  .scroll-down-arrow {
+    width: 48px !important;
+    height: 48px !important;
   }
-}
 
-/* Mobile (480px and below) */
-@media (max-width: 480px) {
   .scroll-down-arrow__icon {
     width: 20px;
     height: 20px;

@@ -1,8 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
-import { ROUTES } from "@/constants/routes";
+import React, { useState } from "react";
 import UnderlineButton from "@components/common/button/UnderlineButton";
+import BookingModal from "@components/booking/BookingModal";
 import "./ContactV2.css";
 
 // Import icons
@@ -12,13 +10,10 @@ import mailIcon from "@assets/images/button/mail.png";
 import bookingIcon from "@assets/images/button/appartment.png";
 
 const ContactV2 = () => {
-  const navigate = useNavigate();
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-  const handleBookAppointment = async () => {
-    await optimizedTransitionUtils.transitionToRoute(
-      navigate,
-      ROUTES.BOOK_APPOINTMENT
-    );
+  const handleBookAppointment = () => {
+    setIsBookingModalOpen(true);
   };
 
   return (
@@ -131,6 +126,12 @@ const ContactV2 = () => {
           <span className="contact-v2-card-arrow">›</span>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </section>
   );
 };

@@ -168,43 +168,43 @@ const VendorStatistics = ({ vendorInfo }) => {
       
       <div className="vendor-stats-grid">
         <div className="vendor-stat-card">
-          <div className="vendor-stat-value">{stats.totalProducts}</div>
-          <div className="vendor-stat-label">Total Products</div>
+          <div className="vendor-stat-value heading-2--no-margin">{stats.totalProducts}</div>
+          <div className="vendor-stat-label bodytext-5--no-margin">Total Products</div>
         </div>
 
         <div className="vendor-stat-card">
-          <div className="vendor-stat-value">{stats.activeProducts}</div>
-          <div className="vendor-stat-label">Active Products</div>
+          <div className="vendor-stat-value heading-2--no-margin">{stats.activeProducts}</div>
+          <div className="vendor-stat-label bodytext-5--no-margin">Active Products</div>
         </div>
 
         <div className="vendor-stat-card">
-          <div className="vendor-stat-value">{stats.featuredProducts}</div>
-          <div className="vendor-stat-label">Featured Products</div>
+          <div className="vendor-stat-value heading-2--no-margin">{stats.featuredProducts}</div>
+          <div className="vendor-stat-label bodytext-5--no-margin">Featured Products</div>
         </div>
 
         <div className="vendor-stat-card">
-          <div className="vendor-stat-value">{stats.totalOrders}</div>
-          <div className="vendor-stat-label">Total Orders</div>
+          <div className="vendor-stat-value heading-2--no-margin">{stats.totalOrders}</div>
+          <div className="vendor-stat-label bodytext-5--no-margin">Total Orders</div>
         </div>
 
         <div className="vendor-stat-card">
-          <div className="vendor-stat-value" style={{ fontSize: "1.5rem" }}>
+          <div className="vendor-stat-value heading-3--no-margin">
             {formatCurrency(stats.totalRevenue)}
           </div>
-          <div className="vendor-stat-label">Total Revenue</div>
+          <div className="vendor-stat-label bodytext-5--no-margin">Total Revenue</div>
         </div>
 
         <div className="vendor-stat-card">
-          <div className="vendor-stat-value" style={{ color: stats.lowStockProducts > 0 ? "#dc3545" : "#28a745" }}>
+          <div className="vendor-stat-value heading-2--no-margin" style={{ color: stats.lowStockProducts > 0 ? "#dc3545" : "#28a745" }}>
             {stats.lowStockProducts}
           </div>
-          <div className="vendor-stat-label">Low Stock Alerts</div>
+          <div className="vendor-stat-label bodytext-5--no-margin">Low Stock Alerts</div>
         </div>
       </div>
 
       <div className="vendor-card">
         <div className="vendor-card-header">
-          <h3 className="vendor-card-title">Quick Actions</h3>
+          <h3 className="vendor-card-title heading-3--no-margin">Quick Actions</h3>
         </div>
         <div className="vendor-card-body">
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
@@ -233,7 +233,7 @@ const VendorStatistics = ({ vendorInfo }) => {
 
       <div className="vendor-card">
         <div className="vendor-card-header">
-          <h3 className="vendor-card-title">Recent Activity</h3>
+          <h3 className="vendor-card-title heading-3--no-margin">Recent Activity</h3>
         </div>
         <div className="vendor-card-body">
           <div className="bodytext-4--no-margin" style={{ color: "#666", fontStyle: "italic", textAlign: "center", padding: "2rem" }}>
@@ -244,15 +244,15 @@ const VendorStatistics = ({ vendorInfo }) => {
 
       {/* Visual Analytics Section */}
       <div className="analytics-section" style={{ marginTop: '2rem' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '1.5rem', color: '#333' }}>
+        <h2 className="heading-2--no-margin" style={{ marginBottom: '1.5rem', color: '#333' }}>
           Business Analytics
         </h2>
 
         {/* Revenue Trend */}
         <div className="vendor-card" style={{ marginBottom: '1.5rem' }}>
           <div className="vendor-card-header">
-            <h3 className="vendor-card-title">Revenue & Order Trend</h3>
-            <p style={{ margin: '0.5rem 0 0 0', color: '#666', fontSize: '14px' }}>
+            <h3 className="vendor-card-title heading-3--no-margin">Revenue & Order Trend</h3>
+            <p className="bodytext-5--no-margin" style={{ marginTop: '0.5rem', color: '#666' }}>
               Monthly performance overview
             </p>
           </div>
@@ -273,8 +273,8 @@ const VendorStatistics = ({ vendorInfo }) => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
           <div className="vendor-card">
             <div className="vendor-card-header">
-              <h3 className="vendor-card-title">Product Categories</h3>
-              <p style={{ margin: '0.5rem 0 0 0', color: '#666', fontSize: '14px' }}>
+              <h3 className="vendor-card-title heading-3--no-margin">Product Categories</h3>
+              <p className="bodytext-5--no-margin" style={{ marginTop: '0.5rem', color: '#666' }}>
                 Revenue by category
               </p>
             </div>
@@ -291,8 +291,8 @@ const VendorStatistics = ({ vendorInfo }) => {
 
           <div className="vendor-card">
             <div className="vendor-card-header">
-              <h3 className="vendor-card-title">Order Status</h3>
-              <p style={{ margin: '0.5rem 0 0 0', color: '#666', fontSize: '14px' }}>
+              <h3 className="vendor-card-title heading-3--no-margin">Order Status</h3>
+              <p className="bodytext-5--no-margin" style={{ marginTop: '0.5rem', color: '#666' }}>
                 Current order distribution
               </p>
             </div>
@@ -310,8 +310,8 @@ const VendorStatistics = ({ vendorInfo }) => {
         {/* Top Products Performance */}
         <div className="vendor-card" style={{ marginBottom: '1.5rem' }}>
           <div className="vendor-card-header">
-            <h3 className="vendor-card-title">Top Products Performance</h3>
-            <p style={{ margin: '0.5rem 0 0 0', color: '#666', fontSize: '14px' }}>
+            <h3 className="vendor-card-title heading-3--no-margin">Top Products Performance</h3>
+            <p className="bodytext-5--no-margin" style={{ marginTop: '0.5rem', color: '#666' }}>
               Best selling products by revenue
             </p>
           </div>
@@ -333,8 +333,8 @@ const VendorStatistics = ({ vendorInfo }) => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem' }}>
           <div className="vendor-card">
             <div className="vendor-card-header">
-              <h3 className="vendor-card-title">Inventory Health</h3>
-              <p style={{ margin: '0.5rem 0 0 0', color: '#666', fontSize: '14px' }}>
+              <h3 className="vendor-card-title heading-3--no-margin">Inventory Health</h3>
+              <p className="bodytext-5--no-margin" style={{ marginTop: '0.5rem', color: '#666' }}>
                 Stock status distribution
               </p>
             </div>
@@ -353,8 +353,8 @@ const VendorStatistics = ({ vendorInfo }) => {
 
           <div className="vendor-card">
             <div className="vendor-card-header">
-              <h3 className="vendor-card-title">Customer Growth</h3>
-              <p style={{ margin: '0.5rem 0 0 0', color: '#666', fontSize: '14px' }}>
+              <h3 className="vendor-card-title heading-3--no-margin">Customer Growth</h3>
+              <p className="bodytext-5--no-margin" style={{ marginTop: '0.5rem', color: '#666' }}>
                 Monthly customer acquisition
               </p>
             </div>
