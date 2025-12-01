@@ -3,16 +3,16 @@ import { useDeviceCamera } from '../ijewel_useDeviceCamera';
 import styles from './premium.module.css';
 
 const MODELS = [
-  { id: 'WcCfk6hEQEeEzo5B7yadEQ', name: 'Fistion', basename: 'drive' }, // sai ngon giua tay phai cam truoc
-  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' }, // chuan
-  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }, // chuan
-  { id: 'Qteju98xRgKe8y5KylzXIw', name: 'Heart', basename: 'drive' }, // sai ngon giua tay phai cam truoc
-  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' }, // chuan
-  { id: 'duPabpMCTeu6JohkfH_Btg', name: 'Oval', basename: 'drive' }, // sai dai
+  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' },
+  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' },
+  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' },
+  { id: 'N1w9lJ3FQfOWsrC7jeeYfA', name: 'Oval', basename: 'drive' },
+  { id: 'DfRULQ-OSk6TjbYAcB9zkA', name: 'Fistion', basename: 'drive' },
+  { id: 'FWV7-qA6QEG_Ju8pjSItuA', name: 'Triology', basename: 'drive' },
+  { id: 'QAauSV24QiuM5CxA_1797w', name: 'Myfav', basename: 'drive' },
+  { id: 'YS4Zch2mShSnA-LABIS5wQ', name: 'Flower', basename: 'drive' },
+  { id: 'czl3wmsyTDWrV420qcKOew', name: 'Heart', basename: 'drive' },
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
-  // { id: 'dGVcGf5ZSwq20ULDHOeaNQ', name: 'Flower', basename: 'drive' },
-  { id: 'ZLwefZohRdatJ2eW7S68Fg', name: 'Myfav', basename: 'drive' }, // chua sai dai
-  { id: 'HjkNylDSRNSbJboRBLBeOQ', name: 'Trilogy', basename: 'drive' } // file nay chua biet co file sua chua
 ];
 
 const getModelFromURL = () => {

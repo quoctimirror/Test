@@ -12,11 +12,11 @@ const MODELS = [
   { id: 'QAauSV24QiuM5CxA_1797w', name: 'Myfav', basename: 'drive' }, // chuan
   // ==============================================================================================================
   // đang sửa
-  { id: 'YS4Zch2mShSnA-LABIS5wQ', name: 'Flower', basename: 'drive' }, // chua duyet len production duoc, sai ar
-  { id: 'czl3wmsyTDWrV420qcKOew', name: 'Heart', basename: 'drive' }, // sai ar
+
   // ==============================================================================================================
   // chịu chúa cứu, hữu duyên cứu được thì cứu
-
+  { id: 'YS4Zch2mShSnA-LABIS5wQ', name: 'Flower', basename: 'drive' }, // scale quá lớn cái heart có cái lỗi giống cái flower
+  { id: 'czl3wmsyTDWrV420qcKOew', name: 'Heart', basename: 'drive' }, // scale quá lớn, sai như hình gửi trong zalo, sai luôn có lúc viewer nha
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
 
 ];
