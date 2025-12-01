@@ -14,7 +14,7 @@ const MODELS = [
   { id: 'ZLwefZohRdatJ2eW7S68Fg', name: 'Myfav', basename: 'drive' }, // sai đai thôi còn lại đúng với file cũ
   { id: 'HjkNylDSRNSbJboRBLBeOQ', name: 'Trilogy', basename: 'drive' }, // file nay chua biet co file sua chua
   { id: 'dGVcGf5ZSwq20ULDHOeaNQ', name: 'Flower', basename: 'drive' }, // chua duyet len production duoc, sai ar
-  { id: 'duPabpMCTeu6JohkfH_Btg', name: 'Oval', basename: 'drive' }, // chua duyet len production duoc, sai ar
+  { id: 'N1w9lJ3FQfOWsrC7jeeYfA', name: 'Oval', basename: 'drive' }, // chua duyet len production duoc, sai ar
   { id: 'Qteju98xRgKe8y5KylzXIw', name: 'Heart', basename: 'drive' }, // sai ar
 ];
 
