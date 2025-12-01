@@ -185,6 +185,24 @@
   position: static;
 }
 
+/* Fixed Lumex91 Image Container - above immersive button, aligned right */
+.fixed-lumex91-container {
+  position: fixed;
+  bottom: 120px;
+  right: 2.5%;
+  z-index: 1000;
+  pointer-events: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.fixed-lumex91-container .lumex91-image {
+  width: 200px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+
 /* ============= RESPONSIVE DESIGN ============= */
 
 /* Tablet and Mobile (768px and below) */
@@ -208,6 +226,14 @@
 
   .fixed-immersive-container {
     bottom: 24px;
+  }
+
+  .fixed-lumex91-container {
+    bottom: 90px;
+  }
+
+  .fixed-lumex91-container .lumex91-image {
+    width: 150px;
   }
 }
 

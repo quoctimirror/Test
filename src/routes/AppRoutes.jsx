@@ -86,6 +86,7 @@ const ScavengerHunt = lazy(() =>
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const PremiumPage = lazy(() => import("@pages/PremiumPage"));
 const PremiumDevPage = lazy(() => import("@pages/PremiumDevPage"));
+const SimpleMeshInspector = lazy(() => import("@components/ijewelTryOn/quocti_dancefloor/SimpleMeshInspector"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -131,6 +132,7 @@ export default function AppRoutes() {
       ROUTES.FORGOT_PASSWORD,
       ROUTES.PREMIUM,
       ROUTES.PREMIUM_DEV,
+      ROUTES.MESH_INSPECTOR,
     ];
 
     // Check exact matches
@@ -168,7 +170,8 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.PREMIUM ||
-    location.pathname === ROUTES.PREMIUM_DEV;
+    location.pathname === ROUTES.PREMIUM_DEV ||
+    location.pathname === ROUTES.MESH_INSPECTOR;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -182,7 +185,8 @@ export default function AppRoutes() {
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
     location.pathname === ROUTES.PREMIUM ||
-    location.pathname === ROUTES.PREMIUM_DEV;
+    location.pathname === ROUTES.PREMIUM_DEV ||
+    location.pathname === ROUTES.MESH_INSPECTOR;
 
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
@@ -293,6 +297,9 @@ export default function AppRoutes() {
 
             {/* Premium AR Development Route */}
             <Route path={ROUTES.PREMIUM_DEV} element={<PremiumDevPage />} />
+
+            {/* Mesh Inspector Tool */}
+            <Route path={ROUTES.MESH_INSPECTOR} element={<SimpleMeshInspector />} />
 
             <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
 
