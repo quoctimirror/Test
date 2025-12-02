@@ -11,6 +11,22 @@
   box-sizing: border-box;
   position: relative;
   width: 100%;
+  isolation: isolate;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Black overlay to prevent white flash during fast scroll */
+.hover-expand-section::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  background-color: #000;
+  z-index: -1;
 }
 
 .hover-expand-header {
@@ -19,6 +35,7 @@
   padding-bottom: 60px;
   padding-left: 20px;
   padding-right: 20px;
+  background-color: #000;
 }
 
 .hover-expand-title {
@@ -52,6 +69,7 @@
   margin-top: auto;
   margin-bottom: -1px; /* Overlap next section by 1px */
   position: relative;
+  background-color: #000;
 }
 
 /* Gradient boxes */
@@ -105,6 +123,7 @@
   flex: 1;
   height: 100%;
   aspect-ratio: 4 / 5;
+  background-color: #000;
 }
 
 .gallery-item img {
@@ -115,6 +134,7 @@
   transition: all 1.3s ease;
   filter: grayscale(100%);
   opacity: 1;
+  background-color: #000;
 }
 
 .gallery-item:hover {

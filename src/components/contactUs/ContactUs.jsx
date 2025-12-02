@@ -48,14 +48,14 @@ const ContactUs = () => {
         <div className="contact-us-actions">
           <UnderlineButtonOpposite
             onClick={handleLiveChatClick}
-            textClassName="bodytext-4--no-margin"
+            textClassName="bodytext-6--no-margin"
           >
             Start a live chat
           </UnderlineButtonOpposite>
-          <span className="contact-us-separator bodytext-4--no-margin">or</span>
+          <span className="contact-us-separator bodytext-6--no-margin">or</span>
           <UnderlineButtonOpposite
             onClick={handlePhoneCallClick}
-            textClassName="bodytext-4--no-margin"
+            textClassName="bodytext-6--no-margin"
           >
             Make a phone call
           </UnderlineButtonOpposite>

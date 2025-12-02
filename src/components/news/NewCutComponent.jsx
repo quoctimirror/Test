@@ -140,7 +140,7 @@ const NewCutComponent = () => {
             </p>
           </div>
           <div className="new-cut-hero-image">
-            <MediaImage src="news/lumex_91.png" alt="Lumex-9 Ring" />
+            <MediaImage src="news/lumex_91.webp" alt="Lumex-9 Ring" />
           </div>
         </div>
       </section>

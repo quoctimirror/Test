@@ -227,7 +227,7 @@ html {
 /* Logo Center */
 .logo-center {
   position: absolute;
-  top: 49.75%;
+  top: 50.25%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 6;
@@ -814,7 +814,7 @@ html {
 /* Fixed Arrow Container - always visible at bottom of viewport */
 .fixed-arrow-container {
   position: fixed;
-  bottom: 48px;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000; /* Very high to ensure it's above all page content */

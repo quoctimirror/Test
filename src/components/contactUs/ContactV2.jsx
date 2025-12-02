@@ -39,7 +39,7 @@ const ContactV2 = () => {
             </p>
             <UnderlineButton
               className="contact-v2-card-link"
-              textClassName="bodytext-4--no-margin"
+              textClassName="bodytext-6--no-margin"
             >
               Chat now
             </UnderlineButton>
@@ -63,7 +63,7 @@ const ContactV2 = () => {
             <a href="tel:+442077589780">
               <UnderlineButton
                 className="contact-v2-card-link"
-                textClassName="bodytext-4--no-margin"
+                textClassName="bodytext-6--no-margin"
               >
                 Call now
               </UnderlineButton>
@@ -88,7 +88,7 @@ const ContactV2 = () => {
             <a href="mailto:support@mirrorfuturediamond.com">
               <UnderlineButton
                 className="contact-v2-card-link"
-                textClassName="bodytext-4--no-margin"
+                textClassName="bodytext-6--no-margin"
               >
                 Send email
               </UnderlineButton>
@@ -118,7 +118,7 @@ const ContactV2 = () => {
             </p>
             <UnderlineButton
               className="contact-v2-card-link"
-              textClassName="bodytext-4--no-margin"
+              textClassName="bodytext-6--no-margin"
             >
               Book an appointment
             </UnderlineButton>

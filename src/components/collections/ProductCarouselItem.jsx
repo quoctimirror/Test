@@ -10,7 +10,7 @@ const ProductCarouselItem = ({ images = [], label, className = "" }) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   // Ensure we have at least one image
-  const imageList = images.length > 0 ? images : ["collections/collectionDetail/collectionDetail_more.png"];
+  const imageList = images.length > 0 ? images : ["collections/collectionDetail/collectionDetail_more.webp"];
   const totalImages = imageList.length;
 
   const handleNext = (e) => {

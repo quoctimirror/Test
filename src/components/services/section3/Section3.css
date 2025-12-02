@@ -78,7 +78,7 @@
 
   /* Override desktop gradient background with grayscale image for tablet */
   .services-section3::before {
-    background: url("__CDN_URL__/services/section_3.jpg");
+    background: url("__CDN_URL__/services/section_3.webp");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -133,7 +133,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: url("__CDN_URL__/services/section_3.jpg")
+    background: url("__CDN_URL__/services/section_3.webp")
       lightgray 50% / cover no-repeat;
     filter: grayscale(100%);
     z-index: auto;

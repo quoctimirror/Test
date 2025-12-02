@@ -60,6 +60,9 @@
   align-items: flex-start;
   position: relative;
   padding-top: 0;
+  opacity: 0;
+  transform: translateY(120px);
+  will-change: transform, opacity;
 }
 
 /* LEFT SECTION - Discover Menu */
@@ -67,15 +70,6 @@
   width: 298px;
   min-height: 140px;
   box-sizing: border-box;
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  transition-delay: 0.6s;
-}
-
-.footer-left.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* RIGHT SECTION - Contact Info */
@@ -84,15 +78,6 @@
   min-height: 140px;
   text-align: right;
   box-sizing: border-box;
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  transition-delay: 0.5s;
-}
-
-.footer-right.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* CENTER SECTION - Newsletter */
@@ -105,14 +90,8 @@
   left: 50%;
   top: 50%;
   opacity: 0;
-  transform: translate(-50%, -50%) translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  transition-delay: 0.3s;
-}
-
-.footer-center.visible {
-  opacity: 1;
-  transform: translate(-50%, -50%) translateY(0);
+  transform: translate(-50%, -50%) translateY(100px);
+  will-change: transform, opacity;
 }
 
 /* ========================================
@@ -281,21 +260,16 @@
   justify-content: flex-end;
   margin-top: 36px;
   opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  transition-delay: 0s;
-}
-
-.footer-bottom.visible {
-  opacity: 1;
-  transform: translateY(0);
+  transform: translateY(80px);
+  will-change: transform, opacity;
 }
 
 /* Footer Bottom Row - Contains left and right */
 .footer-bottom-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 48px;
   width: 100%;
   position: relative;
 }

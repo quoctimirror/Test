@@ -591,7 +591,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleLogoClick}
                     >
                       Home
@@ -606,7 +606,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleProductsClick}
                     >
                       Products
@@ -621,7 +621,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleServicesClick}
                     >
                       Services
@@ -636,7 +636,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleSupportClick}
                     >
                       Support
@@ -651,7 +651,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleAboutClick}
                     >
                       About
@@ -666,7 +666,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleNewsClick}
                     >
                       News
@@ -685,7 +685,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleImmersiveShowroomClick}
                     >
                       Immersive Showroom
@@ -717,7 +717,7 @@ export default function NavbarV4() {
                         />
                       </svg>
                       <UnderlineButton
-                        textClassName="bodytext-4--no-margin"
+                        textClassName="bodytext-6--no-margin"
                         onClick={handleContactClick}
                       >
                         Contact
@@ -756,7 +756,7 @@ export default function NavbarV4() {
                         />
                       </svg>
                       <UnderlineButton
-                        textClassName="bodytext-4--no-margin"
+                        textClassName="bodytext-6--no-margin"
                         onClick={handleLocationClick}
                       >
                         Find your nearest location
@@ -772,7 +772,7 @@ export default function NavbarV4() {
                     <ul className="menu-v4-list menu-v4-list-profile">
                       <li>
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={() => handleProfileClick("My Passport")}
                         >
                           My Passport
@@ -780,7 +780,7 @@ export default function NavbarV4() {
                       </li>
                       <li>
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={() => handleProfileClick("Orders")}
                         >
                           My Orders
@@ -788,7 +788,7 @@ export default function NavbarV4() {
                       </li>
                       <li>
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={() => handleProfileClick("Services")}
                         >
                           My Services
@@ -796,7 +796,7 @@ export default function NavbarV4() {
                       </li>
                       <li>
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={() => handleProfileClick("Wishlist")}
                         >
                           My Wishlist
@@ -806,7 +806,7 @@ export default function NavbarV4() {
                       {isUserAdmin() && (
                         <li>
                           <UnderlineButton
-                            textClassName="bodytext-4--no-margin"
+                            textClassName="bodytext-6--no-margin"
                             onClick={handleAdminDashboardClick}
                           >
                             Admin Dashboard
@@ -817,7 +817,7 @@ export default function NavbarV4() {
                       {isUserVendor() && (
                         <li>
                           <UnderlineButton
-                            textClassName="bodytext-4--no-margin"
+                            textClassName="bodytext-6--no-margin"
                             onClick={handleVendorDashboardClick}
                           >
                             Vendor Dashboard
@@ -828,7 +828,7 @@ export default function NavbarV4() {
                       {isUserDesigner() && (
                         <li>
                           <UnderlineButton
-                            textClassName="bodytext-4--no-margin"
+                            textClassName="bodytext-6--no-margin"
                             onClick={handleDesignerDashboardClick}
                           >
                             Designer Dashboard
@@ -838,7 +838,7 @@ export default function NavbarV4() {
 
                       <li className="logout-v4-item">
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={handleLogoutClick}
                         >
                           Log out

@@ -6,19 +6,19 @@ import "./Section3CollectionDetail.css";
 
 const Section3CollectionDetail = () => {
   const images = [
-    "collections/collectionDetail/bong_hoa.png",
-    "collections/collectionDetail/earrings-heart.png",
-    "collections/collectionDetail/model_3.png",
-    "collections/collectionDetail/model_6.png",
-    "collections/collectionDetail/pink_diamond.png",
-    "collections/collectionDetail/product_10.png",
-    "collections/collectionDetail/product-6.png",
-    "collections/collectionDetail/product-11.png",
-    "collections/collectionDetail/product-8.png",
-    "collections/collectionDetail/product-15-opt2.png",
-    "collections/collectionDetail/product-17.png",
-    "collections/collectionDetail/product-23.png",
-    "collections/collectionDetail/uynhu._httpss.mj.runYccCkEmimOY_A_luxury_editorial_close-up_p_d2e70813-b2a6-48c4-840f-26f53cd18a22_2 copy.png",
+    "collections/collectionDetail/bong_hoa.webp",
+    "collections/collectionDetail/earrings-heart.webp",
+    "collections/collectionDetail/model_3.webp",
+    "collections/collectionDetail/model_6.webp",
+    "collections/collectionDetail/pink_diamond.webp",
+    "collections/collectionDetail/product_10.webp",
+    "collections/collectionDetail/product-6.webp",
+    "collections/collectionDetail/product-11.webp",
+    "collections/collectionDetail/product-8.webp",
+    "collections/collectionDetail/product-15-opt2.webp",
+    "collections/collectionDetail/product-17.webp",
+    "collections/collectionDetail/product-23.webp",
+    "collections/collectionDetail/uynhu._httpss.mj.runYccCkEmimOY_A_luxury_editorial_close-up_p_d2e70813-b2a6-48c4-840f-26f53cd18a22_2 copy.webp",
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);

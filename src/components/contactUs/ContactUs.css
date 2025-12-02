@@ -5,7 +5,8 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: white;
+  color: black;
+  background: #000;
   position: relative;
   overflow: hidden;
 }
@@ -23,6 +24,7 @@
   object-fit: cover;
   object-position: center 40%;
   z-index: 0;
+  background-color: #000;
 }
 
 .contact-us-hero-content {
@@ -92,7 +94,6 @@
   .contact-us-hero {
     min-height: 60vh;
   }
-
 }
 
 /* Gradient box at bottom of background */
@@ -129,5 +130,4 @@
   .contact-us-separator {
     display: none;
   }
-
 }

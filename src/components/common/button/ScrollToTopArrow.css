@@ -1,5 +1,5 @@
-/* Scroll down arrow button with glass surface effect */
-.scroll-down-arrow {
+/* Scroll to top arrow button with glass surface effect */
+.scroll-to-top-arrow {
   position: relative;
   display: inline-flex;
   justify-content: center;
@@ -10,20 +10,20 @@
   background: transparent;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: bounce-arrow 2.5s infinite;
+  animation: bounce-arrow-up 2.5s infinite;
 }
 
-.scroll-down-arrow:hover {
+.scroll-to-top-arrow:hover {
   animation-play-state: paused;
   transform: translateY(-2px);
 }
 
-.scroll-down-arrow:active {
+.scroll-to-top-arrow:active {
   transform: translateY(0);
 }
 
 /* SVG Filter - hidden but functional */
-.scroll-down-arrow__filter {
+.scroll-to-top-arrow__filter {
   position: absolute;
   width: 0;
   height: 0;
@@ -31,15 +31,15 @@
 }
 
 /* Arrow icon */
-.scroll-down-arrow__icon {
+.scroll-to-top-arrow__icon {
   position: relative;
   z-index: 2;
   width: 26px;
   height: 26px;
 }
 
-/* Bounce arrow animation - moves downward to indicate scroll down */
-@keyframes bounce-arrow {
+/* Bounce arrow up animation - moves upward to indicate scroll to top */
+@keyframes bounce-arrow-up {
   0%,
   20%,
   50%,
@@ -48,17 +48,17 @@
     transform: translateY(0);
   }
   40% {
-    transform: translateY(10px);
+    transform: translateY(-10px);
   }
   60% {
-    transform: translateY(5px);
+    transform: translateY(-5px);
   }
 }
 
 /* ========================================
    SVG FILTER SUPPORTED
 ======================================== */
-.scroll-down-arrow--svg {
+.scroll-to-top-arrow--svg {
   backdrop-filter: var(--filter-id);
   -webkit-backdrop-filter: var(--filter-id);
   background: rgba(255, 255, 255, 0.05);
@@ -72,7 +72,7 @@
 /* ========================================
    FALLBACK (Safari/Firefox)
 ======================================== */
-.scroll-down-arrow--fallback {
+.scroll-to-top-arrow--fallback {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -84,8 +84,8 @@
 }
 
 /* Hover states */
-.scroll-down-arrow--svg:hover,
-.scroll-down-arrow--fallback:hover {
+.scroll-to-top-arrow--svg:hover,
+.scroll-to-top-arrow--fallback:hover {
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.7),
@@ -98,35 +98,35 @@
 ======================================== */
 
 /* ========== BLEND THEME (Default) ========== */
-.scroll-down-arrow--blend {
+.scroll-to-top-arrow--blend {
   mix-blend-mode: difference;
   color: #ffffff;
 }
 
 /* ========== WHITE THEME ========== */
-.scroll-down-arrow--white {
+.scroll-to-top-arrow--white {
   mix-blend-mode: normal;
   color: #ffffff;
 }
 
-.scroll-down-arrow--white.scroll-down-arrow--svg,
-.scroll-down-arrow--white.scroll-down-arrow--fallback {
+.scroll-to-top-arrow--white.scroll-to-top-arrow--svg,
+.scroll-to-top-arrow--white.scroll-to-top-arrow--fallback {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.scroll-down-arrow--white:hover {
+.scroll-to-top-arrow--white:hover {
   border-color: rgba(255, 255, 255, 0.5);
 }
 
 /* ========== BLACK THEME ========== */
-.scroll-down-arrow--black {
+.scroll-to-top-arrow--black {
   mix-blend-mode: normal;
   color: #000000;
 }
 
-.scroll-down-arrow--black.scroll-down-arrow--svg,
-.scroll-down-arrow--black.scroll-down-arrow--fallback {
+.scroll-to-top-arrow--black.scroll-to-top-arrow--svg,
+.scroll-to-top-arrow--black.scroll-to-top-arrow--fallback {
   background: rgba(0, 0, 0, 0.05);
   border-color: rgba(0, 0, 0, 0.2);
   box-shadow:
@@ -135,7 +135,7 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
-.scroll-down-arrow--black:hover {
+.scroll-to-top-arrow--black:hover {
   border-color: rgba(0, 0, 0, 0.3);
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.1),
@@ -146,13 +146,37 @@
 /* ========================================
    FOCUS STATE
 ======================================== */
-.scroll-down-arrow:focus-visible {
+.scroll-to-top-arrow:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.6);
   outline-offset: 2px;
 }
 
-.scroll-down-arrow--black:focus-visible {
+.scroll-to-top-arrow--black:focus-visible {
   outline-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================
+   FIXED CONTAINER - positioned above ImmersiveButton
+======================================== */
+.fixed-scroll-top-container {
+  position: fixed;
+  bottom: 90px; /* 24px (immersive bottom) + 54px (immersive height) + 12px (gap) */
+  right: 2.5%;
+  z-index: 1000;
+  pointer-events: auto;
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.fixed-scroll-top-container.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fixed-scroll-top-container .scroll-to-top-arrow {
+  position: static;
 }
 
 /* ========================================
@@ -161,13 +185,17 @@
 
 /* Tablet and Mobile (768px and below) */
 @media (max-width: 768px) {
-  .scroll-down-arrow {
+  .scroll-to-top-arrow {
     width: 48px !important;
     height: 48px !important;
   }
 
-  .scroll-down-arrow__icon {
+  .scroll-to-top-arrow__icon {
     width: 20px;
     height: 20px;
+  }
+
+  .fixed-scroll-top-container {
+    bottom: 84px; /* 24px + 48px + 12px */
   }
 }

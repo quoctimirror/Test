@@ -415,7 +415,7 @@ const Profile = () => {
                 }`}
                 onClick={() => handleNavClick(item)}
               >
-                <span className="bodytext-3--no-margin">{item}</span>
+                <span className="bodytext-6--no-margin">{item}</span>
               </button>
             ))}
           </nav>
@@ -441,13 +441,13 @@ const Profile = () => {
             <form className="profile-form" onSubmit={handleSubmit} noValidate>
               {/* Title */}
               <div className="profile-title-group">
-                <label className="bodytext-4--no-margin">Title*</label>
+                <label className="bodytext-6--no-margin">Title*</label>
                 <div className="profile-title-options">
                   {titles.map((title) => (
                     <span
                       key={title}
                       onClick={() => handleTitleSelect(title)}
-                      className={`profile-title-option bodytext-4--no-margin ${
+                      className={`profile-title-option bodytext-6--no-margin ${
                         formData.title?.toLowerCase() === title.toLowerCase()
                           ? "active"
                           : ""

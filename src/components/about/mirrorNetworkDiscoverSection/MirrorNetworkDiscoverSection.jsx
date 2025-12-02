@@ -177,22 +177,22 @@ const MirrorNetworkDiscoverSection = () => {
         <div className="grid-container">
           {/* Images positioned using grid system */}
           <div className="shape shape-1">
-            <MediaImage src="about/discover-section/img_1.png" alt="Discover 1" />
+            <MediaImage src="about/discover-section/img_1.webp" alt="Discover 1" />
           </div>
           <div className="shape shape-2">
-            <MediaImage src="about/discover-section/img_2.png" alt="Discover 2" />
+            <MediaImage src="about/discover-section/img_2.webp" alt="Discover 2" />
           </div>
           <div className="shape shape-3">
-            <MediaImage src="about/discover-section/img_3.png" alt="Discover 3" />
+            <MediaImage src="about/discover-section/img_3.webp" alt="Discover 3" />
           </div>
           <div className="shape shape-4">
-            <MediaImage src="about/discover-section/img_4.png" alt="Discover 4" />
+            <MediaImage src="about/discover-section/img_4.webp" alt="Discover 4" />
           </div>
           <div className="shape shape-5">
-            <MediaImage src="about/discover-section/img_5.png" alt="Discover 5" />
+            <MediaImage src="about/discover-section/img_5.webp" alt="Discover 5" />
           </div>
           <div className="shape shape-6">
-            <MediaImage src="about/discover-section/img_6.png" alt="Discover 6" />
+            <MediaImage src="about/discover-section/img_6.webp" alt="Discover 6" />
           </div>
 
           {/* Button */}

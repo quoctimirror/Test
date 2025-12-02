@@ -25,14 +25,14 @@ const MirrorNetworkV2 = () => {
 
   // Carousel images - duplicate for infinite loop
   const carouselImages = [
-    { src: "about/network-section/Art gallery.png", alt: "Art Gallery" },
-    { src: "about/network-section/Enscape_2025-10-09-10-15-51.png", alt: "Enscape 1" },
-    { src: "about/network-section/Enscape_2025-10-09-10-21-27.png", alt: "Enscape 2" },
-    { src: "about/network-section/Gym.png", alt: "Gym" },
-    { src: "about/network-section/Hotel lobby.png", alt: "Hotel Lobby" },
-    { src: "about/network-section/Restaurants_01.png", alt: "Restaurant 1" },
-    { src: "about/network-section/Restaurants_02.png", alt: "Restaurant 2" },
-    { src: "about/network-section/Spa.png", alt: "Spa" },
+    { src: "about/network-section/Art gallery.webp", alt: "Art Gallery" },
+    { src: "about/network-section/Enscape_2025-10-09-10-15-51.webp", alt: "Enscape 1" },
+    { src: "about/network-section/Enscape_2025-10-09-10-21-27.webp", alt: "Enscape 2" },
+    { src: "about/network-section/Gym.webp", alt: "Gym" },
+    { src: "about/network-section/Hotel lobby.webp", alt: "Hotel Lobby" },
+    { src: "about/network-section/Restaurants_01.webp", alt: "Restaurant 1" },
+    { src: "about/network-section/Restaurants_02.webp", alt: "Restaurant 2" },
+    { src: "about/network-section/Spa.webp", alt: "Spa" },
   ];
 
   // Carousel drag-to-scroll functionality with infinite loop

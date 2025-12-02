@@ -11,6 +11,7 @@
   position: relative;
   overflow: hidden;
   background: #000000; /* Black background to prevent footer bleed-through */
+  background-color: #000;
 }
 
 /* Gradient overlays - dark at top and bottom */
@@ -66,6 +67,7 @@
   backface-visibility: hidden;
   transform: translateZ(0);
   will-change: opacity;
+  background-color: #000;
 }
 
 .showroom-background.loaded {
@@ -89,6 +91,7 @@
   transform: translateZ(0);
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+  background-color: #000;
 }
 
 /* Show fallback when iframe is loading/error on desktop */
@@ -110,8 +113,7 @@
 .showroom-content {
   position: relative;
   z-index: 2;
-  max-width: 905px;
-  padding: 0 20px;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   justify-content: center;

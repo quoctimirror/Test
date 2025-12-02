@@ -472,7 +472,11 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
           </div>
 
           {/* Confirmation Page - outside carousel */}
-          <div className={`booking-panel-confirmation ${currentStep === 7 ? "show" : ""}`}>
+          <div
+            className={`booking-panel-confirmation ${
+              currentStep === 7 ? "show" : ""
+            }`}
+          >
             <ConfirmationPage onClose={onClose} />
           </div>
         </div>
@@ -655,12 +659,7 @@ const renderPreviousStepReadonly = (
         />
       );
     case 5:
-      return (
-        <FillFormReadonly
-          formData={formData}
-          setFormData={setFormData}
-        />
-      );
+      return <FillFormReadonly formData={formData} setFormData={setFormData} />;
     default:
       return null;
   }
@@ -898,7 +897,13 @@ const SelectVenue = ({
 };
 
 // Readonly version of SelectVenue (for left panel display)
-const SelectVenueReadonly = ({ selectedVenue, setSelectedVenue, locations, cities, loading }) => {
+const SelectVenueReadonly = ({
+  selectedVenue,
+  setSelectedVenue,
+  locations,
+  cities,
+  loading,
+}) => {
   const [filterCity, setFilterCity] = useState("All Cities");
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
 
@@ -1085,7 +1090,12 @@ const ChooseService = ({
 };
 
 // Readonly version of ChooseService
-const ChooseServiceReadonly = ({ selectedService, setSelectedService, otherServiceText, setOtherServiceText }) => {
+const ChooseServiceReadonly = ({
+  selectedService,
+  setSelectedService,
+  otherServiceText,
+  setOtherServiceText,
+}) => {
   const services = [
     {
       id: 1,
@@ -1334,35 +1344,146 @@ const FillForm = ({ onNext, onBack, formData, setFormData }) => {
 
   const removeDiacritics = (str) => {
     const vietnameseMap = {
-      'à': 'a', 'á': 'a', 'ạ': 'a', 'ả': 'a', 'ã': 'a',
-      'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ậ': 'a', 'ẩ': 'a', 'ẫ': 'a',
-      'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ặ': 'a', 'ẳ': 'a', 'ẵ': 'a',
-      'è': 'e', 'é': 'e', 'ẹ': 'e', 'ẻ': 'e', 'ẽ': 'e',
-      'ê': 'e', 'ề': 'e', 'ế': 'e', 'ệ': 'e', 'ể': 'e', 'ễ': 'e',
-      'ì': 'i', 'í': 'i', 'ị': 'i', 'ỉ': 'i', 'ĩ': 'i',
-      'ò': 'o', 'ó': 'o', 'ọ': 'o', 'ỏ': 'o', 'õ': 'o',
-      'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ộ': 'o', 'ổ': 'o', 'ỗ': 'o',
-      'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ợ': 'o', 'ở': 'o', 'ỡ': 'o',
-      'ù': 'u', 'ú': 'u', 'ụ': 'u', 'ủ': 'u', 'ũ': 'u',
-      'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ự': 'u', 'ử': 'u', 'ữ': 'u',
-      'ỳ': 'y', 'ý': 'y', 'ỵ': 'y', 'ỷ': 'y', 'ỹ': 'y',
-      'đ': 'd',
-      'À': 'A', 'Á': 'A', 'Ạ': 'A', 'Ả': 'A', 'Ã': 'A',
-      'Â': 'A', 'Ầ': 'A', 'Ấ': 'A', 'Ậ': 'A', 'Ẩ': 'A', 'Ẫ': 'A',
-      'Ă': 'A', 'Ằ': 'A', 'Ắ': 'A', 'Ặ': 'A', 'Ẳ': 'A', 'Ẵ': 'A',
-      'È': 'E', 'É': 'E', 'Ẹ': 'E', 'Ẻ': 'E', 'Ẽ': 'E',
-      'Ê': 'E', 'Ề': 'E', 'Ế': 'E', 'Ệ': 'E', 'Ể': 'E', 'Ễ': 'E',
-      'Ì': 'I', 'Í': 'I', 'Ị': 'I', 'Ỉ': 'I', 'Ĩ': 'I',
-      'Ò': 'O', 'Ó': 'O', 'Ọ': 'O', 'Ỏ': 'O', 'Õ': 'O',
-      'Ô': 'O', 'Ồ': 'O', 'Ố': 'O', 'Ộ': 'O', 'Ổ': 'O', 'Ỗ': 'O',
-      'Ơ': 'O', 'Ờ': 'O', 'Ớ': 'O', 'Ợ': 'O', 'Ở': 'O', 'Ỡ': 'O',
-      'Ù': 'U', 'Ú': 'U', 'Ụ': 'U', 'Ủ': 'U', 'Ũ': 'U',
-      'Ư': 'U', 'Ừ': 'U', 'Ứ': 'U', 'Ự': 'U', 'Ử': 'U', 'Ữ': 'U',
-      'Ỳ': 'Y', 'Ý': 'Y', 'Ỵ': 'Y', 'Ỷ': 'Y', 'Ỹ': 'Y',
-      'Đ': 'D'
+      à: "a",
+      á: "a",
+      ạ: "a",
+      ả: "a",
+      ã: "a",
+      â: "a",
+      ầ: "a",
+      ấ: "a",
+      ậ: "a",
+      ẩ: "a",
+      ẫ: "a",
+      ă: "a",
+      ằ: "a",
+      ắ: "a",
+      ặ: "a",
+      ẳ: "a",
+      ẵ: "a",
+      è: "e",
+      é: "e",
+      ẹ: "e",
+      ẻ: "e",
+      ẽ: "e",
+      ê: "e",
+      ề: "e",
+      ế: "e",
+      ệ: "e",
+      ể: "e",
+      ễ: "e",
+      ì: "i",
+      í: "i",
+      ị: "i",
+      ỉ: "i",
+      ĩ: "i",
+      ò: "o",
+      ó: "o",
+      ọ: "o",
+      ỏ: "o",
+      õ: "o",
+      ô: "o",
+      ồ: "o",
+      ố: "o",
+      ộ: "o",
+      ổ: "o",
+      ỗ: "o",
+      ơ: "o",
+      ờ: "o",
+      ớ: "o",
+      ợ: "o",
+      ở: "o",
+      ỡ: "o",
+      ù: "u",
+      ú: "u",
+      ụ: "u",
+      ủ: "u",
+      ũ: "u",
+      ư: "u",
+      ừ: "u",
+      ứ: "u",
+      ự: "u",
+      ử: "u",
+      ữ: "u",
+      ỳ: "y",
+      ý: "y",
+      ỵ: "y",
+      ỷ: "y",
+      ỹ: "y",
+      đ: "d",
+      À: "A",
+      Á: "A",
+      Ạ: "A",
+      Ả: "A",
+      Ã: "A",
+      Â: "A",
+      Ầ: "A",
+      Ấ: "A",
+      Ậ: "A",
+      Ẩ: "A",
+      Ẫ: "A",
+      Ă: "A",
+      Ằ: "A",
+      Ắ: "A",
+      Ặ: "A",
+      Ẳ: "A",
+      Ẵ: "A",
+      È: "E",
+      É: "E",
+      Ẹ: "E",
+      Ẻ: "E",
+      Ẽ: "E",
+      Ê: "E",
+      Ề: "E",
+      Ế: "E",
+      Ệ: "E",
+      Ể: "E",
+      Ễ: "E",
+      Ì: "I",
+      Í: "I",
+      Ị: "I",
+      Ỉ: "I",
+      Ĩ: "I",
+      Ò: "O",
+      Ó: "O",
+      Ọ: "O",
+      Ỏ: "O",
+      Õ: "O",
+      Ô: "O",
+      Ồ: "O",
+      Ố: "O",
+      Ộ: "O",
+      Ổ: "O",
+      Ỗ: "O",
+      Ơ: "O",
+      Ờ: "O",
+      Ớ: "O",
+      Ợ: "O",
+      Ở: "O",
+      Ỡ: "O",
+      Ù: "U",
+      Ú: "U",
+      Ụ: "U",
+      Ủ: "U",
+      Ũ: "U",
+      Ư: "U",
+      Ừ: "U",
+      Ứ: "U",
+      Ự: "U",
+      Ử: "U",
+      Ữ: "U",
+      Ỳ: "Y",
+      Ý: "Y",
+      Ỵ: "Y",
+      Ỷ: "Y",
+      Ỹ: "Y",
+      Đ: "D",
     };
 
-    return str.split('').map(char => vietnameseMap[char] || char).join('');
+    return str
+      .split("")
+      .map((char) => vietnameseMap[char] || char)
+      .join("");
   };
 
   const handleChange = (field, value) => {
@@ -1407,7 +1528,7 @@ const FillForm = ({ onNext, onBack, formData, setFormData }) => {
               <span
                 key={title}
                 onClick={() => handleTitleSelect(title)}
-                className={`form-title-option bodytext-4--no-margin ${
+                className={`form-title-option bodytext-6--no-margin ${
                   formData.title === title ? "active" : ""
                 }`}
               >
@@ -1576,7 +1697,11 @@ const ChooseDateReadonly = ({ selectedDate, setSelectedDate }) => {
 };
 
 // Readonly version of ChooseTime
-const ChooseTimeReadonly = ({ selectedTime, setSelectedTime, selectedDate }) => {
+const ChooseTimeReadonly = ({
+  selectedTime,
+  setSelectedTime,
+  selectedDate,
+}) => {
   const timeSlots = [
     "09:00 AM",
     "10:00 AM",
@@ -1640,35 +1765,146 @@ const FillFormReadonly = ({ formData, setFormData }) => {
 
   const removeDiacritics = (str) => {
     const vietnameseMap = {
-      'à': 'a', 'á': 'a', 'ạ': 'a', 'ả': 'a', 'ã': 'a',
-      'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ậ': 'a', 'ẩ': 'a', 'ẫ': 'a',
-      'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ặ': 'a', 'ẳ': 'a', 'ẵ': 'a',
-      'è': 'e', 'é': 'e', 'ẹ': 'e', 'ẻ': 'e', 'ẽ': 'e',
-      'ê': 'e', 'ề': 'e', 'ế': 'e', 'ệ': 'e', 'ể': 'e', 'ễ': 'e',
-      'ì': 'i', 'í': 'i', 'ị': 'i', 'ỉ': 'i', 'ĩ': 'i',
-      'ò': 'o', 'ó': 'o', 'ọ': 'o', 'ỏ': 'o', 'õ': 'o',
-      'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ộ': 'o', 'ổ': 'o', 'ỗ': 'o',
-      'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ợ': 'o', 'ở': 'o', 'ỡ': 'o',
-      'ù': 'u', 'ú': 'u', 'ụ': 'u', 'ủ': 'u', 'ũ': 'u',
-      'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ự': 'u', 'ử': 'u', 'ữ': 'u',
-      'ỳ': 'y', 'ý': 'y', 'ỵ': 'y', 'ỷ': 'y', 'ỹ': 'y',
-      'đ': 'd',
-      'À': 'A', 'Á': 'A', 'Ạ': 'A', 'Ả': 'A', 'Ã': 'A',
-      'Â': 'A', 'Ầ': 'A', 'Ấ': 'A', 'Ậ': 'A', 'Ẩ': 'A', 'Ẫ': 'A',
-      'Ă': 'A', 'Ằ': 'A', 'Ắ': 'A', 'Ặ': 'A', 'Ẳ': 'A', 'Ẵ': 'A',
-      'È': 'E', 'É': 'E', 'Ẹ': 'E', 'Ẻ': 'E', 'Ẽ': 'E',
-      'Ê': 'E', 'Ề': 'E', 'Ế': 'E', 'Ệ': 'E', 'Ể': 'E', 'Ễ': 'E',
-      'Ì': 'I', 'Í': 'I', 'Ị': 'I', 'Ỉ': 'I', 'Ĩ': 'I',
-      'Ò': 'O', 'Ó': 'O', 'Ọ': 'O', 'Ỏ': 'O', 'Õ': 'O',
-      'Ô': 'O', 'Ồ': 'O', 'Ố': 'O', 'Ộ': 'O', 'Ổ': 'O', 'Ỗ': 'O',
-      'Ơ': 'O', 'Ờ': 'O', 'Ớ': 'O', 'Ợ': 'O', 'Ở': 'O', 'Ỡ': 'O',
-      'Ù': 'U', 'Ú': 'U', 'Ụ': 'U', 'Ủ': 'U', 'Ũ': 'U',
-      'Ư': 'U', 'Ừ': 'U', 'Ứ': 'U', 'Ự': 'U', 'Ử': 'U', 'Ữ': 'U',
-      'Ỳ': 'Y', 'Ý': 'Y', 'Ỵ': 'Y', 'Ỷ': 'Y', 'Ỹ': 'Y',
-      'Đ': 'D'
+      à: "a",
+      á: "a",
+      ạ: "a",
+      ả: "a",
+      ã: "a",
+      â: "a",
+      ầ: "a",
+      ấ: "a",
+      ậ: "a",
+      ẩ: "a",
+      ẫ: "a",
+      ă: "a",
+      ằ: "a",
+      ắ: "a",
+      ặ: "a",
+      ẳ: "a",
+      ẵ: "a",
+      è: "e",
+      é: "e",
+      ẹ: "e",
+      ẻ: "e",
+      ẽ: "e",
+      ê: "e",
+      ề: "e",
+      ế: "e",
+      ệ: "e",
+      ể: "e",
+      ễ: "e",
+      ì: "i",
+      í: "i",
+      ị: "i",
+      ỉ: "i",
+      ĩ: "i",
+      ò: "o",
+      ó: "o",
+      ọ: "o",
+      ỏ: "o",
+      õ: "o",
+      ô: "o",
+      ồ: "o",
+      ố: "o",
+      ộ: "o",
+      ổ: "o",
+      ỗ: "o",
+      ơ: "o",
+      ờ: "o",
+      ớ: "o",
+      ợ: "o",
+      ở: "o",
+      ỡ: "o",
+      ù: "u",
+      ú: "u",
+      ụ: "u",
+      ủ: "u",
+      ũ: "u",
+      ư: "u",
+      ừ: "u",
+      ứ: "u",
+      ự: "u",
+      ử: "u",
+      ữ: "u",
+      ỳ: "y",
+      ý: "y",
+      ỵ: "y",
+      ỷ: "y",
+      ỹ: "y",
+      đ: "d",
+      À: "A",
+      Á: "A",
+      Ạ: "A",
+      Ả: "A",
+      Ã: "A",
+      Â: "A",
+      Ầ: "A",
+      Ấ: "A",
+      Ậ: "A",
+      Ẩ: "A",
+      Ẫ: "A",
+      Ă: "A",
+      Ằ: "A",
+      Ắ: "A",
+      Ặ: "A",
+      Ẳ: "A",
+      Ẵ: "A",
+      È: "E",
+      É: "E",
+      Ẹ: "E",
+      Ẻ: "E",
+      Ẽ: "E",
+      Ê: "E",
+      Ề: "E",
+      Ế: "E",
+      Ệ: "E",
+      Ể: "E",
+      Ễ: "E",
+      Ì: "I",
+      Í: "I",
+      Ị: "I",
+      Ỉ: "I",
+      Ĩ: "I",
+      Ò: "O",
+      Ó: "O",
+      Ọ: "O",
+      Ỏ: "O",
+      Õ: "O",
+      Ô: "O",
+      Ồ: "O",
+      Ố: "O",
+      Ộ: "O",
+      Ổ: "O",
+      Ỗ: "O",
+      Ơ: "O",
+      Ờ: "O",
+      Ớ: "O",
+      Ợ: "O",
+      Ở: "O",
+      Ỡ: "O",
+      Ù: "U",
+      Ú: "U",
+      Ụ: "U",
+      Ủ: "U",
+      Ũ: "U",
+      Ư: "U",
+      Ừ: "U",
+      Ứ: "U",
+      Ự: "U",
+      Ử: "U",
+      Ữ: "U",
+      Ỳ: "Y",
+      Ý: "Y",
+      Ỵ: "Y",
+      Ỷ: "Y",
+      Ỹ: "Y",
+      Đ: "D",
     };
 
-    return str.split('').map(char => vietnameseMap[char] || char).join('');
+    return str
+      .split("")
+      .map((char) => vietnameseMap[char] || char)
+      .join("");
   };
 
   const handleChange = (field, value) => {
@@ -1709,7 +1945,7 @@ const FillFormReadonly = ({ formData, setFormData }) => {
               <span
                 key={title}
                 onClick={() => handleTitleSelect(title)}
-                className={`form-title-option bodytext-4--no-margin ${
+                className={`form-title-option bodytext-6--no-margin ${
                   formData?.title === title ? "active" : ""
                 }`}
               >
@@ -1792,7 +2028,7 @@ const ReviewBooking = ({
   acceptTerms,
   setAcceptTerms,
   acceptPrivacy,
-  setAcceptPrivacy
+  setAcceptPrivacy,
 }) => {
   return (
     <div className="booking-step review-step">
@@ -1802,9 +2038,14 @@ const ReviewBooking = ({
         <div className="review-item">
           <div>
             <h4 className="bodytext-6--no-margin">Service</h4>
-            <p className="bodytext-4--no-margin">In-store appointment: {bookingData.service?.title}</p>
+            <p className="bodytext-4--no-margin">
+              In-store appointment: {bookingData.service?.title}
+            </p>
           </div>
-          <UnderlineButton onClick={() => onEdit(2)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(2)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1814,7 +2055,10 @@ const ReviewBooking = ({
             <h4 className="bodytext-6--no-margin">Where</h4>
             <p className="bodytext-4--no-margin">{bookingData.venue?.name}</p>
           </div>
-          <UnderlineButton onClick={() => onEdit(1)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(1)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1824,7 +2068,10 @@ const ReviewBooking = ({
             <h4 className="bodytext-6--no-margin">When</h4>
             <p className="bodytext-4--no-margin">Tuesday, Nov 25, 2025</p>
           </div>
-          <UnderlineButton onClick={() => onEdit(3)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(3)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1834,7 +2081,10 @@ const ReviewBooking = ({
             <h4 className="bodytext-6--no-margin">Time</h4>
             <p className="bodytext-4--no-margin">{bookingData.time}, GMT +7</p>
           </div>
-          <UnderlineButton onClick={() => onEdit(4)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(4)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1847,7 +2097,10 @@ const ReviewBooking = ({
               {bookingData.formData?.lastName}
             </p>
           </div>
-          <UnderlineButton onClick={() => onEdit(5)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(5)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1855,9 +2108,14 @@ const ReviewBooking = ({
         <div className="review-item">
           <div>
             <h4 className="bodytext-6--no-margin">Email</h4>
-            <p className="bodytext-4--no-margin">{bookingData.formData?.email}</p>
+            <p className="bodytext-4--no-margin">
+              {bookingData.formData?.email}
+            </p>
           </div>
-          <UnderlineButton onClick={() => onEdit(5)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(5)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1865,9 +2123,14 @@ const ReviewBooking = ({
         <div className="review-item">
           <div>
             <h4 className="bodytext-6--no-margin">Phone / WhatsApp</h4>
-            <p className="bodytext-4--no-margin">{bookingData.formData?.phone}</p>
+            <p className="bodytext-4--no-margin">
+              {bookingData.formData?.phone}
+            </p>
           </div>
-          <UnderlineButton onClick={() => onEdit(5)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(5)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>

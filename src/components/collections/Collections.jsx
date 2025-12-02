@@ -15,21 +15,21 @@ const products = [
   {
     id: 1,
     title: "AURORA",
-    image: "/collections/pendant.png",
+    image: "/collections/pendant.webp",
     description:
       "More than a ring, AURORA is a \ncelebration of light, geometry, and the \nfuture you're building together.",
   },
   {
     id: 2,
     title: "SOLARIS",
-    image: "/collections/ring1.png",
+    image: "/collections/ring1.webp",
     description:
       "A testament to the sun's eternal brilliance, \ncaptured in a timeless design that radiates \nwarmth and elegance.",
   },
   {
     id: 3,
     title: "LUNA",
-    image: "/collections/earings.png",
+    image: "/collections/earings.webp",
     description:
       "Capturing the serene glow of the moonlight, \nLUNA reflects a story of mystique and \nprofound beauty.",
   },

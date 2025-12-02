@@ -519,7 +519,7 @@ const SelectOptionSection = () => {
       {/* Main ring display */}
       <div className="ring-display">
         <MediaImage
-          src="products/nhan_ex.png"
+          src="products/nhan_ex.webp"
           alt="Wedding Ring Set"
           className="ring-image"
         />

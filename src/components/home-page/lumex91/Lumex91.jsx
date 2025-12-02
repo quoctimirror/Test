@@ -119,7 +119,7 @@ const Lumex91 = () => {
             className={`lumex91-video lumex91-placeholder ${
               framesLoaded ? "lumex91-placeholder-hide" : ""
             }`}
-            src="home-page/Mirror-Lumex 91.jpg"
+            src="home-page/Mirror-Lumex 91.webp"
             alt="Mirror-Lumex 91"
           />
 

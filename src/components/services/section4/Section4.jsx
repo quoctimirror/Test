@@ -330,7 +330,7 @@ const Section4 = () => {
         <div className="section4-desktop-screen">
           <div className="section4-desktop-image">
             <MediaImage
-              src="services/b2f5b664-7235-4fe3-b721-c19450d3518a.png"
+              src="services/b2f5b664-7235-4fe3-b721-c19450d3518a.webp"
               alt="Return & Exchange"
             />
           </div>
@@ -367,7 +367,7 @@ const Section4 = () => {
         {/* Screen 2 - Sizing Guide */}
         <div className="section4-desktop-screen">
           <div className="section4-desktop-image">
-            <MediaImage src="services/product-20.png" alt="Sizing Guide" />
+            <MediaImage src="services/product-20.webp" alt="Sizing Guide" />
           </div>
           <div className="section4-desktop-content">
             <div className="section4-content">
@@ -403,7 +403,7 @@ const Section4 = () => {
         <div className="section4-desktop-screen">
           <div className="section4-desktop-image">
             <MediaImage
-              src="services/Waranty Legacy.png"
+              src="services/Waranty Legacy.webp"
               alt="Warranty & Info"
             />
           </div>

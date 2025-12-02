@@ -66,7 +66,7 @@ const SupportDetail = () => {
                 className={`support-tab ${activeTab === tab.id ? "active" : ""}`}
                 onClick={() => handleTabClick(tab.id)}
               >
-                <span className="bodytext-4--no-margin">{tab.label}</span>
+                <span className="bodytext-6--no-margin">{tab.label}</span>
               </button>
             ))}
           </div>

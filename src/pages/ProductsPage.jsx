@@ -5,6 +5,7 @@ import ParallaxScrolling from "@components/parallaxScrolling/ParallaxScrolling";
 import ViewAllProduct from "@components/viewAllProduct/ViewAllProduct";
 import ContactUs from "@components/contactUs/ContactUs";
 import ScrollDownArrow from "@components/common/button/ScrollDownArrow";
+import ScrollToTopArrow from "@components/common/button/ScrollToTopArrow";
 import ImmersiveButton from "@components/common/button/ImmersiveButton";
 import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
 import { useBottomTheme } from "@/hooks/useBottomTheme";
@@ -17,16 +18,19 @@ const ProductsPage = () => {
   });
   const { theme: arrowTheme } = useBottomTheme();
   const [isImmersiveCollapsed, setIsImmersiveCollapsed] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Handle immersive button click
   const handleImmersiveClick = () => {
     console.log("Immersive button clicked");
   };
 
-  // Detect scroll to collapse immersive button
+  // Detect scroll to collapse immersive button and show scroll-to-top
   useEffect(() => {
     const handleScroll = () => {
-      setIsImmersiveCollapsed(window.scrollY > 100);
+      const scrollY = window.scrollY;
+      setIsImmersiveCollapsed(scrollY > 100);
+      setShowScrollTop(scrollY > 500);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
@@ -74,6 +78,11 @@ const ProductsPage = () => {
           <ScrollDownArrow theme={arrowTheme} onClick={handleArrowClick} />
         </div>
       )}
+
+      {/* Fixed Scroll to Top Button - only show when scroll-down arrow is hidden */}
+      <div className={`fixed-scroll-top-container ${showScrollTop ? 'visible' : ''}`}>
+        <ScrollToTopArrow theme={arrowTheme} />
+      </div>
     </div>
   );
 };

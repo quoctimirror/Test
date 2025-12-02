@@ -136,9 +136,9 @@ const ParallaxScrolling = () => {
   };
 
   const images = [
-    { src: "parallaxScrolling/3_rings.jpg", alt: "Bộ ba nhẫn vàng ánh đỏ" },
-    { src: "parallaxScrolling/1_ring.png", alt: "Nhẫn ba vòng lồng vào nhau" },
-    { src: "parallaxScrolling/snake_h.png", alt: "Vòng tay và nhẫn hình rắn" },
+    { src: "parallaxScrolling/3_rings.webp", alt: "Bộ ba nhẫn vàng ánh đỏ" },
+    { src: "parallaxScrolling/1_ring.webp", alt: "Nhẫn ba vòng lồng vào nhau" },
+    { src: "parallaxScrolling/snake_h.webp", alt: "Vòng tay và nhẫn hình rắn" },
   ];
 
   return (
@@ -178,13 +178,13 @@ const ParallaxScrolling = () => {
         <div className="split-container">
           <div className="image-pane">
             <MediaImage
-              src="parallaxScrolling/1_ring.png"
+              src="parallaxScrolling/1_ring.webp"
               alt="Nhẫn ba vòng lồng vào nhau"
             />
           </div>
           <div className="image-pane">
             <MediaImage
-              src="parallaxScrolling/snake_h.png"
+              src="parallaxScrolling/snake_h.webp"
               alt="Vòng tay và nhẫn hình rắn"
             />
           </div>

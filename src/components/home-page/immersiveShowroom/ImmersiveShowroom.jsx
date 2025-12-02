@@ -31,7 +31,7 @@ const ImmersiveShowroom = () => {
       <div className="immersive-showroom">
         {/* Fallback background image - always rendered, CSS controls visibility */}
         <MediaImage
-          src="immersiveShowroom/immersiveShowroomBackground.png"
+          src="immersiveShowroom/immersiveShowroomBackground.webp"
           alt="Immersive Showroom Background"
           className={`showroom-background-fallback ${
             !iframeLoaded || iframeError ? "visible" : ""

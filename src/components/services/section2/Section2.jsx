@@ -238,7 +238,7 @@ const Section2 = () => {
         <div className="section2-desktop-screen">
           <div className="section2-desktop-image">
             <MediaImage
-              src="services/Product care & Repair_960x1080.png"
+              src="services/Product care & Repair_960x1080.webp"
               alt="Product Care"
             />
           </div>
@@ -275,7 +275,7 @@ const Section2 = () => {
         {/* Screen 2 - Trade In */}
         <div className="section2-desktop-screen">
           <div className="section2-desktop-image">
-            <MediaImage src="services/Trade in_960x1080.jpg" alt="Trade In" />
+            <MediaImage src="services/Trade in_960x1080.webp" alt="Trade In" />
           </div>
           <div className="section2-desktop-content">
             <div className="section2-content">

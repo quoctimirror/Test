@@ -37,25 +37,25 @@ const HoverExpandSection = () => {
       <div className="hover-expand-gallery">
         <div className="hover-expand-gradient-top"></div>
         <div className="gallery-item" onClick={handleExploreMoreClick}>
-          <MediaImage src="home-page/hover-expand/Ring.png" alt="Jewelry piece 1" />
+          <MediaImage src="home-page/hover-expand/Ring.webp" alt="Jewelry piece 1" />
           <p className="bodytext-1--no-margin gallery-item-text">
             Premium Collection
           </p>
         </div>
         <div className="gallery-item" onClick={handleExploreMoreClick}>
-          <MediaImage src="home-page/hover-expand/Earring.png" alt="Jewelry piece 2" />
+          <MediaImage src="home-page/hover-expand/Earring.webp" alt="Jewelry piece 2" />
           <p className="bodytext-1--no-margin gallery-item-text">
             Luxury Rings
           </p>
         </div>
         <div className="gallery-item" onClick={handleExploreMoreClick}>
-          <MediaImage src="home-page/hover-expand/Necklace.png" alt="Jewelry piece 3" />
+          <MediaImage src="home-page/hover-expand/Necklace.webp" alt="Jewelry piece 3" />
           <p className="bodytext-1--no-margin gallery-item-text">
             Diamond Series
           </p>
         </div>
         <div className="gallery-item" onClick={handleExploreMoreClick}>
-          <MediaImage src="home-page/hover-expand/Bracelet.png" alt="Jewelry piece 4" />
+          <MediaImage src="home-page/hover-expand/Bracelet.webp" alt="Jewelry piece 4" />
           <p className="bodytext-1--no-margin gallery-item-text">
             Signature Pieces
           </p>

@@ -20,7 +20,7 @@ const ProductCareRepair = () => {
           To ensure your jewelry always looks its best, Mirror proudly offers:
         </p>
 
-        <div className="service-item">
+        <div className="sd-service-item">
           <ul>
             <li>
               <p className="bodytext-4--no-margin">
@@ -78,7 +78,7 @@ const ProductCareRepair = () => {
           offers expert repair services to restore its original condition.
         </p>
 
-        <div className="service-item">
+        <div className="sd-service-item">
           <ul>
             <li>
               <p className="bodytext-4--no-margin">

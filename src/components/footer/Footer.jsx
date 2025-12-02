@@ -18,6 +18,11 @@ const Footer = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const footerRef = useRef(null);
 
+  // Refs for scroll-linked animation elements
+  const footerContentRef = useRef(null);
+  const footerCenterRef = useRef(null);
+  const footerBottomRef = useRef(null);
+
   const handleHomeClick = async (e) => {
     e.preventDefault();
     if (window.location.pathname === ROUTES.HOME) {
@@ -112,12 +117,26 @@ const Footer = () => {
   useEffect(() => {
     let rafId = null;
 
-    // Detect when footer is visible on screen
+    // Apply scroll-linked transform to an element
+    const applyScrollTransform = (element, progress, maxTranslate = 50, isCenter = false) => {
+      if (!element) return;
+      const clampedProgress = Math.max(0, Math.min(1, progress));
+      const translateY = maxTranslate * (1 - clampedProgress);
+      // footer-center needs translate(-50%, -50%) for centering
+      if (isCenter) {
+        element.style.transform = `translate(-50%, -50%) translateY(${translateY}px)`;
+      } else {
+        element.style.transform = `translateY(${translateY}px)`;
+      }
+      element.style.opacity = clampedProgress;
+    };
+
+    // Scroll-linked animation handler
     const handleScroll = () => {
       if (rafId) return; // Throttle with RAF
 
       rafId = requestAnimationFrame(() => {
-        // Skip when body is fixed (menu is open) - check INSIDE RAF
+        // Skip when body is fixed (menu is open)
         if (document.body.style.position === 'fixed') {
           rafId = null;
           return;
@@ -125,21 +144,44 @@ const Footer = () => {
 
         const scrollPosition = window.scrollY + window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
+        const footerHeight = window.innerHeight; // Footer is 100vh
 
-        // Footer is visible when user is within 1.2 viewport heights from bottom
-        const threshold = documentHeight - window.innerHeight * 1.2;
-        const footerVisible = scrollPosition >= threshold;
+        // Calculate when footer starts becoming visible
+        const footerStart = documentHeight - footerHeight;
 
-        // Update visibility state
+        // Footer is visible when user scrolls past the content above footer
+        const footerVisible = scrollPosition >= footerStart;
         setIsFooterVisible(footerVisible);
+
+        // Calculate scroll progress within footer (0 to 1)
+        const scrollIntoFooter = Math.max(0, scrollPosition - footerStart);
+
+        // Each element has its own animation range for smooth scroll-linked effect
+        const elementAnimationRange = footerHeight * 0.35; // Each element takes 35% of footer to fully animate
+
+        // Staggered start positions (bottom to top) - DELAYED start so user can see animation
+        const bottomStart = footerHeight * 0.25;  // Bottom starts at 25% scroll into footer
+        const centerStart = footerHeight * 0.35;  // Center starts at 35% scroll
+        const contentStart = footerHeight * 0.45; // Content starts at 45% scroll
+
+        // Calculate individual progress for each element
+        const bottomProgress = (scrollIntoFooter - bottomStart) / elementAnimationRange;
+        const centerProgress = (scrollIntoFooter - centerStart) / elementAnimationRange;
+        const contentProgress = (scrollIntoFooter - contentStart) / elementAnimationRange;
+
+        // Apply transforms - elements slide up as user scrolls
+        applyScrollTransform(footerBottomRef.current, bottomProgress, 80);
+        applyScrollTransform(footerCenterRef.current, centerProgress, 100, true);
+        applyScrollTransform(footerContentRef.current, contentProgress, 120);
+
         rafId = null;
       });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Don't check on mount - wait for user to scroll
-    // This prevents animation from running on page load
+    // Initial check
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -183,8 +225,8 @@ const Footer = () => {
       </div>
 
       <div className="footer-container">
-        <div className="footer-content">
-          <div className={`footer-left ${isFooterVisible ? "visible" : ""}`}>
+        <div className="footer-content" ref={footerContentRef}>
+          <div className="footer-left">
             <div className="footer-section">
               <ul className="footer-links">
                 <li>
@@ -239,14 +281,14 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className={`footer-right ${isFooterVisible ? "visible" : ""}`}>
+          <div className="footer-right">
             <div className="footer-section">
               <ul className="contact-info">
                 <li>
                   <UnderlineButton
                     onClick={handleLocationClick}
                     className="contact-link-button"
-                    textClassName="bodytext-4--no-margin"
+                    textClassName="bodytext-6--no-margin"
                   >
                     Location
                   </UnderlineButton>
@@ -255,7 +297,7 @@ const Footer = () => {
                   <UnderlineButton
                     onClick={handleContactClick}
                     className="contact-link-button"
-                    textClassName="bodytext-4--no-margin"
+                    textClassName="bodytext-6--no-margin"
                   >
                     Contact us
                   </UnderlineButton>
@@ -264,7 +306,7 @@ const Footer = () => {
                   <UnderlineButton
                     onClick={handleBookAppointmentClick}
                     className="contact-link-button"
-                    textClassName="bodytext-4--no-margin"
+                    textClassName="bodytext-6--no-margin"
                   >
                     Book an appointment
                   </UnderlineButton>
@@ -273,7 +315,7 @@ const Footer = () => {
                   <a href="mailto:support@mirrorfuturediamond.com">
                     <UnderlineButton
                       className="contact-link-button"
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                     >
                       support@mirrorfuturediamond.com
                     </UnderlineButton>
@@ -283,7 +325,7 @@ const Footer = () => {
                   <a href="tel:+97.130.0938">
                     <UnderlineButton
                       className="contact-link-button"
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                     >
                       +97.130.0938
                     </UnderlineButton>
@@ -294,7 +336,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className={`footer-center ${isFooterVisible ? "visible" : ""}`}>
+        <div className="footer-center" ref={footerCenterRef}>
           <div className="newsletter-section">
             <p className="bodytext-4--no-margin newsletter-tagline">
               COLLECT. REFLECT. AWAKEN
@@ -327,7 +369,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className={`footer-bottom ${isFooterVisible ? "visible" : ""}`}>
+        <div className="footer-bottom" ref={footerBottomRef}>
           <div className="footer-bottom-center">
             <div className="social-icons">
               <a
