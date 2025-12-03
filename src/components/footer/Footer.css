@@ -219,11 +219,6 @@
   border-radius: 999px !important;
 }
 
-.newsletter-btn-explore .button-text,
-.newsletter-btn-signin .button-text {
-  font-size: 16px !important;
-}
-
 /* Sign in button - white background base for theme light effect */
 .newsletter-btn-signin .glass-layer {
   background: rgba(255, 255, 255, 0.75) !important;

@@ -1014,7 +1014,7 @@ export default function NavbarV4() {
             onClick={() => setIsBookingModalOpen(true)}
             style={{ cursor: "pointer" }}
           >
-            <span className="immersive-v4-text bodytext-4--no-margin">
+            <span className="immersive-v4-text bodytext-6--no-margin">
               Book an Appointment
             </span>
           </div>

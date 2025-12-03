@@ -171,7 +171,7 @@ const ShineGlassButton = ({
         type={type}
         onClick={onClick}
         disabled={disabled}
-        className={`shine-glass-button shine-glass-button--${theme} shine-glass-button--variant-${variant} bodytext-4--no-margin ${className}`}
+        className={`shine-glass-button shine-glass-button--${theme} shine-glass-button--variant-${variant} bodytext-6--no-margin ${className}`}
         style={{
           ...(width && { width: `${width}px` }),
           ...(height && { height: `${height}px` }),
@@ -180,7 +180,7 @@ const ShineGlassButton = ({
       >
         <div className="glass-layer"></div>
         <div className="shine-layer"></div>
-        <span className="button-text bodytext-4--no-margin">{children}</span>
+        <span className="button-text bodytext-6--no-margin">{children}</span>
         <div className="border-layer"></div>
       </button>
     </div>

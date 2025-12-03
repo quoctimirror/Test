@@ -229,11 +229,8 @@
 
 .profile-title-option {
   cursor: pointer;
-  padding-bottom: 1.5px;
-  border-bottom: 2px solid transparent;
+  border-bottom: 1px solid transparent;
   color: #797979;
-  font-size: 18px;
-  font-weight: 400;
   transition: all 0.2s ease;
 }
 

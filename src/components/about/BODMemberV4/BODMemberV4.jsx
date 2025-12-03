@@ -20,12 +20,12 @@ const BODMemberV4 = () => {
     {
       name: "Kenneth Nguyen",
       position: "Chief Strategy Officer",
-      image: "/about/BODMember/A KHÁNH.webp",
+      image: "/about/BODMember/A KHÁNH.png",
     },
     {
       name: "Dang Hai Son",
       position: "Chief Executive Officer",
-      image: "/about/BODMember/A SƠN.webp",
+      image: "/about/BODMember/A SƠN.png",
     },
     {
       name: "Tran Kim Ngan",
@@ -35,52 +35,52 @@ const BODMemberV4 = () => {
     {
       name: "Tran Nhat Minh",
       position: "Chief Technology Officer",
-      image: "/about/BODMember/A MINH.webp",
+      image: "/about/BODMember/A MINH.png",
     },
     {
       name: "Dong Thi Phuong Uyen",
       position: "Chief Marketing Officer",
-      image: "/about/BODMember/C UYÊN 2.webp",
+      image: "/about/BODMember/C UYÊN 2.png",
     },
     {
       name: "Minh Khoa",
       position: "Art Director",
-      image: "/about/BODMember/A KHOA.webp",
+      image: "/about/BODMember/A KHOA.png",
     },
     {
       name: "Duy Khanh",
       position: "3D Jewelry Designer",
-      image: "/about/BODMember/A KHÁNH.webp",
+      image: "/about/BODMember/A KHÁNH.png",
     },
     {
       name: "Le Gia Quoc Ti",
       position: "Creative Developer",
-      image: "/about/BODMember/TI.webp",
+      image: "/about/BODMember/TI.png",
     },
     {
       name: "Dang Phuong Nam",
       position: "Creative Developer",
-      image: "/about/BODMember/NAM.webp",
+      image: "/about/BODMember/NAM.png",
     },
     {
       name: "Pham Ngoc Khanh Doan",
       position: "Designer",
-      image: "/about/BODMember/ĐOAN.webp",
+      image: "/about/BODMember/ĐOAN.png",
     },
     {
       name: "Nguyen Hien",
       position: "Designer",
-      image: "/about/BODMember/HIỀN.webp",
+      image: "/about/BODMember/HIỀN.png",
     },
     {
       name: "An Khanh Nhat",
       position: "Designer",
-      image: "/about/BODMember/AN.webp",
+      image: "/about/BODMember/AN.png",
     },
     {
       name: "Uy Nhu",
       position: "Designer",
-      image: "/about/BODMember/NHƯ.webp",
+      image: "/about/BODMember/NHƯ.png",
     },
   ];
 
