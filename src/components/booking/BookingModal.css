@@ -826,6 +826,30 @@
   color: rgba(188, 34, 76, 1);
 }
 
+/* Booked time slot */
+.time-slot.booked {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  position: relative;
+}
+
+.time-slot.booked:hover {
+  border-left-color: var(--Gray-2, #e0e0e0);
+}
+
+.time-slot.booked:hover span {
+  transform: none;
+}
+
+.time-slot .booked-label {
+  font-size: 10px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
 /* Form */
 .form-container {
   display: flex;
@@ -1046,6 +1070,19 @@
 .confirmation-subtitle {
   margin-bottom: 12px;
   color: #000;
+}
+
+.confirmation-reference {
+  margin-bottom: 24px;
+  color: #000;
+  padding: 16px 32px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+}
+
+.confirmation-reference strong {
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .confirmation-text {

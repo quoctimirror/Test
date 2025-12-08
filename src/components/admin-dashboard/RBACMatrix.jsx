@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { roleMatrixAPI } from "@/services/api";
+import { SkeletonTable } from "./Skeleton";
 
 const RBACMatrix = () => {
   const [rows, setRows] = useState([]);
@@ -23,7 +24,12 @@ const RBACMatrix = () => {
   }, []);
 
   if (loading) {
-    return <div className="p-4">Loading role matrix...</div>;
+    return (
+      <div className="admin-card admin-p-lg">
+        <div className="skeleton" style={{ width: '250px', height: '1.5rem', marginBottom: '1rem' }} />
+        <SkeletonTable rows={8} columns={4} />
+      </div>
+    );
   }
 
   if (error) {

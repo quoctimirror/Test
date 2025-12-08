@@ -32,6 +32,7 @@ export const ROUTES = {
   NEWS: "/d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a",
   NEWS_DETAIL: "/d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a/:slug",
   ALL_GEMS: "/c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+  PRODUCT_DETAIL: "/f4g5h6i7-j8k9-0l1m-2n3o-4p5q6r7s8t9u/:productId",
   USER_PROFILE: "/e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b",
   PREMIUM: "/premium", // Premium AR Try-On
   PREMIUM_DEV: "/premium-dev", // Premium AR Development
@@ -62,3 +63,7 @@ export const getNewsDetailRoute = (slug) => {
   return ROUTES.NEWS_DETAIL.replace(":slug", slug);
 };
 
+// Helper to get product detail route with ID
+export const getProductDetailRoute = (productId) => {
+  return ROUTES.PRODUCT_DETAIL.replace(":productId", productId);
+};

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collectionsAPI, productsAPI, handleAPIError } from "@services/api";
 import { getImageUrl } from "@utils/cloudflareMediaUtil";
+import { SkeletonList } from "./Skeleton";
 
 const CollectionsManager = () => {
   const [collections, setCollections] = useState([]);
@@ -355,71 +356,45 @@ const CollectionsManager = () => {
 
   if (loading) {
     return (
-      <div
-        className="admin-card"
-        style={{ padding: "3rem", textAlign: "center" }}
-      >
-        <div>Loading collections...</div>
+      <div className="collections-manager">
+        <div className="admin-card admin-p-lg admin-mb-lg">
+          <div className="skeleton" style={{ width: '200px', height: '1.5rem', marginBottom: '0.5rem' }} />
+          <div className="skeleton" style={{ width: '350px', height: '1rem' }} />
+        </div>
+        <SkeletonList items={4} />
       </div>
     );
   }
 
   return (
-    <div className="collections-manager">
+    <div className="admin-card" style={{ padding: "1.5rem" }}>
       {error && (
-        <div
-          className="admin-card"
-          style={{
-            padding: "1rem",
-            marginBottom: "1rem",
-            backgroundColor: "#fee",
-            borderColor: "#feb2b2",
-          }}
-        >
-          <div style={{ color: "#c53030" }}>{error}</div>
+        <div className="admin-error-state" style={{ marginBottom: "1.5rem" }}>
+          {error}
         </div>
       )}
 
       {/* Header Controls */}
-      <div
-        className="admin-card"
-        style={{ padding: "1.5rem", marginBottom: "1.5rem" }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "1rem",
-            flexWrap: "wrap",
-          }}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+        <input
+          type="text"
+          placeholder="Search collections..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="admin-input"
+          style={{ flex: 1, maxWidth: "400px" }}
+        />
+        <button
+          onClick={handleAdd}
+          className="admin-button admin-button-primary"
+          title="Add Collection"
         >
-          <input
-            type="text"
-            placeholder="Search collections..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="admin-input"
-            style={{ flex: 1, maxWidth: "400px" }}
-          />
-          <button
-            onClick={handleAdd}
-            className="admin-button admin-button-primary"
-            title="Add Collection"
-          >
-            +
-          </button>
-        </div>
+          Add Collection
+        </button>
       </div>
 
       {/* Collections Grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
-          gap: "1.5rem",
-        }}
-      >
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", gap: "1rem" }}>
         {filteredCollections.map((collection) => (
           <div
             key={collection.id}
@@ -437,121 +412,60 @@ const CollectionsManager = () => {
                 }}
               >
                 {collection.featured && (
-                  <div
-                    style={{
+                  <div className="status-pill" style={{
                       position: "absolute",
                       top: "1rem",
                       right: "1rem",
-                      background: "#bc224c",
+                      backgroundColor: "#0f172a",
                       color: "white",
-                      padding: "0.25rem 0.5rem",
-                      borderRadius: "4px",
-                      fontSize: "12px",
-                      fontWeight: "500",
+                      borderColor: "#0f172a"
                     }}
                   >
-                     Featured
+                    Featured
                   </div>
                 )}
               </div>
             )}
 
-            <div style={{ padding: "1.5rem" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  marginBottom: "1rem",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <h3
-                    style={{
-                      margin: "0 0 0.5rem 0",
-                      fontSize: "18px",
-                      fontWeight: "600",
-                      color: "#212529",
-                    }}
-                  >
-                    {collection.name}
-                  </h3>
-                  <div
-                    style={{
-                      fontSize: "12px",
-                      color: "#6c757d",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    ID:{" "}
-                    <code
-                      style={{
-                        background: "#f8f9fa",
-                        padding: "2px 4px",
-                        borderRadius: "4px",
-                      }}
-                    >
-                      {collection.id}
-                    </code>
-                  </div>
-                  <p
-                    style={{
-                      margin: "0",
-                      fontSize: "14px",
-                      color: "#6c757d",
-                      lineHeight: "1.4",
-                    }}
-                  >
-                    {collection.description || "No description provided"}
-                  </p>
+            <div style={{ padding: "1rem" }}>
+              <div style={{ marginBottom: "1rem" }}>
+                <h3 style={{ margin: "0 0 0.5rem 0", fontSize: "0.875rem", fontWeight: "600", color: "#0f172a" }}>
+                  {collection.name}
+                </h3>
+                <div style={{ fontSize: "0.75rem", color: "#64748b", marginBottom: "0.5rem" }}>
+                  ID: <code style={{ background: "#f1f5f9", padding: "2px 6px", borderRadius: "4px", fontFamily: "monospace", fontSize: "0.6875rem" }}>
+                    {collection.id}
+                  </code>
                 </div>
+                <p style={{ margin: "0", fontSize: "0.8125rem", color: "#64748b", lineHeight: "1.4" }}>
+                  {collection.description || "No description provided"}
+                </p>
               </div>
 
               {/* Collection Info */}
-              <div
-                style={{
-                  margin: "1rem 0",
-                  padding: "0.75rem",
-                  backgroundColor: "#f8f9fa",
-                  borderRadius: "8px",
-                  fontSize: "14px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "0.5rem",
-                  }}
-                >
+              <div style={{  margin: "1rem 0", padding: "0.75rem", backgroundColor: "#fafbfc", borderRadius: "6px", fontSize: "0.75rem", border: "1px solid #e2e8f0" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                   <div>
-                    <span style={{ color: "#6c757d" }}>Season:</span>
-                    <span style={{ marginLeft: "0.5rem", fontWeight: "500" }}>
+                    <span style={{ color: "#64748b", fontWeight: "500" }}>Season:</span>
+                    <span style={{ marginLeft: "0.5rem", color: "#0f172a" }}>
                       {collection.season || "All Seasons"}
                     </span>
                   </div>
                   <div>
-                    <span style={{ color: "#6c757d" }}>Year:</span>
-                    <span style={{ marginLeft: "0.5rem", fontWeight: "500" }}>
+                    <span style={{ color: "#64748b", fontWeight: "500" }}>Year:</span>
+                    <span style={{ marginLeft: "0.5rem", color: "#0f172a" }}>
                       {collection.year || currentYear}
                     </span>
                   </div>
                   <div>
-                    <span style={{ color: "#6c757d" }}>Products:</span>
-                    <span style={{ marginLeft: "0.5rem", fontWeight: "500" }}>
+                    <span style={{ color: "#64748b", fontWeight: "500" }}>Products:</span>
+                    <span style={{ marginLeft: "0.5rem", color: "#0f172a" }}>
                       {collectionProducts[collection.id]?.length || 0}
                     </span>
                   </div>
                   <div>
-                    <span style={{ color: "#6c757d" }}>Status:</span>
-                    <span
-                      style={{
-                        marginLeft: "0.5rem",
-                        color:
-                          collection.isActive !== false ? "#28a745" : "#dc3545",
-                        fontWeight: "500",
-                      }}
-                    >
+                    <span style={{ color: "#64748b", fontWeight: "500" }}>Status:</span>
+                    <span style={{ marginLeft: "0.5rem", color: collection.isActive !== false ? "#059669" : "#dc2626", fontWeight: "500" }}>
                       {collection.isActive !== false ? "Active" : "Inactive"}
                     </span>
                   </div>
@@ -706,7 +620,7 @@ const CollectionsManager = () => {
                                         color: "#6c757d",
                                       }}
                                     >
-                                      SKU: {product.sku} | Price:{" "}
+                                      SKU: {product.skuCode || "N/A"} | Price:{" "}
                                       {new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
                                         currency: product.currency || "VND",
@@ -804,55 +718,32 @@ const CollectionsManager = () => {
                   </div>
                 )}
 
-              <div
-                style={{
-                  display: "flex",
-                  gap: "0.5rem",
-                  marginTop: "1rem",
-                  flexWrap: "wrap",
-                }}
-              >
+              <div style={{ display: "flex", gap: "0.5rem", marginTop: "1rem", flexWrap: "wrap" }}>
                 <button
                   onClick={() => handleEdit(collection)}
                   className="admin-button admin-button-outline"
-                  style={{
-                    flex: 1,
-                    minWidth: "80px",
-                    padding: "0.5rem",
-                    fontSize: "14px",
-                  }}
+                  style={{ flex: 1, minWidth: "80px", padding: "0.375rem 0.75rem", fontSize: "0.8125rem" }}
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleManageProducts(collection.id)}
-                  className="admin-button"
-                  style={{
-                    padding: "0.5rem",
-                    fontSize: "14px",
-                    backgroundColor: "#17a2b8",
-                    color: "white",
-                    border: "none",
-                  }}
+                  className="admin-button admin-button-secondary"
+                  style={{ padding: "0.375rem 0.75rem", fontSize: "0.8125rem" }}
                 >
                   Manage Products
                 </button>
                 <button
                   onClick={() => toggleFeatured(collection)}
                   className="admin-button admin-button-secondary"
-                  style={{ padding: "0.5rem", fontSize: "14px" }}
+                  style={{ padding: "0.375rem 0.75rem", fontSize: "0.8125rem" }}
                 >
                   {collection.featured ? "Unfeature" : "Feature"}
                 </button>
                 <button
                   onClick={() => handleDelete(collection.id)}
-                  className="admin-button"
-                  style={{
-                    padding: "0.5rem",
-                    fontSize: "14px",
-                    backgroundColor: "#dc3545",
-                    color: "white",
-                  }}
+                  className="admin-button admin-button-danger"
+                  style={{ padding: "0.375rem 0.75rem", fontSize: "0.8125rem" }}
                 >
                   Delete
                 </button>
@@ -863,14 +754,8 @@ const CollectionsManager = () => {
       </div>
 
       {filteredCollections.length === 0 && (
-        <div
-          className="admin-card"
-          style={{ padding: "3rem", textAlign: "center", color: "#6c757d" }}
-        >
-          No collections found.{" "}
-          {searchTerm
-            ? "Try adjusting your search."
-            : "Add your first collection to get started."}
+        <div className="admin-empty-state">
+          No collections found. {searchTerm ? "Try adjusting your search." : "Add your first collection to get started."}
         </div>
       )}
 
@@ -881,34 +766,16 @@ const CollectionsManager = () => {
           onClick={() => setIsModalOpen(false)}
         >
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
-            <div style={{ padding: "2rem" }}>
-              <h2
-                style={{
-                  margin: "0 0 1.5rem 0",
-                  fontSize: "24px",
-                  fontWeight: "600",
-                }}
-              >
+            <div style={{ padding: "1.5rem" }}>
+              <h2 style={{ margin: "0 0 1.5rem 0", fontSize: "1rem", fontWeight: "600", color: "#0f172a", paddingBottom: "1rem", borderBottom: "1px solid #e2e8f0" }}>
                 {editingCollection ? "Edit Collection" : "Add New Collection"}
               </h2>
 
               <form onSubmit={handleSubmit}>
                 <div style={{ display: "grid", gap: "1rem" }}>
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "1rem",
-                    }}
-                  >
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                     <div>
-                      <label
-                        style={{
-                          display: "block",
-                          marginBottom: "0.5rem",
-                          fontWeight: "500",
-                        }}
-                      >
+                      <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "500", fontSize: "0.8125rem", color: "#0f172a" }}>
                         Collection Name *
                       </label>
                       <input
@@ -1399,7 +1266,7 @@ const CollectionsManager = () => {
                               <div
                                 style={{ fontSize: "13px", color: "#6c757d" }}
                               >
-                                SKU: {product.sku} |{" "}
+                                SKU: {product.skuCode || "N/A"} |{" "}
                                 {new Intl.NumberFormat("vi-VN", {
                                   style: "currency",
                                   currency: product.currency || "VND",
@@ -1608,7 +1475,7 @@ const CollectionsManager = () => {
                               <div
                                 style={{ fontSize: "13px", color: "#6c757d" }}
                               >
-                                SKU: {product.sku} |{" "}
+                                SKU: {product.skuCode || "N/A"} |{" "}
                                 {new Intl.NumberFormat("vi-VN", {
                                   style: "currency",
                                   currency: product.currency || "VND",

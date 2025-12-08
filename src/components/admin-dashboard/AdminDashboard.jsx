@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ProductsManager from "./ProductsManager";
 import UnifiedOrdersManager from "./UnifiedOrdersManager";
 import ProductFulfillment from "./ProductFulfillment";
@@ -8,7 +9,7 @@ import MultiCurrencyCalculator from "./MultiCurrencyCalculator";
 import PreciousMetalDashboard from "./PreciousMetalDashboard";
 import UnitConversionCalculator from "./UnitConversionCalculator";
 import PaymentSchedulesManager from "./PaymentSchedulesManager";
-import CategoriesManagerEnhanced from "@components/manage-products/CategoriesManagerEnhanced";
+import CategoriesManager from "./CategoriesManager";
 import CollectionsManager from "./CollectionsManager";
 import LocationsManager from "./LocationsManager";
 import ComponentsManager from "./ComponentsManager";
@@ -23,6 +24,15 @@ import MarketTrendDashboard from "./MarketTrendDashboard";
 import PurchaseOrderSummary from "./PurchaseOrderSummary";
 import VendorSelectionWizard from "./VendorSelectionWizard";
 import RBACMatrix from "./RBACMatrix";
+import AppointmentsManager from "./AppointmentsManager";
+// Product Ops Dashboard
+import {
+  ProductOpsDashboard,
+  SKUGenerator,
+  ProductFulfillment as ProductFulfillmentNew,
+  MISAIntegration,
+  ProductPublisher
+} from "../product-ops-dashboard";
 import "./AdminDashboard.css";
 import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/context/AuthContext";
@@ -30,17 +40,45 @@ import { useAuth } from "@/context/AuthContext";
 const AdminDashboard = () => {
   const { user } = useAuth();
   const roles = user?.roles || [];
-  const isAdminLike = roles.includes("ADMIN") || roles.includes("IT_ADMIN");
+  const isAdminLike = roles.includes("SUPER_ADMIN") || roles.includes("ADMIN") || roles.includes("IT_ADMIN");
 
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Get tab from URL query params
+  const getTabFromUrl = useCallback(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get('tab') || 'dashboard';
+  }, [location.search]);
+
+  const [activeTab, setActiveTabState] = useState(getTabFromUrl);
+
+  // Update URL when tab changes
+  const setActiveTab = useCallback((tabId) => {
+    setActiveTabState(tabId);
+    const params = new URLSearchParams(location.search);
+    if (tabId === 'dashboard') {
+      params.delete('tab');
+    } else {
+      params.set('tab', tabId);
+    }
+    const newSearch = params.toString();
+    navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ''}`, { replace: true });
+  }, [navigate, location.pathname, location.search]);
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard" },
+    // Product Ops Dashboard (NEW)
+    { id: "product-ops", label: "Product Ops Dashboard" },
+    { id: "misa-integration", label: "MISA Integration" },
+    { id: "product-publisher", label: "Product Publisher" },
+    // Existing tabs
     { id: "products", label: "Products" },
-    { id: "product-fulfillment", label: "Product Fulfillment" },
+    { id: "product-fulfillment", label: "Product Fulfillment (Old)" },
     { id: "sku-codes", label: "SKU Codes" },
     { id: "orders", label: "Orders" },
     { id: "payments", label: "Payment schedules" },
+    { id: "appointments", label: "Appointments" },
     { id: "categories", label: "Categories" },
     { id: "collections", label: "Collections" },
     { id: "locations", label: "Locations" },
@@ -64,11 +102,17 @@ const AdminDashboard = () => {
   const tabAccess = useMemo(
     () => ({
       dashboard: roles,
+      // Product Ops Dashboard access
+      "product-ops": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "misa-integration": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "product-publisher": ["PRODUCTION_OPS", "MARKETING", "ADMIN", "IT_ADMIN"],
+      // Existing tabs
       products: ["CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       "product-fulfillment": ["CREATIVE_DESIGN", "MARKETING", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       "sku-codes": ["CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       orders: ["SALES_CUSTOMER_OPS", "FINANCE", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       payments: ["FINANCE", "SALES_CUSTOMER_OPS", "ADMIN", "IT_ADMIN"],
+      appointments: ["SALES_CUSTOMER_OPS", "ADMIN", "IT_ADMIN"],
       categories: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       collections: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       locations: ["ADMIN", "IT_ADMIN"],
@@ -98,11 +142,26 @@ const AdminDashboard = () => {
 
   const visibleMenuItems = menuItems.filter((item) => isTabAllowed(item.id));
 
+  // Sync state with URL when browser navigation occurs (back/forward)
   useEffect(() => {
-    if (!isTabAllowed(activeTab) && visibleMenuItems.length > 0) {
-      setActiveTab(visibleMenuItems[0].id);
+    const urlTab = getTabFromUrl();
+    if (urlTab !== activeTab) {
+      setActiveTabState(urlTab);
     }
-  }, [activeTab, visibleMenuItems]);
+  }, [location.search, getTabFromUrl]);
+
+  // Validate tab access and redirect to valid tab if needed
+  useEffect(() => {
+    const urlTab = getTabFromUrl();
+    const validTabIds = menuItems.map(item => item.id);
+
+    // If tab from URL is invalid or not allowed, redirect to first allowed tab
+    if (!validTabIds.includes(urlTab) || !isTabAllowed(urlTab)) {
+      if (visibleMenuItems.length > 0) {
+        setActiveTab(visibleMenuItems[0].id);
+      }
+    }
+  }, [activeTab, visibleMenuItems, getTabFromUrl, setActiveTab]);
 
   const handleHomeNavigation = () => {
     window.location.href = ROUTES.HOME_PAGE;
@@ -112,6 +171,14 @@ const AdminDashboard = () => {
     switch (activeTab) {
       case "dashboard":
         return <DashboardHome setActiveTab={setActiveTab} />;
+      // Product Ops Dashboard
+      case "product-ops":
+        return <ProductOpsDashboard />;
+      case "misa-integration":
+        return <MISAIntegration />;
+      case "product-publisher":
+        return <ProductPublisher />;
+      // Existing tabs
       case "products":
         return <ProductsManager />;
       case "product-fulfillment":
@@ -122,8 +189,10 @@ const AdminDashboard = () => {
         return <UnifiedOrdersManager />;
       case "payments":
         return <PaymentSchedulesManager />;
+      case "appointments":
+        return <AppointmentsManager />;
       case "categories":
-        return <CategoriesManagerEnhanced />;
+        return <CategoriesManager />;
       case "collections":
         return <CollectionsManager />;
       case "locations":
@@ -169,13 +238,27 @@ const AdminDashboard = () => {
         title: "Admin Dashboard",
         description: "Overview of your Mirror Diamond management system",
       },
+      // Product Ops Dashboard
+      "product-ops": {
+        title: "Product Operations Dashboard",
+        description: "Manage product lifecycle from SKU generation to publication",
+      },
+      "misa-integration": {
+        title: "MISA ERP Integration",
+        description: "Manage MISA SKU creation and sync status",
+      },
+      "product-publisher": {
+        title: "Product Publisher",
+        description: "Review, approve, and publish products to website",
+      },
+      // Existing tabs
       products: {
         title: "Products Management",
         description:
           "Manage your diamond products, rings, necklaces, and jewelry items",
       },
       "product-fulfillment": {
-        title: "Product Fulfillment",
+        title: "Product Fulfillment (Old)",
         description:
           "Complete product details, add images, and publish products to the website",
       },
@@ -200,6 +283,10 @@ const AdminDashboard = () => {
       payments: {
         title: "Payment Schedules",
         description: "Monitor installments across orders and record payments",
+      },
+      appointments: {
+        title: "Appointments Management",
+        description: "View and manage customer appointment bookings",
       },
       collections: {
         title: "Collections Management",

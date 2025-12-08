@@ -1,0 +1,372 @@
+/* Section 1: Product Hero */
+.section1-product-hero {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem 3rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.product-hero-container {
+  max-width: 1600px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 5rem;
+  align-items: flex-start;
+}
+
+/* Product Image Gallery */
+.product-hero-gallery {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Main Image */
+.gallery-main-image-wrapper {
+  width: 100%;
+  max-height: 65vh;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  background: #f8fafc;
+}
+
+.gallery-main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+  color: #64748b;
+  font-size: 1.125rem;
+}
+
+/* Thumbnail Gallery */
+.gallery-thumbnails {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.gallery-thumbnails::-webkit-scrollbar {
+  height: 6px;
+}
+
+.gallery-thumbnails::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.gallery-thumbnails::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.gallery-thumbnails::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.gallery-thumbnail {
+  flex-shrink: 0;
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  background: #f8fafc;
+}
+
+.gallery-thumbnail:hover {
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-thumbnail.active {
+  border-color: #0f172a;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.gallery-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Product Info */
+.product-hero-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 6rem;
+}
+
+.product-category {
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.product-name {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.product-sku {
+  color: #64748b;
+  font-family: "Courier New", monospace;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+}
+
+/* Price Section */
+.product-price-section {
+  margin: 1rem 0;
+  padding: 1.5rem 0;
+  border-top: 2px solid #e2e8f0;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.product-price {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.product-base-price {
+  color: #94a3b8;
+  text-decoration: line-through;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Quick Info Grid */
+.product-quick-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.quick-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.info-value {
+  font-size: 1.25rem;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* Action Buttons */
+.product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.action-buttons-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.wishlist-button {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.wishlist-button:hover {
+  border-color: #0f172a;
+  transform: scale(1.05);
+}
+
+.wishlist-button.active {
+  background: #fee2e2;
+  border-color: #dc2626;
+}
+
+.wishlist-icon {
+  font-size: 1.25rem;
+}
+
+.book-appointment-button {
+  flex: 1;
+  padding: 0.875rem 2rem;
+  background: white;
+  color: #0f172a;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.book-appointment-button:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.order-now-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.order-now-button:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.3);
+}
+
+/* Status Badge */
+.product-status {
+  margin-top: 0.5rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge.active,
+.status-badge.published {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-badge.available {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .product-hero-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .product-name {
+    font-size: 2.5rem;
+  }
+
+  .product-price {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section1-product-hero {
+    padding: 6rem 1.5rem 3rem;
+  }
+
+  .product-hero-container {
+    gap: 2rem;
+  }
+
+  .product-hero-info {
+    position: relative;
+    top: 0;
+  }
+
+  .product-name {
+    font-size: 2rem;
+  }
+
+  .product-price {
+    font-size: 1.75rem;
+  }
+
+  .product-quick-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .gallery-thumbnail {
+    width: 80px;
+    height: 80px;
+  }
+
+  .gallery-thumbnails {
+    gap: 0.75rem;
+  }
+
+  .action-buttons-row {
+    flex-direction: column;
+  }
+
+  .wishlist-button {
+    width: 100%;
+    height: 48px;
+  }
+
+  .book-appointment-button {
+    width: 100%;
+  }
+}

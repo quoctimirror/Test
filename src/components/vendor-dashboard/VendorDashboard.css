@@ -1,13 +1,11 @@
-/* Vendor Dashboard Styles - Mirror Brand */
-:root {
-  --vendor-sidebar-width: 280px;
-  --vendor-sidebar-collapsed-width: 80px;
-}
+/* Vendor Dashboard Styles */
+@import '../../styles/dashboard-tokens.css';
 
 .vendor-dashboard-container {
   display: flex;
   min-height: 100vh;
-  background-color: var(--color-gray-1, #f6f6f6);
+  background-color: var(--mirror-bg);
+  font-family: var(--font-ui);
 }
 
 /* Sidebar */
@@ -107,24 +105,12 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-.vendor-sidebar-logo {
-  display: none;
-  width: 48px;
-  height: 48px;
-  background: var(--color-pink, #bc224c);
-  color: var(--color-white, #ffffff);
-  border-radius: 8px;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-secondary, "Saol Display", serif);
-  font-size: 24px;
-  font-weight: 400;
-  margin: 0 auto;
-}
-
 .vendor-sidebar-title {
-  color: var(--color-white, #ffffff);
-  margin: 0 0 0.5rem 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 300;
+  color: white;
+  margin: 0 0 var(--space-sm) 0;
 }
 
 .vendor-sidebar-subtitle {

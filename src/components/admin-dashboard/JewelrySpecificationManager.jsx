@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Search, Diamond, DollarSign, Target } from 'lucide-react';
 
 const JewelrySpecificationManager = () => {
   const [specifications, setSpecifications] = useState([]);
@@ -94,13 +93,13 @@ const JewelrySpecificationManager = () => {
     }
   };
 
-  const getComplexityColor = (complexity) => {
+  const getComplexityStyle = (complexity) => {
     switch (complexity) {
-      case 'SIMPLE': return 'bg-green-100 text-green-800';
-      case 'MODERATE': return 'bg-yellow-100 text-yellow-800';
-      case 'COMPLEX': return 'bg-orange-100 text-orange-800';
-      case 'MASTERPIECE': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'SIMPLE': return { backgroundColor: '#dcfce7', color: '#166534' };
+      case 'MODERATE': return { backgroundColor: '#fef3c7', color: '#854d0e' };
+      case 'COMPLEX': return { backgroundColor: '#fed7aa', color: '#9a3412' };
+      case 'MASTERPIECE': return { backgroundColor: '#fee2e2', color: '#991b1b' };
+      default: return { backgroundColor: '#f1f5f9', color: '#475569' };
     }
   };
 
@@ -113,178 +112,177 @@ const JewelrySpecificationManager = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      <div className="admin-empty-state">
+        Loading specifications...
       </div>
     );
   }
 
   return (
-    <div className="jewelry-specification-manager">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Action Bar */}
-        <div className="mb-6 flex justify-end">
+    <div>
+      {/* Action Bar */}
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 style={{ margin: 0, fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+          Jewelry Specifications
+        </h1>
+        <button
+          onClick={() => alert('Create modal - Coming soon!')}
+          className="admin-button admin-button-primary"
+        >
+          + Create New Specification
+        </button>
+      </div>
+
+      {/* Filters and Search */}
+      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div>
+            <input
+              type="text"
+              placeholder="Search specifications..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="admin-input"
+              style={{ width: '100%' }}
+            />
+          </div>
+
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="admin-select"
+          >
+            <option value="ALL">All Categories</option>
+            {categories.map(category => (
+              <option key={category} value={category}>{category.replace('_', ' ')}</option>
+            ))}
+          </select>
+
+          <select
+            value={complexityFilter}
+            onChange={(e) => setComplexityFilter(e.target.value)}
+            className="admin-select"
+          >
+            <option value="ALL">All Complexities</option>
+            {complexities.map(complexity => (
+              <option key={complexity} value={complexity}>{complexity}</option>
+            ))}
+          </select>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.875rem', color: '#64748b', fontWeight: '500' }}>
+            {filteredSpecs.length} specifications
+          </div>
+        </div>
+      </div>
+
+      {/* Specifications Grid */}
+      {filteredSpecs.length === 0 ? (
+        <div className="admin-empty-state">
+          <h3 style={{ fontSize: '1rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>No specifications found</h3>
+          <p style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '1.5rem' }}>
+            {searchTerm || categoryFilter !== 'ALL' || complexityFilter !== 'ALL'
+              ? 'Try adjusting your search or filters.'
+              : 'Get started by creating your first jewelry specification.'}
+          </p>
           <button
             onClick={() => alert('Create modal - Coming soon!')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+            className="admin-button admin-button-primary"
           >
-            <Plus size={20} />
-            Create New Specification
+            + Create Specification
           </button>
         </div>
-
-        {/* Filters and Search */}
-        <div className="bg-white p-6 rounded-lg shadow-sm mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search specifications..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="ALL">All Categories</option>
-              {categories.map(category => (
-                <option key={category} value={category}>{category.replace('_', ' ')}</option>
-              ))}
-            </select>
-
-            <select
-              value={complexityFilter}
-              onChange={(e) => setComplexityFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="ALL">All Complexities</option>
-              {complexities.map(complexity => (
-                <option key={complexity} value={complexity}>{complexity}</option>
-              ))}
-            </select>
-
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <DollarSign className="h-4 w-4" />
-              <span>{filteredSpecs.length} specifications</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Specifications Grid */}
-        {filteredSpecs.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-            <Diamond className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No specifications found</h3>
-            <p className="text-sm text-gray-500 mb-4">
-              {searchTerm || categoryFilter !== 'ALL' || complexityFilter !== 'ALL'
-                ? 'Try adjusting your search or filters.'
-                : 'Get started by creating your first jewelry specification.'}
-            </p>
-            <button
-              onClick={() => alert('Create modal - Coming soon!')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center gap-2"
-            >
-              <Plus size={20} />
-              Create Specification
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredSpecs.map((spec) => (
-              <div key={spec.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <Diamond className="h-4 w-4 text-blue-600" />
-                      <h3 className="text-lg font-semibold text-gray-900">{spec.name}</h3>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => alert('Edit modal - Coming soon!')}
-                        className="text-gray-400 hover:text-blue-600"
-                      >
-                        <Edit size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(spec.id)}
-                        className="text-gray-400 hover:text-red-600"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Category:</span>
-                      <span className="text-sm font-medium">{spec.category?.replace('_', ' ') || 'Not specified'}</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Subcategory:</span>
-                      <span className="text-sm font-medium">{spec.subcategory || 'Not specified'}</span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Complexity:</span>
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${getComplexityColor(spec.designComplexity)}`}>
-                        {spec.designComplexity}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Metal:</span>
-                      <span className="text-sm font-medium">
-                        {spec.metalSpec ? `${spec.metalSpec.metalType} ${spec.metalSpec.purityLevel?.replace('_', ' ') || ''}` : 'Not specified'}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Stones:</span>
-                      <span className="text-sm font-medium">
-                        {spec.stoneSpecs ? `${spec.stoneSpecs.length} type${spec.stoneSpecs.length !== 1 ? 's' : ''}` : '0 types'}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Target Age Groups:</span>
-                      <span className="text-sm font-medium">{spec.targetAgeGroups?.length || 0}</span>
-                    </div>
-
-                    <div className="pt-3 border-t border-gray-200">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Est. Retail Price:</span>
-                        <span className="text-lg font-bold text-green-600">
-                          {formatCurrency(spec.estimatedRetailPrice)}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center mt-1">
-                        <span className="text-sm text-gray-600">Target Margin:</span>
-                        <span className="text-sm font-medium text-blue-600">
-                          {spec.targetMargin}%
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="pt-3 border-t border-gray-200">
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <Target className="h-3 w-3" />
-                        <span>Created: {new Date(spec.createdAt).toLocaleDateString()}</span>
-                      </div>
-                    </div>
-                  </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+          {filteredSpecs.map((spec) => (
+            <div key={spec.id} className="admin-card" style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                <h3 style={{ margin: 0, fontSize: '0.9375rem', fontWeight: '600', color: '#0f172a' }}>{spec.name}</h3>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button
+                    onClick={() => alert('Edit modal - Coming soon!')}
+                    className="admin-button admin-button-outline"
+                    style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(spec.id)}
+                    className="admin-button admin-button-danger"
+                    style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Category:</span>
+                  <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a' }}>{spec.category?.replace('_', ' ') || 'Not specified'}</span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Subcategory:</span>
+                  <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a' }}>{spec.subcategory || 'Not specified'}</span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Complexity:</span>
+                  <span style={{
+                    padding: '0.25rem 0.75rem',
+                    fontSize: '0.75rem',
+                    fontWeight: '500',
+                    borderRadius: '12px',
+                    ...getComplexityStyle(spec.designComplexity)
+                  }}>
+                    {spec.designComplexity}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Metal:</span>
+                  <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a' }}>
+                    {spec.metalSpec ? `${spec.metalSpec.metalType} ${spec.metalSpec.purityLevel?.replace('_', ' ') || ''}` : 'Not specified'}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Stones:</span>
+                  <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a' }}>
+                    {spec.stoneSpecs ? `${spec.stoneSpecs.length} type${spec.stoneSpecs.length !== 1 ? 's' : ''}` : '0 types'}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Target Age Groups:</span>
+                  <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a' }}>{spec.targetAgeGroups?.length || 0}</span>
+                </div>
+
+                <div style={{ paddingTop: '0.75rem', borderTop: '1px solid #e2e8f0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Est. Retail Price:</span>
+                    <span style={{ fontSize: '1rem', fontWeight: '700', color: '#10b981' }}>
+                      {formatCurrency(spec.estimatedRetailPrice)}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.25rem' }}>
+                    <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Target Margin:</span>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a' }}>
+                      {spec.targetMargin}%
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ paddingTop: '0.75rem', borderTop: '1px solid #e2e8f0' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                    Created: {new Date(spec.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

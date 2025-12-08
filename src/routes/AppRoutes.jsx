@@ -10,6 +10,7 @@ const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
 const CollectionPage = lazy(() => import("@pages/CollectionPage"));
 const CollectionDetailPage = lazy(() => import("@pages/CollectionDetailPage"));
+const ProductDetailPage = lazy(() => import("@pages/ProductDetailPage"));
 const ServicesPage = lazy(() => import("@pages/ServicesPage"));
 const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
 const SupportPage = lazy(() => import("@pages/SupportPage"));
@@ -141,9 +142,11 @@ export default function AppRoutes() {
     }
 
     // Check dynamic routes (with params)
+    const productDetailBase = ROUTES.PRODUCT_DETAIL.replace("/:productId", "");
     if (
       location.pathname.startsWith(ROUTES.COLLECTIONS + "/") ||
       location.pathname.startsWith(ROUTES.NEWS + "/") ||
+      location.pathname.startsWith(productDetailBase + "/") ||
       location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
@@ -234,6 +237,11 @@ export default function AppRoutes() {
               element={<CollectionDetailPage />}
             />
 
+            <Route
+              path={ROUTES.PRODUCT_DETAIL}
+              element={<ProductDetailPage />}
+            />
+
             <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
 
             <Route
@@ -306,7 +314,7 @@ export default function AppRoutes() {
             <Route
               path={ROUTES.DASHBOARD_ADMIN_MANAGE}
               element={
-                <ProtectedRoute requiredRole="ADMIN">
+                <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN", "IT_ADMIN", "PRODUCTION_OPS", "SALES_CUSTOMER_OPS", "FINANCE", "MARKETING", "CREATIVE_DESIGN", "LEGAL"]}>
                   <ManageProducts />
                 </ProtectedRoute>
               }
@@ -315,7 +323,7 @@ export default function AppRoutes() {
             <Route
               path={ROUTES.DASHBOARD_ADMIN}
               element={
-                <ProtectedRoute requiredRole="ADMIN">
+                <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN", "IT_ADMIN", "PRODUCTION_OPS", "SALES_CUSTOMER_OPS", "FINANCE", "MARKETING", "CREATIVE_DESIGN", "LEGAL"]}>
                   <AdminDashboard />
                 </ProtectedRoute>
               }

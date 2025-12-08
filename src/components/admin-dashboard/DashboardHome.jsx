@@ -41,7 +41,7 @@ const DashboardHome = ({ setActiveTab }) => {
     }
   };
 
-  const StatCard = ({ title, value, icon, color, description }) => (
+  const StatCard = ({ title, value, icon, color, description, trend, progress }) => (
     <div className="admin-card stat-card">
       <div className="stat-card-header">
         <div className="stat-card-icon" style={{ backgroundColor: color }}>
@@ -49,10 +49,34 @@ const DashboardHome = ({ setActiveTab }) => {
         </div>
         <div className="stat-card-info">
           <h3 className="stat-card-title">{title}</h3>
-          <div className="stat-card-value">{stats.loading ? "..." : value}</div>
+          <div className="stat-card-value">
+            {stats.loading ? (
+              <span className="skeleton-loader" />
+            ) : (
+              <>
+                {value}
+                {trend && (
+                  <span className={`stat-card-trend ${trend.type}`}>
+                    {trend.type === 'positive' ? '↑' : '↓'} {trend.value}
+                  </span>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
       <div className="stat-card-description">{description}</div>
+      {progress && (
+        <div className="stat-card-progress">
+          <div
+            className="stat-card-progress-bar"
+            style={{
+              width: `${progress}%`,
+              background: `linear-gradient(90deg, ${color}, ${color}dd)`
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 
@@ -71,45 +95,27 @@ const DashboardHome = ({ setActiveTab }) => {
 
   return (
     <div className="dashboard-home">
-      {/* Welcome Section */}
-      <div className="admin-card welcome-card">
-        <h2 className="welcome-title">Welcome to Mirror Admin Dashboard</h2>
-        <p className="welcome-description">
-          Manage your diamond jewelry business with ease. Monitor your
-          inventory, update product catalogs, and oversee store operations all
-          in one place.
-        </p>
-      </div>
-
       {/* Stats Grid */}
       <div className="stats-grid">
         <StatCard
           title="Products"
           value={stats.products}
-          icon=""
-          color="#bc224c"
-          description="Total jewelry products in inventory"
+          description="Active jewelry items in catalog"
         />
         <StatCard
           title="Categories"
           value={stats.categories}
-          icon=""
-          color="#17a2b8"
-          description="Product categories and types"
+          description="Product categories from MISA"
         />
         <StatCard
           title="Collections"
           value={stats.collections}
-          icon=""
-          color="#28a745"
-          description="Seasonal and themed collections"
+          description="Curated seasonal collections"
         />
         <StatCard
           title="Locations"
           value={stats.locations}
-          icon=""
-          color="#ffc107"
-          description="Store locations and outlets"
+          description="Retail and showroom locations"
         />
       </div>
 
@@ -120,29 +126,21 @@ const DashboardHome = ({ setActiveTab }) => {
           <QuickAction
             title="Add New Product"
             description="Create a new jewelry product with specifications"
-            icon=""
-            color="#bc224c"
             onClick={() => setActiveTab("products")}
           />
           <QuickAction
             title="Manage Categories"
-            description="Organize products into categories"
-            icon=""
-            color="#17a2b8"
+            description="View and organize MISA product categories"
             onClick={() => setActiveTab("categories")}
           />
           <QuickAction
             title="Create Collection"
-            description="Group products into seasonal collections"
-            icon=""
-            color="#28a745"
+            description="Curate seasonal jewelry collections"
             onClick={() => setActiveTab("collections")}
           />
           <QuickAction
             title="Add Store Location"
-            description="Register a new store or outlet"
-            icon=""
-            color="#ffc107"
+            description="Register a new retail location"
             onClick={() => setActiveTab("locations")}
           />
         </div>

@@ -31,7 +31,7 @@ const VendorProducts = ({ vendorInfo }) => {
   const filteredProducts = products.filter((product) => {
     return (
       product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.sku?.toLowerCase().includes(searchTerm.toLowerCase())
+      product.skuCode?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
 
@@ -154,10 +154,10 @@ const VendorProducts = ({ vendorInfo }) => {
                           padding: "2px 6px",
                           borderRadius: "4px",
                         }}>
-                          {product.sku}
+                          {product.skuCode || "N/A"}
                         </code>
                       </td>
-                      <td>{product.category?.name || "No Category"}</td>
+                      <td>{product.categoryName || "No Category"}</td>
                       <td>
                         <span style={{
                           color: product.stockQuantity <= product.minStockLevel ? "#dc3545" : "#28a745",

@@ -171,15 +171,15 @@ const PaymentSchedulesManager = () => {
   }, [schedules.length, page, pageSize, totalCount]);
 
   return (
-    <div className="admin-card admin-payments-card">
-      <div className="admin-card-header">
+    <div className="admin-card" style={{ padding: "1.5rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" }}>
         <div>
-          <h2 className="admin-card-title">Payment Schedules</h2>
-          <p className="admin-card-subtitle">
+          <h2 style={{ fontSize: "1rem", fontWeight: "600", marginBottom: "0.5rem", color: "#0f172a" }}>Payment Schedules</h2>
+          <p style={{ fontSize: "0.875rem", color: "#64748b" }}>
             Track installments across all customer orders and mark payments as received.
           </p>
         </div>
-        <div className="payments-toolbar">
+        <div style={{ display: "flex", gap: "0.75rem" }}>
           <select
             className="admin-select"
             value={statusFilter}
@@ -208,8 +208,8 @@ const PaymentSchedulesManager = () => {
       ) : schedules.length === 0 ? (
         <div className="admin-empty-state">No payment schedules found.</div>
       ) : (
-        <div className="payments-table-wrapper">
-          <table className="payments-table">
+        <div style={{ overflowX: "auto" }}>
+          <table className="admin-table">
             <thead>
               <tr>
                 <th>Order</th>
@@ -237,11 +237,12 @@ const PaymentSchedulesManager = () => {
                     </span>
                   </td>
                   <td>
-                    <div className="payments-actions">
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
                       {canMarkPaid(schedule) && (
                         <button
                           className="admin-button admin-button-primary"
                           onClick={() => openMarkModal(schedule)}
+                          style={{ padding: "0.375rem 0.75rem", fontSize: "0.8125rem" }}
                         >
                           Mark paid
                         </button>
@@ -255,9 +256,9 @@ const PaymentSchedulesManager = () => {
         </div>
       )}
 
-      <div className="payments-footer">
-        <span className="payments-page-info">{pageInfo}</span>
-        <div className="payments-pagination">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #e2e8f0" }}>
+        <span style={{ fontSize: "0.875rem", color: "#64748b" }}>{pageInfo}</span>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
           <button
             className="admin-button admin-button-secondary"
             onClick={() => setPage(Math.max(page - 1, 0))}
@@ -278,24 +279,24 @@ const PaymentSchedulesManager = () => {
       {markModal && (
         <div className="admin-modal-overlay">
           <div className="admin-modal">
-            <div className="admin-modal-header">
-              <h3>Record payment</h3>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", paddingBottom: "1rem", borderBottom: "1px solid #e2e8f0" }}>
+              <h3 style={{ fontSize: "1rem", fontWeight: "600", color: "#0f172a" }}>Record payment</h3>
               <button
                 type="button"
-                className="admin-modal-close"
                 onClick={closeMarkModal}
                 disabled={markSubmitting}
+                style={{ background: "none", border: "none", fontSize: "1.5rem", color: "#64748b", cursor: "pointer", padding: "0", lineHeight: "1" }}
               >
                 ×
               </button>
             </div>
-            <form className="payments-mark-form" onSubmit={handleMarkSubmit}>
-              <p className="payments-mark-summary">
+            <form onSubmit={handleMarkSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <p style={{ fontSize: "0.875rem", color: "#64748b", marginBottom: "0.5rem" }}>
                 {`Order ${markModal.schedule.orderId} – due ${formatDateTime(markModal.schedule.dueDate)}`}
               </p>
-              <div className="payments-mark-grid">
-                <label>
-                  Amount paid
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  <span style={{ fontSize: "0.875rem", fontWeight: "500", color: "#0f172a" }}>Amount paid</span>
                   <input
                     type="number"
                     min="1"
@@ -308,10 +309,11 @@ const PaymentSchedulesManager = () => {
                       }))
                     }
                     required
+                    className="admin-input"
                   />
                 </label>
-                <label>
-                  Payment method
+                <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  <span style={{ fontSize: "0.875rem", fontWeight: "500", color: "#0f172a" }}>Payment method</span>
                   <input
                     type="text"
                     value={markModal.paymentMethod}
@@ -322,10 +324,11 @@ const PaymentSchedulesManager = () => {
                       }))
                     }
                     placeholder="e.g. Bank transfer"
+                    className="admin-input"
                   />
                 </label>
-                <label>
-                  Paid at
+                <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  <span style={{ fontSize: "0.875rem", fontWeight: "500", color: "#0f172a" }}>Paid at</span>
                   <input
                     type="datetime-local"
                     value={markModal.paidAt}
@@ -335,11 +338,12 @@ const PaymentSchedulesManager = () => {
                         paidAt: event.target.value,
                       }))
                     }
+                    className="admin-input"
                   />
                 </label>
               </div>
-              <label className="payments-mark-notes">
-                Internal notes
+              <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <span style={{ fontSize: "0.875rem", fontWeight: "500", color: "#0f172a" }}>Internal notes</span>
                 <textarea
                   rows={3}
                   value={markModal.note}
@@ -350,6 +354,7 @@ const PaymentSchedulesManager = () => {
                     }))
                   }
                   placeholder="Optional note for audit trail"
+                  className="admin-input"
                 />
               </label>
 
@@ -359,7 +364,7 @@ const PaymentSchedulesManager = () => {
                 </div>
               )}
 
-              <div className="payments-mark-actions">
+              <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end", marginTop: "0.5rem" }}>
                 <button
                   type="button"
                   className="admin-button admin-button-secondary"

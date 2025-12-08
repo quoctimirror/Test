@@ -93,13 +93,23 @@ const OrderFormModal = ({ isOpen, onClose, productDetails, onSuccess }) => {
 
                 // Product details
                 productName: productDetails.name,
-                productConfiguration: {
-                    shape: productDetails.shape,
-                    metal: productDetails.metal,
-                    band: productDetails.band,
-                    size: productDetails.size,
-                    quantity: productDetails.quantity
-                },
+                productConfiguration: productDetails.isRegularProduct
+                    ? {
+                        skuCode: productDetails.skuCode,
+                        category: productDetails.category,
+                        metalType: productDetails.metalType,
+                        metalPurity: productDetails.metalPurity,
+                        stoneType: productDetails.stoneType,
+                        weightGrams: productDetails.weightGrams,
+                        quantity: productDetails.quantity
+                    }
+                    : {
+                        shape: productDetails.shape,
+                        metal: productDetails.metal,
+                        band: productDetails.band,
+                        size: productDetails.size,
+                        quantity: productDetails.quantity
+                    },
 
                 // Pricing
                 totalAmount: subtotal,
@@ -153,10 +163,38 @@ const OrderFormModal = ({ isOpen, onClose, productDetails, onSuccess }) => {
                         <div className="order-summary-details">
                             <p className="bodytext-3--no-margin"><strong>{productDetails.name}</strong></p>
                             <div className="order-summary-specs">
-                                <span className="bodytext-4--no-margin">Shape: {productDetails.shape}</span>
-                                <span className="bodytext-4--no-margin">Metal: {productDetails.metal}</span>
-                                <span className="bodytext-4--no-margin">Band: {productDetails.band}</span>
-                                <span className="bodytext-4--no-margin">Size: {productDetails.size}</span>
+                                {/* Configurable product specs (ProductV2) */}
+                                {!productDetails.isRegularProduct && (
+                                    <>
+                                        <span className="bodytext-4--no-margin">Shape: {productDetails.shape}</span>
+                                        <span className="bodytext-4--no-margin">Metal: {productDetails.metal}</span>
+                                        <span className="bodytext-4--no-margin">Band: {productDetails.band}</span>
+                                        <span className="bodytext-4--no-margin">Size: {productDetails.size}</span>
+                                    </>
+                                )}
+                                {/* Regular product specs (Product Detail Page) */}
+                                {productDetails.isRegularProduct && (
+                                    <>
+                                        {productDetails.skuCode && (
+                                            <span className="bodytext-4--no-margin">SKU: {productDetails.skuCode}</span>
+                                        )}
+                                        {productDetails.category && (
+                                            <span className="bodytext-4--no-margin">Category: {productDetails.category}</span>
+                                        )}
+                                        {productDetails.metalType && (
+                                            <span className="bodytext-4--no-margin">Metal: {productDetails.metalType}</span>
+                                        )}
+                                        {productDetails.metalPurity && (
+                                            <span className="bodytext-4--no-margin">Purity: {productDetails.metalPurity}</span>
+                                        )}
+                                        {productDetails.stoneType && (
+                                            <span className="bodytext-4--no-margin">Stone: {productDetails.stoneType}</span>
+                                        )}
+                                        {productDetails.weightGrams && (
+                                            <span className="bodytext-4--no-margin">Weight: {productDetails.weightGrams}g</span>
+                                        )}
+                                    </>
+                                )}
                                 <span className="bodytext-4--no-margin">Quantity: {productDetails.quantity}</span>
                             </div>
                             <p className="order-summary-price heading-3--no-margin">

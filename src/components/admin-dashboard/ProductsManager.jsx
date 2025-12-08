@@ -18,8 +18,8 @@ const ProductsManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [uploading, setUploading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [imageFiles, setImageFiles] = useState([]); // Array of {file, preview, uploaded, url}
+  const [existingImages, setExistingImages] = useState([]); // Existing image URLs from server
 
   const [formData, setFormData] = useState({
     name: "",
@@ -51,7 +51,7 @@ const ProductsManager = () => {
     setLoading(true);
     try {
       const [productsRes, categoriesRes, vendorsRes] = await Promise.all([
-        productsAPI.getAll(),
+        productsAPI.getAllIncludingInactive(),
         categoriesAPI.getAll(),
         vendorsAPI.getAll().catch(() => ({ data: [] })), // Fallback if vendors API fails
       ]);
@@ -90,70 +90,110 @@ const ProductsManager = () => {
       minStockLevel: "",
     });
     setEditingProduct(null);
-    setSelectedFile(null);
-    // Cleanup preview URL to prevent memory leak
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
-    setPreviewUrl(null);
+    // Cleanup preview URLs to prevent memory leak
+    imageFiles.forEach(img => {
+      if (img.preview) {
+        URL.revokeObjectURL(img.preview);
+      }
+    });
+    setImageFiles([]);
+    setExistingImages([]);
   };
 
-  // File upload functions
-  const handleFileSelect = (event) => {
-    const file = event.target.files[0];
-    if (file) {
+  // Multiple file upload functions
+  const handleMultipleFileSelect = (event) => {
+    const files = Array.from(event.target.files);
+    if (files.length === 0) return;
+
+    const validFiles = [];
+    for (const file of files) {
       // Check file type
       if (!file.type.startsWith("image/")) {
-        setError("Please select an image file");
-        return;
+        setError(`${file.name} is not an image file`);
+        continue;
       }
       // Check file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setError("File size must be less than 5MB");
-        return;
+        setError(`${file.name} is too large (max 5MB)`);
+        continue;
       }
 
-      setSelectedFile(file);
-      setError(null);
-
-      // Cleanup previous preview URL
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
-
-      // Create preview URL for local display
+      // Create preview URL
       const preview = URL.createObjectURL(file);
-      setPreviewUrl(preview);
+      validFiles.push({
+        file,
+        preview,
+        uploaded: false,
+        url: null
+      });
+    }
+
+    if (validFiles.length > 0) {
+      setImageFiles(prev => [...prev, ...validFiles]);
+      setError(null);
     }
   };
 
-  const uploadImage = async (file = selectedFile) => {
-    if (!file) return null;
+  const uploadAllImages = async () => {
+    const uploadPromises = imageFiles
+      .filter(img => !img.uploaded && img.file)
+      .map(async (img, index) => {
+        try {
+          const response = await fileUploadAPI.upload(
+            img.file,
+            `Product image: ${formData.name || "New product"} - ${index + 1}`,
+            "mirror-storage",
+            "public"
+          );
 
-    setUploading(true);
-    try {
-      const response = await fileUploadAPI.upload(
-        file,
-        `Product image: ${formData.name || "New product"}`,
-        "mirror-storage",
-        "public"
-      );
+          const publicUrl = response.data.publicUrl;
+          if (publicUrl) {
+            img.uploaded = true;
+            img.url = publicUrl;
+            return publicUrl;
+          }
+          throw new Error("No public URL returned");
+        } catch (err) {
+          console.error(`Failed to upload ${img.file.name}:`, err);
+          throw err;
+        }
+      });
 
-      const publicUrl = response.data.publicUrl;
-      if (publicUrl) {
-        setFormData((prev) => ({ ...prev, imageUrl: publicUrl }));
-        setSelectedFile(null);
-        setError(null);
-        return publicUrl;
-      }
+    const uploadedUrls = await Promise.all(uploadPromises);
+    return uploadedUrls;
+  };
 
-      throw new Error("No public URL returned from upload");
-    } catch (err) {
-      const errorInfo = handleAPIError(err, "Failed to upload image");
-      setError(errorInfo.message);
-      throw err;
-    } finally {
-      setUploading(false);
+  const removeImage = (index, isExisting = false) => {
+    if (isExisting) {
+      setExistingImages(prev => prev.filter((_, i) => i !== index));
+    } else {
+      setImageFiles(prev => {
+        const removed = prev[index];
+        if (removed.preview) {
+          URL.revokeObjectURL(removed.preview);
+        }
+        return prev.filter((_, i) => i !== index);
+      });
+    }
+  };
+
+  const moveImage = (index, direction, isExisting = false) => {
+    if (isExisting) {
+      setExistingImages(prev => {
+        const newArr = [...prev];
+        const newIndex = direction === 'up' ? index - 1 : index + 1;
+        if (newIndex < 0 || newIndex >= newArr.length) return prev;
+        [newArr[index], newArr[newIndex]] = [newArr[newIndex], newArr[index]];
+        return newArr;
+      });
+    } else {
+      setImageFiles(prev => {
+        const newArr = [...prev];
+        const newIndex = direction === 'up' ? index - 1 : index + 1;
+        if (newIndex < 0 || newIndex >= newArr.length) return prev;
+        [newArr[index], newArr[newIndex]] = [newArr[newIndex], newArr[index]];
+        return newArr;
+      });
     }
   };
 
@@ -168,7 +208,7 @@ const ProductsManager = () => {
       description: product.description || "",
       categoryId: product.categoryId || "",
       vendorId: product.vendor?.id || "",
-      sku: product.sku || "",
+      sku: product.skuCode || "",
       price: product.price?.toString() || "",
       currency: product.currency || "VND",
       metalType: product.metalType || "GOLD",
@@ -191,6 +231,21 @@ const ProductsManager = () => {
       stockQuantity: product.stockQuantity?.toString() || "",
       minStockLevel: product.minStockLevel?.toString() || "",
     });
+
+    // Populate existing images
+    const existingUrls = [];
+    if (product.imageUrl && !product.imageUrl.includes('example.com')) {
+      existingUrls.push(product.imageUrl);
+    }
+    if (Array.isArray(product.imageUrls)) {
+      product.imageUrls.forEach(url => {
+        if (url && !url.includes('example.com') && !existingUrls.includes(url)) {
+          existingUrls.push(url);
+        }
+      });
+    }
+    setExistingImages(existingUrls);
+
     setEditingProduct(product);
     setIsModalOpen(true);
   };
@@ -201,17 +256,28 @@ const ProductsManager = () => {
     setUploading(true);
 
     try {
-      // Upload image first if new file is selected
-      let imageUrl = formData.imageUrl; // Keep existing URL
-      if (selectedFile) {
-        const uploadedUrl = await uploadImage(selectedFile);
-        imageUrl = uploadedUrl || formData.imageUrl;
+      // Upload all new images first
+      let newUploadedUrls = [];
+      if (imageFiles.length > 0) {
+        newUploadedUrls = await uploadAllImages();
       }
+
+      // Combine existing images and newly uploaded images
+      const allImageUrls = [
+        ...existingImages,
+        ...newUploadedUrls.filter(url => url)
+      ];
+
+      // First image becomes imageUrl, rest go to imageUrls
+      const imageUrl = allImageUrls[0] || "";
+      const imageUrls = allImageUrls.length > 0 ? allImageUrls : [];
 
       const submitData = {
         ...formData,
+        skuId: formData.sku, // Map 'sku' form field to 'skuId' backend field
         imageUrl: imageUrl,
-        vendorId: formData.vendorId || null, // Send vendorId or null
+        imageUrls: imageUrls,
+        vendorId: formData.vendorId || null,
         price: parseFloat(formData.price) || 0,
         weightGrams: formData.weightGrams
           ? parseFloat(formData.weightGrams)
@@ -224,22 +290,16 @@ const ProductsManager = () => {
               .map((tag) => tag.trim())
               .filter((tag) => tag)
           : [],
-        imageUrls: formData.imageUrls
-          ? formData.imageUrls
-              .split(",")
-              .map((url) => url.trim())
-              .filter((url) => url)
-          : [],
         dimensions: formData.dimensions
           ? (() => {
-              // Parse text thành JSON object
+              // Parse text to JSON object
               // "Diameter: 17mm, Band width: 2.5mm" -> {diameter: "17mm", bandWidth: "2.5mm"}
               const dimensionsObj = {};
               const pairs = formData.dimensions.split(",");
               pairs.forEach((pair) => {
                 const [key, value] = pair.split(":").map((s) => s.trim());
                 if (key && value) {
-                  // Convert key thành camelCase
+                  // Convert key to camelCase
                   const camelKey = key
                     .toLowerCase()
                     .replace(/\s+(.)/g, (_, letter) => letter.toUpperCase());
@@ -250,6 +310,9 @@ const ProductsManager = () => {
             })()
           : null,
       };
+
+      // Remove the 'sku' field since we're using 'skuId'
+      delete submitData.sku;
 
       if (editingProduct) {
         await productsAPI.update(editingProduct.id, submitData);
@@ -295,7 +358,7 @@ const ProductsManager = () => {
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.sku?.toLowerCase().includes(searchTerm.toLowerCase());
+      (product.skuCode || '').toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
       selectedCategory === "all" || product.categoryId === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -309,49 +372,21 @@ const ProductsManager = () => {
   };
 
   if (loading) {
-    return (
-      <div
-        className="admin-card"
-        style={{ padding: "3rem", textAlign: "center" }}
-      >
-        <div>Loading products...</div>
-      </div>
-    );
+    return <div className="admin-empty-state">Loading products...</div>;
   }
 
   return (
     <div className="products-manager">
       {error && (
-        <div
-          className="admin-card"
-          style={{
-            padding: "1rem",
-            marginBottom: "1rem",
-            backgroundColor: "#fee",
-            borderColor: "#feb2b2",
-          }}
-        >
-          <div style={{ color: "#c53030" }}>{error}</div>
+        <div className="admin-error-state" style={{ marginBottom: "1.5rem" }}>
+          {error}
         </div>
       )}
 
       {/* Header Controls */}
-      <div
-        className="admin-card"
-        style={{ padding: "1.5rem", marginBottom: "1.5rem" }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "1rem",
-            flexWrap: "wrap",
-          }}
-        >
-          <div
-            style={{ display: "flex", gap: "1rem", flex: 1, minWidth: "300px" }}
-          >
+      <div className="admin-card" style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "1rem", flex: 1, minWidth: "300px" }}>
             <input
               type="text"
               placeholder="Search products..."
@@ -363,7 +398,7 @@ const ProductsManager = () => {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="admin-input"
+              className="admin-select"
               style={{ width: "200px" }}
             >
               <option value="all">All Categories</option>
@@ -378,12 +413,8 @@ const ProductsManager = () => {
               ))}
             </select>
           </div>
-          <button
-            onClick={handleAdd}
-            className="admin-button admin-button-primary"
-            title="Add Product"
-          >
-            +
+          <button onClick={handleAdd} className="admin-button admin-button-primary">
+            Add Product
           </button>
         </div>
       </div>
@@ -407,36 +438,19 @@ const ProductsManager = () => {
             {filteredProducts.map((product) => (
               <tr key={product.id}>
                 <td>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
                     {product.imageUrl && (
                       <img
                         src={product.imageUrl}
                         alt={product.name}
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          borderRadius: "4px",
-                          objectFit: "cover",
-                        }}
+                        style={{ width: "40px", height: "40px", borderRadius: "4px", objectFit: "cover" }}
                       />
                     )}
                     <div>
-                      <div style={{ fontWeight: "500" }}>{product.name}</div>
+                      <div style={{ fontWeight: "500", color: "#0f172a" }}>{product.name}</div>
                       {product.featured && (
-                        <span
-                          style={{
-                            fontSize: "12px",
-                            color: "#bc224c",
-                            fontWeight: "500",
-                          }}
-                        >
-                           Featured
+                        <span style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: "400" }}>
+                          Featured
                         </span>
                       )}
                     </div>
@@ -445,26 +459,16 @@ const ProductsManager = () => {
                 <td>
                   <code
                     style={{
-                      background: "#f8f9fa",
-                      padding: "2px 6px",
+                      background: "#f1f5f9",
+                      padding: "2px 8px",
                       borderRadius: "4px",
                     }}
                   >
-                    {product.skuId ||
-                     (typeof product.sku === 'string'
-                       ? product.sku
-                       : product.sku?.id || product.sku?.name || "N/A")}
+                    {product.skuCode || "N/A"}
                   </code>
                 </td>
                 <td>
-                  {(() => {
-                    if (!product.category) return "No Category";
-                    if (typeof product.category === 'string') return product.category;
-                    if (typeof product.category === 'object') {
-                      return product.category.name || product.category.categoryName || "Unnamed Category";
-                    }
-                    return String(product.category);
-                  })()}
+                  {product.categoryName || "No Category"}
                 </td>
                 <td>
                   {product.vendor ? (
@@ -482,7 +486,7 @@ const ProductsManager = () => {
                       )}
                     </div>
                   ) : (
-                    <span style={{ color: "#999", fontStyle: "italic" }}>
+                    <span style={{ color: "#94a3b8", fontStyle: "italic" }}>
                       No Vendor
                     </span>
                   )}
@@ -493,8 +497,8 @@ const ProductsManager = () => {
                     style={{
                       color:
                         product.stockQuantity <= product.minStockLevel
-                          ? "#dc3545"
-                          : "#28a745",
+                          ? "#dc2626"
+                          : "#059669",
                       fontWeight: "500",
                     }}
                   >
@@ -503,8 +507,8 @@ const ProductsManager = () => {
                   {product.stockQuantity <= product.minStockLevel && (
                     <span
                       style={{
-                        fontSize: "12px",
-                        color: "#dc3545",
+                        fontSize: "0.75rem",
+                        color: "#dc2626",
                         marginLeft: "4px",
                       }}
                     >
@@ -514,15 +518,14 @@ const ProductsManager = () => {
                 </td>
                 <td>
                   <span
+                    className="status-pill"
                     style={{
-                      padding: "4px 8px",
-                      borderRadius: "12px",
-                      fontSize: "12px",
-                      fontWeight: "500",
                       backgroundColor:
-                        product.status === "ACTIVE" ? "#d4edda" : "#f8d7da",
+                        product.status === "ACTIVE" ? "#ecfdf5" : "#fef2f2",
                       color:
-                        product.status === "ACTIVE" ? "#155724" : "#721c24",
+                        product.status === "ACTIVE" ? "#059669" : "#dc2626",
+                      borderColor:
+                        product.status === "ACTIVE" ? "#059669" : "#dc2626",
                     }}
                   >
                     {product.status || "ACTIVE"}
@@ -533,26 +536,14 @@ const ProductsManager = () => {
                     <button
                       onClick={() => handleEdit(product)}
                       className="admin-button admin-button-outline"
-                      style={{ padding: "0.25rem 0.5rem", fontSize: "12px" }}
+                      style={{ padding: "0.375rem 0.75rem", fontSize: "0.8125rem" }}
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => toggleFeatured(product)}
-                      className="admin-button admin-button-secondary"
-                      style={{ padding: "0.25rem 0.5rem", fontSize: "12px" }}
-                    >
-                      {product.featured ? "Unfeature" : "Feature"}
-                    </button>
-                    <button
                       onClick={() => handleDelete(product.id)}
-                      className="admin-button"
-                      style={{
-                        padding: "0.25rem 0.5rem",
-                        fontSize: "12px",
-                        backgroundColor: "#dc3545",
-                        color: "white",
-                      }}
+                      className="admin-button admin-button-danger"
+                      style={{ padding: "0.375rem 0.75rem", fontSize: "0.8125rem" }}
                     >
                       Delete
                     </button>
@@ -564,9 +555,7 @@ const ProductsManager = () => {
         </table>
 
         {filteredProducts.length === 0 && (
-          <div
-            style={{ padding: "3rem", textAlign: "center", color: "#6c757d" }}
-          >
+          <div className="admin-empty-state">
             No products found.{" "}
             {searchTerm || selectedCategory !== "all"
               ? "Try adjusting your filters."
@@ -689,7 +678,7 @@ const ProductsManager = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, categoryId: e.target.value })
                         }
-                        className="admin-input"
+                        className="admin-select"
                         required
                       >
                         <option value="">Select Category</option>
@@ -720,7 +709,7 @@ const ProductsManager = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, vendorId: e.target.value })
                         }
-                        className="admin-input"
+                        className="admin-select"
                       >
                         <option value="">None (No Vendor)</option>
                         {vendors.map((vendor) => (
@@ -780,7 +769,7 @@ const ProductsManager = () => {
                             metalType: e.target.value,
                           })
                         }
-                        className="admin-input"
+                        className="admin-select"
                       >
                         <option value="GOLD">Gold</option>
                         <option value="SILVER">Silver</option>
@@ -903,90 +892,117 @@ const ProductsManager = () => {
                         fontWeight: "500",
                       }}
                     >
-                      Main Image
+                      Product Images {uploading && <span style={{ color: "#ffc107" }}>⏳ Uploading...</span>}
                     </label>
+
+                    {/* File Upload Input */}
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={handleFileSelect}
+                      multiple
+                      onChange={handleMultipleFileSelect}
                       disabled={uploading}
-                      style={{
-                        padding: "0.5rem",
-                        border: "2px dashed #ddd",
-                        borderRadius: "4px",
-                        width: "100%",
-                        cursor: uploading ? "not-allowed" : "pointer",
-                        opacity: uploading ? 0.6 : 1,
-                      }}
                     />
-                    {selectedFile && (
-                      <div
-                        style={{
-                          marginTop: "0.5rem",
-                          fontSize: "14px",
-                          color: "#666",
-                        }}
-                      >
-                        📁 Selected: {selectedFile.name} (
-                        {(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
-                      </div>
-                    )}
-                    {(previewUrl || formData.imageUrl) && (
-                      <div style={{ marginTop: "0.5rem" }}>
-                        <img
-                          src={previewUrl || formData.imageUrl}
-                          alt={previewUrl ? "Preview" : "Current image"}
-                          style={{
-                            width: "120px",
-                            height: "120px",
-                            objectFit: "cover",
-                            borderRadius: "8px",
-                            border: previewUrl
-                              ? "2px dashed #ffc107"
-                              : "2px solid #28a745",
-                          }}
-                        />
-                        {!previewUrl && formData.imageUrl && (
-                          <div
-                            style={{
-                              fontSize: "12px",
-                              color: "#666",
-                              marginTop: "0.25rem",
-                            }}
-                          >
-                            <a
-                              href={formData.imageUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{ color: "#007bff" }}
-                            >
-                              View full size
-                            </a>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                    <div className="image-upload-help">
+                      Select multiple images (max 5MB each). First image will be the main product image.
+                    </div>
 
-                  <div>
-                    <label
-                      style={{
-                        display: "block",
-                        marginBottom: "0.5rem",
-                        fontWeight: "500",
-                      }}
-                    >
-                      Additional Image URLs (comma-separated)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.imageUrls}
-                      onChange={(e) =>
-                        setFormData({ ...formData, imageUrls: e.target.value })
-                      }
-                      className="admin-input"
-                      placeholder="https://example.com/img1.jpg, https://example.com/img2.jpg"
-                    />
+                    {/* Image Gallery */}
+                    {(existingImages.length > 0 || imageFiles.length > 0) && (
+                      <div className="image-gallery-grid">
+                        {/* Existing Images */}
+                        {existingImages.map((url, index) => (
+                          <div key={`existing-${index}`} className={`image-gallery-item ${index === 0 ? 'main-image' : ''}`}>
+                            {index === 0 && (
+                              <div className="image-badge main">
+                                MAIN
+                              </div>
+                            )}
+                            <img
+                              src={url}
+                              alt={`Product ${index + 1}`}
+                            />
+                            <div className="image-controls">
+                              {index > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() => moveImage(index, 'up', true)}
+                                  title="Move up"
+                                >
+                                  ↑
+                                </button>
+                              )}
+                              {index < existingImages.length + imageFiles.length - 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => moveImage(index, 'down', true)}
+                                  title="Move down"
+                                >
+                                  ↓
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => removeImage(index, true)}
+                                className="delete"
+                                title="Delete image"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* New Image Files */}
+                        {imageFiles.map((img, index) => {
+                          const actualIndex = existingImages.length + index;
+                          return (
+                            <div key={`new-${index}`} className={`image-gallery-item ${actualIndex === 0 ? 'main-image' : ''}`}>
+                              {actualIndex === 0 && (
+                                <div className="image-badge main">
+                                  MAIN
+                                </div>
+                              )}
+                              <div className="image-badge new">
+                                NEW
+                              </div>
+                              <img
+                                src={img.preview}
+                                alt={`New ${index + 1}`}
+                              />
+                              <div className="image-controls">
+                                {actualIndex > 0 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => moveImage(index, 'up', false)}
+                                    title="Move up"
+                                  >
+                                    ↑
+                                  </button>
+                                )}
+                                {actualIndex < existingImages.length + imageFiles.length - 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => moveImage(index, 'down', false)}
+                                    title="Move down"
+                                  >
+                                    ↓
+                                  </button>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => removeImage(index, false)}
+                                  className="delete"
+                                  title="Delete image"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -1053,7 +1069,7 @@ const ProductsManager = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, status: e.target.value })
                         }
-                        className="admin-input"
+                        className="admin-select"
                       >
                         <option value="ACTIVE">Active</option>
                         <option value="DISCONTINUED">Discontinued</option>

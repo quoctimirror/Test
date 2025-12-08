@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, Calendar, Target, Globe, BarChart3, RefreshCw } from 'lucide-react';
 
 const MarketTrendDashboard = () => {
   const [trends, setTrends] = useState([]);
@@ -8,7 +7,6 @@ const MarketTrendDashboard = () => {
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
   const categories = ['ALL', 'RINGS', 'NECKLACES', 'BRACELETS', 'EARRINGS'];
-  const seasons = ['SPRING', 'SUMMER', 'FALL', 'WINTER'];
 
   useEffect(() => {
     fetchMarketData();
@@ -67,17 +65,17 @@ const MarketTrendDashboard = () => {
     selectedCategory === 'ALL' || trend.category === selectedCategory
   );
 
-  const getTrendIcon = (priceImpact) => {
-    if (priceImpact > 0) return <TrendingUp className="h-5 w-5 text-green-600" />;
-    if (priceImpact < 0) return <TrendingDown className="h-5 w-5 text-red-600" />;
-    return <BarChart3 className="h-5 w-5 text-gray-600" />;
+  const getTrendIndicator = (priceImpact) => {
+    if (priceImpact > 0) return { symbol: '↑', color: '#10b981' };
+    if (priceImpact < 0) return { symbol: '↓', color: '#ef4444' };
+    return { symbol: '→', color: '#64748b' };
   };
 
-  const getStrengthColor = (strength) => {
-    if (strength >= 0.8) return 'bg-green-100 text-green-800';
-    if (strength >= 0.6) return 'bg-yellow-100 text-yellow-800';
-    if (strength >= 0.4) return 'bg-orange-100 text-orange-800';
-    return 'bg-red-100 text-red-800';
+  const getStrengthStyle = (strength) => {
+    if (strength >= 0.8) return { backgroundColor: '#dcfce7', color: '#166534' };
+    if (strength >= 0.6) return { backgroundColor: '#fef3c7', color: '#854d0e' };
+    if (strength >= 0.4) return { backgroundColor: '#fed7aa', color: '#9a3412' };
+    return { backgroundColor: '#fee2e2', color: '#991b1b' };
   };
 
   const formatPercentage = (value) => {
@@ -86,104 +84,119 @@ const MarketTrendDashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      <div className="admin-empty-state">
+        Loading market trends...
       </div>
     );
   }
 
   return (
-    <div className="market-trend-dashboard">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Action Bar */}
-        <div className="mb-6 flex justify-between items-center">
-          <div className="text-sm text-gray-500">
+    <div>
+      {/* Action Bar */}
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 style={{ margin: 0, fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+          Market Trends
+        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ fontSize: '0.8125rem', color: '#64748b' }}>
             Last updated: {lastRefresh.toLocaleTimeString()}
           </div>
           <button
             onClick={fetchMarketData}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+            className="admin-button admin-button-primary"
           >
-            <RefreshCw size={20} />
-            Refresh Data
+            ⟳ Refresh Data
           </button>
         </div>
-        {/* Filters */}
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700">Category:</label>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {categories.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-            <div className="ml-auto text-sm text-gray-600">
-              {filteredTrends.length} trends found
-            </div>
-          </div>
-        </div>
-
-        {/* Trends Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTrends.map((trend) => (
-            <div key={trend.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  {getTrendIcon(trend.priceImpact)}
-                  <h3 className="text-lg font-semibold text-gray-900">{trend.trendName}</h3>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mb-4">{trend.description}</p>
-
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Category:</span>
-                  <span className="text-sm font-medium">{trend.category}</span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Trend Strength:</span>
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStrengthColor(trend.strength)}`}>
-                    {formatPercentage(trend.strength)}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Price Impact:</span>
-                  <span className={`text-sm font-medium ${trend.priceImpact > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {trend.priceImpact > 0 ? '+' : ''}{formatPercentage(trend.priceImpact)}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Peak Season:</span>
-                  <span className="text-sm font-medium">{trend.peakSeason}</span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Est. Duration:</span>
-                  <span className="text-sm font-medium">{trend.estimatedDuration} days</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredTrends.length === 0 && (
-          <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-            <BarChart3 className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No trends found</h3>
-            <p className="text-sm text-gray-500">
-              Try selecting a different category or refresh the data.
-            </p>
-          </div>
-        )}
       </div>
+
+      {/* Filters */}
+      <div className="admin-card" style={{ padding: '1rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <label className="admin-label" style={{ margin: 0 }}>Category:</label>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="admin-select"
+          >
+            {categories.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
+          <div style={{ marginLeft: 'auto', fontSize: '0.875rem', color: '#64748b', fontWeight: '500' }}>
+            {filteredTrends.length} trends found
+          </div>
+        </div>
+      </div>
+
+      {/* Trends Grid */}
+      {filteredTrends.length === 0 ? (
+        <div className="admin-empty-state">
+          <h3 style={{ fontSize: '1rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>No trends found</h3>
+          <p style={{ fontSize: '0.875rem', color: '#64748b', margin: 0 }}>
+            Try selecting a different category or refresh the data.
+          </p>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+          {filteredTrends.map((trend) => {
+            const indicator = getTrendIndicator(trend.priceImpact);
+            return (
+              <div key={trend.id} className="admin-card" style={{ padding: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '1.25rem', color: indicator.color }}>{indicator.symbol}</span>
+                    <h3 style={{ margin: 0, fontSize: '0.9375rem', fontWeight: '600', color: '#0f172a' }}>{trend.trendName}</h3>
+                  </div>
+                </div>
+
+                <p style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1rem' }}>{trend.description}</p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Category:</span>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a' }}>{trend.category}</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Trend Strength:</span>
+                    <span style={{
+                      padding: '0.25rem 0.75rem',
+                      fontSize: '0.75rem',
+                      fontWeight: '500',
+                      borderRadius: '12px',
+                      ...getStrengthStyle(trend.strength)
+                    }}>
+                      {formatPercentage(trend.strength)}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Price Impact:</span>
+                    <span style={{
+                      fontSize: '0.8125rem',
+                      fontWeight: '500',
+                      color: trend.priceImpact > 0 ? '#10b981' : '#ef4444'
+                    }}>
+                      {trend.priceImpact > 0 ? '+' : ''}{formatPercentage(trend.priceImpact)}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Peak Season:</span>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a' }}>{trend.peakSeason}</span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Est. Duration:</span>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a' }}>{trend.estimatedDuration} days</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

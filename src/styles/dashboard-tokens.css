@@ -1,0 +1,415 @@
+/*
+ * MIRROR DIAMOND - DASHBOARD DESIGN TOKENS
+ * Shared design system for all admin/dashboard interfaces
+ * Import this file in all dashboard CSS files
+ */
+
+:root {
+  /* ========================================
+     PRIMARY COLORS - Navy Professional Palette
+     ======================================== */
+  --mirror-navy: #0f172a;
+  --mirror-navy-light: #1e293b;
+  --mirror-charcoal: #334155;
+  --mirror-slate: #64748b;
+
+  /* ========================================
+     ACCENT COLORS - Muted & Sophisticated
+     ======================================== */
+  --mirror-accent: #0f172a;
+  --mirror-accent-light: #334155;
+  --mirror-accent-subtle: #e2e8f0;
+
+  /* ========================================
+     NEUTRAL COLORS - Clean & Minimal
+     ======================================== */
+  --mirror-white: #ffffff;
+  --mirror-bg: #fafbfc;
+  --mirror-gray-50: #f8fafc;
+  --mirror-gray-100: #f1f5f9;
+  --mirror-gray-200: #e2e8f0;
+  --mirror-gray-300: #cbd5e1;
+  --mirror-gray-400: #94a3b8;
+  --mirror-gray-500: #64748b;
+  --mirror-gray-600: #475569;
+  --mirror-gray-700: #334155;
+  --mirror-gray-800: #1e293b;
+  --mirror-gray-900: #0f172a;
+
+  /* ========================================
+     FUNCTIONAL COLORS - Status & Feedback
+     ======================================== */
+  --color-success: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-info: #0284c7;
+  --color-info-bg: #f0f9ff;
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-error: #dc2626;
+  --color-error-bg: #fef2f2;
+
+  /* ========================================
+     STATUS COLORS - Order/Product Workflow
+     ======================================== */
+  --status-new: #78716c;
+  --status-pending: #2563eb;
+  --status-confirmed: #059669;
+  --status-production: #d97706;
+  --status-shipped: #7c3aed;
+  --status-completed: #16a34a;
+  --status-cancelled: #dc2626;
+  --status-overdue: #b91c1c;
+
+  /* ========================================
+     SHADOWS - Subtle Depth
+     ======================================== */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
+  --shadow-xl: 0 16px 48px rgba(15, 23, 42, 0.16);
+
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+  --font-display: 'Saol Display', serif;
+  --font-ui: 'BT Beau Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* ========================================
+     SPACING SCALE
+     ======================================== */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ========================================
+     TRANSITIONS
+     ======================================== */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   SKELETON LOADER - Loading States
+   ======================================== */
+
+/* Base skeleton element */
+.skeleton {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    var(--mirror-gray-200) 25%,
+    var(--mirror-gray-100) 50%,
+    var(--mirror-gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Legacy class for backwards compatibility */
+.skeleton-loader {
+  display: inline-block;
+  width: 48px;
+  height: 28px;
+  background: linear-gradient(
+    90deg,
+    var(--mirror-gray-200) 25%,
+    var(--mirror-gray-100) 50%,
+    var(--mirror-gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Skeleton text container */
+.skeleton-text {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Skeleton list container */
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Skeleton form container */
+.skeleton-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Animated shimmer */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Loading dots animation */
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+}
+
+.loading-dots-animation {
+  display: inline-block;
+  width: 1.5em;
+  text-align: left;
+  animation: loading-dots-animation 1.4s infinite;
+}
+
+@keyframes loading-dots-animation {
+  0%, 20% {
+    content: '.';
+  }
+  40% {
+    content: '..';
+  }
+  60%, 100% {
+    content: '...';
+  }
+}
+
+/* Loading container - centered loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl);
+  text-align: center;
+  color: var(--mirror-slate);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--mirror-gray-200);
+  border-top-color: var(--mirror-navy);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: var(--space-md);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 0.875rem;
+  color: var(--mirror-slate);
+}
+
+/* ========================================
+   RESPONSIVE BREAKPOINTS & UTILITIES
+   ======================================== */
+
+/*
+ * Breakpoint Reference:
+ * --bp-sm: 640px   - Small tablets, large phones in landscape
+ * --bp-md: 768px   - Tablets
+ * --bp-lg: 1024px  - Small laptops, tablets in landscape
+ * --bp-xl: 1280px  - Laptops, desktops
+ * --bp-2xl: 1536px - Large desktops
+ */
+
+/* Hide on mobile */
+.hide-mobile {
+  display: block;
+}
+
+/* Show only on mobile */
+.show-mobile {
+  display: none;
+}
+
+/* Responsive text utilities */
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Responsive table wrapper */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Stack elements on mobile */
+.stack-mobile {
+  display: flex;
+  gap: var(--space-md);
+}
+
+/* Responsive card grid */
+.responsive-grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* ========================================
+   TABLET BREAKPOINT (max-width: 1024px)
+   ======================================== */
+@media (max-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+/* ========================================
+   MOBILE BREAKPOINT (max-width: 768px)
+   ======================================== */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .show-mobile {
+    display: block !important;
+  }
+
+  .stack-mobile {
+    flex-direction: column;
+  }
+
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Reduce padding on mobile */
+  .admin-card,
+  .admin-p-lg {
+    padding: var(--space-md);
+  }
+
+  /* Full-width buttons on mobile */
+  .admin-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Responsive header */
+  .admin-page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  /* Responsive form grid */
+  .admin-grid-2,
+  .admin-grid-3,
+  .admin-grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stack flex items */
+  .admin-flex-wrap {
+    flex-direction: column;
+  }
+
+  /* Modal full-width on mobile */
+  .admin-modal-lg {
+    width: 95%;
+    max-width: none;
+    margin: var(--space-sm);
+  }
+
+  /* Table font size reduction */
+  .admin-table {
+    font-size: 0.8125rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 0.625rem 0.5rem;
+  }
+
+  /* Stats grid single column */
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Reduce section title size */
+  .admin-section-title {
+    font-size: 1rem;
+  }
+
+  /* Reduce header title size */
+  .admin-header-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* ========================================
+   SMALL MOBILE BREAKPOINT (max-width: 480px)
+   ======================================== */
+@media (max-width: 480px) {
+  /* Minimum padding */
+  .admin-card,
+  .admin-p-lg {
+    padding: var(--space-sm);
+  }
+
+  /* Smaller text */
+  .admin-header-subtitle,
+  .admin-form-hint,
+  .admin-stat-label {
+    font-size: 0.75rem;
+  }
+
+  /* Compact stat values */
+  .admin-stat-value {
+    font-size: 1.25rem;
+  }
+
+  /* Reduce button padding */
+  .admin-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .admin-button-sm {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  /* Compact table cells */
+  .admin-table th,
+  .admin-table td {
+    padding: 0.5rem 0.375rem;
+    font-size: 0.75rem;
+  }
+
+  /* Reduce input height */
+  .admin-input,
+  .admin-select {
+    height: 2rem;
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.5rem;
+  }
+}

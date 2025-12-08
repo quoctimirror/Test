@@ -37,4 +37,18 @@ dist-ssr
 # macOS system files
 __MACOSX/
 
+# Documentation files
+DASHBOARD_IMPLEMENTATION_PLAN.md
+PRODUCT_OPS_TESTING_GUIDE.md
+
+# Python virtual environment
+.venv/
+
+# Python test scripts
+*.py
+test_*.py
+capture_*.py
+__pycache__/
+*.pyc
+
 .claude/*

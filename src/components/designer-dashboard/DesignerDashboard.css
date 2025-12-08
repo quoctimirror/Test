@@ -1,9 +1,11 @@
 /* Designer Dashboard Styles */
+@import '../../styles/dashboard-tokens.css';
+
 .designer-dashboard-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f8f9fa;
-  font-family: "BT Beau Sans", sans-serif;
+  background-color: var(--mirror-bg);
+  font-family: var(--font-ui);
 }
 
 /* Sidebar */
@@ -26,11 +28,11 @@
 }
 
 .designer-sidebar-title {
-  font-family: "Saol Display", serif;
+  font-family: var(--font-display);
   font-size: 24px;
   font-weight: 300;
   color: white;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 var(--space-sm) 0;
 }
 
 .designer-sidebar-subtitle {
