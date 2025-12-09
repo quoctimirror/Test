@@ -25,7 +25,7 @@ html {
 /* Scroll effect section wrapper */
 .scroll-effect-section {
   position: relative;
-  height: 230vh;
+  height: 250vh; /* Match scrollEffectHeight in JS */
   z-index: 3;
 }
 
@@ -833,5 +833,57 @@ html {
 
   .fixed-arrow-container {
     bottom: 24px;
+  }
+}
+
+/* ========================================
+   FIXED IMMERSIVE BUTTON CONTAINER
+   For GlassThemeButton with globe icon
+======================================== */
+.fixed-immersive-container {
+  position: fixed;
+  bottom: 24px;
+  right: 2.5%;
+  z-index: 1000;
+  pointer-events: auto;
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .fixed-immersive-container {
+    bottom: 24px;
+  }
+}
+
+/* ========================================
+   FIXED SCROLL TO TOP CONTAINER
+   For GlassThemeButton with arrow-up icon
+======================================== */
+.fixed-scroll-top-container {
+  position: fixed;
+  bottom: 94px; /* 24px (immersive bottom) + 46px (immersive height) + 48px (gap) */
+  right: 2.5%;
+  z-index: 1000;
+  pointer-events: auto;
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.fixed-scroll-top-container.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-width: 768px) {
+  .fixed-scroll-top-container {
+    bottom: 78px; /* 24px + 42px + 12px - adjusted for smaller button */
+  }
+}
+
+@media (max-width: 480px) {
+  .fixed-scroll-top-container {
+    bottom: 74px; /* 24px + 38px + 12px - adjusted for smallest button */
   }
 }

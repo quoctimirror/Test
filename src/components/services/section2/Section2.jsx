@@ -4,7 +4,7 @@ import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransit
 import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 import "./Section2.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 
 const Section2 = () => {
   const navigate = useNavigate();
@@ -129,13 +129,13 @@ const Section2 = () => {
                 piece as radiant as the day you received it.
               </p>
             </div>
-            <ShineGlassButton
+            <GlassThemeButton
               className="section2-cta"
               theme="light"
               onClick={handleProductCareClick}
             >
-              See more
-            </ShineGlassButton>
+              <span className="bodytext-6--no-margin">See more</span>
+            </GlassThemeButton>
           </div>
         </div>
       </div>
@@ -158,13 +158,13 @@ const Section2 = () => {
                 promise of continuous evolution in your jewelry journey.
               </p>
             </div>
-            <ShineGlassButton
+            <GlassThemeButton
               className="section2-cta"
               theme="light"
               onClick={handleTradeInClick}
             >
-              See more
-            </ShineGlassButton>
+              <span className="bodytext-6--no-margin">See more</span>
+            </GlassThemeButton>
           </div>
         </div>
       </div>
@@ -189,13 +189,13 @@ const Section2 = () => {
                   piece as radiant as the day you received it.
                 </p>
               </div>
-              <ShineGlassButton
+              <GlassThemeButton
                 className="section2-cta"
-                theme="footer"
+                theme="dark"
                 onClick={handleProductCareClick}
               >
-                See more
-              </ShineGlassButton>
+                <span className="bodytext-6--no-margin">See more</span>
+              </GlassThemeButton>
             </div>
           </div>
         </div>
@@ -220,13 +220,13 @@ const Section2 = () => {
                   promise of continuous evolution in your jewelry journey.
                 </p>
               </div>
-              <ShineGlassButton
+              <GlassThemeButton
                 className="section2-cta"
-                theme="footer"
+                theme="dark"
                 onClick={handleTradeInClick}
               >
-                See more
-              </ShineGlassButton>
+                <span className="bodytext-6--no-margin">See more</span>
+              </GlassThemeButton>
             </div>
           </div>
         </div>
@@ -260,13 +260,13 @@ const Section2 = () => {
                     piece as radiant as the day you received it.
                   </p>
                 </div>
-                <ShineGlassButton
+                <GlassThemeButton
                   className="section2-cta"
                   theme="light"
                   onClick={handleProductCareClick}
                 >
-                  See more
-                </ShineGlassButton>
+                  <span className="bodytext-6--no-margin">See more</span>
+                </GlassThemeButton>
               </div>
             </div>
           </div>
@@ -295,13 +295,13 @@ const Section2 = () => {
                     promise of continuous evolution in your jewelry journey.
                   </p>
                 </div>
-                <ShineGlassButton
+                <GlassThemeButton
                   className="section2-cta"
                   theme="light"
                   onClick={handleTradeInClick}
                 >
-                  See more
-                </ShineGlassButton>
+                  <span className="bodytext-6--no-margin">See more</span>
+                </GlassThemeButton>
               </div>
             </div>
           </div>

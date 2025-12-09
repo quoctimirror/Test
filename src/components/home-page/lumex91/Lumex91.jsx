@@ -1,16 +1,15 @@
 import "./Lumex91.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import ShinyText from "@components/common/shiny-text/ShinyText";
-import { MediaImage } from "@components/common/media";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNewsDetailRoute } from "@/constants/routes";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 
-const TOTAL_FRAMES = 240;
-const FRAME_PATH = "/home-page/diamond-frames/frame_";
+const TOTAL_FRAMES = 456;
+const FRAME_PATH = "/home-page/lumex91-ani-frames/frame_";
 
-const Lumex91 = () => {
+const Lumex91 = ({ externalProgress = null }) => {
   const [framesLoaded, setFramesLoaded] = useState(false);
   const [shouldLoadFrames, setShouldLoadFrames] = useState(false);
   const [currentFrame, setCurrentFrame] = useState(1);
@@ -53,7 +52,7 @@ const Lumex91 = () => {
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new Image();
       const frameNum = String(i).padStart(3, "0");
-      img.src = `${FRAME_PATH}${frameNum}.png`;
+      img.src = `${FRAME_PATH}${frameNum}.webp`;
       img.onload = () => {
         loadedCount++;
         if (loadedCount === TOTAL_FRAMES) {
@@ -70,6 +69,17 @@ const Lumex91 = () => {
   const updateFrame = useCallback(() => {
     if (!videoBoxRef.current || !framesLoaded) return;
 
+    // Use external progress if provided
+    if (externalProgress !== null) {
+      const frameIndex = Math.min(
+        TOTAL_FRAMES,
+        Math.max(1, Math.ceil(externalProgress * TOTAL_FRAMES))
+      );
+      setCurrentFrame(frameIndex);
+      rafRef.current = requestAnimationFrame(updateFrame);
+      return;
+    }
+
     const rect = videoBoxRef.current.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
@@ -80,12 +90,18 @@ const Lumex91 = () => {
     const scrollRange = scrollStart - scrollEnd;
     const currentPosition = rect.top;
 
-    const progress = Math.max(0, Math.min(1, (scrollStart - currentPosition) / scrollRange));
-    const frameIndex = Math.min(TOTAL_FRAMES, Math.max(1, Math.ceil(progress * TOTAL_FRAMES)));
+    const progress = Math.max(
+      0,
+      Math.min(1, (scrollStart - currentPosition) / scrollRange)
+    );
+    const frameIndex = Math.min(
+      TOTAL_FRAMES,
+      Math.max(1, Math.ceil(progress * TOTAL_FRAMES))
+    );
 
     setCurrentFrame(frameIndex);
     rafRef.current = requestAnimationFrame(updateFrame);
-  }, [framesLoaded]);
+  }, [framesLoaded, externalProgress]);
 
   // Start animation loop when frames ready
   useEffect(() => {
@@ -108,18 +124,21 @@ const Lumex91 = () => {
   };
 
   // Generate current frame src
-  const currentFrameSrc = `${FRAME_PATH}${String(currentFrame).padStart(3, "0")}.png`;
+  const currentFrameSrc = `${FRAME_PATH}${String(currentFrame).padStart(
+    3,
+    "0"
+  )}.webp`;
 
   return (
     <section className="lumex91">
       <div className="lumex91-container">
         <div className="lumex91-video-box" ref={videoBoxRef}>
           {/* Placeholder image - shown while frames loading */}
-          <MediaImage
+          <img
             className={`lumex91-video lumex91-placeholder ${
               framesLoaded ? "lumex91-placeholder-hide" : ""
             }`}
-            src="home-page/Mirror-Lumex 91.webp"
+            src={`${FRAME_PATH}001.webp`}
             alt="Mirror-Lumex 91"
           />
 
@@ -137,9 +156,9 @@ const Lumex91 = () => {
           <h1 className="heading-1--no-margin">
             <ShinyText text="Mirror Lumex - 91™" speed={2} />
           </h1>
-          <ShineGlassButton theme="footer" onClick={handleExploreClick}>
-            Explore more
-          </ShineGlassButton>
+          <GlassThemeButton theme="dark" onClick={handleExploreClick}>
+            <span className="bodytext-6--no-margin">Explore more</span>
+          </GlassThemeButton>
         </div>
       </div>
     </section>

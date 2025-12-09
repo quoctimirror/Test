@@ -40,6 +40,8 @@ export const useBottomTheme = () => {
   // Detect sections and apply theme based on bottom position
   useEffect(() => {
     let scrollTimeout = null;
+    let mutationObserver = null;
+    let retryTimeouts = [];
 
     // Check which section is at the bottom of the viewport
     const checkVisibleSection = () => {
@@ -170,16 +172,47 @@ export const useBottomTheme = () => {
     // Add scroll listener
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Initial check
-    checkVisibleSection();
+    // Setup with retries for faster initialization after route change
+    const retryDelays = [0, 100, 300];
+    retryDelays.forEach((delay) => {
+      const timeoutId = setTimeout(() => {
+        checkVisibleSection();
+      }, delay);
+      retryTimeouts.push(timeoutId);
+    });
+
+    // MutationObserver to detect when sections are added to DOM
+    let mutationTimeout = null;
+    mutationObserver = new MutationObserver(() => {
+      // Throttle to avoid too many checks
+      if (mutationTimeout) return;
+
+      mutationTimeout = setTimeout(() => {
+        const sections = document.querySelectorAll("[data-navbar-theme]");
+        if (sections.length > 0) {
+          checkVisibleSection();
+        }
+        mutationTimeout = null;
+      }, 100);
+    });
+
+    // Observe the entire document for added nodes
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     // Also check on resize (viewport height changes)
     window.addEventListener("resize", checkVisibleSection);
 
     // Cleanup
     return () => {
+      retryTimeouts.forEach(clearTimeout);
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
+      }
+      if (mutationObserver) {
+        mutationObserver.disconnect();
       }
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", checkVisibleSection);

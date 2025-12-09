@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MediaImage } from "@components/common/media";
 import "./ImmersiveShowroom.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 
 const ImmersiveShowroom = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -70,13 +70,13 @@ const ImmersiveShowroom = () => {
             AR/VR encounters that let you feel the future of luxury before you
             wear it.
           </p>
-          <ShineGlassButton
-            theme="footer"
+          <GlassThemeButton
+            theme="dark"
             className="explore-button"
             onClick={handleExploreClick}
           >
-            Explore
-          </ShineGlassButton>
+            <span className="bodytext-6--no-margin">Explore</span>
+          </GlassThemeButton>
         </div>
       </div>
 

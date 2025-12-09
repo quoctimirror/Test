@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import { ROUTES } from "@/constants/routes";
@@ -114,16 +114,40 @@ const Footer = () => {
     setIsBookingModalOpen(true);
   };
 
+  // Use IntersectionObserver on the spacer element (not fixed footer)
+  useEffect(() => {
+    // Find the spacer element that reveals the footer
+    const spacer = document.querySelector(".footer-reveal-spacer");
+    if (!spacer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsFooterVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 } // Trigger when 10% of spacer is visible
+    );
+
+    observer.observe(spacer);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Scroll-linked animation for footer elements
   useEffect(() => {
     let rafId = null;
 
     // Apply scroll-linked transform to an element
-    const applyScrollTransform = (element, progress, maxTranslate = 50, isCenter = false) => {
+    const applyScrollTransform = (
+      element,
+      progress,
+      maxTranslate = 50,
+      isCenter = false
+    ) => {
       if (!element) return;
       const clampedProgress = Math.max(0, Math.min(1, progress));
       const translateY = maxTranslate * (1 - clampedProgress);
-      // footer-center needs translate(-50%, -50%) for centering
-      if (isCenter) {
+      // Only apply translate(-50%, -50%) on desktop (> 1023px)
+      if (isCenter && window.innerWidth > 1023) {
         element.style.transform = `translate(-50%, -50%) translateY(${translateY}px)`;
       } else {
         element.style.transform = `translateY(${translateY}px)`;
@@ -131,47 +155,40 @@ const Footer = () => {
       element.style.opacity = clampedProgress;
     };
 
-    // Scroll-linked animation handler
     const handleScroll = () => {
-      if (rafId) return; // Throttle with RAF
+      if (rafId) return;
 
       rafId = requestAnimationFrame(() => {
-        // Skip when body is fixed (menu is open)
-        if (document.body.style.position === 'fixed') {
+        if (document.body.style.position === "fixed") {
           rafId = null;
           return;
         }
 
         const scrollPosition = window.scrollY + window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
-        const footerHeight = window.innerHeight; // Footer is 100vh
-
-        // Calculate when footer starts becoming visible
+        const footerHeight = window.innerHeight;
         const footerStart = documentHeight - footerHeight;
-
-        // Footer is visible when user scrolls past the content above footer
-        const footerVisible = scrollPosition >= footerStart;
-        setIsFooterVisible(footerVisible);
-
-        // Calculate scroll progress within footer (0 to 1)
         const scrollIntoFooter = Math.max(0, scrollPosition - footerStart);
 
-        // Each element has its own animation range for smooth scroll-linked effect
-        const elementAnimationRange = footerHeight * 0.35; // Each element takes 35% of footer to fully animate
+        const elementAnimationRange = footerHeight * 0.35;
+        const bottomStart = footerHeight * 0.25;
+        const centerStart = footerHeight * 0.35;
+        const contentStart = footerHeight * 0.45;
 
-        // Staggered start positions (bottom to top) - DELAYED start so user can see animation
-        const bottomStart = footerHeight * 0.25;  // Bottom starts at 25% scroll into footer
-        const centerStart = footerHeight * 0.35;  // Center starts at 35% scroll
-        const contentStart = footerHeight * 0.45; // Content starts at 45% scroll
+        const bottomProgress =
+          (scrollIntoFooter - bottomStart) / elementAnimationRange;
+        const centerProgress =
+          (scrollIntoFooter - centerStart) / elementAnimationRange;
+        const contentProgress =
+          (scrollIntoFooter - contentStart) / elementAnimationRange;
 
-        // Calculate individual progress for each element
-        const bottomProgress = (scrollIntoFooter - bottomStart) / elementAnimationRange;
-        const centerProgress = (scrollIntoFooter - centerStart) / elementAnimationRange;
-        const contentProgress = (scrollIntoFooter - contentStart) / elementAnimationRange;
-
-        // Apply transforms - elements slide up as user scrolls
         applyScrollTransform(footerBottomRef.current, bottomProgress, 80);
-        applyScrollTransform(footerCenterRef.current, centerProgress, 100, true);
+        applyScrollTransform(
+          footerCenterRef.current,
+          centerProgress,
+          100,
+          true
+        );
         applyScrollTransform(footerContentRef.current, contentProgress, 120);
 
         rafId = null;
@@ -179,9 +196,6 @@ const Footer = () => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-
-    // Initial check
-    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -351,20 +365,20 @@ const Footer = () => {
               and your stories shape the luxury you receive.
             </p>
             <div className="newsletter-buttons">
-              <ShineGlassButton
+              <GlassThemeButton
                 onClick={() => console.log("Explore more clicked")}
                 className="newsletter-btn-explore"
-                theme="footer"
+                theme="dark"
               >
-                Explore more
-              </ShineGlassButton>
-              <ShineGlassButton
+                <span className="bodytext-6--no-margin">Explore more</span>
+              </GlassThemeButton>
+              <GlassThemeButton
                 onClick={() => console.log("Sign in clicked")}
                 className="newsletter-btn-signin"
-                theme="light"
+                theme="spec_dark"
               >
-                Sign in
-              </ShineGlassButton>
+                <span className="bodytext-6--no-margin">Sign in</span>
+              </GlassThemeButton>
             </div>
           </div>
         </div>

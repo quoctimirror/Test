@@ -1,0 +1,297 @@
+/* FutureDiamondV2 Component Styles */
+.future-diamond-v2 {
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    #000 0%,
+    #5e1226 15%,
+    #c9385f 30%,
+    #bb234c 37%,
+    #000 60%,
+    #000 100%
+  );
+  position: relative;
+}
+
+/* Intro Overlay - centered, visible by default, only fades out */
+.future-diamond-v2-intro-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  text-align: center;
+  pointer-events: none;
+  opacity: 1;
+  max-width: 905px;
+}
+
+.future-diamond-v2-intro-overlay .heading-2--no-margin {
+  color: rgba(246, 246, 246, 1) !important;
+}
+
+.future-diamond-v2-intro-overlay h2 {
+  color: rgba(246, 246, 246, 1) !important;
+}
+
+.future-diamond-v2-intro-overlay--faded {
+  opacity: 0;
+  transform: translate(-50%, -50%) translateY(-20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Title Overlay - centered, fades in/out */
+.future-diamond-v2-title-overlay {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  text-align: center;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+  width: 100%;
+}
+
+.future-diamond-v2-title-overlay--hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) translateY(20px);
+}
+
+.future-diamond-v2-title-overlay--visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(0);
+}
+
+.future-diamond-v2-title-overlay--faded {
+  opacity: 0;
+  transform: translate(-50%, -50%) translateY(-20px);
+}
+
+/* Sticky Scroll Wrapper - provides scroll height */
+.future-diamond-v2-sticky-wrapper {
+  position: relative;
+  height: 500vh; /* Scroll space for sticky effect */
+}
+
+/* Sticky Content - stays in viewport */
+.future-diamond-v2-sticky-content {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* Lumex Container - centered in sticky viewport */
+.future-diamond-v2-lumex-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+/* Lumex container structure */
+.future-diamond-v2-lumex-container .lumex91 {
+  width: 50vw;
+}
+
+.future-diamond-v2-lumex-container .lumex91-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Lumex video-box fade in */
+.future-diamond-v2-lumex-container .lumex91-video-box {
+  transition: opacity 0.8s ease;
+  transform: translateY(40%);
+}
+
+.future-diamond-v2-videobox--hidden .lumex91-video-box {
+  opacity: 0;
+}
+
+.future-diamond-v2-videobox--visible .lumex91-video-box {
+  opacity: 1;
+}
+
+/* Hide original lumex content inside container */
+.future-diamond-v2-lumex-container .lumex91-content {
+  display: none;
+}
+
+/* Lumex Content Overlay - positioned 20% from viewport top */
+.future-diamond-v2-lumex-content-overlay {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 10;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+}
+
+.future-diamond-v2-lumex-content-overlay--hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(20px);
+}
+
+.future-diamond-v2-lumex-content-overlay--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.future-diamond-v2-lumex-content-overlay--faded {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-20px);
+}
+
+.future-diamond-v2-lumex-content-overlay .heading-1--no-margin {
+  color: white;
+}
+
+.future-diamond-v2-lumex-content-overlay > * {
+  margin-bottom: 24px;
+}
+
+.future-diamond-v2-lumex-content-overlay > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Description Overlay - bottom left */
+.future-diamond-v2-description-overlay {
+  position: absolute;
+  top: 15%;
+  left: 2.5%;
+  z-index: 10;
+  max-width: 846px;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+}
+
+.future-diamond-v2-description-overlay--hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.future-diamond-v2-description-overlay--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.future-diamond-v2-description-overlay--faded {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.future-diamond-v2-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: "Saol Display", serif;
+  font-size: clamp(80px, 10vw, 200px);
+  font-style: normal;
+  font-weight: 300;
+  line-height: 90%;
+  letter-spacing: -0.03em;
+  text-transform: none;
+  margin: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-wrap: break-word;
+  hyphens: none;
+
+  /* Gradient effect */
+  background: linear-gradient(
+    90deg,
+    #000000 0%,
+    #000000 15%,
+    rgba(50, 6, 6, 1) 25%,
+    rgba(154, 14, 52, 1) 40%,
+    rgba(154, 14, 52, 1) 50%,
+    rgba(154, 14, 52, 1) 60%,
+    rgba(50, 6, 6, 1) 75%,
+    #000000 85%,
+    #000000 100%
+  );
+  background-size: 800% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: futureDiamondV2GradientMove 3s ease-in-out infinite;
+}
+
+.future-diamond-v2-description-overlay .heading-1--no-margin,
+.future-diamond-v2-description-overlay .bodytext-4--no-margin {
+  color: #ffffff;
+  text-align: left;
+}
+
+.future-diamond-v2-description-overlay .bodytext-4--no-margin {
+  margin-top: 24px;
+  max-width: 447px;
+}
+
+/* Medium screens (tablets) - 426px to 1023px */
+@media screen and (max-width: 1023px) {
+  .future-diamond-v2-sticky-wrapper {
+    height: 400vh;
+  }
+
+  .future-diamond-v2-title {
+    font-size: clamp(32px, 17.5vw, 180px);
+  }
+
+  .future-diamond-v2-description-overlay {
+    max-width: 320px;
+    bottom: 8%;
+  }
+
+  .future-diamond-v2-intro-overlay {
+    padding: 0 5%;
+  }
+}
+
+/* Small screens (mobile) - less than 425px */
+@media (max-width: 425px) {
+  .future-diamond-v2-sticky-wrapper {
+    height: 350vh;
+  }
+
+  .future-diamond-v2-title {
+    font-size: clamp(20px, 24vw, 60px);
+    white-space: normal;
+    word-break: break-word;
+    line-height: 95%;
+  }
+
+  .future-diamond-v2-description-overlay {
+    max-width: 260px;
+    bottom: 6%;
+    left: 4%;
+  }
+
+  .future-diamond-v2-intro-overlay {
+    padding: 0 5%;
+  }
+}
+
+@keyframes futureDiamondV2GradientMove {
+  0% {
+    background-position: 50% 50%;
+  }
+  50% {
+    background-position: 20% 0%;
+  }
+  100% {
+    background-position: 55% 50%;
+  }
+}

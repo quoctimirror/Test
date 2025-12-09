@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import UnderlineButton from "@/components/common/button/UnderlineButton";
-import ShineGlassButton from "@/components/common/button/ShineGlassButton";
+import GlassThemeButton from "@/components/common/button/GlassThemeButton";
 import BookingModal from "@/components/booking/BookingModal";
 import { ROUTES } from "@/constants/routes";
 import { useNavbarTheme } from "@/hooks/useNavbarTheme";
@@ -849,27 +849,28 @@ export default function NavbarV4() {
                 )}
               </div>
 
-              {/* Shine Glass Buttons at bottom - outside of groups */}
+              {/* Glass Theme Buttons at bottom - outside of groups */}
               <div
                 className="menu-v4-bottom-buttons"
                 style={{ mixBlendMode: "normal", isolation: "isolate" }}
               >
-                <ShineGlassButton
+                <GlassThemeButton
                   theme="light"
                   onClick={() => {
                     // TODO: Add Mirror Partners Gate navigation
                     console.log("Enter Mirror Partners Gate clicked");
                   }}
                 >
-                  Enter Mirror Partners Gate
-                </ShineGlassButton>
-                <ShineGlassButton
+                  <span className="bodytext-6--no-margin">Enter Mirror Partners Gate</span>
+                </GlassThemeButton>
+                <GlassThemeButton
+                  theme="spec_light"
                   onClick={() => {
                     setIsBookingModalOpen(true);
                   }}
                 >
-                  Explore Mirror Passport
-                </ShineGlassButton>
+                  <span className="bodytext-6--no-margin">Explore Mirror Passport</span>
+                </GlassThemeButton>
               </div>
             </div>
           </div>

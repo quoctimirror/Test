@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SupportDetail from "@components/support/SupportDetail";
-import ScrollDownArrow from "@components/common/button/ScrollDownArrow";
-import ScrollToTopArrow from "@components/common/button/ScrollToTopArrow";
-import ImmersiveButton from "@components/common/button/ImmersiveButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
 import { useBottomTheme } from "@/hooks/useBottomTheme";
 import "@components/home-page/scrollEffect/ScrollEffect.css";
@@ -44,22 +42,36 @@ const SupportDetailPage = () => {
         <SupportDetail />
       </main>
 
+      {/* Fixed Immersive Button */}
       <div className="fixed-immersive-container">
-        <ImmersiveButton
-          theme={arrowTheme}
+        <GlassThemeButton
+          theme={arrowTheme === "white" ? "dark" : "light"}
+          icon="globe"
           isCollapsed={isImmersiveCollapsed}
           onClick={handleImmersiveClick}
-        />
+        >
+          Immersive Showroom
+        </GlassThemeButton>
       </div>
 
+      {/* Fixed Arrow Button */}
       {isArrowVisible && (
         <div className="fixed-arrow-container">
-          <ScrollDownArrow theme={arrowTheme} onClick={handleArrowClick} />
+          <GlassThemeButton
+            theme={arrowTheme === "white" ? "dark" : "light"}
+            icon="arrow"
+            onClick={handleArrowClick}
+          />
         </div>
       )}
 
+      {/* Fixed Scroll to Top Button */}
       <div className={`fixed-scroll-top-container ${showScrollTop ? 'visible' : ''}`}>
-        <ScrollToTopArrow theme={arrowTheme} />
+        <GlassThemeButton
+          theme={arrowTheme === "white" ? "dark" : "light"}
+          icon="arrow-up"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        />
       </div>
     </div>
   );

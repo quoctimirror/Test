@@ -20,10 +20,6 @@ const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 const UniverseSection = lazy(() =>
   import("@components/home-page/universeSection/MirrorExp.jsx")
 );
-const HoverExpandSection = lazy(() =>
-  import("@components/home-page/hoverExpandSection/HoverExpandSection.jsx")
-);
-const View360 = lazy(() => import("@components/view360/View360.jsx"));
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
@@ -120,9 +116,7 @@ export default function AppRoutes() {
       ROUTES.BOOK_APPOINTMENT,
       ROUTES.MILAN_SUBMIT,
       `${ROUTES.MILAN_SUBMIT}/submit-success`,
-      ROUTES.HOVER_EXPAND,
       ROUTES.PRODUCTS_LEFT,
-      ROUTES.VIEW_360,
       ROUTES.USER_PROFILE,
       ROUTES.SCAVENGER_HUNT,
       ROUTES.DASHBOARD_ADMIN_MANAGE,
@@ -151,7 +145,6 @@ export default function AppRoutes() {
       location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
       location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
-      location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
       location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
       location.pathname.startsWith(ROUTES.MILAN_SUBMIT)
     ) {
@@ -166,7 +159,6 @@ export default function AppRoutes() {
   const staticRoutesToHideNavBar =
     is404 ||
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
-    location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -179,7 +171,6 @@ export default function AppRoutes() {
   const staticRoutesToHideFooter =
     is404 ||
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
-    location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -288,15 +279,7 @@ export default function AppRoutes() {
   {/* for observing UI universe-section final */ }
             <Route path="/universe-section" element={<UniverseSection />} />
 
-            <Route
-              path={ROUTES.HOVER_EXPAND}
-              element={<HoverExpandSection />}
-            />
-
-  {/* Test route for ProductsLeft */ }
             <Route path={ROUTES.PRODUCTS_LEFT} element={<ProductsLeft />} />
-
-            <Route path={ROUTES.VIEW_360} element={<View360 />} />
 
             <Route path={ROUTES.USER_PROFILE} element={<Profile />} />
 

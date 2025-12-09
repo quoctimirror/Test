@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./ContactUs.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButtonOpposite from "@components/common/button/UnderlineButtonOpposite";
 import { MediaImage } from "@components/common/media";
 import BookingModal from "@components/booking/BookingModal";
@@ -37,13 +37,13 @@ const ContactUs = () => {
           Our client care experts are always here to help.
         </p>
         <div className="contact-us-button-wrapper">
-          <ShineGlassButton
-            theme="footer"
+          <GlassThemeButton
+            theme="dark"
             onClick={handleBookAppointmentClick}
             className="contact-us-button"
           >
-            Book an Appointment
-          </ShineGlassButton>
+            <span className="bodytext-6--no-margin">Book an Appointment</span>
+          </GlassThemeButton>
         </div>
         <div className="contact-us-actions">
           <UnderlineButtonOpposite

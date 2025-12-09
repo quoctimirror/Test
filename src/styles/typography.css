@@ -283,7 +283,7 @@
 .bodytext-6 {
   font-family: var(--font-bt-beau-sans);
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 700;
   /* regular */
   line-height: 1;
   letter-spacing: 0;
@@ -375,7 +375,7 @@
 .bodytext-6--no-margin {
   font-family: var(--font-bt-beau-sans);
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
   margin: 0;

@@ -1,6 +1,8 @@
 /* MirrorNetworkV2 Component Styles */
 .mirror-network-v2-section {
   width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   background: #000;
   position: relative;
   padding: 240px 0 120px;
@@ -53,71 +55,84 @@
   overflow: hidden;
   position: relative;
   width: 100%;
+  max-width: 100%;
 }
 
-/* Slider Arrows */
-.network-v2-slider-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  transition: transform 0.3s ease;
+/* Cursor Follower Arrow Button */
+.network-v2-cursor-follower {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%) scale(1);
+  animation: cursorZoomIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-.network-v2-slider-arrow:hover {
-  transform: translateY(-50%) scale(1.05);
+.network-v2-cursor-follower.zoom-out {
+  animation: cursorZoomOut 0.15s ease-out forwards;
 }
 
-.network-v2-slider-arrow:active {
-  transform: translateY(-50%) scale(0.95);
+/* Override GlassThemeButton states in cursor follower */
+.network-v2-cursor-follower .glass-theme-button,
+.network-v2-cursor-follower .glass-theme-button:hover,
+.network-v2-cursor-follower .glass-theme-button:active,
+.network-v2-cursor-follower .glass-theme-button:focus {
+  transform: scale(1) !important;
 }
 
-.network-v2-slider-arrow,
-.network-v2-slider-arrow button,
-.network-v2-slider-arrow *,
-.network-v2-slider-arrow button * {
-  outline: none !important;
-  -webkit-tap-highlight-color: transparent !important;
+/* Disable hover effect on cursor follower button - default state */
+.network-v2-cursor-follower .glass-theme-button.glass-theme-button--dark::before {
+  opacity: 0 !important;
+  transition: opacity 0.15s ease !important;
 }
 
-.network-v2-slider-arrow:focus,
-.network-v2-slider-arrow:focus-visible,
-.network-v2-slider-arrow button:focus,
-.network-v2-slider-arrow button:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
+/* Keep arrow white in cursor follower */
+.network-v2-cursor-follower .arrow-button svg path,
+.network-v2-cursor-follower .arrow-button:hover svg path {
+  stroke: #fff !important;
+  transition: stroke 0.15s ease !important;
 }
 
-@media (hover: none) {
-  .network-v2-slider-arrow:hover {
-    transform: translateY(-50%) scale(1) !important;
+/* ========== CLICK STATE - Show hover effect ========== */
+.network-v2-cursor-follower.is-clicking .glass-theme-button.glass-theme-button--dark::before {
+  opacity: 1 !important;
+}
+
+.network-v2-cursor-follower.is-clicking .arrow-button svg path {
+  stroke: #fff !important;
+}
+
+/* Zoom animations */
+@keyframes cursorZoomIn {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
   }
 }
 
-@media (hover: none) and (pointer: coarse) {
-  .network-v2-slider-arrow:active {
-    transform: translateY(-50%) scale(1);
+@keyframes cursorZoomOut {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
   }
-
-  .network-v2-slider-arrow svg path,
-  .network-v2-slider-arrow:hover svg path,
-  .network-v2-slider-arrow:active svg path,
-  .network-v2-slider-arrow:focus svg path {
-    stroke: #fff !important;
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
   }
 }
 
-.network-v2-slider-arrow-left {
-  left: 2.5%;
-}
+/* Hide default cursor only when custom cursor is visible */
+@media (hover: hover) and (pointer: fine) {
+  .network-v2-carousel-wrapper.cursor-hidden {
+    cursor: none;
+  }
 
-.network-v2-slider-arrow-right {
-  right: 2.5%;
-}
-
-.network-v2-slider-arrow button {
-  width: 54px !important;
-  height: 54px !important;
+  .network-v2-carousel-wrapper.cursor-hidden * {
+    cursor: none;
+  }
 }
 
 /* Carousel Container */
@@ -125,22 +140,16 @@
   display: flex;
   gap: 0.625%;
   overflow-x: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  cursor: grab;
   user-select: none;
   width: 100%;
+  /* Prevent touch scroll on mobile */
+  touch-action: none;
 }
 
 .network-v2-carousel-container::-webkit-scrollbar {
   display: none;
-}
-
-.network-v2-carousel-container.dragging {
-  cursor: grabbing;
-  scroll-behavior: auto;
 }
 
 /* Carousel Items - Similar to milan-large-carousel-item */
@@ -170,24 +179,6 @@
     max-width: 900px;
     padding: 0 30px;
     margin-bottom: 80px;
-  }
-
-  .network-v2-slider-arrow-left {
-    left: 12px;
-  }
-
-  .network-v2-slider-arrow-right {
-    right: 12px;
-  }
-
-  .network-v2-slider-arrow button {
-    width: 48px !important;
-    height: 48px !important;
-  }
-
-  .network-v2-slider-arrow svg {
-    width: 20px !important;
-    height: 20px !important;
   }
 
   .network-carousel-item {
@@ -225,24 +216,6 @@
 
   .network-v2-title {
     margin-bottom: 40px;
-  }
-
-  .network-v2-slider-arrow-left {
-    left: 8px;
-  }
-
-  .network-v2-slider-arrow-right {
-    right: 8px;
-  }
-
-  .network-v2-slider-arrow button {
-    width: 48px !important;
-    height: 48px !important;
-  }
-
-  .network-v2-slider-arrow svg {
-    width: 20px !important;
-    height: 20px !important;
   }
 
   .network-carousel-item {

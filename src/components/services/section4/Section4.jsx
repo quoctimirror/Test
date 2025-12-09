@@ -4,7 +4,7 @@ import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransit
 import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 import "./Section4.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 
 const Section4 = () => {
   const navigate = useNavigate();
@@ -163,13 +163,13 @@ const Section4 = () => {
                 piece as radiant as the day you received it.
               </p>
             </div>
-            <ShineGlassButton
+            <GlassThemeButton
               className="section4-cta"
               theme="light"
               onClick={handleReturnExchangeClick}
             >
-              See more
-            </ShineGlassButton>
+              <span className="bodytext-6--no-margin">See more</span>
+            </GlassThemeButton>
           </div>
         </div>
       </div>
@@ -192,13 +192,13 @@ const Section4 = () => {
                 giving.
               </p>
             </div>
-            <ShineGlassButton
+            <GlassThemeButton
               className="section4-cta"
               theme="light"
               onClick={handleSizingGuideClick}
             >
-              See more
-            </ShineGlassButton>
+              <span className="bodytext-6--no-margin">See more</span>
+            </GlassThemeButton>
           </div>
         </div>
       </div>
@@ -220,13 +220,13 @@ const Section4 = () => {
                 12-month limited warranty
               </p>
             </div>
-            <ShineGlassButton
+            <GlassThemeButton
               className="section4-cta"
               theme="light"
               onClick={handleWarrantyInfoClick}
             >
-              See more
-            </ShineGlassButton>
+              <span className="bodytext-6--no-margin">See more</span>
+            </GlassThemeButton>
           </div>
         </div>
       </div>
@@ -251,13 +251,13 @@ const Section4 = () => {
                   piece as radiant as the day you received it.
                 </p>
               </div>
-              <ShineGlassButton
+              <GlassThemeButton
                 className="section4-cta"
-                theme="footer"
+                theme="dark"
                 onClick={handleReturnExchangeClick}
               >
-                See more
-              </ShineGlassButton>
+                <span className="bodytext-6--no-margin">See more</span>
+              </GlassThemeButton>
             </div>
           </div>
         </div>
@@ -282,13 +282,13 @@ const Section4 = () => {
                   giving.
                 </p>
               </div>
-              <ShineGlassButton
+              <GlassThemeButton
                 className="section4-cta"
-                theme="footer"
+                theme="dark"
                 onClick={handleSizingGuideClick}
               >
-                See more
-              </ShineGlassButton>
+                <span className="bodytext-6--no-margin">See more</span>
+              </GlassThemeButton>
             </div>
           </div>
         </div>
@@ -312,13 +312,13 @@ const Section4 = () => {
                   a 12-month limited warranty
                 </p>
               </div>
-              <ShineGlassButton
+              <GlassThemeButton
                 className="section4-cta"
-                theme="footer"
+                theme="dark"
                 onClick={handleWarrantyInfoClick}
               >
-                See more
-              </ShineGlassButton>
+                <span className="bodytext-6--no-margin">See more</span>
+              </GlassThemeButton>
             </div>
           </div>
         </div>
@@ -352,13 +352,13 @@ const Section4 = () => {
                     piece as radiant as the day you received it.
                   </p>
                 </div>
-                <ShineGlassButton
+                <GlassThemeButton
                   className="section4-cta"
                   theme="light"
                   onClick={handleReturnExchangeClick}
                 >
-                  See more
-                </ShineGlassButton>
+                  <span className="bodytext-6--no-margin">See more</span>
+                </GlassThemeButton>
               </div>
             </div>
           </div>
@@ -387,13 +387,13 @@ const Section4 = () => {
                     giving.
                   </p>
                 </div>
-                <ShineGlassButton
+                <GlassThemeButton
                   className="section4-cta"
                   theme="light"
                   onClick={handleSizingGuideClick}
                 >
-                  See more
-                </ShineGlassButton>
+                  <span className="bodytext-6--no-margin">See more</span>
+                </GlassThemeButton>
               </div>
             </div>
           </div>
@@ -424,13 +424,13 @@ const Section4 = () => {
                     by a 12-month limited warranty
                   </p>
                 </div>
-                <ShineGlassButton
+                <GlassThemeButton
                   className="section4-cta"
                   theme="light"
                   onClick={handleWarrantyInfoClick}
                 >
-                  See more
-                </ShineGlassButton>
+                  <span className="bodytext-6--no-margin">See more</span>
+                </GlassThemeButton>
               </div>
             </div>
           </div>

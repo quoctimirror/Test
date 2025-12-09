@@ -4,18 +4,23 @@
 .support-hero-section {
   width: 100%;
   height: 56vh;
-  background-image: url("__CDN_URL__/support/section_1.webp");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
+}
+
+/* Image variant (Return & Exchange) */
+.support-hero-section--image {
+  background-image: url("__CDN_URL__/support/section_1.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   filter: grayscale(100%);
 }
 
-.support-hero-section::before {
+.support-hero-section--image::before {
   content: "";
   position: absolute;
   top: 0;
@@ -24,6 +29,27 @@
   bottom: 0;
   background-color: #00000094;
   z-index: 1;
+}
+
+/* Gradient variant (Sizing Guide, Warranty, FAQs) */
+.support-hero-section--gradient::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background: radial-gradient(
+    114.53% 100% at 50% 0%,
+    #0b0b0b 0%,
+    #1b0008 10%,
+    #780a28 30%,
+    #bc224c 50%,
+    #f69ab3 70%,
+    #f6f6f6 85%
+  );
+  filter: blur(50px);
+  z-index: 0;
 }
 
 .hero-content {
@@ -64,7 +90,7 @@
   max-width: 1920px;
   margin-left: auto;
   margin-right: auto;
-  background: white;
+  background: #f6f6f6;
 }
 
 /* Tab Navigation */

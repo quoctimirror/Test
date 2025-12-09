@@ -63,9 +63,12 @@ export const optimizedTransitionUtils = {
 
   // Performance optimizations
   optimizations: {
-    // Disable video autoplay in cloned content to prevent flickering
+    // Optimize cloned content for smooth animation
     disableClonedVideos: (container) => {
       if (!container) return;
+
+      // Add containment to limit browser paint/layout work
+      container.style.contain = 'strict';
 
       // Handle slogan-section specially - it has position:fixed which escapes clone
       const sloganSection = container.querySelector('.slogan-section');
@@ -74,6 +77,16 @@ export const optimizedTransitionUtils = {
         sloganSection.style.position = 'absolute';
         sloganSection.style.zIndex = '0';
       }
+
+      // Remove unnecessary elements that add to rendering cost
+      container.querySelectorAll('script, iframe, [data-transition-ignore]').forEach(el => el.remove());
+
+      // Disable all interactions and animations in clone
+      container.querySelectorAll('*').forEach(el => {
+        el.style.pointerEvents = 'none';
+        el.style.animation = 'none';
+        el.style.transition = 'none';
+      });
 
       // Replace videos with their poster images
       const videos = container.querySelectorAll('video');
@@ -102,6 +115,11 @@ export const optimizedTransitionUtils = {
           video.pause();
           video.muted = true;
         }
+      });
+
+      // Stop all canvas animations
+      container.querySelectorAll('canvas').forEach(canvas => {
+        canvas.style.display = 'none';
       });
     },
 
@@ -279,10 +297,7 @@ export const optimizedTransitionUtils = {
       return;
     }
 
-    // Use lightweight transition for low-performance devices
-    if (optimizedTransitionUtils.config.simplifiedTransition) {
-      return optimizedTransitionUtils.lightweightTransition(navigateFunction, route, options);
-    }
+    // Always use full transition for consistent UX across all devices
 
     const {
       onStart = null,
@@ -350,23 +365,65 @@ export const optimizedTransitionUtils = {
       // Scroll to top once only
       window.scrollTo(0, 0);
 
-      // Wait for new content to fully load - optimized
+      // Wait for new content to fully load - improved for slow networks
       const waitForPageLoad = async () => {
         let retries = 0;
-        const maxRetries = 30; // Reduce max wait time to 3 seconds
+        const maxRetries = 100; // Max wait time: 10 seconds for slow networks
 
+        // Step 1: Wait for React to render NEW content
         while (retries < maxRetries) {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
           // Check if React has rendered NEW content (not old content)
           if (root.children.length > 0 && root.innerHTML !== originalContent) {
-            // Content has changed, wait a bit more for JS to settle
-            await new Promise((resolve) => setTimeout(resolve, 150));
             break;
           }
 
           retries++;
         }
+
+        // Step 2: Wait for critical resources to load
+        const waitForResources = async () => {
+          const maxResourceRetries = 50; // Max 5 seconds for resources
+          let resourceRetries = 0;
+
+          while (resourceRetries < maxResourceRetries) {
+            // Get first few visible images
+            const images = Array.from(root.querySelectorAll('img')).slice(0, 5);
+            const videos = Array.from(root.querySelectorAll('video')).slice(0, 2);
+
+            // Check if critical images are loaded
+            let allImagesLoaded = true;
+            for (const img of images) {
+              if (img.src && !img.complete) {
+                allImagesLoaded = false;
+                break;
+              }
+            }
+
+            // Check if videos have metadata
+            let allVideosReady = true;
+            for (const video of videos) {
+              if (video.src && video.readyState < 1) {
+                allVideosReady = false;
+                break;
+              }
+            }
+
+            // If all critical resources loaded, we're done
+            if (allImagesLoaded && allVideosReady) {
+              break;
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            resourceRetries++;
+          }
+        };
+
+        await waitForResources();
+
+        // Step 3: Final stabilization wait for JS to settle
+        await new Promise((resolve) => setTimeout(resolve, 200));
       };
 
       await waitForPageLoad();
@@ -376,6 +433,7 @@ export const optimizedTransitionUtils = {
       frozenWrapper.remove();
 
       // Create animated clone wrapper (keep current scroll position)
+      // Always use GPU-accelerated properties for smooth animation on all devices
       const currentPageWrapper = document.createElement("div");
       currentPageWrapper.style.cssText = `
         position: fixed;
@@ -387,16 +445,10 @@ export const optimizedTransitionUtils = {
         background: white;
         overflow: hidden;
         pointer-events: none;
-        ${
-          optimizedTransitionUtils.config.enableGPU
-            ? "transform: translateZ(0);"
-            : ""
-        }
-        ${
-          optimizedTransitionUtils.config.enableWillChange
-            ? "will-change: transform, opacity;"
-            : ""
-        }
+        contain: layout style paint;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        will-change: transform, opacity;
       `;
 
       // Create the actual page content clone
@@ -416,6 +468,7 @@ export const optimizedTransitionUtils = {
       document.body.appendChild(currentPageWrapper);
 
       // Create new page container with slide-up animation
+      // Always use GPU-accelerated properties for smooth animation on all devices
       const newPageContainer = document.createElement("div");
       newPageContainer.innerHTML = root.innerHTML;
       optimizedTransitionUtils.optimizations.disableClonedVideos(newPageContainer);
@@ -429,91 +482,55 @@ export const optimizedTransitionUtils = {
         background: white;
         overflow: hidden;
         pointer-events: none;
-        ${
-          optimizedTransitionUtils.config.enableGPU
-            ? "transform: translateY(100%) translateZ(0);"
-            : "transform: translateY(100%);"
-        }
-        ${
-          optimizedTransitionUtils.config.enableWillChange
-            ? "will-change: transform;"
-            : ""
-        }
+        contain: layout style paint;
+        transform: translateY(100%) translateZ(0);
+        backface-visibility: hidden;
+        will-change: transform;
       `;
       document.body.appendChild(newPageContainer);
 
-      // Enable GPU acceleration
-      if (optimizedTransitionUtils.config.enableGPU) {
-        optimizedTransitionUtils.optimizations.enableGPU(currentPageWrapper);
-        optimizedTransitionUtils.optimizations.enableGPU(newPageContainer);
-      }
-
-      // Improved easing functions for smoother animation
-      const easeOutCubic = (t) => {
-        return 1 - Math.pow(1 - t, 3); // Smoother deceleration curve
-      };
-
-      // Perform smooth animation - optimized
+      // Perform smooth animation using CSS transitions (GPU-accelerated, runs on compositor thread)
       const performAnimation = async () => {
         return new Promise((resolve) => {
-          if (optimizedTransitionUtils.config.enableRAF) {
-            const startTime = performance.now();
-            const animationDuration = duration * 1000;
+          // Use CSS transitions instead of JS animation for maximum smoothness
+          // CSS transitions run on the GPU compositor thread, independent of main JS thread
 
-            const animate = (currentTime) => {
-              const elapsed = currentTime - startTime;
-              const rawProgress = Math.min(elapsed / animationDuration, 1);
+          // Force a reflow to ensure initial state is painted before transition
+          currentPageWrapper.offsetHeight;
+          newPageContainer.offsetHeight;
 
-              // Apply cubic easing for ultra-smooth animation
-              const progress = easeOutCubic(rawProgress);
+          // Add CSS transitions (cubic-bezier for smooth easing similar to easeOutCubic)
+          const transitionTiming = `${duration}s cubic-bezier(0.33, 1, 0.68, 1)`;
 
-              // Current page: fade out + scale down
-              // Combine opacity and transform in single operation for better performance
-              const opacity = Math.max(0, 1 - progress * 1.2); // Faster fade
-              const scale = 1 - progress * 0.05; // Subtle scale: 1 -> 0.95
+          currentPageWrapper.style.transition = `opacity ${transitionTiming}, transform ${transitionTiming}`;
+          newPageContainer.style.transition = `transform ${transitionTiming}`;
 
-              currentPageWrapper.style.opacity = opacity;
-              currentPageWrapper.style.transform = `scale(${scale})${
-                optimizedTransitionUtils.config.enableGPU ? " translateZ(0)" : ""
-              }`;
+          // Trigger animation by setting final state
+          // Double RAF ensures styles are applied before transition starts
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              // Current page: fade out + scale down (always use translateZ for GPU layer)
+              currentPageWrapper.style.opacity = '0';
+              currentPageWrapper.style.transform = 'scale(0.95) translateZ(0)';
 
-              // New page: slide up with eased progress
-              // Round to avoid sub-pixel jank for ultra-smooth rendering
-              const translateY = Math.round((100 * (1 - progress)) * 100) / 100;
-              newPageContainer.style.transform = `translateY(${translateY}%)${
-                optimizedTransitionUtils.config.enableGPU ? " translateZ(0)" : ""
-              }`;
+              // New page: slide up from 100% to 0%
+              newPageContainer.style.transform = 'translateY(0%) translateZ(0)';
+            });
+          });
 
-              if (rawProgress < 1) {
-                optimizedTransitionUtils.state.rafId =
-                  requestAnimationFrame(animate);
-              } else {
-                resolve();
-              }
-            };
+          // Wait for transition to complete
+          const onTransitionEnd = () => {
+            newPageContainer.removeEventListener('transitionend', onTransitionEnd);
+            resolve();
+          };
 
-            optimizedTransitionUtils.state.rafId =
-              requestAnimationFrame(animate);
-          } else {
-            // GSAP fallback - with scale
-            const tl = gsap.timeline({ onComplete: resolve });
+          newPageContainer.addEventListener('transitionend', onTransitionEnd);
 
-            tl.to(currentPageWrapper, {
-              duration: duration,
-              opacity: 0,
-              scale: 0.95, // Scale từ 1 -> 0.95
-              ease: optimizedTransitionUtils.config.easing,
-            }).to(
-              newPageContainer,
-              {
-                y: "0%",
-                duration: duration,
-                ease: optimizedTransitionUtils.config.easing,
-                force3D: optimizedTransitionUtils.config.enableGPU,
-              },
-              0
-            );
-          }
+          // Fallback timeout in case transitionend doesn't fire
+          setTimeout(() => {
+            newPageContainer.removeEventListener('transitionend', onTransitionEnd);
+            resolve();
+          }, duration * 1000 + 50);
         });
       };
 
@@ -528,10 +545,8 @@ export const optimizedTransitionUtils = {
       // Final scroll to top to ensure new page is at the beginning
       window.scrollTo(0, 0);
 
-      // Cleanup GPU acceleration
-      if (optimizedTransitionUtils.config.enableGPU) {
-        optimizedTransitionUtils.optimizations.disableGPU(root);
-      }
+      // Cleanup GPU acceleration hints
+      optimizedTransitionUtils.optimizations.disableGPU(root);
 
       // Clean up ScrollTrigger and let pages handle their own setup
       setTimeout(() => {
@@ -561,9 +576,7 @@ export const optimizedTransitionUtils = {
       const root = document.getElementById("root");
       if (root) {
         root.style.opacity = "1";
-        if (optimizedTransitionUtils.config.enableGPU) {
-          optimizedTransitionUtils.optimizations.disableGPU(root);
-        }
+        optimizedTransitionUtils.optimizations.disableGPU(root);
       }
 
       document.querySelectorAll('[style*="fixed"]').forEach((el) => {
@@ -589,10 +602,7 @@ export const optimizedTransitionUtils = {
       return;
     }
 
-    // Use lightweight transition for low-performance devices
-    if (optimizedTransitionUtils.config.simplifiedTransition) {
-      return optimizedTransitionUtils.lightweightTransition(navigateFunction, route, options);
-    }
+    // Always use full transition for consistent UX across all devices
 
     const {
       onStart = null,
@@ -740,10 +750,7 @@ export const optimizedTransitionUtils = {
       return;
     }
 
-    // Use lightweight transition for low-performance devices
-    if (optimizedTransitionUtils.config.simplifiedTransition) {
-      return optimizedTransitionUtils.lightweightTransition(navigateFunction, route, options);
-    }
+    // Always use full transition for consistent UX across all devices
 
     const {
       onStart = null,

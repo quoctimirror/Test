@@ -37,12 +37,8 @@ export const ROUTES = {
   PREMIUM: "/premium", // Premium AR Try-On
   PREMIUM_DEV: "/premium-dev", // Premium AR Development
   MESH_INSPECTOR: "/mesh-inspector", // 3D Mesh Inspector Tool
-
-  // Test routes
   PRODUCTS_V2: "/7b8e9f0a-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
   PRODUCTS_LEFT: "/4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
-  VIEW_360: "/6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
-  HOVER_EXPAND: "/2a5f8c9d-4e3b-4a1c-9f7e-8d6c5b4a3e2f",
   UNIVERSE_FINAL: "/1f2e3d4c-5b6a-7c8d-9e0f-1a2b3c4d5e6f",
   NEWS_V2: "/5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
 

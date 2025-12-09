@@ -6,12 +6,11 @@ import BrandPillars from "@components/home-page/brandPillars/BrandPillars";
 // import UniverseSection from "@components/home-page/universeSection/MirrorExp";
 import UniverseSection from "@components/home-page/universeSection/MirrorExp";
 import FutureDiamond from "@components/home-page/futureDiamond/FutureDiamond";
+import FutureDiamondV2 from "@components/home-page/futureDiamondV2/FutureDiamondV2";
 import HoverExpandSection from "@components/home-page/hoverExpandSection/HoverExpandSection";
 import ContactUs from "@components/contactUs/ContactUs";
 import MirrorQuote from "@components/home-page/mirrorQuote/MirrorQuote";
-import ScrollDownArrow from "@components/common/button/ScrollDownArrow";
-import ScrollToTopArrow from "@components/common/button/ScrollToTopArrow";
-import ImmersiveButton from "@components/common/button/ImmersiveButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
 import { useBottomTheme } from "@/hooks/useBottomTheme";
 import "@components/home-page/scrollEffect/ScrollEffect.css";
@@ -60,7 +59,7 @@ export default function HomePage() {
       </div>
 
       <div data-section="future-diamond" data-navbar-theme="white">
-        <FutureDiamond />
+        <FutureDiamondV2 />
       </div>
 
       {/* <div data-section="mirror-quote">
@@ -99,7 +98,11 @@ export default function HomePage() {
       {/* Fixed Scroll to Top Button - only show when scroll-down arrow is hidden */}
       {/* Note: ImmersiveButton and ScrollDownArrow are already rendered by ScrollEffect component */}
       <div className={`fixed-scroll-top-container ${showScrollTop ? 'visible' : ''}`}>
-        <ScrollToTopArrow theme={arrowTheme} />
+        <GlassThemeButton
+          theme={arrowTheme === "white" ? "dark" : "light"}
+          icon="arrow-up"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        />
       </div>
     </>
   );

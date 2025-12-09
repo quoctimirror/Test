@@ -4,7 +4,7 @@ import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransit
 import { getNewsDetailRoute } from "@/constants/routes";
 import { MediaImage } from "@components/common/media";
 import "./NewsGrid.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 
 const NewsGrid = () => {

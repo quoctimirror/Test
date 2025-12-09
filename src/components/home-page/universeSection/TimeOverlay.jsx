@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useRef } from 'react';
 import { MediaImage } from '@components/common/media';
 import './TimeOverlay.css';
 import StarlightEffect from './StarlightEffect';
-import ShineGlassButton from '@components/common/button/ShineGlassButton';
+import GlassThemeButton from '@components/common/button/GlassThemeButton';
 import DropletTimeSVG from './svg/DropletTimeSVG';
 
 const TimeOverlay = ({ isVisible, onClose, origin }) => {
@@ -91,11 +91,9 @@ const TimeOverlay = ({ isVisible, onClose, origin }) => {
             </div>
             {/* Close Button - moved outside content to prevent jumping */}
             <div className={`time-overlay__close-button ${isClosing ? 'time-overlay__close-button--closing' : ''}`}>
-                <ShineGlassButton
+                <GlassThemeButton
                     onClick={handleClose}
-                    theme="footer"
-                    width={44}
-                    height={44}
+                    theme="light"
                     className="time-overlay__close-btn"
                 >
                     <MediaImage
@@ -104,7 +102,7 @@ const TimeOverlay = ({ isVisible, onClose, origin }) => {
                         width="20"
                         height="20"
                     />
-                </ShineGlassButton>
+                </GlassThemeButton>
             </div>
 
             <div

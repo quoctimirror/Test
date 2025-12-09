@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import CollectionHeroSection from "./CollectionHeroSection";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import ArrowButton from "@components/common/button/ArrowButton";
 import { collectionsAPI } from "@services/api";
@@ -196,13 +196,13 @@ function Collection() {
                   </>
                 )}
           </div>
-          <ShineGlassButton
-            theme="footer"
+          <GlassThemeButton
+            theme="dark"
             onClick={handleExploreCollection}
             className="collection-hero-explore-button"
           >
-            Explore this collection
-          </ShineGlassButton>
+            <span className="bodytext-6--no-margin">Explore this collection</span>
+          </GlassThemeButton>
         </div>
 
         <div className="collection-content-panel full-width">
@@ -243,12 +243,12 @@ function Collection() {
               >
                 {currentProduct.title}
               </h3>
-              <ShineGlassButton
+              <GlassThemeButton
                 className="shop-now-button"
-                theme="footer"
+                theme="dark"
               >
-                Shop now
-              </ShineGlassButton>
+                <span className="bodytext-6--no-margin">Shop now</span>
+              </GlassThemeButton>
             </div>
           </div>
         </div>

@@ -940,7 +940,7 @@
 
 /* Fade in animation when menu is opening */
 .menu-v4-popup.opening .menu-v4-bottom-buttons {
-  animation: fadeInBottomButtons 0.6s ease 0.3s forwards; /* 0.3s delay after menu starts */
+  animation: fadeInBottomButtons 1s ease-out 0.5s forwards; /* 0.5s delay, 1s duration */
 }
 
 /* Keep visible after animation completes */
@@ -951,7 +951,7 @@
 @keyframes fadeInBottomButtons {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
