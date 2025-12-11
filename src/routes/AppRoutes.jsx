@@ -85,6 +85,11 @@ const PremiumPage = lazy(() => import("@pages/PremiumPage"));
 const PremiumDevPage = lazy(() => import("@pages/PremiumDevPage"));
 const SimpleMeshInspector = lazy(() => import("@components/ijewelTryOn/quocti_dancefloor/SimpleMeshInspector"));
 
+// Event Pages
+const EventPage = lazy(() => import("@pages/Event/EventPage"));
+const EventDisplayPage = lazy(() => import("@pages/Event/EventDisplayPage"));
+const EventAdminPage = lazy(() => import("@pages/Event/EventAdminPage"));
+
 export default function AppRoutes() {
   const location = useLocation();
 
@@ -128,6 +133,9 @@ export default function AppRoutes() {
       ROUTES.PREMIUM,
       ROUTES.PREMIUM_DEV,
       ROUTES.MESH_INSPECTOR,
+      ROUTES.EVENT,
+      ROUTES.EVENT_DISPLAY,
+      ROUTES.EVENT_ADMIN,
     ];
 
     // Check exact matches
@@ -166,7 +174,8 @@ export default function AppRoutes() {
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.PREMIUM ||
     location.pathname === ROUTES.PREMIUM_DEV ||
-    location.pathname === ROUTES.MESH_INSPECTOR;
+    location.pathname === ROUTES.MESH_INSPECTOR ||
+    location.pathname.startsWith(ROUTES.EVENT);
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -180,8 +189,8 @@ export default function AppRoutes() {
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
     location.pathname === ROUTES.PREMIUM ||
     location.pathname === ROUTES.PREMIUM_DEV ||
-    location.pathname === ROUTES.MESH_INSPECTOR;
-
+    location.pathname === ROUTES.MESH_INSPECTOR ||
+    location.pathname.startsWith(ROUTES.EVENT);
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -329,6 +338,11 @@ export default function AppRoutes() {
                 </ProtectedRoute>
               }
             />
+
+            {/* Event Routes */}
+            <Route path={ROUTES.EVENT} element={<EventPage />} />
+            <Route path={ROUTES.EVENT_DISPLAY} element={<EventDisplayPage />} />
+            <Route path={ROUTES.EVENT_ADMIN} element={<EventAdminPage />} />
 
             {/* 404 - Catch all route for non-existent paths */}
             <Route path="*" element={<NotFoundPage />} />

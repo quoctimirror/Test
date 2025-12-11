@@ -50,12 +50,16 @@ const MirrorNetworkV2 = () => {
     const carousel = carouselRef.current;
     if (!carousel) return;
 
-    // Prevent wheel/trackpad scrolling
-    const preventWheel = (e) => {
-      e.preventDefault();
+    // Prevent horizontal wheel/trackpad scrolling but allow vertical page scroll
+    const preventHorizontalWheel = (e) => {
+      // Only prevent if it's primarily a horizontal scroll attempt
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+      }
+      // Vertical scroll (deltaY) passes through to allow page scrolling
     };
 
-    carousel.addEventListener("wheel", preventWheel, { passive: false });
+    carousel.addEventListener("wheel", preventHorizontalWheel, { passive: false });
 
     // Set initial position in the middle for bidirectional scrolling
     setTimeout(() => {
@@ -78,7 +82,7 @@ const MirrorNetworkV2 = () => {
     }, 100);
 
     return () => {
-      carousel.removeEventListener("wheel", preventWheel);
+      carousel.removeEventListener("wheel", preventHorizontalWheel);
       if (arrowAnimationId.current) {
         cancelAnimationFrame(arrowAnimationId.current);
       }

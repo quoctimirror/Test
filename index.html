@@ -29,7 +29,7 @@
       style-src 'self' 'unsafe-inline' https:;
       img-src 'self' data: https: http: blob:;
       font-src 'self' data: https:;
-      connect-src 'self' http://localhost:* https: data: blob:;
+      connect-src 'self' http://localhost:* https: wss://*.ably.net wss://*.ably-realtime.com wss://*.ably.io data: blob:;
       frame-src 'self' https:;
       child-src 'self' https: blob:;
       worker-src 'self' blob:;

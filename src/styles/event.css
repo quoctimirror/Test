@@ -1,0 +1,1041 @@
+/**
+ * Event System Styles
+ * Mirror Diamond Symphony Event
+ */
+
+/* ============================================
+   Base Styles & Variables
+   ============================================ */
+:root {
+  --event-primary: #e91e63;
+  --event-primary-dark: #880e4f;
+  --event-primary-light: #f48fb1;
+  --event-bg-dark: #1a0a10;
+  --event-bg-gradient: linear-gradient(
+    135deg,
+    #1a0a10 0%,
+    #2d1520 50%,
+    #1a0a10 100%
+  );
+  --event-text: #ffffff;
+  --event-text-muted: rgba(255, 255, 255, 0.7);
+  --event-glass: rgba(255, 255, 255, 0.1);
+  --event-glass-border: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   Event Page Base
+   ============================================ */
+.event-page,
+.event-display,
+.event-admin {
+  min-height: 100vh;
+  background: var(--event-bg-gradient);
+  color: var(--event-text);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.event-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* ============================================
+   Event Screen (Flow Steps)
+   ============================================ */
+.event-screen {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.event-screen__content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.event-tagline {
+  font-size: 1rem;
+  color: var(--event-text-muted);
+  text-align: center;
+  font-style: italic;
+  margin: 1rem 0;
+}
+
+.event-subtitle {
+  font-size: 0.9rem;
+  color: var(--event-text-muted);
+  text-align: center;
+}
+
+/* ============================================
+   Event Form
+   ============================================ */
+.event-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-form__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.event-form__field {
+  position: relative;
+  width: 100%;
+}
+
+.event-form__counter {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: var(--event-text-muted);
+}
+
+.event-form__error {
+  color: #ff6b6b;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* ============================================
+   Event Input
+   ============================================ */
+.event-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--event-glass);
+  border: 1px solid var(--event-glass-border);
+  border-radius: 12px;
+  color: var(--event-text);
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.event-input::placeholder {
+  color: var(--event-text-muted);
+}
+
+.event-input:focus {
+  border-color: var(--event-primary);
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.3);
+}
+
+.event-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   Event Buttons
+   ============================================ */
+.event-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.event-btn--primary {
+  background: linear-gradient(
+    135deg,
+    var(--event-primary) 0%,
+    var(--event-primary-dark) 100%
+  );
+  color: white;
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+}
+
+.event-btn--primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(233, 30, 99, 0.5);
+}
+
+.event-btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.event-btn--secondary {
+  background: var(--event-glass);
+  border: 1px solid var(--event-glass-border);
+  color: var(--event-text);
+  backdrop-filter: blur(10px);
+}
+
+.event-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.event-btn--outline {
+  background: transparent;
+  border: 2px solid var(--event-primary);
+  color: var(--event-primary-light);
+}
+
+.event-btn--outline:hover {
+  background: var(--event-primary);
+  color: white;
+}
+
+.event-btn--text {
+  background: transparent;
+  color: var(--event-text-muted);
+  padding: 0.5rem 1rem;
+}
+
+.event-btn--text:hover {
+  color: var(--event-text);
+}
+
+/* ============================================
+   Diamond Selection Grid
+   ============================================ */
+.diamond-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 350px;
+}
+
+.diamond-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--event-glass);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.diamond-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.diamond-card--selected {
+  border-color: var(--event-primary);
+  background: rgba(233, 30, 99, 0.2);
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
+}
+
+.diamond-card__name {
+  font-size: 0.7rem;
+  color: var(--event-text-muted);
+  text-align: center;
+}
+
+.diamond-card__pitch {
+  font-size: 0.65rem;
+  color: var(--event-primary-light);
+  font-weight: 600;
+}
+
+.diamond-selected-info {
+  text-align: center;
+  padding: 1rem;
+  background: var(--event-glass);
+  border-radius: 12px;
+  width: 100%;
+}
+
+/* ============================================
+   Music Staff
+   ============================================ */
+.music-staff {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--event-primary);
+}
+
+.music-staff--interactive {
+  cursor: crosshair;
+}
+
+.music-staff--interactive:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.place-staff-container {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.place-diamond-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--event-glass);
+  border-radius: 50px;
+}
+
+.place-note-count {
+  font-size: 0.875rem;
+  color: var(--event-text-muted);
+}
+
+/* ============================================
+   Result Screen
+   ============================================ */
+.result-title {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--event-primary-light),
+    var(--event-primary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.result-subtitle {
+  color: var(--event-text-muted);
+}
+
+.result-light-number {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.5rem 2rem;
+  background: var(--event-glass);
+  border-radius: 16px;
+}
+
+.result-light-label {
+  font-size: 0.875rem;
+  color: var(--event-text-muted);
+}
+
+.result-light-value {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--event-primary-light);
+}
+
+.result-diamond {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.result-diamond-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.result-diamond-pitch {
+  font-size: 0.875rem;
+  color: var(--event-primary-light);
+}
+
+.result-username {
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--event-text-muted);
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.result-journey {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.result-journey h3 {
+  font-size: 1rem;
+  color: var(--event-text-muted);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.result-notice {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(233, 30, 99, 0.1);
+  border: 1px solid rgba(233, 30, 99, 0.3);
+  border-radius: 12px;
+  font-size: 0.875rem;
+}
+
+.result-notice p {
+  margin: 0.25rem 0;
+}
+
+.demo-badge {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  background: #ff9800;
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 4px;
+}
+
+/* ============================================
+   Display Page
+   ============================================ */
+.event-display {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.event-display__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.event-display__stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.event-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.event-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--event-primary-light);
+}
+
+.event-stat-label {
+  font-size: 0.75rem;
+  color: var(--event-text-muted);
+}
+
+.event-display__staff {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.event-display__latest {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--event-primary);
+  border-radius: 50px;
+  animation: slideUp 0.5s ease;
+}
+
+.latest-info strong {
+  color: var(--event-primary-light);
+}
+
+.event-display__footer {
+  padding: 1rem;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--event-text-muted);
+  font-style: italic;
+}
+
+/* ============================================
+   Lucky Draw Overlay
+   ============================================ */
+.lucky-draw-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.lucky-draw-content {
+  text-align: center;
+  padding: 3rem;
+}
+
+.lucky-draw-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--event-primary-light);
+}
+
+.lucky-draw-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.spinning-diamond {
+  animation: spin 0.5s linear infinite;
+}
+
+.lucky-draw-winner h3 {
+  font-size: 1.5rem;
+  color: var(--event-text-muted);
+  margin-bottom: 2rem;
+}
+
+.winner-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.winner-light {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--event-primary-light);
+}
+
+.winner-name {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* ============================================
+   Admin Page
+   ============================================ */
+.event-admin {
+  padding: 2rem;
+}
+
+.event-admin--login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 2rem;
+}
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.admin-login-form h2 {
+  text-align: center;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--event-glass-border);
+}
+
+.admin-header h1 {
+  font-size: 1.5rem;
+}
+
+.admin-content {
+  display: grid;
+  gap: 2rem;
+}
+
+.admin-section {
+  background: var(--event-glass);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.admin-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--event-primary-light);
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.event-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.event-stat-card .event-stat-value {
+  font-size: 1.75rem;
+}
+
+.admin-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--event-glass-border);
+  border-radius: 12px;
+  color: var(--event-text);
+  font-family: monospace;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.import-result {
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.import-result.success {
+  background: rgba(76, 175, 80, 0.2);
+  color: #81c784;
+}
+
+.import-result.error {
+  background: rgba(244, 67, 54, 0.2);
+  color: #e57373;
+}
+
+.lucky-draw-btn {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.last-winner {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.last-winner h3 {
+  font-size: 1rem;
+  color: var(--event-text-muted);
+  margin-bottom: 1rem;
+}
+
+.winner-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.winner-details .winner-light {
+  font-size: 1.5rem;
+}
+
+.winner-details .winner-name {
+  font-size: 1.25rem;
+}
+
+.notes-table-container {
+  overflow-x: auto;
+}
+
+.notes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.notes-table th,
+.notes-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--event-glass-border);
+}
+
+.notes-table th {
+  color: var(--event-text-muted);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.notes-table td {
+  font-size: 0.875rem;
+}
+
+.notes-table td:has(svg) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-display-link {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+.admin-display-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+/* ============================================
+   Note Preview Screen
+   ============================================ */
+.preview-light-number {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1rem 1.5rem;
+  background: var(--event-glass);
+  border-radius: 12px;
+}
+
+.preview-light-label {
+  font-size: 0.8rem;
+  color: var(--event-text-muted);
+}
+
+.preview-light-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--event-primary-light);
+}
+
+.preview-note-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--event-glass);
+  border-radius: 16px;
+}
+
+.preview-note-details {
+  text-align: left;
+}
+
+.preview-note-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--event-text);
+  margin: 0;
+}
+
+.preview-note-pitch {
+  font-size: 0.9rem;
+  color: var(--event-primary-light);
+  margin: 0.25rem 0 0;
+}
+
+.preview-play-btn {
+  width: 100%;
+}
+
+.preview-staff {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.preview-staff-label {
+  font-size: 0.85rem;
+  color: var(--event-text-muted);
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.preview-staff-count {
+  font-size: 0.85rem;
+  color: var(--event-text-muted);
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+/* ============================================
+   Background & Scenery Selection Screen
+   ============================================ */
+.selection-section {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.selection-label {
+  font-size: 0.9rem;
+  color: var(--event-text-muted);
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.background-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.background-card {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  max-height: 150px;
+  border-radius: 12px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  overflow: hidden;
+}
+
+.background-card:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.background-card--selected {
+  border-color: var(--event-primary);
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.5);
+}
+
+.background-card__name {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  font-weight: 500;
+}
+
+.background-card__check {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 20px;
+  height: 20px;
+  background: var(--event-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: white;
+}
+
+/* Scenery Selection */
+.scenery-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.scenery-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.75rem 0.5rem;
+  background: var(--event-glass);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scenery-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.scenery-card--selected {
+  border-color: var(--event-primary);
+  background: rgba(233, 30, 99, 0.2);
+  box-shadow: 0 0 15px rgba(233, 30, 99, 0.4);
+}
+
+.scenery-card__icon {
+  font-size: 1.5rem;
+}
+
+.scenery-card__name {
+  font-size: 0.6rem;
+  color: var(--event-text-muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.scenery-card__check {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  width: 16px;
+  height: 16px;
+  background: var(--event-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  color: white;
+}
+
+/* Result Download Button */
+.result-download-btn {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.result-journey__count {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--event-text-muted);
+  margin-top: 0.75rem;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.diamond__selection-ring {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+  .event-page {
+    padding: 1rem;
+  }
+
+  .event-screen {
+    padding: 1rem;
+  }
+
+  .diamond-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .diamond-card {
+    padding: 0.75rem;
+  }
+
+  .result-light-value {
+    font-size: 2.5rem;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .event-display__header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

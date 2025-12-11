@@ -47,6 +47,11 @@ export const ROUTES = {
   DASHBOARD_ADMIN_MANAGE: "/dashboard/admin/manage-products",
   DASHBOARD_VENDOR: "/dashboard/vendor",
   DASHBOARD_DESIGNER: "/dashboard/designer",
+
+  // Event routes
+  EVENT: "/event",
+  EVENT_DISPLAY: "/event/display",
+  EVENT_ADMIN: "/event/admin",
 };
 
 // Helper to get collection detail route with ID

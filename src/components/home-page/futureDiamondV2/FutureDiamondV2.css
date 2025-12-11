@@ -11,6 +11,9 @@
     #000 100%
   );
   position: relative;
+  z-index: 10;
+  /* Responsive padding: min 150px, preferred 20vw (based on video-box width), max 300px */
+  padding-bottom: clamp(150px, 20vw, 300px);
 }
 
 /* Intro Overlay - centered, visible by default, only fades out */
@@ -84,6 +87,8 @@
   align-items: center;
   justify-content: center;
   overflow: visible;
+  /* Clip only top/left/right, allow bottom to overflow */
+  clip-path: inset(0 0 -100vh 0);
 }
 
 /* Lumex Container - centered in sticky viewport */
@@ -127,7 +132,7 @@
 /* Lumex Content Overlay - positioned 20% from viewport top */
 .future-diamond-v2-lumex-content-overlay {
   position: absolute;
-  top: 15%;
+  top: 18%;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
   z-index: 10;
@@ -238,6 +243,18 @@
 .future-diamond-v2-description-overlay .bodytext-4--no-margin {
   margin-top: 24px;
   max-width: 447px;
+}
+
+@media screen and (max-width: 1550px) {
+  .future-diamond-v2-description-overlay {
+    max-width: 680px;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .future-diamond-v2-description-overlay {
+    max-width: 510px;
+  }
 }
 
 /* Medium screens (tablets) - 426px to 1023px */
