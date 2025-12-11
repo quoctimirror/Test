@@ -42,6 +42,35 @@ const AdminDashboard = () => {
   const roles = user?.roles || [];
   const isAdminLike = roles.includes("SUPER_ADMIN") || roles.includes("ADMIN") || roles.includes("IT_ADMIN");
 
+  // Get portal branding based on user's primary role
+  const getPortalInfo = () => {
+    const primaryRole = roles[0];
+    if (roles.includes("SUPER_ADMIN") || roles.includes("ADMIN") || roles.includes("IT_ADMIN")) {
+      return { title: "Mirror Admin", subtitle: "Management Portal", breadcrumb: "Admin" };
+    }
+    if (roles.includes("PRODUCTION_OPS")) {
+      return { title: "Mirror Production", subtitle: "Operations Portal", breadcrumb: "Production" };
+    }
+    if (roles.includes("SALES_CUSTOMER_OPS")) {
+      return { title: "Mirror Sales", subtitle: "Customer Operations Portal", breadcrumb: "Sales" };
+    }
+    if (roles.includes("FINANCE")) {
+      return { title: "Mirror Finance", subtitle: "Finance Portal", breadcrumb: "Finance" };
+    }
+    if (roles.includes("MARKETING")) {
+      return { title: "Mirror Marketing", subtitle: "Marketing Portal", breadcrumb: "Marketing" };
+    }
+    if (roles.includes("CREATIVE_DESIGN")) {
+      return { title: "Mirror Creative", subtitle: "Design Portal", breadcrumb: "Creative" };
+    }
+    if (roles.includes("LEGAL")) {
+      return { title: "Mirror Legal", subtitle: "Legal Portal", breadcrumb: "Legal" };
+    }
+    return { title: "Mirror Staff", subtitle: "Staff Portal", breadcrumb: "Staff" };
+  };
+
+  const portalInfo = getPortalInfo();
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -109,12 +138,12 @@ const AdminDashboard = () => {
       // Existing tabs
       products: ["CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       "product-fulfillment": ["CREATIVE_DESIGN", "MARKETING", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
-      "sku-codes": ["CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      "sku-codes": ["PRODUCTION_OPS", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       orders: ["SALES_CUSTOMER_OPS", "FINANCE", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       payments: ["FINANCE", "SALES_CUSTOMER_OPS", "ADMIN", "IT_ADMIN"],
       appointments: ["SALES_CUSTOMER_OPS", "ADMIN", "IT_ADMIN"],
       categories: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
-      collections: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      collections: ["PRODUCTION_OPS", "MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       locations: ["ADMIN", "IT_ADMIN"],
       vendors: ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       "vendor-matching": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
@@ -235,7 +264,7 @@ const AdminDashboard = () => {
   const getPageInfo = () => {
     const pageMap = {
       dashboard: {
-        title: "Admin Dashboard",
+        title: `${portalInfo.breadcrumb} Dashboard`,
         description: "Overview of your Mirror Diamond management system",
       },
       // Product Ops Dashboard
@@ -366,8 +395,8 @@ const AdminDashboard = () => {
       {/* Sidebar Navigation */}
       <div className="admin-sidebar">
         <div className="admin-sidebar-header">
-          <h1 className="admin-sidebar-title">Mirror Admin</h1>
-          <p className="admin-sidebar-subtitle">Management Portal</p>
+          <h1 className="admin-sidebar-title">{portalInfo.title}</h1>
+          <p className="admin-sidebar-subtitle">{portalInfo.subtitle}</p>
         </div>
 
         <nav className="admin-sidebar-nav">
@@ -389,10 +418,10 @@ const AdminDashboard = () => {
             <span className="home-nav-label">← Back to Home</span>
           </button>
           <div className="admin-user-info">
-            <div className="admin-user-avatar">A</div>
+            <div className="admin-user-avatar">{user?.firstName?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}</div>
             <div className="admin-user-details">
-              <div className="admin-user-name">Admin User</div>
-              <div className="admin-user-role">Administrator</div>
+              <div className="admin-user-name">{user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.email || 'User'}</div>
+              <div className="admin-user-role">{user?.roles?.[0]?.replace(/_/g, ' ') || 'Staff'}</div>
             </div>
           </div>
         </div>
@@ -402,7 +431,7 @@ const AdminDashboard = () => {
       <div className="admin-main-content">
         <div className="admin-content-header">
           <div className="admin-breadcrumb">
-            <span>Admin</span>
+            <span>{portalInfo.breadcrumb}</span>
             <span className="breadcrumb-separator">›</span>
             <span>{getPageInfo().title}</span>
           </div>
