@@ -192,6 +192,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.PREMIUM ||
     location.pathname === ROUTES.PREMIUM_DEV ||
     location.pathname === ROUTES.MESH_INSPECTOR ||
+    location.pathname.startsWith(ROUTES.EVENT);
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.INVENTORY);
 
@@ -208,6 +209,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.PREMIUM ||
     location.pathname === ROUTES.PREMIUM_DEV ||
     location.pathname === ROUTES.MESH_INSPECTOR ||
+    location.pathname.startsWith(ROUTES.EVENT);
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.INVENTORY);
 

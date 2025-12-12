@@ -532,6 +532,30 @@ export const categoriesAPI = {
   },
 };
 
+// ===== CERTIFICATES API =====
+export const certificatesAPI = {
+  // Get all certificates
+  getAll: () => api.get("/api/certificates"),
+
+  // Get certificate by ID
+  getById: (id) => api.get(`/api/certificates/${id}`),
+
+  // Get certificate by code
+  getByCode: (code) => api.get(`/api/certificates/by-code?code=${encodeURIComponent(code)}`),
+
+  // Get certificates by type (IGI, etc.)
+  getByType: (type) => api.get(`/api/certificates/by-type?type=${type}`),
+
+  // Create new certificate
+  create: (certificateData) => api.post("/api/certificates", certificateData),
+
+  // Update certificate
+  update: (id, certificateData) => api.put(`/api/certificates/${id}`, certificateData),
+
+  // Delete certificate (soft delete)
+  delete: (id) => api.delete(`/api/certificates/${id}`),
+};
+
 // ===== COMPONENTS API =====
 export const componentsAPI = {
   // Get all active components

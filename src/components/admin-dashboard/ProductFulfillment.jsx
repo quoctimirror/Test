@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { productsAPI, fileUploadAPI } from "@/services/api";
+import { productsAPI, fileUploadAPI, certificatesAPI } from "@/services/api";
 import "./ProductFulfillment.css";
+
+const CERTIFICATE_TYPES = [
+  { value: "IGI", label: "IGI - International Gemological Institute" },
+];
 
 const ProductStatus = {
   DRAFT: "DRAFT",
@@ -23,13 +27,25 @@ const ProductFulfillment = () => {
   const [existingImages, setExistingImages] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
 
+  // Certificate management
+  const [certificates, setCertificates] = useState([]);
+  const [certificateCodes, setCertificateCodes] = useState([]);
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
+  const [certificateFormData, setCertificateFormData] = useState({
+    certificateCode: "",
+    certificateType: "IGI",
+    certificateUrl: "",
+  });
+  const [certificateError, setCertificateError] = useState(null);
+
   const [fulfillmentData, setFulfillmentData] = useState({
     description: "",
     videoUrls: [],
     has3DModel: false,
     iJewel3DUrl: "",
     hasARTryOn: false,
-    markReadyForRelease: false
+    markReadyForRelease: false,
+    hasCertificates: null, // null = not chosen, true = has certificates, false = no certificates
   });
 
   const showNotification = (message, type = "success") => {
@@ -90,13 +106,21 @@ const ProductFulfillment = () => {
     setExistingImages(existingUrls);
     setImageFiles([]);
 
+    // Load existing certificates
+    setCertificateCodes(product.certificateCodes || []);
+
+    // Initialize hasCertificates based on existing certificates
+    const existingCertificates = product.certificateCodes || [];
+    const hasCerts = existingCertificates.length > 0 ? true : null; // true if has certs, null if user needs to choose
+
     setFulfillmentData({
       description: product.description || "",
       videoUrls: [],
       has3DModel: false,
       iJewel3DUrl: "",
       hasARTryOn: false,
-      markReadyForRelease: false
+      markReadyForRelease: false,
+      hasCertificates: hasCerts,
     });
   };
 
@@ -212,6 +236,7 @@ const ProductFulfillment = () => {
         featured: selectedProduct.featured || false,
         stockQuantity: selectedProduct.stockQuantity || 0,
         minStockLevel: selectedProduct.minStockLevel || 1,
+        certificateCodes: certificateCodes,
       };
 
       // Use the regular update endpoint instead of fulfill
@@ -292,7 +317,8 @@ const ProductFulfillment = () => {
   const getCompletionStatus = (product) => {
     const checks = {
       hasImages: (product.imageUrls?.length || 0) > 0 || product.imageUrl,
-      hasDescription: product.description && product.description.length > 0
+      hasDescription: product.description && product.description.length > 0,
+      hasCertificates: (product.certificateCodes?.length || 0) > 0
     };
     const completed = Object.values(checks).filter(Boolean).length;
     const total = Object.values(checks).length;
@@ -393,6 +419,10 @@ const ProductFulfillment = () => {
                     <div className={`check-item ${status.checks.hasDescription ? 'complete' : ''}`}>
                       <span className="check-icon">{status.checks.hasDescription ? '✓' : '○'}</span>
                       Description
+                    </div>
+                    <div className={`check-item ${status.checks.hasCertificates ? 'complete' : ''}`}>
+                      <span className="check-icon">{status.checks.hasCertificates ? '✓' : '○'}</span>
+                      Certificates
                     </div>
                   </div>
                 </div>
@@ -695,6 +725,172 @@ const ProductFulfillment = () => {
                   )}
                 </div>
 
+                {/* Included Certificates */}
+                <div className="form-section">
+                  <div className="section-header">
+                    <h3>Included Certificates</h3>
+                    <span className="section-required">Required</span>
+                  </div>
+                  <p className="section-description">Does this product include diamond certificates (IGI, GIA, etc.)?</p>
+
+                  {/* Certificate Choice Radio Buttons */}
+                  <div style={{ marginBottom: "1rem" }}>
+                    <div className="checkbox-group" style={{ marginBottom: "0.5rem" }}>
+                      <label className="checkbox-label" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <input
+                          type="radio"
+                          name="hasCertificates"
+                          checked={fulfillmentData.hasCertificates === false}
+                          onChange={() => {
+                            setFulfillmentData({
+                              ...fulfillmentData,
+                              hasCertificates: false,
+                            });
+                            setCertificateCodes([]); // Clear any added certificates
+                          }}
+                          style={{ width: "16px", height: "16px" }}
+                        />
+                        <span className="checkbox-text">No certificates needed for this product</span>
+                      </label>
+                    </div>
+                    <div className="checkbox-group">
+                      <label className="checkbox-label" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <input
+                          type="radio"
+                          name="hasCertificates"
+                          checked={fulfillmentData.hasCertificates === true}
+                          onChange={() =>
+                            setFulfillmentData({
+                              ...fulfillmentData,
+                              hasCertificates: true,
+                            })
+                          }
+                          style={{ width: "16px", height: "16px" }}
+                        />
+                        <span className="checkbox-text">This product includes certificates</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Show certificate management only when "has certificates" is selected */}
+                  {fulfillmentData.hasCertificates === true && (
+                    <>
+                      {/* Validation message if no certificates added */}
+                      {certificateCodes.length === 0 && (
+                        <div
+                          style={{
+                            padding: "0.75rem",
+                            marginBottom: "0.75rem",
+                            backgroundColor: "#fef3c7",
+                            border: "1px solid #f59e0b",
+                            borderRadius: "6px",
+                            color: "#92400e",
+                            fontSize: "0.875rem",
+                          }}
+                        >
+                          Please add at least one certificate to complete this step.
+                        </div>
+                      )}
+
+                      {/* Added Certificates List */}
+                      {certificateCodes.length > 0 && (
+                        <div style={{ marginBottom: "0.75rem" }}>
+                          {certificateCodes.map((code) => {
+                            const cert = certificates.find(c => c.certificateCode === code);
+                            return (
+                              <div
+                                key={code}
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "0.5rem",
+                                  padding: "0.375rem 0.75rem",
+                                  backgroundColor: "#dbeafe",
+                                  border: "1px solid #3b82f6",
+                                  borderRadius: "9999px",
+                                  marginRight: "0.5rem",
+                                  marginBottom: "0.5rem",
+                                  fontSize: "0.8125rem",
+                                }}
+                              >
+                                <span style={{ fontWeight: "500", color: "#1d4ed8" }}>
+                                  {cert?.certificateType || "IGI"}: {code}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setCertificateCodes(certificateCodes.filter(c => c !== code));
+                                  }}
+                                  style={{
+                                    background: "none",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    padding: "0",
+                                    color: "#dc2626",
+                                    fontWeight: "bold",
+                                    fontSize: "1rem",
+                                    lineHeight: "1",
+                                  }}
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      {/* Add Certificate Button */}
+                      <button
+                        type="button"
+                        onClick={() => setIsCertificateModalOpen(true)}
+                        className="add-url-btn"
+                      >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                          <path d="M10 5V15M5 10H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        </svg>
+                        Add Certificate
+                      </button>
+                    </>
+                  )}
+
+                  {/* Show completion message when "no certificates" is selected */}
+                  {fulfillmentData.hasCertificates === false && (
+                    <div
+                      style={{
+                        padding: "0.75rem",
+                        backgroundColor: "#dcfce7",
+                        border: "1px solid #22c55e",
+                        borderRadius: "6px",
+                        color: "#166534",
+                        fontSize: "0.875rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                      }}
+                    >
+                      <span>✓</span>
+                      <span>Certificate step completed - no certificates needed.</span>
+                    </div>
+                  )}
+
+                  {/* Show prompt when no choice made yet */}
+                  {fulfillmentData.hasCertificates === null && (
+                    <div
+                      style={{
+                        padding: "0.75rem",
+                        backgroundColor: "#f1f5f9",
+                        border: "1px solid #cbd5e1",
+                        borderRadius: "6px",
+                        color: "#64748b",
+                        fontSize: "0.875rem",
+                      }}
+                    >
+                      Please select an option above to complete this step.
+                    </div>
+                  )}
+                </div>
+
                 {/* Mark Ready for Release */}
                 <div className="form-section">
                   <div className="checkbox-group">
@@ -800,6 +996,255 @@ const ProductFulfillment = () => {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Certificate Modal */}
+      {isCertificateModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 10000,
+          }}
+          onClick={() => {
+            setIsCertificateModalOpen(false);
+            setCertificateError(null);
+            setCertificateFormData({
+              certificateCode: "",
+              certificateType: "IGI",
+              certificateUrl: "",
+            });
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "white",
+              borderRadius: "8px",
+              padding: "1.5rem",
+              width: "100%",
+              maxWidth: "450px",
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <h3
+              style={{
+                margin: "0 0 1.5rem 0",
+                fontSize: "1.125rem",
+                fontWeight: "600",
+                color: "#0f172a",
+              }}
+            >
+              Add New Certificate
+            </h3>
+
+            {certificateError && (
+              <div
+                style={{
+                  padding: "0.75rem",
+                  marginBottom: "1rem",
+                  backgroundColor: "#fef2f2",
+                  border: "1px solid #fecaca",
+                  borderRadius: "6px",
+                  color: "#dc2626",
+                  fontSize: "0.875rem",
+                }}
+              >
+                {certificateError}
+              </div>
+            )}
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setCertificateError(null);
+
+                if (!certificateFormData.certificateCode.trim()) {
+                  setCertificateError("Certificate code is required");
+                  return;
+                }
+
+                try {
+                  const response = await certificatesAPI.create({
+                    certificateCode: certificateFormData.certificateCode.trim(),
+                    certificateType: certificateFormData.certificateType,
+                    certificateUrl: certificateFormData.certificateUrl.trim() || null,
+                  });
+
+                  // Add the new certificate to local state
+                  const newCert = response.data;
+                  setCertificates([...certificates, newCert]);
+
+                  // Auto-add the new certificate code
+                  setCertificateCodes([...certificateCodes, newCert.certificateCode]);
+
+                  // Close modal and reset form
+                  setIsCertificateModalOpen(false);
+                  setCertificateFormData({
+                    certificateCode: "",
+                    certificateType: "IGI",
+                    certificateUrl: "",
+                  });
+                } catch (err) {
+                  setCertificateError(err.response?.data?.message || "Failed to create certificate");
+                }
+              }}
+            >
+              {/* Certificate Code */}
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    color: "#374151",
+                  }}
+                >
+                  Certificate Code <span style={{ color: "#dc2626" }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  value={certificateFormData.certificateCode}
+                  onChange={(e) =>
+                    setCertificateFormData({
+                      ...certificateFormData,
+                      certificateCode: e.target.value,
+                    })
+                  }
+                  className="form-input"
+                  placeholder="e.g., 123456789"
+                  style={{ width: "100%" }}
+                  required
+                />
+              </div>
+
+              {/* Certificate Type */}
+              <div style={{ marginBottom: "1rem" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    color: "#374151",
+                  }}
+                >
+                  Certificate Type <span style={{ color: "#dc2626" }}>*</span>
+                </label>
+                <select
+                  value={certificateFormData.certificateType}
+                  onChange={(e) =>
+                    setCertificateFormData({
+                      ...certificateFormData,
+                      certificateType: e.target.value,
+                    })
+                  }
+                  className="form-input"
+                  style={{ width: "100%" }}
+                  required
+                >
+                  {CERTIFICATE_TYPES.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Certificate URL */}
+              <div style={{ marginBottom: "1.5rem" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "0.5rem",
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    color: "#374151",
+                  }}
+                >
+                  Certificate URL
+                </label>
+                <input
+                  type="url"
+                  value={certificateFormData.certificateUrl}
+                  onChange={(e) =>
+                    setCertificateFormData({
+                      ...certificateFormData,
+                      certificateUrl: e.target.value,
+                    })
+                  }
+                  className="form-input"
+                  placeholder="https://..."
+                  style={{ width: "100%" }}
+                />
+                <p
+                  style={{
+                    margin: "0.25rem 0 0 0",
+                    fontSize: "0.75rem",
+                    color: "#64748b",
+                  }}
+                >
+                  Link to the certificate document or verification page
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.75rem",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <button
+                  type="button"
+                  className="action-button"
+                  onClick={() => {
+                    setIsCertificateModalOpen(false);
+                    setCertificateError(null);
+                    setCertificateFormData({
+                      certificateCode: "",
+                      certificateType: "IGI",
+                      certificateUrl: "",
+                    });
+                  }}
+                  style={{
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "#f1f5f9",
+                    color: "#475569",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="action-button primary"
+                  style={{
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "#3b82f6",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Create & Add
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
