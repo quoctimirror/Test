@@ -25,6 +25,7 @@ import PurchaseOrderSummary from "./PurchaseOrderSummary";
 import VendorSelectionWizard from "./VendorSelectionWizard";
 import RBACMatrix from "./RBACMatrix";
 import AppointmentsManager from "./AppointmentsManager";
+import PackagePrintingKit from "./PackagePrintingKit";
 // Product Ops Dashboard
 import {
   ProductOpsDashboard,
@@ -108,6 +109,7 @@ const AdminDashboard = () => {
     { id: "orders", label: "Orders" },
     { id: "payments", label: "Payment schedules" },
     { id: "appointments", label: "Appointments" },
+    { id: "package-printing-kit", label: "Package Printing Kit" },
     { id: "categories", label: "Categories" },
     { id: "collections", label: "Collections" },
     { id: "locations", label: "Locations" },
@@ -142,6 +144,7 @@ const AdminDashboard = () => {
       orders: ["SALES_CUSTOMER_OPS", "FINANCE", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       payments: ["FINANCE", "SALES_CUSTOMER_OPS", "ADMIN", "IT_ADMIN"],
       appointments: ["SALES_CUSTOMER_OPS", "ADMIN", "IT_ADMIN"],
+      "package-printing-kit": ["SALES_CUSTOMER_OPS", "MARKETING", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       categories: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       collections: ["PRODUCTION_OPS", "MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       locations: ["ADMIN", "IT_ADMIN"],
@@ -220,6 +223,8 @@ const AdminDashboard = () => {
         return <PaymentSchedulesManager />;
       case "appointments":
         return <AppointmentsManager />;
+      case "package-printing-kit":
+        return <PackagePrintingKit />;
       case "categories":
         return <CategoriesManager />;
       case "collections":
@@ -316,6 +321,10 @@ const AdminDashboard = () => {
       appointments: {
         title: "Appointments Management",
         description: "View and manage customer appointment bookings",
+      },
+      "package-printing-kit": {
+        title: "Package Printing Kit",
+        description: "Generate and print certificates and thank you cards for products",
       },
       collections: {
         title: "Collections Management",

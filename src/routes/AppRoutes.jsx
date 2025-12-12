@@ -188,6 +188,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
+    location.pathname === ROUTES.HOME ||
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.PREMIUM ||
     location.pathname === ROUTES.PREMIUM_DEV ||
@@ -204,6 +205,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
     location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
+    location.pathname === ROUTES.HOME ||
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
     location.pathname === ROUTES.PREMIUM ||
@@ -232,7 +234,8 @@ export default function AppRoutes() {
           }
         >
           <Routes>
-            <Route path={ROUTES.HOME} element={<HomePage />} />
+            {/* Default route "/" shows WelcomePage */}
+            <Route path={ROUTES.HOME} element={<WelcomePage />} />
 
             <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
             <Route path={ROUTES.WELCOME} element={<WelcomePage />} />
