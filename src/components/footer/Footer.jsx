@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import { ROUTES } from "@/constants/routes";
@@ -9,12 +9,19 @@ import fbIcon from "@assets/images/icons/fb_icon.svg";
 import instaIcon from "@assets/images/icons/insta_icon.svg";
 import tiktokIcon from "@assets/images/icons/tiktok_icon.svg";
 import PrismaticBurst from "@components/common/prismatic-burst/PrismaticBurst";
+import BookingModal from "@components/booking/BookingModal";
 
 const Footer = () => {
   const navigate = useNavigate();
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [shouldRenderBurst, setShouldRenderBurst] = useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const footerRef = useRef(null);
+
+  // Refs for scroll-linked animation elements
+  const footerContentRef = useRef(null);
+  const footerCenterRef = useRef(null);
+  const footerBottomRef = useRef(null);
 
   const handleHomeClick = async (e) => {
     e.preventDefault();
@@ -102,44 +109,93 @@ const Footer = () => {
     );
   };
 
-  const handleBookAppointmentClick = async (e) => {
+  const handleBookAppointmentClick = (e) => {
     e.preventDefault();
-    if (window.location.pathname === ROUTES.BOOK_APPOINTMENT) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(
-      navigate,
-      ROUTES.BOOK_APPOINTMENT
-    );
+    setIsBookingModalOpen(true);
   };
 
+  // Use IntersectionObserver on the spacer element (not fixed footer)
+  useEffect(() => {
+    // Find the spacer element that reveals the footer
+    const spacer = document.querySelector(".footer-reveal-spacer");
+    if (!spacer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsFooterVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 } // Trigger when 10% of spacer is visible
+    );
+
+    observer.observe(spacer);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Scroll-linked animation for footer elements
   useEffect(() => {
     let rafId = null;
 
-    // Detect when footer is visible on screen
+    // Apply scroll-linked transform to an element
+    const applyScrollTransform = (
+      element,
+      progress,
+      maxTranslate = 50,
+      isCenter = false
+    ) => {
+      if (!element) return;
+      const clampedProgress = Math.max(0, Math.min(1, progress));
+      const translateY = maxTranslate * (1 - clampedProgress);
+      // Only apply translate(-50%, -50%) on desktop (> 1023px)
+      if (isCenter && window.innerWidth > 1023) {
+        element.style.transform = `translate(-50%, -50%) translateY(${translateY}px)`;
+      } else {
+        element.style.transform = `translateY(${translateY}px)`;
+      }
+      element.style.opacity = clampedProgress;
+    };
+
     const handleScroll = () => {
-      if (rafId) return; // Throttle with RAF
+      if (rafId) return;
 
       rafId = requestAnimationFrame(() => {
+        if (document.body.style.position === "fixed") {
+          rafId = null;
+          return;
+        }
+
         const scrollPosition = window.scrollY + window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
+        const footerHeight = window.innerHeight;
+        const footerStart = documentHeight - footerHeight;
+        const scrollIntoFooter = Math.max(0, scrollPosition - footerStart);
 
-        // Footer is visible when user is within 1.2 viewport heights from bottom
-        const threshold = documentHeight - window.innerHeight * 1.2;
-        const footerVisible = scrollPosition >= threshold;
+        const elementAnimationRange = footerHeight * 0.35;
+        const bottomStart = footerHeight * 0.25;
+        const centerStart = footerHeight * 0.35;
+        const contentStart = footerHeight * 0.45;
 
-        // Update visibility state
-        setIsFooterVisible(footerVisible);
+        const bottomProgress =
+          (scrollIntoFooter - bottomStart) / elementAnimationRange;
+        const centerProgress =
+          (scrollIntoFooter - centerStart) / elementAnimationRange;
+        const contentProgress =
+          (scrollIntoFooter - contentStart) / elementAnimationRange;
+
+        applyScrollTransform(footerBottomRef.current, bottomProgress, 80);
+        applyScrollTransform(
+          footerCenterRef.current,
+          centerProgress,
+          100,
+          true
+        );
+        applyScrollTransform(footerContentRef.current, contentProgress, 120);
+
         rafId = null;
       });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-
-    // Don't check on mount - wait for user to scroll
-    // This prevents animation from running on page load
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -183,8 +239,8 @@ const Footer = () => {
       </div>
 
       <div className="footer-container">
-        <div className="footer-content">
-          <div className={`footer-left ${isFooterVisible ? "visible" : ""}`}>
+        <div className="footer-content" ref={footerContentRef}>
+          <div className="footer-left">
             <div className="footer-section">
               <ul className="footer-links">
                 <li>
@@ -239,14 +295,14 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className={`footer-right ${isFooterVisible ? "visible" : ""}`}>
+          <div className="footer-right">
             <div className="footer-section">
               <ul className="contact-info">
                 <li>
                   <UnderlineButton
                     onClick={handleLocationClick}
                     className="contact-link-button"
-                    textClassName="bodytext-4--no-margin"
+                    textClassName="bodytext-6--no-margin"
                   >
                     Location
                   </UnderlineButton>
@@ -255,7 +311,7 @@ const Footer = () => {
                   <UnderlineButton
                     onClick={handleContactClick}
                     className="contact-link-button"
-                    textClassName="bodytext-4--no-margin"
+                    textClassName="bodytext-6--no-margin"
                   >
                     Contact us
                   </UnderlineButton>
@@ -264,7 +320,7 @@ const Footer = () => {
                   <UnderlineButton
                     onClick={handleBookAppointmentClick}
                     className="contact-link-button"
-                    textClassName="bodytext-4--no-margin"
+                    textClassName="bodytext-6--no-margin"
                   >
                     Book an appointment
                   </UnderlineButton>
@@ -273,7 +329,7 @@ const Footer = () => {
                   <a href="mailto:support@mirrorfuturediamond.com">
                     <UnderlineButton
                       className="contact-link-button"
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                     >
                       support@mirrorfuturediamond.com
                     </UnderlineButton>
@@ -283,7 +339,7 @@ const Footer = () => {
                   <a href="tel:+97.130.0938">
                     <UnderlineButton
                       className="contact-link-button"
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                     >
                       +97.130.0938
                     </UnderlineButton>
@@ -294,7 +350,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className={`footer-center ${isFooterVisible ? "visible" : ""}`}>
+        <div className="footer-center" ref={footerCenterRef}>
           <div className="newsletter-section">
             <p className="bodytext-4--no-margin newsletter-tagline">
               COLLECT. REFLECT. AWAKEN
@@ -309,25 +365,25 @@ const Footer = () => {
               and your stories shape the luxury you receive.
             </p>
             <div className="newsletter-buttons">
-              <ShineGlassButton
+              <GlassThemeButton
                 onClick={() => console.log("Explore more clicked")}
                 className="newsletter-btn-explore"
-                theme="footer"
+                theme="dark"
               >
-                Explore more
-              </ShineGlassButton>
-              <ShineGlassButton
+                <span className="bodytext-6--no-margin">Explore more</span>
+              </GlassThemeButton>
+              <GlassThemeButton
                 onClick={() => console.log("Sign in clicked")}
                 className="newsletter-btn-signin"
-                theme="light"
+                theme="spec_dark"
               >
-                Sign in
-              </ShineGlassButton>
+                <span className="bodytext-6--no-margin">Sign in</span>
+              </GlassThemeButton>
             </div>
           </div>
         </div>
 
-        <div className={`footer-bottom ${isFooterVisible ? "visible" : ""}`}>
+        <div className="footer-bottom" ref={footerBottomRef}>
           <div className="footer-bottom-center">
             <div className="social-icons">
               <a
@@ -371,6 +427,12 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </footer>
   );
 };

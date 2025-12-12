@@ -36,13 +36,13 @@ const AllGems = () => {
 
   // Each gem has multiple images for carousel
   const gemImages = [
-    "products/allGems/product_card_1.png",
-    "products/allGems/product_card_1.png",
-    "products/allGems/product_card_1.png",
+    "products/allGems/product_card_1.webp",
+    "products/allGems/product_card_1.webp",
+    "products/allGems/product_card_1.webp",
   ];
   const productCards = Array(24).fill(gemImages);
-  const modelImage1 = "products/allGems/earrings-heart.png";
-  const modelImage2 = "products/allGems/flower.png";
+  const modelImage1 = "products/allGems/earrings-heart.webp";
+  const modelImage2 = "products/allGems/flower.webp";
 
   return (
     <div className="all-gems-page">

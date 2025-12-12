@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import MediaImage from "@components/common/media/MediaImage";
 import "./ViewAllProduct.css";
 import { ROUTES } from "@/constants/routes";
@@ -14,14 +14,14 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
   const wrapperRef = useRef(null);
 
   const products = [
-    { id: 1, name: "Lumina", image: "products/product_3_fix.png" },
-    { id: 2, name: "Lumina", image: "products/product_3_fix.png" },
-    { id: 3, name: "Lumina", image: "products/product_3_fix.png" },
-    { id: 4, name: "Lumina", image: "products/product_3_fix.png" },
-    { id: 5, name: "Lumina", image: "products/product_3_fix.png" },
-    { id: 6, name: "Lumina", image: "products/product_3_fix.png" },
-    { id: 7, name: "Lumina", image: "products/product_3_fix.png" },
-    { id: 8, name: "Lumina", image: "products/product_3_fix.png" },
+    { id: 1, name: "Lumina", image: "products/product_3_fix.webp" },
+    { id: 2, name: "Lumina", image: "products/product_3_fix.webp" },
+    { id: 3, name: "Lumina", image: "products/product_3_fix.webp" },
+    { id: 4, name: "Lumina", image: "products/product_3_fix.webp" },
+    { id: 5, name: "Lumina", image: "products/product_3_fix.webp" },
+    { id: 6, name: "Lumina", image: "products/product_3_fix.webp" },
+    { id: 7, name: "Lumina", image: "products/product_3_fix.webp" },
+    { id: 8, name: "Lumina", image: "products/product_3_fix.webp" },
   ];
 
   useEffect(() => {
@@ -226,9 +226,9 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
 
       {showViewProductButton && (
         <div className="view-product-button-container">
-          <ShineGlassButton theme="light" onClick={handleViewAllProducts}>
-            View all products
-          </ShineGlassButton>
+          <GlassThemeButton theme="light" onClick={handleViewAllProducts}>
+            <span className="bodytext-6--no-margin">View all products</span>
+          </GlassThemeButton>
         </div>
       )}
     </>

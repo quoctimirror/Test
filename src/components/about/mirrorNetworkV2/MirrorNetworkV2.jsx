@@ -1,22 +1,32 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./MirrorNetworkV2.css";
 import "@styles/grid-system.css";
-import ArrowButton from "@components/common/button/ArrowButton";
 import MediaImage from "@components/common/media/MediaImage";
+import ArrowButton from "@components/common/button/ArrowButton";
 
 const MirrorNetworkV2 = () => {
   // Carousel refs
   const carouselRef = useRef(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const scrollLeft = useRef(0);
+  const wrapperRef = useRef(null);
   const isLooping = useRef(false);
-  const targetScrollLeft = useRef(0);
-  const animationFrameId = useRef(null);
-  const velocity = useRef(0);
-  const lastX = useRef(0);
-  const lastTime = useRef(0);
-  const isArrowScrolling = useRef(false);
+
+  // Arrow navigation refs
+  const arrowTargetScroll = useRef(0);
+  const arrowAnimationId = useRef(null);
+  const isArrowAnimating = useRef(false);
+
+  // Cursor follower state
+  const [cursorState, setCursorState] = useState({
+    x: 0,
+    y: 0,
+    direction: null, // 'left' | 'right' | null
+    visible: false,
+    isLeaving: false, // For zoom-out animation
+    isClicking: false, // For click state
+  });
+  const hideTimeoutRef = useRef(null);
+  const clickTimeoutRef = useRef(null);
+  const lastMousePos = useRef({ x: 0, y: 0 }); // Track last mouse position for scroll detection
 
   const headerText = "THE MIRROR NETWORK";
   const titleText = "A LIVING SYSTEM OF MODERN LUXURY";
@@ -25,179 +35,36 @@ const MirrorNetworkV2 = () => {
 
   // Carousel images - duplicate for infinite loop
   const carouselImages = [
-    { src: "about/network-section/Art gallery.png", alt: "Art Gallery" },
-    { src: "about/network-section/Enscape_2025-10-09-10-15-51.png", alt: "Enscape 1" },
-    { src: "about/network-section/Enscape_2025-10-09-10-21-27.png", alt: "Enscape 2" },
-    { src: "about/network-section/Gym.png", alt: "Gym" },
-    { src: "about/network-section/Hotel lobby.png", alt: "Hotel Lobby" },
-    { src: "about/network-section/Restaurants_01.png", alt: "Restaurant 1" },
-    { src: "about/network-section/Restaurants_02.png", alt: "Restaurant 2" },
-    { src: "about/network-section/Spa.png", alt: "Spa" },
+    { src: "about/network-section/Art gallery.webp", alt: "Art Gallery" },
+    { src: "about/network-section/Enscape_2025-10-09-10-15-51.webp", alt: "Enscape 1" },
+    { src: "about/network-section/Enscape_2025-10-09-10-21-27.webp", alt: "Enscape 2" },
+    { src: "about/network-section/Gym.webp", alt: "Gym" },
+    { src: "about/network-section/Hotel lobby.webp", alt: "Hotel Lobby" },
+    { src: "about/network-section/Restaurants_01.webp", alt: "Restaurant 1" },
+    { src: "about/network-section/Restaurants_02.webp", alt: "Restaurant 2" },
+    { src: "about/network-section/Spa.webp", alt: "Spa" },
   ];
 
-  // Carousel drag-to-scroll functionality with infinite loop
+  // Carousel initialization - no drag, only arrow navigation
   useEffect(() => {
     const carousel = carouselRef.current;
     if (!carousel) return;
 
-    const smoothScroll = () => {
-      const current = carousel.scrollLeft;
-      const target = targetScrollLeft.current;
-      const diff = target - current;
-
-      if (isDragging.current) {
-        if (Math.abs(diff) > 0.1) {
-          carousel.scrollLeft = current + diff * 0.25;
-          animationFrameId.current = requestAnimationFrame(smoothScroll);
-        } else {
-          carousel.scrollLeft = target;
-          animationFrameId.current = requestAnimationFrame(smoothScroll);
-        }
-      } else {
-        if (Math.abs(velocity.current) > 0.5) {
-          carousel.scrollLeft = current + velocity.current;
-          velocity.current *= 0.94;
-          animationFrameId.current = requestAnimationFrame(smoothScroll);
-        } else {
-          velocity.current = 0;
-          if (animationFrameId.current) {
-            cancelAnimationFrame(animationFrameId.current);
-            animationFrameId.current = null;
-          }
-          checkLoop();
-        }
+    // Prevent horizontal wheel/trackpad scrolling but allow vertical page scroll
+    const preventHorizontalWheel = (e) => {
+      // Only prevent if it's primarily a horizontal scroll attempt
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
       }
+      // Vertical scroll (deltaY) passes through to allow page scrolling
     };
 
-    const handleMouseDown = (e) => {
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
-        animationFrameId.current = null;
-      }
-
-      isDragging.current = true;
-      carousel.style.cursor = "grabbing";
-      carousel.style.scrollBehavior = "auto";
-      startX.current = e.pageX;
-      scrollLeft.current = carousel.scrollLeft;
-      targetScrollLeft.current = carousel.scrollLeft;
-      velocity.current = 0;
-      lastX.current = e.pageX;
-      lastTime.current = Date.now();
-
-      if (!animationFrameId.current) {
-        animationFrameId.current = requestAnimationFrame(smoothScroll);
-      }
-    };
-
-    const handleMouseLeave = () => {
-      if (!isDragging.current) return;
-      isDragging.current = false;
-      carousel.style.cursor = "grab";
-      targetScrollLeft.current = carousel.scrollLeft;
-      if (!animationFrameId.current) {
-        animationFrameId.current = requestAnimationFrame(smoothScroll);
-      }
-    };
-
-    const handleMouseUp = () => {
-      if (!isDragging.current) return;
-      isDragging.current = false;
-      carousel.style.cursor = "grab";
-      targetScrollLeft.current = carousel.scrollLeft;
-      if (!animationFrameId.current) {
-        animationFrameId.current = requestAnimationFrame(smoothScroll);
-      }
-    };
-
-    const handleMouseMove = (e) => {
-      if (!isDragging.current) return;
-      e.preventDefault();
-
-      const currentX = e.pageX;
-      const currentTime = Date.now();
-      const deltaX = currentX - lastX.current;
-      const deltaTime = currentTime - lastTime.current;
-
-      if (deltaTime > 0) {
-        velocity.current = -(deltaX / deltaTime) * 8;
-      }
-
-      const walk = (currentX - startX.current) * 1.2;
-      targetScrollLeft.current = scrollLeft.current - walk;
-
-      lastX.current = currentX;
-      lastTime.current = currentTime;
-    };
-
-    const checkLoop = () => {
-      if (isLooping.current || isDragging.current) return;
-
-      const scrollWidth = carousel.scrollWidth;
-      const currentScroll = carousel.scrollLeft;
-      const clientWidth = carousel.clientWidth;
-
-      const items = carousel.querySelectorAll(".network-carousel-item");
-      if (!items.length) return;
-
-      const itemWidth = items[0].offsetWidth;
-      const gap = parseFloat(getComputedStyle(carousel).gap) || 0;
-      const itemWithGap = itemWidth + gap;
-      const setSize = itemWithGap * 8; // 8 items per set
-      const threshold = setSize * 2;
-
-      if (currentScroll < threshold) {
-        isLooping.current = true;
-        velocity.current = 0;
-        carousel.style.scrollBehavior = "auto";
-        carousel.scrollLeft = currentScroll + setSize * 3;
-        targetScrollLeft.current = carousel.scrollLeft;
-        setTimeout(() => {
-          carousel.style.scrollBehavior = "smooth";
-          isLooping.current = false;
-        }, 50);
-        return;
-      }
-
-      const maxScroll = scrollWidth - clientWidth;
-      if (currentScroll > maxScroll - threshold) {
-        isLooping.current = true;
-        velocity.current = 0;
-        carousel.style.scrollBehavior = "auto";
-        carousel.scrollLeft = currentScroll - setSize * 3;
-        targetScrollLeft.current = carousel.scrollLeft;
-        setTimeout(() => {
-          carousel.style.scrollBehavior = "smooth";
-          isLooping.current = false;
-        }, 50);
-        return;
-      }
-    };
-
-    const handleScroll = () => {
-      if (
-        !isDragging.current &&
-        !isLooping.current &&
-        !isArrowScrolling.current
-      ) {
-        checkLoop();
-      }
-    };
-
-    carousel.addEventListener("mousedown", handleMouseDown);
-    carousel.addEventListener("mouseleave", handleMouseLeave);
-    carousel.addEventListener("mouseup", handleMouseUp);
-    carousel.addEventListener("mousemove", handleMouseMove);
-    carousel.addEventListener("scroll", handleScroll);
+    carousel.addEventListener("wheel", preventHorizontalWheel, { passive: false });
 
     // Set initial position in the middle for bidirectional scrolling
     setTimeout(() => {
       const items = carousel.querySelectorAll(".network-carousel-item");
       if (items.length) {
-        const itemWidth = items[0].offsetWidth;
-        const gap = parseFloat(getComputedStyle(carousel).gap) || 0;
-        const setSize = (itemWidth + gap) * 8;
-
         carousel.style.scrollBehavior = "auto";
 
         // Center an image in the middle of carousel
@@ -209,117 +76,291 @@ const MirrorNetworkV2 = () => {
         const offsetPercent = 25; // 25% of screen width
         carousel.scrollLeft = targetItem.offsetLeft - (screenWidth * offsetPercent / 100);
 
-        velocity.current = 0;
-        isDragging.current = false;
         isLooping.current = false;
-        isArrowScrolling.current = false;
-        targetScrollLeft.current = carousel.scrollLeft;
-
-        setTimeout(() => {
-          carousel.style.scrollBehavior = "smooth";
-        }, 50);
+        arrowTargetScroll.current = carousel.scrollLeft;
       }
     }, 100);
 
     return () => {
-      carousel.removeEventListener("mousedown", handleMouseDown);
-      carousel.removeEventListener("mouseleave", handleMouseLeave);
-      carousel.removeEventListener("mouseup", handleMouseUp);
-      carousel.removeEventListener("mousemove", handleMouseMove);
-      carousel.removeEventListener("scroll", handleScroll);
-
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
+      carousel.removeEventListener("wheel", preventHorizontalWheel);
+      if (arrowAnimationId.current) {
+        cancelAnimationFrame(arrowAnimationId.current);
       }
     };
   }, []);
 
-  // Arrow navigation handlers
-  const handlePrevious = (e) => {
+  // Cursor follower effect
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    // Check if device supports hover (not touch device)
+    const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!supportsHover) return;
+
+    // Check if mouse is within wrapper bounds
+    const isWithinBounds = (e) => {
+      const rect = wrapper.getBoundingClientRect();
+      return (
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+      );
+    };
+
+    // Hide cursor with zoom-out animation
+    const hideCursor = () => {
+      // Clear any existing timeout
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+
+      // Start leaving animation
+      setCursorState(prev => ({ ...prev, isLeaving: true }));
+
+      // Remove after animation completes
+      hideTimeoutRef.current = setTimeout(() => {
+        setCursorState(prev => ({ ...prev, visible: false, isLeaving: false }));
+        // Restore normal cursor
+        wrapper.classList.remove('cursor-hidden');
+      }, 150); // Match zoom-out animation duration
+    };
+
+    // Show cursor (cancel any pending hide)
+    const showCursor = (x, y, direction) => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+        hideTimeoutRef.current = null;
+      }
+
+      // Hide native cursor
+      wrapper.classList.add('cursor-hidden');
+
+      setCursorState({
+        x,
+        y,
+        direction,
+        visible: true,
+        isLeaving: false,
+      });
+    };
+
+    // Global mouse move handler - track everywhere
+    const handleGlobalMouseMove = (e) => {
+      // Store last mouse position
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
+
+      // Check if within wrapper bounds
+      if (!isWithinBounds(e)) {
+        if (cursorState.visible && !cursorState.isLeaving) {
+          hideCursor();
+        }
+        return;
+      }
+
+      const rect = wrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const midpoint = rect.width / 2;
+      const direction = x < midpoint ? "left" : "right";
+
+      showCursor(e.clientX, e.clientY, direction);
+    };
+
+    // Handle scroll - re-check bounds with last known mouse position
+    const handleScroll = () => {
+      const rect = wrapper.getBoundingClientRect();
+      const { x: mouseX, y: mouseY } = lastMousePos.current;
+
+      // Check if last known mouse position is still within wrapper bounds
+      const withinBounds = (
+        mouseX >= rect.left &&
+        mouseX <= rect.right &&
+        mouseY >= rect.top &&
+        mouseY <= rect.bottom
+      );
+
+      if (withinBounds) {
+        // Still within bounds - update cursor position and direction
+        const x = mouseX - rect.left;
+        const midpoint = rect.width / 2;
+        const direction = x < midpoint ? "left" : "right";
+        showCursor(mouseX, mouseY, direction);
+      } else {
+        // Outside bounds - hide cursor
+        if (cursorState.visible && !cursorState.isLeaving) {
+          hideCursor();
+        }
+      }
+    };
+
+    const handleMouseDown = (e) => {
+      if (!isWithinBounds(e)) return;
+
+      // Show click state immediately (before drag starts)
+      setCursorState(prev => ({ ...prev, isClicking: true }));
+    };
+
+    const handleMouseUp = (e) => {
+      if (!isWithinBounds(e)) {
+        setCursorState(prev => ({ ...prev, isClicking: false }));
+        return;
+      }
+
+      // Clear any existing click timeout
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
+      }
+
+      // Reset click state after short delay
+      clickTimeoutRef.current = setTimeout(() => {
+        setCursorState(prev => ({ ...prev, isClicking: false }));
+      }, 150);
+
+      // Navigate based on click position
+      const rect = wrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const midpoint = rect.width / 2;
+
+      if (x < midpoint) {
+        handlePrevious();
+      } else {
+        handleNext();
+      }
+    };
+
+    // Listen on document for better tracking
+    document.addEventListener("mousemove", handleGlobalMouseMove);
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      document.removeEventListener("mousemove", handleGlobalMouseMove);
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("scroll", handleScroll);
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
+      }
+      // Restore normal cursor on cleanup
+      wrapper.classList.remove('cursor-hidden');
+    };
+  }, [cursorState.visible, cursorState.isLeaving]);
+
+  // Custom smooth scroll animation for arrow navigation
+  const animateArrowScroll = () => {
     const carousel = carouselRef.current;
-    if (!carousel || isArrowScrolling.current) return;
+    if (!carousel) return;
 
-    if (e && e.currentTarget) {
-      const button = e.currentTarget.querySelector("button");
-      if (button) button.blur();
-      e.currentTarget.blur();
-    }
+    const current = carousel.scrollLeft;
+    const target = arrowTargetScroll.current;
+    const diff = target - current;
 
-    const items = carousel.querySelectorAll(".network-carousel-item");
-    if (!items.length) return;
+    // Easing factor - higher = faster
+    const easing = 0.12;
+    const threshold = 1;
 
-    const itemWidth = items[0].offsetWidth;
-    const gap = parseFloat(getComputedStyle(carousel).gap) || 0;
-    const scrollAmount = itemWidth + gap;
-    const setSize = scrollAmount * 8;
-    const threshold = setSize * 2.5;
-
-    isArrowScrolling.current = true;
-
-    const currentScroll = carousel.scrollLeft;
-
-    if (currentScroll - scrollAmount < threshold) {
-      carousel.style.scrollBehavior = "auto";
-      carousel.scrollLeft = currentScroll + setSize * 3;
-      setTimeout(() => {
-        carousel.style.scrollBehavior = "smooth";
-        carousel.scrollLeft -= scrollAmount;
-        setTimeout(() => {
-          isArrowScrolling.current = false;
-        }, 400);
-      }, 50);
+    if (Math.abs(diff) > threshold) {
+      carousel.scrollLeft = current + diff * easing;
+      arrowAnimationId.current = requestAnimationFrame(animateArrowScroll);
     } else {
-      carousel.style.scrollBehavior = "smooth";
-      carousel.scrollLeft -= scrollAmount;
-      setTimeout(() => {
-        isArrowScrolling.current = false;
-      }, 400);
+      // Snap to target
+      carousel.scrollLeft = target;
+      isArrowAnimating.current = false;
+      arrowAnimationId.current = null;
+
+      // Check for loop after animation completes
+      checkArrowLoop();
     }
   };
 
-  const handleNext = (e) => {
+  // Check and handle loop for arrow navigation
+  const checkArrowLoop = () => {
     const carousel = carouselRef.current;
-    if (!carousel || isArrowScrolling.current) return;
-
-    if (e && e.currentTarget) {
-      const button = e.currentTarget.querySelector("button");
-      if (button) button.blur();
-      e.currentTarget.blur();
-    }
+    if (!carousel || isLooping.current) return;
 
     const items = carousel.querySelectorAll(".network-carousel-item");
     if (!items.length) return;
 
     const itemWidth = items[0].offsetWidth;
     const gap = parseFloat(getComputedStyle(carousel).gap) || 0;
-    const scrollAmount = itemWidth + gap;
-    const setSize = scrollAmount * 8;
-    const threshold = setSize * 2.5;
-
-    isArrowScrolling.current = true;
+    const setSize = (itemWidth + gap) * 8;
+    const threshold = setSize * 2;
 
     const currentScroll = carousel.scrollLeft;
     const scrollWidth = carousel.scrollWidth;
     const clientWidth = carousel.clientWidth;
     const maxScroll = scrollWidth - clientWidth;
 
-    if (currentScroll + scrollAmount > maxScroll - threshold) {
-      carousel.style.scrollBehavior = "auto";
-      carousel.scrollLeft = currentScroll - setSize * 3;
+    if (currentScroll < threshold) {
+      isLooping.current = true;
+      carousel.scrollLeft = currentScroll + setSize * 3;
+      arrowTargetScroll.current = carousel.scrollLeft;
       setTimeout(() => {
-        carousel.style.scrollBehavior = "smooth";
-        carousel.scrollLeft += scrollAmount;
-        setTimeout(() => {
-          isArrowScrolling.current = false;
-        }, 400);
+        isLooping.current = false;
       }, 50);
-    } else {
-      carousel.style.scrollBehavior = "smooth";
-      carousel.scrollLeft += scrollAmount;
+    } else if (currentScroll > maxScroll - threshold) {
+      isLooping.current = true;
+      carousel.scrollLeft = currentScroll - setSize * 3;
+      arrowTargetScroll.current = carousel.scrollLeft;
       setTimeout(() => {
-        isArrowScrolling.current = false;
-      }, 400);
+        isLooping.current = false;
+      }, 50);
     }
+  };
+
+  // Start or update arrow scroll animation
+  const startArrowScroll = (delta) => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    // Initialize target from current position if not animating
+    if (!isArrowAnimating.current) {
+      arrowTargetScroll.current = carousel.scrollLeft;
+    }
+
+    // Accumulate the scroll delta
+    arrowTargetScroll.current += delta;
+
+    // Start animation if not already running
+    if (!isArrowAnimating.current) {
+      isArrowAnimating.current = true;
+      carousel.style.scrollBehavior = "auto";
+      arrowAnimationId.current = requestAnimationFrame(animateArrowScroll);
+    }
+  };
+
+  // Arrow navigation handlers - allow rapid clicking
+  const handlePrevious = () => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const items = carousel.querySelectorAll(".network-carousel-item");
+    if (!items.length) return;
+
+    const itemWidth = items[0].offsetWidth;
+    const gap = parseFloat(getComputedStyle(carousel).gap) || 0;
+    const scrollAmount = itemWidth + gap;
+
+    startArrowScroll(-scrollAmount);
+  };
+
+  const handleNext = () => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const items = carousel.querySelectorAll(".network-carousel-item");
+    if (!items.length) return;
+
+    const itemWidth = items[0].offsetWidth;
+    const gap = parseFloat(getComputedStyle(carousel).gap) || 0;
+    const scrollAmount = itemWidth + gap;
+
+    startArrowScroll(scrollAmount);
   };
 
   return (
@@ -347,13 +388,23 @@ const MirrorNetworkV2 = () => {
       </div>
 
       {/* Carousel */}
-      <div className="network-v2-carousel-wrapper">
-        <ArrowButton
-          direction="left"
-          className="network-v2-slider-arrow network-v2-slider-arrow-left"
-          onClick={handlePrevious}
-          ariaLabel="Previous image"
-        />
+      <div className="network-v2-carousel-wrapper" ref={wrapperRef}>
+        {/* Cursor follower arrow button */}
+        {cursorState.visible && cursorState.direction && (
+          <div
+            key={cursorState.direction} /* Re-mount on direction change for zoom animation */
+            className={`network-v2-cursor-follower ${cursorState.isLeaving ? 'zoom-out' : ''} ${cursorState.isClicking ? 'is-clicking' : ''}`}
+            style={{
+              left: cursorState.x,
+              top: cursorState.y,
+            }}
+          >
+            <ArrowButton
+              direction={cursorState.direction}
+              ariaLabel={cursorState.direction === "left" ? "Previous" : "Next"}
+            />
+          </div>
+        )}
 
         <div className="network-v2-carousel-container" ref={carouselRef}>
           {/* Duplicate 10 times for infinite loop buffer */}
@@ -370,13 +421,6 @@ const MirrorNetworkV2 = () => {
             </React.Fragment>
           ))}
         </div>
-
-        <ArrowButton
-          direction="right"
-          className="network-v2-slider-arrow network-v2-slider-arrow-right"
-          onClick={handleNext}
-          ariaLabel="Next image"
-        />
       </div>
     </section>
   );

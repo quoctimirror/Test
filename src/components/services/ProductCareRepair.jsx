@@ -1,5 +1,5 @@
 import React from "react";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 
 const ProductCareRepair = () => {
   return (
@@ -20,7 +20,7 @@ const ProductCareRepair = () => {
           To ensure your jewelry always looks its best, Mirror proudly offers:
         </p>
 
-        <div className="service-item">
+        <div className="sd-service-item">
           <ul>
             <li>
               <p className="bodytext-4--no-margin">
@@ -78,7 +78,7 @@ const ProductCareRepair = () => {
           offers expert repair services to restore its original condition.
         </p>
 
-        <div className="service-item">
+        <div className="sd-service-item">
           <ul>
             <li>
               <p className="bodytext-4--no-margin">
@@ -190,9 +190,9 @@ const ProductCareRepair = () => {
       </div>
 
       <div className="cta-section">
-        <ShineGlassButton className="services-cta" theme="light">
-          Book a Service
-        </ShineGlassButton>
+        <GlassThemeButton className="services-cta" theme="light">
+          <span className="bodytext-6--no-margin">Book a Service</span>
+        </GlassThemeButton>
       </div>
     </div>
   );

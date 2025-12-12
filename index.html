@@ -1,56 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Open Graph / Social Media -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="MIRROR FUTURE DIAMOND" />
-    <meta
-      property="og:description"
-      content="Awakening Luxury through Your Senses, in Every Time, Space, and Presence."
-    />
-    <meta
-      property="og:image"
-      content="https://www.mirrorfuturediamond.com/mirror-logo-square.svg"
-    />
-    <meta property="og:image:alt" content="Mirror Future Diamond Logo" />
-    <meta property="og:url" content="https://www.mirrorfuturediamond.com" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="MIRROR FUTURE DIAMOND" />
-    <meta
-      name="twitter:description"
-      content="Awakening Luxury through Your Senses, in Every Time, Space, and Presence."
-    />
-    <meta
-      name="twitter:image"
-      content="https://www.mirrorfuturediamond.com/mirror-logo-square.svg"
-    />
-    <meta name="twitter:image:alt" content="Mirror Future Diamond Logo" />
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="MIRROR FUTURE DIAMOND" />
+  <meta property="og:description" content="Awakening Luxury through Your Senses, in Every Time, Space, and Presence." />
+  <meta property="og:image" content="https://www.mirrorfuturediamond.com/mirror-logo-square.svg" />
+  <meta property="og:image:alt" content="Mirror Future Diamond Logo" />
+  <meta property="og:url" content="https://www.mirrorfuturediamond.com" />
 
-    <!-- Content Security Policy - Development Mode (More Permissive) -->
-    <!-- For production, tighten these rules -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MIRROR FUTURE DIAMOND" />
+  <meta name="twitter:description"
+    content="Awakening Luxury through Your Senses, in Every Time, Space, and Presence." />
+  <meta name="twitter:image" content="https://www.mirrorfuturediamond.com/mirror-logo-square.svg" />
+  <meta name="twitter:image:alt" content="Mirror Future Diamond Logo" />
+
+  <!-- Content Security Policy - Development Mode (More Permissive) -->
+  <!-- For production, tighten these rules -->
+  <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
       script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http://localhost:* blob:;
       style-src 'self' 'unsafe-inline' https:;
       img-src 'self' data: https: http: blob:;
       font-src 'self' data: https:;
-      connect-src 'self' http://localhost:* https: data: blob:;
+      connect-src 'self' http://localhost:* https: wss://*.ably.net wss://*.ably-realtime.com wss://*.ably.io data: blob:;
       frame-src 'self' https:;
       child-src 'self' https: blob:;
       worker-src 'self' blob:;
       media-src 'self' https: blob:;
-    "
-    />
+    " />
 
-    <!-- Schema.org Structured Data for Google Search -->
-    <script type="application/ld+json">
+  <!-- Schema.org Structured Data for Google Search -->
+  <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
@@ -60,43 +47,35 @@
       }
     </script>
 
-    <!-- For iJewel3d SDK - UPDATED TO LATEST -->
-    <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js"></script>
-    <script src="https://releases.ijewel3d.com/libs/mini-viewer/0.5.0/bundle.nowebgi.iife.js"></script>
-    <script>
-      window.webgi = window;
-    </script>
-    <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.37/web-vto.js"></script>
+  <!-- For iJewel3d SDK - UPDATED TO LATEST -->
+  <script src="https://releases.ijewel3d.com/libs/webgi-v0/bundle-0.18.0.js"></script>
+  <script src="https://releases.ijewel3d.com/libs/mini-viewer/0.5.0/bundle.nowebgi.iife.js"></script>
+  <script>
+    window.webgi = window;
+  </script>
+  <script src="https://releases.ijewel3d.com/libs/web-vto/0.0.37/web-vto.js"></script>
 
-    <!-- MediaPipe Hands for hand detection -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"
-      crossorigin="anonymous"
-    ></script>
+  <!-- MediaPipe Hands for hand detection -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
 
-    <!-- MindAR Scripts (loaded globally for AR features) -->
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <script src="https://unpkg.com/omggif@1.0.10/omggif.js"></script>
+  <!-- MindAR Scripts - DISABLED to avoid Three.js conflict with React Three Fiber -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js"></script> -->
+  <!-- <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script> -->
+  <script src="https://unpkg.com/omggif@1.0.10/omggif.js"></script>
 
-    <title>MIRROR FUTURE DIAMOND</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/mirror-logo-square.svg" />
-    <!-- External libraries -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/animate.css@4.1.1/animate.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@teleporthq/teleport-custom-scripts/dist/style.css"
-    />
-  </head>
+  <title>MIRROR FUTURE DIAMOND</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/mirror-logo-square.svg" />
+  <!-- External libraries -->
+  <link rel="stylesheet" href="https://unpkg.com/animate.css@4.1.1/animate.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@teleporthq/teleport-custom-scripts/dist/style.css" />
+</head>
 
-  <body>
-    <div id="root"></div>
-    <div id="overlay-root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<body>
+  <div id="root"></div>
+  <div id="overlay-root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

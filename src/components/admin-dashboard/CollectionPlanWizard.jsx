@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, ArrowRight, Plus, X } from 'lucide-react';
 
 const CollectionPlanWizard = ({ collectionPlanId, onBack, onNext }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -146,22 +145,26 @@ const CollectionPlanWizard = ({ collectionPlanId, onBack, onNext }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      <div className="admin-empty-state">
+        Loading collection plan...
       </div>
     );
   }
 
   if (!collectionPlan) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Collection Plan Not Found</h2>
-          <p className="text-sm text-gray-500 mb-4">Please select a valid collection plan</p>
+      <div className="admin-empty-state">
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: '700', color: '#0f172a', marginBottom: '0.5rem' }}>
+            Collection Plan Not Found
+          </h2>
+          <p style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '1.5rem' }}>
+            Please select a valid collection plan
+          </p>
           {onBack && (
             <button
               onClick={onBack}
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="admin-button admin-button-primary"
             >
               Back to Dashboard
             </button>
@@ -177,42 +180,77 @@ const CollectionPlanWizard = ({ collectionPlanId, onBack, onNext }) => {
   ];
 
   return (
-    <div className="collection-plan-wizard">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Collection Info */}
-        <div className="mb-6 p-4 bg-white rounded-lg border border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{collectionPlan.name}</h2>
-          <p className="text-sm text-gray-600 mt-1">
-            {collectionPlan.totalQuantity} pieces • Deadline: {new Date(collectionPlan.deadline).toLocaleDateString()}
-          </p>
-        </div>
-
-        {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            {steps.map((step, index) => (
-              <div key={step.number} className="flex items-center">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full ${
-                  currentStep >= step.number ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
-                }`}>
-                  {step.number}
-                </div>
-                <div className="ml-4">
-                  <div className="text-sm font-medium text-gray-900">{step.name}</div>
-                  <div className="text-sm text-gray-500">{step.description}</div>
-                </div>
-                {index < steps.length - 1 && (
-                  <div className={`w-24 h-0.5 mx-8 ${
-                    currentStep > step.number ? 'bg-blue-600' : 'bg-gray-200'
-                  }`} />
-                )}
-              </div>
-            ))}
+    <div>
+      {/* Collection Info Header */}
+      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 style={{ margin: '0 0 0.5rem 0', fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+              {collectionPlan.name}
+            </h1>
+            <p style={{ margin: 0, fontSize: '0.8125rem', color: '#64748b' }}>
+              {collectionPlan.totalQuantity.toLocaleString()} pieces •
+              Deadline: {new Date(collectionPlan.deadline).toLocaleDateString()}
+            </p>
+          </div>
+          <div style={{
+            fontSize: '0.75rem',
+            color: '#64748b',
+            fontWeight: '500',
+            padding: '0.5rem 1rem',
+            backgroundColor: '#f1f5f9',
+            borderRadius: '6px',
+            border: '1px solid #e2e8f0'
+          }}>
+            Step {currentStep} of {steps.length}
           </div>
         </div>
+      </div>
 
-        {/* Step Content */}
-        <div className="bg-white rounded-lg shadow-sm">
+      {/* Progress Steps */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }}>
+          {steps.map((step, index) => (
+            <React.Fragment key={step.number}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1', maxWidth: '250px' }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '50%',
+                  backgroundColor: currentStep >= step.number ? '#0f172a' : '#e2e8f0',
+                  color: currentStep >= step.number ? '#ffffff' : '#64748b',
+                  fontSize: '0.75rem',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem',
+                  border: currentStep === step.number ? '2px solid #64748b' : 'none'
+                }}>
+                  {currentStep > step.number ? '✓' : step.number}
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '0.8125rem', fontWeight: '600', color: currentStep >= step.number ? '#0f172a' : '#64748b', marginBottom: '0.125rem' }}>
+                    {step.name}
+                  </div>
+                  <div style={{ fontSize: '0.6875rem', color: '#64748b' }}>{step.description}</div>
+                </div>
+              </div>
+              {index < steps.length - 1 && (
+                <div style={{
+                  width: '60px',
+                  height: '2px',
+                  backgroundColor: currentStep > step.number ? '#0f172a' : '#e2e8f0',
+                  marginBottom: '2.5rem'
+                }} />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+      {/* Step Content */}
+      <div className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
           {currentStep === 1 && (
             <ProductSelectionStep
               items={items}
@@ -233,24 +271,24 @@ const CollectionPlanWizard = ({ collectionPlanId, onBack, onNext }) => {
           )}
 
           {/* Navigation */}
-          <div className="px-6 py-4 border-t border-gray-200 flex justify-between items-center">
+          <div style={{ padding: '1.5rem 2rem', borderTop: '1px solid #e2e8f0', backgroundColor: '#fafbfc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <button
               onClick={handleBack}
-              className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+              className="admin-button admin-button-outline"
+              style={{ padding: '0.75rem 1.5rem', fontSize: '0.875rem', fontWeight: '500' }}
             >
-              {currentStep === 1 ? 'Back to Dashboard' : 'Previous'}
+              ← {currentStep === 1 ? 'Back to Dashboard' : 'Previous'}
             </button>
             <button
               onClick={handleNext}
-              className="px-6 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2"
+              className="admin-button admin-button-primary"
+              style={{ padding: '0.75rem 2rem', fontSize: '0.875rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
             >
-              {currentStep === 1 ? 'Generate Variants' : 'Find Vendors'}
-              <ArrowRight size={16} />
+              {currentStep === 1 ? 'Generate Variants' : 'Find Vendors'} →
             </button>
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
@@ -264,48 +302,91 @@ const ProductSelectionStep = ({
   specsLoading,
 }) => {
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Select Target Products</h2>
-        <p className="text-sm text-gray-600">
-          Add the products you want to include in this collection drop.
-          We'll generate age-specific variants for each product.
+    <div style={{ padding: '2rem' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.125rem', fontWeight: '700', color: '#0f172a' }}>
+          Select Target Products
+        </h2>
+        <p style={{ margin: 0, fontSize: '0.875rem', color: '#64748b' }}>
+          Add the products you want to include in this collection drop. We'll generate age-specific variants for each product.
         </p>
       </div>
 
       {/* Age Group Allocation Summary */}
-      <div className="bg-blue-50 rounded-lg p-4 mb-6">
-        <h3 className="text-sm font-medium text-blue-900 mb-3">Age Group Allocation</h3>
-        <div className="grid grid-cols-3 gap-4">
+      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <h3 style={{ margin: '0 0 1rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>Age Group Allocation</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
           {collectionPlan.ageGroupAllocations.map((allocation) => (
-            <div key={allocation.id} className="text-center">
-              <div className="text-lg font-semibold text-blue-900">{allocation.allocationPercentage}%</div>
-              <div className="text-sm text-blue-700">{allocation.ageGroupName}</div>
-              <div className="text-xs text-blue-600">{allocation.targetQuantity} pieces</div>
+            <div
+              key={allocation.id}
+              style={{
+                padding: '1rem',
+                textAlign: 'center',
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
+                backgroundColor: '#fafbfc'
+              }}
+            >
+              <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#0f172a', marginBottom: '0.375rem', lineHeight: 1 }}>
+                {allocation.allocationPercentage}%
+              </div>
+              <div style={{ fontSize: '0.8125rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.375rem' }}>
+                {allocation.ageGroupName}
+              </div>
+              <div style={{
+                fontSize: '0.75rem',
+                color: '#64748b',
+                fontWeight: '500'
+              }}>
+                {allocation.targetQuantity.toLocaleString()} pieces
+              </div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Product Items */}
-      <div className="space-y-4">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {items.map((item, index) => {
           const selectedSpec = jewelrySpecs.find(spec => String(spec.id) === String(item.jewelrySpecId));
           return (
-            <div key={item.id} className="border border-gray-200 rounded-lg p-4">
-              <div className="flex justify-between items-start mb-4">
-                <h4 className="font-medium text-gray-900">Product {index + 1}</h4>
+            <div
+              key={item.id}
+              className="admin-card"
+              style={{ padding: '1.5rem' }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '4px',
+                    backgroundColor: '#0f172a',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#ffffff',
+                    fontWeight: '600',
+                    fontSize: '0.75rem'
+                  }}>
+                    {index + 1}
+                  </div>
+                  <h4 style={{ margin: 0, fontWeight: '600', color: '#0f172a', fontSize: '0.875rem' }}>
+                    Product {index + 1}
+                  </h4>
+                </div>
                 <button
                   onClick={() => onRemoveItem(index)}
-                  className="text-red-500 hover:text-red-700"
+                  className="admin-button admin-button-danger"
+                  style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}
                 >
-                  <X size={20} />
+                  × Remove
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-label">
                     Product Name
                   </label>
                   <select
@@ -330,7 +411,7 @@ const ProductSelectionStep = ({
                         onUpdateItem(index, 'baseDesign', spec.material);
                       }
                     }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-select"
                     disabled={specsLoading}
                   >
                     <option value="">{specsLoading ? 'Loading products...' : 'Select product'}</option>
@@ -341,38 +422,40 @@ const ProductSelectionStep = ({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-label">
                     Product Type
                   </label>
                   <input
                     type="text"
                     value={selectedSpec ? selectedSpec.type || '' : item.productType || ''}
                     disabled
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
+                    className="admin-input"
+                    style={{ backgroundColor: '#f8fafb', cursor: 'not-allowed' }}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-label">
                     Base Design / Material
                   </label>
                   <input
                     type="text"
                     value={selectedSpec ? selectedSpec.material || '' : item.baseDesign || ''}
                     disabled
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
+                    className="admin-input"
+                    style={{ backgroundColor: '#f8fafb', cursor: 'not-allowed' }}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-label">
                     Target Quantity
                   </label>
                   <input
                     type="number"
                     value={item.targetQuantity || 0}
                     onChange={e => onUpdateItem(index, 'targetQuantity', parseInt(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="0"
                   />
                 </div>
@@ -383,10 +466,22 @@ const ProductSelectionStep = ({
 
         <button
           onClick={onAddItem}
-          className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors"
+          className="admin-button admin-button-outline"
+          style={{
+            width: '100%',
+            borderWidth: '2px',
+            borderStyle: 'dashed',
+            padding: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
+            backgroundColor: '#fafbfc',
+            marginTop: '1rem'
+          }}
         >
-          <Plus size={24} className="mx-auto text-gray-400 mb-2" />
-          <div className="text-sm text-gray-600">Add Product</div>
+          <span style={{ fontSize: '1.25rem', fontWeight: '400' }}>+</span>
+          <span style={{ fontSize: '0.875rem', fontWeight: '500', color: '#64748b' }}>Add Product</span>
         </button>
       </div>
     </div>
@@ -444,81 +539,89 @@ const VariantReviewStep = ({ collectionPlan, items }) => {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Age Group Variants</h2>
-        <p className="text-sm text-gray-600">
+    <div style={{ padding: '2rem' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.125rem', fontWeight: '700', color: '#0f172a' }}>Age Group Variants</h2>
+        <p style={{ margin: 0, fontSize: '0.875rem', color: '#64748b' }}>
           Review, edit, approve, or remove the generated variants for each age group. Adjust quantities or exclude variants as needed before proceeding.
         </p>
       </div>
 
       {variantItems.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="admin-empty-state">
           <p>No variants generated yet. Please add products in Step 1.</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {variantItems.map((item) => (
-            <div key={item.id} className="border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">{item.productName || 'Unnamed Product'}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div key={item.id} className="admin-card" style={{ padding: '1.5rem' }}>
+              <h3 style={{ margin: '0 0 1rem 0', fontSize: '0.9375rem', fontWeight: '600', color: '#0f172a' }}>{item.productName || 'Unnamed Product'}</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
                 {item.variants && item.variants.map((variant) => (
-                  <div key={variant.id} className={`bg-gray-50 rounded-lg p-4 relative ${!variant.approved ? 'opacity-50' : ''}`}>
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-medium text-gray-900">{variant.ageGroupName}</h4>
-                      <span className="text-sm text-green-600 font-medium">
+                  <div key={variant.id} style={{
+                    backgroundColor: '#fafbfc',
+                    borderRadius: '6px',
+                    padding: '1rem',
+                    border: '1px solid #e2e8f0',
+                    opacity: variant.approved ? 1 : 0.5
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                      <h4 style={{ margin: 0, fontWeight: '600', fontSize: '0.875rem', color: '#0f172a' }}>{variant.ageGroupName}</h4>
+                      <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: '500' }}>
                         {variant.matchScore}% match
                       </span>
                     </div>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Metal:</span>
-                        <span className="font-medium">{variant.metalType}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.8125rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#64748b' }}>Metal:</span>
+                        <span style={{ fontWeight: '500', color: '#0f172a' }}>{variant.metalType}</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Shape:</span>
-                        <span className="font-medium">{variant.stoneShape}</span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#64748b' }}>Shape:</span>
+                        <span style={{ fontWeight: '500', color: '#0f172a' }}>{variant.stoneShape}</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Size:</span>
-                        <span className="font-medium">{variant.stoneSize}</span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ color: '#64748b' }}>Size:</span>
+                        <span style={{ fontWeight: '500', color: '#0f172a' }}>{variant.stoneSize}</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Quantity:</span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ color: '#64748b' }}>Quantity:</span>
                         <input
                           type="number"
                           min={0}
                           value={variant.targetQuantity}
                           onChange={e => handleQuantityChange(item.id, variant.id, parseInt(e.target.value) || 0)}
-                          className="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+                          className="admin-input"
+                          style={{ width: '80px', textAlign: 'right', padding: '0.25rem 0.5rem', fontSize: '0.8125rem' }}
                           disabled={!variant.approved}
                         />
                       </div>
                       {variant.estimatedUnitCost && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Est. Cost:</span>
-                          <span className="font-medium">
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <span style={{ color: '#64748b' }}>Est. Cost:</span>
+                          <span style={{ fontWeight: '500', color: '#0f172a' }}>
                             ${variant.estimatedUnitCost.toFixed(2)}
                           </span>
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center mt-3 gap-2">
-                      <label className="flex items-center text-xs cursor-pointer">
+                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '0.75rem', gap: '0.5rem' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', fontSize: '0.75rem', cursor: 'pointer', color: '#64748b' }}>
                         <input
                           type="checkbox"
                           checked={variant.approved}
                           onChange={() => handleApproveToggle(item.id, variant.id)}
-                          className="mr-1"
+                          style={{ marginRight: '0.375rem' }}
                         />
                         Approve
                       </label>
                       <button
-                        className="ml-auto text-red-500 hover:text-red-700 text-xs flex items-center"
+                        className="admin-button admin-button-danger"
+                        style={{ marginLeft: 'auto', padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
                         onClick={() => handleRemoveVariant(item.id, variant.id)}
                         title="Remove variant"
                       >
-                        <X size={14} /> Remove
+                        × Remove
                       </button>
                     </div>
                   </div>

@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./BookingModal.css";
-import { locationsAPI, handleAPIError } from "@services/api";
+import { locationsAPI, appointmentsAPI, handleAPIError } from "@services/api";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
@@ -34,6 +35,15 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
   });
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
+
+  // Booked slots state
+  const [bookedSlots, setBookedSlots] = useState([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+
+  // Submission state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState(null);
+  const [bookingReference, setBookingReference] = useState(null);
 
   const [bookingData, setBookingData] = useState({
     venue: null,
@@ -84,6 +94,41 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
       setLoading(false);
     }
   };
+
+  // Fetch booked slots when date or venue changes
+  useEffect(() => {
+    const fetchBookedSlots = async () => {
+      if (!selectedDate || !selectedVenue) {
+        setBookedSlots([]);
+        return;
+      }
+
+      setLoadingSlots(true);
+      try {
+        // Format date as YYYY-MM-DD for the API
+        const dateStr = selectedDate.toISOString().split('T')[0];
+        const response = await appointmentsAPI.getBookedSlots(dateStr, selectedVenue.id);
+
+        // Convert LocalTime strings (e.g., "09:00:00") to display format (e.g., "09:00 AM")
+        const booked = (response.data?.bookedSlots || []).map(timeStr => {
+          const [hours, minutes] = timeStr.split(':');
+          const hour = parseInt(hours, 10);
+          const ampm = hour >= 12 ? 'PM' : 'AM';
+          const displayHour = hour % 12 || 12;
+          return `${displayHour.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+        });
+
+        setBookedSlots(booked);
+      } catch (err) {
+        console.error("Error fetching booked slots:", err);
+        setBookedSlots([]);
+      } finally {
+        setLoadingSlots(false);
+      }
+    };
+
+    fetchBookedSlots();
+  }, [selectedDate, selectedVenue]);
 
   // Disable scroll when modal is open
   useEffect(() => {
@@ -136,6 +181,11 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
         setAcceptTerms(false);
         setAcceptPrivacy(false);
         setHasNavigatedBack(false);
+        setBookedSlots([]);
+        setLoadingSlots(false);
+        setIsSubmitting(false);
+        setSubmissionError(null);
+        setBookingReference(null);
       }, 300);
     }
   }, [isOpen]);
@@ -213,6 +263,58 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
     }
   };
 
+  // Convert display time (e.g., "09:00 AM") to 24-hour format (e.g., "09:00:00")
+  const convertTo24HourFormat = (timeStr) => {
+    const [time, period] = timeStr.split(' ');
+    let [hours, minutes] = time.split(':');
+    hours = parseInt(hours, 10);
+
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+
+    return `${hours.toString().padStart(2, '0')}:${minutes}:00`;
+  };
+
+  // Submit booking to backend
+  const submitBooking = async () => {
+    setIsSubmitting(true);
+    setSubmissionError(null);
+
+    try {
+      // Prepare appointment data
+      const appointmentData = {
+        customerTitle: formData.title,
+        customerFirstName: formData.firstName,
+        customerLastName: formData.lastName,
+        customerEmail: formData.email || '',
+        customerPhone: formData.phone,
+        venueId: selectedVenue.id,
+        service: selectedService?.title || '',
+        appointmentDate: selectedDate.toISOString().split('T')[0], // YYYY-MM-DD
+        appointmentTime: convertTo24HourFormat(selectedTime), // HH:mm:ss
+        language: 'en',
+        preferences: formData.preferences || '',
+      };
+
+      const response = await appointmentsAPI.create(appointmentData);
+
+      // Store booking reference
+      setBookingReference(response.data?.id || 'APT000000');
+
+      // Move to confirmation step
+      handleNext({});
+    } catch (err) {
+      const errorInfo = handleAPIError(err, 'Failed to submit booking');
+      setSubmissionError(errorInfo.message);
+      console.error('Booking submission error:', errorInfo);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleContinue = () => {
     if (!canContinue()) return;
 
@@ -234,9 +336,9 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
       case 5: // Fill Form
         data = { formData };
         break;
-      case 6: // Review
-        data = {};
-        break;
+      case 6: // Review - Submit to backend
+        submitBooking();
+        return; // Don't call handleNext here, submitBooking will do it on success
       default:
         break;
     }
@@ -246,7 +348,7 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="booking-modal-overlay">
       <div className="booking-modal-container">
         {/* Close button - fixed position, outside carousel */}
@@ -404,6 +506,8 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
                     setAcceptTerms,
                     acceptPrivacy,
                     setAcceptPrivacy,
+                    bookedSlots,
+                    loadingSlots,
                   }
                 )}
               </div>
@@ -413,13 +517,18 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
                     isAnimating ? "animating" : ""
                   }`}
                 >
+                  {submissionError && currentStep === 6 && (
+                    <div className="booking-error-message">
+                      {submissionError}
+                    </div>
+                  )}
                   <ShineGlassButton
                     theme="light"
                     className="booking-continue-btn"
                     onClick={handleContinue}
-                    disabled={!canContinue()}
+                    disabled={!canContinue() || isSubmitting}
                   >
-                    {currentStep === 6 ? "Confirm Booking" : "Continue"}
+                    {isSubmitting ? "Submitting..." : currentStep === 6 ? "Confirm Booking" : "Continue"}
                   </ShineGlassButton>
                 </div>
               )}
@@ -463,6 +572,8 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
                       setAcceptTerms,
                       acceptPrivacy,
                       setAcceptPrivacy,
+                      bookedSlots,
+                      loadingSlots,
                     }
                   )}
                 </div>
@@ -472,11 +583,12 @@ const BookingModal = ({ isOpen, onClose, initialStep = 1 }) => {
 
           {/* Confirmation Page - outside carousel */}
           <div className={`booking-panel-confirmation ${currentStep === 7 ? "show" : ""}`}>
-            <ConfirmationPage onClose={onClose} />
+            <ConfirmationPage onClose={onClose} bookingReference={bookingReference} />
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -563,6 +675,8 @@ const renderStep = (
           selectedTime={selectedTime}
           setSelectedTime={setSelectedTime}
           selectedDate={selectedDate}
+          bookedSlots={stateProps.bookedSlots}
+          loadingSlots={stateProps.loadingSlots}
         />
       );
     case 5:
@@ -653,12 +767,7 @@ const renderPreviousStepReadonly = (
         />
       );
     case 5:
-      return (
-        <FillFormReadonly
-          formData={formData}
-          setFormData={setFormData}
-        />
-      );
+      return <FillFormReadonly formData={formData} setFormData={setFormData} />;
     default:
       return null;
   }
@@ -896,7 +1005,13 @@ const SelectVenue = ({
 };
 
 // Readonly version of SelectVenue (for left panel display)
-const SelectVenueReadonly = ({ selectedVenue, setSelectedVenue, locations, cities, loading }) => {
+const SelectVenueReadonly = ({
+  selectedVenue,
+  setSelectedVenue,
+  locations,
+  cities,
+  loading,
+}) => {
   const [filterCity, setFilterCity] = useState("All Cities");
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
 
@@ -1083,7 +1198,12 @@ const ChooseService = ({
 };
 
 // Readonly version of ChooseService
-const ChooseServiceReadonly = ({ selectedService, setSelectedService, otherServiceText, setOtherServiceText }) => {
+const ChooseServiceReadonly = ({
+  selectedService,
+  setSelectedService,
+  otherServiceText,
+  setOtherServiceText,
+}) => {
   const services = [
     {
       id: 1,
@@ -1261,6 +1381,8 @@ const ChooseTime = ({
   selectedTime,
   setSelectedTime,
   selectedDate,
+  bookedSlots = [],
+  loadingSlots = false,
 }) => {
   const timeSlots = [
     "09:00 AM",
@@ -1273,8 +1395,6 @@ const ChooseTime = ({
     "04:00 PM",
     "05:00 PM",
     "06:00 PM",
-    "07:00 PM",
-    "08:00 PM",
   ];
 
   const handleContinue = () => {
@@ -1293,6 +1413,10 @@ const ChooseTime = ({
     });
   };
 
+  const isSlotBooked = (time) => {
+    return bookedSlots.includes(time);
+  };
+
   return (
     <div className="booking-step">
       <h2 className="booking-step-title">Choose a time</h2>
@@ -1305,22 +1429,33 @@ const ChooseTime = ({
         </p>
       </div>
 
-      <div className="time-grid">
-        {timeSlots.map((time) => (
-          <button
-            key={time}
-            className={`time-slot bodytext-1--no-margin ${
-              selectedTime === time ? "selected" : ""
-            }`}
-            onClick={() => {
-              setSelectedTime(time);
-              onNext({ time });
-            }}
-          >
-            <span>{time}</span>
-          </button>
-        ))}
-      </div>
+      {loadingSlots ? (
+        <div className="loading-message">Loading available times...</div>
+      ) : (
+        <div className="time-grid">
+          {timeSlots.map((time) => {
+            const booked = isSlotBooked(time);
+            return (
+              <button
+                key={time}
+                className={`time-slot bodytext-1--no-margin ${
+                  selectedTime === time ? "selected" : ""
+                } ${booked ? "booked" : ""}`}
+                onClick={() => {
+                  if (!booked) {
+                    setSelectedTime(time);
+                    onNext({ time });
+                  }
+                }}
+                disabled={booked}
+              >
+                <span>{time}</span>
+                {booked && <span className="booked-label">Booked</span>}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
@@ -1332,35 +1467,146 @@ const FillForm = ({ onNext, onBack, formData, setFormData }) => {
 
   const removeDiacritics = (str) => {
     const vietnameseMap = {
-      'à': 'a', 'á': 'a', 'ạ': 'a', 'ả': 'a', 'ã': 'a',
-      'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ậ': 'a', 'ẩ': 'a', 'ẫ': 'a',
-      'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ặ': 'a', 'ẳ': 'a', 'ẵ': 'a',
-      'è': 'e', 'é': 'e', 'ẹ': 'e', 'ẻ': 'e', 'ẽ': 'e',
-      'ê': 'e', 'ề': 'e', 'ế': 'e', 'ệ': 'e', 'ể': 'e', 'ễ': 'e',
-      'ì': 'i', 'í': 'i', 'ị': 'i', 'ỉ': 'i', 'ĩ': 'i',
-      'ò': 'o', 'ó': 'o', 'ọ': 'o', 'ỏ': 'o', 'õ': 'o',
-      'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ộ': 'o', 'ổ': 'o', 'ỗ': 'o',
-      'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ợ': 'o', 'ở': 'o', 'ỡ': 'o',
-      'ù': 'u', 'ú': 'u', 'ụ': 'u', 'ủ': 'u', 'ũ': 'u',
-      'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ự': 'u', 'ử': 'u', 'ữ': 'u',
-      'ỳ': 'y', 'ý': 'y', 'ỵ': 'y', 'ỷ': 'y', 'ỹ': 'y',
-      'đ': 'd',
-      'À': 'A', 'Á': 'A', 'Ạ': 'A', 'Ả': 'A', 'Ã': 'A',
-      'Â': 'A', 'Ầ': 'A', 'Ấ': 'A', 'Ậ': 'A', 'Ẩ': 'A', 'Ẫ': 'A',
-      'Ă': 'A', 'Ằ': 'A', 'Ắ': 'A', 'Ặ': 'A', 'Ẳ': 'A', 'Ẵ': 'A',
-      'È': 'E', 'É': 'E', 'Ẹ': 'E', 'Ẻ': 'E', 'Ẽ': 'E',
-      'Ê': 'E', 'Ề': 'E', 'Ế': 'E', 'Ệ': 'E', 'Ể': 'E', 'Ễ': 'E',
-      'Ì': 'I', 'Í': 'I', 'Ị': 'I', 'Ỉ': 'I', 'Ĩ': 'I',
-      'Ò': 'O', 'Ó': 'O', 'Ọ': 'O', 'Ỏ': 'O', 'Õ': 'O',
-      'Ô': 'O', 'Ồ': 'O', 'Ố': 'O', 'Ộ': 'O', 'Ổ': 'O', 'Ỗ': 'O',
-      'Ơ': 'O', 'Ờ': 'O', 'Ớ': 'O', 'Ợ': 'O', 'Ở': 'O', 'Ỡ': 'O',
-      'Ù': 'U', 'Ú': 'U', 'Ụ': 'U', 'Ủ': 'U', 'Ũ': 'U',
-      'Ư': 'U', 'Ừ': 'U', 'Ứ': 'U', 'Ự': 'U', 'Ử': 'U', 'Ữ': 'U',
-      'Ỳ': 'Y', 'Ý': 'Y', 'Ỵ': 'Y', 'Ỷ': 'Y', 'Ỹ': 'Y',
-      'Đ': 'D'
+      à: "a",
+      á: "a",
+      ạ: "a",
+      ả: "a",
+      ã: "a",
+      â: "a",
+      ầ: "a",
+      ấ: "a",
+      ậ: "a",
+      ẩ: "a",
+      ẫ: "a",
+      ă: "a",
+      ằ: "a",
+      ắ: "a",
+      ặ: "a",
+      ẳ: "a",
+      ẵ: "a",
+      è: "e",
+      é: "e",
+      ẹ: "e",
+      ẻ: "e",
+      ẽ: "e",
+      ê: "e",
+      ề: "e",
+      ế: "e",
+      ệ: "e",
+      ể: "e",
+      ễ: "e",
+      ì: "i",
+      í: "i",
+      ị: "i",
+      ỉ: "i",
+      ĩ: "i",
+      ò: "o",
+      ó: "o",
+      ọ: "o",
+      ỏ: "o",
+      õ: "o",
+      ô: "o",
+      ồ: "o",
+      ố: "o",
+      ộ: "o",
+      ổ: "o",
+      ỗ: "o",
+      ơ: "o",
+      ờ: "o",
+      ớ: "o",
+      ợ: "o",
+      ở: "o",
+      ỡ: "o",
+      ù: "u",
+      ú: "u",
+      ụ: "u",
+      ủ: "u",
+      ũ: "u",
+      ư: "u",
+      ừ: "u",
+      ứ: "u",
+      ự: "u",
+      ử: "u",
+      ữ: "u",
+      ỳ: "y",
+      ý: "y",
+      ỵ: "y",
+      ỷ: "y",
+      ỹ: "y",
+      đ: "d",
+      À: "A",
+      Á: "A",
+      Ạ: "A",
+      Ả: "A",
+      Ã: "A",
+      Â: "A",
+      Ầ: "A",
+      Ấ: "A",
+      Ậ: "A",
+      Ẩ: "A",
+      Ẫ: "A",
+      Ă: "A",
+      Ằ: "A",
+      Ắ: "A",
+      Ặ: "A",
+      Ẳ: "A",
+      Ẵ: "A",
+      È: "E",
+      É: "E",
+      Ẹ: "E",
+      Ẻ: "E",
+      Ẽ: "E",
+      Ê: "E",
+      Ề: "E",
+      Ế: "E",
+      Ệ: "E",
+      Ể: "E",
+      Ễ: "E",
+      Ì: "I",
+      Í: "I",
+      Ị: "I",
+      Ỉ: "I",
+      Ĩ: "I",
+      Ò: "O",
+      Ó: "O",
+      Ọ: "O",
+      Ỏ: "O",
+      Õ: "O",
+      Ô: "O",
+      Ồ: "O",
+      Ố: "O",
+      Ộ: "O",
+      Ổ: "O",
+      Ỗ: "O",
+      Ơ: "O",
+      Ờ: "O",
+      Ớ: "O",
+      Ợ: "O",
+      Ở: "O",
+      Ỡ: "O",
+      Ù: "U",
+      Ú: "U",
+      Ụ: "U",
+      Ủ: "U",
+      Ũ: "U",
+      Ư: "U",
+      Ừ: "U",
+      Ứ: "U",
+      Ự: "U",
+      Ử: "U",
+      Ữ: "U",
+      Ỳ: "Y",
+      Ý: "Y",
+      Ỵ: "Y",
+      Ỷ: "Y",
+      Ỹ: "Y",
+      Đ: "D",
     };
 
-    return str.split('').map(char => vietnameseMap[char] || char).join('');
+    return str
+      .split("")
+      .map((char) => vietnameseMap[char] || char)
+      .join("");
   };
 
   const handleChange = (field, value) => {
@@ -1405,7 +1651,7 @@ const FillForm = ({ onNext, onBack, formData, setFormData }) => {
               <span
                 key={title}
                 onClick={() => handleTitleSelect(title)}
-                className={`form-title-option bodytext-4--no-margin ${
+                className={`form-title-option bodytext-6--no-margin ${
                   formData.title === title ? "active" : ""
                 }`}
               >
@@ -1574,7 +1820,11 @@ const ChooseDateReadonly = ({ selectedDate, setSelectedDate }) => {
 };
 
 // Readonly version of ChooseTime
-const ChooseTimeReadonly = ({ selectedTime, setSelectedTime, selectedDate }) => {
+const ChooseTimeReadonly = ({
+  selectedTime,
+  setSelectedTime,
+  selectedDate,
+}) => {
   const timeSlots = [
     "09:00 AM",
     "10:00 AM",
@@ -1586,8 +1836,6 @@ const ChooseTimeReadonly = ({ selectedTime, setSelectedTime, selectedDate }) => 
     "04:00 PM",
     "05:00 PM",
     "06:00 PM",
-    "07:00 PM",
-    "08:00 PM",
   ];
 
   const formatDate = (date) => {
@@ -1638,35 +1886,146 @@ const FillFormReadonly = ({ formData, setFormData }) => {
 
   const removeDiacritics = (str) => {
     const vietnameseMap = {
-      'à': 'a', 'á': 'a', 'ạ': 'a', 'ả': 'a', 'ã': 'a',
-      'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ậ': 'a', 'ẩ': 'a', 'ẫ': 'a',
-      'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ặ': 'a', 'ẳ': 'a', 'ẵ': 'a',
-      'è': 'e', 'é': 'e', 'ẹ': 'e', 'ẻ': 'e', 'ẽ': 'e',
-      'ê': 'e', 'ề': 'e', 'ế': 'e', 'ệ': 'e', 'ể': 'e', 'ễ': 'e',
-      'ì': 'i', 'í': 'i', 'ị': 'i', 'ỉ': 'i', 'ĩ': 'i',
-      'ò': 'o', 'ó': 'o', 'ọ': 'o', 'ỏ': 'o', 'õ': 'o',
-      'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ộ': 'o', 'ổ': 'o', 'ỗ': 'o',
-      'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ợ': 'o', 'ở': 'o', 'ỡ': 'o',
-      'ù': 'u', 'ú': 'u', 'ụ': 'u', 'ủ': 'u', 'ũ': 'u',
-      'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ự': 'u', 'ử': 'u', 'ữ': 'u',
-      'ỳ': 'y', 'ý': 'y', 'ỵ': 'y', 'ỷ': 'y', 'ỹ': 'y',
-      'đ': 'd',
-      'À': 'A', 'Á': 'A', 'Ạ': 'A', 'Ả': 'A', 'Ã': 'A',
-      'Â': 'A', 'Ầ': 'A', 'Ấ': 'A', 'Ậ': 'A', 'Ẩ': 'A', 'Ẫ': 'A',
-      'Ă': 'A', 'Ằ': 'A', 'Ắ': 'A', 'Ặ': 'A', 'Ẳ': 'A', 'Ẵ': 'A',
-      'È': 'E', 'É': 'E', 'Ẹ': 'E', 'Ẻ': 'E', 'Ẽ': 'E',
-      'Ê': 'E', 'Ề': 'E', 'Ế': 'E', 'Ệ': 'E', 'Ể': 'E', 'Ễ': 'E',
-      'Ì': 'I', 'Í': 'I', 'Ị': 'I', 'Ỉ': 'I', 'Ĩ': 'I',
-      'Ò': 'O', 'Ó': 'O', 'Ọ': 'O', 'Ỏ': 'O', 'Õ': 'O',
-      'Ô': 'O', 'Ồ': 'O', 'Ố': 'O', 'Ộ': 'O', 'Ổ': 'O', 'Ỗ': 'O',
-      'Ơ': 'O', 'Ờ': 'O', 'Ớ': 'O', 'Ợ': 'O', 'Ở': 'O', 'Ỡ': 'O',
-      'Ù': 'U', 'Ú': 'U', 'Ụ': 'U', 'Ủ': 'U', 'Ũ': 'U',
-      'Ư': 'U', 'Ừ': 'U', 'Ứ': 'U', 'Ự': 'U', 'Ử': 'U', 'Ữ': 'U',
-      'Ỳ': 'Y', 'Ý': 'Y', 'Ỵ': 'Y', 'Ỷ': 'Y', 'Ỹ': 'Y',
-      'Đ': 'D'
+      à: "a",
+      á: "a",
+      ạ: "a",
+      ả: "a",
+      ã: "a",
+      â: "a",
+      ầ: "a",
+      ấ: "a",
+      ậ: "a",
+      ẩ: "a",
+      ẫ: "a",
+      ă: "a",
+      ằ: "a",
+      ắ: "a",
+      ặ: "a",
+      ẳ: "a",
+      ẵ: "a",
+      è: "e",
+      é: "e",
+      ẹ: "e",
+      ẻ: "e",
+      ẽ: "e",
+      ê: "e",
+      ề: "e",
+      ế: "e",
+      ệ: "e",
+      ể: "e",
+      ễ: "e",
+      ì: "i",
+      í: "i",
+      ị: "i",
+      ỉ: "i",
+      ĩ: "i",
+      ò: "o",
+      ó: "o",
+      ọ: "o",
+      ỏ: "o",
+      õ: "o",
+      ô: "o",
+      ồ: "o",
+      ố: "o",
+      ộ: "o",
+      ổ: "o",
+      ỗ: "o",
+      ơ: "o",
+      ờ: "o",
+      ớ: "o",
+      ợ: "o",
+      ở: "o",
+      ỡ: "o",
+      ù: "u",
+      ú: "u",
+      ụ: "u",
+      ủ: "u",
+      ũ: "u",
+      ư: "u",
+      ừ: "u",
+      ứ: "u",
+      ự: "u",
+      ử: "u",
+      ữ: "u",
+      ỳ: "y",
+      ý: "y",
+      ỵ: "y",
+      ỷ: "y",
+      ỹ: "y",
+      đ: "d",
+      À: "A",
+      Á: "A",
+      Ạ: "A",
+      Ả: "A",
+      Ã: "A",
+      Â: "A",
+      Ầ: "A",
+      Ấ: "A",
+      Ậ: "A",
+      Ẩ: "A",
+      Ẫ: "A",
+      Ă: "A",
+      Ằ: "A",
+      Ắ: "A",
+      Ặ: "A",
+      Ẳ: "A",
+      Ẵ: "A",
+      È: "E",
+      É: "E",
+      Ẹ: "E",
+      Ẻ: "E",
+      Ẽ: "E",
+      Ê: "E",
+      Ề: "E",
+      Ế: "E",
+      Ệ: "E",
+      Ể: "E",
+      Ễ: "E",
+      Ì: "I",
+      Í: "I",
+      Ị: "I",
+      Ỉ: "I",
+      Ĩ: "I",
+      Ò: "O",
+      Ó: "O",
+      Ọ: "O",
+      Ỏ: "O",
+      Õ: "O",
+      Ô: "O",
+      Ồ: "O",
+      Ố: "O",
+      Ộ: "O",
+      Ổ: "O",
+      Ỗ: "O",
+      Ơ: "O",
+      Ờ: "O",
+      Ớ: "O",
+      Ợ: "O",
+      Ở: "O",
+      Ỡ: "O",
+      Ù: "U",
+      Ú: "U",
+      Ụ: "U",
+      Ủ: "U",
+      Ũ: "U",
+      Ư: "U",
+      Ừ: "U",
+      Ứ: "U",
+      Ự: "U",
+      Ử: "U",
+      Ữ: "U",
+      Ỳ: "Y",
+      Ý: "Y",
+      Ỵ: "Y",
+      Ỷ: "Y",
+      Ỹ: "Y",
+      Đ: "D",
     };
 
-    return str.split('').map(char => vietnameseMap[char] || char).join('');
+    return str
+      .split("")
+      .map((char) => vietnameseMap[char] || char)
+      .join("");
   };
 
   const handleChange = (field, value) => {
@@ -1707,7 +2066,7 @@ const FillFormReadonly = ({ formData, setFormData }) => {
               <span
                 key={title}
                 onClick={() => handleTitleSelect(title)}
-                className={`form-title-option bodytext-4--no-margin ${
+                className={`form-title-option bodytext-6--no-margin ${
                   formData?.title === title ? "active" : ""
                 }`}
               >
@@ -1790,8 +2149,18 @@ const ReviewBooking = ({
   acceptTerms,
   setAcceptTerms,
   acceptPrivacy,
-  setAcceptPrivacy
+  setAcceptPrivacy,
 }) => {
+  const formatDate = (date) => {
+    if (!date) return "Not selected";
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   return (
     <div className="booking-step review-step">
       <h2 className="booking-step-title">Review your booking</h2>
@@ -1800,9 +2169,14 @@ const ReviewBooking = ({
         <div className="review-item">
           <div>
             <h4 className="bodytext-6--no-margin">Service</h4>
-            <p className="bodytext-4--no-margin">In-store appointment: {bookingData.service?.title}</p>
+            <p className="bodytext-4--no-margin">
+              In-store appointment: {bookingData.service?.title}
+            </p>
           </div>
-          <UnderlineButton onClick={() => onEdit(2)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(2)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1812,7 +2186,10 @@ const ReviewBooking = ({
             <h4 className="bodytext-6--no-margin">Where</h4>
             <p className="bodytext-4--no-margin">{bookingData.venue?.name}</p>
           </div>
-          <UnderlineButton onClick={() => onEdit(1)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(1)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1820,9 +2197,12 @@ const ReviewBooking = ({
         <div className="review-item">
           <div>
             <h4 className="bodytext-6--no-margin">When</h4>
-            <p className="bodytext-4--no-margin">Tuesday, Nov 25, 2025</p>
+            <p className="bodytext-4--no-margin">{formatDate(bookingData.date)}</p>
           </div>
-          <UnderlineButton onClick={() => onEdit(3)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(3)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1832,7 +2212,10 @@ const ReviewBooking = ({
             <h4 className="bodytext-6--no-margin">Time</h4>
             <p className="bodytext-4--no-margin">{bookingData.time}, GMT +7</p>
           </div>
-          <UnderlineButton onClick={() => onEdit(4)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(4)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1845,7 +2228,10 @@ const ReviewBooking = ({
               {bookingData.formData?.lastName}
             </p>
           </div>
-          <UnderlineButton onClick={() => onEdit(5)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(5)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1853,9 +2239,14 @@ const ReviewBooking = ({
         <div className="review-item">
           <div>
             <h4 className="bodytext-6--no-margin">Email</h4>
-            <p className="bodytext-4--no-margin">{bookingData.formData?.email}</p>
+            <p className="bodytext-4--no-margin">
+              {bookingData.formData?.email}
+            </p>
           </div>
-          <UnderlineButton onClick={() => onEdit(5)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(5)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1863,9 +2254,14 @@ const ReviewBooking = ({
         <div className="review-item">
           <div>
             <h4 className="bodytext-6--no-margin">Phone / WhatsApp</h4>
-            <p className="bodytext-4--no-margin">{bookingData.formData?.phone}</p>
+            <p className="bodytext-4--no-margin">
+              {bookingData.formData?.phone}
+            </p>
           </div>
-          <UnderlineButton onClick={() => onEdit(5)} className="review-edit-btn">
+          <UnderlineButton
+            onClick={() => onEdit(5)}
+            className="review-edit-btn"
+          >
             Edit
           </UnderlineButton>
         </div>
@@ -1925,7 +2321,7 @@ const ReviewBooking = ({
 };
 
 // Step 7: Confirmation Page
-const ConfirmationPage = ({ onClose }) => {
+const ConfirmationPage = ({ onClose, bookingReference }) => {
   const handleHomepage = () => {
     onClose();
     window.location.href = "/";

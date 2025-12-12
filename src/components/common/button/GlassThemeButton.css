@@ -1,0 +1,466 @@
+/* Glass Theme Button - Base styles */
+.glass-theme-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-theme-btn-text {
+  padding: 16px 24px;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+  transform: translateZ(0); /* Force GPU layer to prevent sub-pixel shifting */
+}
+
+/* Icon styles */
+.glass-theme-btn-icon {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 16px;
+}
+
+.glass-theme-btn-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.glass-theme-button--with-icon .glass-theme-btn-text {
+  padding-right: 8px;
+}
+
+/* Icon only button */
+.glass-theme-button--icon-only {
+  width: 54px;
+  height: 54px;
+  padding: 0;
+}
+
+.glass-theme-button--icon-only:hover {
+  animation-play-state: paused;
+}
+
+.glass-theme-button--icon-only .glass-theme-btn-icon {
+  padding: 0;
+}
+
+/* Arrow down animation */
+.glass-theme-button--icon-arrow {
+  animation: bounce-glass-arrow-down 2.5s infinite;
+}
+
+/* Bounce animation for scroll down arrow */
+@keyframes bounce-glass-arrow-down {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(10px);
+  }
+  60% {
+    transform: translateY(5px);
+  }
+}
+
+/* Globe icon specific size */
+.glass-theme-button .glass-theme-btn-icon svg[viewBox="0 0 18 18"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* ========== EXPANDABLE BUTTON ========== */
+/* For buttons that expand on hover (like Immersive Showroom) */
+.glass-theme-button--expandable {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.glass-theme-button--expandable .glass-theme-btn-text,
+.glass-theme-button--expandable .glass-theme-btn-icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 1;
+}
+
+/* Expanded state - show text, hide icon */
+.glass-theme-button--expanded {
+  width: 188px;
+  height: 54px;
+  padding: 0;
+  animation: none;
+}
+
+.glass-theme-button--expanded .glass-theme-btn-text {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease;
+}
+
+.glass-theme-button--expanded .glass-theme-btn-icon {
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.3s ease;
+}
+
+/* Collapsed state - show icon, hide text */
+.glass-theme-button--collapsed {
+  width: 54px;
+  height: 54px;
+  padding: 0;
+  animation: none;
+}
+
+.glass-theme-button--collapsed .glass-theme-btn-text {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.3s ease;
+  transition-delay: 0s;
+}
+
+.glass-theme-button--collapsed .glass-theme-btn-icon {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.3s ease;
+}
+
+/* Collapsed hover - expand to show text */
+.glass-theme-button--collapsed:hover {
+  width: 188px;
+}
+
+.glass-theme-button--collapsed:hover .glass-theme-btn-text {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 0.15s;
+}
+
+.glass-theme-button--collapsed:hover .glass-theme-btn-icon {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+/* Fix transition for expandable buttons - override theme transitions */
+.glass-theme-button--expandable.glass-theme-button--light,
+.glass-theme-button--expandable.glass-theme-button--dark,
+.glass-theme-button--expandable.glass-theme-button--spec_light,
+.glass-theme-button--expandable.glass-theme-button--spec_dark {
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.4s ease,
+              background 0.3s ease,
+              border-radius 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+}
+
+/* Expandable icon needs z-index above ::before */
+.glass-theme-button--expandable .glass-theme-btn-icon {
+  z-index: 2;
+}
+
+/* Delay ::before fade-in for expandable collapsed buttons */
+.glass-theme-button--expandable.glass-theme-button--collapsed::before {
+  transition: opacity 0.3s ease 0.2s; /* delay 0.2s to let width expand first */
+}
+
+.glass-theme-button--expandable.glass-theme-button--collapsed:hover::before {
+  transition-delay: 0.15s;
+}
+
+
+/* ========== LIGHT THEME ========== */
+/* For use on light backgrounds */
+.glass-theme-button--light {
+  background: rgba(255, 255, 255, 0.5);
+  color: #171717;
+  transition: color 0.4s ease;
+
+  /* Glass effect from Figma */
+  box-shadow:
+    /* Inner shadows */
+    inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.75),
+    inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8),
+    inset 1px 1px 1px 0.5px rgba(255, 255, 255, 0.75),
+    inset -1px -1px 1px 0.5px rgba(255, 255, 255, 0.75),
+    inset 0 0 1px 1px rgba(255, 255, 255, 0.15),
+    inset 0 0 1px 1px rgba(153, 153, 153, 1),
+    inset 0 0 16px 0 rgba(242, 242, 242, 1),
+    /* Drop shadows */
+    0 0 2px 0 rgba(0, 0, 0, 0.1),
+    0 1px 8px 0 rgba(0, 0, 0, 0.1);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-theme-button--light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      61.32% 123.33% at 50.28% 123.33%,
+      #bc224c 0%,
+      rgba(188, 34, 76, 0.15) 100%
+    ),
+    rgba(255, 255, 255, 0.5);
+  box-shadow:
+    /* Inner shadows - darker for hover state */
+    inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.4),
+    inset 1px 1px 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset -1px -1px 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset 0 0 1px 1px rgba(153, 153, 153, 0.5),
+    inset 0 0 8px 0 rgba(242, 242, 242, 0.4),
+    /* Drop shadows */
+    0 0 2px 0 rgba(0, 0, 0, 0.1),
+    0 1px 8px 0 rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.glass-theme-button--light:hover::before {
+  opacity: 1;
+}
+
+.glass-theme-button--light:hover {
+  color: #fff;
+}
+
+.glass-theme-button--light .glass-theme-btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ========== DARK THEME ========== */
+/* For use on dark backgrounds - light text button */
+.glass-theme-button--dark {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+
+  /* Glass effect for dark bg */
+  box-shadow:
+    3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8) inset,
+    2px 2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    -2px -2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 0 8px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 2px 0 rgba(0, 0, 0, 0.2),
+    0 1px 8px 0 rgba(0, 0, 0, 0.3);
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.glass-theme-button--dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      49.72% 100% at 50.28% 100%,
+      #bc224c 0%,
+      rgba(188, 34, 76, 0.2) 100%
+    );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.glass-theme-button--dark:hover::before {
+  opacity: 1;
+}
+
+.glass-theme-button--dark .glass-theme-btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ========== SPECIAL LIGHT THEME ========== */
+/* Base state = hover state of light theme */
+.glass-theme-button--spec_light {
+  background:
+    radial-gradient(
+      61.32% 123.33% at 50.28% 123.33%,
+      #bc224c 0%,
+      rgba(188, 34, 76, 0.15) 100%
+    ),
+    rgba(255, 255, 255, 0.5);
+  color: #fff;
+
+  /* Glass effect - same as light hover */
+  box-shadow:
+    inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.4),
+    inset 1px 1px 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset -1px -1px 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset 0 0 1px 1px rgba(153, 153, 153, 0.5),
+    inset 0 0 8px 0 rgba(242, 242, 242, 0.4),
+    0 0 2px 0 rgba(0, 0, 0, 0.1),
+    0 1px 8px 0 rgba(0, 0, 0, 0.1);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-theme-button--spec_light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      61.32% 123.33% at 50.28% 123.33%,
+      #000 0%,
+      #bc224c 100%
+    ),
+    rgba(140, 140, 140, 0.25);
+  box-shadow:
+    0 0 2px 0 rgba(0, 0, 0, 0.1),
+    0 1px 8px 0 rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.glass-theme-button--spec_light:hover::before {
+  opacity: 1;
+}
+
+.glass-theme-button--spec_light .glass-theme-btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ========== SPECIAL DARK THEME ========== */
+/* Base state = hover state of dark theme */
+.glass-theme-button--spec_dark {
+  background:
+    radial-gradient(
+      49.72% 100% at 50.28% 100%,
+      #bc224c 0%,
+      rgba(188, 34, 76, 0.2) 100%
+    ),
+    rgba(255, 255, 255, 0.1);
+  color: #fff;
+
+  /* Glass effect for dark bg */
+  box-shadow:
+    3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8) inset,
+    2px 2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    -2px -2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 0 8px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 2px 0 rgba(0, 0, 0, 0.2),
+    0 1px 8px 0 rgba(0, 0, 0, 0.3);
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.glass-theme-button--spec_dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      61.32% 123.33% at 50.28% 123.33%,
+      #000 0%,
+      #bc224c 100%
+    ),
+    rgba(224, 224, 224, 0.5);
+  box-shadow:
+    3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8) inset,
+    2px 2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    -2px -2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 0 8px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 2px 0 rgba(0, 0, 0, 0.2),
+    0 1px 8px 0 rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.glass-theme-button--spec_dark:hover::before {
+  opacity: 1;
+}
+
+.glass-theme-button--spec_dark .glass-theme-btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ========== RESPONSIVE ========== */
+@media screen and (max-width: 768px) {
+  .glass-theme-btn-text {
+    padding: 14px 20px;
+  }
+
+  .glass-theme-button--icon-only {
+    width: 48px;
+    height: 48px;
+  }
+
+  .glass-theme-button--icon-only .glass-theme-btn-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Expandable button responsive */
+  .glass-theme-button--expandable {
+    height: 48px;
+  }
+
+  .glass-theme-button--expanded {
+    width: 168px;
+  }
+
+  .glass-theme-button--collapsed {
+    width: 48px;
+    height: 48px;
+  }
+
+  .glass-theme-button--collapsed:hover {
+    width: 168px;
+  }
+
+  .glass-theme-button .glass-theme-btn-icon svg[viewBox="0 0 22 17"] {
+    width: 18px;
+    height: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .glass-theme-btn-text {
+    padding: 12px 18px;
+  }
+
+  .glass-theme-button--expanded {
+    width: 152px;
+  }
+
+  .glass-theme-button--collapsed:hover {
+    width: 152px;
+  }
+
+  .glass-theme-button .glass-theme-btn-icon svg[viewBox="0 0 22 17"] {
+    width: 16px;
+    height: 12px;
+  }
+}

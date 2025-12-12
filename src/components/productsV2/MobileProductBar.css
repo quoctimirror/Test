@@ -17,7 +17,7 @@
     right: 0;
     width: 100%;
     /* Formula: (115 + 24) / (657 + 40) * 100vh = 139/697 ≈ 19.94vh */
-    height: calc((115 + 24) / (657 + 40) * 100vh);
+    min-height: calc((115 + 24) / (657 + 40) * 100vh);
     /* background: linear-gradient(180deg, #FFF 0%, #BB234C 100%); */
     background: white;
     z-index: 100;
@@ -135,6 +135,20 @@
 
 .pv2-mobile-bar-order-btn .border-layer {
     display: block !important;
+}
+
+/* Hover effect for order button - same as footer theme (ContactUs) */
+.pv2-mobile-bar-order-btn .shine-glass-button:hover .glass-layer {
+    background: linear-gradient(-75deg,
+            rgba(140, 140, 140, 0.95),
+            rgba(160, 160, 160, 0.95),
+            rgba(140, 140, 140, 0.95)) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+.pv2-mobile-bar-order-btn .shine-glass-button:hover .button-text {
+    color: rgba(0, 0, 0, 0.9) !important;
 }
 
 /* Mobile Config Overlay - RightConfiguration fullscreen */
@@ -270,6 +284,20 @@
 
     .pv2-mobile-bar-appointment-btn .border-layer {
         display: block !important;
+    }
+
+    /* Hover effect for appointment button - same as footer theme (ContactUs) */
+    .pv2-mobile-bar-appointment-btn .shine-glass-button:hover .glass-layer {
+        background: linear-gradient(-75deg,
+                rgba(140, 140, 140, 0.95),
+                rgba(160, 160, 160, 0.95),
+                rgba(140, 140, 140, 0.95)) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .pv2-mobile-bar-appointment-btn .shine-glass-button:hover .button-text {
+        color: rgba(0, 0, 0, 0.9) !important;
     }
 
     /* Order Now button - equal width with grid */

@@ -145,139 +145,113 @@ const LocationsManager = () => {
 
   if (loading) {
     return (
-      <div className="admin-card" style={{ padding: '3rem', textAlign: 'center' }}>
+      <div className="admin-empty-state">
         <div>Loading locations...</div>
       </div>
     );
   }
 
   return (
-    <div className="locations-manager">
+    <div className="admin-card" style={{ padding: '1.5rem' }}>
       {error && (
-        <div className="admin-card" style={{ padding: '1rem', marginBottom: '1rem', backgroundColor: '#fee', borderColor: '#feb2b2' }}>
-          <div style={{ color: '#c53030' }}>{error}</div>
+        <div className="admin-error-state" style={{ marginBottom: '1.5rem' }}>
+          {error}
         </div>
       )}
 
       {/* Header Controls */}
-      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', gap: '1rem', flex: 1, minWidth: '300px' }}>
-            <input
-              type="text"
-              placeholder="Search locations..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="admin-input"
-              style={{ flex: 1 }}
-            />
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="admin-input"
-              style={{ width: '150px' }}
-            >
-              <option value="all">All Types</option>
-              <option value="SHOWROOM">Showroom</option>
-              <option value="BOUTIQUE">Boutique</option>
-              <option value="POD">Pod</option>
-            </select>
-          </div>
-          <button onClick={handleAdd} className="admin-button admin-button-primary" title="Add Location">
-            +
-          </button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '1rem', flex: 1, minWidth: '300px' }}>
+          <input
+            type="text"
+            placeholder="Search locations..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="admin-input"
+            style={{ flex: 1 }}
+          />
+          <select
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value)}
+            className="admin-select"
+            style={{ width: '150px' }}
+          >
+            <option value="all">All Types</option>
+            <option value="SHOWROOM">Showroom</option>
+            <option value="BOUTIQUE">Boutique</option>
+            <option value="POD">Pod</option>
+          </select>
         </div>
+        <button onClick={handleAdd} className="admin-button admin-button-primary" title="Add Location">
+          Add Location
+        </button>
       </div>
 
       {/* Locations Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '1rem' }}>
         {filteredLocations.map(location => (
-          <div key={location.id} className="admin-card" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem' }}>
-              <div 
-                style={{ 
-                  fontSize: '24px',
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: getTypeColor(location.type),
-                  color: 'white',
-                  flexShrink: 0
-                }}
-              >
-                {getTypeIcon(location.type)}
+          <div key={location.id} style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '1rem' }}>
+            <div style={{ marginBottom: '1rem' }}>
+              <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
+                {location.name}
+              </h3>
+              <div className="status-pill" style={{
+                display: 'inline-block',
+                backgroundColor: '#f1f5f9',
+                color: '#0f172a',
+                borderColor: '#cbd5e1',
+                textTransform: 'uppercase',
+                marginBottom: '0.5rem'
+              }}>
+                {location.type || 'SHOWROOM'}
               </div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '18px', fontWeight: '600', color: '#212529' }}>
-                  {location.name}
-                </h3>
-                <div style={{ 
-                  display: 'inline-block',
-                  padding: '0.25rem 0.5rem',
-                  backgroundColor: getTypeColor(location.type),
-                  color: 'white',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  fontWeight: '500',
-                  textTransform: 'uppercase',
-                  marginBottom: '0.5rem'
-                }}>
-                  {location.type || 'SHOWROOM'}
-                </div>
-                <div style={{ fontSize: '12px', color: '#6c757d' }}>
-                  ID: <code style={{ background: '#f8f9fa', padding: '2px 4px', borderRadius: '4px' }}>{location.id}</code>
-                </div>
+              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                ID: <code style={{ background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', fontFamily: 'monospace', fontSize: '0.6875rem' }}>{location.id}</code>
               </div>
             </div>
 
             {/* Location Details */}
-            <div style={{ marginBottom: '1rem', lineHeight: '1.5' }}>
+            <div style={{ marginBottom: '1rem', lineHeight: '1.5', fontSize: '0.8125rem', color: '#64748b' }}>
               {location.address && (
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '14px' }}></span>
-                  <div style={{ fontSize: '14px', color: '#495057' }}>
+                <div style={{ marginBottom: '0.5rem' }}>
+                  <div style={{ color: '#0f172a' }}>
                     {location.address}
-                    {location.city && <div style={{ color: '#6c757d', fontSize: '13px' }}>{location.city}</div>}
                   </div>
+                  {location.city && <div style={{ fontSize: '0.75rem' }}>{location.city}</div>}
                 </div>
               )}
-              
+
               {location.phone && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '14px' }}>📞</span>
-                  <span style={{ fontSize: '14px', color: '#495057' }}>{location.phone}</span>
+                <div style={{ marginBottom: '0.5rem' }}>
+                  Phone: <span style={{ color: '#0f172a' }}>{location.phone}</span>
                 </div>
               )}
-              
+
               {location.email && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '14px' }}>📧</span>
-                  <span style={{ fontSize: '14px', color: '#495057' }}>{location.email}</span>
+                <div style={{ marginBottom: '0.5rem' }}>
+                  Email: <span style={{ color: '#0f172a' }}>{location.email}</span>
                 </div>
               )}
-              
+
               {location.hours && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <span style={{ fontSize: '14px' }}>🕒</span>
-                  <span style={{ fontSize: '14px', color: '#495057' }}>{location.hours}</span>
+                <div style={{ marginBottom: '0.5rem' }}>
+                  Hours: <span style={{ color: '#0f172a' }}>{location.hours}</span>
                 </div>
               )}
             </div>
 
             {/* Coordinates */}
             {(location.latitude || location.longitude) && (
-              <div style={{ 
+              <div style={{
                 marginBottom: '1rem',
                 padding: '0.75rem',
-                backgroundColor: '#f8f9fa',
-                borderRadius: '8px',
-                fontSize: '12px'
+                backgroundColor: '#fafbfc',
+                borderRadius: '6px',
+                fontSize: '0.75rem',
+                border: '1px solid #e2e8f0'
               }}>
-                <div style={{ color: '#6c757d', marginBottom: '0.25rem' }}>Coordinates:</div>
-                <div style={{ fontFamily: 'monospace', color: '#495057' }}>
+                <div style={{ color: '#64748b', marginBottom: '0.25rem', fontWeight: '500' }}>Coordinates:</div>
+                <div style={{ fontFamily: 'monospace', color: '#0f172a', fontSize: '0.6875rem' }}>
                   {location.latitude}, {location.longitude}
                 </div>
               </div>
@@ -287,7 +261,7 @@ const LocationsManager = () => {
               <button
                 onClick={() => handleEdit(location)}
                 className="admin-button admin-button-outline"
-                style={{ flex: 1, padding: '0.5rem', fontSize: '14px' }}
+                style={{ flex: 1, padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}
               >
                 Edit
               </button>
@@ -295,20 +269,15 @@ const LocationsManager = () => {
                 <button
                   onClick={() => window.open(`https://maps.google.com?q=${location.latitude},${location.longitude}`, '_blank')}
                   className="admin-button admin-button-secondary"
-                  style={{ padding: '0.5rem', fontSize: '14px' }}
+                  style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}
                 >
                   Map
                 </button>
               )}
               <button
                 onClick={() => handleDelete(location.id)}
-                className="admin-button"
-                style={{ 
-                  padding: '0.5rem',
-                  fontSize: '14px',
-                  backgroundColor: '#dc3545',
-                  color: 'white'
-                }}
+                className="admin-button admin-button-danger"
+                style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}
               >
                 Delete
               </button>
@@ -318,7 +287,7 @@ const LocationsManager = () => {
       </div>
 
       {filteredLocations.length === 0 && (
-        <div className="admin-card" style={{ padding: '3rem', textAlign: 'center', color: '#6c757d' }}>
+        <div className="admin-empty-state">
           No locations found. {searchTerm || selectedType !== "all" ? "Try adjusting your filters." : "Add your first location to get started."}
         </div>
       )}
@@ -327,8 +296,8 @@ const LocationsManager = () => {
       {isModalOpen && (
         <div className="admin-modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
-            <div style={{ padding: '2rem' }}>
-              <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '24px', fontWeight: '600' }}>
+            <div style={{ padding: '1.5rem' }}>
+              <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '1rem', fontWeight: '600', color: '#0f172a', paddingBottom: '1rem', borderBottom: '1px solid #e2e8f0' }}>
                 {editingLocation ? 'Edit Location' : 'Add New Location'}
               </h2>
 
@@ -336,7 +305,7 @@ const LocationsManager = () => {
                 <div style={{ display: 'grid', gap: '1rem' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 150px', gap: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
                         Location Name *
                       </label>
                       <input
@@ -349,13 +318,13 @@ const LocationsManager = () => {
                       />
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
                         Type
                       </label>
                       <select
                         value={formData.type}
                         onChange={(e) => setFormData({...formData, type: e.target.value})}
-                        className="admin-input"
+                        className="admin-select"
                       >
                         <option value="SHOWROOM">Showroom</option>
                         <option value="BOUTIQUE">Boutique</option>
@@ -365,7 +334,7 @@ const LocationsManager = () => {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
                       Address *
                     </label>
                     <input
@@ -379,7 +348,7 @@ const LocationsManager = () => {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
                       City
                     </label>
                     <input
@@ -393,7 +362,7 @@ const LocationsManager = () => {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
                         Phone
                       </label>
                       <input
@@ -405,7 +374,7 @@ const LocationsManager = () => {
                       />
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
                         Email
                       </label>
                       <input
@@ -419,7 +388,7 @@ const LocationsManager = () => {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
                       Business Hours
                     </label>
                     <input
@@ -433,7 +402,7 @@ const LocationsManager = () => {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
                         Latitude
                       </label>
                       <input
@@ -446,7 +415,7 @@ const LocationsManager = () => {
                       />
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
                         Longitude
                       </label>
                       <input
@@ -461,7 +430,7 @@ const LocationsManager = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', justifyContent: 'flex-end' }}>
+                <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem', justifyContent: 'flex-end' }}>
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}

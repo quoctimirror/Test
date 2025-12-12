@@ -1,7 +1,7 @@
 import "./HoverExpand.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 
@@ -10,10 +10,7 @@ const HoverExpandSection = () => {
 
   const handleExploreMoreClick = async () => {
     sessionStorage.setItem("scrollToTop", "true");
-    await optimizedTransitionUtils.transitionToRoute(
-      navigate,
-      ROUTES.ALL_GEMS
-    );
+    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.ALL_GEMS);
   };
 
   return (
@@ -25,37 +22,49 @@ const HoverExpandSection = () => {
         <p className="bodytext-4--no-margin hover-expand-subtitle">
           Discover a variety of our pieces.
         </p>
-        <ShineGlassButton
-          theme="footer"
+        <GlassThemeButton
+          theme="dark"
           className="explore-more-button"
           onClick={handleExploreMoreClick}
         >
-          Explore more
-        </ShineGlassButton>
+          <span className="bodytext-6--no-margin">Explore more</span>
+        </GlassThemeButton>
       </div>
 
       <div className="hover-expand-gallery">
         <div className="hover-expand-gradient-top"></div>
         <div className="gallery-item" onClick={handleExploreMoreClick}>
-          <MediaImage src="home-page/hover-expand/Ring.png" alt="Jewelry piece 1" />
+          <MediaImage
+            src="home-page/hover-expand/Ring.webp"
+            alt="Jewelry piece 1"
+          />
           <p className="bodytext-1--no-margin gallery-item-text">
             Premium Collection
           </p>
         </div>
         <div className="gallery-item" onClick={handleExploreMoreClick}>
-          <MediaImage src="home-page/hover-expand/Earring.png" alt="Jewelry piece 2" />
+          <MediaImage
+            src="home-page/hover-expand/Earring.webp"
+            alt="Jewelry piece 2"
+          />
           <p className="bodytext-1--no-margin gallery-item-text">
             Luxury Rings
           </p>
         </div>
         <div className="gallery-item" onClick={handleExploreMoreClick}>
-          <MediaImage src="home-page/hover-expand/Necklace.png" alt="Jewelry piece 3" />
+          <MediaImage
+            src="home-page/hover-expand/Necklace.webp"
+            alt="Jewelry piece 3"
+          />
           <p className="bodytext-1--no-margin gallery-item-text">
             Diamond Series
           </p>
         </div>
         <div className="gallery-item" onClick={handleExploreMoreClick}>
-          <MediaImage src="home-page/hover-expand/Bracelet.png" alt="Jewelry piece 4" />
+          <MediaImage
+            src="home-page/hover-expand/Bracelet.webp"
+            alt="Jewelry piece 4"
+          />
           <p className="bodytext-1--no-margin gallery-item-text">
             Signature Pieces
           </p>

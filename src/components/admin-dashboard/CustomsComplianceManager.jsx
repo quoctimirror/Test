@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, FileText, AlertTriangle, CheckCircle, Globe, Search, RefreshCw, Download } from 'lucide-react';
 
 const CustomsComplianceManager = () => {
   const [customsRates, setCustomsRates] = useState([]);
@@ -153,12 +152,12 @@ const CustomsComplianceManager = () => {
     return matchesSearch;
   });
 
-  const getUpdateIcon = (changeType) => {
+  const getUpdateIndicator = (changeType) => {
     switch (changeType.toLowerCase()) {
-      case 'duty_rate_change': return <Shield className="h-4 w-4 text-blue-600" />;
-      case 'documentation_requirement': return <FileText className="h-4 w-4 text-green-600" />;
-      case 'trade_agreement': return <Globe className="h-4 w-4 text-purple-600" />;
-      default: return <AlertTriangle className="h-4 w-4 text-orange-600" />;
+      case 'duty_rate_change': return { symbol: '🛡️', color: '#3b82f6' };
+      case 'documentation_requirement': return { symbol: '📄', color: '#10b981' };
+      case 'trade_agreement': return { symbol: '🌐', color: '#a855f7' };
+      default: return { symbol: '⚠️', color: '#f97316' };
     }
   };
 
@@ -168,12 +167,12 @@ const CustomsComplianceManager = () => {
     return 'LOW';
   };
 
-  const getPriorityColor = (priority) => {
+  const getPriorityStyle = (priority) => {
     switch (priority) {
-      case 'HIGH': return 'bg-red-100 text-red-800';
-      case 'MEDIUM': return 'bg-yellow-100 text-yellow-800';
-      case 'LOW': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'HIGH': return { backgroundColor: '#fee2e2', color: '#991b1b' };
+      case 'MEDIUM': return { backgroundColor: '#fef3c7', color: '#854d0e' };
+      case 'LOW': return { backgroundColor: '#dcfce7', color: '#166534' };
+      default: return { backgroundColor: '#f1f5f9', color: '#475569' };
     }
   };
 
@@ -182,296 +181,303 @@ const CustomsComplianceManager = () => {
   };
 
   return (
-    <div className="customs-compliance-manager">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Action Bar */}
-        <div className="mb-6 flex justify-end gap-3">
+    <div>
+      {/* Header and Action Bar */}
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 style={{ margin: 0, fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+          Customs & Compliance
+        </h1>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
           <button
             onClick={fetchComplianceData}
-            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+            className="admin-button admin-button-outline"
           >
-            <RefreshCw size={20} />
-            Refresh Data
+            ⟳ Refresh Data
           </button>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-            <Download size={20} />
-            Export Report
+          <button className="admin-button admin-button-primary">
+            ↓ Export Report
           </button>
         </div>
-        {/* Duty Rate Research */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex items-center gap-2 mb-6">
-            <Search className="h-5 w-5 text-blue-600" />
-            <h2 className="text-xl font-semibold text-gray-900">Duty Rate Research</h2>
-          </div>
+      </div>
+      {/* Duty Rate Research */}
+      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <h2 style={{ margin: '0 0 1rem 0', fontSize: '0.9375rem', fontWeight: '600', color: '#0f172a' }}>
+          Duty Rate Research
+        </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Origin Country</label>
-              <select
-                value={researchParams.originCountry}
-                onChange={(e) => setResearchParams({ ...researchParams, originCountry: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {countries.map(country => (
-                  <option key={country.code} value={country.code}>
-                    {country.flag} {country.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Destination</label>
-              <select
-                value={researchParams.destinationCountry}
-                onChange={(e) => setResearchParams({ ...researchParams, destinationCountry: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="VIETNAM">🇻🇳 Vietnam</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Product Category</label>
-              <select
-                value={researchParams.productCategory}
-                onChange={(e) => setResearchParams({ ...researchParams, productCategory: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {productCategories.map(category => (
-                  <option key={category} value={category}>
-                    {category.replace(/_/g, ' ')}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex items-end">
-              <button
-                onClick={researchDutyRates}
-                disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-              >
-                {loading ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                ) : (
-                  <Search size={16} />
-                )}
-                Research Rates
-              </button>
-            </div>
-          </div>
-
-          {/* Duty Rate Results */}
-          {customsRates.length > 0 && (
-            <div className="border border-gray-200 rounded-lg p-4">
-              {customsRates.map((rate, idx) => (
-                <div key={idx} className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-medium text-gray-900">
-                      {countries.find(c => c.code === rate.originCountry)?.flag} {rate.originCountry} → 🇻🇳 {rate.destinationCountry}
-                    </h3>
-                    <span className="text-sm text-gray-500">Effective: {new Date(rate.effectiveDate).toLocaleDateString()}</span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="bg-blue-50 p-3 rounded-lg">
-                      <div className="text-sm text-blue-600 font-medium">HS Code</div>
-                      <div className="text-lg font-bold text-blue-900">{rate.hsCode}</div>
-                    </div>
-                    <div className="bg-red-50 p-3 rounded-lg">
-                      <div className="text-sm text-red-600 font-medium">Standard Duty Rate</div>
-                      <div className="text-lg font-bold text-red-900">{formatPercentage(rate.standardDutyRate)}</div>
-                    </div>
-                    {rate.preferentialRate && (
-                      <div className="bg-green-50 p-3 rounded-lg">
-                        <div className="text-sm text-green-600 font-medium">Preferential Rate</div>
-                        <div className="text-lg font-bold text-green-900">{formatPercentage(rate.preferentialRate)}</div>
-                      </div>
-                    )}
-                    <div className="bg-purple-50 p-3 rounded-lg">
-                      <div className="text-sm text-purple-600 font-medium">VAT Rate</div>
-                      <div className="text-lg font-bold text-purple-900">{formatPercentage(rate.vatRate)}</div>
-                    </div>
-                  </div>
-
-                  {rate.tradeAgreement && (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                      <div className="flex items-center gap-2">
-                        <Globe className="h-4 w-4 text-yellow-600" />
-                        <span className="text-sm font-medium text-yellow-800">Trade Agreement Applied: {rate.tradeAgreement}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {rate.additionalFees && rate.additionalFees.length > 0 && (
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Additional Fees</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        {rate.additionalFees.map((fee, feeIdx) => (
-                          <div key={feeIdx} className="bg-gray-50 p-2 rounded">
-                            <div className="font-medium text-sm">{fee.feeType.replace(/_/g, ' ')}</div>
-                            <div className="text-xs text-gray-600">{fee.description}</div>
-                            <div className="text-sm font-bold">{formatPercentage(fee.rate)}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Compliance Validation */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              <h2 className="text-xl font-semibold text-gray-900">Compliance Validation</h2>
-            </div>
-            <button
-              onClick={validateCompliance}
-              disabled={checkingCompliance}
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors disabled:opacity-50"
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div>
+            <label className="admin-label">Origin Country</label>
+            <select
+              value={researchParams.originCountry}
+              onChange={(e) => setResearchParams({ ...researchParams, originCountry: e.target.value })}
+              className="admin-select"
             >
-              {checkingCompliance ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              ) : (
-                <CheckCircle size={16} />
-              )}
-              Validate Compliance
+              {countries.map(country => (
+                <option key={country.code} value={country.code}>
+                  {country.flag} {country.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="admin-label">Destination</label>
+            <select
+              value={researchParams.destinationCountry}
+              onChange={(e) => setResearchParams({ ...researchParams, destinationCountry: e.target.value })}
+              className="admin-select"
+            >
+              <option value="VIETNAM">🇻🇳 Vietnam</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="admin-label">Product Category</label>
+            <select
+              value={researchParams.productCategory}
+              onChange={(e) => setResearchParams({ ...researchParams, productCategory: e.target.value })}
+              className="admin-select"
+            >
+              {productCategories.map(category => (
+                <option key={category} value={category}>
+                  {category.replace(/_/g, ' ')}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <button
+              onClick={researchDutyRates}
+              disabled={loading}
+              className="admin-button admin-button-primary"
+              style={{ width: '100%', opacity: loading ? 0.5 : 1 }}
+            >
+              {loading ? 'Loading...' : '🔍 Research Rates'}
             </button>
           </div>
+        </div>
 
-          {complianceCheck && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className={`p-4 rounded-lg ${complianceCheck.isCompliant ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  {complianceCheck.isCompliant ? (
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                  ) : (
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
+        {/* Duty Rate Results */}
+        {customsRates.length > 0 && (
+          <div style={{ border: '1px solid #e2e8f0', borderRadius: '6px', padding: '1rem', backgroundColor: '#fafbfc' }}>
+            {customsRates.map((rate, idx) => (
+              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <h3 style={{ margin: 0, fontSize: '0.9375rem', fontWeight: '600', color: '#0f172a' }}>
+                    {countries.find(c => c.code === rate.originCountry)?.flag} {rate.originCountry} → 🇻🇳 {rate.destinationCountry}
+                  </h3>
+                  <span style={{ fontSize: '0.8125rem', color: '#64748b' }}>Effective: {new Date(rate.effectiveDate).toLocaleDateString()}</span>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.75rem' }}>
+                  <div style={{ padding: '0.75rem', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '500', marginBottom: '0.25rem' }}>HS Code</div>
+                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#0f172a' }}>{rate.hsCode}</div>
+                  </div>
+                  <div style={{ padding: '0.75rem', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '500', marginBottom: '0.25rem' }}>Standard Duty Rate</div>
+                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#0f172a' }}>{formatPercentage(rate.standardDutyRate)}</div>
+                  </div>
+                  {rate.preferentialRate && (
+                    <div style={{ padding: '0.75rem', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '500', marginBottom: '0.25rem' }}>Preferential Rate</div>
+                      <div style={{ fontSize: '1rem', fontWeight: '700', color: '#10b981' }}>{formatPercentage(rate.preferentialRate)}</div>
+                    </div>
                   )}
-                  <span className={`font-medium ${complianceCheck.isCompliant ? 'text-green-800' : 'text-red-800'}`}>
-                    Compliance Status
-                  </span>
+                  <div style={{ padding: '0.75rem', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '500', marginBottom: '0.25rem' }}>VAT Rate</div>
+                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#0f172a' }}>{formatPercentage(rate.vatRate)}</div>
+                  </div>
                 </div>
-                <div className={`text-lg font-bold ${complianceCheck.isCompliant ? 'text-green-900' : 'text-red-900'}`}>
-                  {complianceCheck.isCompliant ? 'COMPLIANT' : 'NON-COMPLIANT'}
-                </div>
-              </div>
 
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <div className="text-sm text-blue-600 font-medium mb-2">Documentation Required</div>
-                <div className="text-lg font-bold text-blue-900">
-                  {complianceCheck.requiredDocuments?.length || 0} documents
-                </div>
-                {complianceCheck.requiredDocuments && complianceCheck.requiredDocuments.length > 0 && (
-                  <ul className="mt-2 text-xs text-blue-700 space-y-1">
-                    {complianceCheck.requiredDocuments.slice(0, 3).map((doc, idx) => (
-                      <li key={idx}>• {doc}</li>
-                    ))}
-                    {complianceCheck.requiredDocuments.length > 3 && (
-                      <li>+ {complianceCheck.requiredDocuments.length - 3} more...</li>
-                    )}
-                  </ul>
+                {rate.tradeAgreement && (
+                  <div style={{ padding: '0.75rem', backgroundColor: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '6px' }}>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#854d0e' }}>🌐 Trade Agreement Applied: {rate.tradeAgreement}</span>
+                  </div>
+                )}
+
+                {rate.additionalFees && rate.additionalFees.length > 0 && (
+                  <div>
+                    <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.8125rem', fontWeight: '600', color: '#0f172a' }}>Additional Fees</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem' }}>
+                      {rate.additionalFees.map((fee, feeIdx) => (
+                        <div key={feeIdx} style={{ padding: '0.75rem', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
+                          <div style={{ fontWeight: '600', fontSize: '0.8125rem', color: '#0f172a', marginBottom: '0.25rem' }}>{fee.feeType.replace(/_/g, ' ')}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>{fee.description}</div>
+                          <div style={{ fontSize: '0.875rem', fontWeight: '700', color: '#0f172a' }}>{formatPercentage(fee.rate)}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
+            ))}
+          </div>
+        )}
+      </div>
 
-              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <div className="text-sm text-yellow-600 font-medium mb-2">Risk Level</div>
-                <div className="text-lg font-bold text-yellow-900">
-                  {complianceCheck.riskLevel || 'MEDIUM'}
-                </div>
-              </div>
-            </div>
-          )}
+      {/* Compliance Validation */}
+      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <h2 style={{ margin: 0, fontSize: '0.9375rem', fontWeight: '600', color: '#0f172a' }}>
+            Compliance Validation
+          </h2>
+          <button
+            onClick={validateCompliance}
+            disabled={checkingCompliance}
+            className="admin-button admin-button-primary"
+            style={{ opacity: checkingCompliance ? 0.5 : 1 }}
+          >
+            {checkingCompliance ? 'Validating...' : '✓ Validate Compliance'}
+          </button>
         </div>
 
-        {/* Regulatory Updates */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-orange-600" />
-              <h2 className="text-xl font-semibold text-gray-900">Regulatory Updates</h2>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search updates..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+        {complianceCheck && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div style={{
+              padding: '1rem',
+              borderRadius: '6px',
+              backgroundColor: complianceCheck.isCompliant ? '#dcfce7' : '#fee2e2',
+              border: `1px solid ${complianceCheck.isCompliant ? '#bbf7d0' : '#fecaca'}`
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                marginBottom: '0.5rem',
+                fontWeight: '500',
+                fontSize: '0.8125rem',
+                color: complianceCheck.isCompliant ? '#166534' : '#991b1b'
+              }}>
+                {complianceCheck.isCompliant ? '✓' : '⚠️'} Compliance Status
+              </div>
+              <div style={{
+                fontSize: '1rem',
+                fontWeight: '700',
+                color: complianceCheck.isCompliant ? '#166534' : '#991b1b'
+              }}>
+                {complianceCheck.isCompliant ? 'COMPLIANT' : 'NON-COMPLIANT'}
               </div>
             </div>
-          </div>
 
-          <div className="space-y-4">
-            {filteredUpdates.map((update, idx) => {
-              const priority = getUpdatePriority(update.complianceRequired, update.impact);
-              return (
-                <div key={idx} className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      {getUpdateIcon(update.changeType)}
-                      <div>
-                        <h3 className="font-medium text-gray-900">{update.changeType.replace(/_/g, ' ')}</h3>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(priority)}`}>
-                            {priority} PRIORITY
-                          </span>
-                          {update.complianceRequired && (
-                            <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
-                              ACTION REQUIRED
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      Effective: {new Date(update.effectiveDate).toLocaleDateString()}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <div>
-                      <span className="text-sm font-medium text-gray-700">Description:</span>
-                      <p className="text-sm text-gray-600 mt-1">{update.description}</p>
-                    </div>
-                    <div>
-                      <span className="text-sm font-medium text-gray-700">Impact:</span>
-                      <p className="text-sm text-gray-600 mt-1">{update.impact}</p>
-                    </div>
-                  </div>
-
-                  {update.complianceRequired && (
-                    <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-red-600" />
-                        <span className="text-sm font-medium text-red-800">
-                          Immediate compliance action required by {new Date(update.effectiveDate).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
+            <div style={{ padding: '1rem', backgroundColor: '#eff6ff', border: '1px solid #dbeafe', borderRadius: '6px' }}>
+              <div style={{ fontSize: '0.8125rem', color: '#1e40af', fontWeight: '500', marginBottom: '0.5rem' }}>Documentation Required</div>
+              <div style={{ fontSize: '1rem', fontWeight: '700', color: '#1e40af' }}>
+                {complianceCheck.requiredDocuments?.length || 0} documents
+              </div>
+              {complianceCheck.requiredDocuments && complianceCheck.requiredDocuments.length > 0 && (
+                <ul style={{ marginTop: '0.5rem', fontSize: '0.75rem', color: '#1e40af', paddingLeft: '1rem' }}>
+                  {complianceCheck.requiredDocuments.slice(0, 3).map((doc, idx) => (
+                    <li key={idx}>{doc}</li>
+                  ))}
+                  {complianceCheck.requiredDocuments.length > 3 && (
+                    <li>+ {complianceCheck.requiredDocuments.length - 3} more...</li>
                   )}
-                </div>
-              );
-            })}
-          </div>
-
-          {filteredUpdates.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              <AlertTriangle className="mx-auto h-12 w-12 text-gray-400 mb-3" />
-              <p>No regulatory updates found matching your search.</p>
+                </ul>
+              )}
             </div>
-          )}
+
+            <div style={{ padding: '1rem', backgroundColor: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '6px' }}>
+              <div style={{ fontSize: '0.8125rem', color: '#854d0e', fontWeight: '500', marginBottom: '0.5rem' }}>Risk Level</div>
+              <div style={{ fontSize: '1rem', fontWeight: '700', color: '#854d0e' }}>
+                {complianceCheck.riskLevel || 'MEDIUM'}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Regulatory Updates */}
+      <div className="admin-card" style={{ padding: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <h2 style={{ margin: 0, fontSize: '0.9375rem', fontWeight: '600', color: '#0f172a' }}>
+            Regulatory Updates
+          </h2>
+          <div>
+            <input
+              type="text"
+              placeholder="Search updates..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="admin-input"
+              style={{ minWidth: '250px' }}
+            />
+          </div>
         </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {filteredUpdates.map((update, idx) => {
+            const priority = getUpdatePriority(update.complianceRequired, update.impact);
+            const indicator = getUpdateIndicator(update.changeType);
+            return (
+              <div key={idx} style={{ border: '1px solid #e2e8f0', borderRadius: '6px', padding: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                    <span style={{ fontSize: '1.125rem' }}>{indicator.symbol}</span>
+                    <div>
+                      <h3 style={{ margin: '0 0 0.5rem 0', fontWeight: '600', fontSize: '0.875rem', color: '#0f172a' }}>
+                        {update.changeType.replace(/_/g, ' ')}
+                      </h3>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <span style={{
+                          padding: '0.25rem 0.75rem',
+                          fontSize: '0.6875rem',
+                          fontWeight: '600',
+                          borderRadius: '12px',
+                          ...getPriorityStyle(priority)
+                        }}>
+                          {priority} PRIORITY
+                        </span>
+                        {update.complianceRequired && (
+                          <span style={{
+                            padding: '0.25rem 0.75rem',
+                            fontSize: '0.6875rem',
+                            fontWeight: '600',
+                            borderRadius: '12px',
+                            backgroundColor: '#fee2e2',
+                            color: '#991b1b'
+                          }}>
+                            ACTION REQUIRED
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.8125rem', color: '#64748b' }}>
+                    Effective: {new Date(update.effectiveDate).toLocaleDateString()}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: '600', color: '#0f172a' }}>Description:</span>
+                    <p style={{ fontSize: '0.8125rem', color: '#64748b', margin: '0.25rem 0 0 0' }}>{update.description}</p>
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: '600', color: '#0f172a' }}>Impact:</span>
+                    <p style={{ fontSize: '0.8125rem', color: '#64748b', margin: '0.25rem 0 0 0' }}>{update.impact}</p>
+                  </div>
+                </div>
+
+                {update.complianceRequired && (
+                  <div style={{ marginTop: '0.75rem', padding: '0.75rem', backgroundColor: '#fee2e2', border: '1px solid #fecaca', borderRadius: '6px' }}>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#991b1b' }}>
+                      ⚠️ Immediate compliance action required by {new Date(update.effectiveDate).toLocaleDateString()}
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {filteredUpdates.length === 0 && (
+          <div className="admin-empty-state">
+            <p style={{ margin: 0 }}>No regulatory updates found matching your search.</p>
+          </div>
+        )}
       </div>
     </div>
   );

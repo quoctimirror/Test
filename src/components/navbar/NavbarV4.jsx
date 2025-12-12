@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import UnderlineButton from "@/components/common/button/UnderlineButton";
-import ShineGlassButton from "@/components/common/button/ShineGlassButton";
+import GlassThemeButton from "@/components/common/button/GlassThemeButton";
 import BookingModal from "@/components/booking/BookingModal";
 import { ROUTES } from "@/constants/routes";
 import { useNavbarTheme } from "@/hooks/useNavbarTheme";
@@ -141,25 +141,27 @@ export default function NavbarV4() {
     }
   }, [isMenuOpening]);
 
-  // Prevent body scroll when menu is open on mobile/tablet
+  // Prevent body scroll when menu is open (all devices)
   useEffect(() => {
-    if ((isMobile || isTablet) && isMenuOpen) {
+    if (isMenuOpen) {
       // Save current scroll position
       const scrollY = window.scrollY;
       document.body.style.position = "fixed";
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = "100%";
+      document.body.style.overflow = "hidden";
     } else {
       // Restore scroll position
       const scrollY = document.body.style.top;
       document.body.style.position = "";
       document.body.style.top = "";
       document.body.style.width = "";
+      document.body.style.overflow = "";
       if (scrollY) {
         window.scrollTo(0, parseInt(scrollY || "0") * -1);
       }
     }
-  }, [isMenuOpen, isMobile, isTablet]);
+  }, [isMenuOpen]);
 
   useEffect(() => {
     if (!isHomePage) return;
@@ -589,7 +591,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleLogoClick}
                     >
                       Home
@@ -604,7 +606,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleProductsClick}
                     >
                       Products
@@ -619,7 +621,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleServicesClick}
                     >
                       Services
@@ -634,7 +636,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleSupportClick}
                     >
                       Support
@@ -649,7 +651,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleAboutClick}
                     >
                       About
@@ -664,7 +666,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleNewsClick}
                     >
                       News
@@ -683,7 +685,7 @@ export default function NavbarV4() {
                     }
                   >
                     <UnderlineButton
-                      textClassName="bodytext-4--no-margin"
+                      textClassName="bodytext-6--no-margin"
                       onClick={handleImmersiveShowroomClick}
                     >
                       Immersive Showroom
@@ -715,7 +717,7 @@ export default function NavbarV4() {
                         />
                       </svg>
                       <UnderlineButton
-                        textClassName="bodytext-4--no-margin"
+                        textClassName="bodytext-6--no-margin"
                         onClick={handleContactClick}
                       >
                         Contact
@@ -754,7 +756,7 @@ export default function NavbarV4() {
                         />
                       </svg>
                       <UnderlineButton
-                        textClassName="bodytext-4--no-margin"
+                        textClassName="bodytext-6--no-margin"
                         onClick={handleLocationClick}
                       >
                         Find your nearest location
@@ -770,7 +772,7 @@ export default function NavbarV4() {
                     <ul className="menu-v4-list menu-v4-list-profile">
                       <li>
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={() => handleProfileClick("My Passport")}
                         >
                           My Passport
@@ -778,7 +780,7 @@ export default function NavbarV4() {
                       </li>
                       <li>
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={() => handleProfileClick("Orders")}
                         >
                           My Orders
@@ -786,7 +788,7 @@ export default function NavbarV4() {
                       </li>
                       <li>
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={() => handleProfileClick("Services")}
                         >
                           My Services
@@ -794,7 +796,7 @@ export default function NavbarV4() {
                       </li>
                       <li>
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={() => handleProfileClick("Wishlist")}
                         >
                           My Wishlist
@@ -804,7 +806,7 @@ export default function NavbarV4() {
                       {isUserAdmin() && (
                         <li>
                           <UnderlineButton
-                            textClassName="bodytext-4--no-margin"
+                            textClassName="bodytext-6--no-margin"
                             onClick={handleAdminDashboardClick}
                           >
                             Admin Dashboard
@@ -815,7 +817,7 @@ export default function NavbarV4() {
                       {isUserVendor() && (
                         <li>
                           <UnderlineButton
-                            textClassName="bodytext-4--no-margin"
+                            textClassName="bodytext-6--no-margin"
                             onClick={handleVendorDashboardClick}
                           >
                             Vendor Dashboard
@@ -826,7 +828,7 @@ export default function NavbarV4() {
                       {isUserDesigner() && (
                         <li>
                           <UnderlineButton
-                            textClassName="bodytext-4--no-margin"
+                            textClassName="bodytext-6--no-margin"
                             onClick={handleDesignerDashboardClick}
                           >
                             Designer Dashboard
@@ -836,7 +838,7 @@ export default function NavbarV4() {
 
                       <li className="logout-v4-item">
                         <UnderlineButton
-                          textClassName="bodytext-4--no-margin"
+                          textClassName="bodytext-6--no-margin"
                           onClick={handleLogoutClick}
                         >
                           Log out
@@ -847,27 +849,63 @@ export default function NavbarV4() {
                 )}
               </div>
 
-              {/* Shine Glass Buttons at bottom - outside of groups */}
+              {/* Glass Theme Buttons at bottom - outside of groups */}
               <div
                 className="menu-v4-bottom-buttons"
                 style={{ mixBlendMode: "normal", isolation: "isolate" }}
               >
-                <ShineGlassButton
-                  theme="light"
-                  onClick={() => {
-                    // TODO: Add Mirror Partners Gate navigation
-                    console.log("Enter Mirror Partners Gate clicked");
-                  }}
-                >
-                  Enter Mirror Partners Gate
-                </ShineGlassButton>
-                <ShineGlassButton
+                {/* Mirror Partners Gate - shows Staff Portal for staff, Vendor/Designer Portal for partners, or default text */}
+                {isAuthenticated && user?.roles?.some(role =>
+                  ["ADMIN", "SUPER_ADMIN", "IT_ADMIN", "PRODUCTION_OPS", "SALES_CUSTOMER_OPS", "FINANCE", "MARKETING", "CREATIVE_DESIGN", "LEGAL"].includes(role)
+                ) ? (
+                  <GlassThemeButton
+                    theme="light"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate(ROUTES.DASHBOARD_ADMIN);
+                    }}
+                  >
+                    <span className="bodytext-6--no-margin">Staff Portal</span>
+                  </GlassThemeButton>
+                ) : isAuthenticated && user?.roles?.includes("VENDOR") ? (
+                  <GlassThemeButton
+                    theme="light"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate(ROUTES.DASHBOARD_VENDOR);
+                    }}
+                  >
+                    <span className="bodytext-6--no-margin">Vendor Portal</span>
+                  </GlassThemeButton>
+                ) : isAuthenticated && user?.roles?.includes("DESIGNER") ? (
+                  <GlassThemeButton
+                    theme="light"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate(ROUTES.DASHBOARD_DESIGNER);
+                    }}
+                  >
+                    <span className="bodytext-6--no-margin">Designer Portal</span>
+                  </GlassThemeButton>
+                ) : (
+                  <GlassThemeButton
+                    theme="light"
+                    onClick={() => {
+                      // TODO: Add Mirror Partners Gate navigation
+                      console.log("Enter Mirror Partners Gate clicked");
+                    }}
+                  >
+                    <span className="bodytext-6--no-margin">Enter Mirror Partners Gate</span>
+                  </GlassThemeButton>
+                )}
+                <GlassThemeButton
+                  theme="spec_light"
                   onClick={() => {
                     setIsBookingModalOpen(true);
                   }}
                 >
-                  Explore Mirror Passport
-                </ShineGlassButton>
+                  <span className="bodytext-6--no-margin">Explore Mirror Passport</span>
+                </GlassThemeButton>
               </div>
             </div>
           </div>
@@ -1012,7 +1050,7 @@ export default function NavbarV4() {
             onClick={() => setIsBookingModalOpen(true)}
             style={{ cursor: "pointer" }}
           >
-            <span className="immersive-v4-text bodytext-4--no-margin">
+            <span className="immersive-v4-text bodytext-6--no-margin">
               Book an Appointment
             </span>
           </div>

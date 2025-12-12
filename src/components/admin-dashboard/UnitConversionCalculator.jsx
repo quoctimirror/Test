@@ -1,12 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {
-  ArrowRightLeft,
-  Calculator,
-  Info,
-  RefreshCw,
-  Copy,
-  CheckCircle
-} from "lucide-react";
 
 const WeightUnit = {
   GRAMS: "GRAMS",
@@ -179,41 +171,32 @@ const UnitConversionCalculator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-                <Calculator className="h-8 w-8 mr-3 text-blue-600" />
-                Jewelry Unit Converter
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                Convert between grams, ounces, and Vietnamese jewelry units
-                (lượng, chỉ)
-              </p>
-            </div>
-          </div>
-        </div>
+      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <h1 style={{ margin: '0 0 0.5rem 0', fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+          Jewelry Unit Converter
+        </h1>
+        <p style={{ margin: '0', fontSize: '0.8125rem', color: '#64748b' }}>
+          Convert between grams, ounces, and Vietnamese jewelry units (lượng, chỉ)
+        </p>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
           {/* Converter */}
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="admin-card" style={{ padding: '1.5rem' }}>
+            <h2 style={{ margin: '0 0 1rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
               Unit Converter
             </h2>
 
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {/* From Section */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="admin-label">
                   From
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                   <input
                     type="number"
                     step="0.0001"
@@ -222,13 +205,13 @@ const UnitConversionCalculator = () => {
                     onChange={(e) =>
                       setFromValue(parseFloat(e.target.value) || 0)
                     }
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="Enter value"
                   />
                   <select
                     value={fromUnit}
                     onChange={(e) => setFromUnit(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-select"
                   >
                     <option value={WeightUnit.GRAMS}>Grams (g)</option>
                     <option value={WeightUnit.OUNCES}>Ounces (oz)</option>
@@ -236,35 +219,33 @@ const UnitConversionCalculator = () => {
                     <option value={WeightUnit.CHI}>Chỉ</option>
                   </select>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p style={{ fontSize: '0.6875rem', color: '#64748b', marginTop: '0.25rem' }}>
                   {getUnitInfo(fromUnit)}
                 </p>
               </div>
 
               {/* Swap Button */}
-              <div className="flex justify-center">
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <button
                   onClick={handleSwapUnits}
-                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+                  className="admin-button admin-button-outline"
+                  style={{ padding: '0.5rem', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   title="Swap units"
                 >
-                  <ArrowRightLeft className="h-5 w-5 text-gray-600" />
+                  ⇅
                 </button>
               </div>
 
               {/* To Section */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="admin-label">
                   To
                 </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-md">
-                    <span className="text-gray-700 font-medium">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <div style={{ padding: '0.625rem 0.75rem', backgroundColor: '#f8fafb', border: '1px solid #e2e8f0', borderRadius: '6px' }}>
+                    <span style={{ color: '#0f172a', fontWeight: '500', fontSize: '0.875rem' }}>
                       {loading ? (
-                        <div className="flex items-center">
-                          <RefreshCw className="h-4 w-4 animate-spin mr-2" />
-                          Converting...
-                        </div>
+                        <span>⟳ Converting...</span>
                       ) : result ? (
                         result.convertedValue.toLocaleString("en-US", {
                           minimumFractionDigits: 0,
@@ -278,7 +259,7 @@ const UnitConversionCalculator = () => {
                   <select
                     value={toUnit}
                     onChange={(e) => setToUnit(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-select"
                   >
                     <option value={WeightUnit.GRAMS}>Grams (g)</option>
                     <option value={WeightUnit.OUNCES}>Ounces (oz)</option>
@@ -286,70 +267,65 @@ const UnitConversionCalculator = () => {
                     <option value={WeightUnit.CHI}>Chỉ</option>
                   </select>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p style={{ fontSize: '0.6875rem', color: '#64748b', marginTop: '0.25rem' }}>
                   {getUnitInfo(toUnit)}
                 </p>
               </div>
 
               {/* Result Display */}
               {result && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <div className="flex justify-between items-center">
+                <div style={{ backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '6px', padding: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <h3 className="text-sm font-medium text-blue-900">
+                      <h3 style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#1e40af', margin: '0 0 0.5rem 0' }}>
                         Conversion Result
                       </h3>
-                      <p className="text-lg font-semibold text-blue-800 mt-1">
+                      <p style={{ fontSize: '1rem', fontWeight: '600', color: '#1e3a8a', margin: '0 0 0.25rem 0' }}>
                         {result.originalValue} {result.originalUnit} ={" "}
                         {result.convertedValue.toLocaleString("en-US", {
                           maximumFractionDigits: 6
                         })}{" "}
                         {result.convertedUnit}
                       </p>
-                      <p className="text-xs text-blue-600 mt-1">
+                      <p style={{ fontSize: '0.6875rem', color: '#2563eb', margin: 0 }}>
                         Conversion rate: {result.conversionRate} • Precision:{" "}
                         {result.precision} decimal places
                       </p>
                     </div>
                     <button
                       onClick={copyResult}
-                      className="p-2 bg-blue-100 hover:bg-blue-200 rounded-md transition-colors"
+                      className="admin-button admin-button-outline"
+                      style={{ padding: '0.5rem' }}
                       title="Copy result"
                     >
-                      {copied ? (
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                      ) : (
-                        <Copy className="h-5 w-5 text-blue-600" />
-                      )}
+                      {copied ? "✓" : "📋"}
                     </button>
                   </div>
                 </div>
               )}
 
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <div className="flex items-center">
-                    <Info className="h-5 w-5 text-red-600 mr-2" />
-                    <span className="text-sm text-red-700">{error}</span>
-                  </div>
+                <div className="admin-error-state">
+                  {error}
                 </div>
               )}
             </div>
           </div>
 
           {/* Quick Conversions & Reference */}
-          <div className="space-y-6">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {/* Quick Conversions */}
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="admin-card" style={{ padding: '1.5rem' }}>
+              <h2 style={{ margin: '0 0 1rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
                 Quick Conversions
               </h2>
-              <div className="grid grid-cols-1 gap-2">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {quickConversions.map((preset, index) => (
                   <button
                     key={index}
                     onClick={() => handleQuickConversion(preset)}
-                    className="text-left p-3 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors text-sm"
+                    className="admin-button admin-button-outline"
+                    style={{ justifyContent: 'flex-start', fontSize: '0.8125rem' }}
                   >
                     {preset.label}
                   </button>
@@ -358,77 +334,77 @@ const UnitConversionCalculator = () => {
             </div>
 
             {/* Reference Table */}
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="admin-card" style={{ padding: '1.5rem' }}>
+              <h2 style={{ margin: '0 0 1rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
                 Reference Guide
               </h2>
 
-              <div className="space-y-4">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900 mb-2">
+                  <h3 style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a', marginBottom: '0.5rem' }}>
                     Vietnamese Jewelry Units
                   </h3>
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
+                  <div style={{ backgroundColor: '#fef9c3', border: '1px solid #fde047', borderRadius: '6px', padding: '0.75rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', fontSize: '0.8125rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>1 lượng =</span>
-                        <span className="font-medium">37.5 grams</span>
+                        <span style={{ fontWeight: '500' }}>37.5 grams</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>1 chỉ =</span>
-                        <span className="font-medium">3.75 grams</span>
+                        <span style={{ fontWeight: '500' }}>3.75 grams</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>1 lượng =</span>
-                        <span className="font-medium">10 chỉ</span>
+                        <span style={{ fontWeight: '500' }}>10 chỉ</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900 mb-2">
+                  <h3 style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a', marginBottom: '0.5rem' }}>
                     International Units
                   </h3>
-                  <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
+                  <div style={{ backgroundColor: '#dbeafe', border: '1px solid #93c5fd', borderRadius: '6px', padding: '0.75rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', fontSize: '0.8125rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>1 troy ounce =</span>
-                        <span className="font-medium">28.3495 grams</span>
+                        <span style={{ fontWeight: '500' }}>28.3495 grams</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>1 troy ounce =</span>
-                        <span className="font-medium">0.7560 lượng</span>
+                        <span style={{ fontWeight: '500' }}>0.7560 lượng</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>1 gram =</span>
-                        <span className="font-medium">0.0267 lượng</span>
+                        <span style={{ fontWeight: '500' }}>0.0267 lượng</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900 mb-2">
+                  <h3 style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a', marginBottom: '0.5rem' }}>
                     Common Jewelry Weights
                   </h3>
-                  <div className="bg-green-50 border border-green-200 rounded-md p-3">
-                    <div className="space-y-1 text-sm">
-                      <div className="flex justify-between">
+                  <div style={{ backgroundColor: '#dcfce7', border: '1px solid #86efac', borderRadius: '6px', padding: '0.75rem' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', fontSize: '0.8125rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>Wedding ring:</span>
-                        <span className="font-medium">2-6 grams (0.5-1.6 chỉ)</span>
+                        <span style={{ fontWeight: '500' }}>2-6 grams (0.5-1.6 chỉ)</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>Chain necklace:</span>
-                        <span className="font-medium">5-20 grams (1.3-5.3 chỉ)</span>
+                        <span style={{ fontWeight: '500' }}>5-20 grams (1.3-5.3 chỉ)</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>Pendant:</span>
-                        <span className="font-medium">1-10 grams (0.3-2.7 chỉ)</span>
+                        <span style={{ fontWeight: '500' }}>1-10 grams (0.3-2.7 chỉ)</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <span>Earrings (pair):</span>
-                        <span className="font-medium">2-8 grams (0.5-2.1 chỉ)</span>
+                        <span style={{ fontWeight: '500' }}>2-8 grams (0.5-2.1 chỉ)</span>
                       </div>
                     </div>
                   </div>
@@ -438,38 +414,38 @@ const UnitConversionCalculator = () => {
 
             {/* Conversion Rates Table */}
             {conversionRates && (
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="admin-card" style={{ padding: '1.5rem' }}>
+                <h2 style={{ margin: '0 0 1rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
                   Conversion Matrix
                 </h2>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full text-xs">
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', fontSize: '0.75rem', borderCollapse: 'collapse' }}>
                     <thead>
-                      <tr className="bg-gray-50">
-                        <th className="px-2 py-1 text-left">From → To</th>
-                        <th className="px-2 py-1 text-center">Grams</th>
-                        <th className="px-2 py-1 text-center">Ounces</th>
-                        <th className="px-2 py-1 text-center">Lượng</th>
-                        <th className="px-2 py-1 text-center">Chỉ</th>
+                      <tr style={{ backgroundColor: '#f8fafb' }}>
+                        <th style={{ padding: '0.5rem', textAlign: 'left', borderBottom: '1px solid #e2e8f0' }}>From → To</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'center', borderBottom: '1px solid #e2e8f0' }}>Grams</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'center', borderBottom: '1px solid #e2e8f0' }}>Ounces</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'center', borderBottom: '1px solid #e2e8f0' }}>Lượng</th>
+                        <th style={{ padding: '0.5rem', textAlign: 'center', borderBottom: '1px solid #e2e8f0' }}>Chỉ</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody>
                       {Object.entries(conversionRates).map(
                         ([fromUnitKey, rates]) => (
-                          <tr key={fromUnitKey}>
-                            <td className="px-2 py-1 font-medium">
+                          <tr key={fromUnitKey} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                            <td style={{ padding: '0.5rem', fontWeight: '500' }}>
                               {getUnitDisplay(fromUnitKey)}
                             </td>
-                            <td className="px-2 py-1 text-center">
+                            <td style={{ padding: '0.5rem', textAlign: 'center' }}>
                               {rates.GRAMS?.toFixed(4) || "1.0000"}
                             </td>
-                            <td className="px-2 py-1 text-center">
+                            <td style={{ padding: '0.5rem', textAlign: 'center' }}>
                               {rates.OUNCES?.toFixed(4) || "—"}
                             </td>
-                            <td className="px-2 py-1 text-center">
+                            <td style={{ padding: '0.5rem', textAlign: 'center' }}>
                               {rates.LUONG?.toFixed(4) || "—"}
                             </td>
-                            <td className="px-2 py-1 text-center">
+                            <td style={{ padding: '0.5rem', textAlign: 'center' }}>
                               {rates.CHI?.toFixed(4) || "—"}
                             </td>
                           </tr>
@@ -482,7 +458,6 @@ const UnitConversionCalculator = () => {
             )}
           </div>
         </div>
-      </div>
     </div>
   );
 };

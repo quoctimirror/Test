@@ -1,16 +1,15 @@
+import { useState } from "react";
 import "./ContactUs.css";
-import { useNavigate } from "react-router-dom";
-import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButtonOpposite from "@components/common/button/UnderlineButtonOpposite";
 import { MediaImage } from "@components/common/media";
-import { ROUTES } from "@/constants/routes";
+import BookingModal from "@components/booking/BookingModal";
 
 const ContactUs = () => {
-  const navigate = useNavigate();
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-  const handleBookAppointmentClick = async () => {
-    await optimizedTransitionUtils.transitionToRoute(navigate, ROUTES.BOOK_APPOINTMENT);
+  const handleBookAppointmentClick = () => {
+    setIsBookingModalOpen(true);
   };
 
   const handleLiveChatClick = () => {
@@ -38,30 +37,36 @@ const ContactUs = () => {
           Our client care experts are always here to help.
         </p>
         <div className="contact-us-button-wrapper">
-          <ShineGlassButton
-            theme="footer"
+          <GlassThemeButton
+            theme="dark"
             onClick={handleBookAppointmentClick}
             className="contact-us-button"
           >
-            Book an Appointment
-          </ShineGlassButton>
+            <span className="bodytext-6--no-margin">Book an Appointment</span>
+          </GlassThemeButton>
         </div>
         <div className="contact-us-actions">
           <UnderlineButtonOpposite
             onClick={handleLiveChatClick}
-            textClassName="bodytext-4--no-margin"
+            textClassName="bodytext-6--no-margin"
           >
             Start a live chat
           </UnderlineButtonOpposite>
-          <span className="contact-us-separator bodytext-4--no-margin">or</span>
+          <span className="contact-us-separator bodytext-6--no-margin">or</span>
           <UnderlineButtonOpposite
             onClick={handlePhoneCallClick}
-            textClassName="bodytext-4--no-margin"
+            textClassName="bodytext-6--no-margin"
           >
             Make a phone call
           </UnderlineButtonOpposite>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+      />
     </section>
   );
 };

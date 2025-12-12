@@ -10,7 +10,7 @@
 .video-background {
   width: 100%;
   height: 120%;
-  background: lightgray url("__CDN_URL__/collections/hero_collection.png")
+  background: black url("__CDN_URL__/collections/hero_collection.webp")
     no-repeat center / cover;
   position: absolute;
   top: -30%;

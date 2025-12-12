@@ -60,6 +60,9 @@
   align-items: flex-start;
   position: relative;
   padding-top: 0;
+  opacity: 0;
+  transform: translateY(120px);
+  will-change: transform, opacity;
 }
 
 /* LEFT SECTION - Discover Menu */
@@ -67,15 +70,6 @@
   width: 298px;
   min-height: 140px;
   box-sizing: border-box;
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  transition-delay: 0.6s;
-}
-
-.footer-left.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* RIGHT SECTION - Contact Info */
@@ -84,15 +78,6 @@
   min-height: 140px;
   text-align: right;
   box-sizing: border-box;
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  transition-delay: 0.5s;
-}
-
-.footer-right.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* CENTER SECTION - Newsletter */
@@ -105,14 +90,8 @@
   left: 50%;
   top: 50%;
   opacity: 0;
-  transform: translate(-50%, -50%) translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  transition-delay: 0.3s;
-}
-
-.footer-center.visible {
-  opacity: 1;
-  transform: translate(-50%, -50%) translateY(0);
+  transform: translate(-50%, -50%) translateY(100px);
+  will-change: transform, opacity;
 }
 
 /* ========================================
@@ -228,47 +207,10 @@
   margin: 0;
 }
 
+/* GlassThemeButton in footer - full width */
 .newsletter-btn-explore,
 .newsletter-btn-signin {
   width: 100% !important;
-  height: 57px;
-}
-
-.newsletter-btn-explore .glass-layer,
-.newsletter-btn-signin .glass-layer {
-  padding: 18px 26px !important;
-  border-radius: 999px !important;
-}
-
-.newsletter-btn-explore .button-text,
-.newsletter-btn-signin .button-text {
-  font-size: 16px !important;
-}
-
-/* Sign in button - white background base for theme light effect */
-.newsletter-btn-signin .glass-layer {
-  background: rgba(255, 255, 255, 0.75) !important;
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  transition: background 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.newsletter-btn-signin .button-text {
-  color: rgba(0, 0, 0, 1) !important;
-  transition: color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.newsletter-btn-signin:hover .glass-layer {
-  background: linear-gradient(
-    -75deg,
-    rgba(0, 0, 0, 0.95),
-    rgba(0, 0, 0, 0.98),
-    rgba(0, 0, 0, 0.95)
-  ) !important;
-}
-
-.newsletter-btn-signin:hover .button-text {
-  color: rgba(255, 255, 255, 1) !important;
 }
 
 /* ========================================
@@ -281,21 +223,16 @@
   justify-content: flex-end;
   margin-top: 36px;
   opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  transition-delay: 0s;
-}
-
-.footer-bottom.visible {
-  opacity: 1;
-  transform: translateY(0);
+  transform: translateY(80px);
+  will-change: transform, opacity;
 }
 
 /* Footer Bottom Row - Contains left and right */
 .footer-bottom-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 48px;
   width: 100%;
   position: relative;
 }
@@ -307,7 +244,7 @@
 }
 
 .footer-bottom-left p {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 /* Footer Bottom Center - Social Icons */
@@ -358,7 +295,7 @@
 }
 
 .legal-link {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
 }
 
@@ -378,6 +315,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     flex: 1;
   }
 
@@ -388,6 +326,7 @@
     justify-content: center;
     padding-top: 0;
     gap: 48px;
+    width: 100%;
   }
 
   .footer-left,
@@ -407,6 +346,14 @@
     margin: 0 auto 36px;
     order: -1;
     padding: 0;
+  }
+
+  .footer-center.visible {
+    transform: none;
+  }
+
+  .newsletter-section {
+    align-items: center;
   }
 
   .newsletter-title {
@@ -500,6 +447,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     flex: 1;
   }
 
@@ -510,6 +458,7 @@
     justify-content: center;
     padding-top: 0;
     gap: 36px;
+    width: 100%;
   }
 
   .footer-left,
@@ -529,6 +478,14 @@
     margin: 0 auto 36px;
     order: -1;
     padding: 0;
+  }
+
+  .footer-center.visible {
+    transform: none;
+  }
+
+  .newsletter-section {
+    align-items: center;
   }
 
   .newsletter-title {

@@ -188,12 +188,14 @@
   flex: 1;
   overflow-y: auto;
   padding: 0; /* Padding handled by content */
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
 }
 
-/* Force show scrollbar in BookingModal */
+/* Scrollbar styles - only show when content overflows */
 .booking-panel-content::-webkit-scrollbar {
   width: 8px;
-  display: block;
 }
 
 .booking-panel-content::-webkit-scrollbar-track {
@@ -207,12 +209,6 @@
 
 .booking-panel-content::-webkit-scrollbar-thumb:hover {
   background: #555;
-}
-
-/* For Firefox */
-.booking-panel-content {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
 }
 
 /* Panel Footer - fixed at bottom with continue button */
@@ -238,7 +234,6 @@
 .booking-step-info {
   background: #fff;
   padding: 24px 48px;
-  min-height: 100%;
 }
 
 .booking-step-info-title {
@@ -286,6 +281,23 @@
 /* Readonly mode - keep interactive */
 .booking-step.readonly {
   opacity: 0.9;
+}
+
+/* Panel background to match step background */
+.booking-panel-left .booking-panel-content,
+.booking-panel-right .booking-panel-content {
+  background: #f6f6f6;
+}
+
+/* White background when booking-step-info is shown (Step 1 left panel) */
+.booking-panel-left .booking-panel-content:has(.booking-step-info) {
+  background: #fff;
+}
+
+/* Fit content height for both panels - no forced min-height */
+.booking-panel-left .booking-step,
+.booking-panel-right .booking-step {
+  min-height: auto;
 }
 
 /* Booking Step - white background that travels with content */
@@ -814,6 +826,30 @@
   color: rgba(188, 34, 76, 1);
 }
 
+/* Booked time slot */
+.time-slot.booked {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  position: relative;
+}
+
+.time-slot.booked:hover {
+  border-left-color: var(--Gray-2, #e0e0e0);
+}
+
+.time-slot.booked:hover span {
+  transform: none;
+}
+
+.time-slot .booked-label {
+  font-size: 10px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
 /* Form */
 .form-container {
   display: flex;
@@ -840,7 +876,7 @@
 .form-title-option {
   cursor: pointer;
   padding-bottom: 1.5px;
-  border-bottom: 2px solid transparent;
+  border-bottom: 1px solid transparent;
   color: #797979;
   transition: all 0.2s ease;
 }
@@ -1034,6 +1070,19 @@
 .confirmation-subtitle {
   margin-bottom: 12px;
   color: #000;
+}
+
+.confirmation-reference {
+  margin-bottom: 24px;
+  color: #000;
+  padding: 16px 32px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+}
+
+.confirmation-reference strong {
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .confirmation-text {

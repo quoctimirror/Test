@@ -10,6 +10,13 @@
 .viewerContainer {
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
+}
+
+/* Fix video/canvas aspect ratio from SDK */
+.viewerContainer :global(canvas),
+.viewerContainer :global(video) {
+  object-fit: cover !important;
 }
 
 .modelSelectorContainer {
@@ -764,20 +771,42 @@
 }
 
 /* ==========================================
-   FPS COUNTER
+   DEBUG PANEL
    ========================================== */
-.fpsCounter {
+.debugPanel {
   position: absolute;
   top: 16px;
   left: 16px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
   font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
   z-index: 10000;
   pointer-events: none;
   user-select: none;
+  min-width: 120px;
+}
+
+.debugRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.debugLabel {
+  color: #aaa;
+  margin-right: 12px;
+}
+
+@media (max-width: 480px) {
+  .debugPanel {
+    top: 10px;
+    left: 10px;
+    padding: 8px 10px;
+    font-size: 11px;
+    min-width: 100px;
+  }
 }

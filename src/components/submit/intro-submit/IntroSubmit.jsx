@@ -110,7 +110,7 @@ const IntroSubmit = () => {
                 </ShineGlassButton>
                 <UnderlineButton
                   className="intro-submit-btn-secondary"
-                  textClassName="bodytext-4--no-margin"
+                  textClassName="bodytext-6--no-margin"
                   onClick={handleViewGuidelinesClick}
                 >
                   Learn More
@@ -128,9 +128,9 @@ const IntroSubmit = () => {
             <picture>
               <source
                 media="(max-width: 1024px)"
-                srcSet={getImageUrl("submit/kv-milan-on-website-mobile2.png")}
+                srcSet={getImageUrl("submit/kv-milan-on-website-mobile2.webp")}
               />
-              <img src={getImageUrl("submit/kv MILAN.png")} alt="Submit Hero" />
+              <img src={getImageUrl("submit/kv MILAN.webp")} alt="Submit Hero" />
             </picture>
             {/* <h3 className="intro-submit-hero-image-caption heading-3--no-margin">
               Collaborate, Innovate, Awaken luxury

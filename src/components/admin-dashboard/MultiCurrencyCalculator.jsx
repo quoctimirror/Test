@@ -1,14 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {
-  Calculator,
-  DollarSign,
-  TrendingUp,
-  Globe,
-  Truck,
-  Shield,
-  FileText,
-  AlertCircle
-} from "lucide-react";
 import { currencyAPI } from "@/services/api";
 
 const MultiCurrencyCalculator = () => {
@@ -184,345 +174,324 @@ const MultiCurrencyCalculator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Multi-Currency Cost Calculator
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                Calculate comprehensive import costs for jewelry with real-time
-                exchange rates
-              </p>
+      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 style={{ margin: '0 0 0.5rem 0', fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+              Multi-Currency Cost Calculator
+            </h1>
+            <p style={{ margin: '0', fontSize: '0.8125rem', color: '#64748b' }}>
+              Calculate comprehensive import costs for jewelry with real-time exchange rates
+            </p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              Updated:{" "}
+              {exchangeRates.length > 0
+                ? new Date(exchangeRates[0].timestamp).toLocaleTimeString()
+                : "Loading..."}
             </div>
-            <div className="flex items-center gap-4">
-              <div className="text-sm text-gray-500">
-                Exchange rates updated:{" "}
-                {exchangeRates.length > 0
-                  ? new Date(exchangeRates[0].timestamp).toLocaleTimeString()
-                  : "Loading..."}
-              </div>
-              <button
-                onClick={fetchExchangeRates}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-              >
-                <TrendingUp size={20} />
-                Refresh Rates
-              </button>
-            </div>
+            <button
+              onClick={fetchExchangeRates}
+              className="admin-button admin-button-primary"
+            >
+              Refresh Rates
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Input Form */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center gap-2 mb-6">
-              <Calculator className="h-5 w-5 text-blue-600" />
-              <h2 className="text-xl font-semibold text-gray-900">
-                Import Parameters
-              </h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem' }}>
+        {/* Input Form */}
+        <div className="admin-card" style={{ padding: '1.5rem' }}>
+          <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
+            Import Parameters
+          </h2>
+
+          {validationErrors.length > 0 && (
+            <div className="admin-error-state" style={{ marginBottom: '1.5rem' }}>
+              <div style={{ fontWeight: '500', marginBottom: '0.5rem' }}>
+                Please fix the following errors:
+              </div>
+              <ul style={{ fontSize: '0.8125rem', listStyle: 'disc', paddingLeft: '1.25rem', margin: 0 }}>
+                {validationErrors.map((error, idx) => (
+                  <li key={idx}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
+                Supplier Name
+              </label>
+              <input
+                type="text"
+                value={formData.supplierName}
+                onChange={(e) =>
+                  setFormData({ ...formData, supplierName: e.target.value })
+                }
+                className="admin-input"
+                style={{ width: '100%' }}
+                placeholder="Enter supplier name..."
+              />
             </div>
 
-            {validationErrors.length > 0 && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertCircle className="h-4 w-4 text-red-600" />
-                  <span className="text-sm font-medium text-red-800">
-                    Please fix the following errors:
-                  </span>
-                </div>
-                <ul className="text-sm text-red-700 list-disc list-inside space-y-1">
-                  {validationErrors.map((error, idx) => (
-                    <li key={idx}>{error}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
+                Total Value (USD)
+              </label>
+              <input
+                type="number"
+                value={formData.totalValue}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    totalValue: parseFloat(e.target.value) || 0
+                  })
+                }
+                className="admin-input"
+                style={{ width: '100%' }}
+                placeholder="Enter total order value..."
+              />
+            </div>
 
-            <div className="space-y-4">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Supplier Name
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
+                  Origin Country
                 </label>
-                <input
-                  type="text"
-                  value={formData.supplierName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, supplierName: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter supplier name..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Total Value (USD)
-                </label>
-                <input
-                  type="number"
-                  value={formData.totalValue}
+                <select
+                  value={formData.originCountry}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      totalValue: parseFloat(e.target.value) || 0
+                      originCountry: e.target.value
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter total order value..."
+                  className="admin-select"
+                  style={{ width: '100%' }}
+                >
+                  <option value="INDIA">India</option>
+                  <option value="USA">United States</option>
+                  <option value="THAILAND">Thailand</option>
+                  <option value="HONG_KONG">Hong Kong</option>
+                  <option value="CHINA">China</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
+                  Currency
+                </label>
+                <select
+                  value={formData.currency}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      currency: e.target.value,
+                      originCurrency: e.target.value
+                    })
+                  }
+                  className="admin-select"
+                  style={{ width: '100%' }}
+                >
+                  <option value="USD">USD - US Dollar</option>
+                  <option value="CNY">CNY - Chinese Yuan</option>
+                  <option value="INR">INR - Indian Rupee</option>
+                  <option value="THB">THB - Thai Baht</option>
+                  <option value="HKD">HKD - Hong Kong Dollar</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
+                  Quantity (pieces)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.quantity}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      quantity: parseInt(e.target.value) || 0
+                    })
+                  }
+                  className="admin-input"
+                  style={{ width: '100%' }}
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Origin Country
-                  </label>
-                  <select
-                    value={formData.originCountry}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        originCountry: e.target.value
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="INDIA">India</option>
-                    <option value="USA">United States</option>
-                    <option value="THAILAND">Thailand</option>
-                    <option value="HONG_KONG">Hong Kong</option>
-                    <option value="CHINA">China</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Currency
-                  </label>
-                  <select
-                    value={formData.currency}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        currency: e.target.value,
-                        originCurrency: e.target.value
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="USD">USD - US Dollar</option>
-                    <option value="CNY">CNY - Chinese Yuan</option>
-                    <option value="INR">INR - Indian Rupee</option>
-                    <option value="THB">THB - Thai Baht</option>
-                    <option value="HKD">HKD - Hong Kong Dollar</option>
-                  </select>
-                </div>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
+                  Unit Cost ({formData.originCurrency})
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  value={formData.unitCostOriginCurrency}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      unitCostOriginCurrency: parseFloat(e.target.value) || 0
+                    })
+                  }
+                  className="admin-input"
+                  style={{ width: '100%' }}
+                />
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Quantity (pieces)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    value={formData.quantity}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        quantity: parseInt(e.target.value) || 0
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Unit Cost ({formData.originCurrency})
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0.01"
-                    value={formData.unitCostOriginCurrency}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        unitCostOriginCurrency: parseFloat(e.target.value) || 0
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-
-              <button
-                onClick={calculateImportCost}
-                disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
-              >
-                {loading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                ) : (
-                  <Calculator size={20} />
-                )}
-                {loading ? "Calculating..." : "Calculate Import Cost"}
-              </button>
-            </div>
-          </div>
-
-          {/* Exchange Rates Panel */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center gap-2 mb-6">
-              <Globe className="h-5 w-5 text-green-600" />
-              <h2 className="text-xl font-semibold text-gray-900">
-                Current Exchange Rates
-              </h2>
             </div>
 
-            <div className="space-y-3">
-              {exchangeRates.map((rate, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-bold text-blue-600">
-                        {rate.fromCurrency}
-                      </span>
-                    </div>
-                    <div>
-                      <div className="font-medium text-gray-900">
-                        {rate.fromCurrency} to {rate.toCurrency}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        Source: {rate.source}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-gray-900">
-                      {rate.rate.toLocaleString("vi-VN", {
-                        maximumFractionDigits: 0
-                      })}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {new Date(rate.timestamp).toLocaleTimeString()}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <button
+              onClick={calculateImportCost}
+              disabled={loading}
+              className="admin-button admin-button-primary"
+              style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+            >
+              {loading ? (
+                <>
+                  <div style={{ width: '16px', height: '16px', border: '2px solid white', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+                  Calculating...
+                </>
+              ) : (
+                "Calculate Import Cost"
+              )}
+            </button>
           </div>
         </div>
 
-        {/* Cost Breakdown Results */}
-        {calculation && (
-          <div className="mt-6 bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center gap-2 mb-6">
-              <FileText className="h-5 w-5 text-purple-600" />
-              <h2 className="text-xl font-semibold text-gray-900">
-                Import Cost Breakdown
-              </h2>
-            </div>
+        {/* Exchange Rates Panel */}
+        <div className="admin-card" style={{ padding: '1.5rem' }}>
+          <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
+            Current Exchange Rates
+          </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <DollarSign className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm text-blue-600 font-medium">
-                    FOB Cost
-                  </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {exchangeRates.map((rate, idx) => (
+              <div
+                key={idx}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem', border: '1px solid #e2e8f0', borderRadius: '6px' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ width: '40px', height: '40px', backgroundColor: '#f1f5f9', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: '600', color: '#0f172a' }}>
+                      {rate.fromCurrency}
+                    </span>
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: '500', fontSize: '0.8125rem', color: '#0f172a' }}>
+                      {rate.fromCurrency} to {rate.toCurrency}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                      Source: {rate.source}
+                    </div>
+                  </div>
                 </div>
-                <div className="text-2xl font-bold text-blue-900">
-                  {formatCurrency(calculation.fobCostVnd || 0)}
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+                    {rate.rate.toLocaleString("vi-VN", {
+                      maximumFractionDigits: 0
+                    })}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                    {new Date(rate.timestamp).toLocaleTimeString()}
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-              <div className="bg-green-50 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Truck className="h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-600 font-medium">
-                    Shipping & Logistics
-                  </span>
-                </div>
-                <div className="text-2xl font-bold text-green-900">
-                  {formatCurrency(
-                    (calculation.shippingCostVnd || 0) +
-                      (calculation.insuranceCost || 0)
-                  )}
-                </div>
+      {/* Cost Breakdown Results */}
+      {calculation && (
+        <div className="admin-card" style={{ padding: '1.5rem', marginTop: '1.5rem' }}>
+          <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
+            Import Cost Breakdown
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '1.5rem' }}>
+            <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: '500' }}>
+                FOB Cost
               </div>
-
-              <div className="bg-orange-50 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="h-4 w-4 text-orange-600" />
-                  <span className="text-sm text-orange-600 font-medium">
-                    Customs & Duties
-                  </span>
-                </div>
-                <div className="text-2xl font-bold text-orange-900">
-                  {formatCurrency(
-                    (calculation.importDutyVnd || 0) + (calculation.vatVnd || 0)
-                  )}
-                </div>
-              </div>
-
-              <div className="bg-purple-50 p-4 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Calculator className="h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-600 font-medium">
-                    Total Import Cost
-                  </span>
-                </div>
-                <div className="text-2xl font-bold text-purple-900">
-                  {formatCurrency(
-                    calculation.totalLandedCostVnd || calculation.totalCostVnd || 0
-                  )}
-                </div>
+              <div style={{ fontSize: '1.25rem', fontWeight: '600', color: '#0f172a' }}>
+                {formatCurrency(calculation.fobCostVnd || 0)}
               </div>
             </div>
 
-            {/* Profit Analysis */}
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <div className="text-sm text-gray-600 mb-1">
-                  Suggested Retail Price
-                </div>
-                <div className="text-xl font-bold text-gray-900">
-                  {formatCurrency(calculation.totalLandedCostVnd * 2.5)}
-                </div>
+            <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: '500' }}>
+                Shipping & Logistics
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <div className="text-sm text-gray-600 mb-1">Gross Margin</div>
-                <div className="text-xl font-bold text-green-600">
-                  {formatPercentage(0.6)}
-                </div>
+              <div style={{ fontSize: '1.25rem', fontWeight: '600', color: '#0f172a' }}>
+                {formatCurrency(
+                  (calculation.shippingCostVnd || 0) +
+                    (calculation.insuranceCost || 0)
+                )}
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <div className="text-sm text-gray-600 mb-1">
-                  Break-even Quantity
-                </div>
-                <div className="text-xl font-bold text-blue-600">
-                  {Math.ceil(
-                    calculation.totalLandedCostVnd / 100000
-                  ).toLocaleString()}{" "}
-                  pieces
-                </div>
+            </div>
+
+            <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: '500' }}>
+                Customs & Duties
+              </div>
+              <div style={{ fontSize: '1.25rem', fontWeight: '600', color: '#0f172a' }}>
+                {formatCurrency(
+                  (calculation.importDutyVnd || 0) + (calculation.vatVnd || 0)
+                )}
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: '500' }}>
+                Total Import Cost
+              </div>
+              <div style={{ fontSize: '1.25rem', fontWeight: '600', color: '#0f172a' }}>
+                {formatCurrency(
+                  calculation.totalLandedCostVnd || calculation.totalCostVnd || 0
+                )}
               </div>
             </div>
           </div>
-        )}
-      </div>
+
+          {/* Profit Analysis */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+            <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>
+                Suggested Retail Price
+              </div>
+              <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#0f172a' }}>
+                {formatCurrency(calculation.totalLandedCostVnd * 2.5)}
+              </div>
+            </div>
+            <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>Gross Margin</div>
+              <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#059669' }}>
+                {formatPercentage(0.6)}
+              </div>
+            </div>
+            <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.25rem' }}>
+                Break-even Quantity
+              </div>
+              <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#0f172a' }}>
+                {Math.ceil(
+                  calculation.totalLandedCostVnd / 100000
+                ).toLocaleString()}{" "}
+                pieces
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { designersAPI } from "@/services/api";
 import DesignerStatistics from "./DesignerStatistics";
@@ -8,7 +9,29 @@ import "./DesignerDashboard.css";
 import { ROUTES } from "@/constants/routes";
 
 const DesignerDashboard = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Get tab from URL query params
+  const getTabFromUrl = useCallback(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get('tab') || 'dashboard';
+  }, [location.search]);
+
+  const [activeTab, setActiveTabState] = useState(getTabFromUrl);
+
+  // Update URL when tab changes
+  const setActiveTab = useCallback((tabId) => {
+    setActiveTabState(tabId);
+    const params = new URLSearchParams(location.search);
+    if (tabId === 'dashboard') {
+      params.delete('tab');
+    } else {
+      params.set('tab', tabId);
+    }
+    const newSearch = params.toString();
+    navigate(`${location.pathname}${newSearch ? `?${newSearch}` : ''}`, { replace: true });
+  }, [navigate, location.pathname, location.search]);
   const [designerInfo, setDesignerInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [hasDesigner, setHasDesigner] = useState(false);
@@ -46,6 +69,23 @@ const DesignerDashboard = () => {
       loadDesignerInfo();
     }
   }, [user]);
+
+  // Sync state with URL when browser navigation occurs (back/forward)
+  useEffect(() => {
+    const urlTab = getTabFromUrl();
+    if (urlTab !== activeTab) {
+      setActiveTabState(urlTab);
+    }
+  }, [location.search, getTabFromUrl]);
+
+  // Validate tab and redirect to valid tab if needed
+  useEffect(() => {
+    const urlTab = getTabFromUrl();
+    const validTabIds = ['dashboard', 'designs', 'sales'];
+    if (!validTabIds.includes(urlTab)) {
+      setActiveTab('dashboard');
+    }
+  }, [activeTab, getTabFromUrl, setActiveTab]);
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard" },

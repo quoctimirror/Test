@@ -3,15 +3,22 @@ import { useDeviceCamera } from '../ijewel_useDeviceCamera';
 import styles from './premium_dev.module.css';
 
 const MODELS = [
-  { id: 'Cs9yFentQsiL9VOyTa8Rdw', name: 'Fistion', basename: 'drive' },
-  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' },
-  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' },
-  { id: 'Qteju98xRgKe8y5KylzXIw', name: 'Heart', basename: 'drive' },
-  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' },
-  { id: 'Hprd00uZRoq8t0Ou1YlWMg', name: 'Oval', basename: 'drive' },
+  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' }, // chuan
+  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }, // chuan
+  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' }, // chuan, chi co sai luc viewer thoi 
+  { id: 'N1w9lJ3FQfOWsrC7jeeYfA', name: 'Oval', basename: 'drive' }, // chuan
+  { id: 'DfRULQ-OSk6TjbYAcB9zkA', name: 'Fistion', basename: 'drive' }, // chuan
+  { id: 'FWV7-qA6QEG_Ju8pjSItuA', name: 'Triology', basename: 'drive' }, // chuan
+  { id: 'QAauSV24QiuM5CxA_1797w', name: 'Myfav', basename: 'drive' }, // chuan
+  // ==============================================================================================================
+  // đang sửa
+
+  // ==============================================================================================================
+  // chịu chúa cứu, hữu duyên cứu được thì cứu
+  { id: 'YS4Zch2mShSnA-LABIS5wQ', name: 'Flower', basename: 'drive' }, // scale quá lớn cái heart có cái lỗi giống cái flower
+  { id: 'czl3wmsyTDWrV420qcKOew', name: 'Heart', basename: 'drive' }, // scale quá lớn, sai như hình gửi trong zalo, sai luôn có lúc viewer nha
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
-  { id: 'HB3RidmJSdezIO1T2hdXcQ', name: 'Flower', basename: 'drive' }, // sai hoan toan lam lai
-  { id: 'bTfEBf0fSHaflMHTd4scxw', name: 'Myfav', basename: 'drive' }, // standard
+
 ];
 
 const getModelFromURL = () => {
@@ -56,6 +63,12 @@ const Premium = () => {
   const isBackCameraRef = useRef(false);
   const isManualRotationRef = useRef(false);
 
+  // FPS counter refs
+  const fpsRef = useRef(0);
+  const frameCountRef = useRef(0);
+  const lastFpsTimeRef = useRef(performance.now());
+  const [displayFps, setDisplayFps] = useState(0);
+
   const {
     isMobile,
     updateCamera,
@@ -67,6 +80,8 @@ const Premium = () => {
   const [fileConfig, setFileConfig] = useState(null);
   const [currentFinger, setCurrentFinger] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
+  const [displayCamera, setDisplayCamera] = useState('Trước');
+  const [displayHand, setDisplayHand] = useState('Chưa detect');
 
   // Read hand detection directly from SDK (no state, no re-renders)
   const getDetectedHand = useCallback(() => {
@@ -122,6 +137,23 @@ const Premium = () => {
   const runARLoop = useCallback(() => {
     const arPlugin = arPluginRef.current;
     const viewerApp = viewerAppRef.current;
+
+    // FPS calculation + update debug info (mỗi giây 1 lần để không lag)
+    frameCountRef.current++;
+    const now = performance.now();
+    const elapsed = now - lastFpsTimeRef.current;
+    if (elapsed >= 1000) {
+      fpsRef.current = Math.round((frameCountRef.current * 1000) / elapsed);
+      setDisplayFps(fpsRef.current);
+      frameCountRef.current = 0;
+      lastFpsTimeRef.current = now;
+
+      // Update hand display
+      const hand = getDetectedHand();
+      if (hand === 0) setDisplayHand('Trái');
+      else if (hand === 1) setDisplayHand('Phải');
+      else setDisplayHand('Chưa detect');
+    }
 
     // Sync modelRoot.visible with arPlugin.visible
     // arPlugin.visible is automatically true when hand detected, false when no hand
@@ -233,9 +265,11 @@ const Premium = () => {
       if (isMobile) {
         await arPlugin.flipCamera();
         isBackCameraRef.current = true;
+        setDisplayCamera('Sau');
         updateCamera(0);
       } else {
         isBackCameraRef.current = false;
+        setDisplayCamera('Trước');
       }
 
       setInAR(true);
@@ -283,6 +317,7 @@ const Premium = () => {
     try {
       await arPlugin.flipCamera();
       isBackCameraRef.current = !isBackCameraRef.current;
+      setDisplayCamera(isBackCameraRef.current ? 'Sau' : 'Trước');
       toggleCamera();
     } catch (error) {
       console.error('Flip camera error:', error);
@@ -301,9 +336,41 @@ const Premium = () => {
     setFingerWithRotation(newFinger);
   };
 
+  // FPS color: green >= 50, yellow >= 30, red < 30
+  const getFpsColor = (fps) => {
+    if (fps >= 50) return '#00ff00';  // Xanh lá - Tốt
+    if (fps >= 30) return '#ffff00';  // Vàng - Trung bình
+    return '#ff0000';                  // Đỏ - Lag
+  };
+
+  // Finger names
+  const FINGER_NAMES = ['Cái', 'Trỏ', 'Giữa', 'Áp út', 'Út'];
+
   return (
     <div className={styles.container}>
       <div ref={containerRef} className={styles.viewerContainer} />
+
+      {/* Debug Info - chỉ hiện khi AR đang chạy */}
+      {inAR && (
+        <div className={styles.debugPanel}>
+          <div className={styles.debugRow}>
+            <span className={styles.debugLabel}>FPS:</span>
+            <span style={{ color: getFpsColor(displayFps) }}>{displayFps}</span>
+          </div>
+          <div className={styles.debugRow}>
+            <span className={styles.debugLabel}>Cam:</span>
+            <span>{displayCamera}</span>
+          </div>
+          <div className={styles.debugRow}>
+            <span className={styles.debugLabel}>Tay:</span>
+            <span>{displayHand}</span>
+          </div>
+          <div className={styles.debugRow}>
+            <span className={styles.debugLabel}>Ngón:</span>
+            <span>{FINGER_NAMES[currentFinger]}</span>
+          </div>
+        </div>
+      )}
 
       {/* SVG Filter for Liquid Glass Effect */}
       <svg className={styles.svgFilter} aria-hidden="true">

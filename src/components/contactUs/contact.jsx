@@ -17,7 +17,7 @@ const Contact = () => {
         <div className="cards-gradient-top"></div>
         <div className="contact-card">
           <MediaImage
-            src="services/img_1_section_6.jpg"
+            src="services/img_1_section_6.webp"
             alt="Live Chat"
             className="contact-image"
           />
@@ -29,7 +29,7 @@ const Contact = () => {
 
         <div className="contact-card">
           <MediaImage
-            src="services/img_2_section_6.jpg"
+            src="services/img_2_section_6.webp"
             alt="Phone Call"
             className="contact-image"
           />
@@ -45,7 +45,7 @@ const Contact = () => {
 
         <div className="contact-card">
           <MediaImage
-            src="services/img_3_section_6.jpg"
+            src="services/img_3_section_6.webp"
             alt="Email"
             className="contact-image"
           />
@@ -61,7 +61,7 @@ const Contact = () => {
 
         <div className="contact-card">
           <MediaImage
-            src="services/img_4_section_6.png"
+            src="services/img_4_section_6.webp"
             alt="Appointment"
             className="contact-image"
           />

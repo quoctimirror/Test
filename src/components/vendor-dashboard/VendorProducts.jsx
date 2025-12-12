@@ -31,7 +31,7 @@ const VendorProducts = ({ vendorInfo }) => {
   const filteredProducts = products.filter((product) => {
     return (
       product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.sku?.toLowerCase().includes(searchTerm.toLowerCase())
+      product.skuCode?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
 
@@ -91,10 +91,10 @@ const VendorProducts = ({ vendorInfo }) => {
       {/* Products Table */}
       <div className="vendor-card">
         <div className="vendor-card-header">
-          <h3 className="vendor-card-title">
+          <h3 className="vendor-card-title heading-3--no-margin">
             My Products ({filteredProducts.length})
             {vendorInfo && (
-              <span style={{ fontSize: "14px", color: "#666", fontWeight: "normal", marginLeft: "0.5rem" }}>
+              <span className="bodytext-5--no-margin" style={{ color: "#666", fontWeight: "normal", marginLeft: "0.5rem" }}>
                 - {vendorInfo.name} ({vendorInfo.code})
               </span>
             )}
@@ -154,10 +154,10 @@ const VendorProducts = ({ vendorInfo }) => {
                           padding: "2px 6px",
                           borderRadius: "4px",
                         }}>
-                          {product.sku}
+                          {product.skuCode || "N/A"}
                         </code>
                       </td>
-                      <td>{product.category?.name || "No Category"}</td>
+                      <td>{product.categoryName || "No Category"}</td>
                       <td>
                         <span style={{
                           color: product.stockQuantity <= product.minStockLevel ? "#dc3545" : "#28a745",

@@ -49,9 +49,12 @@ const SupportDetail = () => {
     }
   };
 
+  // Determine hero variant based on active tab
+  const heroVariant = activeTab === "return-exchange" ? "image" : "gradient";
+
   return (
     <>
-      <div className="support-hero-section" data-navbar-theme="white">
+      <div className={`support-hero-section support-hero-section--${heroVariant}`} data-navbar-theme="white">
         <div className="hero-content">
           <h1>Support</h1>
         </div>
@@ -66,7 +69,7 @@ const SupportDetail = () => {
                 className={`support-tab ${activeTab === tab.id ? "active" : ""}`}
                 onClick={() => handleTabClick(tab.id)}
               >
-                <span className="bodytext-4--no-margin">{tab.label}</span>
+                <span className="bodytext-6--no-margin">{tab.label}</span>
               </button>
             ))}
           </div>

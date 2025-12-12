@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import CollectionHeroSection from "./CollectionHeroSection";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import ArrowButton from "@components/common/button/ArrowButton";
 import { collectionsAPI } from "@services/api";
@@ -15,21 +15,21 @@ const products = [
   {
     id: 1,
     title: "AURORA",
-    image: "/collections/pendant.png",
+    image: "/collections/pendant.webp",
     description:
       "More than a ring, AURORA is a \ncelebration of light, geometry, and the \nfuture you're building together.",
   },
   {
     id: 2,
     title: "SOLARIS",
-    image: "/collections/ring1.png",
+    image: "/collections/ring1.webp",
     description:
       "A testament to the sun's eternal brilliance, \ncaptured in a timeless design that radiates \nwarmth and elegance.",
   },
   {
     id: 3,
     title: "LUNA",
-    image: "/collections/earings.png",
+    image: "/collections/earings.webp",
     description:
       "Capturing the serene glow of the moonlight, \nLUNA reflects a story of mystique and \nprofound beauty.",
   },
@@ -196,13 +196,13 @@ function Collection() {
                   </>
                 )}
           </div>
-          <ShineGlassButton
-            theme="footer"
+          <GlassThemeButton
+            theme="dark"
             onClick={handleExploreCollection}
             className="collection-hero-explore-button"
           >
-            Explore this collection
-          </ShineGlassButton>
+            <span className="bodytext-6--no-margin">Explore this collection</span>
+          </GlassThemeButton>
         </div>
 
         <div className="collection-content-panel full-width">
@@ -243,12 +243,12 @@ function Collection() {
               >
                 {currentProduct.title}
               </h3>
-              <ShineGlassButton
+              <GlassThemeButton
                 className="shop-now-button"
-                theme="footer"
+                theme="dark"
               >
-                Shop now
-              </ShineGlassButton>
+                <span className="bodytext-6--no-margin">Shop now</span>
+              </GlassThemeButton>
             </div>
           </div>
         </div>

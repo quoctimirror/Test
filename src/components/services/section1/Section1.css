@@ -96,7 +96,7 @@
 
   /* Override desktop gradient background with image for tablet */
   .services-section1::before {
-    background: url("__CDN_URL__/services/section_1.jpg");
+    background: url("__CDN_URL__/services/section_1.webp");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -146,7 +146,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url("__CDN_URL__/services/section_1.jpg");
+    background-image: url("__CDN_URL__/services/section_1.webp");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

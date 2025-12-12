@@ -112,12 +112,14 @@
   color: #000000;
 }
 
-.immersive-globe-btn.immersive-globe-btn--collapsed:hover .immersive-globe-btn__icon {
+.immersive-globe-btn.immersive-globe-btn--collapsed:hover
+  .immersive-globe-btn__icon {
   opacity: 0;
   transform: scale(0.5);
 }
 
-.immersive-globe-btn.immersive-globe-btn--collapsed:hover .immersive-globe-btn__text {
+.immersive-globe-btn.immersive-globe-btn--collapsed:hover
+  .immersive-globe-btn__text {
   opacity: 1;
   transform: translateX(0);
   transition-delay: 0.15s;
@@ -175,10 +177,11 @@
 /* Fixed Immersive Button Container - right side of viewport */
 .fixed-immersive-container {
   position: fixed;
-  bottom: 48px;
+  bottom: 24px;
   right: 2.5%;
   z-index: 1000;
   pointer-events: auto;
+  display: flex;
 }
 
 .fixed-immersive-container .immersive-globe-btn {

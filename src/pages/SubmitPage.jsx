@@ -1,4 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import ScrollDownArrow from "@components/common/button/ScrollDownArrow";
+import ScrollToTopArrow from "@components/common/button/ScrollToTopArrow";
+import ImmersiveButton from "@components/common/button/ImmersiveButton";
+import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
+import { useBottomTheme } from "@/hooks/useBottomTheme";
+import "@components/home-page/scrollEffect/ScrollEffect.css";
 import SmoothScroll from "@utils/smoothScroll";
 import IntroSubmit from "@components/submit/intro-submit/IntroSubmit";
 import GuideStep1 from "@components/submit/guide-step-1/GuideStep1";
@@ -10,6 +16,28 @@ import "./SubmitPage.css";
 const SubmitPage = () => {
   const progressBarRef = useRef(null);
   const smoothScrollRef = useRef(null);
+
+  const { isArrowVisible, handleArrowClick } = useScrollToNextSection({
+    footerSelector: '.footer',
+  });
+  const { theme: arrowTheme } = useBottomTheme();
+  const [isImmersiveCollapsed, setIsImmersiveCollapsed] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const handleImmersiveClick = () => {
+    console.log("Immersive button clicked");
+  };
+
+  useEffect(() => {
+    const handleScrollButtons = () => {
+      const scrollY = window.scrollY;
+      setIsImmersiveCollapsed(scrollY > 100);
+      setShowScrollTop(scrollY > 500);
+    };
+    window.addEventListener("scroll", handleScrollButtons, { passive: true });
+    handleScrollButtons();
+    return () => window.removeEventListener("scroll", handleScrollButtons);
+  }, []);
 
   useEffect(() => {
     // Initialize smooth scroll only on desktop
@@ -75,6 +103,27 @@ const SubmitPage = () => {
 
           <SubmitForm />
         </div>
+      </div>
+
+      {/* Fixed Immersive Button */}
+      <div className="fixed-immersive-container">
+        <ImmersiveButton
+          theme={arrowTheme}
+          isCollapsed={isImmersiveCollapsed}
+          onClick={handleImmersiveClick}
+        />
+      </div>
+
+      {/* Fixed Arrow Button */}
+      {isArrowVisible && (
+        <div className="fixed-arrow-container">
+          <ScrollDownArrow theme={arrowTheme} onClick={handleArrowClick} />
+        </div>
+      )}
+
+      {/* Fixed Scroll to Top Button - only show when scroll-down arrow is hidden */}
+      <div className={`fixed-scroll-top-container ${showScrollTop ? 'visible' : ''}`}>
+        <ScrollToTopArrow theme={arrowTheme} />
       </div>
     </div>
   );

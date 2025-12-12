@@ -10,6 +10,7 @@ const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
 const CollectionPage = lazy(() => import("@pages/CollectionPage"));
 const CollectionDetailPage = lazy(() => import("@pages/CollectionDetailPage"));
+const ProductDetailPage = lazy(() => import("@pages/ProductDetailPage"));
 const ServicesPage = lazy(() => import("@pages/ServicesPage"));
 const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
 const SupportPage = lazy(() => import("@pages/SupportPage"));
@@ -19,10 +20,6 @@ const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
 const UniverseSection = lazy(() =>
   import("@components/home-page/universeSection/MirrorExp.jsx")
 );
-const HoverExpandSection = lazy(() =>
-  import("@components/home-page/hoverExpandSection/HoverExpandSection.jsx")
-);
-const View360 = lazy(() => import("@components/view360/View360.jsx"));
 const ManageProducts = lazy(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
@@ -86,6 +83,22 @@ const ScavengerHunt = lazy(() =>
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const PremiumPage = lazy(() => import("@pages/PremiumPage"));
 const PremiumDevPage = lazy(() => import("@pages/PremiumDevPage"));
+const SimpleMeshInspector = lazy(() => import("@components/ijewelTryOn/quocti_dancefloor/SimpleMeshInspector"));
+
+// Event Pages
+const EventPage = lazy(() => import("@pages/Event/EventPage"));
+const EventDisplayPage = lazy(() => import("@pages/Event/EventDisplayPage"));
+const EventAdminPage = lazy(() => import("@pages/Event/EventAdminPage"));
+
+// Inventory Management
+const InventoryLayout = lazy(() => import("@components/inventory/InventoryLayout"));
+const InventoryDashboard = lazy(() => import("@components/inventory/Dashboard"));
+const InventoryScanner = lazy(() => import("@components/inventory/Scanner"));
+const InventoryProductForm = lazy(() => import("@components/inventory/ProductForm"));
+const InventoryProductList = lazy(() => import("@components/inventory/ProductList"));
+const InventoryProductDetail = lazy(() => import("@components/inventory/ProductDetail"));
+const InventoryPrintLabel = lazy(() => import("@components/inventory/PrintLabel"));
+const InventoryCreateOrder = lazy(() => import("@components/inventory/CreateOrder"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -118,9 +131,7 @@ export default function AppRoutes() {
       ROUTES.BOOK_APPOINTMENT,
       ROUTES.MILAN_SUBMIT,
       `${ROUTES.MILAN_SUBMIT}/submit-success`,
-      ROUTES.HOVER_EXPAND,
       ROUTES.PRODUCTS_LEFT,
-      ROUTES.VIEW_360,
       ROUTES.USER_PROFILE,
       ROUTES.SCAVENGER_HUNT,
       ROUTES.DASHBOARD_ADMIN_MANAGE,
@@ -129,9 +140,18 @@ export default function AppRoutes() {
       ROUTES.DASHBOARD_DESIGNER,
       ROUTES.UNIVERSE_FINAL,
       ROUTES.FORGOT_PASSWORD,
-      ROUTES.IJEWEL_AR_TRYON,
       ROUTES.PREMIUM,
       ROUTES.PREMIUM_DEV,
+      ROUTES.MESH_INSPECTOR,
+      ROUTES.EVENT,
+      ROUTES.EVENT_DISPLAY,
+      ROUTES.EVENT_ADMIN,
+      ROUTES.INVENTORY,
+      ROUTES.INVENTORY_DASHBOARD,
+      ROUTES.INVENTORY_SCANNER,
+      ROUTES.INVENTORY_ADD_PRODUCT,
+      ROUTES.INVENTORY_PRODUCTS,
+      ROUTES.INVENTORY_PRINT,
     ];
 
     // Check exact matches
@@ -140,16 +160,18 @@ export default function AppRoutes() {
     }
 
     // Check dynamic routes (with params)
+    const productDetailBase = ROUTES.PRODUCT_DETAIL.replace("/:productId", "");
     if (
       location.pathname.startsWith(ROUTES.COLLECTIONS + "/") ||
       location.pathname.startsWith(ROUTES.NEWS + "/") ||
+      location.pathname.startsWith(productDetailBase + "/") ||
       location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
       location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
-      location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
       location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
-      location.pathname.startsWith(ROUTES.MILAN_SUBMIT)
+      location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
+      location.pathname.startsWith(ROUTES.INVENTORY)
     ) {
       return false;
     }
@@ -162,24 +184,36 @@ export default function AppRoutes() {
   const staticRoutesToHideNavBar =
     is404 ||
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
-    location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
-    location.pathname === ROUTES.WELCOME;
+    location.pathname === ROUTES.HOME ||
+    location.pathname === ROUTES.WELCOME ||
+    location.pathname === ROUTES.PREMIUM ||
+    location.pathname === ROUTES.PREMIUM_DEV ||
+    location.pathname === ROUTES.MESH_INSPECTOR ||
+    location.pathname.startsWith(ROUTES.EVENT);
+    location.pathname.startsWith(ROUTES.EVENT) ||
+    location.pathname.startsWith(ROUTES.INVENTORY);
 
   const staticRoutesToHideFooter =
     is404 ||
     location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
-    location.pathname.startsWith(ROUTES.HOVER_EXPAND) ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
+    location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
+    location.pathname === ROUTES.HOME ||
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
-    location.pathname.startsWith(ROUTES.MILAN_SUBMIT);
+    location.pathname === ROUTES.PREMIUM ||
+    location.pathname === ROUTES.PREMIUM_DEV ||
+    location.pathname === ROUTES.MESH_INSPECTOR ||
+    location.pathname.startsWith(ROUTES.EVENT);
+    location.pathname.startsWith(ROUTES.EVENT) ||
+    location.pathname.startsWith(ROUTES.INVENTORY);
 
   const shouldShowNavbar = !staticRoutesToHideNavBar;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -200,7 +234,8 @@ export default function AppRoutes() {
           }
         >
           <Routes>
-            <Route path={ROUTES.HOME} element={<HomePage />} />
+            {/* Default route "/" shows WelcomePage */}
+            <Route path={ROUTES.HOME} element={<WelcomePage />} />
 
             <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
             <Route path={ROUTES.WELCOME} element={<WelcomePage />} />
@@ -224,6 +259,11 @@ export default function AppRoutes() {
             <Route
               path={ROUTES.COLLECTION_DETAIL}
               element={<CollectionDetailPage />}
+            />
+
+            <Route
+              path={ROUTES.PRODUCT_DETAIL}
+              element={<ProductDetailPage />}
             />
 
             <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
@@ -269,33 +309,28 @@ export default function AppRoutes() {
               <Route path="submit-success" element={<SubmitSuccessPage />} />
             </Route>
 
-            {/* for observing UI universe-section final */}
+  {/* for observing UI universe-section final */ }
             <Route path="/universe-section" element={<UniverseSection />} />
 
-            <Route
-              path={ROUTES.HOVER_EXPAND}
-              element={<HoverExpandSection />}
-            />
-
-            {/* Test route for ProductsLeft */}
             <Route path={ROUTES.PRODUCTS_LEFT} element={<ProductsLeft />} />
-
-            <Route path={ROUTES.VIEW_360} element={<View360 />} />
 
             <Route path={ROUTES.USER_PROFILE} element={<Profile />} />
 
-            {/* Premium AR Route */}
-            <Route path={ROUTES.PREMIUM} element={<PremiumPage />} />
+  {/* Premium AR Route */ }
+  <Route path={ROUTES.PREMIUM} element={<PremiumPage />} />
 
             {/* Premium AR Development Route */}
             <Route path={ROUTES.PREMIUM_DEV} element={<PremiumDevPage />} />
+
+            {/* Mesh Inspector Tool */}
+            <Route path={ROUTES.MESH_INSPECTOR} element={<SimpleMeshInspector />} />
 
             <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
 
             <Route
               path={ROUTES.DASHBOARD_ADMIN_MANAGE}
               element={
-                <ProtectedRoute requiredRole="ADMIN">
+                <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN", "IT_ADMIN", "PRODUCTION_OPS", "SALES_CUSTOMER_OPS", "FINANCE", "MARKETING", "CREATIVE_DESIGN", "LEGAL"]}>
                   <ManageProducts />
                 </ProtectedRoute>
               }
@@ -304,7 +339,7 @@ export default function AppRoutes() {
             <Route
               path={ROUTES.DASHBOARD_ADMIN}
               element={
-                <ProtectedRoute requiredRole="ADMIN">
+                <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN", "IT_ADMIN", "PRODUCTION_OPS", "SALES_CUSTOMER_OPS", "FINANCE", "MARKETING", "CREATIVE_DESIGN", "LEGAL"]}>
                   <AdminDashboard />
                 </ProtectedRoute>
               }
@@ -328,17 +363,35 @@ export default function AppRoutes() {
               }
             />
 
+            {/* Event Routes */}
+            <Route path={ROUTES.EVENT} element={<EventPage />} />
+            <Route path={ROUTES.EVENT_DISPLAY} element={<EventDisplayPage />} />
+            <Route path={ROUTES.EVENT_ADMIN} element={<EventAdminPage />} />
+
+            {/* Inventory Management Routes */}
+            <Route path={ROUTES.INVENTORY} element={<InventoryLayout />}>
+              <Route index element={<InventoryDashboard />} />
+              <Route path="dashboard" element={<InventoryDashboard />} />
+              <Route path="create-order" element={<InventoryCreateOrder />} />
+              <Route path="scanner" element={<InventoryScanner />} />
+              <Route path="add" element={<InventoryProductForm />} />
+              <Route path="products" element={<InventoryProductList />} />
+              <Route path="products/:id" element={<InventoryProductDetail />} />
+              <Route path="products/:id/edit" element={<InventoryProductForm isEdit={true} />} />
+              <Route path="print" element={<InventoryPrintLabel />} />
+            </Route>
+
             {/* 404 - Catch all route for non-existent paths */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
-      </main>
+      </main >
 
-      {/* Spacer to reveal footer */}
-      {shouldShowFooter && <div className="footer-reveal-spacer" />}
+    {/* Spacer to reveal footer */ }
+  { shouldShowFooter && <div className="footer-reveal-spacer" /> }
 
-      {/* Conditional Footer - Fixed at bottom */}
-      {shouldShowFooter && <Footer />}
+  {/* Conditional Footer - Fixed at bottom */ }
+  { shouldShowFooter && <Footer /> }
     </>
   );
 }

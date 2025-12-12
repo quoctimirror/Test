@@ -1,0 +1,335 @@
+/*
+ * PRODUCT OPS DASHBOARD - CSS Styles
+ * Extends AdminDashboard.css design system
+ * Uses shared CSS variables from dashboard-tokens.css
+ */
+
+@import '../../styles/dashboard-tokens.css';
+
+/* ========================================
+   PRODUCT OPS - ERROR MESSAGES
+   ======================================== */
+.product-ops-error {
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  background-color: var(--color-error-bg);
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-sm);
+  color: #991b1b;
+}
+
+/* ========================================
+   PRODUCT OPS - HEADER
+   ======================================== */
+.product-ops-header {
+  margin-bottom: var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.product-ops-header-info h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+}
+
+.product-ops-header-info p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--mirror-slate);
+}
+
+.product-ops-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.product-ops-timestamp {
+  font-size: 0.8125rem;
+  color: var(--mirror-slate);
+}
+
+/* ========================================
+   PRODUCT OPS - SUMMARY CARDS GRID
+   ======================================== */
+.product-ops-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.product-ops-summary-card {
+  padding: 1.25rem;
+}
+
+.product-ops-summary-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.product-ops-summary-card-label {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.8125rem;
+  color: var(--mirror-slate);
+  font-weight: 500;
+}
+
+.product-ops-summary-card-value {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--mirror-navy);
+}
+
+.product-ops-summary-card-value.blue {
+  color: #3b82f6;
+}
+
+.product-ops-summary-card-value.amber {
+  color: #f59e0b;
+}
+
+.product-ops-summary-card-value.green {
+  color: #10b981;
+}
+
+.product-ops-summary-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.product-ops-summary-icon.gray {
+  background-color: var(--mirror-gray-100);
+}
+
+.product-ops-summary-icon.blue {
+  background-color: #dbeafe;
+}
+
+.product-ops-summary-icon.amber {
+  background-color: #fef3c7;
+}
+
+.product-ops-summary-icon.green {
+  background-color: #dcfce7;
+}
+
+.product-ops-summary-footer {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--mirror-slate);
+}
+
+/* ========================================
+   PRODUCT OPS - FILTERS
+   ======================================== */
+.product-ops-filters {
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.product-ops-filters-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.product-ops-search {
+  flex: 1 1 300px;
+  min-width: 200px;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.product-ops-search input {
+  flex: 1;
+}
+
+.product-ops-status-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.product-ops-status-filter label {
+  margin: 0;
+}
+
+.product-ops-results-count {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--mirror-slate);
+  font-weight: 500;
+}
+
+/* ========================================
+   PRODUCT OPS - PRODUCTS LIST
+   ======================================== */
+.product-ops-products-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.product-ops-product-card {
+  padding: 1.25rem;
+}
+
+.product-ops-product-header {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.product-ops-product-header.expanded {
+  margin-bottom: var(--space-lg);
+}
+
+.product-ops-thumbnail {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  background-color: var(--mirror-gray-100);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.product-ops-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-ops-product-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.product-ops-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.product-ops-product-name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ========================================
+   PRODUCT OPS - STATUS BADGES
+   ======================================== */
+.product-ops-status-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.product-ops-status-badge.draft {
+  background-color: var(--mirror-gray-200);
+  color: var(--mirror-gray-600);
+}
+
+.product-ops-status-badge.in-progress {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.product-ops-status-badge.ready {
+  background-color: #fef3c7;
+  color: #854d0e;
+}
+
+.product-ops-status-badge.published {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+/* ========================================
+   PRODUCT OPS - SKU INFO
+   ======================================== */
+.product-ops-sku-row {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.product-ops-sku-item {
+  font-size: 0.8125rem;
+}
+
+.product-ops-sku-label {
+  color: var(--mirror-slate);
+}
+
+.product-ops-sku-value {
+  color: var(--mirror-navy);
+  font-weight: 500;
+}
+
+/* ========================================
+   PRODUCT OPS - WORKFLOW
+   ======================================== */
+.product-ops-workflow-compact {
+  margin-bottom: 0.75rem;
+}
+
+/* ========================================
+   PRODUCT OPS - ACTIONS
+   ======================================== */
+.product-ops-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.product-ops-actions .admin-button {
+  font-size: 0.8125rem;
+  padding: 0.5rem 1rem;
+}
+
+/* ========================================
+   PRODUCT OPS - EXPANDED VIEW
+   ======================================== */
+.product-ops-expanded {
+  border-top: 1px solid var(--mirror-gray-200);
+  padding-top: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+/* ========================================
+   PRODUCT OPS - EMPTY STATE
+   ======================================== */
+.product-ops-empty h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+  margin-bottom: 0.5rem;
+}
+
+.product-ops-empty p {
+  font-size: 0.875rem;
+  color: var(--mirror-slate);
+  margin: 0;
+}

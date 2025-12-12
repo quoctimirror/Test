@@ -15,7 +15,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden; /* Keep for desktop */
+  overflow: hidden; /* Allow lumex91 video-box to show above */
   box-sizing: border-box;
 }
 

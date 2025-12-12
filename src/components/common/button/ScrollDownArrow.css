@@ -38,7 +38,7 @@
   height: 26px;
 }
 
-/* Bounce arrow animation */
+/* Bounce arrow animation - moves downward to indicate scroll down */
 @keyframes bounce-arrow {
   0%,
   20%,
@@ -48,10 +48,10 @@
     transform: translateY(0);
   }
   40% {
-    transform: translateY(-10px);
+    transform: translateY(10px);
   }
   60% {
-    transform: translateY(-5px);
+    transform: translateY(5px);
   }
 }
 
@@ -161,14 +161,11 @@
 
 /* Tablet and Mobile (768px and below) */
 @media (max-width: 768px) {
-  .scroll-down-arrow__icon {
-    width: 22px;
-    height: 22px;
+  .scroll-down-arrow {
+    width: 48px !important;
+    height: 48px !important;
   }
-}
 
-/* Mobile (480px and below) */
-@media (max-width: 480px) {
   .scroll-down-arrow__icon {
     width: 20px;
     height: 20px;

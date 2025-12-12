@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import MediaImage from "@components/common/media/MediaImage";
 import "./NewCutComponent.css";
 
@@ -40,6 +40,11 @@ const NewCutComponent = () => {
     };
 
     const handleScroll = () => {
+      // Skip scroll handling when body is fixed (menu is open)
+      if (document.body.style.position === "fixed") {
+        return;
+      }
+
       const scrolled = window.pageYOffset;
       const windowHeight = window.innerHeight;
       const scrollDirection = scrolled > lastScrollPosition ? "down" : "up";
@@ -52,6 +57,9 @@ const NewCutComponent = () => {
 
         heroRef.current.style.opacity = opacity;
         heroRef.current.style.transform = `scale(${scale})`;
+        // Use pointer-events instead of visibility to not affect theme detection
+        heroRef.current.style.pointerEvents =
+          scrolled >= windowHeight ? "none" : "auto";
 
         // Keep background layer visible ONLY when in hero section to block footer
         if (backgroundLayerRef.current) {
@@ -132,7 +140,7 @@ const NewCutComponent = () => {
             </p>
           </div>
           <div className="new-cut-hero-image">
-            <MediaImage src="news/lumex_91.png" alt="Lumex-9 Ring" />
+            <MediaImage src="news/lumex_91.webp" alt="Lumex-9 Ring" />
           </div>
         </div>
       </section>

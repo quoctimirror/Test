@@ -32,15 +32,13 @@ export const ROUTES = {
   NEWS: "/d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a",
   NEWS_DETAIL: "/d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a/:slug",
   ALL_GEMS: "/c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+  PRODUCT_DETAIL: "/f4g5h6i7-j8k9-0l1m-2n3o-4p5q6r7s8t9u/:productId",
   USER_PROFILE: "/e1f2a3b4-c5d6-7e8f-9a0b-1c2d3e4f5a6b",
   PREMIUM: "/premium", // Premium AR Try-On
   PREMIUM_DEV: "/premium-dev", // Premium AR Development
-
-  // Test routes
+  MESH_INSPECTOR: "/mesh-inspector", // 3D Mesh Inspector Tool
   PRODUCTS_V2: "/7b8e9f0a-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
   PRODUCTS_LEFT: "/4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
-  VIEW_360: "/6c7d8e9f-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
-  HOVER_EXPAND: "/2a5f8c9d-4e3b-4a1c-9f7e-8d6c5b4a3e2f",
   UNIVERSE_FINAL: "/1f2e3d4c-5b6a-7c8d-9e0f-1a2b3c4d5e6f",
   NEWS_V2: "/5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
 
@@ -49,6 +47,22 @@ export const ROUTES = {
   DASHBOARD_ADMIN_MANAGE: "/dashboard/admin/manage-products",
   DASHBOARD_VENDOR: "/dashboard/vendor",
   DASHBOARD_DESIGNER: "/dashboard/designer",
+
+  // Event routes
+  EVENT: "/event",
+  EVENT_DISPLAY: "/event/display",
+  EVENT_ADMIN: "/event/admin",
+
+  // Inventory Management routes
+  INVENTORY: "/inventory",
+  INVENTORY_DASHBOARD: "/inventory/dashboard",
+  INVENTORY_SCANNER: "/inventory/scanner",
+  INVENTORY_ADD_PRODUCT: "/inventory/add",
+  INVENTORY_PRODUCTS: "/inventory/products",
+  INVENTORY_PRODUCT_DETAIL: "/inventory/products/:id",
+  INVENTORY_PRODUCT_EDIT: "/inventory/products/:id/edit",
+  INVENTORY_PRINT: "/inventory/print",
+  INVENTORY_CREATE_ORDER: "/inventory/create-order",
 };
 
 // Helper to get collection detail route with ID
@@ -59,4 +73,19 @@ export const getCollectionDetailRoute = (collectionId) => {
 // Helper to get news detail route with slug
 export const getNewsDetailRoute = (slug) => {
   return ROUTES.NEWS_DETAIL.replace(":slug", slug);
+};
+
+// Helper to get product detail route with ID
+export const getProductDetailRoute = (productId) => {
+  return ROUTES.PRODUCT_DETAIL.replace(":productId", productId);
+};
+
+// Helper to get inventory product detail route
+export const getInventoryProductDetailRoute = (id) => {
+  return ROUTES.INVENTORY_PRODUCT_DETAIL.replace(":id", id);
+};
+
+// Helper to get inventory product edit route
+export const getInventoryProductEditRoute = (id) => {
+  return ROUTES.INVENTORY_PRODUCT_EDIT.replace(":id", id);
 };

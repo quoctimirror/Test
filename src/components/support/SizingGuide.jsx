@@ -81,7 +81,7 @@ const SizingGuide = () => {
 
         <div className="size-chart">
           <MediaImage
-            src="support/support.png"
+            src="support/support.webp"
             alt="Ring Size Chart"
             className="chart-image"
           />

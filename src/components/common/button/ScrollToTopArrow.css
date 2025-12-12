@@ -1,0 +1,183 @@
+/* Scroll to top arrow button with glass surface effect */
+.scroll-to-top-arrow {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scroll-to-top-arrow:hover {
+  transform: translateY(-2px);
+}
+
+.scroll-to-top-arrow:active {
+  transform: translateY(0);
+}
+
+/* SVG Filter - hidden but functional */
+.scroll-to-top-arrow__filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Arrow icon */
+.scroll-to-top-arrow__icon {
+  position: relative;
+  z-index: 2;
+  width: 26px;
+  height: 26px;
+}
+
+
+/* ========================================
+   SVG FILTER SUPPORTED
+======================================== */
+.scroll-to-top-arrow--svg {
+  backdrop-filter: var(--filter-id);
+  -webkit-backdrop-filter: var(--filter-id);
+  background: rgba(255, 255, 255, 0.05);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   FALLBACK (Safari/Firefox)
+======================================== */
+.scroll-to-top-arrow--fallback {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Hover states */
+.scroll-to-top-arrow--svg:hover,
+.scroll-to-top-arrow--fallback:hover {
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========================================
+   THEME SYSTEM
+======================================== */
+
+/* ========== BLEND THEME (Default) ========== */
+.scroll-to-top-arrow--blend {
+  mix-blend-mode: difference;
+  color: #ffffff;
+}
+
+/* ========== WHITE THEME ========== */
+.scroll-to-top-arrow--white {
+  mix-blend-mode: normal;
+  color: #ffffff;
+}
+
+.scroll-to-top-arrow--white.scroll-to-top-arrow--svg,
+.scroll-to-top-arrow--white.scroll-to-top-arrow--fallback {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.scroll-to-top-arrow--white:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========== BLACK THEME ========== */
+.scroll-to-top-arrow--black {
+  mix-blend-mode: normal;
+  color: #000000;
+}
+
+.scroll-to-top-arrow--black.scroll-to-top-arrow--svg,
+.scroll-to-top-arrow--black.scroll-to-top-arrow--fallback {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.scroll-to-top-arrow--black:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   FOCUS STATE
+======================================== */
+.scroll-to-top-arrow:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+.scroll-to-top-arrow--black:focus-visible {
+  outline-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================
+   FIXED CONTAINER - positioned above ImmersiveButton
+======================================== */
+.fixed-scroll-top-container {
+  position: fixed;
+  bottom: 90px; /* 24px (immersive bottom) + 54px (immersive height) + 12px (gap) */
+  right: 2.5%;
+  z-index: 1000;
+  pointer-events: auto;
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.fixed-scroll-top-container.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fixed-scroll-top-container .scroll-to-top-arrow {
+  position: static;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+/* Tablet and Mobile (768px and below) */
+@media (max-width: 768px) {
+  .scroll-to-top-arrow {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .scroll-to-top-arrow__icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .fixed-scroll-top-container {
+    bottom: 84px; /* 24px + 48px + 12px */
+  }
+}

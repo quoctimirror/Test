@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Package, DollarSign, Calendar, CheckCircle, Clock, AlertCircle, FileText } from 'lucide-react';
+import { SkeletonStatsGrid, SkeletonTable } from './Skeleton';
 
 const PurchaseOrderSummary = () => {
   const [orders, setOrders] = useState([]);
@@ -69,14 +69,14 @@ const PurchaseOrderSummary = () => {
     statusFilter === 'ALL' || order.status === statusFilter
   );
 
-  const getStatusConfig = (status) => {
+  const getStatusStyle = (status) => {
     const configs = {
-      DRAFT: { color: 'bg-gray-100 text-gray-800', icon: FileText },
-      PENDING: { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-      APPROVED: { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-      IN_TRANSIT: { color: 'bg-blue-100 text-blue-800', icon: Package },
-      DELIVERED: { color: 'bg-purple-100 text-purple-800', icon: CheckCircle },
-      CANCELLED: { color: 'bg-red-100 text-red-800', icon: AlertCircle }
+      DRAFT: { backgroundColor: '#f1f5f9', color: '#475569' },
+      PENDING: { backgroundColor: '#fef3c7', color: '#854d0e' },
+      APPROVED: { backgroundColor: '#dcfce7', color: '#166534' },
+      IN_TRANSIT: { backgroundColor: '#dbeafe', color: '#1e40af' },
+      DELIVERED: { backgroundColor: '#f3e8ff', color: '#6b21a8' },
+      CANCELLED: { backgroundColor: '#fee2e2', color: '#991b1b' }
     };
     return configs[status] || configs.PENDING;
   };
@@ -106,169 +106,161 @@ const PurchaseOrderSummary = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      <div className="purchase-orders-summary">
+        <SkeletonStatsGrid count={4} className="admin-mb-lg" />
+        <div className="admin-card">
+          <div className="admin-section-header">
+            <div className="skeleton" style={{ width: '180px', height: '1.25rem' }} />
+          </div>
+          <SkeletonTable rows={5} columns={7} />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="purchase-order-summary">
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Info Banner */}
-        {orders.some(o => o.id.includes(Date.now().toString().substring(0, 8))) && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-start gap-3">
-              <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5" />
-              <div>
-                <h3 className="font-semibold text-blue-900">Purchase Orders Created!</h3>
-                <p className="text-sm text-blue-700 mt-1">
-                  Your vendor selections from the Vendor Selection Wizard have been converted into purchase orders below.
-                  Orders marked as "NEW" are ready for review and approval.
-                </p>
-              </div>
-            </div>
+    <div>
+      {/* Header */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ margin: 0, fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+          Purchase Orders
+        </h1>
+      </div>
+
+      {/* Info Banner */}
+      {orders.some(o => o.id.includes(Date.now().toString().substring(0, 8))) && (
+        <div className="admin-card" style={{ padding: '1rem', marginBottom: '1.5rem', backgroundColor: '#eff6ff', borderLeft: '3px solid #3b82f6' }}>
+          <h3 style={{ margin: '0 0 0.375rem 0', fontWeight: '600', fontSize: '0.875rem', color: '#1e40af' }}>Purchase Orders Created!</h3>
+          <p style={{ margin: 0, fontSize: '0.8125rem', color: '#1e40af' }}>
+            Your vendor selections from the Vendor Selection Wizard have been converted into purchase orders below.
+            Orders marked as "NEW" are ready for review and approval.
+          </p>
+        </div>
+      )}
+
+      {/* Stats Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div className="admin-card" style={{ padding: '1.5rem' }}>
+          <p style={{ margin: '0 0 0.375rem 0', fontSize: '0.75rem', color: '#64748b', fontWeight: '500' }}>Total Orders</p>
+          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700', color: '#0f172a' }}>{stats.total}</p>
+        </div>
+
+        <div className="admin-card" style={{ padding: '1.5rem' }}>
+          <p style={{ margin: '0 0 0.375rem 0', fontSize: '0.75rem', color: '#64748b', fontWeight: '500' }}>Total Value</p>
+          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700', color: '#0f172a' }}>{formatCurrency(stats.totalAmount)}</p>
+        </div>
+
+        <div className="admin-card" style={{ padding: '1.5rem' }}>
+          <p style={{ margin: '0 0 0.375rem 0', fontSize: '0.75rem', color: '#64748b', fontWeight: '500' }}>Pending</p>
+          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700', color: '#0f172a' }}>{stats.pending}</p>
+        </div>
+
+        <div className="admin-card" style={{ padding: '1.5rem' }}>
+          <p style={{ margin: '0 0 0.375rem 0', fontSize: '0.75rem', color: '#64748b', fontWeight: '500' }}>In Transit</p>
+          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700', color: '#0f172a' }}>{stats.inTransit}</p>
+        </div>
+      </div>
+
+      {/* Filter */}
+      <div className="admin-card" style={{ padding: '1rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <label className="admin-label" style={{ margin: 0 }}>Status:</label>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="admin-select"
+          >
+            {statuses.map(status => (
+              <option key={status} value={status}>{status}</option>
+            ))}
+          </select>
+          <div style={{ marginLeft: 'auto', fontSize: '0.875rem', color: '#64748b', fontWeight: '500' }}>
+            {filteredOrders.length} orders
+          </div>
+        </div>
+      </div>
+
+      {/* Orders Table */}
+      <div className="admin-card" style={{ padding: 0, overflow: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f8fafb', borderBottom: '1px solid #e2e8f0' }}>
+              <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>
+                Order ID
+              </th>
+              <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>
+                Vendor
+              </th>
+              <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>
+                Items
+              </th>
+              <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>
+                Amount
+              </th>
+              <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>
+                Order Date
+              </th>
+              <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>
+                Expected Delivery
+              </th>
+              <th style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredOrders.map((order) => {
+              const isNew = order.id.includes(Date.now().toString().substring(0, 8));
+              return (
+                <tr key={order.id} style={{
+                  borderBottom: '1px solid #e2e8f0',
+                  backgroundColor: isNew ? '#eff6ff' : '#ffffff',
+                  borderLeft: isNew ? '3px solid #3b82f6' : 'none'
+                }}>
+                  <td style={{ padding: '1rem 1.5rem', fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a', whiteSpace: 'nowrap' }}>
+                    {order.id}
+                    {isNew && <span style={{ marginLeft: '0.5rem', padding: '0.25rem 0.5rem', fontSize: '0.6875rem', backgroundColor: '#3b82f6', color: '#ffffff', borderRadius: '12px', fontWeight: '600' }}>NEW</span>}
+                  </td>
+                  <td style={{ padding: '1rem 1.5rem', fontSize: '0.8125rem', color: '#0f172a', whiteSpace: 'nowrap' }}>
+                    {order.vendorName}
+                  </td>
+                  <td style={{ padding: '1rem 1.5rem', fontSize: '0.8125rem', color: '#0f172a', whiteSpace: 'nowrap' }}>
+                    {order.itemCount} items
+                  </td>
+                  <td style={{ padding: '1rem 1.5rem', fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a', whiteSpace: 'nowrap' }}>
+                    {formatCurrency(order.totalAmount)}
+                  </td>
+                  <td style={{ padding: '1rem 1.5rem', fontSize: '0.8125rem', color: '#64748b', whiteSpace: 'nowrap' }}>
+                    {new Date(order.orderDate).toLocaleDateString()}
+                  </td>
+                  <td style={{ padding: '1rem 1.5rem', fontSize: '0.8125rem', color: '#64748b', whiteSpace: 'nowrap' }}>
+                    {new Date(order.expectedDelivery).toLocaleDateString()}
+                  </td>
+                  <td style={{ padding: '1rem 1.5rem', whiteSpace: 'nowrap' }}>
+                    <span style={{
+                      padding: '0.25rem 0.75rem',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      borderRadius: '12px',
+                      ...getStatusStyle(order.status)
+                    }}>
+                      {order.status}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+
+        {filteredOrders.length === 0 && (
+          <div className="admin-empty-state">
+            <h3 style={{ fontSize: '1rem', fontWeight: '600', color: '#0f172a', marginBottom: '0.5rem' }}>No orders found</h3>
+            <p style={{ fontSize: '0.875rem', color: '#64748b', margin: 0 }}>
+              Try selecting a different status filter.
+            </p>
           </div>
         )}
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <Package className="h-8 w-8 text-blue-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Total Orders</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.total}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <DollarSign className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Total Value</p>
-                <p className="text-2xl font-semibold text-gray-900">{formatCurrency(stats.totalAmount)}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <Clock className="h-8 w-8 text-yellow-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Pending</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.pending}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <Package className="h-8 w-8 text-purple-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">In Transit</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats.inTransit}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filter */}
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700">Status:</label>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {statuses.map(status => (
-                <option key={status} value={status}>{status}</option>
-              ))}
-            </select>
-            <div className="ml-auto text-sm text-gray-600">
-              {filteredOrders.length} orders
-            </div>
-          </div>
-        </div>
-
-        {/* Orders Table */}
-        <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Order ID
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Vendor
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Items
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Order Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Expected Delivery
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredOrders.map((order) => {
-                const statusConfig = getStatusConfig(order.status);
-                const StatusIcon = statusConfig.icon;
-                const isNew = order.id.includes(Date.now().toString().substring(0, 8)); // Check if created today
-                return (
-                  <tr key={order.id} className={`hover:bg-gray-50 ${isNew ? 'bg-blue-50 border-l-4 border-blue-500' : ''}`}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {order.id}
-                      {isNew && <span className="ml-2 px-2 py-1 text-xs bg-blue-600 text-white rounded-full">NEW</span>}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {order.vendorName}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {order.itemCount} items
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {formatCurrency(order.totalAmount)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(order.orderDate).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(order.expectedDelivery).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-3 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${statusConfig.color}`}>
-                        <StatusIcon size={12} />
-                        {order.status}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-
-          {filteredOrders.length === 0 && (
-            <div className="text-center py-12">
-              <Package className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
-              <p className="text-sm text-gray-500">
-                Try selecting a different status filter.
-              </p>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

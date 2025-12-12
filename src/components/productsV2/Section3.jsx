@@ -302,25 +302,25 @@ const Section3 = () => {
               <React.Fragment key={setIndex}>
                 <div className="pv2-section3-carousel-item">
                   <MediaImage
-                    src="products/placeholder1.png"
+                    src="products/placeholder1.webp"
                     alt="Product Image 1"
                   />
                 </div>
                 <div className="pv2-section3-carousel-item">
                   <MediaImage
-                    src="products/placeholder2.png"
+                    src="products/placeholder2.webp"
                     alt="Product Image 2"
                   />
                 </div>
                 <div className="pv2-section3-carousel-item">
                   <MediaImage
-                    src="products/placeholder3.png"
+                    src="products/placeholder3.webp"
                     alt="Product Image 3"
                   />
                 </div>
                 <div className="pv2-section3-carousel-item">
                   <MediaImage
-                    src="products/placeholder4.png"
+                    src="products/placeholder4.webp"
                     alt="Product Image 4"
                   />
                 </div>

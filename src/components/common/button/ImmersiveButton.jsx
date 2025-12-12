@@ -18,7 +18,11 @@ const ImmersiveButton = ({
 }) => {
   return (
     <button
-      className={`immersive-globe-btn immersive-globe-btn--${theme} ${isCollapsed ? 'immersive-globe-btn--collapsed' : 'immersive-globe-btn--expanded'} ${className}`}
+      className={`immersive-globe-btn immersive-globe-btn--${theme} ${
+        isCollapsed
+          ? "immersive-globe-btn--collapsed"
+          : "immersive-globe-btn--expanded"
+      } ${className}`}
       aria-label="Immersive Showroom"
       onClick={onClick}
       {...props}
@@ -42,7 +46,9 @@ const ImmersiveButton = ({
           strokeLinecap="round"
         />
       </svg>
-      <span className="immersive-globe-btn__text bodytext-4--no-margin">Immersive Showroom</span>
+      <span className="immersive-globe-btn__text bodytext-6--no-margin">
+        Immersive Showroom
+      </span>
     </button>
   );
 };

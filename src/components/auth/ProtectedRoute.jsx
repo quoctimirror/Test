@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { ROUTES } from '@/constants/routes';
 
-const ProtectedRoute = ({ children, requiredRole = null }) => {
+const ProtectedRoute = ({ children, requiredRole = null, allowedRoles = null }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
@@ -24,8 +24,19 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
     return <Navigate to={ROUTES.AUTH_LOGIN} state={{ from: location }} replace />;
   }
 
-  // Check role-based access if required
-  if (requiredRole && (!user?.roles || !user.roles.includes(requiredRole))) {
+  // Check role-based access
+  // If allowedRoles array is provided, check if user has any of those roles
+  // Otherwise, fall back to single requiredRole check
+  const userRoles = user?.roles || [];
+  let hasAccess = true;
+
+  if (allowedRoles && allowedRoles.length > 0) {
+    hasAccess = userRoles.some(role => allowedRoles.includes(role));
+  } else if (requiredRole) {
+    hasAccess = userRoles.includes(requiredRole);
+  }
+
+  if (!hasAccess) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -46,8 +57,10 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h2>
           <p className="text-gray-600 mb-4">
-            You don't have permission to access this page. 
-            {requiredRole && ` This page requires ${requiredRole} role.`}
+            You don't have permission to access this page.
+            {allowedRoles && allowedRoles.length > 0
+              ? ` This page requires one of these roles: ${allowedRoles.join(', ')}.`
+              : requiredRole && ` This page requires ${requiredRole} role.`}
           </p>
           <p className="text-sm text-gray-500">
             Current role: {user?.roles ? user.roles.join(', ') : 'No role assigned'}

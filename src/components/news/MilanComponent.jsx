@@ -66,6 +66,11 @@ const MilanComponent = () => {
     };
 
     const handleScroll = () => {
+      // Skip scroll handling when body is fixed (menu is open)
+      if (document.body.style.position === 'fixed') {
+        return;
+      }
+
       const scrolled = window.pageYOffset;
       const windowHeight = window.innerHeight;
       const scrollDirection = scrolled > lastScrollPosition ? "down" : "up";
@@ -78,6 +83,8 @@ const MilanComponent = () => {
 
         heroRef.current.style.opacity = opacity;
         heroRef.current.style.transform = `scale(${scale})`;
+        // Use pointer-events instead of visibility to not affect theme detection
+        heroRef.current.style.pointerEvents = scrolled >= windowHeight ? 'none' : 'auto';
 
         // Keep background layer visible ONLY when in hero section to block footer
         if (backgroundLayerRef.current) {
@@ -757,7 +764,7 @@ const MilanComponent = () => {
           </div>
           <div className="milan-hero-image">
             <MediaImage
-              src="news/milan/milan_news_1.png"
+              src="news/milan/milan_news_1.webp"
               alt="Digital Jewelry Week Milan"
             />
           </div>
@@ -782,7 +789,7 @@ const MilanComponent = () => {
           {/* Feature Image 1 */}
           <div className="milan-feature-image col-8 col-start-3">
             <MediaImage
-              src="news/milan/milan_news_2.png"
+              src="news/milan/milan_news_2.webp"
               alt="Digital Jewelry Experience"
             />
           </div>
@@ -820,25 +827,25 @@ const MilanComponent = () => {
                 <React.Fragment key={setIndex}>
                   <div className="milan-carousel-item">
                     <MediaImage
-                      src="news/milan/milan_news_3.png"
+                      src="news/milan/milan_news_3.webp"
                       alt="Milan Experience 1"
                     />
                   </div>
                   <div className="milan-carousel-item">
                     <MediaImage
-                      src="news/milan/milan_news_4.png"
+                      src="news/milan/milan_news_4.webp"
                       alt="Milan Experience 2"
                     />
                   </div>
                   <div className="milan-carousel-item">
                     <MediaImage
-                      src="news/milan/milan_news_5.png"
+                      src="news/milan/milan_news_5.webp"
                       alt="Milan Experience 3"
                     />
                   </div>
                   <div className="milan-carousel-item">
                     <MediaImage
-                      src="news/milan/milan_news_6.png"
+                      src="news/milan/milan_news_6.webp"
                       alt="Milan Experience 4"
                     />
                   </div>
@@ -882,19 +889,19 @@ const MilanComponent = () => {
                 <React.Fragment key={setIndex}>
                   <div className="milan-large-carousel-item">
                     <MediaImage
-                      src="news/milan/milan_news_7.png"
+                      src="news/milan/milan_news_7.webp"
                       alt="Exhibition Space 1"
                     />
                   </div>
                   <div className="milan-large-carousel-item">
                     <MediaImage
-                      src="news/milan/milan_news_8.png"
+                      src="news/milan/milan_news_8.webp"
                       alt="Exhibition Space 2"
                     />
                   </div>
                   <div className="milan-large-carousel-item">
                     <MediaImage
-                      src="news/milan/milan_news_9.png"
+                      src="news/milan/milan_news_9.webp"
                       alt="Exhibition Space 3"
                     />
                   </div>
@@ -922,7 +929,7 @@ const MilanComponent = () => {
           {/* Final Image */}
           <div className="milan-final-image col-8 col-start-3">
             <MediaImage
-              src="news/milan/milan_news_10.png"
+              src="news/milan/milan_news_10.webp"
               alt="Digital Jewelry Week Milan 2025"
             />
           </div>

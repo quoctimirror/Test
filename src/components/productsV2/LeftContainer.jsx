@@ -11,7 +11,7 @@ const LeftContainer = ({ productConfig }) => {
             <Section1 productConfig={productConfig} />
             <Section2 />
             <Section3 />
-            <OneImageLayout imageName="placeholder4.png" />
+            <OneImageLayout imageName="placeholder4.webp" />
         </div>
     );
 };

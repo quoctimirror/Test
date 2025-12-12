@@ -59,7 +59,7 @@ const NewsItemV2 = ({ item }) => {
           )}
           <UnderlineButton
             className="news-item-v2-button"
-            textClassName="bodytext-4--no-margin"
+            textClassName="bodytext-6--no-margin"
           >
             Discover
           </UnderlineButton>

@@ -173,16 +173,16 @@
 }
 
 /* Indent nested service items */
-.service-item .service-item {
+.sd-service-item .sd-service-item {
   padding-left: 20px;
 }
 
 /* Indent repair services list items */
-.service-item ul {
+.sd-service-item ul {
   padding-left: 40px;
 }
 
-.service-item h4 {
+.sd-service-item h4 {
   font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, sans-serif;
   font-weight: 500;
@@ -192,19 +192,19 @@
   margin-bottom: 16px;
 }
 
-.service-item ul {
+.sd-service-item ul {
   margin: 16px 0;
   padding-left: 20px;
   list-style: none;
 }
 
-.service-item ul li {
+.sd-service-item ul li {
   margin-bottom: 12px;
   position: relative;
   padding-left: 0px;
 }
 
-.service-item ul li::before {
+.sd-service-item ul li::before {
   content: "•";
   position: absolute;
   left: -13px;

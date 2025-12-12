@@ -40,11 +40,11 @@ const ServicesDetailPage = () => {
   const getHeroImage = () => {
     switch (activeTab) {
       case "product-care-repair":
-        return getImageUrl("services/Product care & Repair_1920x600.jpg");
+        return getImageUrl("services/Product care & Repair_1920x600.webp");
       case "trade-in-upgrade":
-        return getImageUrl("services/Trade in_1920x600.jpg");
+        return getImageUrl("services/Trade in_1920x600.webp");
       default:
-        return getImageUrl("services/service_detail_img.jpg");
+        return getImageUrl("services/service_detail_img.webp");
     }
   };
 
@@ -78,7 +78,7 @@ const ServicesDetailPage = () => {
               className={`services-detail-tab ${activeTab === tab.id ? "active" : ""}`}
               onClick={() => handleTabClick(tab.id)}
             >
-              <span className="bodytext-4--no-margin">{tab.label}</span>
+              <span className="bodytext-6--no-margin">{tab.label}</span>
             </button>
           ))}
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit2, Trash2, Building2, MapPin, CreditCard, Package, ShoppingCart, Eye, Clock, DollarSign, Globe } from 'lucide-react';
 import { vendorsAPI, handleAPIError } from '@services/api';
+import { SkeletonStatsGrid, SkeletonTable } from './Skeleton';
 
 // Vendor Type Constants
 const VendorType = {
@@ -137,252 +137,191 @@ const VendorsManager = () => {
     return labels[type] || type;
   };
 
+  const getVendorTypeClass = (type) => {
+    const classes = {
+      [VendorType.BOTH]: 'vendor-type-both',
+      [VendorType.PARTS_ONLY]: 'vendor-type-parts',
+      [VendorType.WHOLE_PIECE_ONLY]: 'vendor-type-whole'
+    };
+    return classes[type] || 'vendor-type-parts';
+  };
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      <div className="vendors-manager">
+        <div className="admin-card admin-p-lg admin-mb-lg">
+          <SkeletonStatsGrid count={4} />
+        </div>
+        <div className="admin-card">
+          <div className="admin-section-header">
+            <div className="skeleton" style={{ width: '150px', height: '1.25rem' }} />
+          </div>
+          <SkeletonTable rows={5} columns={7} />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Vendor Management
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                Manage your jewelry suppliers and vendor relationships
-              </p>
-            </div>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-            >
-              <Plus size={20} />
-              Add New Vendor
-            </button>
+    <div className="vendors-manager">
+      {/* Header Controls */}
+      <div className="admin-card admin-p-lg admin-mb-lg">
+        <div className="admin-page-header admin-mb-lg">
+          <div>
+            <h1 className="admin-header-title">Vendor Management</h1>
+            <p className="admin-header-subtitle">
+              Manage your jewelry suppliers and vendor relationships
+            </p>
+          </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="admin-button admin-button-primary"
+          >
+            Add New Vendor
+          </button>
+        </div>
+
+        {/* Filters */}
+        <div className="admin-flex-wrap">
+          <input
+            type="text"
+            placeholder="Search vendors by name, code, or country..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="admin-input admin-input-flex"
+          />
+          <select
+            value={selectedCountryFilter}
+            onChange={(e) => setSelectedCountryFilter(e.target.value)}
+            className="admin-select admin-select-fixed"
+          >
+            <option value="">All Countries</option>
+            {getUniqueCountries().map(country => (
+              <option key={country} value={country}>{country}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="admin-stats-grid">
+        <div className="admin-card admin-p-lg">
+          <div>
+            <p className="admin-stat-label">Total Vendors</p>
+            <p className="admin-stat-value">{vendors.length}</p>
+          </div>
+        </div>
+
+        <div className="admin-card admin-p-lg">
+          <div>
+            <p className="admin-stat-label">Countries</p>
+            <p className="admin-stat-value">{getUniqueCountries().length}</p>
+          </div>
+        </div>
+
+        <div className="admin-card admin-p-lg">
+          <div>
+            <p className="admin-stat-label">Avg Product Cost</p>
+            <p className="admin-stat-value">
+              {formatCurrency(
+                vendors.reduce((sum, v) => sum + (v.avgProductCost || 0), 0) / (vendors.length || 1)
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div className="admin-card admin-p-lg">
+          <div>
+            <p className="admin-stat-label">Avg Lead Time</p>
+            <p className="admin-stat-value">
+              {Math.round(
+                vendors.reduce((sum, v) => sum + (v.productionLeadTimeDays || 0), 0) / (vendors.length || 1)
+              )} days
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search vendors by name, code, or country..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-            <div className="w-full md:w-48">
-              <select
-                value={selectedCountryFilter}
-                onChange={(e) => setSelectedCountryFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">All Countries</option>
-                {getUniqueCountries().map(country => (
-                  <option key={country} value={country}>{country}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+      {/* Vendors Table */}
+      <div className="admin-card">
+        <div className="admin-section-header">
+          <h2>Vendors ({filteredVendors.length})</h2>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <Building2 className="h-8 w-8 text-blue-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Total Vendors</p>
-                <p className="text-2xl font-semibold text-gray-900">{vendors.length}</p>
-              </div>
-            </div>
+        {filteredVendors.length === 0 ? (
+          <div className="admin-empty-state">
+            {searchQuery || selectedCountryFilter
+              ? 'No vendors found. Try adjusting your search criteria.'
+              : 'No vendors found. Get started by adding your first vendor.'}
           </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <MapPin className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Countries</p>
-                <p className="text-2xl font-semibold text-gray-900">{getUniqueCountries().length}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <Package className="h-8 w-8 text-purple-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Avg Product Cost</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {formatCurrency(
-                    vendors.reduce((sum, v) => sum + (v.avgProductCost || 0), 0) / (vendors.length || 1)
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center">
-              <Clock className="h-8 w-8 text-orange-600" />
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Avg Lead Time</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {Math.round(
-                    vendors.reduce((sum, v) => sum + (v.productionLeadTimeDays || 0), 0) / (vendors.length || 1)
-                  )} days
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Vendors Table */}
-        <div className="bg-white shadow-sm rounded-lg overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Vendors ({filteredVendors.length})</h2>
-          </div>
-
-          {filteredVendors.length === 0 ? (
-            <div className="text-center py-12">
-              <Building2 className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No vendors found</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                {searchQuery || selectedCountryFilter
-                  ? 'Try adjusting your search criteria.'
-                  : 'Get started by adding your first vendor.'}
-              </p>
-              {!searchQuery && !selectedCountryFilter && (
-                <div className="mt-6">
-                  <button
-                    onClick={() => setShowAddModal(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 mx-auto transition-colors"
-                  >
-                    <Plus size={20} />
-                    Add New Vendor
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Vendor
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Country
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Type
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Payment Terms
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Avg Cost
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Lead Time
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
+        ) : (
+          <div className="admin-table-wrapper">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Vendor</th>
+                  <th>Country</th>
+                  <th>Type</th>
+                  <th>Payment Terms</th>
+                  <th>Avg Cost</th>
+                  <th>Lead Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredVendors.map((vendor) => (
+                  <tr key={vendor.id}>
+                    <td>
+                      <div>
+                        <div className="admin-table-primary">{vendor.name}</div>
+                        <div className="admin-table-secondary">
+                          Code: <code className="admin-code">{vendor.code || 'N/A'}</code>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{vendor.country || 'N/A'}</td>
+                    <td>
+                      <span className={`vendor-type-badge ${getVendorTypeClass(vendor.vendorType)}`}>
+                        {getVendorTypeLabel(vendor.vendorType)}
+                      </span>
+                    </td>
+                    <td>{formatPaymentTerms(vendor.paymentTerms)}</td>
+                    <td>{formatCurrency(vendor.avgProductCost)}</td>
+                    <td>{vendor.productionLeadTimeDays ? `${vendor.productionLeadTimeDays} days` : 'N/A'}</td>
+                    <td>
+                      <div className="admin-flex admin-gap-sm">
+                        <button
+                          onClick={() => handleViewDetails(vendor)}
+                          className="admin-button admin-button-outline admin-button-sm"
+                          title="View Details"
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedVendor(vendor);
+                            setShowEditModal(true);
+                          }}
+                          className="admin-button admin-button-outline admin-button-sm"
+                          title="Edit"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteVendor(vendor.id)}
+                          className="admin-button admin-button-danger admin-button-sm"
+                          title="Delete"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredVendors.map((vendor) => (
-                    <tr key={vendor.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <Building2 className="h-5 w-5 text-blue-600" />
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{vendor.name}</div>
-                            <div className="text-sm text-gray-500">Code: {vendor.code || 'N/A'}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <MapPin className="h-4 w-4 text-gray-400 mr-2" />
-                          <span className="text-sm text-gray-900">{vendor.country || 'N/A'}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                          vendor.vendorType === VendorType.BOTH ? 'bg-green-100 text-green-800' :
-                          vendor.vendorType === VendorType.PARTS_ONLY ? 'bg-blue-100 text-blue-800' :
-                          'bg-purple-100 text-purple-800'
-                        }`}>
-                          {getVendorTypeLabel(vendor.vendorType)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <CreditCard className="h-4 w-4 text-gray-400 mr-2" />
-                          <span className="text-sm text-gray-900">{formatPaymentTerms(vendor.paymentTerms)}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(vendor.avgProductCost)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {vendor.productionLeadTimeDays ? `${vendor.productionLeadTimeDays} days` : 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => handleViewDetails(vendor)}
-                            className="text-blue-600 hover:text-blue-900"
-                            title="View Details"
-                          >
-                            <Eye size={16} />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedVendor(vendor);
-                              setShowEditModal(true);
-                            }}
-                            className="text-indigo-600 hover:text-indigo-900"
-                            title="Edit"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteVendor(vendor.id)}
-                            className="text-red-600 hover:text-red-900"
-                            title="Delete"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Add Vendor Modal */}
@@ -499,63 +438,57 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
+    <div className="admin-modal-overlay" onClick={onClose}>
+      <div
+        className="admin-modal admin-modal-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="admin-modal-body">
+          <h3 className="admin-section-title admin-mb-lg" style={{ paddingBottom: '1rem', borderBottom: '1px solid var(--mirror-gray-200)' }}>
             {vendor ? 'Edit Vendor' : 'Add New Vendor'}
           </h3>
 
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
+            <div className="admin-error-state admin-mb-md">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="admin-flex-col admin-gap-lg">
             {/* Basic Information */}
             <div>
-              <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <Building2 className="h-5 w-5 mr-2" />
-                Basic Information
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <h4 className="admin-section-title">Basic Information</h4>
+              <div className="admin-grid admin-grid-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Vendor Code *
-                  </label>
+                  <label className="admin-form-label">Vendor Code *</label>
                   <input
                     type="text"
                     required
                     value={formData.code}
                     onChange={(e) => setFormData({...formData, code: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="e.g., VEN001"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Vendor Name *
-                  </label>
+                  <label className="admin-form-label">Vendor Name *</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="e.g., Jewelry Manufacturer Ltd"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Vendor Type *
-                  </label>
+                  <label className="admin-form-label">Vendor Type *</label>
                   <select
                     value={formData.vendorType}
                     onChange={(e) => setFormData({...formData, vendorType: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-select"
                     required
                   >
                     <option value={VendorType.BOTH}>Both Parts & Whole Pieces</option>
@@ -568,19 +501,14 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
 
             {/* Location Information */}
             <div>
-              <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <Globe className="h-5 w-5 mr-2" />
-                Location Information
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <h4 className="admin-section-title">Location Information</h4>
+              <div className="admin-grid admin-grid-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Vendor Country *
-                  </label>
+                  <label className="admin-form-label">Vendor Country *</label>
                   <select
                     value={formData.country}
                     onChange={(e) => setFormData({...formData, country: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-select"
                     required
                   >
                     <option value="">Select Country</option>
@@ -591,13 +519,11 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Country of Origin
-                  </label>
+                  <label className="admin-form-label">Country of Origin</label>
                   <select
                     value={formData.countryOfOrigin}
                     onChange={(e) => setFormData({...formData, countryOfOrigin: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-select"
                   >
                     <option value="">Select Country</option>
                     {countries.map(country => (
@@ -610,13 +536,12 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
 
             {/* Tax Structure */}
             <div>
-              <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <DollarSign className="h-5 w-5 mr-2" />
+              <h4 className="admin-section-title">
                 Tax Structure
               </h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="admin-grid admin-grid-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Import Tax (%)
                   </label>
                   <input
@@ -626,13 +551,13 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
                     max="100"
                     value={formData.importTaxPercent}
                     onChange={(e) => setFormData({...formData, importTaxPercent: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="0.00"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     VAT Tax (%)
                   </label>
                   <input
@@ -642,13 +567,13 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
                     max="100"
                     value={formData.vatTaxPercent}
                     onChange={(e) => setFormData({...formData, vatTaxPercent: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="0.00"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Customs Tax (%)
                   </label>
                   <input
@@ -658,7 +583,7 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
                     max="100"
                     value={formData.taxCustomsPercent}
                     onChange={(e) => setFormData({...formData, taxCustomsPercent: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="0.00"
                   />
                 </div>
@@ -667,13 +592,12 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
 
             {/* Cost Structure */}
             <div>
-              <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <Package className="h-5 w-5 mr-2" />
+              <h4 className="admin-section-title">
                 Cost Structure
               </h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="admin-grid admin-grid-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Shipping Fee (USD)
                   </label>
                   <input
@@ -682,13 +606,13 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
                     min="0"
                     value={formData.shippingFee}
                     onChange={(e) => setFormData({...formData, shippingFee: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="0.00"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Avg Labor Cost/Piece (USD)
                   </label>
                   <input
@@ -697,13 +621,13 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
                     min="0"
                     value={formData.avgLaborCostPerPiece}
                     onChange={(e) => setFormData({...formData, avgLaborCostPerPiece: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="0.00"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Avg Product Cost (USD)
                   </label>
                   <input
@@ -712,7 +636,7 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
                     min="0"
                     value={formData.avgProductCost}
                     onChange={(e) => setFormData({...formData, avgProductCost: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="0.00"
                   />
                 </div>
@@ -721,13 +645,12 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
 
             {/* Operational Details */}
             <div>
-              <h4 className="text-md font-medium text-gray-900 mb-3 flex items-center">
-                <Clock className="h-5 w-5 mr-2" />
+              <h4 className="admin-section-title">
                 Operational Details
               </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="admin-grid admin-grid-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Production Lead Time (Days)
                   </label>
                   <input
@@ -735,13 +658,13 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
                     min="0"
                     value={formData.productionLeadTimeDays}
                     onChange={(e) => setFormData({...formData, productionLeadTimeDays: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="0"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Payment Terms *
                   </label>
                   <input
@@ -749,20 +672,20 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
                     required
                     value={formData.paymentTerms}
                     onChange={(e) => setFormData({...formData, paymentTerms: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="e.g., Net 30, 50% advance"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Commission Term
                   </label>
                   <input
                     type="text"
                     value={formData.commissionTerm}
                     onChange={(e) => setFormData({...formData, commissionTerm: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                     placeholder="Commission structure"
                   />
                 </div>
@@ -771,78 +694,82 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
 
             {/* Contact Information */}
             <div>
-              <h4 className="text-md font-medium text-gray-900 mb-3">Contact Information</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <h4 className="admin-section-title">
+                Contact Information
+              </h4>
+              <div className="admin-grid admin-grid-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Contact Person
                   </label>
                   <input
                     type="text"
                     value={formData.contactPerson}
                     onChange={(e) => setFormData({...formData, contactPerson: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Contact Email
                   </label>
                   <input
                     type="email"
                     value={formData.contactEmail}
                     onChange={(e) => setFormData({...formData, contactEmail: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="admin-form-label">
                     Contact Phone
                   </label>
                   <input
                     type="tel"
                     value={formData.contactPhone}
                     onChange={(e) => setFormData({...formData, contactPhone: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="admin-input"
                   />
                 </div>
               </div>
 
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="admin-mt-md">
+                <label className="admin-form-label">
                   Address
                 </label>
                 <textarea
                   value={formData.address}
                   onChange={(e) => setFormData({...formData, address: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="admin-input"
                   rows="2"
                   placeholder="Full address of the vendor"
                 />
               </div>
 
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="admin-mt-md">
+                <label className="admin-form-label">
                   Labor Cost Factors (JSON)
                 </label>
                 <textarea
                   value={formData.laborCostFactors}
                   onChange={(e) => setFormData({...formData, laborCostFactors: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="admin-input"
                   placeholder='{"complexity_multiplier": 1.2, "skill_level": "high"}'
                   rows={2}
                 />
-                <p className="text-xs text-gray-500 mt-1">Optional JSON for labor cost calculations</p>
+                <p className="admin-form-hint">
+                  Optional JSON for labor cost calculations
+                </p>
               </div>
             </div>
 
-            <div className="flex justify-end space-x-3 pt-4 border-t">
+            <div className="admin-modal-footer">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                className="admin-button admin-button-secondary"
                 disabled={submitting}
               >
                 Cancel
@@ -850,7 +777,7 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                className="admin-button admin-button-primary"
               >
                 {submitting ? 'Saving...' : vendor ? 'Update Vendor' : 'Add Vendor'}
               </button>
@@ -864,102 +791,122 @@ const VendorModal = ({ vendor, onClose, onSuccess }) => {
 
 // Vendor Details Modal Component
 const VendorDetailsModal = ({ vendor, materials, orders, onClose, formatCurrency, formatPaymentTerms, getVendorTypeLabel, VendorType }) => {
+  const getVendorTypeClass = (type) => {
+    const classes = {
+      [VendorType.BOTH]: 'vendor-type-both',
+      [VendorType.PARTS_ONLY]: 'vendor-type-parts',
+      [VendorType.WHOLE_PIECE_ONLY]: 'vendor-type-whole'
+    };
+    return classes[type] || 'vendor-type-parts';
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex justify-between items-start mb-6">
+    <div className="admin-modal-overlay" onClick={onClose}>
+      <div
+        className="admin-modal"
+        onClick={(e) => e.stopPropagation()}
+        style={{ maxWidth: '900px', width: '90%' }}
+      >
+        <div style={{ padding: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid #e2e8f0' }}>
             <div>
-              <h3 className="text-xl font-semibold text-gray-900">{vendor.name}</h3>
-              <p className="text-sm text-gray-500">Vendor Details</p>
+              <h3 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+                {vendor.name}
+              </h3>
+              <p style={{ margin: '0', fontSize: '0.875rem', color: '#64748b' }}>Vendor Details</p>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
+              style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '1.5rem',
+                cursor: 'pointer',
+                color: '#94a3b8',
+                lineHeight: '1',
+                padding: '0.25rem'
+              }}
             >
               ✕
             </button>
           </div>
 
           {/* Vendor Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center">
-                <Building2 className="h-4 w-4 mr-2" />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div style={{ padding: '1rem', backgroundColor: '#fafbfc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <h4 style={{ margin: '0 0 0.75rem 0', fontSize: '0.8125rem', fontWeight: '600', color: '#0f172a' }}>
                 Basic Information
               </h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Code:</span>
-                  <span className="font-medium">{vendor.code || 'N/A'}</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.8125rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Code:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.code || 'N/A'}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Type:</span>
-                  <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                    vendor.vendorType === VendorType.BOTH ? 'bg-green-100 text-green-800' :
-                    vendor.vendorType === VendorType.PARTS_ONLY ? 'bg-blue-100 text-blue-800' :
-                    'bg-purple-100 text-purple-800'
-                  }`}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Type:</span>
+                  <span className="status-pill" style={{
+                    backgroundColor: vendor.vendorType === 'BOTH' ? '#ecfdf5' : vendor.vendorType === 'PARTS_ONLY' ? '#f0f9ff' : '#faf5ff',
+                    color: vendor.vendorType === 'BOTH' ? '#059669' : vendor.vendorType === 'PARTS_ONLY' ? '#0284c7' : '#7c3aed',
+                    borderColor: vendor.vendorType === 'BOTH' ? '#a7f3d0' : vendor.vendorType === 'PARTS_ONLY' ? '#bae6fd' : '#e9d5ff'
+                  }}>
                     {getVendorTypeLabel(vendor.vendorType)}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Country:</span>
-                  <span className="font-medium">{vendor.country || 'N/A'}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Country:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.country || 'N/A'}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Origin:</span>
-                  <span className="font-medium">{vendor.countryOfOrigin || 'N/A'}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Origin:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.countryOfOrigin || 'N/A'}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Payment:</span>
-                  <span className="font-medium">{formatPaymentTerms(vendor.paymentTerms)}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Payment:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{formatPaymentTerms(vendor.paymentTerms)}</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center">
-                <DollarSign className="h-4 w-4 mr-2" />
+            <div style={{ padding: '1rem', backgroundColor: '#fafbfc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <h4 style={{ margin: '0 0 0.75rem 0', fontSize: '0.8125rem', fontWeight: '600', color: '#0f172a' }}>
                 Tax & Cost Structure
               </h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Import Tax:</span>
-                  <span className="font-medium">{vendor.importTaxPercent || 0}%</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.8125rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Import Tax:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.importTaxPercent || 0}%</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">VAT Tax:</span>
-                  <span className="font-medium">{vendor.vatTaxPercent || 0}%</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>VAT Tax:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.vatTaxPercent || 0}%</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Customs Tax:</span>
-                  <span className="font-medium">{vendor.taxCustomsPercent || 0}%</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Customs Tax:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.taxCustomsPercent || 0}%</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping Fee:</span>
-                  <span className="font-medium">{formatCurrency(vendor.shippingFee)}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Shipping Fee:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{formatCurrency(vendor.shippingFee)}</span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium text-gray-900 mb-3 flex items-center">
-                <Clock className="h-4 w-4 mr-2" />
+            <div style={{ padding: '1rem', backgroundColor: '#fafbfc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <h4 style={{ margin: '0 0 0.75rem 0', fontSize: '0.8125rem', fontWeight: '600', color: '#0f172a' }}>
                 Production Details
               </h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Lead Time:</span>
-                  <span className="font-medium">{vendor.productionLeadTimeDays || 0} days</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.8125rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Lead Time:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.productionLeadTimeDays || 0} days</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Avg Labor Cost:</span>
-                  <span className="font-medium">{formatCurrency(vendor.avgLaborCostPerPiece)}/pc</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Avg Labor Cost:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{formatCurrency(vendor.avgLaborCostPerPiece)}/pc</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Avg Product Cost:</span>
-                  <span className="font-medium">{formatCurrency(vendor.avgProductCost)}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#64748b' }}>Avg Product Cost:</span>
+                  <span style={{ fontWeight: '500', color: '#0f172a' }}>{formatCurrency(vendor.avgProductCost)}</span>
                 </div>
               </div>
             </div>
@@ -967,20 +914,34 @@ const VendorDetailsModal = ({ vendor, materials, orders, onClose, formatCurrency
 
           {/* Contact Information */}
           {(vendor.contactPerson || vendor.contactEmail || vendor.contactPhone || vendor.address) && (
-            <div className="mb-8">
-              <h4 className="font-medium text-gray-900 mb-4">Contact Information</h4>
-              <div className="bg-gray-50 p-4 rounded-lg space-y-2 text-sm">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ margin: '0 0 0.75rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
+                Contact Information
+              </h4>
+              <div style={{ padding: '1rem', backgroundColor: '#fafbfc', borderRadius: '6px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.8125rem' }}>
                 {vendor.contactPerson && (
-                  <div><span className="text-gray-600">Person:</span> <span className="font-medium">{vendor.contactPerson}</span></div>
+                  <div>
+                    <span style={{ color: '#64748b' }}>Person: </span>
+                    <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.contactPerson}</span>
+                  </div>
                 )}
                 {vendor.contactEmail && (
-                  <div><span className="text-gray-600">Email:</span> <span className="font-medium">{vendor.contactEmail}</span></div>
+                  <div>
+                    <span style={{ color: '#64748b' }}>Email: </span>
+                    <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.contactEmail}</span>
+                  </div>
                 )}
                 {vendor.contactPhone && (
-                  <div><span className="text-gray-600">Phone:</span> <span className="font-medium">{vendor.contactPhone}</span></div>
+                  <div>
+                    <span style={{ color: '#64748b' }}>Phone: </span>
+                    <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.contactPhone}</span>
+                  </div>
                 )}
                 {vendor.address && (
-                  <div><span className="text-gray-600">Address:</span> <span className="font-medium">{vendor.address}</span></div>
+                  <div>
+                    <span style={{ color: '#64748b' }}>Address: </span>
+                    <span style={{ fontWeight: '500', color: '#0f172a' }}>{vendor.address}</span>
+                  </div>
                 )}
               </div>
             </div>
@@ -988,10 +949,12 @@ const VendorDetailsModal = ({ vendor, materials, orders, onClose, formatCurrency
 
           {/* Labor Cost Factors */}
           {vendor.laborCostFactors && (
-            <div className="mb-8">
-              <h4 className="font-medium text-gray-900 mb-4">Labor Cost Factors</h4>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <pre className="text-sm text-gray-700 whitespace-pre-wrap">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ margin: '0 0 0.75rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
+                Labor Cost Factors
+              </h4>
+              <div style={{ padding: '1rem', backgroundColor: '#fafbfc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                <pre style={{ margin: '0', fontSize: '0.75rem', color: '#0f172a', whiteSpace: 'pre-wrap' }}>
                   {vendor.laborCostFactors}
                 </pre>
               </div>
@@ -999,35 +962,37 @@ const VendorDetailsModal = ({ vendor, materials, orders, onClose, formatCurrency
           )}
 
           {/* Statistics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-blue-50 p-4 rounded-lg text-center">
-              <h4 className="font-medium text-gray-900 mb-2">Materials</h4>
-              <div className="text-3xl font-bold text-blue-600">{materials.length}</div>
-              <p className="text-sm text-gray-600 mt-1">Active materials</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div style={{ padding: '1rem', backgroundColor: '#fafbfc', borderRadius: '6px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem' }}>
+                Materials
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '600', color: '#0f172a' }}>{materials.length}</div>
+              <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.75rem', color: '#64748b' }}>Active materials</p>
             </div>
 
-            <div className="bg-green-50 p-4 rounded-lg text-center">
-              <h4 className="font-medium text-gray-900 mb-2">Purchase Orders</h4>
-              <div className="text-3xl font-bold text-green-600">{orders.length}</div>
-              <p className="text-sm text-gray-600 mt-1">Total orders</p>
+            <div style={{ padding: '1rem', backgroundColor: '#fafbfc', borderRadius: '6px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem' }}>
+                Purchase Orders
+              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '600', color: '#0f172a' }}>{orders.length}</div>
+              <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.75rem', color: '#64748b' }}>Total orders</p>
             </div>
 
-            <div className="bg-purple-50 p-4 rounded-lg text-center">
-              <h4 className="font-medium text-gray-900 mb-2">Created</h4>
-              <div className="text-sm font-medium text-purple-900 mt-2">
+            <div style={{ padding: '1rem', backgroundColor: '#fafbfc', borderRadius: '6px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+              <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem' }}>
+                Created
+              </div>
+              <div style={{ fontSize: '0.8125rem', fontWeight: '500', color: '#0f172a', marginTop: '0.5rem' }}>
                 {vendor.createdAt ? new Date(vendor.createdAt).toLocaleDateString() : 'N/A'}
               </div>
-              <p className="text-xs text-gray-600 mt-1">Registration date</p>
+              <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.75rem', color: '#64748b' }}>Registration date</p>
             </div>
           </div>
 
           {materials.length === 0 && orders.length === 0 && (
-            <div className="text-center py-8">
-              <Package className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No data available</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                This vendor doesn't have any materials or purchase orders yet.
-              </p>
+            <div className="admin-empty-state">
+              This vendor doesn't have any materials or purchase orders yet.
             </div>
           )}
         </div>

@@ -259,6 +259,7 @@ export const productsAPI = {
   // Product Fulfillment operations
   getPendingFulfillment: () => api.get("/api/products/pending-fulfillment"),
   getDraft: () => api.get("/api/products/draft"),
+  getFulfilledDrafts: () => api.get("/api/products/fulfilled-drafts"),
   fulfill: (id, fulfillmentData) =>
     api.post(`/api/products/${id}/fulfill`, fulfillmentData),
   markReadyForRelease: (id) =>
@@ -302,6 +303,67 @@ export const ordersAPI = {
     api.post(`/api/orders/${id}/misa-sku-created`, null, {
       params: { misaItemId }
     }),
+};
+
+// ===== APPOINTMENTS API =====
+export const appointmentsAPI = {
+  // Create a new appointment
+  create: (appointmentData) => api.post("/api/appointments", appointmentData),
+
+  // Get all appointments
+  getAll: () => api.get("/api/appointments"),
+
+  // Get appointment by ID
+  getById: (id) => api.get(`/api/appointments/${id}`),
+
+  // Get booked time slots for a date (optionally filtered by venue)
+  getBookedSlots: (date, venueId = null) => {
+    const params = { date };
+    if (venueId) params.venueId = venueId;
+    return api.get("/api/appointments/slots", { params });
+  },
+
+  // Get appointments by date
+  getByDate: (date) => api.get("/api/appointments/by-date", { params: { date } }),
+
+  // Get appointments by venue and date
+  getByVenueAndDate: (venueId, date) =>
+    api.get("/api/appointments/by-venue-date", { params: { venueId, date } }),
+
+  // Get upcoming appointments
+  getUpcoming: () => api.get("/api/appointments/upcoming"),
+
+  // Get appointments by customer email
+  getByEmail: (email) =>
+    api.get("/api/appointments/by-email", { params: { email } }),
+
+  // Get appointments by status
+  getByStatus: (status) =>
+    api.get("/api/appointments/by-status", { params: { status } }),
+
+  // Update appointment
+  update: (id, appointmentData) =>
+    api.put(`/api/appointments/${id}`, appointmentData),
+
+  // Confirm appointment
+  confirm: (id) => api.post(`/api/appointments/${id}/confirm`),
+
+  // Complete appointment
+  complete: (id) => api.post(`/api/appointments/${id}/complete`),
+
+  // Cancel appointment
+  cancel: (id, reason = null) =>
+    api.post(`/api/appointments/${id}/cancel`, { reason }),
+
+  // Mark as no-show
+  markNoShow: (id) => api.post(`/api/appointments/${id}/no-show`),
+
+  // Add staff notes
+  addNotes: (id, notes) =>
+    api.put(`/api/appointments/${id}/notes`, { notes }),
+
+  // Delete appointment
+  delete: (id) => api.delete(`/api/appointments/${id}`),
 };
 
 // ===== COLLECTIONS API =====
@@ -442,8 +504,57 @@ export const skusAPI = {
   deactivate: (id) => api.patch(`/api/skus/${id}/deactivate`),
 };
 
-// Temporary alias for backwards compatibility with components still using categoriesAPI
-export const categoriesAPI = skusAPI;
+// ===== CATEGORIES API (MISA Product Categories - READ ONLY) =====
+export const categoriesAPI = {
+  // Get all active categories synced from MISA
+  getAll: () => api.get("/api/categories"),
+
+  // Get category by MISA category ID
+  getById: (categoryId) => api.get(`/api/categories/${categoryId}`),
+
+  // Get root categories (no parent)
+  getRootCategories: () => api.get("/api/categories/root"),
+
+  // Get child categories by parent ID
+  getChildCategories: (parentId) => api.get(`/api/categories/children/${parentId}`),
+
+  // Note: Categories are managed in MISA ERP and synced to Mirror.
+  // For backwards compatibility with components expecting CRUD operations,
+  // these methods throw errors directing users to MISA
+  create: () => {
+    throw new Error("Categories must be created in MISA ERP and will sync automatically");
+  },
+  update: () => {
+    throw new Error("Categories must be updated in MISA ERP and will sync automatically");
+  },
+  delete: () => {
+    throw new Error("Categories must be deleted in MISA ERP and will sync automatically");
+  },
+};
+
+// ===== CERTIFICATES API =====
+export const certificatesAPI = {
+  // Get all certificates
+  getAll: () => api.get("/api/certificates"),
+
+  // Get certificate by ID
+  getById: (id) => api.get(`/api/certificates/${id}`),
+
+  // Get certificate by code
+  getByCode: (code) => api.get(`/api/certificates/by-code?code=${encodeURIComponent(code)}`),
+
+  // Get certificates by type (IGI, etc.)
+  getByType: (type) => api.get(`/api/certificates/by-type?type=${type}`),
+
+  // Create new certificate
+  create: (certificateData) => api.post("/api/certificates", certificateData),
+
+  // Update certificate
+  update: (id, certificateData) => api.put(`/api/certificates/${id}`, certificateData),
+
+  // Delete certificate (soft delete)
+  delete: (id) => api.delete(`/api/certificates/${id}`),
+};
 
 // ===== COMPONENTS API =====
 export const componentsAPI = {
@@ -984,6 +1095,48 @@ export const preciousMetalAPI = {
   // Calculate material cost for a given weight and metal type
   calculateMaterialCost: (request) =>
     api.post("/api/precious-metals/calculate-material-cost", request),
+};
+
+// ===== LAB-GROWN DIAMONDS API =====
+export const diamondsAPI = {
+  // Get all active diamonds
+  getAllDiamonds: () => api.get("/api/diamonds"),
+
+  // Get diamond by ID
+  getDiamondById: (id) => api.get(`/api/diamonds/${id}`),
+
+  // Get diamond by SKU code
+  getDiamondBySkuCode: (skuCode) => api.get(`/api/diamonds/sku/${skuCode}`),
+
+  // Get diamond by certificate number
+  getDiamondByCertNumber: (certNumber) => api.get(`/api/diamonds/cert/${certNumber}`),
+
+  // Get diamonds by invoice number
+  getDiamondsByInvoice: (invoiceNumber) => api.get(`/api/diamonds/invoice/${invoiceNumber}`),
+
+  // Get diamonds by status
+  getDiamondsByStatus: (status) => api.get(`/api/diamonds/status/${status}`),
+
+  // Search diamonds with filters
+  searchDiamonds: (filters) => api.post("/api/diamonds/search", filters),
+
+  // Get inventory statistics
+  getInventoryStats: () => api.get("/api/diamonds/stats"),
+
+  // Generate SKU code
+  generateSku: (request) => api.post("/api/diamonds/generate-sku", request),
+
+  // Create new diamond
+  createDiamond: (request) => api.post("/api/diamonds", request),
+
+  // Update diamond
+  updateDiamond: (id, request) => api.put(`/api/diamonds/${id}`, request),
+
+  // Update diamond status
+  updateDiamondStatus: (id, status) => api.patch(`/api/diamonds/${id}/status`, { status }),
+
+  // Delete diamond (soft delete)
+  deleteDiamond: (id) => api.delete(`/api/diamonds/${id}`),
 };
 
 // Export the axios instance for custom calls

@@ -4,7 +4,7 @@ import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransit
 import { getNewsDetailRoute } from "@/constants/routes";
 import { MediaImage } from "@components/common/media";
 import "./NewsGrid.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 
 const NewsGrid = () => {
@@ -18,14 +18,14 @@ const NewsGrid = () => {
       id: 1,
       title: "Digital Jewelry Week Milan 2025",
       slug: "milan",
-      image: "news/mirror-milan1.png",
+      image: "news/mirror-milan1.webp",
       date: "10/2025",
     },
     {
       id: 2,
       title: "Lumex-91™: The Next Star Has Arrived",
       slug: "new-cut",
-      image: "news/lumex_91.png",
+      image: "news/lumex_91.webp",
       date: "10/2024",
     },
     {
@@ -82,49 +82,49 @@ const NewsGrid = () => {
       id: 10,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "news/news-9.jpg",
+      image: "news/news-9.webp",
       date: "02/2024",
     },
     {
       id: 11,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "news/news-10.jpg",
+      image: "news/news-10.webp",
       date: "01/2024",
     },
     {
       id: 12,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "news/news-11.jpg",
+      image: "news/news-11.webp",
       date: "12/2023",
     },
     {
       id: 13,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "news/news-12.jpg",
+      image: "news/news-12.webp",
       date: "11/2023",
     },
     {
       id: 14,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "news/news-13.jpg",
+      image: "news/news-13.webp",
       date: "10/2023",
     },
     {
       id: 15,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "news/news-14.jpg",
+      image: "news/news-14.webp",
       date: "09/2023",
     },
     {
       id: 16,
       title: "La Société Benefit, vers un nouveau paradigme entrepreneurial?",
       slug: null,
-      image: "news/news-15.jpg",
+      image: "news/news-15.webp",
       date: "08/2023",
     },
   ];
@@ -192,14 +192,14 @@ const NewsGrid = () => {
                     {item.slug ? (
                       <UnderlineButton
                         className="news-item-button"
-                        textClassName="bodytext-4--no-margin"
+                        textClassName="bodytext-6--no-margin"
                       >
                         Discover
                       </UnderlineButton>
                     ) : (
                       <UnderlineButton
                         className="news-item-button"
-                        textClassName="bodytext-4--no-margin"
+                        textClassName="bodytext-6--no-margin"
                         disabled
                       >
                         Discover

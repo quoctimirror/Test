@@ -40,16 +40,6 @@ const StartingPlaceSection = () => {
       const contentFadeProgress =
         progress <= 0.15 ? Math.max(0, Math.min(1, progress / 0.15)) : 1;
 
-      // Debug
-      if (progress > 0 && progress < 0.2) {
-        console.log(
-          "Progress:",
-          progress.toFixed(3),
-          "Content opacity:",
-          contentFadeProgress.toFixed(3)
-        );
-      }
-
       if (contentRef.current) {
         // Content stays centered, fades in quickly before blur completes
         contentRef.current.style.transform = `translateY(0)`;

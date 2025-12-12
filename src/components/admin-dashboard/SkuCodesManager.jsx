@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import JewelryCodeForm from "./sku-codes/JewelryCodeForm";
 import PackagingCodeForm from "./sku-codes/PackagingCodeForm";
+import DiamondCodeForm from "./sku-codes/DiamondCodeForm";
 import CodeSearch from "./sku-codes/CodeSearch";
-import { skuCodesAPI } from "@/services/api";
+import { skuCodesAPI, diamondsAPI } from "@/services/api";
 import "./SkuCodesManager.css";
 
 const DEFAULT_PAGE_SIZE = 25;
@@ -49,6 +50,11 @@ const SkuCodesManager = () => {
   const [generatedLoading, setGeneratedLoading] = useState(false);
   const [generatedError, setGeneratedError] = useState(null);
 
+  // Lab-Grown Diamonds state
+  const [diamonds, setDiamonds] = useState([]);
+  const [diamondsLoading, setDiamondsLoading] = useState(false);
+  const [diamondsError, setDiamondsError] = useState(null);
+
   const fetchGeneratedSkus = useCallback(
     async ({ page, size } = {}) => {
       const nextPage = page ?? 0;
@@ -85,17 +91,36 @@ const SkuCodesManager = () => {
     [generatedMeta.size]
   );
 
+  const fetchDiamonds = useCallback(async () => {
+    setDiamondsLoading(true);
+    setDiamondsError(null);
+
+    try {
+      const diamondsResponse = await diamondsAPI.getAllDiamonds();
+      setDiamonds(diamondsResponse.data || []);
+    } catch (error) {
+      setDiamondsError(
+        error.response?.data?.message ||
+          "Failed to load diamonds. Please try again."
+      );
+    } finally {
+      setDiamondsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (activeTab === "history") {
       fetchGeneratedSkus({ page: 0 });
+      fetchDiamonds();
     }
-  }, [activeTab, fetchGeneratedSkus]);
+  }, [activeTab, fetchGeneratedSkus, fetchDiamonds]);
 
   const handleSkuGenerated = useCallback(() => {
     if (activeTab === "history") {
       fetchGeneratedSkus({ page: 0 });
+      fetchDiamonds();
     }
-  }, [activeTab, fetchGeneratedSkus]);
+  }, [activeTab, fetchGeneratedSkus, fetchDiamonds]);
 
   const handlePageSizeChange = (event) => {
     const newSize = parseInt(event.target.value, 10);
@@ -185,6 +210,7 @@ const SkuCodesManager = () => {
   const tabs = [
     { id: "jewelry", label: "Generate Jewelry SKU" },
     { id: "packaging", label: "Generate Packaging SKU" },
+    { id: "diamond", label: "Generate Diamond SKU" },
     { id: "history", label: "Generated SKUs" },
   ];
 
@@ -194,29 +220,32 @@ const SkuCodesManager = () => {
         return <JewelryCodeForm onCodeGenerated={handleSkuGenerated} />;
       case "packaging":
         return <PackagingCodeForm onCodeGenerated={handleSkuGenerated} />;
+      case "diamond":
+        return <DiamondCodeForm onCodeGenerated={handleSkuGenerated} />;
       case "history":
         return (
-          <div className="generated-codes-tab">
-            <div className="generated-codes-search">
+          <div>
+            <div style={{ marginBottom: "1.5rem" }}>
               <CodeSearch />
             </div>
 
-            <div className="generated-codes-section">
-              <div className="generated-codes-header">
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem" }}>
                 <div>
-                  <h3>Generated SKUs</h3>
-                  <p className="generated-codes-subtitle">
-                    Showing SKUs saved in the mirror_products catalog (newest first)
+                  <h3 style={{ fontSize: "0.875rem", fontWeight: "600", marginBottom: "0.25rem", color: "#0f172a" }}>Generated SKUs</h3>
+                  <p style={{ fontSize: "0.875rem", color: "#64748b" }}>
+                    Showing products and lab-grown diamonds (newest first)
                   </p>
                 </div>
 
-                <div className="generated-codes-controls">
-                  <label className="generated-page-size">
+                <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+                  <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.875rem", color: "#64748b" }}>
                     <span>Results per page:</span>
                     <select
                       value={generatedMeta.size}
                       onChange={handlePageSizeChange}
                       disabled={generatedLoading}
+                      className="admin-select"
                     >
                       <option value="10">10</option>
                       <option value="25">25</option>
@@ -227,7 +256,7 @@ const SkuCodesManager = () => {
 
                   <button
                     type="button"
-                    className="generated-refresh-btn"
+                    className="admin-button admin-button-secondary"
                     onClick={handleRefresh}
                     disabled={generatedLoading}
                   >
@@ -236,30 +265,30 @@ const SkuCodesManager = () => {
 
                   <button
                     type="button"
-                    className="generated-export-misa-btn"
+                    className="admin-button admin-button-primary"
                     onClick={handleExportToMisa}
                     disabled={generatedLoading || generatedSkus.length === 0}
                     title="Download MISA Import Template"
                   >
-                    📥 Export to MISA
+                    Export to MISA
                   </button>
                 </div>
               </div>
 
               {generatedError ? (
-                <div className="generated-codes-error">
+                <div className="admin-error-state">
                   <div>
                     <strong>Unable to load generated SKUs.</strong>
                     <p>{generatedError}</p>
                   </div>
-                  <button type="button" onClick={handleRefresh}>
+                  <button type="button" onClick={handleRefresh} className="admin-button admin-button-secondary" style={{ marginTop: "1rem" }}>
                     Try Again
                   </button>
                 </div>
               ) : (
                 <>
-                  <div className="generated-codes-table-wrapper">
-                    <table className="generated-codes-table">
+                  <div style={{ overflowX: "auto" }}>
+                    <table className="admin-table">
                       <thead>
                         <tr>
                           <th>SKU</th>
@@ -275,13 +304,13 @@ const SkuCodesManager = () => {
                       <tbody>
                         {generatedLoading ? (
                           <tr>
-                            <td colSpan="8" className="generated-table-message">
+                            <td colSpan="8" style={{ textAlign: "center", padding: "3rem 1rem", color: "#64748b" }}>
                               Loading generated SKUs...
                             </td>
                           </tr>
                         ) : generatedSkus.length === 0 ? (
                           <tr>
-                            <td colSpan="8" className="generated-table-message">
+                            <td colSpan="8" style={{ textAlign: "center", padding: "3rem 1rem", color: "#64748b" }}>
                               No generated SKUs found.
                             </td>
                           </tr>
@@ -289,13 +318,21 @@ const SkuCodesManager = () => {
                           generatedSkus.map((item) => (
                             <tr key={item.skuCode}>
                               <td>
-                                <div className="generated-code-cell">
-                                  <code>{item.skuCode}</code>
+                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                                  <code style={{ background: "#f1f5f9", padding: "2px 8px", borderRadius: "4px", fontSize: "0.8125rem", fontFamily: "monospace" }}>{item.skuCode}</code>
                                   <button
                                     type="button"
-                                    className="btn-copy-small"
                                     onClick={() => handleCopySku(item.skuCode)}
                                     title="Copy SKU"
+                                    style={{
+                                      background: "none",
+                                      border: "1px solid #e2e8f0",
+                                      borderRadius: "4px",
+                                      padding: "2px 6px",
+                                      cursor: "pointer",
+                                      fontSize: "0.75rem",
+                                      lineHeight: "1"
+                                    }}
                                   >
                                     📋
                                   </button>
@@ -303,13 +340,21 @@ const SkuCodesManager = () => {
                               </td>
                               <td>
                                 {item.barcode ? (
-                                  <div className="generated-code-cell">
-                                    <code>{item.barcode}</code>
+                                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                                    <code style={{ background: "#f1f5f9", padding: "2px 8px", borderRadius: "4px", fontSize: "0.8125rem", fontFamily: "monospace" }}>{item.barcode}</code>
                                     <button
                                       type="button"
-                                      className="btn-copy-small"
                                       onClick={() => handleCopyBarcode(item.barcode)}
                                       title="Copy Barcode"
+                                      style={{
+                                        background: "none",
+                                        border: "1px solid #e2e8f0",
+                                        borderRadius: "4px",
+                                        padding: "2px 6px",
+                                        cursor: "pointer",
+                                        fontSize: "0.75rem",
+                                        lineHeight: "1"
+                                      }}
                                     >
                                       📋
                                     </button>
@@ -335,26 +380,26 @@ const SkuCodesManager = () => {
                     </table>
                   </div>
 
-                  <div className="generated-codes-pagination">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #e2e8f0" }}>
                     <button
                       type="button"
-                      className="generated-page-btn"
+                      className="admin-button admin-button-secondary"
                       onClick={goToPreviousPage}
                       disabled={generatedLoading || generatedMeta.page === 0}
                     >
-                      ← Previous
+                      Previous
                     </button>
 
-                    <span className="generated-page-info">
+                    <span style={{ fontSize: "0.875rem", color: "#64748b" }}>
                       Page {generatedMeta.totalPages === 0 ? 0 : generatedMeta.page + 1} of {generatedMeta.totalPages}
-                      <span className="generated-total-count">
+                      <span style={{ marginLeft: "0.5rem" }}>
                         ({generatedMeta.totalElements} total)
                       </span>
                     </span>
 
                     <button
                       type="button"
-                      className="generated-page-btn"
+                      className="admin-button admin-button-secondary"
                       onClick={goToNextPage}
                       disabled={
                         generatedLoading ||
@@ -362,10 +407,97 @@ const SkuCodesManager = () => {
                         generatedMeta.page >= generatedMeta.totalPages - 1
                       }
                     >
-                      Next →
+                      Next
                     </button>
                   </div>
                 </>
+              )}
+            </div>
+
+            {/* Lab-Grown Diamonds Section */}
+            <div style={{ marginTop: "3rem", paddingTop: "2rem", borderTop: "2px solid #e2e8f0" }}>
+              <div style={{ marginBottom: "1.5rem" }}>
+                <h3 style={{ fontSize: "0.875rem", fontWeight: "600", marginBottom: "0.25rem", color: "#0f172a" }}>Lab-Grown Diamonds</h3>
+                <p style={{ fontSize: "0.875rem", color: "#64748b" }}>
+                  Diamond SKUs: LGD-[COLOR][CLARITY]-[CARAT]-[SHAPE]-[ORIGIN]-[MFR]-[CERT]
+                </p>
+              </div>
+
+              {diamondsError ? (
+                <div className="admin-error-state">
+                  <div>
+                    <strong>Unable to load diamonds.</strong>
+                    <p>{diamondsError}</p>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ overflowX: "auto" }}>
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>SKU Code</th>
+                        <th>Type</th>
+                        <th>Color/Clarity</th>
+                        <th>Carat</th>
+                        <th>Shape</th>
+                        <th>Cert #</th>
+                        <th>Manufacturer</th>
+                        <th>Status</th>
+                        <th>Price</th>
+                        <th>Created</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {diamondsLoading ? (
+                        <tr>
+                          <td colSpan="10" style={{ textAlign: "center", padding: "3rem 1rem", color: "#64748b" }}>
+                            Loading diamonds...
+                          </td>
+                        </tr>
+                      ) : diamonds.length === 0 ? (
+                        <tr>
+                          <td colSpan="10" style={{ textAlign: "center", padding: "3rem 1rem", color: "#64748b" }}>
+                            No diamonds found.
+                          </td>
+                        </tr>
+                      ) : (
+                        diamonds.map((diamond) => (
+                          <tr key={diamond.id}>
+                            <td>
+                              <code style={{ background: "#f1f5f9", padding: "2px 8px", borderRadius: "4px", fontSize: "0.8125rem", fontFamily: "monospace" }}>{diamond.skuCode}</code>
+                            </td>
+                            <td>
+                              <span style={{ padding: "2px 8px", borderRadius: "4px", fontSize: "0.75rem", fontWeight: "500", background: "#dbeafe", color: "#1e40af" }}>
+                                Diamond
+                              </span>
+                            </td>
+                            <td>
+                              <span style={{ fontWeight: "500" }}>{diamond.color} {diamond.clarity}</span>
+                            </td>
+                            <td>{diamond.caratWeight?.toFixed(2)} ct</td>
+                            <td>{diamond.shape}</td>
+                            <td><code style={{ fontSize: "0.8125rem" }}>{diamond.certNumber}</code></td>
+                            <td>{diamond.manufacturerName || diamond.manufacturerCode || "—"}</td>
+                            <td>
+                              <span style={{
+                                padding: "2px 8px",
+                                borderRadius: "4px",
+                                fontSize: "0.75rem",
+                                fontWeight: "500",
+                                background: diamond.status === "IN_STOCK" ? "#dcfce7" : "#f3f4f6",
+                                color: diamond.status === "IN_STOCK" ? "#166534" : "#374151"
+                              }}>
+                                {diamond.status}
+                              </span>
+                            </td>
+                            <td>{formatCurrency(diamond.totalPriceUsd)}</td>
+                            <td>{formatDateTime(diamond.createdAt)}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </div>
           </div>
@@ -376,27 +508,37 @@ const SkuCodesManager = () => {
   };
 
   return (
-    <div className="sku-codes-manager">
-      <div className="sku-codes-header">
-        <h2>SKU Generator & Search</h2>
-        <p className="sku-codes-description">
+    <div className="admin-card" style={{ padding: "1.5rem" }}>
+      <div style={{ marginBottom: "1.5rem" }}>
+        <h2 style={{ fontSize: "1rem", fontWeight: "600", marginBottom: "0.5rem", color: "#0f172a" }}>SKU Generator & Search</h2>
+        <p style={{ fontSize: "0.875rem", color: "#64748b" }}>
           Generate standardized product SKUs for jewelry and packaging, then browse or search the catalog of existing SKUs.
         </p>
       </div>
 
-      <div className="sku-codes-tabs">
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", borderBottom: "1px solid #e2e8f0" }}>
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            className={`tab-button ${activeTab === tab.id ? "active" : ""}`}
             onClick={() => setActiveTab(tab.id)}
+            style={{
+              padding: "0.75rem 1rem",
+              background: "none",
+              border: "none",
+              borderBottom: activeTab === tab.id ? "2px solid #0f172a" : "2px solid transparent",
+              color: activeTab === tab.id ? "#0f172a" : "#64748b",
+              fontWeight: activeTab === tab.id ? "500" : "400",
+              fontSize: "0.875rem",
+              cursor: "pointer",
+              transition: "all 0.2s"
+            }}
           >
-            <span className="tab-label">{tab.label}</span>
+            {tab.label}
           </button>
         ))}
       </div>
 
-      <div className="sku-codes-content">{renderTabContent()}</div>
+      <div>{renderTabContent()}</div>
     </div>
   );
 };

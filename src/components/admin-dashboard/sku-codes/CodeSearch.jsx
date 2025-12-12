@@ -60,7 +60,7 @@ const CodeSearch = () => {
               disabled={loading}
             />
             <button type="submit" className="btn-search" disabled={loading}>
-              {loading ? "Searching..." : "🔍 Search"}
+              {loading ? "Searching..." : "Search"}
             </button>
           </div>
 
@@ -82,7 +82,7 @@ const CodeSearch = () => {
         </form>
 
         <div className="search-help">
-          <h4>💡 Search Tips</h4>
+          <h4>Search Tips</h4>
           <ul>
             <li><strong>Fuzzy matching:</strong> Works with typos (e.g., "dimond" finds "diamond")</li>
             <li><strong>Synonyms:</strong> Understands "gold" → "18KWG", "wg", etc.</li>
@@ -94,7 +94,6 @@ const CodeSearch = () => {
 
       {error && (
         <div className="search-error">
-          <div className="error-icon">❌</div>
           <p>{error}</p>
         </div>
       )}
@@ -113,7 +112,6 @@ const CodeSearch = () => {
 
           {results.totalResults === 0 ? (
             <div className="no-results">
-              <div className="no-results-icon">🔍</div>
               <h4>No SKUs found</h4>
               <p>Try refining your search keywords or widening synonyms.</p>
             </div>
@@ -129,7 +127,7 @@ const CodeSearch = () => {
                         onClick={() => navigator.clipboard.writeText(result.skuCode)}
                         title="Copy SKU"
                       >
-                        📋
+                        Copy
                       </button>
                     </div>
                     <div className={`result-relevance ${getRelevanceColor(result.relevance)}`}>

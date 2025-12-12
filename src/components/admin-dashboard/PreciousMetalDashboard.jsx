@@ -1,14 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  BarChart3,
-  RefreshCw,
-  Clock,
-  Target,
-  Calculator
-} from "lucide-react";
 import { preciousMetalAPI } from "@/services/api";
 
 const PreciousMetalDashboard = () => {
@@ -171,25 +161,25 @@ const PreciousMetalDashboard = () => {
     }).format(amount);
   };
 
-  const getTrendIcon = (trend) => {
+  const getTrendText = (trend) => {
     switch (trend) {
       case "RISING":
-        return <TrendingUp className="h-4 w-4 text-green-600" />;
+        return "↑";
       case "FALLING":
-        return <TrendingDown className="h-4 w-4 text-red-600" />;
+        return "↓";
       default:
-        return <BarChart3 className="h-4 w-4 text-gray-600" />;
+        return "→";
     }
   };
 
   const getTrendColor = (trend) => {
     switch (trend) {
       case "RISING":
-        return "text-green-600";
+        return "#059669";
       case "FALLING":
-        return "text-red-600";
+        return "#dc2626";
       default:
-        return "text-gray-600";
+        return "#64748b";
     }
   };
 
@@ -219,434 +209,420 @@ const PreciousMetalDashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      <div className="admin-empty-state">
+        Loading precious metal prices...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Precious Metal Price Tracker
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                Real-time precious metal prices with jewelry cost calculations
-              </p>
+      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div>
+            <h1 style={{ margin: '0 0 0.5rem 0', fontSize: '1rem', fontWeight: '600', color: '#0f172a' }}>
+              Precious Metal Price Tracker
+            </h1>
+            <p style={{ margin: '0', fontSize: '0.8125rem', color: '#64748b' }}>
+              Real-time precious metal prices with jewelry cost calculations
+            </p>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+              Updated:{" "}
+              {pricesVND
+                ? new Date(pricesVND.lastUpdated).toLocaleTimeString()
+                : "-"}
             </div>
-            <div className="flex items-center gap-4">
-              <div className="text-sm text-gray-500">
-                Last updated:{" "}
-                {pricesVND
-                  ? new Date(pricesVND.lastUpdated).toLocaleTimeString()
-                  : "-"}
-              </div>
-              <button
-                onClick={fetchPriceData}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-              >
-                <RefreshCw size={20} />
-                Refresh Prices
-              </button>
-            </div>
+            <button
+              onClick={fetchPriceData}
+              className="admin-button admin-button-primary"
+            >
+              Refresh Prices
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Current Prices Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {metalTypes.map((metal) => {
-            const priceVND = getMetalPrice(metal.type, pricesVND);
-            const priceUSD = getMetalPriceUSD(metal.type, pricesUSD);
-            const metalTrend = trends.find(
-              (t) =>
-                t.metal?.toUpperCase() === metal.type ||
-                t.metalType?.toUpperCase() === metal.type
-            );
+      {/* Current Prices Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
+        {metalTypes.map((metal) => {
+          const priceVND = getMetalPrice(metal.type, pricesVND);
+          const priceUSD = getMetalPriceUSD(metal.type, pricesUSD);
+          const metalTrend = trends.find(
+            (t) =>
+              t.metal?.toUpperCase() === metal.type ||
+              t.metalType?.toUpperCase() === metal.type
+          );
 
-            return (
-              <div
-                key={metal.type}
-                className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-l-yellow-400"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className={`h-6 w-6 ${metal.color}`} />
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {metal.name}
-                    </h3>
-                  </div>
-                  {metalTrend && (
-                    <div className="flex items-center gap-1">
-                      {getTrendIcon(metalTrend.trend)}
-                      <span
-                        className={`text-sm font-medium ${getTrendColor(
-                          metalTrend.trend
-                        )}`}
-                      >
-                        {metalTrend.trend}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <div>
-                    <div className="text-sm text-gray-600">VND per gram</div>
-                    <div className="text-2xl font-bold text-gray-900">
-                      {formatCompactVND(priceVND)}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-600">USD per troy oz</div>
-                    <div className="text-lg font-semibold text-gray-700">
-                      {formatCurrencyUSD(priceUSD)}
-                    </div>
-                  </div>
-                  {metalTrend && (
-                    <div className="pt-2 border-t border-gray-200">
-                      <div className="text-xs text-gray-500">
-                        Volatility: {(metalTrend.volatility * 100).toFixed(1)}%
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        Range: {formatCompactVND(metalTrend.minPrice)} -{" "}
-                        {formatCompactVND(metalTrend.maxPrice)}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Exchange Rate Info */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Target className="h-5 w-5 text-green-600" />
-            <h2 className="text-xl font-semibold text-gray-900">
-              Exchange Rate Information
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-sm text-green-600 font-medium">
-                USD to VND Rate
-              </div>
-              <div className="text-2xl font-bold text-green-900">
-                {pricesVND
-                  ? pricesVND.exchangeRateUsdVnd.toLocaleString("vi-VN")
-                  : "-"}
-              </div>
-            </div>
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-sm text-blue-600 font-medium">
-                Gold Premium (VND)
-              </div>
-              <div className="text-2xl font-bold text-blue-900">
-                {pricesVND && pricesUSD
-                  ? formatCompactVND(
-                      pricesVND.goldPriceVndPerGram * 31.1035 -
-                        pricesUSD.pricePerOunce * pricesVND.exchangeRateUsdVnd
-                    )
-                  : "-"}
-              </div>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-sm text-purple-600 font-medium">
-                Conversion Accuracy
-              </div>
-              <div className="text-2xl font-bold text-purple-900">99.9%</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Price Trends Chart */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-blue-600" />
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Price Trends
-                </h2>
-              </div>
-              <select
-                value={selectedPeriod}
-                onChange={(e) => setSelectedPeriod(parseInt(e.target.value))}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value={7}>7 Days</option>
-                <option value={30}>30 Days</option>
-                <option value={90}>90 Days</option>
-                <option value={365}>1 Year</option>
-              </select>
-            </div>
-
-            <div className="space-y-4">
-              {trends.map((trend, idx) => (
-                <div
-                  key={idx}
-                  className="border border-gray-200 rounded-lg p-4"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`w-3 h-3 rounded-full ${
-                          (trend.metal || trend.metalType) === "GOLD"
-                            ? "bg-yellow-400"
-                            : (trend.metal || trend.metalType) === "SILVER"
-                            ? "bg-gray-400"
-                            : (trend.metal || trend.metalType) === "PLATINUM"
-                            ? "bg-blue-400"
-                            : "bg-purple-400"
-                        }`}
-                      ></div>
-                      <span className="font-medium text-gray-900">
-                        {trend.metal || trend.metalType}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {getTrendIcon(trend.trend)}
-                      <span
-                        className={`text-sm font-medium ${getTrendColor(
-                          trend.trend
-                        )}`}
-                      >
-                        {trend.trend}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <div className="text-gray-600">Average</div>
-                      <div className="font-semibold">
-                        {formatCompactVND(trend.averagePrice)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-gray-600">Min Price</div>
-                      <div className="font-semibold text-red-600">
-                        {formatCompactVND(trend.minPrice)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-gray-600">Max Price</div>
-                      <div className="font-semibold text-green-600">
-                        {formatCompactVND(trend.maxPrice)}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 text-xs text-gray-500">
-                    Volatility: {(trend.volatility * 100).toFixed(1)}% • Data
-                    points: {trend.priceHistory?.length || 0}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Material Cost Calculator */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center gap-2 mb-6">
-              <Calculator className="h-5 w-5 text-purple-600" />
-              <h2 className="text-xl font-semibold text-gray-900">
-                Material Cost Calculator
-              </h2>
-            </div>
-
-            <div className="space-y-4 mb-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Metal Type
-                  </label>
-                  <select
-                    value={calculatorSpec.metalType}
-                    onChange={(e) =>
-                      setCalculatorSpec({
-                        ...calculatorSpec,
-                        metalType: e.target.value
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {metalTypes.map((metal) => (
-                      <option key={metal.type} value={metal.type}>
-                        {metal.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Purity
-                  </label>
-                  <select
-                    value={calculatorSpec.purity}
-                    onChange={(e) =>
-                      setCalculatorSpec({
-                        ...calculatorSpec,
-                        purity: e.target.value
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {(purityOptions[calculatorSpec.metalType] || []).map(
-                      (purity) => (
-                        <option key={purity} value={purity}>
-                          {purity}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Weight (grams)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={calculatorSpec.metalWeightGrams}
-                    onChange={(e) =>
-                      setCalculatorSpec({
-                        ...calculatorSpec,
-                        metalWeightGrams: parseFloat(e.target.value) || 0
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Quantity
-                  </label>
-                  <input
-                    type="number"
-                    value={calculatorSpec.quantity}
-                    onChange={(e) =>
-                      setCalculatorSpec({
-                        ...calculatorSpec,
-                        quantity: parseInt(e.target.value) || 0
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Jewelry Type
-                  </label>
-                  <select
-                    value={calculatorSpec.jewelryType}
-                    onChange={(e) =>
-                      setCalculatorSpec({
-                        ...calculatorSpec,
-                        jewelryType: e.target.value
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="RING">Ring</option>
-                    <option value="NECKLACE">Necklace</option>
-                    <option value="EARRINGS">Earrings</option>
-                    <option value="BRACELET">Bracelet</option>
-                    <option value="PENDANT">Pendant</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Complexity
-                  </label>
-                  <select
-                    value={calculatorSpec.complexity}
-                    onChange={(e) =>
-                      setCalculatorSpec({
-                        ...calculatorSpec,
-                        complexity: e.target.value
-                      })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="SIMPLE">Simple</option>
-                    <option value="MODERATE">Moderate</option>
-                    <option value="COMPLEX">Complex</option>
-                    <option value="MASTERPIECE">Masterpiece</option>
-                  </select>
-                </div>
-              </div>
-
-              <button
-                onClick={calculateMaterialCost}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors"
-              >
-                <Calculator size={20} />
-                Calculate Material Cost
-              </button>
-            </div>
-
-            {materialCost && (
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  Cost Breakdown
+          return (
+            <div
+              key={metal.type}
+              className="admin-card"
+              style={{ padding: '1.5rem', borderLeft: '3px solid #0f172a' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: '0.875rem', fontWeight: '600', color: '#0f172a', margin: 0 }}>
+                  {metal.name}
                 </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Metal Cost:</span>
-                    <span className="font-semibold">
-                      {formatCurrencyVND(materialCost.metalCostVnd)}
+                {metalTrend && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <span style={{ fontSize: '0.875rem', color: getTrendColor(metalTrend.trend) }}>
+                      {getTrendText(metalTrend.trend)}
+                    </span>
+                    <span style={{ fontSize: '0.75rem', fontWeight: '500', color: getTrendColor(metalTrend.trend) }}>
+                      {metalTrend.trend}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Labor Cost:</span>
-                    <span className="font-semibold">
-                      {formatCurrencyVND(materialCost.laborCostVnd)}
-                    </span>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>VND per gram</div>
+                  <div style={{ fontSize: '1.25rem', fontWeight: '600', color: '#0f172a' }}>
+                    {formatCompactVND(priceVND)}
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Overhead Cost:</span>
-                    <span className="font-semibold">
-                      {formatCurrencyVND(materialCost.overheadCostVnd)}
-                    </span>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>USD per troy oz</div>
+                  <div style={{ fontSize: '1rem', fontWeight: '500', color: '#0f172a' }}>
+                    {formatCurrencyUSD(priceUSD)}
                   </div>
-                  <div className="border-t border-gray-200 pt-2">
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium text-gray-900">
-                        Total Cost:
-                      </span>
-                      <span className="text-lg font-bold text-purple-600">
-                        {formatCurrencyVND(materialCost.totalCostVnd)}
-                      </span>
+                </div>
+                {metalTrend && (
+                  <div style={{ paddingTop: '0.5rem', borderTop: '1px solid #e2e8f0' }}>
+                    <div style={{ fontSize: '0.6875rem', color: '#64748b' }}>
+                      Volatility: {(metalTrend.volatility * 100).toFixed(1)}%
                     </div>
-                    <div className="flex justify-between items-center mt-1">
-                      <span className="text-gray-600">Unit Cost:</span>
-                      <span className="font-semibold">
-                        {formatCurrencyVND(materialCost.unitCostVnd)}
-                      </span>
+                    <div style={{ fontSize: '0.6875rem', color: '#64748b' }}>
+                      Range: {formatCompactVND(metalTrend.minPrice)} -{" "}
+                      {formatCompactVND(metalTrend.maxPrice)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Exchange Rate Info */}
+      <div className="admin-card" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
+        <h2 style={{ margin: '0 0 1rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
+          Exchange Rate Information
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+          <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: '500' }}>
+              USD to VND Rate
+            </div>
+            <div style={{ fontSize: '1.25rem', fontWeight: '600', color: '#0f172a' }}>
+              {pricesVND
+                ? pricesVND.exchangeRateUsdVnd.toLocaleString("vi-VN")
+                : "-"}
+            </div>
+          </div>
+          <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: '500' }}>
+              Gold Premium (VND)
+            </div>
+            <div style={{ fontSize: '1.25rem', fontWeight: '600', color: '#0f172a' }}>
+              {pricesVND && pricesUSD
+                ? formatCompactVND(
+                    pricesVND.goldPriceVndPerGram * 31.1035 -
+                      pricesUSD.pricePerOunce * pricesVND.exchangeRateUsdVnd
+                  )
+                : "-"}
+            </div>
+          </div>
+          <div style={{ backgroundColor: '#fafbfc', padding: '1rem', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', fontWeight: '500' }}>
+              Conversion Accuracy
+            </div>
+            <div style={{ fontSize: '1.25rem', fontWeight: '600', color: '#0f172a' }}>99.9%</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+        {/* Price Trends Chart */}
+        <div className="admin-card" style={{ padding: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+            <h2 style={{ margin: 0, fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
+              Price Trends
+            </h2>
+            <select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(parseInt(e.target.value))}
+              className="admin-select"
+            >
+              <option value={7}>7 Days</option>
+              <option value={30}>30 Days</option>
+              <option value={90}>90 Days</option>
+              <option value={365}>1 Year</option>
+            </select>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {trends.map((trend, idx) => (
+              <div
+                key={idx}
+                style={{ border: '1px solid #e2e8f0', borderRadius: '6px', padding: '1rem' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div
+                      style={{
+                        width: '12px',
+                        height: '12px',
+                        borderRadius: '50%',
+                        backgroundColor:
+                          (trend.metal || trend.metalType) === "GOLD"
+                            ? "#facc15"
+                            : (trend.metal || trend.metalType) === "SILVER"
+                            ? "#94a3b8"
+                            : (trend.metal || trend.metalType) === "PLATINUM"
+                            ? "#60a5fa"
+                            : "#a78bfa"
+                      }}
+                    ></div>
+                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '0.8125rem' }}>
+                      {trend.metal || trend.metalType}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.875rem', color: getTrendColor(trend.trend) }}>
+                      {getTrendText(trend.trend)}
+                    </span>
+                    <span
+                      style={{ fontSize: '0.75rem', fontWeight: '500', color: getTrendColor(trend.trend) }}
+                    >
+                      {trend.trend}
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', fontSize: '0.8125rem' }}>
+                  <div>
+                    <div style={{ color: '#64748b' }}>Average</div>
+                    <div style={{ fontWeight: '600', color: '#0f172a' }}>
+                      {formatCompactVND(trend.averagePrice)}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ color: '#64748b' }}>Min Price</div>
+                    <div style={{ fontWeight: '600', color: '#dc2626' }}>
+                      {formatCompactVND(trend.minPrice)}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ color: '#64748b' }}>Max Price</div>
+                    <div style={{ fontWeight: '600', color: '#059669' }}>
+                      {formatCompactVND(trend.maxPrice)}
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 text-xs text-gray-500">
-                  Calculated at:{" "}
-                  {new Date(materialCost.calculatedAt).toLocaleString()}
+
+                <div style={{ marginTop: '0.75rem', fontSize: '0.6875rem', color: '#64748b' }}>
+                  Volatility: {(trend.volatility * 100).toFixed(1)}% • Data
+                  points: {trend.priceHistory?.length || 0}
                 </div>
               </div>
-            )}
+            ))}
           </div>
+        </div>
+
+        {/* Material Cost Calculator */}
+        <div className="admin-card" style={{ padding: '1.5rem' }}>
+          <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0f172a' }}>
+            Material Cost Calculator
+          </h2>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div>
+                <label className="admin-label">
+                  Metal Type
+                </label>
+                <select
+                  value={calculatorSpec.metalType}
+                  onChange={(e) =>
+                    setCalculatorSpec({
+                      ...calculatorSpec,
+                      metalType: e.target.value
+                    })
+                  }
+                  className="admin-select"
+                >
+                  {metalTypes.map((metal) => (
+                    <option key={metal.type} value={metal.type}>
+                      {metal.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="admin-label">
+                  Purity
+                </label>
+                <select
+                  value={calculatorSpec.purity}
+                  onChange={(e) =>
+                    setCalculatorSpec({
+                      ...calculatorSpec,
+                      purity: e.target.value
+                    })
+                  }
+                  className="admin-select"
+                >
+                  {(purityOptions[calculatorSpec.metalType] || []).map(
+                    (purity) => (
+                      <option key={purity} value={purity}>
+                        {purity}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+
+              <div>
+                <label className="admin-label">
+                  Weight (grams)
+                </label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={calculatorSpec.metalWeightGrams}
+                  onChange={(e) =>
+                    setCalculatorSpec({
+                      ...calculatorSpec,
+                      metalWeightGrams: parseFloat(e.target.value) || 0
+                    })
+                  }
+                  className="admin-input"
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">
+                  Quantity
+                </label>
+                <input
+                  type="number"
+                  value={calculatorSpec.quantity}
+                  onChange={(e) =>
+                    setCalculatorSpec({
+                      ...calculatorSpec,
+                      quantity: parseInt(e.target.value) || 0
+                    })
+                  }
+                  className="admin-input"
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">
+                  Jewelry Type
+                </label>
+                <select
+                  value={calculatorSpec.jewelryType}
+                  onChange={(e) =>
+                    setCalculatorSpec({
+                      ...calculatorSpec,
+                      jewelryType: e.target.value
+                    })
+                  }
+                  className="admin-select"
+                >
+                  <option value="RING">Ring</option>
+                  <option value="NECKLACE">Necklace</option>
+                  <option value="EARRINGS">Earrings</option>
+                  <option value="BRACELET">Bracelet</option>
+                  <option value="PENDANT">Pendant</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="admin-label">
+                  Complexity
+                </label>
+                <select
+                  value={calculatorSpec.complexity}
+                  onChange={(e) =>
+                    setCalculatorSpec({
+                      ...calculatorSpec,
+                      complexity: e.target.value
+                    })
+                  }
+                  className="admin-select"
+                >
+                  <option value="SIMPLE">Simple</option>
+                  <option value="MODERATE">Moderate</option>
+                  <option value="COMPLEX">Complex</option>
+                  <option value="MASTERPIECE">Masterpiece</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              onClick={calculateMaterialCost}
+              className="admin-button admin-button-primary"
+              style={{ width: '100%' }}
+            >
+              Calculate Material Cost
+            </button>
+          </div>
+
+          {materialCost && (
+            <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem' }}>
+              <h3 style={{ fontSize: '0.875rem', fontWeight: '600', color: '#0f172a', marginBottom: '1rem' }}>
+                Cost Breakdown
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#64748b', fontSize: '0.8125rem' }}>Metal Cost:</span>
+                  <span style={{ fontWeight: '600', color: '#0f172a', fontSize: '0.8125rem' }}>
+                    {formatCurrencyVND(materialCost.metalCostVnd)}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#64748b', fontSize: '0.8125rem' }}>Labor Cost:</span>
+                  <span style={{ fontWeight: '600', color: '#0f172a', fontSize: '0.8125rem' }}>
+                    {formatCurrencyVND(materialCost.laborCostVnd)}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#64748b', fontSize: '0.8125rem' }}>Overhead Cost:</span>
+                  <span style={{ fontWeight: '600', color: '#0f172a', fontSize: '0.8125rem' }}>
+                    {formatCurrencyVND(materialCost.overheadCostVnd)}
+                  </span>
+                </div>
+                <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontWeight: '500', color: '#0f172a', fontSize: '0.8125rem' }}>
+                      Total Cost:
+                    </span>
+                    <span style={{ fontSize: '1rem', fontWeight: '700', color: '#0f172a' }}>
+                      {formatCurrencyVND(materialCost.totalCostVnd)}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.25rem' }}>
+                    <span style={{ color: '#64748b', fontSize: '0.8125rem' }}>Unit Cost:</span>
+                    <span style={{ fontWeight: '600', color: '#0f172a', fontSize: '0.8125rem' }}>
+                      {formatCurrencyVND(materialCost.unitCostVnd)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div style={{ marginTop: '1rem', fontSize: '0.6875rem', color: '#64748b' }}>
+                Calculated at:{" "}
+                {new Date(materialCost.calculatedAt).toLocaleString()}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

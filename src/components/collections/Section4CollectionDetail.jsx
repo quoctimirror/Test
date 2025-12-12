@@ -42,12 +42,12 @@ const Section4CollectionDetail = ({
     .map(() => ({
       label: "Lumina",
       images: [
-        "products/allGems/product_card_1.png",
-        "products/allGems/model_4.png",
-        "products/allGems/toietmoi-product.png",
+        "products/allGems/product_card_1.webp",
+        "products/allGems/model_4.webp",
+        "products/allGems/toietmoi-product.webp",
       ],
     }));
-  const modelImage = "products/allGems/flower.png";
+  const modelImage = "products/allGems/flower.webp";
 
   // Helper function to convert slug back to name for API lookup
   const slugToName = (slug) => {
@@ -162,7 +162,7 @@ const Section4CollectionDetail = ({
               product.primaryImage ||
               product.thumbnail ||
               product.featuredImage ||
-              "collections/collectionDetail/collectionDetail_more.png";
+              "collections/collectionDetail/collectionDetail_more.webp";
 
             return {
               id: product.id,
@@ -212,7 +212,7 @@ const Section4CollectionDetail = ({
       .map((_, index) => ({
         id: index + 1,
         name: "Lumina",
-        image: "collections/collectionDetail/collectionDetail_more.png",
+        image: "collections/collectionDetail/collectionDetail_more.webp",
       }));
   };
 
