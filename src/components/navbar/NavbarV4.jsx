@@ -37,6 +37,9 @@ export default function NavbarV4() {
     location.pathname === ROUTES.WELCOME ||
     location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
+  // Check if current page is immersive showroom (for always white logo without blend)
+  const isImmersiveShowroomPage = location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
+
   // Check if current page is Milan submission page or Submit Success page
   const isMilanPage = location.pathname.startsWith(ROUTES.MILAN_SUBMIT);
 
@@ -511,7 +514,9 @@ export default function NavbarV4() {
           isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
         } ${shouldDisableLogoClick ? "no-click" : ""} ${
           isSubmitPage ? "submit-page-logo" : ""
-        } ${isInIntroSubmitSection ? "intro-submit-logo" : ""}`}
+        } ${isInIntroSubmitSection ? "intro-submit-logo" : ""} ${
+          isImmersiveShowroomPage ? "immersive-showroom-logo" : ""
+        }`}
         onClick={handleLogoClick}
       >
         <img

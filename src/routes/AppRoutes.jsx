@@ -5,6 +5,7 @@ import { lazy, Suspense } from "react";
 import NavbarV4 from "@components/navbar/NavbarV4";
 import Footer from "@components/footer/Footer";
 import { ROUTES } from "@/constants/routes";
+import { useImmersiveModal } from "@/contexts/ImmersiveModalContext";
 // Lazy-load components
 const HomePage = lazy(() => import("@pages/HomePage"));
 const ProductsPage = lazy(() => import("@pages/ProductsPage"));
@@ -102,6 +103,7 @@ const InventoryCreateOrder = lazy(() => import("@components/inventory/CreateOrde
 
 export default function AppRoutes() {
   const location = useLocation();
+  const { isOpen: isImmersiveModalOpen } = useImmersiveModal();
 
   // Check if current path matches any defined route (to detect 404)
   const isNotFoundPage = () => {
@@ -215,7 +217,7 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.INVENTORY);
 
-  const shouldShowNavbar = !staticRoutesToHideNavBar;
+  const shouldShowNavbar = !staticRoutesToHideNavBar && !isImmersiveModalOpen;
   const shouldShowFooter = !staticRoutesToHideFooter;
 
   return (
@@ -304,10 +306,12 @@ export default function AppRoutes() {
               element={<BookAppointmentPage />}
             />
 
+            {/* Milan Digital Jewelry Week - Route disabled (page still exists)
             <Route path={ROUTES.MILAN_SUBMIT}>
               <Route index element={<SubmitPage />} />
               <Route path="submit-success" element={<SubmitSuccessPage />} />
             </Route>
+            */}
 
   {/* for observing UI universe-section final */ }
             <Route path="/universe-section" element={<UniverseSection />} />

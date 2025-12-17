@@ -3,7 +3,7 @@ import {
   productsAPI,
   categoriesAPI,
   vendorsAPI,
-  fileUploadAPI,
+  r2API,
   certificatesAPI,
   handleAPIError,
 } from "@services/api";
@@ -156,15 +156,9 @@ const ProductsManager = () => {
   const uploadAllImages = async () => {
     const uploadPromises = imageFiles
       .filter(img => !img.uploaded && img.file)
-      .map(async (img, index) => {
+      .map(async (img) => {
         try {
-          const response = await fileUploadAPI.upload(
-            img.file,
-            `Product image: ${formData.name || "New product"} - ${index + 1}`,
-            "mirror-storage",
-            "public"
-          );
-
+          const response = await r2API.upload(img.file, "products");
           const publicUrl = response.data.publicUrl;
           if (publicUrl) {
             img.uploaded = true;
