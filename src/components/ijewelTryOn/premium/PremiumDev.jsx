@@ -11,6 +11,7 @@ const MODELS = [
   { id: 'DfRULQ-OSk6TjbYAcB9zkA', name: 'Fistion', basename: 'drive' }, // chuan
   { id: 'FWV7-qA6QEG_Ju8pjSItuA', name: 'Triology', basename: 'drive' }, // chuan
   { id: 'QAauSV24QiuM5CxA_1797w', name: 'Myfav', basename: 'drive' }, // chuan
+  { id: 'VdiuGY0xSDOOBoxoHU2y-A', name: 'Lumex91Cadillac', basename: 'drive'}, // chuan
   // ==============================================================================================================
   // đang sửa
 
@@ -507,14 +508,6 @@ const Premium = () => {
               </svg>
             </button>
 
-            {/* Capture button - center */}
-            <button className={styles.circleButton} onClick={handleCapture} aria-label="Capture Photo">
-              <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="12" cy="12" r="6" fill="currentColor" />
-              </svg>
-            </button>
-
             {/* Camera flip */}
             <button className={styles.circleButton} onClick={handleFlipCamera} aria-label="Flip Camera">
               <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -523,6 +516,14 @@ const Premium = () => {
                 <circle cx="12" cy="12" r="3" />
                 <path d="m18 22-3-3 3-3" />
                 <path d="m6 2 3 3-3 3" />
+              </svg>
+            </button>
+
+            {/* Capture button */}
+            <button className={styles.circleButton} onClick={handleCapture} aria-label="Capture Photo">
+              <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" fill="currentColor" />
               </svg>
             </button>
           </div>

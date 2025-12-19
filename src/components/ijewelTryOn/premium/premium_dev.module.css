@@ -538,7 +538,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 15vh; /* desktop */
+  height: max(13vh, 9vw); /* desktop */
   /* Solid white background */
   background: #ffffff;
   z-index: 99999;
@@ -550,10 +550,10 @@
   transform: translateZ(0);
 }
 
-/* Mobile: 12vh */
+/* Mobile: same as desktop */
 @media (max-width: 768px) {
   .footer {
-    height: 12vh;
+    height: max(13vh, 9vw);
   }
 }
 
