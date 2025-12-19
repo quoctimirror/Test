@@ -54,6 +54,9 @@ export const ROUTES = {
   EVENT_DISPLAY: "/event/display",
   EVENT_ADMIN: "/event/admin",
 
+  // Interactive experiences
+  BIRTHDAY_CAKE: "/birthday-cake",
+
   // Inventory Management routes
   INVENTORY: "/inventory",
   INVENTORY_DASHBOARD: "/inventory/dashboard",
