@@ -381,8 +381,16 @@ const Premium = () => {
   const handleDownload = () => {
     if (!capturedImage) return;
 
+    // Format: DD-MM-YYYY theo múi giờ Việt Nam (UTC+7)
+    const vietnamDate = new Intl.DateTimeFormat('vi-VN', {
+      timeZone: 'Asia/Ho_Chi_Minh',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).format(new Date()).replace(/\//g, '-');
+
     const link = document.createElement('a');
-    link.download = `mirror-tryon-${Date.now()}.png`;
+    link.download = `mirror-tryon-${vietnamDate}.png`;
     link.href = capturedImage;
     link.click();
 
