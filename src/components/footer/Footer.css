@@ -61,8 +61,15 @@
   position: relative;
   padding-top: 0;
   opacity: 0;
-  transform: translateY(120px);
+  transform: translateY(80px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition-delay: 0.15s;
   will-change: transform, opacity;
+}
+
+.footer-content.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* LEFT SECTION - Discover Menu */
@@ -90,8 +97,15 @@
   left: 50%;
   top: 50%;
   opacity: 0;
-  transform: translate(-50%, -50%) translateY(100px);
+  transform: translate(-50%, -50%) translateY(60px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition-delay: 0s;
   will-change: transform, opacity;
+}
+
+.footer-center.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) translateY(0);
 }
 
 /* ========================================
@@ -223,8 +237,15 @@
   justify-content: flex-end;
   margin-top: 36px;
   opacity: 0;
-  transform: translateY(80px);
+  transform: translateY(40px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition-delay: 0.3s;
   will-change: transform, opacity;
+}
+
+.footer-bottom.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Footer Bottom Row - Contains left and right */
@@ -342,14 +363,22 @@
     max-width: 450px;
     min-height: 100px;
     height: auto;
-    transform: none;
+    transform: translateY(40px);
     margin: 0 auto 36px;
     order: -1;
     padding: 0;
   }
 
   .footer-center.visible {
-    transform: none;
+    transform: translateY(0);
+  }
+
+  .footer-content {
+    transform: translateY(40px);
+  }
+
+  .footer-content.visible {
+    transform: translateY(0);
   }
 
   .newsletter-section {
@@ -474,14 +503,22 @@
     max-width: 304px;
     min-height: 100px;
     height: auto;
-    transform: none;
+    transform: translateY(40px);
     margin: 0 auto 36px;
     order: -1;
     padding: 0;
   }
 
   .footer-center.visible {
-    transform: none;
+    transform: translateY(0);
+  }
+
+  .footer-content {
+    transform: translateY(40px);
+  }
+
+  .footer-content.visible {
+    transform: translateY(0);
   }
 
   .newsletter-section {

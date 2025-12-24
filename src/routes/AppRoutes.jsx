@@ -84,22 +84,43 @@ const ScavengerHunt = lazy(() =>
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const PremiumPage = lazy(() => import("@pages/PremiumPage"));
 const PremiumDevPage = lazy(() => import("@pages/PremiumDevPage"));
-const SimpleMeshInspector = lazy(() => import("@components/ijewelTryOn/quocti_dancefloor/SimpleMeshInspector"));
+const SimpleMeshInspector = lazy(() =>
+  import("@components/ijewelTryOn/quocti_dancefloor/SimpleMeshInspector")
+);
 
 // Event Pages
 const EventPage = lazy(() => import("@pages/Event/EventPage"));
 const EventDisplayPage = lazy(() => import("@pages/Event/EventDisplayPage"));
 const EventAdminPage = lazy(() => import("@pages/Event/EventAdminPage"));
 
+// Interactive Experiences
+const BirthdayCake = lazy(() =>
+  import("@components/birthday-cake/BirthdayCake")
+);
+
 // Inventory Management
-const InventoryLayout = lazy(() => import("@components/inventory/InventoryLayout"));
-const InventoryDashboard = lazy(() => import("@components/inventory/Dashboard"));
+const InventoryLayout = lazy(() =>
+  import("@components/inventory/InventoryLayout")
+);
+const InventoryDashboard = lazy(() =>
+  import("@components/inventory/Dashboard")
+);
 const InventoryScanner = lazy(() => import("@components/inventory/Scanner"));
-const InventoryProductForm = lazy(() => import("@components/inventory/ProductForm"));
-const InventoryProductList = lazy(() => import("@components/inventory/ProductList"));
-const InventoryProductDetail = lazy(() => import("@components/inventory/ProductDetail"));
-const InventoryPrintLabel = lazy(() => import("@components/inventory/PrintLabel"));
-const InventoryCreateOrder = lazy(() => import("@components/inventory/CreateOrder"));
+const InventoryProductForm = lazy(() =>
+  import("@components/inventory/ProductForm")
+);
+const InventoryProductList = lazy(() =>
+  import("@components/inventory/ProductList")
+);
+const InventoryProductDetail = lazy(() =>
+  import("@components/inventory/ProductDetail")
+);
+const InventoryPrintLabel = lazy(() =>
+  import("@components/inventory/PrintLabel")
+);
+const InventoryCreateOrder = lazy(() =>
+  import("@components/inventory/CreateOrder")
+);
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -154,6 +175,7 @@ export default function AppRoutes() {
       ROUTES.INVENTORY_ADD_PRODUCT,
       ROUTES.INVENTORY_PRODUCTS,
       ROUTES.INVENTORY_PRINT,
+      ROUTES.BIRTHDAY_CAKE,
     ];
 
     // Check exact matches
@@ -195,9 +217,10 @@ export default function AppRoutes() {
     location.pathname === ROUTES.PREMIUM ||
     location.pathname === ROUTES.PREMIUM_DEV ||
     location.pathname === ROUTES.MESH_INSPECTOR ||
-    location.pathname.startsWith(ROUTES.EVENT);
+    location.pathname === ROUTES.BIRTHDAY_CAKE ||
     location.pathname.startsWith(ROUTES.EVENT) ||
-    location.pathname.startsWith(ROUTES.INVENTORY);
+    location.pathname.startsWith(ROUTES.INVENTORY) ||
+    location.pathname === ROUTES.DB_EXPLORER;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -213,9 +236,10 @@ export default function AppRoutes() {
     location.pathname === ROUTES.PREMIUM ||
     location.pathname === ROUTES.PREMIUM_DEV ||
     location.pathname === ROUTES.MESH_INSPECTOR ||
-    location.pathname.startsWith(ROUTES.EVENT);
+    location.pathname === ROUTES.BIRTHDAY_CAKE ||
     location.pathname.startsWith(ROUTES.EVENT) ||
-    location.pathname.startsWith(ROUTES.INVENTORY);
+    location.pathname.startsWith(ROUTES.INVENTORY) ||
+    location.pathname === ROUTES.DB_EXPLORER;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar && !isImmersiveModalOpen;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -313,28 +337,46 @@ export default function AppRoutes() {
             </Route>
             */}
 
-  {/* for observing UI universe-section final */ }
+            {/* for observing UI universe-section final */}
             <Route path="/universe-section" element={<UniverseSection />} />
 
             <Route path={ROUTES.PRODUCTS_LEFT} element={<ProductsLeft />} />
 
             <Route path={ROUTES.USER_PROFILE} element={<Profile />} />
 
-  {/* Premium AR Route */ }
-  <Route path={ROUTES.PREMIUM} element={<PremiumPage />} />
+            {/* Premium AR Route */}
+            <Route path={ROUTES.PREMIUM} element={<PremiumPage />} />
 
             {/* Premium AR Development Route */}
             <Route path={ROUTES.PREMIUM_DEV} element={<PremiumDevPage />} />
 
             {/* Mesh Inspector Tool */}
-            <Route path={ROUTES.MESH_INSPECTOR} element={<SimpleMeshInspector />} />
+            <Route
+              path={ROUTES.MESH_INSPECTOR}
+              element={<SimpleMeshInspector />}
+            />
+
+            {/* DB Explorer - Export CSV/XLSX */}
+            <Route path={ROUTES.DB_EXPLORER} element={<DBExplorerPage />} />
 
             <Route path={ROUTES.SCAVENGER_HUNT} element={<ScavengerHunt />} />
 
             <Route
               path={ROUTES.DASHBOARD_ADMIN_MANAGE}
               element={
-                <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN", "IT_ADMIN", "PRODUCTION_OPS", "SALES_CUSTOMER_OPS", "FINANCE", "MARKETING", "CREATIVE_DESIGN", "LEGAL"]}>
+                <ProtectedRoute
+                  allowedRoles={[
+                    "SUPER_ADMIN",
+                    "ADMIN",
+                    "IT_ADMIN",
+                    "PRODUCTION_OPS",
+                    "SALES_CUSTOMER_OPS",
+                    "FINANCE",
+                    "MARKETING",
+                    "CREATIVE_DESIGN",
+                    "LEGAL",
+                  ]}
+                >
                   <ManageProducts />
                 </ProtectedRoute>
               }
@@ -343,7 +385,19 @@ export default function AppRoutes() {
             <Route
               path={ROUTES.DASHBOARD_ADMIN}
               element={
-                <ProtectedRoute allowedRoles={["SUPER_ADMIN", "ADMIN", "IT_ADMIN", "PRODUCTION_OPS", "SALES_CUSTOMER_OPS", "FINANCE", "MARKETING", "CREATIVE_DESIGN", "LEGAL"]}>
+                <ProtectedRoute
+                  allowedRoles={[
+                    "SUPER_ADMIN",
+                    "ADMIN",
+                    "IT_ADMIN",
+                    "PRODUCTION_OPS",
+                    "SALES_CUSTOMER_OPS",
+                    "FINANCE",
+                    "MARKETING",
+                    "CREATIVE_DESIGN",
+                    "LEGAL",
+                  ]}
+                >
                   <AdminDashboard />
                 </ProtectedRoute>
               }
@@ -372,6 +426,9 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT_DISPLAY} element={<EventDisplayPage />} />
             <Route path={ROUTES.EVENT_ADMIN} element={<EventAdminPage />} />
 
+            {/* Interactive Experiences */}
+            <Route path={ROUTES.BIRTHDAY_CAKE} element={<BirthdayCake />} />
+
             {/* Inventory Management Routes */}
             <Route path={ROUTES.INVENTORY} element={<InventoryLayout />}>
               <Route index element={<InventoryDashboard />} />
@@ -381,7 +438,10 @@ export default function AppRoutes() {
               <Route path="add" element={<InventoryProductForm />} />
               <Route path="products" element={<InventoryProductList />} />
               <Route path="products/:id" element={<InventoryProductDetail />} />
-              <Route path="products/:id/edit" element={<InventoryProductForm isEdit={true} />} />
+              <Route
+                path="products/:id/edit"
+                element={<InventoryProductForm isEdit={true} />}
+              />
               <Route path="print" element={<InventoryPrintLabel />} />
             </Route>
 
@@ -389,13 +449,13 @@ export default function AppRoutes() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
-      </main >
+      </main>
 
-    {/* Spacer to reveal footer */ }
-  { shouldShowFooter && <div className="footer-reveal-spacer" /> }
+      {/* Spacer to reveal footer */}
+      {shouldShowFooter && <div className="footer-reveal-spacer" />}
 
-  {/* Conditional Footer - Fixed at bottom */ }
-  { shouldShowFooter && <Footer /> }
+      {/* Conditional Footer - Fixed at bottom */}
+      {shouldShowFooter && <Footer />}
     </>
   );
 }

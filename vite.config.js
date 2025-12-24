@@ -27,6 +27,12 @@ export default defineConfig(({ mode }) => {
           secure: false,
           ws: true,
         },
+        "/inventory": {
+          target: env.VITE_INVENTORY_API_URL || "http://172.27.208.1:8080",
+          changeOrigin: true,
+          secure: false,
+          ws: true,
+        },
       },
     },
     resolve: {
