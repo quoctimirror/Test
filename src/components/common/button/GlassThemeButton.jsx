@@ -109,6 +109,7 @@ export default function GlassThemeButton({
   children,
   onClick,
   className = "",
+  textClassName = "bodytext-6--no-margin",
   type = "button",
   theme = "light", // "light" | "dark" | "spec_light" | "spec_dark"
   icon = null, // "arrow" | "arrow-up" | "globe" | React element | null
@@ -160,7 +161,7 @@ export default function GlassThemeButton({
       className={`glass-theme-button glass-theme-button--${theme} ${variantClass} ${className}`}
       onClick={handleClick}
     >
-      {children && <span className="glass-theme-btn-text">{children}</span>}
+      {children && <span className={`glass-theme-btn-text ${textClassName}`}>{children}</span>}
       {icon && <span className="glass-theme-btn-icon">{renderIcon()}</span>}
     </button>
   );

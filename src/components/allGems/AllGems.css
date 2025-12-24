@@ -1,3 +1,8 @@
+/* Page wrapper for AllGemsPage */
+.all-gems-page-wrapper {
+  position: relative;
+}
+
 .all-gems-page {
   min-height: 100vh;
   background: #f6f6f6;
@@ -95,6 +100,19 @@
   cursor: pointer;
 }
 
+/* Fixed aspect ratio to prevent size change when switching images */
+.gem-item .product-carousel-images {
+  aspect-ratio: 4 / 5;
+}
+
+.gem-item .product-carousel-slide {
+  position: absolute;
+}
+
+.gem-item .product-carousel-slide.active {
+  position: absolute;
+}
+
 .gem-item-large {
   grid-column: span 1;
   --parallax-img-offset: 0%;
@@ -183,4 +201,83 @@
   .gems-subtitle {
     max-width: 77%;
   }
+}
+
+/* Loading State */
+.gems-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.gems-loading p {
+  margin-top: 20px;
+  color: #797979;
+  font-size: 16px;
+}
+
+.gems-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #bc224c;
+  border-radius: 50%;
+  animation: gems-spin 1s linear infinite;
+}
+
+@keyframes gems-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.gems-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.gems-error p {
+  color: #dc2626;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.gems-error button {
+  background: #bc224c;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.gems-error button:hover {
+  background: #9a1c3e;
+}
+
+/* Empty State */
+.gems-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.gems-empty p {
+  color: #797979;
+  font-size: 18px;
 }

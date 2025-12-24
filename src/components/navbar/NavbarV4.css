@@ -118,6 +118,16 @@
   cursor: pointer;
 }
 
+/* Logo above modal - higher z-index when booking modal is open */
+.logo-v4-fixed-container.above-modal {
+  z-index: 10000;
+  mix-blend-mode: normal;
+}
+
+.logo-v4-fixed-container.above-modal .navbar-v4-logo-svg path {
+  fill: rgba(0, 0, 0, 1);
+}
+
 /* Submit page: absolute on mobile/tablet (no sticky), fixed on desktop (prevent pin) */
 @media screen and (max-width: 1023px) {
   body:has(.submit-page) .logo-v4-fixed-container,

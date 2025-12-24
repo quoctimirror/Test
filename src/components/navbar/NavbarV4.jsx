@@ -516,7 +516,7 @@ export default function NavbarV4() {
           isSubmitPage ? "submit-page-logo" : ""
         } ${isInIntroSubmitSection ? "intro-submit-logo" : ""} ${
           isImmersiveShowroomPage ? "immersive-showroom-logo" : ""
-        }`}
+        } ${isBookingModalOpen ? "above-modal" : ""}`}
         onClick={handleLogoClick}
       >
         <img

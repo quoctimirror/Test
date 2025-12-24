@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MediaImage } from "@components/common/media";
+import { getProductDetailRoute } from "@/constants/routes";
 import "./ProductCarouselItem.css";
 
-const ProductCarouselItem = ({ images = [], label, className = "" }) => {
+const ProductCarouselItem = ({ images = [], label, className = "", productId = null }) => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -51,6 +54,12 @@ const ProductCarouselItem = ({ images = [], label, className = "" }) => {
     setIsAnimating(false);
   };
 
+  const handleProductClick = () => {
+    if (productId) {
+      navigate(getProductDetailRoute(productId));
+    }
+  };
+
   const getSlideClass = (index) => {
     if (index === currentIndex) {
       if (isAnimating && slideDirection) {
@@ -66,9 +75,12 @@ const ProductCarouselItem = ({ images = [], label, className = "" }) => {
 
   return (
     <div
-      className={`product-carousel-item ${className}`}
+      className={`product-carousel-item ${className} ${productId ? "clickable" : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
+      onClick={handleProductClick}
+      role={productId ? "button" : undefined}
+      tabIndex={productId ? 0 : undefined}
     >
       <div className="product-carousel-images">
         {imageList.map((src, index) => (

@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./BookingModalV2.css";
 import { locationsAPI, appointmentsAPI, handleAPIError } from "@services/api";
 import UnderlineButton from "@components/common/button/UnderlineButton";
+import UnderlineButtonOpposite from "@components/common/button/UnderlineButtonOpposite";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import { getImageUrl } from "@/utils/cloudflareMediaUtil";
@@ -707,9 +708,6 @@ const BookingModalV2 = ({ isOpen, onClose, initialStep = 1 }) => {
                               disabled={booked}
                             >
                               <span>{time}</span>
-                              {booked && (
-                                <span className="bkv2-booked-label">Booked</span>
-                              )}
                             </button>
                           );
                         })}
@@ -836,7 +834,11 @@ const BookingModalV2 = ({ isOpen, onClose, initialStep = 1 }) => {
             </div>
           ) : (
             <img
-              key={currentStep === 3 ? selectedService?.id || "default" : currentStep}
+              key={
+                currentStep === 3
+                  ? selectedService?.id || "default"
+                  : currentStep
+              }
               src={
                 currentStep === 3
                   ? selectedService?.image || DEFAULT_LEFT_IMAGE
@@ -969,7 +971,7 @@ const BookingModalV2 = ({ isOpen, onClose, initialStep = 1 }) => {
                   {isSubmitting
                     ? "Submitting..."
                     : currentStep === 6
-                    ? "Confirm Booking"
+                    ? "Booking"
                     : "Continue"}
                 </GlassThemeButton>
               </div>
@@ -1357,7 +1359,6 @@ const StepDateTime = ({
                   disabled={booked}
                 >
                   <span>{time}</span>
-                  {booked && <span className="bkv2-booked-label">Booked</span>}
                 </button>
               );
             })}
@@ -1400,15 +1401,15 @@ const StepForm = ({ formData, setFormData }) => {
         <label className="bodytext-6--no-margin">Title *</label>
         <div className="bkv2-form-title-options">
           {titles.map((title) => (
-            <span
+            <UnderlineButton
               key={title}
               onClick={() => handleTitleSelect(title)}
-              className={`bkv2-form-title-option bodytext-6--no-margin ${
+              className={`bkv2-form-title-option ${
                 formData.title === title ? "active" : ""
               }`}
             >
               {title}
-            </span>
+            </UnderlineButton>
           ))}
         </div>
       </div>
@@ -1510,9 +1511,12 @@ const StepReview = ({
             In-store appointment: {selectedService?.title}
           </p>
         </div>
-        <UnderlineButton onClick={() => onEdit(3)} className="bkv2-review-edit">
+        <UnderlineButtonOpposite
+          onClick={() => onEdit(3)}
+          className="bkv2-review-edit"
+        >
           Edit
-        </UnderlineButton>
+        </UnderlineButtonOpposite>
       </div>
 
       <div className="bkv2-review-item">
@@ -1520,9 +1524,12 @@ const StepReview = ({
           <h4 className="bodytext-6--no-margin">Venue</h4>
           <p className="bodytext-4--no-margin">{selectedVenue?.name}</p>
         </div>
-        <UnderlineButton onClick={() => onEdit(2)} className="bkv2-review-edit">
+        <UnderlineButtonOpposite
+          onClick={() => onEdit(2)}
+          className="bkv2-review-edit"
+        >
           Edit
-        </UnderlineButton>
+        </UnderlineButtonOpposite>
       </div>
 
       <div className="bkv2-review-item">
@@ -1530,9 +1537,12 @@ const StepReview = ({
           <h4 className="bodytext-6--no-margin">Date</h4>
           <p className="bodytext-4--no-margin">{formatDate(selectedDate)}</p>
         </div>
-        <UnderlineButton onClick={() => onEdit(4)} className="bkv2-review-edit">
+        <UnderlineButtonOpposite
+          onClick={() => onEdit(4)}
+          className="bkv2-review-edit"
+        >
           Edit
-        </UnderlineButton>
+        </UnderlineButtonOpposite>
       </div>
 
       <div className="bkv2-review-item">
@@ -1540,9 +1550,12 @@ const StepReview = ({
           <h4 className="bodytext-6--no-margin">Time</h4>
           <p className="bodytext-4--no-margin">{selectedTime}, GMT +7</p>
         </div>
-        <UnderlineButton onClick={() => onEdit(4)} className="bkv2-review-edit">
+        <UnderlineButtonOpposite
+          onClick={() => onEdit(4)}
+          className="bkv2-review-edit"
+        >
           Edit
-        </UnderlineButton>
+        </UnderlineButtonOpposite>
       </div>
 
       <div className="bkv2-review-item">
@@ -1552,9 +1565,12 @@ const StepReview = ({
             {formData.title}. {formData.firstName} {formData.lastName}
           </p>
         </div>
-        <UnderlineButton onClick={() => onEdit(5)} className="bkv2-review-edit">
+        <UnderlineButtonOpposite
+          onClick={() => onEdit(5)}
+          className="bkv2-review-edit"
+        >
           Edit
-        </UnderlineButton>
+        </UnderlineButtonOpposite>
       </div>
 
       <div className="bkv2-review-item">
@@ -1564,9 +1580,12 @@ const StepReview = ({
             {formData.email || "Not provided"}
           </p>
         </div>
-        <UnderlineButton onClick={() => onEdit(5)} className="bkv2-review-edit">
+        <UnderlineButtonOpposite
+          onClick={() => onEdit(5)}
+          className="bkv2-review-edit"
+        >
           Edit
-        </UnderlineButton>
+        </UnderlineButtonOpposite>
       </div>
 
       <div className="bkv2-review-item">
@@ -1574,14 +1593,17 @@ const StepReview = ({
           <h4 className="bodytext-6--no-margin">Phone / WhatsApp</h4>
           <p className="bodytext-4--no-margin">{formData.phone}</p>
         </div>
-        <UnderlineButton onClick={() => onEdit(5)} className="bkv2-review-edit">
+        <UnderlineButtonOpposite
+          onClick={() => onEdit(5)}
+          className="bkv2-review-edit"
+        >
           Edit
-        </UnderlineButton>
+        </UnderlineButtonOpposite>
       </div>
 
       <div className="bkv2-privacy">
-        <h4 className="bodytext-1--no-margin">Booking and privacy policy</h4>
-        <p className="bodytext-4--no-margin">
+        <h4 className="bodytext-4--no-margin">Booking and privacy policy</h4>
+        <p className="bodytext-6Confirm Booking--no-margin">
           By ticking the boxes below, you confirm that you have read the Privacy
           Statement accessible from the link below, and consent to the
           processing of your personal data by Christian Dior Couture for the
