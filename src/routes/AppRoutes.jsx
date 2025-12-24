@@ -51,6 +51,7 @@ const NewCutPage = lazy(() => import("@pages/NewCutPage"));
 const MilanPage = lazy(() => import("@pages/MilanPage"));
 const ContactPage = lazy(() => import("@pages/ContactPage"));
 const ContactPageV2 = lazy(() => import("@pages/ContactPageV2"));
+const DBExplorerPage = lazy(() => import("@pages/DBExplorerPage"));
 
 // News Detail Wrapper Component
 const NewsDetailWrapper = () => {

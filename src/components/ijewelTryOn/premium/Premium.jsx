@@ -336,8 +336,20 @@ const Premium = () => {
       compositeCanvas.width = canvas.width;
       compositeCanvas.height = canvas.height;
 
+      // Flip horizontally for back camera (to fix flipped image)
+      const shouldFlip = isBackCameraRef.current;
+      if (shouldFlip) {
+        ctx.scale(-1, 1);
+        ctx.translate(-canvas.width, 0);
+      }
+
       // Draw the main canvas (AR view)
       ctx.drawImage(canvas, 0, 0);
+
+      // Reset transform for logo drawing
+      if (shouldFlip) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+      }
 
       // Load and draw logo
       const logo = new Image();
