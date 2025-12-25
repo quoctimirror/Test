@@ -3,7 +3,7 @@ import "./ContactUs.css";
 import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButtonOpposite from "@components/common/button/UnderlineButtonOpposite";
 import { MediaImage } from "@components/common/media";
-import BookingModal from "@components/booking/BookingModal";
+import BookingModalV2 from "@components/booking/BookingModalV2";
 
 const ContactUs = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -63,7 +63,7 @@ const ContactUs = () => {
       </div>
 
       {/* Booking Modal */}
-      <BookingModal
+      <BookingModalV2
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
       />
