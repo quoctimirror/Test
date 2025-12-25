@@ -93,6 +93,7 @@ const SimpleMeshInspector = lazy(() =>
 const EventPage = lazy(() => import("@pages/Event/EventPage"));
 const EventDisplayPage = lazy(() => import("@pages/Event/EventDisplayPage"));
 const EventAdminPage = lazy(() => import("@pages/Event/EventAdminPage"));
+const ChristmasMusicPage = lazy(() => import("@pages/Event/ChristmasMusicPage"));
 
 // Interactive Experiences
 const BirthdayCake = lazy(() =>
@@ -426,6 +427,7 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT} element={<EventPage />} />
             <Route path={ROUTES.EVENT_DISPLAY} element={<EventDisplayPage />} />
             <Route path={ROUTES.EVENT_ADMIN} element={<EventAdminPage />} />
+            <Route path={ROUTES.EVENT_CHRISTMAS} element={<ChristmasMusicPage />} />
 
             {/* Interactive Experiences */}
             <Route path={ROUTES.BIRTHDAY_CAKE} element={<BirthdayCake />} />
