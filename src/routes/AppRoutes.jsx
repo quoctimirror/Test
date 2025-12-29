@@ -85,7 +85,6 @@ const ScavengerHunt = lazy(() =>
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const PremiumPage = lazy(() => import("@pages/PremiumPage"));
 const PremiumDevPage = lazy(() => import("@pages/PremiumDevPage"));
-const DBExplorerPage = lazy(() => import("@pages/DBExplorerPage"));
 const SimpleMeshInspector = lazy(() =>
   import("@components/ijewelTryOn/quocti_dancefloor/SimpleMeshInspector")
 );
