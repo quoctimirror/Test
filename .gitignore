@@ -46,6 +46,7 @@ PRODUCT_OPS_TESTING_GUIDE.md
 
 # Python test scripts
 *.py
+!api/*.py
 test_*.py
 capture_*.py
 __pycache__/
