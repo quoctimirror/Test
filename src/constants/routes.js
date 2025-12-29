@@ -53,6 +53,7 @@ export const ROUTES = {
   EVENT: "/event",
   EVENT_DISPLAY: "/event/display",
   EVENT_ADMIN: "/event/admin",
+  EVENT_CHRISTMAS: "/event/christmas",
 
   // Interactive experiences
   BIRTHDAY_CAKE: "/birthday-cake",

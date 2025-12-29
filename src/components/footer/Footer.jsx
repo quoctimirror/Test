@@ -9,7 +9,7 @@ import fbIcon from "@assets/images/icons/fb_icon.svg";
 import instaIcon from "@assets/images/icons/insta_icon.svg";
 import tiktokIcon from "@assets/images/icons/tiktok_icon.svg";
 import PrismaticBurst from "@components/common/prismatic-burst/PrismaticBurst";
-import BookingModal from "@components/booking/BookingModal";
+import BookingModalV2 from "@components/booking/BookingModalV2";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -383,7 +383,7 @@ const Footer = () => {
       </div>
 
       {/* Booking Modal */}
-      <BookingModal
+      <BookingModalV2
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
       />

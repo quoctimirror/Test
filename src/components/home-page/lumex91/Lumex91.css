@@ -59,6 +59,21 @@
   z-index: 1;
 }
 
+/* Canvas for smooth frame rendering */
+.lumex91-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+  background: transparent;
+}
+
+.lumex91-canvas-visible {
+  opacity: 1;
+}
+
 .lumex91-content {
   text-align: center;
   color: white;

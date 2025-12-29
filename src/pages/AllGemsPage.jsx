@@ -25,7 +25,7 @@ const AllGemsPage = () => {
   }, []);
 
   return (
-    <div className="all-gems-page">
+    <div className="all-gems-page-wrapper">
       <AllGems />
 
       <div className="fixed-immersive-container">

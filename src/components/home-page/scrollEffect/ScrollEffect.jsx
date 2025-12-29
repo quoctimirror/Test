@@ -38,7 +38,13 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
   const isAutoScrollingRef = useRef(false);
   const lastScrollYRef = useRef(0);
 
-  const numFrames = 249; // Actual frames from Landscape_3D.mp4 (8.3s * 30fps)
+  // Smooth frame interpolation refs
+  const targetFrameRef = useRef(0);
+  const displayedFrameRef = useRef(0);
+  const animationFrameRef = useRef(null);
+  const framesPerTick = 8; // Max frames to advance per animation tick (controls smoothness vs speed)
+
+  const numFrames = 480; // Actual frames from 251222_60FPS_1080x1920.mp4 (10s * 60fps)
   const scrollEffectHeight = 250; // vh for scroll effect - reduced to make mirror introduce start earlier
   const mirrorIntroduceHeight = 600; // vh for mirror introduce
 
@@ -55,6 +61,34 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Smooth frame interpolation animation loop
+  useEffect(() => {
+    const animateFrames = () => {
+      const target = targetFrameRef.current;
+      const current = displayedFrameRef.current;
+
+      if (current !== target) {
+        // Calculate direction and step
+        const diff = target - current;
+        const step = Math.sign(diff) * Math.min(Math.abs(diff), framesPerTick);
+        const newFrame = current + step;
+
+        displayedFrameRef.current = newFrame;
+        setFrameIndex(newFrame);
+      }
+
+      animationFrameRef.current = requestAnimationFrame(animateFrames);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animateFrames);
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
   }, []);
 
   // Handle arrow click - scroll to next section
@@ -159,7 +193,9 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
 
   // Function to get frame path
   function getFramePath(index) {
-    return `/home-page/frames-webp/frame_${index.toString().padStart(4, "0")}.webp`;
+    return `/home-page/frames-new/frame_${index
+      .toString()
+      .padStart(4, "0")}.webp`;
   }
 
   // Progressive preload images - load in batches
@@ -235,7 +271,6 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
 
       // Check if scrolling down or up
       const isScrollingDown = scrollY > lastScrollYRef.current;
-      const previousScrollY = lastScrollYRef.current;
       lastScrollYRef.current = scrollY;
 
       // If auto-scroll is running, check if user is manually scrolling against auto-scroll direction
@@ -482,8 +517,8 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
           }
         }
 
-        // Reset mirror introduce elements
-        setFrameIndex(0);
+        // Reset mirror introduce elements - set target to 0, animation loop will smoothly transition
+        targetFrameRef.current = 0;
       }
       // Phase 2: MirrorIntroduce (after scrollEffectHeight vh)
       else {
@@ -495,12 +530,12 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
           1
         );
 
-        // Calculate frame index for video
+        // Calculate target frame index for video - animation loop will smoothly interpolate
         const index = Math.min(
           numFrames - 1,
           Math.floor(mirrorProgress * numFrames)
         );
-        setFrameIndex(index);
+        targetFrameRef.current = index;
 
         // Ensure Phase 2 canvas is fully visible
         if (phase2CanvasLayerRef.current) {

@@ -1,7 +1,7 @@
 import "./Lumex91.css";
 import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import ShinyText from "@components/common/shiny-text/ShinyText";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getNewsDetailRoute } from "@/constants/routes";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
@@ -12,10 +12,10 @@ const FRAME_PATH = "/home-page/lumex91-ani-frames/frame_";
 const Lumex91 = ({ externalProgress = null }) => {
   const [framesLoaded, setFramesLoaded] = useState(false);
   const [shouldLoadFrames, setShouldLoadFrames] = useState(false);
-  const [currentFrame, setCurrentFrame] = useState(1);
   const videoBoxRef = useRef(null);
+  const canvasRef = useRef(null);
   const imagesRef = useRef([]);
-  const rafRef = useRef(null);
+  const lastRenderedFrameRef = useRef(-1);
   const navigate = useNavigate();
 
   // Preload all frames when approaching viewport (earlier trigger)
@@ -52,7 +52,7 @@ const Lumex91 = ({ externalProgress = null }) => {
         const frameNum = String(index).padStart(3, "0");
         img.src = `${FRAME_PATH}${frameNum}.webp`;
         img.onload = () => resolve(img);
-        img.onerror = () => resolve(img); // Still resolve to not block others
+        img.onerror = () => resolve(null); // Return null for failed loads
       });
     };
 
@@ -68,56 +68,89 @@ const Lumex91 = ({ externalProgress = null }) => {
     });
   }, [shouldLoadFrames]);
 
-  // Scroll-controlled frame display
-  const updateFrame = useCallback(() => {
-    if (!videoBoxRef.current || !framesLoaded) return;
+  // Draw frame to canvas - optimized to only redraw when frame changes
+  const drawFrame = (frameIndex) => {
+    if (!canvasRef.current || !imagesRef.current.length) return;
 
-    // Use external progress if provided
-    if (externalProgress !== null) {
-      const frameIndex = Math.min(
-        TOTAL_FRAMES,
-        Math.max(1, Math.ceil(externalProgress * TOTAL_FRAMES))
-      );
-      setCurrentFrame(frameIndex);
-      rafRef.current = requestAnimationFrame(updateFrame);
-      return;
+    // Skip if same frame already rendered
+    if (frameIndex === lastRenderedFrameRef.current) return;
+
+    const image = imagesRef.current[frameIndex - 1]; // frames are 1-indexed
+    if (!image) return;
+
+    lastRenderedFrameRef.current = frameIndex;
+
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d", { alpha: true });
+
+    // Set canvas size to match container
+    const container = videoBoxRef.current;
+    if (container) {
+      const rect = container.getBoundingClientRect();
+      if (canvas.width !== rect.width || canvas.height !== rect.height) {
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
     }
 
-    const rect = videoBoxRef.current.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
+    // Clear canvas before drawing new frame
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Start: top of box enters bottom of viewport
-    // End: box scrolled 30% past top of viewport (slower animation)
-    const scrollStart = windowHeight;
-    const scrollEnd = -rect.height * 0.3;
-    const scrollRange = scrollStart - scrollEnd;
-    const currentPosition = rect.top;
+    // Calculate cover sizing (like object-fit: cover)
+    const scaleX = canvas.width / image.width;
+    const scaleY = canvas.height / image.height;
+    const scale = Math.max(scaleX, scaleY);
 
-    const progress = Math.max(
-      0,
-      Math.min(1, (scrollStart - currentPosition) / scrollRange)
-    );
+    const scaledWidth = image.width * scale;
+    const scaledHeight = image.height * scale;
+
+    const offsetX = (canvas.width - scaledWidth) / 2;
+    const offsetY = (canvas.height - scaledHeight) / 2;
+
+    context.drawImage(image, offsetX, offsetY, scaledWidth, scaledHeight);
+  };
+
+  // Update frame based on external progress - only on scroll, not continuous RAF
+  useEffect(() => {
+    if (!framesLoaded || externalProgress === null) return;
+
     const frameIndex = Math.min(
       TOTAL_FRAMES,
-      Math.max(1, Math.ceil(progress * TOTAL_FRAMES))
+      Math.max(1, Math.ceil(externalProgress * TOTAL_FRAMES))
     );
 
-    setCurrentFrame(frameIndex);
-    rafRef.current = requestAnimationFrame(updateFrame);
+    requestAnimationFrame(() => {
+      drawFrame(frameIndex);
+    });
   }, [framesLoaded, externalProgress]);
 
-  // Start animation loop when frames ready
+  // Handle resize - redraw current frame
   useEffect(() => {
     if (!framesLoaded) return;
 
-    rafRef.current = requestAnimationFrame(updateFrame);
-
-    return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+    const handleResize = () => {
+      // Force redraw by resetting last rendered frame
+      const currentFrame = lastRenderedFrameRef.current;
+      lastRenderedFrameRef.current = -1;
+      if (currentFrame > 0) {
+        requestAnimationFrame(() => {
+          drawFrame(currentFrame);
+        });
       }
     };
-  }, [framesLoaded, updateFrame]);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [framesLoaded]);
+
+  // Draw first frame when loaded
+  useEffect(() => {
+    if (framesLoaded && imagesRef.current.length > 0) {
+      requestAnimationFrame(() => {
+        drawFrame(1);
+      });
+    }
+  }, [framesLoaded]);
 
   const handleExploreClick = async () => {
     await optimizedTransitionUtils.transitionToRoute(
@@ -125,12 +158,6 @@ const Lumex91 = ({ externalProgress = null }) => {
       getNewsDetailRoute("milan")
     );
   };
-
-  // Generate current frame src
-  const currentFrameSrc = `${FRAME_PATH}${String(currentFrame).padStart(
-    3,
-    "0"
-  )}.webp`;
 
   return (
     <section className="lumex91">
@@ -145,14 +172,13 @@ const Lumex91 = ({ externalProgress = null }) => {
             alt="Mirror-Lumex 91"
           />
 
-          {/* Scroll-controlled frame display */}
-          {framesLoaded && (
-            <img
-              className="lumex91-video lumex91-frame"
-              src={currentFrameSrc}
-              alt="Mirror-Lumex 91"
-            />
-          )}
+          {/* Canvas for smooth frame rendering */}
+          <canvas
+            ref={canvasRef}
+            className={`lumex91-video lumex91-canvas ${
+              framesLoaded ? "lumex91-canvas-visible" : ""
+            }`}
+          />
         </div>
 
         <div className="lumex91-content">

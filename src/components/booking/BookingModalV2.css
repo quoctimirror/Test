@@ -944,19 +944,27 @@
 
 .bkv2-form-title-option {
   cursor: pointer;
-  padding-bottom: 2px;
-  border-bottom: 1px solid transparent;
+}
+
+.bkv2-form-title-option .underline-button-text {
   color: #797979;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
 
-.bkv2-form-title-option:hover {
+.bkv2-form-title-option .underline-button-text::after {
+  background: #000;
+}
+
+.bkv2-form-title-option:hover .underline-button-text {
   color: #000;
 }
 
-.bkv2-form-title-option.active {
+.bkv2-form-title-option.active .underline-button-text {
   color: #000;
-  border-bottom-color: #000;
+}
+
+.bkv2-form-title-option.active .underline-button-text::after {
+  transform: scaleX(1);
 }
 
 .bkv2-form-field {
@@ -1020,11 +1028,11 @@
   color: #0b0b0b;
 }
 
-.bkv2-review-edit .underline-button-text {
+.bkv2-review-edit .underline-button-opposite-text {
   color: #000;
 }
 
-.bkv2-review-edit .underline-button-text::after {
+.bkv2-review-edit .underline-button-opposite-text::after {
   background: #000;
 }
 
