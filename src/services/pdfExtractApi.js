@@ -1,9 +1,13 @@
 /**
  * PDF Invoice Extraction API Service
  * Calls the Python backend API to extract data from PDF invoices using pdfplumber
+ *
+ * Backend hosted on AWS - configure VITE_PDF_API_URL in .env
  */
 
-const API_ENDPOINT = '/api/extract-invoice';
+// AWS Backend URL - set in .env file: VITE_PDF_API_URL=https://your-aws-backend.com
+const API_BASE_URL = import.meta.env.VITE_PDF_API_URL || 'http://localhost:5000';
+const API_ENDPOINT = `${API_BASE_URL}/api/extract-invoice`;
 
 /**
  * Extract invoice data from a PDF file

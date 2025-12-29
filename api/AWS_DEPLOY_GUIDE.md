@@ -249,16 +249,23 @@ sudo systemctl enable pdf-extract
 sudo systemctl start pdf-extract
 ```
 
-## 6. Update Frontend API URL
+## 6. Update Frontend Environment Variable
 
-Update your frontend to call AWS backend instead of Vercel:
+Frontend đã được cấu hình sẵn sử dụng environment variable.
 
+**Cách 1: Local development** - tạo file `.env.local`:
+```bash
+VITE_PDF_API_URL=http://localhost:5000
+```
+
+**Cách 2: Vercel production** - thêm env variable trong Vercel Dashboard:
+```
+VITE_PDF_API_URL=https://your-aws-backend.com
+```
+
+**Cách 3: Hoặc chỉnh sửa trực tiếp** trong `src/services/pdfExtractApi.js`:
 ```javascript
-// Before (Vercel)
-const API_URL = '/api/extract-invoice';
-
-// After (AWS)
-const API_URL = 'https://your-aws-backend.com/api/extract-invoice';
+const API_BASE_URL = 'https://your-aws-backend.com';
 ```
 
 ## 7. Test API
