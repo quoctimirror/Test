@@ -54,3 +54,6 @@ __pycache__/
 
 .claude/*
 .vercel
+
+# Large frame files - too big for Vercel
+public/home-page/frames-new/
