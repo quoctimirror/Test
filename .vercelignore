@@ -10,3 +10,7 @@ __pycache__/
 
 # Local dev files
 api/server.py
+
+# Python API - deploy to AWS backend instead (avoid 250MB serverless limit)
+api/extract-invoice.py
+requirements.txt
