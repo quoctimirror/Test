@@ -409,7 +409,7 @@ const PackagingCodeForm = ({ onCodeGenerated }) => {
             <p>
               Upload a CSV file with required columns: prefix, country_of_origin, <strong>item_name</strong>, and optional columns: material, size, color, type, finish, notes.{" "}
               <a
-                href="/api/sku-codes/templates/packaging"
+                href="/api/skus/templates/packaging"
                 download="packaging_items_template.csv"
                 style={{color: '#007bff', textDecoration: 'underline'}}
               >

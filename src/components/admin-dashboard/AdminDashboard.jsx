@@ -26,6 +26,7 @@ import VendorSelectionWizard from "./VendorSelectionWizard";
 import RBACMatrix from "./RBACMatrix";
 import AppointmentsManager from "./AppointmentsManager";
 import PackagePrintingKit from "./PackagePrintingKit";
+import StockReconciliation from "./StockReconciliation";
 // Product Ops Dashboard
 import {
   ProductOpsDashboard,
@@ -102,6 +103,7 @@ const AdminDashboard = () => {
     { id: "product-ops", label: "Product Ops Dashboard" },
     { id: "misa-integration", label: "MISA Integration" },
     { id: "product-publisher", label: "Product Publisher" },
+    { id: "stock-reconciliation", label: "Stock Reconciliation" },
     // Existing tabs
     { id: "products", label: "Products" },
     { id: "product-fulfillment", label: "Product Fulfillment (Old)" },
@@ -137,6 +139,7 @@ const AdminDashboard = () => {
       "product-ops": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       "misa-integration": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       "product-publisher": ["PRODUCTION_OPS", "MARKETING", "ADMIN", "IT_ADMIN"],
+      "stock-reconciliation": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       // Existing tabs
       products: ["CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       "product-fulfillment": ["CREATIVE_DESIGN", "MARKETING", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
@@ -210,6 +213,8 @@ const AdminDashboard = () => {
         return <MISAIntegration />;
       case "product-publisher":
         return <ProductPublisher />;
+      case "stock-reconciliation":
+        return <StockReconciliation />;
       // Existing tabs
       case "products":
         return <ProductsManager />;
@@ -284,6 +289,10 @@ const AdminDashboard = () => {
       "product-publisher": {
         title: "Product Publisher",
         description: "Review, approve, and publish products to website",
+      },
+      "stock-reconciliation": {
+        title: "Stock Reconciliation",
+        description: "Scan barcodes to reconcile physical inventory against system records",
       },
       // Existing tabs
       products: {

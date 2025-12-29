@@ -261,6 +261,10 @@ const BookingModalV2 = ({ isOpen, onClose, initialStep = 1 }) => {
   const [bookedSlots, setBookedSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
 
+  // Unavailable dates state (fully blocked dates)
+  const [unavailableDates, setUnavailableDates] = useState([]);
+  const [loadingUnavailableDates, setLoadingUnavailableDates] = useState(false);
+
   // Map loading state
   const [mapLoading, setMapLoading] = useState(false);
   const mapIframeRef = useRef(null);
@@ -358,6 +362,50 @@ const BookingModalV2 = ({ isOpen, onClose, initialStep = 1 }) => {
     fetchBookedSlots();
   }, [selectedDate, selectedVenue]);
 
+  // Fetch unavailable dates when venue is selected
+  useEffect(() => {
+    const fetchUnavailableDates = async () => {
+      if (!selectedVenue) {
+        setUnavailableDates([]);
+        return;
+      }
+
+      setLoadingUnavailableDates(true);
+      try {
+        // Get unavailable dates for the next 90 days
+        const today = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 90);
+
+        const formatDate = (d) => {
+          const year = d.getFullYear();
+          const month = String(d.getMonth() + 1).padStart(2, "0");
+          const day = String(d.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        };
+
+        const response = await appointmentsAPI.getUnavailableDates(
+          formatDate(today),
+          formatDate(endDate),
+          selectedVenue.id
+        );
+
+        // Convert date strings to Date objects for comparison
+        const dates = (response.data?.unavailableDates || []).map(
+          (dateStr) => new Date(dateStr + "T00:00:00")
+        );
+        setUnavailableDates(dates);
+      } catch (err) {
+        console.error("Error fetching unavailable dates:", err);
+        setUnavailableDates([]);
+      } finally {
+        setLoadingUnavailableDates(false);
+      }
+    };
+
+    fetchUnavailableDates();
+  }, [selectedVenue]);
+
   // Disable scroll when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -393,6 +441,8 @@ const BookingModalV2 = ({ isOpen, onClose, initialStep = 1 }) => {
         setAcceptPrivacy(false);
         setBookedSlots([]);
         setLoadingSlots(false);
+        setUnavailableDates([]);
+        setLoadingUnavailableDates(false);
         setIsSubmitting(false);
         setSubmissionError(null);
         setBookingReference(null);
@@ -528,6 +578,18 @@ const BookingModalV2 = ({ isOpen, onClose, initialStep = 1 }) => {
 
   if (!isOpen) return null;
 
+  // Filter function to disable unavailable dates
+  const isDateAvailable = (date) => {
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+
+    return !unavailableDates.some((unavailableDate) => {
+      const unavailable = new Date(unavailableDate);
+      unavailable.setHours(0, 0, 0, 0);
+      return checkDate.getTime() === unavailable.getTime();
+    });
+  };
+
   // Step 4: Special layout - Choose Date (left) | Choose Time (right)
   if (currentStep === 4) {
     return createPortal(
@@ -545,6 +607,7 @@ const BookingModalV2 = ({ isOpen, onClose, initialStep = 1 }) => {
                 inline
                 minDate={new Date()}
                 calendarClassName="bkv2-calendar bkv2-calendar-large"
+                filterDate={isDateAvailable}
                 renderCustomHeader={({
                   date,
                   decreaseMonth,
@@ -936,6 +999,7 @@ const BookingModalV2 = ({ isOpen, onClose, initialStep = 1 }) => {
                     setSelectedTime={setSelectedTime}
                     bookedSlots={bookedSlots}
                     loadingSlots={loadingSlots}
+                    unavailableDates={unavailableDates}
                   />
                 )}
                 {currentStep === 5 && (
@@ -1225,7 +1289,19 @@ const StepDateTime = ({
   setSelectedTime,
   bookedSlots,
   loadingSlots,
+  unavailableDates = [],
 }) => {
+  // Filter function to disable unavailable dates
+  const isDateAvailable = (date) => {
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+
+    return !unavailableDates.some((unavailableDate) => {
+      const unavailable = new Date(unavailableDate);
+      unavailable.setHours(0, 0, 0, 0);
+      return checkDate.getTime() === unavailable.getTime();
+    });
+  };
   const renderCustomHeader = ({
     date,
     decreaseMonth,
@@ -1311,6 +1387,7 @@ const StepDateTime = ({
           inline
           minDate={new Date()}
           calendarClassName="bkv2-calendar"
+          filterDate={isDateAvailable}
           renderCustomHeader={renderCustomHeader}
           formatWeekDay={(day) => (
             <span className="bodytext-6--no-margin">

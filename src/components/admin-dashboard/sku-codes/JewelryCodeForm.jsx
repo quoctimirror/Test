@@ -525,7 +525,7 @@ const JewelryCodeForm = ({ onCodeGenerated }) => {
             <p>
               Upload a CSV file with required columns: prefix, material, <strong>material_color</strong>, <strong>material_weight</strong>, <strong>is_coated</strong>, coating_material (if coated), stone_origin, main_shape, main_weight, side_stones, country_of_origin, <strong>item_name</strong>, and optional variant.{" "}
               <a
-                href="/api/sku-codes/templates/jewelry"
+                href="/api/skus/templates/jewelry"
                 download="jewelry_items_template.csv"
                 style={{color: '#007bff', textDecoration: 'underline'}}
               >

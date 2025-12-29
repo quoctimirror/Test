@@ -328,6 +328,13 @@ export const appointmentsAPI = {
     return api.get("/api/appointments/slots", { params });
   },
 
+  // Get unavailable dates for a venue within a date range (where ALL slots are blocked/booked)
+  getUnavailableDates: (startDate, endDate, venueId = null) => {
+    const params = { startDate, endDate };
+    if (venueId) params.venueId = venueId;
+    return api.get("/api/appointments/unavailable-dates", { params });
+  },
+
   // Get appointments by date
   getByDate: (date) => api.get("/api/appointments/by-date", { params: { date } }),
 
@@ -369,6 +376,55 @@ export const appointmentsAPI = {
 
   // Delete appointment
   delete: (id) => api.delete(`/api/appointments/${id}`),
+};
+
+// ===== BLOCKED SLOTS API (Admin) =====
+export const blockedSlotsAPI = {
+  // Create a new blocked slot
+  create: (blockedSlotData) =>
+    api.post("/api/appointments/blocked-slots", blockedSlotData),
+
+  // Get all blocked slots
+  getAll: () => api.get("/api/appointments/blocked-slots"),
+
+  // Get blocked slot by ID
+  getById: (id) => api.get(`/api/appointments/blocked-slots/${id}`),
+
+  // Get blocked slots by date
+  getByDate: (date) =>
+    api.get("/api/appointments/blocked-slots/by-date", { params: { date } }),
+
+  // Get blocked slots by venue and date
+  getByVenueAndDate: (venueId, date) =>
+    api.get("/api/appointments/blocked-slots/by-venue-date", {
+      params: { venueId, date },
+    }),
+
+  // Get blocked slots by date range
+  getByDateRange: (startDate, endDate, venueId = null) => {
+    const params = { startDate, endDate };
+    if (venueId) params.venueId = venueId;
+    return api.get("/api/appointments/blocked-slots/by-date-range", { params });
+  },
+
+  // Check if a slot is blocked
+  checkBlocked: (venueId, date, time) =>
+    api.get("/api/appointments/blocked-slots/check", {
+      params: { venueId, date, time },
+    }),
+
+  // Get blocked times for a venue and date
+  getBlockedTimes: (venueId, date) =>
+    api.get("/api/appointments/blocked-slots/blocked-times", {
+      params: { venueId, date },
+    }),
+
+  // Update blocked slot
+  update: (id, blockedSlotData) =>
+    api.put(`/api/appointments/blocked-slots/${id}`, blockedSlotData),
+
+  // Delete blocked slot
+  delete: (id) => api.delete(`/api/appointments/blocked-slots/${id}`),
 };
 
 // ===== COLLECTIONS API =====
@@ -919,24 +975,26 @@ export const vendorsAPI = {
 };
 
 // ===== SKU CODES API =====
+// NOTE: These endpoints have been consolidated into /api/skus/ on the backend
+// The API paths below use the new merged endpoints
 export const skuCodesAPI = {
   // Generate jewelry SKU
   generateJewelrySku: (codeData) =>
-    api.post("/api/sku-codes/jewelry", codeData),
+    api.post("/api/skus/generate/jewelry", codeData),
 
   // Generate packaging SKU
   generatePackagingSku: (codeData) =>
-    api.post("/api/sku-codes/packaging", codeData),
+    api.post("/api/skus/generate/packaging", codeData),
 
   // Fetch generated SKUs saved in the catalog
   getGeneratedSkus: (params = {}) =>
-    api.get("/api/sku-codes/generated", { params }),
+    api.get("/api/skus/generated", { params }),
 
   // Bulk import jewelry SKUs from CSV
   importJewelrySkus: (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    return api.post("/api/sku-codes/jewelry/import", formData, {
+    return api.post("/api/skus/import/jewelry", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
@@ -945,36 +1003,36 @@ export const skuCodesAPI = {
   importPackagingSkus: (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    return api.post("/api/sku-codes/packaging/import", formData, {
+    return api.post("/api/skus/import/packaging", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
 
   // Search SKUs with fuzzy matching
   searchSkus: (query, limit = 50, threshold = 0.3) =>
-    api.get("/api/sku-codes/search", {
+    api.get("/api/skus/search", {
       params: { q: query, threshold, limit },
     }),
 
   // Search SKUs using POST
   searchSkusPost: (searchData) =>
-    api.post("/api/sku-codes/search", searchData),
+    api.post("/api/skus/search", searchData),
 
   // Export all generated SKUs to MISA template
   exportAllToMisa: () =>
-    api.get("/api/sku-codes/export-misa", {
+    api.get("/api/skus/export-misa", {
       responseType: "blob",
     }),
 
   // Export selected products by IDs to MISA template
   exportByIdsToMisa: (productIds) =>
-    api.post("/api/sku-codes/export-misa-by-ids", productIds, {
+    api.post("/api/skus/export-misa-by-ids", productIds, {
       responseType: "blob",
     }),
 
   // Export products by category to MISA template
   exportByCategoryToMisa: (category) =>
-    api.get("/api/sku-codes/export-misa-by-category", {
+    api.get("/api/skus/export-misa-by-category", {
       params: { category },
       responseType: "blob",
     }),
@@ -1098,6 +1156,27 @@ export const notificationsAPI = {
       }
     );
   },
+};
+
+// ===== MISA AMIS API =====
+export const misaAmisAPI = {
+  // Get AMIS authentication status
+  getStatus: () => api.get("/api/misa/amis/status"),
+
+  // Authenticate with MISA AMIS
+  authenticate: () => api.post("/api/misa/amis/authenticate"),
+
+  // Get inventory balance from MISA AMIS
+  getInventoryBalance: (params = {}) =>
+    api.get("/api/misa/amis/inventory-balance", { params }),
+
+  // Get warehouses from MISA AMIS
+  getWarehouses: (params = {}) =>
+    api.get("/api/misa/amis/warehouses", { params }),
+
+  // Get inventory items from MISA AMIS
+  getInventoryItems: (params = {}) =>
+    api.get("/api/misa/amis/inventory-items", { params }),
 };
 
 // ===== CURRENCY API ===== (FREE exchangerate-api.com)
