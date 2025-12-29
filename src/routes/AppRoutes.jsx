@@ -51,6 +51,7 @@ const NewCutPage = lazy(() => import("@pages/NewCutPage"));
 const MilanPage = lazy(() => import("@pages/MilanPage"));
 const ContactPage = lazy(() => import("@pages/ContactPage"));
 const ContactPageV2 = lazy(() => import("@pages/ContactPageV2"));
+const DBExplorerPage = lazy(() => import("@pages/DBExplorerPage"));
 
 // News Detail Wrapper Component
 const NewsDetailWrapper = () => {
@@ -84,7 +85,6 @@ const ScavengerHunt = lazy(() =>
 const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
 const PremiumPage = lazy(() => import("@pages/PremiumPage"));
 const PremiumDevPage = lazy(() => import("@pages/PremiumDevPage"));
-const DBExplorerPage = lazy(() => import("@pages/DBExplorerPage"));
 const SimpleMeshInspector = lazy(() =>
   import("@components/ijewelTryOn/quocti_dancefloor/SimpleMeshInspector")
 );
@@ -122,6 +122,9 @@ const InventoryPrintLabel = lazy(() =>
 );
 const InventoryCreateOrder = lazy(() =>
   import("@components/inventory/CreateOrder")
+);
+const InventoryInvoicePreview = lazy(() =>
+  import("@components/inventory/InvoicePreview")
 );
 
 export default function AppRoutes() {
@@ -446,6 +449,7 @@ export default function AppRoutes() {
                 element={<InventoryProductForm isEdit={true} />}
               />
               <Route path="print" element={<InventoryPrintLabel />} />
+              <Route path="invoice" element={<InventoryInvoicePreview />} />
             </Route>
 
             {/* 404 - Catch all route for non-existent paths */}

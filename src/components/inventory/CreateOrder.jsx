@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   misaProductStockAPI,
   getStockStatusColor,
@@ -16,10 +17,14 @@ import {
   CheckCircle,
   RefreshCw,
   Loader2,
+  FileText,
+  Upload,
 } from "lucide-react";
+import PDFInvoiceReader from "./PDFInvoiceReader";
 import "./CreateOrder.css";
 
 const CreateOrder = () => {
+  const navigate = useNavigate();
   const inputRef = useRef(null);
   const [skuInput, setSkuInput] = useState("");
   const [orderItems, setOrderItems] = useState([]);
@@ -28,6 +33,7 @@ const CreateOrder = () => {
   const [loading, setLoading] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+  const [showPdfReader, setShowPdfReader] = useState(false);
 
   // Auto focus input on mount
   useEffect(() => {
@@ -216,6 +222,48 @@ const CreateOrder = () => {
     inputRef.current?.focus();
   };
 
+  // Import items from PDF
+  const handleImportFromPdf = (importedItems) => {
+    // Add imported items to order
+    const newItems = importedItems.map((item, index) => ({
+      id: `pdf-import-${Date.now()}-${index}`,
+      name: item.name,
+      sku: `PDF-${Date.now()}-${index}`,
+      barcode: "",
+      price: item.price || item.unitPrice || 0,
+      currency: "VND",
+      imageUrl: "",
+      stockQuantity: 999, // Unknown stock from PDF
+      totalOnHand: 999,
+      stockStatus: "UNKNOWN",
+      branchStocks: [],
+      quantity: item.quantity || 1,
+    }));
+
+    setOrderItems((prev) => [...prev, ...newItems]);
+    setSuccess(`Da import ${importedItems.length} san pham tu PDF`);
+    inputRef.current?.focus();
+  };
+
+  // Export invoice - navigate to invoice page with order data
+  const handleExportInvoice = () => {
+    const orderData = {
+      invoiceCode: `MR${Date.now().toString().slice(-6)}`,
+      invoiceNumber: "<Chưa cấp số>",
+      invoiceDate: new Date(),
+      customerCompany: "Khách lẻ không lấy hóa đơn",
+      customerName: "Khách lẻ không lấy hóa đơn",
+      paymentMethod: "TM/CK",
+      items: orderItems.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+    };
+
+    navigate("/inventory/invoice", { state: { orderData } });
+  };
+
   // Format currency
   const formatCurrency = (value, currency = "VND") => {
     return new Intl.NumberFormat("vi-VN", {
@@ -311,6 +359,14 @@ const CreateOrder = () => {
               Them
             </>
           )}
+        </button>
+        <button
+          className="import-pdf-btn"
+          onClick={() => setShowPdfReader(true)}
+          title="Import tu file PDF hoa don"
+        >
+          <Upload size={20} />
+          PDF
         </button>
       </div>
 
@@ -448,6 +504,13 @@ const CreateOrder = () => {
             Huy don hang
           </button>
           <button
+            className="action-btn invoice-btn"
+            onClick={handleExportInvoice}
+          >
+            <FileText size={20} />
+            Xuat hoa don
+          </button>
+          <button
             className="action-btn submit-btn"
             onClick={() => setShowSubmitConfirm(true)}
           >
@@ -529,8 +592,17 @@ const CreateOrder = () => {
             <li>San pham se tu dong duoc them vao don hang</li>
             <li>Quet lai san pham da co de tang so luong</li>
             <li>Click "Xac nhan ban hang" khi hoan tat</li>
+            <li>Hoac click "PDF" de import tu file hoa don PDF</li>
           </ul>
         </div>
+      )}
+
+      {/* PDF Invoice Reader Modal */}
+      {showPdfReader && (
+        <PDFInvoiceReader
+          onImportItems={handleImportFromPdf}
+          onClose={() => setShowPdfReader(false)}
+        />
       )}
     </div>
   );
