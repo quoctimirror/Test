@@ -1,5 +1,7 @@
 # Ignore large frame files to stay under 300MB limit
 public/home-page/frames-new/
+public/home-page/lumex91-ani-frames/
+public/home-page/Landscape_3D.mp4
 
 # Python cache
 __pycache__/
