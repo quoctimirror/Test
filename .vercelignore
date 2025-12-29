@@ -1,0 +1,10 @@
+# Ignore large frame files to stay under 300MB limit
+public/home-page/frames-new/
+
+# Python cache
+__pycache__/
+*.pyc
+.venv/
+
+# Local dev files
+api/server.py
