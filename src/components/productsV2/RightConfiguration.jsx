@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './RightConfiguration.css';
 import opaqueIcon from '@assets/images/opaque_gts.svg';
 import whiteIcon from '@assets/images/white_gts.svg';
-import editPenIcon from '@assets/images/icons/edit_pen.svg';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import SizeSelector from './SizeSelector';
 import ShapeSelector from './ShapeSelector';
@@ -10,21 +9,12 @@ import ShapeSelector from './ShapeSelector';
 const RightConfiguration = ({ hideButtons = false, productConfig, setProductConfig, onOrderNow }) => {
     const [showSizeSelector, setShowSizeSelector] = useState(false);
     const [showShapeSelector, setShowShapeSelector] = useState(false);
-    const quantityInputRef = React.useRef(null);
 
     // Use productConfig if provided, otherwise use local state
-    const quantity = productConfig?.quantity || 1;
     const size = productConfig?.size || '3.0';
     const shape = productConfig?.shape || 'Pear';
     const metal = productConfig?.metal || 'Silver';
     const band = productConfig?.band || 'Single band';
-
-    const handleQuantityChange = (increment) => {
-        const newQuantity = Math.max(1, quantity + increment);
-        if (setProductConfig) {
-            setProductConfig(prev => ({ ...prev, quantity: newQuantity }));
-        }
-    };
 
     const handleSizeSelect = (sizeItem) => {
         const newSize = sizeItem.size.toString();
@@ -50,13 +40,6 @@ const RightConfiguration = ({ hideButtons = false, productConfig, setProductConf
     const handleOrderNowClick = () => {
         if (onOrderNow) {
             onOrderNow();
-        }
-    };
-
-    const handleEditQuantityClick = () => {
-        if (quantityInputRef.current) {
-            quantityInputRef.current.focus();
-            quantityInputRef.current.select();
         }
     };
 
@@ -100,45 +83,6 @@ const RightConfiguration = ({ hideButtons = false, productConfig, setProductConf
                             <div className="pv2-size-selector" onClick={() => setShowSizeSelector(true)}>
                                 <span className="pv2-size-value bodytext-4--no-margin">{size}</span>
                                 <img src={whiteIcon} alt="" className="pv2-size-arrow-icon" />
-                            </div>
-                        </div>
-
-                        <div className="pv2-option-row pv2-quantity-row">
-                            <span className="pv2-option-label bodytext-6--no-margin">Quantity</span>
-                            <div className="pv2-quantity-selector">
-                                <button
-                                    className="pv2-quantity-btn"
-                                    onClick={() => handleQuantityChange(-1)}
-                                    disabled={quantity <= 1}
-                                >
-                                    -
-                                </button>
-                                <input
-                                    ref={quantityInputRef}
-                                    type="number"
-                                    value={quantity}
-                                    onChange={(e) => {
-                                        const newQuantity = Math.max(1, parseInt(e.target.value) || 1);
-                                        if (setProductConfig) {
-                                            setProductConfig(prev => ({ ...prev, quantity: newQuantity }));
-                                        }
-                                    }}
-                                    className="pv2-quantity-value bodytext-4--no-margin"
-                                    min="1"
-                                />
-                                <button
-                                    className="pv2-quantity-btn"
-                                    onClick={() => handleQuantityChange(1)}
-                                >
-                                    +
-                                </button>
-                                <img
-                                    src={editPenIcon}
-                                    alt="Edit quantity"
-                                    className="pv2-quantity-edit-icon"
-                                    onClick={handleEditQuantityClick}
-                                    style={{ cursor: 'pointer' }}
-                                />
                             </div>
                         </div>
                     </div>

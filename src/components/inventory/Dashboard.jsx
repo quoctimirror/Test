@@ -21,8 +21,8 @@ const Dashboard = () => {
   const [stats, setStats] = useState({
     total: 0,
     available: 0,
-    hold: 0,
-    warranty: 0,
+    lowStock: 0,
+    outOfStock: 0,
     totalValue: 0,
   });
   const [loading, setLoading] = useState(true);
@@ -43,16 +43,17 @@ const Dashboard = () => {
       const dashboardData = dashboardResponse.data?.data || dashboardResponse.data;
 
       if (dashboardData) {
-        // Map theo API response format mới
+        // Map theo API response format từ backend
         const statusCounts = dashboardData.productsByStatus || {};
         setStats({
-          total: dashboardData.totalProducts || 0,
-          available: statusCounts.in_stock || 0,
-          hold: statusCounts.on_hold || 0,
-          warranty: statusCounts.warranty || 0,
-          totalValue: dashboardData.totalInventoryValue || 0,
+          total: dashboardData.totalActiveProducts || 0,
+          available: statusCounts.INSTOCK || statusCounts.IN_STOCK || statusCounts.PUBLISHED || 0,
+          lowStock: dashboardData.lowStockProducts || 0,
+          outOfStock: dashboardData.outOfStockProducts || 0,
+          totalValue: 0, // Backend không trả về totalInventoryValue
         });
-        setRecentProducts(dashboardData.recentProducts || []);
+        // Backend không trả về recentProducts
+        setRecentProducts([]);
       }
     } catch (err) {
       console.error("Error fetching dashboard:", err);
@@ -105,14 +106,14 @@ const Dashboard = () => {
     },
     {
       icon: Clock,
-      label: "Dang giu",
-      value: stats.hold,
+      label: "Sap het hang",
+      value: stats.lowStock,
       color: "#f59e0b",
     },
     {
-      icon: Wrench,
-      label: "Bao hanh",
-      value: stats.warranty,
+      icon: AlertCircle,
+      label: "Het hang",
+      value: stats.outOfStock,
       color: "#ef4444",
     },
   ];

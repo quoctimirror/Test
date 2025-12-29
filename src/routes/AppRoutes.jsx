@@ -122,6 +122,9 @@ const InventoryPrintLabel = lazy(() =>
 const InventoryCreateOrder = lazy(() =>
   import("@components/inventory/CreateOrder")
 );
+const InventoryInvoicePreview = lazy(() =>
+  import("@components/inventory/InvoicePreview")
+);
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -444,6 +447,7 @@ export default function AppRoutes() {
                 element={<InventoryProductForm isEdit={true} />}
               />
               <Route path="print" element={<InventoryPrintLabel />} />
+              <Route path="invoice" element={<InventoryInvoicePreview />} />
             </Route>
 
             {/* 404 - Catch all route for non-existent paths */}

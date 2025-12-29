@@ -72,7 +72,7 @@ const OrderFormModal = ({ isOpen, onClose, productDetails, onSuccess }) => {
         setSubmitError(null);
 
         try {
-            const subtotal = productDetails.price * productDetails.quantity;
+            const subtotal = productDetails.price;
 
             // Get user info if logged in
             const userId = user?.id || 'guest';
@@ -100,15 +100,13 @@ const OrderFormModal = ({ isOpen, onClose, productDetails, onSuccess }) => {
                         metalType: productDetails.metalType,
                         metalPurity: productDetails.metalPurity,
                         stoneType: productDetails.stoneType,
-                        weightGrams: productDetails.weightGrams,
-                        quantity: productDetails.quantity
+                        weightGrams: productDetails.weightGrams
                     }
                     : {
                         shape: productDetails.shape,
                         metal: productDetails.metal,
                         band: productDetails.band,
-                        size: productDetails.size,
-                        quantity: productDetails.quantity
+                        size: productDetails.size
                     },
 
                 // Pricing
@@ -195,10 +193,9 @@ const OrderFormModal = ({ isOpen, onClose, productDetails, onSuccess }) => {
                                         )}
                                     </>
                                 )}
-                                <span className="bodytext-4--no-margin">Quantity: {productDetails.quantity}</span>
                             </div>
                             <p className="order-summary-price heading-3--no-margin">
-                                ${(productDetails.price * productDetails.quantity).toLocaleString()}
+                                ${productDetails.price.toLocaleString()}
                             </p>
                         </div>
                     </div>

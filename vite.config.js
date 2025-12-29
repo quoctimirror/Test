@@ -21,13 +21,25 @@ export default defineConfig(({ mode }) => {
       host: "0.0.0.0",
       port: 5173,
       proxy: {
+        // PDF Extract API - local Python server
+        "/api/extract-invoice": {
+          target: "http://localhost:3000",
+          changeOrigin: true,
+          secure: false,
+        },
+        // DB Explorer - notification-service local
+        "/api/v1/printing": {
+          target: "http://localhost:8085",
+          changeOrigin: true,
+          secure: false,
+        },
         "/api": {
           target: env.VITE_API_BASE_URL || "http://localhost:8090",
           changeOrigin: true,
           secure: false,
           ws: true,
         },
-        "/inventory": {
+        "/api/inventory": {
           target: env.VITE_INVENTORY_API_URL || "http://172.27.208.1:8080",
           changeOrigin: true,
           secure: false,

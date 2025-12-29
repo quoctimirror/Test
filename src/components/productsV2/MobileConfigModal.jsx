@@ -10,7 +10,6 @@ import { getShapeConfig } from './shapeConfig';
 import { PRODUCT_CONFIG } from './productConfig';
 
 const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, onClose, selectedShape, onShapeChange, selectedSize, onSizeChange, metal, band }) => {
-    const [quantity, setQuantity] = useState(1);
     const [showSizeSelector, setShowSizeSelector] = useState(false);
     const [showShapeSelector, setShowShapeSelector] = useState(false);
 
@@ -21,10 +20,6 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
     // Get metal and band from props (comes from productConfig in parent)
     const currentMetal = metal || getShapeConfig(currentShape).metal;
     const currentBand = band || getShapeConfig(currentShape).band;
-
-    const handleQuantityChange = (increment) => {
-        setQuantity(prev => Math.max(1, prev + increment));
-    };
 
     const handleSizeSelect = (sizeItem) => {
         const newSize = sizeItem.size.toString();
@@ -95,32 +90,6 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
                                 <div className="pv2-mobile-size-selector" onClick={() => setShowSizeSelector(true)}>
                                     <span className="pv2-mobile-size-value bodytext-3--no-margin">{currentSize}</span>
                                     <img src={whiteIcon} alt="" className="pv2-mobile-size-arrow-icon" />
-                                </div>
-                            </div>
-
-                            <div className="pv2-mobile-option-row pv2-mobile-quantity-row">
-                                <span className="pv2-mobile-option-label bodytext-6--no-margin">Quantity</span>
-                                <div className="pv2-mobile-quantity-selector">
-                                    <button
-                                        className="pv2-mobile-quantity-btn"
-                                        onClick={() => handleQuantityChange(-1)}
-                                        disabled={quantity <= 1}
-                                    >
-                                        -
-                                    </button>
-                                    <input
-                                        type="number"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                                        className="pv2-mobile-quantity-value bodytext-3--no-margin"
-                                        min="1"
-                                    />
-                                    <button
-                                        className="pv2-mobile-quantity-btn"
-                                        onClick={() => handleQuantityChange(1)}
-                                    >
-                                        +
-                                    </button>
                                 </div>
                             </div>
                         </div>

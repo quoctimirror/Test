@@ -67,6 +67,7 @@ export const ROUTES = {
   INVENTORY_PRODUCT_EDIT: "/inventory/products/:id/edit",
   INVENTORY_PRINT: "/inventory/print",
   INVENTORY_CREATE_ORDER: "/inventory/create-order",
+  INVENTORY_INVOICE: "/inventory/invoice",
 };
 
 // Helper to get collection detail route with ID

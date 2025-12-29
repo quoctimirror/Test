@@ -42,7 +42,6 @@ const Products = () => {
         metal: defaultShape.metal,
         band: defaultShape.band,
         size: '3.0',
-        quantity: 1,
         price: 15600
     });
 

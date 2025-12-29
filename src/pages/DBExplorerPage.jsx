@@ -25,7 +25,8 @@ import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import "./DBExplorerPage.css";
 
-// URL base của API (sẽ tự động dùng domain hiện tại khi deploy)
+// URL base của API - Dùng Vite proxy để tránh CORS
+// Proxy config: /api/v1/printing → http://localhost:8085
 const API_BASE = "";
 
 export default function DBExplorerPage() {
@@ -101,7 +102,7 @@ export default function DBExplorerPage() {
     setLoadingDbs(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/db/databases`);
+      const res = await fetch(`${API_BASE}/api/v1/printing/databases`);
       const data = await res.json();
       if (data.success) {
         setDatabases(data.databases);
@@ -122,7 +123,7 @@ export default function DBExplorerPage() {
     setLoadingTables(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/db/tables?db=${encodeURIComponent(db)}`);
+      const res = await fetch(`${API_BASE}/api/v1/printing/tables?db=${encodeURIComponent(db)}`);
       const data = await res.json();
       if (data.success) {
         setTables(data.tables);
@@ -144,7 +145,7 @@ export default function DBExplorerPage() {
     setError(null);
     try {
       const res = await fetch(
-        `${API_BASE}/api/db/columns?db=${encodeURIComponent(db)}&table=${encodeURIComponent(table)}`
+        `${API_BASE}/api/v1/printing/columns?db=${encodeURIComponent(db)}&table=${encodeURIComponent(table)}`
       );
       const data = await res.json();
       if (data.success) {
@@ -175,7 +176,7 @@ export default function DBExplorerPage() {
     try {
       const columnsParam = selectedColumns.join(",");
       const res = await fetch(
-        `${API_BASE}/api/db/data?db=${encodeURIComponent(selectedDb)}&table=${encodeURIComponent(
+        `${API_BASE}/api/v1/printing/data?db=${encodeURIComponent(selectedDb)}&table=${encodeURIComponent(
           selectedTable
         )}&columns=${encodeURIComponent(columnsParam)}&limit=10`
       );
@@ -300,7 +301,7 @@ export default function DBExplorerPage() {
       // Lấy toàn bộ data (không limit)
       const columnsParam = selectedColumns.join(",");
       const res = await fetch(
-        `${API_BASE}/api/db/data?db=${encodeURIComponent(selectedDb)}&table=${encodeURIComponent(
+        `${API_BASE}/api/v1/printing/data?db=${encodeURIComponent(selectedDb)}&table=${encodeURIComponent(
           selectedTable
         )}&columns=${encodeURIComponent(columnsParam)}`
       );
