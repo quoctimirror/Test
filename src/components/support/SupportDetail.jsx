@@ -7,6 +7,7 @@ import WarrantyInfo from "./WarrantyInfo";
 import FAQs from "./FAQs";
 import ContactUs from "@components/contactUs/ContactUs";
 import { ROUTES } from "@/constants/routes";
+import { getImageUrl } from "@utils/cloudflareMediaUtil";
 
 const SupportDetail = () => {
   const [searchParams] = useSearchParams();
@@ -21,6 +22,20 @@ const SupportDetail = () => {
       setActiveTab(tabFromUrl);
     }
   }, [searchParams]);
+
+  const getHeroImage = () => {
+    switch (activeTab) {
+      case "return-exchange":
+        return getImageUrl("services/Return & Exchange_1920x600.webp");
+      case "sizing-guide":
+        return getImageUrl("services/Sizing Guide_2.webp");
+      case "warranty-info":
+        return getImageUrl("services/Warranty Legacy_2.webp");
+      case "faqs":
+      default:
+        return null; // FAQs uses gradient, no image
+    }
+  };
 
   const tabs = [
     {
@@ -52,12 +67,10 @@ const SupportDetail = () => {
   return (
     <>
       <div
-        className={`support-hero-section support-hero-section--image support-hero-section--${activeTab}`}
+        className={`support-hero-section ${activeTab === 'faqs' ? 'support-hero-section--faqs' : 'support-hero-section--image'}`}
         data-navbar-theme="white"
+        style={activeTab !== 'faqs' ? { backgroundImage: `url("${getHeroImage()}")` } : undefined}
       >
-        <div className="hero-content">
-          <h1>Support</h1>
-        </div>
       </div>
 
       <div className="support-wrapper" data-navbar-theme="black">

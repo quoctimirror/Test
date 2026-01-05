@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useRef } from 'react';
 import { MediaImage } from '@components/common/media';
 import './SpaceOverlay.css';
 import StarlightEffect from './StarlightEffect';
-import GlassThemeButton from '@components/common/button/GlassThemeButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import RectSpaceSVG from './svg/RectSpaceSVG';
 
 const SpaceOverlay = ({ isVisible, onClose, origin }) => {
@@ -79,7 +79,7 @@ const SpaceOverlay = ({ isVisible, onClose, origin }) => {
             </div>
             {/* Close Button - moved outside content to prevent jumping */}
             <div className={`space-overlay__close-button ${isClosing ? 'space-overlay__close-button--closing' : ''}`}>
-                <GlassThemeButton
+                <ShineGlassButton
                     onClick={handleClose}
                     theme="light"
                     className="space-overlay__close-btn"
@@ -90,7 +90,7 @@ const SpaceOverlay = ({ isVisible, onClose, origin }) => {
                         width="20"
                         height="20"
                     />
-                </GlassThemeButton>
+                </ShineGlassButton>
             </div>
 
             <div

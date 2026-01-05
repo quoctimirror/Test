@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./FAQs.css";
+import MediaImage from "@components/common/media/MediaImage";
 
 const FAQs = () => {
   const [expandedFAQ, setExpandedFAQ] = useState(null);
@@ -134,12 +135,12 @@ const FAQs = () => {
 
   // Dữ liệu để định nghĩa các section và sidebar, giúp chúng đồng bộ
   const sectionsInfo = [
-    { id: "products", title: "Products" },
-    { id: "orders", title: "Orders & Payments" },
-    { id: "exchanges", title: "Exchanges & Returns" },
-    { id: "care", title: "Care & Repairs" },
-    { id: "shipping", title: "Shipping & Delivery" },
-    { id: "location", title: "Location" },
+    { id: "products", title: "Products", image: "support/Products.webp" },
+    { id: "orders", title: "Orders & Payments", image: "support/Orders & Payments.webp" },
+    { id: "exchanges", title: "Exchanges & Returns", image: "support/Exchange & Return.webp" },
+    { id: "care", title: "Care & Repairs", image: "support/Care & Repairs.webp" },
+    { id: "shipping", title: "Shipping & Delivery", image: "support/Shipping & Delivery.webp" },
+    { id: "location", title: "Location", image: "support/Location.webp" },
   ];
 
   // Logic Intersection Observer để theo dõi section active (giữ nguyên)
@@ -257,7 +258,7 @@ const FAQs = () => {
                     activeSection === section.id ? "active" : ""
                   }`}
                 >
-                  <a href={`#${section.id}`} className="bodytext-4--no-margin">
+                  <a href={`#${section.id}`} className="bodytext-6--no-margin">
                     {section.title}
                   </a>
                 </li>
@@ -301,7 +302,7 @@ const FAQs = () => {
                         onClick={() => toggleFAQ(faq.id)}
                       >
                         <button className="faq-question">
-                          <span>{faq.question}</span>
+                          <span className="bodytext-4--no-margin">{faq.question}</span>
                           <span
                             className={`faq-icon ${
                               expandedFAQ === faq.id ? "expanded" : ""
@@ -309,7 +310,7 @@ const FAQs = () => {
                           ></span>
                         </button>
                         <div className="faq-answer" data-faq-id={faq.id}>
-                          <p>{faq.answer}</p>
+                          <p className="bodytext-6--no-margin">{faq.answer}</p>
                         </div>
                       </div>
                     ))}
@@ -325,10 +326,12 @@ const FAQs = () => {
               <div className="faq-sections">
                 {sectionsInfo.map((section) => (
                   <div key={section.id} id={section.id} className="faq-section">
-                    <div className="faq-image-placeholder">
-                      <h3 className="heading-3--no-margin placeholder-box">
-                        {section.title}
-                      </h3>
+                    <div className="faq-section-image">
+                      <MediaImage
+                        src={section.image}
+                        alt={section.title}
+                        className="faq-image"
+                      />
                     </div>
 
                     <div className="faq-list">
@@ -343,7 +346,7 @@ const FAQs = () => {
                           onClick={() => toggleFAQ(`${section.id}-${index}`)}
                         >
                           <button className="faq-question">
-                            <span>{faq.question}</span>
+                            <span className="bodytext-4--no-margin">{faq.question}</span>
                             <span
                               className={`faq-icon ${
                                 expandedFAQ === `${section.id}-${index}`
@@ -356,7 +359,7 @@ const FAQs = () => {
                             className="faq-answer"
                             data-faq-id={`${section.id}-${index}`}
                           >
-                            <p>{faq.answer}</p>
+                            <p className="bodytext-6--no-margin">{faq.answer}</p>
                           </div>
                         </div>
                       ))}

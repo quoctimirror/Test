@@ -136,7 +136,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: all var(--shine-anim--hover-time) var(--shine-anim--hover-ease);
-  padding: 18px 36px; /* Fixed padding like in the image */
+  padding: 16px 24px;
   pointer-events: none;
   z-index: 2;
   text-align: center;
@@ -289,16 +289,16 @@
 
 /* ========== RESPONSIVE BEHAVIOR ========== */
 
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 768px) {
   .shine-glass-button .button-text {
-    padding: 16px 24px; /* Smaller padding for mobile as shown in image */
+    padding: 14px 20px;
   }
 }
 
 /* Mobile - up to 480px */
 @media screen and (max-width: 480px) {
   .shine-glass-button .button-text {
-    padding: 16px 20px; /* Smaller padding for mobile as shown in image */
+    padding: 12px 18px;
   }
 }
 

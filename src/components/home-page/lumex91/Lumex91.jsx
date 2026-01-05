@@ -1,5 +1,5 @@
 import "./Lumex91.css";
-import GlassThemeButton from "@components/common/button/GlassThemeButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import ShinyText from "@components/common/shiny-text/ShinyText";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -185,9 +185,9 @@ const Lumex91 = ({ externalProgress = null }) => {
           <h1 className="heading-1--no-margin">
             <ShinyText text="Mirror Lumex - 91™" speed={2} />
           </h1>
-          <GlassThemeButton theme="dark" onClick={handleExploreClick}>
-            <span className="bodytext-6--no-margin">Explore more</span>
-          </GlassThemeButton>
+          <ShineGlassButton theme="footer" onClick={handleExploreClick}>
+            Explore more
+          </ShineGlassButton>
         </div>
       </div>
     </section>

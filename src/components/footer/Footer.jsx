@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Footer.css";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
@@ -9,7 +10,7 @@ import fbIcon from "@assets/images/icons/fb_icon.svg";
 import instaIcon from "@assets/images/icons/insta_icon.svg";
 import tiktokIcon from "@assets/images/icons/tiktok_icon.svg";
 import PrismaticBurst from "@components/common/prismatic-burst/PrismaticBurst";
-import BookingModalV2 from "@components/booking/BookingModalV2";
+import BookingModalV3 from "@components/booking/BookingModalV3";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -319,13 +320,13 @@ const Footer = () => {
               and your stories shape the luxury you receive.
             </p>
             <div className="newsletter-buttons">
-              <GlassThemeButton
+              <ShineGlassButton
                 onClick={() => console.log("Explore more clicked")}
                 className="newsletter-btn-explore"
-                theme="dark"
+                theme="footer"
               >
-                <span className="bodytext-6--no-margin">Explore more</span>
-              </GlassThemeButton>
+                Explore more
+              </ShineGlassButton>
               <GlassThemeButton
                 onClick={() => console.log("Sign in clicked")}
                 className="newsletter-btn-signin"
@@ -383,7 +384,7 @@ const Footer = () => {
       </div>
 
       {/* Booking Modal */}
-      <BookingModalV2
+      <BookingModalV3
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
       />

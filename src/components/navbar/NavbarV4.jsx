@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import UnderlineButton from "@/components/common/button/UnderlineButton";
 import GlassThemeButton from "@/components/common/button/GlassThemeButton";
-import BookingModalV2 from "@/components/booking/BookingModalV2";
+import BookingModalV3 from "@/components/booking/BookingModalV3";
 import { ROUTES } from "@/constants/routes";
 import { useNavbarTheme } from "@/hooks/useNavbarTheme";
 
@@ -1063,7 +1063,7 @@ export default function NavbarV4() {
       )}
 
       {/* Booking Modal */}
-      <BookingModalV2
+      <BookingModalV3
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
       />

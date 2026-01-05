@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MediaImage } from "@components/common/media";
 import "./ImmersiveShowroom.css";
-import GlassThemeButton from "@components/common/button/GlassThemeButton";
+import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import { useImmersiveModal } from "@/contexts/ImmersiveModalContext";
 
 const ImmersiveShowroom = () => {
@@ -67,13 +67,13 @@ const ImmersiveShowroom = () => {
             AR/VR encounters that let you feel the future of luxury before you
             wear it.
           </p>
-          <GlassThemeButton
-            theme="dark"
+          <ShineGlassButton
+            theme="footer"
             className="explore-button"
             onClick={handleExploreClick}
           >
-            <span className="bodytext-6--no-margin">Explore</span>
-          </GlassThemeButton>
+            Explore
+          </ShineGlassButton>
         </div>
       </div>
     </>

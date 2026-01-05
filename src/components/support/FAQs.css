@@ -77,7 +77,6 @@
 
 .faq-nav .nav-item.active a {
   color: #000;
-  font-weight: 500;
 }
 
 .faq-nav .nav-item.active a::after,
@@ -96,7 +95,7 @@
 /* --- Main content căn giữa toàn trang --- */
 .faqs-main-section {
   width: 100%;
-  max-width: 47%;
+  max-width: 702px;
   margin: 0 auto;
 }
 
@@ -115,7 +114,6 @@
   justify-content: center;
   gap: 16px;
   width: 100%;
-  max-width: 635px;
   margin: 0 auto;
   border-bottom: 1px solid #ddd;
   padding-bottom: 12px;
@@ -179,7 +177,6 @@
   overflow: hidden;
   box-shadow: none;
   padding-bottom: 120px;
-  min-height: 100vh; /* Giúp các section đủ cao để trigger observer dễ dàng */
 }
 
 .faq-section:last-child {
@@ -187,23 +184,25 @@
   padding-bottom: 0;
 }
 
-.faq-image-placeholder {
-  height: 500px;
-  background: #c0c0c0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.faq-section-image {
+  width: 100%;
   margin-bottom: 60px;
+  overflow: hidden;
 }
 
-/* .placeholder-box - Typography handled by heading-3--no-margin class */
+.faq-section-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
 
 .faq-list {
   padding: 0;
 }
 
 .faq-item {
-  padding: 36px 0;
+  padding: 24px 0;
   position: relative;
   cursor: pointer;
 }
@@ -222,12 +221,12 @@
 .faq-item {
   border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
-  padding: 36px 0;
+  padding: 24px 0;
   transition: border-color 0.3s ease;
 }
 
 .faq-item:first-child {
-  padding-top: 36px;
+  padding-top: 24px;
   border-top: 1px solid #e0e0e0;
 }
 
@@ -236,13 +235,6 @@
 }
 
 .faq-question {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 20px;
-  line-height: 120%;
-  letter-spacing: 0%;
   width: 100%;
   padding: 0;
   background: none;
@@ -327,13 +319,6 @@
 /* Không cần class expanded nữa - sẽ dùng inline style */
 
 .faq-answer p {
-  font-family: "BT Beau Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 120%;
-  letter-spacing: 0%;
   color: #797979;
   margin: 0;
   padding: 12px 0 0 0;
@@ -357,19 +342,8 @@
     padding: 0;
   }
 
-  .faq-question {
-    font-size: 18px;
-  }
 
-  .faq-answer p {
-    font-size: 15px;
-  }
 
-  .faq-image-placeholder {
-    height: 450px;
-  }
-
-  /* .placeholder-box - Typography handled by heading-3--no-margin class */
 }
 
 @media (max-width: 992px) {
@@ -397,26 +371,14 @@
     padding: 0;
   }
 
-  .faq-question {
-    font-size: 16px;
-    line-height: 140%;
-  }
 
   .faq-answer p {
-    font-size: 14px;
-    line-height: 140%;
     padding: 10px 0 0 0;
   }
 
   .faq-item {
     padding: 30px 0;
   }
-
-  .faq-image-placeholder {
-    height: 400px;
-  }
-
-  /* .placeholder-box - Typography handled by heading-3--no-margin class */
 
   .faq-icon {
     width: 30px;
@@ -462,14 +424,8 @@
     text-align: left;
   }
 
-  .faq-question {
-    font-size: 15px;
-    line-height: 150%;
-  }
 
   .faq-answer p {
-    font-size: 13px;
-    line-height: 150%;
     padding: 8px 0 0 0;
   }
 
@@ -481,12 +437,6 @@
     padding-bottom: 60px;
     min-height: auto;
   }
-
-  .faq-image-placeholder {
-    height: 300px;
-  }
-
-  /* .placeholder-box - Typography handled by heading-3--no-margin class */
 
   .faq-icon {
     width: 28px;
@@ -572,20 +522,10 @@
     padding: 0;
   }
 
-  .faq-question {
-    font-size: 14px;
-    line-height: 160%;
-  }
 
   .faq-item {
     padding: 17px 0;
   }
-
-  .faq-image-placeholder {
-    height: 250px;
-  }
-
-  /* .placeholder-box - Typography handled by heading-3--no-margin class */
 
   .faq-icon {
     min-width: 20px;

@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useRef } from 'react';
 import { MediaImage } from '@components/common/media';
 import './SenseOverlay.css';
 import StarlightEffect from './StarlightEffect';
-import GlassThemeButton from '@components/common/button/GlassThemeButton';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import HeartSenseSVG from './svg/HeartSenseSVG';
 
 // Sense descriptions - moved outside component to avoid recreation on every render
@@ -122,7 +122,7 @@ const SenseOverlay = ({ isVisible, onClose, origin }) => {
             <div
                 className={`sense-overlay__close-button ${isClosing ? 'sense-overlay__close-button--closing' : ''}`}
             >
-                <GlassThemeButton
+                <ShineGlassButton
                     onClick={handleClose}
                     theme="light"
                     className="sense-overlay__close-btn"
@@ -133,7 +133,7 @@ const SenseOverlay = ({ isVisible, onClose, origin }) => {
                         width="20"
                         height="20"
                     />
-                </GlassThemeButton>
+                </ShineGlassButton>
             </div>
 
             <div

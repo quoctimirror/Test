@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MediaImage } from "@components/common/media";
 import { getProductDetailRoute } from "@/constants/routes";
+import Ellipse245 from "@assets/images/icons/Ellipse 245.png";
+import Ellipse246 from "@assets/images/icons/Ellipse 246.png";
+import Ellipse247 from "@assets/images/icons/Ellipse 247.png";
 import "./ProductCarouselItem.css";
 
 const ProductCarouselItem = ({ images = [], label, className = "", productId = null }) => {
@@ -134,6 +137,15 @@ const ProductCarouselItem = ({ images = [], label, className = "", productId = n
             </svg>
           </button>
         </>
+      )}
+
+      {/* Thumbnail circles - bottom right corner */}
+      {totalImages > 1 && (
+        <div className={`product-carousel-thumbnails ${isHovered ? "visible" : ""}`}>
+          <img src={Ellipse245} alt="" className="product-carousel-thumbnail" />
+          <img src={Ellipse246} alt="" className="product-carousel-thumbnail" />
+          <img src={Ellipse247} alt="" className="product-carousel-thumbnail" />
+        </div>
       )}
     </div>
   );
