@@ -199,9 +199,27 @@ const Premium = () => {
 
       window.addEventListener('ijewel-file-data', handleFileData);
 
+      // Calculate footer height matching CSS: max(13vh, 9vw)
+      const calculateFooterHeight = () => {
+        const vh = window.innerHeight / 100;
+        const vw = window.innerWidth / 100;
+        return Math.max(13 * vh, 9 * vw);
+      };
+
+      // Configurator sits right above footer
+      const calculateConfiguratorOffset = () => {
+        const footerHeight = calculateFooterHeight();
+        console.log('🔍 Footer height:', footerHeight, 'px');
+        console.log('🔍 Configurator offset:', footerHeight, 'px');
+        return footerHeight;
+      };
+
       await window.ijewelViewer.loadModelById(currentModel.id, currentModel.basename, containerRef.current, {
         showUiButtons: false,
-        hideTryOn: false
+        hideTryOn: false,
+        showConfigurator: true,
+        configuratorBottomOffsetPx: calculateConfiguratorOffset(),
+        hideNameNumbers: true  // Hide numerical suffixes like "materials 2"
       });
 
       const handleViewerReady = (event) => {
