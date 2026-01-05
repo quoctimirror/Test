@@ -758,6 +758,53 @@ const ProductsManager = () => {
                     />
                   </div>
 
+                  {/* Jewelry Specifications (read-only from SKU generation) */}
+                  {editingProduct && (editingProduct.stoneShape || editingProduct.stoneOrigin || editingProduct.stoneWeight || editingProduct.materialColor) && (
+                    <div style={{
+                      backgroundColor: "#f8fafc",
+                      border: "1px solid #e2e8f0",
+                      borderRadius: "8px",
+                      padding: "1rem",
+                      marginBottom: "0.5rem"
+                    }}>
+                      <h4 style={{ margin: "0 0 0.75rem 0", fontSize: "0.875rem", fontWeight: "600", color: "#475569" }}>
+                        Jewelry Specifications (from SKU)
+                      </h4>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem", fontSize: "0.8125rem" }}>
+                        {editingProduct.barcode && (
+                          <div>
+                            <span style={{ color: "#64748b" }}>Barcode:</span>{" "}
+                            <code style={{ background: "#e2e8f0", padding: "2px 6px", borderRadius: "4px" }}>{editingProduct.barcode}</code>
+                          </div>
+                        )}
+                        {editingProduct.materialColor && (
+                          <div><span style={{ color: "#64748b" }}>Material Color:</span> <strong>{editingProduct.materialColor}</strong></div>
+                        )}
+                        {editingProduct.materialWeight && (
+                          <div><span style={{ color: "#64748b" }}>Material Weight:</span> <strong>{editingProduct.materialWeight}</strong></div>
+                        )}
+                        {editingProduct.stoneOrigin && (
+                          <div><span style={{ color: "#64748b" }}>Stone Origin:</span> <strong>{editingProduct.stoneOrigin}</strong></div>
+                        )}
+                        {editingProduct.stoneShape && (
+                          <div><span style={{ color: "#64748b" }}>Stone Shape:</span> <strong>{editingProduct.stoneShape}</strong></div>
+                        )}
+                        {editingProduct.stoneWeight && (
+                          <div><span style={{ color: "#64748b" }}>Stone Weight:</span> <strong>{editingProduct.stoneWeight}</strong></div>
+                        )}
+                        {editingProduct.sideStones && (
+                          <div><span style={{ color: "#64748b" }}>Side Stones:</span> <strong>{editingProduct.sideStones}</strong></div>
+                        )}
+                        {editingProduct.countryOfOrigin && (
+                          <div><span style={{ color: "#64748b" }}>Country:</span> <strong>{editingProduct.countryOfOrigin}</strong></div>
+                        )}
+                        {editingProduct.isCoated && (
+                          <div><span style={{ color: "#64748b" }}>Coating:</span> <strong>{editingProduct.coatingMaterial || "Yes"}</strong></div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <div
                     style={{
                       display: "grid",

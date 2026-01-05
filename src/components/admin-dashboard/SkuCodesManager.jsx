@@ -396,7 +396,7 @@ const SkuCodesManager = () => {
                           <th>Item Name</th>
                           <th>Category</th>
                           <th>MISA Item Code</th>
-                          <th>Quantity</th>
+                          <th>Qty</th>
                           <th>Price</th>
                           <th>Created</th>
                         </tr>
@@ -427,11 +427,11 @@ const SkuCodesManager = () => {
                               </td>
                               <td>
                                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                                  <code style={{ background: "#f1f5f9", padding: "2px 8px", borderRadius: "4px", fontSize: "0.8125rem", fontFamily: "monospace" }}>{item.skuCode}</code>
+                                  <code style={{ background: "#dbeafe", padding: "2px 8px", borderRadius: "4px", fontSize: "0.8125rem", fontFamily: "monospace", color: "#1e40af" }}>{item.skuCode}</code>
                                   <button
                                     type="button"
                                     onClick={() => handleCopySku(item.skuCode)}
-                                    title="Copy SKU"
+                                    title="Copy SKU Code"
                                     style={{
                                       background: "none",
                                       border: "1px solid #e2e8f0",
@@ -447,13 +447,13 @@ const SkuCodesManager = () => {
                                 </div>
                               </td>
                               <td>
-                                {item.barcode ? (
+                                {item.descriptiveCode ? (
                                   <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                                    <code style={{ background: "#f1f5f9", padding: "2px 8px", borderRadius: "4px", fontSize: "0.8125rem", fontFamily: "monospace" }}>{item.barcode}</code>
+                                    <code style={{ background: "#f1f5f9", padding: "2px 8px", borderRadius: "4px", fontSize: "0.8125rem", fontFamily: "monospace" }}>{item.descriptiveCode}</code>
                                     <button
                                       type="button"
-                                      onClick={() => handleCopyBarcode(item.barcode)}
-                                      title="Copy Barcode"
+                                      onClick={() => handleCopyBarcode(item.descriptiveCode)}
+                                      title="Copy Descriptive Code"
                                       style={{
                                         background: "none",
                                         border: "1px solid #e2e8f0",
@@ -475,7 +475,7 @@ const SkuCodesManager = () => {
                               <td>{item.category || "—"}</td>
                               <td>{item.misaItemCode || "—"}</td>
                               <td>{
-                                item.currentQuantity !== null && item.currentQuantity !== undefined
+                                item.currentQuantity !== null && item.currentQuantity !== undefined && item.currentQuantity > 0
                                   ? item.currentQuantity
                                   : "—"
                               }</td>
