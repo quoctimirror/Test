@@ -12,6 +12,7 @@ const MODELS = [
   { id: 'FWV7-qA6QEG_Ju8pjSItuA', name: 'Triology', basename: 'drive' }, // chuan
   { id: 'QAauSV24QiuM5CxA_1797w', name: 'Myfav', basename: 'drive' }, // chuan
   { id: 'VdiuGY0xSDOOBoxoHU2y-A', name: 'Lumex91Cadillac', basename: 'drive'}, // chuan
+  { id: 'P936xDENR7-yCCiZSMeLTQ', name: 'Lumex91Leaves', basename: 'drive'}, // chuan
   // ==============================================================================================================
   // đang sửa
 
