@@ -119,8 +119,8 @@
 /* Lumex Container - centered in sticky viewport */
 .future-diamond-v2-lumex-container {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 38%;
+  left: 50.25%;
   transform: translate(-50%, -50%);
   z-index: 1;
 }

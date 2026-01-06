@@ -9,8 +9,6 @@
   min-height: 100vh;
   background: #f6f6f6;
   position: relative;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
 }
 
 .gems-header {
@@ -102,8 +100,6 @@
   --gap: 0px;
   background: #f6f6f6;
   position: relative;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
 }
 
 /* Border for product carousel items */
@@ -206,28 +202,12 @@
   cursor: pointer;
   border: 0.5px solid #fff;
   transition: border 0.3s ease;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .gem-item:hover {
   border: 1px solid #e0e0e0;
 }
 
-/* Fixed aspect ratio to prevent size change when switching images */
-.gem-item .product-carousel-images {
-  aspect-ratio: 4 / 5;
-}
-
-.gem-item .product-carousel-slide {
-  position: absolute;
-}
-
-.gem-item .product-carousel-slide.active {
-  position: relative;
-}
 
 .gem-item-large {
   grid-column: span 1;
@@ -248,7 +228,6 @@
   height: 120%;
   object-fit: cover;
   display: block;
-  will-change: transform;
   transform: translateY(var(--parallax-img-offset));
   transition: none;
 }

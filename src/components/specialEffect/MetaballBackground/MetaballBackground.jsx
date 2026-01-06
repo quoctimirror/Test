@@ -11,6 +11,15 @@ const MetaballBackground = ({ className }) => {
   const mouseMetaballRef = useRef(null);
   const isInitializedRef = useRef(false);
 
+  // Performance: FPS throttle (60fps - desktop only, hidden on mobile)
+  const TARGET_FPS = 60;
+  const FRAME_INTERVAL = 1000 / TARGET_FPS;
+  const lastFrameTimeRef = useRef(0);
+
+  // Performance: Mouse move throttle
+  const lastMouseUpdateRef = useRef(0);
+  const MOUSE_THROTTLE_MS = 16; // ~60fps for mouse, smoother than render
+
   // Shader sources
   const vertexShaderSource = `
     attribute vec4 aVertexPosition;
@@ -329,9 +338,18 @@ const MetaballBackground = ({ className }) => {
     updateCanvasSize();
     initMetaballs();
 
-    // Animation loop
+    // Animation loop with FPS throttle
     let lastTime = 0;
     const render = (time) => {
+      animationRef.current = requestAnimationFrame(render);
+
+      // FPS throttle: Skip frame if not enough time has passed
+      const elapsed = time - lastFrameTimeRef.current;
+      if (elapsed < FRAME_INTERVAL) {
+        return;
+      }
+      lastFrameTimeRef.current = time - (elapsed % FRAME_INTERVAL);
+
       const delta = (time - lastTime) / 1000;
       metaballsRef.current.forEach((mb) => mb.update(delta || 0));
       lastTime = time;
@@ -340,19 +358,16 @@ const MetaballBackground = ({ className }) => {
 
       // Skip rendering if not initialized or canvas is hidden
       if (!isInitializedRef.current || !gl || !shaderProgram) {
-        animationRef.current = requestAnimationFrame(render);
         return;
       }
 
       // Skip rendering if canvas is hidden or has invalid size
       if (canvas.width === 0 || canvas.height === 0) {
-        animationRef.current = requestAnimationFrame(render);
         return;
       }
 
       // Check for WebGL context loss
       if (gl.isContextLost()) {
-        animationRef.current = requestAnimationFrame(render);
         return;
       }
 
@@ -405,8 +420,6 @@ const MetaballBackground = ({ className }) => {
 
       // Draw the fullscreen quad
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-      animationRef.current = requestAnimationFrame(render);
     };
 
     // Start animation
@@ -419,8 +432,14 @@ const MetaballBackground = ({ className }) => {
     mouseRef.current.x = initialX;
     mouseRef.current.y = initialY;
 
-    // Mouse event listener that works with absolute positioning
+    // Mouse event listener with throttle
     const handleMouseMove = (event) => {
+      const now = performance.now();
+      if (now - lastMouseUpdateRef.current < MOUSE_THROTTLE_MS) {
+        return; // Skip if throttled
+      }
+      lastMouseUpdateRef.current = now;
+
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
 
@@ -455,8 +474,14 @@ const MetaballBackground = ({ className }) => {
     canvas.addEventListener("webglcontextlost", handleContextLost);
     canvas.addEventListener("webglcontextrestored", handleContextRestored);
 
-    // Add to the document to catch all mouse movements over the canvas area
+    // Add to the document to catch all mouse movements over the canvas area (with throttle)
     const handleDocumentMouseMove = (event) => {
+      const now = performance.now();
+      if (now - lastMouseUpdateRef.current < MOUSE_THROTTLE_MS) {
+        return; // Skip if throttled
+      }
+      lastMouseUpdateRef.current = now;
+
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
 

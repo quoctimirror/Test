@@ -19,7 +19,7 @@
 
 .lumex91-video-box {
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 1285 / 985; /* Match new frame dimensions */
   background: transparent;
   overflow: hidden;
   position: relative;

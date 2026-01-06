@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
-import TopBanner from "@components/topBanner/TopBanner";
 import ScrollEffect from "@components/home-page/scrollEffect/ScrollEffect";
 import ImmersiveShowroom from "@components/home-page/immersiveShowroom/ImmersiveShowroom";
 import BrandPillars from "@components/home-page/brandPillars/BrandPillars";
-// import UniverseSection from "@components/home-page/universeSection/MirrorExp";
 import UniverseSection from "@components/home-page/universeSection/MirrorExp";
-import FutureDiamond from "@components/home-page/futureDiamond/FutureDiamond";
 import FutureDiamondV2 from "@components/home-page/futureDiamondV2/FutureDiamondV2";
 import HoverExpandSection from "@components/home-page/hoverExpandSection/HoverExpandSection";
 import ContactUs from "@components/contactUs/ContactUs";
-import MirrorQuote from "@components/home-page/mirrorQuote/MirrorQuote";
 import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
 import { useBottomTheme } from "@/hooks/useBottomTheme";

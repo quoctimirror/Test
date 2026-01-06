@@ -321,14 +321,14 @@ const Footer = () => {
             </p>
             <div className="newsletter-buttons">
               <ShineGlassButton
-                onClick={() => console.log("Explore more clicked")}
+                onClick={() => {}}
                 className="newsletter-btn-explore"
                 theme="footer"
               >
                 Explore more
               </ShineGlassButton>
               <GlassThemeButton
-                onClick={() => console.log("Sign in clicked")}
+                onClick={() => {}}
                 className="newsletter-btn-signin"
                 theme="spec_dark"
               >

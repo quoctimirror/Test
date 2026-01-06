@@ -2,18 +2,18 @@
  * EventDisplayPage - Large screen display for venue projection
  */
 import React, { useEffect, useState, useRef } from 'react';
-import { fetchAllNotes } from '../../services/event/eventApi';
+import { fetchAllNotes } from '@services/event/eventApi';
 import {
   subscribeToNotesChannel,
   subscribeToLuckyDrawChannel,
-} from '../../services/event/ably';
-import MusicStaff from '../../components/event/ui/MusicStaff';
-import Diamond from '../../components/event/ui/Diamond';
-import Logo from '../../components/event/ui/Logo';
-import ChristmasMusicSheet from '../../components/event/ui/ChristmasMusicSheet';
-import { getDiamondConfig, TEXT } from '../../constants/eventConstants';
+} from '@services/event/ably';
+import MusicStaff from '@components/event/ui/MusicStaff';
+import Diamond from '@components/event/ui/Diamond';
+import Logo from '@components/event/ui/Logo';
+import ChristmasMusicSheet from '@components/event/ui/ChristmasMusicSheet';
+import { getDiamondConfig, TEXT } from '@/constants/eventConstants';
 
-import '../../styles/event.css';
+import '@styles/event.css';
 
 const EventDisplayPage = () => {
   const [notes, setNotes] = useState([]);

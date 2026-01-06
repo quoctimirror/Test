@@ -3,7 +3,7 @@
  * Generates a 1080x1920 image (Instagram/TikTok story ratio)
  */
 import React, { useRef, useEffect, useCallback } from 'react';
-import { getDiamondConfig } from '../../../constants/eventConstants';
+import { getDiamondConfig } from '@/constants/eventConstants';
 
 // Background gradient presets - user can choose
 export const AVATAR_BACKGROUNDS = [

@@ -180,9 +180,8 @@
   position: relative;
   top: -30%;
   height: 120%;
-  will-change: transform;
   transform: translateY(var(--parallax-img-offset));
-  transition: none; /* Override inherited transition for smooth parallax */
+  transition: none;
 }
 
 .section4-collection-item-large:hover img {

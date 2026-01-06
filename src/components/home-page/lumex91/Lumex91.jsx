@@ -6,15 +6,17 @@ import { useNavigate } from "react-router-dom";
 import { getNewsDetailRoute } from "@/constants/routes";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 
-const TOTAL_FRAMES = 456;
-const FRAME_PATH = "/home-page/lumex91-ani-frames/frame_";
+const TOTAL_FRAMES = 361;
+const FRAME_PATH = "/home-page/lumex91-frames/frame_";
+const BATCH_SIZE = 50; // Load 50 frames per batch for better performance
 
 const Lumex91 = ({ externalProgress = null }) => {
   const [framesLoaded, setFramesLoaded] = useState(false);
+  const [loadedCount, setLoadedCount] = useState(0); // Track loading progress
   const [shouldLoadFrames, setShouldLoadFrames] = useState(false);
   const videoBoxRef = useRef(null);
   const canvasRef = useRef(null);
-  const imagesRef = useRef([]);
+  const imagesRef = useRef(new Array(TOTAL_FRAMES).fill(null));
   const lastRenderedFrameRef = useRef(-1);
   const navigate = useNavigate();
 
@@ -42,7 +44,7 @@ const Lumex91 = ({ externalProgress = null }) => {
     return () => observer.disconnect();
   }, []);
 
-  // Preload all frame images in parallel using Promise.all
+  // Batch load frame images for better performance
   useEffect(() => {
     if (!shouldLoadFrames) return;
 
@@ -51,31 +53,61 @@ const Lumex91 = ({ externalProgress = null }) => {
         const img = new Image();
         const frameNum = String(index).padStart(3, "0");
         img.src = `${FRAME_PATH}${frameNum}.webp`;
-        img.onload = () => resolve(img);
-        img.onerror = () => resolve(null); // Return null for failed loads
+        img.onload = () => {
+          imagesRef.current[index - 1] = img; // Store directly in ref (0-indexed)
+          resolve(img);
+        };
+        img.onerror = () => resolve(null);
       });
     };
 
-    // Load all frames in parallel
-    const imagePromises = [];
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
-      imagePromises.push(loadImage(i));
-    }
+    // Load frames in batches
+    const loadBatch = async (startIndex, endIndex) => {
+      const promises = [];
+      for (let i = startIndex; i <= Math.min(endIndex, TOTAL_FRAMES); i++) {
+        promises.push(loadImage(i));
+      }
+      await Promise.all(promises);
+      setLoadedCount(Math.min(endIndex, TOTAL_FRAMES));
+    };
 
-    Promise.all(imagePromises).then((loadedImages) => {
-      imagesRef.current = loadedImages;
-      setFramesLoaded(true);
-    });
+    // Load first batch immediately, then continue in background
+    const loadAllBatches = async () => {
+      // First batch - load immediately for quick display
+      await loadBatch(1, BATCH_SIZE);
+      setFramesLoaded(true); // Can start displaying after first batch
+
+      // Load remaining batches in background
+      let nextStart = BATCH_SIZE + 1;
+      while (nextStart <= TOTAL_FRAMES) {
+        await loadBatch(nextStart, nextStart + BATCH_SIZE - 1);
+        nextStart += BATCH_SIZE;
+      }
+    };
+
+    loadAllBatches();
   }, [shouldLoadFrames]);
 
   // Draw frame to canvas - optimized to only redraw when frame changes
   const drawFrame = (frameIndex) => {
-    if (!canvasRef.current || !imagesRef.current.length) return;
+    if (!canvasRef.current) return;
 
     // Skip if same frame already rendered
     if (frameIndex === lastRenderedFrameRef.current) return;
 
-    const image = imagesRef.current[frameIndex - 1]; // frames are 1-indexed
+    // Get image, or find nearest loaded frame if not yet loaded
+    let image = imagesRef.current[frameIndex - 1]; // frames are 1-indexed
+
+    // If requested frame not loaded, find nearest loaded frame
+    if (!image) {
+      for (let i = frameIndex - 1; i >= 0; i--) {
+        if (imagesRef.current[i]) {
+          image = imagesRef.current[i];
+          break;
+        }
+      }
+    }
+
     if (!image) return;
 
     lastRenderedFrameRef.current = frameIndex;

@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import UnderlineButton from "@/components/common/button/UnderlineButton";
 import GlassThemeButton from "@/components/common/button/GlassThemeButton";
+import ShineGlassButton from "@/components/common/button/ShineGlassButton";
 import BookingModalV3 from "@/components/booking/BookingModalV3";
 import { ROUTES } from "@/constants/routes";
 import { useNavbarTheme } from "@/hooks/useNavbarTheme";
@@ -893,15 +894,15 @@ export default function NavbarV4() {
                     <span className="bodytext-6--no-margin">Designer Portal</span>
                   </GlassThemeButton>
                 ) : (
-                  <GlassThemeButton
+                  <ShineGlassButton
                     theme="light"
                     onClick={() => {
                       // TODO: Add Mirror Partners Gate navigation
                       console.log("Enter Mirror Partners Gate clicked");
                     }}
                   >
-                    <span className="bodytext-6--no-margin">Enter Mirror Partners Gate</span>
-                  </GlassThemeButton>
+                    Enter Mirror Partners Gate
+                  </ShineGlassButton>
                 )}
                 <GlassThemeButton
                   theme="spec_light"

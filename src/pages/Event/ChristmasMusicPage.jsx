@@ -3,12 +3,12 @@
  * Supports both 2D (SVG) and 3D (Three.js) versions
  */
 import React, { useState, Suspense } from 'react';
-import ChristmasMusicSheet from '../../components/event/ui/ChristmasMusicSheet';
-import '../../styles/event.css';
+import ChristmasMusicSheet from '@components/event/ui/ChristmasMusicSheet';
+import '@styles/event.css';
 
 // Lazy load 3D component (heavy)
 const ChristmasMusic3D = React.lazy(() =>
-  import('../../components/event/ui/ChristmasMusic3D')
+  import('@components/event/ui/ChristmasMusic3D')
 );
 
 const ChristmasMusicPage = () => {

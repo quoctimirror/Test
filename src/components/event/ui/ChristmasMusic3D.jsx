@@ -19,7 +19,7 @@ import {
   SONG_TEMPO,
   NOTE_FREQUENCIES,
   calculateNotePosition,
-} from '../../../constants/christmasSong';
+} from '@/constants/christmasSong';
 
 // ============================================
 // Constants

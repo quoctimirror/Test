@@ -1,10 +1,34 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import Logo from "@assets/images/Logo.svg";
 import { ROUTES } from "@/constants/routes";
 import GlassThemeButton from "@/components/common/button/GlassThemeButton";
 import { useBottomTheme } from "@/hooks/useBottomTheme";
 import "./ScrollEffect.css";
+
+// Throttle utility for scroll performance
+const useThrottle = (callback, delay) => {
+  const lastCall = useRef(0);
+  const lastArgs = useRef(null);
+  const timeoutRef = useRef(null);
+
+  return useCallback((...args) => {
+    const now = Date.now();
+    lastArgs.current = args;
+
+    if (now - lastCall.current >= delay) {
+      lastCall.current = now;
+      callback(...args);
+    } else if (!timeoutRef.current) {
+      // Schedule trailing call
+      timeoutRef.current = setTimeout(() => {
+        lastCall.current = Date.now();
+        timeoutRef.current = null;
+        callback(...lastArgs.current);
+      }, delay - (now - lastCall.current));
+    }
+  }, [callback, delay]);
+};
 
 export default function ScrollEffect({ isAnyOverlayOpen = false }) {
   const location = useLocation();
@@ -48,20 +72,22 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
   const scrollEffectHeight = 250; // vh for scroll effect - reduced to make mirror introduce start earlier
   const mirrorIntroduceHeight = 600; // vh for mirror introduce
 
+  // Throttled handler for immersive collapse (16ms = ~60fps)
+  const handleImmersiveCollapse = useCallback(() => {
+    const scrollY = window.scrollY;
+    setIsImmersiveCollapsed(scrollY > 100);
+  }, []);
+
+  const throttledImmersiveCollapse = useThrottle(handleImmersiveCollapse, 16);
+
   // Detect scroll to collapse immersive button
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      // Collapse button after scrolling 100px
-      setIsImmersiveCollapsed(scrollY > 100);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", throttledImmersiveCollapse, { passive: true });
     // Initial check
-    handleScroll();
+    handleImmersiveCollapse();
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    return () => window.removeEventListener("scroll", throttledImmersiveCollapse);
+  }, [throttledImmersiveCollapse, handleImmersiveCollapse]);
 
   // Smooth frame interpolation animation loop
   useEffect(() => {
@@ -200,7 +226,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
 
   // Progressive preload images - load in batches
   function preloadImages() {
-    const batchSize = 20;
+    const batchSize = 50; // Increased from 20 to 50 for better performance
     const loadedImagesArray = new Array(numFrames);
     let loadedCount = 0;
 
@@ -242,7 +268,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
           } else {
             clearInterval(intervalId);
           }
-        }, 300);
+        }, 200); // Reduced interval from 300ms to 200ms for faster loading
       })
       .catch(() => {
         // Initial image load failed silently
@@ -618,32 +644,35 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
     return () => window.removeEventListener("scroll", handleScrollStart);
   }, [hasStartedScrolling, scrollEffectHeight]);
 
+  // Throttled handler for arrow visibility (32ms = ~30fps, less critical)
+  const handleArrowVisibilityCheck = useCallback(() => {
+    const footerSection = document.querySelector(
+      '[data-section="contact-us"]'
+    );
+
+    if (footerSection) {
+      const rect = footerSection.getBoundingClientRect();
+      const scrollY = window.scrollY;
+      const footerTop = scrollY + rect.top;
+
+      // Hide arrow when we're within 100px of footer top
+      if (scrollY >= footerTop - 100) {
+        setIsArrowVisible(false);
+      } else {
+        setIsArrowVisible(true);
+      }
+    }
+  }, []);
+
+  const throttledArrowVisibility = useThrottle(handleArrowVisibilityCheck, 32);
+
   // Hide arrow button when scrolled to footer (ContactUs section)
   useEffect(() => {
-    const handleArrowVisibility = () => {
-      const footerSection = document.querySelector(
-        '[data-section="contact-us"]'
-      );
+    window.addEventListener("scroll", throttledArrowVisibility, { passive: true });
+    handleArrowVisibilityCheck(); // Initial check
 
-      if (footerSection) {
-        const rect = footerSection.getBoundingClientRect();
-        const scrollY = window.scrollY;
-        const footerTop = scrollY + rect.top;
-
-        // Hide arrow when we're within 100px of footer top
-        if (scrollY >= footerTop - 100) {
-          setIsArrowVisible(false);
-        } else {
-          setIsArrowVisible(true);
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleArrowVisibility, { passive: true });
-    handleArrowVisibility(); // Initial check
-
-    return () => window.removeEventListener("scroll", handleArrowVisibility);
-  }, []);
+    return () => window.removeEventListener("scroll", throttledArrowVisibility);
+  }, [throttledArrowVisibility, handleArrowVisibilityCheck]);
 
   // Update canvas when frame changes - only render if frame is different
   useEffect(() => {

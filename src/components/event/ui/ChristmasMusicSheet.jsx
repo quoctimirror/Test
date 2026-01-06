@@ -13,7 +13,7 @@ import {
   NOTE_FREQUENCIES,
   calculateNotePosition,
   getNoteColor,
-} from '../../../constants/christmasSong';
+} from '@/constants/christmasSong';
 
 const ChristmasMusicSheet = ({
   autoPlay = false,

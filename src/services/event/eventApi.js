@@ -5,7 +5,7 @@
  */
 import { getSupabaseClient, isSupabaseConfigured } from './supabase';
 import { v4 as uuidv4 } from 'uuid';
-import { calculateNotePositionByOrder } from '../../constants/eventConstants';
+import { calculateNotePositionByOrder } from '@/constants/eventConstants';
 
 // Database table/view names (matching mirror-dmm-mvp)
 const TABLES = {
@@ -85,7 +85,199 @@ function handleDemoTicketValidation(code) {
 // ============================================================
 
 /**
- * Register a new user for the event
+ * Register a Google user for the event
+ * @param {Object} userData - Google user data
+ * @param {string} userData.googleId - Google user ID (Supabase auth user id)
+ * @param {string} userData.email - User's email
+ * @param {string} userData.displayName - User's display name from Google
+ * @returns {Object} { success: boolean, user?: object, error?: string }
+ */
+export async function registerGoogleUser(userData) {
+  const { googleId, email, displayName } = userData;
+
+  // Demo mode
+  if (!isSupabaseConfigured()) {
+    return handleDemoGoogleRegistration(userData);
+  }
+
+  try {
+    const supabase = getSupabaseClient();
+
+    // Check if user already exists
+    const { data: existingUser, error: checkError } = await supabase
+      .from(TABLES.users)
+      .select('id, display_name, light_number, email, google_id')
+      .eq('google_id', googleId)
+      .single();
+
+    if (existingUser && !checkError) {
+      // User already exists, return existing data
+      return {
+        success: true,
+        user: {
+          id: existingUser.id,
+          googleId: existingUser.google_id,
+          email: existingUser.email,
+          displayName: existingUser.display_name,
+          lightNumber: existingUser.light_number,
+          createdAt: new Date(),
+        },
+      };
+    }
+
+    // Get next light number
+    const { count } = await supabase
+      .from(TABLES.users)
+      .select('*', { count: 'exact', head: true });
+
+    const lightNumber = (count || 0) + 1;
+
+    // Insert new user
+    const { data: newUser, error: insertError } = await supabase
+      .from(TABLES.users)
+      .insert({
+        google_id: googleId,
+        email: email,
+        display_name: displayName.trim(),
+        light_number: lightNumber,
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error('Insert user error:', insertError);
+      return { success: false, error: 'Không thể đăng ký. Vui lòng thử lại.' };
+    }
+
+    return {
+      success: true,
+      user: {
+        id: newUser.id,
+        googleId: newUser.google_id,
+        email: newUser.email,
+        displayName: newUser.display_name,
+        lightNumber: newUser.light_number,
+        createdAt: new Date(newUser.created_at),
+      },
+    };
+  } catch (error) {
+    console.error('Google registration error:', error);
+    return { success: false, error: 'Lỗi kết nối. Vui lòng thử lại.' };
+  }
+}
+
+/**
+ * Demo mode Google registration
+ */
+function handleDemoGoogleRegistration(userData) {
+  const lightNumber = Math.floor(Math.random() * 1000) + 1;
+  return {
+    success: true,
+    user: {
+      id: uuidv4(),
+      googleId: userData.googleId,
+      email: userData.email,
+      displayName: userData.displayName.trim(),
+      lightNumber,
+      createdAt: new Date(),
+    },
+    isDemo: true,
+  };
+}
+
+/**
+ * Get user's existing note from Supabase
+ * Used to restore state when user logs in again
+ * @param {string} userId - User ID (from users table)
+ * @returns {Object} { hasNote: boolean, note?: object, user?: object }
+ */
+export async function getUserExistingNote(userId) {
+  if (!isSupabaseConfigured()) {
+    return { hasNote: false };
+  }
+
+  try {
+    const supabase = getSupabaseClient();
+
+    // Get user's note from notes_with_users view
+    const { data: note, error } = await supabase
+      .from(VIEWS.notesWithUsers)
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (error || !note) {
+      return { hasNote: false };
+    }
+
+    return {
+      hasNote: true,
+      note: {
+        id: note.id,
+        diamondShape: note.diamond_shape,
+        pitch: note.pitch,
+        positionX: note.position_x,
+        positionY: note.position_y,
+        createdAt: new Date(note.created_at),
+      },
+      user: {
+        displayName: note.display_name,
+        lightNumber: note.light_number,
+      },
+    };
+  } catch (error) {
+    console.error('Get existing note error:', error);
+    return { hasNote: false };
+  }
+}
+
+/**
+ * Get user by Google ID to check if already registered
+ * @param {string} googleId - Google/Supabase auth user ID
+ * @returns {Object} { exists: boolean, user?: object, hasNote?: boolean, note?: object }
+ */
+export async function checkExistingGoogleUser(googleId) {
+  if (!isSupabaseConfigured()) {
+    return { exists: false };
+  }
+
+  try {
+    const supabase = getSupabaseClient();
+
+    // Get user by google_id
+    const { data: user, error } = await supabase
+      .from(TABLES.users)
+      .select('id, display_name, light_number, email, google_id')
+      .eq('google_id', googleId)
+      .single();
+
+    if (error || !user) {
+      return { exists: false };
+    }
+
+    // Check if user has a note
+    const noteResult = await getUserExistingNote(user.id);
+
+    return {
+      exists: true,
+      user: {
+        id: user.id,
+        googleId: user.google_id,
+        email: user.email,
+        displayName: user.display_name,
+        lightNumber: user.light_number,
+      },
+      hasNote: noteResult.hasNote,
+      note: noteResult.note,
+    };
+  } catch (error) {
+    console.error('Check existing user error:', error);
+    return { exists: false };
+  }
+}
+
+/**
+ * Register a new user for the event (legacy - ticket-based)
  * Uses the claim_ticket RPC function (matching mirror-dmm-mvp)
  * @param {string} ticketCode - The validated ticket code
  * @param {string} displayName - User's display name

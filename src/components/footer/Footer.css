@@ -398,26 +398,6 @@
     font-size: 14px;
   }
 
-  .newsletter-form {
-    flex-direction: row;
-    gap: 12px;
-    max-width: 100%;
-    margin: 0 auto;
-    align-items: flex-end;
-  }
-
-  .email-input {
-    flex: 1;
-    padding: 10px 0;
-    font-size: 14px;
-  }
-
-  .signup-button {
-    width: 90px;
-    height: 44px;
-    font-size: 12px;
-  }
-
   .footer-title {
     font-size: 18px;
     margin-bottom: 15px;
@@ -536,26 +516,6 @@
   .newsletter-subtitle {
     margin-bottom: 12px !important;
     font-size: 14px;
-  }
-
-  .newsletter-form {
-    flex-direction: row;
-    gap: 12px;
-    max-width: 100%;
-    margin: 0 auto;
-    align-items: flex-end;
-  }
-
-  .email-input {
-    flex: 1;
-    padding: 10px 0;
-    font-size: 14px;
-  }
-
-  .signup-button {
-    width: 90px;
-    height: 44px;
-    font-size: 12px;
   }
 
   .footer-title {

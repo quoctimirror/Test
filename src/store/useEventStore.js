@@ -9,10 +9,10 @@ const useEventStore = create(
   persist(
     (set, get) => ({
       // Current step in the flow
-      currentStep: 'ticket', // 'ticket' | 'name' | 'diamond' | 'result'
+      currentStep: 'login', // 'login' | 'diamond' | 'result'
 
-      // User data
-      user: null, // { id, ticketId, displayName, lightNumber, createdAt }
+      // User data (Google login)
+      user: null, // { id, googleId, email, displayName, lightNumber, createdAt }
 
       // Selected diamond shape
       selectedDiamond: null,
@@ -69,7 +69,7 @@ const useEventStore = create(
       // Reset all state (logout)
       reset: () =>
         set({
-          currentStep: 'ticket',
+          currentStep: 'login',
           user: null,
           selectedDiamond: null,
           selectedBackground: 'pink',

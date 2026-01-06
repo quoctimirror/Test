@@ -2,7 +2,7 @@
  * Diamond Component - SVG-based diamond shape renderer
  */
 import React from 'react';
-import { getDiamondConfig } from '../../../constants/eventConstants';
+import { getDiamondConfig } from '@/constants/eventConstants';
 
 // SVG paths for different diamond shapes
 const DIAMOND_PATHS = {

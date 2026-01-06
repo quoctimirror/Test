@@ -7,17 +7,17 @@ import {
   getRecentNotes,
   importTickets,
   pickLuckyWinner,
-} from '../../services/event/eventApi';
+} from '@services/event/eventApi';
 import {
   broadcastLuckyDrawStart,
   broadcastWinner,
   broadcastStatsUpdate,
-} from '../../services/event/ably';
-import { ADMIN_PASSWORD, getDiamondConfig } from '../../constants/eventConstants';
-import Logo from '../../components/event/ui/Logo';
-import Diamond from '../../components/event/ui/Diamond';
+} from '@services/event/ably';
+import { ADMIN_PASSWORD, getDiamondConfig } from '@/constants/eventConstants';
+import Logo from '@components/event/ui/Logo';
+import Diamond from '@components/event/ui/Diamond';
 
-import '../../styles/event.css';
+import '@styles/event.css';
 
 const EventAdminPage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
