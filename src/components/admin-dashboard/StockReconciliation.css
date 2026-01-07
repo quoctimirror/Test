@@ -723,14 +723,22 @@
 }
 
 .sku-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sku-cell .sku-code {
   font-family: 'SF Mono', Monaco, monospace;
   font-weight: 600;
   font-size: 13px;
   color: #1e293b;
 }
 
-.name-cell {
-  max-width: 200px;
+.sku-cell .name-cell {
+  font-size: 12px;
+  color: #64748b;
+  max-width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1095,5 +1103,231 @@
 
   .search-box.large input {
     width: 100%;
+  }
+
+  /* ========== MOBILE CARD LAYOUT FOR COMPARISON TABLE ========== */
+  .comparison-panel {
+    padding: 12px;
+  }
+
+  .comparison-header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .comparison-header h3 {
+    font-size: 16px;
+  }
+
+  .comparison-toolbar {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .comparison-toolbar .search-box {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  /* Hide table header on mobile */
+  .comparison-table thead {
+    display: none;
+  }
+
+  .comparison-table table {
+    display: block;
+  }
+
+  /* Convert table rows to cards */
+  .comparison-table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .comparison-table tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .comparison-table tbody tr.row-missing {
+    background: #fef2f2;
+    border-color: #fecaca;
+  }
+
+  .comparison-table tbody tr.row-excess {
+    background: #fefce8;
+    border-color: #fef08a;
+  }
+
+  .comparison-table tbody tr.row-match {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+  }
+
+  .comparison-table tbody tr.row-not_in_misa {
+    background: #f5f3ff;
+    border-color: #ddd6fe;
+  }
+
+  .comparison-table td {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 4px 0;
+    border: none;
+  }
+
+  /* Add labels for mobile */
+  .comparison-table td::before {
+    content: attr(data-label);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  /* SKU cell - full width at top */
+  .comparison-table td.sku-cell {
+    width: 100%;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    margin-bottom: 4px;
+  }
+
+  .comparison-table td.sku-cell::before {
+    content: none;
+  }
+
+  .comparison-table .sku-cell .sku-code {
+    font-size: 13px;
+    font-weight: 600;
+    word-break: break-all;
+    color: #1e293b;
+  }
+
+  .comparison-table .sku-cell .name-cell {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+    text-align: left;
+    white-space: normal;
+    max-width: 100%;
+  }
+
+  /* Numbers row - side by side */
+  .comparison-table td.num-col {
+    flex: 1;
+    min-width: 60px;
+    text-align: left;
+  }
+
+  .comparison-table td.num-col .physical-count,
+  .comparison-table td.num-col .misa-count {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .comparison-table .physical-count {
+    font-size: 16px;
+  }
+
+  .comparison-table .misa-count {
+    font-size: 16px;
+  }
+
+  .comparison-table .diff-cell {
+    font-size: 16px;
+  }
+
+  /* Status cell */
+  .comparison-table td[data-label="Status"] {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  /* Actions cell - right side */
+  .comparison-table .actions-cell {
+    width: 100%;
+    justify-content: flex-end;
+    flex-direction: row;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    margin-top: 4px;
+  }
+
+  .comparison-table .actions-cell::before {
+    content: none;
+  }
+
+  .btn-adjust {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  /* Status badge */
+  .status-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .summary-cards {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .summary-card {
+    min-width: 60px;
+    padding: 8px 10px;
+  }
+
+  .card-value {
+    font-size: 18px;
+  }
+
+  .card-label {
+    font-size: 9px;
+  }
+
+  .comparison-panel {
+    padding: 8px;
+  }
+
+  .comparison-header {
+    padding: 10px 12px;
+  }
+
+  .comparison-table tbody tr {
+    padding: 10px;
+  }
+
+  .comparison-table .sku-cell .sku-code {
+    font-size: 12px;
+  }
+
+  .comparison-table .sku-cell .name-cell {
+    font-size: 11px;
+  }
+
+  .comparison-table td.num-col {
+    min-width: 50px;
+  }
+
+  .btn-adjust {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
   }
 }

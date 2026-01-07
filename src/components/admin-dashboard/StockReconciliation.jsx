@@ -42,8 +42,11 @@ export default function StockReconciliation() {
   const audioContextRef = useRef(null);
 
   // Build MISA lookup map for quick access
+  // Supports both exact match and base SKU match (without variant suffix like -RO, -WH, etc.)
   const misaLookup = useMemo(() => {
     const lookup = {};
+    const baseSkuMap = {}; // Maps base SKU (without variant) to full SKU codes
+
     misaStock.forEach(item => {
       const sku = item.inventory_item_code;
       if (!sku) return;
@@ -61,9 +64,62 @@ export default function StockReconciliation() {
       }
       lookup[sku].quantity += item.quantity_balance || 0;
       lookup[sku].amount += item.amount_balance || 0;
+
+      // Also index by base SKU (without variant suffix like -RO, -WH, -BL, etc.)
+      // Pattern: SKU might end with -XX where XX is a 2-letter variant code
+      const variantMatch = sku.match(/^(.+)-([A-Z]{2})$/);
+      if (variantMatch) {
+        const baseSku = variantMatch[1];
+        if (!baseSkuMap[baseSku]) {
+          baseSkuMap[baseSku] = [];
+        }
+        baseSkuMap[baseSku].push(sku);
+      }
     });
+
+    // Attach baseSkuMap to lookup for variant matching
+    lookup._baseSkuMap = baseSkuMap;
     return lookup;
   }, [misaStock, selectedWarehouse]);
+
+  // Helper function to find MISA item by SKU (supports exact and base SKU match)
+  const findMisaItem = useCallback((skuCode) => {
+    // Try exact match first
+    if (misaLookup[skuCode]) {
+      return { item: misaLookup[skuCode], matchedSku: skuCode };
+    }
+
+    // Try base SKU match (scanned barcode might not have variant suffix)
+    const baseSkuMap = misaLookup._baseSkuMap || {};
+    if (baseSkuMap[skuCode]) {
+      // Found variants for this base SKU
+      const variants = baseSkuMap[skuCode];
+      if (variants.length === 1) {
+        // Single variant - use it directly
+        const fullSku = variants[0];
+        return { item: misaLookup[fullSku], matchedSku: fullSku };
+      } else if (variants.length > 1) {
+        // Multiple variants - aggregate them
+        const aggregated = {
+          quantity: 0,
+          name: misaLookup[variants[0]]?.name || "Multiple variants",
+          warehouse: misaLookup[variants[0]]?.warehouse || "Multiple",
+          unitPrice: 0,
+          amount: 0,
+          variants: variants
+        };
+        variants.forEach(v => {
+          if (misaLookup[v]) {
+            aggregated.quantity += misaLookup[v].quantity || 0;
+            aggregated.amount += misaLookup[v].amount || 0;
+          }
+        });
+        return { item: aggregated, matchedSku: skuCode, isAggregated: true };
+      }
+    }
+
+    return { item: null, matchedSku: null };
+  }, [misaLookup]);
 
   // Initialize audio
   useEffect(() => {
@@ -157,7 +213,7 @@ export default function StockReconciliation() {
     setTotalScans(prev => prev + 1);
 
     try {
-      // Check if we already have this item
+      // Check if we already have this item (by scanned code)
       if (scannedItems[skuCode]) {
         setScannedItems(prev => ({
           ...prev,
@@ -168,14 +224,15 @@ export default function StockReconciliation() {
         }));
         successBeepRef.current?.();
       } else {
-        // Try to get info from MISA first, then fall back to API
-        const misaItem = misaLookup[skuCode];
+        // Try to get info from MISA first (supports base SKU match), then fall back to API
+        const { item: misaItem, matchedSku } = findMisaItem(skuCode);
 
         if (misaItem) {
           setScannedItems(prev => ({
             ...prev,
             [skuCode]: {
               count: 1,
+              matchedMisaSku: matchedSku, // Store the matched MISA SKU for comparison
               productInfo: {
                 id: null,
                 name: misaItem.name,
@@ -238,7 +295,7 @@ export default function StockReconciliation() {
       console.error("Scan processing error:", error);
       errorBeepRef.current?.();
     }
-  }, [lastScanned, scannedItems, misaLookup]);
+  }, [lastScanned, scannedItems, findMisaItem]);
 
   // Start camera scanner
   const startScanner = async () => {
@@ -421,15 +478,18 @@ export default function StockReconciliation() {
 
   // Get comparison data for scanned items
   const getComparisonData = useMemo(() => {
-    const items = Object.entries(scannedItems).map(([sku, { count, productInfo }]) => {
-      const misaQty = misaLookup[sku]?.quantity || 0;
+    const items = Object.entries(scannedItems).map(([sku, { count, productInfo, matchedMisaSku }]) => {
+      // Use findMisaItem for flexible matching (supports base SKU without variant suffix)
+      const { item: misaItem } = findMisaItem(sku);
+      const misaQty = misaItem?.quantity || 0;
       const diff = count - misaQty;
-      const notInMisa = !misaLookup[sku];
+      const notInMisa = !misaItem;
 
       return {
         sku,
-        name: misaLookup[sku]?.name || productInfo.name,
-        warehouse: misaLookup[sku]?.warehouse || productInfo.category,
+        matchedMisaSku: matchedMisaSku || (misaItem ? sku : null), // Show matched MISA SKU if different
+        name: misaItem?.name || productInfo.name,
+        warehouse: misaItem?.warehouse || productInfo.category,
         physicalCount: count,
         misaCount: misaQty,
         difference: diff,
@@ -452,7 +512,7 @@ export default function StockReconciliation() {
       if (a.status !== "match" && b.status === "match") return -1;
       return Math.abs(b.difference) - Math.abs(a.difference);
     });
-  }, [scannedItems, misaLookup, searchQuery]);
+  }, [scannedItems, findMisaItem, searchQuery]);
 
   // Get filtered MISA inventory
   const filteredMisaStock = useMemo(() => {
@@ -479,13 +539,17 @@ export default function StockReconciliation() {
     const excess = getComparisonData.filter(i => i.status === "excess").length;
     const notInMisa = getComparisonData.filter(i => i.status === "not_in_misa").length;
 
-    // Progress: how many MISA items have been scanned
-    const misaItemsCount = Object.keys(misaLookup).length;
-    const scannedMisaItems = Object.keys(scannedItems).filter(sku => misaLookup[sku]).length;
+    // Progress: how many MISA items have been scanned (using flexible matching)
+    // Count unique MISA SKUs (excluding the _baseSkuMap key)
+    const misaItemsCount = Object.keys(misaLookup).filter(k => k !== '_baseSkuMap').length;
+    const scannedMisaItems = Object.keys(scannedItems).filter(sku => {
+      const { item } = findMisaItem(sku);
+      return item !== null;
+    }).length;
     const progress = misaItemsCount > 0 ? Math.round((scannedMisaItems / misaItemsCount) * 100) : 0;
 
     return { total, matches, mismatches, missing, excess, notInMisa, progress, misaItemsCount, scannedMisaItems };
-  }, [getComparisonData, misaLookup, scannedItems]);
+  }, [getComparisonData, misaLookup, scannedItems, findMisaItem]);
 
   // Export report
   const exportReport = () => {
@@ -760,8 +824,7 @@ export default function StockReconciliation() {
                 <table>
                   <thead>
                     <tr>
-                      <th>SKU</th>
-                      <th>Name</th>
+                      <th>SKU / Name</th>
                       <th className="num-col">Physical</th>
                       <th className="num-col">MISA</th>
                       <th className="num-col">Diff</th>
@@ -772,14 +835,16 @@ export default function StockReconciliation() {
                   <tbody>
                     {getComparisonData.map((item) => (
                       <tr key={item.sku} className={`row-${item.status}`}>
-                        <td className="sku-cell">{item.sku}</td>
-                        <td className="name-cell">{item.name}</td>
-                        <td className="num-col physical-count">{item.physicalCount}</td>
-                        <td className="num-col misa-count">{item.misaCount}</td>
-                        <td className={`num-col diff-cell ${item.difference > 0 ? "positive" : item.difference < 0 ? "negative" : ""}`}>
+                        <td className="sku-cell" data-label="SKU">
+                          <span className="sku-code">{item.sku}</span>
+                          <span className="name-cell">{item.name}</span>
+                        </td>
+                        <td className="num-col physical-count" data-label="Physical">{item.physicalCount}</td>
+                        <td className="num-col misa-count" data-label="MISA">{item.misaCount}</td>
+                        <td className={`num-col diff-cell ${item.difference > 0 ? "positive" : item.difference < 0 ? "negative" : ""}`} data-label="Diff">
                           {item.difference > 0 ? "+" : ""}{item.difference}
                         </td>
-                        <td>
+                        <td data-label="Status">
                           <span className={`status-badge ${item.status}`}>
                             {item.status === "match" && "✓ Match"}
                             {item.status === "excess" && "↑ Excess"}
@@ -788,8 +853,16 @@ export default function StockReconciliation() {
                           </span>
                         </td>
                         <td className="actions-cell">
-                          <button className="btn-adjust" onClick={() => adjustCount(item.sku, -1)} title="Decrease">−</button>
-                          <button className="btn-adjust" onClick={() => adjustCount(item.sku, 1)} title="Increase">+</button>
+                          <button
+                            className="btn-adjust"
+                            onClick={(e) => { e.stopPropagation(); adjustCount(item.sku, -1); }}
+                            title="Decrease"
+                          >−</button>
+                          <button
+                            className="btn-adjust"
+                            onClick={(e) => { e.stopPropagation(); adjustCount(item.sku, 1); }}
+                            title="Increase"
+                          >+</button>
                         </td>
                       </tr>
                     ))}

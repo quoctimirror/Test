@@ -44,6 +44,17 @@ const AdminDashboard = () => {
   const roles = user?.roles || [];
   const isAdminLike = roles.includes("SUPER_ADMIN") || roles.includes("ADMIN") || roles.includes("IT_ADMIN");
 
+  // Sidebar state for mobile
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Close sidebar when clicking a menu item on mobile
+  const handleMenuClick = (tabId) => {
+    setActiveTab(tabId);
+    if (window.innerWidth <= 1024) {
+      setSidebarOpen(false);
+    }
+  };
+
   // Get portal branding based on user's primary role
   const getPortalInfo = () => {
     const primaryRole = roles[0];
@@ -410,11 +421,28 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard-container">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="admin-sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <div className="admin-sidebar">
+      <div className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="admin-sidebar-header">
-          <h1 className="admin-sidebar-title">{portalInfo.title}</h1>
-          <p className="admin-sidebar-subtitle">{portalInfo.subtitle}</p>
+          <div className="admin-sidebar-header-content">
+            <h1 className="admin-sidebar-title">{portalInfo.title}</h1>
+            <p className="admin-sidebar-subtitle">{portalInfo.subtitle}</p>
+          </div>
+          <button
+            className="admin-sidebar-close"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close menu"
+          >
+            ×
+          </button>
         </div>
 
         <nav className="admin-sidebar-nav">
@@ -424,7 +452,7 @@ const AdminDashboard = () => {
               className={`admin-nav-button ${
                 activeTab === item.id ? "active" : ""
               }`}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => handleMenuClick(item.id)}
             >
               <span className="admin-nav-label">{item.label}</span>
             </button>
@@ -447,6 +475,20 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <div className="admin-main-content">
+        {/* Mobile Header with Menu Toggle */}
+        <div className="admin-mobile-header">
+          <button
+            className="admin-menu-toggle"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
+          >
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+          </button>
+          <span className="admin-mobile-title">{portalInfo.title}</span>
+        </div>
+
         <div className="admin-content-header">
           <div className="admin-breadcrumb">
             <span>{portalInfo.breadcrumb}</span>
