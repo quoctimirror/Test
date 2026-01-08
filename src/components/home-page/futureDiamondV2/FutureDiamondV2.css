@@ -5,7 +5,7 @@
   z-index: 10;
   /* Responsive padding: min 150px, preferred 20vw (based on video-box width), max 300px */
   padding-bottom: clamp(150px, 20vw, 300px);
-  /* Light gradient as base background */
+  /* Light gradient as base background - fixed to viewport */
   background: linear-gradient(
     180deg,
     #f2f2f2 0%,
@@ -14,6 +14,8 @@
     #fff 75%,
     #b8b8b8 100%
   );
+  background-attachment: fixed;
+  background-size: 100% 100vh;
 }
 
 /* Dark overlay for fade effect */
@@ -119,7 +121,7 @@
 /* Lumex Container - centered in sticky viewport */
 .future-diamond-v2-lumex-container {
   position: absolute;
-  top: 38%;
+  top: 40%;
   left: 50.25%;
   transform: translate(-50%, -50%);
   z-index: 1;
@@ -127,7 +129,7 @@
 
 /* Lumex container structure */
 .future-diamond-v2-lumex-container .lumex91 {
-  width: 50vw;
+  width: 40vw;
 }
 
 .future-diamond-v2-lumex-container .lumex91-container {

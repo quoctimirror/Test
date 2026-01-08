@@ -1,0 +1,376 @@
+/**
+ * EventGuidePage Styles
+ * Landing page for Mirror Diamond Symphony Event
+ */
+
+.event-guide {
+  width: 100%;
+  min-height: 100vh;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ============================================
+   Hero Section
+   ============================================ */
+.event-guide__hero {
+  height: 100vh;
+  background: url("__CDN_URL__/mirror_DMM/Artboard-6.webp") center center / cover no-repeat;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-guide__hero-top {
+  align-items: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.event-guide__hero-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-guide__hero-title-img {
+  max-width: 600px;
+  width: 80%;
+  height: auto;
+}
+
+.event-guide__hero-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.event-guide__hero-left {
+  grid-column: 2 / span 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.event-guide__collab {
+  color: #fff;
+  margin: 0;
+}
+
+.event-guide__collab-sub {
+  color: #fff;
+  margin: 0;
+}
+
+.event-guide__hero-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #fff;
+  font-size: 0.875rem;
+}
+
+
+.event-guide__hero-description {
+  grid-column: 9 / span 3;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+.event-guide__btn {
+  padding: 0.875rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.event-guide__btn--outline {
+  background: transparent;
+  border: 1px solid #333;
+  color: #333;
+}
+
+.event-guide__btn--outline:hover {
+  background: #333;
+  color: #fff;
+}
+
+.event-guide__btn--filled {
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+.event-guide__btn--filled:hover {
+  background: #fff;
+  color: #4A0020;
+}
+
+/* ============================================
+   About Section
+   ============================================ */
+.event-guide__about {
+  background: #797979;
+  padding: 6rem 4rem;
+  text-align: center;
+}
+
+.event-guide__about-title {
+  font-family: "Saol Display", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  font-style: italic;
+  color: #fff;
+  margin-bottom: 2rem;
+}
+
+.event-guide__about-text {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================
+   Music Staff Visual
+   ============================================ */
+.event-guide__staff-visual {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  height: 250px;
+  margin-bottom: 2rem;
+}
+
+.event-guide__treble-clef {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 150px;
+}
+
+.event-guide__staff-lines {
+  position: absolute;
+  left: 80px;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.event-guide__staff-line {
+  height: 1px;
+  background: #ccc;
+  width: 100%;
+}
+
+.event-guide__notes {
+  position: absolute;
+  left: 80px;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100px;
+}
+
+.event-guide__note {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+}
+
+.event-guide__note--1 {
+  left: 20%;
+  top: 10%;
+}
+
+.event-guide__note--2 {
+  left: 40%;
+  top: 40%;
+}
+
+.event-guide__note--3 {
+  left: 60%;
+  top: 20%;
+}
+
+.event-guide__note--heart {
+  right: 10%;
+  top: 60%;
+  width: 40px;
+  height: 40px;
+}
+
+/* ============================================
+   Section Common Styles
+   ============================================ */
+.event-guide__section-title {
+  font-family: "Saol Display", Georgia, serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 300;
+  font-style: italic;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.event-guide__section-title--light {
+  color: #797979;
+}
+
+.event-guide__section-text {
+  max-width: 400px;
+  margin: 0 auto 2rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #666;
+  text-align: center;
+}
+
+.event-guide__section-text--light {
+  color: #797979;
+}
+
+/* ============================================
+   Every Note Section
+   ============================================ */
+.event-guide__every-note {
+  background: #f6f6f6;
+  height: 100vh;
+  padding: 4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   Avatar Generator Section
+   ============================================ */
+.event-guide__avatar {
+  background: #fff;
+  min-height: 100vh;
+  padding: 4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-guide__avatar-image {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.event-guide__avatar-card {
+  width: 200px;
+  height: 280px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-guide__avatar-placeholder {
+  width: 80%;
+  height: 60%;
+  background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%);
+  border-radius: 8px;
+}
+
+/* ============================================
+   Lucky Draw Section
+   ============================================ */
+.event-guide__lucky-draw {
+  background: #f6f6f6;
+  min-height: 100vh;
+  padding: 4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+  .event-guide__hero {
+    padding: 1.5rem;
+  }
+
+  .event-guide__hero-top {
+    text-align: center;
+  }
+
+  .event-guide__hero-left {
+    grid-column: 1 / span 12;
+  }
+
+  .event-guide__hero-description {
+    grid-column: 1 / span 12;
+  }
+
+  .event-guide__hero-bottom {
+    gap: 1.5rem;
+  }
+
+  .event-guide__hero-right {
+    flex-direction: column;
+  }
+
+  .event-guide__about,
+  .event-guide__staff,
+  .event-guide__every-note,
+  .event-guide__avatar,
+  .event-guide__lucky-draw {
+    padding: 4rem 1.5rem;
+  }
+
+  .event-guide__staff-visual {
+    height: 200px;
+  }
+
+  .event-guide__treble-clef {
+    width: 40px;
+    height: 100px;
+  }
+
+  .event-guide__staff-lines {
+    left: 50px;
+    gap: 15px;
+  }
+
+  .event-guide__notes {
+    left: 50px;
+  }
+
+  .event-guide__note {
+    width: 20px;
+    height: 20px;
+  }
+
+  .event-guide__note--heart {
+    width: 30px;
+    height: 30px;
+  }
+}

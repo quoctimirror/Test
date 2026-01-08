@@ -1,0 +1,92 @@
+/**
+ * EventPreviewPage - Preview page before generating avatar
+ * User can choose note shape and see avatar preview
+ */
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
+import ShineGlassButton from '@components/common/button/ShineGlassButton';
+
+import './EventPreviewPage.css';
+
+// Diamond shapes data
+const DIAMOND_SHAPES = [
+  { id: 'heart', name: 'Heart', icon: '/diamonds/heart.webp' },
+  { id: 'round', name: 'Round', icon: '/diamonds/round.webp' },
+  { id: 'oval', name: 'Oval', icon: '/diamonds/oval.webp' },
+  { id: 'marquise', name: 'Marquise', icon: '/diamonds/marquise.webp' },
+];
+
+const EventPreviewPage = () => {
+  const navigate = useNavigate();
+  const [selectedShape, setSelectedShape] = useState('heart');
+
+  const handleBack = () => {
+    navigate(ROUTES.EVENT_NAME);
+  };
+
+  const handleGenerate = () => {
+    // TODO: Store selected shape and generate avatar
+    navigate(ROUTES.EVENT_RESULT);
+  };
+
+  return (
+    <div className="event-preview">
+      {/* Background */}
+      <div className="event-preview__bg" />
+
+      {/* Main Content */}
+      <div className="event-preview__main">
+        {/* Back Button */}
+        <ShineGlassButton theme="light" onClick={handleBack} className="event-preview__back">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </ShineGlassButton>
+
+        {/* Diamond Shape */}
+        <div className="event-preview__diamond">
+          <img
+            src="/diamonds/heart-ruby.webp"
+            alt="Heart Diamond"
+            className="event-preview__diamond-img"
+          />
+        </div>
+
+        {/* Divider Line */}
+        <div className="event-preview__divider" />
+
+        {/* Avatar Preview Card */}
+        <div className="event-preview__card">
+          <div className="event-preview__card-content">
+            <span className="event-preview__card-subtitle">THE SOUND OF</span>
+            <span className="event-preview__card-title">Love</span>
+            <span className="event-preview__card-script">Grown</span>
+          </div>
+        </div>
+
+        {/* Generate Button */}
+        <ShineGlassButton theme="light" onClick={handleGenerate}>
+          Generate
+        </ShineGlassButton>
+      </div>
+
+      {/* Bottom Content */}
+      <div className="event-preview__bottom">
+        <div className="event-preview__info">
+          <h3 className="heading-3--no-margin event-preview__info-title">
+            Choose the note shape
+          </h3>
+          <p className="event-preview__info-text">
+            cinq elit, sed diam nonummy nibut laoreet dolore
+            magna aliquam erat volutpat. cinq elit, sed diam
+            nonummy nibut nibut laoreet dolore magna aliquam
+            erat volutpat.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EventPreviewPage;

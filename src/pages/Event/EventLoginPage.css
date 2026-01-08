@@ -1,0 +1,222 @@
+/**
+ * EventLoginPage Styles
+ * Login page for Mirror Diamond Event
+ */
+
+.event-login {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background */
+.event-login__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("__CDN_URL__/mirror_DMM/Artboard-6.webp") center center / cover no-repeat;
+  z-index: -2;
+}
+
+/* Login Card */
+.event-login__card {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 1 / 1;
+  background: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 0px;
+  padding: 3rem 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Noise/Grain texture overlay */
+.event-login__card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  border-radius: 0px;
+}
+
+/* Title */
+.event-login__title {
+  font-family: "Saol Display", Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 300;
+  font-style: italic;
+  color: #4a3040;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Form */
+.event-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Field */
+.event-login__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.event-login__field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-login__label {
+  font-size: 0.8rem;
+  color: #6a5060;
+  font-weight: 500;
+}
+
+.event-login__forgot {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: #8a7080;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.event-login__forgot:hover {
+  color: #4a3040;
+}
+
+/* Input */
+.event-login__input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(200, 180, 190, 0.3);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #4a3040;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.event-login__input::placeholder {
+  color: #a090a0;
+}
+
+.event-login__input:focus {
+  border-color: rgba(150, 100, 130, 0.5);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 3px rgba(150, 100, 130, 0.1);
+}
+
+/* Submit Button */
+.event-login__submit {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.event-login__submit .shine-button-wrap {
+  width: 100%;
+}
+
+.event-login__submit .shine-glass-button {
+  width: 100%;
+}
+
+/* Social Login */
+.event-login__social {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.event-login__social-text {
+  font-size: 0.8rem;
+  color: #8a7080;
+}
+
+.event-login__social-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(200, 180, 190, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.event-login__social-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.event-login__social-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Sign Up Link */
+.event-login__signup {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #8a7080;
+}
+
+.event-login__signup button {
+  background: none;
+  border: none;
+  color: #4a3040;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 0.25rem;
+  transition: color 0.3s ease;
+}
+
+.event-login__signup button:hover {
+  color: #6a4050;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .event-login {
+    padding: 1rem;
+  }
+
+  .event-login__card {
+    padding: 2rem 1.5rem;
+  }
+
+  .event-login__title {
+    font-size: 2rem;
+  }
+}

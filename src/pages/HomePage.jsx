@@ -3,6 +3,8 @@ import ScrollEffect from "@components/home-page/scrollEffect/ScrollEffect";
 import ImmersiveShowroom from "@components/home-page/immersiveShowroom/ImmersiveShowroom";
 import BrandPillars from "@components/home-page/brandPillars/BrandPillars";
 import UniverseSection from "@components/home-page/universeSection/MirrorExp";
+import MirrorExpV2 from "@components/home-page/universeSection/MirrorExpV2";
+import MirrorExpV3 from "@components/home-page/universeSection/MirrorExpV3";
 import FutureDiamondV2 from "@components/home-page/futureDiamondV2/FutureDiamondV2";
 import HoverExpandSection from "@components/home-page/hoverExpandSection/HoverExpandSection";
 import ContactUs from "@components/contactUs/ContactUs";
@@ -61,7 +63,18 @@ export default function HomePage() {
         <BrandPillars />
       </div>
 
-      <div data-section="universe-section" data-navbar-theme="white">
+      {/* Universe Section V2 - 3D Ellipse Design */}
+      <div data-section="universe-section-v2" data-navbar-theme="white">
+        <MirrorExpV2 />
+      </div>
+
+      {/* Universe Section V3 - Three.js 3D Universe */}
+      {/* <div data-section="universe-section-v3" data-navbar-theme="white">
+        <MirrorExpV3 />
+      </div> */}
+
+      {/* Original Universe Section - Comment out for comparison */}
+      {/* <div data-section="universe-section" data-navbar-theme="white">
         <UniverseSection
           showSenseOverlay={showSenseOverlay}
           setShowSenseOverlay={setShowSenseOverlay}
@@ -72,7 +85,7 @@ export default function HomePage() {
           showTimeOverlay={showTimeOverlay}
           setShowTimeOverlay={setShowTimeOverlay}
         />
-      </div>
+      </div> */}
 
       <div data-section="immersive-showroom" data-navbar-theme="white">
         <ImmersiveShowroom />

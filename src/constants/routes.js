@@ -51,6 +51,11 @@ export const ROUTES = {
 
   // Event routes
   EVENT: "/event",
+  EVENT_GUIDE: "/event/guide",
+  EVENT_LOGIN: "/event/login",
+  EVENT_NAME: "/event/name",
+  EVENT_PREVIEW: "/event/preview",
+  EVENT_RESULT: "/event/result",
   EVENT_DISPLAY: "/event/display",
   EVENT_ADMIN: "/event/admin",
   EVENT_CHRISTMAS: "/event/christmas",

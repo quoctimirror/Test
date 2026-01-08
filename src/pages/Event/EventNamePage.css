@@ -1,0 +1,159 @@
+/**
+ * EventNamePage Styles
+ * Name input page for Mirror Diamond Event
+ */
+
+.event-name {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background */
+.event-name__bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180%;
+  height: 180%;
+  background: radial-gradient(50% 50% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%);
+  z-index: -2;
+}
+
+/* Main Container - Horizontal layout */
+.event-name__main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100vw;
+  padding: 0 24px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+}
+
+/* Main Content */
+.event-name__content {
+  text-align: center;
+  flex: 1;
+  max-width: 500px;
+}
+
+.event-name__greeting {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.event-name__hi {
+  font-family: "Saol Display", Georgia, serif;
+  font-size: 3rem;
+  font-weight: 300;
+  font-style: italic;
+  color: #fff;
+}
+
+.event-name__input-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.event-name__input-measure {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre;
+  font-family: "Saol Display", Georgia, serif;
+  font-size: 3rem;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.event-name__input {
+  font-family: "Saol Display", Georgia, serif;
+  font-size: 3rem;
+  font-weight: 300;
+  font-style: italic;
+  color: #4a3040;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+  padding-bottom: 0.25rem;
+  width: auto;
+  text-align: center;
+}
+
+.event-name__input::placeholder {
+  color: #a090a0;
+}
+
+.event-name__input-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #4a3040;
+}
+
+.event-name__subtitle {
+  color: #fff;
+}
+
+/* Back Button - circular style */
+.event-name__back.shine-glass-button,
+.event-name__back.shine-glass-button .glass-layer,
+.event-name__back.shine-glass-button .shine-layer,
+.event-name__back.shine-glass-button .border-layer {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.event-name__back .button-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Navigation */
+.event-name__nav {
+  display: flex;
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .event-name__main {
+    padding: 0 1rem;
+  }
+
+  .event-name__hi,
+  .event-name__input,
+  .event-name__input-measure {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-name {
+    padding: 1rem;
+  }
+
+  .event-name__hi,
+  .event-name__input,
+  .event-name__input-measure {
+    font-size: 1.5rem;
+  }
+}
