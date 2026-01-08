@@ -1268,5 +1268,32 @@ export const diamondsAPI = {
   deleteDiamond: (id) => api.delete(`/api/diamonds/${id}`),
 };
 
+// Stock Reconciliation API
+export const stockReconciliationAPI = {
+  // Create a new stock reconciliation record with report file
+  createRecord: (data, file) => {
+    const formData = new FormData();
+    formData.append("data", new Blob([JSON.stringify(data)], { type: "application/json" }));
+    if (file) {
+      formData.append("file", file);
+    }
+    return api.post("/api/stock-reconciliation", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+
+  // Get a single record by ID
+  getRecord: (id) => api.get(`/api/stock-reconciliation/${id}`),
+
+  // List records with filters
+  listRecords: (params = {}) => api.get("/api/stock-reconciliation", { params }),
+
+  // Get download URL for report file
+  getDownloadUrl: (id) => api.get(`/api/stock-reconciliation/${id}/download`),
+
+  // Delete a record (soft delete)
+  deleteRecord: (id) => api.delete(`/api/stock-reconciliation/${id}`),
+};
+
 // Export the axios instance for custom calls
 export default api;
