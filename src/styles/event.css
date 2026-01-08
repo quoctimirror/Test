@@ -1585,3 +1585,899 @@
   }
 }
 
+/* ============================================
+   Place Note Screen - New Pink Design
+   ============================================ */
+
+.place-note-new {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Background with gradient and rings */
+.place-note-new__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+  radial-gradient(121.12% 87.58% at 50% 50%, rgba(255, 182, 203, 0.6) 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%), linear-gradient(180deg, #FFF5F8 0%, #FFF3F6 12.53%, #F6F6F6 25.06%, #FFF5F8 37.53%, #FFF0F4 50%, #FFF5F8 63.82%, #FFF 77.64%, #FFF4F7 100%);
+  z-index: 0;
+}
+
+.place-note-new__rings {
+  display: none;
+}
+
+/* Header */
+.place-note-new__header {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+  text-align: center;
+}
+
+.place-note-new__title {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: #333;
+  margin: 0;
+}
+
+/* Main content - vertically centered */
+.place-note-new__main {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.place-note-new__staff-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Arrow buttons wrapper - fixed position, vertically centered */
+.place-note-new__arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  isolation: isolate;
+}
+
+.place-note-new__arrow--left {
+  left: 24px;
+}
+
+.place-note-new__arrow--right {
+  right: 24px;
+}
+
+/* Fix arrow icon - don't fill on hover */
+.place-note-new__arrow .shine-glass-button:hover .button-text svg path {
+  fill: none !important;
+}
+
+/* Music Staff */
+.place-note-new__staff {
+  position: relative;
+  width: 100%;
+  height: 380px; /* 5 lines * 12px + 4 gaps * 80px */
+  cursor: pointer;
+}
+
+/* Placement zones - 4 spaces between 5 lines */
+/* Red highlights on lines - where notes can be placed */
+.place-note-new__line-highlights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.place-note-new__line-highlight {
+  position: absolute;
+  left: 0;
+  height: 12px; /* Same as line height */
+  width: 100%;
+  background: rgba(244, 67, 54, 0.4); /* Red highlight */
+  pointer-events: none;
+}
+
+/* Position each line highlight on the lines */
+.place-note-new__line-highlight:nth-child(1) { top: 0px; }    /* Line 1 */
+.place-note-new__line-highlight:nth-child(2) { top: 92px; }   /* Line 2 */
+.place-note-new__line-highlight:nth-child(3) { top: 184px; }  /* Line 3 */
+.place-note-new__line-highlight:nth-child(4) { top: 276px; }  /* Line 4 */
+.place-note-new__line-highlight:nth-child(5) { top: 368px; }  /* Line 5 */
+
+/* Green zones - spaces between lines */
+.place-note-new__zones {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.place-note-new__zone {
+  position: absolute;
+  left: 0;
+  height: 80px; /* Gap between lines */
+  width: 100%;
+  background: rgba(76, 175, 80, 0.3); /* Green for spaces between lines */
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+/* Position each zone in the space between lines */
+.place-note-new__zone:nth-child(1) { top: 12px; }   /* Between line 1-2 */
+.place-note-new__zone:nth-child(2) { top: 104px; }  /* Between line 2-3 */
+.place-note-new__zone:nth-child(3) { top: 196px; }  /* Between line 3-4 */
+.place-note-new__zone:nth-child(4) { top: 288px; }  /* Between line 4-5 */
+
+.place-note-new__zone--active {
+  background: rgba(76, 175, 80, 0.5); /* Brighter green when note is in this zone */
+}
+
+/* Lines wrapper - 5 lines with 80px gap */
+.place-note-new__lines-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  width: 100vw;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.place-note-new__line {
+  width: 100%;
+  height: 12px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Heart note on staff - positioned dynamically */
+.place-note-new__diamond {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: left 0.3s ease, top 0.3s ease;
+  z-index: 10;
+}
+
+.place-note-new__heart {
+  width: 120px;
+  height: auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* RippleEffect container styles */
+.place-note-new__diamond .ripple-effect-area {
+  overflow: visible;
+}
+
+/* Active line highlight - brighter red */
+.place-note-new__line-highlight--active {
+  background: rgba(244, 67, 54, 0.6) !important;
+}
+
+/* Footer - fixed bottom left */
+.place-note-new__footer {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  z-index: 10;
+  max-width: 320px;
+}
+
+/* Progress bar 1/3 */
+.place-note-new__progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.place-note-new__progress-step {
+  width: 60px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 13px;
+}
+
+.place-note-new__progress-step--active {
+  background: var(--gray-3, #797979);
+}
+
+.place-note-new__subtitle {
+  font-style: italic;
+  color: var(--Black, #0B0B0B);
+  margin-bottom: 0.5rem;
+}
+
+.place-note-new__description {
+  color: var(--Black, #0B0B0B);
+}
+
+.place-note-new__error {
+  color: #e53935;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Next button - bottom right */
+.place-note-new__next {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 10;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .place-note-new__rings {
+    width: 500px;
+    height: 500px;
+  }
+
+  .place-note-new__title {
+    font-size: 1.25rem;
+    letter-spacing: 0.2em;
+  }
+
+  .place-note-new__staff-container {
+    gap: 0.5rem;
+  }
+
+  .place-note-new__staff {
+    height: 150px;
+  }
+
+  .place-note-new__footer {
+    bottom: 20px;
+    left: 20px;
+    max-width: 280px;
+  }
+
+  .place-note-new__next {
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+/* =====================================================
+   WRITE MESSAGE SCREEN (Step 2) - Two Music Staffs
+   ===================================================== */
+
+.write-message {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Background */
+.write-message__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #F6F6F6 100%);
+  z-index: 0;
+}
+
+/* Header */
+.write-message__header {
+  position: fixed;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.write-message__title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: var(--Black, #0B0B0B);
+  margin: 0;
+}
+
+/* Main - Two staffs container */
+.write-message__main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.write-message__staffs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 80px; /* Space between two staffs */
+  width: 100%;
+  margin-top: -80px; /* Move staffs up */
+}
+
+/* Single staff */
+.write-message__staff {
+  position: relative;
+  width: 100%;
+  height: 171.48px; /* 5 lines × 6.296px + 4 gaps × 35px = 31.48 + 140 */
+}
+
+/* Staff lines - absolute positioning for exact placement */
+.write-message__lines {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 100%;
+  pointer-events: none;
+}
+
+.write-message__line {
+  position: absolute;
+  left: 0;
+  width: 100vw;
+  height: 6.296px;
+  pointer-events: none;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #878787 0%, #F3F2F2 24.04%, rgba(255, 255, 255, 0.50) 50.48%, #565656 71.15%, #5A5A5A 78.85%, #C2C2C2 100%);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.50);
+}
+
+/* Position each line exactly: line spacing = 6.296px + 35px = 41.296px */
+.write-message__line:nth-child(1) { top: 0px; }
+.write-message__line:nth-child(2) { top: 41.296px; }
+.write-message__line:nth-child(3) { top: 82.592px; }
+.write-message__line:nth-child(4) { top: 123.888px; }
+.write-message__line:nth-child(5) { top: 165.184px; }
+
+/* Notes */
+.write-message__note {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.write-message__note-img {
+  width: 35px;
+  height: auto;
+}
+
+.write-message__note--user {
+  z-index: 10;
+}
+
+.write-message__note-img--user {
+  width: 35px;
+}
+
+/* Ripple container - allow ripple to overflow */
+.write-message__note .ripple-effect-area {
+  overflow: visible;
+}
+
+/* Ensure staffs can show ripple overflow */
+.write-message__staffs {
+  overflow: visible;
+}
+
+.write-message__staff {
+  overflow: visible;
+}
+
+/* Footer - same as place-note */
+.write-message__footer {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  z-index: 10;
+  max-width: 320px;
+}
+
+.write-message__progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.write-message__progress-step {
+  width: 60px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 13px;
+}
+
+.write-message__progress-step--active {
+  background: var(--gray-3, #797979);
+}
+
+.write-message__subtitle {
+  font-style: italic;
+  color: var(--Black, #0B0B0B);
+  margin-bottom: 0.5rem;
+}
+
+.write-message__description {
+  color: var(--gray-3, #797979);
+  line-height: 1.4;
+}
+
+.write-message__error {
+  color: #e53935;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Arrow buttons - fixed position, vertically centered (same as layout 1) */
+.write-message__arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  isolation: isolate;
+}
+
+.write-message__arrow--left {
+  left: 24px;
+}
+
+.write-message__arrow--right {
+  right: 24px;
+}
+
+/* Action buttons - bottom center */
+.write-message__actions {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 10;
+}
+
+/* =====================================================
+   GLASS BUTTON - Liquid Glass Effect (from ijewel)
+   ===================================================== */
+
+.glass-button {
+  position: relative;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Liquid Glass Effect */
+  background-color: rgba(187, 187, 188, 0.18);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+
+  /* Complex shadow for glass depth */
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset 1.8px 3px 0px -2px rgba(255, 255, 255, 0.9),
+    inset -2px -2px 0px -2px rgba(255, 255, 255, 0.8),
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.6),
+    inset -0.3px -1px 4px 0px rgba(0, 0, 0, 0.1),
+    inset -1.5px 2.5px 0px -2px rgba(0, 0, 0, 0.2),
+    inset 0px 3px 4px -2px rgba(0, 0, 0, 0.2),
+    inset 2px -6.5px 1px -4px rgba(0, 0, 0, 0.08),
+    0px 1px 4px 0px rgba(0, 0, 0, 0.08),
+    0px 4px 16px 0px rgba(0, 0, 0, 0.06);
+
+  transition: all 0.2s ease;
+}
+
+.glass-button--circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+
+.glass-button--pill {
+  height: 56px;
+  padding: 0 32px;
+  border-radius: 100px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #BC224C;
+}
+
+.glass-button:hover {
+  background-color: rgba(187, 187, 188, 0.25);
+  transform: scale(1.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+    inset 1.8px 3px 0px -2px rgba(255, 255, 255, 1),
+    inset -2px -2px 0px -2px rgba(255, 255, 255, 0.9),
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.7),
+    inset -0.3px -1px 4px 0px rgba(0, 0, 0, 0.15),
+    inset -1.5px 2.5px 0px -2px rgba(0, 0, 0, 0.25),
+    inset 0px 3px 4px -2px rgba(0, 0, 0, 0.25),
+    inset 2px -6.5px 1px -4px rgba(0, 0, 0, 0.12),
+    0px 2px 8px 0px rgba(0, 0, 0, 0.12),
+    0px 8px 24px 0px rgba(0, 0, 0, 0.1);
+}
+
+.glass-button:active {
+  transform: scale(0.95);
+  background-color: rgba(187, 187, 188, 0.3);
+}
+
+.glass-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.glass-button svg {
+  width: 24px;
+  height: 24px;
+  color: #BC224C;
+  opacity: 0.85;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .write-message__staffs {
+    gap: 60px;
+  }
+
+  .write-message__staff {
+    height: 140px;
+  }
+
+  .write-message__note-img {
+    width: 40px;
+  }
+
+  .write-message__note-img--user {
+    width: 40px;
+  }
+
+  .write-message__footer {
+    bottom: 20px;
+    left: 20px;
+    max-width: 280px;
+  }
+
+  .write-message__arrow--left {
+    left: 16px;
+  }
+
+  .write-message__arrow--right {
+    right: 16px;
+  }
+
+  .write-message__actions {
+    bottom: 20px;
+    gap: 12px;
+  }
+
+  .write-message__actions .glass-button--pill {
+    height: 48px;
+    padding: 0 24px;
+    font-size: 14px;
+  }
+
+  .glass-button--circle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .glass-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* =====================================================
+   CHOOSE NOTE SHAPE SCREEN (Step 3) - Card Preview
+   ===================================================== */
+
+.choose-note-shape {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Background - same radial gradient as layouts 1 & 2 */
+.choose-note-shape__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(121.12% 87.58% at 50% 50%, rgba(255, 182, 203, 0.6) 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+    linear-gradient(180deg, #FFF5F8 0%, #FFF3F6 12.53%, #F6F6F6 25.06%, #FFF5F8 37.53%, #FFF0F4 50%, #FFF5F8 63.82%, #FFF 77.64%, #FFF4F7 100%);
+  z-index: 0;
+}
+
+/* Header */
+.choose-note-shape__header {
+  position: fixed;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.choose-note-shape__title {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: #333;
+  margin: 0;
+}
+
+/* Main content */
+.choose-note-shape__main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Arrow button - left side */
+.choose-note-shape__arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.choose-note-shape__arrow--left {
+  left: 24px;
+}
+
+/* Card container - centered */
+.choose-note-shape__card-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Card - phone mockup style */
+.choose-note-shape__card {
+  position: relative;
+  width: 280px;
+  height: 500px;
+  border-radius: 24px;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+/* Allow ripple to overflow */
+.choose-note-shape__card .ripple-effect-area {
+  overflow: visible;
+}
+
+/* Card background - landscape gradient */
+.choose-note-shape__card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    #E8C4D4 0%,
+    #D4A5B9 20%,
+    #C08BA3 40%,
+    #9B6B7D 60%,
+    #8C5F72 70%,
+    #B89AAD 85%,
+    #E8D5DE 100%
+  );
+  z-index: 1;
+}
+
+/* Add mountain silhouettes with CSS pseudo-elements */
+.choose-note-shape__card-bg::before {
+  content: '';
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background:
+    linear-gradient(135deg, transparent 40%, #8B6B7B 40%, #8B6B7B 60%, transparent 60%),
+    linear-gradient(225deg, transparent 50%, #7A5A6A 50%, #7A5A6A 70%, transparent 70%);
+  opacity: 0.6;
+}
+
+/* Water reflection at bottom */
+.choose-note-shape__card-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
+  background: linear-gradient(
+    180deg,
+    rgba(184, 154, 173, 0.5) 0%,
+    rgba(200, 180, 190, 0.7) 50%,
+    rgba(220, 200, 210, 0.8) 100%
+  );
+}
+
+/* Diamond wrapper - centered in card */
+.choose-note-shape__diamond-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.choose-note-shape__diamond {
+  width: 160px;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+}
+
+/* Action buttons below card */
+.choose-note-shape__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2;
+  position: relative;
+}
+
+.choose-note-shape__actions .glass-button--pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 24px;
+}
+
+.choose-note-shape__actions .glass-button--pill span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Small circle button variant */
+.glass-button--small {
+  width: 44px;
+  height: 44px;
+}
+
+.glass-button--small svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Social icons - right side, vertical stack */
+.choose-note-shape__social {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 10;
+}
+
+/* Footer - same as layouts 1 & 2 */
+.choose-note-shape__footer {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  z-index: 10;
+  max-width: 320px;
+}
+
+.choose-note-shape__progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.choose-note-shape__progress-step {
+  width: 60px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 13px;
+}
+
+.choose-note-shape__progress-step--active {
+  background: var(--gray-3, #797979);
+}
+
+.choose-note-shape__subtitle {
+  font-style: italic;
+  color: var(--Black, #0B0B0B);
+  margin-bottom: 0.5rem;
+}
+
+.choose-note-shape__description {
+  color: var(--gray-3, #797979);
+  line-height: 1.4;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .choose-note-shape__card {
+    width: 240px;
+    height: 420px;
+  }
+
+  .choose-note-shape__diamond {
+    width: 120px;
+  }
+
+  .choose-note-shape__footer {
+    bottom: 20px;
+    left: 20px;
+    max-width: 280px;
+  }
+
+  .choose-note-shape__arrow--left {
+    left: 16px;
+  }
+
+  .choose-note-shape__social {
+    right: 16px;
+    gap: 8px;
+  }
+
+  .glass-button--small {
+    width: 40px;
+    height: 40px;
+  }
+
+  .glass-button--small svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
