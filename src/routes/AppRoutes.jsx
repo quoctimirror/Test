@@ -94,6 +94,7 @@ const EventPage = lazy(() => import("@pages/Event/EventPage"));
 const EventGuidePage = lazy(() => import("@pages/Event/EventGuidePage"));
 const EventLoginPage = lazy(() => import("@pages/Event/EventLoginPage"));
 const EventNamePage = lazy(() => import("@pages/Event/EventNamePage"));
+const EventChooseShapePage = lazy(() => import("@pages/Event/EventChooseShapePage"));
 const EventPreviewPage = lazy(() => import("@pages/Event/EventPreviewPage"));
 const EventResultPage = lazy(() => import("@pages/Event/EventResultPage"));
 const EventDisplayPage = lazy(() => import("@pages/Event/EventDisplayPage"));
@@ -183,6 +184,7 @@ export default function AppRoutes() {
       ROUTES.EVENT_GUIDE,
       ROUTES.EVENT_LOGIN,
       ROUTES.EVENT_NAME,
+      ROUTES.EVENT_CHOOSE_SHAPE,
       ROUTES.EVENT_PREVIEW,
       ROUTES.EVENT_RESULT,
       ROUTES.EVENT_DISPLAY,
@@ -444,6 +446,7 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT_GUIDE} element={<EventGuidePage />} />
             <Route path={ROUTES.EVENT_LOGIN} element={<EventLoginPage />} />
             <Route path={ROUTES.EVENT_NAME} element={<EventNamePage />} />
+            <Route path={ROUTES.EVENT_CHOOSE_SHAPE} element={<EventChooseShapePage />} />
             <Route path={ROUTES.EVENT_PREVIEW} element={<EventPreviewPage />} />
             <Route path={ROUTES.EVENT_RESULT} element={<EventResultPage />} />
             <Route path={ROUTES.EVENT_DISPLAY} element={<EventDisplayPage />} />

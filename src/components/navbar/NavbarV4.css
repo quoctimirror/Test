@@ -185,6 +185,85 @@
   fill: white;
 }
 
+/* Collab mode - Mirror x DMM logos */
+.logo-v4-fixed-container.collab-mode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  position: fixed;
+  height: 69px;
+}
+
+.navbar-v4-collab-x {
+  width: 9px;
+  height: 9px;
+  color: white;
+}
+
+.navbar-v4-dmm-logo {
+  width: auto;
+  height: 56px;
+  display: block;
+}
+
+.navbar-v4-dmm-logo path {
+  fill: white;
+}
+
+/* Collab mode responsive - Tablet */
+@media screen and (max-width: 1024px) {
+  .logo-v4-fixed-container.collab-mode {
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 16px;
+    height: auto;
+  }
+
+  .logo-v4-fixed-container.collab-mode .navbar-v4-logo-svg {
+    width: auto;
+    height: 20px;
+  }
+
+  .logo-v4-fixed-container.collab-mode .navbar-v4-dmm-logo {
+    height: 40px;
+  }
+
+  .logo-v4-fixed-container.collab-mode .navbar-v4-collab-x {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Collab mode responsive - Mobile */
+@media screen and (max-width: 480px) {
+  .logo-v4-fixed-container.collab-mode {
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 10px;
+    height: auto;
+  }
+
+  .logo-v4-fixed-container.collab-mode .navbar-v4-logo-svg {
+    width: auto;
+    height: 14px;
+  }
+
+  .logo-v4-fixed-container.collab-mode .navbar-v4-dmm-logo {
+    height: 28px;
+  }
+
+  .logo-v4-fixed-container.collab-mode .navbar-v4-collab-x {
+    width: 5px;
+    height: 5px;
+  }
+}
+
 /* Submit page logo override - must be after default styles */
 .logo-v4-fixed-container.submit-page-logo {
   mix-blend-mode: normal !important;
@@ -1898,6 +1977,18 @@
   fill: rgba(255, 255, 255, 1) !important;
 }
 
+.logo-v4-fixed-container.navbar-v4-theme-white .navbar-v4-collab-x {
+  color: rgba(255, 255, 255, 1) !important;
+}
+
+.logo-v4-fixed-container.navbar-v4-theme-white .navbar-v4-collab-x path {
+  stroke: rgba(255, 255, 255, 1) !important;
+}
+
+.logo-v4-fixed-container.navbar-v4-theme-white .navbar-v4-dmm-logo {
+  filter: brightness(0) invert(1) !important;
+}
+
 /* Black Theme - Black logo for light background sections */
 .logo-v4-fixed-container.navbar-v4-theme-black {
   mix-blend-mode: normal !important;
@@ -1905,6 +1996,18 @@
 
 .logo-v4-fixed-container.navbar-v4-theme-black .navbar-v4-logo-svg {
   filter: invert(1) !important;
+}
+
+.logo-v4-fixed-container.navbar-v4-theme-black .navbar-v4-collab-x {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.logo-v4-fixed-container.navbar-v4-theme-black .navbar-v4-collab-x path {
+  stroke: rgba(0, 0, 0, 1) !important;
+}
+
+.logo-v4-fixed-container.navbar-v4-theme-black .navbar-v4-dmm-logo {
+  filter: brightness(0) !important;
 }
 
 /* Blend Theme - Default mix-blend-mode for logo */

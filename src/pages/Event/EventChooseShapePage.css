@@ -1,0 +1,393 @@
+/**
+ * EventChooseShapePage Styles
+ * Choose diamond shape page with 3D elliptical orbits
+ */
+
+.event-choose-shape {
+  height: 100vh;
+  background: #f6f6f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* .event-choose-shape::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 3468px;
+  background: radial-gradient(56.91% 41.15% at 50% 41.15%, #FADEE6 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%);
+  pointer-events: none;
+  z-index: 0;
+} */
+
+
+/* Navigation Buttons - Circular style */
+.event-choose-shape__nav-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+}
+
+.event-choose-shape__nav-btn.shine-glass-button,
+.event-choose-shape__nav-btn.shine-glass-button .glass-layer,
+.event-choose-shape__nav-btn.shine-glass-button .shine-layer,
+.event-choose-shape__nav-btn.shine-glass-button .border-layer {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.event-choose-shape__nav-btn .button-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Remove hover transform/bouncing effect */
+.event-choose-shape__nav-btn.shine-glass-button:hover {
+  transform: translateY(-50%) scale(1);
+}
+
+.event-choose-shape__nav-btn--left {
+  left: 48px;
+}
+
+.event-choose-shape__nav-btn--right {
+  right: 48px;
+}
+
+/* Title */
+.event-choose-shape__title {
+  color: #000;
+  text-align: center;
+  z-index: 10;
+  margin-top: 120px;
+}
+
+/* Main Content Area */
+.event-choose-shape__main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 80px;
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  pointer-events: none;
+}
+
+/* Center Diamond Display */
+.event-choose-shape__center {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-choose-shape__diamond {
+  position: relative;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Exit animation - shrink down and fade out */
+.event-choose-shape__diamond--exit {
+  position: absolute;
+  animation: diamondExit 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Enter animation - grow up and fade in */
+.event-choose-shape__diamond--enter {
+  animation: diamondEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes diamondExit {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.3) translateY(250px);
+    opacity: 0;
+  }
+}
+
+@keyframes diamondEnter {
+  0% {
+    transform: scale(0.3) translateY(200px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.event-choose-shape__diamond-img {
+  width: auto;
+  height: 500px;
+  max-width: 550px;
+  object-fit: contain;
+}
+
+/* Orbits Container */
+.event-choose-shape__orbits-container {
+  position: absolute;
+  top : 60%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 115vw;
+  height: 18.9vw; /* Proportional to width: 280/1700 * 115vw */
+  z-index: 5;
+}
+
+.event-choose-shape__orbits-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%;
+  height: 150%;
+  opacity: 0.55;
+  background: radial-gradient(50% 50% at 50% 50%, #BC224C 0%, #BC224C 15%, rgba(188, 34, 76, 0.35) 45%, rgba(246, 246, 246, 0.00) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* SVG Orbits */
+.event-choose-shape__orbits-svg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 115vw;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 20px rgba(188, 34, 76, 0.3));
+}
+
+/* Shapes on Orbits */
+.event-choose-shape__orbit-shapes {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 115vw;
+  height: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.event-choose-shape__orbit-shape {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: filter 0.3s ease,
+              opacity 0.3s ease,
+              transform 0.3s ease;
+}
+
+.event-choose-shape__orbit-shape:hover {
+  transform: translate(-50%, -100%) scale(1.1);
+}
+
+.event-choose-shape__orbit-shape-img {
+  width: auto;
+  max-height: 55px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: opacity 0.3s ease, filter 0.3s ease, transform 0.3s ease;
+}
+
+/* Selected shape - no blur, highlighted */
+.event-choose-shape__orbit-shape--selected .event-choose-shape__orbit-shape-img {
+  opacity: 1;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+  transform: scale(1.2);
+}
+
+/* Blurred shapes */
+.event-choose-shape__orbit-shape--blurred .event-choose-shape__orbit-shape-img {
+  opacity: 0.5;
+  filter: blur(2px) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.event-choose-shape__orbit-shape--blurred:hover .event-choose-shape__orbit-shape-img {
+  opacity: 0.8;
+  filter: blur(0px) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+}
+
+/* Bottom Section */
+.event-choose-shape__bottom {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 48px;
+  z-index: 10;
+}
+
+/* Place your note */
+.event-choose-shape__note {
+  max-width: 280px;
+}
+
+.event-choose-shape__note-title {
+  color: #000;
+  margin-bottom: 12px;
+}
+
+.event-choose-shape__note-text {
+  color: #000;
+}
+
+/* Choose the shape button */
+.event-choose-shape__select-btn {
+  background: transparent;
+  border: none;
+  color: #797979;
+  cursor: pointer;
+  padding: 12px 24px;
+  transition: color 0.3s ease;
+}
+
+.event-choose-shape__select-btn:hover {
+  color: #4A3040;
+}
+
+/* Spacer for layout balance */
+.event-choose-shape__spacer {
+  width: 280px;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .event-choose-shape__main {
+    padding: 0 40px;
+  }
+
+  .event-choose-shape__diamond-img {
+    height: 280px;
+    max-width: 320px;
+  }
+
+  .event-choose-shape__orbits-container {
+    bottom: 60px;
+    max-width: 800px;
+  }
+
+  .event-choose-shape__orbit-shape-img {
+    max-height: 45px;
+  }
+}
+
+@media (max-width: 768px) {
+  .event-choose-shape {
+    padding-top: 100px;
+  }
+
+  .event-choose-shape__nav-btn--left {
+    left: 24px;
+  }
+
+  .event-choose-shape__nav-btn--right {
+    right: 24px;
+  }
+
+  .event-choose-shape__nav-btn.shine-glass-button:hover {
+    transform: translateY(-50%) scale(1);
+  }
+
+  .event-choose-shape__main {
+    padding: 0 20px;
+  }
+
+  .event-choose-shape__diamond-img {
+    height: 220px;
+    max-width: 260px;
+  }
+
+  .event-choose-shape__orbits-container {
+    bottom: 120px;
+    max-width: 600px;
+    height: 180px;
+  }
+
+  .event-choose-shape__bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 24px;
+  }
+
+  .event-choose-shape__note {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .event-choose-shape__spacer {
+    display: none;
+  }
+
+  .event-choose-shape__orbit-shape-img {
+    max-height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-choose-shape {
+    padding-top: 80px;
+  }
+
+  .event-choose-shape__nav-btn--left {
+    left: 16px;
+  }
+
+  .event-choose-shape__nav-btn--right {
+    right: 16px;
+  }
+
+  .event-choose-shape__nav-btn.shine-glass-button:hover {
+    transform: translateY(-50%) scale(1);
+  }
+
+  .event-choose-shape__title {
+    margin-bottom: 24px;
+  }
+
+  .event-choose-shape__diamond-img {
+    height: 180px;
+    max-width: 200px;
+  }
+
+  .event-choose-shape__orbits-container {
+    bottom: 140px;
+    max-width: 100%;
+    height: 150px;
+  }
+
+  .event-choose-shape__orbit-shape-img {
+    max-height: 32px;
+  }
+}

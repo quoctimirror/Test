@@ -33,6 +33,8 @@
   background: var(--event-bg-gradient);
   color: var(--event-text);
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .event-page {

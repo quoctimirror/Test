@@ -54,6 +54,7 @@ export const ROUTES = {
   EVENT_GUIDE: "/event/guide",
   EVENT_LOGIN: "/event/login",
   EVENT_NAME: "/event/name",
+  EVENT_CHOOSE_SHAPE: "/event/choose-shape",
   EVENT_PREVIEW: "/event/preview",
   EVENT_RESULT: "/event/result",
   EVENT_DISPLAY: "/event/display",

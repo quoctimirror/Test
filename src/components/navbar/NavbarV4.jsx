@@ -1,6 +1,7 @@
 import "./NavbarV4.css";
 import { useState, useRef, useEffect, useCallback } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
+import DmmLogo from "@assets/LOGO DOC MONG MO.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
@@ -11,7 +12,7 @@ import BookingModalV3 from "@/components/booking/BookingModalV3";
 import { ROUTES } from "@/constants/routes";
 import { useNavbarTheme } from "@/hooks/useNavbarTheme";
 
-export default function NavbarV4() {
+export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,11 +48,11 @@ export default function NavbarV4() {
   // Check if current page is submit page (not success page)
   const isSubmitPage = location.pathname === ROUTES.MILAN_SUBMIT;
 
-  // Check if should hide menu, account, and immersive button (Milan and Immersive Showroom)
+  // Check if should hide menu, account, and immersive button (Milan, Immersive Showroom, or logoOnly mode)
   const shouldHideButtons =
-    isMilanPage || location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
+    logoOnly || isMilanPage || location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
-  // Check if logo click should be disabled (Milan and Immersive Showroom)
+  // Check if logo click should be disabled (Milan, Immersive Showroom, or logoOnly mode)
   const shouldDisableLogoClick = shouldHideButtons;
 
   // Helper function to close menu with fade out animation
@@ -517,7 +518,9 @@ export default function NavbarV4() {
           isSubmitPage ? "submit-page-logo" : ""
         } ${isInIntroSubmitSection ? "intro-submit-logo" : ""} ${
           isImmersiveShowroomPage ? "immersive-showroom-logo" : ""
-        } ${isBookingModalOpen ? "above-modal" : ""}`}
+        } ${isBookingModalOpen ? "above-modal" : ""} ${
+          showDmmLogo ? "collab-mode" : ""
+        }`}
         onClick={handleLogoClick}
       >
         <img
@@ -526,6 +529,19 @@ export default function NavbarV4() {
           alt="Mirror Logo"
           className="navbar-v4-logo-svg"
         />
+        {showDmmLogo && (
+          <>
+            <svg className="navbar-v4-collab-x" xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">
+              <path d="M0.5 0.5L8.5 8.5" stroke="currentColor" strokeLinecap="round"/>
+              <path d="M8.5 0.5L0.5 8.5" stroke="currentColor" strokeLinecap="round"/>
+            </svg>
+            <img
+              src={DmmLogo}
+              alt="Dốc Mộng Mơ Logo"
+              className="navbar-v4-dmm-logo"
+            />
+          </>
+        )}
       </div>
 
       {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}

@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
+import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
 
 import './EventPreviewPage.css';
@@ -31,7 +32,9 @@ const EventPreviewPage = () => {
   };
 
   return (
-    <div className="event-preview">
+    <>
+      <NavbarV4 logoOnly />
+      <div className="event-preview" data-navbar-theme="black">
       {/* Background */}
       <div className="event-preview__bg" />
 
@@ -86,6 +89,7 @@ const EventPreviewPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
