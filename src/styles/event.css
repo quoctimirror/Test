@@ -1756,12 +1756,46 @@
   pointer-events: none;
 }
 
+/* Line entrance animation - grow from left to right */
+.place-note-new__line--animate {
+  transform-origin: left center;
+  animation: lineGrowWidth 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes lineGrowWidth {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
 /* Heart note on staff - positioned dynamically */
 .place-note-new__diamond {
   position: absolute;
   transform: translate(-50%, -50%);
   transition: left 0.3s ease, top 0.3s ease;
   z-index: 10;
+}
+
+/* Diamond entrance animation - scale from big to small */
+.place-note-new__diamond--animate {
+  animation: diamondScaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes diamondScaleIn {
+  0% {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }
 
 .place-note-new__heart {
@@ -2479,5 +2513,303 @@
     width: 16px;
     height: 16px;
   }
+}
+
+/* =====================================================
+   3D FLIP CARD - Choose Note Shape Screen
+   ===================================================== */
+
+/* Ambient light effect */
+.flip-card-ambient-light {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(255, 220, 150, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 30% 80%, rgba(100, 150, 255, 0.05) 0%, transparent 40%);
+  z-index: 0;
+}
+
+/* Status indicator */
+.flip-card-status {
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s;
+  margin-top: 12px;
+}
+
+.flip-card-status--front {
+  background: rgba(255, 215, 0, 0.15);
+  color: #b8860b;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+}
+
+.flip-card-status--back {
+  background: rgba(188, 34, 76, 0.15);
+  color: #BC224C;
+  border: 1px solid rgba(188, 34, 76, 0.3);
+  box-shadow: 0 0 30px rgba(188, 34, 76, 0.2);
+}
+
+.flip-card-status--dragging {
+  background: rgba(155, 89, 182, 0.15);
+  color: #9b59b6;
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  box-shadow: 0 0 30px rgba(155, 89, 182, 0.2);
+}
+
+/* Scene container with perspective */
+.flip-card-scene {
+  perspective: 1000px;
+  perspective-origin: 65% 35%;
+  overflow: visible;
+}
+
+/* Card container - draggable area */
+.flip-card-container {
+  position: relative;
+  width: 250px;
+  height: 446px; /* Ratio 2500:4462 */
+  cursor: grab;
+  transform-style: preserve-3d;
+  transform: rotateX(12deg) rotateY(-8deg);
+  animation: flipCardEntry 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.flip-card-container.dragging {
+  cursor: grabbing;
+}
+
+/* Ripple effect - behind the card */
+.flip-card-container .ripple-effect-area {
+  overflow: visible;
+  z-index: -1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes flipCardEntry {
+  0% {
+    transform: translateZ(2000px) scale(4) rotateX(12deg) rotateY(720deg);
+    opacity: 0;
+    filter: blur(20px);
+  }
+  30% {
+    opacity: 1;
+    filter: blur(5px);
+  }
+  100% {
+    transform: translateZ(0) scale(1) rotateX(12deg) rotateY(-8deg);
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+/* The card itself */
+.flip-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipping-to-back {
+  animation: cardFlip 0.4s forwards ease-in-out;
+}
+
+.flip-card.flipping-to-front {
+  animation: cardUnFlip 0.4s forwards ease-in-out;
+}
+
+@keyframes cardFlip {
+  0% { transform: rotateZ(0deg) rotateY(0deg); }
+  50% { transform: rotateZ(-10deg) rotateY(90deg); }
+  100% { transform: rotateZ(0deg) rotateY(180deg); }
+}
+
+@keyframes cardUnFlip {
+  0% { transform: rotateZ(0deg) rotateY(180deg); }
+  50% { transform: rotateZ(-10deg) rotateY(90deg); }
+  100% { transform: rotateZ(0deg) rotateY(0deg); }
+}
+
+/* Card faces - front and back */
+.flip-card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Front face */
+.flip-card-front {
+  background: transparent;
+}
+
+/* Back face */
+.flip-card-back {
+  background: transparent;
+  transform: rotateY(180deg);
+}
+
+/* Card inner content */
+.flip-card-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Card image */
+.flip-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+/* Shine effect */
+.flip-card-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.flip-card-shine::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    rgba(255, 255, 255, 0.05) 60%,
+    transparent 65%,
+    transparent 100%
+  );
+  transform: rotate(-25deg) translateX(var(--shine-pos, -100%));
+}
+
+/* Texture overlay */
+.flip-card-texture {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.01) 3px,
+      rgba(255, 255, 255, 0.01) 6px
+    );
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Card shadow */
+.flip-card-shadow {
+  position: absolute;
+  bottom: -80px;
+  left: 50%;
+  width: 220px;
+  height: 40px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.6) 0%, transparent 70%);
+  transform: translateX(-50%) rotateX(90deg);
+  filter: blur(15px);
+  pointer-events: none;
+}
+
+/* Instructions */
+.flip-card-instructions {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .flip-card-container {
+    width: 200px;
+    height: 357px; /* Keep ratio 2500:4462 */
+  }
+
+  .flip-card-status {
+    padding: 8px 16px;
+    font-size: 10px;
+  }
+
+  .flip-card-instructions {
+    font-size: 11px;
+  }
+}
+
+/* =====================================================
+   ZOOM TRANSITION - Layout 1 → Layout 2
+   ===================================================== */
+
+/* Zoom Out - Layout 1 exit transition */
+@keyframes zoomOutTransition {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+}
+
+.place-note-new--zoom-out {
+  animation: zoomOutTransition 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+/* Zoom In - Layout 2 entrance */
+@keyframes zoomInEntrance {
+  0% {
+    transform: scale(2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.write-message--zoom-in {
+  animation: zoomInEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 

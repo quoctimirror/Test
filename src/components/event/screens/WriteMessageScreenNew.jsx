@@ -106,6 +106,7 @@ const WriteMessageScreenNew = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isEntering, setIsEntering] = useState(true); // Zoom-in entrance
   const userNoteRef = useRef(null);
   const rippleRef = useRef(null);
 
@@ -119,8 +120,18 @@ const WriteMessageScreenNew = () => {
   // Generate random notes for both staffs (memoized) - with guaranteed X spacing
   const { staff1Notes, staff2Notes } = useMemo(() => generateAllNotes(9), []);
 
-  // Initialize RippleEffect on user's note
+  // Remove entering class after zoom-in animation completes
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsEntering(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Initialize RippleEffect on user's note (after entrance animation)
+  useEffect(() => {
+    if (isEntering) return; // Wait for entrance animation to complete
+
     if (userNoteRef.current && !rippleRef.current) {
       rippleRef.current = new RippleEffect(userNoteRef.current, {
         autoRippleCount: 6,
@@ -141,7 +152,7 @@ const WriteMessageScreenNew = () => {
         rippleRef.current = null;
       }
     };
-  }, []);
+  }, [isEntering]);
 
   // Navigation - go back to step 1
   const handleGoBack = () => {
@@ -202,7 +213,7 @@ const WriteMessageScreenNew = () => {
   );
 
   return (
-    <div className="write-message">
+    <div className={`write-message ${isEntering ? 'write-message--zoom-in' : ''}`}>
       {/* Background */}
       <div className="write-message__bg" />
 

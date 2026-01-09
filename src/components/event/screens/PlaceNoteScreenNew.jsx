@@ -34,16 +34,26 @@ const NOTE_POSITIONS_Y = [
   374,  // Line 4 (bottom line)
 ];
 
+// Get random line position (only lines, not zones: 0, 2, 4, 6, 8)
+const getRandomLinePosition = () => {
+  const linePositions = [0, 2, 4, 6, 8]; // Only line positions
+  return linePositions[Math.floor(Math.random() * linePositions.length)];
+};
+
 const PlaceNoteScreenNew = () => {
   const navigate = useNavigate();
   const [positionX, setPositionX] = useState(50); // Center by default
-  const [positionY, setPositionY] = useState(4); // Middle line (index 4 in NOTE_POSITIONS_Y)
+  const [positionY, setPositionY] = useState(() => getRandomLinePosition()); // Random line position
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [linesComplete, setLinesComplete] = useState(false); // Lines animation done
+  const [diamondVisible, setDiamondVisible] = useState(false); // Diamond can appear
+  const [isTransitioning, setIsTransitioning] = useState(false); // Zoom-out transition
   const heartRef = useRef(null);
   const staffRef = useRef(null);
   const rippleRef = useRef(null);
   const lastClickTime = useRef(0);
+  const hasNavigatedRef = useRef(false); // Track if user manually navigated
   const CLICK_DEBOUNCE = 500; // Minimum time between clicks (ms)
 
   const { user, selectedDiamond, setAllNotes, setCurrentStep, setUserNote, addNote } =
@@ -51,6 +61,7 @@ const PlaceNoteScreenNew = () => {
 
   // Handle next button - navigate to write message screen
   const handleNext = () => {
+    hasNavigatedRef.current = true; // Prevent auto-transition
     // Save current position to store
     setUserNote({
       positionX,
@@ -68,29 +79,78 @@ const PlaceNoteScreenNew = () => {
     loadNotes();
   }, [setAllNotes]);
 
-  // Initialize RippleEffect on heart (using original settings)
+  // Animation sequence: lines (1s) -> diamond appears (0.5s delay) -> ripple (0.5s after diamond)
   useEffect(() => {
-    if (heartRef.current && !rippleRef.current) {
-      rippleRef.current = new RippleEffect(heartRef.current, {
-        autoRippleCount: 6,
-        duration: 6000,
-        delay: 1000,
-        startSize: 80,
-        endSize: 950,
-        opacity: 0.65,
-        autoPlay: true,
-        clickable: false,
-        clickRippleCount: 5,
-      });
-    }
+    // Lines complete after 1s
+    const linesTimer = setTimeout(() => {
+      setLinesComplete(true);
+    }, 1000);
+
+    // Diamond appears 0.2s after lines complete
+    const diamondTimer = setTimeout(() => {
+      setDiamondVisible(true);
+    }, 1200);
 
     return () => {
+      clearTimeout(linesTimer);
+      clearTimeout(diamondTimer);
+    };
+  }, []);
+
+  // Initialize RippleEffect on heart AFTER diamond animation completes
+  useEffect(() => {
+    if (!diamondVisible) return;
+
+    // Wait for diamond scale animation to finish (1s)
+    const rippleTimer = setTimeout(() => {
+      if (heartRef.current && !rippleRef.current) {
+        rippleRef.current = new RippleEffect(heartRef.current, {
+          autoRippleCount: 6,
+          duration: 6000,
+          delay: 1000,
+          startSize: 80,
+          endSize: 950,
+          opacity: 0.65,
+          autoPlay: true,
+          clickable: false,
+          clickRippleCount: 5,
+        });
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(rippleTimer);
       if (rippleRef.current) {
         rippleRef.current.destroy();
         rippleRef.current = null;
       }
     };
-  }, []);
+  }, [diamondVisible]);
+
+  // Auto-transition to Layout 2 after 3.2s
+  useEffect(() => {
+    const transitionTimer = setTimeout(() => {
+      if (hasNavigatedRef.current) return; // Skip if user already navigated
+
+      setIsTransitioning(true);
+
+      // Destroy ripple before transition
+      if (rippleRef.current) {
+        rippleRef.current.destroy();
+        rippleRef.current = null;
+      }
+
+      // Navigate after zoom-out animation completes (800ms)
+      setTimeout(() => {
+        if (hasNavigatedRef.current) return;
+        hasNavigatedRef.current = true;
+        setUserNote({ positionX, positionY });
+        navigate(ROUTES.EVENT_WRITE_MESSAGE);
+      }, 800);
+    }, 3200);
+
+    return () => clearTimeout(transitionTimer);
+  }, [navigate, positionX, positionY, setUserNote]);
 
   // Play note sound when position changes
   const playCurrentNote = async () => {
@@ -178,7 +238,7 @@ const PlaceNoteScreenNew = () => {
   };
 
   return (
-    <div className="place-note-new">
+    <div className={`place-note-new ${isTransitioning ? 'place-note-new--zoom-out' : ''}`}>
       {/* Background with radial rings */}
       <div className="place-note-new__bg">
         <div className="place-note-new__rings" />
@@ -209,11 +269,9 @@ const PlaceNoteScreenNew = () => {
             ref={staffRef}
             onClick={handleStaffClick}
           >
-            {/* Red highlights on lines - where notes can be placed */}
+            {/* Red highlights on lines - COMMENTED OUT
             <div className="place-note-new__line-highlights">
               {[0, 1, 2, 3, 4].map((lineIndex) => {
-                // positionY: 0,2,4,6,8 = on lines; 1,3,5,7 = in zones
-                // lineIndex 0 = positionY 0, lineIndex 1 = positionY 2, etc.
                 const isOnThisLine = positionY % 2 === 0 && positionY / 2 === lineIndex;
                 return (
                   <div
@@ -223,12 +281,11 @@ const PlaceNoteScreenNew = () => {
                 );
               })}
             </div>
+            */}
 
-            {/* Green zones - spaces between lines */}
+            {/* Green zones - COMMENTED OUT
             <div className="place-note-new__zones">
               {[0, 1, 2, 3].map((zoneIndex) => {
-                // positionY: 1,3,5,7 = in zones
-                // zoneIndex 0 = positionY 1, zoneIndex 1 = positionY 3, etc.
                 const isInThisZone = positionY % 2 === 1 && (positionY - 1) / 2 === zoneIndex;
                 return (
                   <div
@@ -238,6 +295,7 @@ const PlaceNoteScreenNew = () => {
                 );
               })}
             </div>
+            */}
 
             {/* 5 staff lines */}
             <div className="place-note-new__lines-wrapper">
@@ -246,26 +304,28 @@ const PlaceNoteScreenNew = () => {
                   key={i}
                   src={staffLineSvg}
                   alt=""
-                  className="place-note-new__line"
+                  className="place-note-new__line place-note-new__line--animate"
                 />
               ))}
             </div>
 
-            {/* Heart note on staff */}
-            <div
-              ref={heartRef}
-              className="place-note-new__diamond"
-              style={{
-                left: `${positionX}%`,
-                top: `${NOTE_POSITIONS_Y[positionY]}px`,
-              }}
-            >
-              <img
-                src={heartSvg}
-                alt="Heart note"
-                className="place-note-new__heart"
-              />
-            </div>
+            {/* Heart note on staff - only show after lines complete */}
+            {diamondVisible && (
+              <div
+                ref={heartRef}
+                className="place-note-new__diamond place-note-new__diamond--animate"
+                style={{
+                  left: `${positionX}%`,
+                  top: `${NOTE_POSITIONS_Y[positionY]}px`,
+                }}
+              >
+                <img
+                  src={heartSvg}
+                  alt="Heart note"
+                  className="place-note-new__heart"
+                />
+              </div>
+            )}
           </div>
 
           {/* Right arrow - go to next step */}
