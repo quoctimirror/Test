@@ -99,6 +99,9 @@ const EventResultPage = lazy(() => import("@pages/Event/EventResultPage"));
 const EventDisplayPage = lazy(() => import("@pages/Event/EventDisplayPage"));
 const EventAdminPage = lazy(() => import("@pages/Event/EventAdminPage"));
 const ChristmasMusicPage = lazy(() => import("@pages/Event/ChristmasMusicPage"));
+const EventPlaceNotePage = lazy(() => import("@pages/Event/EventPlaceNotePage"));
+const EventWriteMessagePage = lazy(() => import("@pages/Event/EventWriteMessagePage"));
+const EventChooseNotePage = lazy(() => import("@pages/Event/EventChooseNotePage"));
 
 // Interactive Experiences
 const BirthdayCake = lazy(() =>
@@ -446,6 +449,9 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT_DISPLAY} element={<EventDisplayPage />} />
             <Route path={ROUTES.EVENT_ADMIN} element={<EventAdminPage />} />
             <Route path={ROUTES.EVENT_CHRISTMAS} element={<ChristmasMusicPage />} />
+            <Route path={ROUTES.EVENT_PLACE_NOTE} element={<EventPlaceNotePage />} />
+            <Route path={ROUTES.EVENT_WRITE_MESSAGE} element={<EventWriteMessagePage />} />
+            <Route path={ROUTES.EVENT_CHOOSE_NOTE} element={<EventChooseNotePage />} />
 
             {/* Interactive Experiences */}
             <Route path={ROUTES.BIRTHDAY_CAKE} element={<BirthdayCake />} />

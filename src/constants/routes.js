@@ -59,6 +59,9 @@ export const ROUTES = {
   EVENT_DISPLAY: "/event/display",
   EVENT_ADMIN: "/event/admin",
   EVENT_CHRISTMAS: "/event/christmas",
+  EVENT_PLACE_NOTE: "/event/place-note", // New place note screen (step 1)
+  EVENT_WRITE_MESSAGE: "/event/write-message", // Write message screen (step 2)
+  EVENT_CHOOSE_NOTE: "/event/choose-note", // Choose note shape screen (step 3)
 
   // Interactive experiences
   BIRTHDAY_CAKE: "/birthday-cake",
