@@ -12,26 +12,17 @@ import { initAudio, playNote, isAudioInitialized } from '@services/event/audio';
 import { broadcastNoteAdded } from '@services/event/ably';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
-import staffLineSvg from '@/assets/images/dmm/Rectangle 4200.svg';
+import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 
-// Import all diamond shapes
-import heartSvg from '@/assets/images/dmm/heart.svg';
-import ascherPng from '@/assets/images/dmm/ascher.png';
-import emeraldPng from '@/assets/images/dmm/emerald.png';
-import lumexPng from '@/assets/images/dmm/lumex.png';
-import marquisePng from '@/assets/images/dmm/marquise.png';
-import ovalPng from '@/assets/images/dmm/oval.png';
-import pearPng from '@/assets/images/dmm/pear.png';
-
-// Mapping from shape ID to image
+// Mapping from shape ID to Cloudflare image path
 const DIAMOND_MAP = {
-  h1: heartSvg,      // Heart shape
-  h2: lumexPng,      // Round shape
-  h3: emeraldPng,    // Emerald shape
-  h4: marquisePng,   // Marquise shape
-  h5: pearPng,       // Pear shape
-  h6: ovalPng,       // Oval shape
-  h7: ascherPng,     // Cushion shape
+  h1: 'dmm/heart.svg',      // Heart shape
+  h2: 'dmm/lumex.png',      // Round shape
+  h3: 'dmm/emerald.png',    // Emerald shape
+  h4: 'dmm/marquise.png',   // Marquise shape
+  h5: 'dmm/pear.png',       // Pear shape
+  h6: 'dmm/oval.png',       // Oval shape
+  h7: 'dmm/ascher.png',     // Cushion shape
 };
 
 // Position range for the diamond (percentage)
@@ -371,7 +362,7 @@ const PlaceNoteScreenNew = () => {
               {[0, 1, 2, 3, 4].map((i) => (
                 <img
                   key={i}
-                  src={staffLineSvg}
+                  src={getMediaUrl('dmm/Rectangle 4200.svg')}
                   alt=""
                   className="place-note-new__line place-note-new__line--animate"
                 />
@@ -389,7 +380,7 @@ const PlaceNoteScreenNew = () => {
                 }}
               >
                 <img
-                  src={DIAMOND_MAP[selectedDiamond] || heartSvg}
+                  src={getMediaUrl(DIAMOND_MAP[selectedDiamond] || 'dmm/heart.svg')}
                   alt="Diamond note"
                   className="place-note-new__heart"
                 />

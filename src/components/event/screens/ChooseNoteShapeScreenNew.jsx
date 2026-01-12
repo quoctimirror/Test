@@ -10,9 +10,7 @@ import { ROUTES } from '@/constants/routes';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import AvatarGenerator, { downloadAvatar } from '@/components/event/ui/AvatarGenerator';
-
-// Import card back image
-import cardBackImage from '@/assets/images/dmm/card_back.svg';
+import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 
 // Mapping from shape ID (h1, h2...) to diamondShape name for AvatarGenerator
 const SHAPE_NAME_MAP = {
@@ -446,7 +444,7 @@ const ChooseNoteShapeScreenNew = () => {
                   <div className="flip-card-shine" ref={shineBackRef} />
                   <div className="flip-card-texture" />
                   <div className="flip-card-inner">
-                    <img src={cardBackImage} alt="Card Back" className="flip-card-image" />
+                    <img src={getMediaUrl('dmm/card_back.svg')} alt="Card Back" className="flip-card-image" />
                   </div>
                 </div>
 

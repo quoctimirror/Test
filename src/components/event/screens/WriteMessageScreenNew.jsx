@@ -10,28 +10,20 @@ import { TEXT } from '@/constants/eventConstants';
 import { ROUTES } from '@/constants/routes';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
+import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 
 // Breakpoint for tablet/mobile
 const TABLET_BREAKPOINT = 1024;
 
-// Import all diamond shapes
-import heartSvg from '@/assets/images/dmm/heart.svg';
-import ascherPng from '@/assets/images/dmm/ascher.png';
-import emeraldPng from '@/assets/images/dmm/emerald.png';
-import lumexPng from '@/assets/images/dmm/lumex.png';
-import marquisePng from '@/assets/images/dmm/marquise.png';
-import ovalPng from '@/assets/images/dmm/oval.png';
-import pearPng from '@/assets/images/dmm/pear.png';
-
-// Diamond shape images array
+// Diamond shape Cloudflare paths array
 const DIAMOND_SHAPES = [
-  heartSvg,
-  ascherPng,
-  emeraldPng,
-  lumexPng,
-  marquisePng,
-  ovalPng,
-  pearPng,
+  'dmm/heart.svg',
+  'dmm/ascher.png',
+  'dmm/emerald.png',
+  'dmm/lumex.png',
+  'dmm/marquise.png',
+  'dmm/oval.png',
+  'dmm/pear.png',
 ];
 
 // Staff configuration - Desktop
@@ -254,7 +246,7 @@ const WriteMessageScreenNew = () => {
           }}
         >
           <img
-            src={note.shape}
+            src={getMediaUrl(note.shape)}
             alt="Diamond note"
             className="write-message__note-img"
           />
@@ -272,7 +264,7 @@ const WriteMessageScreenNew = () => {
           }}
         >
           <img
-            src={heartSvg}
+            src={getMediaUrl('dmm/heart.svg')}
             alt="Your note"
             className="write-message__note-img write-message__note-img--user"
           />
