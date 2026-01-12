@@ -4,6 +4,7 @@
  */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
@@ -117,14 +118,6 @@ const EventLoginPage = () => {
     // After redirect back, onAuthStateChange will handle the login
   };
 
-  const handleBack = () => {
-    navigate(ROUTES.EVENT_GUIDE);
-  };
-
-  const handleNext = () => {
-    navigate(ROUTES.EVENT_NAME);
-  };
-
   const handleSocialLogin = (provider) => {
     if (provider === 'google') {
       handleGoogleLogin();
@@ -134,84 +127,167 @@ const EventLoginPage = () => {
     console.log(`Login with ${provider}`);
   };
 
+  // Animation variants
+  const backgroundVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: 'easeOut',
+      },
+    },
+  };
+
+  const contentVariants = {
+    hidden: {
+      opacity: 0,
+      x: 100,
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.6,
+        delay: 0.3,
+        ease: 'easeOut',
+      },
+    },
+  };
+
+  const cardChildrenVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: 0.5 + i * 0.1,
+        duration: 0.4,
+        ease: 'easeOut',
+      },
+    }),
+  };
+
   return (
     <div className="event-login-wrapper">
       <NavbarV4 logoOnly />
       <div className="event-login" data-navbar-theme="black">
-        {/* Background */}
-        <div className="event-login__bg">
+        {/* Background - Fade in */}
+        <motion.div
+          className="event-login__bg"
+          variants={backgroundVariants}
+          initial="hidden"
+          animate="visible"
+        >
           <img
             src={getMediaUrl('mirror_DMM/Artboard-6.webp')}
             alt="Background"
             className="event-login__bg-img"
           />
-        </div>
+        </motion.div>
 
-        {/* Navigation Buttons */}
-        <ShineGlassButton theme="light" onClick={handleBack} className="event-login__nav-btn event-login__nav-btn--left">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </ShineGlassButton>
+        {/* Content - Right side (Desktop) / Glass Card (Mobile) - Slide in from right */}
+        <motion.div
+          className="event-login__content"
+          variants={contentVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Glass Card for Mobile/Tablet */}
+          <div className="event-login__card">
+            <motion.h1
+              className="event-login__title heading-2--no-margin"
+              custom={0}
+              variants={cardChildrenVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              Đợi trong giây lát,
+            </motion.h1>
 
-        <ShineGlassButton theme="light" onClick={handleNext} className="event-login__nav-btn event-login__nav-btn--right">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </ShineGlassButton>
+            <motion.p
+              className="event-login__subtitle bodytext-6--no-margin"
+              custom={1}
+              variants={cardChildrenVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              Bắt đầu đăng nhập với
+            </motion.p>
 
-        {/* Content - Right side */}
-        <div className="event-login__content">
-          <h1 className="event-login__title heading-2--no-margin">Just a moment.</h1>
+            {/* Error Message */}
+            {error && <p className="event-login__error">{error}</p>}
 
-          <div className="event-login__divider">
-            <span className="event-login__divider-line"></span>
-            <span className="event-login__divider-text bodytext-6--no-margin">Let's sign up with</span>
-            <span className="event-login__divider-line"></span>
+            {/* Social Login Buttons - Full width with text */}
+            <motion.div
+              className="event-login__social"
+              custom={2}
+              variants={cardChildrenVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {/* Google */}
+              <ShineGlassButton
+                theme="footer"
+                onClick={() => handleSocialLogin('google')}
+                className="event-login__social-btn"
+                disabled={loading || checking}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <g clipPath="url(#clip0_google)">
+                    <path d="M14.856 6.10857H7.65977V8.99208H11.7947C11.7283 9.40017 11.579 9.80162 11.3604 10.1677C11.11 10.5871 10.8004 10.9064 10.4831 11.1495C9.53256 11.8779 8.42437 12.0268 7.65474 12.0268C5.71057 12.0268 4.0494 10.7703 3.40632 9.06286C3.38037 9.0009 3.36314 8.93689 3.34215 8.87363C3.20005 8.43907 3.1224 7.97883 3.1224 7.50048C3.1224 7.00264 3.20648 6.52609 3.35979 6.076C3.9645 4.30088 5.66312 2.97504 7.65614 2.97504C8.05701 2.97504 8.44305 3.02276 8.80914 3.11793C9.64578 3.33544 10.2376 3.76383 10.6002 4.10268L12.7883 1.95985C11.4573 0.739479 9.72221 1.84511e-09 7.6525 1.84511e-09C5.99791 -3.5612e-05 4.47031 0.515488 3.2185 1.38674C2.20332 2.0933 1.37073 3.0393 0.808828 4.13797C0.286182 5.15666 0 6.28556 0 7.49935C0 8.71319 0.286619 9.85383 0.809267 10.8631V10.8699C1.36131 11.9414 2.16859 12.8639 3.14975 13.5673C4.0069 14.1817 5.54385 15 7.6525 15C8.86513 15 9.93986 14.7814 10.8877 14.3716C11.5714 14.0761 12.1772 13.6906 12.7257 13.1951C13.4504 12.5405 14.018 11.7307 14.4054 10.7991C14.7928 9.8674 15 8.81387 15 7.67167C15 7.13972 14.9466 6.5995 14.856 6.10852V6.10857Z" fill="currentColor"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_google">
+                      <rect width="15" height="15" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span>Đăng nhập bằng Google</span>
+              </ShineGlassButton>
+
+              {/* Facebook */}
+              <ShineGlassButton
+                theme="footer"
+                onClick={() => handleSocialLogin('facebook')}
+                className="event-login__social-btn"
+                disabled={loading || checking}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <g clipPath="url(#clip0_facebook)">
+                    <path d="M7.5 0C3.3579 0 0 3.3579 0 7.5C0 11.0172 2.4216 13.9686 5.6883 14.7792V9.792H4.1418V7.5H5.6883V6.5124C5.6883 3.9597 6.8436 2.7765 9.3498 2.7765C9.825 2.7765 10.6449 2.8698 10.9803 2.9628V5.0403C10.8033 5.0217 10.4958 5.0124 10.1139 5.0124C8.8842 5.0124 8.409 5.4783 8.409 6.6894V7.5H10.8588L10.4379 9.792H8.409V14.9451C12.1227 14.4966 15.0003 11.3346 15.0003 7.5C15 3.3579 11.6421 0 7.5 0Z" fill="currentColor"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_facebook">
+                      <rect width="15" height="15" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span>Đăng nhập bằng Facebook</span>
+              </ShineGlassButton>
+
+              {/* Apple */}
+              <ShineGlassButton
+                theme="footer"
+                onClick={() => handleSocialLogin('apple')}
+                className="event-login__social-btn"
+                disabled={loading || checking}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <g clipPath="url(#clip0_apple)">
+                    <path d="M13.62 11.6897C13.3931 12.2138 13.1246 12.6962 12.8135 13.1397C12.3895 13.7443 12.0422 14.1628 11.7747 14.3952C11.3599 14.7767 10.9154 14.972 10.4395 14.9832C10.0979 14.9832 9.68584 14.8859 9.20623 14.6887C8.72504 14.4924 8.28283 14.3952 7.87849 14.3952C7.45443 14.3952 6.99963 14.4924 6.51317 14.6887C6.02596 14.8859 5.63347 14.9887 5.33339 14.9989C4.87701 15.0183 4.42212 14.8174 3.96806 14.3952C3.67826 14.1424 3.31577 13.7091 2.88152 13.0953C2.41561 12.4397 2.03257 11.6796 1.73248 10.8129C1.41111 9.87683 1.25 8.97038 1.25 8.09281C1.25 7.08756 1.46722 6.22055 1.90229 5.494C2.24423 4.91041 2.69912 4.45005 3.26845 4.1121C3.83779 3.77415 4.45295 3.60193 5.11543 3.59091C5.47792 3.59091 5.95328 3.70304 6.544 3.9234C7.13305 4.14451 7.51128 4.25663 7.67711 4.25663C7.80109 4.25663 8.22126 4.12552 8.93355 3.86414C9.60714 3.62174 10.1756 3.52138 10.6414 3.56091C11.9034 3.66276 12.8515 4.16024 13.482 5.05651C12.3533 5.74038 11.795 6.69822 11.8061 7.92698C11.8163 8.88408 12.1635 9.68054 12.8459 10.3129C13.1552 10.6064 13.5005 10.8333 13.8848 10.9944C13.8015 11.2361 13.7135 11.4675 13.62 11.6897ZM10.7256 0.300269C10.7256 1.05044 10.4516 1.75087 9.90528 2.39919C9.24604 3.1699 8.44866 3.61526 7.58396 3.54499C7.57295 3.45499 7.56656 3.36027 7.56656 3.26074C7.56656 2.54057 7.88006 1.76985 8.43681 1.13969C8.71476 0.820623 9.06827 0.555326 9.49696 0.343693C9.92472 0.135218 10.3293 0.0199262 10.7099 0.000183105C10.721 0.100469 10.7256 0.200762 10.7256 0.300259V0.300269Z" fill="currentColor"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_apple">
+                      <rect width="15" height="15" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+                <span>Đăng nhập bằng Apple</span>
+              </ShineGlassButton>
+            </motion.div>
           </div>
-
-          {/* Error Message */}
-          {error && <p className="event-login__error">{error}</p>}
-
-          {/* Social Login Buttons */}
-          <div className="event-login__social">
-            {/* Google */}
-            <ShineGlassButton
-              theme="light"
-              onClick={() => handleSocialLogin('google')}
-              className="event-login__social-btn"
-              disabled={loading || checking}
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M19.8081 8.14476H10.213V11.9894H15.7263C15.6377 12.5335 15.4387 13.0689 15.1473 13.5569C14.8134 14.1161 14.4005 14.5419 13.9775 14.866C12.7101 15.8373 11.2325 16.0358 10.2063 16.0358C7.61409 16.0358 5.3992 14.3604 4.54176 12.0838C4.50716 12.0012 4.48419 11.9159 4.45621 11.8315C4.26673 11.2521 4.1632 10.6384 4.1632 10.0006C4.1632 9.33685 4.27531 8.70145 4.47971 8.10134C5.28601 5.73451 7.55083 3.96671 10.2082 3.96671C10.7427 3.96671 11.2574 4.03034 11.7455 4.15724C12.861 4.44725 13.6501 5.01844 14.1337 5.47024L17.0511 2.6131C15.2764 0.985972 12.963 0 10.2033 0C7.99722 -4.74828e-05 5.96041 0.687318 4.29134 1.84899C2.93776 2.79108 1.82764 4.0524 1.0784 5.51731C0.381576 6.87555 0 8.38075 0 9.99914C0 11.6176 0.382159 13.1384 1.079 14.4841V14.4932C1.81509 15.9219 2.89145 17.1519 4.19967 18.0896C5.34253 18.9089 7.3918 20 10.2033 20C11.8202 20 13.2531 19.7085 14.5169 19.1622C15.4285 18.7682 16.2362 18.2541 16.9677 17.5935C17.9339 16.7206 18.6906 15.6409 19.2072 14.3987C19.7237 13.1565 20 11.7518 20 10.2289C20 9.51964 19.9288 8.79934 19.8081 8.14469V8.14476Z" fill="currentColor"/>
-              </svg>
-            </ShineGlassButton>
-
-            {/* Facebook */}
-            <ShineGlassButton
-              theme="light"
-              onClick={() => handleSocialLogin('facebook')}
-              className="event-login__social-btn"
-              disabled={loading || checking}
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M20 10C20 4.47715 15.5229 0 10 0C4.47715 0 0 4.47715 0 10C0 14.9912 3.65684 19.1283 8.4375 19.8785V12.8906H5.89844V10H8.4375V7.79688C8.4375 5.29063 9.93047 3.90625 12.2146 3.90625C13.3084 3.90625 14.4531 4.10156 14.4531 4.10156V6.5625H13.1922C11.95 6.5625 11.5625 7.3334 11.5625 8.125V10H14.3359L13.8926 12.8906H11.5625V19.8785C16.3432 19.1283 20 14.9912 20 10Z" fill="currentColor"/>
-              </svg>
-            </ShineGlassButton>
-
-            {/* Apple */}
-            <ShineGlassButton
-              theme="light"
-              onClick={() => handleSocialLogin('apple')}
-              className="event-login__social-btn"
-              disabled={loading || checking}
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M14.2863 0C14.3813 1.05 13.9363 2.1 13.2713 2.87C12.6063 3.64 11.6313 4.26 10.5913 4.17C10.4813 3.14 11.0263 2.06 11.6363 1.37C12.3013 0.62 13.3563 0.05 14.2863 0ZM16.8213 14.89C17.4013 13.97 17.6213 13.51 18.0613 12.48C14.5013 11.16 13.9663 6.13 17.4913 4.35C16.4663 3.1 15.0313 2.37 13.6763 2.37C12.6263 2.37 11.8563 2.67 11.1713 2.94C10.5863 3.17 10.0613 3.38 9.4263 3.38C8.7413 3.38 8.1463 3.16 7.5063 2.92C6.7913 2.65 6.0213 2.36 5.0813 2.38C3.5263 2.41 2.0713 3.24 1.0963 4.64C-0.258703 6.62 -0.038703 10.33 2.1163 13.64C2.9013 14.85 3.9463 16.22 5.3163 16.23C5.9463 16.24 6.3663 16.04 6.8613 15.81C7.4313 15.54 8.0913 15.23 9.1213 15.22C10.1613 15.21 10.8013 15.52 11.3563 15.79C11.8363 16.02 12.2413 16.23 12.8613 16.22C14.2413 16.2 15.3413 14.69 16.1263 13.48C16.4213 13.02 16.6513 12.62 16.8213 12.3V14.89Z" fill="currentColor"/>
-              </svg>
-            </ShineGlassButton>
-          </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

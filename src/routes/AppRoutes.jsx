@@ -189,6 +189,10 @@ export default function AppRoutes() {
       ROUTES.EVENT_RESULT,
       ROUTES.EVENT_DISPLAY,
       ROUTES.EVENT_ADMIN,
+      ROUTES.EVENT_CHRISTMAS,
+      ROUTES.EVENT_PLACE_NOTE,
+      ROUTES.EVENT_WRITE_MESSAGE,
+      ROUTES.EVENT_CHOOSE_NOTE,
       ROUTES.INVENTORY,
       ROUTES.INVENTORY_DASHBOARD,
       ROUTES.INVENTORY_SCANNER,
@@ -196,6 +200,7 @@ export default function AppRoutes() {
       ROUTES.INVENTORY_PRODUCTS,
       ROUTES.INVENTORY_PRINT,
       ROUTES.BIRTHDAY_CAKE,
+      ROUTES.DB_EXPLORER,
     ];
 
     // Check exact matches
@@ -215,6 +220,7 @@ export default function AppRoutes() {
       location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
       location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
       location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
+      location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
       location.pathname.startsWith(ROUTES.INVENTORY)
     ) {
       return false;
@@ -239,6 +245,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname === ROUTES.BIRTHDAY_CAKE ||
     location.pathname.startsWith(ROUTES.EVENT) ||
+    location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname === ROUTES.DB_EXPLORER;
 
@@ -258,6 +265,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname === ROUTES.BIRTHDAY_CAKE ||
     location.pathname.startsWith(ROUTES.EVENT) ||
+    location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname === ROUTES.DB_EXPLORER;
 

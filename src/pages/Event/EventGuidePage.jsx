@@ -2,7 +2,7 @@
  * EventGuidePage - Landing page for Mirror Diamond Symphony Event
  * Design based on provided mockup
  */
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
@@ -73,6 +73,40 @@ const EventGuidePage = () => {
   const staffNoteRef = useRef(null);
   const staffRippleRef = useRef(null);
   const staffSectionRef = useRef(null);
+  const transitionTimeoutRef = useRef(null);
+
+  // Cleanup scroll lock on unmount (prevent stuck scroll lock)
+  useEffect(() => {
+    return () => {
+      // Clear transition timeout
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+      // Always restore scroll on unmount
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.touchAction = '';
+    };
+  }, []);
+
+  // Force scroll to top when step changes to 2
+  useEffect(() => {
+    if (currentStep === 2) {
+      // Multiple attempts to ensure scroll to top on mobile
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Also try after a micro delay
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      });
+    }
+  }, [currentStep]);
 
   // Show scroll to top button after scrolling
   useEffect(() => {
@@ -120,27 +154,41 @@ const EventGuidePage = () => {
   const handleMusicContentClick = () => {
     if (isTransitioning) return;
 
-    // Disable scrolling during transition
-    document.body.style.overflow = 'hidden';
-
     setIsTransitioning(true);
     setHasAnimated(true);
 
-    // Wait for fading class to be applied, then scroll to top
-    // Step 1 fading layer covers everything, so no hero flash
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.scrollTo(0, 0);
-      });
-    });
+    // Force scroll to top immediately - use old syntax for mobile compatibility
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
 
-    // After step1 fades out, switch to step 2
-    setTimeout(() => {
+    // Lock scroll for mobile (simpler approach)
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.top = '0';
+
+    // Switch to step 2 and unlock scroll after short animation
+    transitionTimeoutRef.current = setTimeout(() => {
+      // Re-enable scrolling BEFORE changing step (prevents jump)
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+
+      // Change step
       setCurrentStep(2);
       setIsTransitioning(false);
-      // Re-enable scrolling after transition completes
-      document.body.style.overflow = '';
-    }, 1200);
+
+      // Ensure at top after render
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }, 0);
+    }, 600); // Further reduced to 600ms
   };
 
   // Initialize RippleEffect (without auto-play)
@@ -175,6 +223,8 @@ const EventGuidePage = () => {
     const RIPPLE_INTERVAL = 1000; // For normal scroll
     const OVERSCROLL_RIPPLE_INTERVAL = 400; // Faster for overscroll (scroll nhanh = ripple nhanh)
     let overscrollRippleCount = 0;
+    let touchStartY = 0;
+    let lastScrollY = 0;
 
     const createLargeRipple = () => {
       if (!musicContentRef.current) return;
@@ -216,7 +266,7 @@ const EventGuidePage = () => {
       }
     };
 
-    // Handle wheel for overscroll detection - create ripple and count
+    // Handle wheel for overscroll detection - create ripple and count (Desktop)
     const handleWheel = (e) => {
       if (!musicSectionRef.current) return;
 
@@ -248,12 +298,59 @@ const EventGuidePage = () => {
       }
     };
 
+    // Handle touch start (Mobile/Tablet)
+    const handleTouchStart = (e) => {
+      if (isTransitioning) return;
+      touchStartY = e.touches[0].clientY;
+      lastScrollY = window.scrollY;
+    };
+
+    // Handle touch move for overscroll detection (Mobile/Tablet)
+    const handleTouchMove = (e) => {
+      if (isTransitioning) return;
+      if (!musicSectionRef.current) return;
+
+      const rect = musicSectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const isVisible = rect.top < windowHeight && rect.bottom > 0;
+
+      // Check if at bottom of music section
+      const isAtBottom = rect.bottom <= windowHeight + 50;
+      const currentY = e.touches[0].clientY;
+      const currentScrollY = window.scrollY;
+      const isScrollingDown = touchStartY > currentY;
+
+      // Detect overscroll attempt: at bottom, trying to scroll down
+      if (isAtBottom && isScrollingDown && isVisible && currentScrollY >= lastScrollY) {
+        const now = Date.now();
+        if (now - lastRippleTime >= OVERSCROLL_RIPPLE_INTERVAL) {
+          createLargeRipple();
+          lastRippleTime = now;
+          overscrollRippleCount++;
+
+          // Trigger transition after 3 ripples at bottom
+          if (overscrollRippleCount >= 3) {
+            handleMusicContentClick();
+            return;
+          }
+        }
+      } else if (!isAtBottom) {
+        overscrollRippleCount = 0; // Reset if not at bottom
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
     };
   }, [currentStep, isTransitioning]);
 

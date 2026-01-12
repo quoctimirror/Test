@@ -274,7 +274,7 @@
   width: 100%;
   height: 100vh;
   z-index: 10;
-  animation: step1FadeOut 1.2s ease-out forwards;
+  animation: step1FadeOut 0.6s ease-out forwards;
   /* Solid background to prevent hero flash - music section covers this */
   background: #F6F6F6;
   overflow: hidden;
@@ -361,6 +361,8 @@
   background: linear-gradient(180deg, #FADEE6 0%, #FFF5F7 30%, #F6F6F6 60%, #FFF 100%);
   position: relative;
   overflow: hidden;
+  scroll-margin-top: 0;
+  scroll-snap-align: start;
 }
 
 .event-guide__step2::before {
@@ -805,13 +807,6 @@
     min-height: 1400px;
   }
 
-  /* Hide center cards to reduce overlap */
-  .event-guide__card--4,
-  .event-guide__card--6,
-  .event-guide__card--12,
-  .event-guide__card--14 {
-    display: none;
-  }
 }
 
 /* Tablet responsive */
@@ -847,6 +842,7 @@
 
   .event-guide__avatar-section {
     min-height: 1200px;
+    padding: 0;
   }
 
   /* Card positions responsive - use vw instead of px */
@@ -926,19 +922,32 @@
     max-width: 78%;
   }
 
+  .event-guide__avatar-content {
+    width: 78%;
+    max-width: none;
+  }
+
   .event-guide__staff-title {
     margin-bottom: 60px;
   }
 
   /* Card positions responsive - use vw for mobile */
-  .event-guide__card--1 { left: calc(50% - 42vw); }
-  .event-guide__card--2 { left: calc(50% - 25vw); }
-  .event-guide__card--7 { left: calc(50% - 40vw); }
-  .event-guide__card--8 { left: calc(50% - 20vw); }
-  .event-guide__card--9 { left: calc(50% + 25vw); }
-  .event-guide__card--10 { left: calc(50% + 10vw); }
-  .event-guide__card--15 { left: calc(50% + 5vw); }
-  .event-guide__card--16 { left: calc(50% + 30vw); }
+  .event-guide__card--1 { left: calc(50% - 65vw); top:8%;}
+  .event-guide__card--2 { left: calc(50% - 35vw); top:3%;}
+  .event-guide__card--3 { left: calc(50% - 5vw); top: 8%; }
+  .event-guide__card--4 { left: calc(50% + 20vw);}
+  .event-guide__card--5 { left: calc(50% + 43vw); }
+  .event-guide__card--6 { left: calc(50% - 40vw); top:17%;}
+  .event-guide__card--7 { left: calc(50% + 15vw); top: 20%;}
+  .event-guide__card--8 { left: calc(50% - 40vw); top: 30%;}
+  .event-guide__card--9 { left: calc(50% + 35vw); }
+  .event-guide__card--10 { left: calc(50% - 60vw); top:45%;  rotate: -30deg;}
+  .event-guide__card--11 { left: calc(50% - 60vw); }
+  .event-guide__card--12 { left: calc(50% - 40vw); }
+  .event-guide__card--13 { left: calc(50% + 15vw); }
+  .event-guide__card--14 { left: calc(50% - 10vw); }
+  .event-guide__card--15 { left: calc(50% + 30vw); top:55%;}
+  .event-guide__card--16 { left: calc(50% - 30vw); top: 80%;}
 
   .event-guide__hero-top {
     text-align: center;
@@ -1009,7 +1018,9 @@
   }
 
   /* Hide br tags on mobile - let text wrap naturally */
-  .event-guide__lucky-text br {
+  .event-guide__lucky-text br,
+  .event-guide__avatar-title br,
+  .event-guide__avatar-text br {
     display: none;
   }
 
@@ -1019,17 +1030,7 @@
     height: clamp(142px, 35vw, 212px);
   }
 
-  /* Hide more cards on mobile to prevent clutter */
-  .event-guide__card--3,
-  .event-guide__card--4,
-  .event-guide__card--5,
-  .event-guide__card--6,
-  .event-guide__card--11,
-  .event-guide__card--12,
-  .event-guide__card--13,
-  .event-guide__card--14 {
-    display: none;
-  }
+  
 }
 
 /* ============================================
