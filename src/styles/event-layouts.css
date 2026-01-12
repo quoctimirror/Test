@@ -1,0 +1,3020 @@
+/**
+ * Event System Styles
+ * Mirror Diamond Symphony Event
+ */
+
+/* ============================================
+   Base Styles & Variables
+   ============================================ */
+:root {
+  --event-primary: #e91e63;
+  --event-primary-dark: #880e4f;
+  --event-primary-light: #f48fb1;
+  --event-bg-dark: #1a0a10;
+  --event-bg-gradient: linear-gradient(
+    135deg,
+    #1a0a10 0%,
+    #2d1520 50%,
+    #1a0a10 100%
+  );
+  --event-text: #ffffff;
+  --event-text-muted: rgba(255, 255, 255, 0.7);
+  --event-glass: rgba(255, 255, 255, 0.1);
+  --event-glass-border: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   Event Page Base
+   ============================================ */
+.event-page,
+.event-display,
+.event-admin {
+  min-height: 100vh;
+  background: var(--event-bg-gradient);
+  color: var(--event-text);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.event-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* ============================================
+   Event Screen (Flow Steps)
+   ============================================ */
+.event-screen {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.event-screen__content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.event-tagline {
+  font-size: 1rem;
+  color: var(--event-text-muted);
+  text-align: center;
+  font-style: italic;
+  margin: 1rem 0;
+}
+
+.event-subtitle {
+  font-size: 0.9rem;
+  color: var(--event-text-muted);
+  text-align: center;
+}
+
+/* ============================================
+   Event Form
+   ============================================ */
+.event-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-form__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.event-form__field {
+  position: relative;
+  width: 100%;
+}
+
+.event-form__counter {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: var(--event-text-muted);
+}
+
+.event-form__error {
+  color: #ff6b6b;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* ============================================
+   Event Input
+   ============================================ */
+.event-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--event-glass);
+  border: 1px solid var(--event-glass-border);
+  border-radius: 12px;
+  color: var(--event-text);
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.event-input::placeholder {
+  color: var(--event-text-muted);
+}
+
+.event-input:focus {
+  border-color: var(--event-primary);
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.3);
+}
+
+.event-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   Event Buttons
+   ============================================ */
+.event-btn {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.event-btn--primary {
+  background: linear-gradient(
+    135deg,
+    var(--event-primary) 0%,
+    var(--event-primary-dark) 100%
+  );
+  color: white;
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+}
+
+.event-btn--primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(233, 30, 99, 0.5);
+}
+
+.event-btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.event-btn--secondary {
+  background: var(--event-glass);
+  border: 1px solid var(--event-glass-border);
+  color: var(--event-text);
+  backdrop-filter: blur(10px);
+}
+
+.event-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.event-btn--outline {
+  background: transparent;
+  border: 2px solid var(--event-primary);
+  color: var(--event-primary-light);
+}
+
+.event-btn--outline:hover {
+  background: var(--event-primary);
+  color: white;
+}
+
+.event-btn--text {
+  background: transparent;
+  color: var(--event-text-muted);
+  padding: 0.5rem 1rem;
+}
+
+.event-btn--text:hover {
+  color: var(--event-text);
+}
+
+.event-btn--google {
+  background: white;
+  color: #333;
+  border: 1px solid #ddd;
+  font-weight: 500;
+  gap: 12px;
+}
+
+.event-btn--google:hover:not(:disabled) {
+  background: #f8f8f8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.event-btn--google:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.event-btn--google .google-icon {
+  flex-shrink: 0;
+}
+
+/* Login Screen */
+.login-screen .event-form__subtitle {
+  font-size: 0.9rem;
+  color: var(--event-text-muted);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.event-loading {
+  font-size: 1rem;
+  color: var(--event-text-muted);
+  text-align: center;
+}
+
+/* ============================================
+   Diamond Selection Grid
+   ============================================ */
+.diamond-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 350px;
+}
+
+.diamond-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--event-glass);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.diamond-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.diamond-card--selected {
+  border-color: var(--event-primary);
+  background: rgba(233, 30, 99, 0.2);
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
+}
+
+.diamond-card__name {
+  font-size: 0.7rem;
+  color: var(--event-text-muted);
+  text-align: center;
+}
+
+.diamond-card__pitch {
+  font-size: 0.65rem;
+  color: var(--event-primary-light);
+  font-weight: 600;
+}
+
+.diamond-selected-info {
+  text-align: center;
+  padding: 1rem;
+  background: var(--event-glass);
+  border-radius: 12px;
+  width: 100%;
+}
+
+/* ============================================
+   Music Staff
+   ============================================ */
+.music-staff {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--event-primary);
+}
+
+.music-staff--interactive {
+  cursor: crosshair;
+}
+
+.music-staff--interactive:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.place-staff-container {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.place-diamond-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--event-glass);
+  border-radius: 50px;
+}
+
+.place-note-count {
+  font-size: 0.875rem;
+  color: var(--event-text-muted);
+}
+
+/* ============================================
+   Result Screen
+   ============================================ */
+.result-title {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--event-primary-light),
+    var(--event-primary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.result-subtitle {
+  color: var(--event-text-muted);
+}
+
+.result-light-number {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.5rem 2rem;
+  background: var(--event-glass);
+  border-radius: 16px;
+}
+
+.result-light-label {
+  font-size: 0.875rem;
+  color: var(--event-text-muted);
+}
+
+.result-light-value {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--event-primary-light);
+}
+
+.result-diamond {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.result-diamond-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.result-diamond-pitch {
+  font-size: 0.875rem;
+  color: var(--event-primary-light);
+}
+
+.result-username {
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--event-text-muted);
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.result-journey {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.result-journey h3 {
+  font-size: 1rem;
+  color: var(--event-text-muted);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.result-notice {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(233, 30, 99, 0.1);
+  border: 1px solid rgba(233, 30, 99, 0.3);
+  border-radius: 12px;
+  font-size: 0.875rem;
+}
+
+.result-notice p {
+  margin: 0.25rem 0;
+}
+
+.demo-badge {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  background: #ff9800;
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 4px;
+}
+
+/* ============================================
+   Display Page
+   ============================================ */
+.event-display {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.event-display__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.event-display__stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.event-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.event-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--event-primary-light);
+}
+
+.event-stat-label {
+  font-size: 0.75rem;
+  color: var(--event-text-muted);
+}
+
+.event-display__staff {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.event-display__latest {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--event-primary);
+  border-radius: 50px;
+  animation: slideUp 0.5s ease;
+}
+
+.latest-info strong {
+  color: var(--event-primary-light);
+}
+
+.event-display__footer {
+  padding: 1rem;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--event-text-muted);
+  font-style: italic;
+}
+
+/* ============================================
+   Lucky Draw Overlay
+   ============================================ */
+.lucky-draw-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.lucky-draw-content {
+  text-align: center;
+  padding: 3rem;
+}
+
+.lucky-draw-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--event-primary-light);
+}
+
+.lucky-draw-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.spinning-diamond {
+  animation: spin 0.5s linear infinite;
+}
+
+.lucky-draw-winner h3 {
+  font-size: 1.5rem;
+  color: var(--event-text-muted);
+  margin-bottom: 2rem;
+}
+
+.winner-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.winner-light {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--event-primary-light);
+}
+
+.winner-name {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* ============================================
+   Admin Page
+   ============================================ */
+.event-admin {
+  padding: 2rem;
+}
+
+.event-admin--login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 2rem;
+}
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.admin-login-form h2 {
+  text-align: center;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--event-glass-border);
+}
+
+.admin-header h1 {
+  font-size: 1.5rem;
+}
+
+.admin-content {
+  display: grid;
+  gap: 2rem;
+}
+
+.admin-section {
+  background: var(--event-glass);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.admin-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--event-primary-light);
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.event-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.event-stat-card .event-stat-value {
+  font-size: 1.75rem;
+}
+
+.admin-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--event-glass-border);
+  border-radius: 12px;
+  color: var(--event-text);
+  font-family: monospace;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.import-result {
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.import-result.success {
+  background: rgba(76, 175, 80, 0.2);
+  color: #81c784;
+}
+
+.import-result.error {
+  background: rgba(244, 67, 54, 0.2);
+  color: #e57373;
+}
+
+.lucky-draw-btn {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.last-winner {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+}
+
+.last-winner h3 {
+  font-size: 1rem;
+  color: var(--event-text-muted);
+  margin-bottom: 1rem;
+}
+
+.winner-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.winner-details .winner-light {
+  font-size: 1.5rem;
+}
+
+.winner-details .winner-name {
+  font-size: 1.25rem;
+}
+
+.notes-table-container {
+  overflow-x: auto;
+}
+
+.notes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.notes-table th,
+.notes-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--event-glass-border);
+}
+
+.notes-table th {
+  color: var(--event-text-muted);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.notes-table td {
+  font-size: 0.875rem;
+}
+
+.notes-table td:has(svg) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-display-link {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+.admin-display-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+/* ============================================
+   Note Preview Screen
+   ============================================ */
+.preview-light-number {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1rem 1.5rem;
+  background: var(--event-glass);
+  border-radius: 12px;
+}
+
+.preview-light-label {
+  font-size: 0.8rem;
+  color: var(--event-text-muted);
+}
+
+.preview-light-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--event-primary-light);
+}
+
+.preview-note-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--event-glass);
+  border-radius: 16px;
+}
+
+.preview-note-details {
+  text-align: left;
+}
+
+.preview-note-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--event-text);
+  margin: 0;
+}
+
+.preview-note-pitch {
+  font-size: 0.9rem;
+  color: var(--event-primary-light);
+  margin: 0.25rem 0 0;
+}
+
+.preview-play-btn {
+  width: 100%;
+}
+
+.preview-staff {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.preview-staff-label {
+  font-size: 0.85rem;
+  color: var(--event-text-muted);
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.preview-staff-count {
+  font-size: 0.85rem;
+  color: var(--event-text-muted);
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+/* ============================================
+   Background & Scenery Selection Screen
+   ============================================ */
+.selection-section {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.selection-label {
+  font-size: 0.9rem;
+  color: var(--event-text-muted);
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.background-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.background-card {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  max-height: 150px;
+  border-radius: 12px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  overflow: hidden;
+}
+
+.background-card:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.background-card--selected {
+  border-color: var(--event-primary);
+  box-shadow: 0 0 20px rgba(233, 30, 99, 0.5);
+}
+
+.background-card__name {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  font-weight: 500;
+}
+
+.background-card__check {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 20px;
+  height: 20px;
+  background: var(--event-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: white;
+}
+
+/* Scenery Selection */
+.scenery-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.scenery-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.75rem 0.5rem;
+  background: var(--event-glass);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scenery-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.scenery-card--selected {
+  border-color: var(--event-primary);
+  background: rgba(233, 30, 99, 0.2);
+  box-shadow: 0 0 15px rgba(233, 30, 99, 0.4);
+}
+
+.scenery-card__icon {
+  font-size: 1.5rem;
+}
+
+.scenery-card__name {
+  font-size: 0.6rem;
+  color: var(--event-text-muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.scenery-card__check {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  width: 16px;
+  height: 16px;
+  background: var(--event-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  color: white;
+}
+
+/* Result Download Button */
+.result-download-btn {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.result-journey__count {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--event-text-muted);
+  margin-top: 0.75rem;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.diamond__selection-ring {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+  .event-page {
+    padding: 1rem;
+  }
+
+  .event-screen {
+    padding: 1rem;
+  }
+
+  .diamond-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .diamond-card {
+    padding: 0.75rem;
+  }
+
+  .result-light-value {
+    font-size: 2.5rem;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .event-display__header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* ============================================
+   Christmas Music Sheet - 3D Animated Display
+   ============================================ */
+
+.christmas-music-sheet {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  background: linear-gradient(180deg, #0a0a1a 0%, #1a1a2e 50%, #0a0a1a 100%);
+  overflow: hidden;
+  cursor: pointer;
+  perspective: 1200px;
+}
+
+.sheet-title {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 10;
+}
+
+.sheet-title h2 {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.5),
+    0 0 40px rgba(255, 200, 100, 0.3);
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.sheet-3d-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 80%;
+  transform: translate(-50%, -40%);
+}
+
+.sheet-perspective {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform:
+    rotateX(55deg)
+    rotateZ(-2deg)
+    translateY(10%);
+  animation: sheetFloat 8s ease-in-out infinite;
+}
+
+@keyframes sheetFloat {
+  0%, 100% {
+    transform:
+      rotateX(55deg)
+      rotateZ(-2deg)
+      translateY(10%);
+  }
+  50% {
+    transform:
+      rotateX(55deg)
+      rotateZ(-2deg)
+      translateY(8%);
+  }
+}
+
+.sheet-svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.8));
+}
+
+/* Clef symbols */
+.clef-symbol {
+  opacity: 0.8;
+}
+
+/* Note styling */
+.note {
+  transition: transform 0.1s ease;
+}
+
+.note--active {
+  transform: scale(1.1);
+}
+
+.note-head {
+  transition: all 0.15s ease;
+}
+
+.note-glow-outer {
+  animation: glowPulse 0.5s ease-out;
+}
+
+.note-glow-inner {
+  animation: glowPulse 0.3s ease-out;
+}
+
+@keyframes glowPulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Playhead */
+.playhead {
+  opacity: 0.8;
+}
+
+.playhead-dot {
+  animation: playheadPulse 0.5s ease-in-out infinite;
+}
+
+@keyframes playheadPulse {
+  0%, 100% {
+    r: 8;
+    opacity: 1;
+  }
+  50% {
+    r: 10;
+    opacity: 0.8;
+  }
+}
+
+/* Play button overlay */
+.sheet-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 20;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.christmas-music-sheet:hover .sheet-play-overlay {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.sheet-play-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 48px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.sheet-play-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.sheet-play-btn svg {
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+/* Controls */
+.sheet-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+.sheet-stop-btn {
+  padding: 12px 32px;
+  background: rgba(255, 100, 100, 0.2);
+  border: 1px solid rgba(255, 100, 100, 0.5);
+  border-radius: 8px;
+  color: #ff6b6b;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sheet-stop-btn:hover {
+  background: rgba(255, 100, 100, 0.3);
+}
+
+/* Christmas decorations */
+.christmas-music-sheet::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(2px 2px at 50px 160px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 90px 40px, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(3px 3px at 160px 120px, rgba(255, 215, 0, 0.4), transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  pointer-events: none;
+  animation: starsTwinkle 4s ease-in-out infinite;
+}
+
+@keyframes starsTwinkle {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Event Display Page with Christmas Sheet */
+.event-display--christmas {
+  background: #0a0a1a;
+}
+
+.event-display--christmas .event-display__header {
+  background: transparent;
+}
+
+.event-display--christmas .event-display__footer {
+  background: transparent;
+}
+
+/* Christmas mode toggle */
+.christmas-mode-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(196, 30, 58, 0.4);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.christmas-mode-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(196, 30, 58, 0.5);
+}
+
+.christmas-mode-toggle::before {
+  content: '🎄';
+  font-size: 1.2rem;
+}
+
+/* Christmas Music Page - Full screen */
+.christmas-music-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #0a0a1a;
+  z-index: 9999;
+}
+
+.christmas-music-page .christmas-music-sheet {
+  width: 100%;
+  height: 100%;
+}
+
+.christmas-loop-counter {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  z-index: 100;
+}
+
+/* ============================================
+   Christmas Music 3D - Three.js Version
+   ============================================ */
+
+.christmas-music-3d {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(180deg, #0a0a1a 0%, #1a1a2e 100%);
+  overflow: hidden;
+}
+
+.christmas-3d-title {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.christmas-3d-title h2 {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.5),
+    0 0 40px rgba(255, 200, 100, 0.3);
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.christmas-3d-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 20;
+}
+
+.christmas-3d-play-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 32px 64px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  color: white;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.christmas-3d-play-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.christmas-3d-play-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.christmas-3d-play-btn svg {
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+}
+
+.christmas-3d-controls {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+.christmas-3d-stop-btn {
+  padding: 14px 40px;
+  background: rgba(255, 100, 100, 0.2);
+  border: 1px solid rgba(255, 100, 100, 0.5);
+  border-radius: 10px;
+  color: #ff6b6b;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.christmas-3d-stop-btn:hover {
+  background: rgba(255, 100, 100, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Stars background effect */
+.christmas-music-3d::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 50px 160px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(2px 2px at 90px 40px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(3px 3px at 160px 120px, rgba(255, 215, 0, 0.5), transparent),
+    radial-gradient(2px 2px at 200px 50px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(2px 2px at 250px 100px, rgba(255, 255, 255, 0.4), transparent);
+  background-repeat: repeat;
+  background-size: 300px 200px;
+  pointer-events: none;
+  z-index: 1;
+  animation: starsTwinkle3D 5s ease-in-out infinite;
+}
+
+@keyframes starsTwinkle3D {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* Canvas container styling */
+.christmas-music-3d canvas {
+  position: relative;
+  z-index: 5;
+}
+
+/* Instructions hint */
+.christmas-3d-hint {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  text-align: center;
+  z-index: 10;
+}
+
+/* Version toggle */
+.christmas-version-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  z-index: 30;
+  transition: all 0.3s ease;
+}
+
+.christmas-version-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Loading state */
+.christmas-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #0a0a1a 0%, #1a1a2e 100%);
+  color: white;
+  font-size: 1.2rem;
+}
+
+.christmas-loading span {
+  animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Place Note Screen - New Pink Design
+   ============================================ */
+
+.place-note-new {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Background with gradient and rings */
+.place-note-new__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+  radial-gradient(121.12% 87.58% at 50% 50%, rgba(255, 182, 203, 0.6) 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%), linear-gradient(180deg, #FFF5F8 0%, #FFF3F6 12.53%, #F6F6F6 25.06%, #FFF5F8 37.53%, #FFF0F4 50%, #FFF5F8 63.82%, #FFF 77.64%, #FFF4F7 100%);
+  z-index: 0;
+}
+
+.place-note-new__rings {
+  display: none;
+}
+
+/* Header */
+.place-note-new__header {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+  text-align: center;
+}
+
+.place-note-new__title {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: #333;
+  margin: 0;
+}
+
+/* Main content - vertically centered */
+.place-note-new__main {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.place-note-new__staff-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Arrow buttons wrapper - fixed position, vertically centered */
+.place-note-new__arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  isolation: isolate;
+}
+
+.place-note-new__arrow--left {
+  left: 24px;
+}
+
+.place-note-new__arrow--right {
+  right: 24px;
+}
+
+/* Fix arrow icon - don't fill on hover */
+.place-note-new__arrow .shine-glass-button:hover .button-text svg path {
+  fill: none !important;
+}
+
+/* Music Staff */
+.place-note-new__staff {
+  position: relative;
+  width: 100%;
+  height: 380px; /* 5 lines * 12px + 4 gaps * 80px */
+  cursor: pointer;
+}
+
+/* Placement zones - 4 spaces between 5 lines */
+/* Red highlights on lines - where notes can be placed */
+.place-note-new__line-highlights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.place-note-new__line-highlight {
+  position: absolute;
+  left: 0;
+  height: 12px; /* Same as line height */
+  width: 100%;
+  background: rgba(244, 67, 54, 0.4); /* Red highlight */
+  pointer-events: none;
+}
+
+/* Position each line highlight on the lines */
+.place-note-new__line-highlight:nth-child(1) { top: 0px; }    /* Line 1 */
+.place-note-new__line-highlight:nth-child(2) { top: 92px; }   /* Line 2 */
+.place-note-new__line-highlight:nth-child(3) { top: 184px; }  /* Line 3 */
+.place-note-new__line-highlight:nth-child(4) { top: 276px; }  /* Line 4 */
+.place-note-new__line-highlight:nth-child(5) { top: 368px; }  /* Line 5 */
+
+/* Green zones - spaces between lines */
+.place-note-new__zones {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.place-note-new__zone {
+  position: absolute;
+  left: 0;
+  height: 80px; /* Gap between lines */
+  width: 100%;
+  background: rgba(76, 175, 80, 0.3); /* Green for spaces between lines */
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+/* Position each zone in the space between lines */
+.place-note-new__zone:nth-child(1) { top: 12px; }   /* Between line 1-2 */
+.place-note-new__zone:nth-child(2) { top: 104px; }  /* Between line 2-3 */
+.place-note-new__zone:nth-child(3) { top: 196px; }  /* Between line 3-4 */
+.place-note-new__zone:nth-child(4) { top: 288px; }  /* Between line 4-5 */
+
+.place-note-new__zone--active {
+  background: rgba(76, 175, 80, 0.5); /* Brighter green when note is in this zone */
+}
+
+/* Lines wrapper - 5 lines with 80px gap */
+.place-note-new__lines-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  width: 100vw;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.place-note-new__line {
+  width: 100%;
+  height: 12px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Line entrance animation - grow from left to right */
+.place-note-new__line--animate {
+  transform-origin: left center;
+  animation: lineGrowWidth 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes lineGrowWidth {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* Heart note on staff - positioned dynamically */
+.place-note-new__diamond {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: left 0.3s ease, top 0.3s ease;
+  z-index: 10;
+}
+
+/* Diamond entrance animation - scale from big to small */
+.place-note-new__diamond--animate {
+  animation: diamondScaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes diamondScaleIn {
+  0% {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+.place-note-new__heart {
+  width: 120px;
+  height: auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* RippleEffect container styles */
+.place-note-new__diamond .ripple-effect-area {
+  overflow: visible;
+}
+
+/* Active line highlight - brighter red */
+.place-note-new__line-highlight--active {
+  background: rgba(244, 67, 54, 0.6) !important;
+}
+
+/* Footer - fixed bottom left */
+.place-note-new__footer {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  z-index: 10;
+  max-width: 320px;
+}
+
+/* Progress bar 1/3 */
+.place-note-new__progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.place-note-new__progress-step {
+  width: 60px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 13px;
+}
+
+.place-note-new__progress-step--active {
+  background: var(--gray-3, #797979);
+}
+
+.place-note-new__subtitle {
+  font-style: italic;
+  color: var(--Black, #0B0B0B);
+  margin-bottom: 0.5rem;
+}
+
+.place-note-new__description {
+  color: var(--Black, #0B0B0B);
+}
+
+.place-note-new__error {
+  color: #e53935;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Next button - bottom right */
+.place-note-new__next {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 10;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .place-note-new__header {
+    padding: 1.5rem;
+  }
+
+  /* Staff - same as mobile with 80px gap */
+  .place-note-new__staff {
+    height: 360px; /* 5 lines * 8px + 4 gaps * 80px = 360px */
+  }
+
+  /* Lines wrapper - keep 80px gap */
+  .place-note-new__lines-wrapper {
+    gap: 80px;
+  }
+
+  .place-note-new__line {
+    height: 8px; /* Reduced from 12px */
+  }
+
+  /* Heart/Diamond note - 113.143px on tablet */
+  .place-note-new__heart {
+    width: 113.143px;
+    height: 113.143px;
+    aspect-ratio: 1 / 1;
+  }
+
+  .place-note-new__arrow--left {
+    left: 16px;
+  }
+
+  .place-note-new__arrow--right {
+    right: 16px;
+  }
+
+  .place-note-new__footer {
+    bottom: 32px;
+    left: 32px;
+    max-width: 300px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .place-note-new__header {
+    padding: 1.5rem 1rem;
+  }
+
+  .place-note-new__title {
+    font-size: 1.25rem;
+    letter-spacing: 0.2em;
+  }
+
+  /* Staff - adjusted for mobile with 80px gap */
+  .place-note-new__staff {
+    height: 360px; /* 5 lines * 8px + 4 gaps * 80px = 360px */
+  }
+
+  /* Lines wrapper - keep 80px gap on mobile */
+  .place-note-new__lines-wrapper {
+    gap: 80px;
+  }
+
+  .place-note-new__line {
+    height: 8px; /* Reduced from 12px */
+  }
+
+  /* Heart/Diamond note - 113.143px on mobile */
+  .place-note-new__heart {
+    width: 113.143px;
+    height: 113.143px;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Arrow buttons - closer to edges on mobile */
+  .place-note-new__arrow--left {
+    left: 12px;
+  }
+
+  .place-note-new__arrow--right {
+    right: 12px;
+  }
+
+  /* Footer - adjusted for mobile */
+  .place-note-new__footer {
+    bottom: 24px;
+    left: 20px;
+    right: 20px;
+    max-width: none;
+  }
+
+  .place-note-new__progress-step {
+    width: 40px;
+  }
+
+  .place-note-new__subtitle {
+    font-size: 1rem;
+  }
+
+  .place-note-new__description {
+    font-size: 0.875rem;
+  }
+}
+
+/* =====================================================
+   WRITE MESSAGE SCREEN (Step 2) - Two Music Staffs
+   ===================================================== */
+
+.write-message {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Background */
+.write-message__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #F6F6F6 100%);
+  z-index: 0;
+}
+
+/* Header */
+.write-message__header {
+  position: fixed;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.write-message__title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: var(--Black, #0B0B0B);
+  margin: 0;
+}
+
+/* Main - Two staffs container */
+.write-message__main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.write-message__staffs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 80px; /* Space between two staffs */
+  width: 100%;
+  margin-top: -80px; /* Move staffs up */
+}
+
+/* Single staff */
+.write-message__staff {
+  position: relative;
+  width: 100%;
+  height: 171.48px; /* 5 lines × 6.296px + 4 gaps × 35px = 31.48 + 140 */
+}
+
+/* Staff lines - absolute positioning for exact placement */
+.write-message__lines {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 100%;
+  pointer-events: none;
+}
+
+.write-message__line {
+  position: absolute;
+  left: 0;
+  width: 100vw;
+  height: 6.296px;
+  pointer-events: none;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #878787 0%, #F3F2F2 24.04%, rgba(255, 255, 255, 0.50) 50.48%, #565656 71.15%, #5A5A5A 78.85%, #C2C2C2 100%);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.50);
+}
+
+/* Position each line exactly: line spacing = 6.296px + 35px = 41.296px */
+.write-message__line:nth-child(1) { top: 0px; }
+.write-message__line:nth-child(2) { top: 41.296px; }
+.write-message__line:nth-child(3) { top: 82.592px; }
+.write-message__line:nth-child(4) { top: 123.888px; }
+.write-message__line:nth-child(5) { top: 165.184px; }
+
+/* Notes */
+.write-message__note {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.write-message__note-img {
+  width: 35px;
+  height: auto;
+}
+
+.write-message__note--user {
+  z-index: 10;
+}
+
+.write-message__note-img--user {
+  width: 35px;
+}
+
+/* Ripple container - allow ripple to overflow */
+.write-message__note .ripple-effect-area {
+  overflow: visible;
+}
+
+/* Ensure staffs can show ripple overflow */
+.write-message__staffs {
+  overflow: visible;
+}
+
+.write-message__staff {
+  overflow: visible;
+}
+
+/* Footer - same as place-note */
+.write-message__footer {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  z-index: 10;
+  max-width: 320px;
+}
+
+.write-message__progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.write-message__progress-step {
+  width: 60px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 13px;
+}
+
+.write-message__progress-step--active {
+  background: var(--gray-3, #797979);
+}
+
+.write-message__subtitle {
+  font-style: italic;
+  color: var(--Black, #0B0B0B);
+  margin-bottom: 0.5rem;
+}
+
+.write-message__description {
+  color: var(--gray-3, #797979);
+  line-height: 1.4;
+}
+
+.write-message__error {
+  color: #e53935;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Arrow buttons - fixed position, vertically centered (same as layout 1) */
+.write-message__arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  isolation: isolate;
+}
+
+.write-message__arrow--left {
+  left: 24px;
+}
+
+.write-message__arrow--right {
+  right: 24px;
+}
+
+/* Action buttons - bottom center */
+.write-message__actions {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 10;
+}
+
+/* =====================================================
+   GLASS BUTTON - Liquid Glass Effect (from ijewel)
+   ===================================================== */
+
+.glass-button {
+  position: relative;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Liquid Glass Effect */
+  background-color: rgba(187, 187, 188, 0.18);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+
+  /* Complex shadow for glass depth */
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset 1.8px 3px 0px -2px rgba(255, 255, 255, 0.9),
+    inset -2px -2px 0px -2px rgba(255, 255, 255, 0.8),
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.6),
+    inset -0.3px -1px 4px 0px rgba(0, 0, 0, 0.1),
+    inset -1.5px 2.5px 0px -2px rgba(0, 0, 0, 0.2),
+    inset 0px 3px 4px -2px rgba(0, 0, 0, 0.2),
+    inset 2px -6.5px 1px -4px rgba(0, 0, 0, 0.08),
+    0px 1px 4px 0px rgba(0, 0, 0, 0.08),
+    0px 4px 16px 0px rgba(0, 0, 0, 0.06);
+
+  transition: all 0.2s ease;
+}
+
+.glass-button--circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+}
+
+.glass-button--pill {
+  height: 56px;
+  padding: 0 32px;
+  border-radius: 100px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #BC224C;
+}
+
+.glass-button:hover {
+  background-color: rgba(187, 187, 188, 0.25);
+  transform: scale(1.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+    inset 1.8px 3px 0px -2px rgba(255, 255, 255, 1),
+    inset -2px -2px 0px -2px rgba(255, 255, 255, 0.9),
+    inset -3px -8px 1px -6px rgba(255, 255, 255, 0.7),
+    inset -0.3px -1px 4px 0px rgba(0, 0, 0, 0.15),
+    inset -1.5px 2.5px 0px -2px rgba(0, 0, 0, 0.25),
+    inset 0px 3px 4px -2px rgba(0, 0, 0, 0.25),
+    inset 2px -6.5px 1px -4px rgba(0, 0, 0, 0.12),
+    0px 2px 8px 0px rgba(0, 0, 0, 0.12),
+    0px 8px 24px 0px rgba(0, 0, 0, 0.1);
+}
+
+.glass-button:active {
+  transform: scale(0.95);
+  background-color: rgba(187, 187, 188, 0.3);
+}
+
+.glass-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.glass-button svg {
+  width: 24px;
+  height: 24px;
+  color: #BC224C;
+  opacity: 0.85;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  /* 3 staffs on tablet/mobile */
+  .write-message__staffs--mobile {
+    gap: 72px;
+    margin-top: -40px; /* Adjust vertical position */
+  }
+
+  .write-message__staff {
+    height: 140px;
+  }
+
+  /* Line positions for mobile - gap 27px (140px total height) */
+  .write-message__line:nth-child(1) { top: 0px; }
+  .write-message__line:nth-child(2) { top: 33.296px; }  /* 6.296 + 27 */
+  .write-message__line:nth-child(3) { top: 66.592px; }  /* 2 × 33.296 */
+  .write-message__line:nth-child(4) { top: 99.888px; }  /* 3 × 33.296 */
+  .write-message__line:nth-child(5) { top: 133.184px; } /* 4 × 33.296 */
+
+  /* Note size - 30px */
+  .write-message__note-img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .write-message__note-img--user {
+    width: 30px;
+    height: 30px;
+  }
+
+  .write-message__footer {
+    bottom: 32px;
+    left: 32px;
+    max-width: 300px;
+  }
+
+  .write-message__arrow--left {
+    left: 16px;
+  }
+
+  .write-message__arrow--right {
+    right: 16px;
+  }
+
+  .write-message__actions {
+    gap: 12px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .write-message__staffs--mobile {
+    gap: 72px; /* Gap between 3 staffs */
+    margin-top: 0;
+  }
+
+  /* Hide footer on mobile */
+  .write-message__footer {
+    display: none;
+  }
+
+  /* Hide left arrow on mobile */
+  .write-message__arrow--left {
+    display: none;
+  }
+
+  /* Right arrow - bottom right */
+  .write-message__arrow--right {
+    top: auto;
+    bottom: 24px;
+    right: 20px;
+    transform: none;
+  }
+
+  /* Action buttons - bottom left, only show first button */
+  .write-message__actions {
+    bottom: 24px;
+    left: 20px;
+    right: auto;
+    transform: none;
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  /* Hide second button on mobile */
+  .write-message__actions .glass-button--pill:last-child {
+    display: none;
+  }
+
+  .write-message__actions .glass-button--pill {
+    height: 48px;
+    padding: 0 24px;
+    font-size: 14px;
+  }
+
+  .glass-button--circle {
+    width: 48px;
+    height: 48px;
+  }
+
+  .glass-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* =====================================================
+   CHOOSE NOTE SHAPE SCREEN (Step 3) - Card Preview
+   ===================================================== */
+
+.choose-note-shape {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Background - same radial gradient as layouts 1 & 2 */
+.choose-note-shape__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(121.12% 87.58% at 50% 50%, rgba(255, 182, 203, 0.6) 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+    linear-gradient(180deg, #FFF5F8 0%, #FFF3F6 12.53%, #F6F6F6 25.06%, #FFF5F8 37.53%, #FFF0F4 50%, #FFF5F8 63.82%, #FFF 77.64%, #FFF4F7 100%);
+  z-index: 0;
+}
+
+/* Header */
+.choose-note-shape__header {
+  position: fixed;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.choose-note-shape__title {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: #333;
+  margin: 0;
+}
+
+/* Main content */
+.choose-note-shape__main {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Arrow button - left side */
+.choose-note-shape__arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.choose-note-shape__arrow--left {
+  left: 24px;
+}
+
+/* Card container - centered */
+.choose-note-shape__card-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Card - phone mockup style */
+.choose-note-shape__card {
+  position: relative;
+  width: 280px;
+  height: 500px;
+  border-radius: 24px;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+/* Allow ripple to overflow */
+.choose-note-shape__card .ripple-effect-area {
+  overflow: visible;
+}
+
+/* Card background - landscape gradient */
+.choose-note-shape__card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    #E8C4D4 0%,
+    #D4A5B9 20%,
+    #C08BA3 40%,
+    #9B6B7D 60%,
+    #8C5F72 70%,
+    #B89AAD 85%,
+    #E8D5DE 100%
+  );
+  z-index: 1;
+}
+
+/* Add mountain silhouettes with CSS pseudo-elements */
+.choose-note-shape__card-bg::before {
+  content: '';
+  position: absolute;
+  bottom: 30%;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background:
+    linear-gradient(135deg, transparent 40%, #8B6B7B 40%, #8B6B7B 60%, transparent 60%),
+    linear-gradient(225deg, transparent 50%, #7A5A6A 50%, #7A5A6A 70%, transparent 70%);
+  opacity: 0.6;
+}
+
+/* Water reflection at bottom */
+.choose-note-shape__card-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
+  background: linear-gradient(
+    180deg,
+    rgba(184, 154, 173, 0.5) 0%,
+    rgba(200, 180, 190, 0.7) 50%,
+    rgba(220, 200, 210, 0.8) 100%
+  );
+}
+
+/* Diamond wrapper - centered in card */
+.choose-note-shape__diamond-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.choose-note-shape__diamond {
+  width: 160px;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+}
+
+/* Action buttons below card */
+.choose-note-shape__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2;
+  position: relative;
+}
+
+.choose-note-shape__actions .glass-button--pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 24px;
+}
+
+.choose-note-shape__actions .glass-button--pill span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #BC2242;
+}
+
+.choose-note-shape__actions .glass-button--pill svg {
+  color: #BC2242;
+  stroke: #BC2242;
+}
+
+/* Small circle button variant */
+.glass-button--small {
+  width: 44px;
+  height: 44px;
+}
+
+.glass-button--small svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Social icons - right side, vertical stack */
+.choose-note-shape__social {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 10;
+}
+
+/* Footer - same as layouts 1 & 2 */
+.choose-note-shape__footer {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  z-index: 10;
+  max-width: 320px;
+}
+
+.choose-note-shape__progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.choose-note-shape__progress-step {
+  width: 60px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 13px;
+}
+
+.choose-note-shape__progress-step--active {
+  background: var(--gray-3, #797979);
+}
+
+.choose-note-shape__subtitle {
+  font-style: italic;
+  color: var(--Black, #0B0B0B);
+  margin-bottom: 0.5rem;
+}
+
+.choose-note-shape__description {
+  color: var(--gray-3, #797979);
+  line-height: 1.4;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .choose-note-shape__arrow--left {
+    left: 16px;
+  }
+
+  .choose-note-shape__social {
+    right: 16px;
+  }
+
+  .choose-note-shape__footer {
+    bottom: 32px;
+    left: 32px;
+    max-width: 300px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .choose-note-shape__card {
+    width: 240px;
+    height: 420px;
+  }
+
+  .choose-note-shape__diamond {
+    width: 120px;
+  }
+
+  /* Hide footer on mobile */
+  .choose-note-shape__footer {
+    display: none;
+  }
+
+  /* Hide left arrow on mobile */
+  .choose-note-shape__arrow--left {
+    display: none;
+  }
+
+  /* Hide social icons on mobile */
+  .choose-note-shape__social {
+    display: none;
+  }
+
+  /* Action buttons - bottom center */
+  .choose-note-shape__actions {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .choose-note-shape__actions .glass-button--pill {
+    height: 48px;
+    padding: 0 24px;
+  }
+
+  .choose-note-shape__actions .glass-button--pill span {
+    font-size: 14px;
+    color: #BC224C;
+  }
+
+  .choose-note-shape__actions .glass-button--pill svg {
+    color: #BC224C;
+    stroke: #BC224C;
+  }
+
+  /* Show share button on mobile */
+  .choose-note-shape__actions .glass-button--circle {
+    display: flex;
+  }
+
+  .glass-button--small {
+    width: 44px;
+    height: 44px;
+  }
+
+  .glass-button--small svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Instructions - hide on mobile */
+  .flip-card-instructions {
+    display: none;
+  }
+
+  /* Status - hide on mobile */
+  .flip-card-status {
+    display: none;
+  }
+}
+
+/* =====================================================
+   3D FLIP CARD - Choose Note Shape Screen
+   ===================================================== */
+
+/* Ambient light effect */
+.flip-card-ambient-light {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(255, 220, 150, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 30% 80%, rgba(100, 150, 255, 0.05) 0%, transparent 40%);
+  z-index: 0;
+}
+
+/* Status indicator */
+.flip-card-status {
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s;
+  margin-top: 12px;
+}
+
+.flip-card-status--front {
+  background: rgba(255, 215, 0, 0.15);
+  color: #b8860b;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+}
+
+.flip-card-status--back {
+  background: rgba(188, 34, 76, 0.15);
+  color: #BC224C;
+  border: 1px solid rgba(188, 34, 76, 0.3);
+  box-shadow: 0 0 30px rgba(188, 34, 76, 0.2);
+}
+
+.flip-card-status--dragging {
+  background: rgba(155, 89, 182, 0.15);
+  color: #9b59b6;
+  border: 1px solid rgba(155, 89, 182, 0.3);
+  box-shadow: 0 0 30px rgba(155, 89, 182, 0.2);
+}
+
+/* Scene container with perspective */
+.flip-card-scene {
+  perspective: 1000px;
+  perspective-origin: 65% 35%;
+  overflow: visible;
+}
+
+/* Card container - draggable area */
+.flip-card-container {
+  position: relative;
+  width: 250px;
+  height: 446px; /* Ratio 2500:4462 */
+  cursor: grab;
+  transform-style: preserve-3d;
+  transform: rotateX(12deg) rotateY(-8deg);
+  animation: flipCardEntry 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.flip-card-container.dragging {
+  cursor: grabbing;
+}
+
+/* Ripple effect - behind the card */
+.flip-card-container .ripple-effect-area {
+  overflow: visible;
+  z-index: -1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes flipCardEntry {
+  0% {
+    transform: translateZ(2000px) scale(4) rotateX(12deg) rotateY(720deg);
+    opacity: 0;
+    filter: blur(20px);
+  }
+  30% {
+    opacity: 1;
+    filter: blur(5px);
+  }
+  100% {
+    transform: translateZ(0) scale(1) rotateX(12deg) rotateY(-8deg);
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+/* The card itself */
+.flip-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipping-to-back {
+  animation: cardFlip 0.4s forwards ease-in-out;
+}
+
+.flip-card.flipping-to-front {
+  animation: cardUnFlip 0.4s forwards ease-in-out;
+}
+
+@keyframes cardFlip {
+  0% { transform: rotateZ(0deg) rotateY(0deg); }
+  50% { transform: rotateZ(-10deg) rotateY(90deg); }
+  100% { transform: rotateZ(0deg) rotateY(180deg); }
+}
+
+@keyframes cardUnFlip {
+  0% { transform: rotateZ(0deg) rotateY(180deg); }
+  50% { transform: rotateZ(-10deg) rotateY(90deg); }
+  100% { transform: rotateZ(0deg) rotateY(0deg); }
+}
+
+/* Card faces - front and back */
+.flip-card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Front face */
+.flip-card-front {
+  background: transparent;
+}
+
+/* Back face */
+.flip-card-back {
+  background: transparent;
+  transform: rotateY(180deg);
+}
+
+/* Card inner content */
+.flip-card-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Card image */
+.flip-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+/* Shine effect */
+.flip-card-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.flip-card-shine::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    rgba(255, 255, 255, 0.05) 60%,
+    transparent 65%,
+    transparent 100%
+  );
+  transform: rotate(-25deg) translateX(var(--shine-pos, -100%));
+}
+
+/* Texture overlay */
+.flip-card-texture {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.01) 3px,
+      rgba(255, 255, 255, 0.01) 6px
+    );
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Card shadow */
+.flip-card-shadow {
+  position: absolute;
+  bottom: -80px;
+  left: 50%;
+  width: 220px;
+  height: 40px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.6) 0%, transparent 70%);
+  transform: translateX(-50%) rotateX(90deg);
+  filter: blur(15px);
+  pointer-events: none;
+}
+
+/* Instructions */
+.flip-card-instructions {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .flip-card-container {
+    width: 340px;
+    height: 590px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .flip-card-container {
+    width: 240px;
+    height: 420px;
+  }
+
+  .flip-card-status {
+    padding: 8px 16px;
+    font-size: 10px;
+  }
+
+  .flip-card-instructions {
+    font-size: 11px;
+  }
+}
+
+/* =====================================================
+   ZOOM TRANSITION - Layout 1 → Layout 2 (Google Maps style)
+   ===================================================== */
+
+/*
+ * Layout 1 = Zoomed IN view (close-up on one note)
+ * Layout 2 = Zoomed OUT view (see all notes)
+ *
+ * Transition flow:
+ * 1. Layout 1 fades out
+ * 2. Layout 2 starts zoomed IN (scale 3) on user's note position
+ * 3. Layout 2 zooms OUT (scale 3 → 1) to reveal all notes
+ */
+
+/* Layout 1 Exit - Quick fade out */
+.place-note-new--zoom-out {
+  animation: layout1Exit 0.3s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes layout1Exit {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Layout 2 Entrance - Map-style zoom out from user's note */
+.write-message {
+  /* Default transform-origin, will be overridden by JS */
+  --zoom-origin-x: 50%;
+  --zoom-origin-y: 50%;
+}
+
+.write-message--zoom-in {
+  transform-origin: var(--zoom-origin-x) var(--zoom-origin-y);
+  animation: mapZoomOut 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes mapZoomOut {
+  0% {
+    transform: scale(5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
