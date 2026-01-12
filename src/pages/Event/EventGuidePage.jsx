@@ -12,8 +12,6 @@ import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import titleSvg from '@/assets/images/icons/title.svg';
-import staffLineSvg from '@/assets/images/dmm/Rectangle 4200.svg';
-import heartSvg from '@/assets/images/dmm/heart.svg';
 import '@styles/grid-system.css';
 
 import './EventGuidePage.css';
@@ -405,7 +403,7 @@ const EventGuidePage = () => {
                   {[0, 1, 2, 3, 4].map((i) => (
                     <img
                       key={i}
-                      src={staffLineSvg}
+                      src={getMediaUrl('dmm/Rectangle 4200.svg')}
                       alt=""
                       className="event-guide__staff-line"
                     />
@@ -419,7 +417,7 @@ const EventGuidePage = () => {
                   style={{ top: `${NOTE_POSITION_Y}px` }}
                 >
                   <img
-                    src={heartSvg}
+                    src={getMediaUrl('dmm/heart.svg')}
                     alt="Heart note"
                     className="event-guide__staff-heart"
                   />

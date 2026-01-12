@@ -8,6 +8,7 @@ import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import useEventStore from '@/store/useEventStore';
 
 import './EventChooseShapePage.css';
 
@@ -80,6 +81,7 @@ const getPositionOnOrbit = (orbit, angleDeg) => {
 
 const EventChooseShapePage = () => {
   const navigate = useNavigate();
+  const { setSelectedDiamond } = useEventStore();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -159,8 +161,9 @@ const EventChooseShapePage = () => {
   };
 
   const handleNext = () => {
-    // Navigate to next step with selected shape
-    navigate(ROUTES.EVENT_PREVIEW, { state: { shape: shapes[currentIndex].id } });
+    // Save selected diamond to store and navigate
+    setSelectedDiamond(shapes[currentIndex].id);
+    navigate(ROUTES.EVENT_PLACE_NOTE);
   };
 
   const currentShape = shapes[currentIndex];

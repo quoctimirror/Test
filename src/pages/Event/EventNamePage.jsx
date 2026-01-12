@@ -7,12 +7,14 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
+import useEventStore from '@/store/useEventStore';
 
 import './EventNamePage.css';
 
 const EventNamePage = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const { user, setUser } = useEventStore();
+  const [name, setName] = useState(user?.displayName || '');
   const inputRef = useRef(null);
   const measureRef = useRef(null);
 
@@ -52,6 +54,8 @@ const EventNamePage = () => {
 
   const handleCreateNote = () => {
     if (name.trim()) {
+      // Save name to store
+      setUser({ ...user, displayName: name.trim() });
       navigate(ROUTES.EVENT_CHOOSE_SHAPE);
     }
   };

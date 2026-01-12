@@ -52,3 +52,9 @@ __pycache__/
 *.pyc
 
 .claude/*
+
+# DMM images (served from Cloudflare R2)
+src/assets/images/dmm/
+
+# Wrangler local state
+.wrangler/

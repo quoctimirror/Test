@@ -49,14 +49,12 @@ export const ROUTES = {
   DASHBOARD_VENDOR: "/dashboard/vendor",
   DASHBOARD_DESIGNER: "/dashboard/designer",
 
-  // Event routes - The Muse of Love-grown
+  // Event routes - The Muse of Love
   EVENT: "/event", // Keep original event route
   EVENT_GUIDE: "/the-muse-of-love-grown", // Main landing page
   EVENT_LOGIN: "/the-muse-of-love-grown/login",
   EVENT_NAME: "/the-muse-of-love-grown/name",
   EVENT_CHOOSE_SHAPE: "/the-muse-of-love-grown/choose-shape",
-  EVENT_PREVIEW: "/the-muse-of-love-grown/preview",
-  EVENT_RESULT: "/the-muse-of-love-grown/result",
   EVENT_DISPLAY: "/the-muse-of-love-grown/display",
   EVENT_ADMIN: "/the-muse-of-love-grown/admin",
   EVENT_CHRISTMAS: "/the-muse-of-love-grown/christmas",
