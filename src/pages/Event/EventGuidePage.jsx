@@ -117,7 +117,7 @@ const EventGuidePage = () => {
   }, []);
 
   const handleGetStarted = () => {
-    navigate(ROUTES.EVENT_LOGIN);
+    navigate(ROUTES.EVENT_LOGIN, { state: { fromGuide: true } });
   };
 
   const scrollToContent = () => {
@@ -152,32 +152,63 @@ const EventGuidePage = () => {
   const handleMusicContentClick = () => {
     if (isTransitioning) return;
 
-    setIsTransitioning(true);
-    setHasAnimated(true);
+    // CRITICAL: Create overlay IMMEDIATELY with vanilla JS - don't wait for React
+    const overlay = document.createElement('div');
+    overlay.id = 'transition-overlay-instant';
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: #F6F6F6;
+      z-index: 9999;
+      pointer-events: none;
+    `;
+    document.body.appendChild(overlay);
 
-    // Force scroll to top immediately - use old syntax for mobile compatibility
+    // Force scroll to top immediately
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 
-    // Lock scroll for mobile (simpler approach)
+    // Now trigger React state
+    setIsTransitioning(true);
+    setHasAnimated(true);
+
+    // Change step after short delay
+    setTimeout(() => {
+      setCurrentStep(2);
+
+      // Fade out overlay
+      if (overlay && overlay.parentNode) {
+        overlay.style.transition = 'opacity 0.6s ease-out';
+        overlay.style.opacity = '0';
+
+        // Remove after fade
+        setTimeout(() => {
+          if (overlay && overlay.parentNode) {
+            overlay.remove();
+          }
+        }, 600);
+      }
+    }, 50);
+
+    // Lock scroll for mobile
     document.body.style.overflow = 'hidden';
     document.body.style.touchAction = 'none';
     document.body.style.position = 'fixed';
     document.body.style.width = '100%';
     document.body.style.top = '0';
 
-    // Switch to step 2 and unlock scroll after short animation
+    // Unlock scroll after animation
     transitionTimeoutRef.current = setTimeout(() => {
-      // Re-enable scrolling BEFORE changing step (prevents jump)
       document.body.style.overflow = '';
       document.body.style.touchAction = '';
       document.body.style.position = '';
       document.body.style.width = '';
       document.body.style.top = '';
 
-      // Change step
-      setCurrentStep(2);
       setIsTransitioning(false);
 
       // Ensure at top after render
@@ -186,7 +217,7 @@ const EventGuidePage = () => {
         document.documentElement.scrollTop = 0;
         document.body.scrollTop = 0;
       }, 0);
-    }, 600); // Further reduced to 600ms
+    }, 600);
   };
 
   // Initialize RippleEffect (without auto-play)
@@ -504,37 +535,40 @@ const EventGuidePage = () => {
           </div>
         )}
 
-        {/* Step 1: Hero + Music Reflection - on top, fades out */}
-        {(currentStep === 1 || isTransitioning) && (
-          <div className={`event-guide__step1 ${isTransitioning ? 'event-guide__step1--fading' : ''}`}>
+        {/* Step 1: Hero + Music Reflection */}
+        {currentStep === 1 && (
+          <div className="event-guide__step1">
             {/* Hero Section */}
-            <section className="event-guide__hero" data-navbar-theme="white">
-              <div className="event-guide__hero-content">
-                <div className="event-guide__hero-title-wrapper">
-                  <img
-                    src={titleSvg}
-                    alt="The Sound of Love Grown"
-                    className="event-guide__hero-title-img"
-                  />
-                  {/* Sparkles */}
-                  <span className="event-guide__sparkle event-guide__sparkle--1"></span>
-                  <span className="event-guide__sparkle event-guide__sparkle--2"></span>
-                  <span className="event-guide__sparkle event-guide__sparkle--3"></span>
-                  <span className="event-guide__sparkle event-guide__sparkle--4"></span>
-                  <span className="event-guide__sparkle event-guide__sparkle--5"></span>
+            <section
+              className="event-guide__hero"
+              data-navbar-theme="white"
+            >
+                <div className="event-guide__hero-content">
+                  <div className="event-guide__hero-title-wrapper">
+                    <img
+                      src={titleSvg}
+                      alt="The Sound of Love Grown"
+                      className="event-guide__hero-title-img"
+                    />
+                    {/* Sparkles */}
+                    <span className="event-guide__sparkle event-guide__sparkle--1"></span>
+                    <span className="event-guide__sparkle event-guide__sparkle--2"></span>
+                    <span className="event-guide__sparkle event-guide__sparkle--3"></span>
+                    <span className="event-guide__sparkle event-guide__sparkle--4"></span>
+                    <span className="event-guide__sparkle event-guide__sparkle--5"></span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="event-guide__hero-bottom">
-                <ShineGlassButton theme="footer" onClick={handleGetStarted}>
-                  Bắt đầu
-                </ShineGlassButton>
+                <div className="event-guide__hero-bottom">
+                  <ShineGlassButton theme="footer" onClick={handleGetStarted}>
+                    Bắt đầu
+                  </ShineGlassButton>
 
-                <div className="event-guide__hero-right" onClick={scrollToContent}>
-                  <span>Hoặc kéo xuống để xem thêm</span>
+                  <div className="event-guide__hero-right" onClick={scrollToContent}>
+                    <span>Hoặc kéo xuống để xem thêm</span>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
 
             {/* Music Reflection Section */}
             <section ref={musicSectionRef} className="event-guide__music" data-navbar-theme="black">

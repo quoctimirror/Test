@@ -13,16 +13,17 @@ import { broadcastNoteAdded } from '@services/event/ably';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import NavbarV4 from '@/components/navbar/NavbarV4';
 
-// Mapping from shape ID to Cloudflare image path
+// Mapping from shape ID to Cloudflare image path - using optimized webp
 const DIAMOND_MAP = {
-  h1: 'dmm/heart.svg',      // Heart shape
-  h2: 'dmm/lumex.png',      // Round shape
-  h3: 'dmm/emerald.png',    // Emerald shape
-  h4: 'dmm/marquise.png',   // Marquise shape
-  h5: 'dmm/pear.png',       // Pear shape
-  h6: 'dmm/oval.png',       // Oval shape
-  h7: 'dmm/ascher.png',     // Cushion shape
+  h1: 'mirror_DMM/H1.webp',  // Heart shape
+  h2: 'mirror_DMM/H2.webp',  // Round shape
+  h3: 'mirror_DMM/H3.webp',  // Emerald shape
+  h4: 'mirror_DMM/H4.webp',  // Marquise shape
+  h5: 'mirror_DMM/H5.webp',  // Pear shape
+  h6: 'mirror_DMM/H6.webp',  // Oval shape
+  h7: 'mirror_DMM/H7.webp',  // Cushion shape
 };
 
 // Position range for the diamond (percentage)
@@ -295,19 +296,17 @@ const PlaceNoteScreenNew = () => {
   };
 
   return (
-    <div
-      ref={containerRef}
-      className={`place-note-new ${isTransitioning ? 'place-note-new--zoom-out' : ''}`}
-    >
-      {/* Background with radial rings */}
-      <div className="place-note-new__bg">
-        <div className="place-note-new__rings" />
-      </div>
-
-      {/* Header */}
-      <header className="place-note-new__header">
-        <h1 className="place-note-new__title">MIRROR</h1>
-      </header>
+    <>
+      <NavbarV4 logoOnly />
+      <div
+        ref={containerRef}
+        className={`place-note-new ${isTransitioning ? 'place-note-new--zoom-out' : ''}`}
+        data-navbar-theme="black"
+      >
+        {/* Background with radial rings */}
+        <div className="place-note-new__bg">
+          <div className="place-note-new__rings" />
+        </div>
 
       {/* Main content - Music Staff (vertically centered) */}
       <main className="place-note-new__main">
@@ -380,7 +379,7 @@ const PlaceNoteScreenNew = () => {
                 }}
               >
                 <img
-                  src={getMediaUrl(DIAMOND_MAP[selectedDiamond] || 'dmm/heart.svg')}
+                  src={getMediaUrl(DIAMOND_MAP[selectedDiamond] || 'mirror_DMM/H1.webp')}
                   alt="Diamond note"
                   className="place-note-new__heart"
                 />
@@ -418,7 +417,8 @@ const PlaceNoteScreenNew = () => {
         </p>
         {error && <p className="place-note-new__error">{error}</p>}
       </footer>
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -15,10 +15,14 @@ export async function signInWithGoogle() {
   try {
     const supabase = getSupabaseClient();
 
+    // Use VITE_REDIRECT_URL from environment or fallback to current origin
+    const redirectUrl = import.meta.env.VITE_REDIRECT_URL ||
+                       `${window.location.origin}/the-muse-of-love-grown/login`;
+
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/the-muse-of-love-grown/login`,
+        redirectTo: redirectUrl,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',

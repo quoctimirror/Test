@@ -11,6 +11,7 @@ import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import AvatarGenerator, { downloadAvatar } from '@/components/event/ui/AvatarGenerator';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import NavbarV4 from '@/components/navbar/NavbarV4';
 
 // Mapping from shape ID (h1, h2...) to diamondShape name for AvatarGenerator
 const SHAPE_NAME_MAP = {
@@ -391,17 +392,14 @@ const ChooseNoteShapeScreenNew = () => {
   };
 
   return (
-    <div className="choose-note-shape">
-      {/* Background */}
-      <div className="choose-note-shape__bg" />
+    <>
+      <NavbarV4 logoOnly />
+      <div className="choose-note-shape" data-navbar-theme="black">
+        {/* Background */}
+        <div className="choose-note-shape__bg" />
 
-      {/* Ambient light effect */}
-      <div className="flip-card-ambient-light" />
-
-      {/* Header */}
-      <header className="choose-note-shape__header">
-        <h1 className="choose-note-shape__title">MIRROR</h1>
-      </header>
+        {/* Ambient light effect */}
+        <div className="flip-card-ambient-light" />
 
       {/* Main content */}
       <main className="choose-note-shape__main">
@@ -523,7 +521,8 @@ const ChooseNoteShapeScreenNew = () => {
         diamondShape={SHAPE_NAME_MAP[selectedDiamond] || 'heart'}
         onGenerated={setAvatarDataUrl}
       />
-    </div>
+      </div>
+    </>
   );
 };
 
