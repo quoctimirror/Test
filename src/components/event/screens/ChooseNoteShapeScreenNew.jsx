@@ -4,7 +4,8 @@
  */
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Share2, Instagram } from 'lucide-react';
+import { ArrowLeft, Download, Instagram } from 'lucide-react';
+import shareIcon from '@/assets/images/button/share.svg';
 import { ROUTES } from '@/constants/routes';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
@@ -456,7 +457,7 @@ const ChooseNoteShapeScreenNew = () => {
               onClick={handleShare}
               aria-label="Share"
             >
-              <Share2 size={18} />
+              <img src={shareIcon} alt="Share" width={18} height={18} />
             </button>
           </div>
 

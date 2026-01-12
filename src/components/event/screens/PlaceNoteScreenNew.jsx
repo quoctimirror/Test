@@ -22,7 +22,9 @@ const MAX_POSITION = 90;
 // All possible Y positions for the note (9 positions total)
 // Lines: 0, 2, 4, 6, 8 (odd index = on line)
 // Zones: 1, 3, 5, 7 (even index = between lines)
-const NOTE_POSITIONS_Y = [
+
+// Desktop: line height 12px, gap 80px, total height 380px
+const NOTE_POSITIONS_Y_DESKTOP = [
   6,    // Line 0 (top line)
   52,   // Zone 0 (between line 0 and 1)
   98,   // Line 1
@@ -33,6 +35,22 @@ const NOTE_POSITIONS_Y = [
   328,  // Zone 3 (between line 3 and 4)
   374,  // Line 4 (bottom line)
 ];
+
+// Tablet/Mobile: line height 8px, gap 80px, total height 360px
+const NOTE_POSITIONS_Y_SMALL = [
+  4,    // Line 0 (top line)
+  48,   // Zone 0 (between line 0 and 1)
+  92,   // Line 1
+  136,  // Zone 1 (between line 1 and 2)
+  180,  // Line 2 (middle line)
+  224,  // Zone 2 (between line 2 and 3)
+  268,  // Line 3
+  312,  // Zone 3 (between line 3 and 4)
+  356,  // Line 4 (bottom line)
+];
+
+// Breakpoint for tablet/mobile (both use same line dimensions)
+const TABLET_BREAKPOINT = 1024;
 
 // Get random line position (only lines, not zones: 0, 2, 4, 6, 8)
 const getRandomLinePosition = () => {
@@ -49,6 +67,8 @@ const PlaceNoteScreenNew = () => {
   const [linesComplete, setLinesComplete] = useState(false); // Lines animation done
   const [diamondVisible, setDiamondVisible] = useState(false); // Diamond can appear
   const [isTransitioning, setIsTransitioning] = useState(false); // Zoom-out transition
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(() => window.innerWidth <= TABLET_BREAKPOINT);
+  const containerRef = useRef(null); // Main container ref for setting CSS vars
   const heartRef = useRef(null);
   const staffRef = useRef(null);
   const rippleRef = useRef(null);
@@ -56,18 +76,35 @@ const PlaceNoteScreenNew = () => {
   const hasNavigatedRef = useRef(false); // Track if user manually navigated
   const CLICK_DEBOUNCE = 500; // Minimum time between clicks (ms)
 
+  // Get current NOTE_POSITIONS_Y based on screen size
+  const NOTE_POSITIONS_Y = isTabletOrMobile ? NOTE_POSITIONS_Y_SMALL : NOTE_POSITIONS_Y_DESKTOP;
+
   const { user, selectedDiamond, setAllNotes, setCurrentStep, setUserNote, addNote } =
     useEventStore();
 
-  // Handle next button - navigate to write message screen
+  // Handle next button - navigate to write message screen with zoom transition
   const handleNext = () => {
-    hasNavigatedRef.current = true; // Prevent auto-transition
-    // Save current position to store
-    setUserNote({
-      positionX,
-      positionY,
-    });
-    navigate(ROUTES.EVENT_WRITE_MESSAGE);
+    if (isTransitioning || hasNavigatedRef.current) return;
+
+    hasNavigatedRef.current = true;
+
+    // Start fade-out transition
+    setIsTransitioning(true);
+
+    // Destroy ripple before transition
+    if (rippleRef.current) {
+      rippleRef.current.destroy();
+      rippleRef.current = null;
+    }
+
+    // Save position and navigate after fade-out completes
+    setTimeout(() => {
+      setUserNote({
+        positionX,
+        positionY,
+      });
+      navigate(ROUTES.EVENT_WRITE_MESSAGE);
+    }, 300); // Match layout1Exit animation duration (0.3s)
   };
 
   // Fetch existing notes on mount
@@ -78,6 +115,16 @@ const PlaceNoteScreenNew = () => {
     };
     loadNotes();
   }, [setAllNotes]);
+
+  // Listen for window resize to update isTabletOrMobile
+  useEffect(() => {
+    const handleResize = () => {
+      setIsTabletOrMobile(window.innerWidth <= TABLET_BREAKPOINT);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Animation sequence: lines (1s) -> diamond appears (0.5s delay) -> ripple (0.5s after diamond)
   useEffect(() => {
@@ -127,30 +174,30 @@ const PlaceNoteScreenNew = () => {
     };
   }, [diamondVisible]);
 
-  // Auto-transition to Layout 2 after 3.2s
-  useEffect(() => {
-    const transitionTimer = setTimeout(() => {
-      if (hasNavigatedRef.current) return; // Skip if user already navigated
+  // Auto-transition to Layout 2 after 5s - COMMENTED OUT (use arrows to navigate)
+  // useEffect(() => {
+  //   const transitionTimer = setTimeout(() => {
+  //     if (hasNavigatedRef.current) return; // Skip if user already navigated
 
-      setIsTransitioning(true);
+  //     setIsTransitioning(true);
 
-      // Destroy ripple before transition
-      if (rippleRef.current) {
-        rippleRef.current.destroy();
-        rippleRef.current = null;
-      }
+  //     // Destroy ripple before transition
+  //     if (rippleRef.current) {
+  //       rippleRef.current.destroy();
+  //       rippleRef.current = null;
+  //     }
 
-      // Navigate after zoom-out animation completes (800ms)
-      setTimeout(() => {
-        if (hasNavigatedRef.current) return;
-        hasNavigatedRef.current = true;
-        setUserNote({ positionX, positionY });
-        navigate(ROUTES.EVENT_WRITE_MESSAGE);
-      }, 800);
-    }, 3200);
+  //     // Navigate after zoom-out animation completes (800ms)
+  //     setTimeout(() => {
+  //       if (hasNavigatedRef.current) return;
+  //       hasNavigatedRef.current = true;
+  //       setUserNote({ positionX, positionY });
+  //       navigate(ROUTES.EVENT_WRITE_MESSAGE);
+  //     }, 800);
+  //   }, 5000);
 
-    return () => clearTimeout(transitionTimer);
-  }, [navigate, positionX, positionY, setUserNote]);
+  //   return () => clearTimeout(transitionTimer);
+  // }, [navigate, positionX, positionY, setUserNote]);
 
   // Play note sound when position changes
   const playCurrentNote = async () => {
@@ -201,7 +248,7 @@ const PlaceNoteScreenNew = () => {
     // Create ripple effect and play sound
     setTimeout(createRipple, 50);
     playCurrentNote();
-  }, [createRipple]);
+  }, [createRipple, NOTE_POSITIONS_Y]);
 
   // Navigation - go back
   const handleGoBack = () => {
@@ -238,7 +285,10 @@ const PlaceNoteScreenNew = () => {
   };
 
   return (
-    <div className={`place-note-new ${isTransitioning ? 'place-note-new--zoom-out' : ''}`}>
+    <div
+      ref={containerRef}
+      className={`place-note-new ${isTransitioning ? 'place-note-new--zoom-out' : ''}`}
+    >
       {/* Background with radial rings */}
       <div className="place-note-new__bg">
         <div className="place-note-new__rings" />

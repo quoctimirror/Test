@@ -12,9 +12,11 @@ const OUTPUT_DIR = path.join(__dirname, '../src/assets/images/dmm/output_test');
 // Lấy tên người dùng từ command line argument
 const userName = process.argv[2] || 'Your Name';
 const outputFormat = process.argv[3] || 'png'; // png, jpg, jpeg
+const diamondShape = process.argv[4] || 'heart'; // asscher, emerald, heart, marquise, oval, pear, round
 
 console.log(`\n🎨 Generating image for: "${userName}"`);
-console.log(`📁 Output format: ${outputFormat.toUpperCase()}\n`);
+console.log(`📁 Output format: ${outputFormat.toUpperCase()}`);
+console.log(`💎 Diamond shape: ${diamondShape}\n`);
 
 // Tạo text overlay bằng SVG
 function createTextOverlay(text, width, height) {
@@ -81,7 +83,7 @@ async function generateImage() {
     getRandomImage(path.join(BASE_DIR, '3_flowers')),
     getRandomImage(path.join(BASE_DIR, '4_moons')),
     getFirstImage(path.join(BASE_DIR, '5_music')),
-    getFirstImage(path.join(BASE_DIR, '6_diamonds/heart')), // Default heart shape
+    getRandomImage(path.join(BASE_DIR, `6_diamonds/${diamondShape}`)), // Diamond shape from argument
     getFirstImage(path.join(BASE_DIR, '7_subheading')),
   ];
 
