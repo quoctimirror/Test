@@ -5,24 +5,47 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
+import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
+import useEventStore from '@/store/useEventStore';
 
 import './EventNamePage.css';
 
 const EventNamePage = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const { user, setUser } = useEventStore();
+  const [name, setName] = useState(user?.displayName || '');
   const inputRef = useRef(null);
   const measureRef = useRef(null);
 
-  // Auto-resize input based on content
+  // Auto-resize input-wrap based on content, min = placeholder width (responsive)
   useEffect(() => {
-    if (measureRef.current && inputRef.current) {
-      const text = name || 'Your name';
-      measureRef.current.textContent = text;
-      const width = measureRef.current.offsetWidth;
-      inputRef.current.style.width = `${width + 4}px`;
-    }
+    const updateWidth = () => {
+      if (measureRef.current && inputRef.current) {
+        // Measure placeholder width
+        measureRef.current.textContent = 'Your name';
+        const placeholderWidth = measureRef.current.offsetWidth;
+
+        // Measure current text width
+        if (name) {
+          measureRef.current.textContent = name;
+        }
+        const textWidth = measureRef.current.offsetWidth;
+
+        // Wrapper width = max of placeholder and text
+        const wrapperWidth = Math.max(placeholderWidth, textWidth);
+        const wrapper = inputRef.current.parentElement;
+        if (wrapper) {
+          wrapper.style.width = `${wrapperWidth}px`;
+        }
+      }
+    };
+
+    updateWidth();
+
+    // Re-calculate on window resize for responsive
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
   }, [name]);
 
   const handleBack = () => {
@@ -31,12 +54,16 @@ const EventNamePage = () => {
 
   const handleCreateNote = () => {
     if (name.trim()) {
-      navigate(ROUTES.EVENT_PREVIEW);
+      // Save name to store
+      setUser({ ...user, displayName: name.trim() });
+      navigate(ROUTES.EVENT_CHOOSE_SHAPE);
     }
   };
 
   return (
-    <div className="event-name">
+    <>
+      <NavbarV4 logoOnly />
+      <div className="event-name" data-navbar-theme="black">
       {/* Background */}
       <div className="event-name__bg" />
 
@@ -52,25 +79,26 @@ const EventNamePage = () => {
         {/* Main Content */}
         <div className="event-name__content">
           <div className="event-name__greeting">
-            <span className="event-name__hi">Hi</span>
+            <span className="event-name__hi heading-2--no-margin">Hi</span>
             <div className="event-name__input-wrap">
-              <span ref={measureRef} className="event-name__input-measure" aria-hidden="true" />
+              <span ref={measureRef} className="event-name__input-measure heading-2--no-margin" aria-hidden="true" />
               <input
                 ref={inputRef}
                 type="text"
-                className="event-name__input"
+                className="event-name__input heading-2--no-margin"
                 placeholder="Your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                maxLength={15}
                 autoFocus
               />
               <div className="event-name__input-line" />
             </div>
           </div>
 
-          <h3 className="heading-3--no-margin event-name__subtitle">
+          <h2 className="heading-2--no-margin event-name__subtitle">
             May us guide through The sound of love grown
-          </h3>
+          </h2>
         </div>
 
         {/* Create Note Button */}
@@ -81,6 +109,7 @@ const EventNamePage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

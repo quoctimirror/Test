@@ -14,6 +14,7 @@ import {
   broadcastStatsUpdate,
 } from '@services/event/ably';
 import { ADMIN_PASSWORD, getDiamondConfig } from '@/constants/eventConstants';
+import { ROUTES } from '@/constants/routes';
 import Logo from '@components/event/ui/Logo';
 import Diamond from '@components/event/ui/Diamond';
 
@@ -270,7 +271,7 @@ const EventAdminPage = () => {
         {/* Display Screen Link */}
         <div className="admin-display-link">
           <a
-            href="/event/display"
+            href={ROUTES.EVENT_DISPLAY}
             target="_blank"
             rel="noopener noreferrer"
             className="event-btn event-btn--outline"

@@ -1,222 +1,358 @@
 /**
  * EventLoginPage Styles
- * Login page for Mirror Diamond Event
+ * Desktop: Split screen (image left, content right)
+ * Mobile/Tablet: Full background with centered glass card
  */
 
-.event-login {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  position: relative;
+.event-login-wrapper {
+  height: 100vh;
   overflow: hidden;
 }
 
-/* Background */
+.event-login {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Gradient background with border-radius as pseudo-element - Desktop only */
+.event-login::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 140%;
+  transform: translate(-50%, -50%);
+  width: 200%;
+  height: 200%;
+  border-radius: 3468px;
+  background: radial-gradient(70.29% 50.83% at 50% 50%, #BC224C 0%, rgba(255, 255, 255, 0.50) 58.27%, rgba(246, 246, 246, 0.00) 71.12%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Background - Left half on Desktop, Full on Mobile */
 .event-login__bg {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: url("__CDN_URL__/mirror_DMM/Artboard-6.webp") center center / cover no-repeat;
-  z-index: -2;
+  width: 50%;
+  height: 100%;
+  z-index: 1;
 }
 
-/* Login Card */
-.event-login__card {
-  width: 100%;
-  max-width: 480px;
-  aspect-ratio: 1 / 1;
-  background: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border-radius: 0px;
-  padding: 3rem 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* Noise/Grain texture overlay */
-.event-login__card::before {
+.event-login__bg::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity: 0.03;
+  background: linear-gradient(270deg, #F6F6F6 0%, rgba(246, 246, 246, 0.00) 20%);
   pointer-events: none;
-  border-radius: 0px;
 }
 
-/* Title */
-.event-login__title {
-  font-family: "Saol Display", Georgia, serif;
-  font-size: 2.5rem;
-  font-weight: 300;
-  font-style: italic;
-  color: #4a3040;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-/* Form */
-.event-login__form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-/* Field */
-.event-login__field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.event-login__field-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.event-login__label {
-  font-size: 0.8rem;
-  color: #6a5060;
-  font-weight: 500;
-}
-
-.event-login__forgot {
-  background: none;
-  border: none;
-  font-size: 0.75rem;
-  color: #8a7080;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.event-login__forgot:hover {
-  color: #4a3040;
-}
-
-/* Input */
-.event-login__input {
+.event-login__bg-img {
   width: 100%;
-  padding: 0.875rem 1rem;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(200, 180, 190, 0.3);
-  border-radius: 8px;
-  font-size: 0.9rem;
-  color: #4a3040;
-  outline: none;
-  transition: all 0.3s ease;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
 }
 
-.event-login__input::placeholder {
-  color: #a090a0;
+/* Navigation Buttons - Circular style */
+.event-login__nav-btn {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
 }
 
-.event-login__input:focus {
-  border-color: rgba(150, 100, 130, 0.5);
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 0 0 3px rgba(150, 100, 130, 0.1);
-}
-
-/* Submit Button */
-.event-login__submit {
-  margin-top: 0.5rem;
-  display: flex;
-  justify-content: center;
-}
-
-.event-login__submit .shine-button-wrap {
-  width: 100%;
-}
-
-.event-login__submit .shine-glass-button {
-  width: 100%;
-}
-
-/* Social Login */
-.event-login__social {
-  margin-top: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-.event-login__social-text {
-  font-size: 0.8rem;
-  color: #8a7080;
-}
-
-.event-login__social-btn {
-  width: 44px;
-  height: 44px;
+.event-login__nav-btn.shine-glass-button,
+.event-login__nav-btn.shine-glass-button .glass-layer,
+.event-login__nav-btn.shine-glass-button .shine-layer,
+.event-login__nav-btn.shine-glass-button .border-layer {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  padding: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(200, 180, 190, 0.3);
-  cursor: pointer;
+}
+
+.event-login__nav-btn .button-text {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  padding: 0;
 }
 
-.event-login__social-btn:hover {
-  background: rgba(255, 255, 255, 0.9);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/* Remove hover transform/bouncing effect */
+.event-login__nav-btn.shine-glass-button:hover {
+  transform: translateY(-50%) scale(1);
 }
 
-.event-login__social-btn svg {
-  width: 20px;
-  height: 20px;
+.event-login__nav-btn--left {
+  left: 48px;
 }
 
-/* Sign Up Link */
-.event-login__signup {
-  margin-top: 1.5rem;
+.event-login__nav-btn--right {
+  right: 48px;
+}
+
+/* Content - Right half on Desktop */
+.event-login__content {
+  position: relative;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.event-login__content > * {
+  pointer-events: auto;
+}
+
+/* Card - Only visible on mobile, transparent on desktop */
+.event-login__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 464px;
+}
+
+/* Title - uses heading-2--no-margin from typography.css */
+.event-login__title {
+  margin-bottom: 48px;
   text-align: center;
-  font-size: 0.85rem;
-  color: #8a7080;
 }
 
-.event-login__signup button {
-  background: none;
-  border: none;
-  color: #4a3040;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: underline;
-  margin-left: 0.25rem;
-  transition: color 0.3s ease;
+/* Subtitle with lines - uses bodytext-6--no-margin from typography.css */
+.event-login__subtitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #797979;
+  margin-bottom: 48px;
+  width: 100%;
 }
 
-.event-login__signup button:hover {
-  color: #6a4050;
+.event-login__subtitle::before,
+.event-login__subtitle::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--Gray-2, #E0E0E0);
 }
 
-/* Responsive */
-@media (max-width: 480px) {
+/* Error Message */
+.event-login__error {
+  color: #dc3545;
+  font-size: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Social Login Buttons - Desktop: Icon only, horizontal using ShineGlassButton */
+.event-login__social {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* Desktop: Circular icon-only buttons with light theme */
+.event-login__social-btn.shine-glass-button {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+}
+
+.event-login__social-btn.shine-glass-button,
+.event-login__social-btn.shine-glass-button .glass-layer,
+.event-login__social-btn.shine-glass-button .shine-layer,
+.event-login__social-btn.shine-glass-button .border-layer {
+  border-radius: 50%;
+}
+
+.event-login__social-btn.shine-glass-button .button-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.event-login__social-btn.shine-glass-button svg {
+  flex-shrink: 0;
+}
+
+/* Hide text on desktop */
+.event-login__social-btn span {
+  display: none;
+}
+
+/* ============================================
+   RESPONSIVE - Tablet & Mobile
+   ============================================ */
+
+/* Tablet - Full background with centered glass card */
+@media (max-width: 1024px) {
   .event-login {
-    padding: 1rem;
+    justify-content: center;
+    align-items: center;
   }
 
+  /* Hide the radial gradient on tablet */
+  .event-login::before {
+    display: none;
+  }
+
+  /* Full screen background image */
+  .event-login__bg {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: url("__CDN_URL__/mirror_DMM/KV-tablet.webp") center center / cover no-repeat;
+  }
+
+  /* Hide the img, use CSS background instead */
+  .event-login__bg-img {
+    display: none;
+  }
+
+  /* Remove the right-side gradient overlay */
+  .event-login__bg::after {
+    display: none;
+  }
+
+  /* Content wrapper */
+  .event-login__content {
+    width: auto;
+    /* max-width: calc(100% - 48px); */
+    max-width: 248px;
+  }
+
+  /* Glass Card */
   .event-login__card {
-    padding: 2rem 1.5rem;
+    padding: 160px 133px;
+    border-radius: 22.5px;
+    background: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    box-shadow: none;
   }
 
   .event-login__title {
-    font-size: 2rem;
+    margin-bottom: 48px;
+  }
+
+  .event-login__subtitle {
+    margin-bottom: 48px;
+  }
+
+  /* Social buttons - Full width with text on tablet using ShineGlassButton footer theme */
+  .event-login__social {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* Reset to pill shape on tablet - full width like original */
+  .event-login__social-btn.shine-glass-button {
+    width: 100%;
+    height: 44px;
+    min-width: unset;
+    max-width: 100%;
+  }
+
+  .event-login__social-btn.shine-glass-button,
+  .event-login__social-btn.shine-glass-button .glass-layer,
+  .event-login__social-btn.shine-glass-button .shine-layer,
+  .event-login__social-btn.shine-glass-button .border-layer {
+    border-radius: 100px;
+  }
+
+  .event-login__social-btn.shine-glass-button .button-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 24px;
+  }
+
+  /* Show text on tablet */
+  .event-login__social-btn span {
+    display: inline;
+  }
+
+  .event-login__nav-btn--left {
+    left: 24px;
+  }
+
+  .event-login__nav-btn--right {
+    right: 24px;
+  }
+
+  .event-login__nav-btn.shine-glass-button:hover {
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* Mobile small - Full screen glass */
+@media (max-width: 480px) {
+  .event-login__bg {
+    background-image: url("__CDN_URL__/mirror_DMM/KV-mobile.webp");
+  }
+
+  .event-login__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+  }
+
+  .event-login__card {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    padding: 120px 24px 40px;
+    border-radius: 0;
+    background: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+    justify-content: center;
+  }
+
+  /* Limit content width to 78% */
+  .event-login__card > * {
+    max-width: 78%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .event-login__nav-btn--left {
+    left: 16px;
+  }
+
+  .event-login__nav-btn--right {
+    right: 16px;
+  }
+
+  .event-login__nav-btn.shine-glass-button:hover {
+    transform: translateY(-50%) scale(1);
   }
 }

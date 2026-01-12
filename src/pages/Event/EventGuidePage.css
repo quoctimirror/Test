@@ -7,21 +7,26 @@
   width: 100%;
   min-height: 100vh;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* ============================================
-   Hero Section
+   Hero Section - Pinned on scroll
    ============================================ */
 .event-guide__hero {
   height: 100vh;
   background: url("__CDN_URL__/mirror_DMM/Artboard-6.webp") center center / cover no-repeat;
   display: flex;
   flex-direction: column;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .event-guide__hero-top {
   align-items: center;
-  padding-top: 2rem;
+  padding-top: 6rem;
   padding-bottom: 2rem;
 }
 
@@ -32,10 +37,75 @@
   justify-content: center;
 }
 
+.event-guide__hero-title-wrapper {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32vw;
+}
+
 .event-guide__hero-title-img {
-  max-width: 600px;
-  width: 80%;
+  width: 100%;
   height: auto;
+  display: block;
+}
+
+/* Sparkles - Bright star */
+.event-guide__sparkle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: sparkle-twinkle 2s ease-in-out infinite;
+  box-shadow:
+    0 0 4px 2px rgba(255, 255, 255, 1),
+    0 0 10px 5px rgba(255, 255, 255, 0.9),
+    0 0 20px 10px rgba(255, 255, 255, 0.6),
+    0 0 40px 20px rgba(255, 255, 255, 0.3);
+}
+
+.event-guide__sparkle--1 {
+  top: 55%;
+  left: 25%;
+  animation-delay: 0s;
+}
+
+.event-guide__sparkle--2 {
+  top: 70%;
+  right: 20%;
+  animation-delay: 0.4s;
+}
+
+.event-guide__sparkle--3 {
+  bottom: -5%;
+  left: 40%;
+  animation-delay: 0.8s;
+}
+
+.event-guide__sparkle--4 {
+  top: 80%;
+  left: 15%;
+  animation-delay: 1.2s;
+}
+
+.event-guide__sparkle--5 {
+  bottom: 0%;
+  right: 30%;
+  animation-delay: 1.6s;
+}
+
+@keyframes sparkle-twinkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .event-guide__hero-bottom {
@@ -43,7 +113,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 0;
+  gap: 12px;
+  padding: 48px 0 ;
 }
 
 .event-guide__hero-left {
@@ -115,208 +186,768 @@
 }
 
 /* ============================================
-   About Section
+   Music Reflection Section
    ============================================ */
-.event-guide__about {
-  background: #797979;
-  padding: 6rem 4rem;
+.event-guide__music {
+  background: linear-gradient(180deg, rgba(246, 246, 246, 0.00) 0%, #F6F6F6 11.04%);
+  backdrop-filter: blur(2px);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* Pink radial background circle */
+.event-guide__music::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2748px;
+  height: 2748px;
+  border-radius: 2748px;
+  opacity: 0.44;
+  background: radial-gradient(50% 50% at 50% 50%, #FF87A8 0%, rgba(246, 246, 246, 0.50) 99.99%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Content with Ripple Effect */
+.event-guide__music-content {
+  position: relative;
+  z-index: 2;
   text-align: center;
+  max-width: 600px;
+  padding: 0 2rem;
 }
 
-.event-guide__about-title {
-  font-family: "Saol Display", Georgia, serif;
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 300;
-  font-style: italic;
-  color: #fff;
-  margin-bottom: 2rem;
+/* Allow ripple to overflow */
+.event-guide__music-content .ripple-effect-area {
+  overflow: visible;
 }
 
-.event-guide__about-text {
-  max-width: 700px;
-  margin: 0 auto;
-  font-size: 0.9rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.8);
+.event-guide__music-title {
+  color: #000;
+  margin-bottom: 36px;
+  max-width: 463px;
+}
+
+.event-guide__music-text {
+  color: #000;
+  max-width: 463px;
+}
+
+
+/* Transition animation - text fades out */
+.event-guide__music-content--transitioning .event-guide__music-title,
+.event-guide__music-content--transitioning .event-guide__music-text {
+  animation: textFadeOut 0.6s ease-out forwards;
+}
+
+@keyframes textFadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
 }
 
 /* ============================================
-   Music Staff Visual
+   Crossfade Transition
    ============================================ */
-.event-guide__staff-visual {
+.event-guide__step1 {
   position: relative;
-  width: 100%;
-  max-width: 900px;
-  height: 250px;
-  margin-bottom: 2rem;
+  z-index: 2;
 }
 
-.event-guide__treble-clef {
-  position: absolute;
+.event-guide__step1--fading {
+  position: fixed;
+  top: 0;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60px;
-  height: 150px;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  animation: step1FadeOut 0.6s ease-out forwards;
+  /* Solid background to prevent hero flash - music section covers this */
+  background: #F6F6F6;
+  overflow: hidden;
+}
+
+.event-guide__step1--fading .event-guide__hero {
+  display: none;
+}
+
+.event-guide__step1--fading .event-guide__music {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* During transition - step 2 stays in normal flow, step 1 covers it */
+.event-guide--transitioning .event-guide__step2 {
+  visibility: visible;
+}
+
+.event-guide__step2--animated {
+  position: relative;
+  z-index: 1;
+}
+
+.event-guide__step2--animated .event-guide__staff-section {
+  animation: step2FadeIn 1.2s ease-out forwards;
+}
+
+.event-guide__step2--animated .event-guide__staff-title {
+  animation: titleFadeIn 1.2s ease-out 0.3s both;
+}
+
+.event-guide__step2--animated .event-guide__staff-line {
+  animation: staffLinesAppear 1s ease-out both;
+}
+
+.event-guide__step2--animated .event-guide__staff-line:nth-child(1) { animation-delay: 0.1s; }
+.event-guide__step2--animated .event-guide__staff-line:nth-child(2) { animation-delay: 0.2s; }
+.event-guide__step2--animated .event-guide__staff-line:nth-child(3) { animation-delay: 0.3s; }
+.event-guide__step2--animated .event-guide__staff-line:nth-child(4) { animation-delay: 0.4s; }
+.event-guide__step2--animated .event-guide__staff-line:nth-child(5) { animation-delay: 0.5s; }
+
+.event-guide__step2--animated .event-guide__staff-note {
+  /* Initial state matches animation 0% to prevent flash before animation applies */
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  animation: heartGrow 1.2s ease-out 0.4s both;
+}
+
+.event-guide__step2--animated .event-guide__staff-description {
+  animation: titleFadeIn 1s ease-out 0.8s both;
+}
+
+@keyframes step1FadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes step2FadeIn {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Step 2 Styles
+   ============================================ */
+.event-guide__step2 {
+  animation: fadeIn 0.5s ease-out;
+  background: linear-gradient(180deg, #FADEE6 0%, #FFF5F7 30%, #F6F6F6 60%, #FFF 100%);
+  position: relative;
+  overflow: hidden;
+  scroll-margin-top: 0;
+  scroll-snap-align: start;
+}
+
+.event-guide__step2::before {
+  content: '';
+  position: absolute;
+  top: 50vh;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120vmax;
+  height: 150vmax;
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, #FF87A8 0%, rgba(246, 246, 246, 0.50) 99.99%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Staff lines appearing animation */
+@keyframes staffLinesAppear {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+/* Heart note grow animation - scale up from center */
+@keyframes heartGrow {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Text fade in */
+@keyframes titleFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Staff Section */
+.event-guide__staff-section {
+  min-height: 100vh;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.event-guide__staff-title {
+  color: #000;
+  text-align: center;
+  margin-bottom: 160px;
+  position: relative;
+  z-index: 2;
+}
+
+.event-guide__staff {
+  position: relative;
+  width: 100vw;
+  height: 328px; /* 5 lines × 8px + 4 gaps × 72px */
+  z-index: 2;
 }
 
 .event-guide__staff-lines {
   position: absolute;
-  left: 80px;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: center;
+  gap: 72px;
+  padding: 0;
 }
 
 .event-guide__staff-line {
-  height: 1px;
-  background: #ccc;
   width: 100%;
+  height: 8px;
+  object-fit: cover;
 }
 
-.event-guide__notes {
+.event-guide__staff-note {
   position: absolute;
-  left: 80px;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 100px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
 }
 
-.event-guide__note {
-  position: absolute;
-  width: 30px;
-  height: 30px;
+.event-guide__staff-note .ripple-effect-area {
+  overflow: visible;
 }
 
-.event-guide__note--1 {
-  left: 20%;
-  top: 10%;
+/* Override ripple size for staff note */
+.event-guide__staff-note .ripple-effect-continuous {
+  animation-name: staffNoteRipple !important;
+  animation-duration: 5000ms !important;
+  animation-timing-function: ease-out !important;
 }
 
-.event-guide__note--2 {
-  left: 40%;
-  top: 40%;
+@keyframes staffNoteRipple {
+  0% {
+    width: 80px;
+    height: 80px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 0.45;
+  }
+  80% {
+    opacity: 0.2;
+  }
+  100% {
+    width: 750px;
+    height: 750px;
+    opacity: 0;
+  }
 }
 
-.event-guide__note--3 {
-  left: 60%;
-  top: 20%;
+.event-guide__staff-heart {
+  width: 120px;
+  height: auto;
+  position: relative;
+  z-index: 2;
 }
 
-.event-guide__note--heart {
-  right: 10%;
-  top: 60%;
-  width: 40px;
-  height: 40px;
-}
-
-/* ============================================
-   Section Common Styles
-   ============================================ */
-.event-guide__section-title {
-  font-family: "Saol Display", Georgia, serif;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 300;
-  font-style: italic;
-  color: #333;
-  margin-bottom: 1rem;
-}
-
-.event-guide__section-title--light {
-  color: #797979;
-}
-
-.event-guide__section-text {
-  max-width: 400px;
-  margin: 0 auto 2rem;
-  font-size: 0.875rem;
-  line-height: 1.7;
-  color: #666;
+.event-guide__staff-description {
+  color: #000;
   text-align: center;
+  margin-top: 120px;
+  position: relative;
+  z-index: 2;
 }
 
-.event-guide__section-text--light {
-  color: #797979;
-}
-
-/* ============================================
-   Every Note Section
-   ============================================ */
-.event-guide__every-note {
-  background: #f6f6f6;
+/* Avatar Section with Scattered Cards */
+.event-guide__avatar-section {
+  min-height: 2000px;
   height: 100vh;
-  padding: 4rem;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.event-guide__cards-scattered {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.event-guide__card {
+  position: absolute;
+  width: clamp(120px, 12vw, 200px);
+  height: clamp(212px, 21vw, 354px);
+  background: linear-gradient(180deg, #F8A4BB 0%, #F6F6F6 100%);
+  pointer-events: auto;
+  cursor: pointer;
+  overflow: hidden;
+  --rotation: 0deg;
+  transform: rotate(var(--rotation));
+  scale: 1;
+  transition: transform 0.4s ease, scale 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Card hover image overlay */
+.event-guide__card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("__CDN_URL__/mirror_DMM/landing-event-hover.webp") center center / cover no-repeat;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+
+.event-guide__card:hover {
+  transform: rotate(calc(var(--rotation) + 6deg));
+  scale: 1.08;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.event-guide__card:hover::before {
+  opacity: 1;
+}
+
+/* ===== TOP ROW (6 cards) - positioned from center ===== */
+.event-guide__card--1 {
+  top: 15%;
+  left: calc(50% - 880px);
+  --rotation: -16deg;
+}
+
+.event-guide__card--2 {
+  top: 5%;
+  left: calc(50% - 600px);
+  --rotation: 3deg;
+}
+
+.event-guide__card--3 {
+  top: 15%;
+  left: calc(50% - 200px);
+  --rotation: -15deg;
+}
+
+.event-guide__card--4 {
+  top: 0%;
+  left: calc(50% + 220px);
+  --rotation: 10deg;
+}
+
+.event-guide__card--5 {
+  top: 15%;
+  left: calc(50% + 650px);
+  --rotation: 3deg;
+}
+
+.event-guide__card--6 {
+  top: 22%;
+  left: calc(50% + 300px);
+  --rotation: 12deg;
+}
+
+/* ===== LEFT SIDE (2 cards) ===== */
+.event-guide__card--7 {
+  top: 43%;
+  left: calc(50% - 820px);
+  --rotation: -4deg;
+}
+
+.event-guide__card--8 {
+  top: 26%;
+  left: calc(50% - 580px);
+  --rotation: 12deg;
+}
+
+/* ===== RIGHT SIDE (2 cards) ===== */
+.event-guide__card--9 {
+  top: 38%;
+  left: calc(50% + 600px);
+  --rotation: -2deg;
+}
+
+.event-guide__card--10 {
+  top: 60%;
+  left: calc(50% + 300px);
+  --rotation: 15deg;
+}
+
+/* ===== BOTTOM ROW (6 cards) ===== */
+.event-guide__card--11 {
+  top: 65%;
+  left: calc(50% - 800px);
+  --rotation: -16deg;
+}
+
+.event-guide__card--12 {
+  top: 55%;
+  left: calc(50% - 520px);
+  --rotation: -15deg;
+}
+
+.event-guide__card--13 {
+  top: 75%;
+  left: calc(50% - 420px);
+  --rotation: 10deg;
+}
+
+.event-guide__card--14 {
+  top: 62%;
+  left: calc(50% - 50px);
+  --rotation: -1deg;
+}
+
+.event-guide__card--15 {
+  top: 80%;
+  left: calc(50% + 200px);
+  --rotation: -8deg;
+}
+
+.event-guide__card--16 {
+  top: 65%;
+  left: calc(50% + 700px);
+  --rotation: 20deg;
+}
+
+.event-guide__avatar-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
   text-align: center;
+  max-width: 500px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
-/* ============================================
-   Avatar Generator Section
-   ============================================ */
-.event-guide__avatar {
-  background: #fff;
-  min-height: 100vh;
-  padding: 4rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.event-guide__avatar-image {
+.event-guide__avatar-title {
+  color: #000;
   margin-bottom: 2rem;
-  display: flex;
-  justify-content: center;
 }
 
-.event-guide__avatar-card {
-  width: 200px;
-  height: 280px;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.event-guide__avatar-text {
+  color: #666;
+  max-width: 500px;
+  margin-bottom: 2rem;
 }
 
-.event-guide__avatar-placeholder {
-  width: 80%;
-  height: 60%;
-  background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%);
-  border-radius: 8px;
-}
-
-/* ============================================
-   Lucky Draw Section
-   ============================================ */
-.event-guide__lucky-draw {
-  background: #f6f6f6;
+/* Lucky Moment Section */
+.event-guide__lucky-section {
   min-height: 100vh;
-  padding: 4rem;
+  background: linear-gradient(180deg, #860710 0%, #250000 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.event-guide__lucky-title {
+  margin-top: 160px;
+  color: #fff;
+  margin-bottom: 36px;
+  max-width: 638px;
+}
+
+.event-guide__lucky-text {
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 460px;
+  margin-bottom: 36px;
+}
+
+/* Button in lucky section - 72px gap from ring */
+.event-guide__lucky-section > .shine-glass-button {
+  margin-bottom: 72px;
+}
+
+/* Bottom row: 3 columns (stat - ring - stat) */
+.event-guide__lucky-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.event-guide__lucky-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.event-guide__lucky-number {
+  font-family: "Saol Display";
+  font-size: 80px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 100%;
+  color: #fff;
+}
+
+.event-guide__lucky-label {
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+/* Diamond Ring Image */
+.event-guide__lucky-ring {
+  display: flex;
+  justify-content: center;
+}
+
+.event-guide__lucky-ring-img {
+  width: clamp(400px, 60vw, 700px);
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 /* ============================================
    Responsive
    ============================================ */
-@media (max-width: 768px) {
-  .event-guide__hero {
-    padding: 1.5rem;
+
+/* Medium screens - reduce card overlap */
+@media (max-height: 900px) {
+  .event-guide__avatar-section {
+    min-height: 1200px;
   }
+
+  .event-guide__card {
+    width: clamp(100px, 10vw, 160px);
+    height: clamp(177px, 17vw, 284px);
+  }
+}
+
+/* Small height screens - hide some cards */
+@media (max-height: 700px) {
+  .event-guide__avatar-section {
+    min-height: 1400px;
+  }
+
+}
+
+/* Tablet responsive */
+@media (max-width: 1024px) {
+  .event-guide__hero {
+    background-image: url("__CDN_URL__/mirror_DMM/KV-tablet.webp");
+  }
+
+  .event-guide__hero-title-wrapper {
+    width: 50vw;
+    top: 40%;
+  }
+
+  .event-guide__music-content {
+    max-width: 46%;
+  }
+
+  .event-guide__staff-title {
+    margin-bottom: 100px;
+  }
+
+  .event-guide__staff {
+    height: 280px; /* 5 lines × 8px + 4 gaps × 60px */
+  }
+
+  .event-guide__staff-lines {
+    gap: 60px;
+  }
+
+  .event-guide__staff-note {
+    top: 140px !important; /* Center of 280px height */
+  }
+
+  .event-guide__avatar-section {
+    min-height: 1200px;
+    padding: 0;
+  }
+
+  /* Card positions responsive - use vw instead of px */
+  .event-guide__card--1 { left: calc(50% - 45vw); }
+  .event-guide__card--2 { left: calc(50% - 32vw); }
+  .event-guide__card--3 { left: calc(50% - 12vw); }
+  .event-guide__card--4 { left: calc(50% + 10vw); }
+  .event-guide__card--5 { left: calc(50% + 34vw); }
+  .event-guide__card--6 { left: calc(50% + 14vw); }
+  .event-guide__card--7 { left: calc(50% - 42vw); }
+  .event-guide__card--8 { left: calc(50% - 30vw); }
+  .event-guide__card--9 { left: calc(50% + 32vw); }
+  .event-guide__card--10 { left: calc(50% + 16vw); }
+  .event-guide__card--11 { left: calc(50% - 42vw); }
+  .event-guide__card--13 { left: calc(50% - 22vw); }
+  .event-guide__card--15 { left: calc(50% + 10vw); }
+  .event-guide__card--16 { left: calc(50% + 36vw); }
+
+  /* Lucky section - stats at top, content in middle, ring at bottom */
+  .event-guide__lucky-section {
+    justify-content: flex-start;
+    padding: 0;
+  }
+
+  .event-guide__lucky-title {
+    margin-bottom: 24px;
+    margin-top : 72px;
+  }
+  .event-guide__lucky-text{
+    margin-bottom: 24px;
+  }
+
+  .event-guide__lucky-bottom {
+    position: static;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 60px;
+    margin-top: 160px;
+    order: -1; /* Move to top */
+  }
+
+  /* Stats in a row at top */
+  .event-guide__lucky-stat {
+    position: static;
+  }
+
+  /* Ring at bottom of section (absolute to section) */
+  .event-guide__lucky-ring {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .event-guide__lucky-ring-img {
+    width: calc(100vw - 180px); /* Full width with 24px padding each side */
+  }
+
+  .event-guide__lucky-number {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-guide__hero {
+    background-image: url("__CDN_URL__/mirror_DMM/KV-mobile.webp");
+  }
+
+  .event-guide__hero-title-wrapper {
+    width: 62vw;
+    top: 42%;
+  }
+
+  .event-guide__music-content {
+    max-width: 78%;
+  }
+
+  .event-guide__avatar-content {
+    width: 78%;
+    max-width: none;
+  }
+
+  .event-guide__staff-title {
+    margin-bottom: 60px;
+  }
+
+  /* Card positions responsive - use vw for mobile */
+  .event-guide__card--1 { left: calc(50% - 65vw); top:8%;}
+  .event-guide__card--2 { left: calc(50% - 35vw); top:3%;}
+  .event-guide__card--3 { left: calc(50% - 5vw); top: 8%; }
+  .event-guide__card--4 { left: calc(50% + 20vw);}
+  .event-guide__card--5 { left: calc(50% + 43vw); }
+  .event-guide__card--6 { left: calc(50% - 40vw); top:17%;}
+  .event-guide__card--7 { left: calc(50% + 15vw); top: 20%;}
+  .event-guide__card--8 { left: calc(50% - 40vw); top: 30%;}
+  .event-guide__card--9 { left: calc(50% + 35vw); }
+  .event-guide__card--10 { left: calc(50% - 60vw); top:45%;  rotate: -30deg;}
+  .event-guide__card--11 { left: calc(50% - 60vw); }
+  .event-guide__card--12 { left: calc(50% - 40vw); }
+  .event-guide__card--13 { left: calc(50% + 15vw); }
+  .event-guide__card--14 { left: calc(50% - 10vw); }
+  .event-guide__card--15 { left: calc(50% + 30vw); top:55%;}
+  .event-guide__card--16 { left: calc(50% - 30vw); top: 80%;}
 
   .event-guide__hero-top {
     text-align: center;
@@ -338,39 +969,169 @@
     flex-direction: column;
   }
 
-  .event-guide__about,
-  .event-guide__staff,
-  .event-guide__every-note,
-  .event-guide__avatar,
-  .event-guide__lucky-draw {
+  .event-guide__music {
     padding: 4rem 1.5rem;
   }
 
-  .event-guide__staff-visual {
-    height: 200px;
+  /* Fix transition alignment on mobile */
+  .event-guide__step1--fading .event-guide__music {
+    padding: 0;
   }
 
-  .event-guide__treble-clef {
-    width: 40px;
-    height: 100px;
+  /* Step 2 Responsive */
+  .event-guide__cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .event-guide__staff {
+    height: 232px; /* 5 lines × 8px + 4 gaps × 48px */
   }
 
   .event-guide__staff-lines {
-    left: 50px;
-    gap: 15px;
+    gap: 48px;
   }
 
-  .event-guide__notes {
-    left: 50px;
+  .event-guide__staff-note {
+    top: 116px !important; /* Center of 232px height */
   }
 
-  .event-guide__note {
-    width: 20px;
+  .event-guide__staff-heart {
+    width: 80px;
+  }
+
+  .event-guide__lucky-section {
+    padding: 0 24px;
+  }
+
+  .event-guide__lucky-bottom {
+    gap: 40px;
+    margin-top: 90px;
+  }
+
+  .event-guide__lucky-number {
+    font-size: 2.5rem;
+  }
+
+  .event-guide__lucky-ring-img {
+    width: calc(100vw - 48px); /* Full width with 24px padding each side */
+  }
+
+  /* Hide br tags on mobile - let text wrap naturally */
+  .event-guide__lucky-text br,
+  .event-guide__avatar-title br,
+  .event-guide__avatar-text br {
+    display: none;
+  }
+
+  /* Smaller cards on mobile */
+  .event-guide__card {
+    width: clamp(80px, 20vw, 120px);
+    height: clamp(142px, 35vw, 212px);
+  }
+
+  
+}
+
+/* ============================================
+   Fixed Scroll Top Container
+   Positioned above Sound Button
+   ============================================ */
+.fixed-scroll-top-container {
+  position: fixed;
+  bottom: 94px; /* 24px (sound btn bottom) + 54px (sound btn height) + 16px (gap) */
+  right: 2.5%;
+  z-index: 1000;
+  pointer-events: auto;
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.fixed-scroll-top-container.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================
+   Fixed Sound Button Container
+   Same position as ImmersiveButton
+   ============================================ */
+.fixed-sound-container {
+  position: fixed;
+  bottom: 24px;
+  right: 2.5%;
+  z-index: 1000;
+  pointer-events: auto;
+  display: flex;
+}
+
+/* Sound Wave Icon Styles - Override GlassThemeButton sizing */
+.glass-theme-btn-icon .sound-wave-container {
+  width: 16px;
+  height: 24px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.glass-theme-btn-icon .sound-wave-svg {
+  width: 80px !important;
+  height: 24px !important;
+  display: block;
+  flex-shrink: 0;
+}
+
+.sound-wave-svg.active {
+  animation: wave-flow 2s linear infinite;
+  will-change: transform;
+}
+
+.wave-path-straight {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wave-path-straight.visible {
+  opacity: 1;
+}
+
+.wave-group {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wave-group.visible {
+  opacity: 1;
+}
+
+@keyframes wave-flow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-16.67%);
+  }
+}
+
+@media (max-width: 768px) {
+  .fixed-scroll-top-container {
+    bottom: 84px; /* 24px + 48px + 12px */
+  }
+
+  .fixed-sound-container {
+    bottom: 24px;
+  }
+
+  .glass-theme-btn-icon .sound-wave-container {
+    width: 14px;
     height: 20px;
   }
 
-  .event-guide__note--heart {
-    width: 30px;
-    height: 30px;
+  .glass-theme-btn-icon .sound-wave-svg {
+    width: 70px !important;
+    height: 20px !important;
   }
 }

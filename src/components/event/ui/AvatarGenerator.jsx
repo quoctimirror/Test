@@ -1,364 +1,246 @@
 /**
  * AvatarGenerator - Creates personalized avatar image for event participants
- * Generates a 1080x1920 image (Instagram/TikTok story ratio)
+ * Generates a 2500x4462 image by compositing layers from generatedImages folder
+ *
+ * Layer order (bottom to top):
+ * 1. Mountain (background)
+ * 2. Grass
+ * 3. Flowers
+ * 4. Moon
+ * 5. Music
+ * 6. Diamond (based on user's selected shape)
+ * 7. Subheading
+ * + Text overlay (user name + light number)
+ *
+ * Each image already has correct transparency and positioning built-in.
+ * Just draw them in order at full canvas size (2500x4462).
  */
-import React, { useRef, useEffect, useCallback } from 'react';
-import { getDiamondConfig } from '@/constants/eventConstants';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 
-// Background gradient presets - user can choose
-export const AVATAR_BACKGROUNDS = [
-  { id: 'pink', name: 'Hồng phấn', start: '#1a0a10', mid: '#B91C6B', end: '#fce4ec' },
-  { id: 'purple', name: 'Tím hoàng hôn', start: '#0d0d2b', mid: '#4a1942', end: '#c9a5c9' },
-  { id: 'midnight', name: 'Đêm huyền bí', start: '#1a1a2e', mid: '#16213e', end: '#e8d5e8' },
-  { id: 'rose', name: 'Hoa hồng', start: '#2d132c', mid: '#801336', end: '#f6d5d5' },
-  { id: 'galaxy', name: 'Thiên hà', start: '#0f0f23', mid: '#5c2751', end: '#f5e6e8' },
-];
+// Import mountain images
+import mountain1 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-1@2500x.webp';
+import mountain2 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-2@2500x.webp';
+import mountain3 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-3@2500x.webp';
+import mountain4 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-4@2500x.webp';
+import mountain5 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-5@2500x.webp';
+import mountain6 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-6@2500x.webp';
+import mountain7 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-7@2500x.webp';
+import mountain8 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-8@2500x.webp';
+import mountain9 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-9@2500x.webp';
+import mountain10 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-10@2500x.webp';
 
-// Scenery presets - user can choose
-export const AVATAR_SCENERIES = [
-  { id: 'mountains', name: 'Núi non', icon: '🏔️' },
-  { id: 'stars', name: 'Bầu trời sao', icon: '✨' },
-  { id: 'flowers', name: 'Hoa lá', icon: '🌸' },
-  { id: 'waves', name: 'Sóng biển', icon: '🌊' },
-  { id: 'none', name: 'Không có', icon: '◯' },
-];
+// Import grass images
+import grass1 from '@/assets/images/dmm/generatedImages/2_grass/grass-1.webp';
+import grass2 from '@/assets/images/dmm/generatedImages/2_grass/grass-2.webp';
+import grass3 from '@/assets/images/dmm/generatedImages/2_grass/grass-3.webp';
+import grass4 from '@/assets/images/dmm/generatedImages/2_grass/grass-4.webp';
+import grass5 from '@/assets/images/dmm/generatedImages/2_grass/grass-5.webp';
+import grass6 from '@/assets/images/dmm/generatedImages/2_grass/grass-6.webp';
+import grass7 from '@/assets/images/dmm/generatedImages/2_grass/grass-7.webp';
+import grass8 from '@/assets/images/dmm/generatedImages/2_grass/grass-8.webp';
+import grass9 from '@/assets/images/dmm/generatedImages/2_grass/grass-9.webp';
+import grass10 from '@/assets/images/dmm/generatedImages/2_grass/grass-10.webp';
 
-// Scenery colors
-const SCENERY_COLORS = ['#d4a5d4', '#c9a5c9', '#e8c5e8', '#f0d5f0'];
+// Import flower images
+import flowers1 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-1.webp';
+import flowers2 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-2.webp';
+import flowers3 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-3.webp';
+import flowers4 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-4.webp';
+import flowers5 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-5.webp';
+import flowers6 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-6.webp';
+import flowers7 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-7.webp';
+import flowers8 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-8.webp';
+import flowers9 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-9.webp';
+import flowers10 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-10.webp';
 
-/**
- * Auto-generate background and scenery based on lightNumber and diamondShape
- * Uses deterministic algorithm so same input always produces same output
- */
-const autoSelectBackground = (lightNumber, diamondShape) => {
-  // Map diamond shapes to preferred backgrounds
-  const diamondToBgPreference = {
-    round: ['pink', 'rose'],
-    oval: ['purple', 'galaxy'],
-    pear: ['midnight', 'purple'],
-    heart: ['rose', 'pink'],
-    princess: ['galaxy', 'midnight'],
-    emerald: ['midnight', 'purple'],
-    marquise: ['purple', 'galaxy'],
-  };
+// Import moon images
+import moon1 from '@/assets/images/dmm/generatedImages/4_moons/moon-1.webp';
+import moon2 from '@/assets/images/dmm/generatedImages/4_moons/moon-2.webp';
+import moon3 from '@/assets/images/dmm/generatedImages/4_moons/moon-3.webp';
+import moon4 from '@/assets/images/dmm/generatedImages/4_moons/moon-4.webp';
+import moon5 from '@/assets/images/dmm/generatedImages/4_moons/moon-5.webp';
+import moon6 from '@/assets/images/dmm/generatedImages/4_moons/moon-6.webp';
+import moon7 from '@/assets/images/dmm/generatedImages/4_moons/moon-7.webp';
+import moon8 from '@/assets/images/dmm/generatedImages/4_moons/moon-8.webp';
+import moon9 from '@/assets/images/dmm/generatedImages/4_moons/moon-9.webp';
+import moon10 from '@/assets/images/dmm/generatedImages/4_moons/moon-10.webp';
+import moon11 from '@/assets/images/dmm/generatedImages/4_moons/moon-11.webp';
 
-  const preferences = diamondToBgPreference[diamondShape] || ['pink'];
-  const bgIndex = lightNumber % preferences.length;
-  return preferences[bgIndex];
+// Import music (only one version)
+import music from '@/assets/images/dmm/generatedImages/5_music/music.webp';
+
+// Import diamond images - mapped to shape names
+import heart1 from '@/assets/images/dmm/generatedImages/6_diamonds/heart/heart-1_1@2500x.webp';
+import heart2 from '@/assets/images/dmm/generatedImages/6_diamonds/heart/heart-2@2500x.webp';
+import heart3 from '@/assets/images/dmm/generatedImages/6_diamonds/heart/heart-3@2500x.webp';
+import round1 from '@/assets/images/dmm/generatedImages/6_diamonds/round/round-1.webp';
+import round2 from '@/assets/images/dmm/generatedImages/6_diamonds/round/round-2.webp';
+import round3 from '@/assets/images/dmm/generatedImages/6_diamonds/round/round-3.webp';
+import emerald1 from '@/assets/images/dmm/generatedImages/6_diamonds/emerald/emerald-1.webp';
+import emerald2 from '@/assets/images/dmm/generatedImages/6_diamonds/emerald/emerald-2.webp';
+import emerald3 from '@/assets/images/dmm/generatedImages/6_diamonds/emerald/emerald-3.webp';
+import marquise1 from '@/assets/images/dmm/generatedImages/6_diamonds/marquise/marquise-1.webp';
+import marquise2 from '@/assets/images/dmm/generatedImages/6_diamonds/marquise/marquise-2.webp';
+import marquise3 from '@/assets/images/dmm/generatedImages/6_diamonds/marquise/marquise-3.webp';
+import oval1 from '@/assets/images/dmm/generatedImages/6_diamonds/oval/oval-1.webp';
+import oval2 from '@/assets/images/dmm/generatedImages/6_diamonds/oval/oval-2.webp';
+import oval3 from '@/assets/images/dmm/generatedImages/6_diamonds/oval/oval-3.webp';
+import pear1 from '@/assets/images/dmm/generatedImages/6_diamonds/pear/pear-1.webp';
+import pear2 from '@/assets/images/dmm/generatedImages/6_diamonds/pear/pear-2.webp';
+import pear3 from '@/assets/images/dmm/generatedImages/6_diamonds/pear/pear-3.webp';
+import asscher1 from '@/assets/images/dmm/generatedImages/6_diamonds/asscher/asscher-1.webp';
+import asscher2 from '@/assets/images/dmm/generatedImages/6_diamonds/asscher/asscher-2.webp';
+import asscher3 from '@/assets/images/dmm/generatedImages/6_diamonds/asscher/asscher-3.webp';
+
+// Import subheading
+import subheading from '@/assets/images/dmm/generatedImages/7_subheading/subheading.webp';
+
+// Image collections
+const MOUNTAINS = [mountain1, mountain2, mountain3, mountain4, mountain5, mountain6, mountain7, mountain8, mountain9, mountain10];
+const GRASS = [grass1, grass2, grass3, grass4, grass5, grass6, grass7, grass8, grass9, grass10];
+const FLOWERS = [flowers1, flowers2, flowers3, flowers4, flowers5, flowers6, flowers7, flowers8, flowers9, flowers10];
+const MOONS = [moon1, moon2, moon3, moon4, moon5, moon6, moon7, moon8, moon9, moon10, moon11];
+
+// Diamond images mapped to shape names from user selection
+const DIAMONDS = {
+  heart: [heart1, heart2, heart3],
+  round: [round1, round2, round3],
+  emerald: [emerald1, emerald2, emerald3],
+  marquise: [marquise1, marquise2, marquise3],
+  oval: [oval1, oval2, oval3],
+  pear: [pear1, pear2, pear3],
+  princess: [asscher1, asscher2, asscher3], // princess = asscher
 };
 
-const autoSelectScenery = (lightNumber, diamondShape) => {
-  // Map diamond shapes to preferred sceneries
-  const diamondToSceneryPreference = {
-    round: ['stars', 'flowers'],
-    oval: ['waves', 'mountains'],
-    pear: ['flowers', 'stars'],
-    heart: ['flowers', 'stars'],
-    princess: ['stars', 'mountains'],
-    emerald: ['mountains', 'waves'],
-    marquise: ['stars', 'waves'],
-  };
+// Helper to load image
+const loadImage = (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+};
 
-  const preferences = diamondToSceneryPreference[diamondShape] || ['mountains'];
-  const sceneryIndex = Math.floor(lightNumber / 2) % preferences.length;
-  return preferences[sceneryIndex];
+// Seeded random for consistent results per user
+const seededRandom = (seed) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
 };
 
 const AvatarGenerator = ({
   displayName,
   lightNumber,
   diamondShape,
-  backgroundId = null, // If null, auto-generate
-  sceneryId = null, // If null, auto-generate
   onGenerated,
 }) => {
   const canvasRef = useRef(null);
-  const config = getDiamondConfig(diamondShape);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const hasGenerated = useRef(false);
 
-  // Auto-select if not provided
-  const finalBackgroundId = backgroundId || autoSelectBackground(lightNumber, diamondShape);
-  const finalSceneryId = sceneryId || autoSelectScenery(lightNumber, diamondShape);
-
-  // Seed random based on lightNumber for consistent scenery
-  const seedRandom = useCallback((seed) => {
-    const x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
-  }, []);
-
-  // Draw diamond shape
-  const drawDiamond = useCallback(
-    (ctx, x, y, size) => {
-      const color = config?.color || '#E91E63';
-
-      // Create gradient for diamond
-      const gradient = ctx.createLinearGradient(
-        x - size / 2,
-        y - size / 2,
-        x + size / 2,
-        y + size / 2
-      );
-      gradient.addColorStop(0, color);
-      gradient.addColorStop(0.5, '#ffffff');
-      gradient.addColorStop(1, color);
-
-      ctx.beginPath();
-
-      // Draw based on shape
-      switch (diamondShape) {
-        case 'heart':
-          ctx.moveTo(x, y + size * 0.3);
-          ctx.bezierCurveTo(x, y - size * 0.1, x - size * 0.5, y - size * 0.3, x - size * 0.5, y);
-          ctx.bezierCurveTo(x - size * 0.5, y + size * 0.3, x, y + size * 0.5, x, y + size * 0.5);
-          ctx.bezierCurveTo(x, y + size * 0.5, x + size * 0.5, y + size * 0.3, x + size * 0.5, y);
-          ctx.bezierCurveTo(x + size * 0.5, y - size * 0.3, x, y - size * 0.1, x, y + size * 0.3);
-          break;
-        case 'oval':
-          ctx.ellipse(x, y, size * 0.35, size * 0.5, 0, 0, Math.PI * 2);
-          break;
-        case 'pear':
-          ctx.moveTo(x, y - size * 0.5);
-          ctx.bezierCurveTo(x + size * 0.3, y - size * 0.3, x + size * 0.4, y + size * 0.1, x + size * 0.3, y + size * 0.4);
-          ctx.bezierCurveTo(x + size * 0.1, y + size * 0.5, x - size * 0.1, y + size * 0.5, x - size * 0.3, y + size * 0.4);
-          ctx.bezierCurveTo(x - size * 0.4, y + size * 0.1, x - size * 0.3, y - size * 0.3, x, y - size * 0.5);
-          break;
-        case 'princess':
-          ctx.rect(x - size * 0.4, y - size * 0.4, size * 0.8, size * 0.8);
-          break;
-        case 'round':
-          ctx.arc(x, y, size * 0.45, 0, Math.PI * 2);
-          break;
-        case 'emerald':
-          ctx.moveTo(x - size * 0.3, y - size * 0.45);
-          ctx.lineTo(x + size * 0.3, y - size * 0.45);
-          ctx.lineTo(x + size * 0.45, y - size * 0.2);
-          ctx.lineTo(x + size * 0.45, y + size * 0.2);
-          ctx.lineTo(x + size * 0.3, y + size * 0.45);
-          ctx.lineTo(x - size * 0.3, y + size * 0.45);
-          ctx.lineTo(x - size * 0.45, y + size * 0.2);
-          ctx.lineTo(x - size * 0.45, y - size * 0.2);
-          ctx.closePath();
-          break;
-        case 'marquise':
-          ctx.ellipse(x, y, size * 0.25, size * 0.5, 0, 0, Math.PI * 2);
-          break;
-        default:
-          ctx.arc(x, y, size * 0.45, 0, Math.PI * 2);
-      }
-
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      // Add sparkle
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.beginPath();
-      ctx.arc(x - size * 0.15, y - size * 0.15, size * 0.08, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Add glow
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 30;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-    },
-    [diamondShape, config]
-  );
-
-  // Generate avatar
-  const generateAvatar = useCallback(() => {
+  const generateAvatar = useCallback(async () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || isGenerating || hasGenerated.current) return;
+
+    setIsGenerating(true);
+    hasGenerated.current = true;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      setIsGenerating(false);
+      return;
+    }
 
-    const width = 1080;
-    const height = 1920;
+    // Canvas size matches the layer images
+    const width = 2500;
+    const height = 4462;
     canvas.width = width;
     canvas.height = height;
 
-    // Get selected background (auto-generated or provided)
-    const bg = AVATAR_BACKGROUNDS.find((b) => b.id === finalBackgroundId) || AVATAR_BACKGROUNDS[0];
+    try {
+      // Use lightNumber as seed for unique combination per user
+      const seed = lightNumber || 1;
 
-    // Draw gradient background
-    const gradient = ctx.createLinearGradient(0, 0, 0, height);
-    gradient.addColorStop(0, bg.start);
-    gradient.addColorStop(0.5, bg.mid);
-    gradient.addColorStop(1, bg.end);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
+      // Select random image from each category based on seed
+      const mountainIndex = Math.floor(seededRandom(seed) * MOUNTAINS.length);
+      const grassIndex = Math.floor(seededRandom(seed + 1) * GRASS.length);
+      const flowersIndex = Math.floor(seededRandom(seed + 2) * FLOWERS.length);
+      const moonIndex = Math.floor(seededRandom(seed + 3) * MOONS.length);
+      const diamondVariantIndex = Math.floor(seededRandom(seed + 4) * 3);
 
-    // Draw music staff lines (subtle)
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-    ctx.lineWidth = 2;
-    for (let i = 0; i < 5; i++) {
-      const y = height * 0.45 + i * 50;
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-      ctx.stroke();
+      // Get diamond images based on user's selected shape
+      const diamondImages = DIAMONDS[diamondShape] || DIAMONDS.heart;
+
+      // Load all layer images in parallel
+      const [mountainImg, grassImg, flowersImg, moonImg, musicImg, diamondImg, subheadingImg] = await Promise.all([
+        loadImage(MOUNTAINS[mountainIndex]),
+        loadImage(GRASS[grassIndex]),
+        loadImage(FLOWERS[flowersIndex]),
+        loadImage(MOONS[moonIndex]),
+        loadImage(music),
+        loadImage(diamondImages[diamondVariantIndex]),
+        loadImage(subheading),
+      ]);
+
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw layers in order at original size (0, 0)
+      // Each image already has correct position/transparency built-in
+      // Layer 1: Mountain (background)
+      ctx.drawImage(mountainImg, 0, 0);
+
+      // Layer 2: Grass
+      ctx.drawImage(grassImg, 0, 0);
+
+      // Layer 3: Flowers
+      ctx.drawImage(flowersImg, 0, 0);
+
+      // Layer 4: Moon
+      ctx.drawImage(moonImg, 0, 0);
+
+      // Layer 5: Music
+      ctx.drawImage(musicImg, 0, 0);
+
+      // Layer 6: Diamond (user's selected shape)
+      ctx.drawImage(diamondImg, 0, 0);
+
+      // Layer 7: Subheading
+      ctx.drawImage(subheadingImg, 0, 0);
+
+      // Layer 8: Text overlay - User name only
+      // Position at 18% from top (same as original local code)
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = 'italic 160px Georgia, "Times New Roman", serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 4;
+      ctx.fillText(displayName || 'Guest', width / 2, height * 0.14);
+      ctx.shadowBlur = 0;
+
+      // Export as PNG
+      const dataUrl = canvas.toDataURL('image/png');
+      onGenerated?.(dataUrl);
+    } catch (error) {
+      console.error('Error generating avatar:', error);
+      hasGenerated.current = false;
+    } finally {
+      setIsGenerating(false);
     }
-
-    // Draw scenery based on selection (auto-generated or provided)
-    const sceneryColor = SCENERY_COLORS[Math.floor(seedRandom(lightNumber + 1) * SCENERY_COLORS.length)];
-
-    if (finalSceneryId === 'mountains') {
-      // Draw mountains
-      ctx.fillStyle = sceneryColor + '40';
-      for (let i = 0; i < 3; i++) {
-        const peakX = width * (0.2 + i * 0.3) + seedRandom(lightNumber + i * 10) * 100;
-        const peakY = height * 0.25 + seedRandom(lightNumber + i * 20) * 100;
-        ctx.beginPath();
-        ctx.moveTo(peakX - 300, height * 0.6);
-        ctx.lineTo(peakX, peakY);
-        ctx.lineTo(peakX + 300, height * 0.6);
-        ctx.fill();
-      }
-    } else if (finalSceneryId === 'stars') {
-      // Draw stars
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      for (let i = 0; i < 50; i++) {
-        const starX = seedRandom(lightNumber + i * 7) * width;
-        const starY = seedRandom(lightNumber + i * 13) * height * 0.6;
-        const starSize = 1 + seedRandom(lightNumber + i * 17) * 3;
-        ctx.beginPath();
-        ctx.arc(starX, starY, starSize, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      // Draw some larger glowing stars
-      for (let i = 0; i < 8; i++) {
-        const starX = seedRandom(lightNumber + i * 23) * width;
-        const starY = seedRandom(lightNumber + i * 29) * height * 0.5;
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.beginPath();
-        ctx.arc(starX, starY, 8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.beginPath();
-        ctx.arc(starX, starY, 3, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    } else if (finalSceneryId === 'flowers') {
-      // Draw flower petals
-      ctx.fillStyle = sceneryColor + '50';
-      for (let i = 0; i < 20; i++) {
-        const flowerX = seedRandom(lightNumber + i * 11) * width;
-        const flowerY = height * 0.15 + seedRandom(lightNumber + i * 19) * height * 0.25;
-        const petalSize = 20 + seedRandom(lightNumber + i * 23) * 30;
-        // Draw 5 petals
-        for (let p = 0; p < 5; p++) {
-          const angle = (p / 5) * Math.PI * 2;
-          const px = flowerX + Math.cos(angle) * petalSize * 0.5;
-          const py = flowerY + Math.sin(angle) * petalSize * 0.5;
-          ctx.beginPath();
-          ctx.ellipse(px, py, petalSize * 0.3, petalSize * 0.5, angle, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        // Flower center
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.beginPath();
-        ctx.arc(flowerX, flowerY, petalSize * 0.15, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = sceneryColor + '50';
-      }
-      // Add floating petals
-      ctx.fillStyle = sceneryColor + '30';
-      for (let i = 0; i < 15; i++) {
-        const petalX = seedRandom(lightNumber + i * 31) * width;
-        const petalY = seedRandom(lightNumber + i * 37) * height * 0.7;
-        ctx.beginPath();
-        ctx.ellipse(petalX, petalY, 8, 15, seedRandom(lightNumber + i) * Math.PI, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    } else if (finalSceneryId === 'waves') {
-      // Draw ocean waves
-      ctx.strokeStyle = sceneryColor + '60';
-      ctx.lineWidth = 3;
-      for (let w = 0; w < 8; w++) {
-        const waveY = height * 0.2 + w * 40;
-        ctx.beginPath();
-        ctx.moveTo(0, waveY);
-        for (let x = 0; x < width; x += 20) {
-          const y = waveY + Math.sin((x + seedRandom(lightNumber + w) * 100) / 50) * 15;
-          ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-      }
-      // Add foam dots
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      for (let i = 0; i < 30; i++) {
-        const foamX = seedRandom(lightNumber + i * 41) * width;
-        const foamY = height * 0.18 + seedRandom(lightNumber + i * 43) * height * 0.2;
-        ctx.beginPath();
-        ctx.arc(foamX, foamY, 2 + seedRandom(lightNumber + i) * 4, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-    // finalSceneryId === 'none' - don't draw any scenery
-
-    // Draw diamond in center
-    const diamondSize = 280;
-    const diamondY = height * 0.5;
-    drawDiamond(ctx, width / 2, diamondY, diamondSize);
-
-    // Draw reflection
-    ctx.globalAlpha = 0.3;
-    ctx.save();
-    ctx.translate(0, diamondY * 2 + 100);
-    ctx.scale(1, -0.5);
-    drawDiamond(ctx, width / 2, diamondY, diamondSize);
-    ctx.restore();
-    ctx.globalAlpha = 1;
-
-    // Draw water ripple lines
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < 5; i++) {
-      const rippleY = height * 0.72 + i * 30;
-      ctx.beginPath();
-      ctx.moveTo(width * 0.1, rippleY);
-      ctx.bezierCurveTo(
-        width * 0.3,
-        rippleY + 5,
-        width * 0.7,
-        rippleY - 5,
-        width * 0.9,
-        rippleY
-      );
-      ctx.stroke();
-    }
-
-    // Draw name (cursive style)
-    ctx.font = 'italic 72px serif';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-    ctx.textAlign = 'center';
-    ctx.fillText(displayName, width / 2, height * 0.18);
-
-    // Draw light number
-    ctx.font = 'bold 36px sans-serif';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-    ctx.fillText(`ÁNH SÁNG #${lightNumber}`, width / 2, height * 0.24);
-
-    // Draw tagline
-    ctx.font = '28px sans-serif';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-    ctx.fillText('Ánh sáng của bạn là một phần của', width / 2, height * 0.82);
-    ctx.fillText('Bản Giao Hưởng Kim Cương', width / 2, height * 0.86);
-
-    // Draw logo
-    ctx.font = 'bold 32px serif';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    ctx.fillText('MIRROR × Diamond', width / 2, height * 0.94);
-
-    // Export
-    const dataUrl = canvas.toDataURL('image/png');
-    onGenerated?.(dataUrl);
-  }, [displayName, lightNumber, diamondShape, finalBackgroundId, finalSceneryId, drawDiamond, seedRandom, onGenerated]);
+  }, [displayName, lightNumber, diamondShape, onGenerated, isGenerating]);
 
   useEffect(() => {
     generateAvatar();
   }, [generateAvatar]);
+
+  // Reset when props change to allow regeneration
+  useEffect(() => {
+    hasGenerated.current = false;
+  }, [displayName, lightNumber, diamondShape]);
 
   return (
     <canvas

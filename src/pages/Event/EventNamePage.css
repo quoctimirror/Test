@@ -9,9 +9,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
   position: relative;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Background */
@@ -20,9 +21,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 180%;
-  height: 180%;
-  background: radial-gradient(50% 50% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%);
+  width: 200%;
+  height: 200%;
+  border-radius: 3468px;
+  background: radial-gradient(69.15% 50% at 50% 50%, #BC224C 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%);
   z-index: -2;
 }
 
@@ -32,7 +34,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100vw;
-  padding: 0 24px;
+  padding: 0 48px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -43,22 +45,16 @@
 .event-name__content {
   text-align: center;
   flex: 1;
-  max-width: 500px;
 }
 
 .event-name__greeting {
   display: flex;
   align-items: baseline;
   justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: 8px;
 }
 
 .event-name__hi {
-  font-family: "Saol Display", Georgia, serif;
-  font-size: 3rem;
-  font-weight: 300;
-  font-style: italic;
   color: #fff;
 }
 
@@ -71,29 +67,21 @@
   position: absolute;
   visibility: hidden;
   white-space: pre;
-  font-family: "Saol Display", Georgia, serif;
-  font-size: 3rem;
-  font-weight: 300;
-  font-style: italic;
 }
 
 .event-name__input {
-  font-family: "Saol Display", Georgia, serif;
-  font-size: 3rem;
-  font-weight: 300;
-  font-style: italic;
   color: #4a3040;
   background: transparent;
   border: none;
   outline: none;
   padding: 0;
   padding-bottom: 0.25rem;
-  width: auto;
+  width: 100%;
   text-align: center;
 }
 
 .event-name__input::placeholder {
-  color: #a090a0;
+  color: rgba(0, 0, 0, 0.10);
 }
 
 .event-name__input-line {
@@ -107,6 +95,8 @@
 
 .event-name__subtitle {
   color: #fff;
+  max-width: 627px;
+  margin: 0 auto;
 }
 
 /* Back Button - circular style */
@@ -138,22 +128,10 @@
   .event-name__main {
     padding: 0 1rem;
   }
-
-  .event-name__hi,
-  .event-name__input,
-  .event-name__input-measure {
-    font-size: 2rem;
-  }
 }
 
 @media (max-width: 480px) {
   .event-name {
     padding: 1rem;
-  }
-
-  .event-name__hi,
-  .event-name__input,
-  .event-name__input-measure {
-    font-size: 1.5rem;
   }
 }

@@ -94,8 +94,7 @@ const EventPage = lazy(() => import("@pages/Event/EventPage"));
 const EventGuidePage = lazy(() => import("@pages/Event/EventGuidePage"));
 const EventLoginPage = lazy(() => import("@pages/Event/EventLoginPage"));
 const EventNamePage = lazy(() => import("@pages/Event/EventNamePage"));
-const EventPreviewPage = lazy(() => import("@pages/Event/EventPreviewPage"));
-const EventResultPage = lazy(() => import("@pages/Event/EventResultPage"));
+const EventChooseShapePage = lazy(() => import("@pages/Event/EventChooseShapePage"));
 const EventDisplayPage = lazy(() => import("@pages/Event/EventDisplayPage"));
 const EventAdminPage = lazy(() => import("@pages/Event/EventAdminPage"));
 const ChristmasMusicPage = lazy(() => import("@pages/Event/ChristmasMusicPage"));
@@ -183,10 +182,13 @@ export default function AppRoutes() {
       ROUTES.EVENT_GUIDE,
       ROUTES.EVENT_LOGIN,
       ROUTES.EVENT_NAME,
-      ROUTES.EVENT_PREVIEW,
-      ROUTES.EVENT_RESULT,
+      ROUTES.EVENT_CHOOSE_SHAPE,
       ROUTES.EVENT_DISPLAY,
       ROUTES.EVENT_ADMIN,
+      ROUTES.EVENT_CHRISTMAS,
+      ROUTES.EVENT_PLACE_NOTE,
+      ROUTES.EVENT_WRITE_MESSAGE,
+      ROUTES.EVENT_CHOOSE_NOTE,
       ROUTES.INVENTORY,
       ROUTES.INVENTORY_DASHBOARD,
       ROUTES.INVENTORY_SCANNER,
@@ -194,6 +196,7 @@ export default function AppRoutes() {
       ROUTES.INVENTORY_PRODUCTS,
       ROUTES.INVENTORY_PRINT,
       ROUTES.BIRTHDAY_CAKE,
+      ROUTES.DB_EXPLORER,
     ];
 
     // Check exact matches
@@ -213,6 +216,7 @@ export default function AppRoutes() {
       location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
       location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
       location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
+      location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
       location.pathname.startsWith(ROUTES.INVENTORY)
     ) {
       return false;
@@ -237,6 +241,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname === ROUTES.BIRTHDAY_CAKE ||
     location.pathname.startsWith(ROUTES.EVENT) ||
+    location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname === ROUTES.DB_EXPLORER;
 
@@ -256,6 +261,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname === ROUTES.BIRTHDAY_CAKE ||
     location.pathname.startsWith(ROUTES.EVENT) ||
+    location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname === ROUTES.DB_EXPLORER;
 
@@ -444,8 +450,7 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT_GUIDE} element={<EventGuidePage />} />
             <Route path={ROUTES.EVENT_LOGIN} element={<EventLoginPage />} />
             <Route path={ROUTES.EVENT_NAME} element={<EventNamePage />} />
-            <Route path={ROUTES.EVENT_PREVIEW} element={<EventPreviewPage />} />
-            <Route path={ROUTES.EVENT_RESULT} element={<EventResultPage />} />
+            <Route path={ROUTES.EVENT_CHOOSE_SHAPE} element={<EventChooseShapePage />} />
             <Route path={ROUTES.EVENT_DISPLAY} element={<EventDisplayPage />} />
             <Route path={ROUTES.EVENT_ADMIN} element={<EventAdminPage />} />
             <Route path={ROUTES.EVENT_CHRISTMAS} element={<ChristmasMusicPage />} />

@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
+import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
 
 import './EventResultPage.css';
@@ -79,7 +80,9 @@ const EventResultPage = () => {
   };
 
   return (
-    <div className="event-result">
+    <>
+      <NavbarV4 logoOnly />
+      <div className="event-result" data-navbar-theme="black">
       {/* Background */}
       <div className="event-result__bg" />
 
@@ -215,6 +218,7 @@ const EventResultPage = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

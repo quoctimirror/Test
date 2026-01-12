@@ -1,21 +1,16 @@
 /**
- * ChooseNoteShapeScreenNew - Step 3: Preview card with 3D flip effect
- * Shows a 3D flip card with front (generated image) and back (card back)
+ * ChooseNoteShapeScreenNew - Step 3: Preview card with diamond
+ * Shows a phone mockup with landscape background and heart diamond
  */
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Instagram } from 'lucide-react';
-import shareIcon from '@/assets/images/button/share.svg';
+import { ArrowLeft, Download, Share2, Instagram } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 
-// Import card images
-import cardFrontImage from '@/assets/images/dmm/output_test/quoc_ti_1767948582301.png';
-import cardBackImage from '@/assets/images/dmm/card_back.svg';
-
-// Custom gradient for ripple effect (lighter pink)
-const RIPPLE_GRADIENT = `radial-gradient(50% 50% at 50% 50%, #F4A5B8 0%, rgba(185, 185, 185, 0.00) 54.33%, #FFF 93.27%, rgba(255, 255, 255, 0.00) 100%)`;
+// Import heart diamond image
+import heartSvg from '@/assets/images/dmm/heart.svg';
 
 // Facebook icon component
 const FacebookIcon = ({ size = 24 }) => (
@@ -31,323 +26,40 @@ const TikTokIcon = ({ size = 24 }) => (
   </svg>
 );
 
+// Custom gradient for ripple effect (lighter pink)
+const RIPPLE_GRADIENT = `radial-gradient(50% 50% at 50% 50%, #F4A5B8 0%, rgba(185, 185, 185, 0.00) 54.33%, #FFF 93.27%, rgba(255, 255, 255, 0.00) 100%)`;
+
 const ChooseNoteShapeScreenNew = () => {
   const navigate = useNavigate();
   const [downloading, setDownloading] = useState(false);
-
-  // Flip card refs
   const cardRef = useRef(null);
-  const cardContainerRef = useRef(null);
-  const shineFrontRef = useRef(null);
-  const shineBackRef = useRef(null);
-  const shadowRef = useRef(null);
   const rippleRef = useRef(null);
-
-  // Flip card state
-  const [isFlipping, setIsFlipping] = useState(false);
-  const [isShowingFront, setIsShowingFront] = useState(true);
-  const [status, setStatus] = useState('front');
-  const [isDraggingVisual, setIsDraggingVisual] = useState(false);
-
-  // Use refs for values that need to be accessed in event listeners (avoid closure issues)
-  const isDraggingRef = useRef(false);
-  const isFlippingRef = useRef(false);
-  const currentRotation = useRef(0);
-  const velocity = useRef(0);
-  const targetRotation = useRef(0);
-  const animationId = useRef(null);
-  const dragHistory = useRef([]);
-  const dragLastX = useRef(0);
-  const mouseDownTime = useRef(0);
-  const mouseDownX = useRef(0);
-  const isShowingFrontRef = useRef(true);
-
-  // Physics
-  const friction = 0.95;
-  const snapStrength = 0.08;
 
   const { userNote, selectedDiamond } = useEventStore();
 
-  // Helper functions
-  const calculateReleaseVelocity = useCallback(() => {
-    if (dragHistory.current.length < 2) return 0;
-    const recentHistory = dragHistory.current.slice(-5);
-    let totalDelta = 0;
-    let totalTime = 0;
-    for (let i = 1; i < recentHistory.length; i++) {
-      totalDelta += recentHistory[i].x - recentHistory[i - 1].x;
-      totalTime += recentHistory[i].time - recentHistory[i - 1].time;
-    }
-    if (totalTime === 0) return 0;
-    return (totalDelta / totalTime) * 16;
-  }, []);
-
-  const findNearestFrontAngle = useCallback((angle) => {
-    return Math.round(angle / 360) * 360;
-  }, []);
-
-  const updateShine = useCallback((rotation) => {
-    const normalized = ((rotation % 360) + 360) % 360;
-    let frontShinePos = normalized <= 90 ? (normalized / 90) * 100 :
-      normalized >= 270 ? ((normalized - 270) / 90) * 100 - 100 : 200;
-    let backShinePos = (normalized >= 90 && normalized <= 270) ?
-      ((normalized - 90) / 180) * 200 - 100 : 200;
-
-    if (shineFrontRef.current) {
-      shineFrontRef.current.style.setProperty('--shine-pos', `${frontShinePos}%`);
-    }
-    if (shineBackRef.current) {
-      shineBackRef.current.style.setProperty('--shine-pos', `${backShinePos}%`);
-    }
-  }, []);
-
-  const updateShadow = useCallback((rotation) => {
-    const normalized = ((rotation % 360) + 360) % 360;
-    const shadowOffset = Math.sin(normalized * Math.PI / 180) * 40;
-    const shadowScale = 0.8 + Math.abs(Math.cos(normalized * Math.PI / 180)) * 0.2;
-    const shadowOpacity = 0.3 + Math.abs(Math.cos(normalized * Math.PI / 180)) * 0.3;
-
-    if (shadowRef.current) {
-      shadowRef.current.style.transform = `translateX(calc(-50% + ${shadowOffset}px)) rotateX(90deg) scaleX(${shadowScale})`;
-      shadowRef.current.style.opacity = shadowOpacity;
-    }
-  }, []);
-
-  // Animation loop
-  const animate = useCallback(() => {
-    if (!isDraggingRef.current && !isFlippingRef.current) {
-      if (Math.abs(velocity.current) > 0.1) {
-        velocity.current *= friction;
-        currentRotation.current += velocity.current;
-        const remainingDistance = velocity.current / (1 - friction);
-        const predictedEnd = currentRotation.current + remainingDistance;
-        targetRotation.current = findNearestFrontAngle(predictedEnd);
-      } else {
-        velocity.current = 0;
-        const diff = targetRotation.current - currentRotation.current;
-        if (Math.abs(diff) > 0.5) {
-          currentRotation.current += diff * snapStrength;
-        } else {
-          currentRotation.current = targetRotation.current;
-        }
-      }
-
-      if (cardRef.current) {
-        cardRef.current.style.transform = `rotateY(${currentRotation.current}deg)`;
-      }
-      updateShine(currentRotation.current);
-      updateShadow(currentRotation.current);
-    }
-
-    animationId.current = requestAnimationFrame(animate);
-  }, [findNearestFrontAngle, updateShine, updateShadow]);
-
-  // Start animation loop on mount
+  // Initialize RippleEffect on card
   useEffect(() => {
-    animate();
-    return () => {
-      if (animationId.current) {
-        cancelAnimationFrame(animationId.current);
-      }
-    };
-  }, [animate]);
-
-  // Initialize RippleEffect AFTER entrance animation completes (2.5s)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (cardContainerRef.current && !rippleRef.current) {
-        rippleRef.current = new RippleEffect(cardContainerRef.current, {
-          autoRippleCount: 5,
-          duration: 10000,
-          delay: 2000,
-          startSize: 100,
-          endSize: 1200,
-          opacity: 0.7,
-          autoPlay: true,
-          clickable: false,
-          gradient: RIPPLE_GRADIENT,
-        });
-      }
-    }, 1000); // Wait for entrance animation
+    if (cardRef.current && !rippleRef.current) {
+      rippleRef.current = new RippleEffect(cardRef.current, {
+        autoRippleCount: 5,
+        duration: 10000,
+        delay: 2000,
+        startSize: 100,
+        endSize: 1200,
+        opacity: 0.7,
+        autoPlay: true,
+        clickable: false,
+        gradient: RIPPLE_GRADIENT,
+      });
+    }
 
     return () => {
-      clearTimeout(timer);
       if (rippleRef.current) {
         rippleRef.current.destroy();
         rippleRef.current = null;
       }
     };
   }, []);
-
-  const flipCard = useCallback(() => {
-    if (isFlippingRef.current || isDraggingRef.current) return;
-
-    isFlippingRef.current = true;
-    setIsFlipping(true);
-    velocity.current = 0;
-
-    const willShowBack = isShowingFrontRef.current;
-
-    if (cardRef.current) {
-      cardRef.current.classList.remove('flipping-to-back', 'flipping-to-front');
-      cardRef.current.style.transform = '';
-
-      if (willShowBack) {
-        cardRef.current.classList.add('flipping-to-back');
-      } else {
-        cardRef.current.classList.add('flipping-to-front');
-      }
-    }
-
-    isShowingFrontRef.current = !isShowingFrontRef.current;
-    setIsShowingFront(isShowingFrontRef.current);
-    setStatus(willShowBack ? 'back' : 'front');
-
-    setTimeout(() => {
-      isFlippingRef.current = false;
-      setIsFlipping(false);
-      if (cardRef.current) {
-        cardRef.current.classList.remove('flipping-to-back', 'flipping-to-front');
-        const newRotation = willShowBack ? 180 : 0;
-        currentRotation.current = newRotation;
-        targetRotation.current = newRotation;
-        cardRef.current.style.transform = `rotateY(${newRotation}deg)`;
-      }
-    }, 400);
-  }, []);
-
-  // Drag handlers
-  const startDrag = useCallback((clientX) => {
-    if (isFlippingRef.current) return;
-
-    isDraggingRef.current = true;
-    setIsDraggingVisual(true);
-    setStatus('dragging');
-    dragHistory.current = [{ x: clientX, time: performance.now() }];
-    dragLastX.current = clientX;
-    mouseDownX.current = clientX;
-    mouseDownTime.current = Date.now();
-    velocity.current = 0;
-
-    if (cardRef.current) {
-      cardRef.current.classList.remove('flipping-to-back', 'flipping-to-front');
-    }
-  }, []);
-
-  const moveDrag = useCallback((clientX) => {
-    if (!isDraggingRef.current) return;
-
-    const deltaX = clientX - dragLastX.current;
-    currentRotation.current += deltaX * 0.5;
-    dragLastX.current = clientX;
-
-    dragHistory.current.push({ x: clientX, time: performance.now() });
-    if (dragHistory.current.length > 10) dragHistory.current.shift();
-
-    if (cardRef.current) {
-      cardRef.current.style.transform = `rotateY(${currentRotation.current}deg)`;
-    }
-    updateShine(currentRotation.current);
-    updateShadow(currentRotation.current);
-  }, [updateShine, updateShadow]);
-
-  const endDrag = useCallback((clientX) => {
-    if (!isDraggingRef.current) return;
-
-    isDraggingRef.current = false;
-    setIsDraggingVisual(false);
-    setStatus(isShowingFrontRef.current ? 'front' : 'back');
-
-    velocity.current = calculateReleaseVelocity() * 0.5;
-    const remainingDistance = velocity.current / (1 - friction);
-    const predictedEnd = currentRotation.current + remainingDistance;
-    targetRotation.current = findNearestFrontAngle(predictedEnd);
-
-    // Check for click (short press without much movement)
-    const clickDistance = Math.abs(clientX - mouseDownX.current);
-    const clickDuration = Date.now() - mouseDownTime.current;
-    if (clickDistance < 10 && clickDuration < 300) {
-      flipCard();
-    }
-  }, [calculateReleaseVelocity, findNearestFrontAngle, flipCard]);
-
-  // Mouse events
-  const handleMouseDown = useCallback((e) => {
-    e.preventDefault();
-    startDrag(e.clientX);
-  }, [startDrag]);
-
-  useEffect(() => {
-    const handleMouseMove = (e) => moveDrag(e.clientX);
-    const handleMouseUp = (e) => endDrag(e.clientX);
-    const handleMouseLeave = () => {
-      if (isDraggingRef.current) {
-        isDraggingRef.current = false;
-        setIsDraggingVisual(false);
-        setStatus(isShowingFrontRef.current ? 'front' : 'back');
-      }
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('blur', handleMouseLeave);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('blur', handleMouseLeave);
-    };
-  }, [moveDrag, endDrag]);
-
-  // Touch events
-  const handleTouchStart = useCallback((e) => {
-    e.preventDefault();
-    startDrag(e.touches[0].clientX);
-  }, [startDrag]);
-
-  useEffect(() => {
-    const handleTouchMove = (e) => {
-      if (isDraggingRef.current && e.touches.length > 0) {
-        moveDrag(e.touches[0].clientX);
-      }
-    };
-    const handleTouchEnd = (e) => {
-      const touch = e.changedTouches[0];
-      endDrag(touch ? touch.clientX : dragLastX.current);
-    };
-    const handleTouchCancel = () => {
-      if (isDraggingRef.current) {
-        isDraggingRef.current = false;
-        setIsDraggingVisual(false);
-        setStatus(isShowingFrontRef.current ? 'front' : 'back');
-      }
-    };
-
-    document.addEventListener('touchmove', handleTouchMove);
-    document.addEventListener('touchend', handleTouchEnd);
-    document.addEventListener('touchcancel', handleTouchCancel);
-
-    return () => {
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
-      document.removeEventListener('touchcancel', handleTouchCancel);
-    };
-  }, [moveDrag, endDrag]);
-
-  // Keyboard events
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.code === 'Space' && !isDraggingRef.current) {
-        e.preventDefault();
-        flipCard();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [flipCard]);
 
   // Navigation - go back to step 2
   const handleGoBack = () => {
@@ -383,9 +95,6 @@ const ChooseNoteShapeScreenNew = () => {
       {/* Background */}
       <div className="choose-note-shape__bg" />
 
-      {/* Ambient light effect */}
-      <div className="flip-card-ambient-light" />
-
       {/* Header */}
       <header className="choose-note-shape__header">
         <h1 className="choose-note-shape__title">MIRROR</h1>
@@ -404,42 +113,20 @@ const ChooseNoteShapeScreenNew = () => {
           </button>
         </div>
 
-        {/* Center - 3D Flip Card */}
+        {/* Center card preview */}
         <div className="choose-note-shape__card-container">
-          <div className="flip-card-scene">
-            <div
-              className={`flip-card-container ${isDraggingVisual ? 'dragging' : ''}`}
-              ref={cardContainerRef}
-              onMouseDown={handleMouseDown}
-              onTouchStart={handleTouchStart}
-            >
-              <div className="flip-card" ref={cardRef}>
-                {/* Front face */}
-                <div className="flip-card-face flip-card-front">
-                  <div className="flip-card-shine" ref={shineFrontRef} />
-                  <div className="flip-card-texture" />
-                  <div className="flip-card-inner">
-                    <img src={cardFrontImage} alt="Card Front" className="flip-card-image" />
-                  </div>
-                </div>
+          <div className="choose-note-shape__card" ref={cardRef}>
+            {/* Card background - gradient landscape */}
+            <div className="choose-note-shape__card-bg" />
 
-                {/* Back face */}
-                <div className="flip-card-face flip-card-back">
-                  <div className="flip-card-shine" ref={shineBackRef} />
-                  <div className="flip-card-texture" />
-                  <div className="flip-card-inner">
-                    <img src={cardBackImage} alt="Card Back" className="flip-card-image" />
-                  </div>
-                </div>
-
-                <div className="flip-card-shadow" ref={shadowRef} />
-              </div>
+            {/* Diamond heart in center of card */}
+            <div className="choose-note-shape__diamond-wrapper">
+              <img
+                src={heartSvg}
+                alt="Heart Diamond"
+                className="choose-note-shape__diamond"
+              />
             </div>
-          </div>
-
-          {/* Instructions */}
-          <div className="flip-card-instructions">
-            👆 Click để lật thẻ &nbsp;|&nbsp; ✋ Giữ + kéo để xoay
           </div>
 
           {/* Action buttons below card */}
@@ -457,15 +144,8 @@ const ChooseNoteShapeScreenNew = () => {
               onClick={handleShare}
               aria-label="Share"
             >
-              <img src={shareIcon} alt="Share" width={18} height={18} />
+              <Share2 size={18} />
             </button>
-          </div>
-
-          {/* Status indicator */}
-          <div className={`flip-card-status flip-card-status--${status}`}>
-            {status === 'dragging' && '✋ ĐANG KÉO'}
-            {status === 'front' && '💎 MẶT TRƯỚC'}
-            {status === 'back' && '🔥 MẶT SAU'}
           </div>
         </div>
 
