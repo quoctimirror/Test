@@ -49,19 +49,18 @@ export const ROUTES = {
   DASHBOARD_VENDOR: "/dashboard/vendor",
   DASHBOARD_DESIGNER: "/dashboard/designer",
 
-  // Event routes
-  EVENT: "/event",
-  EVENT_GUIDE: "/event/guide",
-  EVENT_LOGIN: "/event/login",
-  EVENT_NAME: "/event/name",
-  EVENT_PREVIEW: "/event/preview",
-  EVENT_RESULT: "/event/result",
-  EVENT_DISPLAY: "/event/display",
-  EVENT_ADMIN: "/event/admin",
-  EVENT_CHRISTMAS: "/event/christmas",
-  EVENT_PLACE_NOTE: "/event/place-note", // New place note screen (step 1)
-  EVENT_WRITE_MESSAGE: "/event/write-message", // Write message screen (step 2)
-  EVENT_CHOOSE_NOTE: "/event/choose-note", // Choose note shape screen (step 3)
+  // Event routes - The Muse of Love
+  EVENT: "/event", // Keep original event route
+  EVENT_GUIDE: "/the-muse-of-love-grown", // Main landing page
+  EVENT_LOGIN: "/the-muse-of-love-grown/login",
+  EVENT_NAME: "/the-muse-of-love-grown/name",
+  EVENT_CHOOSE_SHAPE: "/the-muse-of-love-grown/choose-shape",
+  EVENT_DISPLAY: "/the-muse-of-love-grown/display",
+  EVENT_ADMIN: "/the-muse-of-love-grown/admin",
+  EVENT_CHRISTMAS: "/the-muse-of-love-grown/christmas",
+  EVENT_PLACE_NOTE: "/the-muse-of-love-grown/place-note", // New place note screen (step 1)
+  EVENT_WRITE_MESSAGE: "/the-muse-of-love-grown/write-message", // Write message screen (step 2)
+  EVENT_CHOOSE_NOTE: "/the-muse-of-love-grown/choose-note", // Choose note shape screen (step 3)
 
   // Interactive experiences
   BIRTHDAY_CAKE: "/birthday-cake",
