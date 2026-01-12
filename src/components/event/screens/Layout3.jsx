@@ -10,10 +10,7 @@ import shareIcon from '@/assets/images/button/share.svg';
 import { ROUTES } from '@/constants/routes';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
-
-// Import card images
-import cardFrontImage from '@/assets/images/dmm/output_test/quoc_ti_1767948582301.png';
-import cardBackImage from '@/assets/images/dmm/card_back.svg';
+import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 
 // Custom gradient for ripple effect (lighter pink)
 const RIPPLE_GRADIENT = `radial-gradient(50% 50% at 50% 50%, #F4A5B8 0%, rgba(185, 185, 185, 0.00) 54.33%, #FFF 93.27%, rgba(255, 255, 255, 0.00) 100%)`;
@@ -420,7 +417,7 @@ const Layout3 = () => {
                   <div className="flip-card-shine" ref={shineFrontRef} />
                   <div className="flip-card-texture" />
                   <div className="flip-card-inner">
-                    <img src={cardFrontImage} alt="Card Front" className="flip-card-image" />
+                    <img src={getMediaUrl('dmm/output_test/quoc_ti_1767948582301.png')} alt="Card Front" className="flip-card-image" />
                   </div>
                 </div>
 
@@ -429,7 +426,7 @@ const Layout3 = () => {
                   <div className="flip-card-shine" ref={shineBackRef} />
                   <div className="flip-card-texture" />
                   <div className="flip-card-inner">
-                    <img src={cardBackImage} alt="Card Back" className="flip-card-image" />
+                    <img src={getMediaUrl('dmm/card_back.svg')} alt="Card Back" className="flip-card-image" />
                   </div>
                 </div>
 

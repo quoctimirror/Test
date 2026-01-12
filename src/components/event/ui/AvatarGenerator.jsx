@@ -16,100 +16,103 @@
  * Just draw them in order at full canvas size (2500x4462).
  */
 import React, { useRef, useEffect, useCallback, useState } from 'react';
+import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 
-// Import mountain images
-import mountain1 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-1@2500x.webp';
-import mountain2 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-2@2500x.webp';
-import mountain3 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-3@2500x.webp';
-import mountain4 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-4@2500x.webp';
-import mountain5 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-5@2500x.webp';
-import mountain6 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-6@2500x.webp';
-import mountain7 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-7@2500x.webp';
-import mountain8 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-8@2500x.webp';
-import mountain9 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-9@2500x.webp';
-import mountain10 from '@/assets/images/dmm/generatedImages/1_mountains/mountain-10@2500x.webp';
+// Image paths on Cloudflare CDN
+const MOUNTAINS = [
+  'dmm/generatedImages/1_mountains/mountain-1@2500x.webp',
+  'dmm/generatedImages/1_mountains/mountain-2@2500x.webp',
+  'dmm/generatedImages/1_mountains/mountain-3@2500x.webp',
+  'dmm/generatedImages/1_mountains/mountain-4@2500x.webp',
+  'dmm/generatedImages/1_mountains/mountain-5@2500x.webp',
+  'dmm/generatedImages/1_mountains/mountain-6@2500x.webp',
+  'dmm/generatedImages/1_mountains/mountain-7@2500x.webp',
+  'dmm/generatedImages/1_mountains/mountain-8@2500x.webp',
+  'dmm/generatedImages/1_mountains/mountain-9@2500x.webp',
+  'dmm/generatedImages/1_mountains/mountain-10@2500x.webp',
+];
 
-// Import grass images
-import grass1 from '@/assets/images/dmm/generatedImages/2_grass/grass-1.webp';
-import grass2 from '@/assets/images/dmm/generatedImages/2_grass/grass-2.webp';
-import grass3 from '@/assets/images/dmm/generatedImages/2_grass/grass-3.webp';
-import grass4 from '@/assets/images/dmm/generatedImages/2_grass/grass-4.webp';
-import grass5 from '@/assets/images/dmm/generatedImages/2_grass/grass-5.webp';
-import grass6 from '@/assets/images/dmm/generatedImages/2_grass/grass-6.webp';
-import grass7 from '@/assets/images/dmm/generatedImages/2_grass/grass-7.webp';
-import grass8 from '@/assets/images/dmm/generatedImages/2_grass/grass-8.webp';
-import grass9 from '@/assets/images/dmm/generatedImages/2_grass/grass-9.webp';
-import grass10 from '@/assets/images/dmm/generatedImages/2_grass/grass-10.webp';
+const GRASS = [
+  'dmm/generatedImages/2_grass/grass-1.webp',
+  'dmm/generatedImages/2_grass/grass-2.webp',
+  'dmm/generatedImages/2_grass/grass-3.webp',
+  'dmm/generatedImages/2_grass/grass-4.webp',
+  'dmm/generatedImages/2_grass/grass-5.webp',
+  'dmm/generatedImages/2_grass/grass-6.webp',
+  'dmm/generatedImages/2_grass/grass-7.webp',
+  'dmm/generatedImages/2_grass/grass-8.webp',
+  'dmm/generatedImages/2_grass/grass-9.webp',
+  'dmm/generatedImages/2_grass/grass-10.webp',
+];
 
-// Import flower images
-import flowers1 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-1.webp';
-import flowers2 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-2.webp';
-import flowers3 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-3.webp';
-import flowers4 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-4.webp';
-import flowers5 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-5.webp';
-import flowers6 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-6.webp';
-import flowers7 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-7.webp';
-import flowers8 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-8.webp';
-import flowers9 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-9.webp';
-import flowers10 from '@/assets/images/dmm/generatedImages/3_flowers/flowers-10.webp';
+const FLOWERS = [
+  'dmm/generatedImages/3_flowers/flowers-1.webp',
+  'dmm/generatedImages/3_flowers/flowers-2.webp',
+  'dmm/generatedImages/3_flowers/flowers-3.webp',
+  'dmm/generatedImages/3_flowers/flowers-4.webp',
+  'dmm/generatedImages/3_flowers/flowers-5.webp',
+  'dmm/generatedImages/3_flowers/flowers-6.webp',
+  'dmm/generatedImages/3_flowers/flowers-7.webp',
+  'dmm/generatedImages/3_flowers/flowers-8.webp',
+  'dmm/generatedImages/3_flowers/flowers-9.webp',
+  'dmm/generatedImages/3_flowers/flowers-10.webp',
+];
 
-// Import moon images
-import moon1 from '@/assets/images/dmm/generatedImages/4_moons/moon-1.webp';
-import moon2 from '@/assets/images/dmm/generatedImages/4_moons/moon-2.webp';
-import moon3 from '@/assets/images/dmm/generatedImages/4_moons/moon-3.webp';
-import moon4 from '@/assets/images/dmm/generatedImages/4_moons/moon-4.webp';
-import moon5 from '@/assets/images/dmm/generatedImages/4_moons/moon-5.webp';
-import moon6 from '@/assets/images/dmm/generatedImages/4_moons/moon-6.webp';
-import moon7 from '@/assets/images/dmm/generatedImages/4_moons/moon-7.webp';
-import moon8 from '@/assets/images/dmm/generatedImages/4_moons/moon-8.webp';
-import moon9 from '@/assets/images/dmm/generatedImages/4_moons/moon-9.webp';
-import moon10 from '@/assets/images/dmm/generatedImages/4_moons/moon-10.webp';
-import moon11 from '@/assets/images/dmm/generatedImages/4_moons/moon-11.webp';
+const MOONS = [
+  'dmm/generatedImages/4_moons/moon-1.webp',
+  'dmm/generatedImages/4_moons/moon-2.webp',
+  'dmm/generatedImages/4_moons/moon-3.webp',
+  'dmm/generatedImages/4_moons/moon-4.webp',
+  'dmm/generatedImages/4_moons/moon-5.webp',
+  'dmm/generatedImages/4_moons/moon-6.webp',
+  'dmm/generatedImages/4_moons/moon-7.webp',
+  'dmm/generatedImages/4_moons/moon-8.webp',
+  'dmm/generatedImages/4_moons/moon-9.webp',
+  'dmm/generatedImages/4_moons/moon-10.webp',
+  'dmm/generatedImages/4_moons/moon-11.webp',
+];
 
-// Import music (only one version)
-import music from '@/assets/images/dmm/generatedImages/5_music/music.webp';
+const MUSIC = 'dmm/generatedImages/5_music/music.webp';
 
-// Import diamond images - mapped to shape names
-import heart1 from '@/assets/images/dmm/generatedImages/6_diamonds/heart/heart-1_1@2500x.webp';
-import heart2 from '@/assets/images/dmm/generatedImages/6_diamonds/heart/heart-2@2500x.webp';
-import heart3 from '@/assets/images/dmm/generatedImages/6_diamonds/heart/heart-3@2500x.webp';
-import round1 from '@/assets/images/dmm/generatedImages/6_diamonds/round/round-1.webp';
-import round2 from '@/assets/images/dmm/generatedImages/6_diamonds/round/round-2.webp';
-import round3 from '@/assets/images/dmm/generatedImages/6_diamonds/round/round-3.webp';
-import emerald1 from '@/assets/images/dmm/generatedImages/6_diamonds/emerald/emerald-1.webp';
-import emerald2 from '@/assets/images/dmm/generatedImages/6_diamonds/emerald/emerald-2.webp';
-import emerald3 from '@/assets/images/dmm/generatedImages/6_diamonds/emerald/emerald-3.webp';
-import marquise1 from '@/assets/images/dmm/generatedImages/6_diamonds/marquise/marquise-1.webp';
-import marquise2 from '@/assets/images/dmm/generatedImages/6_diamonds/marquise/marquise-2.webp';
-import marquise3 from '@/assets/images/dmm/generatedImages/6_diamonds/marquise/marquise-3.webp';
-import oval1 from '@/assets/images/dmm/generatedImages/6_diamonds/oval/oval-1.webp';
-import oval2 from '@/assets/images/dmm/generatedImages/6_diamonds/oval/oval-2.webp';
-import oval3 from '@/assets/images/dmm/generatedImages/6_diamonds/oval/oval-3.webp';
-import pear1 from '@/assets/images/dmm/generatedImages/6_diamonds/pear/pear-1.webp';
-import pear2 from '@/assets/images/dmm/generatedImages/6_diamonds/pear/pear-2.webp';
-import pear3 from '@/assets/images/dmm/generatedImages/6_diamonds/pear/pear-3.webp';
-import asscher1 from '@/assets/images/dmm/generatedImages/6_diamonds/asscher/asscher-1.webp';
-import asscher2 from '@/assets/images/dmm/generatedImages/6_diamonds/asscher/asscher-2.webp';
-import asscher3 from '@/assets/images/dmm/generatedImages/6_diamonds/asscher/asscher-3.webp';
-
-// Import subheading
-import subheading from '@/assets/images/dmm/generatedImages/7_subheading/subheading.webp';
-
-// Image collections
-const MOUNTAINS = [mountain1, mountain2, mountain3, mountain4, mountain5, mountain6, mountain7, mountain8, mountain9, mountain10];
-const GRASS = [grass1, grass2, grass3, grass4, grass5, grass6, grass7, grass8, grass9, grass10];
-const FLOWERS = [flowers1, flowers2, flowers3, flowers4, flowers5, flowers6, flowers7, flowers8, flowers9, flowers10];
-const MOONS = [moon1, moon2, moon3, moon4, moon5, moon6, moon7, moon8, moon9, moon10, moon11];
+const SUBHEADING = 'dmm/generatedImages/7_subheading/subheading.webp';
 
 // Diamond images mapped to shape names from user selection
 const DIAMONDS = {
-  heart: [heart1, heart2, heart3],
-  round: [round1, round2, round3],
-  emerald: [emerald1, emerald2, emerald3],
-  marquise: [marquise1, marquise2, marquise3],
-  oval: [oval1, oval2, oval3],
-  pear: [pear1, pear2, pear3],
-  princess: [asscher1, asscher2, asscher3], // princess = asscher
+  heart: [
+    'dmm/generatedImages/6_diamonds/heart/heart-1_1@2500x.webp',
+    'dmm/generatedImages/6_diamonds/heart/heart-2@2500x.webp',
+    'dmm/generatedImages/6_diamonds/heart/heart-3@2500x.webp',
+  ],
+  round: [
+    'dmm/generatedImages/6_diamonds/round/round-1.webp',
+    'dmm/generatedImages/6_diamonds/round/round-2.webp',
+    'dmm/generatedImages/6_diamonds/round/round-3.webp',
+  ],
+  emerald: [
+    'dmm/generatedImages/6_diamonds/emerald/emerald-1.webp',
+    'dmm/generatedImages/6_diamonds/emerald/emerald-2.webp',
+    'dmm/generatedImages/6_diamonds/emerald/emerald-3.webp',
+  ],
+  marquise: [
+    'dmm/generatedImages/6_diamonds/marquise/marquise-1.webp',
+    'dmm/generatedImages/6_diamonds/marquise/marquise-2.webp',
+    'dmm/generatedImages/6_diamonds/marquise/marquise-3.webp',
+  ],
+  oval: [
+    'dmm/generatedImages/6_diamonds/oval/oval-1.webp',
+    'dmm/generatedImages/6_diamonds/oval/oval-2.webp',
+    'dmm/generatedImages/6_diamonds/oval/oval-3.webp',
+  ],
+  pear: [
+    'dmm/generatedImages/6_diamonds/pear/pear-1.webp',
+    'dmm/generatedImages/6_diamonds/pear/pear-2.webp',
+    'dmm/generatedImages/6_diamonds/pear/pear-3.webp',
+  ],
+  princess: [
+    'dmm/generatedImages/6_diamonds/asscher/asscher-1.webp',
+    'dmm/generatedImages/6_diamonds/asscher/asscher-2.webp',
+    'dmm/generatedImages/6_diamonds/asscher/asscher-3.webp',
+  ], // princess = asscher
 };
 
 // Helper to load image
@@ -172,15 +175,15 @@ const AvatarGenerator = ({
       // Get diamond images based on user's selected shape
       const diamondImages = DIAMONDS[diamondShape] || DIAMONDS.heart;
 
-      // Load all layer images in parallel
+      // Load all layer images in parallel (using Cloudflare CDN URLs)
       const [mountainImg, grassImg, flowersImg, moonImg, musicImg, diamondImg, subheadingImg] = await Promise.all([
-        loadImage(MOUNTAINS[mountainIndex]),
-        loadImage(GRASS[grassIndex]),
-        loadImage(FLOWERS[flowersIndex]),
-        loadImage(MOONS[moonIndex]),
-        loadImage(music),
-        loadImage(diamondImages[diamondVariantIndex]),
-        loadImage(subheading),
+        loadImage(getMediaUrl(MOUNTAINS[mountainIndex])),
+        loadImage(getMediaUrl(GRASS[grassIndex])),
+        loadImage(getMediaUrl(FLOWERS[flowersIndex])),
+        loadImage(getMediaUrl(MOONS[moonIndex])),
+        loadImage(getMediaUrl(MUSIC)),
+        loadImage(getMediaUrl(diamondImages[diamondVariantIndex])),
+        loadImage(getMediaUrl(SUBHEADING)),
       ]);
 
       // Clear canvas

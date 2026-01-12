@@ -13,8 +13,7 @@ import { initAudio, playNote, isAudioInitialized } from '@services/event/audio';
 import { broadcastNoteAdded } from '@services/event/ably';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
-import staffLineSvg from '@/assets/images/dmm/Rectangle 4200.svg';
-import heartSvg from '@/assets/images/dmm/heart.svg';
+import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 
 // Position range for the diamond (percentage)
 const MIN_POSITION = 10;
@@ -353,7 +352,7 @@ const Layout1 = () => {
               {[0, 1, 2, 3, 4].map((i) => (
                 <img
                   key={i}
-                  src={staffLineSvg}
+                  src={getMediaUrl('dmm/Rectangle 4200.svg')}
                   alt=""
                   className="place-note-new__line place-note-new__line--animate"
                 />
@@ -371,7 +370,7 @@ const Layout1 = () => {
                 }}
               >
                 <img
-                  src={heartSvg}
+                  src={getMediaUrl('dmm/heart.svg')}
                   alt="Heart note"
                   className="place-note-new__heart"
                 />
