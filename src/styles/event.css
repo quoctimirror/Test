@@ -33,6 +33,8 @@
   background: var(--event-bg-gradient);
   color: var(--event-text);
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .event-page {
@@ -1756,46 +1758,12 @@
   pointer-events: none;
 }
 
-/* Line entrance animation - grow from left to right */
-.place-note-new__line--animate {
-  transform-origin: left center;
-  animation: lineGrowWidth 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes lineGrowWidth {
-  0% {
-    transform: scaleX(0);
-  }
-  100% {
-    transform: scaleX(1);
-  }
-}
-
 /* Heart note on staff - positioned dynamically */
 .place-note-new__diamond {
   position: absolute;
   transform: translate(-50%, -50%);
   transition: left 0.3s ease, top 0.3s ease;
   z-index: 10;
-}
-
-/* Diamond entrance animation - scale from big to small */
-.place-note-new__diamond--animate {
-  animation: diamondScaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes diamondScaleIn {
-  0% {
-    transform: translate(-50%, -50%) scale(3);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
 }
 
 .place-note-new__heart {
@@ -1866,52 +1834,11 @@
   z-index: 10;
 }
 
-/* Responsive - Tablet */
-@media (max-width: 1024px) {
-  .place-note-new__header {
-    padding: 1.5rem;
-  }
-
-  /* Staff - same as mobile with 80px gap */
-  .place-note-new__staff {
-    height: 360px; /* 5 lines * 8px + 4 gaps * 80px = 360px */
-  }
-
-  /* Lines wrapper - keep 80px gap */
-  .place-note-new__lines-wrapper {
-    gap: 80px;
-  }
-
-  .place-note-new__line {
-    height: 8px; /* Reduced from 12px */
-  }
-
-  /* Heart/Diamond note - 113.143px on tablet */
-  .place-note-new__heart {
-    width: 113.143px;
-    height: 113.143px;
-    aspect-ratio: 1 / 1;
-  }
-
-  .place-note-new__arrow--left {
-    left: 16px;
-  }
-
-  .place-note-new__arrow--right {
-    right: 16px;
-  }
-
-  .place-note-new__footer {
-    bottom: 32px;
-    left: 32px;
-    max-width: 300px;
-  }
-}
-
-/* Responsive - Mobile */
+/* Responsive */
 @media (max-width: 768px) {
-  .place-note-new__header {
-    padding: 1.5rem 1rem;
+  .place-note-new__rings {
+    width: 500px;
+    height: 500px;
   }
 
   .place-note-new__title {
@@ -1919,54 +1846,23 @@
     letter-spacing: 0.2em;
   }
 
-  /* Staff - adjusted for mobile with 80px gap */
+  .place-note-new__staff-container {
+    gap: 0.5rem;
+  }
+
   .place-note-new__staff {
-    height: 360px; /* 5 lines * 8px + 4 gaps * 80px = 360px */
+    height: 150px;
   }
 
-  /* Lines wrapper - keep 80px gap on mobile */
-  .place-note-new__lines-wrapper {
-    gap: 80px;
-  }
-
-  .place-note-new__line {
-    height: 8px; /* Reduced from 12px */
-  }
-
-  /* Heart/Diamond note - 113.143px on mobile */
-  .place-note-new__heart {
-    width: 113.143px;
-    height: 113.143px;
-    aspect-ratio: 1 / 1;
-  }
-
-  /* Arrow buttons - closer to edges on mobile */
-  .place-note-new__arrow--left {
-    left: 12px;
-  }
-
-  .place-note-new__arrow--right {
-    right: 12px;
-  }
-
-  /* Footer - adjusted for mobile */
   .place-note-new__footer {
-    bottom: 24px;
+    bottom: 20px;
     left: 20px;
+    max-width: 280px;
+  }
+
+  .place-note-new__next {
+    bottom: 20px;
     right: 20px;
-    max-width: none;
-  }
-
-  .place-note-new__progress-step {
-    width: 40px;
-  }
-
-  .place-note-new__subtitle {
-    font-size: 1rem;
-  }
-
-  .place-note-new__description {
-    font-size: 0.875rem;
   }
 }
 
@@ -2254,40 +2150,28 @@
   opacity: 0.85;
 }
 
-/* Responsive - Tablet */
-@media (max-width: 1024px) {
-  /* 3 staffs on tablet/mobile */
-  .write-message__staffs--mobile {
-    gap: 72px;
-    margin-top: -40px; /* Adjust vertical position */
+/* Responsive */
+@media (max-width: 768px) {
+  .write-message__staffs {
+    gap: 60px;
   }
 
   .write-message__staff {
     height: 140px;
   }
 
-  /* Line positions for mobile - gap 27px (140px total height) */
-  .write-message__line:nth-child(1) { top: 0px; }
-  .write-message__line:nth-child(2) { top: 33.296px; }  /* 6.296 + 27 */
-  .write-message__line:nth-child(3) { top: 66.592px; }  /* 2 × 33.296 */
-  .write-message__line:nth-child(4) { top: 99.888px; }  /* 3 × 33.296 */
-  .write-message__line:nth-child(5) { top: 133.184px; } /* 4 × 33.296 */
-
-  /* Note size - 30px */
   .write-message__note-img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
   }
 
   .write-message__note-img--user {
-    width: 30px;
-    height: 30px;
+    width: 40px;
   }
 
   .write-message__footer {
-    bottom: 32px;
-    left: 32px;
-    max-width: 300px;
+    bottom: 20px;
+    left: 20px;
+    max-width: 280px;
   }
 
   .write-message__arrow--left {
@@ -2299,48 +2183,8 @@
   }
 
   .write-message__actions {
+    bottom: 20px;
     gap: 12px;
-  }
-}
-
-/* Responsive - Mobile */
-@media (max-width: 768px) {
-  .write-message__staffs--mobile {
-    gap: 72px; /* Gap between 3 staffs */
-    margin-top: 0;
-  }
-
-  /* Hide footer on mobile */
-  .write-message__footer {
-    display: none;
-  }
-
-  /* Hide left arrow on mobile */
-  .write-message__arrow--left {
-    display: none;
-  }
-
-  /* Right arrow - bottom right */
-  .write-message__arrow--right {
-    top: auto;
-    bottom: 24px;
-    right: 20px;
-    transform: none;
-  }
-
-  /* Action buttons - bottom left, only show first button */
-  .write-message__actions {
-    bottom: 24px;
-    left: 20px;
-    right: auto;
-    transform: none;
-    flex-direction: row;
-    gap: 12px;
-  }
-
-  /* Hide second button on mobile */
-  .write-message__actions .glass-button--pill:last-child {
-    display: none;
   }
 
   .write-message__actions .glass-button--pill {
@@ -2539,12 +2383,7 @@
 .choose-note-shape__actions .glass-button--pill span {
   font-size: 14px;
   font-weight: 500;
-  color: #BC2242;
-}
-
-.choose-note-shape__actions .glass-button--pill svg {
-  color: #BC2242;
-  stroke: #BC2242;
+  color: #333;
 }
 
 /* Small circle button variant */
@@ -2607,24 +2446,7 @@
   line-height: 1.4;
 }
 
-/* Responsive - Tablet */
-@media (max-width: 1024px) {
-  .choose-note-shape__arrow--left {
-    left: 16px;
-  }
-
-  .choose-note-shape__social {
-    right: 16px;
-  }
-
-  .choose-note-shape__footer {
-    bottom: 32px;
-    left: 32px;
-    max-width: 300px;
-  }
-}
-
-/* Responsive - Mobile */
+/* Responsive */
 @media (max-width: 768px) {
   .choose-note-shape__card {
     width: 240px;
@@ -2635,386 +2457,29 @@
     width: 120px;
   }
 
-  /* Hide footer on mobile */
   .choose-note-shape__footer {
-    display: none;
+    bottom: 20px;
+    left: 20px;
+    max-width: 280px;
   }
 
-  /* Hide left arrow on mobile */
   .choose-note-shape__arrow--left {
-    display: none;
+    left: 16px;
   }
 
-  /* Hide social icons on mobile */
   .choose-note-shape__social {
-    display: none;
-  }
-
-  /* Action buttons - bottom center */
-  .choose-note-shape__actions {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .choose-note-shape__actions .glass-button--pill {
-    height: 48px;
-    padding: 0 24px;
-  }
-
-  .choose-note-shape__actions .glass-button--pill span {
-    font-size: 14px;
-    color: #BC224C;
-  }
-
-  .choose-note-shape__actions .glass-button--pill svg {
-    color: #BC224C;
-    stroke: #BC224C;
-  }
-
-  /* Show share button on mobile */
-  .choose-note-shape__actions .glass-button--circle {
-    display: flex;
+    right: 16px;
+    gap: 8px;
   }
 
   .glass-button--small {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
   }
 
   .glass-button--small svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  /* Instructions - hide on mobile */
-  .flip-card-instructions {
-    display: none;
-  }
-
-  /* Status - hide on mobile */
-  .flip-card-status {
-    display: none;
-  }
-}
-
-/* =====================================================
-   3D FLIP CARD - Choose Note Shape Screen
-   ===================================================== */
-
-/* Ambient light effect */
-.flip-card-ambient-light {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 70% 20%, rgba(255, 220, 150, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 30% 80%, rgba(100, 150, 255, 0.05) 0%, transparent 40%);
-  z-index: 0;
-}
-
-/* Status indicator */
-.flip-card-status {
-  padding: 10px 24px;
-  border-radius: 30px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  backdrop-filter: blur(10px);
-  transition: all 0.4s;
-  margin-top: 12px;
-}
-
-.flip-card-status--front {
-  background: rgba(255, 215, 0, 0.15);
-  color: #b8860b;
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
-}
-
-.flip-card-status--back {
-  background: rgba(188, 34, 76, 0.15);
-  color: #BC224C;
-  border: 1px solid rgba(188, 34, 76, 0.3);
-  box-shadow: 0 0 30px rgba(188, 34, 76, 0.2);
-}
-
-.flip-card-status--dragging {
-  background: rgba(155, 89, 182, 0.15);
-  color: #9b59b6;
-  border: 1px solid rgba(155, 89, 182, 0.3);
-  box-shadow: 0 0 30px rgba(155, 89, 182, 0.2);
-}
-
-/* Scene container with perspective */
-.flip-card-scene {
-  perspective: 1000px;
-  perspective-origin: 65% 35%;
-  overflow: visible;
-}
-
-/* Card container - draggable area */
-.flip-card-container {
-  position: relative;
-  width: 250px;
-  height: 446px; /* Ratio 2500:4462 */
-  cursor: grab;
-  transform-style: preserve-3d;
-  transform: rotateX(12deg) rotateY(-8deg);
-  animation: flipCardEntry 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.flip-card-container.dragging {
-  cursor: grabbing;
-}
-
-/* Ripple effect - behind the card */
-.flip-card-container .ripple-effect-area {
-  overflow: visible;
-  z-index: -1;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-@keyframes flipCardEntry {
-  0% {
-    transform: translateZ(2000px) scale(4) rotateX(12deg) rotateY(720deg);
-    opacity: 0;
-    filter: blur(20px);
-  }
-  30% {
-    opacity: 1;
-    filter: blur(5px);
-  }
-  100% {
-    transform: translateZ(0) scale(1) rotateX(12deg) rotateY(-8deg);
-    opacity: 1;
-    filter: blur(0px);
-  }
-}
-
-/* The card itself */
-.flip-card {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-}
-
-.flip-card.flipping-to-back {
-  animation: cardFlip 0.4s forwards ease-in-out;
-}
-
-.flip-card.flipping-to-front {
-  animation: cardUnFlip 0.4s forwards ease-in-out;
-}
-
-@keyframes cardFlip {
-  0% { transform: rotateZ(0deg) rotateY(0deg); }
-  50% { transform: rotateZ(-10deg) rotateY(90deg); }
-  100% { transform: rotateZ(0deg) rotateY(180deg); }
-}
-
-@keyframes cardUnFlip {
-  0% { transform: rotateZ(0deg) rotateY(180deg); }
-  50% { transform: rotateZ(-10deg) rotateY(90deg); }
-  100% { transform: rotateZ(0deg) rotateY(0deg); }
-}
-
-/* Card faces - front and back */
-.flip-card-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.4),
-    0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* Front face */
-.flip-card-front {
-  background: transparent;
-}
-
-/* Back face */
-.flip-card-back {
-  background: transparent;
-  transform: rotateY(180deg);
-}
-
-/* Card inner content */
-.flip-card-inner {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  z-index: 1;
-}
-
-/* Card image */
-.flip-card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 14px;
-}
-
-/* Shine effect */
-.flip-card-shine {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 10;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.flip-card-shine::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    transparent 35%,
-    rgba(255, 255, 255, 0.05) 40%,
-    rgba(255, 255, 255, 0.15) 45%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0.15) 55%,
-    rgba(255, 255, 255, 0.05) 60%,
-    transparent 65%,
-    transparent 100%
-  );
-  transform: rotate(-25deg) translateX(var(--shine-pos, -100%));
-}
-
-/* Texture overlay */
-.flip-card-texture {
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 3px,
-      rgba(255, 255, 255, 0.01) 3px,
-      rgba(255, 255, 255, 0.01) 6px
-    );
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-/* Card shadow */
-.flip-card-shadow {
-  position: absolute;
-  bottom: -80px;
-  left: 50%;
-  width: 220px;
-  height: 40px;
-  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.6) 0%, transparent 70%);
-  transform: translateX(-50%) rotateX(90deg);
-  filter: blur(15px);
-  pointer-events: none;
-}
-
-/* Instructions */
-.flip-card-instructions {
-  color: rgba(0, 0, 0, 0.5);
-  font-size: 13px;
-  text-align: center;
-  margin-top: 16px;
-}
-
-/* Responsive - Tablet */
-@media (max-width: 1024px) {
-  .flip-card-container {
-    width: 340px;
-    height: 590px;
-  }
-}
-
-/* Responsive - Mobile */
-@media (max-width: 768px) {
-  .flip-card-container {
-    width: 240px;
-    height: 420px;
-  }
-
-  .flip-card-status {
-    padding: 8px 16px;
-    font-size: 10px;
-  }
-
-  .flip-card-instructions {
-    font-size: 11px;
-  }
-}
-
-/* =====================================================
-   ZOOM TRANSITION - Layout 1 → Layout 2 (Google Maps style)
-   ===================================================== */
-
-/*
- * Layout 1 = Zoomed IN view (close-up on one note)
- * Layout 2 = Zoomed OUT view (see all notes)
- *
- * Transition flow:
- * 1. Layout 1 fades out
- * 2. Layout 2 starts zoomed IN (scale 3) on user's note position
- * 3. Layout 2 zooms OUT (scale 3 → 1) to reveal all notes
- */
-
-/* Layout 1 Exit - Quick fade out */
-.place-note-new--zoom-out {
-  animation: layout1Exit 0.3s ease-out forwards;
-  pointer-events: none;
-}
-
-@keyframes layout1Exit {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/* Layout 2 Entrance - Map-style zoom out from user's note */
-.write-message {
-  /* Default transform-origin, will be overridden by JS */
-  --zoom-origin-x: 50%;
-  --zoom-origin-y: 50%;
-}
-
-.write-message--zoom-in {
-  transform-origin: var(--zoom-origin-x) var(--zoom-origin-y);
-  animation: mapZoomOut 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
-
-@keyframes mapZoomOut {
-  0% {
-    transform: scale(5);
-  }
-  100% {
-    transform: scale(1);
+    width: 16px;
+    height: 16px;
   }
 }
 

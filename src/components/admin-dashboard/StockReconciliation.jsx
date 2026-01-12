@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Html5Qrcode } from "html5-qrcode";
-import { productsAPI, misaAmisAPI } from "@/services/api";
+import { productsAPI, misaAmisAPI, stockReconciliationAPI } from "@/services/api";
+import { generateStockReconciliationReport } from "@/utils/stockReconciliationExport";
+import { saveAs } from "file-saver";
 import "./StockReconciliation.css";
 
 export default function StockReconciliation() {
@@ -551,8 +553,138 @@ export default function StockReconciliation() {
     return { total, matches, mismatches, missing, excess, notInMisa, progress, misaItemsCount, scannedMisaItems };
   }, [getComparisonData, misaLookup, scannedItems, findMisaItem]);
 
-  // Export report
-  const exportReport = () => {
+  // Export report state
+  const [isExporting, setIsExporting] = useState(false);
+  const [showExportConfirm, setShowExportConfirm] = useState(false);
+
+  // Handle export button click - show confirmation modal
+  const handleExportClick = () => {
+    setShowExportConfirm(true);
+  };
+
+  // Export report as DOCX and save to backend
+  const exportReport = async () => {
+    setShowExportConfirm(false); // Close modal
+    setIsExporting(true);
+    try {
+      const warehouseName = selectedWarehouse
+        ? misaWarehouses.find(w => w.stock_id === selectedWarehouse)?.stock_name || "All Warehouses"
+        : "All Warehouses";
+
+      // Prepare scanned items with unit price
+      const scannedItemsForExport = getComparisonData.map(item => ({
+        ...item,
+        unitPrice: item.unitPrice || 0,
+        unit: item.unit || "Cái",
+        quality: "good"
+      }));
+
+      // Get set of scanned SKUs (including matched MISA SKUs)
+      const scannedSkus = new Set();
+      getComparisonData.forEach(item => {
+        scannedSkus.add(item.sku);
+        if (item.matchedMisaSku) {
+          scannedSkus.add(item.matchedMisaSku);
+        }
+      });
+
+      // Add unscanned MISA items (items in system but not counted = missing)
+      const unscannedMisaItems = filteredMisaStock
+        .filter(item => !scannedSkus.has(item.inventory_item_code))
+        .map(item => ({
+          sku: item.inventory_item_code,
+          name: item.inventory_item_name || "",
+          physicalCount: 0, // Not scanned = 0 physical count
+          misaCount: item.quantity_balance || 0,
+          difference: -(item.quantity_balance || 0), // Negative = missing
+          status: "missing",
+          unitPrice: item.unit_price || 0,
+          unit: item.unit_name || "Cái",
+          quality: "good"
+        }));
+
+      // Combine scanned and unscanned items
+      const allItemsForExport = [...scannedItemsForExport, ...unscannedMisaItems];
+
+      // Sort: first by status (match, excess, missing, not_in_misa), then by SKU
+      const statusOrder = { match: 0, excess: 1, missing: 2, not_in_misa: 3 };
+      allItemsForExport.sort((a, b) => {
+        const statusDiff = (statusOrder[a.status] || 99) - (statusOrder[b.status] || 99);
+        if (statusDiff !== 0) return statusDiff;
+        return (a.sku || "").localeCompare(b.sku || "");
+      });
+
+      const documentNumber = `KK-${new Date().getTime()}`;
+      const inventoryDate = new Date();
+
+      // Generate DOCX report (return blob instead of saving)
+      const { blob, fileName } = await generateStockReconciliationReport({
+        companyName: "MIRROR DIAMOND",
+        department: warehouseName,
+        documentNumber,
+        inventoryDate,
+        committee: [], // Will show placeholder lines
+        items: allItemsForExport,
+        warehouseName,
+        returnBlob: true // Return blob for API upload
+      });
+
+      // Save local copy first
+      saveAs(blob, fileName);
+
+      // Calculate summary stats
+      const summary = {
+        total: allItemsForExport.length,
+        match: allItemsForExport.filter(i => i.status === "match").length,
+        missing: allItemsForExport.filter(i => i.status === "missing").length,
+        excess: allItemsForExport.filter(i => i.status === "excess").length,
+        notInMisa: allItemsForExport.filter(i => i.status === "not_in_misa").length
+      };
+
+      // Prepare data for backend
+      const recordData = {
+        documentNumber,
+        warehouseId: selectedWarehouse || null,
+        warehouseName,
+        reconciliationDate: inventoryDate.toISOString(),
+        summary,
+        items: allItemsForExport,
+        notes: `Kiểm kê ${warehouseName} - ${inventoryDate.toLocaleDateString('vi-VN')}`
+      };
+
+      // Convert blob to File for upload
+      const file = new File([blob], fileName, {
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      });
+
+      // Save to backend
+      try {
+        const response = await stockReconciliationAPI.createRecord(recordData, file);
+        console.log("Stock reconciliation record saved:", response.data);
+
+        // Stop scanner and clear session after successful export
+        await stopScanner();
+        clearSession();
+      } catch (apiError) {
+        console.error("Failed to save to backend:", apiError);
+        // Still show success for local download, warn about backend
+        alert(`⚠️ Đã tải xuống biên bản!\nLưu ý: Không thể lưu vào hệ thống (${apiError.message})`);
+
+        // Still stop scanner and clear session
+        await stopScanner();
+        clearSession();
+      }
+
+    } catch (error) {
+      console.error("Export failed:", error);
+      alert("Xuất báo cáo thất bại. Vui lòng thử lại.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  // Export report as JSON (alternative)
+  const exportReportJSON = () => {
     const report = {
       sessionDate: new Date().toISOString(),
       warehouse: selectedWarehouse ? misaWarehouses.find(w => w.stock_id === selectedWarehouse)?.stock_name : "All Warehouses",
@@ -771,11 +903,16 @@ export default function StockReconciliation() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <button className="btn-export" onClick={exportReport} disabled={getComparisonData.length === 0}>
+                <button
+                  className="btn-export"
+                  onClick={handleExportClick}
+                  disabled={(getComparisonData.length === 0 && filteredMisaStock.length === 0) || isExporting}
+                  title="Xuất biên bản kiểm kê (bao gồm cả hàng chưa kiểm)"
+                >
                   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
                   </svg>
-                  Export
+                  {isExporting ? "Đang xuất..." : "Xuất biên bản"}
                 </button>
                 {Object.keys(scannedItems).length > 0 && (
                   <button className="btn-clear" onClick={clearSession}>Clear</button>
@@ -991,6 +1128,66 @@ export default function StockReconciliation() {
                 </tbody>
               </table>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Export Confirmation Modal */}
+      {showExportConfirm && (
+        <div className="modal-overlay" onClick={() => setShowExportConfirm(false)}>
+          <div className="modal-content export-confirm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Xác nhận xuất biên bản kiểm kê</h3>
+              <button className="modal-close" onClick={() => setShowExportConfirm(false)}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="confirm-icon">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M9 12l2 2 4-4" />
+                  <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+                </svg>
+              </div>
+              <p className="confirm-message">Bạn có chắc chắn muốn hoàn tất phiên kiểm kê này?</p>
+              <div className="confirm-details">
+                <div className="confirm-item">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="6" y="6" width="12" height="12" />
+                  </svg>
+                  <span>Dừng phiên kiểm kê hiện tại</span>
+                </div>
+                <div className="confirm-item">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                  </svg>
+                  <span>Xuất biên bản kiểm kê (file DOCX)</span>
+                </div>
+                <div className="confirm-item">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                    <polyline points="17 21 17 13 7 13 7 21" />
+                    <polyline points="7 3 7 8 15 8" />
+                  </svg>
+                  <span>Lưu biên bản vào hệ thống</span>
+                </div>
+              </div>
+              <div className="confirm-summary">
+                <span>Tổng số mặt hàng: <strong>{summaryStats.total + (filteredMisaStock.length - summaryStats.scannedMisaItems)}</strong></span>
+                <span className="match">Khớp: <strong>{summaryStats.matches}</strong></span>
+                <span className="missing">Thiếu: <strong>{summaryStats.missing + (filteredMisaStock.length - summaryStats.scannedMisaItems)}</strong></span>
+                <span className="excess">Thừa: <strong>{summaryStats.excess}</strong></span>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn-cancel" onClick={() => setShowExportConfirm(false)}>
+                Hủy
+              </button>
+              <button className="btn-confirm" onClick={exportReport} disabled={isExporting}>
+                {isExporting ? "Đang xuất..." : "Xác nhận & Xuất biên bản"}
+              </button>
+            </div>
           </div>
         </div>
       )}
