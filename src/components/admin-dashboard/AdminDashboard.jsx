@@ -27,6 +27,7 @@ import RBACMatrix from "./RBACMatrix";
 import AppointmentsManager from "./AppointmentsManager";
 import PackagePrintingKit from "./PackagePrintingKit";
 import StockReconciliation from "./StockReconciliation";
+import WarehouseManagement from "./WarehouseManagement";
 // Product Ops Dashboard
 import {
   ProductOpsDashboard,
@@ -126,6 +127,7 @@ const AdminDashboard = () => {
     { id: "categories", label: "Categories" },
     { id: "collections", label: "Collections" },
     { id: "locations", label: "Locations" },
+    { id: "warehouses", label: "Warehouses" },
     { id: "vendors", label: "Vendors" },
     // { id: "vendor-matching", label: "Vendor Matching" },
     // { id: "vendor-optimization", label: "Vendor Optimization" },
@@ -162,6 +164,7 @@ const AdminDashboard = () => {
       categories: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       collections: ["PRODUCTION_OPS", "MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       locations: ["ADMIN", "IT_ADMIN"],
+      warehouses: ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN", "SUPER_ADMIN"],
       vendors: ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       "vendor-matching": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       "vendor-optimization": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
@@ -247,6 +250,8 @@ const AdminDashboard = () => {
         return <CollectionsManager />;
       case "locations":
         return <LocationsManager />;
+      case "warehouses":
+        return <WarehouseManagement />;
       case "vendors":
         return <VendorsManager />;
       case "vendor-matching":
@@ -354,6 +359,10 @@ const AdminDashboard = () => {
         title: "Store Locations",
         description:
           "Manage store locations, addresses, and contact information",
+      },
+      warehouses: {
+        title: "Warehouse Management",
+        description: "Manage warehouses, racks, slots, and inventory positions",
       },
       vendors: {
         title: "Vendors Management",

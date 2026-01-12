@@ -1295,5 +1295,34 @@ export const stockReconciliationAPI = {
   deleteRecord: (id) => api.delete(`/api/stock-reconciliation/${id}`),
 };
 
+// ===== WAREHOUSE MANAGEMENT API =====
+export const warehouseAPI = {
+  // Warehouses
+  getAll: () => api.get("/api/warehouses"),
+  getById: (id) => api.get(`/api/warehouses/${id}`),
+  create: (data) => api.post("/api/warehouses", data),
+  update: (id, data) => api.put(`/api/warehouses/${id}`, data),
+  delete: (id) => api.delete(`/api/warehouses/${id}`),
+
+  // Racks
+  getRacks: (warehouseId) => api.get(`/api/warehouses/${warehouseId}/racks`),
+  createRack: (warehouseId, data) => api.post(`/api/warehouses/${warehouseId}/racks`, data),
+  updateRack: (id, data) => api.put(`/api/warehouses/racks/${id}`, data),
+  deleteRack: (id) => api.delete(`/api/warehouses/racks/${id}`),
+
+  // Slots
+  getSlots: (rackId) => api.get(`/api/warehouses/racks/${rackId}/slots`),
+  createSlot: (rackId, data) => api.post(`/api/warehouses/racks/${rackId}/slots`, data),
+  createSlotsBatch: (rackId, data) => api.post(`/api/warehouses/racks/${rackId}/slots/batch`, data),
+
+  // Positions
+  getPending: (params) => api.get("/api/warehouses/positions/pending", { params }),
+  assignPosition: (data) => api.post("/api/warehouses/positions/assign", data),
+  bulkAssign: (data) => api.post("/api/warehouses/positions/bulk-assign", data),
+
+  // Stock & Stats
+  stockInward: (data) => api.post("/api/warehouses/stock/inward", data),
+  getStats: () => api.get("/api/warehouses/stats"),
+};
 // Export the axios instance for custom calls
 export default api;
