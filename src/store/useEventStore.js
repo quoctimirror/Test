@@ -17,6 +17,9 @@ const useEventStore = create(
       // Selected diamond shape
       selectedDiamond: null,
 
+      // Initial note position (randomized once per user, then persisted)
+      initialNotePosition: null, // { x: number, y: number }
+
       // Selected avatar background
       selectedBackground: 'pink',
 
@@ -46,6 +49,8 @@ const useEventStore = create(
 
       setSelectedDiamond: (diamond) => set({ selectedDiamond: diamond }),
 
+      setInitialNotePosition: (position) => set({ initialNotePosition: position }),
+
       setSelectedBackground: (background) => set({ selectedBackground: background }),
 
       setSelectedScenery: (scenery) => set({ selectedScenery: scenery }),
@@ -72,6 +77,7 @@ const useEventStore = create(
           currentStep: 'login',
           user: null,
           selectedDiamond: null,
+          initialNotePosition: null,
           selectedBackground: 'pink',
           selectedScenery: 'mountains',
           userNote: null,
@@ -100,10 +106,12 @@ const useEventStore = create(
     }),
     {
       name: 'mirror-diamond-event',
-      // Only persist userNote and user to localStorage
+      // Persist userNote, user, selectedDiamond, and initialNotePosition to localStorage
       partialize: (state) => ({
         userNote: state.userNote,
         user: state.user,
+        selectedDiamond: state.selectedDiamond,
+        initialNotePosition: state.initialNotePosition,
       }),
     }
   )

@@ -81,11 +81,20 @@ const getPositionOnOrbit = (orbit, angleDeg) => {
 
 const EventChooseShapePage = () => {
   const navigate = useNavigate();
-  const { setSelectedDiamond } = useEventStore();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const { selectedDiamond, setSelectedDiamond } = useEventStore();
+
+  // Find initial index based on previously selected diamond (or default to 0)
+  const getInitialIndex = () => {
+    if (!selectedDiamond) return 0;
+    const index = shapes.findIndex(shape => shape.id === selectedDiamond);
+    return index >= 0 ? index : 0;
+  };
+
+  const [currentIndex, setCurrentIndex] = useState(getInitialIndex);
   const [prevIndex, setPrevIndex] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [rotationOffset, setRotationOffset] = useState(0);
+  // Initialize rotation offset to show selected shape at center
+  const [rotationOffset, setRotationOffset] = useState(() => orbitAngles[getInitialIndex()]);
   const animationRef = useRef(null);
 
   // Animate rotation when currentIndex changes
