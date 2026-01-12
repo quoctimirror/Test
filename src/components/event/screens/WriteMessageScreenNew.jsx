@@ -11,19 +11,20 @@ import { ROUTES } from '@/constants/routes';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import NavbarV4 from '@/components/navbar/NavbarV4';
 
 // Breakpoint for tablet/mobile
 const TABLET_BREAKPOINT = 1024;
 
-// Diamond shape Cloudflare paths array
+// Diamond shape Cloudflare paths array - using optimized webp
 const DIAMOND_SHAPES = [
-  'dmm/heart.svg',
-  'dmm/ascher.png',
-  'dmm/emerald.png',
-  'dmm/lumex.png',
-  'dmm/marquise.png',
-  'dmm/oval.png',
-  'dmm/pear.png',
+  'mirror_DMM/H1.webp',
+  'mirror_DMM/H2.webp',
+  'mirror_DMM/H3.webp',
+  'mirror_DMM/H4.webp',
+  'mirror_DMM/H5.webp',
+  'mirror_DMM/H6.webp',
+  'mirror_DMM/H7.webp',
 ];
 
 // Staff configuration - Desktop
@@ -138,6 +139,14 @@ const WriteMessageScreenNew = () => {
     return isTabletOrMobile ? generateMobileNotes() : generateDesktopNotes();
   }, [isTabletOrMobile]);
 
+  // Preload webp images for faster rendering
+  useEffect(() => {
+    DIAMOND_SHAPES.forEach(shape => {
+      const img = new Image();
+      img.src = getMediaUrl(shape);
+    });
+  }, []);
+
   // Listen for window resize to update isTabletOrMobile
   useEffect(() => {
     const handleResize = () => {
@@ -192,15 +201,15 @@ const WriteMessageScreenNew = () => {
 
     if (userNoteRef.current && !rippleRef.current) {
       rippleRef.current = new RippleEffect(userNoteRef.current, {
-        autoRippleCount: 6,
-        duration: 6000,
-        delay: 1000,
+        autoRippleCount: 3,
+        duration: 4000,
+        delay: 1500,
         startSize: 40,
-        endSize: 450,
-        opacity: 0.65,
+        endSize: 350,
+        opacity: 0.5,
         autoPlay: true,
         clickable: false,
-        clickRippleCount: 5,
+        clickRippleCount: 3,
       });
     }
 
@@ -226,7 +235,7 @@ const WriteMessageScreenNew = () => {
   const POSITIONS_Y = isTabletOrMobile ? POSITIONS_Y_MOBILE : POSITIONS_Y_DESKTOP;
 
   // Render a single music staff
-  const renderStaff = (notes, staffId, showUserNote = false) => (
+  const renderStaff = (notes, showUserNote = false) => (
     <div className="write-message__staff">
       {/* 5 staff lines */}
       <div className="write-message__lines">
@@ -264,7 +273,7 @@ const WriteMessageScreenNew = () => {
           }}
         >
           <img
-            src={getMediaUrl('dmm/heart.svg')}
+            src={getMediaUrl('mirror_DMM/H1.webp')}
             alt="Your note"
             className="write-message__note-img write-message__note-img--user"
           />
@@ -274,17 +283,15 @@ const WriteMessageScreenNew = () => {
   );
 
   return (
-    <div
-      ref={containerRef}
-      className={`write-message ${isEntering ? 'write-message--zoom-in' : ''}`}
-    >
-      {/* Background */}
-      <div className="write-message__bg" />
-
-      {/* Header */}
-      <header className="write-message__header">
-        <h1 className="write-message__title">MIRROR</h1>
-      </header>
+    <>
+      <NavbarV4 logoOnly />
+      <div
+        ref={containerRef}
+        className={`write-message ${isEntering ? 'write-message--zoom-in' : ''}`}
+        data-navbar-theme="black"
+      >
+        {/* Background */}
+        <div className="write-message__bg" />
 
       {/* Main content - Two music staffs with arrow buttons */}
       <main className="write-message__main">
@@ -300,9 +307,9 @@ const WriteMessageScreenNew = () => {
         </div>
 
         <div className={`write-message__staffs ${isTabletOrMobile ? 'write-message__staffs--mobile' : ''}`}>
-          {renderStaff(staff1Notes, 1, false)}
-          {renderStaff(staff2Notes, 2, !isTabletOrMobile)}
-          {isTabletOrMobile && renderStaff(staff3Notes, 3, true)}
+          {renderStaff(staff1Notes, false)}
+          {renderStaff(staff2Notes, !isTabletOrMobile)}
+          {isTabletOrMobile && renderStaff(staff3Notes, true)}
         </div>
 
         {/* Right arrow - go to next step */}
@@ -345,7 +352,8 @@ const WriteMessageScreenNew = () => {
         </button>
       </div>
 
-    </div>
+      </div>
+    </>
   );
 };
 

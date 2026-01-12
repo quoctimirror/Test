@@ -322,8 +322,8 @@ const EventChooseShapePage = () => {
 
         {/* Bottom Section */}
         <div className="event-choose-shape__bottom">
-          {/* Place your note - Left */}
-          <div className="event-choose-shape__note">
+          {/* Place your note - Left (Desktop only) */}
+          <div className="event-choose-shape__note event-choose-shape__note--desktop">
             <h3 className="event-choose-shape__note-title heading-3--no-margin">Place your note</h3>
             <p className="event-choose-shape__note-text bodytext-6--no-margin">
               cing elit, sed diam nonummy nibut laoreet dolore
@@ -333,15 +333,22 @@ const EventChooseShapePage = () => {
             </p>
           </div>
 
-          {/* Choose the shape - Center */}
+          {/* Choose the shape - Desktop */}
           <button
-            className="event-choose-shape__select-btn bodytext-6--no-margin"
+            className="event-choose-shape__select-btn event-choose-shape__select-btn--desktop bodytext-6--no-margin"
             onClick={handleNext}
           >
             Choose the shape
           </button>
 
-          {/* Empty space - Right (for balance) */}
+          {/* Confirm button - Mobile/Tablet */}
+          <div className="event-choose-shape__confirm-btn--mobile">
+            <ShineGlassButton theme="footer" onClick={handleNext}>
+              Confirm this shape
+            </ShineGlassButton>
+          </div>
+
+          {/* Empty space - Right (for balance, Desktop only) */}
           <div className="event-choose-shape__spacer"></div>
         </div>
       </div>

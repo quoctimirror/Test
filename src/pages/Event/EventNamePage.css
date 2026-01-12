@@ -124,6 +124,39 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  /* Hide navigation buttons on mobile/tablet */
+  .event-name__back {
+    display: none;
+  }
+
+  .event-name__nav {
+    display: none;
+  }
+
+  /* Vertical layout for greeting on tablet/mobile */
+  .event-name__greeting {
+    flex-direction: column;
+    gap: 0;
+    align-items: center;
+  }
+
+
+  .event-name__input-wrap {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .event-name__input {
+    text-align: center;
+  }
+
+  .event-name__subtitle {
+    margin-top: 0rem;
+    max-width: 46%;
+  }
+}
+
 @media (max-width: 768px) {
   .event-name__main {
     padding: 0 1rem;
@@ -133,5 +166,9 @@
 @media (max-width: 480px) {
   .event-name {
     padding: 1rem;
+  }
+
+  .event-name__subtitle {
+    max-width: 78%;
   }
 }

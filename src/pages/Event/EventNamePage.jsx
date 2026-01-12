@@ -23,7 +23,7 @@ const EventNamePage = () => {
     const updateWidth = () => {
       if (measureRef.current && inputRef.current) {
         // Measure placeholder width
-        measureRef.current.textContent = 'Your name';
+        measureRef.current.textContent = 'tên của bạn';
         const placeholderWidth = measureRef.current.offsetWidth;
 
         // Measure current text width
@@ -79,14 +79,14 @@ const EventNamePage = () => {
         {/* Main Content */}
         <div className="event-name__content">
           <div className="event-name__greeting">
-            <span className="event-name__hi heading-2--no-margin">Hi</span>
+            <span className="event-name__hi heading-2--no-margin">Dành cho</span>
             <div className="event-name__input-wrap">
               <span ref={measureRef} className="event-name__input-measure heading-2--no-margin" aria-hidden="true" />
               <input
                 ref={inputRef}
                 type="text"
                 className="event-name__input heading-2--no-margin"
-                placeholder="Your name"
+                placeholder="tên của bạn"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 maxLength={15}
@@ -97,7 +97,7 @@ const EventNamePage = () => {
           </div>
 
           <h2 className="heading-2--no-margin event-name__subtitle">
-            May us guide through The sound of love grown
+            nguồn cảm hứng của giai điệu Love-Grown.
           </h2>
         </div>
 

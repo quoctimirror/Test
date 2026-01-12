@@ -280,8 +280,21 @@
   overflow: hidden;
 }
 
+/* Add solid layer IMMEDIATELY to cover hero background */
+.event-guide__step1--fading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #F6F6F6;
+  z-index: 2;
+  pointer-events: none;
+}
+
 .event-guide__step1--fading .event-guide__hero {
-  display: none;
+  display: none !important;
 }
 
 .event-guide__step1--fading .event-guide__music {
@@ -294,6 +307,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
+  background: #F6F6F6 !important;
+  backdrop-filter: none !important;
+}
+
+/* Override the pink radial background - use solid instead */
+.event-guide__step1--fading .event-guide__music::before {
+  display: none !important;
 }
 
 /* During transition - step 2 stays in normal flow, step 1 covers it */
@@ -336,6 +357,15 @@
 }
 
 @keyframes step1FadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeOutOverlay {
   0% {
     opacity: 1;
   }
