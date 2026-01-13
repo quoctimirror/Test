@@ -28,47 +28,54 @@ const shapeVideos = {
 const getVideoUrl = (shape) => getMediaUrl(shapeVideos[shape.id]);
 
 // Diamond shapes data - H1 to H7 (scale: 1 = default, >1 = larger)
+// HEART-01 = Heart shape
+// HEART-02 = Oval shape
+// HEART-03 = Round shape
+// HEART-04 = Pear shape
+// HEART-05 = Cushion shape
+// HEART-06 = Emerald shape
+// HEART-07 = Marquise shape
 const shapes = [
   {
     id: 'h1',
     name: 'Heart shape',
-    image: 'mirror_DMM/HEART-01.webp',
+    image: 'mirror_DMM/HEART-01.webp', // Heart shape
     scale: 1.2,
   },
   {
     id: 'h2',
     name: 'Oval shape',
-    image: 'mirror_DMM/HEART-02.webp',
+    image: 'mirror_DMM/HEART-02.webp', // Oval shape
     scale: 1,
   },
   {
     id: 'h3',
     name: 'Round shape',
-    image: 'mirror_DMM/HEART-03.webp',
+    image: 'mirror_DMM/HEART-03.webp', // Round shape
     scale: 1.2,
   },
   {
     id: 'h4',
     name: 'Pear shape',
-    image: 'mirror_DMM/HEART-04.webp',
+    image: 'mirror_DMM/HEART-04.webp', // Pear shape
     scale: 1.2,
   },
   {
     id: 'h5',
     name: 'Cushion shape',
-    image: 'mirror_DMM/HEART-05.webp',
+    image: 'mirror_DMM/HEART-05.webp', // Cushion shape
     scale: 1.2,
   },
   {
     id: 'h6',
     name: 'Emerald shape',
-    image: 'mirror_DMM/HEART-06.webp',
+    image: 'mirror_DMM/HEART-06.webp', // Emerald shape
     scale: 1,
   },
   {
     id: 'h7',
     name: 'Marquise shape',
-    image: 'mirror_DMM/HEART-07.webp',
+    image: 'mirror_DMM/HEART-07.webp', // Marquise shape
     scale: 0.9,
   },
 ];

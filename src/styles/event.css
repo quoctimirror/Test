@@ -1633,10 +1633,10 @@
   display: none;
 }
 
-/* Note title - centered, top: 110px */
+/* Note title - centered, top: 180px */
 .place-note-new__note-title {
   position: absolute;
-  top: 110px;
+  top: 180px;
   left: 50%;
   transform: translateX(-50%);
   color: var(--Black, #0B0B0B);
@@ -1676,10 +1676,10 @@
   margin: 0;
 }
 
-/* Main content - vertically centered */
+/* Main content - slightly below center */
 .place-note-new__main {
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 0;
   right: 0;
   transform: translateY(-50%);
@@ -1691,25 +1691,25 @@
   width: 100%;
 }
 
-/* Arrow buttons wrapper - fixed position, vertically centered */
+/* Arrow buttons - fixed position, bottom (same as choose-shape) */
 .place-note-new__arrow {
   position: fixed;
-  bottom: 48px;
-  z-index: 100;
-  isolation: isolate;
+  bottom: 24px;
+  z-index: 1000;
 }
 
 .place-note-new__arrow--left {
-  left: 24px;
+  left: 2.5%;
 }
 
 .place-note-new__arrow--right {
-  right: 24px;
+  right: 2.5%;
 }
 
-/* Fix arrow icon - don't fill on hover */
-.place-note-new__arrow .shine-glass-button:hover .button-text svg path {
-  fill: none !important;
+/* Arrow icon size */
+.place-note-new__arrow .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Music Staff */
@@ -1844,7 +1844,7 @@
 }
 
 .place-note-new__heart {
-  width: 120px;
+  width: 60px;
   height: auto;
   position: relative;
   z-index: 2;
@@ -1911,27 +1911,23 @@
   z-index: 10;
 }
 
-/* Responsive - Tablet */
+/* Responsive - Tablet (max-width: 1024px) */
 @media (max-width: 1024px) {
   .place-note-new__header {
     padding: 1.5rem;
   }
 
-  /* Staff - same as mobile with 80px gap */
+  /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 113.143px on tablet */
+  /* Heart/Diamond note - 60px on tablet */
   .place-note-new__heart {
-    width: 113.143px;
-    height: 113.143px;
-    aspect-ratio: 1 / 1;
+    width: 60px;
+    height: auto;
   }
 
-  .place-note-new__arrow--left {
-    left: 16px;
-  }
-
-  .place-note-new__arrow--right {
-    right: 16px;
+  /* Note title - lower on tablet */
+  .place-note-new__note-title {
+    top: 180px;
   }
 
   .place-note-new__footer {
@@ -1941,8 +1937,8 @@
   }
 }
 
-/* Responsive - Mobile */
-@media (max-width: 768px) {
+/* Responsive - Mobile (max-width: 480px) */
+@media (max-width: 480px) {
   .place-note-new__header {
     padding: 1.5rem 1rem;
   }
@@ -1952,22 +1948,17 @@
     letter-spacing: 0.2em;
   }
 
-  /* Staff - adjusted for mobile with 80px gap */
+  /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 113.143px on mobile */
+  /* Heart/Diamond note - 60px on mobile */
   .place-note-new__heart {
-    width: 113.143px;
-    height: 113.143px;
-    aspect-ratio: 1 / 1;
+    width: 60px;
+    height: auto;
   }
 
-  /* Arrow buttons - closer to edges on mobile */
-  .place-note-new__arrow--left {
-    left: 12px;
-  }
-
-  .place-note-new__arrow--right {
-    right: 12px;
+  /* Note title - lower on mobile */
+  .place-note-new__note-title {
+    top: 140px;
   }
 
   /* Footer - adjusted for mobile */
@@ -3157,6 +3148,11 @@
   pointer-events: none;
 }
 
+/* Staff 2 - hidden by default (desktop/tablet) */
+.your-melody__lines--staff2 {
+  display: none;
+}
+
 /* Individual staff line */
 .your-melody__line {
   width: 100%;
@@ -3192,8 +3188,8 @@
 }
 
 .your-melody__note-img--user {
-  width: 72px;
-  height: 72px;
+  width: 120px;
+  height: 120px;
   filter: drop-shadow(0 4px 16px rgba(200, 50, 100, 0.3));
 }
 
@@ -3346,17 +3342,42 @@
 }
 
 /* ============================================
-   YOUR MELODY - MOBILE RESPONSIVE (≤768px)
+   YOUR MELODY - MOBILE RESPONSIVE (≤480px)
    ============================================ */
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
+  /* Hide header on mobile */
   .your-melody__header {
-    padding: 90px 16px 16px;
+    display: none;
   }
 
-  .your-melody__title {
-    font-size: 32px;
+  /* Move staffs down to fit nicely in viewport */
+  .your-melody__main {
+    top: 55%;
+    transform: translateY(-50%);
   }
+
+  /* Reduce line gap on mobile: 80px → 50px */
+  .your-melody__lines {
+    gap: 50px;
+  }
+
+  /* Staff height for 2 staffs with 50px gap:
+     Each staff = 5 lines (8px) + 4 gaps (50px) = 240px
+     Gap between staffs = 80px
+     Total = 240 + 80 + 240 = 560px */
+  .your-melody__staff {
+    height: 560px;
+  }
+
+  /* Show staff 2 on mobile, position below staff 1 */
+  /* Staff gap = 80px (1.6x internal gap of 50px) */
+  .your-melody__lines--staff2 {
+    display: flex;
+    top: 320px; /* 240px (staff 1) + 80px (gap) */
+  }
+
+  /* Note positions handled by JS - no scaling needed */
 
   .your-melody__note-img {
     width: 36px;
@@ -3372,9 +3393,15 @@
     padding: 16px 12px 24px;
   }
 
+  /* Keep row layout, hide second button */
   .your-melody__actions {
     bottom: 24px;
-    flex-direction: column;
+    flex-direction: row;
+  }
+
+  /* Hide "Nghe nốt của tôi" button on mobile */
+  .your-melody__actions .shine-glass-button--light {
+    display: none;
   }
 }
 

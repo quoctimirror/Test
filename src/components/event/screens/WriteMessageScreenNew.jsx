@@ -49,19 +49,21 @@ const ArrowLeftIcon = ({ className = '' }) => (
 );
 
 // Diamond shape Cloudflare paths array - using optimized webp
+// HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
+// HEART-05 = Cushion, HEART-06 = Emerald, HEART-07 = Marquise
 const DIAMOND_SHAPES = [
-  'mirror_DMM/HEART-01.webp',
-  'mirror_DMM/H2.webp',
-  'mirror_DMM/H3.webp',
-  'mirror_DMM/H4.webp',
-  'mirror_DMM/H5.webp',
-  'mirror_DMM/H6.webp',
-  'mirror_DMM/H7.webp',
+  'mirror_DMM/HEART-01.webp',  // Heart shape
+  'mirror_DMM/HEART-02.webp',  // Oval shape
+  'mirror_DMM/HEART-03.webp',  // Round shape
+  'mirror_DMM/HEART-04.webp',  // Pear shape
+  'mirror_DMM/HEART-05.webp',  // Cushion shape
+  'mirror_DMM/HEART-06.webp',  // Emerald shape
+  'mirror_DMM/HEART-07.webp',  // Marquise shape
 ];
 
 // Staff configuration - 9 Y positions (5 lines + 4 zones)
-// Line height 8px, gap 80px, total height 360px
-const NOTE_POSITIONS_Y = [
+// Desktop: Line height 8px, gap 80px, total height 360px
+const NOTE_POSITIONS_Y_DESKTOP = [
   4,    // Line 0 (top)
   48,   // Zone 0
   92,   // Line 1
@@ -73,6 +75,35 @@ const NOTE_POSITIONS_Y = [
   356,  // Line 4 (bottom)
 ];
 
+// Mobile: Line height 8px, gap 50px, staff height 240px
+// Staff 1: 0-240px, Staff 2: 360-600px (with 120px gap between)
+const NOTE_POSITIONS_Y_MOBILE_STAFF1 = [
+  4,    // Line 0 (top)
+  33,   // Zone 0
+  62,   // Line 1
+  91,   // Zone 1
+  120,  // Line 2 (middle)
+  149,  // Zone 2
+  178,  // Line 3
+  207,  // Zone 3
+  236,  // Line 4 (bottom)
+];
+
+const NOTE_POSITIONS_Y_MOBILE_STAFF2 = [
+  324,  // Line 0 (top) - offset by 320px
+  353,  // Zone 0
+  382,  // Line 1
+  411,  // Zone 1
+  440,  // Line 2 (middle)
+  469,  // Zone 2
+  498,  // Line 3
+  527,  // Zone 3
+  556,  // Line 4 (bottom)
+];
+
+// Alias for backward compatibility
+const NOTE_POSITIONS_Y = NOTE_POSITIONS_Y_DESKTOP;
+
 // Happy melody intervals - ascending patterns for positive feeling
 const HAPPY_INTERVALS = [
   [0, 2, 4],      // Major triad pattern
@@ -83,39 +114,45 @@ const HAPPY_INTERVALS = [
 ];
 
 // Generate 7 random notes that form a happy melody
+// Mobile: 4 notes on staff 1, 3 notes on staff 2 (+ user note = 4)
 const generateHappyMelody = () => {
   const notes = [];
 
-  // Pick a random happy pattern
-  const pattern = HAPPY_INTERVALS[Math.floor(Math.random() * HAPPY_INTERVALS.length)];
+  // Generate random Y positions covering both lines and zones
+  // Ensure good distribution across all position types
+  const allPositions = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 0,2,4,6,8 = lines; 1,3,5,7 = zones
+  const shuffledPositions = [...allPositions].sort(() => Math.random() - 0.5);
 
-  // Start from a random base position (0-4) to allow room for ascending
-  const basePosition = Math.floor(Math.random() * 5);
+  // Take 7 random positions, ensuring mix of lines and zones
+  const positions = shuffledPositions.slice(0, 7);
 
-  // Generate positions based on pattern, repeating if needed
-  const positions = [];
-  for (let i = 0; i < 7; i++) {
-    const patternIndex = i % pattern.length;
-    let pos = basePosition + pattern[patternIndex];
-    // Keep within bounds (0-8)
-    pos = Math.min(8, Math.max(0, pos));
-    positions.push(pos);
-  }
+  // For mobile layout (4 notes on staff 1, 3 on staff 2):
+  // Notes 0-3: Staff 1, X positions spread left to right
+  // Notes 4-6: Staff 2, X positions spread left to right
+  // Note 7 (user's note): Staff 2, rightmost position
 
-  // Distribute 8 notes evenly in safe zone (17% to 83%)
-  // 8 notes = 7 gaps, step = 66/7 ≈ 9.43%
-  // 7 random notes: 17% to ~73.6%, user note at 83%
-  const minX = 17;
-  const totalStep = (83 - 17) / 7; // ≈ 9.43% - same gap between all 8 notes
+  // Staff 1: 4 notes, X from 15% to 85%
+  // Staff 2: 4 notes (3 random + 1 user), X from 15% to 85%
 
   for (let i = 0; i < 7; i++) {
-    const positionX = minX + i * totalStep + (Math.random() - 0.5) * 2; // Small random offset ±1%
+    const staffIndex = i < 4 ? 0 : 1; // First 4 notes on staff 1, rest on staff 2
+    const indexInStaff = staffIndex === 0 ? i : i - 4;
+    const notesInStaff = staffIndex === 0 ? 4 : 4; // 4 notes each staff (including user note in staff 2)
+
+    // Calculate X position: spread evenly within staff, left to right
+    // NO random offset - ensure strict left-to-right ordering
+    const minX = 15;
+    const maxX = staffIndex === 0 ? 85 : 65; // Staff 2 leaves room for user note at 85%
+    const stepX = (maxX - minX) / (notesInStaff - 1);
+    const positionX = minX + indexInStaff * stepX; // Removed random offset
+
     const shapeIndex = Math.floor(Math.random() * DIAMOND_SHAPES.length);
 
     notes.push({
       id: `note-${i}`,
-      positionX: Math.max(5, Math.min(90, positionX)),
+      positionX,
       positionY: positions[i],
+      staffIndex, // 0 = staff 1 (top), 1 = staff 2 (bottom)
       shape: DIAMOND_SHAPES[shapeIndex],
     });
   }
@@ -127,6 +164,7 @@ const WriteMessageScreenNew = () => {
   const navigate = useNavigate();
   const [isEntering, setIsEntering] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
 
   const containerRef = useRef(null);
   const userNoteRef = useRef(null);
@@ -136,13 +174,38 @@ const WriteMessageScreenNew = () => {
 
   const { userNote, melodyNotes, setMelodyNotes, selectedDiamond } = useEventStore();
 
-  // User's note position - at end of safe zone, evenly spaced with other notes
-  const userPositionX = 83;
+  // Track window resize for mobile detection
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // User's note position
+  // Desktop: X at 83% (rightmost of single staff)
+  // Mobile: X at 85% on staff 2 (rightmost of staff 2)
+  const userPositionX = isMobile ? 85 : 83;
   const userPositionY = userNote?.positionY ?? 4;
 
+  // Helper function to get Y position based on screen size and staff
+  const getNoteYPosition = (positionY, staffIndex = 0) => {
+    if (isMobile) {
+      return staffIndex === 0
+        ? NOTE_POSITIONS_Y_MOBILE_STAFF1[positionY]
+        : NOTE_POSITIONS_Y_MOBILE_STAFF2[positionY];
+    }
+    return NOTE_POSITIONS_Y_DESKTOP[positionY];
+  };
+
   // Generate or retrieve melody notes (persisted)
+  // Force regenerate if old melody doesn't have staffIndex (migration)
   useEffect(() => {
-    if (!melodyNotes) {
+    const needsRegenerate = !melodyNotes ||
+      (melodyNotes.length > 0 && melodyNotes[0].staffIndex === undefined);
+
+    if (needsRegenerate) {
       const newMelody = generateHappyMelody();
       setMelodyNotes(newMelody);
     }
@@ -221,11 +284,20 @@ const WriteMessageScreenNew = () => {
 
     const tempo = 400; // ms between notes
 
-    // Sort all notes by X position (left to right)
+    // Sort notes: by staffIndex first, then by X position within each staff
     const allNotes = [
       ...displayNotes.map(note => ({ ...note, isUserNote: false })),
       { id: 'user-note', positionX: userPositionX, positionY: userPositionY, isUserNote: true },
-    ].sort((a, b) => a.positionX - b.positionX);
+    ].sort((a, b) => {
+      const staffA = a.staffIndex ?? (a.isUserNote && isMobile ? 1 : 0);
+      const staffB = b.staffIndex ?? (b.isUserNote && isMobile ? 1 : 0);
+      // Sort by staff first
+      if (staffA !== staffB) {
+        return staffA - staffB;
+      }
+      // Then by X position within same staff
+      return a.positionX - b.positionX;
+    });
 
     for (let i = 0; i < allNotes.length; i++) {
       const note = allNotes[i];
@@ -290,7 +362,7 @@ const WriteMessageScreenNew = () => {
     }
 
     setIsPlaying(false);
-  }, [isPlaying, displayNotes, userPositionX, userPositionY]);
+  }, [isPlaying, displayNotes, userPositionX, userPositionY, isMobile]);
 
   // Play only user's note
   const handlePlayUserNote = useCallback(async () => {
@@ -321,20 +393,22 @@ const WriteMessageScreenNew = () => {
   };
 
   // Get user's diamond shape
+  // HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
+  // HEART-05 = Cushion, HEART-06 = Emerald, HEART-07 = Marquise
   const getUserDiamondShape = () => {
     if (selectedDiamond) {
       const shapeMap = {
-        h1: 'mirror_DMM/H1.webp',
-        h2: 'mirror_DMM/H2.webp',
-        h3: 'mirror_DMM/H3.webp',
-        h4: 'mirror_DMM/H4.webp',
-        h5: 'mirror_DMM/H5.webp',
-        h6: 'mirror_DMM/H6.webp',
-        h7: 'mirror_DMM/H7.webp',
+        h1: 'mirror_DMM/HEART-01.webp', // Heart shape
+        h2: 'mirror_DMM/HEART-02.webp', // Oval shape
+        h3: 'mirror_DMM/HEART-03.webp', // Round shape
+        h4: 'mirror_DMM/HEART-04.webp', // Pear shape
+        h5: 'mirror_DMM/HEART-05.webp', // Cushion shape
+        h6: 'mirror_DMM/HEART-06.webp', // Emerald shape
+        h7: 'mirror_DMM/HEART-07.webp', // Marquise shape
       };
-      return shapeMap[selectedDiamond] || 'mirror_DMM/H1.webp';
+      return shapeMap[selectedDiamond] || 'mirror_DMM/HEART-01.webp';
     }
-    return 'mirror_DMM/H1.webp';
+    return 'mirror_DMM/HEART-01.webp';
   };
 
   return (
@@ -361,39 +435,49 @@ const WriteMessageScreenNew = () => {
           {/* Staff container */}
           <div className="your-melody__staff-container">
             <div className="your-melody__staff">
-              {/* 5 staff lines */}
-              <div className="your-melody__lines">
+              {/* Staff 1: 5 lines (top) */}
+              <div className="your-melody__lines your-melody__lines--staff1">
                 {[0, 1, 2, 3, 4].map((i) => (
                   <div key={i} className="your-melody__line" />
                 ))}
               </div>
 
-              {/* Random notes (7) */}
-              {displayNotes.map((note) => (
-                <div
-                  key={note.id}
-                  ref={(el) => { noteRefs.current[note.id] = el; }}
-                  className="your-melody__note"
-                  style={{
-                    left: `${note.positionX}%`,
-                    top: `${NOTE_POSITIONS_Y[note.positionY]}px`,
-                  }}
-                >
-                  <img
-                    src={getMediaUrl(note.shape)}
-                    alt="Diamond note"
-                    className="your-melody__note-img"
-                  />
-                </div>
-              ))}
+              {/* Staff 2: 5 lines (bottom) - mobile only */}
+              <div className="your-melody__lines your-melody__lines--staff2">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div key={`staff2-${i}`} className="your-melody__line" />
+                ))}
+              </div>
 
-              {/* User's note (last position) */}
+              {/* Random notes (7) */}
+              {displayNotes.map((note) => {
+                const yPos = getNoteYPosition(note.positionY, note.staffIndex || 0);
+                return (
+                  <div
+                    key={note.id}
+                    ref={(el) => { noteRefs.current[note.id] = el; }}
+                    className="your-melody__note"
+                    style={{
+                      left: `${note.positionX}%`,
+                      top: `${yPos}px`,
+                    }}
+                  >
+                    <img
+                      src={getMediaUrl(note.shape)}
+                      alt="Diamond note"
+                      className="your-melody__note-img"
+                    />
+                  </div>
+                );
+              })}
+
+              {/* User's note (last position - on staff 2 for mobile) */}
               <div
                 ref={userNoteRef}
                 className="your-melody__note your-melody__note--user"
                 style={{
                   left: `${userPositionX}%`,
-                  top: `${NOTE_POSITIONS_Y[userPositionY]}px`,
+                  top: `${getNoteYPosition(userPositionY, isMobile ? 1 : 0)}px`,
                 }}
               >
                 <img

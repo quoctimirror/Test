@@ -49,7 +49,21 @@ const useEventStore = create(
       // Actions
       setCurrentStep: (step) => set({ currentStep: step }),
 
-      setUser: (user) => set({ user }),
+      setUser: (user) => {
+        const currentUser = get().user;
+        // If user changed, reset user-specific data (melody, note position, etc.)
+        if (currentUser && user && currentUser.id !== user.id) {
+          set({
+            user,
+            melodyNotes: null,
+            initialNotePosition: null,
+            userNote: null,
+            selectedDiamond: null,
+          });
+        } else {
+          set({ user });
+        }
+      },
 
       setSelectedDiamond: (diamond) => set({ selectedDiamond: diamond }),
 

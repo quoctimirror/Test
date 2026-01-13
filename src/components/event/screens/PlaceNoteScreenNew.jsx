@@ -5,80 +5,46 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
-import ShineGlassButton from '@/components/common/button/ShineGlassButton';
+import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { fetchAllNotes } from '@services/event/eventApi';
 import { initAudio, playNoteByPosition, isAudioInitialized } from '@services/event/audio';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
-import lineSvg from '@/assets/images/dmm/line.svg';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 
-// Custom Arrow Icons from Figma
-const ArrowRightIcon = ({ className = '' }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="12"
-    viewBox="0 0 14 12"
-    fill="none"
-    className={className}
-  >
-    <path
-      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
-      stroke="currentColor"
-      strokeLinecap="square"
-    />
-  </svg>
-);
-
-const ArrowLeftIcon = ({ className = '' }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="12"
-    viewBox="0 0 14 12"
-    fill="none"
-    className={className}
-    style={{ transform: 'scaleX(-1)' }}
-  >
-    <path
-      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
-      stroke="currentColor"
-      strokeLinecap="square"
-    />
-  </svg>
-);
-
 // Mapping from shape ID to Cloudflare image path - using optimized webp
+// HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
+// HEART-05 = Cushion, HEART-06 = Emerald, HEART-07 = Marquise
 const DIAMOND_MAP = {
   h1: 'mirror_DMM/HEART-01.webp',  // Heart shape
-  h2: 'mirror_DMM/H2.webp',  // Round shape
-  h3: 'mirror_DMM/H3.webp',  // Emerald shape
-  h4: 'mirror_DMM/H4.webp',  // Marquise shape
-  h5: 'mirror_DMM/H5.webp',  // Pear shape
-  h6: 'mirror_DMM/H6.webp',  // Oval shape
-  h7: 'mirror_DMM/H7.webp',  // Cushion shape
+  h2: 'mirror_DMM/HEART-02.webp',  // Oval shape
+  h3: 'mirror_DMM/HEART-03.webp',  // Round shape
+  h4: 'mirror_DMM/HEART-04.webp',  // Pear shape
+  h5: 'mirror_DMM/HEART-05.webp',  // Cushion shape
+  h6: 'mirror_DMM/HEART-06.webp',  // Emerald shape
+  h7: 'mirror_DMM/HEART-07.webp',  // Marquise shape
 };
 
-// Mapping from position Y to Vietnamese note name
+// Mapping from position Y to Vietnamese note name (Treble Clef - Khóa Sol)
+// Lines (on staff line): positions 0, 2, 4, 6, 8
+// Spaces (between lines): positions 1, 3, 5, 7
 const POSITION_TO_NOTE_NAME = {
-  0: 'Đô (C)',    // C5 - Đô cao
-  1: 'Si (B)',    // B4
-  2: 'La (A)',    // A4
-  3: 'Sol (G)',   // G4
-  4: 'Fa (F)',    // F4
-  5: 'Mi (E)',    // E4
-  6: 'Rê (D)',    // D4
-  7: 'Đô (C)',    // C4
-  8: 'Si (B)',    // B3 - Si thấp
+  0: 'Fa (F)',    // F5 - Line 5 (top)
+  1: 'Mi (E)',    // E5 - Space 4
+  2: 'Rê (D)',    // D5 - Line 4
+  3: 'Đô (C)',    // C5 - Space 3
+  4: 'Si (B)',    // B4 - Line 3 (middle)
+  5: 'La (A)',    // A4 - Space 2
+  6: 'Sol (G)',   // G4 - Line 2
+  7: 'Fa (F)',    // F4 - Space 1
+  8: 'Mi (E)',    // E4 - Line 1 (bottom)
 };
 
 // All possible Y positions for the note (9 positions total)
-// Lines: 0, 2, 4, 6, 8 (odd index = on line)
-// Zones: 1, 3, 5, 7 (even index = between lines)
-
-// All screens: line height 8px, gap 80px, total height 360px
+// Lines: 0, 2, 4, 6, 8 (on line)
+// Zones: 1, 3, 5, 7 (between lines)
+// Line height 8px, gap 80px, total height 360px (same for all screen sizes)
 const NOTE_POSITIONS_Y = [
   4,    // Line 0 (top line)
   48,   // Zone 0 (between line 0 and 1)
@@ -90,9 +56,6 @@ const NOTE_POSITIONS_Y = [
   312,  // Zone 3 (between line 3 and 4)
   356,  // Line 4 (bottom line)
 ];
-
-// Breakpoint for tablet/mobile (both use same line dimensions)
-const TABLET_BREAKPOINT = 1024;
 
 // Get random position (all positions: 0-8, including lines and zones)
 const getRandomPosition = () => {
@@ -126,14 +89,11 @@ const PlaceNoteScreenNew = () => {
   const [diamondVisible, setDiamondVisible] = useState(false); // Diamond can appear
   const [titleVisible, setTitleVisible] = useState(false); // Title appears after diamond animation
   const [isTransitioning, setIsTransitioning] = useState(false); // Zoom-out transition
-  const [isTabletOrMobile, setIsTabletOrMobile] = useState(() => window.innerWidth <= TABLET_BREAKPOINT);
   const containerRef = useRef(null); // Main container ref for setting CSS vars
   const heartRef = useRef(null);
   const rippleRef = useRef(null);
   const hasNavigatedRef = useRef(false); // Track if user manually navigated
   const audioReadyRef = useRef(false); // Track if audio was initialized by user interaction
-
-  // Note positions are the same for all screen sizes now
 
   // Handle next button - navigate to write message screen with zoom transition
   const handleNext = () => {
@@ -176,15 +136,6 @@ const PlaceNoteScreenNew = () => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Listen for window resize to update isTabletOrMobile
-  useEffect(() => {
-    const handleResize = () => {
-      setIsTabletOrMobile(window.innerWidth <= TABLET_BREAKPOINT);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Initialize audio on first user interaction (required by browser autoplay policy)
   useEffect(() => {
@@ -325,24 +276,18 @@ const PlaceNoteScreenNew = () => {
 
         {/* Arrow buttons - outside main to avoid transform containing block issue */}
         <div className="place-note-new__arrow place-note-new__arrow--left">
-          <ShineGlassButton
-            variant="circle"
-            onClick={handleGoBack}
-            width={48}
-            height={48}
-          >
-            <ArrowLeftIcon />
-          </ShineGlassButton>
+          <GlassThemeButton theme="light" onClick={handleGoBack} icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+              <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
+            </svg>
+          } />
         </div>
         <div className="place-note-new__arrow place-note-new__arrow--right">
-          <ShineGlassButton
-            variant="circle"
-            onClick={handleNext}
-            width={48}
-            height={48}
-          >
-            <ArrowRightIcon />
-          </ShineGlassButton>
+          <GlassThemeButton theme="light" onClick={handleNext} icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+              <path d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031" stroke="currentColor" strokeLinecap="square"/>
+            </svg>
+          } />
         </div>
 
       {/* Main content - Music Staff (vertically centered) */}
