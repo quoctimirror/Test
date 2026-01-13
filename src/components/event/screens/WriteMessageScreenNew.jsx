@@ -9,7 +9,7 @@ import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import NavbarV4 from '@/components/navbar/NavbarV4';
-import ShineGlassButton from '@/components/common/button/ShineGlassButton';
+import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { initAudio, playNoteByPosition } from '@services/event/audio';
 
 // Custom Arrow Icons from Figma
@@ -77,28 +77,29 @@ const NOTE_POSITIONS_Y_DESKTOP = [
 
 // Mobile: Line height 8px, gap 50px, staff height 240px
 // Staff 1: 0-240px, Staff 2: 360-600px (with 120px gap between)
+// Added +5px offset to shift notes down slightly
 const NOTE_POSITIONS_Y_MOBILE_STAFF1 = [
-  4,    // Line 0 (top)
-  33,   // Zone 0
-  62,   // Line 1
-  91,   // Zone 1
-  120,  // Line 2 (middle)
-  149,  // Zone 2
-  178,  // Line 3
-  207,  // Zone 3
-  236,  // Line 4 (bottom)
+  9,    // Line 0 (top)
+  38,   // Zone 0
+  67,   // Line 1
+  96,   // Zone 1
+  125,  // Line 2 (middle)
+  154,  // Zone 2
+  183,  // Line 3
+  212,  // Zone 3
+  241,  // Line 4 (bottom)
 ];
 
 const NOTE_POSITIONS_Y_MOBILE_STAFF2 = [
-  324,  // Line 0 (top) - offset by 320px
-  353,  // Zone 0
-  382,  // Line 1
-  411,  // Zone 1
-  440,  // Line 2 (middle)
-  469,  // Zone 2
-  498,  // Line 3
-  527,  // Zone 3
-  556,  // Line 4 (bottom)
+  329,  // Line 0 (top) - offset by 320px + 5px
+  358,  // Zone 0
+  387,  // Line 1
+  416,  // Zone 1
+  445,  // Line 2 (middle)
+  474,  // Zone 2
+  503,  // Line 3
+  532,  // Zone 3
+  561,  // Line 4 (bottom)
 ];
 
 // Alias for backward compatibility
@@ -164,7 +165,7 @@ const WriteMessageScreenNew = () => {
   const navigate = useNavigate();
   const [isEntering, setIsEntering] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
   const containerRef = useRef(null);
   const userNoteRef = useRef(null);
@@ -174,10 +175,10 @@ const WriteMessageScreenNew = () => {
 
   const { userNote, melodyNotes, setMelodyNotes, selectedDiamond } = useEventStore();
 
-  // Track window resize for mobile detection
+  // Track window resize for mobile/tablet detection
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 480);
+      setIsMobile(window.innerWidth <= 1024);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -199,11 +200,31 @@ const WriteMessageScreenNew = () => {
     return NOTE_POSITIONS_Y_DESKTOP[positionY];
   };
 
+  // Helper function to get X position based on screen size
+  // Desktop: 8 notes spread evenly from 10% to 85%
+  // Mobile/Tablet: use stored positionX (for 2-staff layout)
+  const getNoteXPosition = (noteIndex, storedPositionX) => {
+    if (isMobile) {
+      return storedPositionX;
+    }
+    // Desktop: spread 8 notes evenly (indices 0-6 for melody + 7 for user)
+    const minX = 10;
+    const maxX = 85;
+    const step = (maxX - minX) / 7; // 7 gaps for 8 notes
+    return minX + noteIndex * step;
+  };
+
   // Generate or retrieve melody notes (persisted)
-  // Force regenerate if old melody doesn't have staffIndex (migration)
+  // Force regenerate if old melody doesn't have staffIndex or has wrong distribution
   useEffect(() => {
     const needsRegenerate = !melodyNotes ||
-      (melodyNotes.length > 0 && melodyNotes[0].staffIndex === undefined);
+      melodyNotes.length === 0 ||
+      melodyNotes[0].staffIndex === undefined ||
+      // Check if notes have correct 4-3 distribution (notes 0-3 on staff 0, notes 4-6 on staff 1)
+      melodyNotes.some((note, i) => {
+        const expectedStaff = i < 4 ? 0 : 1;
+        return note.staffIndex !== expectedStaff;
+      });
 
     if (needsRegenerate) {
       const newMelody = generateHappyMelody();
@@ -284,19 +305,35 @@ const WriteMessageScreenNew = () => {
 
     const tempo = 400; // ms between notes
 
-    // Sort notes: by staffIndex first, then by X position within each staff
+    // Sort notes: by staffIndex first (mobile only), then by calculated X position
     const allNotes = [
-      ...displayNotes.map(note => ({ ...note, isUserNote: false })),
-      { id: 'user-note', positionX: userPositionX, positionY: userPositionY, isUserNote: true },
+      ...displayNotes.map((note, index) => ({
+        ...note,
+        isUserNote: false,
+        noteIndex: index,
+        calculatedX: getNoteXPosition(index, note.positionX)
+      })),
+      {
+        id: 'user-note',
+        positionX: userPositionX,
+        positionY: userPositionY,
+        isUserNote: true,
+        noteIndex: 7,
+        calculatedX: getNoteXPosition(7, userPositionX),
+        staffIndex: 1 // User note always on staff 2 for mobile
+      },
     ].sort((a, b) => {
-      const staffA = a.staffIndex ?? (a.isUserNote && isMobile ? 1 : 0);
-      const staffB = b.staffIndex ?? (b.isUserNote && isMobile ? 1 : 0);
-      // Sort by staff first
+      // On desktop, ignore staffIndex - just sort by X position
+      if (!isMobile) {
+        return a.calculatedX - b.calculatedX;
+      }
+      // On mobile/tablet, sort by staff first, then by X
+      const staffA = a.staffIndex ?? 0;
+      const staffB = b.staffIndex ?? 0;
       if (staffA !== staffB) {
         return staffA - staffB;
       }
-      // Then by X position within same staff
-      return a.positionX - b.positionX;
+      return a.calculatedX - b.calculatedX;
     });
 
     for (let i = 0; i < allNotes.length; i++) {
@@ -450,7 +487,8 @@ const WriteMessageScreenNew = () => {
               </div>
 
               {/* Random notes (7) */}
-              {displayNotes.map((note) => {
+              {displayNotes.map((note, index) => {
+                const xPos = getNoteXPosition(index, note.positionX);
                 const yPos = getNoteYPosition(note.positionY, note.staffIndex || 0);
                 return (
                   <div
@@ -458,7 +496,7 @@ const WriteMessageScreenNew = () => {
                     ref={(el) => { noteRefs.current[note.id] = el; }}
                     className="your-melody__note"
                     style={{
-                      left: `${note.positionX}%`,
+                      left: `${xPos}%`,
                       top: `${yPos}px`,
                     }}
                   >
@@ -471,12 +509,12 @@ const WriteMessageScreenNew = () => {
                 );
               })}
 
-              {/* User's note (last position - on staff 2 for mobile) */}
+              {/* User's note (last position - index 7, on staff 2 for mobile) */}
               <div
                 ref={userNoteRef}
                 className="your-melody__note your-melody__note--user"
                 style={{
-                  left: `${userPositionX}%`,
+                  left: `${getNoteXPosition(7, userPositionX)}%`,
                   top: `${getNoteYPosition(userPositionY, isMobile ? 1 : 0)}px`,
                 }}
               >
@@ -494,43 +532,38 @@ const WriteMessageScreenNew = () => {
         <footer className="your-melody__footer">
           {/* Left arrow */}
           <div className="your-melody__arrow your-melody__arrow--left">
-            <ShineGlassButton
-              variant="circle"
+            <GlassThemeButton
+              theme="light"
               onClick={handleGoBack}
-              width={48}
-              height={48}
-            >
-              <ArrowLeftIcon />
-            </ShineGlassButton>
+              icon={<ArrowLeftIcon />}
+            />
           </div>
 
           {/* Action buttons */}
           <div className="your-melody__actions">
-            <ShineGlassButton
+            <GlassThemeButton
+              theme="light"
               onClick={handlePlayMelody}
-              disabled={isPlaying}
+              className={isPlaying ? 'disabled' : ''}
             >
               Nghe 1 đoạn nốt
-            </ShineGlassButton>
-            <ShineGlassButton
-              theme="light"
+            </GlassThemeButton>
+            <GlassThemeButton
+              theme="spec_light"
               onClick={handlePlayUserNote}
-              disabled={isPlaying}
+              className={isPlaying ? 'disabled' : ''}
             >
               Nghe nốt của tôi
-            </ShineGlassButton>
+            </GlassThemeButton>
           </div>
 
           {/* Right arrow */}
           <div className="your-melody__arrow your-melody__arrow--right">
-            <ShineGlassButton
-              variant="circle"
+            <GlassThemeButton
+              theme="light"
               onClick={handleNext}
-              width={48}
-              height={48}
-            >
-              <ArrowRightIcon />
-            </ShineGlassButton>
+              icon={<ArrowRightIcon />}
+            />
           </div>
         </footer>
       </div>
