@@ -17,6 +17,7 @@
  */
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import brikeyMouraItalic from '@fonts/BrikeyMoura/1FTVVIPBrikeyMoura-Italic.ttf';
 
 // Image paths on Cloudflare CDN
 const MOUNTAINS = [
@@ -162,6 +163,20 @@ const AvatarGenerator = ({
     canvas.height = height;
 
     try {
+      // Load BrikeyMoura Italic font for text rendering
+      try {
+        const font = new FontFace(
+          'BrikeyMoura',
+          `url(${brikeyMouraItalic})`,
+          { style: 'italic', weight: '400' }
+        );
+        await font.load();
+        document.fonts.add(font);
+        await document.fonts.ready; // Wait for font to be ready
+      } catch (fontError) {
+        console.warn('Could not load BrikeyMoura font, using fallback:', fontError);
+      }
+
       // Use lightNumber as seed for unique combination per user
       const seed = lightNumber || 1;
 
@@ -212,18 +227,49 @@ const AvatarGenerator = ({
       // Layer 7: Subheading
       ctx.drawImage(subheadingImg, 0, 0);
 
-      // Layer 8: Text overlay - User name only
-      // Position at 18% from top (same as original local code)
+      // Layer 8: Text overlay - User name with metallic chrome gradient effect
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = 'italic 160px Georgia, "Times New Roman", serif';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-      ctx.shadowBlur = 15;
+      ctx.font = 'italic 233px BrikeyMoura, Georgia, serif'; // 70pt ≈ 233px
+
+      const textX = width / 2;
+      const textY = height * 0.14;
+      const displayText = displayName || 'Guest';
+      const textMetrics = ctx.measureText(displayText);
+      const textWidth = textMetrics.width;
+
+      // Chrome metallic gradient (vertical with highlight bands)
+      const chromeGradient = ctx.createLinearGradient(
+        textX, textY - 100,  // top
+        textX, textY + 100   // bottom
+      );
+      // Chrome effect: dark → light → dark with color tint (darker pink)
+      chromeGradient.addColorStop(0, '#8b1538');      // Darkest pink top
+      chromeGradient.addColorStop(0.2, '#bc224c');    // Dark pink
+      chromeGradient.addColorStop(0.4, '#d64470');    // Medium pink
+      chromeGradient.addColorStop(0.5, '#e8668a');    // Highlight (not too bright)
+      chromeGradient.addColorStop(0.6, '#d64470');    // Medium pink
+      chromeGradient.addColorStop(0.8, '#bc224c');    // Dark pink
+      chromeGradient.addColorStop(1, '#8b1538');      // Darkest pink bottom
+
+      // Draw text stroke (outline) for definition
+      ctx.strokeStyle = '#8b1538';
+      ctx.lineWidth = 4;
+      ctx.strokeText(displayText, textX, textY);
+
+      // Shadow for depth
+      ctx.shadowColor = 'rgba(139, 21, 56, 0.6)';
+      ctx.shadowBlur = 8;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
-      ctx.fillText(displayName || 'Guest', width / 2, height * 0.14);
+
+      // Draw main chrome gradient text
+      ctx.fillStyle = chromeGradient;
+      ctx.fillText(displayText, textX, textY);
+
+      // Reset shadow
       ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
 
       // Export as PNG
       const dataUrl = canvas.toDataURL('image/png');

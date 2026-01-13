@@ -672,7 +672,13 @@
 .your-melody .heading-2,
 .your-melody .heading-2--no-margin,
 .your-melody .heading-3,
-.your-melody .heading-3--no-margin {
+.your-melody .heading-3--no-margin,
+.your-wallpaper .heading-1,
+.your-wallpaper .heading-1--no-margin,
+.your-wallpaper .heading-2,
+.your-wallpaper .heading-2--no-margin,
+.your-wallpaper .heading-3,
+.your-wallpaper .heading-3--no-margin {
   font-family: var(--font-brikey-moura);
 }
 
@@ -684,7 +690,8 @@
 .place-note-new .heading-2--no-margin,
 .write-message .heading-2--no-margin,
 .choose-note-shape .heading-2--no-margin,
-.your-melody .heading-2--no-margin {
+.your-melody .heading-2--no-margin,
+.your-wallpaper .heading-2--no-margin {
   font-style: italic;
 }
 

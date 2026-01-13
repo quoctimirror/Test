@@ -2848,6 +2848,16 @@
   100% { transform: rotateZ(0deg) rotateY(0deg); }
 }
 
+/* Entrance flip animation - smooth continuous rotation */
+.flip-card.entrance-flip-to-back {
+  animation: entranceFlipToBack 0.8s ease-out forwards;
+}
+
+@keyframes entranceFlipToBack {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(180deg); }
+}
+
 /* Card faces - front and back */
 .flip-card-face {
   position: absolute;
@@ -3359,6 +3369,141 @@
   .your-melody__actions {
     bottom: 24px;
     flex-direction: column;
+  }
+}
+
+/* ============================================
+   YOUR WALLPAPER PAGE - Step 3
+   ============================================ */
+
+.your-wallpaper {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Background - pink radial gradient with rings */
+.your-wallpaper__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+    linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #F6F6F6 100%);
+  z-index: 0;
+}
+
+/* Header - top left */
+.your-wallpaper__header {
+  position: absolute;
+  top: 100px;
+  left: 48px;
+  max-width: 400px;
+  z-index: 10;
+}
+
+.your-wallpaper__title {
+  color: var(--Pink, #BC224C);
+  font-size: 48px;
+  line-height: 105%;
+  margin: 0 0 12px 0;
+  white-space: nowrap;
+}
+
+.your-wallpaper__description {
+  color: var(--Black, #0B0B0B);
+  width: 345px;
+}
+
+/* Main content - centered card */
+.your-wallpaper__main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.your-wallpaper__card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Action buttons below card - Download + Share */
+.your-wallpaper__actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Footer with arrows at corners */
+.your-wallpaper__footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 24px 24px 48px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Arrow buttons */
+.your-wallpaper__arrow {
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .your-wallpaper__header {
+    left: 32px;
+    top: 80px;
+  }
+
+  .your-wallpaper__title {
+    font-size: 36px;
+  }
+
+  .your-wallpaper__footer {
+    padding: 20px 20px 40px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .your-wallpaper__header {
+    left: 16px;
+    top: 70px;
+    max-width: calc(100% - 32px);
+  }
+
+  .your-wallpaper__title {
+    font-size: 28px;
+    white-space: normal;
+  }
+
+  .your-wallpaper__description {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .your-wallpaper__footer {
+    padding: 16px 12px 24px;
   }
 }
 
