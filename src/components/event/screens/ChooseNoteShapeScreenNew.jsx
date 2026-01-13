@@ -477,7 +477,7 @@ const ChooseNoteShapeScreenNew = () => {
           </div>
         </main>
 
-        {/* Footer - arrows at bottom corners */}
+        {/* Footer - arrows and actions on tablet */}
         <footer className="your-wallpaper__footer">
           {/* Left arrow - go back */}
           <div className="your-wallpaper__arrow your-wallpaper__arrow--left">
@@ -488,6 +488,24 @@ const ChooseNoteShapeScreenNew = () => {
               height={48}
             >
               <ArrowLeftIcon />
+            </ShineGlassButton>
+          </div>
+
+          {/* Center actions - shown on tablet/mobile */}
+          <div className="your-wallpaper__footer-actions">
+            <ShineGlassButton
+              onClick={handleDownload}
+              disabled={downloading || !avatarDataUrl}
+            >
+              {downloading ? 'Đang tải...' : 'Tải xuống'}
+            </ShineGlassButton>
+            <ShineGlassButton
+              variant="circle"
+              onClick={handleShare}
+              width={48}
+              height={48}
+            >
+              <img src={shareIcon} alt="Share" width={18} height={18} />
             </ShineGlassButton>
           </div>
 
