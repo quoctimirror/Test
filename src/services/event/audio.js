@@ -4,32 +4,33 @@
  */
 import { getDiamondConfig, DIAMOND_CONFIGS } from '../../constants/eventConstants';
 
-// Note frequencies (Hz) - Khuông nhạc khóa Sol (Treble Clef)
+// Note frequencies (Hz) - 7 nốt cơ bản: Đô Rê Mi Fa Sol La Si
 const NOTE_FREQUENCIES = {
+  // Octave 3
+  B3: 246.94,   // Si thấp
   // Octave 4
-  E4: 329.63,   // Mi
-  F4: 349.23,   // Fa
-  G4: 392.0,    // Sol
-  A4: 440.0,    // La
-  B4: 493.88,   // Si
+  C4: 261.63,   // Đô (Do)
+  D4: 293.66,   // Rê (Re)
+  E4: 329.63,   // Mi (Mi)
+  F4: 349.23,   // Fa (Fa)
+  G4: 392.0,    // Sol (Sol)
+  A4: 440.0,    // La (La)
+  B4: 493.88,   // Si (Si)
   // Octave 5
-  C5: 523.25,   // Đô cao
-  D5: 587.33,   // Rê cao
-  E5: 659.25,   // Mi cao
-  F5: 698.46,   // Fa cao
+  C5: 523.25,   // Đô cao (Do cao)
 };
 
-// Map vị trí Y (0-8) trên khuông nhạc → nốt nhạc (đúng nhạc lý khóa Sol)
+// Map vị trí Y (0-8) trên khuông nhạc → nốt nhạc (Đô Rê Mi Fa Sol La Si)
 export const POSITION_TO_NOTE = {
-  0: 'F5',   // Dòng 5 (trên) - Fa cao
-  1: 'E5',   // Khe 4        - Mi cao
-  2: 'D5',   // Dòng 4       - Rê cao
-  3: 'C5',   // Khe 3        - Đô cao
-  4: 'B4',   // Dòng 3 (giữa)- Si
-  5: 'A4',   // Khe 2        - La
-  6: 'G4',   // Dòng 2       - Sol
-  7: 'F4',   // Khe 1        - Fa
-  8: 'E4',   // Dòng 1 (dưới)- Mi
+  0: 'C5',   // Vị trí 0 (trên cùng) - Đô cao
+  1: 'B4',   // Vị trí 1             - Si
+  2: 'A4',   // Vị trí 2             - La
+  3: 'G4',   // Vị trí 3             - Sol
+  4: 'F4',   // Vị trí 4 (giữa)      - Fa
+  5: 'E4',   // Vị trí 5             - Mi
+  6: 'D4',   // Vị trí 6             - Rê
+  7: 'C4',   // Vị trí 7             - Đô
+  8: 'B3',   // Vị trí 8 (dưới cùng) - Si thấp
 };
 
 let audioCtx = null;

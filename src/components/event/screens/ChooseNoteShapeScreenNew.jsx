@@ -369,25 +369,43 @@ const ChooseNoteShapeScreenNew = () => {
   const handleDownload = async () => {
     if (!avatarDataUrl) return;
     setDownloading(true);
-    const filename = `mirror-diamond-${user?.displayName || 'guest'}-${user?.lightNumber || 1}.png`;
+    const filename = `mirrorthankyou_${user?.displayName || 'guest'}_${Date.now()}.png`;
     downloadAvatar(avatarDataUrl, filename);
     setTimeout(() => {
       setDownloading(false);
     }, 500);
   };
 
-  // Handle share
+  // Handle share - share the generated image
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
+    if (!avatarDataUrl) return;
+
+    try {
+      // Convert dataURL to Blob
+      const response = await fetch(avatarDataUrl);
+      const blob = await response.blob();
+      const file = new File([blob], `mirrorthankyou_${user?.displayName || 'guest'}.png`, { type: 'image/png' });
+
+      // Check if Web Share API supports files
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Mirror Diamond',
+          text: 'Nốt sáng của tôi từ Mirror Diamond ✨',
+        });
+      } else if (navigator.share) {
+        // Fallback: share URL if file sharing not supported
         await navigator.share({
           title: 'Mirror Diamond',
-          text: 'Check out my diamond note!',
+          text: 'Nốt sáng của tôi từ Mirror Diamond ✨',
           url: window.location.href,
         });
-      } catch (err) {
-        console.log('Share cancelled or failed');
+      } else {
+        // Fallback: download image if share not supported
+        downloadAvatar(avatarDataUrl, `mirrorthankyou_${user?.displayName || 'guest'}.png`);
       }
+    } catch (err) {
+      console.log('Share cancelled or failed:', err);
     }
   };
 

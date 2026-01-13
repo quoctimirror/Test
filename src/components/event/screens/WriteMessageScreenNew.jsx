@@ -1,20 +1,52 @@
 /**
- * WriteMessageScreenNew - Step 2: Display music staffs with random notes
- * Desktop: Two music staffs with 18 random diamond notes (9 per staff)
- * Mobile: Three music staffs with 18 random diamond notes (6 per staff)
+ * WriteMessageScreenNew (Your Melody) - Step 2: Display 8 notes (7 random + 1 user)
+ * Sidebar layout with staff visualization and melody playback
  */
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { TEXT } from '@/constants/eventConstants';
 import { ROUTES } from '@/constants/routes';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import NavbarV4 from '@/components/navbar/NavbarV4';
+import ShineGlassButton from '@/components/common/button/ShineGlassButton';
+import { initAudio, playNoteByPosition } from '@services/event/audio';
 
-// Breakpoint for tablet/mobile
-const TABLET_BREAKPOINT = 1024;
+// Custom Arrow Icons from Figma
+const ArrowRightIcon = ({ className = '' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="12"
+    viewBox="0 0 14 12"
+    fill="none"
+    className={className}
+  >
+    <path
+      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
+      stroke="currentColor"
+      strokeLinecap="square"
+    />
+  </svg>
+);
+
+const ArrowLeftIcon = ({ className = '' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="12"
+    viewBox="0 0 14 12"
+    fill="none"
+    className={className}
+    style={{ transform: 'scaleX(-1)' }}
+  >
+    <path
+      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
+      stroke="currentColor"
+      strokeLinecap="square"
+    />
+  </svg>
+);
 
 // Diamond shape Cloudflare paths array - using optimized webp
 const DIAMOND_SHAPES = [
@@ -27,65 +59,62 @@ const DIAMOND_SHAPES = [
   'mirror_DMM/H7.webp',
 ];
 
-// Staff configuration - Desktop
-const LINE_HEIGHT_DESKTOP = 6.296;
-const LINE_GAP_DESKTOP = 35;
-const LINES_PER_STAFF = 5;
+// Staff configuration - 9 Y positions (5 lines + 4 zones)
+// Line height 8px, gap 80px, total height 360px
+const NOTE_POSITIONS_Y = [
+  4,    // Line 0 (top)
+  48,   // Zone 0
+  92,   // Line 1
+  136,  // Zone 1
+  180,  // Line 2 (middle)
+  224,  // Zone 2
+  268,  // Line 3
+  312,  // Zone 3
+  356,  // Line 4 (bottom)
+];
 
-// Staff configuration - Mobile (staff height 140px)
-const LINE_HEIGHT_MOBILE = 6.296;
-const LINE_GAP_MOBILE = 27; // (140 - 5*6.296) / 4 ≈ 27
+// Happy melody intervals - ascending patterns for positive feeling
+const HAPPY_INTERVALS = [
+  [0, 2, 4],      // Major triad pattern
+  [0, 2, 3, 5],   // Ascending scale
+  [0, 4, 7],      // Power chord feel
+  [2, 4, 5, 7],   // Happy progression
+  [0, 2, 4, 5, 7], // Pentatonic feel
+];
 
-// 9 Y positions per staff (5 lines + 4 zones between)
-const getStaffPositionsY = (lineHeight, lineGap) => {
-  const positions = [];
-  for (let i = 0; i < LINES_PER_STAFF; i++) {
-    // Line position (center of line)
-    const lineY = i * (lineHeight + lineGap) + lineHeight / 2;
-    positions.push(lineY);
-
-    // Zone position (between this line and next)
-    if (i < LINES_PER_STAFF - 1) {
-      const zoneY = lineY + lineHeight / 2 + lineGap / 2;
-      positions.push(zoneY);
-    }
-  }
-  return positions;
-};
-
-const POSITIONS_Y_DESKTOP = getStaffPositionsY(LINE_HEIGHT_DESKTOP, LINE_GAP_DESKTOP);
-const POSITIONS_Y_MOBILE = getStaffPositionsY(LINE_HEIGHT_MOBILE, LINE_GAP_MOBILE);
-
-// Generate notes for a single staff - spread evenly across full width
-const generateStaffNotes = (count, staffIndex, maxX = 92) => {
+// Generate 7 random notes that form a happy melody
+const generateHappyMelody = () => {
   const notes = [];
-  const usedYPositions = new Set();
 
-  // Evenly distribute X positions across full width (5% to maxX%)
-  const minX = 5;
-  const step = (maxX - minX) / (count - 1);
+  // Pick a random happy pattern
+  const pattern = HAPPY_INTERVALS[Math.floor(Math.random() * HAPPY_INTERVALS.length)];
 
-  for (let i = 0; i < count; i++) {
-    // Base X position evenly spread
-    const baseX = minX + i * step;
-    // Add small random offset (-2% to +2%) for natural look
-    const offset = (Math.random() - 0.5) * 4;
-    const positionX = Math.max(3, Math.min(maxX + 2, baseX + offset));
+  // Start from a random base position (0-4) to allow room for ascending
+  const basePosition = Math.floor(Math.random() * 5);
 
-    // Random Y position (0-8 for 9 positions) - no duplicates
-    let posY;
-    do {
-      posY = Math.floor(Math.random() * 9);
-    } while (usedYPositions.has(posY) && usedYPositions.size < 9);
-    usedYPositions.add(posY);
+  // Generate positions based on pattern, repeating if needed
+  const positions = [];
+  for (let i = 0; i < 7; i++) {
+    const patternIndex = i % pattern.length;
+    let pos = basePosition + pattern[patternIndex];
+    // Keep within bounds (0-8)
+    pos = Math.min(8, Math.max(0, pos));
+    positions.push(pos);
+  }
 
-    // Random shape
+  // Distribute X positions evenly (10% to 85%)
+  const minX = 10;
+  const maxX = 85;
+  const step = (maxX - minX) / 6; // 7 notes = 6 gaps
+
+  for (let i = 0; i < 7; i++) {
+    const positionX = minX + i * step + (Math.random() - 0.5) * 5; // Small random offset
     const shapeIndex = Math.floor(Math.random() * DIAMOND_SHAPES.length);
 
     notes.push({
-      id: `staff${staffIndex}-note${i}`,
-      positionX,
-      positionY: posY,
+      id: `note-${i}`,
+      positionX: Math.max(5, Math.min(90, positionX)),
+      positionY: positions[i],
       shape: DIAMOND_SHAPES[shapeIndex],
     });
   }
@@ -93,53 +122,35 @@ const generateStaffNotes = (count, staffIndex, maxX = 92) => {
   return notes;
 };
 
-// Generate notes for desktop (17 random + 1 user = 18 total)
-const generateDesktopNotes = () => {
-  // Staff 1: 9 notes, full width (5% - 92%)
-  const staff1Notes = generateStaffNotes(9, 1, 92);
-  // Staff 2: 8 notes + 1 user note = 9, leave room for user's note at 98%
-  const staff2Notes = generateStaffNotes(8, 2, 90);
-
-  return { staff1Notes, staff2Notes, staff3Notes: [] };
-};
-
-// Generate notes for mobile (17 random + 1 user = 18 total) - 3 staffs
-const generateMobileNotes = () => {
-  // Staff 1: 6 notes, full width (5% - 92%)
-  const staff1Notes = generateStaffNotes(6, 1, 92);
-  // Staff 2: 6 notes, full width (5% - 92%)
-  const staff2Notes = generateStaffNotes(6, 2, 92);
-  // Staff 3: 5 notes + 1 user note = 6, leave room for user's note
-  const staff3Notes = generateStaffNotes(5, 3, 90);
-
-  return { staff1Notes, staff2Notes, staff3Notes };
-};
-
 const WriteMessageScreenNew = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [isEntering, setIsEntering] = useState(true); // Zoom-in entrance
-  const [isTabletOrMobile, setIsTabletOrMobile] = useState(() => window.innerWidth <= TABLET_BREAKPOINT);
-  const containerRef = useRef(null); // Main container for setting transform-origin
+  const [isEntering, setIsEntering] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const containerRef = useRef(null);
   const userNoteRef = useRef(null);
+  const noteRefs = useRef({});
   const rippleRef = useRef(null);
+  const playingRippleRef = useRef(null);
 
-  const { userNote } = useEventStore();
+  const { userNote, melodyNotes, setMelodyNotes, selectedDiamond } = useEventStore();
 
-  // User's note is always at the last position (rightmost) in the layout
-  // X position: 98% (end of staff), Y position: use user's selected position or default
-  const userPositionX = 98;
+  // User's note position
+  const userPositionX = 95;
   const userPositionY = userNote?.positionY ?? 4;
 
-  // Generate random notes based on screen size (memoized)
-  // Desktop: 2 staffs × 9 notes = 18
-  // Mobile: 3 staffs × 6 notes = 18
-  const { staff1Notes, staff2Notes, staff3Notes } = useMemo(() => {
-    return isTabletOrMobile ? generateMobileNotes() : generateDesktopNotes();
-  }, [isTabletOrMobile]);
+  // Generate or retrieve melody notes (persisted)
+  useEffect(() => {
+    if (!melodyNotes) {
+      const newMelody = generateHappyMelody();
+      setMelodyNotes(newMelody);
+    }
+  }, [melodyNotes, setMelodyNotes]);
 
-  // Preload webp images for faster rendering
+  // Use persisted melody or empty array while loading
+  const displayNotes = melodyNotes || [];
+
+  // Preload webp images
   useEffect(() => {
     DIAMOND_SHAPES.forEach(shape => {
       const img = new Image();
@@ -147,66 +158,27 @@ const WriteMessageScreenNew = () => {
     });
   }, []);
 
-  // Listen for window resize to update isTabletOrMobile
-  useEffect(() => {
-    const handleResize = () => {
-      setIsTabletOrMobile(window.innerWidth <= TABLET_BREAKPOINT);
-    };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Calculate user's note position and set transform-origin for zoom effect
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    // Use requestAnimationFrame to ensure DOM is ready
-    requestAnimationFrame(() => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      const containerRect = container.getBoundingClientRect();
-
-      // Find user's note element and get its position
-      if (userNoteRef.current) {
-        const noteRect = userNoteRef.current.getBoundingClientRect();
-
-        // Calculate center of the note relative to the container
-        const noteCenterX = noteRect.left + noteRect.width / 2 - containerRect.left;
-        const noteCenterY = noteRect.top + noteRect.height / 2 - containerRect.top;
-
-        // Convert to percentage
-        const originX = (noteCenterX / containerRect.width) * 100;
-        const originY = (noteCenterY / containerRect.height) * 100;
-
-        // Set CSS custom properties for transform-origin
-        container.style.setProperty('--zoom-origin-x', `${originX}%`);
-        container.style.setProperty('--zoom-origin-y', `${originY}%`);
-      }
-    });
-  }, [isTabletOrMobile]);
-
-  // Remove entering class after zoom-in animation completes
+  // Remove entering class after animation
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsEntering(false);
-    }, 1200); // Match the mapZoomOut animation duration (1.2s)
+    }, 1200);
     return () => clearTimeout(timer);
   }, []);
 
-  // Initialize RippleEffect on user's note (after entrance animation)
+  // Initialize RippleEffect on user's note (after entrance, not during play)
   useEffect(() => {
-    if (isEntering) return; // Wait for entrance animation to complete
+    if (isEntering || isPlaying) return;
 
     if (userNoteRef.current && !rippleRef.current) {
       rippleRef.current = new RippleEffect(userNoteRef.current, {
-        autoRippleCount: 3,
-        duration: 4000,
-        delay: 1500,
-        startSize: 40,
-        endSize: 350,
-        opacity: 0.5,
+        autoRippleCount: 4,
+        duration: 5000,
+        delay: 1200,
+        startSize: 60,
+        endSize: 400,
+        opacity: 0.6,
         autoPlay: true,
         clickable: false,
         clickRippleCount: 3,
@@ -219,139 +191,263 @@ const WriteMessageScreenNew = () => {
         rippleRef.current = null;
       }
     };
-  }, [isEntering]);
+  }, [isEntering, isPlaying]);
 
-  // Navigation - go back to step 1
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (rippleRef.current) {
+        rippleRef.current.destroy();
+      }
+      if (playingRippleRef.current) {
+        playingRippleRef.current.destroy();
+      }
+    };
+  }, []);
+
+  // Play melody - all notes from left to right
+  const handlePlayMelody = useCallback(async () => {
+    if (isPlaying) return;
+
+    await initAudio();
+    setIsPlaying(true);
+
+    // Pause user's continuous ripple during melody playback
+    if (rippleRef.current) {
+      rippleRef.current.destroy();
+      rippleRef.current = null;
+    }
+
+    const tempo = 400; // ms between notes
+
+    // Sort all notes by X position (left to right)
+    const allNotes = [
+      ...displayNotes.map(note => ({ ...note, isUserNote: false })),
+      { id: 'user-note', positionX: userPositionX, positionY: userPositionY, isUserNote: true },
+    ].sort((a, b) => a.positionX - b.positionX);
+
+    for (let i = 0; i < allNotes.length; i++) {
+      const note = allNotes[i];
+      const noteElement = note.isUserNote ? userNoteRef.current : noteRefs.current[note.id];
+
+      // Add playing class directly to DOM for instant visual feedback
+      if (noteElement) {
+        noteElement.classList.add('your-melody__note--playing');
+      }
+
+      // Destroy previous playing ripple
+      if (playingRippleRef.current) {
+        playingRippleRef.current.destroy();
+        playingRippleRef.current = null;
+      }
+
+      // Create ripple effect on current note
+      if (noteElement) {
+        playingRippleRef.current = new RippleEffect(noteElement, {
+          autoRippleCount: 2,
+          duration: 800,
+          delay: 0,
+          startSize: 40,
+          endSize: 200,
+          opacity: 0.7,
+          autoPlay: true,
+          clickable: false,
+        });
+      }
+
+      // Play the sound based on Y position
+      playNoteByPosition(note.positionY);
+
+      // Wait before next note
+      await new Promise(resolve => setTimeout(resolve, tempo));
+
+      // Remove playing class after note is done
+      if (noteElement) {
+        noteElement.classList.remove('your-melody__note--playing');
+      }
+    }
+
+    // Cleanup playing ripple
+    if (playingRippleRef.current) {
+      playingRippleRef.current.destroy();
+      playingRippleRef.current = null;
+    }
+
+    // Restart user's continuous ripple after melody ends
+    if (userNoteRef.current) {
+      rippleRef.current = new RippleEffect(userNoteRef.current, {
+        autoRippleCount: 4,
+        duration: 5000,
+        delay: 1200,
+        startSize: 60,
+        endSize: 400,
+        opacity: 0.6,
+        autoPlay: true,
+        clickable: false,
+        clickRippleCount: 3,
+      });
+    }
+
+    setIsPlaying(false);
+  }, [isPlaying, displayNotes, userPositionX, userPositionY]);
+
+  // Play only user's note
+  const handlePlayUserNote = useCallback(async () => {
+    await initAudio();
+
+    // Add playing class directly to DOM
+    if (userNoteRef.current) {
+      userNoteRef.current.classList.add('your-melody__note--playing');
+    }
+
+    playNoteByPosition(userPositionY);
+
+    // Remove playing class after sound plays
+    setTimeout(() => {
+      if (userNoteRef.current) {
+        userNoteRef.current.classList.remove('your-melody__note--playing');
+      }
+    }, 800);
+  }, [userPositionY]);
+
+  // Navigation
   const handleGoBack = () => {
     navigate(ROUTES.EVENT_PLACE_NOTE);
   };
 
-  // Navigation - go to next step (step 3)
   const handleNext = () => {
     navigate(ROUTES.EVENT_CHOOSE_NOTE);
   };
 
-  // Get current Y positions based on screen size
-  const POSITIONS_Y = isTabletOrMobile ? POSITIONS_Y_MOBILE : POSITIONS_Y_DESKTOP;
-
-  // Render a single music staff
-  const renderStaff = (notes, showUserNote = false) => (
-    <div className="write-message__staff">
-      {/* 5 staff lines */}
-      <div className="write-message__lines">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <div key={i} className="write-message__line" />
-        ))}
-      </div>
-
-      {/* Random notes */}
-      {notes.map((note) => (
-        <div
-          key={note.id}
-          className="write-message__note"
-          style={{
-            left: `${note.positionX}%`,
-            top: `${POSITIONS_Y[note.positionY]}px`,
-          }}
-        >
-          <img
-            src={getMediaUrl(note.shape)}
-            alt="Diamond note"
-            className="write-message__note-img"
-          />
-        </div>
-      ))}
-
-      {/* User's note with ripple effect - always at last X position, Y from user selection */}
-      {showUserNote && (
-        <div
-          ref={userNoteRef}
-          className="write-message__note write-message__note--user"
-          style={{
-            left: `${userPositionX}%`,
-            top: `${POSITIONS_Y[userPositionY]}px`,
-          }}
-        >
-          <img
-            src={getMediaUrl('mirror_DMM/H1.webp')}
-            alt="Your note"
-            className="write-message__note-img write-message__note-img--user"
-          />
-        </div>
-      )}
-    </div>
-  );
+  // Get user's diamond shape
+  const getUserDiamondShape = () => {
+    if (selectedDiamond) {
+      const shapeMap = {
+        h1: 'mirror_DMM/H1.webp',
+        h2: 'mirror_DMM/H2.webp',
+        h3: 'mirror_DMM/H3.webp',
+        h4: 'mirror_DMM/H4.webp',
+        h5: 'mirror_DMM/H5.webp',
+        h6: 'mirror_DMM/H6.webp',
+        h7: 'mirror_DMM/H7.webp',
+      };
+      return shapeMap[selectedDiamond] || 'mirror_DMM/H1.webp';
+    }
+    return 'mirror_DMM/H1.webp';
+  };
 
   return (
     <>
       <NavbarV4 logoOnly />
       <div
         ref={containerRef}
-        className={`write-message ${isEntering ? 'write-message--zoom-in' : ''}`}
+        className={`your-melody ${isEntering ? 'your-melody--entering' : ''}`}
         data-navbar-theme="black"
       >
         {/* Background */}
-        <div className="write-message__bg" />
+        <div className="your-melody__bg" />
 
-      {/* Main content - Two music staffs with arrow buttons */}
-      <main className="write-message__main">
-        {/* Left arrow - go back to step 1 */}
-        <div className="write-message__arrow write-message__arrow--left">
-          <button
-            className="glass-button glass-button--circle"
-            onClick={handleGoBack}
-            aria-label="Go back"
-          >
-            <ArrowLeft size={24} />
-          </button>
-        </div>
+        {/* Header - Title and description at top left */}
+        <header className="your-melody__header">
+          <h2 className="heading-2--no-margin your-melody__title">Tương tác cùng Nốt sáng</h2>
+          <p className="bodytext-6--no-margin your-melody__description">
+            Bạn đã tạo nên Nốt Sáng của riêng mình. Hãy trải nghiệm và lắng nghe giai điệu được hoàn thiện từ chính sự hiện diện của bạn.
+          </p>
+        </header>
 
-        <div className={`write-message__staffs ${isTabletOrMobile ? 'write-message__staffs--mobile' : ''}`}>
-          {renderStaff(staff1Notes, false)}
-          {renderStaff(staff2Notes, !isTabletOrMobile)}
-          {isTabletOrMobile && renderStaff(staff3Notes, true)}
-        </div>
+        {/* Main content - Staff with notes */}
+        <main className="your-melody__main">
+          {/* Staff container */}
+          <div className="your-melody__staff-container">
+            <div className="your-melody__staff">
+              {/* 5 staff lines */}
+              <div className="your-melody__lines">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div key={i} className="your-melody__line" />
+                ))}
+              </div>
 
-        {/* Right arrow - go to next step */}
-        <div className="write-message__arrow write-message__arrow--right">
-          <button
-            className="glass-button glass-button--circle"
-            onClick={handleNext}
-            aria-label="Next step"
-          >
-            <ArrowRight size={24} />
-          </button>
-        </div>
-      </main>
+              {/* Random notes (7) */}
+              {displayNotes.map((note) => (
+                <div
+                  key={note.id}
+                  ref={(el) => { noteRefs.current[note.id] = el; }}
+                  className="your-melody__note"
+                  style={{
+                    left: `${note.positionX}%`,
+                    top: `${NOTE_POSITIONS_Y[note.positionY]}px`,
+                  }}
+                >
+                  <img
+                    src={getMediaUrl(note.shape)}
+                    alt="Diamond note"
+                    className="your-melody__note-img"
+                  />
+                </div>
+              ))}
 
-      {/* Footer - bottom left */}
-      <footer className="write-message__footer">
-        {/* Progress bar 2/3 */}
-        <div className="write-message__progress">
-          <div className="write-message__progress-step write-message__progress-step--active" />
-          <div className="write-message__progress-step write-message__progress-step--active" />
-          <div className="write-message__progress-step" />
-        </div>
-        <h3 className="heading-3--no-margin write-message__subtitle">Place your note</h3>
-        <p className="bodytext-6--no-margin write-message__description">
-          cing elit, sed diam nonummy nibut laoreet dolore
-          magna aliquam erat volutpat. cing elit, sed diam
-          nonummy nibut nibut laoreet dolore magna aliquam
-          erat volutpat.
-        </p>
-        {error && <p className="write-message__error">{error}</p>}
-      </footer>
+              {/* User's note (last position) */}
+              <div
+                ref={userNoteRef}
+                className="your-melody__note your-melody__note--user"
+                style={{
+                  left: `${userPositionX}%`,
+                  top: `${NOTE_POSITIONS_Y[userPositionY]}px`,
+                }}
+              >
+                <img
+                  src={getMediaUrl(getUserDiamondShape())}
+                  alt="Your note"
+                  className="your-melody__note-img your-melody__note-img--user"
+                />
+              </div>
+            </div>
+          </div>
+        </main>
 
-      {/* Action buttons - bottom center */}
-      <div className="write-message__actions">
-        <button className="glass-button glass-button--pill">
-          Nghe 1 đoạn nốt
-        </button>
-        <button className="glass-button glass-button--pill">
-          Nghe nốt của tôi
-        </button>
-      </div>
+        {/* Footer - arrows and action buttons */}
+        <footer className="your-melody__footer">
+          {/* Left arrow */}
+          <div className="your-melody__arrow your-melody__arrow--left">
+            <ShineGlassButton
+              variant="circle"
+              onClick={handleGoBack}
+              width={48}
+              height={48}
+            >
+              <ArrowLeftIcon />
+            </ShineGlassButton>
+          </div>
 
+          {/* Action buttons */}
+          <div className="your-melody__actions">
+            <ShineGlassButton
+              onClick={handlePlayMelody}
+              disabled={isPlaying}
+            >
+              Nghe 1 đoạn nốt
+            </ShineGlassButton>
+            <ShineGlassButton
+              theme="light"
+              onClick={handlePlayUserNote}
+              disabled={isPlaying}
+            >
+              Nghe nốt của tôi
+            </ShineGlassButton>
+          </div>
+
+          {/* Right arrow */}
+          <div className="your-melody__arrow your-melody__arrow--right">
+            <ShineGlassButton
+              variant="circle"
+              onClick={handleNext}
+              width={48}
+              height={48}
+            >
+              <ArrowRightIcon />
+            </ShineGlassButton>
+          </div>
+        </footer>
       </div>
     </>
   );

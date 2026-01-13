@@ -4,14 +4,51 @@
  */
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
+import ShineGlassButton from '@/components/common/button/ShineGlassButton';
 import { fetchAllNotes } from '@services/event/eventApi';
 import { initAudio, playNoteByPosition, isAudioInitialized } from '@services/event/audio';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import lineSvg from '@/assets/images/dmm/line.svg';
 import NavbarV4 from '@/components/navbar/NavbarV4';
+
+// Custom Arrow Icons from Figma
+const ArrowRightIcon = ({ className = '' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="12"
+    viewBox="0 0 14 12"
+    fill="none"
+    className={className}
+  >
+    <path
+      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
+      stroke="currentColor"
+      strokeLinecap="square"
+    />
+  </svg>
+);
+
+const ArrowLeftIcon = ({ className = '' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="12"
+    viewBox="0 0 14 12"
+    fill="none"
+    className={className}
+    style={{ transform: 'scaleX(-1)' }}
+  >
+    <path
+      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
+      stroke="currentColor"
+      strokeLinecap="square"
+    />
+  </svg>
+);
 
 // Mapping from shape ID to Cloudflare image path - using optimized webp
 const DIAMOND_MAP = {
@@ -24,25 +61,25 @@ const DIAMOND_MAP = {
   h7: 'mirror_DMM/H7.webp',  // Cushion shape
 };
 
+// Mapping from position Y to Vietnamese note name
+const POSITION_TO_NOTE_NAME = {
+  0: 'Đô (C)',    // C5 - Đô cao
+  1: 'Si (B)',    // B4
+  2: 'La (A)',    // A4
+  3: 'Sol (G)',   // G4
+  4: 'Fa (F)',    // F4
+  5: 'Mi (E)',    // E4
+  6: 'Rê (D)',    // D4
+  7: 'Đô (C)',    // C4
+  8: 'Si (B)',    // B3 - Si thấp
+};
+
 // All possible Y positions for the note (9 positions total)
 // Lines: 0, 2, 4, 6, 8 (odd index = on line)
 // Zones: 1, 3, 5, 7 (even index = between lines)
 
-// Desktop: line height 12px, gap 80px, total height 380px
-const NOTE_POSITIONS_Y_DESKTOP = [
-  6,    // Line 0 (top line)
-  52,   // Zone 0 (between line 0 and 1)
-  98,   // Line 1
-  144,  // Zone 1 (between line 1 and 2)
-  190,  // Line 2 (middle line)
-  236,  // Zone 2 (between line 2 and 3)
-  282,  // Line 3
-  328,  // Zone 3 (between line 3 and 4)
-  374,  // Line 4 (bottom line)
-];
-
-// Tablet/Mobile: line height 8px, gap 80px, total height 360px
-const NOTE_POSITIONS_Y_SMALL = [
+// All screens: line height 8px, gap 80px, total height 360px
+const NOTE_POSITIONS_Y = [
   4,    // Line 0 (top line)
   48,   // Zone 0 (between line 0 and 1)
   92,   // Line 1
@@ -87,6 +124,7 @@ const PlaceNoteScreenNew = () => {
   const [error] = useState('');
   const [, setLinesComplete] = useState(false); // Lines animation done
   const [diamondVisible, setDiamondVisible] = useState(false); // Diamond can appear
+  const [titleVisible, setTitleVisible] = useState(false); // Title appears after diamond animation
   const [isTransitioning, setIsTransitioning] = useState(false); // Zoom-out transition
   const [isTabletOrMobile, setIsTabletOrMobile] = useState(() => window.innerWidth <= TABLET_BREAKPOINT);
   const containerRef = useRef(null); // Main container ref for setting CSS vars
@@ -95,8 +133,7 @@ const PlaceNoteScreenNew = () => {
   const hasNavigatedRef = useRef(false); // Track if user manually navigated
   const audioReadyRef = useRef(false); // Track if audio was initialized by user interaction
 
-  // Get current NOTE_POSITIONS_Y based on screen size
-  const NOTE_POSITIONS_Y = isTabletOrMobile ? NOTE_POSITIONS_Y_SMALL : NOTE_POSITIONS_Y_DESKTOP;
+  // Note positions are the same for all screen sizes now
 
   // Handle next button - navigate to write message screen with zoom transition
   const handleNext = () => {
@@ -175,7 +212,7 @@ const PlaceNoteScreenNew = () => {
     };
   }, []);
 
-  // Animation sequence: lines (1s) -> diamond appears (0.5s delay) -> ripple (0.5s after diamond)
+  // Animation sequence: lines (1s) -> diamond appears (0.2s delay) -> title (1s after diamond)
   useEffect(() => {
     // Lines complete after 1s
     const linesTimer = setTimeout(() => {
@@ -187,9 +224,15 @@ const PlaceNoteScreenNew = () => {
       setDiamondVisible(true);
     }, 1200);
 
+    // Title appears 1s after diamond (after diamond scale animation completes)
+    const titleTimer = setTimeout(() => {
+      setTitleVisible(true);
+    }, 2200);
+
     return () => {
       clearTimeout(linesTimer);
       clearTimeout(diamondTimer);
+      clearTimeout(titleTimer);
     };
   }, []);
 
@@ -273,20 +316,38 @@ const PlaceNoteScreenNew = () => {
           <div className="place-note-new__rings" />
         </div>
 
+        {/* Note title - shows the note name based on position (appears after diamond animation) */}
+        {titleVisible && (
+          <h2 className="place-note-new__note-title place-note-new__note-title--animate heading-3--no-margin">
+            Bạn là nốt sáng {POSITION_TO_NOTE_NAME[positionY]}
+          </h2>
+        )}
+
+        {/* Arrow buttons - outside main to avoid transform containing block issue */}
+        <div className="place-note-new__arrow place-note-new__arrow--left">
+          <ShineGlassButton
+            variant="circle"
+            onClick={handleGoBack}
+            width={48}
+            height={48}
+          >
+            <ArrowLeftIcon />
+          </ShineGlassButton>
+        </div>
+        <div className="place-note-new__arrow place-note-new__arrow--right">
+          <ShineGlassButton
+            variant="circle"
+            onClick={handleNext}
+            width={48}
+            height={48}
+          >
+            <ArrowRightIcon />
+          </ShineGlassButton>
+        </div>
+
       {/* Main content - Music Staff (vertically centered) */}
       <main className="place-note-new__main">
         <div className="place-note-new__staff-container">
-          {/* Left arrow - go back */}
-          <div className="place-note-new__arrow place-note-new__arrow--left">
-            <button
-              className="glass-button glass-button--circle"
-              onClick={handleGoBack}
-              aria-label="Go back"
-            >
-              <ArrowLeft size={24} />
-            </button>
-          </div>
-
           {/* Music Staff with 5 SVG lines */}
           <div className="place-note-new__staff">
             {/* Red highlights on lines - COMMENTED OUT
@@ -320,10 +381,8 @@ const PlaceNoteScreenNew = () => {
             {/* 5 staff lines */}
             <div className="place-note-new__lines-wrapper">
               {[0, 1, 2, 3, 4].map((i) => (
-                <img
+                <div
                   key={i}
-                  src={getMediaUrl('dmm/Rectangle 4200.svg')}
-                  alt=""
                   className="place-note-new__line place-note-new__line--animate"
                 />
               ))}
@@ -347,35 +406,11 @@ const PlaceNoteScreenNew = () => {
               </div>
             )}
           </div>
-
-          {/* Right arrow - go to next step */}
-          <div className="place-note-new__arrow place-note-new__arrow--right">
-            <button
-              className="glass-button glass-button--circle"
-              onClick={handleNext}
-              aria-label="Next step"
-            >
-              <ArrowRight size={24} />
-            </button>
-          </div>
         </div>
       </main>
 
       {/* Footer - bottom left */}
       <footer className="place-note-new__footer">
-        {/* Progress bar 1/3 */}
-        <div className="place-note-new__progress">
-          <div className="place-note-new__progress-step place-note-new__progress-step--active" />
-          <div className="place-note-new__progress-step" />
-          <div className="place-note-new__progress-step" />
-        </div>
-        <h3 className="heading-3--no-margin place-note-new__subtitle">Place your note</h3>
-        <p className="bodytext-6--no-margin place-note-new__description">
-          cing elit, sed diam nonummy nibut laoreet dolore
-          magna aliquam erat volutpat. cing elit, sed diam
-          nonummy nibut nibut laoreet dolore magna aliquam
-          erat volutpat.
-        </p>
         {error && <p className="place-note-new__error">{error}</p>}
       </footer>
       </div>

@@ -58,9 +58,9 @@ export const ROUTES = {
   EVENT_DISPLAY: "/the-muse-of-love-grown/display",
   EVENT_ADMIN: "/the-muse-of-love-grown/admin",
   EVENT_CHRISTMAS: "/the-muse-of-love-grown/christmas",
-  EVENT_PLACE_NOTE: "/the-muse-of-love-grown/place-note", // New place note screen (step 1)
-  EVENT_WRITE_MESSAGE: "/the-muse-of-love-grown/write-message", // Write message screen (step 2)
-  EVENT_CHOOSE_NOTE: "/the-muse-of-love-grown/choose-note", // Choose note shape screen (step 3)
+  EVENT_PLACE_NOTE: "/the-muse-of-love-grown/your-note", // New place note screen (step 1)
+  EVENT_WRITE_MESSAGE: "/the-muse-of-love-grown/your-melody", // Write message screen (step 2)
+  EVENT_CHOOSE_NOTE: "/the-muse-of-love-grown/your-wallpaper", // Your wallpaper screen (step 3)
 
   // Interactive experiences
   BIRTHDAY_CAKE: "/birthday-cake",
