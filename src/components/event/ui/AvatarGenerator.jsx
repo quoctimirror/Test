@@ -138,10 +138,12 @@ const AvatarGenerator = ({
   lightNumber,
   diamondShape,
   onGenerated,
+  delay = 0, // Delay in ms before starting generation
 }) => {
   const canvasRef = useRef(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const hasGenerated = useRef(false);
+  const [shouldGenerate, setShouldGenerate] = useState(delay === 0);
 
   const generateAvatar = useCallback(async () => {
     const canvas = canvasRef.current;
@@ -271,9 +273,22 @@ const AvatarGenerator = ({
     }
   }, [displayName, lightNumber, diamondShape, onGenerated, isGenerating]);
 
+  // Delay generation to avoid blocking entrance animation
   useEffect(() => {
-    generateAvatar();
-  }, [generateAvatar]);
+    if (delay > 0) {
+      const timer = setTimeout(() => {
+        setShouldGenerate(true);
+      }, delay);
+      return () => clearTimeout(timer);
+    }
+  }, [delay]);
+
+  // Only generate when shouldGenerate is true (after delay)
+  useEffect(() => {
+    if (shouldGenerate) {
+      generateAvatar();
+    }
+  }, [generateAvatar, shouldGenerate]);
 
   // Reset when props change to allow regeneration
   useEffect(() => {
