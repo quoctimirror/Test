@@ -405,14 +405,17 @@
 @media screen and (min-width: 1301px) and (max-width: 1550px) {
   .heading-1 {
     font-size: 48px;
+    line-height: 1.05;
   }
 
   .heading-2 {
     font-size: 48px;
+    line-height: 1.05;
   }
 
   .heading-3 {
     font-size: 28px;
+    line-height: 1.05;
   }
 
   .bodytext-1 {
@@ -441,14 +444,17 @@
 
   .heading-1--no-margin {
     font-size: 48px;
+    line-height: 1.05;
   }
 
   .heading-2--no-margin {
     font-size: 48px;
+    line-height: 1.05;
   }
 
   .heading-3--no-margin {
     font-size: 28px;
+    line-height: 1.05;
   }
 
   .bodytext-1--no-margin {
@@ -478,15 +484,18 @@
 
 @media screen and (min-width: 481px) and (max-width: 1300px) {
   .heading-1 {
-    font-size: 36px;
+    font-size: 40px;
+    line-height: 1.05;
   }
 
   .heading-2 {
-    font-size: 36px;
+    font-size: 40px;
+    line-height: 1.05;
   }
 
   .heading-3 {
     font-size: 24px;
+    line-height: 1.05;
   }
 
   .bodytext-1 {
@@ -514,15 +523,18 @@
   }
 
   .heading-1--no-margin {
-    font-size: 36px;
+    font-size: 40px;
+    line-height: 1.05;
   }
 
   .heading-2--no-margin {
-    font-size: 36px;
+    font-size: 40px;
+    line-height: 1.05;
   }
 
   .heading-3--no-margin {
     font-size: 24px;
+    line-height: 1.05;
   }
 
   .bodytext-1--no-margin {
@@ -553,14 +565,17 @@
 @media screen and (max-width: 480px) {
   .heading-1 {
     font-size: 32px;
+    line-height: 1.05;
   }
 
   .heading-2 {
     font-size: 32px;
+    line-height: 1.05;
   }
 
   .heading-3 {
     font-size: 20px;
+    line-height: 1.05;
   }
 
   .bodytext-1 {
@@ -584,19 +599,23 @@
   }
 
   .bodytext-6 {
-    font-size: 12px;
+    font-size: 10px;
+    line-height: 1.2;
   }
 
   .heading-1--no-margin {
     font-size: 32px;
+    line-height: 1.05;
   }
 
   .heading-2--no-margin {
     font-size: 32px;
+    line-height: 1.05;
   }
 
   .heading-3--no-margin {
     font-size: 20px;
+    line-height: 1.05;
   }
 
   .bodytext-1--no-margin {
@@ -620,7 +639,8 @@
   }
 
   .bodytext-6--no-margin {
-    font-size: 12px;
+    font-size: 10px;
+    line-height: 1.2;
   }
 }
 

@@ -23,40 +23,6 @@ const NOTE_POSITION_Y = 164; // Middle line position
 // Target date: March 7, 2026
 const TARGET_DATE = new Date('2026-03-07T00:00:00');
 
-// Sound wave icon component (same as old SoundButton)
-const SoundWaveIcon = ({ isActive }) => (
-  <div className="sound-wave-container">
-    <svg
-      className={`sound-wave-svg ${isActive ? 'active' : ''}`}
-      width="120"
-      height="24"
-      viewBox="0 0 120 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Straight line - visible when inactive */}
-      <path
-        className={`wave-path-straight ${!isActive ? 'visible' : ''}`}
-        d="M0 12 L120 12"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      {/* Long flowing wave - visible when active */}
-      <g className={`wave-group ${isActive ? 'visible' : ''}`}>
-        <path
-          className="wave-path-flowing"
-          d="M-20 12 Q-15 4, -10 12 Q-5 20, 0 12 Q5 4, 10 12 Q15 20, 20 12 Q25 4, 30 12 Q35 20, 40 12 Q45 4, 50 12 Q55 20, 60 12 Q65 4, 70 12 Q75 20, 80 12 Q85 4, 90 12 Q95 20, 100 12 Q105 4, 110 12 Q115 20, 120 12 Q125 4, 130 12 Q135 20, 140 12"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          fill="none"
-        />
-      </g>
-    </svg>
-  </div>
-);
-
 const EventGuidePage = () => {
   const navigate = useNavigate();
   const { theme: arrowTheme } = useBottomTheme();
@@ -65,13 +31,15 @@ const EventGuidePage = () => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0 });
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [isSoundActive, setIsSoundActive] = useState(false);
+  const [luckyFadePhase, setLuckyFadePhase] = useState('light'); // light, dark
   const musicContentRef = useRef(null);
   const musicSectionRef = useRef(null);
   const rippleRef = useRef(null);
   const staffNoteRef = useRef(null);
   const staffRippleRef = useRef(null);
   const staffSectionRef = useRef(null);
+  const avatarSectionRef = useRef(null);
+  const luckySectionRef = useRef(null);
   const transitionTimeoutRef = useRef(null);
 
   // Cleanup scroll lock on unmount (prevent stuck scroll lock)
@@ -107,15 +75,114 @@ const EventGuidePage = () => {
     }
   }, [currentStep]);
 
-  // Show scroll to top button after scrolling
+  // Show scroll to top button after scrolling (or always in step 2)
   useEffect(() => {
     const handleScrollButtons = () => {
-      setShowScrollTop(window.scrollY > 500);
+      // In step 2, always show the button
+      // In step 1, show after scrolling 500px
+      if (currentStep === 2) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(window.scrollY > 500);
+      }
     };
     window.addEventListener('scroll', handleScrollButtons, { passive: true });
     handleScrollButtons();
     return () => window.removeEventListener('scroll', handleScrollButtons);
-  }, []);
+  }, [currentStep]);
+
+  // Fade effect when scrolling through avatar-lucky wrapper
+  useEffect(() => {
+    if (currentStep !== 2) return;
+
+    const handleLuckyFade = () => {
+      if (!avatarSectionRef.current) return;
+
+      const avatarRect = avatarSectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Fade to dark only when avatar section bottom is near middle of viewport
+      // (user has scrolled well into the transition area)
+      if (avatarRect.bottom <= windowHeight * 0.5) {
+        setLuckyFadePhase('dark');
+      } else {
+        setLuckyFadePhase('light');
+      }
+    };
+
+    window.addEventListener('scroll', handleLuckyFade, { passive: true });
+    handleLuckyFade();
+    return () => window.removeEventListener('scroll', handleLuckyFade);
+  }, [currentStep]);
+
+  // Hero to Music transition scroll effect with auto-scroll
+  useEffect(() => {
+    if (currentStep !== 1) return;
+
+    let isAutoScrolling = false;
+    let lastScrollProgress = 0;
+    let currentPhase = 'hero'; // 'hero' or 'music'
+
+    const handleHeroMusicScroll = () => {
+      const wrapper = document.querySelector('.event-guide__hero-music-wrapper');
+      if (!wrapper) return;
+
+      const rect = wrapper.getBoundingClientRect();
+      const scrollProgress = Math.min(Math.max(-rect.top / window.innerHeight, 0), 1);
+
+      // Update CSS custom properties
+      wrapper.style.setProperty('--hero-opacity', String(1 - scrollProgress));
+      wrapper.style.setProperty('--music-opacity', String(scrollProgress));
+      wrapper.style.setProperty('--hero-pointer', scrollProgress > 0.5 ? 'none' : 'auto');
+      wrapper.style.setProperty('--music-pointer', scrollProgress > 0.5 ? 'auto' : 'none');
+
+      if (isAutoScrolling) {
+        lastScrollProgress = scrollProgress;
+        return;
+      }
+
+      const isScrollingDown = scrollProgress > lastScrollProgress;
+      const isScrollingUp = scrollProgress < lastScrollProgress;
+
+      // Auto-scroll DOWN to music (when in hero phase and scrolling down)
+      if (currentPhase === 'hero' && isScrollingDown && scrollProgress > 0.05 && scrollProgress < 0.95) {
+        isAutoScrolling = true;
+        currentPhase = 'music';
+
+        const targetScroll = wrapper.offsetTop + window.innerHeight;
+        window.scrollTo({
+          top: targetScroll,
+          behavior: 'smooth'
+        });
+
+        setTimeout(() => {
+          isAutoScrolling = false;
+        }, 1000);
+      }
+
+      // Auto-scroll UP to hero (when in music phase and scrolling up)
+      if (currentPhase === 'music' && isScrollingUp && scrollProgress > 0.05 && scrollProgress < 0.95) {
+        isAutoScrolling = true;
+        currentPhase = 'hero';
+
+        const targetScroll = wrapper.offsetTop;
+        window.scrollTo({
+          top: targetScroll,
+          behavior: 'smooth'
+        });
+
+        setTimeout(() => {
+          isAutoScrolling = false;
+        }, 1000);
+      }
+
+      lastScrollProgress = scrollProgress;
+    };
+
+    window.addEventListener('scroll', handleHeroMusicScroll, { passive: true });
+    handleHeroMusicScroll();
+    return () => window.removeEventListener('scroll', handleHeroMusicScroll);
+  }, [currentStep]);
 
   const handleGetStarted = () => {
     navigate(ROUTES.EVENT_LOGIN, { state: { fromGuide: true } });
@@ -220,6 +287,56 @@ const EventGuidePage = () => {
       }, 0);
     }, 600);
   };
+
+  // State for back transition (step 2 -> step 1)
+  const [isGoingBack, setIsGoingBack] = useState(false);
+
+  // Handle transition back to step 1 (triggered by scroll up at top)
+  const handleBackToStep1 = () => {
+    if (isTransitioning || isGoingBack) return;
+
+    setIsGoingBack(true);
+    window.scrollTo(0, 0);
+
+    // After fade animation completes, change step
+    setTimeout(() => {
+      setCurrentStep(1);
+      setIsGoingBack(false);
+    }, 600);
+  };
+
+  // Detect scroll up at top of step 2 to go back to step 1
+  useEffect(() => {
+    if (currentStep !== 2 || isTransitioning || isGoingBack) return;
+
+    let overscrollUpCount = 0;
+    let lastWheelTime = 0;
+
+    const handleWheelUp = (e) => {
+      const isAtTop = window.scrollY <= 10;
+      const isScrollingUp = e.deltaY < 0;
+
+      if (isAtTop && isScrollingUp) {
+        const now = Date.now();
+        if (now - lastWheelTime >= 400) {
+          lastWheelTime = now;
+          overscrollUpCount++;
+
+          if (overscrollUpCount >= 3) {
+            handleBackToStep1();
+          }
+        }
+      } else if (!isAtTop) {
+        overscrollUpCount = 0;
+      }
+    };
+
+    window.addEventListener('wheel', handleWheelUp, { passive: true });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheelUp);
+    };
+  }, [currentStep, isTransitioning]);
 
   // Initialize RippleEffect (without auto-play)
   useEffect(() => {
@@ -394,9 +511,9 @@ const EventGuidePage = () => {
       timeoutId = setTimeout(() => {
         if (staffNoteRef.current && !staffRippleRef.current) {
           staffRippleRef.current = new RippleEffect(staffNoteRef.current, {
-            autoRippleCount: 6,
-            duration: 5000,
-            delay: 900,
+            autoRippleCount: 4,
+            duration: 7000,
+            delay: 1800,
             startSize: 80,
             endSize: 750,
             opacity: 0.65,
@@ -420,13 +537,13 @@ const EventGuidePage = () => {
     <>
       <NavbarV4 logoOnly showDmmLogo />
 
-      <div className={`event-guide ${currentStep === 2 ? 'event-guide--step2' : ''} ${isTransitioning ? 'event-guide--transitioning' : ''}`} data-navbar-theme="black">
+      <div className={`event-guide ${currentStep === 2 ? 'event-guide--step2' : ''} ${isTransitioning ? 'event-guide--transitioning' : ''}`} data-navbar-theme="white">
         {/* Step 2 appears behind during transition */}
-        {(currentStep === 2 || isTransitioning) && (
-          <div className={`event-guide__step2 ${hasAnimated ? 'event-guide__step2--animated' : ''}`}>
+        {(currentStep === 2 || isTransitioning || isGoingBack) && (
+          <div className={`event-guide__step2 ${hasAnimated ? 'event-guide__step2--animated' : ''} ${isGoingBack ? 'event-guide__step2--fading-out' : ''}`}>
             {/* Music Staff Section */}
             <section ref={staffSectionRef} className="event-guide__staff-section" data-navbar-theme="black">
-              <h2 className="event-guide__staff-title heading-2--no-margin">Nơi Nốt Nhạc<br />Đồng Điệu</h2>
+              <h2 className="event-guide__staff-title heading-2--no-margin">Bạn là một Nốt Sáng</h2>
 
               {/* Staff with note */}
               <div className="event-guide__staff">
@@ -449,7 +566,7 @@ const EventGuidePage = () => {
                   style={{ top: `${NOTE_POSITION_Y}px` }}
                 >
                   <img
-                    src={getMediaUrl('dmm/heart.svg')}
+                    src={getMediaUrl('mirror_DMM/HEART-01.webp')}
                     alt="Heart note"
                     className="event-guide__staff-heart"
                   />
@@ -457,154 +574,178 @@ const EventGuidePage = () => {
               </div>
 
               <p className="event-guide__staff-description bodytext-6--no-margin">
-                Bạn ở đây, một Nốt Sáng. <br />Nguồn cảm hứng hoàn thiện bản nhạc<br /> và mở lối cho hành trình đa giác quan được đánh thức.
+                Giữa bản nhạc Love-Grown, <br />mỗi người hiện diện như một Nốt Sáng, <br />một nguồn cảm hứng giúp giai điệu được hoàn thiện. <br />Và mở lối cho hành trình đa giác quan được đánh thức...
               </p>
             </section>
 
-            {/* Avatar Card Section with Scattered Cards */}
-            <section className="event-guide__avatar-section" data-navbar-theme="black">
-              {/* Scattered Cards */}
-              <div className="event-guide__cards-scattered">
-                <div className="event-guide__card event-guide__card--1" />
-                <div className="event-guide__card event-guide__card--2" />
-                <div className="event-guide__card event-guide__card--3" />
-                <div className="event-guide__card event-guide__card--4" />
-                <div className="event-guide__card event-guide__card--5" />
-                <div className="event-guide__card event-guide__card--6" />
-                <div className="event-guide__card event-guide__card--7" />
-                <div className="event-guide__card event-guide__card--8" />
-                <div className="event-guide__card event-guide__card--9" />
-                <div className="event-guide__card event-guide__card--10" />
-                <div className="event-guide__card event-guide__card--11" />
-                <div className="event-guide__card event-guide__card--12" />
-                <div className="event-guide__card event-guide__card--13" />
-                <div className="event-guide__card event-guide__card--14" />
-                <div className="event-guide__card event-guide__card--15" />
-                <div className="event-guide__card event-guide__card--16" />
-              </div>
-
-              {/* Center Content */}
-              <div className="event-guide__avatar-content">
-                <h2 className="event-guide__avatar-title heading-2--no-margin">
-                  Your One-and-<br />Only Avatar<br />Card
-                </h2>
-                <p className="event-guide__avatar-text bodytext-6--no-margin">
-                  Từ lựa chọn của bạn, MIRROR tạo nên một avatar riêng biệt mang tên bạn, phản chiếu dấu ấn cá nhân và ghi lại khoảnh khắc bạn hiện diện trong thế giới quan của MIRROR.
-                </p>
-                <ShineGlassButton theme="light" onClick={handleGetStarted}>
-                  Bắt đầu
-                </ShineGlassButton>
-              </div>
-            </section>
-
-            {/* Lucky Moment Section */}
-            <section className="event-guide__lucky-section" data-navbar-theme="white">
-              <h2 className="event-guide__lucky-title heading-2--no-margin">
-                Khoảnh Khắc Sáng Được Gọi Tên
-              </h2>
-              <p className="event-guide__lucky-text bodytext-6--no-margin">
-                Giữa bản nhạc, một khoảnh khắc được gọi tên.<br />
-                Chiếc nhẫn kim cương từ MIRROR xuất hiện như một biểu tượng của tình<br />
-                yêu được âm nhạc dẫn lối, tìm đến nguồn cảm hứng, để bản nhạc ấy cất<br />
-                thành lời.
-              </p>
-              <ShineGlassButton theme="footer" onClick={handleGetStarted}>
-                Khoảnh khắc ấy dành cho bạn
-              </ShineGlassButton>
-
-              {/* Bottom row: Stats + Diamond Ring (3 columns) */}
-              <div className="event-guide__lucky-bottom">
-                <div className="event-guide__lucky-stat">
-                  <span className="event-guide__lucky-number">{countdown.days}</span>
-                  <span className="event-guide__lucky-label bodytext-6--no-margin">Ngày</span>
-                </div>
-
-                <div className="event-guide__lucky-ring">
-                  <img
-                    src={getMediaUrl('mirror_DMM/diamond-ring.webp')}
-                    alt="Diamond Ring"
-                    className="event-guide__lucky-ring-img"
-                  />
-                </div>
-
-                <div className="event-guide__lucky-stat">
-                  <span className="event-guide__lucky-number">{countdown.hours}</span>
-                  <span className="event-guide__lucky-label bodytext-6--no-margin">Tiếng</span>
-                </div>
-              </div>
-            </section>
-          </div>
-        )}
-
-        {/* Step 1: Hero + Music Reflection */}
-        {currentStep === 1 && (
-          <div className="event-guide__step1">
-            {/* Hero Section */}
-            <section
-              className="event-guide__hero"
-              data-navbar-theme="white"
+            {/* Avatar + Lucky Wrapper for smooth fade transition */}
+            <div
+              ref={luckySectionRef}
+              className={`event-guide__avatar-lucky-wrapper event-guide__avatar-lucky-wrapper--${luckyFadePhase}`}
+              data-navbar-theme={luckyFadePhase === 'dark' ? 'white' : 'black'}
             >
-                <div className="event-guide__hero-content">
-                  <div className="event-guide__hero-title-wrapper">
-                    <img
-                      src={titleSvg}
-                      alt="The Sound of Love Grown"
-                      className="event-guide__hero-title-img"
-                    />
-                    {/* Sparkles */}
-                    <span className="event-guide__sparkle event-guide__sparkle--1"></span>
-                    <span className="event-guide__sparkle event-guide__sparkle--2"></span>
-                    <span className="event-guide__sparkle event-guide__sparkle--3"></span>
-                    <span className="event-guide__sparkle event-guide__sparkle--4"></span>
-                    <span className="event-guide__sparkle event-guide__sparkle--5"></span>
-                  </div>
+              {/* Avatar Card Section with Scattered Cards */}
+              <section
+                ref={avatarSectionRef}
+                className="event-guide__avatar-section"
+              >
+                {/* Scattered Cards */}
+                <div className="event-guide__cards-scattered">
+                  <div className="event-guide__card event-guide__card--1" />
+                  <div className="event-guide__card event-guide__card--2" />
+                  <div className="event-guide__card event-guide__card--3" />
+                  <div className="event-guide__card event-guide__card--4" />
+                  <div className="event-guide__card event-guide__card--5" />
+                  <div className="event-guide__card event-guide__card--6" />
+                  <div className="event-guide__card event-guide__card--7" />
+                  <div className="event-guide__card event-guide__card--8" />
+                  <div className="event-guide__card event-guide__card--9" />
+                  <div className="event-guide__card event-guide__card--10" />
+                  <div className="event-guide__card event-guide__card--11" />
+                  <div className="event-guide__card event-guide__card--12" />
+                  <div className="event-guide__card event-guide__card--13" />
+                  <div className="event-guide__card event-guide__card--14" />
+                  <div className="event-guide__card event-guide__card--15" />
+                  <div className="event-guide__card event-guide__card--16" />
                 </div>
 
-                <div className="event-guide__hero-bottom">
-                  <ShineGlassButton theme="footer" onClick={handleGetStarted}>
-                    Bắt đầu
+                {/* Center Content */}
+                <div className="event-guide__avatar-content">
+                  <h2 className="event-guide__avatar-title heading-2--no-margin">
+                    Một phiên bản avatar khác biệt
+                  </h2>
+                  <p className="event-guide__avatar-text bodytext-6--no-margin">
+                    Từ lựa chọn của bạn, một avatar riêng biệt mang tên bạn sẽ được tạo ra, một món quà phản chiếu dấu ấn cá nhân và ghi lại khoảnh khắc bạn hiện diện trong thế giới quan của Her Concert.
+                  </p>
+                  <ShineGlassButton theme="light" onClick={handleGetStarted}>
+                    Bắt đầu hành trình
                   </ShineGlassButton>
-
-                  <div className="event-guide__hero-right" onClick={scrollToContent}>
-                    <span>Hoặc kéo xuống để xem thêm</span>
-                  </div>
                 </div>
               </section>
 
-            {/* Music Reflection Section */}
-            <section ref={musicSectionRef} className="event-guide__music" data-navbar-theme="black">
-              {/* Content with Ripple Effect - Scroll to transition */}
-              <div
-                ref={musicContentRef}
-                className={`event-guide__music-content ${isTransitioning ? 'event-guide__music-content--transitioning' : ''}`}
-              >
-                <h2 className="event-guide__music-title heading-2--no-margin">Nơi Nốt Nhạc Đồng Điệu</h2>
-                <p className="event-guide__music-text bodytext-6--no-margin">
-                  Dốc Mộng Mơ × MIRROR cùng gặp nhau ở những giá trị chung về cảm xúc và vẻ đẹp. Sự hợp tác mở ra một trải nghiệm nơi âm nhạc, ánh sáng và công nghệ hòa quyện, để khán giả không chỉ lắng nghe, mà trở thành một phần của câu chuyện trong thế giới quan của MIRROR.
-<br />Trong hành trình này, Dốc Mộng Mơ đồng hành cùng MIRROR với vai trò sensory partner về âm thanh nơi mỗi nốt nhạc được dẫn dắt để chạm đến cảm xúc, và cùng nhau hoàn thiện trải nghiệm đa giác quan.
+              {/* Lucky Moment Section */}
+              <section className="event-guide__lucky-section">
+                <h2 className="event-guide__lucky-title heading-2--no-margin">
+                  Khoảnh khắc <br /> Nốt sáng được gọi tên
+                </h2>
+                <p className="event-guide__lucky-text bodytext-6--no-margin">
+                  Giữa bản nhạc, một khoảnh khắc được gọi tên trong đêm “Her concert”.
+Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình yêu được âm nhạc dẫn lối, tìm đến nguồn cảm hứng, để bản nhạc ấy cất thành lời.
                 </p>
-              </div>
-            </section>
+                <div className="event-guide__lucky-btn">
+                  <ShineGlassButton theme="footer" onClick={handleGetStarted}>
+                    Tham gia lucky draw
+                  </ShineGlassButton>
+                </div>
+
+                {/* Bottom row: Stats + Diamond Ring (3 columns) */}
+                <div className="event-guide__lucky-bottom">
+                  <div className="event-guide__lucky-stat">
+                    <span className="event-guide__lucky-number">{countdown.days}</span>
+                    <span className="event-guide__lucky-label bodytext-6--no-margin">Ngày</span>
+                  </div>
+
+                  <div className="event-guide__lucky-ring">
+                    <video
+                      src={getMediaUrl('mirror_DMM/nhan-lucky-draw.webm')}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="event-guide__lucky-ring-img"
+                      onLoadedMetadata={(e) => { e.target.playbackRate = 0.25; }}
+                    />
+                  </div>
+
+                  <div className="event-guide__lucky-stat">
+                    <span className="event-guide__lucky-number">{countdown.hours}</span>
+                    <span className="event-guide__lucky-label bodytext-6--no-margin">Giờ</span>
+                  </div>
+                </div>
+              </section>
+            </div>
           </div>
         )}
-      </div>
 
-      <div className={`fixed-scroll-top-container ${showScrollTop ? 'visible' : ''}`}>
-        <GlassThemeButton
-          theme={arrowTheme === "white" ? "dark" : "light"}
-          icon="arrow-up"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        />
-      </div>
-      <div className="fixed-sound-container">
-        <GlassThemeButton
-          theme={arrowTheme === "white" ? "dark" : "light"}
-          icon={<SoundWaveIcon isActive={isSoundActive} />}
-          isCollapsed={true}
-          onClick={() => setIsSoundActive(!isSoundActive)}
-        >
-          {isSoundActive ? "Background music on" : "Background music off"}
-        </GlassThemeButton>
+        {/* Step 1: Hero + Music Reflection - Sticky Scroll */}
+        {(currentStep === 1 || isGoingBack) && (
+          <div
+            ref={musicSectionRef}
+            className={`event-guide__step1 ${isGoingBack ? 'event-guide__step1--fading-in' : ''}`}
+          >
+            <div className="event-guide__hero-music-wrapper">
+              {/* Background layers */}
+              <div className="event-guide__bg event-guide__bg--hero"></div>
+              <div className="event-guide__bg event-guide__bg--music"></div>
+
+              {/* Sticky content container */}
+              <div className="event-guide__sticky-container">
+                {/* Title image - always visible */}
+                <div className="event-guide__title-wrapper">
+                  <img
+                    src={titleSvg}
+                    alt="The Sound of Love Grown"
+                    className="event-guide__title-img"
+                  />
+                </div>
+
+                {/* Hero content - fades out on scroll */}
+                <div className="event-guide__hero-content">
+                  {/* Sparkles */}
+                  <span className="event-guide__sparkle event-guide__sparkle--1"></span>
+                  <span className="event-guide__sparkle event-guide__sparkle--2"></span>
+                  <span className="event-guide__sparkle event-guide__sparkle--3"></span>
+                  <span className="event-guide__sparkle event-guide__sparkle--4"></span>
+                  <span className="event-guide__sparkle event-guide__sparkle--5"></span>
+
+                  <div className="event-guide__hero-cta">
+                    <GlassThemeButton theme="spec_dark" onClick={handleGetStarted}>
+                      Bắt đầu hành trình
+                    </GlassThemeButton>
+                  </div>
+
+                  <div className="event-guide__hero-bottom">
+                    <GlassThemeButton theme="dark" onClick={scrollToContent} icon={
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 18" fill="none">
+                        <path d="M7.91964 0.750001L7.91964 16.75M7.91964 16.75L1.0625 9.89286M7.91964 16.75L14.7768 9.89286" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+                      </svg>
+                    } />
+                  </div>
+                </div>
+
+                {/* Music content - fades in on scroll */}
+                <div
+                  ref={musicContentRef}
+                  className={`event-guide__music-content ${isTransitioning ? 'event-guide__music-content--transitioning' : ''}`}
+                >
+                  <p className="event-guide__music-label event-guide__music-label--left bodytext-6--no-margin">
+                    DỐC MỘNG MƠ<br />X<br />MIRROR
+                  </p>
+                  <p className="event-guide__music-label event-guide__music-label--right bodytext-6--no-margin">
+                    CHO<br />SỰ KIỆN<br />HER CONCERT
+                  </p>
+                  <p className="event-guide__music-text bodytext-6--no-margin">
+                    Một hành trình đa giác quan được khơi nguồn từ âm nhạc.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className={`fixed-scroll-top-container ${showScrollTop ? 'visible' : ''}`}>
+          <GlassThemeButton
+            theme={arrowTheme === "white" ? "dark" : "light"}
+            icon="arrow-up"
+            onClick={() => {
+              if (currentStep === 2) {
+                handleBackToStep1();
+              } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+          />
+        </div>
       </div>
     </>
   );

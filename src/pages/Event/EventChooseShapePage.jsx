@@ -2,52 +2,74 @@
  * EventChooseShapePage - Choose diamond shape for Mirror Diamond Event
  * Click on shapes on the orbit to select them
  */
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
-import ShineGlassButton from '@components/common/button/ShineGlassButton';
+import GlassThemeButton from '@components/common/button/GlassThemeButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import useEventStore from '@/store/useEventStore';
+import EventSoundButton from '@/components/event/ui/EventSoundButton';
 
 import './EventChooseShapePage.css';
 
-// Diamond shapes data - H1 to H7
+// Video mapping for center display
+const shapeVideos = {
+  h1: 'mirror_DMM/HEART.webm',
+  h2: 'mirror_DMM/OVAL.webm',
+  h3: 'mirror_DMM/ROUND.webm',
+  h4: 'mirror_DMM/PEAR.webm',
+  h5: 'mirror_DMM/ASSCHER.webm',
+  h6: 'mirror_DMM/EMERALD.webm',
+  h7: 'mirror_DMM/MARQUISE.webm',
+};
+
+// Get video URL for shape
+const getVideoUrl = (shape) => getMediaUrl(shapeVideos[shape.id]);
+
+// Diamond shapes data - H1 to H7 (scale: 1 = default, >1 = larger)
 const shapes = [
   {
     id: 'h1',
     name: 'Heart shape',
-    image: 'mirror_DMM/H1.webp',
+    image: 'mirror_DMM/HEART-01.webp',
+    scale: 1.2,
   },
   {
     id: 'h2',
-    name: 'Round shape',
-    image: 'mirror_DMM/H2.webp',
+    name: 'Oval shape',
+    image: 'mirror_DMM/HEART-02.webp',
+    scale: 1,
   },
   {
     id: 'h3',
-    name: 'Emerald shape',
-    image: 'mirror_DMM/H3.webp',
+    name: 'Round shape',
+    image: 'mirror_DMM/HEART-03.webp',
+    scale: 1.2,
   },
   {
     id: 'h4',
-    name: 'Marquise shape',
-    image: 'mirror_DMM/H4.webp',
+    name: 'Pear shape',
+    image: 'mirror_DMM/HEART-04.webp',
+    scale: 1.2,
   },
   {
     id: 'h5',
-    name: 'Pear shape',
-    image: 'mirror_DMM/H5.webp',
+    name: 'Cushion shape',
+    image: 'mirror_DMM/HEART-05.webp',
+    scale: 1.2,
   },
   {
     id: 'h6',
-    name: 'Oval shape',
-    image: 'mirror_DMM/H6.webp',
+    name: 'Emerald shape',
+    image: 'mirror_DMM/HEART-06.webp',
+    scale: 1,
   },
   {
     id: 'h7',
-    name: 'Cushion shape',
-    image: 'mirror_DMM/H7.webp',
+    name: 'Marquise shape',
+    image: 'mirror_DMM/HEART-07.webp',
+    scale: 0.9,
   },
 ];
 
@@ -95,7 +117,42 @@ const EventChooseShapePage = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   // Initialize rotation offset to show selected shape at center
   const [rotationOffset, setRotationOffset] = useState(() => orbitAngles[getInitialIndex()]);
+  const [isEntering, setIsEntering] = useState(true); // For entrance animation
+  const [showIdleRipple, setShowIdleRipple] = useState(false); // For idle ripple effect
   const animationRef = useRef(null);
+  const idleTimerRef = useRef(null);
+
+  // Don't remove entrance class - just let animation complete naturally
+  // The class stays but animation only runs once
+  useEffect(() => {
+    // Animation will complete naturally without removing the class
+    // This prevents the "snap" when class is removed
+  }, []);
+
+  // Idle ripple effect - show after 5 seconds of inactivity
+  useEffect(() => {
+    const startIdleTimer = () => {
+      // Clear existing timer
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+      }
+      setShowIdleRipple(false);
+
+      // Start new timer - show ripple after 5 seconds
+      idleTimerRef.current = setTimeout(() => {
+        setShowIdleRipple(true);
+      }, 5000);
+    };
+
+    // Start timer on mount and when currentIndex changes
+    startIdleTimer();
+
+    return () => {
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+      }
+    };
+  }, [currentIndex]);
 
   // Animate rotation when currentIndex changes
   useEffect(() => {
@@ -191,53 +248,52 @@ const EventChooseShapePage = () => {
     <>
       <NavbarV4 logoOnly />
       <div className="event-choose-shape" data-navbar-theme="black">
-        {/* Navigation Buttons */}
-        <ShineGlassButton theme="light" onClick={handleBack} className="event-choose-shape__nav-btn event-choose-shape__nav-btn--left">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none" style={{ transform: 'scaleX(-1)' }}>
-            <path d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031" stroke="currentColor" strokeLinecap="square"/>
-          </svg>
-        </ShineGlassButton>
-
-        <ShineGlassButton theme="light" onClick={handleNext} className="event-choose-shape__nav-btn event-choose-shape__nav-btn--right">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-            <path d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031" stroke="currentColor" strokeLinecap="square"/>
-          </svg>
-        </ShineGlassButton>
-
         {/* Title */}
         <h1 className="event-choose-shape__title heading-3--no-margin">
           {currentShape.name}
         </h1>
 
         {/* Main Content Area */}
-        <div className="event-choose-shape__main">
-          {/* Center Diamond Display */}
-          <div className="event-choose-shape__center">
-            {/* Old shape - animating out */}
-            {isAnimating && prevIndex !== null && (
-              <div className="event-choose-shape__diamond event-choose-shape__diamond--exit">
-                <img
-                  src={getMediaUrl(shapes[prevIndex].image)}
-                  alt={shapes[prevIndex].name}
-                  className="event-choose-shape__diamond-img"
-                />
+        <div className={`event-choose-shape__main ${isEntering ? 'event-choose-shape__main--entering' : ''}`}>
+            {/* Center Diamond Display */}
+            <div className="event-choose-shape__center">
+              {/* Old shape - animating out */}
+              {isAnimating && prevIndex !== null && (
+                <div className="event-choose-shape__diamond event-choose-shape__diamond--exit">
+                  <video
+                    src={getVideoUrl(shapes[prevIndex])}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="event-choose-shape__diamond-img"
+                  />
+                </div>
+              )}
+              {/* Current shape - animating in or static */}
+              <div className={`event-choose-shape__diamond ${isAnimating ? 'event-choose-shape__diamond--enter' : ''}`}>
+                <div style={{ transform: `scale(${currentShape.scale || 1})`, transition: 'transform 0.6s ease' }}>
+                  <video
+                    src={getVideoUrl(currentShape)}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="event-choose-shape__diamond-img"
+                  />
+                </div>
               </div>
-            )}
-            {/* Current shape - animating in or static */}
-            <div className={`event-choose-shape__diamond ${isAnimating ? 'event-choose-shape__diamond--enter' : ''}`}>
-              <img
-                src={getMediaUrl(currentShape.image)}
-                alt={currentShape.name}
-                className="event-choose-shape__diamond-img"
-              />
             </div>
-          </div>
         </div>
 
         {/* Orbits Section */}
-        <div className="event-choose-shape__orbits-container">
+        <div className={`event-choose-shape__orbits-container ${isEntering ? 'event-choose-shape__orbits-container--entering' : ''}`}>
           {/* SVG Orbits */}
-          <svg className="event-choose-shape__orbits-svg" viewBox="0 0 1700 280" preserveAspectRatio="xMidYMid meet">
+          <svg
+            className="event-choose-shape__orbits-svg"
+            viewBox="0 0 1700 280"
+            preserveAspectRatio="xMidYMid meet"
+          >
             <defs>
               {/* Radial gradients for orbit glow fill */}
               <radialGradient id="chooseOrbitGlow1" cx="0.5" cy="0.5" r="0.5">
@@ -306,6 +362,9 @@ const EventChooseShapePage = () => {
               const angle = getShapeAngle(index);
               const pos = getPositionOnOrbit(1, angle);
               const isSelected = index === currentIndex;
+              // Show ripple on the shape to the right of selected (previous index visually)
+              const rightShapeIndex = (currentIndex - 1 + shapes.length) % shapes.length;
+              const showRippleOnThis = index === rightShapeIndex && showIdleRipple;
 
               return (
                 <div
@@ -323,6 +382,14 @@ const EventChooseShapePage = () => {
                     alt={shape.name}
                     className="event-choose-shape__orbit-shape-img"
                   />
+                  {/* Idle ripple indicator - shows on shape next to selected after 3s */}
+                  {showRippleOnThis && (
+                    <div className="event-choose-shape__idle-ripple">
+                      <span className="event-choose-shape__idle-ripple-ring"></span>
+                      <span className="event-choose-shape__idle-ripple-ring"></span>
+                      <span className="event-choose-shape__idle-ripple-ring"></span>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -333,32 +400,40 @@ const EventChooseShapePage = () => {
         <div className="event-choose-shape__bottom">
           {/* Place your note - Left (Desktop only) */}
           <div className="event-choose-shape__note event-choose-shape__note--desktop">
-            <h3 className="event-choose-shape__note-title heading-3--no-margin">Place your note</h3>
+            <h3 className="event-choose-shape__note-title heading-3--no-margin">Lựa chọn Nốt sáng</h3>
             <p className="event-choose-shape__note-text bodytext-6--no-margin">
-              cing elit, sed diam nonummy nibut laoreet dolore
-              magna aliquam erat volutpat. cing elit, sed diam
-              nonummy nibut nibut laoreet dolore magna aliquam
-              erat volutpat.
+              Hãy chọn hình dáng Nốt Sáng phản chiếu cảm xúc và phong cách của bạn. Mỗi dáng hình là cách bạn để lại dấu ấn riêng trong bản nhạc Love-Grown.
             </p>
           </div>
 
           {/* Choose the shape - Desktop */}
-          <div className="event-choose-shape__select-btn event-choose-shape__select-btn--desktop">
-            <ShineGlassButton theme="footer" onClick={handleNext}>
+          <div className="event-choose-shape__select-btn--desktop">
+            <GlassThemeButton theme="spec_dark" onClick={handleNext}>
               Choose the shape
-            </ShineGlassButton>
+            </GlassThemeButton>
           </div>
 
           {/* Confirm button - Mobile/Tablet */}
           <div className="event-choose-shape__confirm-btn--mobile">
-            <ShineGlassButton theme="footer" onClick={handleNext}>
+            <GlassThemeButton theme="spec_dark" onClick={handleNext}>
               Confirm this shape
-            </ShineGlassButton>
+            </GlassThemeButton>
           </div>
 
           {/* Empty space - Right (for balance, Desktop only) */}
           <div className="event-choose-shape__spacer"></div>
         </div>
+
+        {/* Back Button - Fixed bottom left */}
+        <div className="event-choose-shape__back">
+          <GlassThemeButton theme="light" onClick={handleBack} icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+              <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
+            </svg>
+          } />
+        </div>
+
+        <EventSoundButton />
       </div>
     </>
   );

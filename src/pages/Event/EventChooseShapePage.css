@@ -27,43 +27,17 @@
 } */
 
 
-/* Navigation Buttons - Circular style */
-.event-choose-shape__nav-btn {
+/* Back Button - Fixed bottom left */
+.event-choose-shape__back {
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 20;
+  left: 2.5%;
+  bottom: 24px;
+  z-index: 1000;
 }
 
-.event-choose-shape__nav-btn.shine-glass-button,
-.event-choose-shape__nav-btn.shine-glass-button .glass-layer,
-.event-choose-shape__nav-btn.shine-glass-button .shine-layer,
-.event-choose-shape__nav-btn.shine-glass-button .border-layer {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  padding: 0;
-  border-radius: 50%;
-}
-
-.event-choose-shape__nav-btn .button-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-
-/* Remove hover transform/bouncing effect */
-.event-choose-shape__nav-btn.shine-glass-button:hover {
-  transform: translateY(-50%) scale(1);
-}
-
-.event-choose-shape__nav-btn--left {
-  left: 48px;
-}
-
-.event-choose-shape__nav-btn--right {
-  right: 48px;
+.event-choose-shape__back .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Title */
@@ -97,6 +71,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 35vw;
 }
 
 .event-choose-shape__diamond {
@@ -139,10 +114,40 @@
 }
 
 .event-choose-shape__diamond-img {
-  width: auto;
-  height: 500px;
-  max-width: 550px;
+  width: 100%;
+  height: auto;
   object-fit: contain;
+}
+
+/* Entrance Animation - Zoom from center */
+.event-choose-shape__main--entering {
+  animation: zoomFromCenterMain 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.event-choose-shape__orbits-container--entering {
+  animation: zoomFromCenter 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes zoomFromCenterMain {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomFromCenter {
+  0% {
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
 }
 
 /* Orbits Container */
@@ -224,12 +229,77 @@
 /* Blurred shapes */
 .event-choose-shape__orbit-shape--blurred .event-choose-shape__orbit-shape-img {
   opacity: 0.5;
-  filter: blur(2px) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .event-choose-shape__orbit-shape--blurred:hover .event-choose-shape__orbit-shape-img {
   opacity: 0.8;
   filter: blur(0px) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+}
+
+/* Idle Ripple Effect - centered on the next shape */
+.event-choose-shape__idle-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.event-choose-shape__idle-ripple-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.03) 42%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.1) 58%,
+    rgba(255, 255, 255, 0.16) 65%,
+    rgba(255, 255, 255, 0.25) 72%,
+    rgba(255, 255, 255, 0.38) 78%,
+    rgba(255, 255, 255, 0.55) 84%,
+    rgba(255, 255, 255, 0.75) 89%,
+    rgba(255, 255, 255, 0.9) 93%,
+    rgba(255, 255, 255, 0.6) 96%,
+    rgba(255, 255, 255, 0.25) 98%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  opacity: 0.65;
+  animation: idleRipplePulse 3s ease-out infinite;
+}
+
+.event-choose-shape__idle-ripple-ring:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.event-choose-shape__idle-ripple-ring:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+.event-choose-shape__idle-ripple-ring:nth-child(3) {
+  animation-delay: 1.2s;
+}
+
+@keyframes idleRipplePulse {
+  0% {
+    width: 40px;
+    height: 40px;
+    opacity: 0.8;
+  }
+  100% {
+    width: 250px;
+    height: 250px;
+    opacity: 0;
+  }
 }
 
 /* Bottom Section */
@@ -239,15 +309,19 @@
   left: 0;
   right: 0;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   padding: 0 48px;
   z-index: 10;
 }
 
-/* Place your note */
-.event-choose-shape__note {
+/* Place your note - Desktop: Top left corner */
+.event-choose-shape__note--desktop {
+  position: fixed;
+  top: 120px;
+  left: 48px;
   max-width: 280px;
+  z-index: 10;
 }
 
 .event-choose-shape__note-title {
@@ -259,23 +333,14 @@
   color: #000;
 }
 
-/* Choose the shape button */
-.event-choose-shape__select-btn {
-  background: transparent;
-  border: none;
-  color: #797979;
-  cursor: pointer;
-  padding: 12px 24px;
-  transition: color 0.3s ease;
+/* Choose the shape button - Desktop */
+.event-choose-shape__select-btn--desktop {
+  display: block;
 }
 
-.event-choose-shape__select-btn:hover {
-  color: #4A3040;
-}
-
-/* Spacer for layout balance */
+/* Spacer - no longer needed */
 .event-choose-shape__spacer {
-  width: 280px;
+  display: none;
 }
 
 /* Mobile confirm button - hidden on desktop */
@@ -288,22 +353,12 @@
    ============================================ */
 
 @media (max-width: 1024px) {
-  /* .event-choose-shape {
-    padding-top: 100px;
-  } */
-
-  /* Hide navigation buttons on mobile/tablet */
-  .event-choose-shape__nav-btn--left,
-  .event-choose-shape__nav-btn--right {
-    display: none;
-  }
-
   .event-choose-shape__main {
     padding: 0 20px;
   }
 
   .event-choose-shape__center {
-    width: 40vw;
+    width: 80vw;
   }
 
   .event-choose-shape__diamond-img {
@@ -345,7 +400,7 @@
     justify-content: center;
     gap: 0;
     padding: 0 24px;
-    bottom: 48px;
+    bottom: 24px;
   }
 
   /* Hide desktop elements on mobile/tablet */
@@ -361,7 +416,7 @@
   }
 
   .event-choose-shape__orbit-shape-img {
-    max-height: 40px;
+    max-height: 70px;
   }
 }
 
@@ -375,7 +430,7 @@
   }
 
   .event-choose-shape__center {
-    width: 50vw; /* Larger on small mobile */
+    width: 80vw; /* Larger on small mobile */
   }
 
   .event-choose-shape__orbits-container {
@@ -385,6 +440,6 @@
   }
 
   .event-choose-shape__orbit-shape-img {
-    max-height: 32px;
+    max-height: 46px;
   }
 }

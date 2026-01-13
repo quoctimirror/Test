@@ -50,7 +50,7 @@ const ArrowLeftIcon = ({ className = '' }) => (
 
 // Diamond shape Cloudflare paths array - using optimized webp
 const DIAMOND_SHAPES = [
-  'mirror_DMM/H1.webp',
+  'mirror_DMM/HEART-01.webp',
   'mirror_DMM/H2.webp',
   'mirror_DMM/H3.webp',
   'mirror_DMM/H4.webp',

@@ -264,6 +264,42 @@
   }
 }
 
+/* Event logo - larger size for event pages (logoOnly without showDmmLogo) */
+.logo-v4-fixed-container.event-logo {
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logo-v4-fixed-container.event-logo .navbar-v4-logo-svg {
+  width: auto;
+  height: 38px;
+}
+
+/* Event logo responsive - Tablet */
+@media screen and (max-width: 1024px) {
+  .logo-v4-fixed-container.event-logo {
+    top: 21px;
+  }
+
+  .logo-v4-fixed-container.event-logo .navbar-v4-logo-svg {
+    width: auto;
+    height: 43px;
+  }
+}
+
+/* Event logo responsive - Mobile */
+@media screen and (max-width: 480px) {
+  .logo-v4-fixed-container.event-logo {
+    top: 21px;
+  }
+
+  .logo-v4-fixed-container.event-logo .navbar-v4-logo-svg {
+    width: auto;
+    height: 29px;
+  }
+}
+
 /* Submit page logo override - must be after default styles */
 .logo-v4-fixed-container.submit-page-logo {
   mix-blend-mode: normal !important;

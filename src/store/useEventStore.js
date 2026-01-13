@@ -41,6 +41,7 @@ const useEventStore = create(
 
       // Audio state
       audioInitialized: false,
+      isSoundActive: false,
 
       // Demo mode
       isDemo: false,
@@ -74,6 +75,10 @@ const useEventStore = create(
 
       setAudioInitialized: (initialized) => set({ audioInitialized: initialized }),
 
+      setIsSoundActive: (active) => set({ isSoundActive: active }),
+
+      toggleSound: () => set((state) => ({ isSoundActive: !state.isSoundActive })),
+
       setIsDemo: (isDemo) => set({ isDemo }),
 
       // Reset all state (logout)
@@ -91,6 +96,7 @@ const useEventStore = create(
           totalParticipants: 0,
           totalNotes: 0,
           audioInitialized: false,
+          isSoundActive: false,
           isDemo: false,
         }),
 
