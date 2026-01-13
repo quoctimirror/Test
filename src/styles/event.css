@@ -1606,13 +1606,57 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
-  radial-gradient(121.12% 87.58% at 50% 50%, rgba(255, 182, 203, 0.6) 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%), linear-gradient(180deg, #FFF5F8 0%, #FFF3F6 12.53%, #F6F6F6 25.06%, #FFF5F8 37.53%, #FFF0F4 50%, #FFF5F8 63.82%, #FFF 77.64%, #FFF4F7 100%);
+  background:
+    radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+    linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #F6F6F6 100%);
   z-index: 0;
+}
+
+/* Side glow overlay - above lines with blur effect */
+.place-note-new::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(270deg, #FFF 0%, rgba(255, 255, 255, 0.00) 15%, rgba(255, 255, 255, 0.00) 85%, #FFF 100%);
+  z-index: 5;
+  pointer-events: none;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  mask: linear-gradient(90deg, black 0%, transparent 15%, transparent 85%, black 100%);
+  -webkit-mask: linear-gradient(90deg, black 0%, transparent 15%, transparent 85%, black 100%);
 }
 
 .place-note-new__rings {
   display: none;
+}
+
+/* Note title - centered, top: 110px */
+.place-note-new__note-title {
+  position: absolute;
+  top: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--Black, #0B0B0B);
+  text-align: center;
+  z-index: 2;
+}
+
+.place-note-new__note-title--animate {
+  animation: noteTitleFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes noteTitleFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 /* Header */
@@ -1650,8 +1694,7 @@
 /* Arrow buttons wrapper - fixed position, vertically centered */
 .place-note-new__arrow {
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 48px;
   z-index: 100;
   isolation: isolate;
 }
@@ -1673,7 +1716,7 @@
 .place-note-new__staff {
   position: relative;
   width: 100%;
-  height: 380px; /* 5 lines * 12px + 4 gaps * 80px */
+  height: 360px; /* 5 lines * 8px + 4 gaps * 80px */
   cursor: pointer;
 }
 
@@ -1751,8 +1794,10 @@
 
 .place-note-new__line {
   width: 100%;
-  height: 12px;
-  object-fit: cover;
+  height: 8px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #FF92B0 0%, #FFE1E9 24.04%, rgba(255, 232, 238, 0.50) 50.48%, #FFAFC5 71.15%, #FF8FAE 78.85%, #C4637E 100%);
+  box-shadow: 0 1px 1px 0 #BC224C;
   pointer-events: none;
 }
 
@@ -1873,18 +1918,6 @@
   }
 
   /* Staff - same as mobile with 80px gap */
-  .place-note-new__staff {
-    height: 360px; /* 5 lines * 8px + 4 gaps * 80px = 360px */
-  }
-
-  /* Lines wrapper - keep 80px gap */
-  .place-note-new__lines-wrapper {
-    gap: 80px;
-  }
-
-  .place-note-new__line {
-    height: 8px; /* Reduced from 12px */
-  }
 
   /* Heart/Diamond note - 113.143px on tablet */
   .place-note-new__heart {
@@ -1920,18 +1953,6 @@
   }
 
   /* Staff - adjusted for mobile with 80px gap */
-  .place-note-new__staff {
-    height: 360px; /* 5 lines * 8px + 4 gaps * 80px = 360px */
-  }
-
-  /* Lines wrapper - keep 80px gap on mobile */
-  .place-note-new__lines-wrapper {
-    gap: 80px;
-  }
-
-  .place-note-new__line {
-    height: 8px; /* Reduced from 12px */
-  }
 
   /* Heart/Diamond note - 113.143px on mobile */
   .place-note-new__heart {
@@ -2827,6 +2848,16 @@
   100% { transform: rotateZ(0deg) rotateY(0deg); }
 }
 
+/* Entrance flip animation - smooth continuous rotation */
+.flip-card.entrance-flip-to-back {
+  animation: entranceFlipToBack 0.8s ease-out forwards;
+}
+
+@keyframes entranceFlipToBack {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(180deg); }
+}
+
 /* Card faces - front and back */
 .flip-card-face {
   position: absolute;
@@ -3015,6 +3046,465 @@
   }
   100% {
     transform: scale(1);
+  }
+}
+
+/* ============================================
+   YOUR MELODY PAGE - Step 2
+   ============================================ */
+
+.your-melody {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Background - same as place-note-new */
+.your-melody__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+    linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #F6F6F6 100%);
+  z-index: 0;
+}
+
+/* Side glow overlay - same as place-note-new */
+.your-melody::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(270deg, #FFF 0%, rgba(255, 255, 255, 0.00) 15%, rgba(255, 255, 255, 0.00) 85%, #FFF 100%);
+  z-index: 5;
+  pointer-events: none;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  mask: linear-gradient(90deg, black 0%, transparent 15%, transparent 85%, black 100%);
+  -webkit-mask: linear-gradient(90deg, black 0%, transparent 15%, transparent 85%, black 100%);
+}
+
+/* Header - top left */
+.your-melody__header {
+  position: absolute;
+  top: 100px;
+  left: 48px;
+  max-width: 400px;
+  z-index: 10;
+}
+
+.your-melody__title {
+  color: var(--Pink, #BC224C);
+  font-size: 48px;
+  line-height: 105%;
+  margin: 0 0 12px 0;
+  white-space: nowrap;
+}
+
+.your-melody__description {
+  color: var(--Black, #0B0B0B);
+  width: 345px;
+  height: 48px;
+}
+
+/* Main content - centered staff */
+.your-melody__main {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.your-melody__staff-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Music staff - height matches 5 lines (8px) + 4 gaps (80px) = 360px */
+.your-melody__staff {
+  position: relative;
+  width: 100%;
+  height: 360px;
+}
+
+/* Staff lines container - same as place-note-new */
+.your-melody__lines {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  width: 100vw;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Individual staff line */
+.your-melody__line {
+  width: 100%;
+  height: 8px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #FF92B0 0%, #FFE1E9 24.04%, rgba(255, 232, 238, 0.50) 50.48%, #FFAFC5 71.15%, #FF8FAE 78.85%, #C4637E 100%);
+  box-shadow: 0 1px 1px 0 #BC224C;
+  pointer-events: none;
+}
+
+/* Diamond notes */
+.your-melody__note {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+.your-melody__note-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* User's note - slightly larger with glow */
+.your-melody__note--user {
+  z-index: 10;
+}
+
+/* Ensure ripple can expand beyond container - same as your-note page */
+.your-melody__note--user .ripple-effect-area {
+  overflow: visible;
+}
+
+.your-melody__note-img--user {
+  width: 72px;
+  height: 72px;
+  filter: drop-shadow(0 4px 16px rgba(200, 50, 100, 0.3));
+}
+
+/* Playing highlight effect */
+.your-melody__note--playing {
+  z-index: 15;
+}
+
+.your-melody__note--playing .your-melody__note-img {
+  animation: notePulse 0.6s ease-in-out forwards;
+  filter: drop-shadow(0 0 20px rgba(255, 146, 176, 0.8))
+          drop-shadow(0 0 40px rgba(255, 146, 176, 0.6));
+}
+
+@keyframes notePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Footer with navigation */
+.your-melody__footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 24px 24px 48px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Arrow buttons */
+.your-melody__arrow {
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+/* Action buttons container - centered */
+.your-melody__actions {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 48px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* First button - transparent default, dark on hover */
+.your-melody__actions .shine-glass-button--shine:hover .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.9),
+    rgba(20, 20, 20, 0.95),
+    rgba(0, 0, 0, 0.9)
+  );
+}
+
+.your-melody__actions .shine-glass-button--shine:hover .button-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+/* Second button (light theme) - dark default, light on hover (inverted) */
+.your-melody__actions .shine-glass-button--light .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.9),
+    rgba(20, 20, 20, 0.95),
+    rgba(0, 0, 0, 0.9)
+  );
+}
+
+.your-melody__actions .shine-glass-button--light .button-text {
+  color: rgba(255, 255, 255, 1);
+}
+
+.your-melody__actions .shine-glass-button--light:hover .glass-layer {
+  background: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.your-melody__actions .shine-glass-button--light:hover .button-text {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+/* Entrance animation */
+.your-melody--entering {
+  animation: yourMelodyFadeIn 0.8s ease-out forwards;
+}
+
+@keyframes yourMelodyFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   YOUR MELODY - TABLET RESPONSIVE (≤1024px)
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .your-melody__header {
+    position: relative;
+    top: auto;
+    left: auto;
+    max-width: 100%;
+    padding: 100px 24px 24px;
+    text-align: center;
+  }
+
+  .your-melody__title {
+    font-size: 36px;
+  }
+
+  .your-melody__note-img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .your-melody__note-img--user {
+    width: 56px;
+    height: 56px;
+  }
+
+  .your-melody__footer {
+    padding: 24px 16px 32px;
+  }
+
+  .your-melody__actions {
+    bottom: 32px;
+    gap: 12px;
+  }
+}
+
+/* ============================================
+   YOUR MELODY - MOBILE RESPONSIVE (≤768px)
+   ============================================ */
+
+@media (max-width: 768px) {
+  .your-melody__header {
+    padding: 90px 16px 16px;
+  }
+
+  .your-melody__title {
+    font-size: 32px;
+  }
+
+  .your-melody__note-img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .your-melody__note-img--user {
+    width: 48px;
+    height: 48px;
+  }
+
+  .your-melody__footer {
+    padding: 16px 12px 24px;
+  }
+
+  .your-melody__actions {
+    bottom: 24px;
+    flex-direction: column;
+  }
+}
+
+/* ============================================
+   YOUR WALLPAPER PAGE - Step 3
+   ============================================ */
+
+.your-wallpaper {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Background - pink radial gradient with rings */
+.your-wallpaper__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+    linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #F6F6F6 100%);
+  z-index: 0;
+}
+
+/* Header - top left */
+.your-wallpaper__header {
+  position: absolute;
+  top: 100px;
+  left: 48px;
+  max-width: 400px;
+  z-index: 10;
+}
+
+.your-wallpaper__title {
+  color: var(--Pink, #BC224C);
+  font-size: 48px;
+  line-height: 105%;
+  margin: 0 0 12px 0;
+  white-space: nowrap;
+}
+
+.your-wallpaper__description {
+  color: var(--Black, #0B0B0B);
+  width: 345px;
+}
+
+/* Main content - centered card */
+.your-wallpaper__main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.your-wallpaper__card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Action buttons below card - Hidden, moved to footer */
+.your-wallpaper__actions {
+  display: none;
+}
+
+/* Footer with arrows at corners */
+.your-wallpaper__footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 24px 24px 48px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Arrow buttons */
+.your-wallpaper__arrow {
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+/* Footer actions (center) - Download + Share buttons */
+.your-wallpaper__footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .your-wallpaper__header {
+    top: 140px;
+    left: 32px;
+    max-width: 350px;
+  }
+
+  .your-wallpaper__title {
+    font-size: 36px;
+  }
+
+  .your-wallpaper__description {
+    width: 100%;
+  }
+
+  .your-wallpaper__footer {
+    padding: 24px 32px 40px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .your-wallpaper__header {
+    display: none;
+  }
+
+  .your-wallpaper__footer {
+    padding: 20px 16px 32px;
+  }
+
+  .your-wallpaper__footer-actions {
+    gap: 8px;
   }
 }
 

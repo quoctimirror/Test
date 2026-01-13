@@ -4,15 +4,33 @@
  */
 import { getDiamondConfig, DIAMOND_CONFIGS } from '../../constants/eventConstants';
 
-// Note frequencies (Hz)
+// Note frequencies (Hz) - 7 nốt cơ bản: Đô Rê Mi Fa Sol La Si
 const NOTE_FREQUENCIES = {
-  C4: 261.63,
-  D4: 293.66,
-  E4: 329.63,
-  F4: 349.23,
-  G4: 392.0,
-  A4: 440.0,
-  B4: 493.88,
+  // Octave 3
+  B3: 246.94,   // Si thấp
+  // Octave 4
+  C4: 261.63,   // Đô (Do)
+  D4: 293.66,   // Rê (Re)
+  E4: 329.63,   // Mi (Mi)
+  F4: 349.23,   // Fa (Fa)
+  G4: 392.0,    // Sol (Sol)
+  A4: 440.0,    // La (La)
+  B4: 493.88,   // Si (Si)
+  // Octave 5
+  C5: 523.25,   // Đô cao (Do cao)
+};
+
+// Map vị trí Y (0-8) trên khuông nhạc → nốt nhạc (Đô Rê Mi Fa Sol La Si)
+export const POSITION_TO_NOTE = {
+  0: 'C5',   // Vị trí 0 (trên cùng) - Đô cao
+  1: 'B4',   // Vị trí 1             - Si
+  2: 'A4',   // Vị trí 2             - La
+  3: 'G4',   // Vị trí 3             - Sol
+  4: 'F4',   // Vị trí 4 (giữa)      - Fa
+  5: 'E4',   // Vị trí 5             - Mi
+  6: 'D4',   // Vị trí 6             - Rê
+  7: 'C4',   // Vị trí 7             - Đô
+  8: 'B3',   // Vị trí 8 (dưới cùng) - Si thấp
 };
 
 let audioCtx = null;
@@ -80,9 +98,9 @@ export function isAudioInitialized() {
 }
 
 /**
- * Play a single note
+ * Play a single note (piano-like sound)
  */
-export function playNote(pitch, duration = 0.5) {
+export function playNote(pitch, duration = 0.8) {
   if (!audioCtx || typeof audioCtx.createOscillator !== 'function') {
     console.warn('Audio not initialized');
     return;
@@ -96,28 +114,57 @@ export function playNote(pitch, duration = 0.5) {
     const frequency = NOTE_FREQUENCIES[pitch] || 440;
     const now = audioCtx.currentTime;
 
-    const osc = audioCtx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(frequency, now);
+    // Piano-like sound using multiple harmonics
+    const harmonics = [1, 2, 3, 4, 5, 6];
+    const harmonicGains = [1, 0.5, 0.25, 0.125, 0.0625, 0.03];
 
-    const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.3, now + 0.02);
-    gain.gain.linearRampToValueAtTime(0.15, now + 0.1);
-    gain.gain.linearRampToValueAtTime(0, now + duration);
+    const masterGain = audioCtx.createGain();
+    masterGain.connect(audioCtx.destination);
 
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    // Piano ADSR envelope
+    masterGain.gain.setValueAtTime(0, now);
+    masterGain.gain.linearRampToValueAtTime(0.4, now + 0.005); // Fast attack
+    masterGain.gain.exponentialRampToValueAtTime(0.2, now + 0.1); // Quick decay
+    masterGain.gain.exponentialRampToValueAtTime(0.01, now + duration); // Sustain & release
 
-    osc.start(now);
-    osc.stop(now + duration + 0.1);
+    const oscillators = harmonics.map((harmonic, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
 
-    osc.onended = () => {
-      osc.disconnect();
-      gain.disconnect();
-    };
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(frequency * harmonic, now);
+      gain.gain.setValueAtTime(harmonicGains[i] * 0.15, now);
+
+      osc.connect(gain);
+      gain.connect(masterGain);
+
+      osc.start(now);
+      osc.stop(now + duration + 0.1);
+
+      return { osc, gain };
+    });
+
+    // Cleanup
+    setTimeout(() => {
+      oscillators.forEach(({ osc, gain }) => {
+        osc.disconnect();
+        gain.disconnect();
+      });
+      masterGain.disconnect();
+    }, (duration + 0.2) * 1000);
+
   } catch (error) {
     console.error('Failed to play note:', error);
+  }
+}
+
+/**
+ * Play note by position Y on staff (đúng nhạc lý)
+ */
+export function playNoteByPosition(positionY) {
+  const note = POSITION_TO_NOTE[positionY];
+  if (note) {
+    playNote(note);
   }
 }
 

@@ -58,3 +58,6 @@ src/assets/images/dmm/
 
 # Wrangler local state
 .wrangler/
+
+# DMM structure documentation
+dmmstructure12022026.md

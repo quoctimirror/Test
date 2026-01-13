@@ -2,18 +2,53 @@
  * PlaceNoteScreenNew - New design for placing note on music staff
  * Pink gradient background with circular rings
  */
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { TEXT } from '@/constants/eventConstants';
 import { ROUTES } from '@/constants/routes';
-import { placeNote, fetchAllNotes } from '@services/event/eventApi';
-import { initAudio, playNote, isAudioInitialized } from '@services/event/audio';
-import { broadcastNoteAdded } from '@services/event/ably';
+import ShineGlassButton from '@/components/common/button/ShineGlassButton';
+import { fetchAllNotes } from '@services/event/eventApi';
+import { initAudio, playNoteByPosition, isAudioInitialized } from '@services/event/audio';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import lineSvg from '@/assets/images/dmm/line.svg';
 import NavbarV4 from '@/components/navbar/NavbarV4';
+
+// Custom Arrow Icons from Figma
+const ArrowRightIcon = ({ className = '' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="12"
+    viewBox="0 0 14 12"
+    fill="none"
+    className={className}
+  >
+    <path
+      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
+      stroke="currentColor"
+      strokeLinecap="square"
+    />
+  </svg>
+);
+
+const ArrowLeftIcon = ({ className = '' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="12"
+    viewBox="0 0 14 12"
+    fill="none"
+    className={className}
+    style={{ transform: 'scaleX(-1)' }}
+  >
+    <path
+      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
+      stroke="currentColor"
+      strokeLinecap="square"
+    />
+  </svg>
+);
 
 // Mapping from shape ID to Cloudflare image path - using optimized webp
 const DIAMOND_MAP = {
@@ -26,29 +61,25 @@ const DIAMOND_MAP = {
   h7: 'mirror_DMM/H7.webp',  // Cushion shape
 };
 
-// Position range for the diamond (percentage)
-const MIN_POSITION = 10;
-const MAX_POSITION = 90;
+// Mapping from position Y to Vietnamese note name
+const POSITION_TO_NOTE_NAME = {
+  0: 'Đô (C)',    // C5 - Đô cao
+  1: 'Si (B)',    // B4
+  2: 'La (A)',    // A4
+  3: 'Sol (G)',   // G4
+  4: 'Fa (F)',    // F4
+  5: 'Mi (E)',    // E4
+  6: 'Rê (D)',    // D4
+  7: 'Đô (C)',    // C4
+  8: 'Si (B)',    // B3 - Si thấp
+};
 
 // All possible Y positions for the note (9 positions total)
 // Lines: 0, 2, 4, 6, 8 (odd index = on line)
 // Zones: 1, 3, 5, 7 (even index = between lines)
 
-// Desktop: line height 12px, gap 80px, total height 380px
-const NOTE_POSITIONS_Y_DESKTOP = [
-  6,    // Line 0 (top line)
-  52,   // Zone 0 (between line 0 and 1)
-  98,   // Line 1
-  144,  // Zone 1 (between line 1 and 2)
-  190,  // Line 2 (middle line)
-  236,  // Zone 2 (between line 2 and 3)
-  282,  // Line 3
-  328,  // Zone 3 (between line 3 and 4)
-  374,  // Line 4 (bottom line)
-];
-
-// Tablet/Mobile: line height 8px, gap 80px, total height 360px
-const NOTE_POSITIONS_Y_SMALL = [
+// All screens: line height 8px, gap 80px, total height 360px
+const NOTE_POSITIONS_Y = [
   4,    // Line 0 (top line)
   48,   // Zone 0 (between line 0 and 1)
   92,   // Line 1
@@ -63,35 +94,46 @@ const NOTE_POSITIONS_Y_SMALL = [
 // Breakpoint for tablet/mobile (both use same line dimensions)
 const TABLET_BREAKPOINT = 1024;
 
-// Get random line position (only lines, not zones: 0, 2, 4, 6, 8)
-const getRandomLinePosition = () => {
-  const linePositions = [0, 2, 4, 6, 8]; // Only line positions
-  return linePositions[Math.floor(Math.random() * linePositions.length)];
+// Get random position (all positions: 0-8, including lines and zones)
+const getRandomPosition = () => {
+  return Math.floor(Math.random() * 9); // 0 to 8
 };
 
 const PlaceNoteScreenNew = () => {
   const navigate = useNavigate();
-  const [positionX, setPositionX] = useState(50); // Center by default
-  const [positionY, setPositionY] = useState(() => getRandomLinePosition()); // Random line position
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [linesComplete, setLinesComplete] = useState(false); // Lines animation done
+
+  // Get persisted position and setter from store
+  const {
+    selectedDiamond,
+    initialNotePosition,
+    setInitialNotePosition,
+    setAllNotes,
+    setUserNote,
+  } = useEventStore();
+
+  // Initialize position from store or generate random (only once per user)
+  const [positionX] = useState(() => {
+    if (initialNotePosition) return initialNotePosition.x;
+    return 50; // Center by default
+  });
+  const [positionY] = useState(() => {
+    if (initialNotePosition) return initialNotePosition.y;
+    return getRandomPosition(); // Random position (0-8)
+  });
+
+  const [error] = useState('');
+  const [, setLinesComplete] = useState(false); // Lines animation done
   const [diamondVisible, setDiamondVisible] = useState(false); // Diamond can appear
+  const [titleVisible, setTitleVisible] = useState(false); // Title appears after diamond animation
   const [isTransitioning, setIsTransitioning] = useState(false); // Zoom-out transition
   const [isTabletOrMobile, setIsTabletOrMobile] = useState(() => window.innerWidth <= TABLET_BREAKPOINT);
   const containerRef = useRef(null); // Main container ref for setting CSS vars
   const heartRef = useRef(null);
-  const staffRef = useRef(null);
   const rippleRef = useRef(null);
-  const lastClickTime = useRef(0);
   const hasNavigatedRef = useRef(false); // Track if user manually navigated
-  const CLICK_DEBOUNCE = 500; // Minimum time between clicks (ms)
+  const audioReadyRef = useRef(false); // Track if audio was initialized by user interaction
 
-  // Get current NOTE_POSITIONS_Y based on screen size
-  const NOTE_POSITIONS_Y = isTabletOrMobile ? NOTE_POSITIONS_Y_SMALL : NOTE_POSITIONS_Y_DESKTOP;
-
-  const { user, selectedDiamond, setAllNotes, setCurrentStep, setUserNote, addNote } =
-    useEventStore();
+  // Note positions are the same for all screen sizes now
 
   // Handle next button - navigate to write message screen with zoom transition
   const handleNext = () => {
@@ -127,6 +169,13 @@ const PlaceNoteScreenNew = () => {
     loadNotes();
   }, [setAllNotes]);
 
+  // Save initial position to store if not already saved (once per user)
+  useEffect(() => {
+    if (!initialNotePosition) {
+      setInitialNotePosition({ x: positionX, y: positionY });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Listen for window resize to update isTabletOrMobile
   useEffect(() => {
     const handleResize = () => {
@@ -137,7 +186,33 @@ const PlaceNoteScreenNew = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Animation sequence: lines (1s) -> diamond appears (0.5s delay) -> ripple (0.5s after diamond)
+  // Initialize audio on first user interaction (required by browser autoplay policy)
+  useEffect(() => {
+    const initAudioOnInteraction = async () => {
+      if (audioReadyRef.current) return;
+
+      try {
+        await initAudio();
+        audioReadyRef.current = true;
+      } catch (e) {
+        console.warn('Failed to init audio:', e);
+      }
+
+      // Remove listeners after first interaction
+      document.removeEventListener('click', initAudioOnInteraction);
+      document.removeEventListener('touchstart', initAudioOnInteraction);
+    };
+
+    document.addEventListener('click', initAudioOnInteraction);
+    document.addEventListener('touchstart', initAudioOnInteraction);
+
+    return () => {
+      document.removeEventListener('click', initAudioOnInteraction);
+      document.removeEventListener('touchstart', initAudioOnInteraction);
+    };
+  }, []);
+
+  // Animation sequence: lines (1s) -> diamond appears (0.2s delay) -> title (1s after diamond)
   useEffect(() => {
     // Lines complete after 1s
     const linesTimer = setTimeout(() => {
@@ -149,13 +224,20 @@ const PlaceNoteScreenNew = () => {
       setDiamondVisible(true);
     }, 1200);
 
+    // Title appears 1s after diamond (after diamond scale animation completes)
+    const titleTimer = setTimeout(() => {
+      setTitleVisible(true);
+    }, 2200);
+
     return () => {
       clearTimeout(linesTimer);
       clearTimeout(diamondTimer);
+      clearTimeout(titleTimer);
     };
   }, []);
 
   // Initialize RippleEffect on heart AFTER diamond animation completes
+  // Play initial note sound when first ripple starts (only if audio already initialized by user)
   useEffect(() => {
     if (!diamondVisible) return;
 
@@ -173,6 +255,12 @@ const PlaceNoteScreenNew = () => {
           clickable: false,
           clickRippleCount: 5,
         });
+
+        // Only play sound if audio was already initialized by user interaction
+        // Check both local ref and audio service state (for navigation between pages)
+        if (audioReadyRef.current || isAudioInitialized()) {
+          playNoteByPosition(positionY);
+        }
       }
     }, 1000);
 
@@ -183,7 +271,7 @@ const PlaceNoteScreenNew = () => {
         rippleRef.current = null;
       }
     };
-  }, [diamondVisible]);
+  }, [diamondVisible]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Auto-transition to Layout 2 after 5s - COMMENTED OUT (use arrows to navigate)
   // useEffect(() => {
@@ -210,89 +298,9 @@ const PlaceNoteScreenNew = () => {
   //   return () => clearTimeout(transitionTimer);
   // }, [navigate, positionX, positionY, setUserNote]);
 
-  // Play note sound when position changes
-  const playCurrentNote = async () => {
-    if (!isAudioInitialized()) {
-      await initAudio();
-    }
-    playNote('C4');
-  };
-
-  // Create ripple effect at heart position using RippleEffect
-  const createRipple = useCallback(() => {
-    if (rippleRef.current) {
-      rippleRef.current.createCenterRipple();
-    }
-  }, []);
-
-  // Handle click on staff to position heart - on lines OR zones
-  const handleStaffClick = useCallback((e) => {
-    if (!staffRef.current) return;
-
-    // Debounce - prevent spam clicking
-    const now = Date.now();
-    if (now - lastClickTime.current < CLICK_DEBOUNCE) {
-      return;
-    }
-    lastClickTime.current = now;
-
-    const rect = staffRef.current.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
-
-    // Find the closest Y position (line or zone)
-    let closestIndex = 0;
-    let minDistance = Infinity;
-    NOTE_POSITIONS_Y.forEach((posY, index) => {
-      const distance = Math.abs(clickY - posY);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = index;
-      }
-    });
-
-    // Calculate X position as percentage
-    const newX = Math.max(MIN_POSITION, Math.min(MAX_POSITION, (clickX / rect.width) * 100));
-    setPositionX(newX);
-    setPositionY(closestIndex);
-
-    // Create ripple effect and play sound
-    setTimeout(createRipple, 50);
-    playCurrentNote();
-  }, [createRipple, NOTE_POSITIONS_Y]);
-
-  // Navigation - go back
+  // Navigation - go back to Choose Shape
   const handleGoBack = () => {
-    navigate(-1); // Go to previous page
-  };
-
-  const handleConfirm = async () => {
-    if (!user) return;
-
-    setLoading(true);
-    setError('');
-
-    const noteData = {
-      userId: user.id,
-      userDisplayName: user.displayName,
-      diamondShape: selectedDiamond || 'heart',
-      pitch: 'C4',
-      positionX: positionX,
-      positionY: positionY,
-    };
-
-    const result = await placeNote(noteData);
-
-    if (result.success) {
-      addNote(result.note);
-      broadcastNoteAdded(result.note);
-      setUserNote(result.note);
-      setCurrentStep('result');
-    } else {
-      setError(result.error || TEXT.error);
-    }
-
-    setLoading(false);
+    navigate(ROUTES.EVENT_CHOOSE_SHAPE);
   };
 
   return (
@@ -308,26 +316,40 @@ const PlaceNoteScreenNew = () => {
           <div className="place-note-new__rings" />
         </div>
 
+        {/* Note title - shows the note name based on position (appears after diamond animation) */}
+        {titleVisible && (
+          <h2 className="place-note-new__note-title place-note-new__note-title--animate heading-3--no-margin">
+            Bạn là nốt sáng {POSITION_TO_NOTE_NAME[positionY]}
+          </h2>
+        )}
+
+        {/* Arrow buttons - outside main to avoid transform containing block issue */}
+        <div className="place-note-new__arrow place-note-new__arrow--left">
+          <ShineGlassButton
+            variant="circle"
+            onClick={handleGoBack}
+            width={48}
+            height={48}
+          >
+            <ArrowLeftIcon />
+          </ShineGlassButton>
+        </div>
+        <div className="place-note-new__arrow place-note-new__arrow--right">
+          <ShineGlassButton
+            variant="circle"
+            onClick={handleNext}
+            width={48}
+            height={48}
+          >
+            <ArrowRightIcon />
+          </ShineGlassButton>
+        </div>
+
       {/* Main content - Music Staff (vertically centered) */}
       <main className="place-note-new__main">
         <div className="place-note-new__staff-container">
-          {/* Left arrow - go back */}
-          <div className="place-note-new__arrow place-note-new__arrow--left">
-            <button
-              className="glass-button glass-button--circle"
-              onClick={handleGoBack}
-              aria-label="Go back"
-            >
-              <ArrowLeft size={24} />
-            </button>
-          </div>
-
           {/* Music Staff with 5 SVG lines */}
-          <div
-            className="place-note-new__staff"
-            ref={staffRef}
-            onClick={handleStaffClick}
-          >
+          <div className="place-note-new__staff">
             {/* Red highlights on lines - COMMENTED OUT
             <div className="place-note-new__line-highlights">
               {[0, 1, 2, 3, 4].map((lineIndex) => {
@@ -359,10 +381,8 @@ const PlaceNoteScreenNew = () => {
             {/* 5 staff lines */}
             <div className="place-note-new__lines-wrapper">
               {[0, 1, 2, 3, 4].map((i) => (
-                <img
+                <div
                   key={i}
-                  src={getMediaUrl('dmm/Rectangle 4200.svg')}
-                  alt=""
                   className="place-note-new__line place-note-new__line--animate"
                 />
               ))}
@@ -386,35 +406,11 @@ const PlaceNoteScreenNew = () => {
               </div>
             )}
           </div>
-
-          {/* Right arrow - go to next step */}
-          <div className="place-note-new__arrow place-note-new__arrow--right">
-            <button
-              className="glass-button glass-button--circle"
-              onClick={handleNext}
-              aria-label="Next step"
-            >
-              <ArrowRight size={24} />
-            </button>
-          </div>
         </div>
       </main>
 
       {/* Footer - bottom left */}
       <footer className="place-note-new__footer">
-        {/* Progress bar 1/3 */}
-        <div className="place-note-new__progress">
-          <div className="place-note-new__progress-step place-note-new__progress-step--active" />
-          <div className="place-note-new__progress-step" />
-          <div className="place-note-new__progress-step" />
-        </div>
-        <h3 className="heading-3--no-margin place-note-new__subtitle">Place your note</h3>
-        <p className="bodytext-6--no-margin place-note-new__description">
-          cing elit, sed diam nonummy nibut laoreet dolore
-          magna aliquam erat volutpat. cing elit, sed diam
-          nonummy nibut nibut laoreet dolore magna aliquam
-          erat volutpat.
-        </p>
         {error && <p className="place-note-new__error">{error}</p>}
       </footer>
       </div>

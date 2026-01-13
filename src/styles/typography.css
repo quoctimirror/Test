@@ -666,7 +666,19 @@
 .choose-note-shape .heading-2,
 .choose-note-shape .heading-2--no-margin,
 .choose-note-shape .heading-3,
-.choose-note-shape .heading-3--no-margin {
+.choose-note-shape .heading-3--no-margin,
+.your-melody .heading-1,
+.your-melody .heading-1--no-margin,
+.your-melody .heading-2,
+.your-melody .heading-2--no-margin,
+.your-melody .heading-3,
+.your-melody .heading-3--no-margin,
+.your-wallpaper .heading-1,
+.your-wallpaper .heading-1--no-margin,
+.your-wallpaper .heading-2,
+.your-wallpaper .heading-2--no-margin,
+.your-wallpaper .heading-3,
+.your-wallpaper .heading-3--no-margin {
   font-family: var(--font-brikey-moura);
 }
 
@@ -677,7 +689,9 @@
 .event-choose-shape .heading-2--no-margin,
 .place-note-new .heading-2--no-margin,
 .write-message .heading-2--no-margin,
-.choose-note-shape .heading-2--no-margin {
+.choose-note-shape .heading-2--no-margin,
+.your-melody .heading-2--no-margin,
+.your-wallpaper .heading-2--no-margin {
   font-style: italic;
 }
 
@@ -686,6 +700,7 @@
 .event-choose-shape .heading-3--no-margin,
 .place-note-new .heading-3--no-margin,
 .write-message .heading-3--no-margin,
-.choose-note-shape .heading-3--no-margin {
+.choose-note-shape .heading-3--no-margin,
+.your-melody .heading-3--no-margin {
   font-style: italic;
 }

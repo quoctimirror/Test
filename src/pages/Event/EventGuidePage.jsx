@@ -12,6 +12,7 @@ import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import titleSvg from '@/assets/images/icons/title.svg';
+import lineSvg from '@/assets/images/dmm/line.svg';
 import '@styles/grid-system.css';
 
 import './EventGuidePage.css';
@@ -434,7 +435,7 @@ const EventGuidePage = () => {
                   {[0, 1, 2, 3, 4].map((i) => (
                     <img
                       key={i}
-                      src={getMediaUrl('dmm/Rectangle 4200.svg')}
+                      src={lineSvg}
                       alt=""
                       className="event-guide__staff-line"
                     />

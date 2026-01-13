@@ -17,6 +17,7 @@
  */
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import brikeyMouraItalic from '@fonts/BrikeyMoura/1FTVVIPBrikeyMoura-Italic.ttf';
 
 // Image paths on Cloudflare CDN
 const MOUNTAINS = [
@@ -137,10 +138,12 @@ const AvatarGenerator = ({
   lightNumber,
   diamondShape,
   onGenerated,
+  delay = 0, // Delay in ms before starting generation
 }) => {
   const canvasRef = useRef(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const hasGenerated = useRef(false);
+  const [shouldGenerate, setShouldGenerate] = useState(delay === 0);
 
   const generateAvatar = useCallback(async () => {
     const canvas = canvasRef.current;
@@ -162,6 +165,20 @@ const AvatarGenerator = ({
     canvas.height = height;
 
     try {
+      // Load BrikeyMoura Italic font for text rendering
+      try {
+        const font = new FontFace(
+          'BrikeyMoura',
+          `url(${brikeyMouraItalic})`,
+          { style: 'italic', weight: '400' }
+        );
+        await font.load();
+        document.fonts.add(font);
+        await document.fonts.ready; // Wait for font to be ready
+      } catch (fontError) {
+        console.warn('Could not load BrikeyMoura font, using fallback:', fontError);
+      }
+
       // Use lightNumber as seed for unique combination per user
       const seed = lightNumber || 1;
 
@@ -212,18 +229,38 @@ const AvatarGenerator = ({
       // Layer 7: Subheading
       ctx.drawImage(subheadingImg, 0, 0);
 
-      // Layer 8: Text overlay - User name only
-      // Position at 18% from top (same as original local code)
+      // Layer 8: Text overlay - User name with metallic chrome gradient effect
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = 'italic 160px Georgia, "Times New Roman", serif';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-      ctx.shadowBlur = 15;
+      ctx.font = 'italic 233px BrikeyMoura, Georgia, serif'; // 70pt ≈ 233px
+
+      const textX = width / 2;
+      const textY = height * 0.14;
+      const displayText = displayName || 'Guest';
+      const textMetrics = ctx.measureText(displayText);
+      const textWidth = textMetrics.width;
+
+      // Horizontal gradient (left to right: #fa5a86 → #bc224c)
+      const gradient = ctx.createLinearGradient(
+        textX - textWidth / 2, textY,  // left
+        textX + textWidth / 2, textY   // right
+      );
+      gradient.addColorStop(0, '#fa5a86');    // Light pink (left)
+      gradient.addColorStop(1, '#bc224c');    // Dark pink (right)
+
+      // Shadow for depth
+      ctx.shadowColor = 'rgba(139, 21, 56, 0.5)';
+      ctx.shadowBlur = 10;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
-      ctx.fillText(displayName || 'Guest', width / 2, height * 0.14);
+
+      // Draw gradient text
+      ctx.fillStyle = gradient;
+      ctx.fillText(displayText, textX, textY);
+
+      // Reset shadow
       ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
 
       // Export as PNG
       const dataUrl = canvas.toDataURL('image/png');
@@ -236,9 +273,22 @@ const AvatarGenerator = ({
     }
   }, [displayName, lightNumber, diamondShape, onGenerated, isGenerating]);
 
+  // Delay generation to avoid blocking entrance animation
   useEffect(() => {
-    generateAvatar();
-  }, [generateAvatar]);
+    if (delay > 0) {
+      const timer = setTimeout(() => {
+        setShouldGenerate(true);
+      }, delay);
+      return () => clearTimeout(timer);
+    }
+  }, [delay]);
+
+  // Only generate when shouldGenerate is true (after delay)
+  useEffect(() => {
+    if (shouldGenerate) {
+      generateAvatar();
+    }
+  }, [generateAvatar, shouldGenerate]);
 
   // Reset when props change to allow regeneration
   useEffect(() => {
