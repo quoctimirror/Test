@@ -238,33 +238,22 @@ const AvatarGenerator = ({
       const textMetrics = ctx.measureText(displayText);
       const textWidth = textMetrics.width;
 
-      // Chrome metallic gradient (vertical with highlight bands)
-      const chromeGradient = ctx.createLinearGradient(
-        textX, textY - 100,  // top
-        textX, textY + 100   // bottom
+      // Horizontal gradient (left to right: #fa5a86 → #bc224c)
+      const gradient = ctx.createLinearGradient(
+        textX - textWidth / 2, textY,  // left
+        textX + textWidth / 2, textY   // right
       );
-      // Chrome effect: dark → light → dark with color tint (darker pink)
-      chromeGradient.addColorStop(0, '#8b1538');      // Darkest pink top
-      chromeGradient.addColorStop(0.2, '#bc224c');    // Dark pink
-      chromeGradient.addColorStop(0.4, '#d64470');    // Medium pink
-      chromeGradient.addColorStop(0.5, '#e8668a');    // Highlight (not too bright)
-      chromeGradient.addColorStop(0.6, '#d64470');    // Medium pink
-      chromeGradient.addColorStop(0.8, '#bc224c');    // Dark pink
-      chromeGradient.addColorStop(1, '#8b1538');      // Darkest pink bottom
-
-      // Draw text stroke (outline) for definition
-      ctx.strokeStyle = '#8b1538';
-      ctx.lineWidth = 4;
-      ctx.strokeText(displayText, textX, textY);
+      gradient.addColorStop(0, '#fa5a86');    // Light pink (left)
+      gradient.addColorStop(1, '#bc224c');    // Dark pink (right)
 
       // Shadow for depth
-      ctx.shadowColor = 'rgba(139, 21, 56, 0.6)';
-      ctx.shadowBlur = 8;
+      ctx.shadowColor = 'rgba(139, 21, 56, 0.5)';
+      ctx.shadowBlur = 10;
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 4;
 
-      // Draw main chrome gradient text
-      ctx.fillStyle = chromeGradient;
+      // Draw gradient text
+      ctx.fillStyle = gradient;
       ctx.fillText(displayText, textX, textY);
 
       // Reset shadow

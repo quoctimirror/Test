@@ -72,8 +72,8 @@ const ChooseNoteShapeScreenNew = () => {
   const isShowingFrontRef = useRef(false); // Start with back face
 
   // Physics
-  const friction = 0.95;
-  const snapStrength = 0.08;
+  const friction = 0.92;
+  const snapStrength = 0.15;
 
   const { user, selectedDiamond } = useEventStore();
   const [avatarDataUrl, setAvatarDataUrl] = useState('');
@@ -124,30 +124,57 @@ const ChooseNoteShapeScreenNew = () => {
     }
   }, []);
 
+  // Track if animation is at rest to skip unnecessary updates
+  const isAtRest = useRef(false);
+  const lastRotation = useRef(180);
+
   // Animation loop
   const animate = useCallback(() => {
     if (!isDraggingRef.current && !isFlippingRef.current) {
+      let needsUpdate = false;
+
       if (Math.abs(velocity.current) > 0.1) {
         velocity.current *= friction;
         currentRotation.current += velocity.current;
         const remainingDistance = velocity.current / (1 - friction);
         const predictedEnd = currentRotation.current + remainingDistance;
         targetRotation.current = findNearestRestAngle(predictedEnd);
+        needsUpdate = true;
+        isAtRest.current = false;
       } else {
         velocity.current = 0;
         const diff = targetRotation.current - currentRotation.current;
         if (Math.abs(diff) > 0.5) {
+          // Smooth easing to target
           currentRotation.current += diff * snapStrength;
-        } else {
+          needsUpdate = true;
+          isAtRest.current = false;
+        } else if (!isAtRest.current) {
+          // Snap directly when close enough (only once)
           currentRotation.current = targetRotation.current;
+          needsUpdate = true;
+          isAtRest.current = true;
+
+          // Update front/back state based on final position
+          const normalizedRotation = ((currentRotation.current % 360) + 360) % 360;
+          const nowShowingFront = normalizedRotation < 90 || normalizedRotation > 270;
+          if (nowShowingFront !== isShowingFrontRef.current) {
+            isShowingFrontRef.current = nowShowingFront;
+            setIsShowingFront(nowShowingFront);
+            setStatus(nowShowingFront ? 'front' : 'back');
+          }
         }
       }
 
-      if (cardRef.current) {
-        cardRef.current.style.transform = `rotateY(${currentRotation.current}deg)`;
+      // Only update DOM when something changed
+      if (needsUpdate && lastRotation.current !== currentRotation.current) {
+        lastRotation.current = currentRotation.current;
+        if (cardRef.current) {
+          cardRef.current.style.transform = `rotateY(${currentRotation.current}deg)`;
+        }
+        updateShine(currentRotation.current);
+        updateShadow(currentRotation.current);
       }
-      updateShine(currentRotation.current);
-      updateShadow(currentRotation.current);
     }
 
     animationId.current = requestAnimationFrame(animate);
@@ -194,6 +221,7 @@ const ChooseNoteShapeScreenNew = () => {
     if (isFlippingRef.current || isDraggingRef.current) return;
 
     isFlippingRef.current = true;
+    isAtRest.current = false; // Reset for after flip completes
     setIsFlipping(true);
     velocity.current = 0;
 
@@ -222,6 +250,8 @@ const ChooseNoteShapeScreenNew = () => {
         const newRotation = willShowBack ? 180 : 0;
         currentRotation.current = newRotation;
         targetRotation.current = newRotation;
+        lastRotation.current = newRotation;
+        isAtRest.current = true; // Card is now at rest after flip
         cardRef.current.style.transform = `rotateY(${newRotation}deg)`;
       }
     }, 400);
@@ -232,6 +262,7 @@ const ChooseNoteShapeScreenNew = () => {
     if (isFlippingRef.current) return;
 
     isDraggingRef.current = true;
+    isAtRest.current = false; // Reset so animation updates resume
     setIsDraggingVisual(true);
     setStatus('dragging');
     dragHistory.current = [{ x: clientX, time: performance.now() }];
