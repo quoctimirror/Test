@@ -52,7 +52,7 @@ const ArrowLeftIcon = ({ className = '' }) => (
 
 // Mapping from shape ID to Cloudflare image path - using optimized webp
 const DIAMOND_MAP = {
-  h1: 'mirror_DMM/H1.webp',  // Heart shape
+  h1: 'mirror_DMM/HEART-01.webp',  // Heart shape
   h2: 'mirror_DMM/H2.webp',  // Round shape
   h3: 'mirror_DMM/H3.webp',  // Emerald shape
   h4: 'mirror_DMM/H4.webp',  // Marquise shape
@@ -399,7 +399,7 @@ const PlaceNoteScreenNew = () => {
                 }}
               >
                 <img
-                  src={getMediaUrl(DIAMOND_MAP[selectedDiamond] || 'mirror_DMM/H1.webp')}
+                  src={getMediaUrl(DIAMOND_MAP[selectedDiamond] || 'mirror_DMM/HEART-01.webp')}
                   alt="Diamond note"
                   className="place-note-new__heart"
                 />

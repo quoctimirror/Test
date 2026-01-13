@@ -1,6 +1,7 @@
 import "./NavbarV4.css";
 import { useState, useRef, useEffect, useCallback } from "react";
 import MirrorLogo from "@assets/images/Mirror_Logo_new.svg";
+import MirrorLogoEvent from "@assets/Mirror_Logo.svg";
 import DmmLogo from "@assets/LOGO DOC MONG MO.svg";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -520,12 +521,12 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
           isImmersiveShowroomPage ? "immersive-showroom-logo" : ""
         } ${isBookingModalOpen ? "above-modal" : ""} ${
           showDmmLogo ? "collab-mode" : ""
-        }`}
+        } ${logoOnly && !showDmmLogo ? "event-logo" : ""}`}
         onClick={handleLogoClick}
       >
         <img
           ref={logoRef}
-          src={MirrorLogo}
+          src={logoOnly && !showDmmLogo ? MirrorLogoEvent : MirrorLogo}
           alt="Mirror Logo"
           className="navbar-v4-logo-svg"
         />
