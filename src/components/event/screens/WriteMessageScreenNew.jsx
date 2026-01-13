@@ -102,13 +102,14 @@ const generateHappyMelody = () => {
     positions.push(pos);
   }
 
-  // Distribute X positions evenly (10% to 85%)
-  const minX = 10;
-  const maxX = 85;
-  const step = (maxX - minX) / 6; // 7 notes = 6 gaps
+  // Distribute 8 notes evenly in safe zone (17% to 83%)
+  // 8 notes = 7 gaps, step = 66/7 ≈ 9.43%
+  // 7 random notes: 17% to ~73.6%, user note at 83%
+  const minX = 17;
+  const totalStep = (83 - 17) / 7; // ≈ 9.43% - same gap between all 8 notes
 
   for (let i = 0; i < 7; i++) {
-    const positionX = minX + i * step + (Math.random() - 0.5) * 5; // Small random offset
+    const positionX = minX + i * totalStep + (Math.random() - 0.5) * 2; // Small random offset ±1%
     const shapeIndex = Math.floor(Math.random() * DIAMOND_SHAPES.length);
 
     notes.push({
@@ -135,8 +136,8 @@ const WriteMessageScreenNew = () => {
 
   const { userNote, melodyNotes, setMelodyNotes, selectedDiamond } = useEventStore();
 
-  // User's note position
-  const userPositionX = 95;
+  // User's note position - at end of safe zone, evenly spaced with other notes
+  const userPositionX = 83;
   const userPositionY = userNote?.positionY ?? 4;
 
   // Generate or retrieve melody notes (persisted)

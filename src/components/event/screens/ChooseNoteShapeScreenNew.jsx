@@ -554,11 +554,13 @@ const ChooseNoteShapeScreenNew = () => {
         </footer>
 
         {/* Hidden Avatar Generator - generates card image */}
+        {/* Delay 3.5s: entrance (2s) + ripple visible (1.5s) → then generate */}
         <AvatarGenerator
           displayName={user?.displayName || 'Guest'}
           lightNumber={user?.lightNumber || 1}
           diamondShape={SHAPE_NAME_MAP[selectedDiamond] || 'heart'}
           onGenerated={setAvatarDataUrl}
+          delay={3500}
         />
       </div>
     </>

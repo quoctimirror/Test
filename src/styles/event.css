@@ -2776,6 +2776,8 @@
   perspective: 1000px;
   perspective-origin: 65% 35%;
   overflow: visible;
+  /* Promote to GPU layer for smoother child animations */
+  transform: translateZ(0);
 }
 
 /* Card container - draggable area */
@@ -2787,6 +2789,8 @@
   transform-style: preserve-3d;
   transform: rotateX(12deg) rotateY(-8deg);
   animation: flipCardEntry 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* GPU acceleration hints for smooth entrance animation */
+  will-change: transform, opacity;
 }
 
 .flip-card-container.dragging {
@@ -2807,16 +2811,16 @@
   0% {
     transform: translateZ(2000px) scale(4) rotateX(12deg) rotateY(720deg);
     opacity: 0;
-    filter: blur(20px);
   }
-  30% {
+  20% {
+    opacity: 0.6;
+  }
+  40% {
     opacity: 1;
-    filter: blur(5px);
   }
   100% {
     transform: translateZ(0) scale(1) rotateX(12deg) rotateY(-8deg);
     opacity: 1;
-    filter: blur(0px);
   }
 }
 
@@ -2826,6 +2830,8 @@
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
+  /* GPU acceleration for smooth drag rotation */
+  will-change: transform;
 }
 
 .flip-card.flipping-to-back {
