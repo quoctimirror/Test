@@ -464,3 +464,11 @@
     height: 12px;
   }
 }
+
+
+/* ========== DISABLED STATE ========== */
+.glass-theme-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

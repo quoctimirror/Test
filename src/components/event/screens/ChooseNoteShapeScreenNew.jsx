@@ -10,7 +10,7 @@ import RippleEffect from '@/components/event/effects/ripple-effect';
 import AvatarGenerator, { downloadAvatar } from '@/components/event/ui/AvatarGenerator';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import NavbarV4 from '@/components/navbar/NavbarV4';
-import ShineGlassButton from '@/components/common/button/ShineGlassButton';
+import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import shareIcon from '@/assets/images/button/share.svg';
 
 // Arrow icons
@@ -490,20 +490,18 @@ const ChooseNoteShapeScreenNew = () => {
 
             {/* Action buttons below card - Download + Share */}
             <div className="your-wallpaper__actions">
-              <ShineGlassButton
+              <GlassThemeButton
+                theme="light"
                 onClick={handleDownload}
-                disabled={downloading || !avatarDataUrl}
+                className={downloading || !avatarDataUrl ? 'disabled' : ''}
               >
                 {downloading ? 'Đang tải...' : 'Tải xuống'}
-              </ShineGlassButton>
-              <ShineGlassButton
-                variant="circle"
+              </GlassThemeButton>
+              <GlassThemeButton
+                theme="light"
                 onClick={handleShare}
-                width={48}
-                height={48}
-              >
-                <img src={shareIcon} alt="Share" width={18} height={18} />
-              </ShineGlassButton>
+                icon={<img src={shareIcon} alt="Share" width={18} height={18} />}
+              />
             </div>
           </div>
         </main>
@@ -512,44 +510,36 @@ const ChooseNoteShapeScreenNew = () => {
         <footer className="your-wallpaper__footer">
           {/* Left arrow - go back */}
           <div className="your-wallpaper__arrow your-wallpaper__arrow--left">
-            <ShineGlassButton
-              variant="circle"
+            <GlassThemeButton
+              theme="light"
               onClick={handleGoBack}
-              width={48}
-              height={48}
-            >
-              <ArrowLeftIcon />
-            </ShineGlassButton>
+              icon={<ArrowLeftIcon />}
+            />
           </div>
 
           {/* Center actions - shown on tablet/mobile */}
           <div className="your-wallpaper__footer-actions">
-            <ShineGlassButton
+            <GlassThemeButton
+              theme="light"
               onClick={handleDownload}
-              disabled={downloading || !avatarDataUrl}
+              className={downloading || !avatarDataUrl ? 'disabled' : ''}
             >
               {downloading ? 'Đang tải...' : 'Tải xuống'}
-            </ShineGlassButton>
-            <ShineGlassButton
-              variant="circle"
+            </GlassThemeButton>
+            <GlassThemeButton
+              theme="light"
               onClick={handleShare}
-              width={48}
-              height={48}
-            >
-              <img src={shareIcon} alt="Share" width={18} height={18} />
-            </ShineGlassButton>
+              icon={<img src={shareIcon} alt="Share" width={18} height={18} />}
+            />
           </div>
 
           {/* Right arrow */}
           <div className="your-wallpaper__arrow your-wallpaper__arrow--right">
-            <ShineGlassButton
-              variant="circle"
+            <GlassThemeButton
+              theme="light"
               onClick={() => navigate(ROUTES.EVENT_GUIDE)}
-              width={48}
-              height={48}
-            >
-              <ArrowRightIcon />
-            </ShineGlassButton>
+              icon={<ArrowRightIcon />}
+            />
           </div>
         </footer>
 

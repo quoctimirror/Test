@@ -2996,6 +2996,14 @@
   }
 }
 
+/* Responsive - Mobile Small */
+@media (max-width: 480px) {
+  .flip-card-container {
+    width: 200px;
+    height: 350px;
+  }
+}
+
 /* =====================================================
    ZOOM TRANSITION - Layout 1 → Layout 2 (Google Maps style)
    ===================================================== */
@@ -3487,12 +3495,37 @@
   pointer-events: auto;
 }
 
-/* Footer actions (center) - Download + Share buttons */
+/* Footer actions (center) - Download button centered, Share to the right */
 .your-wallpaper__footer-actions {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 12px;
   pointer-events: auto;
+  /* Offset to center "Tải xuống" button (Share button 48px + gap 12px = 60px) */
+  margin-left: 30px;
+}
+
+/* "Tải xuống" button - pink style like spec_light */
+.your-wallpaper__footer-actions .glass-theme-button--light:first-child {
+  background:
+    radial-gradient(
+      61.32% 123.33% at 50.28% 123.33%,
+      #bc224c 0%,
+      rgba(188, 34, 76, 0.15) 100%
+    ),
+    rgba(255, 255, 255, 0.5);
+  color: #fff;
+  box-shadow:
+    inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.4),
+    inset 1px 1px 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset -1px -1px 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset 0 0 1px 1px rgba(153, 153, 153, 0.5),
+    inset 0 0 8px 0 rgba(242, 242, 242, 0.4),
+    0 0 1px 0 rgba(0, 0, 0, 0.05),
+    0 1px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* Responsive - Tablet */
@@ -3522,12 +3555,39 @@
     display: none;
   }
 
+  .your-wallpaper__main {
+    top: 45%;
+  }
+
+  .your-wallpaper__card-container {
+    gap: 20px;
+  }
+
   .your-wallpaper__footer {
-    padding: 20px 16px 32px;
+    padding: 16px 12px 24px;
   }
 
   .your-wallpaper__footer-actions {
     gap: 8px;
+  }
+}
+
+/* Responsive - Mobile Small */
+@media (max-width: 480px) {
+  .your-wallpaper__main {
+    top: 42%;
+  }
+
+  .your-wallpaper__card-container {
+    gap: 16px;
+  }
+
+  .your-wallpaper__footer {
+    padding: 12px 8px 20px;
+  }
+
+  .your-wallpaper__footer-actions {
+    gap: 6px;
   }
 }
 
