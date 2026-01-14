@@ -3710,12 +3710,20 @@
   z-index: 20;
 }
 
-/* Back Button - Fixed at bottom left for tablet */
-.mirror-thankyou__back {
+/* Arrow buttons - same pattern as your-wallpaper */
+.mirror-thankyou__arrow {
   position: fixed;
-  bottom: 32px;
-  left: 24px;
-  z-index: 20;
+  bottom: 24px;
+  z-index: 1000;
+}
+
+.mirror-thankyou__arrow--left {
+  left: 2.5%;
+}
+
+.mirror-thankyou__arrow .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Social Icons */
@@ -3723,6 +3731,11 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.mirror-thankyou__social .glass-theme-btn-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* Right Side Container - Navigation Icons (on LEFT for tablet) */
@@ -3737,9 +3750,13 @@
   z-index: 20;
 }
 
-/* Glass effect for all buttons */
-.mirror-thankyou__left .glass-theme-button--light,
-.mirror-thankyou__right .glass-theme-button--light {
+.mirror-thankyou__right .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Icon-only buttons - glass effect on pink background (same as your-wallpaper) */
+.mirror-thankyou .glass-theme-button--icon-only.glass-theme-button--light {
   background: rgba(255, 255, 255, 0.25);
 }
 
@@ -3834,7 +3851,7 @@
     flex-direction: row; /* Horizontal row */
   }
 
-  .mirror-thankyou__back {
+  .mirror-thankyou__arrow--left {
     bottom: 32px;
     left: 24px;
   }
@@ -3853,14 +3870,21 @@
   }
 
   .mirror-thankyou__title {
-    margin-top: 18.53vh; /* 182/982 from viewport top */
+    margin-top: 14vh;
     font-size: 60px;
     width: calc(938 / 1512 * 100vw); /* ~62.04vw */
     align-self: center;
   }
 
+  .mirror-thankyou__lucky-ring {
+    top: calc(357 / 982 * 100vh); /* ~36.35vh from top */
+    bottom: auto;
+  }
+
   .mirror-thankyou__lucky-ring-img {
-    width: 45vw;
+    width: calc(1000 / 1512 * 100vw); /* ~66.14vw */
+    height: auto;
+    margin-bottom: -60%;
   }
 }
 
