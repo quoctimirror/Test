@@ -7,6 +7,8 @@ import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import refreshIcon from '@/assets/images/dmm/refresh-icon.svg';
+import homeIcon from '@/assets/images/dmm/home-icon.svg';
 
 // Arrow Left Icon
 const ArrowLeftIcon = () => (
@@ -25,26 +27,20 @@ const ArrowLeftIcon = () => (
   </svg>
 );
 
-// Navigation Icons - Left side
-const HomeIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M3 9.5L12 3L21 9.5V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M9 22V12H15V22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
+// Navigation Icons
 const RefreshIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <path d="M21 4V10H15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M3 20V14H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M5.245 10C5.55857 8.90678 6.1356 7.90325 6.92862 7.07382C7.72164 6.24438 8.70736 5.61343 9.79355 5.23505C10.8797 4.85667 12.0359 4.74197 13.1728 4.90073C14.3097 5.05949 15.3949 5.48713 16.336 6.146L21 10M3 14L7.664 17.854C8.60507 18.5129 9.69027 18.9405 10.8272 19.0993C11.9641 19.258 13.1203 19.1433 14.2065 18.7649C15.2926 18.3866 16.2784 17.7556 17.0714 16.9262C17.8644 16.0968 18.4414 15.0932 18.755 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
+  <img src={refreshIcon} alt="Refresh" width="24" height="24" />
 );
 
 const ShareIcon = () => (
   <svg width="18" height="14" viewBox="0 0 15 11" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M14.5 5.10798L7.03341 0.5L7.03341 3.1087C0.5 4.41304 0.5 10.5 0.5 10.5C0.5 10.5 3.29997 7.02174 7.03341 7.45652L7.03341 10.1522L14.5 5.10798Z" stroke="#0B0B0B" strokeLinejoin="round"/>
   </svg>
+);
+
+// Home Icon
+const HomeIcon = () => (
+  <img src={homeIcon} alt="Home" width="24" height="24" />
 );
 
 // Social Icons
@@ -90,13 +86,38 @@ const ThankYouScreen = () => {
         {/* Background */}
         <div className="mirror-thankyou__bg" />
 
-        {/* Navigation Icons - Left side */}
-        <div className="mirror-thankyou__nav">
+        {/* Left Side - Social Icons */}
+        <div className="mirror-thankyou__left">
+          <div className="mirror-thankyou__social">
+            <GlassThemeButton
+              theme="light"
+              onClick={() => window.open('https://www.instagram.com/mirror.diamond', '_blank')}
+              icon={<InstagramIcon />}
+            />
+            <GlassThemeButton
+              theme="light"
+              onClick={() => window.open('https://www.facebook.com/mirror.diamond', '_blank')}
+              icon={<FacebookIcon />}
+            />
+            <GlassThemeButton
+              theme="light"
+              onClick={() => window.open('https://www.tiktok.com/@mirror.diamond', '_blank')}
+              icon={<TikTokIcon />}
+            />
+          </div>
+        </div>
+
+        {/* Back Button - Separate element */}
+        <div className="mirror-thankyou__back">
           <GlassThemeButton
             theme="light"
-            onClick={() => navigate(ROUTES.EVENT_GUIDE)}
-            icon={<HomeIcon />}
+            onClick={handleGoBack}
+            icon={<ArrowLeftIcon />}
           />
+        </div>
+
+        {/* Right Side - Navigation Icons */}
+        <div className="mirror-thankyou__right">
           <GlassThemeButton
             theme="light"
             onClick={() => navigate(ROUTES.EVENT_PLACE_NOTE)}
@@ -107,24 +128,10 @@ const ThankYouScreen = () => {
             onClick={() => {/* TODO: Share functionality */}}
             icon={<ShareIcon />}
           />
-        </div>
-
-        {/* Social Icons - Right side */}
-        <div className="mirror-thankyou__social">
           <GlassThemeButton
             theme="light"
-            onClick={() => window.open('https://www.instagram.com/mirror.diamond', '_blank')}
-            icon={<InstagramIcon />}
-          />
-          <GlassThemeButton
-            theme="light"
-            onClick={() => window.open('https://www.facebook.com/mirror.diamond', '_blank')}
-            icon={<FacebookIcon />}
-          />
-          <GlassThemeButton
-            theme="light"
-            onClick={() => window.open('https://www.tiktok.com/@mirror.diamond', '_blank')}
-            icon={<TikTokIcon />}
+            onClick={() => navigate(ROUTES.EVENT_GUIDE)}
+            icon={<HomeIcon />}
           />
         </div>
 
@@ -138,9 +145,8 @@ const ThankYouScreen = () => {
 
           {/* Description */}
           <p className="mirror-thankyou__description bodytext-6--no-margin">
-            Mỗi tấm vé tham dự sự kiện hoà nhạc "Her" của<br />
-            Dọc Mộng Mơ là một cơ hội nhận được chiếc nhẫn<br />
-            kim cương từ MIRROR.
+            Mỗi tấm vé tham dự Her Concert là một cơ hội nhận<br />
+            được chiếc nhẫn kim cương từ MIRROR.
           </p>
 
           {/* Action Buttons */}
@@ -164,15 +170,6 @@ const ThankYouScreen = () => {
             playsInline
             className="mirror-thankyou__lucky-ring-img"
             onLoadedMetadata={(e) => { e.target.playbackRate = 0.15; }}
-          />
-        </div>
-
-        {/* Back Button */}
-        <div className="mirror-thankyou__back">
-          <GlassThemeButton
-            theme="light"
-            onClick={handleGoBack}
-            icon={<ArrowLeftIcon />}
           />
         </div>
       </div>

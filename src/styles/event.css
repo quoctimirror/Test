@@ -3563,8 +3563,36 @@
   z-index: 0;
 }
 
-/* Navigation Icons - Left side */
-.mirror-thankyou__nav {
+/* Left Side Container - Social Icons (on RIGHT for tablet) */
+.mirror-thankyou__left {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+  z-index: 20;
+}
+
+/* Back Button - Fixed at bottom left for tablet */
+.mirror-thankyou__back {
+  position: fixed;
+  bottom: 32px;
+  left: 24px;
+  z-index: 20;
+}
+
+/* Social Icons */
+.mirror-thankyou__social {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Right Side Container - Navigation Icons (on LEFT for tablet) */
+.mirror-thankyou__right {
   position: fixed;
   left: 24px;
   top: 50%;
@@ -3575,21 +3603,9 @@
   z-index: 20;
 }
 
-/* Social Icons - Right side */
-.mirror-thankyou__social {
-  position: fixed;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  z-index: 20;
-}
-
-/* Glass effect for nav and social buttons */
-.mirror-thankyou__nav .glass-theme-button--light,
-.mirror-thankyou__social .glass-theme-button--light {
+/* Glass effect for all buttons */
+.mirror-thankyou__left .glass-theme-button--light,
+.mirror-thankyou__right .glass-theme-button--light {
   background: rgba(255, 255, 255, 0.25);
 }
 
@@ -3659,19 +3675,52 @@
 }
 
 .mirror-thankyou__lucky-ring-img {
-  width: 45vw;
+  width: calc(100vw - 180px);
   height: auto;
   object-fit: contain;
   display: block;
   margin-bottom: -50%;
 }
 
-/* Back Button */
-.mirror-thankyou__back {
-  position: fixed;
-  bottom: 32px;
-  left: 24px;
-  z-index: 20;
+/* ============================================
+   MIRROR THANK YOU - DESKTOP (≥1025px)
+   ============================================ */
+
+@media (min-width: 1025px) {
+  .mirror-thankyou__left {
+    top: auto;
+    transform: none;
+    bottom: 32px;
+    right: auto; /* Reset tablet position */
+    left: calc(24px + 48px + 3.17vw); /* back left + button width + gap 48/1512 */
+    align-items: flex-start;
+  }
+
+  .mirror-thankyou__social {
+    flex-direction: row; /* Horizontal row */
+  }
+
+  .mirror-thankyou__back {
+    bottom: 32px;
+    left: 24px;
+  }
+
+  .mirror-thankyou__right {
+    top: auto;
+    transform: none;
+    bottom: 32px;
+    left: auto; /* Reset tablet position */
+    right: 24px; /* Back to right side */
+    flex-direction: row; /* Horizontal row */
+  }
+
+  .mirror-thankyou__title {
+    margin-top: 18.53vh; /* 182/982 */
+  }
+
+  .mirror-thankyou__lucky-ring-img {
+    width: 45vw;
+  }
 }
 
 /* ============================================
@@ -3688,49 +3737,7 @@
   .mirror-thankyou__title {
     font-size: 28px;
   }
-
-  .mirror-thankyou__lucky-ring-img {
-    width: calc(100vw - 180px);
-  }
 }
 
-/* ============================================
-   MIRROR THANK YOU - MOBILE RESPONSIVE (≤480px)
-   ============================================ */
-
-@media (max-width: 480px) {
-  .mirror-thankyou__nav {
-    left: 16px;
-    gap: 12px;
-  }
-
-  .mirror-thankyou__social {
-    right: 16px;
-    gap: 12px;
-  }
-
-  .mirror-thankyou__main {
-    padding-top: 80px;
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .mirror-thankyou__title {
-    font-size: 24px;
-  }
-
-  .mirror-thankyou__actions {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .mirror-thankyou__lucky-ring-img {
-    width: calc(100vw - 48px);
-  }
-
-  .mirror-thankyou__back {
-    bottom: 24px;
-    left: 16px;
-  }
-}
+/* NOTE: mirror-thankyou has no mobile version - tablet styles apply */
 
