@@ -131,6 +131,12 @@ const WriteMessageScreenNew = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
 
+  // Entrance animation states
+  const [isAnimatingEntrance, setIsAnimatingEntrance] = useState(false);
+  const [headerAnimated, setHeaderAnimated] = useState(false);
+  const [userNoteAnimated, setUserNoteAnimated] = useState(false);
+  const [animatedNoteIndices, setAnimatedNoteIndices] = useState([]);
+
   const containerRef = useRef(null);
   const userNoteRef = useRef(null);
   const noteRefs = useRef({});
@@ -228,9 +234,44 @@ const WriteMessageScreenNew = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Initialize RippleEffect on user's note (after entrance, not during play)
+  // Entrance animation sequence - runs when page loads (after entering animation)
   useEffect(() => {
-    if (isEntering || isPlaying) return;
+    if (isEntering || displayNotes.length === 0) return;
+
+    const runEntranceAnimation = async () => {
+      setIsAnimatingEntrance(true);
+      await initAudio();
+
+      // Step 1: Header slides in from left (start immediately)
+      setHeaderAnimated(true);
+
+      // Step 2: User's note flies from center to right (after 200ms)
+      await new Promise(resolve => setTimeout(resolve, 200));
+      setUserNoteAnimated(true);
+
+      // Play user's note sound when animation completes
+      await new Promise(resolve => setTimeout(resolve, 500));
+      playNoteByPosition(userPositionY);
+
+      // Step 3: Random notes slide up one by one (150ms stagger)
+      const noteDelay = 150; // ms between each note
+      for (let i = 0; i < displayNotes.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, noteDelay));
+        setAnimatedNoteIndices(prev => [...prev, i]);
+        playNoteByPosition(displayNotes[i].positionY);
+      }
+
+      // Step 4: Animation complete
+      await new Promise(resolve => setTimeout(resolve, 300));
+      setIsAnimatingEntrance(false);
+    };
+
+    runEntranceAnimation();
+  }, [isEntering, displayNotes, userPositionY]);
+
+  // Initialize RippleEffect on user's note (after entrance, not during play or animation)
+  useEffect(() => {
+    if (isEntering || isPlaying || isAnimatingEntrance) return;
 
     if (userNoteRef.current && !rippleRef.current) {
       rippleRef.current = new RippleEffect(userNoteRef.current, {
@@ -252,7 +293,7 @@ const WriteMessageScreenNew = () => {
         rippleRef.current = null;
       }
     };
-  }, [isEntering, isPlaying]);
+  }, [isEntering, isPlaying, isAnimatingEntrance]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -407,7 +448,7 @@ const WriteMessageScreenNew = () => {
         <div className="your-melody__bg" />
 
         {/* Header - Title and description at top left */}
-        <header className="your-melody__header">
+        <header className={`your-melody__header ${!headerAnimated ? 'your-melody__header--hidden' : ''} ${headerAnimated && isAnimatingEntrance ? 'your-melody__header--animate' : ''}`}>
           <h2 className="heading-2--no-margin your-melody__title">Tương tác cùng Nốt sáng</h2>
           <p className="bodytext-6--no-margin your-melody__description">
             Bạn đã tạo nên Nốt Sáng của riêng mình. Hãy trải nghiệm và lắng nghe giai điệu được hoàn thiện từ chính sự hiện diện của bạn.
@@ -437,11 +478,13 @@ const WriteMessageScreenNew = () => {
               {displayNotes.map((note, index) => {
                 const xPos = getNoteXPosition(index, note.positionX);
                 const yPos = getNoteYPosition(note.positionY, note.staffIndex || 0);
+                const isNoteAnimated = animatedNoteIndices.includes(index);
+                const shouldHide = !isNoteAnimated; // Hidden until animated
                 return (
                   <div
                     key={note.id}
                     ref={(el) => { noteRefs.current[note.id] = el; }}
-                    className="your-melody__note"
+                    className={`your-melody__note ${shouldHide ? 'your-melody__note--hidden' : ''} ${isNoteAnimated && isAnimatingEntrance ? 'your-melody__note--animate-slide' : ''}`}
                     style={{
                       left: `${xPos}%`,
                       top: `${yPos}px`,
@@ -459,7 +502,7 @@ const WriteMessageScreenNew = () => {
               {/* User's note (last position - index 7, on staff 2 for mobile) */}
               <div
                 ref={userNoteRef}
-                className="your-melody__note your-melody__note--user"
+                className={`your-melody__note your-melody__note--user ${!userNoteAnimated ? 'your-melody__note--hidden' : ''} ${userNoteAnimated && isAnimatingEntrance ? 'your-melody__note--animate-fly' : ''}`}
                 style={{
                   left: `${getNoteXPosition(7, userPositionX)}%`,
                   top: `${getNoteYPosition(userPositionY, isMobile ? 1 : 0)}px`,

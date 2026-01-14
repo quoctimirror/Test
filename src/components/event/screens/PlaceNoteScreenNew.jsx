@@ -130,14 +130,12 @@ const PlaceNoteScreenNew = () => {
       rippleRef.current = null;
     }
 
-    // Save position and navigate after fade-out completes
-    setTimeout(() => {
-      setUserNote({
-        positionX,
-        positionY,
-      });
-      navigate(ROUTES.EVENT_WRITE_MESSAGE);
-    }, 300); // Match layout1Exit animation duration (0.3s)
+    // Save position and navigate immediately for seamless transition
+    setUserNote({
+      positionX,
+      positionY,
+    });
+    navigate(ROUTES.EVENT_WRITE_MESSAGE);
   };
 
   // Fetch existing notes on mount
@@ -260,11 +258,9 @@ const PlaceNoteScreenNew = () => {
         rippleRef.current = null;
       }
 
-      // Navigate after fade-out animation completes
-      setTimeout(() => {
-        setUserNote({ positionX, positionY });
-        navigate(ROUTES.EVENT_WRITE_MESSAGE);
-      }, 300); // Match layout1Exit animation duration
+      // Navigate immediately for seamless transition
+      setUserNote({ positionX, positionY });
+      navigate(ROUTES.EVENT_WRITE_MESSAGE);
     }, 5000);
 
     return () => clearTimeout(transitionTimer);
