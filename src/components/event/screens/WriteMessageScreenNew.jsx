@@ -240,36 +240,25 @@ const WriteMessageScreenNew = () => {
 
     const runEntranceAnimation = async () => {
       setIsAnimatingEntrance(true);
-      await initAudio();
 
-      // Step 1: Header slides in from left (start immediately)
+      // Header slides in
       setHeaderAnimated(true);
 
-      // Step 2: User's note flies from center to right (after 200ms)
+      // User's note appears
       await new Promise(resolve => setTimeout(resolve, 200));
       setUserNoteAnimated(true);
 
-      // Play user's note sound when animation completes
-      await new Promise(resolve => setTimeout(resolve, 500));
-      playNoteByPosition(userPositionY);
-
-      // Step 3: Notes slide up one by one (slower stagger)
-      const noteDelay = 350; // ms between each note (slower than original 150ms)
-      for (let i = 0; i < displayNotes.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, noteDelay));
-        setAnimatedNoteIndices(prev => [...prev, i]);
-        // Delay sound slightly so note is visible first
-        await new Promise(resolve => setTimeout(resolve, 150));
-        playNoteByPosition(displayNotes[i].positionY);
-      }
-
-      // Step 4: Animation complete
+      // All 7 notes slide up at the same time (no sound)
       await new Promise(resolve => setTimeout(resolve, 300));
+      setAnimatedNoteIndices([0, 1, 2, 3, 4, 5, 6]);
+
+      // Wait for animation to complete
+      await new Promise(resolve => setTimeout(resolve, 500));
       setIsAnimatingEntrance(false);
     };
 
     runEntranceAnimation();
-  }, [isEntering, displayNotes, userPositionY]);
+  }, [isEntering, displayNotes.length]);
 
   // Initialize RippleEffect on user's note (after entrance, not during play or animation)
   useEffect(() => {
