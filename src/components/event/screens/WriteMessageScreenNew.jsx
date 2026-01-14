@@ -12,42 +12,6 @@ import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { initAudio, playNoteByPosition } from '@services/event/audio';
 
-// Custom Arrow Icons from Figma
-const ArrowRightIcon = ({ className = '' }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="12"
-    viewBox="0 0 14 12"
-    fill="none"
-    className={className}
-  >
-    <path
-      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
-      stroke="currentColor"
-      strokeLinecap="square"
-    />
-  </svg>
-);
-
-const ArrowLeftIcon = ({ className = '' }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="14"
-    height="12"
-    viewBox="0 0 14 12"
-    fill="none"
-    className={className}
-    style={{ transform: 'scaleX(-1)' }}
-  >
-    <path
-      d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031"
-      stroke="currentColor"
-      strokeLinecap="square"
-    />
-  </svg>
-);
-
 // Diamond shape Cloudflare paths array - using optimized webp
 // HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
 // HEART-05 = Cushion, HEART-06 = Emerald, HEART-07 = Marquise
@@ -64,15 +28,15 @@ const DIAMOND_SHAPES = [
 // Staff configuration - 9 Y positions (5 lines + 4 zones)
 // Desktop: Line height 8px, gap 80px, total height 360px
 const NOTE_POSITIONS_Y_DESKTOP = [
-  4,    // Line 0 (top)
-  48,   // Zone 0
-  92,   // Line 1
-  136,  // Zone 1
-  180,  // Line 2 (middle)
-  224,  // Zone 2
-  268,  // Line 3
-  312,  // Zone 3
-  356,  // Line 4 (bottom)
+  7,    // Line 0 (top)
+  51,   // Zone 0
+  95,   // Line 1
+  139,  // Zone 1
+  183,  // Line 2 (middle)
+  227,  // Zone 2
+  271,  // Line 3
+  315,  // Zone 3
+  359,  // Line 4 (bottom)
 ];
 
 // Mobile: Line height 8px, gap 50px, staff height 240px
@@ -100,18 +64,6 @@ const NOTE_POSITIONS_Y_MOBILE_STAFF2 = [
   503,  // Line 3
   532,  // Zone 3
   561,  // Line 4 (bottom)
-];
-
-// Alias for backward compatibility
-const NOTE_POSITIONS_Y = NOTE_POSITIONS_Y_DESKTOP;
-
-// Happy melody intervals - ascending patterns for positive feeling
-const HAPPY_INTERVALS = [
-  [0, 2, 4],      // Major triad pattern
-  [0, 2, 3, 5],   // Ascending scale
-  [0, 4, 7],      // Power chord feel
-  [2, 4, 5, 7],   // Happy progression
-  [0, 2, 4, 5, 7], // Pentatonic feel
 ];
 
 // Generate 7 random notes that form a happy melody
@@ -171,7 +123,6 @@ const WriteMessageScreenNew = () => {
   const userNoteRef = useRef(null);
   const noteRefs = useRef({});
   const rippleRef = useRef(null);
-  const playingRippleRef = useRef(null);
 
   const { userNote, melodyNotes, setMelodyNotes, selectedDiamond } = useEventStore();
 
@@ -284,9 +235,6 @@ const WriteMessageScreenNew = () => {
       if (rippleRef.current) {
         rippleRef.current.destroy();
       }
-      if (playingRippleRef.current) {
-        playingRippleRef.current.destroy();
-      }
     };
   }, []);
 
@@ -345,42 +293,16 @@ const WriteMessageScreenNew = () => {
         noteElement.classList.add('your-melody__note--playing');
       }
 
-      // Destroy previous playing ripple
-      if (playingRippleRef.current) {
-        playingRippleRef.current.destroy();
-        playingRippleRef.current = null;
-      }
-
-      // Create ripple effect on current note
-      if (noteElement) {
-        playingRippleRef.current = new RippleEffect(noteElement, {
-          autoRippleCount: 2,
-          duration: 800,
-          delay: 0,
-          startSize: 40,
-          endSize: 200,
-          opacity: 0.7,
-          autoPlay: true,
-          clickable: false,
-        });
-      }
-
       // Play the sound based on Y position
       playNoteByPosition(note.positionY);
 
       // Wait before next note
       await new Promise(resolve => setTimeout(resolve, tempo));
 
-      // Remove playing class after note is done
+      // Remove playing class after note is done (clear ripple immediately)
       if (noteElement) {
         noteElement.classList.remove('your-melody__note--playing');
       }
-    }
-
-    // Cleanup playing ripple
-    if (playingRippleRef.current) {
-      playingRippleRef.current.destroy();
-      playingRippleRef.current = null;
     }
 
     // Restart user's continuous ripple after melody ends
@@ -528,17 +450,24 @@ const WriteMessageScreenNew = () => {
           </div>
         </main>
 
-        {/* Footer - arrows and action buttons */}
-        <footer className="your-melody__footer">
-          {/* Left arrow */}
-          <div className="your-melody__arrow your-melody__arrow--left">
-            <GlassThemeButton
-              theme="light"
-              onClick={handleGoBack}
-              icon={<ArrowLeftIcon />}
-            />
-          </div>
+        {/* Arrow buttons - fixed position like other pages */}
+        <div className="your-melody__arrow your-melody__arrow--left">
+          <GlassThemeButton theme="light" onClick={handleGoBack} icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+              <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
+            </svg>
+          } />
+        </div>
+        <div className="your-melody__arrow your-melody__arrow--right">
+          <GlassThemeButton theme="light" onClick={handleNext} icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+              <path d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031" stroke="currentColor" strokeLinecap="square"/>
+            </svg>
+          } />
+        </div>
 
+        {/* Footer - action buttons */}
+        <footer className="your-melody__footer">
           {/* Action buttons */}
           <div className="your-melody__actions">
             <GlassThemeButton
@@ -549,21 +478,12 @@ const WriteMessageScreenNew = () => {
               Nghe 1 đoạn nốt
             </GlassThemeButton>
             <GlassThemeButton
-              theme="dark"
+              theme="spec_dark"
               onClick={handlePlayUserNote}
               className={isPlaying ? 'disabled' : ''}
             >
               Nghe nốt của tôi
             </GlassThemeButton>
-          </div>
-
-          {/* Right arrow */}
-          <div className="your-melody__arrow your-melody__arrow--right">
-            <GlassThemeButton
-              theme="light"
-              onClick={handleNext}
-              icon={<ArrowRightIcon />}
-            />
           </div>
         </footer>
       </div>

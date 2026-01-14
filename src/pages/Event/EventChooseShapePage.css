@@ -320,17 +320,22 @@
   position: fixed;
   top: 120px;
   left: 48px;
-  max-width: 280px;
+  max-width: 380px;
   z-index: 10;
 }
 
 .event-choose-shape__note-title {
-  color: #000;
+  color: var(--Pink, #BC224C);
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 105%;
   margin-bottom: 12px;
+  white-space: nowrap;
 }
 
 .event-choose-shape__note-text {
-  color: #000;
+  color: var(--Black, #0B0B0B);
+  max-width: 345px;
 }
 
 /* Choose the shape button - Desktop */

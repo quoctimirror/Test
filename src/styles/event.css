@@ -1636,7 +1636,7 @@
 /* Note title - centered, top: 180px */
 .place-note-new__note-title {
   position: absolute;
-  top: 180px;
+  top: calc(156 / 982 * 100vh);
   left: 50%;
   transform: translateX(-50%);
   color: var(--Black, #0B0B0B);
@@ -1676,13 +1676,12 @@
   margin: 0;
 }
 
-/* Main content - slightly below center */
+/* Main content - music staff */
 .place-note-new__main {
   position: absolute;
-  top: 55%;
+  top: calc(310 / 982 * 100vh);
   left: 0;
   right: 0;
-  transform: translateY(-50%);
   z-index: 1;
 }
 
@@ -1844,7 +1843,7 @@
 }
 
 .place-note-new__heart {
-  width: 60px;
+  width: 80px;
   height: auto;
   position: relative;
   z-index: 2;
@@ -3100,9 +3099,9 @@
 /* Header - top left */
 .your-melody__header {
   position: absolute;
-  top: 120px;
+  top: calc(80 / 982 * 100vh);
   left: 48px;
-  max-width: 400px;
+  max-width: 475px;
   z-index: 10;
 }
 
@@ -3111,7 +3110,6 @@
   font-size: 48px;
   line-height: 105%;
   margin: 0 0 24px 0;
-  white-space: nowrap;
 }
 
 .your-melody__description {
@@ -3179,8 +3177,8 @@
 }
 
 .your-melody__note-img {
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   object-fit: contain;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
 }
@@ -3196,8 +3194,8 @@
 }
 
 .your-melody__note-img--user {
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   filter: drop-shadow(0 4px 16px rgba(200, 50, 100, 0.3));
 }
 
@@ -3207,20 +3205,53 @@
 }
 
 .your-melody__note--playing .your-melody__note-img {
-  animation: notePulse 0.6s ease-in-out forwards;
   filter: drop-shadow(0 0 20px rgba(255, 146, 176, 0.8))
           drop-shadow(0 0 40px rgba(255, 146, 176, 0.6));
 }
 
-@keyframes notePulse {
+/* Playing ripple - single ring, matches idle ripple style */
+.your-melody__note--playing::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.03) 42%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.1) 58%,
+    rgba(255, 255, 255, 0.16) 65%,
+    rgba(255, 255, 255, 0.25) 72%,
+    rgba(255, 255, 255, 0.38) 78%,
+    rgba(255, 255, 255, 0.55) 84%,
+    rgba(255, 255, 255, 0.75) 89%,
+    rgba(255, 255, 255, 0.9) 93%,
+    rgba(255, 255, 255, 0.6) 96%,
+    rgba(255, 255, 255, 0.25) 98%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: -1;
+  animation: playingRipplePulse 0.4s ease-out forwards;
+}
+
+@keyframes playingRipplePulse {
   0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.3);
+    width: 40px;
+    height: 40px;
+    opacity: 0.8;
   }
   100% {
-    transform: scale(1);
+    width: 160px;
+    height: 160px;
+    opacity: 0;
   }
 }
 
@@ -3240,20 +3271,35 @@
 
 /* Arrow buttons */
 .your-melody__arrow {
-  flex-shrink: 0;
-  pointer-events: auto;
+  position: fixed;
+  bottom: 24px;
+  z-index: 1000;
+}
+
+.your-melody__arrow--left {
+  left: 2.5%;
+}
+
+.your-melody__arrow--right {
+  right: 2.5%;
+}
+
+.your-melody__arrow .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Action buttons container - centered */
 .your-melody__actions {
-  position: absolute;
+  position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 48px;
+  bottom: 24px;
   display: flex;
   gap: 16px;
   justify-content: center;
   pointer-events: auto;
+  z-index: 1000;
 }
 
 /* Disabled state for buttons */
@@ -3398,7 +3444,7 @@
   }
 
   /* Hide "Nghe nốt của tôi" button on mobile */
-  .your-melody__actions .glass-theme-button--dark {
+  .your-melody__actions .glass-theme-button--spec_dark {
     display: none;
   }
 }
@@ -3470,6 +3516,15 @@
   gap: 24px;
 }
 
+/* Hint text below card */
+.your-wallpaper__hint {
+  color: var(--Black, #0B0B0B);
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: calc(60 / 982 * 100vh);
+}
+
 /* Action buttons below card - Hidden, moved to footer */
 .your-wallpaper__actions {
   display: none;
@@ -3491,21 +3546,35 @@
 
 /* Arrow buttons */
 .your-wallpaper__arrow {
-  flex-shrink: 0;
-  pointer-events: auto;
+  position: fixed;
+  bottom: 24px;
+  z-index: 1000;
+}
+
+.your-wallpaper__arrow--left {
+  left: 2.5%;
+}
+
+.your-wallpaper__arrow--right {
+  right: 2.5%;
+}
+
+.your-wallpaper__arrow .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Footer actions (center) - Download button centered, Share to the right */
 .your-wallpaper__footer-actions {
-  position: absolute;
+  position: fixed;
+  bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 12px;
   pointer-events: auto;
-  /* Offset to center "Tải xuống" button (Share button 48px + gap 12px = 60px) */
-  margin-left: 30px;
+  z-index: 1000;
 }
 
 /* "Tải xuống" button - pink style like spec_light */

@@ -224,30 +224,31 @@ const PlaceNoteScreenNew = () => {
     };
   }, [diamondVisible]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-transition to Layout 2 after 5s - COMMENTED OUT (use arrows to navigate)
-  // useEffect(() => {
-  //   const transitionTimer = setTimeout(() => {
-  //     if (hasNavigatedRef.current) return; // Skip if user already navigated
+  // Auto-transition to next page after 5s
+  useEffect(() => {
+    const transitionTimer = setTimeout(() => {
+      if (hasNavigatedRef.current) return; // Skip if user already navigated
 
-  //     setIsTransitioning(true);
+      // Mark as navigated IMMEDIATELY to prevent race condition with manual click
+      hasNavigatedRef.current = true;
 
-  //     // Destroy ripple before transition
-  //     if (rippleRef.current) {
-  //       rippleRef.current.destroy();
-  //       rippleRef.current = null;
-  //     }
+      setIsTransitioning(true);
 
-  //     // Navigate after zoom-out animation completes (800ms)
-  //     setTimeout(() => {
-  //       if (hasNavigatedRef.current) return;
-  //       hasNavigatedRef.current = true;
-  //       setUserNote({ positionX, positionY });
-  //       navigate(ROUTES.EVENT_WRITE_MESSAGE);
-  //     }, 800);
-  //   }, 5000);
+      // Destroy ripple before transition
+      if (rippleRef.current) {
+        rippleRef.current.destroy();
+        rippleRef.current = null;
+      }
 
-  //   return () => clearTimeout(transitionTimer);
-  // }, [navigate, positionX, positionY, setUserNote]);
+      // Navigate after fade-out animation completes
+      setTimeout(() => {
+        setUserNote({ positionX, positionY });
+        navigate(ROUTES.EVENT_WRITE_MESSAGE);
+      }, 300); // Match layout1Exit animation duration
+    }, 5000);
+
+    return () => clearTimeout(transitionTimer);
+  }, [navigate, positionX, positionY, setUserNote]);
 
   // Navigation - go back to Choose Shape
   const handleGoBack = () => {
