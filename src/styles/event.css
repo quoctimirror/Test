@@ -3099,7 +3099,7 @@
 /* Header - top left */
 .your-melody__header {
   position: absolute;
-  top: calc(80 / 982 * 100vh);
+  top: calc(100 / 982 * 100vh);
   left: 48px;
   max-width: 475px;
   z-index: 10;
@@ -3118,13 +3118,12 @@
   height: 48px;
 }
 
-/* Main content - centered staff */
+/* Main content - same position as your-note */
 .your-melody__main {
   position: absolute;
-  top: 50%;
+  top: calc(310 / 982 * 100vh);
   left: 0;
   right: 0;
-  transform: translateY(-50%);
   z-index: 1;
 }
 
@@ -3528,6 +3527,21 @@
 /* Action buttons below card - Hidden, moved to footer */
 .your-wallpaper__actions {
   display: none;
+}
+
+/* Download button with icon - flex layout (for both actions and footer-actions) */
+.your-wallpaper__actions .glass-theme-button--light:first-child .glass-theme-btn-text,
+.your-wallpaper__footer-actions .glass-theme-button--light:first-child .glass-theme-btn-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.your-wallpaper__actions .glass-theme-button--light:first-child .glass-theme-btn-text svg,
+.your-wallpaper__footer-actions .glass-theme-button--light:first-child .glass-theme-btn-text svg {
+  width: 15px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 /* Footer with arrows at corners */

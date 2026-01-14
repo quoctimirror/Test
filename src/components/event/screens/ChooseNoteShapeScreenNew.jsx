@@ -510,6 +510,9 @@ const ChooseNoteShapeScreenNew = () => {
                 onClick={handleDownload}
                 className={downloading || !avatarDataUrl ? 'disabled' : ''}
               >
+                <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0.5 14.9856C0.854118 15.315 1.33441 15.5 1.83521 15.5H13.1648C13.6656 15.5 14.1459 15.315 14.5 14.9856M7.50105 0.5V10.4521M7.50105 10.4521L11.8171 6.64941M7.50105 10.4521L3.18502 6.64941" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
                 {downloading ? 'Đang tải...' : 'Tải xuống'}
               </GlassThemeButton>
               <GlassThemeButton
@@ -545,6 +548,9 @@ const ChooseNoteShapeScreenNew = () => {
               onClick={handleDownload}
               className={downloading || !avatarDataUrl ? 'disabled' : ''}
             >
+              <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.5 14.9856C0.854118 15.315 1.33441 15.5 1.83521 15.5H13.1648C13.6656 15.5 14.1459 15.315 14.5 14.9856M7.50105 0.5V10.4521M7.50105 10.4521L11.8171 6.64941M7.50105 10.4521L3.18502 6.64941" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
               {downloading ? 'Đang tải...' : 'Tải xuống'}
             </GlassThemeButton>
             <GlassThemeButton
