@@ -549,7 +549,7 @@ const WriteMessageScreenNew = () => {
               Nghe 1 đoạn nốt
             </GlassThemeButton>
             <GlassThemeButton
-              theme="spec_light"
+              theme="dark"
               onClick={handlePlayUserNote}
               className={isPlaying ? 'disabled' : ''}
             >

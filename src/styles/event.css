@@ -3255,6 +3255,11 @@
   cursor: not-allowed;
 }
 
+/* Dark theme button text color - black text */
+.your-melody__actions .glass-theme-button--dark {
+  color: #0B0B0B;
+}
+
 /* Entrance animation */
 .your-melody--entering {
   animation: yourMelodyFadeIn 0.8s ease-out forwards;
@@ -3385,7 +3390,7 @@
   }
 
   /* Hide "Nghe nốt của tôi" button on mobile */
-  .your-melody__actions .glass-theme-button--spec_light {
+  .your-melody__actions .glass-theme-button--dark {
     display: none;
   }
 }
@@ -3523,6 +3528,209 @@
 
   .your-wallpaper__footer-actions {
     gap: 8px;
+  }
+}
+
+/* ============================================
+   MIRROR THANK YOU PAGE - Final Step
+   ============================================ */
+
+.mirror-thankyou {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Background - pink gradient */
+.mirror-thankyou__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    #FFF6F8 0%,
+    #FFE8EE 20%,
+    #FFCDD9 50%,
+    #FFB8C9 80%,
+    #FFA8BC 100%
+  );
+  z-index: 0;
+}
+
+/* Navigation Icons - Left side */
+.mirror-thankyou__nav {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 20;
+}
+
+/* Social Icons - Right side */
+.mirror-thankyou__social {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 20;
+}
+
+/* Glass effect for nav and social buttons */
+.mirror-thankyou__nav .glass-theme-button--light,
+.mirror-thankyou__social .glass-theme-button--light {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Main Content */
+.mirror-thankyou__main {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 120px;
+  max-width: 600px;
+}
+
+/* Title */
+.mirror-thankyou__title {
+  align-self: stretch;
+  color: var(--Black, #0B0B0B);
+  text-align: center;
+  font-family: var(--font-brikey-moura);
+  font-size: 40px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 105%;
+  margin: 26.8vh 0 24px 0;
+}
+
+.mirror-thankyou__title--highlight {
+  font-style: italic;
+}
+
+/* Description */
+.mirror-thankyou__description {
+  color: var(--Black, #0B0B0B);
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  margin-bottom: 32px;
+}
+
+/* Action Buttons */
+.mirror-thankyou__actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* Override light theme button - glass effect on pink background */
+.mirror-thankyou__actions .glass-theme-button--light {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Lucky Ring Video */
+.mirror-thankyou__lucky-ring {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.mirror-thankyou__lucky-ring-img {
+  width: 45vw;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin-bottom: -50%;
+}
+
+/* Back Button */
+.mirror-thankyou__back {
+  position: fixed;
+  bottom: 32px;
+  left: 24px;
+  z-index: 20;
+}
+
+/* ============================================
+   MIRROR THANK YOU - TABLET RESPONSIVE (≤1024px)
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .mirror-thankyou__main {
+    padding-top: 100px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .mirror-thankyou__title {
+    font-size: 28px;
+  }
+
+  .mirror-thankyou__lucky-ring-img {
+    width: calc(100vw - 180px);
+  }
+}
+
+/* ============================================
+   MIRROR THANK YOU - MOBILE RESPONSIVE (≤480px)
+   ============================================ */
+
+@media (max-width: 480px) {
+  .mirror-thankyou__nav {
+    left: 16px;
+    gap: 12px;
+  }
+
+  .mirror-thankyou__social {
+    right: 16px;
+    gap: 12px;
+  }
+
+  .mirror-thankyou__main {
+    padding-top: 80px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .mirror-thankyou__title {
+    font-size: 24px;
+  }
+
+  .mirror-thankyou__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .mirror-thankyou__lucky-ring-img {
+    width: calc(100vw - 48px);
+  }
+
+  .mirror-thankyou__back {
+    bottom: 24px;
+    left: 16px;
   }
 }
 
