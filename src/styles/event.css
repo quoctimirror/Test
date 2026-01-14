@@ -3763,21 +3763,16 @@
   align-items: center;
 }
 
-/* Background - pink gradient */
+/* Background - same as your-wallpaper */
 .mirror-thankyou__bg {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    180deg,
-    #FFF6F8 0%,
-    #FFE8EE 20%,
-    #FFCDD9 50%,
-    #FFB8C9 80%,
-    #FFA8BC 100%
-  );
+  background:
+    radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+    linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #F6F6F6 100%);
   z-index: 0;
 }
 
