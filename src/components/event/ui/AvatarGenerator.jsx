@@ -262,8 +262,8 @@ const AvatarGenerator = ({
       ctx.shadowBlur = 0;
       ctx.shadowOffsetY = 0;
 
-      // Export as PNG
-      const dataUrl = canvas.toDataURL('image/png');
+      // Export as JPEG (smaller file size than PNG)
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
       onGenerated?.(dataUrl);
     } catch (error) {
       console.error('Error generating avatar:', error);

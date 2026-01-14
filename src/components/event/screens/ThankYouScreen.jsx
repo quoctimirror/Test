@@ -27,7 +27,9 @@ const ArrowLeftIcon = () => (
 
 // Navigation Icons
 const RefreshIcon = () => (
-  <img src={getMediaUrl('dmm/icons/refresh-icon.svg')} alt="Refresh" width="24" height="24" />
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M11.5 7.71875C10.7598 9.91458 8.64001 11.5 6.14044 11.5C3.02531 11.5 0.5 9.03757 0.5 6C0.5 2.96243 3.02531 0.5 6.14044 0.5C8.2282 0.5 10.051 1.60605 11.0263 3.25M8.53763 3.9375H11.3578V1.1875" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
 );
 
 const ShareIcon = () => (
@@ -38,7 +40,9 @@ const ShareIcon = () => (
 
 // Home Icon
 const HomeIcon = () => (
-  <img src={getMediaUrl('dmm/icons/home-icon.svg')} alt="Home" width="24" height="24" />
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 14V9.43522C6 9.01504 6.35817 8.67442 6.8 8.67442H9.2C9.64183 8.67442 10 9.01504 10 9.43522V14M7.53638 2.14078L2.33638 5.65735C2.12534 5.80007 2 6.0311 2 6.27737V12.8588C2 13.4891 2.53726 14 3.2 14H12.8C13.4627 14 14 13.4891 14 12.8588V6.27737C14 6.0311 13.8747 5.80007 13.6636 5.65735L8.46362 2.14078C8.18605 1.95307 7.81395 1.95307 7.53638 2.14078Z" stroke="currentColor" strokeLinecap="round"/>
+  </svg>
 );
 
 // Social Icons

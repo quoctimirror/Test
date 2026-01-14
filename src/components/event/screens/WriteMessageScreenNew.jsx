@@ -11,6 +11,7 @@ import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { initAudio, playNoteByPosition } from '@services/event/audio';
+import AvatarGenerator from '@/components/event/ui/AvatarGenerator';
 
 // Diamond shape Cloudflare paths array - using optimized webp
 // HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
@@ -24,6 +25,17 @@ const DIAMOND_SHAPES = [
   'mirror_DMM/HEART-06.webp',  // Emerald shape
   'mirror_DMM/HEART-07.webp',  // Marquise shape
 ];
+
+// Mapping from shape ID to AvatarGenerator diamondShape name
+const SHAPE_NAME_MAP = {
+  h1: 'heart',
+  h2: 'round',
+  h3: 'emerald',
+  h4: 'marquise',
+  h5: 'pear',
+  h6: 'oval',
+  h7: 'princess',
+};
 
 // Staff configuration - 9 Y positions (5 lines + 4 zones)
 // Desktop: Line height 8px, gap 80px, total height 360px
@@ -124,7 +136,20 @@ const WriteMessageScreenNew = () => {
   const noteRefs = useRef({});
   const rippleRef = useRef(null);
 
-  const { userNote, melodyNotes, setMelodyNotes, selectedDiamond } = useEventStore();
+  const {
+    user,
+    userNote,
+    melodyNotes,
+    setMelodyNotes,
+    selectedDiamond,
+    generatedAvatarUrl,
+    generatedForShape,
+    setGeneratedAvatar,
+  } = useEventStore();
+
+  // Pre-generate avatar: check if we need to generate
+  const currentShape = SHAPE_NAME_MAP[selectedDiamond] || 'heart';
+  const shouldGenerateAvatar = !generatedAvatarUrl || generatedForShape !== currentShape;
 
   // Track window resize for mobile/tablet detection
   useEffect(() => {
@@ -486,6 +511,17 @@ const WriteMessageScreenNew = () => {
             </GlassThemeButton>
           </div>
         </footer>
+
+        {/* Hidden Avatar Generator - continue pre-generate for your-wallpaper page */}
+        {shouldGenerateAvatar && (
+          <AvatarGenerator
+            displayName={user?.displayName || 'Guest'}
+            lightNumber={user?.lightNumber || 1}
+            diamondShape={currentShape}
+            onGenerated={(url) => setGeneratedAvatar(url, currentShape)}
+            delay={1000}
+          />
+        )}
       </div>
     </>
   );

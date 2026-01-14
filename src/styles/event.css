@@ -3776,7 +3776,7 @@
 .mirror-thankyou__description {
   color: var(--Black, #0B0B0B);
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   font-style: normal;
   font-weight: 400;
   line-height: 100%;
@@ -3848,8 +3848,15 @@
     flex-direction: row; /* Horizontal row */
   }
 
+  .mirror-thankyou__main {
+    padding-top: 0; /* Remove padding so title margin-top is from viewport top */
+  }
+
   .mirror-thankyou__title {
-    margin-top: 18.53vh; /* 182/982 */
+    margin-top: 18.53vh; /* 182/982 from viewport top */
+    font-size: 60px;
+    width: calc(938 / 1512 * 100vw); /* ~62.04vw */
+    align-self: center;
   }
 
   .mirror-thankyou__lucky-ring-img {

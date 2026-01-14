@@ -61,8 +61,32 @@ const ChooseNoteShapeScreenNew = () => {
   const friction = 0.92;
   const snapStrength = 0.15;
 
-  const { user, selectedDiamond } = useEventStore();
-  const [avatarDataUrl, setAvatarDataUrl] = useState('');
+  const {
+    user,
+    selectedDiamond,
+    generatedAvatarUrl,
+    generatedForShape,
+    setGeneratedAvatar,
+  } = useEventStore();
+
+  // Get current shape name
+  const currentShape = SHAPE_NAME_MAP[selectedDiamond] || 'heart';
+
+  // Use avatar from store if it matches current shape, otherwise use local state as fallback
+  const [localAvatarUrl, setLocalAvatarUrl] = useState('');
+  const avatarDataUrl = (generatedForShape === currentShape && generatedAvatarUrl)
+    ? generatedAvatarUrl
+    : localAvatarUrl;
+
+  // Check if we need to generate (fallback if pre-generation didn't complete)
+  const shouldGenerateAvatar = !avatarDataUrl;
+
+  // Callback when avatar is generated (fallback)
+  const handleAvatarGenerated = (dataUrl) => {
+    setLocalAvatarUrl(dataUrl);
+    // Also save to store for consistency
+    setGeneratedAvatar(dataUrl, currentShape);
+  };
 
   // Helper functions
   const calculateReleaseVelocity = useCallback(() => {
@@ -531,15 +555,16 @@ const ChooseNoteShapeScreenNew = () => {
           </div>
         </footer>
 
-        {/* Hidden Avatar Generator - generates card image */}
-        {/* Delay 3.5s: entrance (2s) + ripple visible (1.5s) → then generate */}
-        <AvatarGenerator
-          displayName={user?.displayName || 'Guest'}
-          lightNumber={user?.lightNumber || 1}
-          diamondShape={SHAPE_NAME_MAP[selectedDiamond] || 'heart'}
-          onGenerated={setAvatarDataUrl}
-          delay={3500}
-        />
+        {/* Hidden Avatar Generator - fallback if pre-generation didn't complete */}
+        {shouldGenerateAvatar && (
+          <AvatarGenerator
+            displayName={user?.displayName || 'Guest'}
+            lightNumber={user?.lightNumber || 1}
+            diamondShape={currentShape}
+            onGenerated={handleAvatarGenerated}
+            delay={500}
+          />
+        )}
       </div>
     </>
   );

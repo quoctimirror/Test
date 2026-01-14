@@ -46,6 +46,10 @@ const useEventStore = create(
       // Demo mode
       isDemo: false,
 
+      // Pre-generated avatar (NOT persisted - kept in memory only)
+      generatedAvatarUrl: null,
+      generatedForShape: null,
+
       // Actions
       setCurrentStep: (step) => set({ currentStep: step }),
 
@@ -95,6 +99,16 @@ const useEventStore = create(
 
       setIsDemo: (isDemo) => set({ isDemo }),
 
+      // Pre-generated avatar actions
+      setGeneratedAvatar: (url, shape) => set({
+        generatedAvatarUrl: url,
+        generatedForShape: shape,
+      }),
+      clearGeneratedAvatar: () => set({
+        generatedAvatarUrl: null,
+        generatedForShape: null,
+      }),
+
       // Reset all state (logout)
       reset: () =>
         set({
@@ -112,6 +126,8 @@ const useEventStore = create(
           audioInitialized: false,
           isSoundActive: false,
           isDemo: false,
+          generatedAvatarUrl: null,
+          generatedForShape: null,
         }),
 
       // Check if user has completed the flow

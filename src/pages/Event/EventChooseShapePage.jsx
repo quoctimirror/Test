@@ -110,7 +110,7 @@ const getPositionOnOrbit = (orbit, angleDeg) => {
 
 const EventChooseShapePage = () => {
   const navigate = useNavigate();
-  const { selectedDiamond, setSelectedDiamond } = useEventStore();
+  const { selectedDiamond, setSelectedDiamond, clearGeneratedAvatar } = useEventStore();
 
   // Find initial index based on previously selected diamond (or default to 0)
   const getInitialIndex = () => {
@@ -234,8 +234,15 @@ const EventChooseShapePage = () => {
   };
 
   const handleNext = () => {
+    const newShapeId = shapes[currentIndex].id;
+
+    // Clear pre-generated avatar if shape changed (will regenerate on next page)
+    if (selectedDiamond !== newShapeId) {
+      clearGeneratedAvatar();
+    }
+
     // Save selected diamond to store and navigate
-    setSelectedDiamond(shapes[currentIndex].id);
+    setSelectedDiamond(newShapeId);
     navigate(ROUTES.EVENT_PLACE_NOTE);
   };
 
