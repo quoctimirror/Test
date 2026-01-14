@@ -11,7 +11,6 @@ import AvatarGenerator, { downloadAvatar } from '@/components/event/ui/AvatarGen
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
-import shareIcon from '@/assets/images/button/share.svg';
 
 // Arrow icons
 const ArrowLeftIcon = () => (
@@ -500,7 +499,7 @@ const ChooseNoteShapeScreenNew = () => {
               <GlassThemeButton
                 theme="light"
                 onClick={handleShare}
-                icon={<img src={shareIcon} alt="Share" width={18} height={18} />}
+                icon={<img src={getMediaUrl('dmm/icons/share-icon.svg')} alt="Share" width={18} height={18} />}
               />
             </div>
           </div>
@@ -529,7 +528,7 @@ const ChooseNoteShapeScreenNew = () => {
             <GlassThemeButton
               theme="light"
               onClick={handleShare}
-              icon={<img src={shareIcon} alt="Share" width={18} height={18} />}
+              icon={<img src={getMediaUrl('dmm/icons/share-icon.svg')} alt="Share" width={18} height={18} />}
             />
           </div>
 

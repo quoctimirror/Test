@@ -7,8 +7,6 @@ import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
-import refreshIcon from '@/assets/images/dmm/refresh-icon.svg';
-import homeIcon from '@/assets/images/dmm/home-icon.svg';
 
 // Arrow Left Icon
 const ArrowLeftIcon = () => (
@@ -29,7 +27,7 @@ const ArrowLeftIcon = () => (
 
 // Navigation Icons
 const RefreshIcon = () => (
-  <img src={refreshIcon} alt="Refresh" width="24" height="24" />
+  <img src={getMediaUrl('dmm/icons/refresh-icon.svg')} alt="Refresh" width="24" height="24" />
 );
 
 const ShareIcon = () => (
@@ -40,7 +38,7 @@ const ShareIcon = () => (
 
 // Home Icon
 const HomeIcon = () => (
-  <img src={homeIcon} alt="Home" width="24" height="24" />
+  <img src={getMediaUrl('dmm/icons/home-icon.svg')} alt="Home" width="24" height="24" />
 );
 
 // Social Icons
