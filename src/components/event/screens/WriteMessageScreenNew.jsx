@@ -253,12 +253,16 @@ const WriteMessageScreenNew = () => {
       await new Promise(resolve => setTimeout(resolve, 500));
       playNoteByPosition(userPositionY);
 
-      // Step 3: Random notes slide up one by one (150ms stagger)
-      const noteDelay = 150; // ms between each note
-      for (let i = 0; i < displayNotes.length; i++) {
+      // Step 3: Random notes slide up in random order (slower stagger)
+      const noteDelay = 350; // ms between each note (slower)
+      // Shuffle indices for random appearance order
+      const shuffledIndices = [...Array(displayNotes.length).keys()]
+        .sort(() => Math.random() - 0.5);
+
+      for (const idx of shuffledIndices) {
         await new Promise(resolve => setTimeout(resolve, noteDelay));
-        setAnimatedNoteIndices(prev => [...prev, i]);
-        playNoteByPosition(displayNotes[i].positionY);
+        setAnimatedNoteIndices(prev => [...prev, idx]);
+        playNoteByPosition(displayNotes[idx].positionY);
       }
 
       // Step 4: Animation complete
