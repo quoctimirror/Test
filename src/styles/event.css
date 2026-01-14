@@ -3570,6 +3570,11 @@
   .your-wallpaper__footer-actions {
     gap: 8px;
   }
+
+  /* Hide right arrow on mobile - your-wallpaper is the final screen */
+  .your-wallpaper__arrow--right {
+    display: none;
+  }
 }
 
 /* Responsive - Mobile Small */

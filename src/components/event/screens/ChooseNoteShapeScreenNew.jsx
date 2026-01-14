@@ -532,11 +532,11 @@ const ChooseNoteShapeScreenNew = () => {
             />
           </div>
 
-          {/* Right arrow */}
+          {/* Right arrow - go to mirror-thankyou (tablet/desktop only) */}
           <div className="your-wallpaper__arrow your-wallpaper__arrow--right">
             <GlassThemeButton
               theme="light"
-              onClick={() => navigate(ROUTES.EVENT_GUIDE)}
+              onClick={() => navigate(ROUTES.EVENT_THANKYOU)}
               icon={<ArrowRightIcon />}
             />
           </div>
