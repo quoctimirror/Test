@@ -319,21 +319,30 @@ const WriteMessageScreenNew = () => {
     navigate(ROUTES.EVENT_CHOOSE_NOTE);
   };
 
-  // Get user's diamond shape
+  // Get user's diamond shape - synced with EventChooseShapePage
   const getUserDiamondShape = () => {
     if (selectedDiamond) {
       const shapeMap = {
-        h1: 'mirror_DMM/H1.webp',
-        h2: 'mirror_DMM/H2.webp',
-        h3: 'mirror_DMM/H3.webp',
-        h4: 'mirror_DMM/H4.webp',
-        h5: 'mirror_DMM/H5.webp',
-        h6: 'mirror_DMM/H6.webp',
-        h7: 'mirror_DMM/H7.webp',
+        // Shape IDs (from EventChooseShapePage)
+        h1: 'mirror_DMM/HEART-01.webp',  // Heart
+        h2: 'mirror_DMM/HEART-02.webp',  // Oval
+        h3: 'mirror_DMM/HEART-03.webp',  // Round
+        h4: 'mirror_DMM/HEART-04.webp',  // Pear
+        h5: 'mirror_DMM/HEART-05.webp',  // Cushion
+        h6: 'mirror_DMM/HEART-06.webp',  // Emerald
+        h7: 'mirror_DMM/HEART-07.webp',  // Marquise
+        // Legacy shape names (from old /event flow)
+        heart: 'mirror_DMM/HEART-01.webp',
+        oval: 'mirror_DMM/HEART-02.webp',
+        round: 'mirror_DMM/HEART-03.webp',
+        pear: 'mirror_DMM/HEART-04.webp',
+        cushion: 'mirror_DMM/HEART-05.webp',
+        emerald: 'mirror_DMM/HEART-06.webp',
+        marquise: 'mirror_DMM/HEART-07.webp',
       };
-      return shapeMap[selectedDiamond] || 'mirror_DMM/H1.webp';
+      return shapeMap[selectedDiamond] || 'mirror_DMM/HEART-01.webp';
     }
-    return 'mirror_DMM/H1.webp';
+    return 'mirror_DMM/HEART-01.webp';
   };
 
   return (

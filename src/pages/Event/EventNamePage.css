@@ -84,7 +84,7 @@
 }
 
 .event-name__input {
-  color: rgba(255, 255, 255, 0.25);
+  color: #fff;
   background: transparent;
   border: none;
   outline: none;
@@ -98,6 +98,7 @@
   color: rgba(255, 255, 255, 0.25);
 }
 
+/* Underline - default mờ */
 .event-name__input-line {
   position: absolute;
   bottom: 0;
@@ -105,6 +106,12 @@
   right: 0;
   height: 2px;
   background: rgba(255, 255, 255, 0.25);
+  transition: background 0.2s ease;
+}
+
+/* Underline trắng khi có text */
+.event-name__input:not(:placeholder-shown) ~ .event-name__input-line {
+  background: #fff;
 }
 
 .event-name__subtitle {

@@ -27,14 +27,25 @@ const ArrowRightIcon = () => (
 );
 
 // Mapping from shape ID (h1, h2...) to diamondShape name for AvatarGenerator
+// Must match keys in AvatarGenerator's DIAMONDS object:
+// heart, round, emerald, marquise, oval, pear, cushion
 const SHAPE_NAME_MAP = {
+  // Shape IDs
   h1: 'heart',
-  h2: 'round',
-  h3: 'emerald',
-  h4: 'marquise',
-  h5: 'pear',
-  h6: 'oval',
-  h7: 'princess', // Cushion/Asscher
+  h2: 'oval',
+  h3: 'round',
+  h4: 'pear',
+  h5: 'cushion',
+  h6: 'emerald',
+  h7: 'marquise',
+  // Legacy names (passthrough)
+  heart: 'heart',
+  oval: 'oval',
+  round: 'round',
+  pear: 'pear',
+  cushion: 'cushion',
+  emerald: 'emerald',
+  marquise: 'marquise',
 };
 
 // Custom gradient for ripple effect (lighter pink)

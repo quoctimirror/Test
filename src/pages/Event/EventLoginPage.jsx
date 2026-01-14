@@ -9,7 +9,7 @@ import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
-import { signInWithGoogle, getCurrentUser, onAuthStateChange } from '@services/event/authService';
+import { signInWithGoogle, signInWithFacebook, getCurrentUser, onAuthStateChange } from '@services/event/authService';
 import { registerGoogleUser, checkExistingGoogleUser } from '@services/event/eventApi';
 import useEventStore from '@/store/useEventStore';
 import EventSoundButton from '@/components/event/ui/EventSoundButton';
@@ -66,41 +66,51 @@ const EventLoginPage = () => {
     return () => unsubscribe();
   }, []);
 
-  // Handle user login (register in database)
-  const handleUserLogin = async (googleUser) => {
+  // Handle user login (register in database) - works for Google, Facebook, etc.
+  const handleUserLogin = async (oauthUser) => {
     setLoading(true);
     setError('');
 
     try {
-      // First check if user already exists
-      const existingCheck = await checkExistingGoogleUser(googleUser.id);
-
-      // TODO: Re-enable this check after UI is done
-      // if (existingCheck.exists && existingCheck.hasNote) {
-      //   // User already has a note - restore state and go to result
-      //   setUser(existingCheck.user);
-      //   setSelectedDiamond(existingCheck.note.diamondShape);
-      //   setUserNote({
-      //     ...existingCheck.note,
-      //     orderId: existingCheck.user.lightNumber,
-      //     userDisplayName: existingCheck.user.displayName,
-      //   });
-      //   navigate(ROUTES.EVENT_RESULT);
-      //   return;
-      // }
+      // First check if user already exists (pass provider to check correct column)
+      const existingCheck = await checkExistingGoogleUser(oauthUser.id, oauthUser.provider);
 
       if (existingCheck.exists) {
-        // User exists - go to name page
-        setUser(existingCheck.user);
-        navigate(ROUTES.EVENT_NAME, { state: { fromLogin: true } });
+        // Add provider info to user
+        setUser({ ...existingCheck.user, provider: oauthUser.provider });
+
+        // Check if user already has a note
+        if (existingCheck.hasNote && existingCheck.note) {
+          // Restore note data to store
+          setSelectedDiamond(existingCheck.note.diamondShape);
+          setUserNote({
+            ...existingCheck.note,
+            orderId: existingCheck.user.lightNumber,
+            userDisplayName: existingCheck.user.displayName,
+          });
+          // Skip to YOUR-NOTE page
+          navigate(ROUTES.EVENT_PLACE_NOTE);
+          return;
+        }
+
+        // Check if user has already confirmed their name
+        if (existingCheck.nameConfirmed) {
+          // Skip name page, go directly to choose shape
+          navigate(ROUTES.EVENT_CHOOSE_SHAPE);
+        } else {
+          // User hasn't confirmed name yet, go to name page
+          navigate(ROUTES.EVENT_NAME, { state: { fromLogin: true } });
+        }
         return;
       }
 
-      // New user - register
+      // New user - register (works for Google, Facebook, etc.)
       const result = await registerGoogleUser({
-        googleId: googleUser.id,
-        email: googleUser.email,
-        displayName: googleUser.displayName,
+        authId: oauthUser.id,
+        googleId: oauthUser.id, // Legacy support
+        email: oauthUser.email,
+        displayName: oauthUser.displayName,
+        provider: oauthUser.provider,
       });
 
       if (result.success) {
@@ -134,12 +144,30 @@ const EventLoginPage = () => {
     // After redirect back, onAuthStateChange will handle the login
   };
 
+  const handleFacebookLogin = async () => {
+    setLoading(true);
+    setError('');
+
+    const result = await signInWithFacebook();
+
+    if (!result.success) {
+      setError(result.error || 'Đăng nhập thất bại');
+      setLoading(false);
+    }
+    // If success, the page will redirect to Facebook OAuth
+    // After redirect back, onAuthStateChange will handle the login
+  };
+
   const handleSocialLogin = (provider) => {
     if (provider === 'google') {
       handleGoogleLogin();
       return;
     }
-    // TODO: Implement other social logins
+    if (provider === 'facebook') {
+      handleFacebookLogin();
+      return;
+    }
+    // TODO: Implement Apple login
     console.log(`Login with ${provider}`);
   };
 
@@ -374,8 +402,8 @@ const EventLoginPage = () => {
                 <span>Tiếp tục với Google</span>
               </ShineGlassButton>
 
-              {/* Facebook */}
-              <ShineGlassButton
+              {/* Facebook - TODO: Enable when ready */}
+              {/* <ShineGlassButton
                 theme="light"
                 onClick={() => handleSocialLogin('facebook')}
                 className="event-login__social-btn"
@@ -383,10 +411,10 @@ const EventLoginPage = () => {
               >
                 <img src="/facebook-icon.svg" alt="Facebook" width="15" height="15" />
                 <span>Tiếp tục với Facebook</span>
-              </ShineGlassButton>
+              </ShineGlassButton> */}
 
-              {/* Apple */}
-              <ShineGlassButton
+              {/* Apple - TODO: Enable when ready */}
+              {/* <ShineGlassButton
                 theme="light"
                 onClick={() => handleSocialLogin('apple')}
                 className="event-login__social-btn"
@@ -394,7 +422,7 @@ const EventLoginPage = () => {
               >
                 <img src="/apple-icon.svg" alt="Apple" width="15" height="15" />
                 <span>Tiếp tục với Apple</span>
-              </ShineGlassButton>
+              </ShineGlassButton> */}
             </motion.div>
           </div>
         </motion.div>

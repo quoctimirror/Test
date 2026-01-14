@@ -50,15 +50,24 @@ const ArrowLeftIcon = ({ className = '' }) => (
   </svg>
 );
 
-// Mapping from shape ID to Cloudflare image path - using optimized webp
+// Mapping from shape ID to Cloudflare image path - synced with EventChooseShapePage
 const DIAMOND_MAP = {
+  // Shape IDs (from EventChooseShapePage)
   h1: 'mirror_DMM/HEART-01.webp',  // Heart shape
-  h2: 'mirror_DMM/H2.webp',  // Round shape
-  h3: 'mirror_DMM/H3.webp',  // Emerald shape
-  h4: 'mirror_DMM/H4.webp',  // Marquise shape
-  h5: 'mirror_DMM/H5.webp',  // Pear shape
-  h6: 'mirror_DMM/H6.webp',  // Oval shape
-  h7: 'mirror_DMM/H7.webp',  // Cushion shape
+  h2: 'mirror_DMM/HEART-02.webp',  // Oval shape
+  h3: 'mirror_DMM/HEART-03.webp',  // Round shape
+  h4: 'mirror_DMM/HEART-04.webp',  // Pear shape
+  h5: 'mirror_DMM/HEART-05.webp',  // Cushion shape
+  h6: 'mirror_DMM/HEART-06.webp',  // Emerald shape
+  h7: 'mirror_DMM/HEART-07.webp',  // Marquise shape
+  // Legacy shape names (from old /event flow)
+  heart: 'mirror_DMM/HEART-01.webp',
+  oval: 'mirror_DMM/HEART-02.webp',
+  round: 'mirror_DMM/HEART-03.webp',
+  pear: 'mirror_DMM/HEART-04.webp',
+  cushion: 'mirror_DMM/HEART-05.webp',
+  emerald: 'mirror_DMM/HEART-06.webp',
+  marquise: 'mirror_DMM/HEART-07.webp',
 };
 
 // Mapping from position Y to Vietnamese note name

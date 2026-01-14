@@ -10,8 +10,28 @@ import GlassThemeButton from '@components/common/button/GlassThemeButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import useEventStore from '@/store/useEventStore';
 import EventSoundButton from '@/components/event/ui/EventSoundButton';
+import { placeNote } from '@services/event/eventApi';
 
 import './EventChooseShapePage.css';
+
+// Mapping from position Y to pitch name
+const POSITION_TO_PITCH = {
+  0: 'C5',  // Đô cao
+  1: 'B4',  // Si
+  2: 'A4',  // La
+  3: 'G4',  // Sol
+  4: 'F4',  // Fa
+  5: 'E4',  // Mi
+  6: 'D4',  // Rê
+  7: 'C4',  // Đô
+  8: 'B3',  // Si thấp
+};
+
+// Generate random position (0-8)
+const getRandomPositionY = () => Math.floor(Math.random() * 9);
+
+// Generate random X position (30-70 for better visual)
+const getRandomPositionX = () => 30 + Math.floor(Math.random() * 41);
 
 // Video mapping for center display
 const shapeVideos = {
@@ -103,7 +123,13 @@ const getPositionOnOrbit = (orbit, angleDeg) => {
 
 const EventChooseShapePage = () => {
   const navigate = useNavigate();
-  const { selectedDiamond, setSelectedDiamond } = useEventStore();
+  const {
+    user,
+    selectedDiamond,
+    setSelectedDiamond,
+    setUserNote,
+    setInitialNotePosition,
+  } = useEventStore();
 
   // Find initial index based on previously selected diamond (or default to 0)
   const getInitialIndex = () => {
@@ -115,6 +141,8 @@ const EventChooseShapePage = () => {
   const [currentIndex, setCurrentIndex] = useState(getInitialIndex);
   const [prevIndex, setPrevIndex] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   // Initialize rotation offset to show selected shape at center
   const [rotationOffset, setRotationOffset] = useState(() => orbitAngles[getInitialIndex()]);
   const [isEntering, setIsEntering] = useState(true); // For entrance animation
@@ -226,10 +254,55 @@ const EventChooseShapePage = () => {
     navigate(ROUTES.EVENT_NAME);
   };
 
-  const handleNext = () => {
-    // Save selected diamond to store and navigate
-    setSelectedDiamond(shapes[currentIndex].id);
-    navigate(ROUTES.EVENT_PLACE_NOTE);
+  const handleNext = async () => {
+    if (saving) return;
+
+    setSaving(true);
+    setError('');
+
+    try {
+      const selectedShape = shapes[currentIndex].id;
+
+      // Generate random position
+      const positionX = getRandomPositionX();
+      const positionY = getRandomPositionY();
+      const pitch = POSITION_TO_PITCH[positionY];
+
+      // Save note to database
+      const noteData = {
+        userId: user.id,
+        userDisplayName: user.displayName,
+        diamondShape: selectedShape,
+        pitch,
+        positionX,
+        positionY,
+      };
+
+      const result = await placeNote(noteData);
+
+      if (result.success) {
+        // Save to store
+        setSelectedDiamond(selectedShape);
+        setInitialNotePosition({ x: positionX, y: positionY });
+        setUserNote({
+          ...result.note,
+          diamondShape: selectedShape,
+          positionX,
+          positionY,
+          pitch,
+        });
+
+        // Navigate to place note screen
+        navigate(ROUTES.EVENT_PLACE_NOTE);
+      } else {
+        setError(result.error || 'Không thể lưu. Vui lòng thử lại.');
+      }
+    } catch (err) {
+      console.error('Save note error:', err);
+      setError('Đã có lỗi xảy ra. Vui lòng thử lại.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const currentShape = shapes[currentIndex];
@@ -406,17 +479,20 @@ const EventChooseShapePage = () => {
             </p>
           </div>
 
+          {/* Error Message */}
+          {error && <p className="event-choose-shape__error">{error}</p>}
+
           {/* Choose the shape - Desktop */}
           <div className="event-choose-shape__select-btn--desktop">
-            <GlassThemeButton theme="spec_dark" onClick={handleNext}>
-              Choose the shape
+            <GlassThemeButton theme="spec_dark" onClick={handleNext} disabled={saving}>
+              {saving ? 'Đang lưu...' : 'Choose the shape'}
             </GlassThemeButton>
           </div>
 
           {/* Confirm button - Mobile/Tablet */}
           <div className="event-choose-shape__confirm-btn--mobile">
-            <GlassThemeButton theme="spec_dark" onClick={handleNext}>
-              Confirm this shape
+            <GlassThemeButton theme="spec_dark" onClick={handleNext} disabled={saving}>
+              {saving ? 'Đang lưu...' : 'Confirm this shape'}
             </GlassThemeButton>
           </div>
 
