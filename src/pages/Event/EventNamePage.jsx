@@ -10,6 +10,7 @@ import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@components/common/button/GlassThemeButton';
 import useEventStore from '@/store/useEventStore';
 import EventSoundButton from '@/components/event/ui/EventSoundButton';
+import { updateUserDisplayName } from '@services/event/eventApi';
 
 import './EventNamePage.css';
 
@@ -17,7 +18,10 @@ const EventNamePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, setUser } = useEventStore();
-  const [name, setName] = useState(user?.displayName || '');
+  // Truncate name to 15 characters max
+  const [name, setName] = useState((user?.displayName || '').slice(0, 15));
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const inputRef = useRef(null);
   const measureRef = useRef(null);
 
@@ -67,11 +71,30 @@ const EventNamePage = () => {
     navigate(ROUTES.EVENT_LOGIN, { state: { fromName: true } });
   };
 
-  const handleCreateNote = () => {
-    if (name.trim()) {
-      // Save name to store
-      setUser({ ...user, displayName: name.trim() });
-      navigate(ROUTES.EVENT_CHOOSE_SHAPE);
+  const handleCreateNote = async () => {
+    if (!name.trim()) return;
+
+    setSaving(true);
+    setError('');
+
+    try {
+      // Save name to database (use correct column based on provider)
+      const authId = user.authId || user.googleId || user.facebookId;
+      const provider = user.provider || 'google';
+      const result = await updateUserDisplayName(authId, name.trim(), provider);
+
+      if (result.success) {
+        // Update store with new name
+        setUser({ ...user, displayName: name.trim() });
+        navigate(ROUTES.EVENT_CHOOSE_SHAPE);
+      } else {
+        setError(result.error || 'Không thể lưu tên. Vui lòng thử lại.');
+      }
+    } catch (err) {
+      console.error('Save name error:', err);
+      setError('Đã có lỗi xảy ra. Vui lòng thử lại.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -143,12 +166,19 @@ const EventNamePage = () => {
           <h2 className="heading-2--no-margin event-name__subtitle">
             nguồn cảm hứng của giai điệu Love-Grown.
           </h2>
+
+          {/* Error Message */}
+          {error && <p className="event-name__error">{error}</p>}
         </div>
 
         {/* Create Note Button */}
         <div className="event-name__nav">
-          <GlassThemeButton theme="spec_dark" onClick={handleCreateNote}>
-            Sáng tạo “Nốt sáng" của riêng bạn
+          <GlassThemeButton
+            theme="spec_dark"
+            onClick={handleCreateNote}
+            disabled={saving || !name.trim()}
+          >
+            {saving ? 'Đang lưu...' : 'Sáng tạo "Nốt sáng" của riêng bạn'}
           </GlassThemeButton>
         </div>
       </div>

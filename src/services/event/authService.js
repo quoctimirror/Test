@@ -1,5 +1,6 @@
 /**
- * Auth Service for Event System - Google OAuth via Supabase
+ * Auth Service for Event System - Social OAuth via Supabase
+ * Supports: Google, Facebook
  */
 import { getSupabaseClient, isSupabaseConfigured } from './supabase';
 
@@ -38,6 +39,41 @@ export async function signInWithGoogle() {
     return { success: true, data };
   } catch (error) {
     console.error('Google sign in error:', error);
+    return { success: false, error: 'Đăng nhập thất bại. Vui lòng thử lại.' };
+  }
+}
+
+/**
+ * Sign in with Facebook OAuth
+ * @returns {Promise<Object>} { success: boolean, error?: string }
+ */
+export async function signInWithFacebook() {
+  if (!isSupabaseConfigured()) {
+    return { success: false, error: 'Supabase chưa được cấu hình' };
+  }
+
+  try {
+    const supabase = getSupabaseClient();
+
+    const redirectUrl = import.meta.env.VITE_REDIRECT_URL ||
+                       `${window.location.origin}/the-muse-of-love-grown/login`;
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options: {
+        redirectTo: redirectUrl,
+        scopes: 'public_profile', // 'email' requires Facebook App Review approval
+      },
+    });
+
+    if (error) {
+      console.error('Facebook sign in error:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Facebook sign in error:', error);
     return { success: false, error: 'Đăng nhập thất bại. Vui lòng thử lại.' };
   }
 }

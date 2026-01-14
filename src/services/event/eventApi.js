@@ -85,29 +85,35 @@ function handleDemoTicketValidation(code) {
 // ============================================================
 
 /**
- * Register a Google user for the event
- * @param {Object} userData - Google user data
- * @param {string} userData.googleId - Google user ID (Supabase auth user id)
+ * Register an OAuth user for the event (Google, Facebook, etc.)
+ * @param {Object} userData - OAuth user data
+ * @param {string} userData.authId - Auth user ID
  * @param {string} userData.email - User's email
- * @param {string} userData.displayName - User's display name from Google
+ * @param {string} userData.displayName - User's display name
+ * @param {string} userData.provider - Auth provider ('google', 'facebook', etc.)
  * @returns {Object} { success: boolean, user?: object, error?: string }
  */
-export async function registerGoogleUser(userData) {
-  const { googleId, email, displayName } = userData;
+export async function registerOAuthUser(userData) {
+  const { authId, email, displayName, provider } = userData;
+  // Support legacy googleId parameter
+  const finalAuthId = authId || userData.googleId;
+  const isGoogle = provider === 'google' || !provider;
+  const isFacebook = provider === 'facebook';
 
   // Demo mode
   if (!isSupabaseConfigured()) {
-    return handleDemoGoogleRegistration(userData);
+    return handleDemoOAuthRegistration(userData);
   }
 
   try {
     const supabase = getSupabaseClient();
 
-    // Check if user already exists
+    // Check if user already exists based on provider
+    const idColumn = isFacebook ? 'facebook_id' : 'google_id';
     const { data: existingUser, error: checkError } = await supabase
       .from(TABLES.users)
-      .select('id, display_name, light_number, email, google_id')
-      .eq('google_id', googleId)
+      .select('id, display_name, light_number, email, google_id, facebook_id')
+      .eq(idColumn, finalAuthId)
       .single();
 
     if (existingUser && !checkError) {
@@ -116,10 +122,13 @@ export async function registerGoogleUser(userData) {
         success: true,
         user: {
           id: existingUser.id,
+          authId: isFacebook ? existingUser.facebook_id : existingUser.google_id,
           googleId: existingUser.google_id,
+          facebookId: existingUser.facebook_id,
           email: existingUser.email,
           displayName: existingUser.display_name,
           lightNumber: existingUser.light_number,
+          provider: provider || 'google',
           createdAt: new Date(),
         },
       };
@@ -132,15 +141,23 @@ export async function registerGoogleUser(userData) {
 
     const lightNumber = (count || 0) + 1;
 
-    // Insert new user
+    // Insert new user with correct ID column based on provider
+    const insertData = {
+      email: email,
+      display_name: displayName.trim(),
+      light_number: lightNumber,
+    };
+
+    // Set the correct ID column based on provider
+    if (isFacebook) {
+      insertData.facebook_id = finalAuthId;
+    } else {
+      insertData.google_id = finalAuthId;
+    }
+
     const { data: newUser, error: insertError } = await supabase
       .from(TABLES.users)
-      .insert({
-        google_id: googleId,
-        email: email,
-        display_name: displayName.trim(),
-        light_number: lightNumber,
-      })
+      .insert(insertData)
       .select()
       .single();
 
@@ -153,32 +170,87 @@ export async function registerGoogleUser(userData) {
       success: true,
       user: {
         id: newUser.id,
+        authId: isFacebook ? newUser.facebook_id : newUser.google_id,
         googleId: newUser.google_id,
+        facebookId: newUser.facebook_id,
         email: newUser.email,
         displayName: newUser.display_name,
         lightNumber: newUser.light_number,
+        provider: provider || 'google',
         createdAt: new Date(newUser.created_at),
       },
     };
   } catch (error) {
-    console.error('Google registration error:', error);
+    console.error('OAuth registration error:', error);
+    return { success: false, error: 'Lỗi kết nối. Vui lòng thử lại.' };
+  }
+}
+
+// Legacy alias for backward compatibility
+export const registerGoogleUser = registerOAuthUser;
+
+/**
+ * Update user's display name and mark name as confirmed
+ * @param {string} authId - Auth user ID (google_id or facebook_id)
+ * @param {string} displayName - New display name
+ * @param {string} provider - Auth provider ('google' or 'facebook')
+ * @returns {Object} { success: boolean, error?: string }
+ */
+export async function updateUserDisplayName(authId, displayName, provider = 'google') {
+  // Demo mode
+  if (!isSupabaseConfigured()) {
+    return { success: true, isDemo: true };
+  }
+
+  try {
+    const supabase = getSupabaseClient();
+
+    // Use correct column based on provider
+    const idColumn = provider === 'facebook' ? 'facebook_id' : 'google_id';
+
+    const { data, error } = await supabase
+      .from(TABLES.users)
+      .update({
+        display_name: displayName.trim(),
+        name_confirmed: true,
+      })
+      .eq(idColumn, authId)
+      .select();
+
+    if (error) {
+      console.error('Update display name error:', error);
+      return { success: false, error: 'Không thể cập nhật tên. Vui lòng thử lại.' };
+    }
+
+    // Check if any row was updated
+    if (!data || data.length === 0) {
+      console.error('No rows updated - user not found');
+      return { success: false, error: 'Không tìm thấy user. Vui lòng thử lại.' };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Update display name error:', error);
     return { success: false, error: 'Lỗi kết nối. Vui lòng thử lại.' };
   }
 }
 
 /**
- * Demo mode Google registration
+ * Demo mode OAuth registration
  */
-function handleDemoGoogleRegistration(userData) {
+function handleDemoOAuthRegistration(userData) {
   const lightNumber = Math.floor(Math.random() * 1000) + 1;
+  const authId = userData.authId || userData.googleId;
   return {
     success: true,
     user: {
       id: uuidv4(),
-      googleId: userData.googleId,
+      authId: authId,
+      googleId: authId, // Legacy support
       email: userData.email,
       displayName: userData.displayName.trim(),
       lightNumber,
+      provider: userData.provider || 'google',
       createdAt: new Date(),
     },
     isDemo: true,
@@ -232,11 +304,12 @@ export async function getUserExistingNote(userId) {
 }
 
 /**
- * Get user by Google ID to check if already registered
- * @param {string} googleId - Google/Supabase auth user ID
- * @returns {Object} { exists: boolean, user?: object, hasNote?: boolean, note?: object }
+ * Get user by auth ID to check if already registered
+ * @param {string} authId - Auth user ID (google_id or facebook_id)
+ * @param {string} provider - Auth provider ('google' or 'facebook')
+ * @returns {Object} { exists: boolean, user?: object, nameConfirmed?: boolean, hasNote?: boolean, note?: object }
  */
-export async function checkExistingGoogleUser(googleId) {
+export async function checkExistingUser(authId, provider = 'google') {
   if (!isSupabaseConfigured()) {
     return { exists: false };
   }
@@ -244,11 +317,13 @@ export async function checkExistingGoogleUser(googleId) {
   try {
     const supabase = getSupabaseClient();
 
-    // Get user by google_id
+    // Use correct column based on provider
+    const idColumn = provider === 'facebook' ? 'facebook_id' : 'google_id';
+
     const { data: user, error } = await supabase
       .from(TABLES.users)
-      .select('id, display_name, light_number, email, google_id')
-      .eq('google_id', googleId)
+      .select('id, display_name, light_number, email, google_id, facebook_id, name_confirmed')
+      .eq(idColumn, authId)
       .single();
 
     if (error || !user) {
@@ -262,11 +337,15 @@ export async function checkExistingGoogleUser(googleId) {
       exists: true,
       user: {
         id: user.id,
+        authId: provider === 'facebook' ? user.facebook_id : user.google_id,
         googleId: user.google_id,
+        facebookId: user.facebook_id,
         email: user.email,
         displayName: user.display_name,
         lightNumber: user.light_number,
+        provider: provider,
       },
+      nameConfirmed: user.name_confirmed || false,
       hasNote: noteResult.hasNote,
       note: noteResult.note,
     };
@@ -275,6 +354,9 @@ export async function checkExistingGoogleUser(googleId) {
     return { exists: false };
   }
 }
+
+// Legacy alias for backward compatibility
+export const checkExistingGoogleUser = checkExistingUser;
 
 /**
  * Register a new user for the event (legacy - ticket-based)

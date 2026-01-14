@@ -16,7 +16,7 @@
    Hero + Music Combined Section (Sticky Scroll)
    ============================================ */
 .event-guide__hero-music-wrapper {
-  height: 220vh;
+  height: 200vh;
   position: relative;
   background: #F6F6F6;
 }
@@ -28,6 +28,7 @@
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height - accounts for mobile address bar */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -53,16 +54,18 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height - accounts for mobile address bar */
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
+  overflow: hidden; /* Prevent child elements from causing scroll */
 }
 
 /* Title image - always centered */
 .event-guide__title-wrapper {
   position: absolute;
-  top: 50%;
+  top: 47%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 30vw;
@@ -92,7 +95,7 @@
 
 .event-guide__hero-cta {
   position: absolute;
-  top: 50%;
+  top: 47%;
   left: 50%;
   transform: translateX(-50%);
   margin-top: calc(15vw + 50px);
@@ -354,7 +357,7 @@
   top: 50%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: calc(15vw + 60px);
+  margin-top: min(calc(15vw + 40px), 20vh);
   color: #fff;
   text-align: center;
 }
@@ -390,6 +393,7 @@
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   z-index: 10;
   animation: step1FadeOut 0.6s ease-out forwards;
   /* Solid background to prevent hero flash - music section covers this */
@@ -405,6 +409,7 @@
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   background: #F6F6F6;
   z-index: 2;
   pointer-events: none;
@@ -601,7 +606,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
+  padding: 0rem 2rem 4rem;
   position: relative;
   z-index: 1;
 }
@@ -633,15 +638,20 @@
 .event-guide__staff-title {
   color: #000;
   text-align: center;
-  margin-bottom: 160px;
+  margin-bottom: 60px;
   position: relative;
   z-index: 2;
 }
 
 .event-guide__staff {
+  --staff-gap: 80px;
+  --staff-line-height: 8px;
+  /* height = 5 lines + 4 gaps */
+  --staff-height: calc(5 * var(--staff-line-height) + 4 * var(--staff-gap));
+
   position: relative;
   width: 100vw;
-  height: 360px; /* 5 lines × 8px + 4 gaps × 80px - same as place-note-new */
+  height: var(--staff-height);
   z-index: 2;
 }
 
@@ -654,7 +664,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 80px; /* same as place-note-new */
+  gap: var(--staff-gap);
   padding: 0;
 }
 
@@ -714,7 +724,7 @@
 .event-guide__staff-description {
   color: #000;
   text-align: center;
-  margin-top: 120px;
+  margin-top: 60px;
   position: relative;
   z-index: 2;
 }
@@ -802,113 +812,125 @@
 }
 
 
-.event-guide__card:hover {
+.event-guide__card:hover,
+.event-guide__card--flipped {
   transform: rotate(calc(var(--rotation) + 3deg));
   scale: 1.08;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   z-index: 10;
 }
 
-.event-guide__card:hover::before {
+.event-guide__card:hover::before,
+.event-guide__card--flipped::before {
   opacity: 1;
 }
 
+/* Smooth flip animation for mobile auto-flip */
+.event-guide__card--flipped {
+  transition: transform 0.6s ease, scale 0.6s ease, box-shadow 0.6s ease;
+}
+
+.event-guide__card--flipped::before {
+  transition: opacity 0.6s ease;
+}
+
 /* ===== TOP ROW (6 cards) - positioned from center ===== */
+/* Desktop: px values based on 2000px container height */
 .event-guide__card--1 {
-  top: 15%;
+  top: 300px;
   left: calc(50% - 880px);
   --rotation: -16deg;
 }
 
 .event-guide__card--2 {
-  top: 5%;
+  top: 100px;
   left: calc(50% - 550px);
   --rotation: 3deg;
 }
 
 .event-guide__card--3 {
-  top: 15%;
+  top: 300px;
   left: calc(50% - 200px);
   --rotation: -15deg;
 }
 
 .event-guide__card--4 {
-  top: 0%;
+  top: 0px;
   left: calc(50% + 150px);
   --rotation: 10deg;
 }
 
 .event-guide__card--5 {
-  top: 15%;
+  top: 300px;
   left: calc(50% + 650px);
   --rotation: 3deg;
 }
 
 .event-guide__card--6 {
-  top: 22%;
+  top: 440px;
   left: calc(50% + 300px);
   --rotation: 12deg;
 }
 
 /* ===== LEFT SIDE (2 cards) ===== */
 .event-guide__card--7 {
-  top: 43%;
+  top: 860px;
   left: calc(50% - 820px);
   --rotation: -4deg;
 }
 
 .event-guide__card--8 {
-  top: 26%;
+  top: 520px;
   left: calc(50% - 580px);
   --rotation: 12deg;
 }
 
 /* ===== RIGHT SIDE (2 cards) ===== */
 .event-guide__card--9 {
-  top: 38%;
+  top: 760px;
   left: calc(50% + 600px);
   --rotation: -2deg;
 }
 
 .event-guide__card--10 {
-  top: 60%;
+  top: 1200px;
   left: calc(50% + 300px);
   --rotation: 15deg;
 }
 
 /* ===== BOTTOM ROW (6 cards) ===== */
 .event-guide__card--11 {
-  top: 65%;
+  top: 1300px;
   left: calc(50% - 800px);
   --rotation: -16deg;
 }
 
 .event-guide__card--12 {
-  top: 55%;
+  top: 1100px;
   left: calc(50% - 520px);
   --rotation: -15deg;
 }
 
 .event-guide__card--13 {
-  top: 75%;
+  top: 1500px;
   left: calc(50% - 420px);
   --rotation: 10deg;
 }
 
 .event-guide__card--14 {
-  top: 62%;
+  top: 1240px;
   left: calc(50% - 50px);
   --rotation: -1deg;
 }
 
 .event-guide__card--15 {
-  top: 80%;
+  top: 1600px;
   left: calc(50% + 200px);
   --rotation: -8deg;
 }
 
 .event-guide__card--16 {
-  top: 65%;
+  top: 1300px;
   left: calc(50% + 700px);
   --rotation: 20deg;
 }
@@ -939,7 +961,7 @@
 
 /* Lucky Moment Section */
 .event-guide__lucky-section {
-  min-height: 100vh;
+  height: 100vh;
   background: transparent;
   display: flex;
   flex-direction: column;
@@ -955,7 +977,8 @@
 .event-guide__lucky-title,
 .event-guide__lucky-text,
 .event-guide__lucky-btn,
-.event-guide__lucky-bottom {
+.event-guide__lucky-stats,
+.event-guide__lucky-ring {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s ease, transform 0.8s ease;
@@ -966,7 +989,8 @@
 .event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-title,
 .event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-text,
 .event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-btn,
-.event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-bottom {
+.event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-stats,
+.event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-ring {
   opacity: 1;
   transform: translateY(0);
 }
@@ -981,8 +1005,11 @@
 .event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-btn {
   transition-delay: 0.3s;
 }
-.event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-bottom {
+.event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-stats {
   transition-delay: 0.4s;
+}
+.event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-ring {
+  transition-delay: 0.5s;
 }
 
 .event-guide__lucky-title {
@@ -999,18 +1026,20 @@
 }
 
 /* Button in lucky section - 72px gap from ring */
-/* .event-guide__lucky-btn {
-  margin-bottom: 72px;
-} */
+.event-guide__lucky-btn {
+  margin-bottom: 24px;
+}
 
-/* Bottom row: 3 columns (stat - ring - stat) */
-.event-guide__lucky-bottom {
-  margin-top: auto;
-  padding-top: 60px;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
+/* Stats row - positioned absolute on sides of ring (desktop) */
+.event-guide__lucky-stats {
+  position: absolute;
+  bottom: 200px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15%;
+  pointer-events: none;
 }
 
 .event-guide__lucky-stat {
@@ -1034,16 +1063,17 @@
   margin-top: 0.5rem;
 }
 
-/* Diamond Ring Image */
+/* Diamond Ring - at bottom */
 .event-guide__lucky-ring {
+  margin-top: auto;
   display: flex;
   justify-content: center;
   overflow: hidden;
 }
 
 .event-guide__lucky-ring-img {
-  width: 45vw;
-  height: auto;
+  width: 943px;
+  height: 1179px;
   object-fit: contain;
   display: block;
   margin-bottom: -50%;
@@ -1054,19 +1084,8 @@
    ============================================ */
 
 /* Medium screens - reduce card overlap */
-@media (max-height: 900px) {
-  .event-guide__avatar-section {
-    min-height: 1200px;
-  }
-}
 
-/* Small height screens - hide some cards */
-@media (max-height: 700px) {
-  .event-guide__avatar-section {
-    min-height: 1400px;
-  }
 
-}
 
 /* Tablet responsive */
 @media (max-width: 1024px) {
@@ -1079,7 +1098,9 @@
   }
 
   .event-guide__hero-cta {
-    margin-top: calc(25vw + 50px);
+    top: auto;
+    bottom: 84px;
+    margin-top: 0;
   }
 
   .event-guide__music-label--left {
@@ -1091,15 +1112,11 @@
   }
 
   .event-guide__music-text {
-    margin-top: calc(25vw + 60px);
-  }
-
-  .event-guide__staff-title {
-    margin-bottom: 100px;
+    margin-top: min(calc(20vw + 10px), 22vh);
   }
 
   .event-guide__staff-note {
-    top: 180px !important; /* Center of 360px height */
+    top: 50% !important; /* Center of dynamic height */
   }
 
   .event-guide__avatar-section {
@@ -1112,26 +1129,27 @@
     height: 190px;
   }
 
-  /* Card positions responsive - tablet */
-  .event-guide__card--1 { left: calc(50% - 437px); }
-  .event-guide__card--2 { left: calc(50% - 280px); }
-  .event-guide__card--3 { left: calc(50% - 114px); }
+  /* Card positions responsive - tablet (use % for top to scale with 800px container) */
+  .event-guide__card--1 { left: calc(50% - 437px); top: 15%; }
+  .event-guide__card--2 { left: calc(50% - 280px); top: 5%; }
+  .event-guide__card--3 { left: calc(50% - 114px); top: 15%; }
   .event-guide__card--4 { left: calc(50% + 65px); top: 4%; }
-  .event-guide__card--5 { left: calc(50% + 300px); }
-  .event-guide__card--6 { left: calc(50% + 100px); }
-  .event-guide__card--7 { left: calc(50% - 450px); }
-  .event-guide__card--8 { left: calc(50% - 295px); }
-  .event-guide__card--9 { left: calc(50% + 290px); }
-  .event-guide__card--10 { left: calc(50% + 152px); }
-  .event-guide__card--11 { left: calc(50% - 409px); }
-  .event-guide__card--12 { left: calc(50% - 290px); }
-  .event-guide__card--13 { left: calc(50% - 214px); }
-  .event-guide__card--15 { left: calc(50% + 95px); }
-  .event-guide__card--16 { left: calc(50% + 352px); }
+  .event-guide__card--5 { left: calc(50% + 300px); top: 15%; }
+  .event-guide__card--6 { left: calc(50% + 100px); top: 22%; }
+  .event-guide__card--7 { left: calc(50% - 450px); top: 43%; }
+  .event-guide__card--8 { left: calc(50% - 295px); top: 26%; }
+  .event-guide__card--9 { left: calc(50% + 290px); top: 38%; }
+  .event-guide__card--10 { left: calc(50% + 152px); top: 60%; }
+  .event-guide__card--11 { left: calc(50% - 409px); top: 65%; }
+  .event-guide__card--12 { left: calc(50% - 290px); top: 55%; }
+  .event-guide__card--13 { left: calc(50% - 214px); top: 75%; }
+  .event-guide__card--14 { top: 62%; }
+  .event-guide__card--15 { left: calc(50% + 95px); top: 80%; }
+  .event-guide__card--16 { left: calc(50% + 352px); top: 65%; }
 
-  /* Lucky section - stats at top, content in middle, ring at bottom */
+  /* Lucky section - use space-between to distribute content */
   .event-guide__lucky-section {
-    justify-content: flex-start;
+    justify-content: space-between;
     padding: 0;
     position: relative;
   }
@@ -1144,41 +1162,35 @@
     margin-bottom: 24px;
   }
 
-  .event-guide__lucky-bottom {
+  /* Stats row - at top on tablet */
+  .event-guide__lucky-stats {
     position: static;
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 100%;
     gap: 60px;
-    margin-top: 160px;
-    order: -1; /* Move to top */
+    order: -1; /* Move stats to top */
+    margin-top: 0;
+    margin-bottom: 40px;
+    padding: 0;
   }
 
-  /* Stats in a row at top */
-  .event-guide__lucky-stat {
-    position: static;
-  }
-
-  /* Lucky bottom - only opacity fade, no transform (to not affect ring position) */
-  .event-guide__lucky-bottom {
+  .event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-stats {
     transform: none;
+    margin-top: 120px;
+    margin-bottom: 0;
   }
 
-  .event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-bottom {
-    transform: none;
-  }
-
-  /* Ring at bottom of screen */
+  /* Ring - flows naturally at bottom with space-between */
   .event-guide__lucky-ring {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    position: static;
+    transform: none;
+    margin-top: 0;
   }
 
   .event-guide__lucky-ring-img {
     width: calc(100vw - 180px);
+    height: auto;
+    margin-bottom: -50%;
   }
 
   .event-guide__lucky-number {
@@ -1198,16 +1210,26 @@
     width: 62vw;
   }
 
-  .event-guide__hero-cta {
-    margin-top: calc(31vw + 50px);
+  /* Stack labels above title on mobile */
+  .event-guide__music-label {
+    top: 30%;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    white-space: normal;
+    text-align: center;
   }
 
-  .event-guide__music-label {
-    display: none;
+  .event-guide__music-label--left {
+    transform: translateX(-50%);
+  }
+
+  .event-guide__music-label--right {
+    display: none; /* Hide right label, keep only left */
   }
 
   .event-guide__music-text {
-    margin-top: calc(31vw + 60px);
+    margin-top: min(calc(21vw + 20px), 18vh);
   }
 
   .event-guide__avatar-content {
@@ -1220,21 +1242,21 @@
     height: 120px;
   }
 
-  /* Card positions responsive - mobile */
+  /* Card positions responsive - mobile (explicit top values for all cards) */
   .event-guide__card--1 { left: calc(50% - 230px); top: 8%; }
   .event-guide__card--2 { left: calc(50% - 120px); top: 3%; }
   .event-guide__card--3 { left: calc(50% - 20px); top: 8%; }
-  .event-guide__card--4 { left: calc(50% + 78px); }
-  .event-guide__card--5 { left: calc(50% + 175px); top:12%;}
+  .event-guide__card--4 { left: calc(50% + 78px); top: 4%; }
+  .event-guide__card--5 { left: calc(50% + 175px); top: 12%; }
   .event-guide__card--6 { left: calc(50% - 140px); top: 20%; }
-  .event-guide__card--7 { left: calc(50% + 80px); top: 20%; rotate: 13deg;}
-  .event-guide__card--8 { left: calc(50% + 170px); top: 68%; rotate:10deg;}
-  .event-guide__card--9 { left: calc(50% + 150px); }
+  .event-guide__card--7 { left: calc(50% + 80px); top: 20%; rotate: 13deg; }
+  .event-guide__card--8 { left: calc(50% + 170px); top: 68%; rotate: 10deg; }
+  .event-guide__card--9 { left: calc(50% + 150px); top: 38%; }
   .event-guide__card--10 { left: calc(50% - 250px); top: 45%; rotate: -20deg; }
-  .event-guide__card--11 { left: calc(50% - 234px); }
-  .event-guide__card--12 { left: calc(50% - 156px); }
-  .event-guide__card--13 { left: calc(50% + 59px); rotate: -15deg; }
-  .event-guide__card--14 { left: calc(50% - 39px); top:65%;}
+  .event-guide__card--11 { left: calc(50% - 234px); top: 65%; }
+  .event-guide__card--12 { left: calc(50% - 156px); top: 55%; }
+  .event-guide__card--13 { left: calc(50% + 59px); top: 75%; rotate: -15deg; }
+  .event-guide__card--14 { left: calc(50% - 39px); top: 65%; }
   .event-guide__card--15 { left: calc(50% + 98px); top: 55%; rotate: 20deg; }
   .event-guide__card--16 { left: calc(50% - 118px); top: 80%; rotate: -15deg; }
 
@@ -1264,8 +1286,13 @@
     gap: 1rem;
   }
 
+  .event-guide__staff {
+    --staff-gap: 60px;
+    /* height auto-calculated: 5×8px + 4×60px = 280px */
+  }
+
   .event-guide__staff-note {
-    top: 180px !important; /* Center of 360px height */
+    top: 50% !important; /* Center of dynamic height */
   }
 
   .event-guide__staff-heart {
@@ -1273,26 +1300,36 @@
   }
 
   .event-guide__lucky-section {
+    justify-content: space-between;
     padding: 0;
     position: relative;
   }
 
-  .event-guide__lucky-bottom {
+  .event-guide__lucky-stats {
     gap: 40px;
-    margin-top: 90px;
+    margin-bottom: 24px;
+  }
+
+  .event-guide__lucky-ring {
+    position: static;
     transform: none;
   }
 
-  .event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-bottom {
+  .event-guide__avatar-lucky-wrapper--dark .event-guide__lucky-stats {
     transform: none;
+    margin-top: 80px;
   }
 
   .event-guide__lucky-number {
     font-size: 2.5rem;
   }
 
+  /* Ring - zoom video 20% while container stays same size */
   .event-guide__lucky-ring-img {
-    width: calc(100vw - 48px); /* Full width with 24px padding each side */
+    width: calc(100vw - 48px);
+    height: auto;
+    transform: scale(1.2);
+    margin-bottom: -50%;
   }
 
   /* Hide br tags on mobile - let text wrap naturally */

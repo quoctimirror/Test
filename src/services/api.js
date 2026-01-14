@@ -1,14 +1,16 @@
 import axios from "axios";
 
 // Base URLs are driven by Vite environment variables to support local/dev/prod
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "https://xpxr4xbvim.ap-southeast-1.awsapprunner.com";
+// In development on localhost, use empty string to leverage Vite's proxy (avoids CORS)
+const isLocalDev = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+const API_BASE_URL = isLocalDev
+  ? '' // Use relative URLs through Vite proxy
+  : (import.meta.env.VITE_API_BASE_URL || "https://nsa4fef6um.ap-southeast-1.awsapprunner.com");
 
-const AUTH_BASE_URL =
-  import.meta.env.VITE_AUTH_BASE_URL ||
-  API_BASE_URL ||
-  "https://nwkg3ymv2p.ap-southeast-1.awsapprunner.com";
+// In monolith architecture, AUTH uses same base URL as API
+const AUTH_BASE_URL = isLocalDev
+  ? '' // Use relative URLs through Vite proxy
+  : (import.meta.env.VITE_API_BASE_URL || "https://nsa4fef6um.ap-southeast-1.awsapprunner.com");
 
 const REFRESH_TOKEN_ENDPOINT = `${AUTH_BASE_URL}/api/v1/auth/refresh-token`;
 
@@ -112,38 +114,39 @@ api.interceptors.response.use(
 );
 
 // ===== AUTHENTICATION API =====
+// Note: Auth endpoints use /api/v1/auth/* path (merged from user-service)
 export const authAPI = {
   // Login / Authenticate
   authenticate: (username, password) =>
-    api.post("/api/auth/authenticate", { username, password }),
+    api.post("/api/v1/auth/authenticate", { username, password }),
 
   // Register new user
-  register: (userData) => api.post("/api/auth/register", userData),
+  register: (userData) => api.post("/api/v1/auth/register", userData),
 
   // Verify email with token (GET with query param)
-  verifyEmail: (token) => api.get(`/api/auth/verify-email?token=${token}`),
+  verifyEmail: (token) => api.get(`/api/v1/auth/verify-email?token=${token}`),
 
   // Resend verification email
   resendVerificationEmail: (email) =>
-    api.post("/api/auth/resend-verification-email", { email }),
+    api.post("/api/v1/auth/resend-verification-email", { email }),
 
   // Refresh token
   refreshToken: (refreshToken) =>
-    api.post("/api/auth/refresh-token", { refreshToken }),
+    api.post("/api/v1/auth/refresh-token", { refreshToken }),
 
   // Forgot password - Step 1: Request OTP
-  forgotPassword: (email) => api.post("/api/auth/forgot-password", { email }),
+  forgotPassword: (email) => api.post("/api/v1/auth/forgot-password", { email }),
 
   // Verify OTP - Step 2: Verify OTP and get reset token
-  verifyOtp: (email, otp) => api.post("/api/auth/verify-otp", { email, otp }),
+  verifyOtp: (email, otp) => api.post("/api/v1/auth/verify-otp", { email, otp }),
 
   // Reset password - Step 3: Reset with token
   resetPassword: (resetToken, newPassword) =>
-    api.post("/api/auth/reset-password", { resetToken, newPassword }),
+    api.post("/api/v1/auth/reset-password", { resetToken, newPassword }),
 
   // Resend password reset OTP
   resendPasswordResetOtp: (email) =>
-    api.post("/api/auth/resend-password-reset-otp", { email }),
+    api.post("/api/v1/auth/resend-password-reset-otp", { email }),
 };
 
 // ===== LOCATIONS API =====
@@ -725,44 +728,45 @@ export const componentOptionalsAPI = {
 };
 
 // ===== USERS API =====
+// Note: User endpoints use /api/v1/users/* path (merged from user-service)
 export const usersAPI = {
   // Get all users
-  getAll: () => api.get("/api/users"),
+  getAll: () => api.get("/api/v1/users"),
 
   // Get user by ID
-  getById: (id) => api.get(`/api/users/${id}`),
+  getById: (id) => api.get(`/api/v1/users/${id}`),
 
   // Get user by username
-  getByUsername: (username) => api.get(`/api/users/username/${username}`),
+  getByUsername: (username) => api.get(`/api/v1/users/username/${username}`),
 
   // Get user by email
   getByEmail: (email) =>
-    api.get(`/api/users/email/${encodeURIComponent(email)}`),
+    api.get(`/api/v1/users/email/${encodeURIComponent(email)}`),
 
   // Get users by role
-  getByRole: (role) => api.get(`/api/users/role/${role}`),
+  getByRole: (role) => api.get(`/api/v1/users/role/${role}`),
 
   // Get users by status
-  getByStatus: (status) => api.get(`/api/users/status/${status}`),
+  getByStatus: (status) => api.get(`/api/v1/users/status/${status}`),
 
   // Search users
   search: (searchTerm) =>
-    api.get(`/api/users/search?q=${encodeURIComponent(searchTerm)}`),
+    api.get(`/api/v1/users/search?q=${encodeURIComponent(searchTerm)}`),
 
   // Get user statistics
-  getStatistics: () => api.get("/api/users/statistics"),
+  getStatistics: () => api.get("/api/v1/users/statistics"),
 
   // Health check
-  health: () => api.get("/api/users/health"),
+  health: () => api.get("/api/v1/users/health"),
 
   // CRUD operations
-  create: (userData) => api.post("/api/users", userData),
-  createByAdmin: (userData) => api.post("/api/users/admin/create", userData),
-  update: (id, userData) => api.put(`/api/users/${id}`, userData),
-  delete: (id) => api.delete(`/api/users/${id}`),
+  create: (userData) => api.post("/api/v1/users", userData),
+  createByAdmin: (userData) => api.post("/api/v1/users/admin/create", userData),
+  update: (id, userData) => api.put(`/api/v1/users/${id}`, userData),
+  delete: (id) => api.delete(`/api/v1/users/${id}`),
   updateStatus: (id, status) =>
-    api.patch(`/api/users/${id}/status`, { status }),
-  updateRole: (id, role) => api.patch(`/api/users/${id}/role`, { role }),
+    api.patch(`/api/v1/users/${id}/status`, { status }),
+  updateRole: (id, role) => api.patch(`/api/v1/users/${id}/role`, { role }),
 };
 
 // ===== RBAC MATRIX =====

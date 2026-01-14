@@ -109,11 +109,11 @@ const DIAMONDS = {
     'dmm/generatedImages/6_diamonds/pear/pear-2.webp',
     'dmm/generatedImages/6_diamonds/pear/pear-3.webp',
   ],
-  princess: [
+  cushion: [
     'dmm/generatedImages/6_diamonds/asscher/asscher-1.webp',
     'dmm/generatedImages/6_diamonds/asscher/asscher-2.webp',
     'dmm/generatedImages/6_diamonds/asscher/asscher-3.webp',
-  ], // princess = asscher
+  ], // cushion uses asscher images
 };
 
 // Helper to load image

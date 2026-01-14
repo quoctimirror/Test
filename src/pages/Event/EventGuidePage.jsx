@@ -17,8 +17,8 @@ import '@styles/grid-system.css';
 
 import './EventGuidePage.css';
 
-// Note position Y values (middle position = index 3, center of 328px)
-const NOTE_POSITION_Y = 164; // Middle line position
+// Note position Y values (center of middle line in 360px staff)
+const NOTE_POSITION_Y = 180; // Center of line 3 (middle line)
 
 // Target date: March 7, 2026
 const TARGET_DATE = new Date('2026-03-07T00:00:00');
@@ -32,6 +32,8 @@ const EventGuidePage = () => {
   const [countdown, setCountdown] = useState({ days: 0, hours: 0 });
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [luckyFadePhase, setLuckyFadePhase] = useState('light'); // light, dark
+  const [flippedCard, setFlippedCard] = useState(null); // Track which card is flipped (mobile/tablet auto-flip)
+  const [isTouchDevice, setIsTouchDevice] = useState(window.innerWidth <= 1024);
   const musicContentRef = useRef(null);
   const musicSectionRef = useRef(null);
   const rippleRef = useRef(null);
@@ -145,7 +147,8 @@ const EventGuidePage = () => {
       const isScrollingUp = scrollProgress < lastScrollProgress;
 
       // Auto-scroll DOWN to music (when in hero phase and scrolling down)
-      if (currentPhase === 'hero' && isScrollingDown && scrollProgress > 0.05 && scrollProgress < 0.95) {
+      // Remove upper bound (< 0.95) to prevent edge case where fast scroll skips auto-scroll
+      if (currentPhase === 'hero' && isScrollingDown && scrollProgress > 0.05) {
         isAutoScrolling = true;
         currentPhase = 'music';
 
@@ -161,7 +164,7 @@ const EventGuidePage = () => {
       }
 
       // Auto-scroll UP to hero (when in music phase and scrolling up)
-      if (currentPhase === 'music' && isScrollingUp && scrollProgress > 0.05 && scrollProgress < 0.95) {
+      if (currentPhase === 'music' && isScrollingUp && scrollProgress > 0.05) {
         isAutoScrolling = true;
         currentPhase = 'hero';
 
@@ -311,7 +314,10 @@ const EventGuidePage = () => {
 
     let overscrollUpCount = 0;
     let lastWheelTime = 0;
+    let touchStartY = 0;
+    let lastTouchTime = 0;
 
+    // Desktop: wheel event
     const handleWheelUp = (e) => {
       const isAtTop = window.scrollY <= 10;
       const isScrollingUp = e.deltaY < 0;
@@ -331,10 +337,45 @@ const EventGuidePage = () => {
       }
     };
 
+    // Mobile/Tablet: touch events
+    const handleTouchStart = (e) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e) => {
+      const isAtTop = window.scrollY <= 10;
+      const currentY = e.touches[0].clientY;
+      const isScrollingUp = currentY > touchStartY + 30; // 30px threshold for swipe down
+
+      if (isAtTop && isScrollingUp) {
+        const now = Date.now();
+        if (now - lastTouchTime >= 400) {
+          lastTouchTime = now;
+          overscrollUpCount++;
+
+          if (overscrollUpCount >= 3) {
+            handleBackToStep1();
+          }
+        }
+      } else if (!isAtTop) {
+        overscrollUpCount = 0;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      touchStartY = 0;
+    };
+
     window.addEventListener('wheel', handleWheelUp, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener('wheel', handleWheelUp);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [currentStep, isTransitioning]);
 
@@ -533,6 +574,47 @@ const EventGuidePage = () => {
     };
   }, [currentStep]);
 
+  // Track touch device (mobile/tablet) viewport
+  useEffect(() => {
+    const handleResize = () => {
+      setIsTouchDevice(window.innerWidth <= 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Auto-flip cards on mobile/tablet
+  useEffect(() => {
+    if (!isTouchDevice || currentStep !== 2) {
+      setFlippedCard(null);
+      return;
+    }
+
+    const TOTAL_CARDS = 16;
+    const FLIP_DURATION = 1500; // How long card stays flipped
+    const FLIP_INTERVAL = 2500; // Time between flips
+
+    const flipRandomCard = () => {
+      // Pick random card (1-16)
+      const randomCard = Math.floor(Math.random() * TOTAL_CARDS) + 1;
+      setFlippedCard(randomCard);
+
+      // Flip back after duration
+      setTimeout(() => {
+        setFlippedCard(null);
+      }, FLIP_DURATION);
+    };
+
+    // Start flipping
+    flipRandomCard();
+    const intervalId = setInterval(flipRandomCard, FLIP_INTERVAL);
+
+    return () => {
+      clearInterval(intervalId);
+      setFlippedCard(null);
+    };
+  }, [isTouchDevice, currentStep]);
+
   return (
     <>
       <NavbarV4 logoOnly showDmmLogo />
@@ -591,22 +673,12 @@ const EventGuidePage = () => {
               >
                 {/* Scattered Cards */}
                 <div className="event-guide__cards-scattered">
-                  <div className="event-guide__card event-guide__card--1" />
-                  <div className="event-guide__card event-guide__card--2" />
-                  <div className="event-guide__card event-guide__card--3" />
-                  <div className="event-guide__card event-guide__card--4" />
-                  <div className="event-guide__card event-guide__card--5" />
-                  <div className="event-guide__card event-guide__card--6" />
-                  <div className="event-guide__card event-guide__card--7" />
-                  <div className="event-guide__card event-guide__card--8" />
-                  <div className="event-guide__card event-guide__card--9" />
-                  <div className="event-guide__card event-guide__card--10" />
-                  <div className="event-guide__card event-guide__card--11" />
-                  <div className="event-guide__card event-guide__card--12" />
-                  <div className="event-guide__card event-guide__card--13" />
-                  <div className="event-guide__card event-guide__card--14" />
-                  <div className="event-guide__card event-guide__card--15" />
-                  <div className="event-guide__card event-guide__card--16" />
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((num) => (
+                    <div
+                      key={num}
+                      className={`event-guide__card event-guide__card--${num}${flippedCard === num ? ' event-guide__card--flipped' : ''}`}
+                    />
+                  ))}
                 </div>
 
                 {/* Center Content */}
@@ -638,29 +710,29 @@ Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình 
                   </ShineGlassButton>
                 </div>
 
-                {/* Bottom row: Stats + Diamond Ring (3 columns) */}
-                <div className="event-guide__lucky-bottom">
+                {/* Stats row */}
+                <div className="event-guide__lucky-stats">
                   <div className="event-guide__lucky-stat">
                     <span className="event-guide__lucky-number">{countdown.days}</span>
                     <span className="event-guide__lucky-label bodytext-6--no-margin">Ngày</span>
                   </div>
-
-                  <div className="event-guide__lucky-ring">
-                    <video
-                      src={getMediaUrl('mirror_DMM/nhan-lucky-draw.webm')}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="event-guide__lucky-ring-img"
-                      onLoadedMetadata={(e) => { e.target.playbackRate = 0.25; }}
-                    />
-                  </div>
-
                   <div className="event-guide__lucky-stat">
                     <span className="event-guide__lucky-number">{countdown.hours}</span>
                     <span className="event-guide__lucky-label bodytext-6--no-margin">Giờ</span>
                   </div>
+                </div>
+
+                {/* Diamond Ring - separate element for flexible positioning */}
+                <div className="event-guide__lucky-ring">
+                  <video
+                    src={getMediaUrl('mirror_DMM/nhan-lucky-draw.webm')}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="event-guide__lucky-ring-img"
+                    onLoadedMetadata={(e) => { e.target.playbackRate = 0.25; }}
+                  />
                 </div>
               </section>
             </div>
