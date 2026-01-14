@@ -3556,7 +3556,7 @@
   }
 
   .your-wallpaper__main {
-    top: 45%;
+    top: 50%;
   }
 
   .your-wallpaper__card-container {
@@ -3580,7 +3580,7 @@
 /* Responsive - Mobile Small */
 @media (max-width: 480px) {
   .your-wallpaper__main {
-    top: 42%;
+    top: 48%;
   }
 
   .your-wallpaper__card-container {
