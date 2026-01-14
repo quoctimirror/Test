@@ -258,6 +258,8 @@ const WriteMessageScreenNew = () => {
       for (let i = 0; i < displayNotes.length; i++) {
         await new Promise(resolve => setTimeout(resolve, noteDelay));
         setAnimatedNoteIndices(prev => [...prev, i]);
+        // Delay sound slightly so note is visible first
+        await new Promise(resolve => setTimeout(resolve, 150));
         playNoteByPosition(displayNotes[i].positionY);
       }
 
