@@ -37,12 +37,12 @@ export const DIAMOND_CONFIGS = [
     displayNameVi: "Kim cương trái tim",
   },
   {
-    shape: "cushion",
+    shape: "asscher",
     pitch: "G4",
     staffLine: 4,
     color: "#C2185B",
-    displayName: "Cushion",
-    displayNameVi: "Kim cương cushion",
+    displayName: "Asscher",
+    displayNameVi: "Kim cương asscher",
   },
   {
     shape: "emerald",
@@ -69,7 +69,7 @@ const SHAPE_ID_TO_NAME = {
   h2: 'oval',       // Oval shape
   h3: 'round',      // Round shape
   h4: 'pear',       // Pear shape
-  h5: 'cushion',    // Cushion shape
+  h5: 'asscher',    // Asscher shape
   h6: 'emerald',    // Emerald shape
   h7: 'marquise',   // Marquise shape
 };

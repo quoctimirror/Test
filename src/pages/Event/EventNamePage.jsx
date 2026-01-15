@@ -9,7 +9,6 @@ import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@components/common/button/GlassThemeButton';
 import useEventStore from '@/store/useEventStore';
-import EventSoundButton from '@/components/event/ui/EventSoundButton';
 import { updateUserDisplayName } from '@services/event/eventApi';
 
 import './EventNamePage.css';
@@ -191,8 +190,6 @@ const EventNamePage = () => {
           </svg>
         } />
       </div>
-
-      <EventSoundButton />
     </div>
     </>
   );

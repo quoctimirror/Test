@@ -2,17 +2,31 @@
  * EventChooseShapePage - Choose diamond shape for Mirror Diamond Event
  * Click on shapes on the orbit to select them
  */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@components/common/button/GlassThemeButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import useEventStore from '@/store/useEventStore';
-import EventSoundButton from '@/components/event/ui/EventSoundButton';
 import { placeNote } from '@services/event/eventApi';
 
 import './EventChooseShapePage.css';
+
+// Frame animation config for Safari (WebM alpha not supported)
+const SHAPE_FRAME_COUNT = 163;
+const SHAPE_FPS = 30;
+
+// Frame folder mapping for each shape
+const shapeFrameFolders = {
+  h1: 'heart-frames',
+  h2: 'oval-frames',
+  h3: 'round-frames',
+  h4: 'pear-frames',
+  h5: 'asscher-frames',
+  h6: 'emerald-frames',
+  h7: 'marquise-frames',
+};
 
 // Mapping from position Y to pitch name
 const POSITION_TO_PITCH = {
@@ -52,7 +66,7 @@ const getVideoUrl = (shape) => getMediaUrl(shapeVideos[shape.id]);
 // HEART-02 = Oval shape
 // HEART-03 = Round shape
 // HEART-04 = Pear shape
-// HEART-05 = Cushion shape
+// HEART-05 = Asscher shape
 // HEART-06 = Emerald shape
 // HEART-07 = Marquise shape
 const shapes = [
@@ -82,15 +96,15 @@ const shapes = [
   },
   {
     id: 'h5',
-    name: 'Cushion shape',
-    image: 'mirror_DMM/HEART-05.webp', // Cushion shape
-    scale: 1.2,
+    name: 'Asscher shape',
+    image: 'mirror_DMM/HEART-05.webp', // Asscher shape
+    scale: 1.3,
   },
   {
     id: 'h6',
     name: 'Emerald shape',
     image: 'mirror_DMM/HEART-06.webp', // Emerald shape
-    scale: 1,
+    scale: 1.1,
   },
   {
     id: 'h7',
@@ -138,6 +152,9 @@ const EventChooseShapePage = () => {
     setInitialNotePosition,
   } = useEventStore();
 
+  // Check if user has already selected a shape (locked mode)
+  const isLocked = !!selectedDiamond;
+
   // Find initial index based on previously selected diamond (or default to 0)
   const getInitialIndex = () => {
     if (!selectedDiamond) return 0;
@@ -150,12 +167,96 @@ const EventChooseShapePage = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [lockedMessage, setLockedMessage] = useState(''); // Message when trying to change locked selection
   // Initialize rotation offset to show selected shape at center
   const [rotationOffset, setRotationOffset] = useState(() => orbitAngles[getInitialIndex()]);
   const [isEntering, setIsEntering] = useState(true); // For entrance animation
   const [showIdleRipple, setShowIdleRipple] = useState(false); // For idle ripple effect
   const animationRef = useRef(null);
   const idleTimerRef = useRef(null);
+
+  // Safari detection and frame animation for diamond shapes
+  const [isSafari, setIsSafari] = useState(false);
+  const [shapeFrames, setShapeFrames] = useState({}); // { h1: [...frames], h2: [...frames], ... }
+  const [currentShapeFrame, setCurrentShapeFrame] = useState(0);
+  const [loadedShapes, setLoadedShapes] = useState({}); // { h1: true, h2: false, ... }
+  const shapeAnimationRef = useRef(null);
+  const lastShapeFrameTimeRef = useRef(0);
+
+  // Detect Safari on mount
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    const safari = /^((?!chrome|android).)*safari/i.test(ua);
+    setIsSafari(safari);
+  }, []);
+
+  // Preload frames for current shape (Safari only)
+  useEffect(() => {
+    if (!isSafari) return;
+
+    const currentShapeId = shapes[currentIndex].id;
+
+    // Skip if already loaded
+    if (loadedShapes[currentShapeId]) return;
+
+    const loadFrames = async () => {
+      const frameFolder = shapeFrameFolders[currentShapeId];
+      if (!frameFolder) return;
+
+      const loadedFrames = [];
+      for (let i = 1; i <= SHAPE_FRAME_COUNT; i++) {
+        const frameNum = String(i).padStart(3, '0');
+        const src = `/dmm-event/${frameFolder}/frame_${frameNum}.webp`;
+
+        await new Promise((resolve) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = resolve; // Continue even if one frame fails
+          img.src = src;
+        });
+        loadedFrames.push(src);
+      }
+
+      setShapeFrames(prev => ({
+        ...prev,
+        [currentShapeId]: loadedFrames,
+      }));
+      setLoadedShapes(prev => ({
+        ...prev,
+        [currentShapeId]: true,
+      }));
+    };
+
+    loadFrames();
+  }, [isSafari, currentIndex, loadedShapes]);
+
+  // Animation loop for shape frames (Safari only)
+  const animateShapeFrames = useCallback((timestamp) => {
+    const frameInterval = 1000 / SHAPE_FPS;
+    if (timestamp - lastShapeFrameTimeRef.current >= frameInterval) {
+      setCurrentShapeFrame((prev) => (prev + 1) % SHAPE_FRAME_COUNT);
+      lastShapeFrameTimeRef.current = timestamp;
+    }
+    shapeAnimationRef.current = requestAnimationFrame(animateShapeFrames);
+  }, []);
+
+  // Start/stop shape animation based on Safari and loaded state
+  useEffect(() => {
+    const currentShapeId = shapes[currentIndex].id;
+    if (!isSafari || !loadedShapes[currentShapeId]) return;
+
+    // Reset frame to 0 when switching shapes
+    setCurrentShapeFrame(0);
+    lastShapeFrameTimeRef.current = 0;
+
+    shapeAnimationRef.current = requestAnimationFrame(animateShapeFrames);
+
+    return () => {
+      if (shapeAnimationRef.current) {
+        cancelAnimationFrame(shapeAnimationRef.current);
+      }
+    };
+  }, [isSafari, currentIndex, loadedShapes, animateShapeFrames]);
 
   // Don't remove entrance class - just let animation complete naturally
   // The class stays but animation only runs once
@@ -246,6 +347,14 @@ const EventChooseShapePage = () => {
   const handleShapeClick = (index) => {
     if (index === currentIndex || isAnimating) return;
 
+    // If locked and trying to select different shape, show message
+    if (isLocked) {
+      setLockedMessage('Bạn đã chọn Nốt sáng.');
+      // Auto hide message after 2 seconds
+      setTimeout(() => setLockedMessage(''), 2000);
+      return;
+    }
+
     setPrevIndex(currentIndex);
     setIsAnimating(true);
     setCurrentIndex(index);
@@ -262,6 +371,12 @@ const EventChooseShapePage = () => {
   };
 
   const handleNext = async () => {
+    // If already locked (shape selected), just navigate to next step
+    if (isLocked) {
+      navigate(ROUTES.EVENT_PLACE_NOTE);
+      return;
+    }
+
     if (saving) return;
 
     setSaving(true);
@@ -340,27 +455,43 @@ const EventChooseShapePage = () => {
               {/* Old shape - animating out */}
               {isAnimating && prevIndex !== null && (
                 <div className="event-choose-shape__diamond event-choose-shape__diamond--exit">
-                  <video
-                    src={getVideoUrl(shapes[prevIndex])}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="event-choose-shape__diamond-img"
-                  />
+                  {isSafari ? (
+                    <img
+                      src={shapeFrames[shapes[prevIndex].id]?.[currentShapeFrame] || `/dmm-event/${shapeFrameFolders[shapes[prevIndex].id]}/frame_001.webp`}
+                      alt={shapes[prevIndex].name}
+                      className="event-choose-shape__diamond-img"
+                    />
+                  ) : (
+                    <video
+                      src={getVideoUrl(shapes[prevIndex])}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="event-choose-shape__diamond-img"
+                    />
+                  )}
                 </div>
               )}
               {/* Current shape - animating in or static */}
               <div className={`event-choose-shape__diamond ${isAnimating ? 'event-choose-shape__diamond--enter' : ''}`}>
                 <div style={{ transform: `scale(${currentShape.scale || 1})`, transition: 'transform 0.6s ease' }}>
-                  <video
-                    src={getVideoUrl(currentShape)}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="event-choose-shape__diamond-img"
-                  />
+                  {isSafari ? (
+                    <img
+                      src={shapeFrames[currentShape.id]?.[currentShapeFrame] || `/dmm-event/${shapeFrameFolders[currentShape.id]}/frame_001.webp`}
+                      alt={currentShape.name}
+                      className="event-choose-shape__diamond-img"
+                    />
+                  ) : (
+                    <video
+                      src={getVideoUrl(currentShape)}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="event-choose-shape__diamond-img"
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -476,6 +607,13 @@ const EventChooseShapePage = () => {
           </div>
         </div>
 
+        {/* Locked Message Toast */}
+        {lockedMessage && (
+          <div className="event-choose-shape__toast bodytext-4--no-margin">
+            {lockedMessage}
+          </div>
+        )}
+
         {/* Bottom Section */}
         <div className="event-choose-shape__bottom">
           {/* Place your note - Left (Desktop only) */}
@@ -492,14 +630,14 @@ const EventChooseShapePage = () => {
           {/* Choose the shape - Desktop */}
           <div className="event-choose-shape__select-btn--desktop">
             <GlassThemeButton theme="spec_dark" onClick={handleNext} disabled={saving}>
-              {saving ? 'Đang lưu...' : 'Chọn Nốt sáng'}
+              {saving ? 'Đang lưu...' : isLocked ? 'Tiếp tục' : 'Chọn Nốt sáng'}
             </GlassThemeButton>
           </div>
 
           {/* Confirm button - Mobile/Tablet */}
           <div className="event-choose-shape__confirm-btn--mobile">
             <GlassThemeButton theme="spec_dark" onClick={handleNext} disabled={saving}>
-              {saving ? 'Đang lưu...' : 'Chọn Nốt sáng'}
+              {saving ? 'Đang lưu...' : isLocked ? 'Tiếp tục' : 'Chọn Nốt sáng'}
             </GlassThemeButton>
           </div>
 
@@ -515,8 +653,6 @@ const EventChooseShapePage = () => {
             </svg>
           } />
         </div>
-
-        <EventSoundButton />
       </div>
     </>
   );

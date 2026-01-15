@@ -15,19 +15,19 @@ import AvatarGenerator from '@/components/event/ui/AvatarGenerator';
 
 // Diamond shape Cloudflare paths array - using optimized webp
 // HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
-// HEART-05 = Cushion, HEART-06 = Emerald, HEART-07 = Marquise
+// HEART-05 = Asscher, HEART-06 = Emerald, HEART-07 = Marquise
 const DIAMOND_SHAPES = [
   'mirror_DMM/HEART-01.webp',  // Heart shape
   'mirror_DMM/HEART-02.webp',  // Oval shape
   'mirror_DMM/HEART-03.webp',  // Round shape
   'mirror_DMM/HEART-04.webp',  // Pear shape
-  'mirror_DMM/HEART-05.webp',  // Cushion shape
+  'mirror_DMM/HEART-05.webp',  // Asscher shape
   'mirror_DMM/HEART-06.webp',  // Emerald shape
   'mirror_DMM/HEART-07.webp',  // Marquise shape
 ];
 
 // Mapping from shape ID to AvatarGenerator diamondShape name
-// Must match EventChooseShapePage: h1=Heart, h2=Oval, h3=Round, h4=Pear, h5=Cushion, h6=Emerald, h7=Marquise
+// Must match EventChooseShapePage: h1=Heart, h2=Oval, h3=Round, h4=Pear, h5=Asscher, h6=Emerald, h7=Marquise
 // OLD (incorrect):
 // h1: 'heart',
 // h2: 'round',
@@ -41,7 +41,7 @@ const SHAPE_NAME_MAP = {
   h2: 'oval',
   h3: 'round',
   h4: 'pear',
-  h5: 'cushion',
+  h5: 'asscher',
   h6: 'emerald',
   h7: 'marquise',
 };
@@ -49,71 +49,71 @@ const SHAPE_NAME_MAP = {
 // Staff configuration - 9 Y positions (5 lines + 4 zones)
 // Desktop: Line height 8px, gap 80px, total height 360px
 const NOTE_POSITIONS_Y_DESKTOP = [
-  6,    // Line 0 (top)
-  50,   // Zone 0
-  94,   // Line 1
-  138,  // Zone 1
-  182,  // Line 2 (middle)
-  226,  // Zone 2
-  270,  // Line 3
-  314,  // Zone 3
-  358,  // Line 4 (bottom)
+  7,    // Line 0 (top)
+  51,   // Zone 0
+  95,   // Line 1
+  139,  // Zone 1
+  183,  // Line 2 (middle)
+  227,  // Zone 2
+  271,  // Line 3
+  315,  // Zone 3
+  359,  // Line 4 (bottom)
 ];
 
 // Tablet: Staff positions in vh (based on 1194px design)
 // Staff 1: top = 350/1194, height = 200/1194
 // Staff 2: top = 650/1194, height = 200/1194
-// Added +3px offset to shift notes down slightly
+// Added +4px offset to shift notes down slightly
 const NOTE_POSITIONS_Y_TABLET_STAFF1 = [
-  (350 + 4 + 3) / 1194 * 100,    // Line 0 (top) - positionY 0
-  (350 + 28 + 3) / 1194 * 100,   // Zone 0 - positionY 1
-  (350 + 52 + 3) / 1194 * 100,   // Line 1 - positionY 2
-  (350 + 76 + 3) / 1194 * 100,   // Zone 1 - positionY 3
-  (350 + 100 + 3) / 1194 * 100,  // Line 2 (middle) - positionY 4
-  (350 + 124 + 3) / 1194 * 100,  // Zone 2 - positionY 5
-  (350 + 148 + 3) / 1194 * 100,  // Line 3 - positionY 6
-  (350 + 172 + 3) / 1194 * 100,  // Zone 3 - positionY 7
-  (350 + 196 + 3) / 1194 * 100,  // Line 4 (bottom) - positionY 8
+  (350 + 4 + 4) / 1194 * 100,    // Line 0 (top) - positionY 0
+  (350 + 28 + 4) / 1194 * 100,   // Zone 0 - positionY 1
+  (350 + 52 + 4) / 1194 * 100,   // Line 1 - positionY 2
+  (350 + 76 + 4) / 1194 * 100,   // Zone 1 - positionY 3
+  (350 + 100 + 4) / 1194 * 100,  // Line 2 (middle) - positionY 4
+  (350 + 124 + 4) / 1194 * 100,  // Zone 2 - positionY 5
+  (350 + 148 + 4) / 1194 * 100,  // Line 3 - positionY 6
+  (350 + 172 + 4) / 1194 * 100,  // Zone 3 - positionY 7
+  (350 + 196 + 4) / 1194 * 100,  // Line 4 (bottom) - positionY 8
 ];
 
 const NOTE_POSITIONS_Y_TABLET_STAFF2 = [
-  (650 + 4 + 3) / 1194 * 100,    // Line 0 (top) - positionY 0
-  (650 + 28 + 3) / 1194 * 100,   // Zone 0 - positionY 1
-  (650 + 52 + 3) / 1194 * 100,   // Line 1 - positionY 2
-  (650 + 76 + 3) / 1194 * 100,   // Zone 1 - positionY 3
-  (650 + 100 + 3) / 1194 * 100,  // Line 2 (middle) - positionY 4
-  (650 + 124 + 3) / 1194 * 100,  // Zone 2 - positionY 5
-  (650 + 148 + 3) / 1194 * 100,  // Line 3 - positionY 6
-  (650 + 172 + 3) / 1194 * 100,  // Zone 3 - positionY 7
-  (650 + 196 + 3) / 1194 * 100,  // Line 4 (bottom) - positionY 8
+  (650 + 4 + 4) / 1194 * 100,    // Line 0 (top) - positionY 0
+  (650 + 28 + 4) / 1194 * 100,   // Zone 0 - positionY 1
+  (650 + 52 + 4) / 1194 * 100,   // Line 1 - positionY 2
+  (650 + 76 + 4) / 1194 * 100,   // Zone 1 - positionY 3
+  (650 + 100 + 4) / 1194 * 100,  // Line 2 (middle) - positionY 4
+  (650 + 124 + 4) / 1194 * 100,  // Zone 2 - positionY 5
+  (650 + 148 + 4) / 1194 * 100,  // Line 3 - positionY 6
+  (650 + 172 + 4) / 1194 * 100,  // Zone 3 - positionY 7
+  (650 + 196 + 4) / 1194 * 100,  // Line 4 (bottom) - positionY 8
 ];
 
 // Mobile: Staff positions in vh (based on 844px design)
 // Staff 1: top = 166/844, height = 200/844
 // Staff 2: top = 466/844, height = 200/844
-// Added +5px offset to shift notes down slightly
+// Added +4px offset to shift notes down slightly
 const NOTE_POSITIONS_Y_MOBILE_STAFF1 = [
-  (166 + 4 + 5) / 844 * 100,    // Line 0 (top) - positionY 0
-  (166 + 28 + 5) / 844 * 100,   // Zone 0 - positionY 1
-  (166 + 52 + 5) / 844 * 100,   // Line 1 - positionY 2
-  (166 + 76 + 5) / 844 * 100,   // Zone 1 - positionY 3
-  (166 + 100 + 5) / 844 * 100,  // Line 2 (middle) - positionY 4
-  (166 + 124 + 5) / 844 * 100,  // Zone 2 - positionY 5
-  (166 + 148 + 5) / 844 * 100,  // Line 3 - positionY 6
-  (166 + 172 + 5) / 844 * 100,  // Zone 3 - positionY 7
-  (166 + 196 + 5) / 844 * 100,  // Line 4 (bottom) - positionY 8
+  (166 + 4 + 4) / 844 * 100,    // Line 0 (top) - positionY 0
+  (166 + 28 + 4) / 844 * 100,   // Zone 0 - positionY 1
+  (166 + 52 + 4) / 844 * 100,   // Line 1 - positionY 2
+  (166 + 76 + 4) / 844 * 100,   // Zone 1 - positionY 3
+  (166 + 100 + 4) / 844 * 100,  // Line 2 (middle) - positionY 4
+  (166 + 124 + 4) / 844 * 100,  // Zone 2 - positionY 5
+  (166 + 148 + 4) / 844 * 100,  // Line 3 - positionY 6
+  (166 + 172 + 4) / 844 * 100,  // Zone 3 - positionY 7
+  (166 + 196 + 4) / 844 * 100,  // Line 4 (bottom) - positionY 8
 ];
 
 const NOTE_POSITIONS_Y_MOBILE_STAFF2 = [
-  (466 + 4 + 5) / 844 * 100,    // Line 0 (top) - positionY 0
-  (466 + 28 + 5) / 844 * 100,   // Zone 0 - positionY 1
-  (466 + 52 + 5) / 844 * 100,   // Line 1 - positionY 2
-  (466 + 76 + 5) / 844 * 100,   // Zone 1 - positionY 3
-  (466 + 100 + 5) / 844 * 100,  // Line 2 (middle) - positionY 4
-  (466 + 124 + 5) / 844 * 100,  // Zone 2 - positionY 5
-  (466 + 148 + 5) / 844 * 100,  // Line 3 - positionY 6
-  (466 + 172 + 5) / 844 * 100,  // Zone 3 - positionY 7
-  (466 + 196 + 5) / 844 * 100,  // Line 4 (bottom) - positionY 8
+  (466 + 4 + 4) / 844 * 100,    // Line 0 (top) - positionY 0
+  (466 + 28 + 4) / 844 * 100,   // Zone 0 - positionY 1
+  (466 + 52 + 4) / 844 * 100,   // Line 1 - positionY 2
+  (466 + 76 + 4) / 844 * 100,   // Zone 1 - positionY 3
+  (466 + 100 + 4) / 844 * 100,  // Line 2 (middle) - positionY 4
+  (466 + 124 + 4) / 844 * 100,  // Zone 2 - positionY 5
+  (466 + 148 + 4) / 844 * 100,  // Line 3 - positionY 6
+  (466 + 172 + 4) / 844 * 100,  // Zone 3 - positionY 7
+  (466 + 196 + 4) / 844 * 100,  // Line 4 (bottom) - positionY 8
 ];
 
 // Generate 7 random notes that form a happy melody
@@ -361,6 +361,7 @@ const WriteMessageScreenNew = () => {
   const handlePlayMelody = useCallback(async () => {
     if (isPlaying) return;
 
+    // Initialize audio and wait for Safari to be ready
     await initAudio();
     setIsPlaying(true);
 
@@ -444,6 +445,7 @@ const WriteMessageScreenNew = () => {
 
   // Play only user's note
   const handlePlayUserNote = useCallback(async () => {
+    // Initialize audio and wait for Safari to be ready
     await initAudio();
 
     // Add playing class directly to DOM
@@ -472,17 +474,26 @@ const WriteMessageScreenNew = () => {
 
   // Get user's diamond shape
   // HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
-  // HEART-05 = Cushion, HEART-06 = Emerald, HEART-07 = Marquise
+  // HEART-05 = Asscher, HEART-06 = Emerald, HEART-07 = Marquise
   const getUserDiamondShape = () => {
     if (selectedDiamond) {
       const shapeMap = {
-        h1: 'mirror_DMM/HEART-01.webp', // Heart shape
-        h2: 'mirror_DMM/HEART-02.webp', // Oval shape
-        h3: 'mirror_DMM/HEART-03.webp', // Round shape
-        h4: 'mirror_DMM/HEART-04.webp', // Pear shape
-        h5: 'mirror_DMM/HEART-05.webp', // Cushion shape
-        h6: 'mirror_DMM/HEART-06.webp', // Emerald shape
-        h7: 'mirror_DMM/HEART-07.webp', // Marquise shape
+        // Shape IDs (from EventChooseShapePage)
+        h1: 'mirror_DMM/HEART-01.webp',  // Heart
+        h2: 'mirror_DMM/HEART-02.webp',  // Oval
+        h3: 'mirror_DMM/HEART-03.webp',  // Round
+        h4: 'mirror_DMM/HEART-04.webp',  // Pear
+        h5: 'mirror_DMM/HEART-05.webp',  // Asscher
+        h6: 'mirror_DMM/HEART-06.webp',  // Emerald
+        h7: 'mirror_DMM/HEART-07.webp',  // Marquise
+        // Legacy shape names (from old /event flow)
+        heart: 'mirror_DMM/HEART-01.webp',
+        oval: 'mirror_DMM/HEART-02.webp',
+        round: 'mirror_DMM/HEART-03.webp',
+        pear: 'mirror_DMM/HEART-04.webp',
+        asscher: 'mirror_DMM/HEART-05.webp',
+        emerald: 'mirror_DMM/HEART-06.webp',
+        marquise: 'mirror_DMM/HEART-07.webp',
       };
       return shapeMap[selectedDiamond] || 'mirror_DMM/HEART-01.webp';
     }

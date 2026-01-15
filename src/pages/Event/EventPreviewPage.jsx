@@ -78,7 +78,7 @@ const EventPreviewPage = () => {
       <div className="event-preview__bottom">
         <div className="event-preview__info">
           <h3 className="heading-3--no-margin event-preview__info-title">
-            Choose the note shape
+            Chọn nốt sáng
           </h3>
           <p className="event-preview__info-text">
             cinq elit, sed diam nonummy nibut laoreet dolore
