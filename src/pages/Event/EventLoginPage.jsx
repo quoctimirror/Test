@@ -12,7 +12,6 @@ import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import { signInWithGoogle, signInWithFacebook, getCurrentUser, onAuthStateChange } from '@services/event/authService';
 import { registerGoogleUser, checkExistingGoogleUser } from '@services/event/eventApi';
 import useEventStore from '@/store/useEventStore';
-import EventSoundButton from '@/components/event/ui/EventSoundButton';
 
 import './EventLoginPage.css';
 
@@ -427,8 +426,6 @@ const EventLoginPage = () => {
           </div>
         </motion.div>
       </div>
-
-      <EventSoundButton />
     </div>
   );
 };

@@ -14,14 +14,14 @@ import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 
 // Mapping from shape ID (h1, h2...) to diamondShape name for AvatarGenerator
 // Must match keys in AvatarGenerator's DIAMONDS object:
-// heart, round, emerald, marquise, oval, pear, cushion
+// heart, round, emerald, marquise, oval, pear, asscher
 const SHAPE_NAME_MAP = {
   // Shape IDs
   h1: 'heart',
   h2: 'oval',
   h3: 'round',
   h4: 'pear',
-  h5: 'cushion',
+  h5: 'asscher',
   h6: 'emerald',
   h7: 'marquise',
   // Legacy names (passthrough)
@@ -29,7 +29,7 @@ const SHAPE_NAME_MAP = {
   oval: 'oval',
   round: 'round',
   pear: 'pear',
-  cushion: 'cushion',
+  asscher: 'asscher',
   emerald: 'emerald',
   marquise: 'marquise',
 };

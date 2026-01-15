@@ -45,7 +45,7 @@
   color: #000;
   text-align: center;
   z-index: 10;
-  margin-top: 120px;
+  margin-top: 160px;
 }
 
 /* Main Content Area */
@@ -441,11 +441,12 @@
   } */
 
   .event-choose-shape__title {
-    margin-bottom: 24px;
+    margin-bottom: 0px;
+    margin-top: 160px;
   }
 
   .event-choose-shape__center {
-    width: 80vw; /* Larger on small mobile */
+    width: 120vw; /* Larger on small mobile */
   }
 
   .event-choose-shape__orbits-container {
@@ -456,5 +457,48 @@
 
   .event-choose-shape__orbit-shape-img {
     max-height: 46px;
+  }
+}
+
+/* Toast notification for locked state */
+.event-choose-shape__toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(11, 11, 11, 0.9);
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 12px;
+  text-align: center;
+  z-index: 9999;
+  animation: toastFadeInOut 2s ease-in-out;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes toastFadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  85% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+/* Toast responsive - Mobile */
+@media (max-width: 480px) {
+  .event-choose-shape__toast {
+    white-space: nowrap;
   }
 }

@@ -16,14 +16,14 @@ import AvatarGenerator from '@/components/event/ui/AvatarGenerator';
 
 // Mapping from shape ID to Cloudflare image path - using optimized webp
 // HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
-// HEART-05 = Cushion, HEART-06 = Emerald, HEART-07 = Marquise
+// HEART-05 = Asscher, HEART-06 = Emerald, HEART-07 = Marquise
 const DIAMOND_MAP = {
   // Shape IDs (from EventChooseShapePage)
   h1: 'mirror_DMM/HEART-01.webp',  // Heart shape
   h2: 'mirror_DMM/HEART-02.webp',  // Oval shape
   h3: 'mirror_DMM/HEART-03.webp',  // Round shape
   h4: 'mirror_DMM/HEART-04.webp',  // Pear shape
-  h5: 'mirror_DMM/HEART-05.webp',  // Cushion shape
+  h5: 'mirror_DMM/HEART-05.webp',  // Asscher shape
   h6: 'mirror_DMM/HEART-06.webp',  // Emerald shape
   h7: 'mirror_DMM/HEART-07.webp',  // Marquise shape
   // Legacy shape names (from old /event flow)
@@ -31,13 +31,13 @@ const DIAMOND_MAP = {
   oval: 'mirror_DMM/HEART-02.webp',
   round: 'mirror_DMM/HEART-03.webp',
   pear: 'mirror_DMM/HEART-04.webp',
-  cushion: 'mirror_DMM/HEART-05.webp',
+  asscher: 'mirror_DMM/HEART-05.webp',
   emerald: 'mirror_DMM/HEART-06.webp',
   marquise: 'mirror_DMM/HEART-07.webp',
 };
 
 // Mapping from shape ID to AvatarGenerator diamondShape name
-// Must match EventChooseShapePage: h1=Heart, h2=Oval, h3=Round, h4=Pear, h5=Cushion, h6=Emerald, h7=Marquise
+// Must match EventChooseShapePage: h1=Heart, h2=Oval, h3=Round, h4=Pear, h5=Asscher, h6=Emerald, h7=Marquise
 // OLD (incorrect):
 // h1: 'heart',
 // h2: 'round',
@@ -51,7 +51,7 @@ const SHAPE_NAME_MAP = {
   h2: 'oval',
   h3: 'round',
   h4: 'pear',
-  h5: 'cushion',
+  h5: 'asscher',
   h6: 'emerald',
   h7: 'marquise',
 };

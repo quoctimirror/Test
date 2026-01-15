@@ -112,10 +112,34 @@
   align-items: center;
   gap: 12px;
   animation: heroEntranceBottom 0.6s ease-out 0.7s both;
+  pointer-events: none; /* Disable click */
+}
+
+.event-guide__hero-bottom .glass-theme-button {
+  pointer-events: none;
+  cursor: default;
+  animation: heroBottomBounce 2.5s ease-in-out infinite 3s; /* Start bouncing after 3s */
+}
+
+.event-guide__hero-bottom .glass-theme-button:hover {
+  transform: none; /* Disable hover effect */
 }
 
 .event-guide__hero-bottom .glass-theme-btn-icon svg {
   color: #000;
+}
+
+/* Bounce animation for hero bottom button */
+@keyframes heroBottomBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
 }
 
 /* Hero entrance animations */
@@ -357,7 +381,7 @@
   top: 50%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: min(calc(15vw + 40px), 20vh);
+  margin-top: min(calc(15vw + 60px), 20vh);
   color: #fff;
   text-align: center;
 }
@@ -962,6 +986,7 @@
 /* Lucky Moment Section */
 .event-guide__lucky-section {
   height: 100vh;
+  min-height: 900px;
   background: transparent;
   display: flex;
   flex-direction: column;
@@ -1025,10 +1050,7 @@
   margin-bottom: 36px;
 }
 
-/* Button in lucky section - 72px gap from ring */
-.event-guide__lucky-btn {
-  margin-bottom: 24px;
-}
+
 
 /* Stats row - positioned absolute on sides of ring (desktop) */
 .event-guide__lucky-stats {
@@ -1065,7 +1087,7 @@
 
 /* Diamond Ring - at bottom */
 .event-guide__lucky-ring {
-  margin-top: auto;
+  margin-top: -60px;
   display: flex;
   justify-content: center;
   overflow: hidden;
@@ -1149,6 +1171,7 @@
 
   /* Lucky section - use space-between to distribute content */
   .event-guide__lucky-section {
+    min-height: 800px;
     justify-content: space-between;
     padding: 0;
     position: relative;
@@ -1212,7 +1235,7 @@
 
   /* Stack labels above title on mobile */
   .event-guide__music-label {
-    top: 30%;
+    top: 27%;
     left: 50%;
     right: auto;
     transform: translateX(-50%);
@@ -1229,7 +1252,7 @@
   }
 
   .event-guide__music-text {
-    margin-top: min(calc(21vw + 20px), 18vh);
+    margin-top: min(calc(21vw + 40px), 18vh);
   }
 
   .event-guide__avatar-content {
@@ -1300,6 +1323,7 @@
   }
 
   .event-guide__lucky-section {
+    min-height: 700px;
     justify-content: space-between;
     padding: 0;
     position: relative;
@@ -1342,11 +1366,10 @@
 
 /* ============================================
    Fixed Scroll Top Container
-   Positioned above Sound Button
    ============================================ */
 .fixed-scroll-top-container {
   position: fixed;
-  bottom: 78px; /* 24px (sound btn bottom) + 48px (sound btn height) + 6px (gap) */
+  bottom: 24px;
   right: 2.5%;
   z-index: 1000;
   pointer-events: auto;
@@ -1430,7 +1453,7 @@
 
 @media (max-width: 1024px) {
   .fixed-scroll-top-container {
-    bottom: 76px; /* 24px + 46px + 6px */
+    bottom: 24px;
   }
 }
 

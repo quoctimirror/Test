@@ -2,7 +2,7 @@
  * EventGuidePage - Landing page for Mirror Diamond Symphony Event
  * Design based on provided mockup
  */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
@@ -19,6 +19,10 @@ import './EventGuidePage.css';
 
 // Note position Y values (center of middle line in 360px staff)
 const NOTE_POSITION_Y = 180; // Center of line 3 (middle line)
+
+// Frame animation config for Safari (WebM alpha not supported)
+const RING_FRAME_COUNT = 90;
+const RING_FPS = 30;
 
 // Target date: March 7, 2026
 const TARGET_DATE = new Date('2026-03-07T00:00:00');
@@ -44,6 +48,14 @@ const EventGuidePage = () => {
   const luckySectionRef = useRef(null);
   const transitionTimeoutRef = useRef(null);
 
+  // Safari detection and frame animation for lucky ring
+  const [isSafari, setIsSafari] = useState(false);
+  const [ringFrames, setRingFrames] = useState([]);
+  const [currentRingFrame, setCurrentRingFrame] = useState(0);
+  const [isRingLoaded, setIsRingLoaded] = useState(false);
+  const ringAnimationRef = useRef(null);
+  const lastRingFrameTimeRef = useRef(0);
+
   // Cleanup scroll lock on unmount (prevent stuck scroll lock)
   useEffect(() => {
     return () => {
@@ -57,8 +69,66 @@ const EventGuidePage = () => {
       document.body.style.top = '';
       document.body.style.width = '';
       document.body.style.touchAction = '';
+      // Cleanup ring animation
+      if (ringAnimationRef.current) {
+        cancelAnimationFrame(ringAnimationRef.current);
+      }
     };
   }, []);
+
+  // Detect Safari on mount
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    const safari = /^((?!chrome|android).)*safari/i.test(ua);
+    setIsSafari(safari);
+  }, []);
+
+  // Preload frames for Safari
+  useEffect(() => {
+    if (!isSafari) return;
+
+    const loadFrames = async () => {
+      const loadedFrames = [];
+      for (let i = 1; i <= RING_FRAME_COUNT; i++) {
+        const frameNum = String(i).padStart(3, '0');
+        const src = `/dmm-event/ring-webp-frames/frame_${frameNum}.webp`;
+
+        await new Promise((resolve) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = src;
+        });
+        loadedFrames.push(src);
+      }
+      setRingFrames(loadedFrames);
+      setIsRingLoaded(true);
+    };
+
+    loadFrames();
+  }, [isSafari]);
+
+  // Animate frames for Safari
+  const animateRing = useCallback((timestamp) => {
+    const frameInterval = 1000 / RING_FPS;
+    if (timestamp - lastRingFrameTimeRef.current >= frameInterval) {
+      setCurrentRingFrame((prev) => (prev + 1) % RING_FRAME_COUNT);
+      lastRingFrameTimeRef.current = timestamp;
+    }
+    ringAnimationRef.current = requestAnimationFrame(animateRing);
+  }, []);
+
+  useEffect(() => {
+    if (!isRingLoaded || !isSafari) return;
+
+    ringAnimationRef.current = requestAnimationFrame(animateRing);
+
+    return () => {
+      if (ringAnimationRef.current) {
+        cancelAnimationFrame(ringAnimationRef.current);
+      }
+    };
+  }, [isRingLoaded, isSafari, animateRing]);
 
   // Force scroll to top when step changes to 2
   useEffect(() => {
@@ -724,15 +794,25 @@ Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình 
 
                 {/* Diamond Ring - separate element for flexible positioning */}
                 <div className="event-guide__lucky-ring">
-                  <video
-                    src={getMediaUrl('mirror_DMM/nhan-lucky-draw.webm')}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="event-guide__lucky-ring-img"
-                    onLoadedMetadata={(e) => { e.target.playbackRate = 0.25; }}
-                  />
+                  {isSafari ? (
+                    // Safari: WebP frame animation (WebM alpha not supported)
+                    <img
+                      src={ringFrames[currentRingFrame] || '/dmm-event/ring-webp-frames/frame_001.webp'}
+                      alt="Lucky Ring"
+                      className="event-guide__lucky-ring-img"
+                    />
+                  ) : (
+                    // Chrome/Firefox: WebM video with alpha
+                    <video
+                      src={getMediaUrl('mirror_DMM/nhan-lucky-draw.webm')}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="event-guide__lucky-ring-img"
+                      onLoadedMetadata={(e) => { e.target.playbackRate = 0.25; }}
+                    />
+                  )}
                 </div>
               </section>
             </div>

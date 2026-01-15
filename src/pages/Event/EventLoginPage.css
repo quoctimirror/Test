@@ -256,6 +256,7 @@
 
   .event-login__title {
     margin-bottom: 48px;
+    white-space: nowrap;
   }
 
   .event-login__subtitle {

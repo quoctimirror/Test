@@ -103,6 +103,9 @@ const EventWriteMessagePage = lazy(() => import("@pages/Event/EventWriteMessageP
 const EventChooseNotePage = lazy(() => import("@pages/Event/EventChooseNotePage"));
 const EventThankYouPage = lazy(() => import("@pages/Event/EventThankYouPage"));
 
+// Event Protected Route
+const EventProtectedRoute = lazy(() => import("@components/event/EventProtectedRoute"));
+
 // Interactive Experiences
 const BirthdayCake = lazy(() =>
   import("@components/birthday-cake/BirthdayCake")
@@ -446,19 +449,21 @@ export default function AppRoutes() {
               }
             />
 
-            {/* Event Routes */}
+            {/* Event Routes - Public */}
             <Route path={ROUTES.EVENT} element={<EventPage />} />
             <Route path={ROUTES.EVENT_GUIDE} element={<EventGuidePage />} />
             <Route path={ROUTES.EVENT_LOGIN} element={<EventLoginPage />} />
-            <Route path={ROUTES.EVENT_NAME} element={<EventNamePage />} />
-            <Route path={ROUTES.EVENT_CHOOSE_SHAPE} element={<EventChooseShapePage />} />
             <Route path={ROUTES.EVENT_DISPLAY} element={<EventDisplayPage />} />
             <Route path={ROUTES.EVENT_ADMIN} element={<EventAdminPage />} />
             <Route path={ROUTES.EVENT_CHRISTMAS} element={<ChristmasMusicPage />} />
-            <Route path={ROUTES.EVENT_PLACE_NOTE} element={<EventPlaceNotePage />} />
-            <Route path={ROUTES.EVENT_WRITE_MESSAGE} element={<EventWriteMessagePage />} />
-            <Route path={ROUTES.EVENT_CHOOSE_NOTE} element={<EventChooseNotePage />} />
-            <Route path={ROUTES.EVENT_THANKYOU} element={<EventThankYouPage />} />
+
+            {/* Event Routes - Protected (require login) */}
+            <Route path={ROUTES.EVENT_NAME} element={<EventProtectedRoute><EventNamePage /></EventProtectedRoute>} />
+            <Route path={ROUTES.EVENT_CHOOSE_SHAPE} element={<EventProtectedRoute><EventChooseShapePage /></EventProtectedRoute>} />
+            <Route path={ROUTES.EVENT_PLACE_NOTE} element={<EventProtectedRoute><EventPlaceNotePage /></EventProtectedRoute>} />
+            <Route path={ROUTES.EVENT_WRITE_MESSAGE} element={<EventProtectedRoute><EventWriteMessagePage /></EventProtectedRoute>} />
+            <Route path={ROUTES.EVENT_CHOOSE_NOTE} element={<EventProtectedRoute><EventChooseNotePage /></EventProtectedRoute>} />
+            <Route path={ROUTES.EVENT_THANKYOU} element={<EventProtectedRoute><EventThankYouPage /></EventProtectedRoute>} />
 
             {/* Interactive Experiences */}
             <Route path={ROUTES.BIRTHDAY_CAKE} element={<BirthdayCake />} />

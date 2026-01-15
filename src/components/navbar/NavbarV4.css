@@ -245,22 +245,22 @@
     top: 16px;
     left: 50%;
     transform: translateX(-50%);
-    gap: 10px;
+    gap: 12px;
     height: auto;
   }
 
   .logo-v4-fixed-container.collab-mode .navbar-v4-logo-svg {
     width: auto;
-    height: 14px;
+    height: 18px;
   }
 
   .logo-v4-fixed-container.collab-mode .navbar-v4-dmm-logo {
-    height: 28px;
+    height: 36px;
   }
 
   .logo-v4-fixed-container.collab-mode .navbar-v4-collab-x {
-    width: 5px;
-    height: 5px;
+    width: 7px;
+    height: 7px;
   }
 }
 

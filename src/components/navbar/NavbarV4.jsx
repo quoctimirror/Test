@@ -53,8 +53,11 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
   const shouldHideButtons =
     logoOnly || isMilanPage || location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
-  // Check if logo click should be disabled (Milan, Immersive Showroom, or logoOnly mode)
-  const shouldDisableLogoClick = shouldHideButtons;
+  // Check if on event pages (the-muse-of-love-grown routes)
+  const isEventPage = location.pathname.startsWith(ROUTES.EVENT_GUIDE);
+
+  // Check if logo click should be disabled (Milan, Immersive Showroom, but NOT event pages)
+  const shouldDisableLogoClick = shouldHideButtons && !isEventPage;
 
   // Helper function to close menu with fade out animation
   const closeMenuWithAnimation = useCallback(() => {
@@ -258,6 +261,16 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
   const handleLogoClick = async () => {
     // Disable logo click on Milan and Immersive Showroom pages
     if (shouldDisableLogoClick) {
+      return;
+    }
+
+    // On event pages, navigate to event guide
+    if (isEventPage) {
+      if (location.pathname === ROUTES.EVENT_GUIDE) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate(ROUTES.EVENT_GUIDE);
+      }
       return;
     }
 
