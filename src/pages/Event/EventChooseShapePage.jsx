@@ -492,14 +492,14 @@ const EventChooseShapePage = () => {
           {/* Choose the shape - Desktop */}
           <div className="event-choose-shape__select-btn--desktop">
             <GlassThemeButton theme="spec_dark" onClick={handleNext} disabled={saving}>
-              {saving ? 'Đang lưu...' : 'Choose the shape'}
+              {saving ? 'Đang lưu...' : 'Chọn Nốt sáng'}
             </GlassThemeButton>
           </div>
 
           {/* Confirm button - Mobile/Tablet */}
           <div className="event-choose-shape__confirm-btn--mobile">
             <GlassThemeButton theme="spec_dark" onClick={handleNext} disabled={saving}>
-              {saving ? 'Đang lưu...' : 'Confirm this shape'}
+              {saving ? 'Đang lưu...' : 'Chọn Nốt sáng'}
             </GlassThemeButton>
           </div>
 

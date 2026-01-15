@@ -1843,7 +1843,7 @@
 }
 
 .place-note-new__heart {
-  width: 80px;
+  width: 120px;
   height: auto;
   position: relative;
   z-index: 2;
@@ -1916,11 +1916,17 @@
     padding: 1.5rem;
   }
 
+  /* Center staff vertically on tablet */
+  .place-note-new__main {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 60px on tablet */
+  /* Heart/Diamond note - 120px on tablet */
   .place-note-new__heart {
-    width: 60px;
+    width: 120px;
     height: auto;
   }
 
@@ -1947,11 +1953,17 @@
     letter-spacing: 0.2em;
   }
 
+  /* Center staff vertically on mobile */
+  .place-note-new__main {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 60px on mobile */
+  /* Heart/Diamond note - 100px on mobile */
   .place-note-new__heart {
-    width: 60px;
+    width: 100px;
     height: auto;
   }
 
@@ -3180,8 +3192,8 @@
 .your-melody__note-img {
   position: relative;
   z-index: 2;
-  width: 90px;
-  height: 90px;
+  width: 140px;
+  height: 140px;
   object-fit: contain;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
 }
@@ -3202,8 +3214,8 @@
 }
 
 .your-melody__note-img--user {
-  width: 90px;
-  height: 90px;
+  width: 140px;
+  height: 140px;
   filter: drop-shadow(0 4px 16px rgba(200, 50, 100, 0.3));
 }
 
@@ -3444,13 +3456,13 @@
   }
 
   .your-melody__note-img {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
   }
 
   .your-melody__note-img--user {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
   }
 
   .your-melody__footer {
@@ -3512,13 +3524,13 @@
   /* Note positions handled by JS - no scaling needed */
 
   .your-melody__note-img {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
   }
 
   .your-melody__note-img--user {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
   }
 
   .your-melody__footer {
@@ -3534,6 +3546,12 @@
   /* Hide "Nghe nốt của tôi" button on mobile */
   .your-melody__actions .glass-theme-button--spec_dark {
     display: none;
+  }
+
+  /* Staff line height for mobile */
+  .your-melody__line {
+    height: 6px;
+    border-radius: 6px;
   }
 }
 
@@ -3882,10 +3900,11 @@
 /* Title */
 .mirror-thankyou__title {
   align-self: stretch;
+  width: calc(938 / 1512 * 100vw);
   color: var(--Black, #0B0B0B);
   text-align: center;
   font-family: var(--font-brikey-moura);
-  font-size: 40px;
+  font-size: 60px;
   font-style: italic;
   font-weight: 400;
   line-height: 105%;
@@ -3898,12 +3917,14 @@
 
 /* Description */
 .mirror-thankyou__description {
+  width: calc(345 / 1512 * 100vw);
   color: var(--Black, #0B0B0B);
   text-align: center;
+  font-family: var(--font-beau-sans);
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
-  line-height: 100%;
+  line-height: 120%;
   margin-bottom: 32px;
 }
 
@@ -4011,5 +4032,122 @@
   }
 }
 
-/* NOTE: mirror-thankyou has no mobile version - tablet styles apply */
+/* ============================================
+   MIRROR THANK YOU - MOBILE RESPONSIVE (≤480px)
+   ============================================ */
+
+@media (max-width: 480px) {
+  /* Prevent body/html scroll when mirror-thankyou is shown */
+  html:has(.mirror-thankyou),
+  body:has(.mirror-thankyou) {
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #FFEDFE;
+  }
+
+  /* Fix height to viewport on mobile - use position fixed to cover entire screen */
+  .mirror-thankyou {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #FFEDFE 100%);
+  }
+
+  /* Background - fix gray color at bottom */
+  .mirror-thankyou__bg {
+    background:
+      radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+      linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #FFEDFE 100%);
+  }
+
+  /* Hide right side navigation icons on mobile */
+  .mirror-thankyou__right {
+    display: none;
+  }
+
+  /* Social icons - bottom center horizontal */
+  .mirror-thankyou__left {
+    position: fixed;
+    top: auto;
+    bottom: 24px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .mirror-thankyou__social {
+    flex-direction: row;
+    gap: 16px;
+  }
+
+  /* Back button - bottom left */
+  .mirror-thankyou__arrow--left {
+    left: 16px;
+    bottom: 24px;
+  }
+
+  /* Main content - centered vertically and horizontally */
+  .mirror-thankyou__main {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Title */
+  .mirror-thankyou__title {
+    align-self: center;
+    margin-top: 0;
+    width: calc(350 / 390 * 100vw);
+    color: var(--Black, #0B0B0B);
+    text-align: center;
+    font-family: var(--font-brikey-moura);
+    font-size: 32px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 105%;
+  }
+
+  /* Description - uses bodytext-6--no-margin from typography */
+  .mirror-thankyou__description {
+    align-self: center;
+    width: calc(304 / 390 * 100vw);
+    color: var(--Black, #0B0B0B);
+    text-align: center;
+  }
+
+  /* Action buttons - side by side */
+  .mirror-thankyou__actions {
+    flex-direction: row;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  /* Lucky ring - centered at bottom */
+  .mirror-thankyou__lucky-ring {
+    bottom: 0;
+  }
+
+  .mirror-thankyou__lucky-ring-img {
+    width: 150vw;
+    margin-bottom: -60%;
+  }
+}
 

@@ -76,15 +76,15 @@ const POSITION_TO_NOTE_NAME = {
 // Zones: 1, 3, 5, 7 (between lines)
 // Line height 8px, gap 80px, total height 360px (same for all screen sizes)
 const NOTE_POSITIONS_Y = [
-  4,    // Line 0 (top line)
-  48,   // Zone 0 (between line 0 and 1)
-  92,   // Line 1
-  136,  // Zone 1 (between line 1 and 2)
-  180,  // Line 2 (middle line)
-  224,  // Zone 2 (between line 2 and 3)
-  268,  // Line 3
-  312,  // Zone 3 (between line 3 and 4)
-  356,  // Line 4 (bottom line)
+  8,    // Line 0 (top line)
+  52,   // Zone 0 (between line 0 and 1)
+  96,   // Line 1
+  140,  // Zone 1 (between line 1 and 2)
+  184,  // Line 2 (middle line)
+  228,  // Zone 2 (between line 2 and 3)
+  272,  // Line 3
+  316,  // Zone 3 (between line 3 and 4)
+  360,  // Line 4 (bottom line)
 ];
 
 // Get random position (all positions: 0-8, including lines and zones)
@@ -260,29 +260,41 @@ const PlaceNoteScreenNew = () => {
     };
   }, [diamondVisible]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-transition to next page after 5s
+  // Auto-transition to next page after 5s - DISABLED: User must press Enter or click arrow to proceed
+  // useEffect(() => {
+  //   const transitionTimer = setTimeout(() => {
+  //     if (hasNavigatedRef.current) return; // Skip if user already navigated
+
+  //     // Mark as navigated IMMEDIATELY to prevent race condition with manual click
+  //     hasNavigatedRef.current = true;
+
+  //     setIsTransitioning(true);
+
+  //     // Destroy ripple before transition
+  //     if (rippleRef.current) {
+  //       rippleRef.current.destroy();
+  //       rippleRef.current = null;
+  //     }
+
+  //     // Navigate immediately for seamless transition
+  //     setUserNote({ positionX, positionY });
+  //     navigate(ROUTES.EVENT_WRITE_MESSAGE);
+  //   }, 5000);
+
+  //   return () => clearTimeout(transitionTimer);
+  // }, [navigate, positionX, positionY, setUserNote]);
+
+  // Navigate on Enter key press
   useEffect(() => {
-    const transitionTimer = setTimeout(() => {
-      if (hasNavigatedRef.current) return; // Skip if user already navigated
-
-      // Mark as navigated IMMEDIATELY to prevent race condition with manual click
-      hasNavigatedRef.current = true;
-
-      setIsTransitioning(true);
-
-      // Destroy ripple before transition
-      if (rippleRef.current) {
-        rippleRef.current.destroy();
-        rippleRef.current = null;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        handleNext();
       }
+    };
 
-      // Navigate immediately for seamless transition
-      setUserNote({ positionX, positionY });
-      navigate(ROUTES.EVENT_WRITE_MESSAGE);
-    }, 5000);
-
-    return () => clearTimeout(transitionTimer);
-  }, [navigate, positionX, positionY, setUserNote]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Navigation - go back to Choose Shape
   const handleGoBack = () => {
