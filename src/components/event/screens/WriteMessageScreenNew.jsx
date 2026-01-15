@@ -361,6 +361,7 @@ const WriteMessageScreenNew = () => {
   const handlePlayMelody = useCallback(async () => {
     if (isPlaying) return;
 
+    // Initialize audio and wait for Safari to be ready
     await initAudio();
     setIsPlaying(true);
 
@@ -444,6 +445,7 @@ const WriteMessageScreenNew = () => {
 
   // Play only user's note
   const handlePlayUserNote = useCallback(async () => {
+    // Initialize audio and wait for Safari to be ready
     await initAudio();
 
     // Add playing class directly to DOM
