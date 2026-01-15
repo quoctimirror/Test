@@ -27,14 +27,23 @@ const DIAMOND_SHAPES = [
 ];
 
 // Mapping from shape ID to AvatarGenerator diamondShape name
+// Must match EventChooseShapePage: h1=Heart, h2=Oval, h3=Round, h4=Pear, h5=Cushion, h6=Emerald, h7=Marquise
+// OLD (incorrect):
+// h1: 'heart',
+// h2: 'round',
+// h3: 'emerald',
+// h4: 'marquise',
+// h5: 'pear',
+// h6: 'oval',
+// h7: 'princess',
 const SHAPE_NAME_MAP = {
   h1: 'heart',
-  h2: 'round',
-  h3: 'emerald',
-  h4: 'marquise',
-  h5: 'pear',
-  h6: 'oval',
-  h7: 'princess',
+  h2: 'oval',
+  h3: 'round',
+  h4: 'pear',
+  h5: 'cushion',
+  h6: 'emerald',
+  h7: 'marquise',
 };
 
 // Staff configuration - 9 Y positions (5 lines + 4 zones)
@@ -120,6 +129,10 @@ const generateHappyMelody = () => {
   // Take 7 random positions, ensuring mix of lines and zones
   const positions = shuffledPositions.slice(0, 7);
 
+  // Shuffle shapes to ensure all 7 shapes appear exactly once
+  // This guarantees diversity - no shape repeats, all shapes represented
+  const shuffledShapes = [...DIAMOND_SHAPES].sort(() => Math.random() - 0.5);
+
   // For mobile layout (4 notes on staff 1, 3 on staff 2):
   // Notes 0-3: Staff 1, X positions spread left to right
   // Notes 4-6: Staff 2, X positions spread left to right
@@ -140,14 +153,12 @@ const generateHappyMelody = () => {
     const stepX = (maxX - minX) / (notesInStaff - 1);
     const positionX = minX + indexInStaff * stepX; // Removed random offset
 
-    const shapeIndex = Math.floor(Math.random() * DIAMOND_SHAPES.length);
-
     notes.push({
       id: `note-${i}`,
       positionX,
       positionY: positions[i],
       staffIndex, // 0 = staff 1 (top), 1 = staff 2 (bottom)
-      shape: DIAMOND_SHAPES[shapeIndex],
+      shape: shuffledShapes[i], // Use shuffled shape - each shape appears exactly once
     });
   }
 

@@ -37,14 +37,23 @@ const DIAMOND_MAP = {
 };
 
 // Mapping from shape ID to AvatarGenerator diamondShape name
+// Must match EventChooseShapePage: h1=Heart, h2=Oval, h3=Round, h4=Pear, h5=Cushion, h6=Emerald, h7=Marquise
+// OLD (incorrect):
+// h1: 'heart',
+// h2: 'round',
+// h3: 'emerald',
+// h4: 'marquise',
+// h5: 'pear',
+// h6: 'oval',
+// h7: 'princess',
 const SHAPE_NAME_MAP = {
   h1: 'heart',
-  h2: 'round',
-  h3: 'emerald',
-  h4: 'marquise',
-  h5: 'pear',
-  h6: 'oval',
-  h7: 'princess',
+  h2: 'oval',
+  h3: 'round',
+  h4: 'pear',
+  h5: 'cushion',
+  h6: 'emerald',
+  h7: 'marquise',
 };
 
 // Mapping from position Y to Vietnamese note name (Treble Clef - Khóa Sol)
@@ -365,7 +374,7 @@ const PlaceNoteScreenNew = () => {
                 ref={heartRef}
                 className="place-note-new__diamond place-note-new__diamond--animate"
                 style={{
-                  left: `${positionX}%`,
+                  left: '50vw', // Always center on viewport width
                   top: `${NOTE_POSITIONS_Y[positionY]}px`,
                 }}
               >
