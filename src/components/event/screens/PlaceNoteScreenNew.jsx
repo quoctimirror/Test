@@ -260,29 +260,29 @@ const PlaceNoteScreenNew = () => {
     };
   }, [diamondVisible]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Auto-transition to next page after 5s
-  useEffect(() => {
-    const transitionTimer = setTimeout(() => {
-      if (hasNavigatedRef.current) return; // Skip if user already navigated
+  // Auto-transition to next page after 5s - DISABLED: User must press Enter to proceed
+  // useEffect(() => {
+  //   const transitionTimer = setTimeout(() => {
+  //     if (hasNavigatedRef.current) return; // Skip if user already navigated
 
-      // Mark as navigated IMMEDIATELY to prevent race condition with manual click
-      hasNavigatedRef.current = true;
+  //     // Mark as navigated IMMEDIATELY to prevent race condition with manual click
+  //     hasNavigatedRef.current = true;
 
-      setIsTransitioning(true);
+  //     setIsTransitioning(true);
 
-      // Destroy ripple before transition
-      if (rippleRef.current) {
-        rippleRef.current.destroy();
-        rippleRef.current = null;
-      }
+  //     // Destroy ripple before transition
+  //     if (rippleRef.current) {
+  //       rippleRef.current.destroy();
+  //       rippleRef.current = null;
+  //     }
 
-      // Navigate immediately for seamless transition
-      setUserNote({ positionX, positionY });
-      navigate(ROUTES.EVENT_WRITE_MESSAGE);
-    }, 5000);
+  //     // Navigate immediately for seamless transition
+  //     setUserNote({ positionX, positionY });
+  //     navigate(ROUTES.EVENT_WRITE_MESSAGE);
+  //   }, 5000);
 
-    return () => clearTimeout(transitionTimer);
-  }, [navigate, positionX, positionY, setUserNote]);
+  //   return () => clearTimeout(transitionTimer);
+  // }, [navigate, positionX, positionY, setUserNote]);
 
   // Navigate on Enter key press
   useEffect(() => {

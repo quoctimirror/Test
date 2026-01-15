@@ -3524,13 +3524,13 @@
   /* Note positions handled by JS - no scaling needed */
 
   .your-melody__note-img {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
   }
 
   .your-melody__note-img--user {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
   }
 
   .your-melody__footer {
