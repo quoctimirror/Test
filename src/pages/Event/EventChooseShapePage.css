@@ -5,12 +5,28 @@
 
 .event-choose-shape {
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
   background: #f6f6f6;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
   overflow: hidden;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .event-choose-shape {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* .event-choose-shape::before {

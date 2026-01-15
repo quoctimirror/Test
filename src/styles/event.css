@@ -1593,10 +1593,27 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
   display: flex;
   flex-direction: column;
   overflow: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .place-note-new {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: unset;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background with gradient and rings */
@@ -1989,7 +2006,24 @@
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
   overflow: hidden;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .write-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background */
@@ -2379,8 +2413,25 @@
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
   overflow: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .choose-note-shape {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background - same radial gradient as layouts 1 & 2 */
@@ -3518,10 +3569,27 @@
 .your-wallpaper {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
   width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .your-wallpaper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: unset;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background - pink radial gradient with rings */
@@ -3758,11 +3826,28 @@
 .mirror-thankyou {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
   width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .mirror-thankyou {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: unset;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background - same as your-wallpaper */

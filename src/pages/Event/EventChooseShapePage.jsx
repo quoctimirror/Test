@@ -637,7 +637,7 @@ const EventChooseShapePage = () => {
           {/* Confirm button - Mobile/Tablet */}
           <div className="event-choose-shape__confirm-btn--mobile">
             <GlassThemeButton theme="spec_dark" onClick={handleNext} disabled={saving}>
-              {saving ? 'Đang lưu...' : isLocked ? 'Tiếp tục' : 'Confirm this shape'}
+              {saving ? 'Đang lưu...' : isLocked ? 'Tiếp tục' : 'Chọn Nốt sáng'}
             </GlassThemeButton>
           </div>
 
