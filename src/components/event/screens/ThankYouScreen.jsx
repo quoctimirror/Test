@@ -3,13 +3,78 @@
  * Tablet layout for /the-muse-of-love-grown/mirror-thankyou
  */
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 
+// Frame animation config for Safari (WebM alpha not supported)
+const RING_FRAME_COUNT = 90;
+const RING_FPS = 30; // Normal speed (30fps)
+
 const ThankYouScreen = () => {
   const navigate = useNavigate();
+  const [isSafari, setIsSafari] = useState(false);
+  const [frames, setFrames] = useState([]);
+  const [currentFrame, setCurrentFrame] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const animationRef = useRef(null);
+  const lastFrameTimeRef = useRef(0);
+
+  // Detect Safari on mount
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    const safari = /^((?!chrome|android).)*safari/i.test(ua);
+    setIsSafari(safari);
+  }, []);
+
+  // Preload frames for Safari
+  useEffect(() => {
+    if (!isSafari) return;
+
+    const loadFrames = async () => {
+      const loadedFrames = [];
+      for (let i = 1; i <= RING_FRAME_COUNT; i++) {
+        const frameNum = String(i).padStart(3, '0');
+        const src = `/dmm-event/ring-webp-frames/frame_${frameNum}.webp`;
+
+        await new Promise((resolve) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = resolve; // Continue even if one frame fails
+          img.src = src;
+        });
+        loadedFrames.push(src);
+      }
+      setFrames(loadedFrames);
+      setIsLoaded(true);
+    };
+
+    loadFrames();
+  }, [isSafari]);
+
+  // Animate frames for Safari
+  const animate = useCallback((timestamp) => {
+    const frameInterval = 1000 / RING_FPS;
+    if (timestamp - lastFrameTimeRef.current >= frameInterval) {
+      setCurrentFrame((prev) => (prev + 1) % RING_FRAME_COUNT);
+      lastFrameTimeRef.current = timestamp;
+    }
+    animationRef.current = requestAnimationFrame(animate);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded || !isSafari) return;
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isLoaded, isSafari, animate]);
 
   const handleGoBack = () => {
     navigate(ROUTES.EVENT_CHOOSE_NOTE);
@@ -130,17 +195,27 @@ const ThankYouScreen = () => {
           </div>
         </main>
 
-        {/* Lucky Ring Video */}
+        {/* Lucky Ring Video/Animation */}
         <div className="mirror-thankyou__lucky-ring">
-          <video
-            src={getMediaUrl('mirror_DMM/nhan-lucky-draw.webm')}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="mirror-thankyou__lucky-ring-img"
-            onLoadedMetadata={(e) => { e.target.playbackRate = 0.15; }}
-          />
+          {isSafari ? (
+            // Safari: WebP frame animation (WebM alpha not supported)
+            <img
+              src={frames[currentFrame] || '/dmm-event/ring-webp-frames/frame_001.webp'}
+              alt="Lucky Ring"
+              className="mirror-thankyou__lucky-ring-img"
+            />
+          ) : (
+            // Chrome/Firefox: WebM video with alpha
+            <video
+              src={getMediaUrl('mirror_DMM/nhan-lucky-draw.webm')}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="mirror-thankyou__lucky-ring-img"
+              onLoadedMetadata={(e) => { e.target.playbackRate = 0.15; }}
+            />
+          )}
         </div>
       </div>
     </>
