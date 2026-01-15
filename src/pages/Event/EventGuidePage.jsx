@@ -24,8 +24,8 @@ const NOTE_POSITION_Y = 180; // Center of line 3 (middle line)
 const RING_FRAME_COUNT = 90;
 const RING_FPS = 30;
 
-// Target date: March 7, 2026
-const TARGET_DATE = new Date('2026-03-07T00:00:00');
+// Target date: March 7, 2026 at 7:00 PM
+const TARGET_DATE = new Date('2026-03-07T19:00:00');
 
 const EventGuidePage = () => {
   const navigate = useNavigate();
@@ -35,9 +35,11 @@ const EventGuidePage = () => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0 });
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showBottomArrow, setShowBottomArrow] = useState(true); // Hide at page bottom
   const [luckyFadePhase, setLuckyFadePhase] = useState('light'); // light, dark
-  const [flippedCard, setFlippedCard] = useState(null); // Track which card is flipped (mobile/tablet auto-flip)
-  const [isTouchDevice, setIsTouchDevice] = useState(window.innerWidth <= 1024);
+  const [flippedCard, setFlippedCard] = useState(null); // Track which card is flipped (auto-flip)
+  const [isHoveringCard, setIsHoveringCard] = useState(false); // Pause auto-flip when hovering
+  const [animationComplete, setAnimationComplete] = useState(false); // Fallback for Safari animation issues
   const musicContentRef = useRef(null);
   const musicSectionRef = useRef(null);
   const rippleRef = useRef(null);
@@ -147,7 +149,23 @@ const EventGuidePage = () => {
     }
   }, [currentStep]);
 
+  // Safari fallback: force show staff lines after animation should complete
+  useEffect(() => {
+    if (!hasAnimated) {
+      setAnimationComplete(false);
+      return;
+    }
+
+    // Wait for all animations to complete (longest: staff-line 1s + 0.5s delay = 1.5s, add buffer)
+    const timeoutId = setTimeout(() => {
+      setAnimationComplete(true);
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, [hasAnimated]);
+
   // Show scroll to top button after scrolling (or always in step 2)
+  // Hide bottom arrow when at page bottom
   useEffect(() => {
     const handleScrollButtons = () => {
       // In step 2, always show the button
@@ -157,11 +175,22 @@ const EventGuidePage = () => {
       } else {
         setShowScrollTop(window.scrollY > 500);
       }
+
+      // Hide bottom arrow when near page bottom (only in Step 2, not during transition)
+      if (currentStep === 2 && !isTransitioning) {
+        const scrollHeight = document.documentElement.scrollHeight;
+        const scrollTop = window.scrollY;
+        const clientHeight = window.innerHeight;
+        const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+        setShowBottomArrow(!isNearBottom);
+      } else {
+        setShowBottomArrow(true); // Always show in Step 1 or during transition
+      }
     };
     window.addEventListener('scroll', handleScrollButtons, { passive: true });
     handleScrollButtons();
     return () => window.removeEventListener('scroll', handleScrollButtons);
-  }, [currentStep]);
+  }, [currentStep, isTransitioning]);
 
   // Fade effect when scrolling through avatar-lucky wrapper
   useEffect(() => {
@@ -375,6 +404,9 @@ const EventGuidePage = () => {
     setTimeout(() => {
       setCurrentStep(1);
       setIsGoingBack(false);
+      // Reset animation states so motion plays again on next visit
+      setHasAnimated(false);
+      setAnimationComplete(false);
     }, 600);
   };
 
@@ -394,11 +426,11 @@ const EventGuidePage = () => {
 
       if (isAtTop && isScrollingUp) {
         const now = Date.now();
-        if (now - lastWheelTime >= 400) {
+        if (now - lastWheelTime >= 300) {
           lastWheelTime = now;
           overscrollUpCount++;
 
-          if (overscrollUpCount >= 3) {
+          if (overscrollUpCount >= 2) {
             handleBackToStep1();
           }
         }
@@ -419,11 +451,11 @@ const EventGuidePage = () => {
 
       if (isAtTop && isScrollingUp) {
         const now = Date.now();
-        if (now - lastTouchTime >= 400) {
+        if (now - lastTouchTime >= 300) {
           lastTouchTime = now;
           overscrollUpCount++;
 
-          if (overscrollUpCount >= 3) {
+          if (overscrollUpCount >= 2) {
             handleBackToStep1();
           }
         }
@@ -644,19 +676,9 @@ const EventGuidePage = () => {
     };
   }, [currentStep]);
 
-  // Track touch device (mobile/tablet) viewport
+  // Auto-flip cards (works on all devices, pauses on hover)
   useEffect(() => {
-    const handleResize = () => {
-      setIsTouchDevice(window.innerWidth <= 1024);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Auto-flip cards on mobile/tablet
-  useEffect(() => {
-    if (!isTouchDevice || currentStep !== 2) {
-      setFlippedCard(null);
+    if (currentStep !== 2 || isHoveringCard) {
       return;
     }
 
@@ -683,7 +705,7 @@ const EventGuidePage = () => {
       clearInterval(intervalId);
       setFlippedCard(null);
     };
-  }, [isTouchDevice, currentStep]);
+  }, [currentStep, isHoveringCard]);
 
   return (
     <>
@@ -692,7 +714,7 @@ const EventGuidePage = () => {
       <div className={`event-guide ${currentStep === 2 ? 'event-guide--step2' : ''} ${isTransitioning ? 'event-guide--transitioning' : ''}`} data-navbar-theme="white">
         {/* Step 2 appears behind during transition */}
         {(currentStep === 2 || isTransitioning || isGoingBack) && (
-          <div className={`event-guide__step2 ${hasAnimated ? 'event-guide__step2--animated' : ''} ${isGoingBack ? 'event-guide__step2--fading-out' : ''}`}>
+          <div className={`event-guide__step2 ${hasAnimated ? 'event-guide__step2--animated' : ''} ${animationComplete ? 'event-guide__step2--animation-complete' : ''} ${isGoingBack ? 'event-guide__step2--fading-out' : ''}`}>
             {/* Music Staff Section */}
             <section ref={staffSectionRef} className="event-guide__staff-section" data-navbar-theme="black">
               <h2 className="event-guide__staff-title heading-2--no-margin">Bạn là một Nốt Sáng</h2>
@@ -747,6 +769,8 @@ const EventGuidePage = () => {
                     <div
                       key={num}
                       className={`event-guide__card event-guide__card--${num}${flippedCard === num ? ' event-guide__card--flipped' : ''}`}
+                      onMouseEnter={() => setIsHoveringCard(true)}
+                      onMouseLeave={() => setIsHoveringCard(false)}
                     />
                   ))}
                 </div>
@@ -775,7 +799,7 @@ const EventGuidePage = () => {
 Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình yêu được âm nhạc dẫn lối, tìm đến nguồn cảm hứng, để bản nhạc ấy cất thành lời.
                 </p>
                 <div className="event-guide__lucky-btn">
-                  <ShineGlassButton theme="footer" onClick={handleGetStarted}>
+                  <ShineGlassButton theme="footer" onClick={() => window.open('https://ticketbox.vn/doc-mong-mo-her-concert-25556?utm_medium=sr-her+concert_all-dates_all-prices&utm_source=tkb-search-results', '_blank')}>
                     Tham gia lucky draw
                   </ShineGlassButton>
                 </div>
@@ -855,14 +879,6 @@ Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình 
                       Bắt đầu hành trình
                     </GlassThemeButton>
                   </div>
-
-                  <div className="event-guide__hero-bottom">
-                    <GlassThemeButton theme="dark" onClick={scrollToContent} icon={
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 18" fill="none">
-                        <path d="M7.91964 0.750001L7.91964 16.75M7.91964 16.75L1.0625 9.89286M7.91964 16.75L14.7768 9.89286" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
-                      </svg>
-                    } />
-                  </div>
                 </div>
 
                 {/* Music content - fades in on scroll */}
@@ -884,6 +900,19 @@ Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình 
             </div>
           </div>
         )}
+
+        {/* Fixed bottom arrow - hidden at page bottom */}
+        <div className={`event-guide__fixed-bottom ${!showBottomArrow ? 'event-guide__fixed-bottom--hidden' : ''}`}>
+          <GlassThemeButton
+            theme={arrowTheme === "white" ? "dark" : "light"}
+            onClick={scrollToContent}
+            icon={
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 18" fill="none">
+                <path d="M7.91964 0.750001L7.91964 16.75M7.91964 16.75L1.0625 9.89286M7.91964 16.75L14.7768 9.89286" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+              </svg>
+            }
+          />
+        </div>
 
         <div className={`fixed-scroll-top-container ${showScrollTop ? 'visible' : ''}`}>
           <GlassThemeButton

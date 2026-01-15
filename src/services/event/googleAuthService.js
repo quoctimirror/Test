@@ -119,8 +119,9 @@ export function signInWithGoogle() {
     try {
       if (!popup || popup.closed) {
         clearInterval(checkPopup);
+        // User closed popup - just reset loading state, don't show error
         if (oauthErrorCallback) {
-          oauthErrorCallback('Popup đã bị đóng');
+          oauthErrorCallback(null);
         }
         return;
       }

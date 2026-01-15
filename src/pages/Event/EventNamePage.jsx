@@ -17,8 +17,8 @@ const EventNamePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, setUser } = useEventStore();
-  // Truncate name to 15 characters max
-  const [name, setName] = useState((user?.displayName || '').slice(0, 15));
+  // Truncate name to 20 characters max
+  const [name, setName] = useState((user?.displayName || '').slice(0, 20));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const inputRef = useRef(null);
@@ -152,8 +152,8 @@ const EventNamePage = () => {
                   className="event-name__input heading-2--no-margin"
                   placeholder="tên của bạn"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  maxLength={15}
+                  onChange={(e) => setName(e.target.value.slice(0, 20))}
+                  maxLength={20}
                   autoFocus
                 />
                 <div className="event-name__input-line" />
