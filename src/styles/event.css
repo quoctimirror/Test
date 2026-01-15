@@ -3375,15 +3375,26 @@
   height: 16px;
 }
 
-/* Action buttons container - centered */
+/* Hint text - shown on all breakpoints */
+.your-melody__hint {
+  display: block;
+  width: 100%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+}
+
+/* Action buttons container - hint on top row, buttons on bottom row */
 .your-melody__actions {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
   bottom: 24px;
   display: flex;
-  gap: 16px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
+  gap: 16px;
   pointer-events: auto;
   z-index: 1000;
 }
@@ -3398,6 +3409,11 @@
 /* Dark theme button text color - black text */
 .your-melody__actions .glass-theme-button--dark {
   color: #0B0B0B;
+}
+
+/* Edge next button - hidden by default (desktop) */
+.your-melody__edge-btn {
+  display: none;
 }
 
 /* Entrance animation - slide from left to right (same direction as your-note exit) */
@@ -3474,10 +3490,33 @@
     padding: 16px 12px 24px;
   }
 
-  /* Keep row layout, show both buttons */
-  .your-melody__actions {
-    bottom: 24px;
-    flex-direction: row;
+  /* Edge next button - tablet: show on left edge, vertically centered */
+  .your-melody__edge-btn {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 48px;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: none;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    z-index: 100;
+    /* Glass effect - same as GlassThemeButton light */
+    box-shadow:
+      inset 1px 1px 2px 0 rgba(255, 255, 255, 0.5),
+      inset -1px -1px 2px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  .your-melody__edge-btn svg path {
+    stroke: #0B0B0B;
   }
 }
 
@@ -3542,15 +3581,24 @@
     padding: 16px 12px 24px;
   }
 
-  /* Keep row layout, hide second button */
+  /* Actions: column layout to stack hint text + button */
   .your-melody__actions {
     bottom: 24px;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
   }
 
   /* Hide "Nghe nốt của tôi" button on mobile */
   .your-melody__actions .glass-theme-button--spec_dark {
     display: none;
+  }
+
+  /* Show hint text on mobile */
+  .your-melody__hint {
+    display: block;
+    width: 100%;
+    color: var(--Pink, #BC224C);
+    text-align: center;
   }
 
   /* Staff line height for mobile */

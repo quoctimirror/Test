@@ -270,7 +270,7 @@ const PlaceNoteScreenNew = () => {
 
   //     setIsTransitioning(true);
 
-  //     // Destroy ripple before transition
+  //     // Destroy ripple before trans
   //     if (rippleRef.current) {
   //       rippleRef.current.destroy();
   //       rippleRef.current = null;
@@ -381,6 +381,7 @@ const PlaceNoteScreenNew = () => {
             </div>
 
             {/* Heart note on staff - only show after lines complete */}
+            {/* Click/tap to play sound (works on iOS) */}
             {diamondVisible && (
               <div
                 ref={heartRef}
@@ -388,6 +389,18 @@ const PlaceNoteScreenNew = () => {
                 style={{
                   left: '50vw', // Always center on viewport width
                   top: `${NOTE_POSITIONS_Y[positionY]}px`,
+                  cursor: 'pointer',
+                }}
+                onClick={async () => {
+                  await initAudio();
+                  audioReadyRef.current = true;
+                  playNoteByPosition(positionY);
+                }}
+                onTouchEnd={async (e) => {
+                  e.preventDefault(); // Prevent double-fire with onClick
+                  await initAudio();
+                  audioReadyRef.current = true;
+                  playNoteByPosition(positionY);
                 }}
               >
                 <img

@@ -539,6 +539,7 @@ const WriteMessageScreenNew = () => {
               </div>
 
               {/* Random notes (7) - show all notes on both staffs */}
+              {/* Random notes - click/tap to play sound (works on iOS) */}
               {displayNotes.map((note, index) => {
                 const xPos = getNoteXPosition(index, note.staffIndex || 0);
                 const yPos = getNoteYPosition(note.positionY, note.staffIndex || 0);
@@ -552,6 +553,18 @@ const WriteMessageScreenNew = () => {
                     style={{
                       left: `${xPos}%`,
                       top: yPos,
+                      cursor: 'pointer',
+                    }}
+                    onClick={async () => {
+                      if (isPlaying) return;
+                      await initAudio();
+                      playNoteByPosition(note.positionY);
+                    }}
+                    onTouchEnd={async (e) => {
+                      if (isPlaying) return;
+                      e.preventDefault();
+                      await initAudio();
+                      playNoteByPosition(note.positionY);
                     }}
                   >
                     <img
@@ -564,12 +577,25 @@ const WriteMessageScreenNew = () => {
               })}
 
               {/* User's note (on staff 2 for mobile/tablet, staff 1 for desktop) */}
+              {/* Click/tap to play sound (works on iOS) */}
               <div
                 ref={userNoteRef}
                 className={`your-melody__note your-melody__note--user ${!userNoteAnimated ? 'your-melody__note--hidden' : ''} ${userNoteAnimated && isAnimatingEntrance ? 'your-melody__note--animate-fly' : ''}`}
                 style={{
                   left: `${getNoteXPosition(7, 1)}%`,
                   top: getNoteYPosition(userPositionY, (isMobile || isTablet) ? 1 : 0),
+                  cursor: 'pointer',
+                }}
+                onClick={async () => {
+                  if (isPlaying) return;
+                  await initAudio();
+                  playNoteByPosition(userPositionY);
+                }}
+                onTouchEnd={async (e) => {
+                  if (isPlaying) return;
+                  e.preventDefault();
+                  await initAudio();
+                  playNoteByPosition(userPositionY);
                 }}
               >
                 <img
@@ -598,10 +624,19 @@ const WriteMessageScreenNew = () => {
           } />
         </div>
 
+        {/* Edge next button - mobile/tablet only, left edge centered */}
+        <button className="your-melody__edge-btn" onClick={handleNext}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="6" height="11" viewBox="0 0 6 11" fill="none">
+            <path d="M1.0625 9.06067L5.0625 5.06067L1.0625 1.06067" stroke="#0B0B0B" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="round"/>
+          </svg>
+        </button>
+
         {/* Footer - action buttons */}
         <footer className="your-melody__footer">
           {/* Action buttons */}
           <div className="your-melody__actions">
+            {/* Hint text - mobile only */}
+            <p className="your-melody__hint bodytext-6--no-margin">Chạm vào nốt để nghe</p>
             <GlassThemeButton
               theme="light"
               onClick={handlePlayMelody}
