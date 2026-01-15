@@ -46,10 +46,28 @@ const useEventStore = create(
       // Demo mode
       isDemo: false,
 
+      // Pre-generated avatar (NOT persisted - kept in memory only)
+      generatedAvatarUrl: null,
+      generatedForShape: null,
+
       // Actions
       setCurrentStep: (step) => set({ currentStep: step }),
 
-      setUser: (user) => set({ user }),
+      setUser: (user) => {
+        const currentUser = get().user;
+        // If user changed, reset user-specific data (melody, note position, etc.)
+        if (currentUser && user && currentUser.id !== user.id) {
+          set({
+            user,
+            melodyNotes: null,
+            initialNotePosition: null,
+            userNote: null,
+            selectedDiamond: null,
+          });
+        } else {
+          set({ user });
+        }
+      },
 
       setSelectedDiamond: (diamond) => set({ selectedDiamond: diamond }),
 
@@ -81,6 +99,16 @@ const useEventStore = create(
 
       setIsDemo: (isDemo) => set({ isDemo }),
 
+      // Pre-generated avatar actions
+      setGeneratedAvatar: (url, shape) => set({
+        generatedAvatarUrl: url,
+        generatedForShape: shape,
+      }),
+      clearGeneratedAvatar: () => set({
+        generatedAvatarUrl: null,
+        generatedForShape: null,
+      }),
+
       // Reset all state (logout)
       reset: () =>
         set({
@@ -98,6 +126,8 @@ const useEventStore = create(
           audioInitialized: false,
           isSoundActive: false,
           isDemo: false,
+          generatedAvatarUrl: null,
+          generatedForShape: null,
         }),
 
       // Check if user has completed the flow

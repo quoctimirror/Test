@@ -10,21 +10,7 @@ import RippleEffect from '@/components/event/effects/ripple-effect';
 import AvatarGenerator, { downloadAvatar } from '@/components/event/ui/AvatarGenerator';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import NavbarV4 from '@/components/navbar/NavbarV4';
-import ShineGlassButton from '@/components/common/button/ShineGlassButton';
-import shareIcon from '@/assets/images/button/share.svg';
-
-// Arrow icons
-const ArrowLeftIcon = () => (
-  <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M13.5 6L1.5 6M1.5 6L6.64286 1M1.5 6L6.64286 11" stroke="currentColor" strokeLinecap="square"/>
-  </svg>
-);
-
-const ArrowRightIcon = () => (
-  <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0.5 6L12.5 6M12.5 6L7.35714 11M12.5 6L7.35714 1" stroke="currentColor" strokeLinecap="square"/>
-  </svg>
-);
+import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 
 // Mapping from shape ID (h1, h2...) to diamondShape name for AvatarGenerator
 // Must match keys in AvatarGenerator's DIAMONDS object:
@@ -86,8 +72,32 @@ const ChooseNoteShapeScreenNew = () => {
   const friction = 0.92;
   const snapStrength = 0.15;
 
-  const { user, selectedDiamond } = useEventStore();
-  const [avatarDataUrl, setAvatarDataUrl] = useState('');
+  const {
+    user,
+    selectedDiamond,
+    generatedAvatarUrl,
+    generatedForShape,
+    setGeneratedAvatar,
+  } = useEventStore();
+
+  // Get current shape name
+  const currentShape = SHAPE_NAME_MAP[selectedDiamond] || 'heart';
+
+  // Use avatar from store if it matches current shape, otherwise use local state as fallback
+  const [localAvatarUrl, setLocalAvatarUrl] = useState('');
+  const avatarDataUrl = (generatedForShape === currentShape && generatedAvatarUrl)
+    ? generatedAvatarUrl
+    : localAvatarUrl;
+
+  // Check if we need to generate (fallback if pre-generation didn't complete)
+  const shouldGenerateAvatar = !avatarDataUrl;
+
+  // Callback when avatar is generated (fallback)
+  const handleAvatarGenerated = (dataUrl) => {
+    setLocalAvatarUrl(dataUrl);
+    // Also save to store for consistency
+    setGeneratedAvatar(dataUrl, currentShape);
+  };
 
   // Helper functions
   const calculateReleaseVelocity = useCallback(() => {
@@ -499,78 +509,79 @@ const ChooseNoteShapeScreenNew = () => {
               </div>
             </div>
 
+            {/* Hint text below card */}
+            <p className="your-wallpaper__hint bodytext-6--no-margin">
+              {isShowingFront ? 'Giữ và kéo để xoay avatar của bạn' : 'Chạm để khám phá avatar của bạn'}
+            </p>
+
             {/* Action buttons below card - Download + Share */}
             <div className="your-wallpaper__actions">
-              <ShineGlassButton
+              <GlassThemeButton
+                theme="light"
                 onClick={handleDownload}
-                disabled={downloading || !avatarDataUrl}
+                className={downloading || !avatarDataUrl ? 'disabled' : ''}
               >
+                <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0.5 14.9856C0.854118 15.315 1.33441 15.5 1.83521 15.5H13.1648C13.6656 15.5 14.1459 15.315 14.5 14.9856M7.50105 0.5V10.4521M7.50105 10.4521L11.8171 6.64941M7.50105 10.4521L3.18502 6.64941" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
                 {downloading ? 'Đang tải...' : 'Tải xuống'}
-              </ShineGlassButton>
-              <ShineGlassButton
-                variant="circle"
+              </GlassThemeButton>
+              <GlassThemeButton
+                theme="light"
                 onClick={handleShare}
-                width={48}
-                height={48}
-              >
-                <img src={shareIcon} alt="Share" width={18} height={18} />
-              </ShineGlassButton>
+                icon={<img src={getMediaUrl('dmm/icons/share-icon.svg')} alt="Share" width={18} height={18} />}
+              />
             </div>
           </div>
         </main>
 
-        {/* Footer - arrows and actions on tablet */}
+        {/* Arrow buttons - fixed position like other pages */}
+        <div className="your-wallpaper__arrow your-wallpaper__arrow--left">
+          <GlassThemeButton theme="light" onClick={handleGoBack} icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+              <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
+            </svg>
+          } />
+        </div>
+        <div className="your-wallpaper__arrow your-wallpaper__arrow--right">
+          <GlassThemeButton theme="light" onClick={() => navigate(ROUTES.EVENT_THANKYOU)} icon={
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
+              <path d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031" stroke="currentColor" strokeLinecap="square"/>
+            </svg>
+          } />
+        </div>
+
+        {/* Footer - actions on tablet/mobile */}
         <footer className="your-wallpaper__footer">
-          {/* Left arrow - go back */}
-          <div className="your-wallpaper__arrow your-wallpaper__arrow--left">
-            <ShineGlassButton
-              variant="circle"
-              onClick={handleGoBack}
-              width={48}
-              height={48}
-            >
-              <ArrowLeftIcon />
-            </ShineGlassButton>
-          </div>
-
-          {/* Center actions - shown on tablet/mobile */}
           <div className="your-wallpaper__footer-actions">
-            <ShineGlassButton
+            <GlassThemeButton
+              theme="light"
               onClick={handleDownload}
-              disabled={downloading || !avatarDataUrl}
+              className={downloading || !avatarDataUrl ? 'disabled' : ''}
             >
+              <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.5 14.9856C0.854118 15.315 1.33441 15.5 1.83521 15.5H13.1648C13.6656 15.5 14.1459 15.315 14.5 14.9856M7.50105 0.5V10.4521M7.50105 10.4521L11.8171 6.64941M7.50105 10.4521L3.18502 6.64941" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
               {downloading ? 'Đang tải...' : 'Tải xuống'}
-            </ShineGlassButton>
-            <ShineGlassButton
-              variant="circle"
+            </GlassThemeButton>
+            <GlassThemeButton
+              theme="light"
               onClick={handleShare}
-              width={48}
-              height={48}
-            >
-              <img src={shareIcon} alt="Share" width={18} height={18} />
-            </ShineGlassButton>
-          </div>
-
-          {/* Right arrow */}
-          <div className="your-wallpaper__arrow your-wallpaper__arrow--right">
-            <ShineGlassButton
-              variant="circle"
-              onClick={() => navigate(ROUTES.EVENT_GUIDE)}
-              width={48}
-              height={48}
-            >
-              <ArrowRightIcon />
-            </ShineGlassButton>
+              icon={<img src={getMediaUrl('dmm/icons/share-icon.svg')} alt="Share" width={18} height={18} />}
+            />
           </div>
         </footer>
 
-        {/* Hidden Avatar Generator - generates card image */}
-        <AvatarGenerator
-          displayName={user?.displayName || 'Guest'}
-          lightNumber={user?.lightNumber || 1}
-          diamondShape={SHAPE_NAME_MAP[selectedDiamond] || 'heart'}
-          onGenerated={setAvatarDataUrl}
-        />
+        {/* Hidden Avatar Generator - fallback if pre-generation didn't complete */}
+        {shouldGenerateAvatar && (
+          <AvatarGenerator
+            displayName={user?.displayName || 'Guest'}
+            lightNumber={user?.lightNumber || 1}
+            diamondShape={currentShape}
+            onGenerated={handleAvatarGenerated}
+            delay={500}
+          />
+        )}
       </div>
     </>
   );

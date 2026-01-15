@@ -1633,10 +1633,10 @@
   display: none;
 }
 
-/* Note title - centered, top: 110px */
+/* Note title - centered, top: 180px */
 .place-note-new__note-title {
   position: absolute;
-  top: 110px;
+  top: calc(156 / 982 * 100vh);
   left: 50%;
   transform: translateX(-50%);
   color: var(--Black, #0B0B0B);
@@ -1676,13 +1676,12 @@
   margin: 0;
 }
 
-/* Main content - vertically centered */
+/* Main content - music staff */
 .place-note-new__main {
   position: absolute;
-  top: 50%;
+  top: calc(310 / 982 * 100vh);
   left: 0;
   right: 0;
-  transform: translateY(-50%);
   z-index: 1;
 }
 
@@ -1691,25 +1690,25 @@
   width: 100%;
 }
 
-/* Arrow buttons wrapper - fixed position, vertically centered */
+/* Arrow buttons - fixed position, bottom (same as choose-shape) */
 .place-note-new__arrow {
   position: fixed;
-  bottom: 48px;
-  z-index: 100;
-  isolation: isolate;
+  bottom: 24px;
+  z-index: 1000;
 }
 
 .place-note-new__arrow--left {
-  left: 24px;
+  left: 2.5%;
 }
 
 .place-note-new__arrow--right {
-  right: 24px;
+  right: 2.5%;
 }
 
-/* Fix arrow icon - don't fill on hover */
-.place-note-new__arrow .shine-glass-button:hover .button-text svg path {
-  fill: none !important;
+/* Arrow icon size */
+.place-note-new__arrow .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Music Staff */
@@ -1844,7 +1843,7 @@
 }
 
 .place-note-new__heart {
-  width: 120px;
+  width: 80px;
   height: auto;
   position: relative;
   z-index: 2;
@@ -1911,27 +1910,23 @@
   z-index: 10;
 }
 
-/* Responsive - Tablet */
+/* Responsive - Tablet (max-width: 1024px) */
 @media (max-width: 1024px) {
   .place-note-new__header {
     padding: 1.5rem;
   }
 
-  /* Staff - same as mobile with 80px gap */
+  /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 113.143px on tablet */
+  /* Heart/Diamond note - 60px on tablet */
   .place-note-new__heart {
-    width: 113.143px;
-    height: 113.143px;
-    aspect-ratio: 1 / 1;
+    width: 60px;
+    height: auto;
   }
 
-  .place-note-new__arrow--left {
-    left: 16px;
-  }
-
-  .place-note-new__arrow--right {
-    right: 16px;
+  /* Note title - lower on tablet */
+  .place-note-new__note-title {
+    top: 180px;
   }
 
   .place-note-new__footer {
@@ -1941,8 +1936,8 @@
   }
 }
 
-/* Responsive - Mobile */
-@media (max-width: 768px) {
+/* Responsive - Mobile (max-width: 480px) */
+@media (max-width: 480px) {
   .place-note-new__header {
     padding: 1.5rem 1rem;
   }
@@ -1952,22 +1947,17 @@
     letter-spacing: 0.2em;
   }
 
-  /* Staff - adjusted for mobile with 80px gap */
+  /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 113.143px on mobile */
+  /* Heart/Diamond note - 60px on mobile */
   .place-note-new__heart {
-    width: 113.143px;
-    height: 113.143px;
-    aspect-ratio: 1 / 1;
+    width: 60px;
+    height: auto;
   }
 
-  /* Arrow buttons - closer to edges on mobile */
-  .place-note-new__arrow--left {
-    left: 12px;
-  }
-
-  .place-note-new__arrow--right {
-    right: 12px;
+  /* Note title - lower on mobile */
+  .place-note-new__note-title {
+    top: 140px;
   }
 
   /* Footer - adjusted for mobile */
@@ -2776,6 +2766,8 @@
   perspective: 1000px;
   perspective-origin: 65% 35%;
   overflow: visible;
+  /* Promote to GPU layer for smoother child animations */
+  transform: translateZ(0);
 }
 
 /* Card container - draggable area */
@@ -2787,6 +2779,8 @@
   transform-style: preserve-3d;
   transform: rotateX(12deg) rotateY(-8deg);
   animation: flipCardEntry 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* GPU acceleration hints for smooth entrance animation */
+  will-change: transform, opacity;
 }
 
 .flip-card-container.dragging {
@@ -2807,16 +2801,16 @@
   0% {
     transform: translateZ(2000px) scale(4) rotateX(12deg) rotateY(720deg);
     opacity: 0;
-    filter: blur(20px);
   }
-  30% {
+  20% {
+    opacity: 0.6;
+  }
+  40% {
     opacity: 1;
-    filter: blur(5px);
   }
   100% {
     transform: translateZ(0) scale(1) rotateX(12deg) rotateY(-8deg);
     opacity: 1;
-    filter: blur(0px);
   }
 }
 
@@ -2826,6 +2820,8 @@
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
+  /* GPU acceleration for smooth drag rotation */
+  will-change: transform;
 }
 
 .flip-card.flipping-to-back {
@@ -2999,6 +2995,14 @@
   }
 }
 
+/* Responsive - Mobile Small */
+@media (max-width: 480px) {
+  .flip-card-container {
+    width: 200px;
+    height: 350px;
+  }
+}
+
 /* =====================================================
    ZOOM TRANSITION - Layout 1 → Layout 2 (Google Maps style)
    ===================================================== */
@@ -3013,17 +3017,19 @@
  * 3. Layout 2 zooms OUT (scale 3 → 1) to reveal all notes
  */
 
-/* Layout 1 Exit - Quick fade out */
+/* Layout 1 Exit - Slide out to right */
 .place-note-new--zoom-out {
-  animation: layout1Exit 0.3s ease-out forwards;
+  animation: layout1Exit 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   pointer-events: none;
 }
 
 @keyframes layout1Exit {
   0% {
+    transform: translateX(0);
     opacity: 1;
   }
   100% {
+    transform: translateX(100%);
     opacity: 0;
   }
 }
@@ -3095,9 +3101,9 @@
 /* Header - top left */
 .your-melody__header {
   position: absolute;
-  top: 100px;
+  top: calc(100 / 982 * 100vh);
   left: 48px;
-  max-width: 400px;
+  max-width: 475px;
   z-index: 10;
 }
 
@@ -3105,8 +3111,7 @@
   color: var(--Pink, #BC224C);
   font-size: 48px;
   line-height: 105%;
-  margin: 0 0 12px 0;
-  white-space: nowrap;
+  margin: 0 0 16px 0;
 }
 
 .your-melody__description {
@@ -3115,13 +3120,12 @@
   height: 48px;
 }
 
-/* Main content - centered staff */
+/* Main content - same position as your-note */
 .your-melody__main {
   position: absolute;
-  top: 50%;
+  top: calc(310 / 982 * 100vh);
   left: 0;
   right: 0;
-  transform: translateY(-50%);
   z-index: 1;
 }
 
@@ -3151,6 +3155,11 @@
   pointer-events: none;
 }
 
+/* Staff 2 - hidden by default (desktop/tablet) */
+.your-melody__lines--staff2 {
+  display: none;
+}
+
 /* Individual staff line */
 .your-melody__line {
   width: 100%;
@@ -3169,10 +3178,17 @@
 }
 
 .your-melody__note-img {
-  width: 56px;
-  height: 56px;
+  position: relative;
+  z-index: 2;
+  width: 90px;
+  height: 90px;
   object-fit: contain;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* Ripple effect behind note image */
+.your-melody__note .ripple-effect-area {
+  z-index: 1;
 }
 
 /* User's note - slightly larger with glow */
@@ -3186,8 +3202,8 @@
 }
 
 .your-melody__note-img--user {
-  width: 72px;
-  height: 72px;
+  width: 90px;
+  height: 90px;
   filter: drop-shadow(0 4px 16px rgba(200, 50, 100, 0.3));
 }
 
@@ -3197,20 +3213,114 @@
 }
 
 .your-melody__note--playing .your-melody__note-img {
-  animation: notePulse 0.6s ease-in-out forwards;
   filter: drop-shadow(0 0 20px rgba(255, 146, 176, 0.8))
           drop-shadow(0 0 40px rgba(255, 146, 176, 0.6));
 }
 
-@keyframes notePulse {
+/* Playing ripple - single ring, matches idle ripple style */
+.your-melody__note--playing::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.03) 42%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.1) 58%,
+    rgba(255, 255, 255, 0.16) 65%,
+    rgba(255, 255, 255, 0.25) 72%,
+    rgba(255, 255, 255, 0.38) 78%,
+    rgba(255, 255, 255, 0.55) 84%,
+    rgba(255, 255, 255, 0.75) 89%,
+    rgba(255, 255, 255, 0.9) 93%,
+    rgba(255, 255, 255, 0.6) 96%,
+    rgba(255, 255, 255, 0.25) 98%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: -1;
+  animation: playingRipplePulse 0.4s ease-out forwards;
+}
+
+@keyframes playingRipplePulse {
   0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.3);
+    width: 40px;
+    height: 40px;
+    opacity: 0.8;
   }
   100% {
-    transform: scale(1);
+    width: 160px;
+    height: 160px;
+    opacity: 0;
+  }
+}
+
+/* ===== ENTRANCE ANIMATIONS ===== */
+/* Hidden state - for notes waiting to animate in */
+.your-melody__note--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Header hidden state */
+.your-melody__header--hidden {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+/* Header slide-in animation */
+.your-melody__header--animate {
+  animation: headerSlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes headerSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* User's note fly-in animation (from center to right) */
+.your-melody__note--animate-fly {
+  animation: userNoteFlyIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes userNoteFlyIn {
+  0% {
+    opacity: 0;
+    transform: translate(-200%, -50%) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Random notes slide-up animation */
+.your-melody__note--animate-slide {
+  animation: noteSlideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes noteSlideUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 80px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -3230,145 +3340,200 @@
 
 /* Arrow buttons */
 .your-melody__arrow {
-  flex-shrink: 0;
-  pointer-events: auto;
+  position: fixed;
+  bottom: 24px;
+  z-index: 1000;
+}
+
+.your-melody__arrow--left {
+  left: 2.5%;
+}
+
+.your-melody__arrow--right {
+  right: 2.5%;
+}
+
+.your-melody__arrow .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Action buttons container - centered */
 .your-melody__actions {
-  position: absolute;
+  position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 48px;
+  bottom: 24px;
   display: flex;
   gap: 16px;
   justify-content: center;
   pointer-events: auto;
+  z-index: 1000;
 }
 
-/* First button - transparent default, dark on hover */
-.your-melody__actions .shine-glass-button--shine:hover .glass-layer {
-  background: linear-gradient(
-    -75deg,
-    rgba(0, 0, 0, 0.9),
-    rgba(20, 20, 20, 0.95),
-    rgba(0, 0, 0, 0.9)
-  );
+/* Disabled state for buttons */
+.your-melody__actions .glass-theme-button.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
-.your-melody__actions .shine-glass-button--shine:hover .button-text {
-  color: rgba(255, 255, 255, 1);
+/* Dark theme button text color - black text */
+.your-melody__actions .glass-theme-button--dark {
+  color: #0B0B0B;
 }
 
-/* Second button (light theme) - dark default, light on hover (inverted) */
-.your-melody__actions .shine-glass-button--light .glass-layer {
-  background: linear-gradient(
-    -75deg,
-    rgba(0, 0, 0, 0.9),
-    rgba(20, 20, 20, 0.95),
-    rgba(0, 0, 0, 0.9)
-  );
-}
-
-.your-melody__actions .shine-glass-button--light .button-text {
-  color: rgba(255, 255, 255, 1);
-}
-
-.your-melody__actions .shine-glass-button--light:hover .glass-layer {
-  background: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.5),
-    rgba(255, 255, 255, 0.3)
-  );
-}
-
-.your-melody__actions .shine-glass-button--light:hover .button-text {
-  color: rgba(0, 0, 0, 0.9);
-}
-
-/* Entrance animation */
+/* Entrance animation - slide from left to right (same direction as your-note exit) */
 .your-melody--entering {
-  animation: yourMelodyFadeIn 0.8s ease-out forwards;
+  animation: yourMelodySlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-@keyframes yourMelodyFadeIn {
+@keyframes yourMelodySlideIn {
   0% {
-    opacity: 0;
+    transform: translateX(-100%);
   }
   100% {
-    opacity: 1;
+    transform: translateX(0);
   }
 }
 
 /* ============================================
    YOUR MELODY - TABLET RESPONSIVE (≤1024px)
+   Same layout as mobile: 2 staffs, hide header
    ============================================ */
 
 @media (max-width: 1024px) {
+  /* Hide header on tablet */
   .your-melody__header {
-    position: relative;
-    top: auto;
-    left: auto;
-    max-width: 100%;
-    padding: 100px 24px 24px;
-    text-align: center;
+    display: none;
   }
 
-  .your-melody__title {
-    font-size: 36px;
+  /* Reset main container position */
+  .your-melody__main {
+    top: 0;
+    transform: none;
+  }
+
+  /* Staff 1 - tablet specs */
+  .your-melody__lines--staff1 {
+    top: calc(350 / 1194 * 100vh);
+    height: calc(200 / 1194 * 100vh);
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    gap: 0;
+  }
+
+  /* Staff height auto */
+  .your-melody__staff {
+    height: auto;
+  }
+
+  /* Staff 2 - positioned below staff 1 with 100/1194 gap */
+  /* Staff 2 top = 350 + 200 + 100 = 650 */
+  .your-melody__lines--staff2 {
+    display: flex;
+    top: calc(650 / 1194 * 100vh);
+    height: calc(200 / 1194 * 100vh);
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    gap: 0;
   }
 
   .your-melody__note-img {
-    width: 44px;
-    height: 44px;
+    width: 60px;
+    height: 60px;
   }
 
   .your-melody__note-img--user {
-    width: 56px;
-    height: 56px;
-  }
-
-  .your-melody__footer {
-    padding: 24px 16px 32px;
-  }
-
-  .your-melody__actions {
-    bottom: 32px;
-    gap: 12px;
-  }
-}
-
-/* ============================================
-   YOUR MELODY - MOBILE RESPONSIVE (≤768px)
-   ============================================ */
-
-@media (max-width: 768px) {
-  .your-melody__header {
-    padding: 90px 16px 16px;
-  }
-
-  .your-melody__title {
-    font-size: 32px;
-  }
-
-  .your-melody__note-img {
-    width: 36px;
-    height: 36px;
-  }
-
-  .your-melody__note-img--user {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
   }
 
   .your-melody__footer {
     padding: 16px 12px 24px;
   }
 
+  /* Keep row layout, show both buttons */
   .your-melody__actions {
     bottom: 24px;
+    flex-direction: row;
+  }
+}
+
+/* ============================================
+   YOUR MELODY - MOBILE RESPONSIVE (≤480px)
+   ============================================ */
+
+@media (max-width: 480px) {
+  /* Hide header on mobile */
+  .your-melody__header {
+    display: none;
+  }
+
+  /* Reset main container position */
+  .your-melody__main {
+    top: 0;
+    transform: none;
+  }
+
+  /* Staff 1 - Figma specs for mobile */
+  .your-melody__lines--staff1 {
+    top: calc(166 / 844 * 100vh);
+    height: calc(200 / 844 * 100vh);
     flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    gap: 0; /* Remove fixed gap, use space-between */
+  }
+
+  /* Staff height for 2 staffs */
+  .your-melody__staff {
+    height: auto;
+  }
+
+  /* Staff 2 - positioned below staff 1 with 100/844 gap */
+  /* Staff 2 top = staff1 top (166) + staff1 height (200) + gap (100) = 466 */
+  .your-melody__lines--staff2 {
+    display: flex;
+    top: calc(466 / 844 * 100vh);
+    height: calc(200 / 844 * 100vh);
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    gap: 0;
+  }
+
+  /* Note positions handled by JS - no scaling needed */
+
+  .your-melody__note-img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .your-melody__note-img--user {
+    width: 60px;
+    height: 60px;
+  }
+
+  .your-melody__footer {
+    padding: 16px 12px 24px;
+  }
+
+  /* Keep row layout, hide second button */
+  .your-melody__actions {
+    bottom: 24px;
+    flex-direction: row;
+  }
+
+  /* Hide "Nghe nốt của tôi" button on mobile */
+  .your-melody__actions .glass-theme-button--spec_dark {
+    display: none;
   }
 }
 
@@ -3439,9 +3604,31 @@
   gap: 24px;
 }
 
+/* Hint text below card */
+.your-wallpaper__hint {
+  color: var(--gray-3, #797979);
+  text-align: center;
+  margin-top: calc(60 / 982 * 100vh);
+}
+
 /* Action buttons below card - Hidden, moved to footer */
 .your-wallpaper__actions {
   display: none;
+}
+
+/* Download button with icon - flex layout (for both actions and footer-actions) */
+.your-wallpaper__actions .glass-theme-button--light:first-child .glass-theme-btn-text,
+.your-wallpaper__footer-actions .glass-theme-button--light:first-child .glass-theme-btn-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.your-wallpaper__actions .glass-theme-button--light:first-child .glass-theme-btn-text svg,
+.your-wallpaper__footer-actions .glass-theme-button--light:first-child .glass-theme-btn-text svg {
+  width: 15px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 /* Footer with arrows at corners */
@@ -3460,16 +3647,55 @@
 
 /* Arrow buttons */
 .your-wallpaper__arrow {
-  flex-shrink: 0;
-  pointer-events: auto;
+  position: fixed;
+  bottom: 24px;
+  z-index: 1000;
 }
 
-/* Footer actions (center) - Download + Share buttons */
+.your-wallpaper__arrow--left {
+  left: 2.5%;
+}
+
+.your-wallpaper__arrow--right {
+  right: 2.5%;
+}
+
+.your-wallpaper__arrow .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Footer actions (center) - Download button centered based on viewport width */
 .your-wallpaper__footer-actions {
+  position: fixed;
+  bottom: 24px;
+  left: 50vw;
+  transform: translateX(calc(-50% + 30px)); /* offset = (icon button 48px + gap 12px) / 2 */
   display: flex;
   align-items: center;
   gap: 12px;
   pointer-events: auto;
+  z-index: 1000;
+}
+
+/* "Tải xuống" button - pink style like spec_light */
+.your-wallpaper__footer-actions .glass-theme-button--light:first-child {
+  background:
+    radial-gradient(
+      61.32% 123.33% at 50.28% 123.33%,
+      #bc224c 0%,
+      rgba(188, 34, 76, 0.15) 100%
+    ),
+    rgba(255, 255, 255, 0.5);
+  color: #fff;
+  box-shadow:
+    inset 3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.4),
+    inset 1px 1px 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset -1px -1px 1px 0.5px rgba(255, 255, 255, 0.3),
+    inset 0 0 1px 1px rgba(153, 153, 153, 0.5),
+    inset 0 0 8px 0 rgba(242, 242, 242, 0.4),
+    0 0 1px 0 rgba(0, 0, 0, 0.05),
+    0 1px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* Responsive - Tablet */
@@ -3499,12 +3725,291 @@
     display: none;
   }
 
+  .your-wallpaper__main {
+    top: calc(302 / 1194 * 100vh);
+    transform: translateX(-50%); /* Only center horizontally, top is fixed */
+  }
+
+  .your-wallpaper__card-container {
+    gap: 20px;
+  }
+
   .your-wallpaper__footer {
-    padding: 20px 16px 32px;
+    padding: 16px 12px 24px;
   }
 
   .your-wallpaper__footer-actions {
     gap: 8px;
+    transform: translateX(calc(-50% + 27px)); /* offset = (icon button 46px + gap 8px) / 2 */
+  }
+
+  /* Hide right arrow on mobile - your-wallpaper is the final screen */
+  .your-wallpaper__arrow--right {
+    display: none;
   }
 }
+
+/* Responsive - Mobile Small */
+@media (max-width: 480px) {
+  .your-wallpaper__main {
+    top: calc(209 / 844 * 100vh);
+    transform: translateX(-50%); /* Only center horizontally, top is fixed */
+  }
+
+  .your-wallpaper__card-container {
+    gap: 16px;
+  }
+
+  .your-wallpaper__footer {
+    padding: 12px 8px 20px;
+  }
+
+  .your-wallpaper__footer-actions {
+    gap: 6px;
+    transform: translateX(calc(-50% + 26px)); /* offset = (icon button 46px + gap 6px) / 2 */
+  }
+
+  /* Button text - MB_Bodytext 6 (12px regular) */
+  .your-wallpaper__footer-actions .glass-theme-btn-text {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+}
+
+/* ============================================
+   MIRROR THANK YOU PAGE - Final Step
+   ============================================ */
+
+.mirror-thankyou {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Background - same as your-wallpaper */
+.mirror-thankyou__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+    linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #F6F6F6 100%);
+  z-index: 0;
+}
+
+/* Left Side Container - Social Icons (on RIGHT for tablet) */
+.mirror-thankyou__left {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+  z-index: 20;
+}
+
+/* Arrow buttons - same pattern as your-wallpaper */
+.mirror-thankyou__arrow {
+  position: fixed;
+  bottom: 24px;
+  z-index: 1000;
+}
+
+.mirror-thankyou__arrow--left {
+  left: 2.5%;
+}
+
+.mirror-thankyou__arrow .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Social Icons */
+.mirror-thankyou__social {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mirror-thankyou__social .glass-theme-btn-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Right Side Container - Navigation Icons (on LEFT for tablet) */
+.mirror-thankyou__right {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 20;
+}
+
+.mirror-thankyou__right .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Icon-only buttons - glass effect on pink background (same as your-wallpaper) */
+.mirror-thankyou .glass-theme-button--icon-only.glass-theme-button--light {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Main Content */
+.mirror-thankyou__main {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 120px;
+  max-width: 600px;
+}
+
+/* Title */
+.mirror-thankyou__title {
+  align-self: stretch;
+  color: var(--Black, #0B0B0B);
+  text-align: center;
+  font-family: var(--font-brikey-moura);
+  font-size: 40px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 105%;
+  margin: 26.8vh 0 24px 0;
+}
+
+.mirror-thankyou__title--highlight {
+  font-style: italic;
+}
+
+/* Description */
+.mirror-thankyou__description {
+  color: var(--Black, #0B0B0B);
+  text-align: center;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  margin-bottom: 32px;
+}
+
+/* Action Buttons */
+.mirror-thankyou__actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* Override light theme button - glass effect on pink background */
+.mirror-thankyou__actions .glass-theme-button--light {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Lucky Ring Video */
+.mirror-thankyou__lucky-ring {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.mirror-thankyou__lucky-ring-img {
+  width: calc(100vw - 180px);
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin-bottom: -50%;
+}
+
+/* ============================================
+   MIRROR THANK YOU - DESKTOP (≥1025px)
+   ============================================ */
+
+@media (min-width: 1025px) {
+  .mirror-thankyou__left {
+    top: auto;
+    transform: none;
+    bottom: 32px;
+    right: auto; /* Reset tablet position */
+    left: calc(24px + 48px + 3.17vw); /* back left + button width + gap 48/1512 */
+    align-items: flex-start;
+  }
+
+  .mirror-thankyou__social {
+    flex-direction: row; /* Horizontal row */
+  }
+
+  .mirror-thankyou__arrow--left {
+    bottom: 32px;
+    left: 24px;
+  }
+
+  .mirror-thankyou__right {
+    top: auto;
+    transform: none;
+    bottom: 32px;
+    left: auto; /* Reset tablet position */
+    right: 24px; /* Back to right side */
+    flex-direction: row; /* Horizontal row */
+  }
+
+  .mirror-thankyou__main {
+    padding-top: 0; /* Remove padding so title margin-top is from viewport top */
+  }
+
+  .mirror-thankyou__title {
+    margin-top: 14vh;
+    font-size: 60px;
+    width: calc(938 / 1512 * 100vw); /* ~62.04vw */
+    align-self: center;
+  }
+
+  .mirror-thankyou__lucky-ring {
+    top: calc(357 / 982 * 100vh); /* ~36.35vh from top */
+    bottom: auto;
+  }
+
+  .mirror-thankyou__lucky-ring-img {
+    width: calc(1000 / 1512 * 100vw); /* ~66.14vw */
+    height: auto;
+    margin-bottom: -60%;
+  }
+}
+
+/* ============================================
+   MIRROR THANK YOU - TABLET RESPONSIVE (≤1024px)
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .mirror-thankyou__main {
+    padding-top: 100px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .mirror-thankyou__title {
+    font-size: 28px;
+  }
+}
+
+/* NOTE: mirror-thankyou has no mobile version - tablet styles apply */
 
