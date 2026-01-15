@@ -115,7 +115,7 @@ const ThankYouScreen = () => {
 
           {/* Description */}
           <p className="mirror-thankyou__description bodytext-6--no-margin">
-            Mỗi tấm vé tham dự Her Concert là một cơ hội nhận được chiếc nhẫn kim cương từ MIRROR.
+            Mỗi tấm vé tham dự Her Concert là một cơ hội nhận <br className="hide-mobile" />được chiếc nhẫn kim cương từ MIRROR.
           </p>
 
           {/* Action Buttons */}

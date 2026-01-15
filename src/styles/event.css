@@ -3760,11 +3760,6 @@
     gap: 8px;
     transform: translateX(calc(-50% + 27px)); /* offset = (icon button 46px + gap 8px) / 2 */
   }
-
-  /* Hide right arrow on mobile - your-wallpaper is the final screen */
-  .your-wallpaper__arrow--right {
-    display: none;
-  }
 }
 
 /* Responsive - Mobile Small */
@@ -3917,15 +3912,15 @@
 
 /* Description */
 .mirror-thankyou__description {
-  width: calc(345 / 1512 * 100vw);
+  width: calc(345 / 834 * 100vw);
   color: var(--Black, #0B0B0B);
   text-align: center;
   font-family: var(--font-beau-sans);
-  font-size: 13px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 120%;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 /* Action Buttons */
@@ -3995,10 +3990,11 @@
 
   .mirror-thankyou__main {
     padding-top: 0; /* Remove padding so title margin-top is from viewport top */
+    margin-top: calc(178 / 982 * 100vh);
   }
 
   .mirror-thankyou__title {
-    margin-top: 14vh;
+    margin-top: 0;
     font-size: 60px;
     width: calc(938 / 1512 * 100vw); /* ~62.04vw */
     align-self: center;
@@ -4029,6 +4025,10 @@
 
   .mirror-thankyou__title {
     font-size: 28px;
+  }
+
+  .mirror-thankyou__description {
+    width: calc(400 / 834 * 100vw);
   }
 }
 
@@ -4128,7 +4128,7 @@
   /* Description - uses bodytext-6--no-margin from typography */
   .mirror-thankyou__description {
     align-self: center;
-    width: calc(304 / 390 * 100vw);
+    width: calc(400 / 390 * 100vw);
     color: var(--Black, #0B0B0B);
     text-align: center;
   }
