@@ -61,6 +61,7 @@ export const ROUTES = {
   EVENT_PLACE_NOTE: "/the-muse-of-love-grown/your-note", // New place note screen (step 1)
   EVENT_WRITE_MESSAGE: "/the-muse-of-love-grown/your-melody", // Write message screen (step 2)
   EVENT_CHOOSE_NOTE: "/the-muse-of-love-grown/your-wallpaper", // Your wallpaper screen (step 3)
+  EVENT_CHOOSE_NOTE_V2: "/the-muse-of-love-grown/your-wallpaper-2", // Your wallpaper screen v2 (simplified)
   EVENT_THANKYOU: "/the-muse-of-love-grown/mirror-thankyou", // Thank you screen (final)
 
   // Interactive experiences

@@ -101,6 +101,7 @@ const ChristmasMusicPage = lazy(() => import("@pages/Event/ChristmasMusicPage"))
 const EventPlaceNotePage = lazy(() => import("@pages/Event/EventPlaceNotePage"));
 const EventWriteMessagePage = lazy(() => import("@pages/Event/EventWriteMessagePage"));
 const EventChooseNotePage = lazy(() => import("@pages/Event/EventChooseNotePage"));
+const EventChooseNotePageV2 = lazy(() => import("@pages/Event/EventChooseNotePageV2"));
 const EventThankYouPage = lazy(() => import("@pages/Event/EventThankYouPage"));
 
 // Event Protected Route
@@ -193,6 +194,7 @@ export default function AppRoutes() {
       ROUTES.EVENT_PLACE_NOTE,
       ROUTES.EVENT_WRITE_MESSAGE,
       ROUTES.EVENT_CHOOSE_NOTE,
+      ROUTES.EVENT_CHOOSE_NOTE_V2,
       ROUTES.INVENTORY,
       ROUTES.INVENTORY_DASHBOARD,
       ROUTES.INVENTORY_SCANNER,
@@ -463,6 +465,7 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT_PLACE_NOTE} element={<EventProtectedRoute><EventPlaceNotePage /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_WRITE_MESSAGE} element={<EventProtectedRoute><EventWriteMessagePage /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_CHOOSE_NOTE} element={<EventProtectedRoute><EventChooseNotePage /></EventProtectedRoute>} />
+            <Route path={ROUTES.EVENT_CHOOSE_NOTE_V2} element={<EventProtectedRoute><EventChooseNotePageV2 /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_THANKYOU} element={<EventProtectedRoute><EventThankYouPage /></EventProtectedRoute>} />
 
             {/* Interactive Experiences */}

@@ -1593,10 +1593,27 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
   display: flex;
   flex-direction: column;
   overflow: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .place-note-new {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: unset;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background with gradient and rings */
@@ -2002,7 +2019,24 @@
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
   overflow: hidden;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .write-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background */
@@ -2393,8 +2427,25 @@
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
   overflow: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .choose-note-shape {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background - same radial gradient as layouts 1 & 2 */
@@ -2776,26 +2827,35 @@
   box-shadow: 0 0 30px rgba(155, 89, 182, 0.2);
 }
 
-/* Scene container with perspective */
+/* Scene container with perspective - matches V2 */
 .flip-card-scene {
   perspective: 1000px;
   perspective-origin: 65% 35%;
-  overflow: visible;
-  /* Promote to GPU layer for smoother child animations */
-  transform: translateZ(0);
+  z-index: 2;
 }
 
-/* Card container - draggable area */
+/* Card container - draggable area - matches V2 */
 .flip-card-container {
-  position: relative;
   width: 250px;
-  height: 446px; /* Ratio 2500:4462 */
-  cursor: grab;
+  height: 446px;
   transform-style: preserve-3d;
   transform: rotateX(12deg) rotateY(-8deg);
+  cursor: grab;
   animation: flipCardEntry 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  /* GPU acceleration hints for smooth entrance animation */
-  will-change: transform, opacity;
+}
+
+@keyframes flipCardEntry {
+  0% {
+    transform: translateZ(2000px) scale(4) rotateX(12deg) rotateY(-8deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: rotateX(12deg) rotateY(-8deg);
+    opacity: 1;
+  }
 }
 
 .flip-card-container.dragging {
@@ -2813,70 +2873,34 @@
   transform: translate(-50%, -50%);
 }
 
-@keyframes flipCardEntry {
-  0% {
-    transform: translateZ(2000px) scale(4) rotateX(12deg) rotateY(720deg);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.6;
-  }
-  40% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateZ(0) scale(1) rotateX(12deg) rotateY(-8deg);
-    opacity: 1;
-  }
-}
-
-/* The card itself */
+/* The card itself - matches V2 */
 .flip-card {
   width: 100%;
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  /* GPU acceleration for smooth drag rotation */
-  will-change: transform;
 }
 
-.flip-card.flipping-to-back {
-  animation: cardFlip 0.4s forwards ease-in-out;
+/* Entry flip animation - card flips while container flies in */
+.flip-card.entry-animating {
+  animation: flipCardEntryFlip 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-.flip-card.flipping-to-front {
-  animation: cardUnFlip 0.4s forwards ease-in-out;
-}
-
-@keyframes cardFlip {
-  0% { transform: rotateZ(0deg) rotateY(0deg); }
-  50% { transform: rotateZ(-10deg) rotateY(90deg); }
-  100% { transform: rotateZ(0deg) rotateY(180deg); }
-}
-
-@keyframes cardUnFlip {
-  0% { transform: rotateZ(0deg) rotateY(180deg); }
-  50% { transform: rotateZ(-10deg) rotateY(90deg); }
-  100% { transform: rotateZ(0deg) rotateY(0deg); }
-}
-
-/* Entrance flip animation - smooth continuous rotation */
-.flip-card.entrance-flip-to-back {
-  animation: entranceFlipToBack 0.8s ease-out forwards;
-}
-
-@keyframes entranceFlipToBack {
+@keyframes flipCardEntryFlip {
   0% { transform: rotateY(0deg); }
   100% { transform: rotateY(180deg); }
 }
 
-/* Card faces - front and back */
+/* Card faces - front and back - matches V2 */
 .flip-card-face {
   position: absolute;
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
   border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.4),
@@ -2885,12 +2909,12 @@
 
 /* Front face */
 .flip-card-front {
-  background: transparent;
+  background: #fff;
 }
 
 /* Back face */
 .flip-card-back {
-  background: transparent;
+  background: #fff;
   transform: rotateY(180deg);
 }
 
@@ -2902,8 +2926,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
-  z-index: 1;
 }
 
 /* Card image */
@@ -2914,8 +2936,9 @@
   border-radius: 14px;
 }
 
-/* Shine effect */
+/* Shine effect - disabled due to Safari glitches */
 .flip-card-shine {
+  display: none; /* Causes Safari card flip glitches */
   position: absolute;
   top: 0;
   left: 0;
@@ -2949,8 +2972,9 @@
   transform: rotate(-25deg) translateX(var(--shine-pos, -100%));
 }
 
-/* Texture overlay */
+/* Texture overlay - disabled due to Safari glitches */
 .flip-card-texture {
+  display: none; /* Causes Safari card flip glitches */
   position: absolute;
   inset: 0;
   background:
@@ -2965,8 +2989,9 @@
   opacity: 0.5;
 }
 
-/* Card shadow */
+/* Card shadow - disabled due to Safari glitches */
 .flip-card-shadow {
+  display: none; /* Causes Safari card flip glitches */
   position: absolute;
   bottom: -80px;
   left: 50%;
@@ -3615,10 +3640,27 @@
 .your-wallpaper {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
   width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .your-wallpaper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: unset;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background - pink radial gradient with rings */
@@ -3850,11 +3892,28 @@
 .mirror-thankyou {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height */
   width: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* iOS Safari: prevent rubber band scrolling on mobile */
+@media (max-width: 480px) {
+  .mirror-thankyou {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: unset;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
 }
 
 /* Background - same as your-wallpaper */

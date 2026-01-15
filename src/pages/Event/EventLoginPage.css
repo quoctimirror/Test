@@ -6,7 +6,17 @@
 
 .event-login-wrapper {
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height - accounts for mobile address bar */
   overflow: hidden;
+  /* iOS Safari: prevent rubber band scrolling */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+  touch-action: none;
 }
 
 .event-login {
@@ -114,6 +124,7 @@
 
 .event-login__content > * {
   pointer-events: auto;
+  touch-action: auto; /* Re-enable touch on interactive elements */
 }
 
 /* Card - Only visible on mobile, transparent on desktop */
@@ -123,6 +134,7 @@
   align-items: center;
   width: 100%;
   max-width: 498px;
+  touch-action: auto; /* Re-enable touch for card content */
 }
 
 /* Title - uses heading-2--no-margin from typography.css */
@@ -293,9 +305,14 @@
 
   .event-login__card {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     max-width: none;
-    padding: 120px 24px 40px;
+    /* Safe area padding for iPhone notch */
+    padding: 0;
+    /* padding-top: max(120px, calc(100px + env(safe-area-inset-top)));
+    padding-bottom: max(40px, calc(20px + env(safe-area-inset-bottom))); */
+    padding-left: max(24px, env(safe-area-inset-left));
+    padding-right: max(24px, env(safe-area-inset-right));
     border-radius: 0;
     background: var(--transparent-white-50, rgba(255, 255, 255, 0.50));
     backdrop-filter: none;
