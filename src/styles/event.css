@@ -1850,8 +1850,9 @@
 }
 
 /* RippleEffect container styles */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .place-note-new__diamond .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 /* Active line highlight - brighter red */
@@ -2110,8 +2111,9 @@
 }
 
 /* Ripple container - allow ripple to overflow */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .write-message__note .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 /* Ensure staffs can show ripple overflow */
@@ -2471,8 +2473,9 @@
 }
 
 /* Allow ripple to overflow */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .choose-note-shape__card .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 /* Card background - landscape gradient */
@@ -2800,8 +2803,9 @@
 }
 
 /* Ripple effect - behind the card */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .flip-card-container .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
   z-index: -1;
   position: absolute;
   top: 50%;
@@ -3209,8 +3213,9 @@
 }
 
 /* Ensure ripple can expand beyond container - same as your-note page */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .your-melody__note--user .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 .your-melody__note-img--user {
