@@ -1843,7 +1843,7 @@
 }
 
 .place-note-new__heart {
-  width: 120px;
+  width: 100px;
   height: auto;
   position: relative;
   z-index: 2;
@@ -1924,9 +1924,9 @@
 
   /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 120px on tablet */
+  /* Heart/Diamond note - 100px on tablet */
   .place-note-new__heart {
-    width: 120px;
+    width: 100px;
     height: auto;
   }
 
@@ -1961,9 +1961,9 @@
 
   /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 100px on mobile */
+  /* Heart/Diamond note - 90px on mobile */
   .place-note-new__heart {
-    width: 100px;
+    width: 90px;
     height: auto;
   }
 
@@ -3192,8 +3192,8 @@
 .your-melody__note-img {
   position: relative;
   z-index: 2;
-  width: 140px;
-  height: 140px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
 }
@@ -3214,8 +3214,8 @@
 }
 
 .your-melody__note-img--user {
-  width: 140px;
-  height: 140px;
+  width: 100px;
+  height: 100px;
   filter: drop-shadow(0 4px 16px rgba(200, 50, 100, 0.3));
 }
 
@@ -3456,13 +3456,13 @@
   }
 
   .your-melody__note-img {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
   }
 
   .your-melody__note-img--user {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
   }
 
   .your-melody__footer {
@@ -3912,7 +3912,7 @@
 
 /* Description */
 .mirror-thankyou__description {
-  width: calc(345 / 834 * 100vw);
+  width: calc(345 / 1512 * 100vw);
   color: var(--Black, #0B0B0B);
   text-align: center;
   font-family: var(--font-beau-sans);
@@ -4018,13 +4018,16 @@
 
 @media (max-width: 1024px) {
   .mirror-thankyou__main {
-    padding-top: 100px;
+    margin-top: calc(320 / 1194 * 100vh);
+    padding-top: 0;
     padding-left: 24px;
     padding-right: 24px;
   }
 
   .mirror-thankyou__title {
-    font-size: 28px;
+    margin: 0 0 36px 0;
+    width: calc(520 / 834 * 100vw);
+    font-size: 40px;
   }
 
   .mirror-thankyou__description {
@@ -4095,17 +4098,16 @@
     bottom: 24px;
   }
 
-  /* Main content - centered vertically and horizontally */
+  /* Main content - positioned from top, centered horizontally */
   .mirror-thankyou__main {
     position: absolute;
-    top: 50%;
+    top: calc(169 / 844 * 100vh);
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     margin-top: 0;
-    padding-top: 0;
-    padding-left: 20px;
-    padding-right: 20px;
-    width: calc(100% - 40px);
+    padding: 0;
+    width: calc(304 / 390 * 100vw);
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -4114,8 +4116,9 @@
   /* Title */
   .mirror-thankyou__title {
     align-self: center;
-    margin-top: 0;
-    width: calc(350 / 390 * 100vw);
+    margin: 0 0 36px 0;
+    padding: 0;
+    width: calc(304 / 390 * 100vw);
     color: var(--Black, #0B0B0B);
     text-align: center;
     font-family: var(--font-brikey-moura);
@@ -4128,9 +4131,10 @@
   /* Description - uses bodytext-6--no-margin from typography */
   .mirror-thankyou__description {
     align-self: center;
-    width: calc(400 / 390 * 100vw);
+    width: 100%;
     color: var(--Black, #0B0B0B);
     text-align: center;
+    font-size: 12px;
   }
 
   /* Action buttons - side by side */

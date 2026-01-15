@@ -110,12 +110,12 @@ const ThankYouScreen = () => {
         <main className="mirror-thankyou__main">
           {/* Title */}
           <h1 className="mirror-thankyou__title">
-            Cảm ơn bạn đã đồng hành cùng<br /><span className="mirror-thankyou__title--highlight">The Muse of Love-Grown</span>
+            Cảm ơn bạn đã đồng hành cùng The Muse of Love-Grow
           </h1>
 
           {/* Description */}
           <p className="mirror-thankyou__description bodytext-6--no-margin">
-            Mỗi tấm vé tham dự Her Concert là một cơ hội nhận <br className="hide-mobile" />được chiếc nhẫn kim cương từ MIRROR.
+            Mỗi tấm vé tham dự Her Concert là một cơ hội nhận được chiếc nhẫn kim cương từ MIRROR.
           </p>
 
           {/* Action Buttons */}
