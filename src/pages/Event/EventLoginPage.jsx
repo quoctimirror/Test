@@ -1,19 +1,52 @@
 /**
  * EventLoginPage - Login page for Mirror Diamond Event
- * Simple social login design
+ * Uses direct Google Sign-In (không qua Supabase Auth)
+ * OAuth redirect về domain của bạn, chỉ dùng Supabase để lưu data
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
-import { signInWithGoogle, signInWithFacebook, getCurrentUser, onAuthStateChange } from '@services/event/authService';
+import { initGoogleSignIn, signOutGoogle, signInWithGoogle } from '@services/event/googleAuthService';
 import { registerGoogleUser, checkExistingGoogleUser } from '@services/event/eventApi';
 import useEventStore from '@/store/useEventStore';
 
 import './EventLoginPage.css';
+
+// LocalStorage key for session
+const SESSION_KEY = 'mirror_event_user';
+
+// Get saved user from localStorage
+const getSavedUser = () => {
+  try {
+    const saved = localStorage.getItem(SESSION_KEY);
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+};
+
+// Save user to localStorage
+const saveUserSession = (user) => {
+  try {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+  } catch (e) {
+    console.error('Failed to save session:', e);
+  }
+};
+
+// Clear user session
+export const clearUserSession = () => {
+  try {
+    localStorage.removeItem(SESSION_KEY);
+    signOutGoogle();
+  } catch (e) {
+    console.error('Failed to clear session:', e);
+  }
+};
 
 const EventLoginPage = () => {
   const navigate = useNavigate();
@@ -21,6 +54,8 @@ const EventLoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState('');
+  const [googleInitialized, setGoogleInitialized] = useState(false);
+  const googleButtonRef = useRef(null);
 
   // Detect if navigated from guide page or name page (desktop only)
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1024);
@@ -43,30 +78,8 @@ const EventLoginPage = () => {
     setSelectedDiamond,
   } = useEventStore();
 
-  // Check if user is already logged in on mount
-  useEffect(() => {
-    const checkExistingUser = async () => {
-      const user = await getCurrentUser();
-      if (user) {
-        await handleUserLogin(user);
-      }
-      setChecking(false);
-    };
-
-    checkExistingUser();
-
-    // Subscribe to auth changes (for OAuth redirect callback)
-    const unsubscribe = onAuthStateChange(async (user) => {
-      if (user) {
-        await handleUserLogin(user);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // Handle user login (register in database) - works for Google, Facebook, etc.
-  const handleUserLogin = async (oauthUser) => {
+  // Handle user login (register in database) - works for Google
+  const handleUserLogin = useCallback(async (oauthUser) => {
     setLoading(true);
     setError('');
 
@@ -76,7 +89,9 @@ const EventLoginPage = () => {
 
       if (existingCheck.exists) {
         // Add provider info to user
-        setUser({ ...existingCheck.user, provider: oauthUser.provider });
+        const userWithProvider = { ...existingCheck.user, provider: oauthUser.provider };
+        setUser(userWithProvider);
+        saveUserSession(userWithProvider);
 
         // Check if user already has a note
         if (existingCheck.hasNote && existingCheck.note) {
@@ -103,7 +118,7 @@ const EventLoginPage = () => {
         return;
       }
 
-      // New user - register (works for Google, Facebook, etc.)
+      // New user - register
       const result = await registerGoogleUser({
         authId: oauthUser.id,
         googleId: oauthUser.id, // Legacy support
@@ -117,6 +132,7 @@ const EventLoginPage = () => {
           setIsDemo(true);
         }
         setUser(result.user);
+        saveUserSession(result.user);
         navigate(ROUTES.EVENT_NAME, { state: { fromLogin: true } });
       } else {
         setError(result.error || 'Không thể đăng ký. Vui lòng thử lại.');
@@ -127,47 +143,79 @@ const EventLoginPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate, setUser, setIsDemo, setUserNote, setSelectedDiamond]);
 
-  const handleGoogleLogin = async () => {
+  // Check if user is already logged in on mount
+  useEffect(() => {
+    const checkExistingUser = async () => {
+      const savedUser = getSavedUser();
+      if (savedUser) {
+        // User already logged in, restore session
+        setUser(savedUser);
+
+        // Check current status from database
+        const existingCheck = await checkExistingGoogleUser(
+          savedUser.googleId || savedUser.authId || savedUser.id,
+          savedUser.provider || 'google'
+        );
+
+        if (existingCheck.exists) {
+          if (existingCheck.hasNote && existingCheck.note) {
+            setSelectedDiamond(existingCheck.note.diamondShape);
+            setUserNote({
+              ...existingCheck.note,
+              orderId: existingCheck.user.lightNumber,
+              userDisplayName: existingCheck.user.displayName,
+            });
+            navigate(ROUTES.EVENT_PLACE_NOTE);
+          } else if (existingCheck.nameConfirmed) {
+            navigate(ROUTES.EVENT_CHOOSE_SHAPE);
+          } else {
+            navigate(ROUTES.EVENT_NAME, { state: { fromLogin: true } });
+          }
+        }
+      }
+      setChecking(false);
+    };
+
+    checkExistingUser();
+  }, [navigate, setUser, setUserNote, setSelectedDiamond]);
+
+  // Initialize Google Sign-In
+  useEffect(() => {
+    if (checking) return; // Wait for session check
+
+    const initGoogle = async () => {
+      try {
+        await initGoogleSignIn(
+          // onSuccess callback
+          (userData) => {
+            handleUserLogin(userData);
+          },
+          // onError callback
+          (errorMsg) => {
+            setError(errorMsg);
+            setLoading(false);
+          }
+        );
+        setGoogleInitialized(true);
+      } catch (err) {
+        console.error('Failed to init Google Sign-In:', err);
+        // Still allow OAuth popup flow even if GSI fails
+        setGoogleInitialized(true);
+      }
+    };
+
+    initGoogle();
+  }, [checking, handleUserLogin]);
+
+  // Handle Google login button click
+  const handleGoogleLogin = () => {
     setLoading(true);
     setError('');
 
-    const result = await signInWithGoogle();
-
-    if (!result.success) {
-      setError(result.error || 'Đăng nhập thất bại');
-      setLoading(false);
-    }
-    // If success, the page will redirect to Google OAuth
-    // After redirect back, onAuthStateChange will handle the login
-  };
-
-  const handleFacebookLogin = async () => {
-    setLoading(true);
-    setError('');
-
-    const result = await signInWithFacebook();
-
-    if (!result.success) {
-      setError(result.error || 'Đăng nhập thất bại');
-      setLoading(false);
-    }
-    // If success, the page will redirect to Facebook OAuth
-    // After redirect back, onAuthStateChange will handle the login
-  };
-
-  const handleSocialLogin = (provider) => {
-    if (provider === 'google') {
-      handleGoogleLogin();
-      return;
-    }
-    if (provider === 'facebook') {
-      handleFacebookLogin();
-      return;
-    }
-    // TODO: Implement Apple login
-    console.log(`Login with ${provider}`);
+    // Use OAuth popup flow (more reliable than One Tap)
+    signInWithGoogle();
   };
 
   // Animation variants
@@ -393,13 +441,16 @@ const EventLoginPage = () => {
               {/* Google */}
               <ShineGlassButton
                 theme="light"
-                onClick={() => handleSocialLogin('google')}
+                onClick={handleGoogleLogin}
                 className="event-login__social-btn"
                 disabled={loading || checking}
               >
                 <img src="/google-icon.svg" alt="Google" width="15" height="15" />
-                <span>Tiếp tục với Google</span>
+                <span>{loading ? 'Đang đăng nhập...' : 'Tiếp tục với Google'}</span>
               </ShineGlassButton>
+
+              {/* Hidden div for Google's native button (optional fallback) */}
+              <div ref={googleButtonRef} style={{ display: 'none' }} />
 
               {/* Facebook - TODO: Enable when ready */}
               {/* <ShineGlassButton
