@@ -511,7 +511,7 @@ const ChooseNoteShapeScreenNew = () => {
 
             {/* Hint text below card */}
             <p className="your-wallpaper__hint bodytext-6--no-margin">
-              {isShowingFront ? 'Giữ và kéo để xoay thẻ bài' : 'Click để xem thẻ bài'}
+              {isShowingFront ? 'Giữ và kéo để xoay avatar của bạn' : 'Chạm để khám phá avatar của bạn'}
             </p>
 
             {/* Action buttons below card - Download + Share */}

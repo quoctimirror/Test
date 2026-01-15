@@ -3111,7 +3111,7 @@
   color: var(--Pink, #BC224C);
   font-size: 48px;
   line-height: 105%;
-  margin: 0 0 20px 0;
+  margin: 0 0 16px 0;
 }
 
 .your-melody__description {
@@ -3408,29 +3408,39 @@
     display: none;
   }
 
-  /* Move staffs down to fit nicely in viewport */
+  /* Reset main container position */
   .your-melody__main {
-    top: 55%;
-    transform: translateY(-50%);
+    top: 0;
+    transform: none;
   }
 
-  /* Reduce line gap: 80px → 50px */
-  .your-melody__lines {
-    gap: 50px;
+  /* Staff 1 - tablet specs */
+  .your-melody__lines--staff1 {
+    top: calc(350 / 1194 * 100vh);
+    height: calc(200 / 1194 * 100vh);
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    gap: 0;
   }
 
-  /* Staff height for 2 staffs with 50px gap:
-     Each staff = 5 lines (8px) + 4 gaps (50px) = 240px
-     Gap between staffs = 80px
-     Total = 240 + 80 + 240 = 560px */
+  /* Staff height auto */
   .your-melody__staff {
-    height: 560px;
+    height: auto;
   }
 
-  /* Show staff 2 on tablet, position below staff 1 */
+  /* Staff 2 - positioned below staff 1 with 100/1194 gap */
+  /* Staff 2 top = 350 + 200 + 100 = 650 */
   .your-melody__lines--staff2 {
     display: flex;
-    top: 320px; /* 240px (staff 1) + 80px (gap) */
+    top: calc(650 / 1194 * 100vh);
+    height: calc(200 / 1194 * 100vh);
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    gap: 0;
   }
 
   .your-melody__note-img {
@@ -3464,30 +3474,39 @@
     display: none;
   }
 
-  /* Move staffs down to fit nicely in viewport */
+  /* Reset main container position */
   .your-melody__main {
-    top: 55%;
-    transform: translateY(-50%);
+    top: 0;
+    transform: none;
   }
 
-  /* Reduce line gap on mobile: 80px → 50px */
-  .your-melody__lines {
-    gap: 50px;
+  /* Staff 1 - Figma specs for mobile */
+  .your-melody__lines--staff1 {
+    top: calc(166 / 844 * 100vh);
+    height: calc(200 / 844 * 100vh);
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    gap: 0; /* Remove fixed gap, use space-between */
   }
 
-  /* Staff height for 2 staffs with 50px gap:
-     Each staff = 5 lines (8px) + 4 gaps (50px) = 240px
-     Gap between staffs = 80px
-     Total = 240 + 80 + 240 = 560px */
+  /* Staff height for 2 staffs */
   .your-melody__staff {
-    height: 560px;
+    height: auto;
   }
 
-  /* Show staff 2 on mobile, position below staff 1 */
-  /* Staff gap = 80px (1.6x internal gap of 50px) */
+  /* Staff 2 - positioned below staff 1 with 100/844 gap */
+  /* Staff 2 top = staff1 top (166) + staff1 height (200) + gap (100) = 466 */
   .your-melody__lines--staff2 {
     display: flex;
-    top: 320px; /* 240px (staff 1) + 80px (gap) */
+    top: calc(466 / 844 * 100vh);
+    height: calc(200 / 844 * 100vh);
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    gap: 0;
   }
 
   /* Note positions handled by JS - no scaling needed */
@@ -3587,10 +3606,8 @@
 
 /* Hint text below card */
 .your-wallpaper__hint {
-  color: var(--Black, #0B0B0B);
+  color: var(--gray-3, #797979);
   text-align: center;
-  font-size: 15px;
-  font-weight: 700;
   margin-top: calc(60 / 982 * 100vh);
 }
 
@@ -3648,12 +3665,12 @@
   height: 16px;
 }
 
-/* Footer actions (center) - Download button centered, Share to the right */
+/* Footer actions (center) - Download button centered based on viewport width */
 .your-wallpaper__footer-actions {
   position: fixed;
   bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 50vw;
+  transform: translateX(calc(-50% + 30px)); /* offset = (icon button 48px + gap 12px) / 2 */
   display: flex;
   align-items: center;
   gap: 12px;
@@ -3709,7 +3726,8 @@
   }
 
   .your-wallpaper__main {
-    top: 50%;
+    top: calc(302 / 1194 * 100vh);
+    transform: translateX(-50%); /* Only center horizontally, top is fixed */
   }
 
   .your-wallpaper__card-container {
@@ -3722,6 +3740,7 @@
 
   .your-wallpaper__footer-actions {
     gap: 8px;
+    transform: translateX(calc(-50% + 27px)); /* offset = (icon button 46px + gap 8px) / 2 */
   }
 
   /* Hide right arrow on mobile - your-wallpaper is the final screen */
@@ -3733,7 +3752,8 @@
 /* Responsive - Mobile Small */
 @media (max-width: 480px) {
   .your-wallpaper__main {
-    top: 48%;
+    top: calc(209 / 844 * 100vh);
+    transform: translateX(-50%); /* Only center horizontally, top is fixed */
   }
 
   .your-wallpaper__card-container {
@@ -3746,6 +3766,14 @@
 
   .your-wallpaper__footer-actions {
     gap: 6px;
+    transform: translateX(calc(-50% + 26px)); /* offset = (icon button 46px + gap 6px) / 2 */
+  }
+
+  /* Button text - MB_Bodytext 6 (12px regular) */
+  .your-wallpaper__footer-actions .glass-theme-btn-text {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.2;
   }
 }
 

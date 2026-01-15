@@ -51,31 +51,60 @@ const NOTE_POSITIONS_Y_DESKTOP = [
   359,  // Line 4 (bottom)
 ];
 
-// Mobile: Line height 8px, gap 50px, staff height 240px
-// Staff 1: 0-240px, Staff 2: 360-600px (with 120px gap between)
-// Added +5px offset to shift notes down slightly
+// Tablet: Staff positions in vh (based on 1194px design)
+// Staff 1: top = 350/1194, height = 200/1194
+// Staff 2: top = 650/1194, height = 200/1194
+// Added +4px offset to shift notes down slightly
+const NOTE_POSITIONS_Y_TABLET_STAFF1 = [
+  (350 + 4 + 4) / 1194 * 100,    // Line 0 (top) - positionY 0
+  (350 + 28 + 4) / 1194 * 100,   // Zone 0 - positionY 1
+  (350 + 52 + 4) / 1194 * 100,   // Line 1 - positionY 2
+  (350 + 76 + 4) / 1194 * 100,   // Zone 1 - positionY 3
+  (350 + 100 + 4) / 1194 * 100,  // Line 2 (middle) - positionY 4
+  (350 + 124 + 4) / 1194 * 100,  // Zone 2 - positionY 5
+  (350 + 148 + 4) / 1194 * 100,  // Line 3 - positionY 6
+  (350 + 172 + 4) / 1194 * 100,  // Zone 3 - positionY 7
+  (350 + 196 + 4) / 1194 * 100,  // Line 4 (bottom) - positionY 8
+];
+
+const NOTE_POSITIONS_Y_TABLET_STAFF2 = [
+  (650 + 4 + 4) / 1194 * 100,    // Line 0 (top) - positionY 0
+  (650 + 28 + 4) / 1194 * 100,   // Zone 0 - positionY 1
+  (650 + 52 + 4) / 1194 * 100,   // Line 1 - positionY 2
+  (650 + 76 + 4) / 1194 * 100,   // Zone 1 - positionY 3
+  (650 + 100 + 4) / 1194 * 100,  // Line 2 (middle) - positionY 4
+  (650 + 124 + 4) / 1194 * 100,  // Zone 2 - positionY 5
+  (650 + 148 + 4) / 1194 * 100,  // Line 3 - positionY 6
+  (650 + 172 + 4) / 1194 * 100,  // Zone 3 - positionY 7
+  (650 + 196 + 4) / 1194 * 100,  // Line 4 (bottom) - positionY 8
+];
+
+// Mobile: Staff positions in vh (based on 844px design)
+// Staff 1: top = 166/844, height = 200/844
+// Staff 2: top = 466/844, height = 200/844
+// Added +4px offset to shift notes down slightly
 const NOTE_POSITIONS_Y_MOBILE_STAFF1 = [
-  9,    // Line 0 (top)
-  38,   // Zone 0
-  67,   // Line 1
-  96,   // Zone 1
-  125,  // Line 2 (middle)
-  154,  // Zone 2
-  183,  // Line 3
-  212,  // Zone 3
-  241,  // Line 4 (bottom)
+  (166 + 4 + 4) / 844 * 100,    // Line 0 (top) - positionY 0
+  (166 + 28 + 4) / 844 * 100,   // Zone 0 - positionY 1
+  (166 + 52 + 4) / 844 * 100,   // Line 1 - positionY 2
+  (166 + 76 + 4) / 844 * 100,   // Zone 1 - positionY 3
+  (166 + 100 + 4) / 844 * 100,  // Line 2 (middle) - positionY 4
+  (166 + 124 + 4) / 844 * 100,  // Zone 2 - positionY 5
+  (166 + 148 + 4) / 844 * 100,  // Line 3 - positionY 6
+  (166 + 172 + 4) / 844 * 100,  // Zone 3 - positionY 7
+  (166 + 196 + 4) / 844 * 100,  // Line 4 (bottom) - positionY 8
 ];
 
 const NOTE_POSITIONS_Y_MOBILE_STAFF2 = [
-  329,  // Line 0 (top) - offset by 320px + 5px
-  358,  // Zone 0
-  387,  // Line 1
-  416,  // Zone 1
-  445,  // Line 2 (middle)
-  474,  // Zone 2
-  503,  // Line 3
-  532,  // Zone 3
-  561,  // Line 4 (bottom)
+  (466 + 4 + 4) / 844 * 100,    // Line 0 (top) - positionY 0
+  (466 + 28 + 4) / 844 * 100,   // Zone 0 - positionY 1
+  (466 + 52 + 4) / 844 * 100,   // Line 1 - positionY 2
+  (466 + 76 + 4) / 844 * 100,   // Zone 1 - positionY 3
+  (466 + 100 + 4) / 844 * 100,  // Line 2 (middle) - positionY 4
+  (466 + 124 + 4) / 844 * 100,  // Zone 2 - positionY 5
+  (466 + 148 + 4) / 844 * 100,  // Line 3 - positionY 6
+  (466 + 172 + 4) / 844 * 100,  // Zone 3 - positionY 7
+  (466 + 196 + 4) / 844 * 100,  // Line 4 (bottom) - positionY 8
 ];
 
 // Generate 7 random notes that form a happy melody
@@ -129,7 +158,8 @@ const WriteMessageScreenNew = () => {
   const navigate = useNavigate();
   const [isEntering, setIsEntering] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
+  const [isTablet, setIsTablet] = useState(window.innerWidth > 480 && window.innerWidth <= 1024);
 
   // Entrance animation states
   const [isAnimatingEntrance, setIsAnimatingEntrance] = useState(false);
@@ -160,36 +190,57 @@ const WriteMessageScreenNew = () => {
   // Track window resize for mobile/tablet detection
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 1024);
+      const width = window.innerWidth;
+      setIsMobile(width <= 480);
+      setIsTablet(width > 480 && width <= 1024);
     };
+    // Call immediately on mount to ensure correct detection
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // User's note position
   // Desktop: X at 83% (rightmost of single staff)
-  // Mobile: X at 85% on staff 2 (rightmost of staff 2)
-  const userPositionX = isMobile ? 85 : 83;
+  // Mobile/Tablet: X at 85% on staff 2 (rightmost of staff 2)
+  const userPositionX = (isMobile || isTablet) ? 85 : 83;
   const userPositionY = userNote?.positionY ?? 4;
 
   // Helper function to get Y position based on screen size and staff
+  // Returns string with unit (vh for mobile/tablet, px for desktop)
   const getNoteYPosition = (positionY, staffIndex = 0) => {
     if (isMobile) {
-      return staffIndex === 0
+      // Mobile (≤480px): use mobile arrays
+      const vhValue = staffIndex === 0
         ? NOTE_POSITIONS_Y_MOBILE_STAFF1[positionY]
         : NOTE_POSITIONS_Y_MOBILE_STAFF2[positionY];
+      return `${vhValue}vh`;
     }
-    return NOTE_POSITIONS_Y_DESKTOP[positionY];
+    if (isTablet) {
+      // Tablet (481-1024px): use tablet arrays
+      const vhValue = staffIndex === 0
+        ? NOTE_POSITIONS_Y_TABLET_STAFF1[positionY]
+        : NOTE_POSITIONS_Y_TABLET_STAFF2[positionY];
+      return `${vhValue}vh`;
+    }
+    // Desktop (>1024px): use desktop array with px
+    return `${NOTE_POSITIONS_Y_DESKTOP[positionY]}px`;
   };
 
-  // Helper function to get X position based on screen size
-  // Desktop: 8 notes spread evenly from 10% to 85%
-  // Mobile/Tablet: use stored positionX (for 2-staff layout)
-  const getNoteXPosition = (noteIndex, storedPositionX) => {
-    if (isMobile) {
-      return storedPositionX;
+  // Helper function to get X position based on screen size and staff
+  // All breakpoints: spread notes evenly within their staff
+  const getNoteXPosition = (noteIndex, staffIndex = 0) => {
+    if (isMobile || isTablet) {
+      // Mobile/Tablet: 2 staffs
+      // Staff 1: 4 notes (indices 0-3), spread from 15% to 85%
+      // Staff 2: 4 notes (indices 4-6 + user at 7), spread from 15% to 85%
+      const indexInStaff = staffIndex === 0 ? noteIndex : noteIndex - 4;
+      const minX = 15;
+      const maxX = 85;
+      const step = (maxX - minX) / 3; // 3 gaps for 4 notes per staff
+      return minX + indexInStaff * step;
     }
-    // Desktop: spread 8 notes evenly (indices 0-6 for melody + 7 for user)
+    // Desktop: 8 notes spread evenly from 10% to 85%
     const minX = 10;
     const maxX = 85;
     const step = (maxX - minX) / 7; // 7 gaps for 8 notes
@@ -316,7 +367,7 @@ const WriteMessageScreenNew = () => {
         ...note,
         isUserNote: false,
         noteIndex: index,
-        calculatedX: getNoteXPosition(index, note.positionX)
+        calculatedX: getNoteXPosition(index, note.staffIndex || 0)
       })),
       {
         id: 'user-note',
@@ -324,12 +375,12 @@ const WriteMessageScreenNew = () => {
         positionY: userPositionY,
         isUserNote: true,
         noteIndex: 7,
-        calculatedX: getNoteXPosition(7, userPositionX),
+        calculatedX: getNoteXPosition(7, 1), // User note on staff 2
         staffIndex: 1 // User note always on staff 2 for mobile
       },
     ].sort((a, b) => {
       // On desktop, ignore staffIndex - just sort by X position
-      if (!isMobile) {
+      if (!isMobile && !isTablet) {
         return a.calculatedX - b.calculatedX;
       }
       // On mobile/tablet, sort by staff first, then by X
@@ -378,7 +429,7 @@ const WriteMessageScreenNew = () => {
     }
 
     setIsPlaying(false);
-  }, [isPlaying, displayNotes, userPositionX, userPositionY, isMobile]);
+  }, [isPlaying, displayNotes, userPositionX, userPositionY, isMobile, isTablet]);
 
   // Play only user's note
   const handlePlayUserNote = useCallback(async () => {
@@ -465,9 +516,9 @@ const WriteMessageScreenNew = () => {
                 ))}
               </div>
 
-              {/* Random notes (7) */}
+              {/* Random notes (7) - show all notes on both staffs */}
               {displayNotes.map((note, index) => {
-                const xPos = getNoteXPosition(index, note.positionX);
+                const xPos = getNoteXPosition(index, note.staffIndex || 0);
                 const yPos = getNoteYPosition(note.positionY, note.staffIndex || 0);
                 const isNoteAnimated = animatedNoteIndices.includes(index);
                 const shouldHide = !isNoteAnimated; // Hidden until animated
@@ -478,7 +529,7 @@ const WriteMessageScreenNew = () => {
                     className={`your-melody__note ${shouldHide ? 'your-melody__note--hidden' : ''} ${isNoteAnimated && isAnimatingEntrance ? 'your-melody__note--animate-slide' : ''}`}
                     style={{
                       left: `${xPos}%`,
-                      top: `${yPos}px`,
+                      top: yPos,
                     }}
                   >
                     <img
@@ -490,13 +541,13 @@ const WriteMessageScreenNew = () => {
                 );
               })}
 
-              {/* User's note (last position - index 7, on staff 2 for mobile) */}
+              {/* User's note (on staff 2 for mobile/tablet, staff 1 for desktop) */}
               <div
                 ref={userNoteRef}
                 className={`your-melody__note your-melody__note--user ${!userNoteAnimated ? 'your-melody__note--hidden' : ''} ${userNoteAnimated && isAnimatingEntrance ? 'your-melody__note--animate-fly' : ''}`}
                 style={{
-                  left: `${getNoteXPosition(7, userPositionX)}%`,
-                  top: `${getNoteYPosition(userPositionY, isMobile ? 1 : 0)}px`,
+                  left: `${getNoteXPosition(7, 1)}%`,
+                  top: getNoteYPosition(userPositionY, (isMobile || isTablet) ? 1 : 0),
                 }}
               >
                 <img
