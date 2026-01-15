@@ -1,16 +1,24 @@
 /**
  * EventLoginPage - Login page for Mirror Diamond Event
- * Uses direct Google Sign-In (không qua Supabase Auth)
- * OAuth redirect về domain của bạn, chỉ dùng Supabase để lưu data
+ *
+ * SỬ DỤNG SUPABASE OAUTH REDIRECT FLOW (không dùng popup)
+ * - Hoạt động trong in-app browser (Zalo, Messenger, Instagram, TikTok)
+ * - Flow: Click login → Redirect đến Google → Google redirect về app
  */
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
-import { initGoogleSignIn, signOutGoogle, signInWithGoogle } from '@services/event/googleAuthService';
+// ============================================================
+// THAY ĐỔI 1: Import từ authService (Supabase OAuth) thay vì googleAuthService (popup)
+// - signInWithGoogle: dùng Supabase OAuth redirect flow (không popup)
+// - onAuthStateChange: lắng nghe khi user đăng nhập thành công và redirect về
+// - signOut: đăng xuất khỏi Supabase
+// ============================================================
+import { signInWithGoogle, onAuthStateChange, signOut } from '@services/event/authService';
 import { registerGoogleUser, checkExistingGoogleUser } from '@services/event/eventApi';
 import useEventStore from '@/store/useEventStore';
 
@@ -38,11 +46,15 @@ const saveUserSession = (user) => {
   }
 };
 
-// Clear user session
-export const clearUserSession = () => {
+// ============================================================
+// THAY ĐỔI 2: Sửa clearUserSession dùng signOut từ Supabase
+// - Xóa session trong localStorage
+// - Gọi signOut() từ Supabase để xóa session trên server
+// ============================================================
+export const clearUserSession = async () => {
   try {
     localStorage.removeItem(SESSION_KEY);
-    signOutGoogle();
+    await signOut(); // Supabase signOut thay vì signOutGoogle
   } catch (e) {
     console.error('Failed to clear session:', e);
   }
@@ -54,8 +66,10 @@ const EventLoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState('');
-  const [googleInitialized, setGoogleInitialized] = useState(false);
-  const googleButtonRef = useRef(null);
+  // ============================================================
+  // THAY ĐỔI 3: Xóa googleInitialized và googleButtonRef
+  // - Không cần nữa vì dùng Supabase OAuth (không cần init Google SDK)
+  // ============================================================
 
   // Detect if navigated from guide page or name page (desktop only)
   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1024);
@@ -181,41 +195,64 @@ const EventLoginPage = () => {
     checkExistingUser();
   }, [navigate, setUser, setUserNote, setSelectedDiamond]);
 
-  // Initialize Google Sign-In
+  // ============================================================
+  // THAY ĐỔI 4: Lắng nghe OAuth callback từ Supabase
+  // - Khi user đăng nhập Google xong, Google redirect về app
+  // - Supabase tự động xử lý token và trigger onAuthStateChange
+  // - Callback này sẽ được gọi với thông tin user
+  // ============================================================
   useEffect(() => {
-    if (checking) return; // Wait for session check
+    if (checking) return; // Đợi kiểm tra session xong
 
-    const initGoogle = async () => {
-      try {
-        await initGoogleSignIn(
-          // onSuccess callback
-          (userData) => {
-            handleUserLogin(userData);
-          },
-          // onError callback
-          (errorMsg) => {
-            setError(errorMsg);
-            setLoading(false);
-          }
-        );
-        setGoogleInitialized(true);
-      } catch (err) {
-        console.error('Failed to init Google Sign-In:', err);
-        // Still allow OAuth popup flow even if GSI fails
-        setGoogleInitialized(true);
+    // Subscribe để lắng nghe khi user đăng nhập thành công
+    const unsubscribe = onAuthStateChange(async (user) => {
+      if (user) {
+        // User vừa đăng nhập thành công từ Google
+        // Chuyển đổi format user từ Supabase sang format của app
+        const userData = {
+          id: user.id,
+          email: user.email,
+          displayName: user.displayName || user.email?.split('@')[0],
+          avatarUrl: user.avatarUrl,
+          provider: user.provider || 'google',
+        };
+        handleUserLogin(userData);
       }
-    };
+    });
 
-    initGoogle();
+    // Cleanup: hủy subscription khi component unmount
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, [checking, handleUserLogin]);
 
-  // Handle Google login button click
-  const handleGoogleLogin = () => {
+  // ============================================================
+  // THAY ĐỔI 5: Sửa handleGoogleLogin dùng Supabase OAuth redirect
+  // - KHÔNG mở popup nữa
+  // - Redirect TRỰC TIẾP đến Google trên cùng tab
+  // - Hoạt động trong in-app browser (Zalo, Messenger, Instagram, TikTok)
+  // ============================================================
+  const handleGoogleLogin = async () => {
     setLoading(true);
     setError('');
 
-    // Use OAuth popup flow (more reliable than One Tap)
-    signInWithGoogle();
+    try {
+      // signInWithGoogle() từ authService sẽ redirect đến Google
+      // Không dùng popup, redirect trực tiếp trên cùng tab
+      const result = await signInWithGoogle();
+
+      if (result?.error) {
+        setError(result.error.message || 'Đăng nhập thất bại');
+        setLoading(false);
+      }
+      // Nếu thành công, trang sẽ redirect đến Google
+      // Sau khi đăng nhập, Google redirect về app
+      // onAuthStateChange callback sẽ xử lý tiếp
+    } catch (err) {
+      console.error('Google login error:', err);
+      setError('Đã có lỗi xảy ra. Vui lòng thử lại.');
+      setLoading(false);
+    }
   };
 
   // Animation variants
@@ -439,6 +476,10 @@ const EventLoginPage = () => {
               animate="visible"
             >
               {/* Google */}
+              {/* ============================================================
+                THAY ĐỔI 6: Xóa hidden div cho Google button
+                - Không cần nữa vì dùng Supabase OAuth (không cần Google SDK)
+                ============================================================ */}
               <ShineGlassButton
                 theme="light"
                 onClick={handleGoogleLogin}
@@ -448,9 +489,6 @@ const EventLoginPage = () => {
                 <img src="/google-icon.svg" alt="Google" width="15" height="15" />
                 <span>{loading ? 'Đang đăng nhập...' : 'Tiếp tục với Google'}</span>
               </ShineGlassButton>
-
-              {/* Hidden div for Google's native button (optional fallback) */}
-              <div ref={googleButtonRef} style={{ display: 'none' }} />
 
               {/* Facebook - TODO: Enable when ready */}
               {/* <ShineGlassButton
