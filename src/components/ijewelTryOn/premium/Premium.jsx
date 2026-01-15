@@ -14,6 +14,7 @@ const MODELS = [
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
   { id: 'VdiuGY0xSDOOBoxoHU2y-A', name: 'Lumex91Cadillac', basename: 'drive'},
   { id: 'P936xDENR7-yCCiZSMeLTQ', name: 'Lumex91Leaves', basename: 'drive'}, 
+  { id: 'RW9pPBQFRmqk88tnI2sMKw', name: 'LuckyRing', basename: 'drive'}, 
   // { id: 'YS4Zch2mShSnA-LABIS5wQ', name: 'Flower', basename: 'drive' },
   // { id: 'czl3wmsyTDWrV420qcKOew', name: 'Heart', basename: 'drive' },
 ];

@@ -350,7 +350,7 @@ const Footer = () => {
                 <img src={fbIcon} alt="Facebook" />
               </a>
               <a
-                href="https://www.instagram.com/mirrorfuturediamond"
+                href="https://www.instagram.com/mirrorfuturediamond/"
                 className="social-icon instagram"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -358,7 +358,7 @@ const Footer = () => {
                 <img src={instaIcon} alt="Instagram" />
               </a>
               <a
-                href="https://www.tiktok.com/@mirrorfuturediamond?_r=1&_t=ZS-916kE9BBDoC"
+                href="https://www.tiktok.com/@mirrorfuturediamond?lang=vi-VN"
                 className="social-icon tiktok"
                 target="_blank"
                 rel="noopener noreferrer"

@@ -2,25 +2,28 @@
  * ThankYouScreen - Final thank you screen after card generation
  * Tablet layout for /the-muse-of-love-grown/mirror-thankyou
  */
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect, useRef, useCallback } from 'react';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
+import ShineGlassButton from '@/components/common/button/ShineGlassButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 
 // Frame animation config for Safari (WebM alpha not supported)
 const RING_FRAME_COUNT = 90;
-const RING_FPS = 30; // Normal speed (30fps)
+const RING_FPS = 20; // Smooth animation
 
 const ThankYouScreen = () => {
   const navigate = useNavigate();
+
+  // Safari detection and frame animation states
   const [isSafari, setIsSafari] = useState(false);
-  const [frames, setFrames] = useState([]);
-  const [currentFrame, setCurrentFrame] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const animationRef = useRef(null);
-  const lastFrameTimeRef = useRef(0);
+  const [ringFrames, setRingFrames] = useState([]);
+  const [currentRingFrame, setCurrentRingFrame] = useState(0);
+  const [isRingLoaded, setIsRingLoaded] = useState(false);
+  const ringAnimationRef = useRef(null);
+  const lastRingFrameTimeRef = useRef(0);
 
   // Detect Safari on mount
   useEffect(() => {
@@ -29,7 +32,7 @@ const ThankYouScreen = () => {
     setIsSafari(safari);
   }, []);
 
-  // Preload frames for Safari
+  // Preload WebP frames for Safari
   useEffect(() => {
     if (!isSafari) return;
 
@@ -38,43 +41,41 @@ const ThankYouScreen = () => {
       for (let i = 1; i <= RING_FRAME_COUNT; i++) {
         const frameNum = String(i).padStart(3, '0');
         const src = `/dmm-event/ring-webp-frames/frame_${frameNum}.webp`;
-
-        await new Promise((resolve) => {
-          const img = new Image();
-          img.onload = resolve;
-          img.onerror = resolve; // Continue even if one frame fails
-          img.src = src;
-        });
         loadedFrames.push(src);
+
+        // Preload image
+        const img = new Image();
+        img.src = src;
       }
-      setFrames(loadedFrames);
-      setIsLoaded(true);
+      setRingFrames(loadedFrames);
+      setIsRingLoaded(true);
     };
 
     loadFrames();
   }, [isSafari]);
 
-  // Animate frames for Safari
-  const animate = useCallback((timestamp) => {
-    const frameInterval = 1000 / RING_FPS;
-    if (timestamp - lastFrameTimeRef.current >= frameInterval) {
-      setCurrentFrame((prev) => (prev + 1) % RING_FRAME_COUNT);
-      lastFrameTimeRef.current = timestamp;
-    }
-    animationRef.current = requestAnimationFrame(animate);
-  }, []);
-
+  // Animation loop for Safari
   useEffect(() => {
-    if (!isLoaded || !isSafari) return;
+    if (!isSafari || !isRingLoaded || ringFrames.length === 0) return;
 
-    animationRef.current = requestAnimationFrame(animate);
+    const frameInterval = 1000 / RING_FPS;
+
+    const animate = (timestamp) => {
+      if (timestamp - lastRingFrameTimeRef.current >= frameInterval) {
+        setCurrentRingFrame(prev => (prev + 1) % ringFrames.length);
+        lastRingFrameTimeRef.current = timestamp;
+      }
+      ringAnimationRef.current = requestAnimationFrame(animate);
+    };
+
+    ringAnimationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (ringAnimationRef.current) {
+        cancelAnimationFrame(ringAnimationRef.current);
       }
     };
-  }, [isLoaded, isSafari, animate]);
+  }, [isSafari, isRingLoaded, ringFrames.length]);
 
   const handleGoBack = () => {
     navigate(ROUTES.EVENT_CHOOSE_NOTE);
@@ -102,7 +103,7 @@ const ThankYouScreen = () => {
           <div className="mirror-thankyou__social">
             <GlassThemeButton
               theme="light"
-              onClick={() => window.open('https://www.instagram.com/mirror.diamond', '_blank')}
+              onClick={() => window.open('https://www.instagram.com/mirrorfuturediamond/', '_blank')}
               icon={
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="currentColor"/>
@@ -111,7 +112,7 @@ const ThankYouScreen = () => {
             />
             <GlassThemeButton
               theme="light"
-              onClick={() => window.open('https://www.facebook.com/mirror.diamond', '_blank')}
+              onClick={() => window.open('https://www.facebook.com/mirrorfuturediamond', '_blank')}
               icon={
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="currentColor"/>
@@ -120,7 +121,7 @@ const ThankYouScreen = () => {
             />
             <GlassThemeButton
               theme="light"
-              onClick={() => window.open('https://www.tiktok.com/@mirror.diamond', '_blank')}
+              onClick={() => window.open('https://www.tiktok.com/@mirrorfuturediamond?lang=vi-VN', '_blank')}
               icon={
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" fill="currentColor"/>
@@ -174,38 +175,38 @@ const ThankYouScreen = () => {
         <main className="mirror-thankyou__main">
           {/* Title */}
           <h1 className="mirror-thankyou__title">
-            Cảm ơn bạn đã đồng hành cùng<br />
-            <span className="mirror-thankyou__title--highlight">The Muse of Love-Grown</span>
+            Cảm ơn bạn đã đồng hành cùng The Muse of Love-Grow
           </h1>
 
           {/* Description */}
           <p className="mirror-thankyou__description bodytext-6--no-margin">
-            Mỗi tấm vé tham dự Her Concert là một cơ hội nhận<br />
-            được chiếc nhẫn kim cương từ MIRROR.
+            Mỗi tấm vé tham dự Her Concert là một cơ hội nhận được chiếc nhẫn kim cương từ MIRROR.
           </p>
 
           {/* Action Buttons */}
           <div className="mirror-thankyou__actions">
-            <GlassThemeButton theme="light" onClick={handleBuyTicket}>
+            <ShineGlassButton theme="footer" onClick={handleBuyTicket}>
               Mua vé tham dự
-            </GlassThemeButton>
+            </ShineGlassButton>
             <GlassThemeButton theme="spec_light" onClick={handleTryAR}>
               Đeo thử nhẫn AR
             </GlassThemeButton>
           </div>
         </main>
 
-        {/* Lucky Ring Video/Animation */}
+        {/* Lucky Ring Video */}
         <div className="mirror-thankyou__lucky-ring">
           {isSafari ? (
-            // Safari: WebP frame animation (WebM alpha not supported)
-            <img
-              src={frames[currentFrame] || '/dmm-event/ring-webp-frames/frame_001.webp'}
-              alt="Lucky Ring"
-              className="mirror-thankyou__lucky-ring-img"
-            />
+            // WebP frame animation for Safari (WebM alpha not supported)
+            isRingLoaded && ringFrames.length > 0 && (
+              <img
+                src={ringFrames[currentRingFrame]}
+                alt="Lucky Ring"
+                className="mirror-thankyou__lucky-ring-img"
+              />
+            )
           ) : (
-            // Chrome/Firefox: WebM video with alpha
+            // WebM video for other browsers
             <video
               src={getMediaUrl('mirror_DMM/nhan-lucky-draw.webm')}
               autoPlay

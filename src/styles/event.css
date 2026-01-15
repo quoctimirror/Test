@@ -1860,15 +1860,16 @@
 }
 
 .place-note-new__heart {
-  width: 80px;
+  width: 100px;
   height: auto;
   position: relative;
   z-index: 2;
 }
 
 /* RippleEffect container styles */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .place-note-new__diamond .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 /* Active line highlight - brighter red */
@@ -1933,11 +1934,17 @@
     padding: 1.5rem;
   }
 
+  /* Center staff vertically on tablet */
+  .place-note-new__main {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 60px on tablet */
+  /* Heart/Diamond note - 100px on tablet */
   .place-note-new__heart {
-    width: 60px;
+    width: 100px;
     height: auto;
   }
 
@@ -1964,11 +1971,17 @@
     letter-spacing: 0.2em;
   }
 
+  /* Center staff vertically on mobile */
+  .place-note-new__main {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   /* Staff - same gap as desktop (80px) for consistent note positioning */
 
-  /* Heart/Diamond note - 60px on mobile */
+  /* Heart/Diamond note - 90px on mobile */
   .place-note-new__heart {
-    width: 60px;
+    width: 90px;
     height: auto;
   }
 
@@ -2132,8 +2145,9 @@
 }
 
 /* Ripple container - allow ripple to overflow */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .write-message__note .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 /* Ensure staffs can show ripple overflow */
@@ -2510,8 +2524,9 @@
 }
 
 /* Allow ripple to overflow */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .choose-note-shape__card .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 /* Card background - landscape gradient */
@@ -2848,8 +2863,9 @@
 }
 
 /* Ripple effect - behind the card */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .flip-card-container .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
   z-index: -1;
   position: absolute;
   top: 50%;
@@ -3205,8 +3221,8 @@
 .your-melody__note-img {
   position: relative;
   z-index: 2;
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
 }
@@ -3222,13 +3238,14 @@
 }
 
 /* Ensure ripple can expand beyond container - same as your-note page */
+/* Using !important to override RippleEffect's injected overflow: hidden */
 .your-melody__note--user .ripple-effect-area {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 .your-melody__note-img--user {
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   filter: drop-shadow(0 4px 16px rgba(200, 50, 100, 0.3));
 }
 
@@ -3383,15 +3400,26 @@
   height: 16px;
 }
 
-/* Action buttons container - centered */
+/* Hint text - shown on all breakpoints */
+.your-melody__hint {
+  display: block;
+  width: 100%;
+  color: var(--Pink, #BC224C);
+  text-align: center;
+}
+
+/* Action buttons container - hint on top row, buttons on bottom row */
 .your-melody__actions {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
   bottom: 24px;
   display: flex;
-  gap: 16px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
+  gap: 16px;
   pointer-events: auto;
   z-index: 1000;
 }
@@ -3406,6 +3434,11 @@
 /* Dark theme button text color - black text */
 .your-melody__actions .glass-theme-button--dark {
   color: #0B0B0B;
+}
+
+/* Edge next button - hidden by default (desktop) */
+.your-melody__edge-btn {
+  display: none;
 }
 
 /* Entrance animation - slide from left to right (same direction as your-note exit) */
@@ -3469,23 +3502,46 @@
   }
 
   .your-melody__note-img {
-    width: 60px;
-    height: 60px;
+    width: 90px;
+    height: 90px;
   }
 
   .your-melody__note-img--user {
-    width: 60px;
-    height: 60px;
+    width: 90px;
+    height: 90px;
   }
 
   .your-melody__footer {
     padding: 16px 12px 24px;
   }
 
-  /* Keep row layout, show both buttons */
-  .your-melody__actions {
-    bottom: 24px;
-    flex-direction: row;
+  /* Edge next button - tablet: show on left edge, vertically centered */
+  .your-melody__edge-btn {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 48px;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: none;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    z-index: 100;
+    /* Glass effect - same as GlassThemeButton light */
+    box-shadow:
+      inset 1px 1px 2px 0 rgba(255, 255, 255, 0.5),
+      inset -1px -1px 2px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  .your-melody__edge-btn svg path {
+    stroke: #0B0B0B;
   }
 }
 
@@ -3550,15 +3606,30 @@
     padding: 16px 12px 24px;
   }
 
-  /* Keep row layout, hide second button */
+  /* Actions: column layout to stack hint text + button */
   .your-melody__actions {
     bottom: 24px;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
   }
 
   /* Hide "Nghe nốt của tôi" button on mobile */
   .your-melody__actions .glass-theme-button--spec_dark {
     display: none;
+  }
+
+  /* Show hint text on mobile */
+  .your-melody__hint {
+    display: block;
+    width: 100%;
+    color: var(--Pink, #BC224C);
+    text-align: center;
+  }
+
+  /* Staff line height for mobile */
+  .your-melody__line {
+    height: 6px;
+    border-radius: 6px;
   }
 }
 
@@ -3784,11 +3855,6 @@
     gap: 8px;
     transform: translateX(calc(-50% + 27px)); /* offset = (icon button 46px + gap 8px) / 2 */
   }
-
-  /* Hide right arrow on mobile - your-wallpaper is the final screen */
-  .your-wallpaper__arrow--right {
-    display: none;
-  }
 }
 
 /* Responsive - Mobile Small */
@@ -3941,10 +4007,11 @@
 /* Title */
 .mirror-thankyou__title {
   align-self: stretch;
+  width: calc(938 / 1512 * 100vw);
   color: var(--Black, #0B0B0B);
   text-align: center;
   font-family: var(--font-brikey-moura);
-  font-size: 40px;
+  font-size: 60px;
   font-style: italic;
   font-weight: 400;
   line-height: 105%;
@@ -3957,13 +4024,15 @@
 
 /* Description */
 .mirror-thankyou__description {
+  width: calc(345 / 1512 * 100vw);
   color: var(--Black, #0B0B0B);
   text-align: center;
-  font-size: 13px;
+  font-family: var(--font-beau-sans);
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 100%;
-  margin-bottom: 32px;
+  line-height: 120%;
+  margin-bottom: 24px;
 }
 
 /* Action Buttons */
@@ -4033,10 +4102,11 @@
 
   .mirror-thankyou__main {
     padding-top: 0; /* Remove padding so title margin-top is from viewport top */
+    margin-top: calc(178 / 982 * 100vh);
   }
 
   .mirror-thankyou__title {
-    margin-top: 14vh;
+    margin-top: 0;
     font-size: 60px;
     width: calc(938 / 1512 * 100vw); /* ~62.04vw */
     align-self: center;
@@ -4060,15 +4130,139 @@
 
 @media (max-width: 1024px) {
   .mirror-thankyou__main {
-    padding-top: 100px;
+    margin-top: calc(320 / 1194 * 100vh);
+    padding-top: 0;
     padding-left: 24px;
     padding-right: 24px;
   }
 
   .mirror-thankyou__title {
-    font-size: 28px;
+    margin: 0 0 36px 0;
+    width: calc(520 / 834 * 100vw);
+    font-size: 40px;
+  }
+
+  .mirror-thankyou__description {
+    width: calc(400 / 834 * 100vw);
   }
 }
 
-/* NOTE: mirror-thankyou has no mobile version - tablet styles apply */
+/* ============================================
+   MIRROR THANK YOU - MOBILE RESPONSIVE (≤480px)
+   ============================================ */
 
+@media (max-width: 480px) {
+  /* Prevent body/html scroll when mirror-thankyou is shown */
+  html:has(.mirror-thankyou),
+  body:has(.mirror-thankyou) {
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #FFEDFE;
+  }
+
+  /* Fix height to viewport on mobile - use position fixed to cover entire screen */
+  .mirror-thankyou {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #FFEDFE 100%);
+  }
+
+  /* Background - fix gray color at bottom */
+  .mirror-thankyou__bg {
+    background:
+      radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
+      linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #FFEDFE 100%);
+  }
+
+  /* Hide right side navigation icons on mobile */
+  .mirror-thankyou__right {
+    display: none;
+  }
+
+  /* Social icons - bottom center horizontal */
+  .mirror-thankyou__left {
+    position: fixed;
+    top: auto;
+    bottom: 24px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .mirror-thankyou__social {
+    flex-direction: row;
+    gap: 16px;
+  }
+
+  /* Back button - bottom left */
+  .mirror-thankyou__arrow--left {
+    left: 16px;
+    bottom: 24px;
+  }
+
+  /* Main content - positioned from top, centered horizontally */
+  .mirror-thankyou__main {
+    position: absolute;
+    top: calc(169 / 844 * 100vh);
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0;
+    padding: 0;
+    width: calc(304 / 390 * 100vw);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Title */
+  .mirror-thankyou__title {
+    align-self: center;
+    margin: 0 0 36px 0;
+    padding: 0;
+    width: calc(304 / 390 * 100vw);
+    color: var(--Black, #0B0B0B);
+    text-align: center;
+    font-family: var(--font-brikey-moura);
+    font-size: 32px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 105%;
+  }
+
+  /* Description - uses bodytext-6--no-margin from typography */
+  .mirror-thankyou__description {
+    align-self: center;
+    width: 100%;
+    color: var(--Black, #0B0B0B);
+    text-align: center;
+    font-size: 12px;
+  }
+
+  /* Action buttons - side by side */
+  .mirror-thankyou__actions {
+    flex-direction: row;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  /* Lucky ring - centered at bottom */
+  .mirror-thankyou__lucky-ring {
+    bottom: 0;
+  }
+
+  .mirror-thankyou__lucky-ring-img {
+    width: 150vw;
+    margin-bottom: -60%;
+  }
+}
