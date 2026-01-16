@@ -170,7 +170,7 @@ const ThankYouScreen = () => {
         <main className="mirror-thankyou__main">
           {/* Title */}
           <h1 className="mirror-thankyou__title">
-            Cảm ơn bạn đã đồng hành cùng The Muse of Love-Grow
+            Cảm ơn bạn đã đồng hành cùng The Muse of Love-Grown
           </h1>
 
           {/* Description */}

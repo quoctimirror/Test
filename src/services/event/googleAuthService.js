@@ -1,6 +1,11 @@
 /**
  * Google Auth Service - Direct Google Sign-In (không qua Supabase Auth)
  * OAuth redirect về domain của bạn, chỉ dùng Supabase để lưu data
+ *
+ * SỬ DỤNG GOOGLE IDENTITY SERVICES SDK
+ * - Google SDK tự mở popup (không dùng window.open)
+ * - Hoạt động trong in-app browser (Zalo, Messenger, Instagram, TikTok)
+ * - Giống cách ticketbox.vn implement
  */
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -81,85 +86,123 @@ export function setOAuthCallbacks(onSuccess, onError) {
 }
 
 /**
- * Trigger Google Sign-In popup
- * Uses OAuth2 popup flow as primary method (more reliable than One Tap)
+ * ============================================================
+ * THAY ĐỔI CHÍNH: Dùng Google Identity Services SDK
+ * - Google SDK TỰ MỞ popup
+ * - Hoạt động trong in-app browser (Zalo, Messenger, Instagram, TikTok)
+ * ============================================================
  */
-export function signInWithGoogle() {
+export async function signInWithGoogle() {
   if (!GOOGLE_CLIENT_ID) {
     console.error('Google Client ID chưa được cấu hình');
+    if (oauthErrorCallback) {
+      oauthErrorCallback('Google Client ID chưa được cấu hình');
+    }
     return;
   }
 
-  // Use OAuth2 popup flow (more reliable across browsers)
-  const oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
+  try {
+    // Đảm bảo Google script đã load
+    await loadGoogleScript();
 
-  // Create popup window
-  const width = 500;
-  const height = 600;
-  const left = window.screenX + (window.outerWidth - width) / 2;
-  const top = window.screenY + (window.outerHeight - height) / 2;
+    // Dùng google.accounts.id.prompt() - Google SDK tự hiển thị UI đăng nhập
+    // Callback đã được set trong initGoogleSignIn()
+    window.google.accounts.id.prompt((notification) => {
+      // Xử lý các trạng thái của prompt
+      if (notification.isNotDisplayed()) {
+        // Prompt không hiển thị được, có thể do:
+        // - User đã đăng nhập
+        // - Browser chặn popup
+        // - Không có session Google
+        console.log('Prompt not displayed:', notification.getNotDisplayedReason());
 
-  const params = new URLSearchParams({
-    client_id: GOOGLE_CLIENT_ID,
-    redirect_uri: window.location.origin,
-    response_type: 'token id_token',
-    scope: 'openid email profile',
-    nonce: Math.random().toString(36).substring(2),
-    prompt: 'select_account',
-  });
-
-  const popup = window.open(
-    `${oauth2Endpoint}?${params.toString()}`,
-    'Google Sign In',
-    `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`
-  );
-
-  // Listen for popup redirect
-  const checkPopup = setInterval(() => {
-    try {
-      if (!popup || popup.closed) {
-        clearInterval(checkPopup);
-        // User closed popup - just reset loading state, don't show error
-        if (oauthErrorCallback) {
-          oauthErrorCallback(null);
+        // Fallback: Dùng OAuth2 token client
+        fallbackToTokenClient();
+      } else if (notification.isSkippedMoment()) {
+        // User bỏ qua prompt
+        console.log('Prompt skipped:', notification.getSkippedReason());
+      } else if (notification.isDismissedMoment()) {
+        // User đóng prompt
+        console.log('Prompt dismissed:', notification.getDismissedReason());
+        if (notification.getDismissedReason() === 'credential_returned') {
+          // Đăng nhập thành công, callback sẽ được gọi từ initialize()
+          return;
         }
-        return;
       }
+    });
+  } catch (error) {
+    console.error('Google Sign-In error:', error);
+    if (oauthErrorCallback) {
+      oauthErrorCallback(error.message || 'Đăng nhập thất bại');
+    }
+  }
+}
 
-      // Check if popup redirected back to our origin
-      if (popup.location.origin === window.location.origin) {
-        clearInterval(checkPopup);
-
-        // Get token from URL hash
-        const hash = popup.location.hash.substring(1);
-        const params = new URLSearchParams(hash);
-        const idToken = params.get('id_token');
-
-        popup.close();
-
-        if (idToken) {
-          const userData = decodeJwtToken(idToken);
-          if (userData && oauthSuccessCallback) {
-            oauthSuccessCallback(userData);
-          } else if (oauthErrorCallback) {
-            oauthErrorCallback('Không thể đọc thông tin user');
+/**
+ * Fallback khi prompt không hiển thị được
+ * Dùng OAuth2 token client
+ */
+async function fallbackToTokenClient() {
+  try {
+    // Tạo mới tokenClient mỗi lần để đảm bảo callback đúng
+    const client = window.google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: 'openid email profile',
+      callback: async (tokenResponse) => {
+        if (tokenResponse.error) {
+          console.error('Token error:', tokenResponse.error);
+          if (oauthErrorCallback) {
+            oauthErrorCallback(tokenResponse.error);
           }
-        } else if (oauthErrorCallback) {
-          oauthErrorCallback('Đăng nhập thất bại');
+          return;
         }
-      }
-    } catch (e) {
-      // Cross-origin error - popup still on Google's page, keep waiting
-    }
-  }, 500);
 
-  // Timeout after 5 minutes
-  setTimeout(() => {
-    clearInterval(checkPopup);
-    if (popup && !popup.closed) {
-      popup.close();
+        // Lấy thông tin user từ Google API
+        try {
+          const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: {
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+            },
+          });
+          const userData = await userInfo.json();
+
+          if (userData && oauthSuccessCallback) {
+            oauthSuccessCallback({
+              id: userData.sub,
+              email: userData.email,
+              displayName: userData.name,
+              firstName: userData.given_name,
+              lastName: userData.family_name,
+              avatarUrl: userData.picture,
+              emailVerified: userData.email_verified,
+              provider: 'google',
+            });
+          } else if (oauthErrorCallback) {
+            oauthErrorCallback('Không thể lấy thông tin user');
+          }
+        } catch (err) {
+          console.error('Error fetching user info:', err);
+          if (oauthErrorCallback) {
+            oauthErrorCallback('Không thể lấy thông tin user');
+          }
+        }
+      },
+      error_callback: (error) => {
+        console.error('Google OAuth error:', error);
+        if (oauthErrorCallback) {
+          oauthErrorCallback(error.message || 'Đăng nhập thất bại');
+        }
+      },
+    });
+
+    // Request token - Google SDK tự mở popup
+    client.requestAccessToken({ prompt: 'select_account' });
+  } catch (error) {
+    console.error('Fallback error:', error);
+    if (oauthErrorCallback) {
+      oauthErrorCallback(error.message || 'Đăng nhập thất bại');
     }
-  }, 5 * 60 * 1000);
+  }
 }
 
 /**
