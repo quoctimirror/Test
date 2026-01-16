@@ -8,7 +8,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
-import ShineGlassButton from '@components/common/button/ShineGlassButton';
+import GlassThemeButton from '@/components/common/button/GlassThemeButton';
+import EventBackButton from '@/components/event/EventBackButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import { initGoogleSignIn, signOutGoogle, signInWithGoogle, signInWithGoogleRedirect, handleOAuthRedirectCallback } from '@services/event/googleAuthService';
 import { registerGoogleUser, checkExistingGoogleUser } from '@services/event/eventApi';
@@ -268,6 +269,11 @@ const EventLoginPage = () => {
     }
   };
 
+  // Handle back to guide page
+  const handleBack = () => {
+    navigate(ROUTES.EVENT_GUIDE);
+  };
+
   // Animation variants
   const contentVariants = isDesktop
     ? {
@@ -463,7 +469,7 @@ const EventLoginPage = () => {
               initial="hidden"
               animate="visible"
             >
-              Phương thức đăng nhập
+              Đăng nhập để tiếp tục
             </motion.p>
 
             {/* Error Message */}
@@ -477,29 +483,26 @@ const EventLoginPage = () => {
               initial="hidden"
               animate="visible"
             >
-              {/* Guide for in-app browser users - show INSTEAD of login button */}
-              {inAppBrowser.isInApp ? (
-                <ShineGlassButton
-                  theme="light"
-                  className="event-login__social-btn event-login__inapp-guide-btn"
-                  disabled
-                >
-                  <span>Nhấn <strong>⋮</strong> rồi chọn <strong>Mở bằng trình duyệt</strong></span>
-                </ShineGlassButton>
-              ) : (
-                <ShineGlassButton
-                  theme="light"
-                  onClick={handleGoogleLogin}
-                  className="event-login__social-btn"
-                  disabled={loading || checking}
-                >
-                  <img src="/google-icon.svg" alt="Google" width="15" height="15" />
-                  <span>{loading ? 'Đang đăng nhập...' : 'Tiếp tục với Google'}</span>
-                </ShineGlassButton>
-              )}
+              {/* Google */}
+              <GlassThemeButton
+                theme="event_dark"
+                onClick={handleGoogleLogin}
+                className="event-login__social-btn"
+                textClassName="bodytext-6--no-margin"
+                expandable={false}
+                icon={<img src="/google-icon.svg" alt="Google" width="15" height="15" />}
+              >
+                {loading ? 'Đang đăng nhập...' : 'Tiếp tục với Google'}
+              </GlassThemeButton>
+
+              {/* Hidden div for Google's native button (optional fallback) */}
+              <div ref={googleButtonRef} style={{ display: 'none' }} />
             </motion.div>
           </div>
         </motion.div>
+
+        {/* Back Button - Fixed bottom left */}
+        <EventBackButton onClick={handleBack} />
       </div>
     </div>
   );

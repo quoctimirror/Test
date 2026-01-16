@@ -6,10 +6,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
-import { useBottomTheme } from '@/hooks/useBottomTheme';
+import { useScrollToNextSection } from '@/hooks/useScrollToNextSection';
 import NavbarV4 from '@/components/navbar/NavbarV4';
-import ShineGlassButton from '@components/common/button/ShineGlassButton';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
+import UnderlineButtonOpposite from '@/components/common/button/UnderlineButtonOpposite';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import titleSvg from '@/assets/images/icons/title.svg';
 import lineSvg from '@/assets/images/dmm/line.svg';
@@ -29,13 +29,16 @@ const TARGET_DATE = new Date('2026-03-07T19:00:00');
 
 const EventGuidePage = () => {
   const navigate = useNavigate();
-  const { theme: arrowTheme } = useBottomTheme();
+  const { handleArrowClick } = useScrollToNextSection({
+    footerSelector: '.event-guide__lucky-section',
+  });
   const [currentStep, setCurrentStep] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0 });
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showBottomArrow, setShowBottomArrow] = useState(true); // Hide at page bottom
+  const [isInHeroSection, setIsInHeroSection] = useState(true); // Track if in hero section
   const [luckyFadePhase, setLuckyFadePhase] = useState('light'); // light, dark
   const [flippedCard, setFlippedCard] = useState(null); // Track which card is flipped (auto-flip)
   const [isHoveringCard, setIsHoveringCard] = useState(false); // Pause auto-flip when hovering
@@ -78,11 +81,25 @@ const EventGuidePage = () => {
     };
   }, []);
 
-  // Detect Safari on mount
+  // Detect browsers that don't support WebM alpha (need frame animation fallback)
+  // Includes: Safari, all iOS browsers (WebKit), in-app browsers (Zalo, Facebook, etc.)
   useEffect(() => {
-    const ua = navigator.userAgent;
-    const safari = /^((?!chrome|android).)*safari/i.test(ua);
-    setIsSafari(safari);
+    const ua = navigator.userAgent.toLowerCase();
+
+    // Check for Safari desktop
+    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    // Check for iOS (ALL browsers on iOS use WebKit which doesn't support WebM alpha)
+    const isIOS = /ipad|iphone|ipod/.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    // Check for in-app browsers that may not support WebM properly
+    const isInAppBrowser = /zalo|fbav|fban|instagram|line|kakaotalk|wechat|micromessenger/.test(ua);
+
+    // Use frame animation for Safari, iOS, or any in-app browser
+    const needsFrameAnimation = isSafariBrowser || isIOS || isInAppBrowser;
+
+    setIsSafari(needsFrameAnimation);
   }, []);
 
   // Preload frames for Safari
@@ -237,6 +254,9 @@ const EventGuidePage = () => {
       wrapper.style.setProperty('--hero-pointer', scrollProgress > 0.5 ? 'none' : 'auto');
       wrapper.style.setProperty('--music-pointer', scrollProgress > 0.5 ? 'auto' : 'none');
 
+      // Update hero section state for "Xem thêm" text visibility
+      setIsInHeroSection(scrollProgress < 0.5);
+
       if (isAutoScrolling) {
         lastScrollProgress = scrollProgress;
         return;
@@ -290,10 +310,47 @@ const EventGuidePage = () => {
     navigate(ROUTES.EVENT_LOGIN, { state: { fromGuide: true } });
   };
 
-  const scrollToContent = () => {
-    const section = document.querySelector('.event-guide__about');
-    section?.scrollIntoView({ behavior: 'smooth' });
-  };
+  // Custom scroll handler - handles both normal scroll and step transition
+  const handleScrollButtonClick = useCallback(() => {
+    if (currentStep === 1) {
+      // Check if at bottom of music section
+      if (musicSectionRef.current) {
+        const rect = musicSectionRef.current.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        const isAtBottom = rect.bottom <= windowHeight + 100;
+
+        if (isAtBottom) {
+          // At bottom of Step 1 -> transition to Step 2
+          handleMusicContentClick();
+          return;
+        }
+      }
+    }
+
+    // Step 2: Custom scroll for staff -> avatar (scroll to center of avatar)
+    if (currentStep === 2 && staffSectionRef.current && avatarSectionRef.current) {
+      const staffRect = staffSectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Check if currently viewing staff section (staff section is mostly in viewport)
+      const isInStaffSection = staffRect.top < windowHeight * 0.5 && staffRect.bottom > windowHeight * 0.3;
+
+      if (isInStaffSection) {
+        // Scroll to center of avatar section
+        const avatarRect = avatarSectionRef.current.getBoundingClientRect();
+        const avatarCenter = window.scrollY + avatarRect.top + (avatarRect.height / 2) - (windowHeight / 2);
+
+        window.scrollTo({
+          top: avatarCenter,
+          behavior: 'smooth'
+        });
+        return;
+      }
+    }
+
+    // Otherwise use default scroll behavior
+    handleArrowClick();
+  }, [currentStep, handleArrowClick]);
 
   // Countdown timer to March 7, 2026
   useEffect(() => {
@@ -484,16 +541,19 @@ const EventGuidePage = () => {
   // Initialize RippleEffect (without auto-play)
   useEffect(() => {
     if (currentStep === 1 && musicContentRef.current && !rippleRef.current) {
+      // Mobile/tablet: auto ripples, Desktop: scroll-triggered
+      const isMobile = window.innerWidth <= 480;
+      const isMobileTablet = window.innerWidth <= 1024;
       rippleRef.current = new RippleEffect(musicContentRef.current, {
         autoRippleCount: 6,
         duration: 6000,
-        delay: 1000,
-        startSize: 500,
-        endSize: 1200,
+        delay: isMobileTablet ? 1500 : 1000,
+        startSize: isMobile ? 150 : 500,
+        endSize: isMobile ? 800 : 1200,
         opacity: 0.65,
-        autoPlay: false,
+        autoPlay: isMobileTablet, // Auto only for mobile/tablet
         clickable: false,
-        clickRippleCount: 1, // Only 1 ripple per trigger
+        clickRippleCount: 1,
       });
     }
 
@@ -531,13 +591,27 @@ const EventGuidePage = () => {
       const ring = document.createElement('div');
       ring.className = 'ripple-effect-continuous scroll-ripple';
       ring.style.animationIterationCount = '1';
+      // iOS Safari flickering fix - force GPU layer with full 3D transform
+      ring.style.webkitTransform = 'translate(-50%, -50%) translate3d(0, 0, 0)';
+      ring.style.transform = 'translate(-50%, -50%) translate3d(0, 0, 0)';
+      ring.style.webkitBackfaceVisibility = 'hidden';
+      ring.style.backfaceVisibility = 'hidden';
+      ring.style.webkitPerspective = '1000px';
+      ring.style.perspective = '1000px';
+      ring.style.isolation = 'isolate';
+      ring.style.willChange = 'transform, opacity, width, height';
       rippleArea.appendChild(ring);
 
       setTimeout(() => ring.remove(), 6500);
     };
 
+    // Detect touch device
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
     // Handle scroll for ripple creation (when not at bottom)
+    // Skip on touch devices - use auto ripples instead to avoid flickering
     const handleScroll = () => {
+      if (isTouchDevice) return;
       if (!musicSectionRef.current) return;
 
       const rect = musicSectionRef.current.getBoundingClientRect();
@@ -577,8 +651,8 @@ const EventGuidePage = () => {
           lastRippleTime = now;
           overscrollRippleCount++;
 
-          // Trigger transition after 3 ripples at bottom
-          if (overscrollRippleCount >= 3) {
+          // Trigger transition after 2 ripples at bottom (desktop)
+          if (overscrollRippleCount >= 2) {
             handleMusicContentClick();
             return;
           }
@@ -595,6 +669,9 @@ const EventGuidePage = () => {
       lastScrollY = window.scrollY;
     };
 
+    // Minimum touch movement required to trigger ripple (pixels)
+    const TOUCH_THRESHOLD = 50;
+
     // Handle touch move for overscroll detection (Mobile/Tablet)
     const handleTouchMove = (e) => {
       if (isTransitioning) return;
@@ -608,18 +685,21 @@ const EventGuidePage = () => {
       const isAtBottom = rect.bottom <= windowHeight + 50;
       const currentY = e.touches[0].clientY;
       const currentScrollY = window.scrollY;
-      const isScrollingDown = touchStartY > currentY;
+      const touchDistance = touchStartY - currentY;
+      const isScrollingDown = touchDistance > TOUCH_THRESHOLD; // Must move at least threshold pixels
 
-      // Detect overscroll attempt: at bottom, trying to scroll down
+      // Detect overscroll attempt: at bottom, trying to scroll down with enough movement
       if (isAtBottom && isScrollingDown && isVisible && currentScrollY >= lastScrollY) {
         const now = Date.now();
         if (now - lastRippleTime >= OVERSCROLL_RIPPLE_INTERVAL) {
           createLargeRipple();
           lastRippleTime = now;
           overscrollRippleCount++;
+          // Reset touch start for next swipe gesture
+          touchStartY = currentY;
 
-          // Trigger transition after 3 ripples at bottom
-          if (overscrollRippleCount >= 3) {
+          // Trigger transition after 1 ripple at bottom (mobile/touch)
+          if (overscrollRippleCount >= 1) {
             handleMusicContentClick();
             return;
           }
@@ -716,8 +796,8 @@ const EventGuidePage = () => {
         {(currentStep === 2 || isTransitioning || isGoingBack) && (
           <div className={`event-guide__step2 ${hasAnimated ? 'event-guide__step2--animated' : ''} ${animationComplete ? 'event-guide__step2--animation-complete' : ''} ${isGoingBack ? 'event-guide__step2--fading-out' : ''}`}>
             {/* Music Staff Section */}
-            <section ref={staffSectionRef} className="event-guide__staff-section" data-navbar-theme="black">
-              <h2 className="event-guide__staff-title heading-2--no-margin">Bạn là một Nốt Sáng</h2>
+            <section ref={staffSectionRef} className="event-guide__staff-section" data-section="staff" data-navbar-theme="black">
+              <h2 className="event-guide__staff-title heading-2--no-margin">Bạn là một Nốt sáng</h2>
 
               {/* Staff with note */}
               <div className="event-guide__staff">
@@ -748,7 +828,7 @@ const EventGuidePage = () => {
               </div>
 
               <p className="event-guide__staff-description bodytext-6--no-margin">
-                Giữa bản nhạc Love-Grown, <br />mỗi người hiện diện như một Nốt Sáng, <br />một nguồn cảm hứng giúp giai điệu được hoàn thiện. <br />Và mở lối cho hành trình đa giác quan được đánh thức...
+                Giữa bản nhạc Love-Grown, <br />mỗi người hiện diện như một Nốt sáng, <br />một nguồn cảm hứng giúp giai điệu được hoàn thiện. <br />Và mở lối cho hành trình đa giác quan được đánh thức...
               </p>
             </section>
 
@@ -762,6 +842,7 @@ const EventGuidePage = () => {
               <section
                 ref={avatarSectionRef}
                 className="event-guide__avatar-section"
+                data-section="avatar"
               >
                 {/* Scattered Cards */}
                 <div className="event-guide__cards-scattered">
@@ -781,27 +862,42 @@ const EventGuidePage = () => {
                     Một phiên bản avatar khác biệt
                   </h2>
                   <p className="event-guide__avatar-text bodytext-6--no-margin">
-                    Từ lựa chọn của bạn, một avatar riêng biệt mang tên bạn sẽ được tạo ra, một món quà phản chiếu dấu ấn cá nhân và ghi lại khoảnh khắc bạn hiện diện trong thế giới quan của Her Concert.
+                    Từ lựa chọn của bạn, một avatar riêng biệt mang tên bạn sẽ được tạo ra, một món quà phản chiếu dấu ấn cá nhân và ghi lại khoảnh khắc bạn hiện diện trong thế giới quan của HER CONCERT.
                   </p>
-                  <ShineGlassButton theme="light" onClick={handleGetStarted}>
+                  <GlassThemeButton theme="event_spec" onClick={handleGetStarted}>
                     Bắt đầu hành trình
-                  </ShineGlassButton>
+                  </GlassThemeButton>
                 </div>
               </section>
 
               {/* Lucky Moment Section */}
-              <section className="event-guide__lucky-section">
+              <section className="event-guide__lucky-section" data-section="lucky">
                 <h2 className="event-guide__lucky-title heading-2--no-margin">
                   Khoảnh khắc <br /> Nốt sáng được gọi tên
                 </h2>
                 <p className="event-guide__lucky-text bodytext-6--no-margin">
-                  Giữa bản nhạc, một khoảnh khắc được gọi tên trong đêm “Her concert”.
+                  Giữa bản nhạc, một khoảnh khắc được gọi tên trong đêm HER CONCERT.
 Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình yêu được âm nhạc dẫn lối, tìm đến nguồn cảm hứng, để bản nhạc ấy cất thành lời.
                 </p>
                 <div className="event-guide__lucky-btn">
-                  <ShineGlassButton theme="footer" onClick={() => window.open('https://ticketbox.vn/doc-mong-mo-her-concert-25556?utm_medium=sr-her+concert_all-dates_all-prices&utm_source=tkb-search-results', '_blank')}>
-                    Tham gia lucky draw
-                  </ShineGlassButton>
+                  <GlassThemeButton theme="event_spec" onClick={handleGetStarted}>
+                    Bắt đầu hành trình
+                  </GlassThemeButton>
+                  {/* Desktop: GlassThemeButton */}
+                  <GlassThemeButton
+                    theme="event_light"
+                    className="event-guide__lucky-btn-ticket--desktop"
+                    onClick={() => window.open('https://ticketbox.vn/doc-mong-mo-her-concert-25556?utm_medium=sr-her+concert_all-dates_all-prices&utm_source=tkb-search-results', '_blank')}
+                  >
+                    Mua vé tham dự
+                  </GlassThemeButton>
+                  {/* Mobile: UnderlineButtonOpposite */}
+                  <UnderlineButtonOpposite
+                    className="event-guide__lucky-btn-ticket--mobile"
+                    onClick={() => window.open('https://ticketbox.vn/doc-mong-mo-her-concert-25556?utm_medium=sr-her+concert_all-dates_all-prices&utm_source=tkb-search-results', '_blank')}
+                  >
+                    Mua vé tham dự
+                  </UnderlineButtonOpposite>
                 </div>
 
                 {/* Stats row */}
@@ -848,8 +944,9 @@ Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình 
           <div
             ref={musicSectionRef}
             className={`event-guide__step1 ${isGoingBack ? 'event-guide__step1--fading-in' : ''}`}
+            data-section="hero"
           >
-            <div className="event-guide__hero-music-wrapper">
+            <div className="event-guide__hero-music-wrapper" data-section="music">
               {/* Background layers */}
               <div className="event-guide__bg event-guide__bg--hero"></div>
               <div className="event-guide__bg event-guide__bg--music"></div>
@@ -875,7 +972,7 @@ Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình 
                   <span className="event-guide__sparkle event-guide__sparkle--5"></span>
 
                   <div className="event-guide__hero-cta">
-                    <GlassThemeButton theme="spec_dark" onClick={handleGetStarted}>
+                    <GlassThemeButton theme="event_spec" onClick={handleGetStarted}>
                       Bắt đầu hành trình
                     </GlassThemeButton>
                   </div>
@@ -903,9 +1000,12 @@ Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình 
 
         {/* Fixed bottom arrow - hidden at page bottom */}
         <div className={`event-guide__fixed-bottom ${!showBottomArrow ? 'event-guide__fixed-bottom--hidden' : ''}`}>
+          {currentStep === 1 && isInHeroSection && (
+            <span className="event-guide__fixed-bottom-text bodytext-4--no-margin">Xem thêm</span>
+          )}
           <GlassThemeButton
-            theme={arrowTheme === "white" ? "dark" : "light"}
-            onClick={scrollToContent}
+            theme={luckyFadePhase === 'dark' ? "event_light" : "event_dark"}
+            onClick={handleScrollButtonClick}
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 18" fill="none">
                 <path d="M7.91964 0.750001L7.91964 16.75M7.91964 16.75L1.0625 9.89286M7.91964 16.75L14.7768 9.89286" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
@@ -916,8 +1016,12 @@ Chiếc nhẫn kim cương xuất hiện như một biểu tượng của tình 
 
         <div className={`fixed-scroll-top-container ${showScrollTop ? 'visible' : ''}`}>
           <GlassThemeButton
-            theme={arrowTheme === "white" ? "dark" : "light"}
-            icon="arrow-up"
+            theme={luckyFadePhase === 'dark' ? "event_light" : "event_dark"}
+            icon={
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 18" fill="none">
+                <path d="M7.9163 17.0605L7.9163 1.06055M7.9163 1.06055L14.7734 7.91769M7.9163 1.06055L1.05916 7.91769" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square"/>
+              </svg>
+            }
             onClick={() => {
               if (currentStep === 2) {
                 handleBackToStep1();

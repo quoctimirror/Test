@@ -8,6 +8,8 @@ import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@components/common/button/GlassThemeButton';
+import EventBackButton from '@/components/event/EventBackButton';
+import EventNextButton from '@/components/event/EventNextButton';
 import useEventStore from '@/store/useEventStore';
 import { updateUserDisplayName } from '@services/event/eventApi';
 
@@ -67,7 +69,7 @@ const EventNamePage = () => {
   }, [name]);
 
   const handleBack = () => {
-    navigate(ROUTES.EVENT_LOGIN, { state: { fromName: true } });
+    navigate(ROUTES.EVENT_GUIDE);
   };
 
   const handleCreateNote = async () => {
@@ -173,23 +175,22 @@ const EventNamePage = () => {
         {/* Create Note Button */}
         <div className="event-name__nav">
           <GlassThemeButton
-            theme="spec_dark"
+            theme="event_spec"
             onClick={handleCreateNote}
             disabled={saving || !name.trim()}
           >
-            {saving ? 'Đang lưu...' : 'Sáng tạo "Nốt sáng" của riêng bạn'}
+            {saving ? 'Đang sáng tạo...' : 'Sáng tạo Nốt sáng của riêng bạn'}
           </GlassThemeButton>
         </div>
       </div>
 
       {/* Back Button - Fixed bottom left */}
-      <div className="event-name__back">
-        <GlassThemeButton theme="light" onClick={handleBack} icon={
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-            <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
-          </svg>
-        } />
-      </div>
+      <EventBackButton onClick={handleBack} />
+
+      {/* Next Button - Fixed bottom right */}
+      <EventNextButton onClick={handleCreateNote} disabled={saving || !name.trim()}>
+        {saving ? 'Đang sáng tạo...' : 'Tiếp tục'}
+      </EventNextButton>
     </div>
     </>
   );

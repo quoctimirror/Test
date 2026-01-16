@@ -10,6 +10,8 @@ import AvatarGenerator, { downloadAvatar } from '@/components/event/ui/AvatarGen
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
+import EventBackButton from '@/components/event/EventBackButton';
+import EventNextButton from '@/components/event/EventNextButton';
 
 // Mapping from shape ID (h1, h2...) to diamondShape name for AvatarGenerator
 // Must match keys in AvatarGenerator's DIAMONDS object:
@@ -236,8 +238,8 @@ const ChooseNoteShapeScreenNew = () => {
     if (!avatarDataUrl) return;
     setDownloading(true);
     const filename = `mirrorthankyou_${user?.displayName || 'guest'}_${Date.now()}.png`;
-    downloadAvatar(avatarDataUrl, filename);
-    setTimeout(() => setDownloading(false), 500);
+    await downloadAvatar(avatarDataUrl, filename);
+    setDownloading(false);
   };
 
   // Share
@@ -478,7 +480,7 @@ const ChooseNoteShapeScreenNew = () => {
             {/* Action buttons below card - Download + Share (desktop) */}
             <div className="your-wallpaper__actions">
               <GlassThemeButton
-                theme="light"
+                theme="event_spec"
                 onClick={handleDownload}
                 className={downloading || !avatarDataUrl ? 'disabled' : ''}
               >
@@ -488,35 +490,27 @@ const ChooseNoteShapeScreenNew = () => {
                 {downloading ? 'Đang tải...' : 'Tải xuống'}
               </GlassThemeButton>
               <GlassThemeButton
-                theme="light"
+                theme="event_dark"
                 onClick={handleShare}
-                icon={<img src={getMediaUrl('dmm/icons/share-icon.svg')} alt="Share" width={18} height={18} />}
-              />
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="11" viewBox="0 0 15 11" fill="none">
+                  <path d="M14.5 5.10798L7.03341 0.5L7.03341 3.1087C0.5 4.41304 0.5 10.5 0.5 10.5C0.5 10.5 3.29997 7.02174 7.03341 7.45652L7.03341 10.1522L14.5 5.10798Z" stroke="currentColor" strokeLinejoin="round"/>
+                </svg>
+                Chia sẻ
+              </GlassThemeButton>
             </div>
           </div>
         </main>
 
-        {/* Arrow buttons - fixed position like other pages */}
-        <div className="your-wallpaper__arrow your-wallpaper__arrow--left">
-          <GlassThemeButton theme="light" onClick={handleGoBack} icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-              <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
-            </svg>
-          } />
-        </div>
-        <div className="your-wallpaper__arrow your-wallpaper__arrow--right">
-          <GlassThemeButton theme="light" onClick={() => navigate(ROUTES.EVENT_THANKYOU)} icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-              <path d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031" stroke="currentColor" strokeLinecap="square"/>
-            </svg>
-          } />
-        </div>
+        {/* Back and Next buttons */}
+        <EventBackButton onClick={handleGoBack} />
+        <EventNextButton onClick={() => navigate(ROUTES.EVENT_THANKYOU)} />
 
         {/* Footer - actions on tablet/mobile */}
         <footer className="your-wallpaper__footer">
           <div className="your-wallpaper__footer-actions">
             <GlassThemeButton
-              theme="light"
+              theme="event_spec"
               onClick={handleDownload}
               className={downloading || !avatarDataUrl ? 'disabled' : ''}
             >
@@ -526,10 +520,14 @@ const ChooseNoteShapeScreenNew = () => {
               {downloading ? 'Đang tải...' : 'Tải xuống'}
             </GlassThemeButton>
             <GlassThemeButton
-              theme="light"
+              theme="event_dark"
               onClick={handleShare}
-              icon={<img src={getMediaUrl('dmm/icons/share-icon.svg')} alt="Share" width={18} height={18} />}
-            />
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="11" viewBox="0 0 15 11" fill="none">
+                <path d="M14.5 5.10798L7.03341 0.5L7.03341 3.1087C0.5 4.41304 0.5 10.5 0.5 10.5C0.5 10.5 3.29997 7.02174 7.03341 7.45652L7.03341 10.1522L14.5 5.10798Z" stroke="currentColor" strokeLinejoin="round"/>
+              </svg>
+              <span className="share-btn-text">Chia sẻ</span>
+            </GlassThemeButton>
           </div>
         </footer>
 

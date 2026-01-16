@@ -12,6 +12,8 @@ import ShineGlassButton from "@/components/common/button/ShineGlassButton";
 import BookingModalV3 from "@/components/booking/BookingModalV3";
 import { ROUTES } from "@/constants/routes";
 import { useNavbarTheme } from "@/hooks/useNavbarTheme";
+import useEventStore from "@/store/useEventStore";
+import { clearUserSession } from "@/pages/Event/EventLoginPage";
 
 export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
   const navigate = useNavigate();
@@ -29,6 +31,9 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false); // Track booking modal
   const logoRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
+
+  // Event store for event logout
+  const { user: eventUser, reset: resetEventStore } = useEventStore();
 
   // Get current navbar theme from hook
   const { theme: navbarTheme } = useNavbarTheme();
@@ -55,6 +60,14 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
 
   // Check if on event pages (the-muse-of-love-grown routes)
   const isEventPage = location.pathname.startsWith(ROUTES.EVENT_GUIDE);
+
+  // Check if on event pages after login (not guide or login page)
+  const isEventPageAfterLogin = isEventPage &&
+    location.pathname !== ROUTES.EVENT_GUIDE &&
+    location.pathname !== ROUTES.EVENT_LOGIN;
+
+  // Show event logout button if on event pages after login and user is logged in
+  const showEventLogout = isEventPageAfterLogin && !!eventUser;
 
   // Check if logo click should be disabled (Milan, Immersive Showroom, but NOT event pages)
   const shouldDisableLogoClick = shouldHideButtons && !isEventPage;
@@ -400,6 +413,13 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
     logout();
   };
 
+  // Event logout - only resets event store, not Mirror account
+  const handleEventLogoutClick = () => {
+    clearUserSession(); // Clear localStorage + sign out from Google
+    resetEventStore();  // Reset Zustand store
+    navigate(ROUTES.EVENT_LOGIN);
+  };
+
   const handleLoginClick = async () => {
     navigate(ROUTES.AUTH_LOGIN);
     if (window.location.pathname === ROUTES.AUTH_LOGIN) {
@@ -557,6 +577,20 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
           </>
         )}
       </div>
+
+      {/* Event Logout Button - Fixed top right on event pages after login */}
+      {showEventLogout && (
+        <div className={`event-logout-v4-container navbar-v4-theme-${navbarTheme}`}>
+          <UnderlineButton onClick={handleEventLogoutClick}>
+            <span className="event-logout-content">
+              Đăng xuất
+              <svg className="event-logout-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M5.8511 2.3999H3.38051C3.00609 2.3999 2.647 2.5474 2.38225 2.80995C2.11749 3.0725 1.96875 3.4286 1.96875 3.7999V12.1999C1.96875 12.5712 2.11749 12.9273 2.38225 13.1899C2.647 13.4524 3.00609 13.5999 3.38051 13.5999H5.8511M6.02656 7.9999H14.0266M14.0266 7.9999L10.9698 4.7999M14.0266 7.9999L10.9698 11.1999" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </span>
+          </UnderlineButton>
+        </div>
+      )}
 
       {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
       {!shouldHideButtons && (

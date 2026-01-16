@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import ShineGlassButton from '@components/common/button/ShineGlassButton';
+import EventBackButton from '@/components/event/EventBackButton';
 
 import './EventPreviewPage.css';
 
@@ -41,11 +42,7 @@ const EventPreviewPage = () => {
       {/* Main Content */}
       <div className="event-preview__main">
         {/* Back Button */}
-        <ShineGlassButton theme="light" onClick={handleBack} className="event-preview__back">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </ShineGlassButton>
+        <EventBackButton onClick={handleBack} />
 
         {/* Diamond Shape */}
         <div className="event-preview__diamond">

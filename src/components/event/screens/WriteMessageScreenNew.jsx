@@ -10,6 +10,8 @@ import RippleEffect from '@/components/event/effects/ripple-effect';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
+import EventBackButton from '@/components/event/EventBackButton';
+import EventNextButton from '@/components/event/EventNextButton';
 import { initAudio, playNoteByPosition } from '@services/event/audio';
 import AvatarGenerator from '@/components/event/ui/AvatarGenerator';
 
@@ -515,7 +517,7 @@ const WriteMessageScreenNew = () => {
         <header className={`your-melody__header ${!headerAnimated ? 'your-melody__header--hidden' : ''} ${headerAnimated && isAnimatingEntrance ? 'your-melody__header--animate' : ''}`}>
           <h2 className="heading-2--no-margin your-melody__title">Tương tác cùng Nốt sáng</h2>
           <p className="bodytext-6--no-margin your-melody__description">
-            Bạn đã tạo nên Nốt Sáng của riêng mình. Hãy trải nghiệm và lắng nghe giai điệu được hoàn thiện từ chính sự hiện diện của bạn.
+            Bạn đã tạo nên Nốt sáng của riêng mình. Hãy trải nghiệm và lắng nghe giai điệu được hoàn thiện từ chính sự hiện diện của bạn.
           </p>
         </header>
 
@@ -608,21 +610,9 @@ const WriteMessageScreenNew = () => {
           </div>
         </main>
 
-        {/* Arrow buttons - fixed position like other pages */}
-        <div className="your-melody__arrow your-melody__arrow--left">
-          <GlassThemeButton theme="light" onClick={handleGoBack} icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-              <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
-            </svg>
-          } />
-        </div>
-        <div className="your-melody__arrow your-melody__arrow--right">
-          <GlassThemeButton theme="light" onClick={handleNext} icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-              <path d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031" stroke="currentColor" strokeLinecap="square"/>
-            </svg>
-          } />
-        </div>
+        {/* Back and Next buttons */}
+        <EventBackButton onClick={handleGoBack} />
+        <EventNextButton onClick={handleNext} />
 
         {/* Edge next button - mobile/tablet only, left edge centered */}
         <button className="your-melody__edge-btn" onClick={handleNext}>
@@ -638,14 +628,14 @@ const WriteMessageScreenNew = () => {
             {/* Hint text - mobile only */}
             <p className="your-melody__hint bodytext-6--no-margin">Chạm vào nốt để nghe</p>
             <GlassThemeButton
-              theme="light"
+              theme="event_spec"
               onClick={handlePlayMelody}
               className={isPlaying ? 'disabled' : ''}
             >
               Nghe 1 đoạn nốt
             </GlassThemeButton>
             <GlassThemeButton
-              theme="spec_dark"
+              theme="event_dark"
               onClick={handlePlayUserNote}
               className={isPlaying ? 'disabled' : ''}
             >

@@ -94,6 +94,12 @@ class RippleEffect {
                 height: 100%;
                 pointer-events: none;
                 overflow: hidden;
+                /* iOS Safari flickering fix - container layer */
+                -webkit-transform: translate3d(0, 0, 0);
+                transform: translate3d(0, 0, 0);
+                -webkit-perspective: 1000px;
+                perspective: 1000px;
+                isolation: isolate;
             }
 
             .ripple-effect-ring {
@@ -103,6 +109,11 @@ class RippleEffect {
                 pointer-events: none;
                 opacity: ${this.options.opacity};
                 background: ${gradient};
+                /* iOS Safari flickering fix */
+                -webkit-transform: translate(-50%, -50%) scale(0) translateZ(0);
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                will-change: transform, opacity;
             }
 
             .ripple-effect-ring.animate {
@@ -114,16 +125,25 @@ class RippleEffect {
                 left: 50%;
                 top: 50%;
                 border-radius: 50%;
-                transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%) translate3d(0, 0, 0);
                 pointer-events: none;
                 opacity: ${this.options.opacity};
                 background: ${gradient};
                 animation: rippleEffectPulse ${this.options.duration}ms ease-out infinite;
+                /* iOS Safari flickering fix */
+                -webkit-transform: translate(-50%, -50%) translate3d(0, 0, 0);
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                -webkit-perspective: 1000px;
+                perspective: 1000px;
+                isolation: isolate;
+                will-change: transform, opacity, width, height;
             }
 
             @keyframes rippleEffectExpand {
                 0% {
-                    transform: translate(-50%, -50%) scale(0);
+                    transform: translate(-50%, -50%) scale(0) translateZ(0);
+                    -webkit-transform: translate(-50%, -50%) scale(0) translateZ(0);
                     opacity: ${this.options.opacity + 0.05};
                 }
                 40% {
@@ -133,7 +153,8 @@ class RippleEffect {
                     opacity: ${this.options.opacity - 0.3};
                 }
                 100% {
-                    transform: translate(-50%, -50%) scale(1);
+                    transform: translate(-50%, -50%) scale(1) translateZ(0);
+                    -webkit-transform: translate(-50%, -50%) scale(1) translateZ(0);
                     opacity: 0;
                 }
             }
@@ -142,21 +163,22 @@ class RippleEffect {
                 0% {
                     width: ${this.options.startSize}px;
                     height: ${this.options.startSize}px;
-                    opacity: 0;
-                }
-                10% {
                     opacity: ${this.options.opacity};
+                    transform: translate(-50%, -50%) translate3d(0, 0, 0);
+                    -webkit-transform: translate(-50%, -50%) translate3d(0, 0, 0);
                 }
                 50% {
-                    opacity: ${this.options.opacity - 0.2};
+                    opacity: ${this.options.opacity - 0.15};
                 }
                 80% {
-                    opacity: ${this.options.opacity - 0.45};
+                    opacity: ${this.options.opacity - 0.35};
                 }
                 100% {
                     width: ${this.options.endSize}px;
                     height: ${this.options.endSize}px;
                     opacity: 0;
+                    transform: translate(-50%, -50%) translate3d(0, 0, 0);
+                    -webkit-transform: translate(-50%, -50%) translate3d(0, 0, 0);
                 }
             }
         `;

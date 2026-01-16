@@ -422,7 +422,7 @@ const ChooseNoteShapeScreenV2 = () => {
         <header className="your-wallpaper__header">
           <h2 className="heading-2--no-margin your-wallpaper__title">Khi giai điệu thành hình</h2>
           <p className="bodytext-6--no-margin your-wallpaper__description">
-            Từ đây, MIRROR đã phát triển avatar phản chiếu Nốt Sáng, giai điệu và dấu ấn cá nhân của bạn.
+            Từ đây, MIRROR đã phát triển avatar phản chiếu Nốt sáng, giai điệu và dấu ấn cá nhân của bạn.
             Bạn có thể tải và chia sẻ khoảnh khắc hiện diện này.
           </p>
         </header>

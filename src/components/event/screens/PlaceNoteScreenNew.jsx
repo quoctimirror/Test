@@ -5,7 +5,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
-import GlassThemeButton from '@/components/common/button/GlassThemeButton';
+import EventBackButton from '@/components/event/EventBackButton';
+import EventNextButton from '@/components/event/EventNextButton';
 import { fetchAllNotes } from '@services/event/eventApi';
 import { initAudio, playNoteByPosition, isAudioInitialized } from '@services/event/audio';
 import useEventStore from '@/store/useEventStore';
@@ -317,25 +318,13 @@ const PlaceNoteScreenNew = () => {
         {/* Note title - shows the note name based on position (appears after diamond animation) */}
         {titleVisible && (
           <h2 className="place-note-new__note-title place-note-new__note-title--animate heading-3--no-margin">
-            Bạn là nốt sáng {POSITION_TO_NOTE_NAME[positionY]}
+            Bạn là Nốt sáng {POSITION_TO_NOTE_NAME[positionY]}
           </h2>
         )}
 
-        {/* Arrow buttons - outside main to avoid transform containing block issue */}
-        <div className="place-note-new__arrow place-note-new__arrow--left">
-          <GlassThemeButton theme="light" onClick={handleGoBack} icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-              <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
-            </svg>
-          } />
-        </div>
-        <div className="place-note-new__arrow place-note-new__arrow--right">
-          <GlassThemeButton theme="light" onClick={handleNext} icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-              <path d="M0.5 5.70703L12.5 5.70703M12.5 5.70703L7.35714 10.707M12.5 5.70703L7.35714 0.707031" stroke="currentColor" strokeLinecap="square"/>
-            </svg>
-          } />
-        </div>
+        {/* Back and Next buttons */}
+        <EventBackButton onClick={handleGoBack} />
+        <EventNextButton onClick={handleNext} />
 
       {/* Main content - Music Staff (vertically centered) */}
       <main className="place-note-new__main">

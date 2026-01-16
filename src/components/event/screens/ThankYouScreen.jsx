@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
-import ShineGlassButton from '@/components/common/button/ShineGlassButton';
+import EventBackButton from '@/components/event/EventBackButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 
 // Frame animation config for Safari (WebM alpha not supported)
@@ -25,11 +25,25 @@ const ThankYouScreen = () => {
   const ringAnimationRef = useRef(null);
   const lastRingFrameTimeRef = useRef(0);
 
-  // Detect Safari on mount
+  // Detect browsers that don't support WebM alpha (need frame animation fallback)
+  // Includes: Safari, all iOS browsers (WebKit), in-app browsers (Zalo, Facebook, etc.)
   useEffect(() => {
-    const ua = navigator.userAgent;
-    const safari = /^((?!chrome|android).)*safari/i.test(ua);
-    setIsSafari(safari);
+    const ua = navigator.userAgent.toLowerCase();
+
+    // Check for Safari desktop
+    const isSafariBrowser = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    // Check for iOS (ALL browsers on iOS use WebKit which doesn't support WebM alpha)
+    const isIOS = /ipad|iphone|ipod/.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    // Check for in-app browsers that may not support WebM properly
+    const isInAppBrowser = /zalo|fbav|fban|instagram|line|kakaotalk|wechat|micromessenger/.test(ua);
+
+    // Use frame animation for Safari, iOS, or any in-app browser
+    const needsFrameAnimation = isSafariBrowser || isIOS || isInAppBrowser;
+
+    setIsSafari(needsFrameAnimation);
   }, []);
 
   // Preload WebP frames for Safari
@@ -97,7 +111,7 @@ const ThankYouScreen = () => {
         <div className="mirror-thankyou__left">
           <div className="mirror-thankyou__social">
             <GlassThemeButton
-              theme="light"
+              theme="event_light"
               onClick={() => window.open('https://www.instagram.com/mirrorfuturediamond/', '_blank')}
               icon={
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -106,7 +120,7 @@ const ThankYouScreen = () => {
               }
             />
             <GlassThemeButton
-              theme="light"
+              theme="event_light"
               onClick={() => window.open('https://www.facebook.com/mirrorfuturediamond', '_blank')}
               icon={
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -115,7 +129,7 @@ const ThankYouScreen = () => {
               }
             />
             <GlassThemeButton
-              theme="light"
+              theme="event_light"
               onClick={() => window.open('https://www.tiktok.com/@mirrorfuturediamond?lang=vi-VN', '_blank')}
               icon={
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -127,18 +141,12 @@ const ThankYouScreen = () => {
         </div>
 
         {/* Back Button */}
-        <div className="mirror-thankyou__arrow mirror-thankyou__arrow--left">
-          <GlassThemeButton theme="light" onClick={handleGoBack} icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-              <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
-            </svg>
-          } />
-        </div>
+        <EventBackButton onClick={handleGoBack} theme="event_light" />
 
         {/* Right Side - Navigation Icons */}
         <div className="mirror-thankyou__right">
           <GlassThemeButton
-            theme="light"
+            theme="event_light"
             onClick={() => navigate(ROUTES.EVENT_PLACE_NOTE)}
             icon={
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -147,7 +155,7 @@ const ThankYouScreen = () => {
             }
           />
           <GlassThemeButton
-            theme="light"
+            theme="event_light"
             onClick={() => {/* TODO: Share functionality */}}
             icon={
               <svg width="18" height="14" viewBox="0 0 15 11" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -156,7 +164,7 @@ const ThankYouScreen = () => {
             }
           />
           <GlassThemeButton
-            theme="light"
+            theme="event_light"
             onClick={() => navigate(ROUTES.EVENT_GUIDE)}
             icon={
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -175,14 +183,14 @@ const ThankYouScreen = () => {
 
           {/* Description */}
           <p className="mirror-thankyou__description bodytext-6--no-margin">
-            Mỗi tấm vé tham dự Her Concert là một cơ hội nhận được chiếc nhẫn kim cương từ MIRROR.
+            Mỗi tấm vé tham dự HER CONCERT là một cơ hội nhận được chiếc nhẫn kim cương từ MIRROR.
           </p>
 
           {/* Action Button */}
           <div className="mirror-thankyou__actions">
-            <ShineGlassButton theme="footer" onClick={handleBuyTicket}>
+            <GlassThemeButton theme="event_spec" onClick={handleBuyTicket}>
               Mua vé tham dự
-            </ShineGlassButton>
+            </GlassThemeButton>
           </div>
         </main>
 

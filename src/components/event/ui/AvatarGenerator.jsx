@@ -304,12 +304,44 @@ const AvatarGenerator = ({
   );
 };
 
-// Download helper
-export const downloadAvatar = (dataUrl, filename) => {
-  const link = document.createElement('a');
-  link.download = filename;
-  link.href = dataUrl;
-  link.click();
+// Download helper - handles iOS Safari which doesn't support download attribute
+export const downloadAvatar = async (dataUrl, filename) => {
+  // Detect iOS
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  if (isIOS) {
+    // iOS: Convert data URL to blob and open in new tab for user to long-press save
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Open in new tab - user can long-press to save
+      const newTab = window.open(blobUrl, '_blank');
+
+      if (!newTab) {
+        // Popup blocked - fallback to showing alert
+        alert('Nhấn giữ hình ảnh để lưu vào thiết bị của bạn');
+        window.location.href = blobUrl;
+      }
+
+      // Clean up blob URL after a delay
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+    } catch (error) {
+      console.error('iOS download error:', error);
+      // Fallback: open data URL directly
+      window.open(dataUrl, '_blank');
+    }
+  } else {
+    // Other browsers: use standard download
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 };
 
 export default AvatarGenerator;

@@ -3579,6 +3579,11 @@
   .your-melody__edge-btn svg path {
     stroke: #0B0B0B;
   }
+
+  /* Action buttons - align with back/next buttons */
+  .your-melody__actions {
+    bottom: 24px;
+  }
 }
 
 /* ============================================
@@ -3650,7 +3655,7 @@
   }
 
   /* Hide "Nghe nốt của tôi" button on mobile */
-  .your-melody__actions .glass-theme-button--spec_dark {
+  .your-melody__actions .glass-theme-button--event_dark {
     display: none;
   }
 
@@ -3765,18 +3770,28 @@
   display: none;
 }
 
-/* Download button with icon - flex layout (for both actions and footer-actions) */
-.your-wallpaper__actions .glass-theme-button--light:first-child .glass-theme-btn-text,
-.your-wallpaper__footer-actions .glass-theme-button--light:first-child .glass-theme-btn-text {
+/* Download & Share buttons with icon - flex layout (for both actions and footer-actions) */
+.your-wallpaper__actions .glass-theme-button--event_spec .glass-theme-btn-text,
+.your-wallpaper__actions .glass-theme-button--event_dark .glass-theme-btn-text,
+.your-wallpaper__footer-actions .glass-theme-button--event_spec .glass-theme-btn-text,
+.your-wallpaper__footer-actions .glass-theme-button--event_dark .glass-theme-btn-text {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.your-wallpaper__actions .glass-theme-button--light:first-child .glass-theme-btn-text svg,
-.your-wallpaper__footer-actions .glass-theme-button--light:first-child .glass-theme-btn-text svg {
+.your-wallpaper__actions .glass-theme-button--event_spec .glass-theme-btn-text svg,
+.your-wallpaper__footer-actions .glass-theme-button--event_spec .glass-theme-btn-text svg {
   width: 15px;
   height: 16px;
+  flex-shrink: 0;
+}
+
+/* Share button icon - smaller size */
+.your-wallpaper__actions .glass-theme-button--event_dark .glass-theme-btn-text svg,
+.your-wallpaper__footer-actions .glass-theme-button--event_dark .glass-theme-btn-text svg {
+  width: 14px;
+  height: 10px;
   flex-shrink: 0;
 }
 
@@ -3868,8 +3883,8 @@
   }
 }
 
-/* Responsive - Mobile */
-@media (max-width: 768px) {
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
   .your-wallpaper__header {
     display: none;
   }
@@ -3888,6 +3903,7 @@
   }
 
   .your-wallpaper__footer-actions {
+    bottom: 24px;
     gap: 8px;
     transform: translateX(calc(-50% + 27px)); /* offset = (icon button 46px + gap 8px) / 2 */
   }
@@ -3909,6 +3925,7 @@
   }
 
   .your-wallpaper__footer-actions {
+    bottom: 24px;
     gap: 6px;
     transform: translateX(calc(-50% + 26px)); /* offset = (icon button 46px + gap 6px) / 2 */
   }
@@ -3918,6 +3935,11 @@
     font-size: 12px;
     font-weight: 400;
     line-height: 1.2;
+  }
+
+  /* Hide share button text on mobile - icon only */
+  .your-wallpaper__footer-actions .share-btn-text {
+    display: none;
   }
 }
 
@@ -3952,52 +3974,33 @@
   }
 }
 
-/* Background - same as your-wallpaper */
+/* Background - dark red gradient */
 .mirror-thankyou__bg {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
-    linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #F6F6F6 100%);
+  background: linear-gradient(180deg, #860710 0%, #250000 100%);
   z-index: 0;
 }
 
-/* Left Side Container - Social Icons (on RIGHT for tablet) */
+/* Left Side Container - Social Icons (next to back button on desktop) */
 .mirror-thankyou__left {
   position: fixed;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 24px;
-  z-index: 20;
-}
-
-/* Arrow buttons - same pattern as your-wallpaper */
-.mirror-thankyou__arrow {
-  position: fixed;
+  left: calc(2.5% + 145px + 35px); /* back button position + width (with text) + gap */
   bottom: 24px;
-  z-index: 1000;
-}
-
-.mirror-thankyou__arrow--left {
-  left: 2.5%;
-}
-
-.mirror-thankyou__arrow .glass-theme-btn-icon svg {
-  width: 16px;
-  height: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  z-index: 20;
 }
 
 /* Social Icons */
 .mirror-thankyou__social {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 16px;
 }
 
@@ -4006,14 +4009,13 @@
   height: 20px;
 }
 
-/* Right Side Container - Navigation Icons (on LEFT for tablet) */
+/* Right Side Container - Navigation Icons (at bottom right on desktop) */
 .mirror-thankyou__right {
   position: fixed;
-  left: 24px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 2.5%;
+  bottom: 24px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 16px;
   z-index: 20;
 }
@@ -4112,9 +4114,9 @@
   .mirror-thankyou__left {
     top: auto;
     transform: none;
-    bottom: 32px;
-    right: auto; /* Reset tablet position */
-    left: calc(24px + 48px + 3.17vw); /* back left + button width + gap 48/1512 */
+    bottom: 24px;
+    right: auto;
+    left: calc(2.5% + 145px + 35px); /* back button position + width (with text) + gap */
     align-items: flex-start;
   }
 
@@ -4122,17 +4124,12 @@
     flex-direction: row; /* Horizontal row */
   }
 
-  .mirror-thankyou__arrow--left {
-    bottom: 32px;
-    left: 24px;
-  }
-
   .mirror-thankyou__right {
     top: auto;
     transform: none;
-    bottom: 32px;
-    left: auto; /* Reset tablet position */
-    right: 24px; /* Back to right side */
+    bottom: 24px;
+    left: auto;
+    right: 2.5%;
     flex-direction: row; /* Horizontal row */
   }
 
@@ -4184,6 +4181,21 @@
 }
 
 /* ============================================
+   MIRROR THANK YOU - TABLET RESPONSIVE (481px - 1024px)
+   ============================================ */
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .mirror-thankyou__left {
+    bottom: 24px;
+    left: calc(2.5% + 145px + 35px); /* back button position + width (with text) + gap */
+  }
+
+  .mirror-thankyou__right {
+    bottom: 24px;
+  }
+}
+
+/* ============================================
    MIRROR THANK YOU - MOBILE RESPONSIVE (≤480px)
    ============================================ */
 
@@ -4211,11 +4223,9 @@
     background: linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #FFEDFE 100%);
   }
 
-  /* Background - fix gray color at bottom */
+  /* Background - dark red gradient */
   .mirror-thankyou__bg {
-    background:
-      radial-gradient(121.12% 87.58% at 50% 50%, #FF87A8 0%, rgba(255, 255, 255, 0.50) 56.25%, rgba(246, 246, 246, 0.00) 100%),
-      linear-gradient(180deg, #FFF6F6 0%, #FFDCE5 12.53%, #FFEFF6 25.06%, #FFF8F8 37.53%, rgba(255, 241, 241, 0.91) 50%, #FFE6EC 63.82%, #FFEDFE 77.64%, #FFEDFE 100%);
+    background: linear-gradient(180deg, #860710 0%, #250000 100%);
   }
 
   /* Hide right side navigation icons on mobile */
@@ -4238,12 +4248,6 @@
   .mirror-thankyou__social {
     flex-direction: row;
     gap: 16px;
-  }
-
-  /* Back button - bottom left */
-  .mirror-thankyou__arrow--left {
-    left: 16px;
-    bottom: 24px;
   }
 
   /* Main content - positioned from top, centered horizontally */

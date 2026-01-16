@@ -6,7 +6,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
-import GlassThemeButton from '@components/common/button/GlassThemeButton';
+import EventBackButton from '@/components/event/EventBackButton';
+import EventNextButton from '@/components/event/EventNextButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import useEventStore from '@/store/useEventStore';
 import { placeNote } from '@services/event/eventApi';
@@ -620,39 +621,29 @@ const EventChooseShapePage = () => {
           <div className="event-choose-shape__note event-choose-shape__note--desktop">
             <h3 className="event-choose-shape__note-title heading-3--no-margin">Lựa chọn Nốt sáng</h3>
             <p className="event-choose-shape__note-text bodytext-6--no-margin">
-              Hãy chọn hình dáng Nốt Sáng phản chiếu cảm xúc và phong cách của bạn. Mỗi dáng hình là cách bạn để lại dấu ấn riêng trong bản nhạc Love-Grown.
+              Hãy chọn hình dáng Nốt sáng phản chiếu cảm xúc và phong cách của bạn. Mỗi dáng hình là cách bạn để lại dấu ấn riêng trong bản nhạc Love-Grown.
             </p>
           </div>
 
           {/* Error Message */}
           {error && <p className="event-choose-shape__error">{error}</p>}
 
-          {/* Choose the shape - Desktop */}
-          <div className="event-choose-shape__select-btn--desktop">
-            <GlassThemeButton theme="spec_dark" onClick={handleNext} disabled={saving}>
-              {saving ? 'Đang lưu...' : isLocked ? 'Tiếp tục' : 'Chọn Nốt sáng'}
-            </GlassThemeButton>
-          </div>
-
-          {/* Confirm button - Mobile/Tablet */}
-          <div className="event-choose-shape__confirm-btn--mobile">
-            <GlassThemeButton theme="spec_dark" onClick={handleNext} disabled={saving}>
-              {saving ? 'Đang lưu...' : isLocked ? 'Tiếp tục' : 'Chọn Nốt sáng'}
-            </GlassThemeButton>
-          </div>
+          {/* Choose the shape text */}
+          <p className="event-choose-shape__select-text bodytext-6--no-margin">
+            {isLocked ? 'Bạn đã chọn Nốt sáng' : 'Chọn Nốt sáng của riêng bạn'}
+          </p>
 
           {/* Empty space - Right (for balance, Desktop only) */}
           <div className="event-choose-shape__spacer"></div>
         </div>
 
         {/* Back Button - Fixed bottom left */}
-        <div className="event-choose-shape__back">
-          <GlassThemeButton theme="light" onClick={handleBack} icon={
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="12" viewBox="0 0 14 12" fill="none">
-              <path d="M12.7187 5.70703L0.71875 5.70703M0.71875 5.70703L5.86161 0.707031M0.71875 5.70703L5.86161 10.707" stroke="currentColor" strokeLinecap="square"/>
-            </svg>
-          } />
-        </div>
+        <EventBackButton onClick={handleBack} />
+
+        {/* Next Button - Fixed bottom right */}
+        <EventNextButton onClick={handleNext} disabled={saving}>
+          {saving ? 'Đang lưu...' : 'Tiếp tục'}
+        </EventNextButton>
       </div>
     </>
   );

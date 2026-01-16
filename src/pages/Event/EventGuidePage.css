@@ -369,11 +369,13 @@
 .event-guide__music-label--left {
   left: calc(50% - 15vw - 80px);
   transform: translate(-100%, -50%);
+  line-height: 1.5 !important;
 }
 
 .event-guide__music-label--right {
   right: calc(50% - 15vw - 80px);
   transform: translate(100%, -50%);
+  line-height: 1.5 !important;
 }
 
 .event-guide__music-text {
@@ -831,6 +833,7 @@
   --rotation: 0deg;
   transform: rotate(var(--rotation));
   scale: 1;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
   transition: transform 0.4s ease, scale 0.4s ease, box-shadow 0.4s ease;
 }
 
@@ -853,7 +856,7 @@
 .event-guide__card--flipped {
   transform: rotate(calc(var(--rotation) + 3deg));
   scale: 1.08;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
   z-index: 10;
 }
 
@@ -1066,6 +1069,41 @@
 .event-guide__lucky-btn {
   position: relative;
   z-index: 100;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-guide__lucky-btn .glass-theme-button {
+  min-width: 180px;
+  justify-content: center;
+}
+
+/* Desktop: show GlassThemeButton, hide UnderlineButtonOpposite */
+.event-guide__lucky-btn-ticket--desktop {
+  display: inline-flex;
+}
+
+.event-guide__lucky-btn-ticket--mobile {
+  display: none;
+}
+
+/* Mobile: hide GlassThemeButton, show UnderlineButtonOpposite */
+@media (max-width: 480px) {
+  .event-guide__lucky-btn {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .event-guide__lucky-btn-ticket--desktop {
+    display: none;
+  }
+
+  .event-guide__lucky-btn-ticket--mobile {
+    display: inline-flex;
+  }
 }
 
 /* Stats row - positioned absolute on sides of ring (desktop) */
@@ -1136,9 +1174,7 @@
   }
 
   .event-guide__hero-cta {
-    top: auto;
-    bottom: 84px;
-    margin-top: 0;
+    top: 50%;
   }
 
   .event-guide__music-label--left {
@@ -1243,10 +1279,16 @@
   }
    .event-guide__lucky-text{
     max-width:78%;
+    margin-bottom: 36px;
   }
 
   .event-guide__title-wrapper {
     width: 62vw;
+  }
+
+  .event-guide__lucky-title {
+    margin-bottom: 36px;
+    margin-top : 50px;
   }
 
   /* Stack labels above title on mobile */
@@ -1393,9 +1435,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 24px;
   opacity: 1;
   visibility: visible;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.event-guide__fixed-bottom-text {
+  color: #000;
 }
 
 .event-guide__fixed-bottom--hidden {
@@ -1411,6 +1458,11 @@
 .event-guide__fixed-bottom .glass-theme-btn-icon svg {
   width: 16px;
   height: 14px;
+  color: #000;
+}
+
+.event-guide__fixed-bottom .glass-theme-button:hover .glass-theme-btn-icon svg {
+  color: #fff;
 }
 
 @keyframes fixedBottomBounce {
@@ -1445,9 +1497,18 @@
   visibility: visible;
 }
 
+.fixed-scroll-top-container .glass-theme-btn-icon svg {
+  width: 16px;
+  height: 13px;
+}
+
 /* Override icon color to black in step 1 (hero section) */
 .event-guide:not(.event-guide--step2) .fixed-scroll-top-container .glass-theme-btn-icon svg {
   color: #000;
+}
+
+.fixed-scroll-top-container .glass-theme-button:hover .glass-theme-btn-icon svg {
+  color: #fff;
 }
 
 /* ============================================
@@ -1513,6 +1574,10 @@
 }
 
 @media (max-width: 1024px) {
+  .event-guide__fixed-bottom {
+    bottom: 24px;
+  }
+
   .fixed-scroll-top-container {
     bottom: 24px;
   }

@@ -111,9 +111,10 @@ export default function GlassThemeButton({
   className = "",
   textClassName = "bodytext-6--no-margin",
   type = "button",
-  theme = "light", // "light" | "dark" | "spec_light" | "spec_dark"
+  theme = "light", // "light" | "dark" | "spec_light" | "spec_dark" | "event_spec" | "event_light" | "event_dark"
   icon = null, // "arrow" | "arrow-up" | "globe" | React element | null
   isCollapsed = false, // For expandable buttons (like immersive)
+  expandable = true, // Set to false for regular buttons with both icon and text
 }) {
   const location = useLocation();
   const { openModal } = useImmersiveModal();
@@ -143,16 +144,17 @@ export default function GlassThemeButton({
   };
 
   const isIconOnly = icon && !children;
-  const isExpandable = icon && children && isCollapsed !== undefined;
 
   // Determine button variant class
   let variantClass = '';
   if (isIconOnly) {
     variantClass = `glass-theme-button--icon-only glass-theme-button--icon-${icon}`;
-  } else if (icon && children) {
+  } else if (icon && children && expandable) {
     variantClass = isCollapsed
       ? 'glass-theme-button--expandable glass-theme-button--collapsed'
       : 'glass-theme-button--expandable glass-theme-button--expanded';
+  } else if (icon && children) {
+    variantClass = 'glass-theme-button--with-icon';
   }
 
   return (

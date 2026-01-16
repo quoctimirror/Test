@@ -353,14 +353,27 @@
   max-width: 345px;
 }
 
-/* Choose the shape button - Desktop - aligned with back button */
-.event-choose-shape__select-btn--desktop {
-  display: block;
+/* Choose the shape text - fixed bottom center, aligned with back/next buttons */
+.event-choose-shape__select-text {
   position: fixed;
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
+  color: #BC224C;
+  text-align: center;
   z-index: 1000;
+  /* Match button height to vertically center text */
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .event-choose-shape__select-text {
+    bottom: 24px;
+    height: 46px;
+  }
 }
 
 /* Spacer - no longer needed */
@@ -368,10 +381,6 @@
   display: none;
 }
 
-/* Mobile confirm button - hidden on desktop */
-.event-choose-shape__confirm-btn--mobile {
-  display: none;
-}
 
 /* ============================================
    Responsive
@@ -430,19 +439,8 @@
 
   /* Hide desktop elements on mobile/tablet */
   .event-choose-shape__note--desktop,
-  .event-choose-shape__select-btn--desktop,
   .event-choose-shape__spacer {
     display: none;
-  }
-
-  /* Show mobile confirm button - aligned with back button */
-  .event-choose-shape__confirm-btn--mobile {
-    display: block;
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
   }
 
   .event-choose-shape__orbit-shape-img {

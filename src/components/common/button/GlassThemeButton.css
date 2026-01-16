@@ -32,8 +32,18 @@
   height: 26px;
 }
 
+/* Button with both icon and text (non-expandable) */
+.glass-theme-button--with-icon {
+  padding: 16px 24px;
+  gap: 10px;
+}
+
 .glass-theme-button--with-icon .glass-theme-btn-text {
-  padding-right: 8px;
+  padding: 0;
+}
+
+.glass-theme-button--with-icon .glass-theme-btn-icon {
+  padding: 0;
 }
 
 /* Icon only button */
@@ -154,7 +164,10 @@
 .glass-theme-button--expandable.glass-theme-button--light,
 .glass-theme-button--expandable.glass-theme-button--dark,
 .glass-theme-button--expandable.glass-theme-button--spec_light,
-.glass-theme-button--expandable.glass-theme-button--spec_dark {
+.glass-theme-button--expandable.glass-theme-button--spec_dark,
+.glass-theme-button--expandable.glass-theme-button--event_spec,
+.glass-theme-button--expandable.glass-theme-button--event_light,
+.glass-theme-button--expandable.glass-theme-button--event_dark {
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
               color 0.4s ease,
               background 0.3s ease,
@@ -406,6 +419,217 @@
 }
 
 
+/* ========== EVENT SPEC THEME ========== */
+/* Base state = gradient lớn, hover state = gradient nhỏ hơn */
+.glass-theme-button--event_spec {
+  /* Base = gradient đen-hồng lớn */
+  background:
+    radial-gradient(
+      61.32% 123.33% at 50.28% 123.33%,
+      #000 0%,
+      #bc224c 100%
+    ),
+    rgba(224, 224, 224, 0.5);
+  color: #fff;
+  transition: color 0.4s ease;
+
+  /* Glass effect */
+  box-shadow:
+    3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8) inset,
+    2px 2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    -2px -2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 0 8px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 1px 0 rgba(0, 0, 0, 0.1),
+    0 1px 4px 0 rgba(0, 0, 0, 0.15);
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Hover gradient - smaller size, fades in on hover */
+.glass-theme-button--event_spec::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* Hover = gradient đen-hồng nhỏ hơn */
+  background:
+    radial-gradient(
+      49.72% 100% at 50.28% 100%,
+      #000 0%,
+      #BC224C 100%
+    ),
+    rgba(224, 224, 224, 0.5);
+  box-shadow:
+    3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8) inset,
+    2px 2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    -2px -2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 0 8px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 1px 0 rgba(0, 0, 0, 0.1),
+    0 1px 4px 0 rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.glass-theme-button--event_spec:hover::before {
+  opacity: 1;
+}
+
+.glass-theme-button--event_spec .glass-theme-btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-theme-button--event_spec .glass-theme-btn-icon {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ========== EVENT LIGHT THEME ========== */
+/* Base state = dark theme, hover state = spec_dark hover, text/icon trắng */
+.glass-theme-button--event_light {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: color 0.4s ease;
+
+  /* Glass effect from dark theme */
+  box-shadow:
+    3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8) inset,
+    2px 2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    -2px -2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 0 8px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 1px 0 rgba(0, 0, 0, 0.1),
+    0 1px 4px 0 rgba(0, 0, 0, 0.15);
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.glass-theme-button--event_light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* Hover state from spec_dark */
+  background:
+    radial-gradient(
+      61.32% 123.33% at 50.28% 123.33%,
+      #000 0%,
+      #bc224c 100%
+    ),
+    rgba(224, 224, 224, 0.5);
+  box-shadow:
+    3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8) inset,
+    2px 2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    -2px -2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 0 8px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 1px 0 rgba(0, 0, 0, 0.1),
+    0 1px 4px 0 rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.glass-theme-button--event_light:hover::before {
+  opacity: 1;
+}
+
+.glass-theme-button--event_light .glass-theme-btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-theme-button--event_light .glass-theme-btn-icon {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+
+.glass-theme-button--event_light:hover {
+  color: #fff;
+}
+
+.glass-theme-button--event_light:hover .glass-theme-btn-icon {
+  color: #fff;
+}
+
+
+/* ========== EVENT DARK THEME ========== */
+/* Base state = dark theme, hover state = spec_dark hover */
+.glass-theme-button--event_dark {
+  background: rgba(255, 255, 255, 0.1);
+  color: #171717;
+
+  /* Glass effect from dark theme */
+  box-shadow:
+    3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8) inset,
+    2px 2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    -2px -2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 0 8px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 1px 0 rgba(0, 0, 0, 0.1),
+    0 1px 4px 0 rgba(0, 0, 0, 0.15);
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.glass-theme-button--event_dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* Hover state from spec_dark */
+  background:
+    radial-gradient(
+      61.32% 123.33% at 50.28% 123.33%,
+      #000 0%,
+      #bc224c 100%
+    ),
+    rgba(224, 224, 224, 0.5);
+  box-shadow:
+    3px 3px 0.5px -3.5px rgba(255, 255, 255, 0.8) inset,
+    2px 2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    -2px -2px 0.5px -2px rgba(255, 255, 255, 0.1) inset,
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 0 8px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 1px 0 rgba(0, 0, 0, 0.1),
+    0 1px 4px 0 rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.glass-theme-button--event_dark:hover::before {
+  opacity: 1;
+}
+
+.glass-theme-button--event_dark .glass-theme-btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-theme-button--event_dark .glass-theme-btn-icon {
+  position: relative;
+  z-index: 1;
+  color: #171717;
+}
+
+.glass-theme-button--event_dark:hover {
+  color: #fff;
+}
+
+.glass-theme-button--event_dark:hover .glass-theme-btn-icon {
+  color: #fff;
+}
+
+
 /* ========== RESPONSIVE ========== */
 @media screen and (max-width: 1024px) {
   .glass-theme-btn-text {
@@ -448,6 +672,10 @@
 
 @media screen and (max-width: 480px) {
   .glass-theme-btn-text {
+    padding: 16px 20px;
+  }
+
+  .glass-theme-button--with-icon {
     padding: 16px 20px;
   }
 
