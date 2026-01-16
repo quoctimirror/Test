@@ -61,3 +61,10 @@ src/assets/images/dmm/
 
 # DMM structure documentation
 dmmstructure12022026.md
+
+# Playwright
+tests/
+test-results/
+playwright-report/
+playwright/.cache/
+playwright.config.js

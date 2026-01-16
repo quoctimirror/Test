@@ -1,11 +1,11 @@
 /**
- * Google Auth Service - Direct Google Sign-In (không qua Supabase Auth)
- * OAuth redirect về domain của bạn, chỉ dùng Supabase để lưu data
+ * Google Auth Service - Direct Google Sign-In
  *
- * SỬ DỤNG GOOGLE IDENTITY SERVICES SDK
- * - Google SDK tự mở popup (không dùng window.open)
- * - Hoạt động trong in-app browser (Zalo, Messenger, Instagram, TikTok)
- * - Giống cách ticketbox.vn implement
+ * Two auth flows:
+ * 1. Popup flow (default): Uses Google Identity Services SDK for better UX
+ * 2. Redirect flow: For Android in-app browsers (Messenger/Facebook) where popup doesn't work
+ *
+ * Note: iOS in-app browsers are blocked by Google (403 disallowed_useragent)
  */
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -78,19 +78,7 @@ let oauthSuccessCallback = null;
 let oauthErrorCallback = null;
 
 /**
- * Set OAuth callbacks (called from initGoogleSignIn)
- */
-export function setOAuthCallbacks(onSuccess, onError) {
-  oauthSuccessCallback = onSuccess;
-  oauthErrorCallback = onError;
-}
-
-/**
- * ============================================================
- * THAY ĐỔI CHÍNH: Dùng Google Identity Services SDK
- * - Google SDK TỰ MỞ popup
- * - Hoạt động trong in-app browser (Zalo, Messenger, Instagram, TikTok)
- * ============================================================
+ * Sign in with Google using popup flow (Google Identity Services SDK)
  */
 export async function signInWithGoogle() {
   if (!GOOGLE_CLIENT_ID) {
@@ -108,27 +96,11 @@ export async function signInWithGoogle() {
     // Dùng google.accounts.id.prompt() - Google SDK tự hiển thị UI đăng nhập
     // Callback đã được set trong initGoogleSignIn()
     window.google.accounts.id.prompt((notification) => {
-      // Xử lý các trạng thái của prompt
       if (notification.isNotDisplayed()) {
-        // Prompt không hiển thị được, có thể do:
-        // - User đã đăng nhập
-        // - Browser chặn popup
-        // - Không có session Google
-        console.log('Prompt not displayed:', notification.getNotDisplayedReason());
-
-        // Fallback: Dùng OAuth2 token client
+        // Fallback to OAuth2 token client when One Tap doesn't display
         fallbackToTokenClient();
-      } else if (notification.isSkippedMoment()) {
-        // User bỏ qua prompt
-        console.log('Prompt skipped:', notification.getSkippedReason());
-      } else if (notification.isDismissedMoment()) {
-        // User đóng prompt
-        console.log('Prompt dismissed:', notification.getDismissedReason());
-        if (notification.getDismissedReason() === 'credential_returned') {
-          // Đăng nhập thành công, callback sẽ được gọi từ initialize()
-          return;
-        }
       }
+      // credential_returned case is handled by initialize() callback
     });
   } catch (error) {
     console.error('Google Sign-In error:', error);
@@ -139,35 +111,102 @@ export async function signInWithGoogle() {
 }
 
 /**
- * Fallback khi prompt không hiển thị được
- * Dùng OAuth2 token client
+ * Sign in with Google using REDIRECT flow (implicit grant)
+ * For in-app browsers like Messenger where popup doesn't work
+ * Returns access token directly in URL hash
+ */
+export function signInWithGoogleRedirect() {
+  if (!GOOGLE_CLIENT_ID) {
+    console.error('Google Client ID chưa được cấu hình');
+    return;
+  }
+
+  const redirectUri = `${window.location.origin}/the-muse-of-love-grown/login`;
+
+  // Build OAuth URL for implicit flow (response_type=token)
+  const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+  authUrl.searchParams.set('client_id', GOOGLE_CLIENT_ID);
+  authUrl.searchParams.set('redirect_uri', redirectUri);
+  authUrl.searchParams.set('response_type', 'token');
+  authUrl.searchParams.set('scope', 'openid email profile');
+  authUrl.searchParams.set('prompt', 'select_account');
+
+  // Redirect to Google OAuth
+  window.location.href = authUrl.toString();
+}
+
+/**
+ * Handle OAuth callback - check URL hash for access token
+ * Call this on page load to handle redirect back from Google
+ * @returns {Promise<Object|null>} User data or null if no callback
+ */
+export async function handleOAuthRedirectCallback() {
+  // Check URL hash for access token (implicit flow)
+  const hash = window.location.hash.substring(1);
+  if (!hash) return null;
+
+  const params = new URLSearchParams(hash);
+  const accessToken = params.get('access_token');
+
+  if (!accessToken) return null;
+
+  try {
+    // Fetch user info from Google
+    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user info');
+    }
+
+    const userData = await response.json();
+
+    // Clean up URL hash
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    return {
+      id: userData.sub,
+      email: userData.email,
+      displayName: userData.name,
+      firstName: userData.given_name,
+      lastName: userData.family_name,
+      avatarUrl: userData.picture,
+      emailVerified: userData.email_verified,
+      provider: 'google',
+    };
+  } catch (error) {
+    console.error('OAuth callback error:', error);
+    // Clean up URL hash
+    window.history.replaceState({}, document.title, window.location.pathname);
+    return null;
+  }
+}
+
+/**
+ * Fallback to OAuth2 token client when One Tap doesn't work
  */
 async function fallbackToTokenClient() {
   try {
-    // Tạo mới tokenClient mỗi lần để đảm bảo callback đúng
     const client = window.google.accounts.oauth2.initTokenClient({
       client_id: GOOGLE_CLIENT_ID,
       scope: 'openid email profile',
       callback: async (tokenResponse) => {
         if (tokenResponse.error) {
-          console.error('Token error:', tokenResponse.error);
-          if (oauthErrorCallback) {
-            oauthErrorCallback(tokenResponse.error);
-          }
+          oauthErrorCallback?.(tokenResponse.error);
           return;
         }
 
-        // Lấy thông tin user từ Google API
         try {
-          const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: {
-              Authorization: `Bearer ${tokenResponse.access_token}`,
-            },
+          const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
           });
-          const userData = await userInfo.json();
+          const userData = await response.json();
 
-          if (userData && oauthSuccessCallback) {
-            oauthSuccessCallback({
+          if (userData) {
+            oauthSuccessCallback?.({
               id: userData.sub,
               email: userData.email,
               displayName: userData.name,
@@ -177,31 +216,21 @@ async function fallbackToTokenClient() {
               emailVerified: userData.email_verified,
               provider: 'google',
             });
-          } else if (oauthErrorCallback) {
-            oauthErrorCallback('Không thể lấy thông tin user');
+          } else {
+            oauthErrorCallback?.('Không thể lấy thông tin user');
           }
-        } catch (err) {
-          console.error('Error fetching user info:', err);
-          if (oauthErrorCallback) {
-            oauthErrorCallback('Không thể lấy thông tin user');
-          }
+        } catch {
+          oauthErrorCallback?.('Không thể lấy thông tin user');
         }
       },
       error_callback: (error) => {
-        console.error('Google OAuth error:', error);
-        if (oauthErrorCallback) {
-          oauthErrorCallback(error.message || 'Đăng nhập thất bại');
-        }
+        oauthErrorCallback?.(error.message || 'Đăng nhập thất bại');
       },
     });
 
-    // Request token - Google SDK tự mở popup
     client.requestAccessToken({ prompt: 'select_account' });
   } catch (error) {
-    console.error('Fallback error:', error);
-    if (oauthErrorCallback) {
-      oauthErrorCallback(error.message || 'Đăng nhập thất bại');
-    }
+    oauthErrorCallback?.(error.message || 'Đăng nhập thất bại');
   }
 }
 

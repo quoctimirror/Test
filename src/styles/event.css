@@ -252,6 +252,42 @@
 }
 
 /* ============================================
+   In-App Browser Guide
+   ============================================ */
+.inapp-browser-guide {
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(188, 34, 76, 0.08);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.inapp-browser-guide__title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--event-primary, #BC224C);
+  margin: 0 0 8px 0;
+}
+
+.inapp-browser-guide__text {
+  font-size: 0.8rem;
+  color: var(--event-text-muted, #666);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.inapp-browser-guide__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* ============================================
    Diamond Selection Grid
    ============================================ */
 .diamond-grid {

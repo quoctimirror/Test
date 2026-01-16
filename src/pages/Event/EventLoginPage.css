@@ -341,3 +341,19 @@
     transform: translateY(-50%) scale(1);
   }
 }
+
+/* ============================================
+   In-App Browser Guide - Uses ShineGlassButton
+   ============================================ */
+.event-login__inapp-guide-btn {
+  cursor: default !important;
+  opacity: 1 !important;
+}
+
+.event-login__inapp-guide-btn .button-text {
+  color: var(--Pink, #BC224C);
+}
+
+.event-login__inapp-guide-btn strong {
+  font-weight: 700;
+}
