@@ -476,7 +476,7 @@ const EventLoginPage = () => {
             {/* Error Message */}
             {error && <p className="event-login__error">{error}</p>}
 
-            {/* Social Login Buttons - Full width with text */}
+            {/* Social Login Buttons or In-app disclaimer */}
             <motion.div
               className="event-login__social"
               custom={2}
@@ -484,20 +484,46 @@ const EventLoginPage = () => {
               initial="hidden"
               animate="visible"
             >
-              {/* Google */}
-              <GlassThemeButton
-                theme="event_dark"
-                onClick={handleGoogleLogin}
-                className="event-login__social-btn"
-                textClassName="bodytext-6--no-margin"
-                expandable={false}
-                icon={<img src="/google-icon.svg" alt="Google" width="15" height="15" />}
-              >
-                {loading ? 'Đang đăng nhập...' : 'Tiếp tục với Google'}
-              </GlassThemeButton>
+              {inAppBrowser.isInApp ? (
+                /* In-app browser: show disclaimer instead of login button */
+                <div className="event-login__inapp-disclaimer event-login__inapp-disclaimer--inline">
+                  <p className="event-login__inapp-disclaimer-text bodytext-6--no-margin">
+                    Chọn{' '}
+                    <span className="event-login__dots event-login__dots--vertical">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 2 2" fill="none"><circle cx="1" cy="1" r="1" fill="#BC224C"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 2 2" fill="none"><circle cx="1" cy="1" r="1" fill="#BC224C"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 2 2" fill="none"><circle cx="1" cy="1" r="1" fill="#BC224C"/></svg>
+                    </span>
+                    {' '}hoặc{' '}
+                    <span className="event-login__dots event-login__dots--horizontal">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 2 2" fill="none"><circle cx="1" cy="1" r="1" fill="#BC224C"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 2 2" fill="none"><circle cx="1" cy="1" r="1" fill="#BC224C"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="2" height="2" viewBox="0 0 2 2" fill="none"><circle cx="1" cy="1" r="1" fill="#BC224C"/></svg>
+                    </span>
+                    {' '}ở góc màn hình
+                  </p>
+                  <p className="event-login__inapp-disclaimer-text bodytext-6--no-margin">
+                    Để mở bằng trình duyệt
+                  </p>
+                </div>
+              ) : (
+                /* Normal browser: show Google login button */
+                <>
+                  <GlassThemeButton
+                    theme="event_dark"
+                    onClick={handleGoogleLogin}
+                    className="event-login__social-btn"
+                    textClassName="bodytext-6--no-margin"
+                    expandable={false}
+                    icon={<img src="/google-icon.svg" alt="Google" width="15" height="15" />}
+                  >
+                    {loading ? 'Đang đăng nhập...' : 'Tiếp tục với Google'}
+                  </GlassThemeButton>
 
-              {/* Hidden div for Google's native button (optional fallback) */}
-              <div ref={googleButtonRef} style={{ display: 'none' }} />
+                  {/* Hidden div for Google's native button (optional fallback) */}
+                  <div ref={googleButtonRef} style={{ display: 'none' }} />
+                </>
+              )}
             </motion.div>
           </div>
         </motion.div>

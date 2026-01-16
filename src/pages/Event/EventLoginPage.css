@@ -336,3 +336,33 @@
   bottom: 24px;
   z-index: 1000;
 }
+
+/* In-app browser disclaimer */
+.event-login__inapp-disclaimer {
+  padding: 12px 24px;
+  border-radius: 23px;
+  background: var(--transparent-white-75, rgba(255, 255, 255, 0.75));
+  border: 1px solid var(--Pink, #BC224C);
+  text-align: center;
+}
+
+.event-login__inapp-disclaimer-text {
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+.event-login__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+.event-login__dots--vertical {
+  flex-direction: column;
+}
+
+.event-login__dots--horizontal {
+  flex-direction: row;
+}
