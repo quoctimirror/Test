@@ -118,6 +118,9 @@ export async function signInWithGoogle() {
 export function signInWithGoogleRedirect() {
   if (!GOOGLE_CLIENT_ID) {
     console.error('Google Client ID chưa được cấu hình');
+    if (oauthErrorCallback) {
+      oauthErrorCallback('Google Client ID chưa được cấu hình');
+    }
     return;
   }
 

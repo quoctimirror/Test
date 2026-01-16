@@ -12,9 +12,8 @@ import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import EventBackButton from '@/components/event/EventBackButton';
 import EventNextButton from '@/components/event/EventNextButton';
-import { initAudio, playNoteByPosition } from '@services/event/audio';
+import { initAudio, playNoteByPosition, getNoteName } from '@services/event/audio';
 import AvatarGenerator from '@/components/event/ui/AvatarGenerator';
-
 // Diamond shape Cloudflare paths array - using optimized webp
 // HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
 // HEART-05 = Asscher, HEART-06 = Emerald, HEART-07 = Marquise
@@ -27,6 +26,20 @@ const DIAMOND_SHAPES = [
   'mirror_DMM/HEART-06.webp',  // Emerald shape
   'mirror_DMM/HEART-07.webp',  // Marquise shape
 ];
+
+// Melody version - increment when position mapping changes to force regeneration
+const MELODY_VERSION = 4;
+
+// Fixed mapping: Note position → Shape (each note has one specific shape)
+const NOTE_TO_SHAPE = {
+  0: 'mirror_DMM/HEART-01.webp',  // Đô → Heart
+  1: 'mirror_DMM/HEART-02.webp',  // Rê → Oval
+  2: 'mirror_DMM/HEART-03.webp',  // Mi → Round
+  3: 'mirror_DMM/HEART-04.webp',  // Pha → Pear
+  4: 'mirror_DMM/HEART-05.webp',  // Son → Asscher
+  5: 'mirror_DMM/HEART-06.webp',  // La → Emerald
+  6: 'mirror_DMM/HEART-07.webp',  // Si → Marquise
+};
 
 // Mapping from shape ID to AvatarGenerator diamondShape name
 // Must match EventChooseShapePage: h1=Heart, h2=Oval, h3=Round, h4=Pear, h5=Asscher, h6=Emerald, h7=Marquise
@@ -48,74 +61,79 @@ const SHAPE_NAME_MAP = {
   h7: 'marquise',
 };
 
-// Staff configuration - 9 Y positions (5 lines + 4 zones)
-// Desktop: Line height 8px, gap 80px, total height 360px
+// Staff configuration - 7 Y positions for 7 notes (C4-B4)
+// Desktop: Line height 8px, gap 80px
+// Following standard treble clef notation:
+// - Đô (C4) = ledger line below staff
+// - Rê (D4) = space below bottom line
+// - Mi (E4) = Line 4 (bottom line)
+// - Pha-Si on lines 2-3 and spaces 2-3
+// Line centers: 4, 92, 180, 268, 356 (lines 0-4)
+// Space centers: 48, 136, 224, 312 (spaces 0-3)
+// Below staff: 400 (space below), 444 (ledger line)
 const NOTE_POSITIONS_Y_DESKTOP = [
-  7,    // Line 0 (top)
-  51,   // Zone 0
-  95,   // Line 1
-  139,  // Zone 1
-  183,  // Line 2 (middle)
-  227,  // Zone 2
-  271,  // Line 3
-  315,  // Zone 3
-  359,  // Line 4 (bottom)
+  456,  // Position 0 - Ledger line (below staff) - Đô (C4) +12px
+  404,  // Position 1 - Space below Line 4 - Rê (D4) +4px
+  360,  // Position 2 - Line 4 (bottom) - Mi (E4) +4px
+  316,  // Position 3 - Space 3 - Pha (F4) +4px
+  272,  // Position 4 - Line 3 - Son (G4) +4px
+  228,  // Position 5 - Space 2 - La (A4) +4px
+  184,  // Position 6 - Line 2 - Si (B4) +4px
 ];
 
 // Tablet: Staff positions in vh (based on 1194px design)
-// Staff 1: top = 350/1194, height = 200/1194
-// Staff 2: top = 650/1194, height = 200/1194
-// Added +4px offset to shift notes down slightly
+// Staff 1: top = 280/1194, height = 200/1194
+// Staff 2: top = 580/1194, height = 200/1194
+// CSS uses space-between with 5 lines (8px each) in 200px container
+// Following standard treble clef (Đô below staff, Mi on bottom line)
+// Line centers within staff: 4, 52, 100, 148, 196 (lines 0-4)
+// Space centers within staff: 28, 76, 124, 172 (spaces 0-3)
+// Below staff: 220 (space below), 244 (ledger line for Đô)
 const NOTE_POSITIONS_Y_TABLET_STAFF1 = [
-  (350 + 4 + 4) / 1194 * 100,    // Line 0 (top) - positionY 0
-  (350 + 28 + 4) / 1194 * 100,   // Zone 0 - positionY 1
-  (350 + 52 + 4) / 1194 * 100,   // Line 1 - positionY 2
-  (350 + 76 + 4) / 1194 * 100,   // Zone 1 - positionY 3
-  (350 + 100 + 4) / 1194 * 100,  // Line 2 (middle) - positionY 4
-  (350 + 124 + 4) / 1194 * 100,  // Zone 2 - positionY 5
-  (350 + 148 + 4) / 1194 * 100,  // Line 3 - positionY 6
-  (350 + 172 + 4) / 1194 * 100,  // Zone 3 - positionY 7
-  (350 + 196 + 4) / 1194 * 100,  // Line 4 (bottom) - positionY 8
+  (280 + 258) / 1194 * 100,    // Position 0 - Ledger line - Đô (C4) +14px → 45vh
+  (280 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Rê (D4) +4px
+  (280 + 200) / 1194 * 100,    // Position 2 - Line 4 (bottom) - Mi (E4) +4px
+  (280 + 176) / 1194 * 100,    // Position 3 - Space 3 - Pha (F4) +4px
+  (280 + 152) / 1194 * 100,    // Position 4 - Line 3 - Son (G4) +4px
+  (280 + 128) / 1194 * 100,    // Position 5 - Space 2 - La (A4) +4px
+  (280 + 104) / 1194 * 100,    // Position 6 - Line 2 - Si (B4) +4px
 ];
 
 const NOTE_POSITIONS_Y_TABLET_STAFF2 = [
-  (650 + 4 + 4) / 1194 * 100,    // Line 0 (top) - positionY 0
-  (650 + 28 + 4) / 1194 * 100,   // Zone 0 - positionY 1
-  (650 + 52 + 4) / 1194 * 100,   // Line 1 - positionY 2
-  (650 + 76 + 4) / 1194 * 100,   // Zone 1 - positionY 3
-  (650 + 100 + 4) / 1194 * 100,  // Line 2 (middle) - positionY 4
-  (650 + 124 + 4) / 1194 * 100,  // Zone 2 - positionY 5
-  (650 + 148 + 4) / 1194 * 100,  // Line 3 - positionY 6
-  (650 + 172 + 4) / 1194 * 100,  // Zone 3 - positionY 7
-  (650 + 196 + 4) / 1194 * 100,  // Line 4 (bottom) - positionY 8
+  (630 + 258) / 1194 * 100,    // Position 0 - Ledger line - Đô (C4) +14px → 45vh
+  (630 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Rê (D4) +4px
+  (630 + 200) / 1194 * 100,    // Position 2 - Line 4 (bottom) - Mi (E4) +4px
+  (630 + 176) / 1194 * 100,    // Position 3 - Space 3 - Pha (F4) +4px
+  (630 + 152) / 1194 * 100,    // Position 4 - Line 3 - Son (G4) +4px
+  (630 + 128) / 1194 * 100,    // Position 5 - Space 2 - La (A4) +4px
+  (630 + 104) / 1194 * 100,    // Position 6 - Line 2 - Si (B4) +4px
 ];
 
 // Mobile: Staff positions in vh (based on 844px design)
-// Staff 1: top = 166/844, height = 200/844
-// Staff 2: top = 466/844, height = 200/844
-// Added +4px offset to shift notes down slightly
+// Staff 1: top = 100/844, height = 200/844
+// Staff 2: top = 400/844, height = 200/844
+// Following standard treble clef (Đô below staff, Mi on bottom line)
+// Line centers within staff: 4, 52, 100, 148, 196 (lines 0-4)
+// Space centers within staff: 28, 76, 124, 172 (spaces 0-3)
+// Below staff: 220 (space below), 244 (ledger line for Đô)
 const NOTE_POSITIONS_Y_MOBILE_STAFF1 = [
-  (166 + 4 + 4) / 844 * 100,    // Line 0 (top) - positionY 0
-  (166 + 28 + 4) / 844 * 100,   // Zone 0 - positionY 1
-  (166 + 52 + 4) / 844 * 100,   // Line 1 - positionY 2
-  (166 + 76 + 4) / 844 * 100,   // Zone 1 - positionY 3
-  (166 + 100 + 4) / 844 * 100,  // Line 2 (middle) - positionY 4
-  (166 + 124 + 4) / 844 * 100,  // Zone 2 - positionY 5
-  (166 + 148 + 4) / 844 * 100,  // Line 3 - positionY 6
-  (166 + 172 + 4) / 844 * 100,  // Zone 3 - positionY 7
-  (166 + 196 + 4) / 844 * 100,  // Line 4 (bottom) - positionY 8
+  (100 + 256) / 844 * 100,     // Position 0 - Ledger line - Đô (C4) +12px
+  (100 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Rê (D4) +4px
+  (100 + 200) / 844 * 100,     // Position 2 - Line 4 (bottom) - Mi (E4) +4px
+  (100 + 176) / 844 * 100,     // Position 3 - Space 3 - Pha (F4) +4px
+  (100 + 152) / 844 * 100,     // Position 4 - Line 3 - Son (G4) +4px
+  (100 + 128) / 844 * 100,     // Position 5 - Space 2 - La (A4) +4px
+  (100 + 104) / 844 * 100,     // Position 6 - Line 2 - Si (B4) +4px
 ];
 
 const NOTE_POSITIONS_Y_MOBILE_STAFF2 = [
-  (466 + 4 + 4) / 844 * 100,    // Line 0 (top) - positionY 0
-  (466 + 28 + 4) / 844 * 100,   // Zone 0 - positionY 1
-  (466 + 52 + 4) / 844 * 100,   // Line 1 - positionY 2
-  (466 + 76 + 4) / 844 * 100,   // Zone 1 - positionY 3
-  (466 + 100 + 4) / 844 * 100,  // Line 2 (middle) - positionY 4
-  (466 + 124 + 4) / 844 * 100,  // Zone 2 - positionY 5
-  (466 + 148 + 4) / 844 * 100,  // Line 3 - positionY 6
-  (466 + 172 + 4) / 844 * 100,  // Zone 3 - positionY 7
-  (466 + 196 + 4) / 844 * 100,  // Line 4 (bottom) - positionY 8
+  (400 + 256) / 844 * 100,     // Position 0 - Ledger line - Đô (C4) +12px
+  (400 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Rê (D4) +4px
+  (400 + 200) / 844 * 100,     // Position 2 - Line 4 (bottom) - Mi (E4) +4px
+  (400 + 176) / 844 * 100,     // Position 3 - Space 3 - Pha (F4) +4px
+  (400 + 152) / 844 * 100,     // Position 4 - Line 3 - Son (G4) +4px
+  (400 + 128) / 844 * 100,     // Position 5 - Space 2 - La (A4) +4px
+  (400 + 104) / 844 * 100,     // Position 6 - Line 2 - Si (B4) +4px
 ];
 
 // Generate 7 random notes that form a happy melody
@@ -123,17 +141,16 @@ const NOTE_POSITIONS_Y_MOBILE_STAFF2 = [
 const generateHappyMelody = () => {
   const notes = [];
 
-  // Generate random Y positions covering both lines and zones
-  // Ensure good distribution across all position types
-  const allPositions = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 0,2,4,6,8 = lines; 1,3,5,7 = zones
+  // 7 positions (0-6) for 7 notes: 4 lines + 3 spaces
+  // Position 0,2,4,6 = lines; Position 1,3,5 = spaces
+  const allPositions = [0, 1, 2, 3, 4, 5, 6];
   const shuffledPositions = [...allPositions].sort(() => Math.random() - 0.5);
 
-  // Take 7 random positions, ensuring mix of lines and zones
-  const positions = shuffledPositions.slice(0, 7);
+  // All 7 positions are used - each note gets a unique position
+  const positions = shuffledPositions;
 
-  // Shuffle shapes to ensure all 7 shapes appear exactly once
-  // This guarantees diversity - no shape repeats, all shapes represented
-  const shuffledShapes = [...DIAMOND_SHAPES].sort(() => Math.random() - 0.5);
+  // Shape is determined by note position (fixed mapping via NOTE_TO_SHAPE)
+  // No more random shape shuffling
 
   // For mobile layout (4 notes on staff 1, 3 on staff 2):
   // Notes 0-3: Staff 1, X positions spread left to right
@@ -160,7 +177,8 @@ const generateHappyMelody = () => {
       positionX,
       positionY: positions[i],
       staffIndex, // 0 = staff 1 (top), 1 = staff 2 (bottom)
-      shape: shuffledShapes[i], // Use shuffled shape - each shape appears exactly once
+      shape: NOTE_TO_SHAPE[positions[i]], // Shape determined by note position
+      version: MELODY_VERSION, // Force regeneration when version changes
     });
   }
 
@@ -261,11 +279,12 @@ const WriteMessageScreenNew = () => {
   };
 
   // Generate or retrieve melody notes (persisted)
-  // Force regenerate if old melody doesn't have staffIndex or has wrong distribution
+  // Force regenerate if old melody doesn't have staffIndex, wrong distribution, or outdated version
   useEffect(() => {
     const needsRegenerate = !melodyNotes ||
       melodyNotes.length === 0 ||
       melodyNotes[0].staffIndex === undefined ||
+      melodyNotes[0].version !== MELODY_VERSION || // Force regen when position mapping changes
       // Check if notes have correct 4-3 distribution (notes 0-3 on staff 0, notes 4-6 on staff 1)
       melodyNotes.some((note, i) => {
         const expectedStaff = i < 4 ? 0 : 1;
@@ -523,6 +542,13 @@ const WriteMessageScreenNew = () => {
 
         {/* Main content - Staff with notes */}
         <main className="your-melody__main">
+          {/* Solock decoration - left side */}
+          <img
+            src={getMediaUrl('dmm/solock.webp')}
+            alt=""
+            className="your-melody__solock"
+          />
+
           {/* Staff container */}
           <div className="your-melody__staff-container">
             <div className="your-melody__staff">
@@ -551,7 +577,7 @@ const WriteMessageScreenNew = () => {
                   <div
                     key={note.id}
                     ref={(el) => { noteRefs.current[note.id] = el; }}
-                    className={`your-melody__note ${shouldHide ? 'your-melody__note--hidden' : ''} ${isNoteAnimated && isAnimatingEntrance ? 'your-melody__note--animate-slide' : ''}`}
+                    className={`your-melody__note ${shouldHide ? 'your-melody__note--hidden' : ''} ${isNoteAnimated && isAnimatingEntrance ? 'your-melody__note--animate-slide' : ''} ${note.positionY === 0 ? 'your-melody__note--position-do' : ''}`}
                     style={{
                       left: `${xPos}%`,
                       top: yPos,
@@ -574,6 +600,7 @@ const WriteMessageScreenNew = () => {
                       alt="Diamond note"
                       className="your-melody__note-img"
                     />
+                    {/* <span className="your-melody__note-name">{getNoteName(note.positionY)}</span> */}
                   </div>
                 );
               })}
@@ -582,7 +609,7 @@ const WriteMessageScreenNew = () => {
               {/* Click/tap to play sound (works on iOS) */}
               <div
                 ref={userNoteRef}
-                className={`your-melody__note your-melody__note--user ${!userNoteAnimated ? 'your-melody__note--hidden' : ''} ${userNoteAnimated && isAnimatingEntrance ? 'your-melody__note--animate-fly' : ''}`}
+                className={`your-melody__note your-melody__note--user ${!userNoteAnimated ? 'your-melody__note--hidden' : ''} ${userNoteAnimated && isAnimatingEntrance ? 'your-melody__note--animate-fly' : ''} ${userPositionY === 0 ? 'your-melody__note--position-do' : ''}`}
                 style={{
                   left: `${getNoteXPosition(7, 1)}%`,
                   top: getNoteYPosition(userPositionY, (isMobile || isTablet) ? 1 : 0),
@@ -605,6 +632,7 @@ const WriteMessageScreenNew = () => {
                   alt="Your note"
                   className="your-melody__note-img your-melody__note-img--user"
                 />
+                {/* <span className="your-melody__note-name">{getNoteName(userPositionY)}</span> */}
               </div>
             </div>
           </div>
@@ -614,12 +642,13 @@ const WriteMessageScreenNew = () => {
         <EventBackButton onClick={handleGoBack} />
         <EventNextButton onClick={handleNext} />
 
-        {/* Edge next button - mobile/tablet only, left edge centered */}
+        {/* Edge next button - mobile/tablet only, left edge centered - DISABLED
         <button className="your-melody__edge-btn" onClick={handleNext}>
           <svg xmlns="http://www.w3.org/2000/svg" width="6" height="11" viewBox="0 0 6 11" fill="none">
             <path d="M1.0625 9.06067L5.0625 5.06067L1.0625 1.06067" stroke="#0B0B0B" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="round"/>
           </svg>
         </button>
+        */}
 
         {/* Footer - action buttons */}
         <footer className="your-melody__footer">

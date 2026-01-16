@@ -1,4 +1,7 @@
 :root {
+  /* Force light mode - prevent browser dark mode from affecting site */
+  color-scheme: light only;
+
   font-family: var(--font-primary);
   line-height: 1.5;
   font-weight: 400;

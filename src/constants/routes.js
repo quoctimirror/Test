@@ -66,6 +66,7 @@ export const ROUTES = {
 
   // Interactive experiences
   BIRTHDAY_CAKE: "/birthday-cake",
+  TEST_NOTES: "/test-notes", // Test page for music notes
 
   // Inventory Management routes
   INVENTORY: "/inventory",

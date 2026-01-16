@@ -362,8 +362,8 @@ const ChooseNoteShapeScreenNew = () => {
           }
 
           .your-wallpaper-v2__card {
-            width: 250px;
-            height: 446px;
+            width: min(420px, calc((100vh - 350px) * 420 / 714));
+            aspect-ratio: 420 / 714;
             position: relative;
             transform-style: preserve-3d;
           }
@@ -387,9 +387,7 @@ const ChooseNoteShapeScreenNew = () => {
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            box-shadow:
-              0 20px 60px rgba(0, 0, 0, 0.4),
-              0 8px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 8px 0 rgba(188, 34, 76, 0.25);
           }
 
           .your-wallpaper-v2__card-front {
@@ -397,7 +395,9 @@ const ChooseNoteShapeScreenNew = () => {
           }
 
           .your-wallpaper-v2__card-back {
-            background: #fff;
+            background-image: url('${getMediaUrl('dmm/card_back.svg')}');
+            background-size: cover;
+            background-position: center;
             transform: rotateY(180deg);
           }
 
@@ -409,16 +409,22 @@ const ChooseNoteShapeScreenNew = () => {
           }
 
           @media (max-width: 1024px) {
+            .your-wallpaper__card-container {
+              margin-top: -50px;
+            }
             .your-wallpaper-v2__card {
-              width: 280px;
-              height: 500px;
+              width: min(350px, calc((100vh - 350px) * 350 / 600));
+              aspect-ratio: 350 / 600;
             }
           }
 
           @media (max-width: 480px) {
+            .your-wallpaper__card-container {
+              margin: -40px auto 0;
+            }
             .your-wallpaper-v2__card {
-              width: 220px;
-              height: 392px;
+              width: min(250px, calc((100vh - 350px) * 241 / 427));
+              aspect-ratio: 241 / 427;
             }
           }
         `}</style>
@@ -465,9 +471,7 @@ const ChooseNoteShapeScreenNew = () => {
                   </div>
 
                   {/* Back face - Card back */}
-                  <div className="your-wallpaper-v2__card-face your-wallpaper-v2__card-back">
-                    <img src={getMediaUrl('dmm/card_back.svg')} alt="Card Back" className="your-wallpaper-v2__card-image" />
-                  </div>
+                  <div className="your-wallpaper-v2__card-face your-wallpaper-v2__card-back" />
                 </div>
               </div>
             </div>

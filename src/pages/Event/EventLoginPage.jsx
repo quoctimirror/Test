@@ -3,7 +3,7 @@
  * Uses direct Google Sign-In (không qua Supabase Auth)
  * OAuth redirect về domain của bạn, chỉ dùng Supabase để lưu data
  */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
@@ -93,6 +93,7 @@ const EventLoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState('');
+  const googleButtonRef = useRef(null);
 
   // Detect in-app browser
   const [inAppBrowser] = useState(() => detectInAppBrowser());

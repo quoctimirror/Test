@@ -111,6 +111,7 @@ const EventProtectedRoute = lazy(() => import("@components/event/EventProtectedR
 const BirthdayCake = lazy(() =>
   import("@components/birthday-cake/BirthdayCake")
 );
+const TestNotesPage = lazy(() => import("@pages/Event/TestNotesPage"));
 
 // Inventory Management
 const InventoryLayout = lazy(() =>
@@ -203,6 +204,7 @@ export default function AppRoutes() {
       ROUTES.INVENTORY_PRINT,
       ROUTES.BIRTHDAY_CAKE,
       ROUTES.DB_EXPLORER,
+      ROUTES.TEST_NOTES,
     ];
 
     // Check exact matches
@@ -246,6 +248,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.PREMIUM_DEV ||
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname === ROUTES.BIRTHDAY_CAKE ||
+    location.pathname === ROUTES.TEST_NOTES ||
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
@@ -266,6 +269,7 @@ export default function AppRoutes() {
     location.pathname === ROUTES.PREMIUM_DEV ||
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname === ROUTES.BIRTHDAY_CAKE ||
+    location.pathname === ROUTES.TEST_NOTES ||
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
@@ -470,6 +474,7 @@ export default function AppRoutes() {
 
             {/* Interactive Experiences */}
             <Route path={ROUTES.BIRTHDAY_CAKE} element={<BirthdayCake />} />
+            <Route path={ROUTES.TEST_NOTES} element={<TestNotesPage />} />
 
             {/* Inventory Management Routes */}
             <Route path={ROUTES.INVENTORY} element={<InventoryLayout />}>

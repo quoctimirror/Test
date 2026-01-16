@@ -8,13 +8,12 @@ import { ROUTES } from '@/constants/routes';
 import EventBackButton from '@/components/event/EventBackButton';
 import EventNextButton from '@/components/event/EventNextButton';
 import { fetchAllNotes } from '@services/event/eventApi';
-import { initAudio, playNoteByPosition, isAudioInitialized } from '@services/event/audio';
+import { initAudio, playNoteByPosition, isAudioInitialized, getNoteName, POSITION_TO_NOTE } from '@services/event/audio';
 import useEventStore from '@/store/useEventStore';
 import RippleEffect from '@/components/event/effects/ripple-effect';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import AvatarGenerator from '@/components/event/ui/AvatarGenerator';
-
 // Mapping from shape ID to Cloudflare image path - using optimized webp
 // HEART-01 = Heart, HEART-02 = Oval, HEART-03 = Round, HEART-04 = Pear
 // HEART-05 = Asscher, HEART-06 = Emerald, HEART-07 = Marquise
@@ -57,41 +56,38 @@ const SHAPE_NAME_MAP = {
   h7: 'marquise',
 };
 
-// Mapping from position Y to Vietnamese note name (Treble Clef - Khóa Sol)
-// Lines (on staff line): positions 0, 2, 4, 6, 8
-// Spaces (between lines): positions 1, 3, 5, 7
-const POSITION_TO_NOTE_NAME = {
-  0: 'Fa (F)',    // F5 - Line 5 (top)
-  1: 'Mi (E)',    // E5 - Space 4
-  2: 'Rê (D)',    // D5 - Line 4
-  3: 'Đô (C)',    // C5 - Space 3
-  4: 'Si (B)',    // B4 - Line 3 (middle)
-  5: 'La (A)',    // A4 - Space 2
-  6: 'Sol (G)',   // G4 - Line 2
-  7: 'Fa (F)',    // F4 - Space 1
-  8: 'Mi (E)',    // E4 - Line 1 (bottom)
+// Fixed mapping: Shape ID → Note position (each shape has one specific note)
+const SHAPE_TO_POSITION = {
+  h1: 0,  // Heart → Đô (C4)
+  h2: 1,  // Oval → Rê (D4)
+  h3: 2,  // Round → Mi (E4)
+  h4: 3,  // Pear → Pha (F4)
+  h5: 4,  // Asscher → Son (G4)
+  h6: 5,  // Emerald → La (A4)
+  h7: 6,  // Marquise → Si (B4)
 };
 
-// All possible Y positions for the note (9 positions total)
-// Lines: 0, 2, 4, 6, 8 (on line)
-// Zones: 1, 3, 5, 7 (between lines)
-// Line height 8px, gap 80px, total height 360px (same for all screen sizes)
+
+// All possible Y positions for the note (7 positions for 7 notes)
+// Following standard treble clef notation:
+// - Đô (C4) = ledger line below staff
+// - Rê (D4) = space below bottom line
+// - Mi (E4) = Line 4 (bottom line)
+// - Pha-Si on lines 2-3 and spaces 2-3
+// Line centers: 4, 92, 180, 268, 356 (lines 0-4)
+// Space centers: 48, 136, 224, 312 (spaces 0-3)
+// Below staff: 400 (space below), 444 (ledger line)
 const NOTE_POSITIONS_Y = [
-  8,    // Line 0 (top line)
-  52,   // Zone 0 (between line 0 and 1)
-  96,   // Line 1
-  140,  // Zone 1 (between line 1 and 2)
-  184,  // Line 2 (middle line)
-  228,  // Zone 2 (between line 2 and 3)
-  272,  // Line 3
-  316,  // Zone 3 (between line 3 and 4)
-  360,  // Line 4 (bottom line)
+  456,  // Position 0 - Ledger line (below staff) - Đô (C4) +12px
+  404,  // Position 1 - Space below Line 4 - Rê (D4) +4px
+  360,  // Position 2 - Line 4 (bottom) - Mi (E4) +4px
+  316,  // Position 3 - Space 3 - Pha (F4) +4px
+  272,  // Position 4 - Line 3 - Son (G4) +4px
+  228,  // Position 5 - Space 2 - La (A4) +4px
+  184,  // Position 6 - Line 2 - Si (B4) +4px
 ];
 
-// Get random position (all positions: 0-8, including lines and zones)
-const getRandomPosition = () => {
-  return Math.floor(Math.random() * 9); // 0 to 8
-};
+// getRandomPosition removed - position now determined by shape via SHAPE_TO_POSITION
 
 const PlaceNoteScreenNew = () => {
   const navigate = useNavigate();
@@ -100,8 +96,6 @@ const PlaceNoteScreenNew = () => {
   const {
     user,
     selectedDiamond,
-    initialNotePosition,
-    setInitialNotePosition,
     setAllNotes,
     setUserNote,
     generatedAvatarUrl,
@@ -113,15 +107,9 @@ const PlaceNoteScreenNew = () => {
   const currentShape = SHAPE_NAME_MAP[selectedDiamond] || 'heart';
   const shouldGenerateAvatar = !generatedAvatarUrl || generatedForShape !== currentShape;
 
-  // Initialize position from store or generate random (only once per user)
-  const [positionX] = useState(() => {
-    if (initialNotePosition) return initialNotePosition.x;
-    return 50; // Center by default
-  });
-  const [positionY] = useState(() => {
-    if (initialNotePosition) return initialNotePosition.y;
-    return getRandomPosition(); // Random position (0-8)
-  });
+  // Position is always determined by shape (no need for useState or store)
+  const positionX = 50; // Always centered
+  const positionY = SHAPE_TO_POSITION[selectedDiamond] ?? 0; // Position determined by shape
 
   const [error] = useState('');
   const [, setLinesComplete] = useState(false); // Lines animation done
@@ -166,12 +154,7 @@ const PlaceNoteScreenNew = () => {
     loadNotes();
   }, [setAllNotes]);
 
-  // Save initial position to store if not already saved (once per user)
-  useEffect(() => {
-    if (!initialNotePosition) {
-      setInitialNotePosition({ x: positionX, y: positionY });
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Position is now deterministic (based on shape), no need to save to store
 
 
   // Initialize audio on first user interaction (required by browser autoplay policy)
@@ -318,13 +301,20 @@ const PlaceNoteScreenNew = () => {
         {/* Note title - shows the note name based on position (appears after diamond animation) */}
         {titleVisible && (
           <h2 className="place-note-new__note-title place-note-new__note-title--animate heading-3--no-margin">
-            Bạn là Nốt sáng {POSITION_TO_NOTE_NAME[positionY]}
+Bạn là nốt sáng {getNoteName(positionY)}
           </h2>
         )}
 
         {/* Back and Next buttons */}
         <EventBackButton onClick={handleGoBack} />
         <EventNextButton onClick={handleNext} />
+
+      {/* Solock decoration - left side */}
+      <img
+        src={getMediaUrl('dmm/solock.webp')}
+        alt=""
+        className="place-note-new__solock"
+      />
 
       {/* Main content - Music Staff (vertically centered) */}
       <main className="place-note-new__main">
@@ -374,7 +364,7 @@ const PlaceNoteScreenNew = () => {
             {diamondVisible && (
               <div
                 ref={heartRef}
-                className="place-note-new__diamond place-note-new__diamond--animate"
+                className={`place-note-new__diamond place-note-new__diamond--animate ${positionY === 0 ? 'place-note-new__diamond--position-do' : ''}`}
                 style={{
                   left: '50vw', // Always center on viewport width
                   top: `${NOTE_POSITIONS_Y[positionY]}px`,
