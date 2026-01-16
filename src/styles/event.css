@@ -3341,18 +3341,30 @@
   pointer-events: none;
 }
 
-/* Solock decoration - left side, fully visible */
+/* Solock decoration - left side, show 20% */
 /* Staff should be vertically centered within solock */
 .your-melody__solock {
   position: fixed;
   left: 0;
-  top: calc(240 / 982 * 100vh + 180px); /* Staff center = staff top + half staff height (180px) */
-  transform: translate(-20%, -50%); /* Show 80%, hide 20% on left */
-  height: 540px; /* staff height (360px) × 1.5 */
+  top: calc(240 / 982 * 100vh + 178px); /* Staff center = staff top + half staff height (160px) */
+  transform: translate(-40%, -50%); /* Show 20%, hide 80% on left */
+  height: 600px; /* staff height (360px) × 1.67 */
   width: auto;
   z-index: 4;
   pointer-events: none;
-  animation: solockSlideIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: solockSlideInYourMelody 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Solock slide-in animation for your-melody desktop - show 20% */
+@keyframes solockSlideInYourMelody {
+  0% {
+    opacity: 0;
+    transform: translate(-100%, -50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-40%, -50%); /* Show 20% on desktop */
+  }
 }
 
 /* Diamond notes */
@@ -3734,8 +3746,8 @@
 /* Solock - equal to TOP staff height, fully visible */
   .your-melody__solock {
     top: calc(380 / 1194 * 100vh); /* Staff1 center = (280 + 100) / 1194 */
-    transform: translate(0, -50%); /* Show 100%, only center vertically */
-    height: calc(200 / 1194 * 100vh); /* = staff1 height */
+    transform: translate(-20%, -50%); /* Show 100%, only center vertically */
+    height: calc(320 / 1194 * 100vh); /* = staff1 height */
     animation: solockSlideInTablet 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
@@ -3746,7 +3758,7 @@
     }
     100% {
       opacity: 1;
-      transform: translate(0, -50%); /* Show 100% on tablet */
+      transform: translate(-20%, -50%); /* Show 100% on tablet */
     }
   }
 
@@ -3855,11 +3867,11 @@
     border-radius: 6px;
   }
 
-  /* Solock - equal to TOP staff height, show 60% */
+  /* Solock - equal to TOP staff height, show 40% */
   .your-melody__solock {
-    top: calc(200 / 844 * 100vh); /* Staff1 center = (100 + 100) / 844 */
-    transform: translate(-40%, -50%); /* Show 60%, hide 40% on left */
-    height: calc(200 / 844 * 100vh); /* = staff1 height */
+    top: calc(195 / 844 * 100vh); /* Staff1 center = (100 + 100) / 844 */
+    transform: translate(-40%, -50%); /* Show 40%, hide 60% on left */
+    height: calc(360 / 844 * 100vh); /* = staff1 height */
     animation: solockSlideInMobile 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
@@ -3870,7 +3882,7 @@
     }
     100% {
       opacity: 1;
-      transform: translate(-40%, -50%); /* Show 60% on mobile */
+      transform: translate(-40%, -50%); /* Show 40% on mobile */
     }
   }
 }
@@ -3881,12 +3893,22 @@
 
 .your-wallpaper {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height */
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height */
+  max-height: 100vh;
+  max-height: 100dvh;
   width: 100%;
   overflow: hidden;
+  overflow-y: hidden;
   display: flex;
   flex-direction: column;
+}
+
+/* Prevent body scroll when your-wallpaper is active */
+body:has(.your-wallpaper) {
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
 }
 
 /* iOS Safari: prevent rubber band scrolling on mobile */
@@ -4247,7 +4269,7 @@
 .mirror-thankyou__title {
   align-self: stretch;
   width: calc(938 / 1512 * 100vw);
-  color: var(--Black, #0B0B0B);
+  color: var(--White, #FFF);
   text-align: center;
   font-family: var(--font-brikey-moura);
   font-size: 60px;
@@ -4264,7 +4286,7 @@
 /* Description */
 .mirror-thankyou__description {
   width: calc(345 / 1512 * 100vw);
-  color: var(--Black, #0B0B0B);
+  color: var(--White, #FFF);
   text-align: center;
   font-family: var(--font-beau-sans);
   font-size: 14px;
@@ -4374,10 +4396,12 @@
     margin: 0 0 36px 0;
     width: calc(520 / 834 * 100vw);
     font-size: 40px;
+    color: var(--White, #FFF);
   }
 
   .mirror-thankyou__description {
     width: calc(400 / 834 * 100vw);
+    color: var(--White, #FFF);
   }
 }
 
@@ -4472,7 +4496,7 @@
     margin: 0 0 36px 0;
     padding: 0;
     width: calc(304 / 390 * 100vw);
-    color: var(--Black, #0B0B0B);
+    color: var(--White, #FFF);
     text-align: center;
     font-family: var(--font-brikey-moura);
     font-size: 32px;
@@ -4485,7 +4509,7 @@
   .mirror-thankyou__description {
     align-self: center;
     width: 100%;
-    color: var(--Black, #0B0B0B);
+    color: var(--White, #FFF);
     text-align: center;
     font-size: 12px;
   }

@@ -29,21 +29,28 @@ const shapeFrameFolders = {
   h7: 'marquise-frames',
 };
 
-// Mapping from position Y to pitch name
-const POSITION_TO_PITCH = {
-  0: 'C5',  // Đô cao
-  1: 'B4',  // Si
-  2: 'A4',  // La
-  3: 'G4',  // Sol
-  4: 'F4',  // Fa
-  5: 'E4',  // Mi
-  6: 'D4',  // Rê
-  7: 'C4',  // Đô
-  8: 'B3',  // Si thấp
+// Fixed mapping: Shape ID → Note position (each shape has one specific note)
+// Must match PlaceNoteScreenNew.jsx
+const SHAPE_TO_POSITION = {
+  h1: 0,  // Heart → Đô (C4)
+  h2: 1,  // Oval → Rê (D4)
+  h3: 2,  // Round → Mi (E4)
+  h4: 3,  // Pear → Pha (F4)
+  h5: 4,  // Asscher → Son (G4)
+  h6: 5,  // Emerald → La (A4)
+  h7: 6,  // Marquise → Si (B4)
 };
 
-// Generate random position (0-8)
-const getRandomPositionY = () => Math.floor(Math.random() * 9);
+// Mapping from position Y to pitch name (must match SHAPE_TO_POSITION)
+const POSITION_TO_PITCH = {
+  0: 'C4',  // Đô
+  1: 'D4',  // Rê
+  2: 'E4',  // Mi
+  3: 'F4',  // Pha
+  4: 'G4',  // Son
+  5: 'A4',  // La
+  6: 'B4',  // Si
+};
 
 // Generate random X position (30-70 for better visual)
 const getRandomPositionX = () => 30 + Math.floor(Math.random() * 41);
@@ -111,7 +118,7 @@ const shapes = [
     id: 'h7',
     name: 'Marquise shape',
     image: 'mirror_DMM/HEART-07.webp', // Marquise shape
-    scale: 0.9,
+    scale: 0.8,
   },
 ];
 
@@ -386,9 +393,9 @@ const EventChooseShapePage = () => {
     try {
       const selectedShape = shapes[currentIndex].id;
 
-      // Generate random position
-      const positionX = getRandomPositionX();
-      const positionY = getRandomPositionY();
+      // Position determined by shape (not random)
+      const positionX = 50; // Always centered
+      const positionY = SHAPE_TO_POSITION[selectedShape];
       const pitch = POSITION_TO_PITCH[positionY];
 
       // Save note to database

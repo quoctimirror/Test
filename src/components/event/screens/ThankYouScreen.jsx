@@ -103,7 +103,7 @@ const ThankYouScreen = () => {
   return (
     <>
       <NavbarV4 logoOnly />
-      <div className="mirror-thankyou" data-navbar-theme="black">
+      <div className="mirror-thankyou" data-navbar-theme="white">
         {/* Background */}
         <div className="mirror-thankyou__bg" />
 

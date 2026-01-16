@@ -568,7 +568,11 @@ const WriteMessageScreenNew = () => {
 
               {/* Random notes (7) - show all notes on both staffs */}
               {/* Random notes - click/tap to play sound (works on iOS) */}
+              {/* Hide first random note on mobile */}
               {displayNotes.map((note, index) => {
+                // Skip first note on mobile
+                if (isMobile && index === 0) return null;
+
                 const xPos = getNoteXPosition(index, note.staffIndex || 0);
                 const yPos = getNoteYPosition(note.positionY, note.staffIndex || 0);
                 const isNoteAnimated = animatedNoteIndices.includes(index);
