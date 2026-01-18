@@ -3339,6 +3339,38 @@
   background: linear-gradient(180deg, #FF92B0 0%, #FFE1E9 24.04%, rgba(255, 232, 238, 0.50) 50.48%, #FFAFC5 71.15%, #FF8FAE 78.85%, #C4637E 100%);
   box-shadow: 0 1px 1px 0 #BC224C;
   pointer-events: none;
+  /* Line draw animation */
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: lineDrawIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Staggered line animation delays - staff 1 */
+.your-melody__lines--staff1 .your-melody__line:nth-child(1) { animation-delay: 0.1s; }
+.your-melody__lines--staff1 .your-melody__line:nth-child(2) { animation-delay: 0.15s; }
+.your-melody__lines--staff1 .your-melody__line:nth-child(3) { animation-delay: 0.2s; }
+.your-melody__lines--staff1 .your-melody__line:nth-child(4) { animation-delay: 0.25s; }
+.your-melody__lines--staff1 .your-melody__line:nth-child(5) { animation-delay: 0.3s; }
+
+/* Staggered line animation delays - staff 2 */
+.your-melody__lines--staff2 .your-melody__line:nth-child(1) { animation-delay: 0.35s; }
+.your-melody__lines--staff2 .your-melody__line:nth-child(2) { animation-delay: 0.4s; }
+.your-melody__lines--staff2 .your-melody__line:nth-child(3) { animation-delay: 0.45s; }
+.your-melody__lines--staff2 .your-melody__line:nth-child(4) { animation-delay: 0.5s; }
+.your-melody__lines--staff2 .your-melody__line:nth-child(5) { animation-delay: 0.55s; }
+
+@keyframes lineDrawIn {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
 }
 
 /* Solock decoration - left side, show 20% */
@@ -3628,17 +3660,17 @@
   display: none;
 }
 
-/* Entrance animation - slide from left to right (same direction as your-note exit) */
+/* Entrance animation - fade in (lines animate separately) */
 .your-melody--entering {
-  animation: yourMelodySlideIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: yourMelodyFadeIn 0.3s ease-out forwards;
 }
 
-@keyframes yourMelodySlideIn {
+@keyframes yourMelodyFadeIn {
   0% {
-    transform: translateX(-100%);
+    opacity: 0;
   }
   100% {
-    transform: translateX(0);
+    opacity: 1;
   }
 }
 
@@ -4164,6 +4196,20 @@ body:has(.your-wallpaper) {
   .your-wallpaper__footer-actions .share-btn-text {
     display: none;
   }
+
+  /* Share button - circular 46x46 on mobile */
+  .your-wallpaper__footer-actions .share-btn-circle {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+  }
+
+  .your-wallpaper__footer-actions .share-btn-circle .glass-theme-btn-text {
+    gap: 0;
+    justify-content: center;
+  }
 }
 
 /* ============================================
@@ -4327,6 +4373,124 @@ body:has(.your-wallpaper) {
   object-fit: contain;
   display: block;
   margin-bottom: -50%;
+}
+
+/* ============================================
+   MIRROR THANK YOU - ENTRANCE ANIMATIONS
+   ============================================ */
+
+/* Background - soft fade in */
+.mirror-thankyou__bg {
+  opacity: 0;
+  animation: bgSoftFadeIn 1s ease-out 0.3s forwards;
+}
+
+@keyframes bgSoftFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Radial glow that expands from center and fades out */
+.mirror-thankyou::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 150vmax;
+  height: 150vmax;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(circle,
+    rgba(255, 180, 180, 0.6) 0%,
+    rgba(200, 100, 100, 0.4) 20%,
+    rgba(134, 7, 16, 0.2) 40%,
+    transparent 70%
+  );
+  animation: glowExpand 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes glowExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Main content - fade in after background (no transform to preserve mobile centering) */
+.mirror-thankyou__main {
+  opacity: 0;
+  animation: contentFadeInOnly 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s forwards;
+}
+
+@keyframes contentFadeInOnly {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Title - staggered fade in */
+.mirror-thankyou__title {
+  opacity: 0;
+  animation: itemFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s forwards;
+}
+
+/* Description - staggered fade in */
+.mirror-thankyou__description {
+  opacity: 0;
+  animation: itemFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
+}
+
+/* Actions - staggered fade in */
+.mirror-thankyou__actions {
+  opacity: 0;
+  animation: itemFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.7s forwards;
+}
+
+/* Lucky ring - fade in from bottom */
+.mirror-thankyou__lucky-ring {
+  opacity: 0;
+  animation: ringFadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
+}
+
+@keyframes ringFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Left side (social icons) - fade in */
+.mirror-thankyou__left {
+  opacity: 0;
+  animation: itemFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s forwards;
+}
+
+/* Right side (nav icons) - fade in */
+.mirror-thankyou__right {
+  opacity: 0;
+  animation: itemFadeIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.8s forwards;
+}
+
+@keyframes itemFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ============================================

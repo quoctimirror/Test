@@ -116,14 +116,25 @@ const DIAMONDS = {
   ],
 };
 
-// Helper to load image
-const loadImage = (src) => {
+// Helper to load image with retry
+const loadImage = (src, retries = 2) => {
   return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
+    const attempt = (remainingRetries) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = (err) => {
+        if (remainingRetries > 0) {
+          // Retry with cache busting
+          setTimeout(() => attempt(remainingRetries - 1), 500);
+        } else {
+          reject(err);
+        }
+      };
+      // Add cache busting for retries
+      img.src = remainingRetries < retries ? `${src}?t=${Date.now()}` : src;
+    };
+    attempt(retries);
   });
 };
 
@@ -152,13 +163,17 @@ const AvatarGenerator = ({
     setIsGenerating(true);
     hasGenerated.current = true;
 
+    // Get 2D context
     const ctx = canvas.getContext('2d');
     if (!ctx) {
+      console.error('Failed to get canvas context');
       setIsGenerating(false);
+      hasGenerated.current = false;
+      onGenerated?.(null); // Notify parent of failure
       return;
     }
 
-    // Canvas size matches the layer images
+    // Canvas size matches the layer images (full quality)
     const width = 2500;
     const height = 4462;
     canvas.width = width;
@@ -268,6 +283,8 @@ const AvatarGenerator = ({
     } catch (error) {
       console.error('Error generating avatar:', error);
       hasGenerated.current = false;
+      // Notify parent of failure
+      onGenerated?.(null);
     } finally {
       setIsGenerating(false);
     }

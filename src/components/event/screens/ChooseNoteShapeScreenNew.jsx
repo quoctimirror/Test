@@ -35,12 +35,16 @@ const SHAPE_NAME_MAP = {
   marquise: 'marquise',
 };
 
+// Card back image URL (precomputed to avoid issues)
+const CARD_BACK_URL = getMediaUrl('dmm/card_back.svg');
+
 const ChooseNoteShapeScreenNew = () => {
   const navigate = useNavigate();
   const [downloading, setDownloading] = useState(false);
   const [isShowingFront, setIsShowingFront] = useState(false);
   const [entryComplete, setEntryComplete] = useState(false);
   const [isEntryAnimating, setIsEntryAnimating] = useState(true);
+  const [cardBackLoaded, setCardBackLoaded] = useState(false);
 
   const cardRef = useRef(null);
   const cardContainerRef = useRef(null);
@@ -64,20 +68,61 @@ const ChooseNoteShapeScreenNew = () => {
     selectedDiamond,
     generatedAvatarUrl,
     generatedForShape,
+    generatedForName,
     setGeneratedAvatar,
   } = useEventStore();
 
   const currentShape = SHAPE_NAME_MAP[selectedDiamond] || 'heart';
+  const currentName = user?.displayName || 'Guest';
   const [localAvatarUrl, setLocalAvatarUrl] = useState('');
-  const avatarDataUrl = (generatedForShape === currentShape && generatedAvatarUrl)
-    ? generatedAvatarUrl
-    : localAvatarUrl;
-  const shouldGenerateAvatar = !avatarDataUrl;
+  const [generationFailed, setGenerationFailed] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+
+  // Check if cached avatar matches both current shape AND current name
+  const isCachedAvatarValid = generatedForShape === currentShape &&
+                              generatedForName === currentName &&
+                              generatedAvatarUrl;
+  const avatarDataUrl = isCachedAvatarValid ? generatedAvatarUrl : localAvatarUrl;
+  const shouldGenerateAvatar = !avatarDataUrl && !generationFailed;
 
   const handleAvatarGenerated = (dataUrl) => {
-    setLocalAvatarUrl(dataUrl);
-    setGeneratedAvatar(dataUrl, currentShape);
+    if (dataUrl) {
+      setLocalAvatarUrl(dataUrl);
+      // Save with both shape and name for validation on reload
+      setGeneratedAvatar(dataUrl, currentShape, currentName);
+      setGenerationFailed(false);
+    } else {
+      // Generation failed
+      setGenerationFailed(true);
+    }
   };
+
+  // Retry generation
+  const handleRetryGeneration = () => {
+    setGenerationFailed(false);
+    setLocalAvatarUrl('');
+    setRetryCount(prev => prev + 1);
+  };
+
+  // Timeout fallback - if generation takes too long (common on iOS), show retry
+  // Only run when retryCount changes (new generation attempt)
+  useEffect(() => {
+    // Skip if we already have avatar or generation already failed
+    if (avatarDataUrl || generationFailed) return;
+
+    const timeout = setTimeout(() => {
+      // Check state at timeout time
+      setGenerationFailed((prev) => {
+        if (!prev) {
+          console.warn('Avatar generation timeout - showing retry button');
+          return true;
+        }
+        return prev;
+      });
+    }, 15000); // 15 seconds timeout
+
+    return () => clearTimeout(timeout);
+  }, [retryCount]); // Only depend on retryCount to avoid loops
 
   // Update card rotation
   const updateCard = () => {
@@ -136,6 +181,21 @@ const ChooseNoteShapeScreenNew = () => {
     animate();
     return () => cancelAnimationFrame(animationId);
   }, [entryComplete]);
+
+  // Preload card back image
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setCardBackLoaded(true);
+    img.onerror = () => {
+      // Retry once on error
+      setTimeout(() => {
+        const retryImg = new Image();
+        retryImg.onload = () => setCardBackLoaded(true);
+        retryImg.src = `${CARD_BACK_URL}?t=${Date.now()}`;
+      }, 500);
+    };
+    img.src = CARD_BACK_URL;
+  }, []);
 
   // Entry animation complete
   useEffect(() => {
@@ -395,10 +455,12 @@ const ChooseNoteShapeScreenNew = () => {
           }
 
           .your-wallpaper-v2__card-back {
-            background-image: url('${getMediaUrl('dmm/card_back.svg')}');
+            background-image: url('${CARD_BACK_URL}');
             background-size: cover;
             background-position: center;
             transform: rotateY(180deg);
+            /* Fallback background color */
+            background-color: #BC224C;
           }
 
           .your-wallpaper-v2__card-image {
@@ -465,8 +527,34 @@ const ChooseNoteShapeScreenNew = () => {
                   <div className="your-wallpaper-v2__card-face your-wallpaper-v2__card-front">
                     {avatarDataUrl ? (
                       <img src={avatarDataUrl} alt="Generated Card" className="your-wallpaper-v2__card-image" />
+                    ) : generationFailed ? (
+                      <div style={{
+                        color: '#BC224C',
+                        textAlign: 'center',
+                        padding: '20px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '12px'
+                      }}>
+                        <p style={{ margin: 0, fontSize: '14px' }}>Không thể tạo avatar</p>
+                        <button
+                          onClick={handleRetryGeneration}
+                          style={{
+                            background: '#BC224C',
+                            color: '#fff',
+                            border: 'none',
+                            padding: '8px 16px',
+                            borderRadius: '20px',
+                            cursor: 'pointer',
+                            fontSize: '14px'
+                          }}
+                        >
+                          Thử lại
+                        </button>
+                      </div>
                     ) : (
-                      <div style={{ color: '#999' }}>Loading...</div>
+                      <div style={{ color: '#999' }}>Đang tạo...</div>
                     )}
                   </div>
 
@@ -526,6 +614,7 @@ const ChooseNoteShapeScreenNew = () => {
             <GlassThemeButton
               theme="event_dark"
               onClick={handleShare}
+              className="share-btn-circle"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="11" viewBox="0 0 15 11" fill="none">
                 <path d="M14.5 5.10798L7.03341 0.5L7.03341 3.1087C0.5 4.41304 0.5 10.5 0.5 10.5C0.5 10.5 3.29997 7.02174 7.03341 7.45652L7.03341 10.1522L14.5 5.10798Z" stroke="currentColor" strokeLinejoin="round"/>
@@ -538,6 +627,7 @@ const ChooseNoteShapeScreenNew = () => {
         {/* Hidden Avatar Generator */}
         {shouldGenerateAvatar && (
           <AvatarGenerator
+            key={`avatar-gen-${retryCount}`}
             displayName={user?.displayName || 'Guest'}
             lightNumber={user?.lightNumber || 1}
             diamondShape={currentShape}

@@ -46,9 +46,10 @@ const useEventStore = create(
       // Demo mode
       isDemo: false,
 
-      // Pre-generated avatar (NOT persisted - kept in memory only)
+      // Pre-generated avatar (NOT persisted - too large for localStorage, kept in memory only)
       generatedAvatarUrl: null,
       generatedForShape: null,
+      generatedForName: null,
 
       // Actions
       setCurrentStep: (step) => set({ currentStep: step }),
@@ -100,13 +101,15 @@ const useEventStore = create(
       setIsDemo: (isDemo) => set({ isDemo }),
 
       // Pre-generated avatar actions
-      setGeneratedAvatar: (url, shape) => set({
+      setGeneratedAvatar: (url, shape, name) => set({
         generatedAvatarUrl: url,
         generatedForShape: shape,
+        generatedForName: name,
       }),
       clearGeneratedAvatar: () => set({
         generatedAvatarUrl: null,
         generatedForShape: null,
+        generatedForName: null,
       }),
 
       // Reset all state (logout)
@@ -128,6 +131,7 @@ const useEventStore = create(
           isDemo: false,
           generatedAvatarUrl: null,
           generatedForShape: null,
+          generatedForName: null,
         }),
 
       // Check if user has completed the flow
@@ -148,7 +152,8 @@ const useEventStore = create(
     }),
     {
       name: 'mirror-diamond-event',
-      // Persist userNote, user, selectedDiamond, initialNotePosition, and melodyNotes to localStorage
+      // Persist userNote, user, selectedDiamond, initialNotePosition, melodyNotes to localStorage
+      // NOTE: Avatar URL is NOT persisted (too large ~2-5MB, causes lag and quota issues)
       partialize: (state) => ({
         userNote: state.userNote,
         user: state.user,
