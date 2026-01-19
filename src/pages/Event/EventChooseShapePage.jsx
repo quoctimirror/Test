@@ -14,7 +14,19 @@ import { placeNote } from '@services/event/eventApi';
 
 import './EventChooseShapePage.css';
 
-// Frame animation config for Safari (WebM alpha not supported)
+// GIF mapping for iOS (WebM alpha not supported, frames too slow)
+// Using local paths since GIFs are not on Cloudflare CDN
+const shapeGifs = {
+  h1: '/dmm-event/HEART.gif',
+  h2: '/dmm-event/OVAL.gif',
+  h3: '/dmm-event/ROUND.gif',
+  h4: '/dmm-event/PEAR.gif',
+  h5: '/dmm-event/ASSCHER.gif',
+  h6: '/dmm-event/EMERALD.gif',
+  h7: '/dmm-event/MARQUISE.gif',
+};
+
+// Frame animation config for macOS Safari (WebM alpha not supported)
 const SHAPE_FRAME_COUNT = 163;
 const SHAPE_FPS = 30;
 
@@ -68,6 +80,9 @@ const shapeVideos = {
 
 // Get video URL for shape
 const getVideoUrl = (shape) => getMediaUrl(shapeVideos[shape.id]);
+
+// Get GIF URL for shape (Safari) - uses local path directly
+const getGifUrl = (shape) => shapeGifs[shape.id];
 
 // Diamond shapes data - H1 to H7 (scale: 1 = default, >1 = larger)
 // HEART-01 = Heart shape
@@ -183,51 +198,72 @@ const EventChooseShapePage = () => {
   const animationRef = useRef(null);
   const idleTimerRef = useRef(null);
 
-  // Safari detection and frame animation for diamond shapes
-  const [isSafari, setIsSafari] = useState(false);
-  const [shapeFrames, setShapeFrames] = useState({}); // { h1: [...frames], h2: [...frames], ... }
+  // Platform detection: iOS uses GIF, macOS Safari uses WebP frames, others use WebM
+  const [isIOS, setIsIOS] = useState(false);
+  const [isMacSafari, setIsMacSafari] = useState(false);
+
+  // Frame animation state for macOS Safari
+  const [shapeFrames, setShapeFrames] = useState({});
   const [currentShapeFrame, setCurrentShapeFrame] = useState(0);
-  const [loadedShapes, setLoadedShapes] = useState({}); // { h1: true, h2: false, ... }
+  const [loadedShapes, setLoadedShapes] = useState({});
   const shapeAnimationRef = useRef(null);
   const lastShapeFrameTimeRef = useRef(0);
 
-  // Detect Safari on mount
+  // Detect platform on mount
   useEffect(() => {
     const ua = navigator.userAgent;
-    const safari = /^((?!chrome|android).)*safari/i.test(ua);
-    setIsSafari(safari);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+    const isIOSDevice = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    console.log('[Platform Detection]', { ua, isSafari, isIOSDevice, macSafari: isSafari && !isIOSDevice });
+
+    setIsIOS(isIOSDevice);
+    setIsMacSafari(isSafari && !isIOSDevice);
   }, []);
 
-  // Preload frames for current shape (Safari only)
+  // Preload frames for current shape (macOS Safari only)
   useEffect(() => {
-    if (!isSafari) return;
+    if (!isMacSafari) {
+      console.log('[Frame Loading] Skipped - not macOS Safari');
+      return;
+    }
 
     const currentShapeId = shapes[currentIndex].id;
 
     // Skip if already loaded
-    if (loadedShapes[currentShapeId]) return;
+    if (loadedShapes[currentShapeId]) {
+      console.log('[Frame Loading] Skipped - already loaded:', currentShapeId);
+      return;
+    }
+
+    console.log('[Frame Loading] Starting for:', currentShapeId);
 
     const loadFrames = async () => {
       const frameFolder = shapeFrameFolders[currentShapeId];
       if (!frameFolder) return;
 
-      const loadedFrames = [];
+      // Build frame URLs
+      const frameUrls = [];
       for (let i = 1; i <= SHAPE_FRAME_COUNT; i++) {
         const frameNum = String(i).padStart(3, '0');
-        const src = `/dmm-event/${frameFolder}/frame_${frameNum}.webp`;
+        frameUrls.push(`/dmm-event/${frameFolder}/frame_${frameNum}.webp`);
+      }
 
-        await new Promise((resolve) => {
+      // Load all frames in parallel for faster loading
+      await Promise.all(frameUrls.map(src =>
+        new Promise((resolve) => {
           const img = new Image();
           img.onload = resolve;
-          img.onerror = resolve; // Continue even if one frame fails
+          img.onerror = resolve;
           img.src = src;
-        });
-        loadedFrames.push(src);
-      }
+        })
+      ));
+
+      console.log('[Frame Loading] Completed:', currentShapeId, frameUrls.length, 'frames');
 
       setShapeFrames(prev => ({
         ...prev,
-        [currentShapeId]: loadedFrames,
+        [currentShapeId]: frameUrls,
       }));
       setLoadedShapes(prev => ({
         ...prev,
@@ -236,9 +272,9 @@ const EventChooseShapePage = () => {
     };
 
     loadFrames();
-  }, [isSafari, currentIndex, loadedShapes]);
+  }, [isMacSafari, currentIndex, loadedShapes]);
 
-  // Animation loop for shape frames (Safari only)
+  // Animation loop for shape frames (macOS Safari only)
   const animateShapeFrames = useCallback((timestamp) => {
     const frameInterval = 1000 / SHAPE_FPS;
     if (timestamp - lastShapeFrameTimeRef.current >= frameInterval) {
@@ -248,12 +284,16 @@ const EventChooseShapePage = () => {
     shapeAnimationRef.current = requestAnimationFrame(animateShapeFrames);
   }, []);
 
-  // Start/stop shape animation based on Safari and loaded state
+  // Start/stop shape animation based on macOS Safari and loaded state
   useEffect(() => {
     const currentShapeId = shapes[currentIndex].id;
-    if (!isSafari || !loadedShapes[currentShapeId]) return;
+    if (!isMacSafari || !loadedShapes[currentShapeId]) {
+      console.log('[Animation] Not starting:', { isMacSafari, loaded: loadedShapes[currentShapeId] });
+      return;
+    }
 
-    // Reset frame to 0 when switching shapes
+    console.log('[Animation] Starting for:', currentShapeId);
+
     setCurrentShapeFrame(0);
     lastShapeFrameTimeRef.current = 0;
 
@@ -264,7 +304,7 @@ const EventChooseShapePage = () => {
         cancelAnimationFrame(shapeAnimationRef.current);
       }
     };
-  }, [isSafari, currentIndex, loadedShapes, animateShapeFrames]);
+  }, [isMacSafari, currentIndex, loadedShapes, animateShapeFrames]);
 
   // Don't remove entrance class - just let animation complete naturally
   // The class stays but animation only runs once
@@ -463,13 +503,22 @@ const EventChooseShapePage = () => {
               {/* Old shape - animating out */}
               {isAnimating && prevIndex !== null && (
                 <div className="event-choose-shape__diamond event-choose-shape__diamond--exit">
-                  {isSafari ? (
+                  {isIOS ? (
+                    // iOS: Use GIF
+                    <img
+                      src={getGifUrl(shapes[prevIndex])}
+                      alt={shapes[prevIndex].name}
+                      className="event-choose-shape__diamond-img"
+                    />
+                  ) : isMacSafari ? (
+                    // macOS Safari: Use WebP frames
                     <img
                       src={shapeFrames[shapes[prevIndex].id]?.[currentShapeFrame] || `/dmm-event/${shapeFrameFolders[shapes[prevIndex].id]}/frame_001.webp`}
                       alt={shapes[prevIndex].name}
                       className="event-choose-shape__diamond-img"
                     />
                   ) : (
+                    // Other browsers: Use WebM video
                     <video
                       src={getVideoUrl(shapes[prevIndex])}
                       autoPlay
@@ -484,13 +533,22 @@ const EventChooseShapePage = () => {
               {/* Current shape - animating in or static */}
               <div className={`event-choose-shape__diamond ${isAnimating ? 'event-choose-shape__diamond--enter' : ''}`}>
                 <div style={{ transform: `scale(${currentShape.scale || 1})`, transition: 'transform 0.6s ease' }}>
-                  {isSafari ? (
+                  {isIOS ? (
+                    // iOS: Use GIF
+                    <img
+                      src={getGifUrl(currentShape)}
+                      alt={currentShape.name}
+                      className="event-choose-shape__diamond-img"
+                    />
+                  ) : isMacSafari ? (
+                    // macOS Safari: Use WebP frames
                     <img
                       src={shapeFrames[currentShape.id]?.[currentShapeFrame] || `/dmm-event/${shapeFrameFolders[currentShape.id]}/frame_001.webp`}
                       alt={currentShape.name}
                       className="event-choose-shape__diamond-img"
                     />
                   ) : (
+                    // Other browsers: Use WebM video
                     <video
                       src={getVideoUrl(currentShape)}
                       autoPlay
