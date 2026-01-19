@@ -15,15 +15,14 @@ import { placeNote } from '@services/event/eventApi';
 import './EventChooseShapePage.css';
 
 // GIF mapping for iOS (WebM alpha not supported, frames too slow)
-// Using local paths since GIFs are not on Cloudflare CDN
 const shapeGifs = {
-  h1: '/dmm-event/HEART.gif',
-  h2: '/dmm-event/OVAL.gif',
-  h3: '/dmm-event/ROUND.gif',
-  h4: '/dmm-event/PEAR.gif',
-  h5: '/dmm-event/ASSCHER.gif',
-  h6: '/dmm-event/EMERALD.gif',
-  h7: '/dmm-event/MARQUISE.gif',
+  h1: 'mirror_DMM/HEART.gif',
+  h2: 'mirror_DMM/OVAL.gif',
+  h3: 'mirror_DMM/ROUND.gif',
+  h4: 'mirror_DMM/PEAR.gif',
+  h5: 'mirror_DMM/ASSCHER.gif',
+  h6: 'mirror_DMM/EMERALD.gif',
+  h7: 'mirror_DMM/MARQUISE.gif',
 };
 
 // Frame animation config for macOS Safari (WebM alpha not supported)
@@ -81,8 +80,8 @@ const shapeVideos = {
 // Get video URL for shape
 const getVideoUrl = (shape) => getMediaUrl(shapeVideos[shape.id]);
 
-// Get GIF URL for shape (Safari) - uses local path directly
-const getGifUrl = (shape) => shapeGifs[shape.id];
+// Get GIF URL for shape (iOS/in-app browsers)
+const getGifUrl = (shape) => getMediaUrl(shapeGifs[shape.id]);
 
 // Diamond shapes data - H1 to H7 (scale: 1 = default, >1 = larger)
 // HEART-01 = Heart shape
@@ -210,15 +209,25 @@ const EventChooseShapePage = () => {
   const lastShapeFrameTimeRef = useRef(0);
 
   // Detect platform on mount
+  // iOS/in-app browsers → GIF (simple, fast)
+  // macOS Safari → WebP frames (smooth animation)
+  // Other browsers → WebM video (best quality with alpha)
   useEffect(() => {
     const ua = navigator.userAgent;
+    const uaLower = ua.toLowerCase();
+
     const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
-    const isIOSDevice = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isIOSDevice = /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-    console.log('[Platform Detection]', { ua, isSafari, isIOSDevice, macSafari: isSafari && !isIOSDevice });
+    // In-app browsers on Android should use GIF too (WebM may not work)
+    const isInAppBrowser = /zalo|fbav|fban|instagram|line|kakaotalk|wechat|micromessenger/.test(uaLower);
+    const isAndroidInApp = isInAppBrowser && /android/i.test(ua);
 
-    setIsIOS(isIOSDevice);
-    setIsMacSafari(isSafari && !isIOSDevice);
+    // iOS or Android in-app browsers → use GIF
+    setIsIOS(isIOSDevice || isAndroidInApp);
+    // macOS Safari (not iOS) → use WebP frames
+    setIsMacSafari(isSafari && !isIOSDevice && !isAndroidInApp);
   }, []);
 
   // Preload frames for current shape (macOS Safari only)
@@ -658,6 +667,7 @@ const EventChooseShapePage = () => {
                     src={getMediaUrl(shape.image)}
                     alt={shape.name}
                     className="event-choose-shape__orbit-shape-img"
+                    draggable="false"
                   />
                   {/* Idle ripple indicator - shows on shape next to selected after 3s */}
                   {showRippleOnThis && (

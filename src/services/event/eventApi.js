@@ -624,6 +624,190 @@ export async function fetchStats() {
   }
 }
 
+/**
+ * Fetch user statistics by auth provider
+ * @returns {Object} { totalUsers, googleUsers, facebookUsers, appleUsers }
+ */
+export async function fetchUserStats() {
+  // Demo mode
+  if (!isSupabaseConfigured()) {
+    return {
+      totalUsers: 150,
+      googleUsers: 80,
+      facebookUsers: 50,
+      appleUsers: 20,
+      isDemo: true,
+    };
+  }
+
+  try {
+    const supabase = getSupabaseClient();
+
+    // Get total users count
+    const { count: totalUsers, error: totalError } = await supabase
+      .from(TABLES.users)
+      .select('*', { count: 'exact', head: true });
+
+    if (totalError) {
+      console.error('Fetch total users error:', totalError);
+      return null;
+    }
+
+    // Get Google users count (users with google_id)
+    const { count: googleUsers, error: googleError } = await supabase
+      .from(TABLES.users)
+      .select('*', { count: 'exact', head: true })
+      .not('google_id', 'is', null);
+
+    // Get Facebook users count (users with facebook_id)
+    const { count: facebookUsers, error: facebookError } = await supabase
+      .from(TABLES.users)
+      .select('*', { count: 'exact', head: true })
+      .not('facebook_id', 'is', null);
+
+    // TODO: Uncomment when apple_id column is added to users table
+    // const { count: appleUsers } = await supabase
+    //   .from(TABLES.users)
+    //   .select('*', { count: 'exact', head: true })
+    //   .not('apple_id', 'is', null);
+
+    return {
+      totalUsers: totalUsers || 0,
+      googleUsers: googleUsers || 0,
+      facebookUsers: facebookUsers || 0,
+      appleUsers: 0, // TODO: Change to appleUsers || 0 when apple_id column exists
+    };
+  } catch (error) {
+    console.error('Fetch user stats error:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch all users with their details (for admin export)
+ * Query users table and notes table separately, then merge
+ * @returns {Array} Array of user objects with email, provider, displayName, shape
+ */
+export async function fetchAllUsers() {
+  // Demo mode
+  if (!isSupabaseConfigured()) {
+    return {
+      users: [
+        { email: 'user1@gmail.com', provider: 'Google', displayName: 'User 1', shape: 'Heart Shape' },
+        { email: 'user2@facebook.com', provider: 'Facebook', displayName: 'User 2', shape: 'Round Shape' },
+        { email: 'user3@icloud.com', provider: 'Apple', displayName: 'User 3', shape: 'Oval Shape' },
+      ],
+      isDemo: true,
+    };
+  }
+
+  try {
+    const supabase = getSupabaseClient();
+
+    // Query 1: Get all users
+    const { data: users, error: usersError } = await supabase
+      .from(TABLES.users)
+      .select('id, email, display_name, google_id, facebook_id, created_at')
+      .order('created_at', { ascending: true });
+
+    if (usersError) {
+      console.error('Fetch users error:', usersError);
+      return null;
+    }
+
+    // Query 2: Get all notes
+    const { data: notes, error: notesError } = await supabase
+      .from(TABLES.notes)
+      .select('user_id, diamond_shape');
+
+    if (notesError) {
+      console.error('Fetch notes error:', notesError);
+    }
+
+    // Create a map of user_id to shape
+    const userShapeMap = {};
+    if (notes) {
+      notes.forEach((note) => {
+        userShapeMap[note.user_id] = note.diamond_shape;
+      });
+    }
+
+    // Map data to user list format
+    const userList = (users || []).map((user) => {
+      // Determine provider based on available IDs
+      let provider = '';
+      if (user.google_id) provider = 'Google';
+      else if (user.facebook_id) provider = 'Facebook';
+
+      return {
+        email: user.email || '',
+        provider,
+        displayName: user.display_name || '',
+        shape: userShapeMap[user.id] || '',
+      };
+    });
+
+    return { users: userList };
+  } catch (error) {
+    console.error('Fetch all users error:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch shape selection statistics
+ * @returns {Object} { shapes: { round: count, oval: count, ... }, totalSelections: number }
+ */
+export async function fetchShapeStats() {
+  // Demo mode
+  if (!isSupabaseConfigured()) {
+    return {
+      shapes: {
+        heart: 25,
+        oval: 20,
+        round: 30,
+        pear: 15,
+        asscher: 10,
+        emerald: 12,
+        marquise: 18,
+      },
+      totalSelections: 130,
+      isDemo: true,
+    };
+  }
+
+  try {
+    const supabase = getSupabaseClient();
+
+    // Get all notes to count shapes
+    const { data: notes, error } = await supabase
+      .from(TABLES.notes)
+      .select('diamond_shape');
+
+    if (error) {
+      console.error('Fetch shape stats error:', error);
+      return null;
+    }
+
+    // Count shapes
+    const shapeCounts = {};
+    (notes || []).forEach((note) => {
+      const shape = note.diamond_shape;
+      if (shape) {
+        shapeCounts[shape] = (shapeCounts[shape] || 0) + 1;
+      }
+    });
+
+    return {
+      shapes: shapeCounts,
+      totalSelections: notes?.length || 0,
+    };
+  } catch (error) {
+    console.error('Fetch shape stats error:', error);
+    return null;
+  }
+}
+
 // ============================================================
 // ADMIN OPERATIONS
 // ============================================================

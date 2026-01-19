@@ -809,6 +809,139 @@
   text-decoration: none;
 }
 
+/* Admin Table */
+.admin-table-container {
+  overflow-x: auto;
+  max-height: 500px;
+  overflow-y: auto;
+  border-radius: 12px;
+  border: 1px solid var(--event-glass-border);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.admin-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.admin-table th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  background: linear-gradient(135deg, #4472c4 0%, #2f5496 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.admin-table th:first-child {
+  text-align: center;
+  width: 60px;
+}
+
+.admin-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--event-glass-border);
+  font-size: 0.875rem;
+}
+
+.admin-table td:first-child {
+  text-align: center;
+  font-weight: 600;
+  color: var(--event-text-muted);
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(68, 114, 196, 0.1);
+}
+
+.admin-table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.admin-table tbody tr:nth-child(even):hover {
+  background: rgba(68, 114, 196, 0.15);
+}
+
+/* Provider Badge */
+.provider-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.provider-google {
+  background: linear-gradient(135deg, #ea4335 0%, #fbbc05 50%, #34a853 100%);
+  color: white;
+}
+
+.provider-facebook {
+  background: #1877f2;
+  color: white;
+}
+
+.provider-apple {
+  background: linear-gradient(135deg, #555555 0%, #000000 100%);
+  color: white;
+}
+
+.provider-badge:not(.provider-google):not(.provider-facebook):not(.provider-apple) {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--event-text-muted);
+}
+
+/* Shape Cell */
+.shape-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.no-shape {
+  color: var(--event-text-muted);
+  font-style: italic;
+}
+
+/* Admin Shape Images */
+.admin-shape-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+}
+
+.admin-shape-img-small {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2));
+}
+
+.shape-stat-card {
+  min-width: 100px;
+}
+
+.shape-stat-card .admin-shape-img {
+  margin-bottom: 0.5rem;
+}
+
+/* Admin Actions */
+.admin-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 /* ============================================
    Note Preview Screen
    ============================================ */

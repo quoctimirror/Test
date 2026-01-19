@@ -149,8 +149,8 @@ export const TEXT = {
   demoMode: "CHẾ ĐỘ DEMO",
 };
 
-// Admin password
-export const ADMIN_PASSWORD = "mirror-dmm-admin-2024";
+// Admin password (from environment variable)
+export const ADMIN_PASSWORD = import.meta.env.VITE_EVENT_ADMIN_PASSWORD || "";
 
 // Demo ticket prefix
 export const DEMO_TICKET_PREFIX = "MFD";
