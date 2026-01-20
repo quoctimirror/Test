@@ -183,7 +183,7 @@ const ChooseNoteShapeScreenNew = () => {
     return () => cancelAnimationFrame(animationId);
   }, [entryComplete]);
 
-  // Preload card back image
+  // Preload card back title image
   useEffect(() => {
     const img = new Image();
     img.onload = () => setCardBackLoaded(true);
@@ -192,10 +192,10 @@ const ChooseNoteShapeScreenNew = () => {
       setTimeout(() => {
         const retryImg = new Image();
         retryImg.onload = () => setCardBackLoaded(true);
-        retryImg.src = `${CARD_BACK_URL}?t=${Date.now()}`;
+        retryImg.src = `${CARD_BACK_TITLE_URL}?t=${Date.now()}`;
       }, 500);
     };
-    img.src = CARD_BACK_URL;
+    img.src = CARD_BACK_TITLE_URL;
   }, []);
 
   // Entry animation complete
