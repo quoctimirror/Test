@@ -37,7 +37,7 @@ const SHAPE_NAME_MAP = {
 };
 
 // Card back image URL (precomputed to avoid issues)
-const CARD_BACK_URL = getMediaUrl('dmm/card_back.svg');
+const CARD_BACK_TITLE_URL = getMediaUrl('dmm/card_back_title.png');
 
 const ChooseNoteShapeScreenNew = () => {
   const navigate = useNavigate();
@@ -458,12 +458,14 @@ const ChooseNoteShapeScreenNew = () => {
           }
 
           .your-wallpaper-v2__card-back {
-            background-image: url('${CARD_BACK_URL}');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(180deg, #4C0F0F 17.79%, #BC224C 55.29%, #F6F6F6 100%);
             transform: rotateY(180deg);
-            /* Fallback background color */
-            background-color: #BC224C;
+          }
+
+          .your-wallpaper-v2__card-back-title {
+            width: 60%;
+            height: auto;
+            object-fit: contain;
           }
 
           .your-wallpaper-v2__card-image {
@@ -562,7 +564,9 @@ const ChooseNoteShapeScreenNew = () => {
                   </div>
 
                   {/* Back face - Card back */}
-                  <div className="your-wallpaper-v2__card-face your-wallpaper-v2__card-back" />
+                  <div className="your-wallpaper-v2__card-face your-wallpaper-v2__card-back">
+                    <img src={CARD_BACK_TITLE_URL} alt="Card Back Title" className="your-wallpaper-v2__card-back-title" />
+                  </div>
                 </div>
               </div>
             </div>

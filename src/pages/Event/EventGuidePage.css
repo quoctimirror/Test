@@ -837,7 +837,7 @@
   transition: transform 0.4s ease, scale 0.4s ease, box-shadow 0.4s ease;
 }
 
-/* Card hover image overlay */
+/* Card hover image overlay - unique image per card */
 .event-guide__card::before {
   content: '';
   position: absolute;
@@ -845,11 +845,31 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("__CDN_URL__/mirror_DMM/landing-event-hover.webp") center center / cover no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   opacity: 0;
   transition: opacity 0.4s ease;
   z-index: 1;
 }
+
+/* Hover images for each card */
+.event-guide__card--1::before { background-image: url("__CDN_URL__/mirror_DMM/card-01-heart-pose1.webp"); }
+.event-guide__card--2::before { background-image: url("__CDN_URL__/mirror_DMM/card-02-heart-pose2.webp"); }
+.event-guide__card--3::before { background-image: url("__CDN_URL__/mirror_DMM/card-03-heart-pose3.webp"); }
+.event-guide__card--4::before { background-image: url("__CDN_URL__/mirror_DMM/card-04-round-pose1.webp"); }
+.event-guide__card--5::before { background-image: url("__CDN_URL__/mirror_DMM/card-05-round-pose2.webp"); }
+.event-guide__card--6::before { background-image: url("__CDN_URL__/mirror_DMM/card-06-round-pose3.webp"); }
+.event-guide__card--7::before { background-image: url("__CDN_URL__/mirror_DMM/card-07-emerald-pose1.webp"); }
+.event-guide__card--8::before { background-image: url("__CDN_URL__/mirror_DMM/card-08-emerald-pose2.webp"); }
+.event-guide__card--9::before { background-image: url("__CDN_URL__/mirror_DMM/card-09-emerald-pose3.webp"); }
+.event-guide__card--10::before { background-image: url("__CDN_URL__/mirror_DMM/card-10-marquise-pose1.webp"); }
+.event-guide__card--11::before { background-image: url("__CDN_URL__/mirror_DMM/card-11-marquise-pose2.webp"); }
+.event-guide__card--12::before { background-image: url("__CDN_URL__/mirror_DMM/card-12-marquise-pose3.webp"); }
+.event-guide__card--13::before { background-image: url("__CDN_URL__/mirror_DMM/card-13-oval-pose1.webp"); }
+.event-guide__card--14::before { background-image: url("__CDN_URL__/mirror_DMM/card-14-oval-pose2.webp"); }
+.event-guide__card--15::before { background-image: url("__CDN_URL__/mirror_DMM/card-15-oval-pose3.webp"); }
+.event-guide__card--16::before { background-image: url("__CDN_URL__/mirror_DMM/card-16-pear-pose1.webp"); }
 
 
 .event-guide__card:hover,
