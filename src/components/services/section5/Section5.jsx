@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import { ROUTES } from "@/constants/routes";
 import "./Section5.css";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 
 const Section5 = () => {
   const navigate = useNavigate();
@@ -101,13 +101,13 @@ const Section5 = () => {
           </div>
 
           <div className="view-all-section">
-            <ShineGlassButton
+            <GlassThemeButton
               className="view-all-btn"
               theme="light"
               onClick={handleViewAllFAQs}
             >
-              View all
-            </ShineGlassButton>
+              <span className="bodytext-6--no-margin">View all</span>
+            </GlassThemeButton>
           </div>
         </div>
       </div>

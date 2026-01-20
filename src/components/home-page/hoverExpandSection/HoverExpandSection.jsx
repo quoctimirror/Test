@@ -1,7 +1,7 @@
 import "./HoverExpand.css";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import { MediaImage } from "@components/common/media";
 import { ROUTES } from "@/constants/routes";
 
@@ -22,13 +22,13 @@ const HoverExpandSection = () => {
         <p className="bodytext-4--no-margin hover-expand-subtitle">
           Discover a variety of our pieces.
         </p>
-        <ShineGlassButton
-          theme="footer"
+        <GlassThemeButton
+          theme="dark"
           className="explore-more-button"
           onClick={handleExploreMoreClick}
         >
-          Explore more
-        </ShineGlassButton>
+          <span className="bodytext-6--no-margin">Explore more</span>
+        </GlassThemeButton>
       </div>
 
       <div className="hover-expand-gallery">

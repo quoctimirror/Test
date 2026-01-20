@@ -2,7 +2,7 @@ import { useEffect, useCallback, useState, useRef } from 'react';
 import { MediaImage } from '@components/common/media';
 import './PresenceOverlay.css';
 import StarlightEffect from './StarlightEffect';
-import ShineGlassButton from '@components/common/button/ShineGlassButton';
+import GlassThemeButton from '@components/common/button/GlassThemeButton';
 import CirclePresenceSVG from './svg/CirclePresenceSVG';
 
 const PresenceOverlay = ({ isVisible, onClose, origin }) => {
@@ -81,7 +81,7 @@ const PresenceOverlay = ({ isVisible, onClose, origin }) => {
             <div
                 className={`presence-overlay__close-button ${isClosing ? 'presence-overlay__close-button--closing' : ''}`}
             >
-                <ShineGlassButton
+                <GlassThemeButton
                     onClick={handleClose}
                     theme="light"
                     className="presence-overlay__close-btn"
@@ -92,7 +92,7 @@ const PresenceOverlay = ({ isVisible, onClose, origin }) => {
                         width="20"
                         height="20"
                     />
-                </ShineGlassButton>
+                </GlassThemeButton>
             </div>
 
             <div

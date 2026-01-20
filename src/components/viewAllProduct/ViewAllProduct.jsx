@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
-import ShineGlassButton from "@components/common/button/ShineGlassButton";
+import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import MediaImage from "@components/common/media/MediaImage";
 import "./ViewAllProduct.css";
 import { ROUTES } from "@/constants/routes";
@@ -224,9 +224,9 @@ const ViewAllProduct = ({ showViewProductButton = false }) => {
 
       {showViewProductButton && (
         <div className="view-product-button-container">
-          <ShineGlassButton theme="light" onClick={handleViewAllProducts}>
-            View all products
-          </ShineGlassButton>
+          <GlassThemeButton theme="light" onClick={handleViewAllProducts}>
+            <span className="bodytext-6--no-margin">View all products</span>
+          </GlassThemeButton>
         </div>
       )}
     </>
