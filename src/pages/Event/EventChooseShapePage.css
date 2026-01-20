@@ -230,8 +230,11 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.event-choose-shape__orbit-shape:hover {
-  transform: translate(-50%, -100%) scale(1.1);
+/* Only apply hover effects on devices with hover capability (desktop) */
+@media (hover: hover) {
+  .event-choose-shape__orbit-shape:hover {
+    transform: translate(-50%, -100%) scale(1.1);
+  }
 }
 
 .event-choose-shape__orbit-shape-img {
@@ -261,9 +264,12 @@
   opacity: 0.5;
 }
 
-.event-choose-shape__orbit-shape--blurred:hover .event-choose-shape__orbit-shape-img {
-  opacity: 0.8;
-  filter: blur(0px) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+/* Only apply hover effects on devices with hover capability (desktop) */
+@media (hover: hover) {
+  .event-choose-shape__orbit-shape--blurred:hover .event-choose-shape__orbit-shape-img {
+    opacity: 0.8;
+    filter: blur(0px) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+  }
 }
 
 /* Idle Ripple Effect - centered on the next shape */
