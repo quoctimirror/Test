@@ -12,6 +12,7 @@ import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import EventBackButton from '@/components/event/EventBackButton';
 import EventNextButton from '@/components/event/EventNextButton';
+import EdgeNextButton from '@/components/event/EdgeNextButton';
 
 // Mapping from shape ID (h1, h2...) to diamondShape name for AvatarGenerator
 // Must match keys in AvatarGenerator's DIAMONDS object:
@@ -442,6 +443,7 @@ const ChooseNoteShapeScreenNew = () => {
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
             border-radius: 16px;
             display: flex;
             justify-content: center;
@@ -452,6 +454,7 @@ const ChooseNoteShapeScreenNew = () => {
 
           .your-wallpaper-v2__card-front {
             background: #fff;
+            transform: translateZ(1px);
           }
 
           .your-wallpaper-v2__card-back {
@@ -597,6 +600,12 @@ const ChooseNoteShapeScreenNew = () => {
         {/* Back and Next buttons */}
         <EventBackButton onClick={handleGoBack} />
         <EventNextButton onClick={() => navigate(ROUTES.EVENT_THANKYOU)} />
+
+        <EdgeNextButton
+          onClick={() => navigate(ROUTES.EVENT_THANKYOU)}
+          title="Khi giai điệu thành hình"
+          description="Từ đây, MIRROR đã phát triển avatar phản chiếu Nốt Sáng, giai điệu và dấu ấn cá nhân của bạn. Bạn có thể tải và chia sẻ khoảnh khắc hiện diện này."
+        />
 
         {/* Footer - actions on tablet/mobile */}
         <footer className="your-wallpaper__footer">

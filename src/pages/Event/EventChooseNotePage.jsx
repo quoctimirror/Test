@@ -3,6 +3,7 @@
  */
 import ChooseNoteShapeScreenNew from '@/components/event/screens/ChooseNoteShapeScreenNew';
 import '@/styles/event.css';
+import './your-wallpaper.css';
 
 const EventChooseNotePage = () => {
   return <ChooseNoteShapeScreenNew />;

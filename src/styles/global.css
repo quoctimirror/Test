@@ -67,3 +67,22 @@ html {
   );
   pointer-events: none;
 }
+
+/* ========================================
+   MOBILE TAP HIGHLIGHT RESET
+======================================== */
+/* Disable default blue tap highlight on all interactive elements */
+button,
+a,
+input,
+textarea,
+select,
+label,
+img,
+[role="button"],
+[tabindex]:not([tabindex="-1"]),
+[onclick],
+.clickable {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}

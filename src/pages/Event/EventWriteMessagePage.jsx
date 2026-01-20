@@ -3,6 +3,7 @@
  */
 import WriteMessageScreenNew from '@/components/event/screens/WriteMessageScreenNew';
 import '@/styles/event.css';
+import './your-melody.css';
 
 const EventWriteMessagePage = () => {
   return <WriteMessageScreenNew />;

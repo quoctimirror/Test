@@ -103,6 +103,7 @@ const EventWriteMessagePage = lazy(() => import("@pages/Event/EventWriteMessageP
 const EventChooseNotePage = lazy(() => import("@pages/Event/EventChooseNotePage"));
 const EventChooseNotePageV2 = lazy(() => import("@pages/Event/EventChooseNotePageV2"));
 const EventThankYouPage = lazy(() => import("@pages/Event/EventThankYouPage"));
+const Model3DFullscreenPage = lazy(() => import("@pages/Event/Model3DFullscreenPage"));
 
 // Event Protected Route
 const EventProtectedRoute = lazy(() => import("@components/event/EventProtectedRoute"));
@@ -471,6 +472,7 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT_CHOOSE_NOTE} element={<EventProtectedRoute><EventChooseNotePage /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_CHOOSE_NOTE_V2} element={<EventProtectedRoute><EventChooseNotePageV2 /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_THANKYOU} element={<EventProtectedRoute><EventThankYouPage /></EventProtectedRoute>} />
+            <Route path={ROUTES.EVENT_RING_VIEWER} element={<Model3DFullscreenPage />} />
 
             {/* Interactive Experiences */}
             <Route path={ROUTES.BIRTHDAY_CAKE} element={<BirthdayCake />} />

@@ -12,6 +12,7 @@ import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import EventBackButton from '@/components/event/EventBackButton';
 import EventNextButton from '@/components/event/EventNextButton';
+import EdgeNextButton from '@/components/event/EdgeNextButton';
 import { initAudio, playNoteByPosition, getNoteName } from '@services/event/audio';
 import AvatarGenerator from '@/components/event/ui/AvatarGenerator';
 // Diamond shape Cloudflare paths array - using optimized webp
@@ -62,89 +63,92 @@ const SHAPE_NAME_MAP = {
 };
 
 // Staff configuration - 7 Y positions for 7 notes (C4-B4)
-// Desktop: Line height 8px, gap 80px
-// Following standard treble clef notation:
-// - Đô (C4) = ledger line below staff
-// - Rê (D4) = space below bottom line
-// - Mi (E4) = Line 4 (bottom line)
-// - Pha-Si on lines 2-3 and spaces 2-3
-// Line centers: 4, 92, 180, 268, 356 (lines 0-4)
-// Space centers: 48, 136, 224, 312 (spaces 0-3)
-// Below staff: 400 (space below), 444 (ledger line)
+// Desktop: Staff lines at top=0, notes use fixed pixel positions
+// .your-melody__main is centered with top:50% + translateY(-50%)
 const NOTE_POSITIONS_Y_DESKTOP = [
-  456,  // Position 0 - Ledger line (below staff) - Đô (C4) +12px
-  404,  // Position 1 - Space below Line 4 - Rê (D4) +4px
-  360,  // Position 2 - Line 4 (bottom) - Mi (E4) +4px
-  316,  // Position 3 - Space 3 - Pha (F4) +4px
-  272,  // Position 4 - Line 3 - Son (G4) +4px
-  228,  // Position 5 - Space 2 - La (A4) +4px
-  184,  // Position 6 - Line 2 - Si (B4) +4px
+  436,  // Position 0 - Đô (C4) - Ledger line below staff
+  404,  // Position 1 - Rê (D4) - Space below Line 4
+  360,  // Position 2 - Mi (E4) - Line 4 (bottom)
+  316,  // Position 3 - Pha (F4) - Space 3
+  272,  // Position 4 - Son (G4) - Line 3
+  228,  // Position 5 - La (A4) - Space 2
+  184,  // Position 6 - Si (B4) - Line 2
 ];
 
-// Tablet: Staff positions in vh (based on 1194px design)
-// Staff 1: top = 280/1194, height = 200/1194
-// Staff 2: top = 580/1194, height = 200/1194
-// CSS uses space-between with 5 lines (8px each) in 200px container
-// Following standard treble clef (Đô below staff, Mi on bottom line)
-// Line centers within staff: 4, 52, 100, 148, 196 (lines 0-4)
-// Space centers within staff: 28, 76, 124, 172 (spaces 0-3)
-// Below staff: 220 (space below), 244 (ledger line for Đô)
+// Tablet: Staff positions in vh (based on 1194px design) - CENTERED
+// Total height = 200 + 150 + 200 = 550, offset = (1194 - 550) / 2 = 322
+// Staff 1: top = 322/1194, height = 200/1194
+// Staff 2: top = 672/1194, height = 200/1194
 const NOTE_POSITIONS_Y_TABLET_STAFF1 = [
-  (280 + 258) / 1194 * 100,    // Position 0 - Ledger line - Đô (C4) +14px → 45vh
-  (280 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Rê (D4) +4px
-  (280 + 200) / 1194 * 100,    // Position 2 - Line 4 (bottom) - Mi (E4) +4px
-  (280 + 176) / 1194 * 100,    // Position 3 - Space 3 - Pha (F4) +4px
-  (280 + 152) / 1194 * 100,    // Position 4 - Line 3 - Son (G4) +4px
-  (280 + 128) / 1194 * 100,    // Position 5 - Space 2 - La (A4) +4px
-  (280 + 104) / 1194 * 100,    // Position 6 - Line 2 - Si (B4) +4px
+  (322 + 241) / 1194 * 100,    // Position 0 - Ledger line - Đô (C4) +4px
+  (322 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Rê (D4)
+  (322 + 200) / 1194 * 100,    // Position 2 - Line 4 (bottom) - Mi (E4)
+  (322 + 176) / 1194 * 100,    // Position 3 - Space 3 - Pha (F4)
+  (322 + 152) / 1194 * 100,    // Position 4 - Line 3 - Son (G4)
+  (322 + 128) / 1194 * 100,    // Position 5 - Space 2 - La (A4)
+  (322 + 104) / 1194 * 100,    // Position 6 - Line 2 - Si (B4)
 ];
 
 const NOTE_POSITIONS_Y_TABLET_STAFF2 = [
-  (630 + 258) / 1194 * 100,    // Position 0 - Ledger line - Đô (C4) +14px → 45vh
-  (630 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Rê (D4) +4px
-  (630 + 200) / 1194 * 100,    // Position 2 - Line 4 (bottom) - Mi (E4) +4px
-  (630 + 176) / 1194 * 100,    // Position 3 - Space 3 - Pha (F4) +4px
-  (630 + 152) / 1194 * 100,    // Position 4 - Line 3 - Son (G4) +4px
-  (630 + 128) / 1194 * 100,    // Position 5 - Space 2 - La (A4) +4px
-  (630 + 104) / 1194 * 100,    // Position 6 - Line 2 - Si (B4) +4px
+  (672 + 241) / 1194 * 100,    // Position 0 - Ledger line - Đô (C4) +4px
+  (672 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Rê (D4)
+  (672 + 200) / 1194 * 100,    // Position 2 - Line 4 (bottom) - Mi (E4)
+  (672 + 176) / 1194 * 100,    // Position 3 - Space 3 - Pha (F4)
+  (672 + 152) / 1194 * 100,    // Position 4 - Line 3 - Son (G4)
+  (672 + 128) / 1194 * 100,    // Position 5 - Space 2 - La (A4)
+  (672 + 104) / 1194 * 100,    // Position 6 - Line 2 - Si (B4)
 ];
 
-// Mobile: Staff positions in vh (based on 844px design)
-// Staff 1: top = 100/844, height = 200/844
-// Staff 2: top = 400/844, height = 200/844
-// Following standard treble clef (Đô below staff, Mi on bottom line)
-// Line centers within staff: 4, 52, 100, 148, 196 (lines 0-4)
-// Space centers within staff: 28, 76, 124, 172 (spaces 0-3)
-// Below staff: 220 (space below), 244 (ledger line for Đô)
+// Mobile: Staff positions in vh (based on 844px design) - CENTERED
+// Total height = 200 + 100 + 200 = 500, offset = (844 - 500) / 2 = 172
+// Staff 1: top = 172/844, height = 200/844
+// Staff 2: top = 472/844, height = 200/844
 const NOTE_POSITIONS_Y_MOBILE_STAFF1 = [
-  (100 + 256) / 844 * 100,     // Position 0 - Ledger line - Đô (C4) +12px
-  (100 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Rê (D4) +4px
-  (100 + 200) / 844 * 100,     // Position 2 - Line 4 (bottom) - Mi (E4) +4px
-  (100 + 176) / 844 * 100,     // Position 3 - Space 3 - Pha (F4) +4px
-  (100 + 152) / 844 * 100,     // Position 4 - Line 3 - Son (G4) +4px
-  (100 + 128) / 844 * 100,     // Position 5 - Space 2 - La (A4) +4px
-  (100 + 104) / 844 * 100,     // Position 6 - Line 2 - Si (B4) +4px
+  (172 + 242) / 844 * 100,     // Position 0 - Ledger line - Đô (C4) +4px
+  (172 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Rê (D4)
+  (172 + 200) / 844 * 100,     // Position 2 - Line 4 (bottom) - Mi (E4)
+  (172 + 176) / 844 * 100,     // Position 3 - Space 3 - Pha (F4)
+  (172 + 152) / 844 * 100,     // Position 4 - Line 3 - Son (G4)
+  (172 + 128) / 844 * 100,     // Position 5 - Space 2 - La (A4)
+  (172 + 104) / 844 * 100,     // Position 6 - Line 2 - Si (B4)
 ];
 
 const NOTE_POSITIONS_Y_MOBILE_STAFF2 = [
-  (400 + 256) / 844 * 100,     // Position 0 - Ledger line - Đô (C4) +12px
-  (400 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Rê (D4) +4px
-  (400 + 200) / 844 * 100,     // Position 2 - Line 4 (bottom) - Mi (E4) +4px
-  (400 + 176) / 844 * 100,     // Position 3 - Space 3 - Pha (F4) +4px
-  (400 + 152) / 844 * 100,     // Position 4 - Line 3 - Son (G4) +4px
-  (400 + 128) / 844 * 100,     // Position 5 - Space 2 - La (A4) +4px
-  (400 + 104) / 844 * 100,     // Position 6 - Line 2 - Si (B4) +4px
+  (472 + 242) / 844 * 100,     // Position 0 - Ledger line - Đô (C4) +4px
+  (472 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Rê (D4)
+  (472 + 200) / 844 * 100,     // Position 2 - Line 4 (bottom) - Mi (E4)
+  (472 + 176) / 844 * 100,     // Position 3 - Space 3 - Pha (F4)
+  (472 + 152) / 844 * 100,     // Position 4 - Line 3 - Son (G4)
+  (472 + 128) / 844 * 100,     // Position 5 - Space 2 - La (A4)
+  (472 + 104) / 844 * 100,     // Position 6 - Line 2 - Si (B4)
 ];
 
-// Generate 7 random notes that form a happy melody
+// Seeded random function (same as AvatarGenerator) - consistent per user
+const seededRandom = (seed) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
+
+// Fisher-Yates shuffle with seeded random
+const seededShuffle = (array, seed) => {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(seededRandom(seed + i) * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+};
+
+// Generate 7 notes - uses lightNumber as seed for consistent melody per user
 // Mobile: 4 notes on staff 1, 3 notes on staff 2 (+ user note = 4)
-const generateHappyMelody = () => {
+const generateHappyMelody = (lightNumber = 1) => {
   const notes = [];
 
   // 7 positions (0-6) for 7 notes: 4 lines + 3 spaces
   // Position 0,2,4,6 = lines; Position 1,3,5 = spaces
   const allPositions = [0, 1, 2, 3, 4, 5, 6];
-  const shuffledPositions = [...allPositions].sort(() => Math.random() - 0.5);
+  // Use lightNumber as seed - same user = same melody
+  const shuffledPositions = seededShuffle(allPositions, lightNumber);
 
   // All 7 positions are used - each note gets a unique position
   const positions = shuffledPositions;
@@ -254,7 +258,7 @@ const WriteMessageScreenNew = () => {
         : NOTE_POSITIONS_Y_TABLET_STAFF2[positionY];
       return `${vhValue}vh`;
     }
-    // Desktop (>1024px): use desktop array with px
+    // Desktop (>1024px): use desktop array with px (fixed within centered container)
     return `${NOTE_POSITIONS_Y_DESKTOP[positionY]}px`;
   };
 
@@ -271,9 +275,9 @@ const WriteMessageScreenNew = () => {
       const step = (maxX - minX) / 3; // 3 gaps for 4 notes per staff
       return minX + indexInStaff * step;
     }
-    // Desktop: 8 notes spread evenly from 10% to 85%
-    const minX = 10;
-    const maxX = 85;
+    // Desktop: 8 notes spread evenly from 12.5% to 87.5% (centered)
+    const minX = 12.5;
+    const maxX = 87.5;
     const step = (maxX - minX) / 7; // 7 gaps for 8 notes
     return minX + noteIndex * step;
   };
@@ -292,10 +296,11 @@ const WriteMessageScreenNew = () => {
       });
 
     if (needsRegenerate) {
-      const newMelody = generateHappyMelody();
+      const lightNumber = user?.lightNumber || 1;
+      const newMelody = generateHappyMelody(lightNumber);
       setMelodyNotes(newMelody);
     }
-  }, [melodyNotes, setMelodyNotes]);
+  }, [melodyNotes, setMelodyNotes, user]);
 
   // Use persisted melody or empty array while loading
   const displayNotes = melodyNotes || [];
@@ -646,13 +651,11 @@ const WriteMessageScreenNew = () => {
         <EventBackButton onClick={handleGoBack} />
         <EventNextButton onClick={handleNext} />
 
-        {/* Edge next button - mobile/tablet only, left edge centered - DISABLED
-        <button className="your-melody__edge-btn" onClick={handleNext}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="6" height="11" viewBox="0 0 6 11" fill="none">
-            <path d="M1.0625 9.06067L5.0625 5.06067L1.0625 1.06067" stroke="#0B0B0B" strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        */}
+        <EdgeNextButton
+          onClick={handleNext}
+          title="Tương tác cùng Nốt sáng"
+          description="Bạn đã tạo nên Nốt sáng của riêng mình. Hãy trải nghiệm và lắng nghe giai điệu được hoàn thiện từ chính sự hiện diện của bạn."
+        />
 
         {/* Footer - action buttons */}
         <footer className="your-melody__footer">

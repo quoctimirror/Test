@@ -100,6 +100,10 @@ const ThankYouScreen = () => {
     window.open('https://ticketbox.vn/doc-mong-mo-her-concert-25556?utm_medium=sr-her+concert_all-dates_all-prices&utm_source=tkb-search-results', '_blank');
   };
 
+  const handleTryAR = () => {
+    window.open(ROUTES.EVENT_RING_VIEWER, '_blank');
+  };
+
   return (
     <>
       <NavbarV4 logoOnly />
@@ -186,10 +190,13 @@ const ThankYouScreen = () => {
             Mỗi tấm vé tham dự HER CONCERT là một cơ hội nhận được chiếc nhẫn kim cương từ MIRROR.
           </p>
 
-          {/* Action Button */}
+          {/* Action Buttons */}
           <div className="mirror-thankyou__actions">
             <GlassThemeButton theme="event_spec" onClick={handleBuyTicket}>
               Mua vé tham dự
+            </GlassThemeButton>
+            <GlassThemeButton theme="event_light" onClick={handleTryAR}>
+              Xem nhẫn 3D
             </GlassThemeButton>
           </div>
         </main>

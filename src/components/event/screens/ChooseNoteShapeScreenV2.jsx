@@ -450,7 +450,7 @@ const ChooseNoteShapeScreenV2 = () => {
 
                   {/* Back face - Card back */}
                   <div className="your-wallpaper-v2__card-face your-wallpaper-v2__card-back">
-                    <img src={getMediaUrl('dmm/card_back.svg')} alt="Card Back" className="your-wallpaper-v2__card-image" />
+                    <img src={getMediaUrl('dmm/card_back.png')} alt="Card Back" className="your-wallpaper-v2__card-image" />
                   </div>
                 </div>
               </div>
