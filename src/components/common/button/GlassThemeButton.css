@@ -151,20 +151,22 @@
   transition: all 0.3s ease;
 }
 
-/* Collapsed hover - expand to show text */
-.glass-theme-button--collapsed:hover {
-  width: 188px;
-}
+/* Collapsed hover - expand to show text (desktop only) */
+@media (hover: hover) {
+  .glass-theme-button--collapsed:hover {
+    width: 188px;
+  }
 
-.glass-theme-button--collapsed:hover .glass-theme-btn-text {
-  opacity: 1;
-  transform: translateX(0);
-  transition-delay: 0.15s;
-}
+  .glass-theme-button--collapsed:hover .glass-theme-btn-text {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.15s;
+  }
 
-.glass-theme-button--collapsed:hover .glass-theme-btn-icon {
-  opacity: 0;
-  transform: scale(0.5);
+  .glass-theme-button--collapsed:hover .glass-theme-btn-icon {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }
 
 /* Fix transition for expandable buttons - override theme transitions */
@@ -192,8 +194,10 @@
   transition: opacity 0.3s ease 0.2s; /* delay 0.2s to let width expand first */
 }
 
-.glass-theme-button--expandable.glass-theme-button--collapsed:hover::before {
-  transition-delay: 0.15s;
+@media (hover: hover) {
+  .glass-theme-button--expandable.glass-theme-button--collapsed:hover::before {
+    transition-delay: 0.15s;
+  }
 }
 
 
@@ -249,11 +253,23 @@
   z-index: 0;
 }
 
-.glass-theme-button--light:hover::before {
+/* Hover only on devices that support it (desktop) */
+@media (hover: hover) {
+  .glass-theme-button--light:hover::before {
+    opacity: 1;
+  }
+
+  .glass-theme-button--light:hover {
+    color: #fff;
+  }
+}
+
+/* Active state for touch devices (mobile/tablet) */
+.glass-theme-button--light:active::before {
   opacity: 1;
 }
 
-.glass-theme-button--light:hover {
+.glass-theme-button--light:active {
   color: #fff;
 }
 
@@ -299,7 +315,15 @@
   z-index: 0;
 }
 
-.glass-theme-button--dark:hover::before {
+/* Hover only on devices that support it (desktop) */
+@media (hover: hover) {
+  .glass-theme-button--dark:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Active state for touch devices (mobile/tablet) */
+.glass-theme-button--dark:active::before {
   opacity: 1;
 }
 
@@ -355,7 +379,15 @@
   z-index: 0;
 }
 
-.glass-theme-button--spec_light:hover::before {
+/* Hover only on devices that support it (desktop) */
+@media (hover: hover) {
+  .glass-theme-button--spec_light:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Active state for touch devices (mobile/tablet) */
+.glass-theme-button--spec_light:active::before {
   opacity: 1;
 }
 
@@ -416,7 +448,15 @@
   z-index: 0;
 }
 
-.glass-theme-button--spec_dark:hover::before {
+/* Hover only on devices that support it (desktop) */
+@media (hover: hover) {
+  .glass-theme-button--spec_dark:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Active state for touch devices (mobile/tablet) */
+.glass-theme-button--spec_dark:active::before {
   opacity: 1;
 }
 
@@ -481,7 +521,15 @@
   z-index: 0;
 }
 
-.glass-theme-button--event_spec:hover::before {
+/* Hover only on devices that support it (desktop) */
+@media (hover: hover) {
+  .glass-theme-button--event_spec:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Active state for touch devices (mobile/tablet) */
+.glass-theme-button--event_spec:active::before {
   opacity: 1;
 }
 
@@ -543,7 +591,15 @@
   z-index: 0;
 }
 
-.glass-theme-button--event_light:hover::before {
+/* Hover only on devices that support it (desktop) */
+@media (hover: hover) {
+  .glass-theme-button--event_light:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Active state for touch devices (mobile/tablet) */
+.glass-theme-button--event_light:active::before {
   opacity: 1;
 }
 
@@ -558,11 +614,23 @@
   color: #fff;
 }
 
-.glass-theme-button--event_light:hover {
+/* Hover only on devices that support it (desktop) */
+@media (hover: hover) {
+  .glass-theme-button--event_light:hover {
+    color: #fff;
+  }
+
+  .glass-theme-button--event_light:hover .glass-theme-btn-icon {
+    color: #fff;
+  }
+}
+
+/* Active state for touch devices (mobile/tablet) */
+.glass-theme-button--event_light:active {
   color: #fff;
 }
 
-.glass-theme-button--event_light:hover .glass-theme-btn-icon {
+.glass-theme-button--event_light:active .glass-theme-btn-icon {
   color: #fff;
 }
 
@@ -613,7 +681,15 @@
   z-index: 0;
 }
 
-.glass-theme-button--event_dark:hover::before {
+/* Hover only on devices that support it (desktop) */
+@media (hover: hover) {
+  .glass-theme-button--event_dark:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Active state for touch devices (mobile/tablet) */
+.glass-theme-button--event_dark:active::before {
   opacity: 1;
 }
 
@@ -628,11 +704,23 @@
   color: #171717;
 }
 
-.glass-theme-button--event_dark:hover {
+/* Hover only on devices that support it (desktop) */
+@media (hover: hover) {
+  .glass-theme-button--event_dark:hover {
+    color: #fff;
+  }
+
+  .glass-theme-button--event_dark:hover .glass-theme-btn-icon {
+    color: #fff;
+  }
+}
+
+/* Active state for touch devices (mobile/tablet) */
+.glass-theme-button--event_dark:active {
   color: #fff;
 }
 
-.glass-theme-button--event_dark:hover .glass-theme-btn-icon {
+.glass-theme-button--event_dark:active .glass-theme-btn-icon {
   color: #fff;
 }
 
@@ -667,10 +755,6 @@
     height: 46px;
   }
 
-  .glass-theme-button--collapsed:hover {
-    width: 168px;
-  }
-
   .glass-theme-button .glass-theme-btn-icon svg[viewBox="0 0 22 17"] {
     width: 18px;
     height: 14px;
@@ -690,13 +774,23 @@
     width: 152px;
   }
 
-  .glass-theme-button--collapsed:hover {
-    width: 152px;
-  }
-
   .glass-theme-button .glass-theme-btn-icon svg[viewBox="0 0 22 17"] {
     width: 16px;
     height: 12px;
+  }
+}
+
+
+/* Responsive hover widths for expandable buttons (desktop only) */
+@media (hover: hover) and (max-width: 1024px) {
+  .glass-theme-button--collapsed:hover {
+    width: 168px;
+  }
+}
+
+@media (hover: hover) and (max-width: 480px) {
+  .glass-theme-button--collapsed:hover {
+    width: 152px;
   }
 }
 
