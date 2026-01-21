@@ -8,6 +8,7 @@ import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import EventBackButton from '@/components/event/EventBackButton';
 import EventNextButton from '@/components/event/EventNextButton';
+import EventProgressBar from '@/components/event/EventProgressBar';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import useEventStore from '@/store/useEventStore';
 import { placeNote } from '@services/event/eventApi';
@@ -498,6 +499,7 @@ const EventChooseShapePage = () => {
 
   return (
     <>
+      <EventProgressBar />
       <NavbarV4 logoOnly />
       <div className="event-choose-shape" data-navbar-theme="black">
         {/* Title */}

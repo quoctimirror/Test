@@ -10,6 +10,7 @@ import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import EventBackButton from '@/components/event/EventBackButton';
+import EventProgressBar from '@/components/event/EventProgressBar';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import { initGoogleSignIn, signOutGoogle, signInWithGoogle, signInWithGoogleRedirect, handleOAuthRedirectCallback } from '@services/event/googleAuthService';
 import { registerGoogleUser, checkExistingGoogleUser } from '@services/event/eventApi';
@@ -417,6 +418,7 @@ const EventLoginPage = () => {
 
   return (
     <div className="event-login-wrapper">
+      <EventProgressBar />
       <NavbarV4 logoOnly />
       <div className="event-login" data-navbar-theme="black">
         {/* Gradient overlay - animated */}

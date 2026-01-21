@@ -10,6 +10,7 @@ import NavbarV4 from '@/components/navbar/NavbarV4';
 import GlassThemeButton from '@components/common/button/GlassThemeButton';
 import EventBackButton from '@/components/event/EventBackButton';
 import EventNextButton from '@/components/event/EventNextButton';
+import EventProgressBar from '@/components/event/EventProgressBar';
 import useEventStore from '@/store/useEventStore';
 import { updateUserDisplayName } from '@services/event/eventApi';
 
@@ -129,6 +130,7 @@ const EventNamePage = () => {
 
   return (
     <>
+      <EventProgressBar />
       <NavbarV4 logoOnly />
       <div className="event-name" data-navbar-theme="black">
       {/* Background */}

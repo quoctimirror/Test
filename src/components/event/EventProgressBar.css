@@ -1,0 +1,36 @@
+/**
+ * EventProgressBar styles
+ * Progress bar with gradient fill and smooth motion animation
+ */
+
+.event-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(246, 246, 246, 0.15);
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.event-progress-bar__fill {
+  position: relative;
+  height: 100%;
+  background: linear-gradient(90deg, #BC224C 0%, #FFA6BE 90%, rgba(246, 246, 246, 0.00) 100%);
+  border-radius: 0 2px 2px 0;
+  /* No CSS transition - using framer-motion spring animation */
+}
+
+/* Glow effect at the edge */
+.event-progress-bar__fill::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -5px;
+  width: 30px;
+  height: 8px;
+  background: radial-gradient(ellipse at right center, rgba(255, 166, 190, 0.8) 0%, transparent 70%);
+  filter: blur(3px);
+  pointer-events: none;
+}
