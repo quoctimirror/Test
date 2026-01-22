@@ -114,6 +114,10 @@ const BirthdayCake = lazy(() =>
 );
 const TestNotesPage = lazy(() => import("@pages/Event/TestNotesPage"));
 
+// Product Finder
+const ProductFinderPage = lazy(() => import("@pages/ProductFinder/ProductFinderPage"));
+const ProductFinderResultPage = lazy(() => import("@pages/ProductFinder/ProductFinderResultPage"));
+
 // Inventory Management
 const InventoryLayout = lazy(() =>
   import("@components/inventory/InventoryLayout")
@@ -140,6 +144,33 @@ const InventoryCreateOrder = lazy(() =>
 const InventoryInvoicePreview = lazy(() =>
   import("@components/inventory/InvoicePreview")
 );
+
+// POD Admin Management
+const PodAdminLayout = lazy(() =>
+  import("@components/pod-admin/PodAdminLayout")
+);
+const PodAdminDashboard = lazy(() => import("@pages/PodAdmin/Dashboard"));
+const PodAdminPartners = lazy(() => import("@pages/PodAdmin/Partners"));
+const PodAdminPartnerCreate = lazy(() => import("@pages/PodAdmin/PartnerCreate"));
+const PodAdminPartnerDetail = lazy(() => import("@pages/PodAdmin/PartnerDetail"));
+const PodAdminPods = lazy(() => import("@pages/PodAdmin/Pods"));
+const PodAdminPodCreate = lazy(() => import("@pages/PodAdmin/PodCreate"));
+const PodAdminPodDetail = lazy(() => import("@pages/PodAdmin/PodDetail"));
+const PodAdminQrCodes = lazy(() => import("@pages/PodAdmin/QrCodes"));
+const PodAdminAttributions = lazy(() => import("@pages/PodAdmin/Attributions"));
+const PodAdminCommissions = lazy(() => import("@pages/PodAdmin/Commissions"));
+const PodAdminCommissionDetail = lazy(() => import("@pages/PodAdmin/CommissionDetail"));
+
+// POD Partner Portal
+const PartnerPortalLayout = lazy(() =>
+  import("@components/partner-portal/PartnerPortalLayout")
+);
+const PartnerPortalDashboard = lazy(() => import("@pages/PartnerPortal/Dashboard"));
+const PartnerPortalPods = lazy(() => import("@pages/PartnerPortal/Pods"));
+const PartnerPortalQrCodes = lazy(() => import("@pages/PartnerPortal/QrCodes"));
+const PartnerPortalScans = lazy(() => import("@pages/PartnerPortal/Scans"));
+const PartnerPortalAttributions = lazy(() => import("@pages/PartnerPortal/Attributions"));
+const PartnerPortalCommissions = lazy(() => import("@pages/PartnerPortal/Commissions"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -206,6 +237,24 @@ export default function AppRoutes() {
       ROUTES.BIRTHDAY_CAKE,
       ROUTES.DB_EXPLORER,
       ROUTES.TEST_NOTES,
+      ROUTES.PRODUCT_FINDER,
+      ROUTES.PRODUCT_FINDER_RESULT,
+      // POD Admin routes
+      ROUTES.POD_ADMIN,
+      ROUTES.POD_ADMIN_DASHBOARD,
+      ROUTES.POD_ADMIN_PARTNERS,
+      ROUTES.POD_ADMIN_PODS,
+      ROUTES.POD_ADMIN_QRCODES,
+      ROUTES.POD_ADMIN_ATTRIBUTIONS,
+      ROUTES.POD_ADMIN_COMMISSIONS,
+      // POD Partner Portal routes
+      ROUTES.POD_PARTNER,
+      ROUTES.POD_PARTNER_DASHBOARD,
+      ROUTES.POD_PARTNER_PODS,
+      ROUTES.POD_PARTNER_QRCODES,
+      ROUTES.POD_PARTNER_SCANS,
+      ROUTES.POD_PARTNER_ATTRIBUTIONS,
+      ROUTES.POD_PARTNER_COMMISSIONS,
     ];
 
     // Check exact matches
@@ -226,7 +275,9 @@ export default function AppRoutes() {
       location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
       location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
       location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
-      location.pathname.startsWith(ROUTES.INVENTORY)
+      location.pathname.startsWith(ROUTES.INVENTORY) ||
+      location.pathname.startsWith(ROUTES.POD_ADMIN) ||
+      location.pathname.startsWith(ROUTES.POD_PARTNER)
     ) {
       return false;
     }
@@ -253,6 +304,8 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
+    location.pathname.startsWith(ROUTES.POD_ADMIN) ||
+    location.pathname.startsWith(ROUTES.POD_PARTNER) ||
     location.pathname === ROUTES.DB_EXPLORER;
 
   const staticRoutesToHideFooter =
@@ -274,6 +327,8 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
+    location.pathname.startsWith(ROUTES.POD_ADMIN) ||
+    location.pathname.startsWith(ROUTES.POD_PARTNER) ||
     location.pathname === ROUTES.DB_EXPLORER;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar && !isImmersiveModalOpen;
@@ -478,6 +533,10 @@ export default function AppRoutes() {
             <Route path={ROUTES.BIRTHDAY_CAKE} element={<BirthdayCake />} />
             <Route path={ROUTES.TEST_NOTES} element={<TestNotesPage />} />
 
+            {/* Product Finder */}
+            <Route path={ROUTES.PRODUCT_FINDER} element={<ProductFinderPage />} />
+            <Route path={ROUTES.PRODUCT_FINDER_RESULT} element={<ProductFinderResultPage />} />
+
             {/* Inventory Management Routes */}
             <Route path={ROUTES.INVENTORY} element={<InventoryLayout />}>
               <Route index element={<InventoryDashboard />} />
@@ -493,6 +552,34 @@ export default function AppRoutes() {
               />
               <Route path="print" element={<InventoryPrintLabel />} />
               <Route path="invoice" element={<InventoryInvoicePreview />} />
+            </Route>
+
+            {/* POD Admin Management Routes */}
+            <Route path={ROUTES.POD_ADMIN} element={<PodAdminLayout />}>
+              <Route index element={<PodAdminDashboard />} />
+              <Route path="dashboard" element={<PodAdminDashboard />} />
+              <Route path="partners" element={<PodAdminPartners />} />
+              <Route path="partners/create" element={<PodAdminPartnerCreate />} />
+              <Route path="partners/:partnerId" element={<PodAdminPartnerDetail />} />
+              <Route path="pods" element={<PodAdminPods />} />
+              <Route path="pods/create" element={<PodAdminPodCreate />} />
+              <Route path="pods/:podId" element={<PodAdminPodDetail />} />
+              <Route path="qr-codes" element={<PodAdminQrCodes />} />
+              <Route path="qr-codes/:qrCodeId" element={<PodAdminQrCodes />} />
+              <Route path="attributions" element={<PodAdminAttributions />} />
+              <Route path="commissions" element={<PodAdminCommissions />} />
+              <Route path="commissions/:commissionId" element={<PodAdminCommissionDetail />} />
+            </Route>
+
+            {/* POD Partner Portal Routes */}
+            <Route path={ROUTES.POD_PARTNER} element={<PartnerPortalLayout />}>
+              <Route index element={<PartnerPortalDashboard />} />
+              <Route path="dashboard" element={<PartnerPortalDashboard />} />
+              <Route path="pods" element={<PartnerPortalPods />} />
+              <Route path="qr-codes" element={<PartnerPortalQrCodes />} />
+              <Route path="scans" element={<PartnerPortalScans />} />
+              <Route path="attributions" element={<PartnerPortalAttributions />} />
+              <Route path="commissions" element={<PartnerPortalCommissions />} />
             </Route>
 
             {/* 404 - Catch all route for non-existent paths */}

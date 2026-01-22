@@ -957,6 +957,16 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
                   >
                     <span className="bodytext-6--no-margin">Designer Portal</span>
                   </GlassThemeButton>
+                ) : isAuthenticated && user?.roles?.includes("PARTNER") ? (
+                  <GlassThemeButton
+                    theme="light"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      navigate(ROUTES.POD_PARTNER_DASHBOARD);
+                    }}
+                  >
+                    <span className="bodytext-6--no-margin">Partner Portal</span>
+                  </GlassThemeButton>
                 ) : (
                   <ShineGlassButton
                     theme="light"

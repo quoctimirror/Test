@@ -1293,16 +1293,16 @@
 
 /* Tablet (426px-1023px) - Icon menu but keep immersive button */
 @media screen and (max-width: 1023px) {
-  /* Glassmorphism menu button for tablet */
+  /* Menu button for tablet - no background */
   .menu-v4-button {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    padding: 3px;
-    width: 48px;
-    height: 48px;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1325,16 +1325,16 @@
     color: white !important;
   }
 
-  /* Scrolled state for tablet menu button */
+  /* Scrolled state for tablet menu button - no background */
   .menu-v4-fixed-container.scrolled .menu-v4-button {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: none;
+    border: none;
   }
 
-  /* When menu is open on tablet */
+  /* When menu is open on tablet - no background */
   .menu-v4-container.menu-v4-open .menu-v4-button {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: none;
+    border: none;
   }
 }
 
@@ -1357,81 +1357,6 @@
 
   .menu-v4-fixed-container {
     left: 20px;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  /* Adjust button sizes and positions */
-  /* bodytext-6 (13px) + padding 16px 24px */
-  .immersive-v4-button {
-    width: 160px;
-    height: 45px;
-  }
-
-  .immersive-v4-text-container,
-  .immersive-v4-border-container {
-    width: 160px;
-    height: 45px;
-  }
-
-  .account-v4-fixed-container {
-    right: calc(20px + 160px + 25px);
-    height: 45px;
-  }
-
-  .menu-v4-fixed-container {
-    height: 45px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  /* Mobile layout adjustments */
-  .logo-v4-fixed-container {
-    top: 20px;
-  }
-
-  .logo-v4-fixed-container .navbar-v4-logo-svg {
-    width: 130px;
-    height: 50px;
-  }
-
-  .menu-v4-fixed-container {
-    top: 20px;
-    height: 45px;
-  }
-
-  .immersive-v4-fixed-container {
-    top: 20px;
-    right: 15px;
-    height: 45px;
-  }
-
-  /* bodytext-6 (13px) + padding 16px 24px */
-  .immersive-v4-button {
-    width: 140px;
-    height: 45px;
-  }
-
-  .immersive-v4-text-container,
-  .immersive-v4-border-container {
-    top: 20px;
-    right: 15px;
-    width: 140px;
-    height: 45px;
-  }
-
-  .account-v4-fixed-container {
-    display: none; /* Hide account link on mobile */
-  }
-
-  /* Show account button in menu when navbar account button is hidden */
-  .menu-v4-popup .menu-v4-list li.account-v4-menu-item {
-    display: inline-block !important;
-  }
-
-  .menu-v4-popup {
-    width: 90vw;
-    max-width: 400px;
   }
 }
 
@@ -1771,16 +1696,16 @@
     display: none;
   }
 
-  /* Glassmorphism menu button for mobile */
+  /* Menu button for mobile - no background */
   .menu-v4-button {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
-    padding: 0px;
-    width: 48px;
-    height: 48px;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1789,16 +1714,16 @@
     pointer-events: auto; /* Mobile: enable click */
   }
 
-  /* Scrolled state for mobile menu button */
+  /* Scrolled state for mobile menu button - no background */
   .menu-v4-fixed-container.scrolled .menu-v4-button {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: none;
+    border: none;
   }
 
-  /* When menu is open on mobile */
+  /* When menu is open on mobile - no background */
   .menu-v4-container.menu-v4-open .menu-v4-button {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: none;
+    border: none;
   }
 }
 
@@ -2267,23 +2192,23 @@
   background: rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Menu button glassmorphism background theme (mobile/tablet) */
+/* Menu button theme (mobile/tablet) - no background */
 @media screen and (max-width: 1023px) {
   .menu-v4-fixed-container.navbar-v4-theme-white .menu-v4-button {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.25) !important;
+    background: none !important;
+    border: none !important;
   }
 
   .menu-v4-fixed-container.navbar-v4-theme-black .menu-v4-button {
-    background: rgba(0, 0, 0, 0.05) !important;
-    border-color: rgba(0, 0, 0, 0.25) !important;
+    background: none !important;
+    border: none !important;
   }
 
-  /* Keep base styles when menu opened (no hover effect) */
+  /* Keep no background when menu opened */
   .menu-v4-fixed-container:has(.menu-v4-container.menu-v4-open)
     .menu-v4-button {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border-color: rgba(255, 255, 255, 0.25) !important;
+    background: none !important;
+    border: none !important;
   }
 
   /* Force white color for menu items on mobile/tablet (overlay has dark background) */

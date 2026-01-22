@@ -69,6 +69,10 @@ export const ROUTES = {
   BIRTHDAY_CAKE: "/birthday-cake",
   TEST_NOTES: "/test-notes", // Test page for music notes
 
+  // Product Finder - Quiz to find perfect product
+  PRODUCT_FINDER: "/find-your-piece",
+  PRODUCT_FINDER_RESULT: "/find-your-piece/result",
+
   // Inventory Management routes
   INVENTORY: "/inventory",
   INVENTORY_DASHBOARD: "/inventory/dashboard",
@@ -80,6 +84,30 @@ export const ROUTES = {
   INVENTORY_PRINT: "/inventory/print",
   INVENTORY_CREATE_ORDER: "/inventory/create-order",
   INVENTORY_INVOICE: "/inventory/invoice",
+
+  // POD Admin routes
+  POD_ADMIN: "/pod-admin",
+  POD_ADMIN_DASHBOARD: "/pod-admin/dashboard",
+  POD_ADMIN_PARTNERS: "/pod-admin/partners",
+  POD_ADMIN_PARTNER_DETAIL: "/pod-admin/partners/:partnerId",
+  POD_ADMIN_PARTNER_CREATE: "/pod-admin/partners/create",
+  POD_ADMIN_PODS: "/pod-admin/pods",
+  POD_ADMIN_POD_DETAIL: "/pod-admin/pods/:podId",
+  POD_ADMIN_POD_CREATE: "/pod-admin/pods/create",
+  POD_ADMIN_QRCODES: "/pod-admin/qr-codes",
+  POD_ADMIN_QRCODE_DETAIL: "/pod-admin/qr-codes/:qrCodeId",
+  POD_ADMIN_ATTRIBUTIONS: "/pod-admin/attributions",
+  POD_ADMIN_COMMISSIONS: "/pod-admin/commissions",
+  POD_ADMIN_COMMISSION_DETAIL: "/pod-admin/commissions/:commissionId",
+
+  // POD Partner Portal routes
+  POD_PARTNER: "/pod-partner",
+  POD_PARTNER_DASHBOARD: "/pod-partner/dashboard",
+  POD_PARTNER_PODS: "/pod-partner/pods",
+  POD_PARTNER_QRCODES: "/pod-partner/qr-codes",
+  POD_PARTNER_SCANS: "/pod-partner/scans",
+  POD_PARTNER_ATTRIBUTIONS: "/pod-partner/attributions",
+  POD_PARTNER_COMMISSIONS: "/pod-partner/commissions",
 };
 
 // Helper to get collection detail route with ID
@@ -105,4 +133,24 @@ export const getInventoryProductDetailRoute = (id) => {
 // Helper to get inventory product edit route
 export const getInventoryProductEditRoute = (id) => {
   return ROUTES.INVENTORY_PRODUCT_EDIT.replace(":id", id);
+};
+
+// Helper to get POD admin partner detail route
+export const getPodPartnerDetailRoute = (partnerId) => {
+  return ROUTES.POD_ADMIN_PARTNER_DETAIL.replace(":partnerId", partnerId);
+};
+
+// Helper to get POD admin pod detail route
+export const getPodDetailRoute = (podId) => {
+  return ROUTES.POD_ADMIN_POD_DETAIL.replace(":podId", podId);
+};
+
+// Helper to get POD admin QR code detail route
+export const getPodQrCodeDetailRoute = (qrCodeId) => {
+  return ROUTES.POD_ADMIN_QRCODE_DETAIL.replace(":qrCodeId", qrCodeId);
+};
+
+// Helper to get POD admin commission detail route
+export const getCommissionDetailRoute = (commissionId) => {
+  return ROUTES.POD_ADMIN_COMMISSION_DETAIL.replace(":commissionId", commissionId);
 };
