@@ -1139,6 +1139,62 @@ export const r2API = {
   health: () => api.get("/api/r2/health"),
 };
 
+// ===== PRINTING / LABEL API =====
+// PDF invoice extraction and database introspection (migrated from notification-service)
+export const printingAPI = {
+  // Extract invoice data from a PDF file
+  extractInvoice: async (file, options = {}) => {
+    const { onProgress } = options;
+
+    if (onProgress) {
+      onProgress({ stage: 'reading', progress: 10 });
+    }
+
+    const formData = new FormData();
+    formData.append('pdf', file);
+
+    if (onProgress) {
+      onProgress({ stage: 'extracting', progress: 30 });
+    }
+
+    const response = await api.post("/api/printing/extract-invoice", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      timeout: 60000,
+    });
+
+    if (onProgress) {
+      onProgress({ stage: 'parsing', progress: 70 });
+    }
+
+    if (!response.data.success) {
+      throw new Error(response.data.error || 'Failed to extract invoice data');
+    }
+
+    if (onProgress) {
+      onProgress({ stage: 'done', progress: 100 });
+    }
+
+    return response.data.data;
+  },
+
+  // List databases
+  getDatabases: () => api.get("/api/printing/databases"),
+
+  // List tables in a database
+  getTables: (db) => api.get("/api/printing/tables", { params: { db } }),
+
+  // List columns of a table
+  getColumns: (db, table) => api.get("/api/printing/columns", { params: { db, table } }),
+
+  // Query table data
+  getData: (db, table, columns, limit) =>
+    api.get("/api/printing/data", { params: { db, table, columns, limit } }),
+};
+
+// Backward-compatible aliases
+export const extractInvoiceFromPdf = printingAPI.extractInvoice;
+export const readPdfInvoice = printingAPI.extractInvoice;
+
 // ===== NOTIFICATIONS API =====
 export const notificationsAPI = {
   // Send email notification (public endpoint - no auth required)
