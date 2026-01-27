@@ -11,7 +11,7 @@ import {
   Plus,
   Loader,
 } from "lucide-react";
-import { readPdfInvoice } from "../../services/pdfExtractApi";
+import { readPdfInvoice } from "../../services/api";
 import "./PDFInvoiceReader.css";
 
 const PDFInvoiceReader = ({ onClose }) => {
