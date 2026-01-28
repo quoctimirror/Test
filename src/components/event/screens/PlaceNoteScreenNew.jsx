@@ -677,15 +677,14 @@ const PlaceNoteScreenNew = () => {
         <EventBackButton onClick={handleGoBack} />
         <EventNextButton onClick={handleNext} />
 
-      {/* Solock decoration - left side */}
-      <img
-        src={getMediaUrl('dmm/solock.webp')}
-        alt=""
-        className="place-note-new__solock"
-      />
-
       {/* Main content - Music Staff (vertically centered) */}
       <main className="place-note-new__main">
+        {/* Solock decoration - inside main (same as your-melody) */}
+        <img
+          src={getMediaUrl('dmm/solock.webp')}
+          alt=""
+          className="place-note-new__solock"
+        />
         <div className="place-note-new__staff-container">
           {/* Music Staff with 5 SVG lines */}
           <div className="place-note-new__staff">
