@@ -1,6 +1,6 @@
 // src/routes/index.jsx
 
-import { Routes, Route, useLocation, useParams } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import NavbarV4 from "@components/navbar/NavbarV4";
 import Footer from "@components/footer/Footer";
@@ -113,6 +113,11 @@ const BirthdayCake = lazy(() =>
   import("@components/birthday-cake/BirthdayCake")
 );
 const TestNotesPage = lazy(() => import("@pages/Event/TestNotesPage"));
+
+// Ring Customizer
+const RingCustomizer = lazy(() =>
+  import("@components/quoctiCustomizer/RingCustomizer")
+);
 
 // Product Finder
 const ProductFinderPage = lazy(() => import("@pages/ProductFinder/ProductFinderPage"));
@@ -237,7 +242,10 @@ export default function AppRoutes() {
       ROUTES.BIRTHDAY_CAKE,
       ROUTES.DB_EXPLORER,
       ROUTES.TEST_NOTES,
+      ROUTES.RING_CUSTOMIZER,
       ROUTES.PRODUCT_FINDER,
+      ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE,
+      ROUTES.PRODUCT_FINDER_CHOOSE_BAND,
       ROUTES.PRODUCT_FINDER_RESULT,
       // POD Admin routes
       ROUTES.POD_ADMIN,
@@ -306,7 +314,8 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname.startsWith(ROUTES.POD_ADMIN) ||
     location.pathname.startsWith(ROUTES.POD_PARTNER) ||
-    location.pathname === ROUTES.DB_EXPLORER;
+    location.pathname === ROUTES.DB_EXPLORER ||
+    location.pathname === ROUTES.RING_CUSTOMIZER;
 
   const staticRoutesToHideFooter =
     is404 ||
@@ -329,7 +338,8 @@ export default function AppRoutes() {
     location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname.startsWith(ROUTES.POD_ADMIN) ||
     location.pathname.startsWith(ROUTES.POD_PARTNER) ||
-    location.pathname === ROUTES.DB_EXPLORER;
+    location.pathname === ROUTES.DB_EXPLORER ||
+    location.pathname === ROUTES.RING_CUSTOMIZER;
 
   const shouldShowNavbar = !staticRoutesToHideNavBar && !isImmersiveModalOpen;
   const shouldShowFooter = !staticRoutesToHideFooter;
@@ -533,8 +543,12 @@ export default function AppRoutes() {
             <Route path={ROUTES.BIRTHDAY_CAKE} element={<BirthdayCake />} />
             <Route path={ROUTES.TEST_NOTES} element={<TestNotesPage />} />
 
+            {/* Ring Customizer */}
+            <Route path={ROUTES.RING_CUSTOMIZER} element={<RingCustomizer />} />
+
             {/* Product Finder */}
-            <Route path={ROUTES.PRODUCT_FINDER} element={<ProductFinderPage />} />
+            <Route path={ROUTES.PRODUCT_FINDER} element={<Navigate to={ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE} replace />} />
+            <Route path="/find-your-piece/:step" element={<ProductFinderPage />} />
             <Route path={ROUTES.PRODUCT_FINDER_RESULT} element={<ProductFinderResultPage />} />
 
             {/* Inventory Management Routes */}

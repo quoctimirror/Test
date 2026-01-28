@@ -2,79 +2,214 @@
  * ProductFinderResultPage - Shows recommended product based on quiz answers
  * Layout: Large product image left, info right
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
+import { productFinderAPI } from '@/services/api';
 
 import './ProductFinderResultPage.css';
-
-// Diamond shape mapping
-const DIAMOND_DATA = {
-  heart: { name: 'Heart', image: 'mirror_DMM/HEART-01.webp' },
-  oval: { name: 'Oval', image: 'mirror_DMM/HEART-02.webp' },
-  round: { name: 'Round', image: 'mirror_DMM/HEART-03.webp' },
-  pear: { name: 'Pear', image: 'mirror_DMM/HEART-04.webp' },
-  asscher: { name: 'Asscher', image: 'mirror_DMM/HEART-05.webp' },
-  emerald: { name: 'Emerald', image: 'mirror_DMM/HEART-06.webp' },
-  marquise: { name: 'Marquise', image: 'mirror_DMM/HEART-07.webp' },
-};
-
-// Band mapping
-const BAND_DATA = {
-  solitaire: { name: 'Solitaire' },
-  pave: { name: 'Pavé' },
-  halo: { name: 'Halo' },
-  'three-stone': { name: 'Three Stone' },
-  vintage: { name: 'Vintage' },
-};
-
-// Mock product recommendations based on selections
-const getRecommendedProduct = (selections) => {
-  const diamond = DIAMOND_DATA[selections.diamond] || DIAMOND_DATA.round;
-  const band = BAND_DATA[selections.band] || BAND_DATA.solitaire;
-
-  return {
-    id: 'prod-001',
-    name: 'Lumina Olivia',
-    description: `The Lumina Olivia rings in 18K gold, ${diamond.name.toLowerCase()} diamond shape. The Lumina Olivia rings in 18K gold, ${diamond.name.toLowerCase()} diamond shape.`,
-    price: '$15.600',
-    image: 'products/ring-result.webp', // Placeholder - replace with actual ring image
-    diamond: diamond,
-    band: band,
-  };
-};
 
 const ProductFinderResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const viewerContainerRef = useRef(null);
+  const viewerRef = useRef(null);
+  const isViewerInitializedRef = useRef(false);
+  const colorChangeHandlerRef = useRef(null);
+  const colorsRef = useRef({ main: null, side: null, band: null });
 
-  const selections = location.state?.selections || {};
+  const diamond = location.state?.diamond;
+  const band = location.state?.band;
+  const savedSelections = location.state?.selections || {};
+  const savedPrices = location.state?.prices || {};
+  const savedEstimatedTotal = location.state?.estimatedTotal || 0;
 
   useEffect(() => {
-    // Simulate API call
-    const timer = setTimeout(() => {
-      const recommended = getRecommendedProduct(selections);
-      setProduct(recommended);
-      setLoading(false);
-    }, 1500);
+    if (!diamond || !band) {
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
+      return;
+    }
 
-    return () => clearTimeout(timer);
-  }, [selections]);
+    const abortController = new AbortController();
+
+    const fetchRecommendation = async () => {
+      try {
+        const response = await productFinderAPI.getRecommendation(
+          { diamond, band },
+          { signal: abortController.signal }
+        );
+        if (!abortController.signal.aborted) {
+          setProduct(response.data);
+        }
+      } catch (err) {
+        if (abortController.signal.aborted) return;
+        if (err.response?.status === 401) {
+          navigate(ROUTES.AUTH_LOGIN, { state: { from: location } });
+          return;
+        }
+        const message = err.response?.data?.message || 'Đã có lỗi xảy ra';
+        setError(message);
+      } finally {
+        if (!abortController.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchRecommendation();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [diamond, band, navigate]);
+
+  // iJewel SDK: load 3D model with configurator (like PremiumDev.jsx)
+  useEffect(() => {
+    if (!product?.modelId || !viewerContainerRef.current) return;
+    if (!window.ijewelViewer?.loadModelById) {
+      console.error('iJewel SDK not loaded');
+      return;
+    }
+    // Guard: prevent double initialization (e.g. React StrictMode, re-renders)
+    if (isViewerInitializedRef.current) return;
+    isViewerInitializedRef.current = true;
+
+    // Track whether this effect has been cleaned up so async callbacks bail out
+    let cancelled = false;
+
+    const handleViewerReady = (event) => {
+      if (cancelled) return;
+
+      const viewer = event.detail.viewer;
+      viewerRef.current = viewer;
+
+      // Setup color tracking after configurator loads
+      setTimeout(() => {
+        if (cancelled) return;
+
+        const configurator = viewer.plugins?.MaterialConfiguratorPlugin;
+        if (!configurator?.variations) return;
+
+        const materialToTab = {};
+        configurator.variations.forEach(v => {
+          materialToTab[v.uuid] = v.title;
+        });
+        console.log('Material → Tab mapping:', materialToTab);
+
+        const getMaterials = () => {
+          const materials = [];
+          viewer.traverseSceneObjects((obj) => {
+            if (obj.material) {
+              materials.push({
+                name: obj.material.name,
+                color: obj.material.color?.getHexString?.() || 'N/A',
+              });
+            }
+          });
+          return materials;
+        };
+
+        // Save initial colors
+        const materials = getMaterials();
+        const lastTabColors = {};
+        Object.keys(materialToTab).forEach(uuid => {
+          const mat = materials.find(m => m.name === uuid);
+          if (mat) {
+            console.log(`[${materialToTab[uuid]}] color: #${mat.color}`);
+            lastTabColors[materialToTab[uuid]] = mat.color;
+            colorsRef.current[materialToTab[uuid]] = '#' + mat.color;
+          }
+        });
+
+        // Track color changes on click
+        const handleColorChange = () => {
+          setTimeout(() => {
+            const currentMaterials = getMaterials();
+            Object.keys(materialToTab).forEach(uuid => {
+              const tabName = materialToTab[uuid];
+              const mat = currentMaterials.find(m => m.name === uuid);
+              if (mat && mat.color !== lastTabColors[tabName]) {
+                console.log(`[${tabName}] color changed: #${mat.color}`);
+                lastTabColors[tabName] = mat.color;
+                colorsRef.current[tabName] = '#' + mat.color;
+              }
+            });
+          }, 200);
+        };
+        // Store ref so cleanup can remove it
+        colorChangeHandlerRef.current = handleColorChange;
+        document.addEventListener('click', handleColorChange);
+      }, 4000);
+    };
+
+    // Register listener BEFORE loadModelById (same pattern as PremiumDev.jsx)
+    window.addEventListener('ijewel-viewer-ready', handleViewerReady);
+
+    const initViewer = async () => {
+      try {
+        await window.ijewelViewer.loadModelById(
+          product.modelId,
+          'drive',
+          viewerContainerRef.current,
+          {
+            showUiButtons: false,
+            showConfigurator: true,
+            hideNameNumbers: true
+          }
+        );
+      } catch (err) {
+        console.error('iJewel loadModelById failed:', err);
+      }
+    };
+
+    initViewer();
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener('ijewel-viewer-ready', handleViewerReady);
+      if (colorChangeHandlerRef.current) {
+        document.removeEventListener('click', colorChangeHandlerRef.current);
+        colorChangeHandlerRef.current = null;
+      }
+      if (viewerRef.current?.dispose) {
+        viewerRef.current.dispose();
+        viewerRef.current = null;
+      }
+      // Do NOT reset isViewerInitializedRef here.
+      // Ref persists across StrictMode cycles — resetting it lets the guard fail
+      // and loadModelById runs twice → 2 WebGL contexts → CONTEXT_LOST → crash.
+    };
+  }, [product]);
 
   const handleBookAppointment = () => {
     navigate(ROUTES.BOOK_APPOINTMENT);
   };
 
-  const handlePreOrder = () => {
-    // Navigate to pre-order or product detail
-    if (product?.id) {
+  const handlePreOrder = async () => {
+    if (saving) return;
+    setSaving(true);
+    setSaveError(null);
+    try {
+      await productFinderAPI.saveSelection({
+        diamond,
+        band,
+        mainColor: colorsRef.current.main,
+        sideColor: colorsRef.current.side,
+        bandColor: colorsRef.current.band,
+      });
       navigate(ROUTES.CONTACT);
+    } catch (err) {
+      console.error('Save selection failed:', err);
+      setSaveError('Lưu không thành công. Vui lòng thử lại.');
+      setSaving(false);
     }
   };
 
@@ -83,19 +218,34 @@ const ProductFinderResultPage = () => {
   };
 
   const handleRetake = () => {
-    navigate(ROUTES.PRODUCT_FINDER);
+    navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, {
+      state: {
+        selections: savedSelections,
+        prices: savedPrices,
+        estimatedTotal: savedEstimatedTotal
+      }
+    });
   };
 
   if (loading) {
     return (
       <div className="product-finder-result" data-navbar-theme="black">
         <div className="product-finder-result__loading">
-          <motion.div
-            className="product-finder-result__loading-spinner"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
+          <div className="product-finder-result__loading-spinner" />
           <p className="bodytext-5--no-margin">Đang tìm sản phẩm phù hợp...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="product-finder-result" data-navbar-theme="black">
+        <div className="product-finder-result__loading">
+          <p className="bodytext-5--no-margin">{error}</p>
+          <GlassThemeButton theme="event_dark" onClick={handleRetake}>
+            Thử lại
+          </GlassThemeButton>
         </div>
       </div>
     );
@@ -105,26 +255,30 @@ const ProductFinderResultPage = () => {
     <div className="product-finder-result" data-navbar-theme="black">
       <div className="product-finder-result__container">
         {/* Product Image - Left */}
-        <motion.div
-          className="product-finder-result__image-section"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <img
-            src={getMediaUrl(product.image)}
-            alt={product.name}
-            className="product-finder-result__image"
-          />
-        </motion.div>
+        <div className="product-finder-result__image-section">
+          {product.modelId ? (
+            <div
+              ref={viewerContainerRef}
+              className="product-finder-result__viewer"
+            />
+          ) : product.images && product.images.length > 0 ? (
+            product.images.map((img, idx) => (
+              <img
+                key={idx}
+                src={getMediaUrl(img)}
+                alt={`${product.name} - ${idx + 1}`}
+                className="product-finder-result__image"
+              />
+            ))
+          ) : (
+            <div className="product-finder-result__no-image">
+              <p>No image available</p>
+            </div>
+          )}
+        </div>
 
         {/* Product Info - Right */}
-        <motion.div
-          className="product-finder-result__info-section"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
+        <div className="product-finder-result__info-section">
           <div className="product-finder-result__info-content">
             <h1 className="product-finder-result__name">
               {product.name}
@@ -135,7 +289,7 @@ const ProductFinderResultPage = () => {
             </p>
 
             <p className="product-finder-result__price">
-              {product.price}
+              {product.estimatedTotalFormatted}
             </p>
 
             {/* Action Buttons */}
@@ -160,19 +314,26 @@ const ProductFinderResultPage = () => {
             <GlassThemeButton
               theme="event_spec"
               onClick={handlePreOrder}
+              disabled={saving}
               className="product-finder-result__btn-preorder"
             >
-              Pre-order now
+              {saving ? 'Saving...' : 'Pre-order now'}
             </GlassThemeButton>
+
+            {saveError && (
+              <p className="product-finder-result__save-error bodytext-6--no-margin">
+                {saveError}
+              </p>
+            )}
 
             {/* Links */}
             <div className="product-finder-result__links">
-              <a href="#" className="product-finder-result__link">
+              <button type="button" className="product-finder-result__link" onClick={() => {}}>
                 Complimentary shipping & returns
-              </a>
-              <a href="#" className="product-finder-result__link" onClick={(e) => { e.preventDefault(); navigate(ROUTES.CONTACT); }}>
+              </button>
+              <button type="button" className="product-finder-result__link" onClick={() => navigate(ROUTES.CONTACT)}>
                 Contact us
-              </a>
+              </button>
             </div>
 
             {/* Change Selection */}
@@ -183,7 +344,7 @@ const ProductFinderResultPage = () => {
               ← Thay đổi lựa chọn
             </button>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

@@ -69,8 +69,12 @@ export const ROUTES = {
   BIRTHDAY_CAKE: "/birthday-cake",
   TEST_NOTES: "/test-notes", // Test page for music notes
 
+  // Ring Customizer
+  RING_CUSTOMIZER: "/ring-customizer",
   // Product Finder - Quiz to find perfect product
   PRODUCT_FINDER: "/find-your-piece",
+  PRODUCT_FINDER_CHOOSE_SHAPE: "/find-your-piece/choose-shape",
+  PRODUCT_FINDER_CHOOSE_BAND: "/find-your-piece/choose-band",
   PRODUCT_FINDER_RESULT: "/find-your-piece/result",
 
   // Inventory Management routes

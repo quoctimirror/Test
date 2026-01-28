@@ -11,6 +11,22 @@
   flex-direction: column;
 }
 
+/* iOS Safari: prevent rubber band scrolling on mobile/tablet */
+@media (max-width: 1024px) {
+  .your-melody {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: unset;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
+}
+
 /* Background - same as place-note-new */
 .your-melody__bg {
   position: absolute;

@@ -68,6 +68,12 @@ export const SHAPE_CONFIGS = {
     metal: 'Gold 24k',
     band: 'Single band'
   },
+  Lumex91Baguette: {
+    shape: 'Lumex91Baguette',
+    modelId: 'SLWfrDdYSqaqN9UFP1CXcA',
+    metal: 'Gold 24k',
+    band: 'Single band'
+  },
 
 };
 

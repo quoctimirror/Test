@@ -2,46 +2,25 @@
  * ProductFinderPage - Quiz to find the perfect jewelry piece
  * Layout similar to EventChooseShapePage with orbit selection
  */
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import { productFinderAPI } from '@/services/api';
 
 import './ProductFinderPage.css';
 
-// Quiz steps configuration
-const QUIZ_STEPS = [
-  {
-    id: 'diamond',
-    title: 'Chọn viên kim cương',
-    subtitle: 'Lựa chọn hình dáng kim cương yêu thích',
-    options: [
-      { id: 'heart', name: 'Heart', image: 'mirror_DMM/HEART-01.webp', gif: 'mirror_DMM/HEART.gif' },
-      { id: 'oval', name: 'Oval', image: 'mirror_DMM/HEART-02.webp', gif: 'mirror_DMM/OVAL.gif' },
-      { id: 'round', name: 'Round', image: 'mirror_DMM/HEART-03.webp', gif: 'mirror_DMM/ROUND.gif' },
-      { id: 'pear', name: 'Pear', image: 'mirror_DMM/HEART-04.webp', gif: 'mirror_DMM/PEAR.gif' },
-      { id: 'asscher', name: 'Asscher', image: 'mirror_DMM/HEART-05.webp', gif: 'mirror_DMM/ASSCHER.gif' },
-      { id: 'emerald', name: 'Emerald', image: 'mirror_DMM/HEART-06.webp', gif: 'mirror_DMM/EMERALD.gif' },
-      { id: 'marquise', name: 'Marquise', image: 'mirror_DMM/HEART-07.webp', gif: 'mirror_DMM/MARQUISE.gif' },
-    ],
-  },
-  {
-    id: 'band',
-    title: 'Chọn band nhẫn',
-    subtitle: 'Lựa chọn kiểu dáng band nhẫn',
-    options: [
-      { id: 'solitaire', name: 'Solitaire', image: 'products/band-solitaire.webp', icon: '💎' },
-      { id: 'pave', name: 'Pavé', image: 'products/band-pave.webp', icon: '✨' },
-      { id: 'halo', name: 'Halo', image: 'products/band-halo.webp', icon: '⭕' },
-      { id: 'three-stone', name: 'Three Stone', image: 'products/band-three-stone.webp', icon: '◆◆◆' },
-      { id: 'vintage', name: 'Vintage', image: 'products/band-vintage.webp', icon: '🏛️' },
-    ],
-  },
-];
-
-const TOTAL_STEPS = QUIZ_STEPS.length;
+// Helper to format price
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
 
 // Orbit configuration - similar to EventChooseShapePage
 const orbitRadii = {
@@ -77,20 +56,175 @@ const getOrbitAngles = (count) => {
   return angles;
 };
 
+// Helper to find index by selection id
+const getIndexFromSelection = (options, selectionId) => {
+  if (!options || !selectionId) return 0;
+  const index = options.findIndex(opt => opt.id === selectionId);
+  return index >= 0 ? index : 0;
+};
+
+// Combo preview images (from public/product-finder/)
+const COMBO_PREVIEWS = {
+  'solitaire': '/product-finder/cadillac_a1.png',
+  'knife-edge-solitaire': '/product-finder/baguette_a1.png',
+};
+
 const ProductFinderPage = () => {
   const navigate = useNavigate();
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [selections, setSelections] = useState({});
+  const location = useLocation();
+  const { step } = useParams();
+  const currentStepIndex = step === 'choose-band' ? 1 : 0;
+
+  // API data states
+  const [diamondShapes, setDiamondShapes] = useState([]);
+  const [bandStyles, setBandStyles] = useState([]);
+  const [apiLoading, setApiLoading] = useState(true);
+  const [apiError, setApiError] = useState(null);
+
+  // Read saved state from navigation (when coming back from result page)
+  const savedSelections = location.state?.selections || {};
+  const savedPrices = location.state?.prices || {};
+
+  const [selections, setSelections] = useState(savedSelections);
+  const [selectedPrices, setSelectedPrices] = useState({
+    diamond: savedPrices.diamond || 0,
+    band: savedPrices.band || 0,
+  });
+  const [selectedIndices, setSelectedIndices] = useState({
+    diamond: 0,
+    band: 0,
+  });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [rotationOffset, setRotationOffset] = useState(0);
   const [isEntering, setIsEntering] = useState(true);
+  const [showIdleRipple, setShowIdleRipple] = useState(false);
   const animationRef = useRef(null);
+  const idleTimerRef = useRef(null);
 
-  const currentStep = QUIZ_STEPS[currentStepIndex];
+  // Remove entering class after animation completes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsEntering(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Idle ripple effect - show after 5 seconds of inactivity
+  useEffect(() => {
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+    }
+    setShowIdleRipple(false);
+
+    idleTimerRef.current = setTimeout(() => {
+      setShowIdleRipple(true);
+    }, 5000);
+
+    return () => {
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+      }
+    };
+  }, [currentIndex]);
+
+  // Sync currentIndex and rotationOffset when URL step changes (component doesn't remount)
+  const prevStepRef = useRef(step);
+  useEffect(() => {
+    if (prevStepRef.current !== step) {
+      prevStepRef.current = step;
+      const stepId = currentStepIndex === 1 ? 'band' : 'diamond';
+      setCurrentIndex(selectedIndices[stepId] || 0);
+      setRotationOffset(0);
+    }
+  }, [step]);
+
+  // Guard: direct access to choose-band without selecting diamond first
+  useEffect(() => {
+    if (step === 'choose-band' && !selections.diamond && !apiLoading) {
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
+    }
+  }, [step, selections.diamond, apiLoading]);
+
+  // Guard: redirect invalid step values to choose-shape
+  useEffect(() => {
+    if (step !== 'choose-shape' && step !== 'choose-band') {
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
+    }
+  }, [step]);
+
+  // Fetch options from API on mount
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    const loadOptions = async () => {
+      try {
+        const [shapesRes, bandsRes] = await Promise.all([
+          productFinderAPI.getDiamondShapes({ signal: abortController.signal }),
+          productFinderAPI.getBandStyles({ signal: abortController.signal }),
+        ]);
+        if (abortController.signal.aborted) return;
+
+        // TODO: re-enable Cushion, Princess, Radiant when ready
+        const HIDDEN_SHAPES = ['cushion', 'princess', 'radiant'];
+        const shapes = (shapesRes.data || []).filter(
+          s => !HIDDEN_SHAPES.includes(s.id?.toLowerCase()) && !HIDDEN_SHAPES.includes(s.name?.toLowerCase())
+        );
+        const bands = bandsRes.data || [];
+        setDiamondShapes(shapes);
+        setBandStyles(bands);
+
+        // Restore saved indices if coming back from result page
+        const diamondIdx = getIndexFromSelection(shapes, savedSelections.diamond);
+        const bandIdx = getIndexFromSelection(bands, savedSelections.band);
+        setSelectedIndices({ diamond: diamondIdx, band: bandIdx });
+        setCurrentIndex(diamondIdx);
+        setSelectedPrices(prev => ({
+          diamond: savedPrices.diamond || shapes[diamondIdx]?.price || 0,
+          band: savedPrices.band || 0,
+        }));
+      } catch (error) {
+        if (abortController.signal.aborted) return;
+        console.error('Failed to load product finder options:', error);
+        setApiError('Không thể tải dữ liệu. Vui lòng thử lại.');
+      } finally {
+        if (!abortController.signal.aborted) {
+          setApiLoading(false);
+        }
+      }
+    };
+    loadOptions();
+
+    return () => {
+      abortController.abort();
+    };
+  }, []);
+
+  // Build quiz steps dynamically from API data
+  const quizSteps = [
+    { id: 'diamond', title: 'Chọn viên kim cương', subtitle: 'Lựa chọn hình dáng kim cương yêu thích', options: diamondShapes },
+    { id: 'band', title: 'Chọn band nhẫn', subtitle: 'Lựa chọn kiểu dáng band nhẫn', options: bandStyles },
+  ];
+
+  const TOTAL_STEPS = quizSteps.length;
+  const currentStep = quizSteps[currentStepIndex];
   const progressPercent = ((currentStepIndex + 1) / TOTAL_STEPS) * 100;
   const orbitAngles = getOrbitAngles(currentStep.options.length);
+
+  // Calculate estimated total (sum of all previous selections + current selection)
+  const calculateEstimatedTotal = () => {
+    let total = 0;
+    for (let i = 0; i < currentStepIndex; i++) {
+      const stepId = quizSteps[i].id;
+      total += selectedPrices[stepId] || 0;
+    }
+    const currentOption = currentStep.options[currentIndex];
+    total += currentOption?.price || 0;
+    return total;
+  };
+
+  const estimatedTotal = calculateEstimatedTotal();
 
   // Calculate angle for each shape
   const getShapeAngle = (index) => {
@@ -102,6 +236,9 @@ const ProductFinderPage = () => {
 
   // Animate rotation when currentIndex changes
   useEffect(() => {
+    // Guard: skip if no data yet (orbitAngles empty → targetOffset would be undefined → NaN)
+    if (orbitAngles.length === 0) return;
+
     const targetOffset = orbitAngles[currentIndex];
     let normalizedStart = rotationOffset % 360;
     if (normalizedStart < 0) normalizedStart += 360;
@@ -144,7 +281,7 @@ const ProductFinderPage = () => {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [currentIndex, orbitAngles]);
+  }, [currentIndex, currentStepIndex, orbitAngles.length]);
 
   // Handle option click
   const handleOptionClick = (index) => {
@@ -160,6 +297,18 @@ const ProductFinderPage = () => {
       [currentStep.id]: option.id
     }));
 
+    // Update selected price for current step
+    setSelectedPrices(prev => ({
+      ...prev,
+      [currentStep.id]: option.price || 0
+    }));
+
+    // Save selected index for current step
+    setSelectedIndices(prev => ({
+      ...prev,
+      [currentStep.id]: index
+    }));
+
     setTimeout(() => {
       setIsAnimating(false);
       setPrevIndex(null);
@@ -169,9 +318,7 @@ const ProductFinderPage = () => {
   // Handle back
   const handleBack = () => {
     if (currentStepIndex > 0) {
-      setCurrentStepIndex(prev => prev - 1);
-      setCurrentIndex(0);
-      setRotationOffset(0);
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE);
     } else {
       navigate(-1);
     }
@@ -179,28 +326,70 @@ const ProductFinderPage = () => {
 
   // Handle next
   const handleNext = () => {
-    // Save current selection if not already saved
-    if (!selections[currentStep.id]) {
-      const option = currentStep.options[currentIndex];
-      setSelections(prev => ({
-        ...prev,
-        [currentStep.id]: option.id
-      }));
-    }
+    // Save current selection and index
+    const option = currentStep.options[currentIndex];
+    setSelections(prev => ({
+      ...prev,
+      [currentStep.id]: option.id
+    }));
+    setSelectedPrices(prev => ({
+      ...prev,
+      [currentStep.id]: option.price || 0
+    }));
+    setSelectedIndices(prev => ({
+      ...prev,
+      [currentStep.id]: currentIndex
+    }));
 
-    if (currentStepIndex < TOTAL_STEPS - 1) {
-      setCurrentStepIndex(prev => prev + 1);
-      setCurrentIndex(0);
-      setRotationOffset(0);
+    if (currentStepIndex === 0) {
+      // Shape → Band: navigate to choose-band
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_BAND);
     } else {
-      // Quiz completed
+      // Band → Result: navigate to result
+      const finalSelections = { ...selections, [currentStep.id]: option.id };
+      const finalPrices = { ...selectedPrices, [currentStep.id]: option.price || 0 };
       navigate(ROUTES.PRODUCT_FINDER_RESULT, {
-        state: { selections: { ...selections, [currentStep.id]: currentStep.options[currentIndex].id } }
+        state: {
+          diamond: finalSelections.diamond,
+          band: finalSelections.band,
+          selections: finalSelections,
+          prices: finalPrices,
+          estimatedTotal: estimatedTotal
+        }
       });
     }
   };
 
   const currentOption = currentStep.options[currentIndex];
+
+  // Show loading while fetching API data
+  if (apiLoading) {
+    return (
+      <div className="product-finder" data-navbar-theme="black">
+        <div className="product-finder__loading">
+          <motion.div
+            className="product-finder__loading-spinner"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if API failed or no data loaded
+  if (apiError || !currentOption) {
+    return (
+      <div className="product-finder" data-navbar-theme="black">
+        <div className="product-finder__loading">
+          <p className="bodytext-5--no-margin">{apiError || 'Không có dữ liệu'}</p>
+          <GlassThemeButton theme="event_dark" onClick={() => window.location.reload()}>
+            Thử lại
+          </GlassThemeButton>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="product-finder" data-navbar-theme="black">
@@ -219,6 +408,21 @@ const ProductFinderPage = () => {
         {currentStepIndex + 1} / {TOTAL_STEPS}
       </div>
 
+      {/* Price Panel - Right side */}
+      <div className="product-finder__price-panel">
+        {/* Current selection price */}
+        <div className="product-finder__current-price">
+          <span className="product-finder__current-name">{currentOption.name}</span>
+          <span className="product-finder__current-value">{formatPrice(currentOption.price || 0)}</span>
+        </div>
+
+        {/* Estimated Total */}
+        <div className="product-finder__estimated-total">
+          <span className="product-finder__estimated-label">Estimated Total</span>
+          <span className="product-finder__estimated-price">{formatPrice(estimatedTotal)}</span>
+        </div>
+      </div>
+
       {/* Title */}
       <h1 className="product-finder__title heading-3--no-margin">
         {currentOption.name}
@@ -228,20 +432,27 @@ const ProductFinderPage = () => {
       <div className={`product-finder__main ${isEntering ? 'product-finder__main--entering' : ''}`}>
         {/* Center Diamond Display */}
         <div className="product-finder__center">
-          {/* Old shape - animating out */}
-          {isAnimating && prevIndex !== null && (
-            <div className="product-finder__diamond product-finder__diamond--exit">
-              <img
-                src={getMediaUrl(currentStep.options[prevIndex].gif || currentStep.options[prevIndex].image)}
-                alt={currentStep.options[prevIndex].name}
-                className="product-finder__diamond-img"
-              />
-            </div>
-          )}
-          {/* Current shape - animating in or static */}
-          <div className={`product-finder__diamond ${isAnimating ? 'product-finder__diamond--enter' : ''}`}>
+          {/* Old image - animating out */}
+          {isAnimating && prevIndex !== null && (() => {
+            const prevOption = currentStep.options[prevIndex];
+            const prevSrc = (currentStep.id === 'band' && COMBO_PREVIEWS[prevOption.id])
+              ? COMBO_PREVIEWS[prevOption.id]
+              : getMediaUrl(prevOption.gif || prevOption.image);
+            const exitClass = currentStep.id === 'band' ? 'product-finder__diamond--fade-out' : 'product-finder__diamond--exit';
+            return (
+              <div className={`product-finder__diamond ${exitClass}`}>
+                <img src={prevSrc} alt={prevOption.name} className="product-finder__diamond-img" />
+              </div>
+            );
+          })()}
+          {/* Current image - enter (diamond) or reveal-bottom (band) */}
+          <div className={`product-finder__diamond ${isAnimating ? (currentStep.id === 'band' ? 'product-finder__diamond--reveal-bottom' : 'product-finder__diamond--enter') : ''}`}>
             <img
-              src={getMediaUrl(currentOption.gif || currentOption.image)}
+              src={
+                (currentStep.id === 'band' && COMBO_PREVIEWS[currentOption.id])
+                  ? COMBO_PREVIEWS[currentOption.id]
+                  : getMediaUrl(currentOption.gif || currentOption.image)
+              }
               alt={currentOption.name}
               className="product-finder__diamond-img"
             />
@@ -322,6 +533,8 @@ const ProductFinderPage = () => {
             const angle = getShapeAngle(index);
             const pos = getPositionOnOrbit(1, angle);
             const isSelected = index === currentIndex;
+            const rightShapeIndex = (currentIndex - 1 + currentStep.options.length) % currentStep.options.length;
+            const showRippleOnThis = index === rightShapeIndex && showIdleRipple;
 
             return (
               <div
@@ -340,6 +553,13 @@ const ProductFinderPage = () => {
                   className="product-finder__orbit-shape-img"
                   draggable="false"
                 />
+                {showRippleOnThis && (
+                  <div className="product-finder__idle-ripple">
+                    <span className="product-finder__idle-ripple-ring"></span>
+                    <span className="product-finder__idle-ripple-ring"></span>
+                    <span className="product-finder__idle-ripple-ring"></span>
+                  </div>
+                )}
               </div>
             );
           })}

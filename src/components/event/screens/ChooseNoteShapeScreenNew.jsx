@@ -313,8 +313,8 @@ const ChooseNoteShapeScreenNew = () => {
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
-          title: 'Mirror Diamond',
-          text: 'Nốt sáng của tôi từ Mirror Diamond ✨',
+          title: 'Mirror Future Diamond',
+          text: 'Tham gia trải nghiệm tạo nốt sáng của riêng bạn ✨🎵🎼',
         });
       } else {
         downloadAvatar(avatarDataUrl, `mirrorthankyou_${user?.displayName || 'guest'}.png`);

@@ -70,7 +70,7 @@ api.interceptors.response.use(
       requestUrl.includes("/auth/authenticate") ||
       requestUrl.includes("/auth/refresh-token");
 
-    const requiresAuth = ["/users/", "/orders/", "/me/"].some((path) =>
+    const requiresAuth = ["/users/", "/orders/", "/me/", "/product-finder/"].some((path) =>
       requestUrl.includes(path)
     );
 
@@ -1067,6 +1067,18 @@ export const dropdownConfigAPI = {
 
   // Get all country of origin options
   getCountries: () => api.get("/api/dropdown-config/countries"),
+};
+
+// ===== PRODUCT FINDER API =====
+export const productFinderAPI = {
+  // Public - không cần auth
+  getDiamondShapes: () => api.get("/api/product-finder/diamond-shapes"),
+  getBandStyles: () => api.get("/api/product-finder/band-styles"),
+
+  // Authenticated - axios interceptor tự gắn Bearer token + X-User-Id
+  getRecommendation: (data, config) => api.post("/api/product-finder/recommend", data, config),
+  getMySelections: () => api.get("/api/product-finder/my-selections"),
+  saveSelection: (data) => api.post("/api/product-finder/save-selection", data),
 };
 
 // ===== FILE UPLOAD API =====

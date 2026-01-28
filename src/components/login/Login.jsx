@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Login.css";
 import { useAuth } from "@/context/AuthContext";
 import EyeIconSvg from "@assets/images/icons/EyeIcon.svg";
@@ -9,6 +9,7 @@ import ShineGlassButton from "@/components/common/button/ShineGlassButton";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [loginInput, setLoginInput] = useState("");
   const [password, setPassword] = useState("");
@@ -73,7 +74,13 @@ const Login = () => {
       // Sử dụng login function từ AuthContext
       await login(payload.username, payload.password);
 
-      navigate(ROUTES.USER_PROFILE);
+      // Quay về trang trước (nếu được redirect từ trang khác), không thì về Profile
+      const from = location.state?.from;
+      if (from) {
+        navigate(from.pathname, { replace: true, state: from.state });
+      } else {
+        navigate(ROUTES.USER_PROFILE, { replace: true });
+      }
     } catch (error) {
       // --- XỬ LÝ KHI THẤT BẠI ---
       let errorMessage = "An unexpected error occurred. Please try again.";

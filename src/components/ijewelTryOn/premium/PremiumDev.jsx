@@ -193,12 +193,173 @@ const Premium = () => {
 
       isInitializedRef.current = true;
 
+      // DEBUG: Intercept ALL ijewel events from SDK
+      const originalDispatch = window.dispatchEvent.bind(window);
+      window.dispatchEvent = function(event) {
+        if (event.type && event.type.toLowerCase().includes('ijewel')) {
+          console.log('📢 [iJewel Event]', event.type, event.detail);
+        }
+        return originalDispatch(event);
+      };
+
       const handleFileData = (event) => {
         const fileData = event.detail.iJewelFileData?.config;
         if (fileData) setFileConfig(JSON.parse(fileData));
       };
 
       window.addEventListener('ijewel-file-data', handleFileData);
+
+      // Define handleViewerReady BEFORE loadModelById
+      const handleViewerReady = (event) => {
+        viewerAppRef.current = event.detail.viewer;
+        const viewer = event.detail.viewer;
+
+        console.log('🔍 [Viewer Ready] viewer.scene:', viewer.scene);
+
+        // Function to get all materials from scene
+        const getMaterials = () => {
+          const materials = [];
+          if (viewer.scene) {
+            viewer.traverseSceneObjects((obj) => {
+              if (obj.material) {
+                materials.push({
+                  name: obj.material.name,
+                  color: obj.material.color?.getHexString?.() || 'N/A',
+                  material: obj.material
+                });
+              }
+            });
+          }
+          return materials;
+        };
+
+        // Track ALL unique materials dynamically
+        let lastColors = {};
+
+        const getTrackedColors = () => {
+          const materials = getMaterials();
+          const colors = {};
+          // Get unique material names and their colors
+          const uniqueNames = [...new Set(materials.map(m => m.name))];
+          uniqueNames.forEach(name => {
+            const material = materials.find(m => m.name === name);
+            if (material) {
+              colors[name] = material.color;
+            }
+          });
+          return colors;
+        };
+
+        // Log initial materials after a delay (scene needs time to load)
+        setTimeout(() => {
+          console.log('🎨 [All Materials]', getMaterials());
+          lastColors = getTrackedColors();
+          console.log('🎨 [Initial Colors]', lastColors);
+        }, 2000);
+
+        // Listen for clicks and detect color changes
+        const handleDocumentClick = () => {
+          setTimeout(() => {
+            const currentColors = getTrackedColors();
+
+            // Check ALL materials for changes
+            Object.keys(currentColors).forEach(name => {
+              if (currentColors[name] && currentColors[name] !== lastColors[name]) {
+                console.log(`🎨 [${name}] color: #${lastColors[name] || 'none'} → #${currentColors[name]}`);
+                lastColors[name] = currentColors[name];
+
+                // Dispatch event
+                window.dispatchEvent(new CustomEvent('ijewel-color-changed', {
+                  detail: {
+                    material: name,
+                    color: currentColors[name],
+                    colorHex: '#' + currentColors[name],
+                    allColors: currentColors
+                  }
+                }));
+              }
+            });
+          }, 200);
+        };
+
+        document.addEventListener('click', handleDocumentClick);
+        console.log('✅ Material color tracking enabled (dynamic)');
+
+        // ============================================================================
+        // DIAGNOSTIC V1-V6: Tất cả console.log hữu ích
+        // ============================================================================
+        const setupColorLogging = () => {
+          // V4: Khám phá viewer.plugins
+          console.log('🔧 [V4] viewer keys:', Object.keys(viewer));
+          console.log('🔌 [V4] viewer.plugins:', viewer.plugins);
+
+          // V5: Khám phá MaterialConfiguratorPlugin
+          const configurator = viewer.plugins?.MaterialConfiguratorPlugin;
+          console.log('🎯 [V5] MaterialConfiguratorPlugin:', configurator);
+          console.log('🎯 [V5] configurator.variations:', configurator?.variations);
+          console.log('🎯 [V5] configurator.options:', configurator?.options);
+
+          if (!configurator?.variations) {
+            console.log('❌ Không tìm thấy configurator.variations');
+            return;
+          }
+
+          // V6: Log chi tiết từng variation → tìm ra mapping
+          console.log('📋 [V6] === VARIATIONS DETAIL ===');
+          configurator.variations.forEach((v, i) => {
+            console.log(`🎯 [V6] variation[${i}]:`, { uuid: v.uuid, title: v.title });
+          });
+
+          // Build mapping: material uuid → tab title
+          const materialToTab = {};
+          configurator.variations.forEach(v => {
+            materialToTab[v.uuid] = v.title;
+          });
+          console.log('✅ [FINAL] Material → Tab mapping:', materialToTab);
+
+          // Log initial colors for all tabs
+          console.log('🎨 === INITIAL COLORS ===');
+          const materials = getMaterials();
+          Object.keys(materialToTab).forEach(uuid => {
+            const mat = materials.find(m => m.name === uuid);
+            if (mat) {
+              console.log(`🎨 [${materialToTab[uuid]}] color: #${mat.color}`);
+            }
+          });
+
+          // Track colors for change detection
+          let lastTabColors = {};
+          Object.keys(materialToTab).forEach(uuid => {
+            const mat = materials.find(m => m.name === uuid);
+            if (mat) {
+              lastTabColors[materialToTab[uuid]] = mat.color;
+            }
+          });
+
+          // Override click handler to log tab + color changes
+          const handleColorChange = () => {
+            setTimeout(() => {
+              const currentMaterials = getMaterials();
+              Object.keys(materialToTab).forEach(uuid => {
+                const tabName = materialToTab[uuid];
+                const mat = currentMaterials.find(m => m.name === uuid);
+                if (mat && mat.color !== lastTabColors[tabName]) {
+                  console.log(`🎨 [${tabName}] color: #${mat.color}`);
+                  lastTabColors[tabName] = mat.color;
+                }
+              });
+            }, 200);
+          };
+
+          document.addEventListener('click', handleColorChange);
+        };
+
+        // Chạy sau 4 giây để configurator kịp load
+        setTimeout(setupColorLogging, 4000);
+      };
+
+      // Register listener BEFORE loadModelById
+      window.addEventListener('ijewel-viewer-ready', handleViewerReady);
 
       // Calculate footer height matching CSS: max(13vh, 9vw)
       const calculateFooterHeight = () => {
@@ -222,12 +383,6 @@ const Premium = () => {
         configuratorBottomOffsetPx: calculateConfiguratorOffset(),
         hideNameNumbers: true  // Hide numerical suffixes like "materials 2"
       });
-
-      const handleViewerReady = (event) => {
-        viewerAppRef.current = event.detail.viewer;
-      };
-
-      window.addEventListener('ijewel-viewer-ready', handleViewerReady);
 
       return () => {
         window.removeEventListener('ijewel-file-data', handleFileData);
