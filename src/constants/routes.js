@@ -4,10 +4,7 @@
 export const ROUTES = {
   // Public routes (keep original)
   HOME: "/",
-  IMMERSIVE_SHOWROOM: "/immersive-showroom",
   BOOK_APPOINTMENT: "/book-an-appointment",
-  MILAN_SUBMIT: "/mirror-in-milan-digital-jewelry-week",
-  MILAN_SUBMIT_SUCCESS: "/mirror-in-milan-digital-jewelry-week/submit-success",
   SCAVENGER_HUNT: "/scavenger-hunt",
   VERIFY_EMAIL: "/verify-email",
 
@@ -26,7 +23,6 @@ export const ROUTES = {
   SUPPORT: "/f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c",
   SUPPORT_DETAIL: "/f6a7b8c9-d0e1-2f3a-4b5c-6d7e8f9a0b1c/detail",
   CONTACT: "/a7b8c9d0-e1f2-3a4b-5c6d-7e8f9a0b1c2d",
-  CONTACT_V2: "/contact-v2",
   ABOUT: "/b8c9d0e1-f2a3-4b5c-6d7e-8f9a0b1c2d3e",
   LOCATIONS: "/c9d0e1f2-a3b4-5c6d-7e8f-9a0b1c2d3e4f",
   NEWS: "/d0e1f2a3-b4c5-6d7e-8f9a-0b1c2d3e4f5a",
@@ -40,8 +36,6 @@ export const ROUTES = {
   DB_EXPLORER: "/db-explorer", // DB Explorer - Export CSV/XLSX
   PRODUCTS_V2: "/7b8e9f0a-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
   PRODUCTS_LEFT: "/4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
-  UNIVERSE_FINAL: "/1f2e3d4c-5b6a-7c8d-9e0f-1a2b3c4d5e6f",
-  NEWS_V2: "/5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
 
   // Dashboard routes (keep original - protected by auth)
   DASHBOARD_ADMIN: "/dashboard/admin",
@@ -65,9 +59,6 @@ export const ROUTES = {
   EVENT_THANKYOU: "/the-muse-of-love-grown/mirror-thankyou", // Thank you screen (final)
   EVENT_RING_VIEWER: "/the-muse-of-love-grown/ring-viewer", // Fullscreen 3D ring viewer
 
-  // Interactive experiences
-  BIRTHDAY_CAKE: "/birthday-cake",
-  TEST_NOTES: "/test-notes", // Test page for music notes
 
   // Ring Customizer
   RING_CUSTOMIZER: "/ring-customizer",
@@ -89,29 +80,48 @@ export const ROUTES = {
   INVENTORY_CREATE_ORDER: "/inventory/create-order",
   INVENTORY_INVOICE: "/inventory/invoice",
 
-  // POD Admin routes
-  POD_ADMIN: "/pod-admin",
-  POD_ADMIN_DASHBOARD: "/pod-admin/dashboard",
-  POD_ADMIN_PARTNERS: "/pod-admin/partners",
-  POD_ADMIN_PARTNER_DETAIL: "/pod-admin/partners/:partnerId",
-  POD_ADMIN_PARTNER_CREATE: "/pod-admin/partners/create",
-  POD_ADMIN_PODS: "/pod-admin/pods",
-  POD_ADMIN_POD_DETAIL: "/pod-admin/pods/:podId",
-  POD_ADMIN_POD_CREATE: "/pod-admin/pods/create",
-  POD_ADMIN_QRCODES: "/pod-admin/qr-codes",
-  POD_ADMIN_QRCODE_DETAIL: "/pod-admin/qr-codes/:qrCodeId",
-  POD_ADMIN_ATTRIBUTIONS: "/pod-admin/attributions",
-  POD_ADMIN_COMMISSIONS: "/pod-admin/commissions",
-  POD_ADMIN_COMMISSION_DETAIL: "/pod-admin/commissions/:commissionId",
+  // POD Admin routes (nested under admin dashboard)
+  POD_ADMIN: "/dashboard/admin/pod",
+  POD_ADMIN_DASHBOARD: "/dashboard/admin/pod/dashboard",
+  POD_ADMIN_PARTNERS: "/dashboard/admin/pod/partners",
+  POD_ADMIN_PARTNER_DETAIL: "/dashboard/admin/pod/partners/:partnerId",
+  POD_ADMIN_PARTNER_CREATE: "/dashboard/admin/pod/partners/create",
+  POD_ADMIN_PODS: "/dashboard/admin/pod/pods",
+  POD_ADMIN_LOCATIONS: "/dashboard/admin/pod/locations",
+  POD_ADMIN_POD_DETAIL: "/dashboard/admin/pod/pods/:podId",
+  POD_ADMIN_POD_CREATE: "/dashboard/admin/pod/pods/create",
+  POD_ADMIN_QRCODES: "/dashboard/admin/pod/qr-codes",
+  POD_ADMIN_QRCODE_DETAIL: "/dashboard/admin/pod/qr-codes/:qrCodeId",
+  POD_ADMIN_SCANS: "/dashboard/admin/pod/scans",
+  POD_ADMIN_USER_ATTRIBUTIONS: "/dashboard/admin/pod/user-attributions",
+  POD_ADMIN_COMMISSIONS: "/dashboard/admin/pod/commissions",
+  POD_ADMIN_COMMISSION_DETAIL: "/dashboard/admin/pod/commissions/:commissionId",
 
   // POD Partner Portal routes
   POD_PARTNER: "/pod-partner",
   POD_PARTNER_DASHBOARD: "/pod-partner/dashboard",
   POD_PARTNER_PODS: "/pod-partner/pods",
+  POD_PARTNER_LOCATIONS: "/pod-partner/locations",
   POD_PARTNER_QRCODES: "/pod-partner/qr-codes",
   POD_PARTNER_SCANS: "/pod-partner/scans",
-  POD_PARTNER_ATTRIBUTIONS: "/pod-partner/attributions",
+  POD_PARTNER_USER_ATTRIBUTIONS: "/pod-partner/user-attributions",
   POD_PARTNER_COMMISSIONS: "/pod-partner/commissions",
+
+  // Phygital Partner Portal routes
+  POD_PARTNER_PHYGITAL_DASHBOARD: "/pod-partner/phygital-dashboard",
+  POD_PARTNER_INVENTORY: "/pod-partner/inventory",
+  POD_PARTNER_INVENTORY_DETAIL: "/pod-partner/inventory/:inventoryId",
+  POD_PARTNER_WHOLESALE_ORDERS: "/pod-partner/wholesale-orders",
+  POD_PARTNER_WHOLESALE_ORDER_DETAIL: "/pod-partner/wholesale-orders/:orderId",
+  POD_PARTNER_SALES: "/pod-partner/sales",
+  POD_PARTNER_SALE_DETAIL: "/pod-partner/sales/:saleId",
+  POD_PARTNER_SALES_REPORT: "/pod-partner/sales-report",
+
+  // Admin Wholesale routes (nested under admin dashboard)
+  POD_ADMIN_WHOLESALE_ORDERS: "/dashboard/admin/pod/wholesale-orders",
+  POD_ADMIN_WHOLESALE_ORDER_DETAIL: "/dashboard/admin/pod/wholesale-orders/:orderId",
+  POD_ADMIN_PHYGITAL_PARTNERS: "/dashboard/admin/pod/phygital-partners",
+  POD_ADMIN_PHYGITAL_PARTNER_DETAIL: "/dashboard/admin/pod/phygital-partners/:partnerId",
 };
 
 // Helper to get collection detail route with ID
@@ -157,4 +167,29 @@ export const getPodQrCodeDetailRoute = (qrCodeId) => {
 // Helper to get POD admin commission detail route
 export const getCommissionDetailRoute = (commissionId) => {
   return ROUTES.POD_ADMIN_COMMISSION_DETAIL.replace(":commissionId", commissionId);
+};
+
+// Helper to get partner inventory detail route
+export const getPartnerInventoryDetailRoute = (inventoryId) => {
+  return ROUTES.POD_PARTNER_INVENTORY_DETAIL.replace(":inventoryId", inventoryId);
+};
+
+// Helper to get partner wholesale order detail route
+export const getPartnerWholesaleOrderDetailRoute = (orderId) => {
+  return ROUTES.POD_PARTNER_WHOLESALE_ORDER_DETAIL.replace(":orderId", orderId);
+};
+
+// Helper to get partner sale detail route
+export const getPartnerSaleDetailRoute = (saleId) => {
+  return ROUTES.POD_PARTNER_SALE_DETAIL.replace(":saleId", saleId);
+};
+
+// Helper to get admin wholesale order detail route
+export const getAdminWholesaleOrderDetailRoute = (orderId) => {
+  return ROUTES.POD_ADMIN_WHOLESALE_ORDER_DETAIL.replace(":orderId", orderId);
+};
+
+// Helper to get admin phygital partner detail route
+export const getAdminPhygitalPartnerDetailRoute = (partnerId) => {
+  return ROUTES.POD_ADMIN_PHYGITAL_PARTNER_DETAIL.replace(":partnerId", partnerId);
 };

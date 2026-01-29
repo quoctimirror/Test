@@ -145,9 +145,7 @@ const LocationsManager = () => {
 
   if (loading) {
     return (
-      <div className="admin-empty-state">
-        <div>Loading locations...</div>
-      </div>
+      <div className="admin-loading-state">Loading locations...</div>
     );
   }
 

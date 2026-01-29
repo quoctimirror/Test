@@ -112,7 +112,7 @@ const JewelrySpecificationManager = () => {
 
   if (loading) {
     return (
-      <div className="admin-empty-state">
+      <div className="admin-loading-state">
         Loading specifications...
       </div>
     );

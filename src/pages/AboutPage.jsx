@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import SEO from "@components/seo/SEO";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SloganSection from "@components/about/sloganSection/SloganSection";
@@ -98,6 +99,11 @@ const AboutPage = () => {
 
   return (
     <div className="about-page">
+      <SEO
+        title="About Us"
+        description="Learn about Mirror Future Diamond - our story, vision, and commitment to sustainable luxury through premium lab-grown diamond jewelry."
+        url="/about"
+      />
       <div data-section="slogan-section" data-navbar-theme="white">
         <SloganSection />
       </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SEO from "@components/seo/SEO";
 import Collection from "@components/collections/Collections";
 import ViewAllProduct from "@components/viewAllProduct/ViewAllProduct";
 import ContactUs from "@components/contactUs/ContactUs";
@@ -34,6 +35,11 @@ const CollectionPage = () => {
 
   return (
     <div className="collection-page-wrapper">
+      <SEO
+        title="Diamond Collections"
+        description="Explore our curated diamond collections. Each collection tells a unique story of craftsmanship and elegance in lab-grown diamond jewelry."
+        url="/collections"
+      />
       {/* Section 1-3: Collection component with internal sections */}
       <div data-section="collection">
         <Collection />

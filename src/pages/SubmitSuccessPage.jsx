@@ -10,9 +10,11 @@ import { useBottomTheme } from "@/hooks/useBottomTheme";
 import "@components/home-page/scrollEffect/ScrollEffect.css";
 import "./SubmitSuccessPage.css";
 import { ROUTES } from "@/constants/routes";
+import { useImmersiveModal } from "@/contexts/ImmersiveModalContext";
 
 const SubmitSuccessPage = () => {
   const navigate = useNavigate();
+  const { openModal } = useImmersiveModal();
 
   const { isArrowVisible, handleArrowClick } = useScrollToNextSection({
     footerSelector: '.footer',
@@ -37,12 +39,11 @@ const SubmitSuccessPage = () => {
   }, []);
 
   const handleImmersiveShowroom = () => {
-    // Navigate to immersive showroom page
-    navigate(ROUTES.IMMERSIVE_SHOWROOM);
+    openModal();
   };
 
   const handleBackToSubmit = () => {
-    navigate(ROUTES.MILAN_SUBMIT);
+    navigate(ROUTES.HOME);
   };
 
   return (

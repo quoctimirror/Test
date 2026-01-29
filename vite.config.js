@@ -22,10 +22,18 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       proxy: {
         "/api": {
-          target: env.VITE_API_BASE_URL || "http://localhost:8082", // Local backend
+          // For local testing, always use localhost:8082
+          // Change to env.VITE_API_BASE_URL for production proxy if needed
+          target: env.VITE_API_BASE_URL || "http://localhost:8082",
           changeOrigin: true,
           secure: false,
           ws: true,
+        },
+        "/q": {
+          // QR scan endpoint - proxy to backend
+          target: env.VITE_API_BASE_URL || "http://localhost:8082",
+          changeOrigin: true,
+          secure: false,
         },
       },
     },

@@ -8,6 +8,7 @@ import { ROUTES } from '@/constants/routes';
 import NavbarV4 from '@/components/navbar/NavbarV4';
 import EventBackButton from '@/components/event/EventBackButton';
 import EventNextButton from '@/components/event/EventNextButton';
+import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import EventProgressBar from '@/components/event/EventProgressBar';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import useEventStore from '@/store/useEventStore';
@@ -190,7 +191,6 @@ const EventChooseShapePage = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [lockedMessage, setLockedMessage] = useState(''); // Message when trying to change locked selection
   // Initialize rotation offset to show selected shape at center
   const [rotationOffset, setRotationOffset] = useState(() => orbitAngles[getInitialIndex()]);
   const [isEntering, setIsEntering] = useState(true); // For entrance animation
@@ -405,14 +405,6 @@ const EventChooseShapePage = () => {
   const handleShapeClick = (index) => {
     if (index === currentIndex || isAnimating) return;
 
-    // If locked and trying to select different shape, show message
-    if (isLocked) {
-      setLockedMessage('Bạn đã chọn Nốt sáng.');
-      // Auto hide message after 2 seconds
-      setTimeout(() => setLockedMessage(''), 2000);
-      return;
-    }
-
     setPrevIndex(currentIndex);
     setIsAnimating(true);
     setCurrentIndex(index);
@@ -428,13 +420,7 @@ const EventChooseShapePage = () => {
     navigate(ROUTES.EVENT_NAME);
   };
 
-  const handleNext = async () => {
-    // If already locked (shape selected), just navigate to next step
-    if (isLocked) {
-      navigate(ROUTES.EVENT_PLACE_NOTE);
-      return;
-    }
-
+  const handleSelect = async () => {
     if (saving) return;
 
     setSaving(true);
@@ -471,9 +457,6 @@ const EventChooseShapePage = () => {
           positionY,
           pitch,
         });
-
-        // Navigate to place note screen
-        navigate(ROUTES.EVENT_PLACE_NOTE);
       } else {
         setError(result.error || 'Không thể lưu. Vui lòng thử lại.');
       }
@@ -483,6 +466,10 @@ const EventChooseShapePage = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleNext = () => {
+    navigate(ROUTES.EVENT_PLACE_NOTE);
   };
 
   const currentShape = shapes[currentIndex];
@@ -685,13 +672,6 @@ const EventChooseShapePage = () => {
           </div>
         </div>
 
-        {/* Locked Message Toast */}
-        {lockedMessage && (
-          <div className="event-choose-shape__toast bodytext-4--no-margin">
-            {lockedMessage}
-          </div>
-        )}
-
         {/* Bottom Section */}
         <div className="event-choose-shape__bottom">
           {/* Place your note - Left (Desktop only) */}
@@ -705,10 +685,33 @@ const EventChooseShapePage = () => {
           {/* Error Message */}
           {error && <p className="event-choose-shape__error">{error}</p>}
 
-          {/* Choose the shape text */}
-          <p className="event-choose-shape__select-text bodytext-6--no-margin">
-            {isLocked ? 'Bạn đã chọn Nốt sáng' : 'Chọn Nốt sáng của riêng bạn'}
-          </p>
+          {/* Choose the shape button / text */}
+          {isLocked ? (
+            <p className="event-choose-shape__select-text bodytext-6--no-margin">
+              Bạn đã chọn Nốt sáng
+            </p>
+          ) : (
+            <div className="event-choose-shape__select-btn">
+              <GlassThemeButton
+                theme="event_dark"
+                onClick={handleSelect}
+                textClassName="bodytext-6--no-margin"
+                expandable={false}
+                disabled={saving}
+              >
+                {saving ? (
+                  <span className="event-choose-shape__loading-dots">
+                    Chọn Nốt sáng
+                    <span className="event-choose-shape__loading-dot">.</span>
+                    <span className="event-choose-shape__loading-dot">.</span>
+                    <span className="event-choose-shape__loading-dot">.</span>
+                  </span>
+                ) : (
+                  'Chọn Nốt sáng'
+                )}
+              </GlassThemeButton>
+            </div>
+          )}
 
           {/* Empty space - Right (for balance, Desktop only) */}
           <div className="event-choose-shape__spacer"></div>
@@ -718,8 +721,8 @@ const EventChooseShapePage = () => {
         <EventBackButton onClick={handleBack} />
 
         {/* Next Button - Fixed bottom right */}
-        <EventNextButton onClick={handleNext} disabled={saving}>
-          {saving ? 'Đang lưu...' : 'Tiếp tục'}
+        <EventNextButton onClick={handleNext} disabled={!isLocked}>
+          Tiếp tục
         </EventNextButton>
       </div>
     </>

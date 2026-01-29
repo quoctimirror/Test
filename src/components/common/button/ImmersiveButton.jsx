@@ -1,5 +1,3 @@
-import { useLocation } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
 import { useImmersiveModal } from "@/contexts/ImmersiveModalContext";
 import "./ImmersiveButton.css";
 
@@ -18,13 +16,7 @@ const ImmersiveButton = ({
   isCollapsed = false,
   ...props
 }) => {
-  const location = useLocation();
   const { openModal } = useImmersiveModal();
-
-  // Don't render on Immersive Showroom page
-  if (location.pathname === ROUTES.IMMERSIVE_SHOWROOM) {
-    return null;
-  }
 
   const handleClick = () => {
     openModal();

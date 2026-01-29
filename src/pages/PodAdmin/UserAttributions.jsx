@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { partnerPortalApi, POD_ENUMS } from "@/services/podApi";
+import { userAttributionApi } from "@/services/podApi";
 import "@/components/pod-admin/PodAdminLayout.css";
 
-export default function PartnerPortalAttributions() {
+export default function PodAdminUserAttributions() {
   const [attributions, setAttributions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,8 +14,9 @@ export default function PartnerPortalAttributions() {
   });
   const [filters, setFilters] = useState({
     status: "",
-    startDate: "",
-    endDate: "",
+    partnerId: "",
+    podId: "",
+    userId: "",
   });
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export default function PartnerPortalAttributions() {
           Object.entries(filters).filter(([_, v]) => v !== "")
         ),
       };
-      const response = await partnerPortalApi.getMyAttributions(params);
+      const response = await userAttributionApi.getAll(params);
       setAttributions(response.data.content || []);
       setPagination((prev) => ({
         ...prev,
@@ -41,8 +42,8 @@ export default function PartnerPortalAttributions() {
       }));
       setError(null);
     } catch (err) {
-      console.error("Error fetching attributions:", err);
-      setError("Failed to load attributions");
+      console.error("Error fetching user attributions:", err);
+      setError("Failed to load user attributions");
     } finally {
       setLoading(false);
     }
@@ -55,18 +56,10 @@ export default function PartnerPortalAttributions() {
 
   const getStatusBadgeClass = (status) => {
     const classes = {
-      PENDING: "pending",
-      CONFIRMED: "confirmed",
-      CANCELLED: "cancelled",
+      ACTIVE: "confirmed",
+      EXPIRED: "cancelled",
     };
     return classes[status] || "";
-  };
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(amount || 0);
   };
 
   const formatDate = (dateStr) => {
@@ -75,23 +68,30 @@ export default function PartnerPortalAttributions() {
       year: "numeric",
       month: "short",
       day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
+  };
+
+  const isExpired = (expiresAt) => {
+    if (!expiresAt) return false;
+    return new Date(expiresAt) < new Date();
   };
 
   // Calculate summary stats
   const summaryStats = {
-    total: attributions.length,
-    pending: attributions.filter((a) => a.status === "PENDING").length,
-    confirmed: attributions.filter((a) => a.status === "CONFIRMED").length,
-    totalAmount: attributions
-      .filter((a) => a.status === "CONFIRMED")
-      .reduce((sum, a) => sum + (a.attributedAmount || 0), 0),
+    total: pagination.totalElements,
+    active: attributions.filter((a) => a.status === "ACTIVE").length,
+    expired: attributions.filter((a) => a.status === "EXPIRED").length,
   };
 
   return (
     <div className="pod-page">
       <div className="pod-page-header">
-        <h1 className="pod-page-title">My Attributions ({pagination.totalElements})</h1>
+        <h1 className="pod-page-title">User Attributions ({pagination.totalElements})</h1>
+        <p style={{ fontSize: "0.875rem", color: "#6b7280", marginTop: "0.25rem" }}>
+          Users linked to PODs for commission tracking (30-day window)
+        </p>
       </div>
 
       {/* Summary Cards */}
@@ -106,18 +106,12 @@ export default function PartnerPortalAttributions() {
           <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>Total</div>
         </div>
         <div className="pod-card" style={{ padding: "1rem", textAlign: "center" }}>
-          <div style={{ fontSize: "1.5rem", fontWeight: "600", color: "#f59e0b" }}>{summaryStats.pending}</div>
-          <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>Pending</div>
+          <div style={{ fontSize: "1.5rem", fontWeight: "600", color: "#10b981" }}>{summaryStats.active}</div>
+          <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>Active</div>
         </div>
         <div className="pod-card" style={{ padding: "1rem", textAlign: "center" }}>
-          <div style={{ fontSize: "1.5rem", fontWeight: "600", color: "#10b981" }}>{summaryStats.confirmed}</div>
-          <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>Confirmed</div>
-        </div>
-        <div className="pod-card" style={{ padding: "1rem", textAlign: "center" }}>
-          <div style={{ fontSize: "1.25rem", fontWeight: "600", color: "#10b981" }}>
-            {formatCurrency(summaryStats.totalAmount)}
-          </div>
-          <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>Attributed Value</div>
+          <div style={{ fontSize: "1.5rem", fontWeight: "600", color: "#6b7280" }}>{summaryStats.expired}</div>
+          <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>Expired</div>
         </div>
       </div>
 
@@ -129,25 +123,32 @@ export default function PartnerPortalAttributions() {
           onChange={(e) => handleFilterChange("status", e.target.value)}
         >
           <option value="">All Status</option>
-          {POD_ENUMS.attributionStatus.map((status) => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="EXPIRED">EXPIRED</option>
         </select>
         <input
-          type="date"
+          type="text"
           className="pod-form-input"
-          value={filters.startDate}
-          onChange={(e) => handleFilterChange("startDate", e.target.value)}
-          style={{ maxWidth: "180px" }}
+          placeholder="Partner ID"
+          value={filters.partnerId}
+          onChange={(e) => handleFilterChange("partnerId", e.target.value)}
+          style={{ maxWidth: "160px" }}
         />
         <input
-          type="date"
+          type="text"
           className="pod-form-input"
-          value={filters.endDate}
-          onChange={(e) => handleFilterChange("endDate", e.target.value)}
-          style={{ maxWidth: "180px" }}
+          placeholder="POD ID"
+          value={filters.podId}
+          onChange={(e) => handleFilterChange("podId", e.target.value)}
+          style={{ maxWidth: "160px" }}
+        />
+        <input
+          type="text"
+          className="pod-form-input"
+          placeholder="User ID"
+          value={filters.userId}
+          onChange={(e) => handleFilterChange("userId", e.target.value)}
+          style={{ maxWidth: "120px" }}
         />
       </div>
 
@@ -155,7 +156,7 @@ export default function PartnerPortalAttributions() {
       {loading && (
         <div className="pod-loading">
           <div className="pod-loading-spinner" />
-          <p>Loading attributions...</p>
+          <p>Loading user attributions...</p>
         </div>
       )}
 
@@ -169,14 +170,14 @@ export default function PartnerPortalAttributions() {
         </div>
       )}
 
-      {/* Attributions Table */}
+      {/* Table */}
       {!loading && !error && (
         <div className="pod-card">
           {attributions.length === 0 ? (
             <div className="pod-empty">
-              <p>No attributions found</p>
+              <p>No user attributions found</p>
               <p style={{ fontSize: "0.875rem", color: "#6b7280" }}>
-                Attributions are created when orders are placed after QR scans
+                User attributions are created when users log in after scanning a POD QR code
               </p>
             </div>
           ) : (
@@ -185,54 +186,39 @@ export default function PartnerPortalAttributions() {
                 <table className="pod-table">
                   <thead>
                     <tr>
-                      <th>Order ID</th>
-                      <th>POD</th>
-                      <th>Type</th>
-                      <th>Order Amount</th>
-                      <th>Attributed</th>
+                      <th>ID</th>
+                      <th>User ID</th>
+                      <th>POD ID</th>
+                      <th>Partner ID</th>
+                      <th>Product</th>
+                      <th>First Scan</th>
+                      <th>Expires</th>
                       <th>Status</th>
-                      <th>Date</th>
                     </tr>
                   </thead>
                   <tbody>
                     {attributions.map((attr) => (
                       <tr key={attr.id}>
                         <td>
-                          <code style={{
-                            background: "#f3f4f6",
-                            padding: "0.25rem 0.5rem",
-                            borderRadius: "4px",
-                            fontSize: "0.75rem"
-                          }}>
-                            {attr.orderId?.slice(0, 12)}...
+                          <code style={{ background: "#f3f4f6", padding: "0.25rem 0.5rem", borderRadius: "4px", fontSize: "0.75rem" }}>
+                            {attr.id}
                           </code>
                         </td>
-                        <td>{attr.podName || attr.podId?.slice(0, 8)}</td>
-                        <td>
-                          <span style={{ fontSize: "0.75rem" }}>
-                            {attr.attributionType}
-                          </span>
-                          {attr.attributionWeight && attr.attributionWeight < 1 && (
-                            <span style={{
-                              fontSize: "0.625rem",
-                              color: "#6b7280",
-                              marginLeft: "0.25rem"
-                            }}>
-                              ({(attr.attributionWeight * 100).toFixed(0)}%)
-                            </span>
-                          )}
-                        </td>
-                        <td>{formatCurrency(attr.orderAmount)}</td>
-                        <td style={{ color: "#10b981", fontWeight: "500" }}>
-                          {formatCurrency(attr.attributedAmount)}
+                        <td style={{ fontWeight: "500" }}>{attr.userId}</td>
+                        <td>{attr.podId}</td>
+                        <td>{attr.partnerId}</td>
+                        <td>{attr.productId || "-"}</td>
+                        <td style={{ fontSize: "0.875rem" }}>{formatDate(attr.firstScanAt)}</td>
+                        <td style={{
+                          fontSize: "0.875rem",
+                          color: isExpired(attr.expiresAt) ? "#ef4444" : "#10b981"
+                        }}>
+                          {formatDate(attr.expiresAt)}
                         </td>
                         <td>
                           <span className={`status-badge ${getStatusBadgeClass(attr.status)}`}>
                             {attr.status}
                           </span>
-                        </td>
-                        <td style={{ fontSize: "0.875rem" }}>
-                          {formatDate(attr.orderPlacedAt)}
                         </td>
                       </tr>
                     ))}

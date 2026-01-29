@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SEO from "@components/seo/SEO";
 import Section1 from "@components/services/section1/Section1";
 import Section2 from "@components/services/section2/Section2";
 import ContactUs from "@components/contactUs/ContactUs";
@@ -38,6 +39,11 @@ const ServicesPage = () => {
 
   return (
     <div className="services-page">
+      <SEO
+        title="Diamond Services"
+        description="Professional diamond services including custom design, certification, repair, and consultation. Experience luxury service at Mirror Future Diamond."
+        url="/services"
+      />
       <div data-section="section-1" data-navbar-theme="white">
         <Section1 />
       </div>

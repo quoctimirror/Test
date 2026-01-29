@@ -2,86 +2,28 @@ import "./IntroSubmit.css";
 import { useRef } from "react";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 import UnderlineButton from "@components/common/button/UnderlineButton";
-import ArrowDown from "@components/common/decorative/ArrowDown";
-import { useNavigate, useLocation } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
 import { getImageUrl } from "@utils/cloudflareMediaUtil";
 
 const IntroSubmit = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const arrowRef = useRef(null);
 
-  // Check if current page is Immersive Showroom
-  const isImmersiveShowroomPage = location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
-
   const handleSubmitPortfolioClick = () => {
-    // Check if we're already on the submit page
-    if (location.pathname === ROUTES.MILAN_SUBMIT) {
-      const submitFormSection = document.querySelector(".submit-form-section");
-      if (submitFormSection) {
-        const rect = submitFormSection.getBoundingClientRect();
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const targetPosition = rect.top + scrollTop;
-        window.scrollTo({
-          top: targetPosition,
-          behavior: "smooth",
-        });
-      }
-    } else {
-      // Navigate to submit page and scroll to form
-      navigate(ROUTES.MILAN_SUBMIT);
-      // Use setTimeout to ensure page has loaded before scrolling
-      setTimeout(() => {
-        const submitFormSection = document.querySelector(
-          ".submit-form-section"
-        );
-        if (submitFormSection) {
-          const rect = submitFormSection.getBoundingClientRect();
-          const scrollTop =
-            window.scrollY || document.documentElement.scrollTop;
-          const targetPosition = rect.top + scrollTop;
-          window.scrollTo({
-            top: targetPosition,
-            behavior: "smooth",
-          });
-        }
-      }, 100);
+    const submitFormSection = document.querySelector(".submit-form-section");
+    if (submitFormSection) {
+      const rect = submitFormSection.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const targetPosition = rect.top + scrollTop;
+      window.scrollTo({ top: targetPosition, behavior: "smooth" });
     }
   };
 
   const handleViewGuidelinesClick = () => {
-    // Check if we're already on the submit page
-    if (location.pathname === ROUTES.MILAN_SUBMIT) {
-      const guideStep1Section = document.querySelector(".guide-step-1-section");
-      if (guideStep1Section) {
-        const rect = guideStep1Section.getBoundingClientRect();
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const targetPosition = rect.top + scrollTop + 20; // Offset for better positioning
-        window.scrollTo({
-          top: targetPosition,
-          behavior: "smooth",
-        });
-      }
-    } else {
-      // Navigate to submit page and scroll to guidelines
-      navigate(ROUTES.MILAN_SUBMIT);
-      // Use setTimeout to ensure page has loaded before scrolling
-      setTimeout(() => {
-        const guideStep1Section = document.querySelector(
-          ".guide-step-1-section"
-        );
-        if (guideStep1Section) {
-          const rect = guideStep1Section.getBoundingClientRect();
-          const scrollTop =
-            window.scrollY || document.documentElement.scrollTop;
-          const targetPosition = rect.top + scrollTop - 100; // Offset for better positioning
-          window.scrollTo({
-            top: targetPosition,
-            behavior: "smooth",
-          });
-        }
-      }, 100);
+    const guideStep1Section = document.querySelector(".guide-step-1-section");
+    if (guideStep1Section) {
+      const rect = guideStep1Section.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const targetPosition = rect.top + scrollTop + 20;
+      window.scrollTo({ top: targetPosition, behavior: "smooth" });
     }
   };
 
@@ -138,12 +80,6 @@ const IntroSubmit = () => {
           </div>
         </div>
 
-        {/* Arrow Down - Hidden on Immersive Showroom page */}
-        {/* {!isImmersiveShowroomPage && (
-          <div className="intro-submit-arrow-down" ref={arrowRef}>
-            <ArrowDown width={20} height={20} fill="black" />
-          </div>
-        )} */}
       </section>
     </div>
   );

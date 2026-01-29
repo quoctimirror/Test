@@ -137,22 +137,12 @@ export const InfoBanner = ({
  */
 export const LoadingState = ({
   message = 'Loading...',
-  variant = 'default',
   className = ''
-}) => {
-  const variantClasses = {
-    default: 'admin-loading-state',
-    inline: 'admin-loading-state admin-loading-state-inline',
-    overlay: 'admin-loading-overlay'
-  };
-
-  return (
-    <div className={`${variantClasses[variant] || variantClasses.default} ${className}`.trim()}>
-      <div className="admin-loading-spinner" />
-      <p className="admin-loading-message">{message}</p>
-    </div>
-  );
-};
+}) => (
+  <div className={`admin-loading-state ${className}`.trim()}>
+    {message}
+  </div>
+);
 
 /**
  * NoResultsState - Specialized empty state for search/filter results

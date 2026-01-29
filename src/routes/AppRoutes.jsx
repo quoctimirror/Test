@@ -6,52 +6,53 @@ import NavbarV4 from "@components/navbar/NavbarV4";
 import Footer from "@components/footer/Footer";
 import { ROUTES } from "@/constants/routes";
 import { useImmersiveModal } from "@/contexts/ImmersiveModalContext";
-// Lazy-load components
-const HomePage = lazy(() => import("@pages/HomePage"));
-const ProductsPage = lazy(() => import("@pages/ProductsPage"));
-const CollectionPage = lazy(() => import("@pages/CollectionPage"));
-const CollectionDetailPage = lazy(() => import("@pages/CollectionDetailPage"));
-const ProductDetailPage = lazy(() => import("@pages/ProductDetailPage"));
-const ServicesPage = lazy(() => import("@pages/ServicesPage"));
-const ServicesDetailPage = lazy(() => import("@pages/ServicesDetailPage"));
-const SupportPage = lazy(() => import("@pages/SupportPage"));
-const SupportDetailPage = lazy(() => import("@pages/SupportDetailPage"));
-const NotFoundPage = lazy(() => import("@pages/NotFoundPage"));
+import lazyWithRetry from "@/utils/lazyWithRetry";
 
-const UniverseSection = lazy(() =>
+// Lazy-load components (with retry to handle stale chunks after deploy)
+const HomePage = lazyWithRetry(() => import("@pages/HomePage"));
+const ProductsPage = lazyWithRetry(() => import("@pages/ProductsPage"));
+const CollectionPage = lazyWithRetry(() => import("@pages/CollectionPage"));
+const CollectionDetailPage = lazyWithRetry(() => import("@pages/CollectionDetailPage"));
+const ProductDetailPage = lazyWithRetry(() => import("@pages/ProductDetailPage"));
+const ServicesPage = lazyWithRetry(() => import("@pages/ServicesPage"));
+const ServicesDetailPage = lazyWithRetry(() => import("@pages/ServicesDetailPage"));
+const SupportPage = lazyWithRetry(() => import("@pages/SupportPage"));
+const SupportDetailPage = lazyWithRetry(() => import("@pages/SupportDetailPage"));
+const NotFoundPage = lazyWithRetry(() => import("@pages/NotFoundPage"));
+const QrRedirect = lazyWithRetry(() => import("@pages/QrRedirect"));
+
+const UniverseSection = lazyWithRetry(() =>
   import("@components/home-page/universeSection/MirrorExp.jsx")
 );
-const ManageProducts = lazy(() =>
+const ManageProducts = lazyWithRetry(() =>
   import("@components/manage-products/ManageProducts.jsx")
 );
-const AdminDashboard = lazy(() =>
+const AdminDashboard = lazyWithRetry(() =>
   import("@components/admin-dashboard/AdminDashboard.jsx")
 );
-const VendorDashboard = lazy(() =>
+const VendorDashboard = lazyWithRetry(() =>
   import("@components/vendor-dashboard/VendorDashboard.jsx")
 );
-const DesignerDashboard = lazy(() =>
+const DesignerDashboard = lazyWithRetry(() =>
   import("@components/designer-dashboard/DesignerDashboard.jsx")
 );
-const AuthPage = lazy(() => import("@pages/AuthPage"));
-const Login = lazy(() => import("@components/login/Login"));
-const Register = lazy(() => import("@components/register/Register"));
-const ForgotPassword = lazy(() =>
+const AuthPage = lazyWithRetry(() => import("@pages/AuthPage"));
+const Login = lazyWithRetry(() => import("@components/login/Login"));
+const Register = lazyWithRetry(() => import("@components/register/Register"));
+const ForgotPassword = lazyWithRetry(() =>
   import("@components/forgot-password/ForgotPassword")
 );
-const EmailVerification = lazy(() =>
+const EmailVerification = lazyWithRetry(() =>
   import("@components/email-verification/EmailVerification")
 );
-const Profile = lazy(() => import("@components/profile/Profile"));
-const ProtectedRoute = lazy(() => import("@components/auth/ProtectedRoute"));
-const AllGemsPage = lazy(() => import("@pages/AllGemsPage"));
-const AllNewsPage = lazy(() => import("@pages/AllNewsPage"));
-const AllNewsPageV2 = lazy(() => import("@pages/AllNewsPageV2"));
-const NewCutPage = lazy(() => import("@pages/NewCutPage"));
-const MilanPage = lazy(() => import("@pages/MilanPage"));
-const ContactPage = lazy(() => import("@pages/ContactPage"));
-const ContactPageV2 = lazy(() => import("@pages/ContactPageV2"));
-const DBExplorerPage = lazy(() => import("@pages/DBExplorerPage"));
+const Profile = lazyWithRetry(() => import("@components/profile/Profile"));
+const ProtectedRoute = lazyWithRetry(() => import("@components/auth/ProtectedRoute"));
+const AllGemsPage = lazyWithRetry(() => import("@pages/AllGemsPage"));
+const AllNewsPage = lazyWithRetry(() => import("@pages/AllNewsPage"));
+const NewCutPage = lazyWithRetry(() => import("@pages/NewCutPage"));
+const MilanPage = lazyWithRetry(() => import("@pages/MilanPage"));
+const ContactPage = lazyWithRetry(() => import("@pages/ContactPage"));
+const DBExplorerPage = lazyWithRetry(() => import("@pages/DBExplorerPage"));
 
 // News Detail Wrapper Component
 const NewsDetailWrapper = () => {
@@ -67,52 +68,41 @@ const NewsDetailWrapper = () => {
   const PageComponent = newsPages[slug] || NewCutPage;
   return <PageComponent />;
 };
-const AboutPage = lazy(() => import("@pages/AboutPage"));
-const LocationsPage = lazy(() => import("@pages/LocationsPage"));
-const WelcomePage = lazy(() => import("@pages/WelcomePage"));
-const ImmersiveShowroomPage = lazy(() =>
-  import("@pages/ImmersiveShowroomPage")
-);
-const SubmitPage = lazy(() => import("@pages/SubmitPage"));
-const SubmitSuccessPage = lazy(() => import("@pages/SubmitSuccessPage"));
-const ProductsV2 = lazy(() => import("@components/productsV2/Products.jsx"));
-const ProductsLeft = lazy(() =>
+const AboutPage = lazyWithRetry(() => import("@pages/AboutPage"));
+const LocationsPage = lazyWithRetry(() => import("@pages/LocationsPage"));
+const WelcomePage = lazyWithRetry(() => import("@pages/WelcomePage"));
+const ProductsV2 = lazyWithRetry(() => import("@components/productsV2/Products.jsx"));
+const ProductsLeft = lazyWithRetry(() =>
   import("@components/productsV2/ProductsLeft.jsx")
 );
-const ScavengerHunt = lazy(() =>
+const ScavengerHunt = lazyWithRetry(() =>
   import("@components/scavenger-hunt/ScavengerHunt")
 );
-const BookAppointmentPage = lazy(() => import("@pages/BookAppointmentPage"));
-const PremiumPage = lazy(() => import("@pages/PremiumPage"));
-const PremiumDevPage = lazy(() => import("@pages/PremiumDevPage"));
-const SimpleMeshInspector = lazy(() =>
+const BookAppointmentPage = lazyWithRetry(() => import("@pages/BookAppointmentPage"));
+const PremiumPage = lazyWithRetry(() => import("@pages/PremiumPage"));
+const PremiumDevPage = lazyWithRetry(() => import("@pages/PremiumDevPage"));
+const SimpleMeshInspector = lazyWithRetry(() =>
   import("@components/ijewelTryOn/quocti_dancefloor/SimpleMeshInspector")
 );
 
 // Event Pages
-const EventPage = lazy(() => import("@pages/Event/EventPage"));
-const EventGuidePage = lazy(() => import("@pages/Event/EventGuidePage"));
-const EventLoginPage = lazy(() => import("@pages/Event/EventLoginPage"));
-const EventNamePage = lazy(() => import("@pages/Event/EventNamePage"));
-const EventChooseShapePage = lazy(() => import("@pages/Event/EventChooseShapePage"));
-const EventDisplayPage = lazy(() => import("@pages/Event/EventDisplayPage"));
-const EventAdminPage = lazy(() => import("@pages/Event/EventAdminPage"));
-const ChristmasMusicPage = lazy(() => import("@pages/Event/ChristmasMusicPage"));
-const EventPlaceNotePage = lazy(() => import("@pages/Event/EventPlaceNotePage"));
-const EventWriteMessagePage = lazy(() => import("@pages/Event/EventWriteMessagePage"));
-const EventChooseNotePage = lazy(() => import("@pages/Event/EventChooseNotePage"));
-const EventChooseNotePageV2 = lazy(() => import("@pages/Event/EventChooseNotePageV2"));
-const EventThankYouPage = lazy(() => import("@pages/Event/EventThankYouPage"));
-const Model3DFullscreenPage = lazy(() => import("@pages/Event/Model3DFullscreenPage"));
+const EventPage = lazyWithRetry(() => import("@pages/Event/EventPage"));
+const EventGuidePage = lazyWithRetry(() => import("@pages/Event/EventGuidePage"));
+const EventLoginPage = lazyWithRetry(() => import("@pages/Event/EventLoginPage"));
+const EventNamePage = lazyWithRetry(() => import("@pages/Event/EventNamePage"));
+const EventChooseShapePage = lazyWithRetry(() => import("@pages/Event/EventChooseShapePage"));
+const EventDisplayPage = lazyWithRetry(() => import("@pages/Event/EventDisplayPage"));
+const EventAdminPage = lazyWithRetry(() => import("@pages/Event/EventAdminPage"));
+const ChristmasMusicPage = lazyWithRetry(() => import("@pages/Event/ChristmasMusicPage"));
+const EventPlaceNotePage = lazyWithRetry(() => import("@pages/Event/EventPlaceNotePage"));
+const EventWriteMessagePage = lazyWithRetry(() => import("@pages/Event/EventWriteMessagePage"));
+const EventChooseNotePage = lazyWithRetry(() => import("@pages/Event/EventChooseNotePage"));
+const EventChooseNotePageV2 = lazyWithRetry(() => import("@pages/Event/EventChooseNotePageV2"));
+const EventThankYouPage = lazyWithRetry(() => import("@pages/Event/EventThankYouPage"));
+const Model3DFullscreenPage = lazyWithRetry(() => import("@pages/Event/Model3DFullscreenPage"));
 
 // Event Protected Route
-const EventProtectedRoute = lazy(() => import("@components/event/EventProtectedRoute"));
-
-// Interactive Experiences
-const BirthdayCake = lazy(() =>
-  import("@components/birthday-cake/BirthdayCake")
-);
-const TestNotesPage = lazy(() => import("@pages/Event/TestNotesPage"));
+const EventProtectedRoute = lazyWithRetry(() => import("@components/event/EventProtectedRoute"));
 
 // Ring Customizer
 const RingCustomizer = lazy(() =>
@@ -120,62 +110,78 @@ const RingCustomizer = lazy(() =>
 );
 
 // Product Finder
-const ProductFinderPage = lazy(() => import("@pages/ProductFinder/ProductFinderPage"));
-const ProductFinderResultPage = lazy(() => import("@pages/ProductFinder/ProductFinderResultPage"));
+const ProductFinderPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderPage"));
+const ProductFinderResultPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderResultPage"));
 
 // Inventory Management
-const InventoryLayout = lazy(() =>
+const InventoryLayout = lazyWithRetry(() =>
   import("@components/inventory/InventoryLayout")
 );
-const InventoryDashboard = lazy(() =>
+const InventoryDashboard = lazyWithRetry(() =>
   import("@components/inventory/Dashboard")
 );
-const InventoryScanner = lazy(() => import("@components/inventory/Scanner"));
-const InventoryProductForm = lazy(() =>
+const InventoryScanner = lazyWithRetry(() => import("@components/inventory/Scanner"));
+const InventoryProductForm = lazyWithRetry(() =>
   import("@components/inventory/ProductForm")
 );
-const InventoryProductList = lazy(() =>
+const InventoryProductList = lazyWithRetry(() =>
   import("@components/inventory/ProductList")
 );
-const InventoryProductDetail = lazy(() =>
+const InventoryProductDetail = lazyWithRetry(() =>
   import("@components/inventory/ProductDetail")
 );
-const InventoryPrintLabel = lazy(() =>
+const InventoryPrintLabel = lazyWithRetry(() =>
   import("@components/inventory/PrintLabel")
 );
-const InventoryCreateOrder = lazy(() =>
+const InventoryCreateOrder = lazyWithRetry(() =>
   import("@components/inventory/CreateOrder")
 );
-const InventoryInvoicePreview = lazy(() =>
+const InventoryInvoicePreview = lazyWithRetry(() =>
   import("@components/inventory/InvoicePreview")
 );
 
-// POD Admin Management
-const PodAdminLayout = lazy(() =>
-  import("@components/pod-admin/PodAdminLayout")
-);
-const PodAdminDashboard = lazy(() => import("@pages/PodAdmin/Dashboard"));
-const PodAdminPartners = lazy(() => import("@pages/PodAdmin/Partners"));
-const PodAdminPartnerCreate = lazy(() => import("@pages/PodAdmin/PartnerCreate"));
-const PodAdminPartnerDetail = lazy(() => import("@pages/PodAdmin/PartnerDetail"));
-const PodAdminPods = lazy(() => import("@pages/PodAdmin/Pods"));
-const PodAdminPodCreate = lazy(() => import("@pages/PodAdmin/PodCreate"));
-const PodAdminPodDetail = lazy(() => import("@pages/PodAdmin/PodDetail"));
-const PodAdminQrCodes = lazy(() => import("@pages/PodAdmin/QrCodes"));
-const PodAdminAttributions = lazy(() => import("@pages/PodAdmin/Attributions"));
-const PodAdminCommissions = lazy(() => import("@pages/PodAdmin/Commissions"));
-const PodAdminCommissionDetail = lazy(() => import("@pages/PodAdmin/CommissionDetail"));
+// POD Admin Management (pages nested under AdminDashboard)
+const PodAdminDashboard = lazyWithRetry(() => import("@pages/PodAdmin/Dashboard"));
+const PodAdminPartners = lazyWithRetry(() => import("@pages/PodAdmin/Partners"));
+const PodAdminPartnerCreate = lazyWithRetry(() => import("@pages/PodAdmin/PartnerCreate"));
+const PodAdminPartnerDetail = lazyWithRetry(() => import("@pages/PodAdmin/PartnerDetail"));
+const PodAdminPods = lazyWithRetry(() => import("@pages/PodAdmin/Pods"));
+const PodAdminPodCreate = lazyWithRetry(() => import("@pages/PodAdmin/PodCreate"));
+const PodAdminPodDetail = lazyWithRetry(() => import("@pages/PodAdmin/PodDetail"));
+const PodAdminPodLocations = lazyWithRetry(() => import("@pages/PodAdmin/PodLocations"));
+const PodAdminQrCodes = lazyWithRetry(() => import("@pages/PodAdmin/QrCodes"));
+const PodAdminScans = lazyWithRetry(() => import("@pages/PodAdmin/Scans"));
+const PodAdminUserAttributions = lazyWithRetry(() => import("@pages/PodAdmin/UserAttributions"));
+const PodAdminCommissions = lazyWithRetry(() => import("@pages/PodAdmin/Commissions"));
+const PodAdminCommissionDetail = lazyWithRetry(() => import("@pages/PodAdmin/CommissionDetail"));
 
 // POD Partner Portal
-const PartnerPortalLayout = lazy(() =>
+const PartnerPortalLayout = lazyWithRetry(() =>
   import("@components/partner-portal/PartnerPortalLayout")
 );
-const PartnerPortalDashboard = lazy(() => import("@pages/PartnerPortal/Dashboard"));
-const PartnerPortalPods = lazy(() => import("@pages/PartnerPortal/Pods"));
-const PartnerPortalQrCodes = lazy(() => import("@pages/PartnerPortal/QrCodes"));
-const PartnerPortalScans = lazy(() => import("@pages/PartnerPortal/Scans"));
-const PartnerPortalAttributions = lazy(() => import("@pages/PartnerPortal/Attributions"));
-const PartnerPortalCommissions = lazy(() => import("@pages/PartnerPortal/Commissions"));
+const PartnerPortalDashboard = lazyWithRetry(() => import("@pages/PartnerPortal/Dashboard"));
+const PartnerPortalPods = lazyWithRetry(() => import("@pages/PartnerPortal/Pods"));
+const PartnerPortalPodLocations = lazyWithRetry(() => import("@pages/PartnerPortal/PodLocations"));
+const PartnerPortalQrCodes = lazyWithRetry(() => import("@pages/PartnerPortal/QrCodes"));
+const PartnerPortalScans = lazyWithRetry(() => import("@pages/PartnerPortal/Scans"));
+const PartnerPortalUserAttributions = lazyWithRetry(() => import("@pages/PartnerPortal/UserAttributions"));
+const PartnerPortalCommissions = lazyWithRetry(() => import("@pages/PartnerPortal/Commissions"));
+
+// Phygital Partner Portal
+const PartnerPhygitalDashboard = lazyWithRetry(() => import("@pages/PartnerPortal/PhygitalDashboard"));
+const PartnerInventory = lazyWithRetry(() => import("@pages/PartnerPortal/Inventory"));
+const PartnerInventoryDetail = lazyWithRetry(() => import("@pages/PartnerPortal/InventoryDetail"));
+const PartnerWholesaleOrders = lazyWithRetry(() => import("@pages/PartnerPortal/WholesaleOrders"));
+const PartnerWholesaleOrderDetail = lazyWithRetry(() => import("@pages/PartnerPortal/WholesaleOrderDetail"));
+const PartnerSales = lazyWithRetry(() => import("@pages/PartnerPortal/Sales"));
+const PartnerSaleDetail = lazyWithRetry(() => import("@pages/PartnerPortal/SaleDetail"));
+const PartnerSalesReport = lazyWithRetry(() => import("@pages/PartnerPortal/SalesReport"));
+
+// Admin Wholesale
+const AdminWholesaleOrders = lazyWithRetry(() => import("@pages/PodAdmin/WholesaleOrders"));
+const AdminWholesaleOrderDetail = lazyWithRetry(() => import("@pages/PodAdmin/WholesaleOrderDetail"));
+const AdminPhygitalPartners = lazyWithRetry(() => import("@pages/PodAdmin/PhygitalPartners"));
+const AdminPhygitalPartnerDetail = lazyWithRetry(() => import("@pages/PodAdmin/PhygitalPartnerDetail"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -200,15 +206,10 @@ export default function AppRoutes() {
       ROUTES.SUPPORT,
       ROUTES.SUPPORT_DETAIL,
       ROUTES.CONTACT,
-      ROUTES.CONTACT_V2,
       ROUTES.ABOUT,
       ROUTES.LOCATIONS,
       ROUTES.NEWS,
-      ROUTES.NEWS_V2,
-      ROUTES.IMMERSIVE_SHOWROOM,
       ROUTES.BOOK_APPOINTMENT,
-      ROUTES.MILAN_SUBMIT,
-      `${ROUTES.MILAN_SUBMIT}/submit-success`,
       ROUTES.PRODUCTS_LEFT,
       ROUTES.USER_PROFILE,
       ROUTES.SCAVENGER_HUNT,
@@ -216,7 +217,6 @@ export default function AppRoutes() {
       ROUTES.DASHBOARD_ADMIN,
       ROUTES.DASHBOARD_VENDOR,
       ROUTES.DASHBOARD_DESIGNER,
-      ROUTES.UNIVERSE_FINAL,
       ROUTES.FORGOT_PASSWORD,
       ROUTES.PREMIUM,
       ROUTES.PREMIUM_DEV,
@@ -239,30 +239,27 @@ export default function AppRoutes() {
       ROUTES.INVENTORY_ADD_PRODUCT,
       ROUTES.INVENTORY_PRODUCTS,
       ROUTES.INVENTORY_PRINT,
-      ROUTES.BIRTHDAY_CAKE,
       ROUTES.DB_EXPLORER,
-      ROUTES.TEST_NOTES,
       ROUTES.RING_CUSTOMIZER,
       ROUTES.PRODUCT_FINDER,
       ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE,
       ROUTES.PRODUCT_FINDER_CHOOSE_BAND,
       ROUTES.PRODUCT_FINDER_RESULT,
-      // POD Admin routes
-      ROUTES.POD_ADMIN,
-      ROUTES.POD_ADMIN_DASHBOARD,
-      ROUTES.POD_ADMIN_PARTNERS,
-      ROUTES.POD_ADMIN_PODS,
-      ROUTES.POD_ADMIN_QRCODES,
-      ROUTES.POD_ADMIN_ATTRIBUTIONS,
-      ROUTES.POD_ADMIN_COMMISSIONS,
       // POD Partner Portal routes
       ROUTES.POD_PARTNER,
       ROUTES.POD_PARTNER_DASHBOARD,
       ROUTES.POD_PARTNER_PODS,
+      ROUTES.POD_PARTNER_LOCATIONS,
       ROUTES.POD_PARTNER_QRCODES,
       ROUTES.POD_PARTNER_SCANS,
-      ROUTES.POD_PARTNER_ATTRIBUTIONS,
+      ROUTES.POD_PARTNER_USER_ATTRIBUTIONS,
       ROUTES.POD_PARTNER_COMMISSIONS,
+      // Phygital Partner routes
+      ROUTES.POD_PARTNER_PHYGITAL_DASHBOARD,
+      ROUTES.POD_PARTNER_INVENTORY,
+      ROUTES.POD_PARTNER_WHOLESALE_ORDERS,
+      ROUTES.POD_PARTNER_SALES,
+      ROUTES.POD_PARTNER_SALES_REPORT,
     ];
 
     // Check exact matches
@@ -279,12 +276,9 @@ export default function AppRoutes() {
       location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
       location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
-      location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
       location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
-      location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
       location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
       location.pathname.startsWith(ROUTES.INVENTORY) ||
-      location.pathname.startsWith(ROUTES.POD_ADMIN) ||
       location.pathname.startsWith(ROUTES.POD_PARTNER)
     ) {
       return false;
@@ -297,7 +291,6 @@ export default function AppRoutes() {
 
   const staticRoutesToHideNavBar =
     is404 ||
-    location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
@@ -307,36 +300,27 @@ export default function AppRoutes() {
     location.pathname === ROUTES.PREMIUM ||
     location.pathname === ROUTES.PREMIUM_DEV ||
     location.pathname === ROUTES.MESH_INSPECTOR ||
-    location.pathname === ROUTES.BIRTHDAY_CAKE ||
-    location.pathname === ROUTES.TEST_NOTES ||
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
-    location.pathname.startsWith(ROUTES.POD_ADMIN) ||
     location.pathname.startsWith(ROUTES.POD_PARTNER) ||
     location.pathname === ROUTES.DB_EXPLORER ||
     location.pathname === ROUTES.RING_CUSTOMIZER;
 
   const staticRoutesToHideFooter =
     is404 ||
-    location.pathname.startsWith(ROUTES.UNIVERSE_FINAL) ||
     location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_ADMIN) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_VENDOR) ||
     location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
-    location.pathname.startsWith(ROUTES.MILAN_SUBMIT) ||
     location.pathname === ROUTES.HOME ||
     location.pathname === ROUTES.WELCOME ||
-    location.pathname === ROUTES.IMMERSIVE_SHOWROOM ||
     location.pathname === ROUTES.PREMIUM ||
     location.pathname === ROUTES.PREMIUM_DEV ||
     location.pathname === ROUTES.MESH_INSPECTOR ||
-    location.pathname === ROUTES.BIRTHDAY_CAKE ||
-    location.pathname === ROUTES.TEST_NOTES ||
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
     location.pathname.startsWith(ROUTES.INVENTORY) ||
-    location.pathname.startsWith(ROUTES.POD_ADMIN) ||
     location.pathname.startsWith(ROUTES.POD_PARTNER) ||
     location.pathname === ROUTES.DB_EXPLORER ||
     location.pathname === ROUTES.RING_CUSTOMIZER;
@@ -374,6 +358,8 @@ export default function AppRoutes() {
             <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
             <Route path={ROUTES.VERIFY_EMAIL} element={<EmailVerification />} />
 
+            <Route path="/q/:shortCode" element={<QrRedirect />} />
+
             <Route path={ROUTES.PRODUCTS} element={<ProductsPage />} />
 
             <Route path={ROUTES.PRODUCTS_V2} element={<ProductsV2 />} />
@@ -408,34 +394,18 @@ export default function AppRoutes() {
 
             <Route path={ROUTES.CONTACT} element={<ContactPage />} />
 
-            <Route path={ROUTES.CONTACT_V2} element={<ContactPageV2 />} />
-
             <Route path={ROUTES.ABOUT} element={<AboutPage />} />
 
             <Route path={ROUTES.LOCATIONS} element={<LocationsPage />} />
 
             <Route path={ROUTES.NEWS} element={<AllNewsPage />} />
 
-            <Route path={ROUTES.NEWS_V2} element={<AllNewsPageV2 />} />
-
             <Route path={ROUTES.NEWS_DETAIL} element={<NewsDetailWrapper />} />
-
-            <Route
-              path={ROUTES.IMMERSIVE_SHOWROOM}
-              element={<ImmersiveShowroomPage />}
-            />
 
             <Route
               path={ROUTES.BOOK_APPOINTMENT}
               element={<BookAppointmentPage />}
             />
-
-            {/* Milan Digital Jewelry Week - Route disabled (page still exists)
-            <Route path={ROUTES.MILAN_SUBMIT}>
-              <Route index element={<SubmitPage />} />
-              <Route path="submit-success" element={<SubmitSuccessPage />} />
-            </Route>
-            */}
 
             {/* for observing UI universe-section final */}
             <Route path="/universe-section" element={<UniverseSection />} />
@@ -501,7 +471,28 @@ export default function AppRoutes() {
                   <AdminDashboard />
                 </ProtectedRoute>
               }
-            />
+            >
+              {/* POD Admin child routes (rendered via Outlet in AdminDashboard) */}
+              <Route path="pod" element={<PodAdminDashboard />} />
+              <Route path="pod/dashboard" element={<PodAdminDashboard />} />
+              <Route path="pod/partners" element={<PodAdminPartners />} />
+              <Route path="pod/partners/create" element={<PodAdminPartnerCreate />} />
+              <Route path="pod/partners/:partnerId" element={<PodAdminPartnerDetail />} />
+              <Route path="pod/pods" element={<PodAdminPods />} />
+              <Route path="pod/pods/create" element={<PodAdminPodCreate />} />
+              <Route path="pod/pods/:podId" element={<PodAdminPodDetail />} />
+              <Route path="pod/locations" element={<PodAdminPodLocations />} />
+              <Route path="pod/qr-codes" element={<PodAdminQrCodes />} />
+              <Route path="pod/qr-codes/:qrCodeId" element={<PodAdminQrCodes />} />
+              <Route path="pod/scans" element={<PodAdminScans />} />
+              <Route path="pod/user-attributions" element={<PodAdminUserAttributions />} />
+              <Route path="pod/commissions" element={<PodAdminCommissions />} />
+              <Route path="pod/commissions/:commissionId" element={<PodAdminCommissionDetail />} />
+              <Route path="pod/wholesale-orders" element={<AdminWholesaleOrders />} />
+              <Route path="pod/wholesale-orders/:orderId" element={<AdminWholesaleOrderDetail />} />
+              <Route path="pod/phygital-partners" element={<AdminPhygitalPartners />} />
+              <Route path="pod/phygital-partners/:partnerId" element={<AdminPhygitalPartnerDetail />} />
+            </Route>
 
             <Route
               path={ROUTES.DASHBOARD_VENDOR}
@@ -539,10 +530,6 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT_THANKYOU} element={<EventProtectedRoute><EventThankYouPage /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_RING_VIEWER} element={<Model3DFullscreenPage />} />
 
-            {/* Interactive Experiences */}
-            <Route path={ROUTES.BIRTHDAY_CAKE} element={<BirthdayCake />} />
-            <Route path={ROUTES.TEST_NOTES} element={<TestNotesPage />} />
-
             {/* Ring Customizer */}
             <Route path={ROUTES.RING_CUSTOMIZER} element={<RingCustomizer />} />
 
@@ -568,32 +555,25 @@ export default function AppRoutes() {
               <Route path="invoice" element={<InventoryInvoicePreview />} />
             </Route>
 
-            {/* POD Admin Management Routes */}
-            <Route path={ROUTES.POD_ADMIN} element={<PodAdminLayout />}>
-              <Route index element={<PodAdminDashboard />} />
-              <Route path="dashboard" element={<PodAdminDashboard />} />
-              <Route path="partners" element={<PodAdminPartners />} />
-              <Route path="partners/create" element={<PodAdminPartnerCreate />} />
-              <Route path="partners/:partnerId" element={<PodAdminPartnerDetail />} />
-              <Route path="pods" element={<PodAdminPods />} />
-              <Route path="pods/create" element={<PodAdminPodCreate />} />
-              <Route path="pods/:podId" element={<PodAdminPodDetail />} />
-              <Route path="qr-codes" element={<PodAdminQrCodes />} />
-              <Route path="qr-codes/:qrCodeId" element={<PodAdminQrCodes />} />
-              <Route path="attributions" element={<PodAdminAttributions />} />
-              <Route path="commissions" element={<PodAdminCommissions />} />
-              <Route path="commissions/:commissionId" element={<PodAdminCommissionDetail />} />
-            </Route>
-
             {/* POD Partner Portal Routes */}
             <Route path={ROUTES.POD_PARTNER} element={<PartnerPortalLayout />}>
               <Route index element={<PartnerPortalDashboard />} />
               <Route path="dashboard" element={<PartnerPortalDashboard />} />
               <Route path="pods" element={<PartnerPortalPods />} />
+              <Route path="locations" element={<PartnerPortalPodLocations />} />
               <Route path="qr-codes" element={<PartnerPortalQrCodes />} />
               <Route path="scans" element={<PartnerPortalScans />} />
-              <Route path="attributions" element={<PartnerPortalAttributions />} />
+              <Route path="user-attributions" element={<PartnerPortalUserAttributions />} />
               <Route path="commissions" element={<PartnerPortalCommissions />} />
+              {/* Phygital Partner Routes */}
+              <Route path="phygital-dashboard" element={<PartnerPhygitalDashboard />} />
+              <Route path="inventory" element={<PartnerInventory />} />
+              <Route path="inventory/:inventoryId" element={<PartnerInventoryDetail />} />
+              <Route path="wholesale-orders" element={<PartnerWholesaleOrders />} />
+              <Route path="wholesale-orders/:orderId" element={<PartnerWholesaleOrderDetail />} />
+              <Route path="sales" element={<PartnerSales />} />
+              <Route path="sales/:saleId" element={<PartnerSaleDetail />} />
+              <Route path="sales-report" element={<PartnerSalesReport />} />
             </Route>
 
             {/* 404 - Catch all route for non-existent paths */}

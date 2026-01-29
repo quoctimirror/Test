@@ -20,7 +20,7 @@ export default function PodAdminCommissionDetail() {
   const fetchCommissionDetail = async () => {
     try {
       setLoading(true);
-      const response = await commissionApi.getById(commissionId);
+      const response = await commissionApi.getDetail(commissionId);
       setCommission(response.data);
       setError(null);
     } catch (err) {
@@ -303,6 +303,83 @@ export default function PodAdminCommissionDetail() {
           </p>
         </div>
       </div>
+
+      {/* Attributions / Orders */}
+      {commission.attributions && commission.attributions.length > 0 && (
+        <div className="pod-card" style={{ marginTop: "1rem" }}>
+          <h2 style={{ marginBottom: "1rem", fontSize: "1.125rem", fontWeight: 600 }}>
+            Attributed Orders ({commission.attributions.length})
+          </h2>
+          <div className="pod-table-container">
+            <table className="pod-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Contact</th>
+                  <th>POD</th>
+                  <th style={{ textAlign: "right" }}>Order Amount</th>
+                  <th style={{ textAlign: "right" }}>Attributed</th>
+                  <th>Order Date</th>
+                  <th style={{ textAlign: "center" }}>Days to Convert</th>
+                </tr>
+              </thead>
+              <tbody>
+                {commission.attributions.map((attr) => (
+                  <tr key={attr.id}>
+                    <td>
+                      <span style={{ fontFamily: "monospace", fontSize: "0.8rem" }}>
+                        {attr.orderId}
+                      </span>
+                    </td>
+                    <td>
+                      <strong>{attr.customerName || "-"}</strong>
+                    </td>
+                    <td>
+                      <div>
+                        {attr.customerPhone && (
+                          <div style={{ fontSize: "0.85rem" }}>{attr.customerPhone}</div>
+                        )}
+                        {attr.customerEmail && (
+                          <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>{attr.customerEmail}</div>
+                        )}
+                        {!attr.customerPhone && !attr.customerEmail && "-"}
+                      </div>
+                    </td>
+                    <td>{attr.podName || "-"}</td>
+                    <td style={{ textAlign: "right" }}>{formatCurrency(attr.orderAmount)}</td>
+                    <td style={{ textAlign: "right", fontWeight: 600 }}>{formatCurrency(attr.attributedAmount)}</td>
+                    <td>{formatDate(attr.orderPlacedAt)}</td>
+                    <td style={{ textAlign: "center" }}>
+                      {attr.daysToConversion != null ? (
+                        <span style={{
+                          background: attr.daysToConversion <= 1 ? "#dcfce7" : attr.daysToConversion <= 7 ? "#fef9c3" : "#fee2e2",
+                          color: attr.daysToConversion <= 1 ? "#166534" : attr.daysToConversion <= 7 ? "#854d0e" : "#991b1b",
+                          padding: "0.15rem 0.5rem",
+                          borderRadius: "9999px",
+                          fontSize: "0.8rem",
+                          fontWeight: 500,
+                        }}>
+                          {attr.daysToConversion}d
+                        </span>
+                      ) : "-"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {commission.attributions && commission.attributions.length === 0 && (
+        <div className="pod-card" style={{ marginTop: "1rem" }}>
+          <h2 style={{ marginBottom: "1rem", fontSize: "1.125rem", fontWeight: 600 }}>
+            Attributed Orders
+          </h2>
+          <p style={{ color: "#9ca3af", margin: 0 }}>No attributions found for this commission period.</p>
+        </div>
+      )}
 
       {/* Adjust Modal */}
       {showAdjustModal && (

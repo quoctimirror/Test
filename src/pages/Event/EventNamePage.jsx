@@ -53,8 +53,8 @@ const EventNamePage = () => {
         }
         const textWidth = measureRef.current.offsetWidth;
 
-        // Wrapper width = max of placeholder and text
-        const wrapperWidth = Math.max(placeholderWidth, textWidth);
+        // Wrapper width = max of placeholder and text + buffer for input caret/browser rendering
+        const wrapperWidth = Math.max(placeholderWidth, textWidth) + 10;
         const wrapper = inputRef.current.parentElement;
         if (wrapper) {
           wrapper.style.width = `${wrapperWidth}px`;
@@ -63,6 +63,9 @@ const EventNamePage = () => {
     };
 
     updateWidth();
+
+    // Re-calculate after fonts load (BrikeyMoura may load async)
+    document.fonts?.ready?.then(updateWidth);
 
     // Re-calculate on window resize for responsive
     window.addEventListener('resize', updateWidth);
@@ -167,7 +170,7 @@ const EventNamePage = () => {
           </div>
 
           <h2 className="heading-2--no-margin event-name__subtitle">
-            nguồn cảm hứng của giai điệu Love-Grown.
+            nguồn cảm hứng của giai điệu Love{'\u2011'}Grown.
           </h2>
 
           {/* Error Message */}

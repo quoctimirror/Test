@@ -259,7 +259,7 @@ const OrdersManager = () => {
       </div>
 
       {loading ? (
-        <div className="admin-empty-state">Loading orders…</div>
+        <div className="admin-loading-state">Loading orders…</div>
       ) : error ? (
         <div className="admin-error-state">{error}</div>
       ) : orders.length === 0 ? (

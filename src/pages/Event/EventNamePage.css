@@ -60,7 +60,6 @@
   flex-direction: column;
   align-items: center;
   width: 100vw;
-  padding: 0 48px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -109,6 +108,9 @@
   padding-bottom: 0.25rem;
   width: 100%;
   text-align: center;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .event-name__input::placeholder {

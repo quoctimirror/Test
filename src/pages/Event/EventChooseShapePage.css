@@ -61,7 +61,7 @@
   color: #000;
   text-align: center;
   z-index: 10;
-  margin-top: 160px;
+  margin-top: clamp(100px, 14vh, 160px);
 }
 
 /* Main Content Area */
@@ -356,7 +356,7 @@
 /* Place your note - Desktop: Top left corner */
 .event-choose-shape__note--desktop {
   position: fixed;
-  top: 120px;
+  top: clamp(76px, 11vh, 120px);
   left: 48px;
   max-width: 380px;
   z-index: 10;
@@ -396,6 +396,51 @@
   .event-choose-shape__select-text {
     bottom: 24px;
     height: 46px;
+  }
+}
+
+/* Choose shape button - fixed bottom center */
+.event-choose-shape__select-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+/* Animated dots for loading state */
+.event-choose-shape__loading-dots {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.event-choose-shape__loading-dot {
+  opacity: 0;
+  animation: chooseShapeDotFade 1.4s ease-in-out infinite;
+  margin-left: 1px;
+}
+
+.event-choose-shape__loading-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.event-choose-shape__loading-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.event-choose-shape__loading-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes chooseShapeDotFade {
+  0%, 20% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  60%, 100% {
+    opacity: 0;
   }
 }
 
@@ -478,7 +523,7 @@
 
   .event-choose-shape__title {
     margin-bottom: 0px;
-    margin-top: 160px;
+    margin-top: clamp(100px, 14vh, 160px);
   }
 
   .event-choose-shape__center {

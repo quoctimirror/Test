@@ -607,7 +607,7 @@ const WarehouseManagement = () => {
           </div>
         </div>
       ) : (
-        <div className="admin-empty-state">Loading statistics...</div>
+        <div className="admin-loading-state">Loading statistics...</div>
       )}
     </div>
   );
@@ -615,9 +615,7 @@ const WarehouseManagement = () => {
   // Loading state
   if (loading && warehouses.length === 0) {
     return (
-      <div className="admin-empty-state">
-        <div>Loading warehouse data...</div>
-      </div>
+      <div className="admin-loading-state">Loading warehouse data...</div>
     );
   }
 
