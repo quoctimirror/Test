@@ -231,6 +231,11 @@ const ProductFinderResultPage = () => {
       navigate(ROUTES.CONTACT);
     } catch (err) {
       console.error('Save selection failed:', err);
+      // If 401, redirect to login
+      if (err.response?.status === 401) {
+        navigate(`${ROUTES.AUTH}/login`, { state: { from: location } });
+        return;
+      }
       setSaveError('Lưu không thành công. Vui lòng thử lại.');
       setSaving(false);
     }
