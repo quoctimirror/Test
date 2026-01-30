@@ -84,3 +84,47 @@ export const AVAILABLE_SHAPES = Object.keys(SHAPE_CONFIGS);
 export const getShapeConfig = (shapeName) => {
   return SHAPE_CONFIGS[shapeName] || SHAPE_CONFIGS.New;
 };
+
+// ===== PRODUCT FINDER CONFIGURATIONS =====
+// Key format: {band}_{mainstone}_{sidestone}
+export const PRODUCT_FINDER_CONFIGS = {
+  'single_round_baguette': {
+    name: 'Single Round Baguette',
+    modelId: 'SLWfrDdYSqaqN9UFP1CXcA',
+    band: 'single',
+    mainStone: 'round',
+    sideStone: 'baguette',
+  },
+  'single_round_halfmoon': {
+    name: 'Single Round Half-Moon',
+    modelId: 'L9keKcLrTw-HM3ZONM_Yzg',
+    band: 'single',
+    mainStone: 'round',
+    sideStone: 'halfmoon',
+  },
+  'double_round_baguette': {
+    name: 'Double Round Baguette',
+    modelId: 'JXsWC993QZOv09hs6n3RLA',
+    band: 'double',
+    mainStone: 'round',
+    sideStone: 'baguette',
+  },
+  'double_round_halfmoon': {
+    name: 'Double Round Half-Moon',
+    modelId: 'Io_czZXZTXSmgotXryj5IQ',
+    band: 'double',
+    mainStone: 'round',
+    sideStone: 'halfmoon',
+  },
+};
+
+// Get Product Finder configuration by combination key
+export const getProductFinderConfig = (band, mainStone, sideStone) => {
+  const key = `${band}_${mainStone}_${sideStone}`;
+  return PRODUCT_FINDER_CONFIGS[key] || null;
+};
+
+// Get Product Finder configuration by key string
+export const getProductFinderConfigByKey = (key) => {
+  return PRODUCT_FINDER_CONFIGS[key] || null;
+};

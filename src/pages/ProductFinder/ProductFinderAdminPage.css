@@ -1,0 +1,298 @@
+.pf-admin {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.pf-admin__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.pf-admin__header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.pf-admin__loading,
+.pf-admin__error {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.125rem;
+}
+
+.pf-admin__error {
+  color: #dc2626;
+}
+
+/* Table */
+.pf-admin__table-container {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pf-admin__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pf-admin__table th,
+.pf-admin__table td {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.pf-admin__table th {
+  background: #f9fafb;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+}
+
+.pf-admin__table td {
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.pf-admin__row--inactive {
+  opacity: 0.5;
+  background: #f9fafb;
+}
+
+.pf-admin__cell--modelid {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pf-admin__empty {
+  color: #9ca3af;
+}
+
+.pf-admin__empty-row {
+  text-align: center;
+  color: #6b7280;
+  padding: 2rem !important;
+}
+
+/* Toggle button */
+.pf-admin__toggle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  transition: all 0.2s;
+}
+
+.pf-admin__toggle--active {
+  border-color: #10b981;
+  background: #10b981;
+  color: #fff;
+}
+
+/* Actions */
+.pf-admin__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Buttons */
+.pf-admin__btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.pf-admin__btn--primary {
+  background: #2563eb;
+  color: #fff;
+}
+
+.pf-admin__btn--primary:hover {
+  background: #1d4ed8;
+}
+
+.pf-admin__btn--edit {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.pf-admin__btn--edit:hover {
+  background: #e5e7eb;
+}
+
+.pf-admin__btn--delete {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.pf-admin__btn--delete:hover {
+  background: #fecaca;
+}
+
+.pf-admin__btn--add {
+  background: #f0fdf4;
+  color: #16a34a;
+  margin-top: 0.5rem;
+}
+
+.pf-admin__btn--remove {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 0.25rem 0.5rem;
+  min-width: 28px;
+}
+
+.pf-admin__btn--cancel {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.pf-admin__btn--save {
+  background: #10b981;
+  color: #fff;
+}
+
+.pf-admin__btn--save:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Modal */
+.pf-admin__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.pf-admin__modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.pf-admin__modal h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1a1a1a;
+}
+
+/* Form */
+.pf-admin__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.pf-admin__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pf-admin__form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.pf-admin__form-group input,
+.pf-admin__form-group select {
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.pf-admin__form-group input:focus,
+.pf-admin__form-group select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.pf-admin__form-group--checkbox {
+  flex-direction: row;
+  align-items: center;
+}
+
+.pf-admin__form-group--checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.pf-admin__form-group--checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.pf-admin__image-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.pf-admin__image-input input {
+  flex: 1;
+}
+
+/* Modal actions */
+.pf-admin__modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pf-admin {
+    padding: 1rem;
+  }
+
+  .pf-admin__header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .pf-admin__modal {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+}

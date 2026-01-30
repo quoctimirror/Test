@@ -1,6 +1,7 @@
 /**
  * ProductFinderResultPage - Shows recommended product based on quiz answers
  * Layout: Large product image left, info right
+ * Now supports 3 selections: diamond + band + sidestone
  */
 import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -8,8 +9,19 @@ import { ROUTES } from '@/constants/routes';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { productFinderAPI } from '@/services/api';
+import { getProductFinderConfigByKey } from '@/components/productsV2/shapeConfig';
 
 import './ProductFinderResultPage.css';
+
+// Helper to format price
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
 
 const ProductFinderResultPage = () => {
   const location = useLocation();
@@ -26,14 +38,19 @@ const ProductFinderResultPage = () => {
   const colorChangeHandlerRef = useRef(null);
   const colorsRef = useRef({ main: null, side: null, band: null });
 
+  // Get selections from location state
   const diamond = location.state?.diamond;
   const band = location.state?.band;
+  const sidestone = location.state?.sidestone;
   const savedSelections = location.state?.selections || {};
   const savedPrices = location.state?.prices || {};
   const savedEstimatedTotal = location.state?.estimatedTotal || 0;
+  const modelKey = location.state?.modelKey; // e.g., "single_round_baguette"
+  const passedModelId = location.state?.modelId; // modelId from shapeConfig
 
   useEffect(() => {
-    if (!diamond || !band) {
+    // Require all 3 selections
+    if (!diamond || !band || !sidestone) {
       navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
       return;
     }
@@ -42,21 +59,44 @@ const ProductFinderResultPage = () => {
 
     const fetchRecommendation = async () => {
       try {
+        // Try to get recommendation from API
         const response = await productFinderAPI.getRecommendation(
-          { diamond, band },
+          { diamond, band, sidestone },
           { signal: abortController.signal }
         );
         if (!abortController.signal.aborted) {
-          setProduct(response.data);
+          // Use modelId from location state if API doesn't provide one
+          const apiProduct = response.data;
+          setProduct({
+            ...apiProduct,
+            modelId: apiProduct.modelId || passedModelId,
+          });
         }
       } catch (err) {
         if (abortController.signal.aborted) return;
+
+        // If API fails (e.g., not implemented yet), use local data
         if (err.response?.status === 401) {
           navigate(ROUTES.AUTH_LOGIN, { state: { from: location } });
           return;
         }
-        const message = err.response?.data?.message || 'Đã có lỗi xảy ra';
-        setError(message);
+
+        // Fallback: build product from local config
+        const config = modelKey ? getProductFinderConfigByKey(modelKey) : null;
+        if (config || passedModelId) {
+          setProduct({
+            name: config?.name || `${band} ${diamond} ${sidestone}`.replace(/-/g, ' '),
+            description: `${diamond.charAt(0).toUpperCase() + diamond.slice(1)} diamond with ${band} band and ${sidestone} side stones.`,
+            estimatedTotal: savedEstimatedTotal,
+            estimatedTotalFormatted: formatPrice(savedEstimatedTotal),
+            modelId: passedModelId || config?.modelId,
+            images: [],
+          });
+          setError(null);
+        } else {
+          const message = err.response?.data?.message || 'Đã có lỗi xảy ra';
+          setError(message);
+        }
       } finally {
         if (!abortController.signal.aborted) {
           setLoading(false);
@@ -69,20 +109,18 @@ const ProductFinderResultPage = () => {
     return () => {
       abortController.abort();
     };
-  }, [diamond, band, navigate]);
+  }, [diamond, band, sidestone, navigate, passedModelId, modelKey, savedEstimatedTotal]);
 
-  // iJewel SDK: load 3D model with configurator (like PremiumDev.jsx)
+  // iJewel SDK: load 3D model with configurator
   useEffect(() => {
     if (!product?.modelId || !viewerContainerRef.current) return;
     if (!window.ijewelViewer?.loadModelById) {
       console.error('iJewel SDK not loaded');
       return;
     }
-    // Guard: prevent double initialization (e.g. React StrictMode, re-renders)
     if (isViewerInitializedRef.current) return;
     isViewerInitializedRef.current = true;
 
-    // Track whether this effect has been cleaned up so async callbacks bail out
     let cancelled = false;
 
     const handleViewerReady = (event) => {
@@ -91,7 +129,6 @@ const ProductFinderResultPage = () => {
       const viewer = event.detail.viewer;
       viewerRef.current = viewer;
 
-      // Setup color tracking after configurator loads
       setTimeout(() => {
         if (cancelled) return;
 
@@ -117,7 +154,6 @@ const ProductFinderResultPage = () => {
           return materials;
         };
 
-        // Save initial colors
         const materials = getMaterials();
         const lastTabColors = {};
         Object.keys(materialToTab).forEach(uuid => {
@@ -129,7 +165,6 @@ const ProductFinderResultPage = () => {
           }
         });
 
-        // Track color changes on click
         const handleColorChange = () => {
           setTimeout(() => {
             const currentMaterials = getMaterials();
@@ -144,13 +179,11 @@ const ProductFinderResultPage = () => {
             });
           }, 200);
         };
-        // Store ref so cleanup can remove it
         colorChangeHandlerRef.current = handleColorChange;
         document.addEventListener('click', handleColorChange);
       }, 4000);
     };
 
-    // Register listener BEFORE loadModelById (same pattern as PremiumDev.jsx)
     window.addEventListener('ijewel-viewer-ready', handleViewerReady);
 
     const initViewer = async () => {
@@ -183,9 +216,6 @@ const ProductFinderResultPage = () => {
         viewerRef.current.dispose();
         viewerRef.current = null;
       }
-      // Do NOT reset isViewerInitializedRef here.
-      // Ref persists across StrictMode cycles — resetting it lets the guard fail
-      // and loadModelById runs twice → 2 WebGL contexts → CONTEXT_LOST → crash.
     };
   }, [product]);
 
@@ -201,6 +231,8 @@ const ProductFinderResultPage = () => {
       await productFinderAPI.saveSelection({
         diamond,
         band,
+        sidestone,
+        modelKey,
         mainColor: colorsRef.current.main,
         sideColor: colorsRef.current.side,
         bandColor: colorsRef.current.band,
@@ -238,11 +270,11 @@ const ProductFinderResultPage = () => {
     );
   }
 
-  if (error) {
+  if (error || !product) {
     return (
       <div className="product-finder-result" data-navbar-theme="black">
         <div className="product-finder-result__loading">
-          <p className="bodytext-5--no-margin">{error}</p>
+          <p className="bodytext-5--no-margin">{error || 'Không tìm thấy sản phẩm'}</p>
           <GlassThemeButton theme="event_dark" onClick={handleRetake}>
             Thử lại
           </GlassThemeButton>
@@ -272,7 +304,15 @@ const ProductFinderResultPage = () => {
             ))
           ) : (
             <div className="product-finder-result__no-image">
-              <p>No image available</p>
+              <img
+                src={`/product-finder/a1_${band}_${diamond}_${sidestone}.png`}
+                alt={product.name}
+                className="product-finder-result__image"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.innerHTML = '<p>No image available</p>';
+                }}
+              />
             </div>
           )}
         </div>
@@ -287,6 +327,22 @@ const ProductFinderResultPage = () => {
             <p className="product-finder-result__description bodytext-5--no-margin">
               {product.description}
             </p>
+
+            {/* Selection Summary */}
+            <div className="product-finder-result__selections">
+              <div className="product-finder-result__selection-item">
+                <span className="product-finder-result__selection-label">Main Stone:</span>
+                <span className="product-finder-result__selection-value">{diamond}</span>
+              </div>
+              <div className="product-finder-result__selection-item">
+                <span className="product-finder-result__selection-label">Band:</span>
+                <span className="product-finder-result__selection-value">{band}</span>
+              </div>
+              <div className="product-finder-result__selection-item">
+                <span className="product-finder-result__selection-label">Side Stones:</span>
+                <span className="product-finder-result__selection-value">{sidestone}</span>
+              </div>
+            </div>
 
             <p className="product-finder-result__price">
               {product.estimatedTotalFormatted}
