@@ -301,6 +301,8 @@ export const ordersAPI = {
       `/api/orders/${orderId}/payment-schedule/${scheduleId}/payments`,
       payload
     ),
+  getPaymentTransactions: (orderId) =>
+    api.get(`/api/orders/${orderId}/payment-transactions`),
 
   // NEW: Order Workflow endpoints (MISA SKU enforcement)
   confirm: (id, data) => api.post(`/api/orders/${id}/confirm`, data),
@@ -503,72 +505,6 @@ export const collectionsAPI = {
 };
 
 // ===== SKU DEFINITIONS API =====
-export const skusAPI = {
-  // Get all active SKU definitions
-  getAll: () =>
-    api.get("/api/skus").then((response) => ({
-      ...response,
-      data: (response.data || []).map((item) => ({
-        ...item,
-        categoryName: item.skuName,
-        categoryCode: item.skuCode,
-      })),
-    })),
-
-  // Get SKU definition by ID
-  getById: (id) =>
-    api.get(`/api/skus/${id}`).then((response) => ({
-      ...response,
-      data: response.data
-        ? {
-            ...response.data,
-            categoryName: response.data.skuName,
-            categoryCode: response.data.skuCode,
-          }
-        : response.data,
-    })),
-
-  // Get SKU definition by name
-  getByName: (name) =>
-    api.get(`/api/skus/name/${encodeURIComponent(name)}`).then((response) => ({
-      ...response,
-      data: response.data
-        ? {
-            ...response.data,
-            categoryName: response.data.skuName,
-            categoryCode: response.data.skuCode,
-          }
-        : response.data,
-    })),
-
-  // Check if SKU exists by name
-  checkExists: (name) =>
-    api.get(`/api/skus/exists/${encodeURIComponent(name)}`),
-
-  // Get active count
-  getActiveCount: () => api.get("/api/skus/count"),
-
-  // CRUD operations
-  create: (skuData) => {
-    const payload = {
-      skuName: skuData.skuName ?? skuData.categoryName,
-      description: skuData.description ?? skuData.categoryDescription,
-      skuCode: skuData.skuCode ?? skuData.categoryCode,
-    };
-    return api.post("/api/skus", payload);
-  },
-  update: (id, skuData) => {
-    const payload = {
-      skuName: skuData.skuName ?? skuData.categoryName,
-      description: skuData.description ?? skuData.categoryDescription,
-      skuCode: skuData.skuCode ?? skuData.categoryCode,
-    };
-    return api.put(`/api/skus/${id}`, payload);
-  },
-  delete: (id) => api.delete(`/api/skus/${id}`),
-  deactivate: (id) => api.patch(`/api/skus/${id}/deactivate`),
-};
-
 // ===== CATEGORIES API (MISA Product Categories - READ ONLY) =====
 export const categoriesAPI = {
   // Get all active categories synced from MISA
@@ -629,8 +565,8 @@ export const componentsAPI = {
       ...response,
       data: (response.data || []).map((component) => ({
         ...component,
-        categoryId: component.skuId,
-        categoryName: component.skuName,
+        categoryId: component.productId,
+        categoryName: component.productName,
       })),
     })),
 
@@ -641,20 +577,31 @@ export const componentsAPI = {
       data: response.data
         ? {
             ...response.data,
-            categoryId: response.data.skuId,
-            categoryName: response.data.skuName,
+            categoryId: response.data.productId,
+            categoryName: response.data.productName,
           }
         : response.data,
     })),
 
-  // Get components by SKU definition ID (legacy name kept for compatibility)
-  getByCategoryId: (skuId) =>
-    api.get(`/api/components/sku/${skuId}`).then((response) => ({
+  // Get components by product ID
+  getByProductId: (productId) =>
+    api.get(`/api/components/product/${productId}`).then((response) => ({
       ...response,
       data: (response.data || []).map((component) => ({
         ...component,
-        categoryId: component.skuId,
-        categoryName: component.skuName,
+        categoryId: component.productId,
+        categoryName: component.productName,
+      })),
+    })),
+
+  // Legacy alias
+  getByCategoryId: (productId) =>
+    api.get(`/api/components/product/${productId}`).then((response) => ({
+      ...response,
+      data: (response.data || []).map((component) => ({
+        ...component,
+        categoryId: component.productId,
+        categoryName: component.productName,
       })),
     })),
 
@@ -663,11 +610,11 @@ export const componentsAPI = {
     api.get(`/api/components/name/${encodeURIComponent(name)}`),
 
   // Check if component exists
-  checkExists: (name, skuId) =>
+  checkExists: (name, productId) =>
     api.get(
       `/api/components/exists/${encodeURIComponent(
         name
-      )}/sku/${skuId}`
+      )}/product/${productId}`
     ),
 
   // Get active count
@@ -677,7 +624,7 @@ export const componentsAPI = {
   create: (componentData) => {
     const payload = {
       ...componentData,
-      skuId: componentData.skuId ?? componentData.categoryId,
+      productId: componentData.productId ?? componentData.categoryId,
     };
     delete payload.categoryId;
     return api.post("/api/components", payload);
@@ -685,7 +632,7 @@ export const componentsAPI = {
   update: (id, componentData) => {
     const payload = {
       ...componentData,
-      skuId: componentData.skuId ?? componentData.categoryId,
+      productId: componentData.productId ?? componentData.categoryId,
     };
     delete payload.categoryId;
     return api.put(`/api/components/${id}`, payload);

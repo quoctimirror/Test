@@ -59,8 +59,8 @@ __pycache__/
 
 # AI/Agent documentation
 REACT_BEST_PRACTICES.md
-docs/PODS_SYSTEM_REQUIREMENTS.md
-docs/diagrams/
+docs/
+wireframes/
 
 # DMM images (served from Cloudflare R2)
 src/assets/images/dmm/
