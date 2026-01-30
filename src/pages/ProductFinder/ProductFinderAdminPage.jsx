@@ -9,6 +9,7 @@ const ProductFinderAdminPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingCombination, setEditingCombination] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [actionMessage, setActionMessage] = useState({ type: '', text: '' });
 
   // Options for dropdowns
   const [bandOptions, setBandOptions] = useState([]);
@@ -60,6 +61,19 @@ const ProductFinderAdminPage = () => {
     loadCombinations();
     loadOptions();
   }, [loadCombinations, loadOptions]);
+
+  // Auto-clear action message after 5 seconds
+  useEffect(() => {
+    if (actionMessage.text) {
+      const timer = setTimeout(() => setActionMessage({ type: '', text: '' }), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [actionMessage]);
+
+  // Show action message (replaces alert())
+  const showMessage = (type, text) => {
+    setActionMessage({ type, text });
+  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -140,9 +154,10 @@ const ProductFinderAdminPage = () => {
 
       setShowModal(false);
       loadCombinations();
+      showMessage('success', 'Combination saved successfully');
     } catch (err) {
       console.error('Failed to save combination:', err);
-      alert(err.response?.data?.message || 'Failed to save combination');
+      showMessage('error', err.response?.data?.message || 'Failed to save combination');
     } finally {
       setSaving(false);
     }
@@ -153,9 +168,10 @@ const ProductFinderAdminPage = () => {
     try {
       await productFinderAdminAPI.toggleCombination(id);
       loadCombinations();
+      showMessage('success', 'Status updated');
     } catch (err) {
       console.error('Failed to toggle combination:', err);
-      alert('Failed to toggle combination status');
+      showMessage('error', 'Failed to toggle combination status');
     }
   };
 
@@ -168,9 +184,10 @@ const ProductFinderAdminPage = () => {
     try {
       await productFinderAdminAPI.deleteCombination(id);
       loadCombinations();
+      showMessage('success', 'Combination deleted');
     } catch (err) {
       console.error('Failed to delete combination:', err);
-      alert('Failed to delete combination');
+      showMessage('error', 'Failed to delete combination');
     }
   };
 
@@ -198,6 +215,14 @@ const ProductFinderAdminPage = () => {
           + Add New Combination
         </button>
       </div>
+
+      {/* Action message toast */}
+      {actionMessage.text && (
+        <div className={`pf-admin__toast pf-admin__toast--${actionMessage.type}`}>
+          {actionMessage.text}
+          <button onClick={() => setActionMessage({ type: '', text: '' })}>×</button>
+        </div>
+      )}
 
       <div className="pf-admin__table-container">
         <table className="pf-admin__table">

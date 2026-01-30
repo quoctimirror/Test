@@ -7,21 +7,12 @@ import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import { formatPrice } from '@/utils/formatPrice';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { productFinderAPI } from '@/services/api';
 import { getProductFinderConfigByKey } from '@/components/productsV2/shapeConfig';
 
 import './ProductFinderResultPage.css';
-
-// Helper to format price
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
-};
 
 const ProductFinderResultPage = () => {
   const location = useLocation();

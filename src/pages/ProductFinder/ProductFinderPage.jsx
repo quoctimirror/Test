@@ -8,20 +8,11 @@ import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
 import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+import { formatPrice } from '@/utils/formatPrice';
 import { productFinderAPI } from '@/services/api';
 import { getProductFinderConfig } from '@/components/productsV2/shapeConfig';
 
 import './ProductFinderPage.css';
-
-// Helper to format price
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price);
-};
 
 // Orbit configuration
 const orbitRadii = {
