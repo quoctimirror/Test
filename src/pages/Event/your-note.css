@@ -163,7 +163,7 @@
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
 }
 
-/* Phase 2: Ledger line for random Đô notes */
+/* Phase 2: Ledger line for random Do notes */
 .place-note-new__random-note--position-do::before {
   content: '';
   position: absolute;
@@ -563,7 +563,7 @@
   overflow: visible !important;
 }
 
-/* Ledger line bar behind Đồ note (position 0) */
+/* Ledger line bar behind Do note (position 0) */
 .place-note-new__diamond--position-do::before {
   content: '';
   position: absolute;

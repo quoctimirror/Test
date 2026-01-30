@@ -91,13 +91,10 @@ const EventGuidePage = lazyWithRetry(() => import("@pages/Event/EventGuidePage")
 const EventLoginPage = lazyWithRetry(() => import("@pages/Event/EventLoginPage"));
 const EventNamePage = lazyWithRetry(() => import("@pages/Event/EventNamePage"));
 const EventChooseShapePage = lazyWithRetry(() => import("@pages/Event/EventChooseShapePage"));
-const EventDisplayPage = lazyWithRetry(() => import("@pages/Event/EventDisplayPage"));
 const EventAdminPage = lazyWithRetry(() => import("@pages/Event/EventAdminPage"));
-const ChristmasMusicPage = lazyWithRetry(() => import("@pages/Event/ChristmasMusicPage"));
 const EventPlaceNotePage = lazyWithRetry(() => import("@pages/Event/EventPlaceNotePage"));
 const EventWriteMessagePage = lazyWithRetry(() => import("@pages/Event/EventWriteMessagePage"));
 const EventChooseNotePage = lazyWithRetry(() => import("@pages/Event/EventChooseNotePage"));
-const EventChooseNotePageV2 = lazyWithRetry(() => import("@pages/Event/EventChooseNotePageV2"));
 const EventThankYouPage = lazyWithRetry(() => import("@pages/Event/EventThankYouPage"));
 const Model3DFullscreenPage = lazyWithRetry(() => import("@pages/Event/Model3DFullscreenPage"));
 
@@ -226,13 +223,10 @@ export default function AppRoutes() {
       ROUTES.EVENT_LOGIN,
       ROUTES.EVENT_NAME,
       ROUTES.EVENT_CHOOSE_SHAPE,
-      ROUTES.EVENT_DISPLAY,
       ROUTES.EVENT_ADMIN,
-      ROUTES.EVENT_CHRISTMAS,
       ROUTES.EVENT_PLACE_NOTE,
       ROUTES.EVENT_WRITE_MESSAGE,
       ROUTES.EVENT_CHOOSE_NOTE,
-      ROUTES.EVENT_CHOOSE_NOTE_V2,
       ROUTES.INVENTORY,
       ROUTES.INVENTORY_DASHBOARD,
       ROUTES.INVENTORY_SCANNER,
@@ -516,9 +510,7 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT} element={<EventPage />} />
             <Route path={ROUTES.EVENT_GUIDE} element={<EventGuidePage />} />
             <Route path={ROUTES.EVENT_LOGIN} element={<EventLoginPage />} />
-            <Route path={ROUTES.EVENT_DISPLAY} element={<EventDisplayPage />} />
             <Route path={ROUTES.EVENT_ADMIN} element={<EventAdminPage />} />
-            <Route path={ROUTES.EVENT_CHRISTMAS} element={<ChristmasMusicPage />} />
 
             {/* Event Routes - Protected (require login) */}
             <Route path={ROUTES.EVENT_NAME} element={<EventProtectedRoute><EventNamePage /></EventProtectedRoute>} />
@@ -526,7 +518,6 @@ export default function AppRoutes() {
             <Route path={ROUTES.EVENT_PLACE_NOTE} element={<EventProtectedRoute><EventPlaceNotePage /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_WRITE_MESSAGE} element={<EventProtectedRoute><EventWriteMessagePage /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_CHOOSE_NOTE} element={<EventProtectedRoute><EventChooseNotePage /></EventProtectedRoute>} />
-            <Route path={ROUTES.EVENT_CHOOSE_NOTE_V2} element={<EventProtectedRoute><EventChooseNotePageV2 /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_THANKYOU} element={<EventProtectedRoute><EventThankYouPage /></EventProtectedRoute>} />
             <Route path={ROUTES.EVENT_RING_VIEWER} element={<Model3DFullscreenPage />} />
 

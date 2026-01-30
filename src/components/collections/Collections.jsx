@@ -1,4 +1,4 @@
-// Thêm 'useState', 'useEffect' từ React
+// Add 'useState', 'useEffect' from React
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
@@ -101,7 +101,7 @@ function Collection() {
     fetchCollections();
   }, []);
 
-  // Auto-rotate images every 3 seconds - reset khi user click arrow
+  // Auto-rotate images every 3 seconds - reset when user clicks arrow
   useEffect(() => {
     const interval = setInterval(() => {
       setSlideDirection("right");
@@ -109,22 +109,22 @@ function Collection() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [currentIndex]); // Thêm currentIndex vào dependency để reset interval khi index thay đổi
+  }, [currentIndex]); // Add currentIndex to dependency to reset interval when index changes
 
-  // MỚI: Hàm handleNext được đơn giản hóa tối đa
+  // Simplified handleNext function
   const handleNext = () => {
     setSlideDirection("right");
     setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
-    // Interval sẽ tự động reset nhờ useEffect dependency [currentIndex]
+    // Interval will auto-reset via useEffect dependency [currentIndex]
   };
 
-  // MỚI: Hàm handlePrevious được đơn giản hóa tối đa
+  // Simplified handlePrevious function
   const handlePrevious = () => {
     setSlideDirection("left");
     setCurrentIndex(
       (prevIndex) => (prevIndex - 1 + products.length) % products.length
     );
-    // Interval sẽ tự động reset nhờ useEffect dependency [currentIndex]
+    // Interval will auto-reset via useEffect dependency [currentIndex]
   };
 
   const currentProduct = products[currentIndex];
@@ -215,7 +215,7 @@ function Collection() {
                 ariaLabel="Previous Product"
               />
 
-              {/* MỚI: Áp dụng class động dựa trên slideDirection */}
+              {/* Apply dynamic class based on slideDirection */}
               <div
                 className={`product-image-container slide-effect-${slideDirection}`}
                 key={`${currentProduct.id}-${slideDirection}`}

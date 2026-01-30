@@ -297,7 +297,7 @@ const Section3 = () => {
           />
 
           <div className="pv2-section3-carousel-container" ref={carouselRef}>
-            {/* Duplicate 10 lần để buffer lớn hơn cho arrow scrolling */}
+            {/* Duplicate 10 times for larger buffer for arrow scrolling */}
             {[...Array(10)].map((_, setIndex) => (
               <React.Fragment key={setIndex}>
                 <div className="pv2-section3-carousel-item">

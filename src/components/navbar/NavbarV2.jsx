@@ -143,7 +143,7 @@ export default function NavbarV2() {
   }, [isHomePage]);
 
   const performTransition = async (route, options = {}) => {
-    // Sử dụng optimized transition system
+    // Use optimized transition system
     await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
   };
 
@@ -419,7 +419,7 @@ export default function NavbarV2() {
         />
       )}
 
-      {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
+      {/* SEPARATE DIV FOR LOGO BLEND ONLY */}
       <div
         className={`logo-v2-fixed-container navbar-v2-theme-${navbarTheme} ${
           isHomePage && !isMenuOpen ? "no-blend" : ""
@@ -436,7 +436,7 @@ export default function NavbarV2() {
         />
       </div>
 
-      {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
+      {/* MENU AND ACCOUNT LINK WITH BLEND MODE */}
       {!shouldHideButtons && (
         <div
           className={`menu-v2-fixed-container navbar-v2-theme-${navbarTheme} ${
@@ -697,14 +697,14 @@ export default function NavbarV2() {
         </div>
       )}
 
-      {/* IMMERSIVE BUTTON - chỉ glassmorphism */}
+      {/* IMMERSIVE BUTTON - glassmorphism only */}
       {!shouldHideButtons && (
         <>
           <div className="immersive-v2-fixed-container">
             <button className="immersive-v2-button"></button>
           </div>
 
-          {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
+          {/* SEPARATE BORDER - mix-blend-mode only */}
           <div
             className={`immersive-v2-border-container navbar-v2-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""
@@ -715,7 +715,7 @@ export default function NavbarV2() {
             <div className="immersive-v2-border"></div>
           </div>
 
-          {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
+          {/* SEPARATE TEXT - mix-blend-mode only */}
           <div
             className={`immersive-v2-text-container navbar-v2-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""

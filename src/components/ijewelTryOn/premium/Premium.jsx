@@ -86,7 +86,7 @@ const Premium = () => {
   }, []);
 
   // Apply rotation config based on hand/finger/camera
-  // fingerOverride: dùng khi muốn áp dụng ngay cho finger mới (tránh giật)
+  // fingerOverride: used when applying immediately for new finger (to avoid jitter)
   const applyRotationConfig = useCallback((fingerOverride) => {
     if (isManualRotationRef.current) return;
 
@@ -106,20 +106,20 @@ const Premium = () => {
       arPlugin.modelRotation.y = (fingerConfig.y * Math.PI) / 180;
       arPlugin.modelRotation.z = (fingerConfig.z * Math.PI) / 180;
     } else {
-      // Không có config cho ngón này → reset về 0
+      // No config for this finger -> reset to 0
       arPlugin.modelRotation.y = 0;
       arPlugin.modelRotation.z = 0;
     }
   }, [getDetectedHand]);
 
-  // Set finger VÀ áp dụng rotation config NGAY LẬP TỨC (tránh giật)
+  // Set finger AND apply rotation config IMMEDIATELY (to avoid jitter)
   const setFingerWithRotation = useCallback((newFinger) => {
     const arPlugin = arPluginRef.current;
     if (!arPlugin) return;
 
-    // Áp dụng rotation config TRƯỚC khi set finger
+    // Apply rotation config BEFORE setting finger
     applyRotationConfig(newFinger);
-    // Sau đó mới set finger cho SDK
+    // Then set finger for SDK
     arPlugin.finger = newFinger;
     setCurrentFinger(newFinger);
   }, [applyRotationConfig]);
@@ -241,7 +241,7 @@ const Premium = () => {
         arPlugin.fromJSON(fileConfig?.tryonConfig);
       }
 
-      // Ẩn model trước khi AR start (sẽ hiện lại khi detect được tay via rAF loop)
+      // Hide model before AR start (will show again when hand detected via rAF loop)
       const modelRoot = viewerApp?.scene?.modelRoot;
       if (modelRoot) {
         modelRoot.visible = false;
@@ -249,7 +249,7 @@ const Premium = () => {
 
       await arPlugin.start();
 
-      // Set finger after AR started - dùng setFingerWithRotation để tránh giật
+      // Set finger after AR started - use setFingerWithRotation to avoid jitter
       setFingerWithRotation(3);
 
       if (isMobile) {
@@ -285,7 +285,7 @@ const Premium = () => {
       arPluginRef.current = null;
     }
 
-    // Hiện lại model khi thoát AR
+    // Show model again when exiting AR
     const modelRoot = viewerAppRef.current?.scene?.modelRoot;
     if (modelRoot) {
       modelRoot.visible = true;
@@ -411,7 +411,7 @@ const Premium = () => {
   const handleDownload = () => {
     if (!capturedImage) return;
 
-    // Format: DD-MM-YYYY theo múi giờ Việt Nam (UTC+7)
+    // Format: DD-MM-YYYY in Vietnam timezone (UTC+7)
     const vietnamDate = new Intl.DateTimeFormat('vi-VN', {
       timeZone: 'Asia/Ho_Chi_Minh',
       day: '2-digit',

@@ -376,7 +376,7 @@ const Products = () => {
         <>
             <div className="pv2-products-main-wrapper" data-navbar-theme="black">
                 <div className="pv2-products-container">
-                    {/* Left side - LeftContainer chứa Section1 và Section2 */}
+                    {/* Left side - LeftContainer contains Section1 and Section2 */}
                     <LeftContainer productConfig={productConfig} />
 
                     {/* Right side - Configuration */}

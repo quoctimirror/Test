@@ -49,13 +49,10 @@ export const ROUTES = {
   EVENT_LOGIN: "/the-muse-of-love-grown/login",
   EVENT_NAME: "/the-muse-of-love-grown/name",
   EVENT_CHOOSE_SHAPE: "/the-muse-of-love-grown/choose-shape",
-  EVENT_DISPLAY: "/the-muse-of-love-grown/display",
   EVENT_ADMIN: "/the-muse-of-love-grown/admin",
-  EVENT_CHRISTMAS: "/the-muse-of-love-grown/christmas",
   EVENT_PLACE_NOTE: "/the-muse-of-love-grown/your-note", // New place note screen (step 1)
   EVENT_WRITE_MESSAGE: "/the-muse-of-love-grown/your-melody", // Write message screen (step 2)
   EVENT_CHOOSE_NOTE: "/the-muse-of-love-grown/your-wallpaper", // Your wallpaper screen (step 3)
-  EVENT_CHOOSE_NOTE_V2: "/the-muse-of-love-grown/your-wallpaper-2", // Your wallpaper screen v2 (simplified)
   EVENT_THANKYOU: "/the-muse-of-love-grown/mirror-thankyou", // Thank you screen (final)
   EVENT_RING_VIEWER: "/the-muse-of-love-grown/ring-viewer", // Fullscreen 3D ring viewer
 

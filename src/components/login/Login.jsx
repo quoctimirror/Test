@@ -58,12 +58,12 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    // Chuyển thành hàm async
+    // Convert to async function
     e.preventDefault();
     if (!validateForm()) return;
 
     setIsLoading(true);
-    setErrors({}); // Xóa lỗi cũ trước khi gọi API
+    setErrors({}); // Clear old errors before calling API
 
     const payload = {
       username: loginInput.trim(),
@@ -71,10 +71,10 @@ const Login = () => {
     };
 
     try {
-      // Sử dụng login function từ AuthContext
+      // Use login function from AuthContext
       await login(payload.username, payload.password);
 
-      // Quay về trang trước (nếu được redirect từ trang khác), không thì về Profile
+      // Return to previous page (if redirected from another page), otherwise go to Profile
       const from = location.state?.from;
       if (from) {
         navigate(from.pathname, { replace: true, state: from.state });
@@ -82,10 +82,10 @@ const Login = () => {
         navigate(ROUTES.USER_PROFILE, { replace: true });
       }
     } catch (error) {
-      // --- XỬ LÝ KHI THẤT BẠI ---
+      // --- HANDLE FAILURE ---
       let errorMessage = "An unexpected error occurred. Please try again.";
       if (error.response) {
-        // Lỗi từ server (4xx, 5xx)
+        // Server error (4xx, 5xx)
         console.error("API Error:", error.response.data);
         errorMessage =
           error.response.data.message || "Invalid username or password.";
@@ -95,13 +95,13 @@ const Login = () => {
           setErrors({ login: "User not found or account is locked." });
         }
       } else if (error.request) {
-        // Lỗi không kết nối được server
+        // Cannot connect to server
         errorMessage =
           "Cannot connect to the server. Please check your network.";
         setErrors({ form: errorMessage });
       }
       console.error("Login failed:", error);
-      // Bạn có thể hiển thị lỗi này trên form
+      // You can display this error on the form
       // setErrors(prev => ({...prev, form: errorMessage}));
     } finally {
       setIsLoading(false);
@@ -121,9 +121,9 @@ const Login = () => {
         <h1 className="heading-1--no-margin login-title">WELCOME BACK!</h1>
 
         <form className="login-form" onSubmit={handleSubmit} noValidate>
-          {/* === THAY ĐỔI BẮT ĐẦU TỪ ĐÂY === */}
+          {/* === CHANGES START HERE === */}
 
-          {/* Cụm Input cho Username/Email */}
+          {/* Input group for Username/Email */}
           <div className="form-field-container">
             <div className="input-group">
               <input
@@ -142,7 +142,7 @@ const Login = () => {
                 Username/Email
               </label>
             </div>
-            {/* Chuyển lỗi ra ngoài input-group */}
+            {/* Move error outside input-group */}
             {errors.login && (
               <p className="bodytext-4--no-margin input-error">
                 {errors.login}
@@ -150,7 +150,7 @@ const Login = () => {
             )}
           </div>
 
-          {/* Cụm Input cho Password */}
+          {/* Input group for Password */}
           <div className="form-field-container">
             <div className="input-group password-group">
               <input
@@ -182,7 +182,7 @@ const Login = () => {
                 />
               </button>
             </div>
-            {/* Chuyển lỗi ra ngoài input-group */}
+            {/* Move error outside input-group */}
             {errors.password && (
               <p className="bodytext-4--no-margin input-error">
                 {errors.password}
@@ -190,7 +190,7 @@ const Login = () => {
             )}
           </div>
 
-          {/* === KẾT THÚC THAY ĐỔI === */}
+          {/* === END OF CHANGES === */}
 
           <div className="forgot-password-wrapper">
             <Link

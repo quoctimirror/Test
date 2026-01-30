@@ -273,7 +273,7 @@
   }
 }
 
-/* Mobile (425px và xuống) */
+/* Mobile (425px and below) */
 @media screen and (max-width: 425px) {
   .section3-collection-detail {
     min-height: auto;

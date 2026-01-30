@@ -52,7 +52,7 @@ const numberToVietnameseWords = (num) => {
   // Capitalize first letter
   result = result.charAt(0).toUpperCase() + result.slice(1) + " đồng";
 
-  // Check if it's exact (chẵn)
+  // Check if it's exact (even amount)
   if (num % 1000 === 0) {
     result += " chẵn";
   }
@@ -72,7 +72,7 @@ const LuxuryInvoice = forwardRef(({
   invoiceCode = "2C25MYY",
   invoiceNumber = "<Chưa cấp số>",
   invoiceDate = new Date(),
-  taxAuthCode = "", // Mã CQT
+  taxAuthCode = "", // Tax Authority Code
   qrCodeUrl = "",
 
   // Customer info

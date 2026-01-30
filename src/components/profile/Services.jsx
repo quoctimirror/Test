@@ -2,7 +2,7 @@ import React from "react";
 import "./ProfileTabs.css";
 
 const Services = () => {
-  // Mock data - sẽ thay bằng API call sau
+  // Mock data - will be replaced with API call later
   const services = [
     {
       id: 1,

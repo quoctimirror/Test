@@ -31,11 +31,11 @@ const ParallaxScrolling = () => {
 
   const getImageTransform = (imageIndex) => {
     const screenHeight = window.innerHeight;
-    const stickyStart = 0; // Bắt đầu sticky ngay từ đầu trang
-    const animationDuration = screenHeight * 3; // Animation diễn ra trong 3 screen heights
+    const stickyStart = 0; // Start sticky from the beginning of page
+    const animationDuration = screenHeight * 3; // Animation runs over 3 screen heights
     const stickyEnd = stickyStart + animationDuration;
 
-    // Trong vùng sticky: chạy animation
+    // In sticky area: run animation
     const stickyScrollY = Math.max(
       0,
       Math.min(scrollY - stickyStart, animationDuration)
@@ -48,7 +48,7 @@ const ParallaxScrolling = () => {
     let rotate = 0;
     let zIndex = 1;
 
-    // Ảnh 1: hiển thị từ 0-40%, fade out hoàn toàn trước 50%
+    // Image 1: display from 0-40%, fade out completely before 50%
     if (imageIndex === 0) {
       if (progress < 0.4) {
         opacity = 1;
@@ -57,7 +57,7 @@ const ParallaxScrolling = () => {
         rotate = 0;
         zIndex = 3;
       } else if (progress < 0.5) {
-        const fadeProgress = (progress - 0.4) / 0.1; // 10% để fade out
+        const fadeProgress = (progress - 0.4) / 0.1; // 10% to fade out
         opacity = 1 - fadeProgress;
         translateX = -fadeProgress * 30;
         scale = 1 - fadeProgress * 0.1;
@@ -72,7 +72,7 @@ const ParallaxScrolling = () => {
       }
     }
 
-    // Ảnh 2: bắt đầu xuất hiện từ 50% (sau khi ảnh 1 biến mất), fade out hoàn toàn trước 80%
+    // Image 2: start appearing from 50% (after image 1 disappears), fade out completely before 80%
     else if (imageIndex === 1) {
       if (progress < 0.5) {
         opacity = 0;
@@ -81,7 +81,7 @@ const ParallaxScrolling = () => {
         rotate = -3;
         zIndex = 1;
       } else if (progress < 0.65) {
-        const fadeInProgress = (progress - 0.5) / 0.15; // 15% để fade in
+        const fadeInProgress = (progress - 0.5) / 0.15; // 15% to fade in
         opacity = fadeInProgress;
         translateX = 30 - fadeInProgress * 30;
         scale = 0.9 + fadeInProgress * 0.1;
@@ -94,7 +94,7 @@ const ParallaxScrolling = () => {
         rotate = 0;
         zIndex = 3;
       } else if (progress < 0.9) {
-        const fadeOutProgress = (progress - 0.8) / 0.1; // 10% để fade out
+        const fadeOutProgress = (progress - 0.8) / 0.1; // 10% to fade out
         opacity = 1 - fadeOutProgress;
         translateX = -fadeOutProgress * 30;
         scale = 1 - fadeOutProgress * 0.1;
@@ -109,7 +109,7 @@ const ParallaxScrolling = () => {
       }
     }
 
-    // Ảnh 3: bắt đầu xuất hiện từ 90% (sau khi ảnh 2 biến mất hoàn toàn)
+    // Image 3: start appearing from 90% (after image 2 completely disappears)
     else if (imageIndex === 2) {
       if (progress < 0.9) {
         opacity = 0;
@@ -118,7 +118,7 @@ const ParallaxScrolling = () => {
         rotate = -3;
         zIndex = 1;
       } else {
-        const fadeInProgress = (progress - 0.9) / 0.1; // 10% để fade in
+        const fadeInProgress = (progress - 0.9) / 0.1; // 10% to fade in
         opacity = fadeInProgress;
         translateX = 30 - fadeInProgress * 30;
         scale = 0.9 + fadeInProgress * 0.1;

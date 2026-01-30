@@ -78,8 +78,8 @@ const MilanComponent = () => {
 
       // Fade effect for hero (only on desktop)
       if (heroRef.current && isDesktop) {
-        const opacity = Math.max(0, 1 - scrolled / (windowHeight * 0.7)); // Fade nhanh hơn cho sync với 700ms
-        const scale = 1 - (scrolled / windowHeight) * 0.08; // Scale nhẹ hơn
+        const opacity = Math.max(0, 1 - scrolled / (windowHeight * 0.7)); // Fade faster to sync with 700ms
+        const scale = 1 - (scrolled / windowHeight) * 0.08; // Lighter scale
 
         heroRef.current.style.opacity = opacity;
         heroRef.current.style.transform = `scale(${scale})`;
@@ -108,7 +108,7 @@ const MilanComponent = () => {
           scrolled < windowHeight * 0.5
         ) {
           isScrolling.current = true;
-          smoothScrollTo(windowHeight, 700); // Article trượt lên trong 1 giây
+          smoothScrollTo(windowHeight, 700); // Article slides up in 1 second
         }
 
         // Auto-scroll UP to hero when user scrolls up just a little
@@ -119,7 +119,7 @@ const MilanComponent = () => {
           scrolled > windowHeight * 0.5
         ) {
           isScrolling.current = true;
-          smoothScrollTo(0, 700); // Quay về hero trong 0.8 giây
+          smoothScrollTo(0, 700); // Return to hero in 0.8 seconds
         }
       }
 
@@ -145,29 +145,29 @@ const MilanComponent = () => {
     const carousel = carouselRef.current;
     if (!carousel) return;
 
-    // Smooth scroll animation với momentum và quán tính
+    // Smooth scroll animation with momentum and inertia
     const smoothScroll = () => {
       const current = carousel.scrollLeft;
       const target = targetScrollLeft.current;
       const diff = target - current;
 
       if (isDragging.current) {
-        // Khi đang drag: smooth với quán tính (lerp)
+        // When dragging: smooth with inertia (lerp)
         if (Math.abs(diff) > 0.1) {
-          carousel.scrollLeft = current + diff * 0.25; // Quán tính khi kéo
+          carousel.scrollLeft = current + diff * 0.25; // Inertia when dragging
           animationFrameId.current = requestAnimationFrame(smoothScroll);
         } else {
           carousel.scrollLeft = target;
           animationFrameId.current = requestAnimationFrame(smoothScroll);
         }
       } else {
-        // Khi thả: apply momentum với friction
+        // When released: apply momentum with friction
         if (Math.abs(velocity.current) > 0.5) {
           carousel.scrollLeft = current + velocity.current;
           velocity.current *= 0.94; // Friction/deceleration
           animationFrameId.current = requestAnimationFrame(smoothScroll);
         } else {
-          // Dừng animation
+          // Stop animation
           velocity.current = 0;
           if (animationFrameId.current) {
             cancelAnimationFrame(animationFrameId.current);
@@ -205,7 +205,7 @@ const MilanComponent = () => {
       if (!isDragging.current) return;
       isDragging.current = false;
       carousel.style.cursor = "grab";
-      // Sync target với current position để tránh snap back
+      // Sync target with current position to prevent snap back
       targetScrollLeft.current = carousel.scrollLeft;
       // Keep animation running for momentum
       if (!animationFrameId.current) {
@@ -217,7 +217,7 @@ const MilanComponent = () => {
       if (!isDragging.current) return;
       isDragging.current = false;
       carousel.style.cursor = "grab";
-      // Sync target với current position để tránh snap back
+      // Sync target with current position to prevent snap back
       targetScrollLeft.current = carousel.scrollLeft;
       // Keep animation running for momentum
       if (!animationFrameId.current) {
@@ -234,9 +234,9 @@ const MilanComponent = () => {
       const deltaX = currentX - lastX.current;
       const deltaTime = currentTime - lastTime.current;
 
-      // Calculate velocity cho momentum (đảo dấu để match hướng scroll)
+      // Calculate velocity for momentum (negate to match scroll direction)
       if (deltaTime > 0) {
-        velocity.current = -(deltaX / deltaTime) * 8; // Negative để đúng hướng
+        velocity.current = -(deltaX / deltaTime) * 8; // Negative to match direction
       }
 
       const walk = (currentX - startX.current) * 1.2;
@@ -246,7 +246,7 @@ const MilanComponent = () => {
       lastTime.current = currentTime;
     };
 
-    // Infinite loop với smooth repositioning (không jump)
+    // Infinite loop with smooth repositioning (no jump)
     const checkLoop = () => {
       if (isLooping.current || isDragging.current) return;
 
@@ -262,10 +262,10 @@ const MilanComponent = () => {
       const itemWithGap = itemWidth + gap;
       const setSize = itemWithGap * 4; // 4 items per set
 
-      // Tăng threshold lên để trigger sớm hơn
+      // Increase threshold to trigger earlier
       const threshold = setSize * 2; // 2 sets = 8 items
 
-      // Nếu scroll về gần đầu, reposition về giữa
+      // If scrolled near the beginning, reposition to middle
       if (currentScroll < threshold) {
         isLooping.current = true;
         velocity.current = 0; // Stop momentum
@@ -279,7 +279,7 @@ const MilanComponent = () => {
         return;
       }
 
-      // Nếu scroll về gần cuối, reposition về giữa
+      // If scrolled near the end, reposition to middle
       const maxScroll = scrollWidth - clientWidth;
       if (currentScroll > maxScroll - threshold) {
         isLooping.current = true;
@@ -296,7 +296,7 @@ const MilanComponent = () => {
     };
 
     const handleScroll = () => {
-      // Không check loop khi đang drag, looping, hoặc arrow scrolling
+      // Don't check loop when dragging, looping, or arrow scrolling
       if (
         !isDragging.current &&
         !isLooping.current &&
@@ -312,7 +312,7 @@ const MilanComponent = () => {
     carousel.addEventListener("mousemove", handleMouseMove);
     carousel.addEventListener("scroll", handleScroll);
 
-    // Set initial position ở giữa để có thể scroll cả 2 hướng
+    // Set initial position in the middle to allow scrolling in both directions
     setTimeout(() => {
       const items = carousel.querySelectorAll(".milan-carousel-item");
       if (items.length) {
@@ -323,7 +323,7 @@ const MilanComponent = () => {
         // Disable scroll behavior temporarily
         carousel.style.scrollBehavior = "auto";
 
-        // Center ảnh đầu tiên: vị trí giữa buffer - offset để center
+        // Center first image: middle position of buffer - offset to center
         const viewportWidth = window.innerWidth;
         carousel.scrollLeft = setSize * 5 - (viewportWidth - itemWidth) / 2;
 
@@ -354,7 +354,7 @@ const MilanComponent = () => {
     };
   }, []);
 
-  // Large Carousel drag-to-scroll functionality (tương tự carousel trên)
+  // Large Carousel drag-to-scroll functionality (similar to carousel above)
   useEffect(() => {
     const carousel = largeCarouselRef.current;
     if (!carousel) return;
@@ -643,7 +643,7 @@ const MilanComponent = () => {
     }
   };
 
-  // Arrow navigation handlers với preemptive repositioning
+  // Arrow navigation handlers with preemptive repositioning
   const handlePrevious = (e) => {
     const carousel = carouselRef.current;
     if (!carousel || isArrowScrolling.current) return;
@@ -666,13 +666,13 @@ const MilanComponent = () => {
 
     isArrowScrolling.current = true;
 
-    // Check nếu cần reposition TRƯỚC KHI scroll
+    // Check if repositioning needed BEFORE scrolling
     const currentScroll = carousel.scrollLeft;
     const scrollWidth = carousel.scrollWidth;
     const clientWidth = carousel.clientWidth;
 
     if (currentScroll - scrollAmount < threshold) {
-      // Gần đầu - reposition về giữa trước
+      // Near beginning - reposition to middle first
       carousel.style.scrollBehavior = "auto";
       carousel.scrollLeft = currentScroll + setSize * 3;
       setTimeout(() => {
@@ -713,14 +713,14 @@ const MilanComponent = () => {
 
     isArrowScrolling.current = true;
 
-    // Check nếu cần reposition TRƯỚC KHI scroll
+    // Check if repositioning needed BEFORE scrolling
     const currentScroll = carousel.scrollLeft;
     const scrollWidth = carousel.scrollWidth;
     const clientWidth = carousel.clientWidth;
     const maxScroll = scrollWidth - clientWidth;
 
     if (currentScroll + scrollAmount > maxScroll - threshold) {
-      // Gần cuối - reposition về giữa trước
+      // Near end - reposition to middle first
       carousel.style.scrollBehavior = "auto";
       carousel.scrollLeft = currentScroll - setSize * 3;
       setTimeout(() => {
@@ -822,7 +822,7 @@ const MilanComponent = () => {
             />
 
             <div className="milan-carousel-container" ref={carouselRef}>
-              {/* Duplicate 10 lần để buffer lớn hơn cho arrow scrolling */}
+              {/* Duplicate 10 times for larger buffer for arrow scrolling */}
               {[...Array(10)].map((_, setIndex) => (
                 <React.Fragment key={setIndex}>
                   <div className="milan-carousel-item">
@@ -884,7 +884,7 @@ const MilanComponent = () => {
               className="milan-large-carousel-container"
               ref={largeCarouselRef}
             >
-              {/* Duplicate 10 lần để buffer lớn hơn cho arrow scrolling */}
+              {/* Duplicate 10 times for larger buffer for arrow scrolling */}
               {[...Array(10)].map((_, setIndex) => (
                 <React.Fragment key={setIndex}>
                   <div className="milan-large-carousel-item">

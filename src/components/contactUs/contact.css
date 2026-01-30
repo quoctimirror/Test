@@ -132,7 +132,7 @@
   text-align: center;
 }
 
-/* Mobile - 425px and below (giống hover expand section) */
+/* Mobile - 425px and below (similar to hover expand section) */
 @media screen and (max-width: 425px) {
   .contact-details {
     margin: 16px 0 0 0;

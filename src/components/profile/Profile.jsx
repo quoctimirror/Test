@@ -22,11 +22,11 @@ import Toast from "@components/common/toast/Toast";
 const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // Bây giờ chỉ cần 'logout' từ context, không cần 'handleApiError' nữa
+  // Now only need 'logout' from context, no longer need 'handleApiError'
   const { logout } = useAuth();
   const navTabsRef = useRef(null);
 
-  // ... (Các state và hằng số không thay đổi)
+  // ... (States and constants unchanged)
   const titles = ["Ms", "Mrs", "Mr"];
   const navItems = [
     "My Passport",
@@ -36,7 +36,7 @@ const Profile = () => {
     "Wishlist",
   ];
 
-  // Danh sách các quốc gia
+  // List of countries
   const countries = [
     "Afghanistan",
     "Albania",
@@ -137,7 +137,7 @@ const Profile = () => {
     type: "success",
   });
 
-  // ... (Các hàm validate, handleInputChange, handlePhoneChange, etc. không thay đổi)
+  // ... (Validation functions, handleInputChange, handlePhoneChange, etc. unchanged)
   const validateForm = () => {
     const newErrors = {};
     const { firstName, lastName, email, phoneNumber, dateOfBirth } = formData;
@@ -206,12 +206,12 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
-    logout(); // Gọi thẳng hàm logout từ context
+    logout(); // Call logout function directly from context
   };
 
   const handleScrollRight = () => {
     if (navTabsRef.current) {
-      const scrollAmount = navTabsRef.current.clientWidth * 0.7; // Scroll 70% của width
+      const scrollAmount = navTabsRef.current.clientWidth * 0.7; // Scroll 70% of width
       navTabsRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
@@ -223,7 +223,7 @@ const Profile = () => {
     }
   }, [location.state]);
 
-  // useEffect để lấy thông tin user - ĐƠN GIẢN HƠN RẤT NHIỀU
+  // useEffect to fetch user info - MUCH SIMPLER
   useEffect(() => {
     const fetchUserProfile = async () => {
       setIsLoading(true);
@@ -237,7 +237,7 @@ const Profile = () => {
         }
         setFormData((prev) => ({ ...prev, ...userData }));
       } catch (error) {
-        // Lỗi ở đây có nghĩa là request đã thất bại ngay cả sau khi thử lại
+        // Error here means request failed even after retry
         console.error("Failed to fetch user profile:", error);
         setErrors({
           form: "Could not load your profile. Please log in again.",
@@ -258,7 +258,7 @@ const Profile = () => {
     setIsLoading(true);
     setErrors({});
 
-    // Chuyển đổi date format từ Date object sang MM/dd/yyyy
+    // Convert date format from Date object to MM/dd/yyyy
     let formattedDateOfBirth = null;
     if (formData.dateOfBirth) {
       const date = formData.dateOfBirth;
@@ -273,7 +273,7 @@ const Profile = () => {
       firstName: formData.firstName.trim(),
       lastName: formData.lastName.trim(),
       email: formData.email.trim(),
-      dateOfBirth: formattedDateOfBirth, // <-- Sử dụng format đã chuyển đổi
+      dateOfBirth: formattedDateOfBirth, // <-- Use converted format
       phoneNumber: formData.phoneNumber,
       nationality: formData.nationality,
     };
@@ -371,9 +371,9 @@ const Profile = () => {
 
   CustomDateInput.displayName = "CustomDateInput";
 
-  // Phần JSX return không có gì thay đổi
+  // JSX return section unchanged
   if (isLoading && !formData.firstName) {
-    // Chỉ hiển thị loading nếu chưa có dữ liệu
+    // Only show loading if data not yet loaded
     return <div className="profile-loading">Loading Profile...</div>;
   }
 

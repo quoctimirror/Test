@@ -42,7 +42,7 @@
 .team-member {
   flex-shrink: 0;
   position: relative;
-  /* Loại bỏ transitions để GSAP control hoàn toàn */
+  /* Remove transitions so GSAP has full control */
 }
 
 .team-member.highlighted {
@@ -93,7 +93,7 @@
   }
 }
 
-/* Breakpoint cho 1728x1080 và similar resolutions */
+/* Breakpoint for 1728x1080 and similar resolutions */
 @media (min-width: 1201px) and (max-width: 1800px) {
   .team-carousel {
     padding: 0 2%;
@@ -167,18 +167,18 @@
   position: relative;
   background: #f5f5f5;
   border: none;
-  /* Loại bỏ CSS transitions, để GSAP control */
+  /* Remove CSS transitions, let GSAP control */
 }
 
 .team-member.hidden-member {
   opacity: 0;
-  /* GSAP sẽ animate từ state này */
+  /* GSAP will animate from this state */
 }
 
 .team-member.hidden-member .member-photo {
   width: 294px;
   height: 441px;
-  /* Giữ kích thước như normal member */
+  /* Keep size like normal member */
 }
 
 /* Responsive hidden member */
@@ -499,7 +499,7 @@
 
   .team-carousel-track {
     gap: 15px;
-    margin: 40px 0 0 0; /* Giảm margin cho màn hình 1200px */
+    margin: 40px 0 0 0; /* Reduce margin for 1200px screen */
   }
 
   .member-photo {
@@ -543,7 +543,7 @@
 
   .team-carousel-track {
     gap: 12px;
-    margin: 35px 0 0 0; /* Giảm margin cho màn hình 992px */
+    margin: 35px 0 0 0; /* Reduce margin for 992px screen */
   }
 
   .member-photo {
@@ -599,7 +599,7 @@
 
   .team-carousel-track {
     gap: 10px;
-    margin: 30px 0 0 0; /* Giảm margin cho màn hình 768px */
+    margin: 30px 0 0 0; /* Reduce margin for 768px screen */
   }
 
   .member-photo {
@@ -675,7 +675,7 @@
 
   .team-carousel-track {
     gap: 8px;
-    margin: 25px 0 0 0; /* Giảm margin cho màn hình mobile 480px */
+    margin: 25px 0 0 0; /* Reduce margin for mobile 480px screen */
   }
 
   .member-photo {

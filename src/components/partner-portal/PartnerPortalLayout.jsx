@@ -122,7 +122,7 @@ export default function PartnerPortalLayout() {
 
   const isPhygital = partnerType === "PHYGITAL";
 
-  // Lọc menu theo partnerType
+  // Filter menu by partnerType
   const menuItems = allMenuItems.filter((item) => {
     if (item.phygitalOnly) return isPhygital;
     if (item.locationOnly) return !isPhygital;

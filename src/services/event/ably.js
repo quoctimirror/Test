@@ -58,7 +58,6 @@ export async function broadcastNoteAdded(note) {
 
     // Wait for connection to be ready
     if (client.connection.state !== 'connected') {
-      console.log('Ably: Waiting for connection...');
       await new Promise((resolve) => {
         client.connection.once('connected', resolve);
         // Timeout after 5 seconds
@@ -71,7 +70,6 @@ export async function broadcastNoteAdded(note) {
       note,
       timestamp: Date.now(),
     });
-    console.log('Ably: Note broadcast successful', note.id);
   } catch (error) {
     console.error('Failed to broadcast note:', error);
   }
@@ -150,18 +148,15 @@ export function subscribeToNotesChannel(callback) {
     const channel = client.channels.get(CHANNELS.notes);
 
     const listener = (message) => {
-      console.log('Ably: Received note:added event', message.data);
       if (message.data?.note) {
         callback(message.data.note);
       }
     };
 
     channel.subscribe('note:added', listener);
-    console.log('Ably: Subscribed to notes channel');
 
     return () => {
       channel.unsubscribe('note:added', listener);
-      console.log('Ably: Unsubscribed from notes channel');
     };
   } catch (error) {
     console.error('Failed to subscribe to notes:', error);

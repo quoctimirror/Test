@@ -166,7 +166,7 @@ const ProductList = () => {
         </button>
       </div>
 
-      {/* Info về chức năng thêm bị disable */}
+      {/* Info about the disabled add functionality */}
       <div className="list-info">
         <Info size={16} />
         <span>Chuc nang them san pham tam thoi bi vo hieu hoa do rang buoc co so du lieu.</span>

@@ -1,25 +1,25 @@
 /* Import fonts */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Cormorant+Garamond:wght@400;700&display=swap");
 
-/* Thiết lập cơ bản */
+/* Basic setup */
 .parallax-container {
   width: 100%;
-  height: 300vh; /* Đặt chiều cao cố định để sticky hoạt động trong phạm vi này */
+  height: 300vh; /* Set fixed height so sticky works within this range */
   position: relative;
 }
 
-/* Bố cục cho mỗi màn hình */
+/* Layout for each screen */
 .screen {
   width: 100%;
-  height: 100vh; /* Chiếm 100% chiều cao của màn hình */
+  height: 100vh; /* Takes up 100% of screen height */
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff; /* Nền trắng cho các section */
+  background-color: #ffffff; /* White background for sections */
 }
 
-/* Sticky screen - giữ nguyên vị trí khi scroll */
+/* Sticky screen - stays in position when scrolling */
 .sticky-screen {
   position: sticky;
   top: 0;
@@ -34,7 +34,7 @@
   box-sizing: border-box;
 }
 
-/* Các khung chứa hình ảnh */
+/* Image containers */
 .image-pane {
   width: 50%;
   height: 100%;
@@ -76,7 +76,7 @@
   filter: grayscale(0%);
 }
 
-/* Khung chứa văn bản */
+/* Text container */
 .text-pane {
   width: 62.5%;
   display: flex;
@@ -87,7 +87,7 @@
     246,
     246,
     1
-  ); /* Màu nền hơi khác để tạo chiều sâu */
+  ); /* Slightly different background color for depth */
 }
 
 .text-content {

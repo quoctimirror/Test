@@ -117,7 +117,7 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* Underline - default mờ */
+/* Underline - default faded */
 .event-name__input-line {
   position: absolute;
   bottom: 0;
@@ -128,7 +128,7 @@
   transition: background 0.2s ease;
 }
 
-/* Underline trắng khi có text */
+/* White underline when there's text */
 .event-name__input:not(:placeholder-shown) ~ .event-name__input-line {
   background: #fff;
 }

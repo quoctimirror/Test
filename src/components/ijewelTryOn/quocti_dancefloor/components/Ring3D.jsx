@@ -1,12 +1,12 @@
 /**
  * Ring3D.jsx
  *
- * NHIỆM VỤ: Render 3D model của nhẫn/trang sức
- * - Nhận danh sách nodes từ GLTF model
- * - Hiển thị từng mesh với material tương ứng
- * - Hỗ trợ highlight mesh được chọn (màu đỏ)
- * - Hỗ trợ đổi màu từng mesh qua meshColors
- * - Auto-rotate nếu được bật
+ * PURPOSE: Render 3D model of ring/jewelry
+ * - Receives list of nodes from GLTF model
+ * - Displays each mesh with corresponding material
+ * - Supports highlighting selected mesh (red color)
+ * - Supports changing color of each mesh via meshColors
+ * - Auto-rotate if enabled
  */
 
 import { useRef, memo } from 'react';
@@ -16,7 +16,7 @@ import { Center, MeshRefractionMaterial } from '@react-three/drei';
 export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform, meshColors, meshVisibility, diamondScale = 1, renderMode = 'smooth' }) {
   const groupRef = useRef();
 
-  // Auto rotate nếu được bật
+  // Auto rotate if enabled
   useFrame((_state, delta) => {
     if (transform.autoRotate && groupRef.current) {
       groupRef.current.rotation.y += delta * 0.5;
@@ -35,19 +35,19 @@ export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform
         {Object.keys(nodes).map(key => {
           const node = nodes[key];
 
-          // Bỏ qua các node không có geometry
+          // Skip nodes without geometry
           if (!node.geometry) return null;
 
-          // Kiểm tra trạng thái visibility - nếu bị ẩn thì không render
-          const isVisible = meshVisibility?.[key] !== false; // Mặc định true nếu undefined
+          // Check visibility state - if hidden, don't render
+          const isVisible = meshVisibility?.[key] !== false; // Default true if undefined
           if (!isVisible) return null;
 
           const material = node.material;
 
-          // ===== XỬ LÝ INSTANCED MESH =====
-          // (Mesh được duplicate nhiều lần, hiệu năng cao)
+          // ===== HANDLE INSTANCED MESH =====
+          // (Mesh duplicated multiple times, high performance)
           if (node.isInstancedMesh) {
-            // Áp dụng diamondScale cho InstancedMesh (viên kim cương chính)
+            // Apply diamondScale for InstancedMesh (main diamond)
             const originalScale = node.scale;
             const finalScale = originalScale.clone().multiplyScalar(diamondScale);
 
@@ -68,7 +68,7 @@ export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform
                 rotation={node.rotation}
                 scale={finalScale}
               >
-                {/* Nếu mesh đang được chọn → highlight màu đỏ */}
+                {/* If mesh is selected -> highlight with red color */}
                 {selectedMesh === key ? (
                   <meshStandardMaterial
                     color="#ff0000"
@@ -76,25 +76,25 @@ export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform
                     emissiveIntensity={0.5}
                   />
                 ) : env ? (
-                  // Có environment map → dùng MeshRefractionMaterial (thủy tinh/kim cương)
+                  // Has environment map -> use MeshRefractionMaterial (glass/diamond)
                   // Converted from diamond-material.dmat (iJewel3D DiamondMaterial)
                   <MeshRefractionMaterial
-                    color="#ffffff"  // color: 16777215 từ .dmat
+                    color="#ffffff"  // color: 16777215 from .dmat
                     envMap={env}
-                    bounces={5}  // rayBounces: 5 từ .dmat
-                    ior={2.6}  // refractiveIndex: 2.6 từ .dmat
-                    fresnel={0.5}  // reflectivity: 0.5 từ .dmat
-                    aberrationStrength={0}  // TẮT hoàn toàn dispersion/chromatic aberration
-                    fastChroma={false}  // Chất lượng cao
+                    bounces={5}  // rayBounces: 5 from .dmat
+                    ior={2.6}  // refractiveIndex: 2.6 from .dmat
+                    fresnel={0.5}  // reflectivity: 0.5 from .dmat
+                    aberrationStrength={0}  // Completely DISABLE dispersion/chromatic aberration
+                    fastChroma={false}  // High quality
                     toneMapped={false}
-                    transmission={1.0}  // Hoàn toàn trong suốt (fix transmission: 0 trong .dmat)
-                    thickness={0.2}  // Thickness vừa phải
-                    envMapIntensity={1.3}  // envMapIntensity: 1.3 từ .dmat
+                    transmission={1.0}  // Fully transparent (fix transmission: 0 in .dmat)
+                    thickness={0.2}  // Moderate thickness
+                    envMapIntensity={1.3}  // envMapIntensity: 1.3 from .dmat
                     clearcoat={1}
                     clearcoatRoughness={0}
                   />
                 ) : (
-                  // Không có env → dùng material thường
+                  // No env -> use standard material
                   <meshStandardMaterial
                     color={meshColors[key] || '#b5cbdd'}
                     roughness={0.15}
@@ -105,14 +105,14 @@ export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform
             );
           }
 
-          // ===== XỬ LÝ MESH THƯỜNG =====
+          // ===== HANDLE REGULAR MESH =====
           if (node.isMesh) {
-            // Kiểm tra xem có phải là đá quý không (dựa vào tên)
+            // Check if this is a gemstone (based on name)
             const isGem = key.toLowerCase().includes('gem') ||
                          key.toLowerCase().includes('diamond') ||
                          key.toLowerCase().includes('stone');
 
-            // Áp dụng diamondScale cho gem meshes (scale mesh transform)
+            // Apply diamondScale for gem meshes (scale mesh transform)
             const originalScale = node.scale;
             const finalScale = isGem
               ? originalScale.clone().multiplyScalar(diamondScale)
@@ -136,7 +136,7 @@ export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform
                 rotation={node.rotation}
                 scale={finalScale}
               >
-                {/* Nếu mesh đang được chọn → highlight màu đỏ */}
+                {/* If mesh is selected -> highlight with red color */}
                 {selectedMesh === key ? (
                   <meshStandardMaterial
                     color="#ff0000"
@@ -144,7 +144,7 @@ export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform
                     emissiveIntensity={0.5}
                   />
                 ) : isGem && env ? (
-                  // Là đá quý + có env → dùng MeshRefractionMaterial
+                  // Is gemstone + has env -> use MeshRefractionMaterial
                   // Converted from diamond-material.dmat
                   <MeshRefractionMaterial
                     color="#ffffff"
@@ -152,7 +152,7 @@ export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform
                     bounces={5}
                     ior={2.6}
                     fresnel={0.5}
-                    aberrationStrength={0}  // TẮT hoàn toàn
+                    aberrationStrength={0}  // Completely DISABLED
                     fastChroma={false}
                     toneMapped={false}
                     transmission={1.0}
@@ -162,7 +162,7 @@ export const Ring3D = memo(function Ring3D({ nodes, env, selectedMesh, transform
                     clearcoatRoughness={0}
                   />
                 ) : (
-                  // Mesh thường (đai nhẫn) → giữ nguyên material gốc
+                  // Regular mesh (ring band) -> keep original material
                   <meshStandardMaterial
                     color={meshColors[key] || material?.color || '#ffaf83'}
                     roughness={material?.roughness ?? 0.3}

@@ -4,22 +4,22 @@ import styles from './premium_dev.module.css';
 import MirrorLogo from '@/assets/images/Mirror_Logo_Text_Pink.svg';
 
 const MODELS = [
-  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' }, // chuan
-  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }, // chuan
-  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' }, // chuan, chi co sai luc viewer thoi 
-  { id: 'N1w9lJ3FQfOWsrC7jeeYfA', name: 'Oval', basename: 'drive' }, // chuan
-  { id: 'DfRULQ-OSk6TjbYAcB9zkA', name: 'Fistion', basename: 'drive' }, // chuan
-  { id: 'FWV7-qA6QEG_Ju8pjSItuA', name: 'Triology', basename: 'drive' }, // chuan
-  { id: 'QAauSV24QiuM5CxA_1797w', name: 'Myfav', basename: 'drive' }, // chuan
-  { id: 'VdiuGY0xSDOOBoxoHU2y-A', name: 'Lumex91Cadillac', basename: 'drive'}, // chuan
-  { id: 'P936xDENR7-yCCiZSMeLTQ', name: 'Lumex91Leaves', basename: 'drive'}, // chuan
+  { id: 'dY4BIhDDQNmCVTRrEpV2QQ', name: 'Twin', basename: 'drive' }, // verified
+  { id: 'MKyTIlEyRbi89oT6bH76yA', name: 'Pear', basename: 'drive' }, // verified
+  { id: 'R4Yyjh0QQlmEtazcWf7IGA', name: 'New', basename: 'drive' }, // verified, only viewer issue sometimes
+  { id: 'N1w9lJ3FQfOWsrC7jeeYfA', name: 'Oval', basename: 'drive' }, // verified
+  { id: 'DfRULQ-OSk6TjbYAcB9zkA', name: 'Fistion', basename: 'drive' }, // verified
+  { id: 'FWV7-qA6QEG_Ju8pjSItuA', name: 'Triology', basename: 'drive' }, // verified
+  { id: 'QAauSV24QiuM5CxA_1797w', name: 'Myfav', basename: 'drive' }, // verified
+  { id: 'VdiuGY0xSDOOBoxoHU2y-A', name: 'Lumex91Cadillac', basename: 'drive'}, // verified
+  { id: 'P936xDENR7-yCCiZSMeLTQ', name: 'Lumex91Leaves', basename: 'drive'}, // verified
   // ==============================================================================================================
-  // đang sửa
+  // fixing in progress
 
   // ==============================================================================================================
-  // chịu chúa cứu, hữu duyên cứu được thì cứu
-  { id: 'YS4Zch2mShSnA-LABIS5wQ', name: 'Flower', basename: 'drive' }, // scale quá lớn cái heart có cái lỗi giống cái flower
-  { id: 'czl3wmsyTDWrV420qcKOew', name: 'Heart', basename: 'drive' }, // scale quá lớn, sai như hình gửi trong zalo, sai luôn có lúc viewer nha
+  // difficult to fix, low priority
+  { id: 'YS4Zch2mShSnA-LABIS5wQ', name: 'Flower', basename: 'drive' }, // scale too large, heart has same issue as flower
+  { id: 'czl3wmsyTDWrV420qcKOew', name: 'Heart', basename: 'drive' }, // scale too large, incorrect as shown in zalo, sometimes viewer issue too
   { id: 'RUsrBi-vQey2vExitZOYig', name: 'Demo', basename: 'drive' },
 
 ];
@@ -99,7 +99,7 @@ const Premium = () => {
   }, []);
 
   // Apply rotation config based on hand/finger/camera
-  // fingerOverride: dùng khi muốn áp dụng ngay cho finger mới (tránh giật)
+  // fingerOverride: used when applying immediately for new finger (to avoid jitter)
   const applyRotationConfig = useCallback((fingerOverride) => {
     if (isManualRotationRef.current) return;
 
@@ -119,20 +119,20 @@ const Premium = () => {
       arPlugin.modelRotation.y = (fingerConfig.y * Math.PI) / 180;
       arPlugin.modelRotation.z = (fingerConfig.z * Math.PI) / 180;
     } else {
-      // Không có config cho ngón này → reset về 0
+      // No config for this finger -> reset to 0
       arPlugin.modelRotation.y = 0;
       arPlugin.modelRotation.z = 0;
     }
   }, [getDetectedHand]);
 
-  // Set finger VÀ áp dụng rotation config NGAY LẬP TỨC (tránh giật)
+  // Set finger AND apply rotation config IMMEDIATELY (to avoid jitter)
   const setFingerWithRotation = useCallback((newFinger) => {
     const arPlugin = arPluginRef.current;
     if (!arPlugin) return;
 
-    // Áp dụng rotation config TRƯỚC khi set finger
+    // Apply rotation config BEFORE setting finger
     applyRotationConfig(newFinger);
-    // Sau đó mới set finger cho SDK
+    // Then set finger for SDK
     arPlugin.finger = newFinger;
     setCurrentFinger(newFinger);
   }, [applyRotationConfig]);
@@ -142,7 +142,7 @@ const Premium = () => {
     const arPlugin = arPluginRef.current;
     const viewerApp = viewerAppRef.current;
 
-    // FPS calculation + update debug info (mỗi giây 1 lần để không lag)
+    // FPS calculation + update debug info (once per second to avoid lag)
     frameCountRef.current++;
     const now = performance.now();
     const elapsed = now - lastFpsTimeRef.current;
@@ -286,25 +286,25 @@ const Premium = () => {
         console.log('✅ Material color tracking enabled (dynamic)');
 
         // ============================================================================
-        // DIAGNOSTIC V1-V6: Tất cả console.log hữu ích
+        // DIAGNOSTIC V1-V6: All useful console.log statements
         // ============================================================================
         const setupColorLogging = () => {
-          // V4: Khám phá viewer.plugins
+          // V4: Explore viewer.plugins
           console.log('🔧 [V4] viewer keys:', Object.keys(viewer));
           console.log('🔌 [V4] viewer.plugins:', viewer.plugins);
 
-          // V5: Khám phá MaterialConfiguratorPlugin
+          // V5: Explore MaterialConfiguratorPlugin
           const configurator = viewer.plugins?.MaterialConfiguratorPlugin;
           console.log('🎯 [V5] MaterialConfiguratorPlugin:', configurator);
           console.log('🎯 [V5] configurator.variations:', configurator?.variations);
           console.log('🎯 [V5] configurator.options:', configurator?.options);
 
           if (!configurator?.variations) {
-            console.log('❌ Không tìm thấy configurator.variations');
+            console.log('❌ configurator.variations not found');
             return;
           }
 
-          // V6: Log chi tiết từng variation → tìm ra mapping
+          // V6: Log each variation in detail -> find the mapping
           console.log('📋 [V6] === VARIATIONS DETAIL ===');
           configurator.variations.forEach((v, i) => {
             console.log(`🎯 [V6] variation[${i}]:`, { uuid: v.uuid, title: v.title });
@@ -354,7 +354,7 @@ const Premium = () => {
           document.addEventListener('click', handleColorChange);
         };
 
-        // Chạy sau 4 giây để configurator kịp load
+        // Run after 4 seconds to let configurator finish loading
         setTimeout(setupColorLogging, 4000);
       };
 
@@ -428,7 +428,7 @@ const Premium = () => {
         arPlugin.fromJSON(fileConfig?.tryonConfig);
       }
 
-      // Ẩn model trước khi AR start (sẽ hiện lại khi detect được tay via rAF loop)
+      // Hide model before AR start (will show again when hand detected via rAF loop)
       const modelRoot = viewerApp?.scene?.modelRoot;
       if (modelRoot) {
         modelRoot.visible = false;
@@ -436,7 +436,7 @@ const Premium = () => {
 
       await arPlugin.start();
 
-      // Set finger after AR started - dùng setFingerWithRotation để tránh giật
+      // Set finger after AR started - use setFingerWithRotation to avoid jitter
       setFingerWithRotation(3);
 
       if (isMobile) {
@@ -474,7 +474,7 @@ const Premium = () => {
       arPluginRef.current = null;
     }
 
-    // Hiện lại model khi thoát AR
+    // Show model again when exiting AR
     const modelRoot = viewerAppRef.current?.scene?.modelRoot;
     if (modelRoot) {
       modelRoot.visible = true;
@@ -630,9 +630,9 @@ const Premium = () => {
 
   // FPS color: green >= 50, yellow >= 30, red < 30
   const getFpsColor = (fps) => {
-    if (fps >= 50) return '#00ff00';  // Xanh lá - Tốt
-    if (fps >= 30) return '#ffff00';  // Vàng - Trung bình
-    return '#ff0000';                  // Đỏ - Lag
+    if (fps >= 50) return '#00ff00';  // Green - Good
+    if (fps >= 30) return '#ffff00';  // Yellow - Medium
+    return '#ff0000';                  // Red - Lag
   };
 
   // Finger names
@@ -642,7 +642,7 @@ const Premium = () => {
     <div className={styles.container}>
       <div ref={containerRef} className={styles.viewerContainer} />
 
-      {/* Debug Info - chỉ hiện khi AR đang chạy */}
+      {/* Debug Info - only show when AR is running */}
       {inAR && (
         <div className={styles.debugPanel}>
           <div className={styles.debugRow}>

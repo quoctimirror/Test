@@ -7,7 +7,7 @@ import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader.js";
 import { RingEnhancer } from "./RingEnhancer.js";
 
-// --- NHẬP CÁC MODULE HẬU KỲ ---
+// --- POST-PROCESSING MODULES ---
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
@@ -125,7 +125,7 @@ export class ThreeJSViewer {
     this.renderer.shadowMap.enabled = false; // Disable shadows for mirror effect
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.2; // Tăng exposure để nhẫn sáng hơn
+    this.renderer.toneMappingExposure = 1.2; // Increased exposure for brighter ring
 
     // Add renderer to container
     this.container.appendChild(this.renderer.domElement);
@@ -339,8 +339,8 @@ export class ThreeJSViewer {
       );
       const ringEnvMap = pmremGenerator.fromEquirectangular(hdrTexture).texture;
 
-      // Áp dụng HDR cho toàn bộ scene
-      this.scene.environment = ringEnvMap; // <-- Áp dụng HDR cho toàn bộ scene
+      // Apply HDR to entire scene
+      this.scene.environment = ringEnvMap; // <-- Apply HDR to entire scene
 
       // Clean up
       hdrTexture.dispose();
@@ -421,13 +421,13 @@ export class ThreeJSViewer {
       canvas.height = 512;
       const ctx = canvas.getContext("2d");
 
-      // Create vertical gradient từ đỉnh hình thang đến đáy (top to bottom)
-      // Gradient mượt mà từ trắng đến tối dần - các màu cách đều nhau để smooth
+      // Create vertical gradient from trapezoid top to bottom
+      // Smooth gradient from light to dark - evenly spaced colors for smoothness
       const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, "#821834"); // Đỉnh - trắng sáng nhất
-      gradient.addColorStop(0.25, "#821834"); // 25% - hồng
-      gradient.addColorStop(0.65, "#821834"); // 65% - đỏ sẫm
-      gradient.addColorStop(1.0, "#821834"); // Đáy - tối nhất
+      gradient.addColorStop(0, "#821834"); // Top - brightest
+      gradient.addColorStop(0.25, "#821834"); // 25% - pink
+      gradient.addColorStop(0.65, "#821834"); // 65% - dark red
+      gradient.addColorStop(1.0, "#821834"); // Bottom - darkest
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -712,11 +712,11 @@ export class ThreeJSViewer {
         const { width, height } = entry.contentRect;
 
         if (this.camera && this.renderer && this.composer) {
-          // Thêm composer vào
+          // Include composer in resize
           this.camera.aspect = width / height;
           this.camera.updateProjectionMatrix();
           this.renderer.setSize(width, height);
-          this.composer.setSize(width, height); // <-- Thêm dòng này
+          this.composer.setSize(width, height); // <-- Added this line
         }
       }
     });
@@ -752,7 +752,7 @@ export class ThreeJSViewer {
 
     // Apply to reflection model
     this.updateReflectionMaterial(goldConfig);
-    console.log("🥇 Đã áp dụng vật liệu vàng cho cả main và reflection");
+    console.log("🥇 Applied gold material to both main and reflection");
   }
 
   setSilverMaterial() {
@@ -781,7 +781,7 @@ export class ThreeJSViewer {
 
     // Apply to reflection model
     this.updateReflectionMaterial(silverConfig);
-    console.log("🥈 Đã áp dụng vật liệu bạc cho cả main và reflection");
+    console.log("🥈 Applied silver material to both main and reflection");
   }
 
   setPlatinumMaterial() {
@@ -810,7 +810,7 @@ export class ThreeJSViewer {
 
     // Apply to reflection model
     this.updateReflectionMaterial(platinumConfig);
-    console.log("🤍 Đã áp dụng vật liệu bạch kim cho cả main và reflection");
+    console.log("🤍 Applied platinum material to both main and reflection");
   }
 
   setRoseGoldMaterial() {
@@ -839,7 +839,7 @@ export class ThreeJSViewer {
 
     // Apply to reflection model
     this.updateReflectionMaterial(roseGoldConfig);
-    console.log("🌹 Đã áp dụng vật liệu vàng hồng cho cả main và reflection");
+    console.log("🌹 Applied rose gold material to both main and reflection");
   }
 
   setDiamondMaterial() {

@@ -467,9 +467,9 @@
 
 
 /* ========== EVENT SPEC THEME ========== */
-/* Base state = gradient lớn, hover state = gradient nhỏ hơn */
+/* Base state = large gradient, hover state = smaller gradient */
 .glass-theme-button--event_spec {
-  /* Base = gradient đen-hồng lớn */
+  /* Base = large black-pink gradient */
   background:
     radial-gradient(
       61.32% 123.33% at 50.28% 123.33%,
@@ -500,7 +500,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  /* Hover = gradient đen-hồng nhỏ hơn */
+  /* Hover = smaller black-pink gradient */
   background:
     radial-gradient(
       49.72% 100% at 50.28% 100%,
@@ -545,7 +545,7 @@
 
 
 /* ========== EVENT LIGHT THEME ========== */
-/* Base state = dark theme, hover state = spec_dark hover, text/icon trắng */
+/* Base state = dark theme, hover state = spec_dark hover, white text/icon */
 .glass-theme-button--event_light {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;

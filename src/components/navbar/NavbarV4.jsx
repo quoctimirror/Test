@@ -225,7 +225,7 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
     // Wait for DOM to update and remove all menu classes before capturing originalContent
     await new Promise((resolve) => setTimeout(resolve, 50));
 
-    // Sử dụng optimized transition system
+    // Use optimized transition system
     await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
   };
 
@@ -497,7 +497,7 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
         />
       )}
 
-      {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
+      {/* SEPARATE DIV FOR LOGO BLEND ONLY */}
       <div
         className={`logo-v4-fixed-container navbar-v4-theme-${navbarTheme} ${
           isHomePage && !isMenuOpen ? "no-blend" : ""
@@ -545,7 +545,7 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
         </div>
       )}
 
-      {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
+      {/* MENU AND ACCOUNT LINK WITH BLEND MODE */}
       {!shouldHideButtons && (
         <div
           className={`menu-v4-fixed-container navbar-v4-theme-${navbarTheme} ${
@@ -1041,7 +1041,7 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
         </div>
       )}
 
-      {/* IMMERSIVE BUTTON - chỉ glassmorphism */}
+      {/* IMMERSIVE BUTTON - glassmorphism only */}
       {!shouldHideButtons && (
         <>
           <div className="immersive-v4-fixed-container">
@@ -1051,7 +1051,7 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
             ></button>
           </div>
 
-          {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
+          {/* SEPARATE BORDER - mix-blend-mode only */}
           <div
             className={`immersive-v4-border-container navbar-v4-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""
@@ -1062,7 +1062,7 @@ export default function NavbarV4({ logoOnly = false, showDmmLogo = false }) {
             <div className="immersive-v4-border"></div>
           </div>
 
-          {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
+          {/* SEPARATE TEXT - mix-blend-mode only */}
           <div
             className={`immersive-v4-text-container navbar-v4-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""

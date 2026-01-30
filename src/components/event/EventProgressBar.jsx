@@ -29,7 +29,6 @@ const EVENT_STEPS = [
   { route: ROUTES.EVENT_PLACE_NOTE, step: 4 },
   { route: ROUTES.EVENT_WRITE_MESSAGE, step: 5 },
   { route: ROUTES.EVENT_CHOOSE_NOTE, step: 6 },
-  { route: ROUTES.EVENT_CHOOSE_NOTE_V2, step: 6 }, // Same step as choose note
   { route: ROUTES.EVENT_THANKYOU, step: 7 },
 ];
 

@@ -194,7 +194,7 @@ export default function NavbarV3() {
       await new Promise(resolve => setTimeout(resolve, 50));
     }
 
-    // Sử dụng optimized transition system
+    // Use optimized transition system
     await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
   };
 
@@ -505,7 +505,7 @@ export default function NavbarV3() {
         />
       )}
 
-      {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
+      {/* SEPARATE DIV FOR LOGO BLEND ONLY */}
       <div
         className={`logo-v3-fixed-container navbar-v3-theme-${navbarTheme} ${
           isHomePage && !isMenuOpen ? "no-blend" : ""
@@ -522,7 +522,7 @@ export default function NavbarV3() {
         />
       </div>
 
-      {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
+      {/* MENU AND ACCOUNT LINK WITH BLEND MODE */}
       {!shouldHideButtons && (
         <div
           className={`menu-v3-fixed-container navbar-v3-theme-${navbarTheme} ${
@@ -812,14 +812,14 @@ export default function NavbarV3() {
         </div>
       )}
 
-      {/* IMMERSIVE BUTTON - chỉ glassmorphism */}
+      {/* IMMERSIVE BUTTON - glassmorphism only */}
       {!shouldHideButtons && (
         <>
           <div className="immersive-v3-fixed-container">
             <button className="immersive-v3-button" onClick={handleBookAppointmentClick}></button>
           </div>
 
-          {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
+          {/* SEPARATE BORDER - mix-blend-mode only */}
           <div
             className={`immersive-v3-border-container navbar-v3-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""
@@ -830,7 +830,7 @@ export default function NavbarV3() {
             <div className="immersive-v3-border"></div>
           </div>
 
-          {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
+          {/* SEPARATE TEXT - mix-blend-mode only */}
           <div
             className={`immersive-v3-text-container navbar-v3-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""

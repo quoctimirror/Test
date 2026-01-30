@@ -116,7 +116,7 @@
     line-height: 100%;
 }
 
-/* Đồng bộ hóa tất cả StarlightEffect */
+/* Synchronize all StarlightEffect */
 .space-overlay__starlight-up,
 .space-overlay__starlight-down {
     opacity: 1;
@@ -507,7 +507,7 @@
         line-height: 100%;
     }
 
-    /* StarlightEffect pointing down - trên chữ Space */
+    /* StarlightEffect pointing down - above Space text */
     .space-overlay__starlight-down {
         position: absolute;
         top: calc(50% - 90px);
@@ -515,7 +515,7 @@
         transform: translateX(-50%);
     }
 
-    /* Chữ Space - giữa màn hình */
+    /* Space text - center of screen */
     .space-overlay__title {
         position: absolute;
         top: calc(50% - 30px);
@@ -525,7 +525,7 @@
         letter-spacing: -0.64px;
     }
 
-    /* StarlightEffect pointing up - dưới chữ Space */
+    /* StarlightEffect pointing up - below Space text */
     .space-overlay__starlight-up {
         position: absolute;
         top: calc(50% + 45px);

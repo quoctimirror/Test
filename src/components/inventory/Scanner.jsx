@@ -68,7 +68,7 @@ const Scanner = () => {
       setStockInfo(null);
       setShowBranchDetails(false);
 
-      // Gọi MISA API để lấy thông tin tồn kho real-time
+      // Call MISA API to get real-time inventory information
       const misaData = await misaProductStockAPI.getByCode(skuInput.trim());
 
       if (misaData && misaData.found) {
@@ -91,7 +91,7 @@ const Scanner = () => {
           unitName: misaData.unitName,
         };
 
-        // Lưu stock info riêng biệt
+        // Save stock info separately
         const stockData = {
           totalOnHand: misaData.totalOnHand,
           totalOrdered: misaData.totalOrdered,
@@ -104,7 +104,7 @@ const Scanner = () => {
         setProduct(productData);
         setStockInfo(stockData);
       } else {
-        // Không tìm thấy trong MISA
+        // Not found in MISA
         setError(misaData?.errorMessage || "Khong tim thay san pham voi ma SKU/barcode nay");
       }
     } catch (err) {

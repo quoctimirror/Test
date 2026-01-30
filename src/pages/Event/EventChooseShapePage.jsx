@@ -42,25 +42,25 @@ const shapeFrameFolders = {
   h7: 'marquise-frames',
 };
 
-// Fixed mapping: Shape ID → Note position (each shape has one specific note)
+// Fixed mapping: Shape ID -> Note position (each shape has one specific note)
 // Must match PlaceNoteScreenNew.jsx
 const SHAPE_TO_POSITION = {
-  h1: 0,  // Heart → Đô (C4)
-  h2: 1,  // Oval → Rê (D4)
-  h3: 2,  // Round → Mi (E4)
-  h4: 3,  // Pear → Pha (F4)
-  h5: 4,  // Asscher → Son (G4)
-  h6: 5,  // Emerald → La (A4)
-  h7: 6,  // Marquise → Si (B4)
+  h1: 0,  // Heart -> Do (C4)
+  h2: 1,  // Oval -> Re (D4)
+  h3: 2,  // Round -> Mi (E4)
+  h4: 3,  // Pear -> Fa (F4)
+  h5: 4,  // Asscher -> Sol (G4)
+  h6: 5,  // Emerald -> La (A4)
+  h7: 6,  // Marquise -> Si (B4)
 };
 
 // Mapping from position Y to pitch name (must match SHAPE_TO_POSITION)
 const POSITION_TO_PITCH = {
-  0: 'C4',  // Đô
-  1: 'D4',  // Rê
+  0: 'C4',  // Do
+  1: 'D4',  // Re
   2: 'E4',  // Mi
-  3: 'F4',  // Pha
-  4: 'G4',  // Son
+  3: 'F4',  // Fa
+  4: 'G4',  // Sol
   5: 'A4',  // La
   6: 'B4',  // Si
 };
@@ -84,6 +84,9 @@ const getVideoUrl = (shape) => getMediaUrl(shapeVideos[shape.id]);
 
 // Get GIF URL for shape (iOS/in-app browsers)
 const getGifUrl = (shape) => getMediaUrl(shapeGifs[shape.id]);
+
+// Get placeholder URL for shape (first frame of WebP sequence)
+const getPlaceholderUrl = (shape) => `/dmm-event/${shapeFrameFolders[shape.id]}/frame_001.webp`;
 
 // Diamond shapes data - H1 to H7 (scale: 1 = default, >1 = larger)
 // HEART-01 = Heart shape
@@ -209,6 +212,9 @@ const EventChooseShapePage = () => {
   const shapeAnimationRef = useRef(null);
   const lastShapeFrameTimeRef = useRef(0);
 
+  // GIF loading state for iOS (show placeholder while loading)
+  const [loadedGifs, setLoadedGifs] = useState({});
+
   // Detect platform on mount
   // iOS/in-app browsers → GIF (simple, fast)
   // macOS Safari → WebP frames (smooth animation)
@@ -231,10 +237,22 @@ const EventChooseShapePage = () => {
     setIsMacSafari(isSafari && !isIOSDevice && !isAndroidInApp);
   }, []);
 
+  // Preload all GIFs when on iOS (show placeholder while loading)
+  useEffect(() => {
+    if (!isIOS) return;
+
+    shapes.forEach(shape => {
+      const img = new Image();
+      img.onload = () => {
+        setLoadedGifs(prev => ({ ...prev, [shape.id]: true }));
+      };
+      img.src = getGifUrl(shape);
+    });
+  }, [isIOS]);
+
   // Preload frames for current shape (macOS Safari only)
   useEffect(() => {
     if (!isMacSafari) {
-      console.log('[Frame Loading] Skipped - not macOS Safari');
       return;
     }
 
@@ -242,11 +260,8 @@ const EventChooseShapePage = () => {
 
     // Skip if already loaded
     if (loadedShapes[currentShapeId]) {
-      console.log('[Frame Loading] Skipped - already loaded:', currentShapeId);
       return;
     }
-
-    console.log('[Frame Loading] Starting for:', currentShapeId);
 
     const loadFrames = async () => {
       const frameFolder = shapeFrameFolders[currentShapeId];
@@ -268,8 +283,6 @@ const EventChooseShapePage = () => {
           img.src = src;
         })
       ));
-
-      console.log('[Frame Loading] Completed:', currentShapeId, frameUrls.length, 'frames');
 
       setShapeFrames(prev => ({
         ...prev,
@@ -298,11 +311,8 @@ const EventChooseShapePage = () => {
   useEffect(() => {
     const currentShapeId = shapes[currentIndex].id;
     if (!isMacSafari || !loadedShapes[currentShapeId]) {
-      console.log('[Animation] Not starting:', { isMacSafari, loaded: loadedShapes[currentShapeId] });
       return;
     }
-
-    console.log('[Animation] Starting for:', currentShapeId);
 
     setCurrentShapeFrame(0);
     lastShapeFrameTimeRef.current = 0;
@@ -502,9 +512,9 @@ const EventChooseShapePage = () => {
               {isAnimating && prevIndex !== null && (
                 <div className="event-choose-shape__diamond event-choose-shape__diamond--exit">
                   {isIOS ? (
-                    // iOS: Use GIF
+                    // iOS: Use GIF with placeholder fallback
                     <img
-                      src={getGifUrl(shapes[prevIndex])}
+                      src={loadedGifs[shapes[prevIndex].id] ? getGifUrl(shapes[prevIndex]) : getPlaceholderUrl(shapes[prevIndex])}
                       alt={shapes[prevIndex].name}
                       className="event-choose-shape__diamond-img"
                     />
@@ -532,9 +542,9 @@ const EventChooseShapePage = () => {
               <div className={`event-choose-shape__diamond ${isAnimating ? 'event-choose-shape__diamond--enter' : ''}`}>
                 <div style={{ transform: `scale(${currentShape.scale || 1})`, transition: 'transform 0.6s ease' }}>
                   {isIOS ? (
-                    // iOS: Use GIF
+                    // iOS: Use GIF with placeholder fallback
                     <img
-                      src={getGifUrl(currentShape)}
+                      src={loadedGifs[currentShape.id] ? getGifUrl(currentShape) : getPlaceholderUrl(currentShape)}
                       alt={currentShape.name}
                       className="event-choose-shape__diamond-img"
                     />

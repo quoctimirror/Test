@@ -33,11 +33,11 @@ const MELODY_VERSION = 4;
 
 // Fixed mapping: Note position → Shape (each note has one specific shape)
 const NOTE_TO_SHAPE = {
-  0: 'mirror_DMM/HEART-01.webp',  // Đô → Heart
-  1: 'mirror_DMM/HEART-02.webp',  // Rê → Oval
+  0: 'mirror_DMM/HEART-01.webp',  // Do → Heart
+  1: 'mirror_DMM/HEART-02.webp',  // Re → Oval
   2: 'mirror_DMM/HEART-03.webp',  // Mi → Round
-  3: 'mirror_DMM/HEART-04.webp',  // Pha → Pear
-  4: 'mirror_DMM/HEART-05.webp',  // Son → Asscher
+  3: 'mirror_DMM/HEART-04.webp',  // Fa → Pear
+  4: 'mirror_DMM/HEART-05.webp',  // Sol → Asscher
   5: 'mirror_DMM/HEART-06.webp',  // La → Emerald
   6: 'mirror_DMM/HEART-07.webp',  // Si → Marquise
 };
@@ -66,11 +66,11 @@ const SHAPE_NAME_MAP = {
 // Desktop: Staff lines at top=0, notes use fixed pixel positions
 // .your-melody__main is centered with top:50% + translateY(-50%)
 const NOTE_POSITIONS_Y_DESKTOP = [
-  436,  // Position 0 - Đô (C4) - Ledger line below staff
-  404,  // Position 1 - Rê (D4) - Space below Line 4
+  436,  // Position 0 - Do (C4) - Ledger line below staff
+  404,  // Position 1 - Re (D4) - Space below Line 4
   360,  // Position 2 - Mi (E4) - Line 4 (bottom)
-  316,  // Position 3 - Pha (F4) - Space 3
-  272,  // Position 4 - Son (G4) - Line 3
+  316,  // Position 3 - Fa (F4) - Space 3
+  272,  // Position 4 - Sol (G4) - Line 3
   228,  // Position 5 - La (A4) - Space 2
   184,  // Position 6 - Si (B4) - Line 2
 ];
@@ -80,21 +80,21 @@ const NOTE_POSITIONS_Y_DESKTOP = [
 // Staff 1: top = 322/1194, height = 200/1194
 // Staff 2: top = 672/1194, height = 200/1194
 const NOTE_POSITIONS_Y_TABLET_STAFF1 = [
-  (322 + 241) / 1194 * 100,    // Position 0 - Ledger line - Đô (C4) +4px
-  (322 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Rê (D4)
+  (322 + 241) / 1194 * 100,    // Position 0 - Ledger line - Do (C4) +4px
+  (322 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Re (D4)
   (322 + 200) / 1194 * 100,    // Position 2 - Line 4 (bottom) - Mi (E4)
-  (322 + 176) / 1194 * 100,    // Position 3 - Space 3 - Pha (F4)
-  (322 + 152) / 1194 * 100,    // Position 4 - Line 3 - Son (G4)
+  (322 + 176) / 1194 * 100,    // Position 3 - Space 3 - Fa (F4)
+  (322 + 152) / 1194 * 100,    // Position 4 - Line 3 - Sol (G4)
   (322 + 128) / 1194 * 100,    // Position 5 - Space 2 - La (A4)
   (322 + 104) / 1194 * 100,    // Position 6 - Line 2 - Si (B4)
 ];
 
 const NOTE_POSITIONS_Y_TABLET_STAFF2 = [
-  (672 + 241) / 1194 * 100,    // Position 0 - Ledger line - Đô (C4) +4px
-  (672 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Rê (D4)
+  (672 + 241) / 1194 * 100,    // Position 0 - Ledger line - Do (C4) +4px
+  (672 + 224) / 1194 * 100,    // Position 1 - Space below Line 4 - Re (D4)
   (672 + 200) / 1194 * 100,    // Position 2 - Line 4 (bottom) - Mi (E4)
-  (672 + 176) / 1194 * 100,    // Position 3 - Space 3 - Pha (F4)
-  (672 + 152) / 1194 * 100,    // Position 4 - Line 3 - Son (G4)
+  (672 + 176) / 1194 * 100,    // Position 3 - Space 3 - Fa (F4)
+  (672 + 152) / 1194 * 100,    // Position 4 - Line 3 - Sol (G4)
   (672 + 128) / 1194 * 100,    // Position 5 - Space 2 - La (A4)
   (672 + 104) / 1194 * 100,    // Position 6 - Line 2 - Si (B4)
 ];
@@ -104,21 +104,21 @@ const NOTE_POSITIONS_Y_TABLET_STAFF2 = [
 // Staff 1: top = 172/844, height = 200/844
 // Staff 2: top = 472/844, height = 200/844
 const NOTE_POSITIONS_Y_MOBILE_STAFF1 = [
-  (172 + 242) / 844 * 100,     // Position 0 - Ledger line - Đô (C4) +4px
-  (172 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Rê (D4)
+  (172 + 242) / 844 * 100,     // Position 0 - Ledger line - Do (C4) +4px
+  (172 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Re (D4)
   (172 + 200) / 844 * 100,     // Position 2 - Line 4 (bottom) - Mi (E4)
-  (172 + 176) / 844 * 100,     // Position 3 - Space 3 - Pha (F4)
-  (172 + 152) / 844 * 100,     // Position 4 - Line 3 - Son (G4)
+  (172 + 176) / 844 * 100,     // Position 3 - Space 3 - Fa (F4)
+  (172 + 152) / 844 * 100,     // Position 4 - Line 3 - Sol (G4)
   (172 + 128) / 844 * 100,     // Position 5 - Space 2 - La (A4)
   (172 + 104) / 844 * 100,     // Position 6 - Line 2 - Si (B4)
 ];
 
 const NOTE_POSITIONS_Y_MOBILE_STAFF2 = [
-  (472 + 242) / 844 * 100,     // Position 0 - Ledger line - Đô (C4) +4px
-  (472 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Rê (D4)
+  (472 + 242) / 844 * 100,     // Position 0 - Ledger line - Do (C4) +4px
+  (472 + 224) / 844 * 100,     // Position 1 - Space below Line 4 - Re (D4)
   (472 + 200) / 844 * 100,     // Position 2 - Line 4 (bottom) - Mi (E4)
-  (472 + 176) / 844 * 100,     // Position 3 - Space 3 - Pha (F4)
-  (472 + 152) / 844 * 100,     // Position 4 - Line 3 - Son (G4)
+  (472 + 176) / 844 * 100,     // Position 3 - Space 3 - Fa (F4)
+  (472 + 152) / 844 * 100,     // Position 4 - Line 3 - Sol (G4)
   (472 + 128) / 844 * 100,     // Position 5 - Space 2 - La (A4)
   (472 + 104) / 844 * 100,     // Position 6 - Line 2 - Si (B4)
 ];

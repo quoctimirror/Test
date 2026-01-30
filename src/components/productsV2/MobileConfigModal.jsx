@@ -137,7 +137,7 @@ const MobileConfigModal = ({ isOpen, isVisible = true, hasOpenedModal = false, o
                             <span className="pv2-mobile-price heading-3--no-margin">$15,600</span>
                         </div>
 
-                        {/* 5️⃣ + 6️⃣ Buttons Container - Chứa cả Action Buttons và Order Button */}
+                        {/* 5 + 6 Buttons Container - Contains both Action Buttons and Order Button */}
                         <div className="pv2-mobile-buttons-container">
                             {/* Action Buttons (wishlist + appointment) */}
                             <div className="pv2-mobile-modal-action-buttons">

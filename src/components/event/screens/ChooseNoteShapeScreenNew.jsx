@@ -319,8 +319,8 @@ const ChooseNoteShapeScreenNew = () => {
       } else {
         downloadAvatar(avatarDataUrl, `mirrorthankyou_${user?.displayName || 'guest'}.png`);
       }
-    } catch (err) {
-      console.log('Share cancelled or failed:', err);
+    } catch {
+      // Share cancelled or failed - this is expected behavior
     }
   };
 

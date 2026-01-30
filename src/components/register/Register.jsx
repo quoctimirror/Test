@@ -216,10 +216,10 @@ const Register = () => {
     }
   };
 
-  // --- BƯỚC 3: CẬP NHẬT HOÀN CHỈNH HÀM SUBMIT ---
+  // --- STEP 3: COMPLETE SUBMIT HANDLER ---
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Thực hiện validation phía client trước
+    // Perform client-side validation first
     if (!validateForm()) {
       // Scroll to top to show errors
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -231,9 +231,9 @@ const Register = () => {
     }
 
     setIsLoading(true);
-    setErrors({}); // Xóa lỗi cũ trước khi gửi
+    setErrors({}); // Clear old errors before submitting
 
-    // Tạo payload để gửi đi, chỉ chứa các trường backend cần
+    // Create payload with only fields backend needs
     const payload = {
       title: formData.title,
       firstName: formData.firstName.trim(),
@@ -241,20 +241,20 @@ const Register = () => {
       username: formData.username.trim(),
       email: formData.email.trim(),
       password: formData.password,
-      // phoneNumber là optional, có thể thêm vào nếu form có
+      // phoneNumber is optional, can be added if form has it
     };
 
     try {
       await api.post("/api/v1/auth/register", payload);
 
-      // Lưu email và hiển thị thông báo kiểm tra email
+      // Save email and show check email notification
       setRegisteredEmail(formData.email);
       setRegistrationSuccess(true);
     } catch (error) {
-      // Xử lý khi thất bại
+      // Handle failure
       let errorMessage = "Registration failed. Please try again.";
 
-      // Lấy thông báo lỗi cụ thể từ response của backend
+      // Get specific error message from backend response
       if (
         error.response &&
         error.response.data &&
@@ -262,7 +262,7 @@ const Register = () => {
       ) {
         errorMessage = error.response.data.message;
 
-        // Hiển thị lỗi ngay tại trường input tương ứng
+        // Display error at corresponding input field
         if (errorMessage.toLowerCase().includes("username")) {
           setErrors({ username: errorMessage });
         } else if (errorMessage.toLowerCase().includes("email")) {
@@ -270,25 +270,25 @@ const Register = () => {
         } else if (errorMessage.toLowerCase().includes("password")) {
           setErrors({ password: errorMessage });
         } else {
-          // Lỗi chung không thuộc trường nào
+          // General error not belonging to any field
           setErrors({ form: errorMessage });
         }
       } else {
-        // Lỗi mạng hoặc lỗi không xác định
+        // Network error or unknown error
         console.error("Registration failed:", error);
         setErrors({
           form: "Cannot connect to the server. Please try again later.",
         });
       }
     } finally {
-      setIsLoading(false); // Luôn dừng loading sau khi hoàn tất
+      setIsLoading(false); // Always stop loading after completion
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    // Nếu là firstName hoặc lastName, chỉ cho phép chữ cái không dấu và khoảng trắng
+    // For firstName or lastName, only allow letters and spaces (no accents)
     let processedValue = value;
     if (name === 'firstName' || name === 'lastName') {
       processedValue = value.replace(/[^a-zA-Z\s]/g, '');
@@ -316,7 +316,7 @@ const Register = () => {
     </button>
   );
 
-  // Nếu đăng ký thành công, hiển thị thông báo kiểm tra email
+  // If registration successful, show check email notification
   if (registrationSuccess) {
     return (
       <div className="register-container" data-navbar-theme="black">
@@ -383,7 +383,7 @@ const Register = () => {
       <div className="register-form-wrapper">
         <h1 className="heading-1--no-margin register-title">CREATE ACCOUNT</h1>
         <form className="register-form" onSubmit={handleSubmit} noValidate>
-          {/* Hiển thị lỗi chung của form */}
+          {/* Display general form errors */}
           {errors.form && (
             <p className="input-error form-error bodytext-4--no-margin">
               {errors.form}
