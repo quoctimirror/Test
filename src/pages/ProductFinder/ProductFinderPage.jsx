@@ -2,7 +2,7 @@
  * ProductFinderPage - Quiz to find the perfect jewelry piece
  * 3 Steps: Main Stone → Band → Side Stone → Result
  */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
@@ -11,52 +11,16 @@ import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
 import { formatPrice } from '@/utils/formatPrice';
 import { productFinderAPI } from '@/services/api';
 import { getProductFinderConfig } from '@/components/productsV2/shapeConfig';
+import {
+  ORBIT_RADII,
+  getPositionOnOrbit,
+  getOrbitAngles,
+  getIndexFromSelection,
+  STEP_MAP,
+  buildImagePath,
+} from './utils/orbitUtils';
 
 import './ProductFinderPage.css';
-
-// Orbit configuration
-const orbitRadii = {
-  1: { rx: 333, ry: 56 },
-  2: { rx: 539, ry: 80 },
-  3: { rx: 821, ry: 113.5 },
-};
-
-const VIEWBOX_WIDTH = 1700;
-const VIEWBOX_HEIGHT = 280;
-const CENTER_X = 850;
-const CENTER_Y = 140;
-
-const getPositionOnOrbit = (orbit, angleDeg) => {
-  const { rx, ry } = orbitRadii[orbit];
-  const angleRad = (angleDeg * Math.PI) / 180;
-  const x = rx * Math.cos(angleRad);
-  const y = ry * Math.sin(angleRad);
-  const percentX = ((CENTER_X + x) / VIEWBOX_WIDTH) * 100;
-  const percentY = ((CENTER_Y + y) / VIEWBOX_HEIGHT) * 100;
-  return { percentX, percentY };
-};
-
-const getOrbitAngles = (count) => {
-  const angles = [];
-  const step = 360 / count;
-  for (let i = 0; i < count; i++) {
-    angles.push(i * step);
-  }
-  return angles;
-};
-
-const getIndexFromSelection = (options, selectionId) => {
-  if (!options || !selectionId) return 0;
-  const index = options.findIndex(opt => opt.id === selectionId);
-  return index >= 0 ? index : 0;
-};
-
-// Step URL mapping
-const STEP_MAP = {
-  'choose-shape': 0,
-  'choose-band': 1,
-  'choose-sidestone': 2,
-};
 
 const ProductFinderPage = () => {
   const navigate = useNavigate();
@@ -210,20 +174,25 @@ const ProductFinderPage = () => {
     return () => abortController.abort();
   }, []);
 
-  // Build quiz steps
-  const quizSteps = [
+  // Build quiz steps - memoized to prevent recalculation on every render
+  const quizSteps = useMemo(() => [
     { id: 'diamond', title: 'Chọn viên kim cương', options: diamondShapes },
     { id: 'band', title: 'Chọn đai nhẫn', options: bandStyles },
     { id: 'sidestone', title: 'Chọn đá phụ', options: sideStones },
-  ];
+  ], [diamondShapes, bandStyles, sideStones]);
 
   const TOTAL_STEPS = quizSteps.length;
   const currentStep = quizSteps[currentStepIndex];
   const progressPercent = ((currentStepIndex + 1) / TOTAL_STEPS) * 100;
-  const orbitAngles = getOrbitAngles(currentStep?.options?.length || 1);
 
-  // Calculate estimated total
-  const calculateEstimatedTotal = () => {
+  // Memoize orbit angles calculation
+  const orbitAngles = useMemo(
+    () => getOrbitAngles(currentStep?.options?.length || 1),
+    [currentStep?.options?.length]
+  );
+
+  // Calculate estimated total - memoized
+  const estimatedTotal = useMemo(() => {
     let total = 0;
     for (let i = 0; i < currentStepIndex; i++) {
       const stepId = quizSteps[i].id;
@@ -234,17 +203,15 @@ const ProductFinderPage = () => {
       total += currentOption?.price || 0;
     }
     return total;
-  };
+  }, [currentStepIndex, quizSteps, selectedPrices, currentStep?.options, currentIndex]);
 
-  const estimatedTotal = calculateEstimatedTotal();
-
-  // Get angle for shape
-  const getShapeAngle = (index) => {
+  // Get angle for shape - memoized callback
+  const getShapeAngle = useCallback((index) => {
     const baseAngle = orbitAngles[index];
     let angle = baseAngle - rotationOffset + 90;
     angle = ((angle % 360) + 360) % 360;
     return angle;
-  };
+  }, [orbitAngles, rotationOffset]);
 
   // Animate rotation
   useEffect(() => {
@@ -361,21 +328,21 @@ const ProductFinderPage = () => {
     }
   };
 
-  // Get center preview for animation
-  const getCenterPreview = (option) => {
+  // Get center preview for animation - memoized callback
+  const getCenterPreview = useCallback((option) => {
     if (currentStepIndex === 0) {
       return getMediaUrl(option.gif || option.image);
     } else if (currentStepIndex === 1) {
-      // Step 2: Band - dùng hình combo làm placeholder
+      // Step 2: Band - use combo image as placeholder
       const mainStone = selections.diamond || 'round';
-      return `/product-finder/a1_${option.id}_${mainStone}_baguette.png`;
+      return buildImagePath(option.id, mainStone, 'baguette');
     } else {
       // Step 3: Full combo images
       const mainStone = selections.diamond || 'round';
       const band = selections.band || 'single';
-      return `/product-finder/a1_${band}_${mainStone}_${option.id}.png`;
+      return buildImagePath(band, mainStone, option.id);
     }
-  };
+  }, [currentStepIndex, selections.diamond, selections.band]);
 
   const currentOption = currentStep?.options?.[currentIndex];
 
@@ -507,9 +474,9 @@ const ProductFinderPage = () => {
               <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.6"/>
             </linearGradient>
           </defs>
-          <ellipse cx="850" cy="140" rx={orbitRadii[3].rx} ry={orbitRadii[3].ry} fill="url(#finderOrbitGlow3)" stroke="url(#finderOrbitStroke3)" strokeWidth="1.5" opacity="0.1"/>
-          <ellipse cx="850" cy="140" rx={orbitRadii[2].rx} ry={orbitRadii[2].ry} fill="url(#finderOrbitGlow2)" stroke="url(#finderOrbitStroke2)" strokeWidth="1.5" opacity="0.5"/>
-          <ellipse cx="850" cy="140" rx={orbitRadii[1].rx} ry={orbitRadii[1].ry} fill="url(#finderOrbitGlow1)" stroke="none"/>
+          <ellipse cx="850" cy="140" rx={ORBIT_RADII[3].rx} ry={ORBIT_RADII[3].ry} fill="url(#finderOrbitGlow3)" stroke="url(#finderOrbitStroke3)" strokeWidth="1.5" opacity="0.1"/>
+          <ellipse cx="850" cy="140" rx={ORBIT_RADII[2].rx} ry={ORBIT_RADII[2].ry} fill="url(#finderOrbitGlow2)" stroke="url(#finderOrbitStroke2)" strokeWidth="1.5" opacity="0.5"/>
+          <ellipse cx="850" cy="140" rx={ORBIT_RADII[1].rx} ry={ORBIT_RADII[1].ry} fill="url(#finderOrbitGlow1)" stroke="none"/>
         </svg>
 
         {/* Options on orbit */}
