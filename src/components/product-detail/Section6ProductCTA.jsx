@@ -1,10 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
+import { useImmersiveModal } from "@/contexts/ImmersiveModalContext";
 import "./Section6ProductCTA.css";
 
 const Section6ProductCTA = ({ product }) => {
   const navigate = useNavigate();
+  const { openModal } = useImmersiveModal();
 
   const handleContact = () => {
     navigate(ROUTES.CONTACT);
@@ -15,7 +17,7 @@ const Section6ProductCTA = ({ product }) => {
   };
 
   const handleImmersiveShowroom = () => {
-    navigate(ROUTES.IMMERSIVE_SHOWROOM);
+    openModal();
   };
 
   return (

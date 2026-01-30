@@ -176,7 +176,7 @@ body:has(.your-wallpaper) {
   z-index: 1000;
 }
 
-/* "Tải xuống" button - pink style like spec_light */
+/* "Download" button - pink style like spec_light */
 .your-wallpaper__footer-actions .glass-theme-button--light:first-child {
   background:
     radial-gradient(

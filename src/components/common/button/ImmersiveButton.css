@@ -41,7 +41,7 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Icon và Text đều absolute, chồng lên nhau */
+/* Icon and Text are both absolute, overlapping each other */
 .immersive-globe-btn--expanded .immersive-globe-btn__icon {
   position: absolute;
   display: flex;
@@ -80,7 +80,7 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Icon và Text đều absolute, chồng lên nhau */
+/* Icon and Text are both absolute, overlapping each other */
 .immersive-globe-btn--collapsed .immersive-globe-btn__icon {
   position: absolute;
   display: flex;

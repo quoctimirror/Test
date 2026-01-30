@@ -2,7 +2,7 @@
    REUSABLE 12-COLUMN GRID SYSTEM
    ======================================== */
 
-/* Grid Container - Sử dụng CSS Grid */
+/* Grid Container - Using CSS Grid */
 .grid-container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);

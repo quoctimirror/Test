@@ -90,11 +90,11 @@ export async function signInWithGoogle() {
   }
 
   try {
-    // Đảm bảo Google script đã load
+    // Ensure Google script is loaded
     await loadGoogleScript();
 
-    // Dùng google.accounts.id.prompt() - Google SDK tự hiển thị UI đăng nhập
-    // Callback đã được set trong initGoogleSignIn()
+    // Use google.accounts.id.prompt() - Google SDK displays login UI
+    // Callback was set in initGoogleSignIn()
     window.google.accounts.id.prompt((notification) => {
       if (notification.isNotDisplayed()) {
         // Fallback to OAuth2 token client when One Tap doesn't display

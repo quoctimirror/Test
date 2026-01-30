@@ -106,7 +106,7 @@
     inset 0 -0.5px 0 0 rgba(255, 255, 255, 0.2);
 }
 
-/* Logo container riêng cho blend mode */
+/* Separate logo container for blend mode */
 .logo-v4-fixed-container {
   position: fixed;
   top: 23px;
@@ -363,7 +363,7 @@
   fill: rgba(255, 255, 255, 1) !important;
 }
 
-/* Menu container với blend mode */
+/* Menu container with blend mode */
 .menu-v4-fixed-container {
   position: fixed;
   top: 11.5px;
@@ -495,7 +495,7 @@
   transition: transform 0.3s ease 0.6s, opacity 0.3s ease 0.6s; /* 0.6s delay matches list expand duration */
 }
 
-/* Account link container với blend mode */
+/* Account link container with blend mode */
 .account-v4-fixed-container {
   position: fixed;
   top: 11.5px;
@@ -528,7 +528,7 @@
   color: rgba(255, 255, 255, 1) !important;
 }
 
-/* Immersive button container KHÔNG có blend mode cho background */
+/* Immersive button container WITHOUT blend mode for background */
 .immersive-v4-fixed-container {
   position: fixed;
   top: 12px;
@@ -850,11 +850,11 @@
   position: relative;
   overflow: hidden;
   margin-right: 0;
-  /* CRITICAL: Tạo isolation để text không bị ảnh hưởng bởi backdrop-filter */
+  /* CRITICAL: Create isolation so text is not affected by backdrop-filter */
   isolation: isolate;
 }
 
-/* Container riêng cho text với blend mode */
+/* Separate container for text with blend mode */
 .immersive-v4-text-container {
   position: fixed;
   top: 12px;
@@ -862,7 +862,7 @@
   /* Button centered in 69px navbar: 12px top + 45px button + 12px bottom */
   width: 212px;
   height: 45px;
-  z-index: 203; /* Cao nhất để ở trên cùng */
+  z-index: 203; /* Highest to be on top */
   mix-blend-mode: difference;
   pointer-events: none;
   display: flex;
@@ -897,12 +897,12 @@
   --angle-1: -75deg;
 }
 
-/* Border hover - phải hover vào button background bên dưới */
+/* Border hover - must hover on button background below */
 .immersive-v4-fixed-container:hover ~ .immersive-v4-border-container {
   opacity: 1;
 }
 
-/* Text hover - phải hover vào button background bên dưới */
+/* Text hover - must hover on button background below */
 .immersive-v4-fixed-container:hover ~ .immersive-v4-text-container {
   opacity: 1;
 }
@@ -914,7 +914,7 @@
   white-space: nowrap;
 }
 
-/* Container riêng cho border với blend mode */
+/* Separate container for border with blend mode */
 .immersive-v4-border-container {
   position: fixed;
   top: 12px;
@@ -922,7 +922,7 @@
   /* Button centered in 69px navbar: 12px top + 45px button + 12px bottom */
   width: 212px;
   height: 45px;
-  z-index: 202; /* Cao hơn button nhưng thấp hơn text */
+  z-index: 202; /* Higher than button but lower than text */
   mix-blend-mode: difference;
   pointer-events: none;
   display: flex;
@@ -1001,7 +1001,7 @@
 
 .immersive-v4-button:hover {
   background: rgba(255, 255, 255, 0.1);
-  /* Box-shadow removed - chỉ tăng background opacity khi hover */
+  /* Box-shadow removed - only increase background opacity on hover */
 }
 
 .menu-v4-popup {
@@ -1220,7 +1220,7 @@
   color: inherit;
 }
 
-/* Xóa các class cũ không còn sử dụng */
+/* Remove old classes no longer in use */
 
 .navbar-right {
   display: flex;

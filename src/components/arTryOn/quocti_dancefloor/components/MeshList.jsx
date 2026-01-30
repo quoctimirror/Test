@@ -1,12 +1,12 @@
 /**
  * MeshList.jsx
  *
- * NHIỆM VỤ: Hiển thị danh sách mesh và color picker
- * - Hiển thị từng mesh với tên và type
- * - Click vào mesh để select/deselect (highlight)
- * - Color picker (visual) để chọn màu
- * - Text input để nhập mã HEX trực tiếp
- * - Toggle visibility (ẩn/hiện mesh) bằng icon con mắt
+ * PURPOSE: Display mesh list and color picker
+ * - Display each mesh with name and type
+ * - Click on mesh to select/deselect (highlight)
+ * - Color picker (visual) to choose color
+ * - Text input to enter HEX code directly
+ * - Toggle visibility (show/hide mesh) with eye icon
  */
 
 export function MeshList({ meshList, selectedMesh, setSelectedMesh, meshColors, setMeshColors, meshVisibility, setMeshVisibility }) {
@@ -17,7 +17,7 @@ export function MeshList({ meshList, selectedMesh, setSelectedMesh, meshColors, 
       </h3>
 
       {meshList.map(mesh => {
-        const isVisible = meshVisibility[mesh.name] !== false; // Mặc định true nếu undefined
+        const isVisible = meshVisibility[mesh.name] !== false; // Default true if undefined
 
         return (
           <div
@@ -31,7 +31,7 @@ export function MeshList({ meshList, selectedMesh, setSelectedMesh, meshColors, 
               opacity: isVisible ? 1 : 0.5
             }}
           >
-            {/* === MESH INFO (Click để select) === */}
+            {/* === MESH INFO (Click to select) === */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {/* Visibility Toggle Button */}
               <button
@@ -51,7 +51,7 @@ export function MeshList({ meshList, selectedMesh, setSelectedMesh, meshColors, 
                   color: isVisible ? '#4CAF50' : '#666',
                   transition: 'color 0.2s'
                 }}
-                title={isVisible ? 'Ẩn mesh' : 'Hiện mesh'}
+                title={isVisible ? 'Hide mesh' : 'Show mesh'}
               >
                 {isVisible ? '👁️' : '👁️‍🗨️'}
               </button>
@@ -92,7 +92,7 @@ export function MeshList({ meshList, selectedMesh, setSelectedMesh, meshColors, 
               value={meshColors[mesh.name] || '#ffffff'}
               onChange={(e) => {
                 const value = e.target.value;
-                // Chỉ chấp nhận HEX hợp lệ: #RRGGBB
+                // Only accept valid HEX: #RRGGBB
                 if (/^#[0-9A-Fa-f]{0,6}$/.test(value)) {
                   setMeshColors(prev => ({ ...prev, [mesh.name]: value }));
                 }

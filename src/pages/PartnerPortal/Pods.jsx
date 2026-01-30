@@ -176,30 +176,13 @@ export default function PartnerPortalPods() {
                       </div>
                       <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>Scans</div>
                     </div>
-                    <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: "1.25rem", fontWeight: "600", color: "#10b981" }}>
-                        {formatNumber(pod.totalAttributions)}
-                      </div>
-                      <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>Orders</div>
-                    </div>
                   </div>
 
-                  {pod.attributedAmount > 0 && (
-                    <div style={{
-                      marginTop: "0.75rem",
-                      padding: "0.5rem",
-                      background: "#ecfdf5",
-                      borderRadius: "6px",
-                      textAlign: "center"
-                    }}>
-                      <span style={{ fontSize: "0.75rem", color: "#059669" }}>
-                        Total Revenue: {formatCurrency(pod.attributedAmount)}
-                      </span>
-                    </div>
-                  )}
-
-                  <div style={{ marginTop: "0.75rem", fontSize: "0.75rem", color: "#9ca3af" }}>
-                    Capacity: {pod.displayCapacity} products
+                  <div style={{ marginTop: "0.75rem", fontSize: "0.75rem", color: "#9ca3af", display: "flex", justifyContent: "space-between" }}>
+                    <span>Capacity: {pod.displayCapacity} products</span>
+                    {pod.commissionRate != null && (
+                      <span style={{ color: "#059669" }}>Commission: {pod.commissionRate}%</span>
+                    )}
                   </div>
                 </div>
               ))}

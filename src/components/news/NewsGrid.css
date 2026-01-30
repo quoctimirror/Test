@@ -43,7 +43,7 @@
   overflow: hidden;
 }
 
-/* Pattern xen kẽ: 1:1, 5:4 */
+/* Alternating pattern: 1:1, 5:4 */
 .news-item:nth-child(odd) .news-item-image {
   aspect-ratio: 1;
 }
@@ -131,7 +131,7 @@
   margin-top: 120px;
 }
 
-/* ShineGlassButton sẽ tự handle styling, chỉ giữ layout styles */
+/* ShineGlassButton handles styling, only keep layout styles */
 .view-more-btn {
   margin: 0;
 }

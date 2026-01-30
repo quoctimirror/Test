@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useOutlet, NavLink } from "react-router-dom";
 import ProductsManager from "./ProductsManager";
 import UnifiedOrdersManager from "./UnifiedOrdersManager";
 import ProductFulfillment from "./ProductFulfillment";
@@ -40,6 +40,8 @@ import "./AdminDashboard.css";
 import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/context/AuthContext";
 
+const SIDEBAR_EXPANDED_KEY = "admin-sidebar-expanded-groups";
+
 const AdminDashboard = () => {
   const { user } = useAuth();
   const roles = user?.roles || [];
@@ -48,9 +50,45 @@ const AdminDashboard = () => {
   // Sidebar state for mobile
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Close sidebar when clicking a menu item on mobile
+  // Collapsible sidebar groups
+  const [expandedGroups, setExpandedGroups] = useState(() => {
+    try {
+      const saved = localStorage.getItem(SIDEBAR_EXPANDED_KEY);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const toggleGroup = useCallback((groupId) => {
+    setExpandedGroups((prev) => {
+      const next = { ...prev, [groupId]: !prev[groupId] };
+      try { localStorage.setItem(SIDEBAR_EXPANDED_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }, []);
+
+  // Close sidebar when clicking a tab menu item on mobile
   const handleMenuClick = (tabId) => {
-    setActiveTab(tabId);
+    // If currently on a pod route, navigate back to admin dashboard base
+    if (outlet) {
+      const params = new URLSearchParams();
+      if (tabId !== 'dashboard') {
+        params.set('tab', tabId);
+      }
+      const newSearch = params.toString();
+      navigate(`${ROUTES.DASHBOARD_ADMIN}${newSearch ? `?${newSearch}` : ''}`, { replace: false });
+      setActiveTabState(tabId);
+    } else {
+      setActiveTab(tabId);
+    }
+    if (window.innerWidth <= 1024) {
+      setSidebarOpen(false);
+    }
+  };
+
+  // Close sidebar on mobile when clicking a route NavLink
+  const handleRouteClick = () => {
     if (window.innerWidth <= 1024) {
       setSidebarOpen(false);
     }
@@ -87,6 +125,8 @@ const AdminDashboard = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const outlet = useOutlet();
+  const hasOutlet = !!outlet;
 
   // Get tab from URL query params
   const getTabFromUrl = useCallback(() => {
@@ -110,39 +150,84 @@ const AdminDashboard = () => {
   }, [navigate, location.pathname, location.search]);
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard" },
-    // Product Ops Dashboard (NEW)
-    { id: "product-ops", label: "Product Ops Dashboard" },
-    { id: "misa-integration", label: "MISA Integration" },
-    { id: "product-publisher", label: "Product Publisher" },
-    { id: "stock-reconciliation", label: "Stock Reconciliation" },
-    // Existing tabs
-    { id: "products", label: "Products" },
-    { id: "product-fulfillment", label: "Product Fulfillment (Old)" },
-    { id: "sku-codes", label: "SKU Codes" },
-    { id: "orders", label: "Orders" },
-    { id: "payments", label: "Payment schedules" },
-    { id: "appointments", label: "Appointments" },
-    { id: "package-printing-kit", label: "Package Printing Kit" },
-    { id: "categories", label: "Categories" },
-    { id: "collections", label: "Collections" },
-    { id: "locations", label: "Locations" },
-    { id: "warehouses", label: "Warehouses" },
-    { id: "vendors", label: "Vendors" },
-    // { id: "vendor-matching", label: "Vendor Matching" },
-    // { id: "vendor-optimization", label: "Vendor Optimization" },
-    // { id: "vendor-selection-wizard", label: "Vendor Selection Wizard" },
-    // { id: "currency-calculator", label: "Currency Calculator" },
-    // { id: "metal-prices", label: "Metal Prices" },
-    // { id: "unit-converter", label: "Unit Converter" },
-    // { id: "collection-plan-wizard", label: "Collection Plan Wizard" },
-    // { id: "jewelry-specifications", label: "Jewelry Specifications" },
-    // { id: "purchase-orders", label: "Purchase Orders" },
-    // { id: "market-trends", label: "Market Trends" },
-    // { id: "customs-compliance", label: "Customs & Compliance" },
-    // { id: "components", label: "Components" },
-    { id: "users", label: "Users" },
-    { id: "rbac-matrix", label: "RBAC Matrix" },
+    // Standalone top-level item
+    { id: "dashboard", label: "Dashboard", type: "tab" },
+    // Grouped items
+    {
+      id: "group-operations", label: "Operations", type: "group",
+      children: [
+        { id: "product-ops", label: "Product Ops Dashboard", type: "tab" },
+        { id: "misa-integration", label: "MISA Integration", type: "tab" },
+        { id: "product-publisher", label: "Product Publisher", type: "tab" },
+        { id: "stock-reconciliation", label: "Stock Reconciliation", type: "tab" },
+      ],
+    },
+    {
+      id: "group-products", label: "Products", type: "group",
+      children: [
+        { id: "products", label: "Products", type: "tab" },
+        { id: "product-fulfillment", label: "Product Fulfillment (Old)", type: "tab" },
+        { id: "sku-codes", label: "SKU Codes", type: "tab" },
+        { id: "categories", label: "Categories", type: "tab" },
+        { id: "collections", label: "Collections", type: "tab" },
+        // { id: "jewelry-specifications", label: "Jewelry Specifications", type: "tab" },
+        // { id: "collection-plan-wizard", label: "Collection Plan Wizard", type: "tab" },
+        // { id: "components", label: "Components", type: "tab" },
+      ],
+    },
+    {
+      id: "group-orders", label: "Orders & Finance", type: "group",
+      children: [
+        { id: "orders", label: "Orders", type: "tab" },
+        { id: "payments", label: "Payment schedules", type: "tab" },
+        { id: "appointments", label: "Appointments", type: "tab" },
+        { id: "package-printing-kit", label: "Package Printing Kit", type: "tab" },
+        // { id: "purchase-orders", label: "Purchase Orders", type: "tab" },
+        // { id: "currency-calculator", label: "Currency Calculator", type: "tab" },
+        // { id: "metal-prices", label: "Metal Prices", type: "tab" },
+      ],
+    },
+    {
+      id: "group-inventory", label: "Inventory", type: "group",
+      children: [
+        { id: "locations", label: "Locations", type: "tab" },
+        { id: "warehouses", label: "Warehouses", type: "tab" },
+        { id: "vendors", label: "Vendors", type: "tab" },
+        // { id: "vendor-matching", label: "Vendor Matching", type: "tab" },
+        // { id: "vendor-optimization", label: "Vendor Optimization", type: "tab" },
+        // { id: "vendor-selection-wizard", label: "Vendor Selection Wizard", type: "tab" },
+        // { id: "unit-converter", label: "Unit Converter", type: "tab" },
+      ],
+    },
+    {
+      id: "group-system", label: "System", type: "group",
+      children: [
+        { id: "users", label: "Users", type: "tab" },
+        { id: "rbac-matrix", label: "RBAC Matrix", type: "tab" },
+        // { id: "market-trends", label: "Market Trends", type: "tab" },
+        // { id: "customs-compliance", label: "Customs & Compliance", type: "tab" },
+      ],
+    },
+    {
+      id: "group-pod", label: "POD System", type: "group",
+      children: [
+        { id: "pod-dashboard", label: "POD Dashboard", type: "route", path: ROUTES.POD_ADMIN_DASHBOARD },
+        { id: "pod-partners", label: "Partners", type: "route", path: ROUTES.POD_ADMIN_PARTNERS },
+        { id: "pod-pods", label: "PODs", type: "route", path: ROUTES.POD_ADMIN_PODS },
+        { id: "pod-locations", label: "POD Locations", type: "route", path: ROUTES.POD_ADMIN_LOCATIONS },
+        { id: "pod-qrcodes", label: "QR Codes", type: "route", path: ROUTES.POD_ADMIN_QRCODES },
+        { id: "pod-scans", label: "Scans", type: "route", path: ROUTES.POD_ADMIN_SCANS },
+        { id: "pod-user-attributions", label: "User Attributions", type: "route", path: ROUTES.POD_ADMIN_USER_ATTRIBUTIONS },
+        { id: "pod-commissions", label: "Commissions", type: "route", path: ROUTES.POD_ADMIN_COMMISSIONS },
+      ],
+    },
+    {
+      id: "group-wholesale", label: "Wholesale", type: "group",
+      children: [
+        { id: "pod-wholesale-orders", label: "Wholesale Orders", type: "route", path: ROUTES.POD_ADMIN_WHOLESALE_ORDERS },
+        { id: "pod-phygital-partners", label: "Phygital Partners", type: "route", path: ROUTES.POD_ADMIN_PHYGITAL_PARTNERS },
+      ],
+    },
   ];
 
   const tabAccess = useMemo(
@@ -179,6 +264,18 @@ const AdminDashboard = () => {
       "customs-compliance": ["PRODUCTION_OPS", "LEGAL", "ADMIN", "IT_ADMIN"],
       users: ["ADMIN", "IT_ADMIN"],
       "rbac-matrix": ["ADMIN", "IT_ADMIN"],
+      // POD System access
+      "pod-dashboard": ["ADMIN", "IT_ADMIN"],
+      "pod-partners": ["ADMIN", "IT_ADMIN"],
+      "pod-pods": ["ADMIN", "IT_ADMIN"],
+      "pod-locations": ["ADMIN", "IT_ADMIN"],
+      "pod-qrcodes": ["ADMIN", "IT_ADMIN"],
+      "pod-scans": ["ADMIN", "IT_ADMIN"],
+      "pod-user-attributions": ["ADMIN", "IT_ADMIN"],
+      "pod-commissions": ["ADMIN", "IT_ADMIN"],
+      // Wholesale access
+      "pod-wholesale-orders": ["ADMIN", "IT_ADMIN"],
+      "pod-phygital-partners": ["ADMIN", "IT_ADMIN"],
     }),
     [roles]
   );
@@ -189,7 +286,17 @@ const AdminDashboard = () => {
     return isAdminLike || roles.some((r) => allowed.includes(r));
   };
 
-  const visibleMenuItems = menuItems.filter((item) => isTabAllowed(item.id));
+  const visibleMenuItems = menuItems
+    .map((item) => {
+      if (item.type !== "group") {
+        return isTabAllowed(item.id) ? item : null;
+      }
+      // Group: filter children, keep group only if it has visible children
+      const visibleChildren = item.children.filter((child) => isTabAllowed(child.id));
+      if (visibleChildren.length === 0) return null;
+      return { ...item, children: visibleChildren };
+    })
+    .filter(Boolean);
 
   // Sync state with URL when browser navigation occurs (back/forward)
   useEffect(() => {
@@ -199,18 +306,47 @@ const AdminDashboard = () => {
     }
   }, [location.search, getTabFromUrl]);
 
-  // Validate tab access and redirect to valid tab if needed
+  // Flatten menu items for validation (extracts children from groups)
+  const allFlatItems = visibleMenuItems.flatMap((item) =>
+    item.type === "group" ? item.children : [item]
+  );
+
+  // Validate tab access and redirect to valid tab if needed (skip when outlet is active)
   useEffect(() => {
+    if (hasOutlet) return; // Pod route is active, skip tab validation
     const urlTab = getTabFromUrl();
-    const validTabIds = menuItems.map(item => item.id);
+    const validTabIds = allFlatItems.filter(i => i.type === "tab").map(item => item.id);
 
     // If tab from URL is invalid or not allowed, redirect to first allowed tab
     if (!validTabIds.includes(urlTab) || !isTabAllowed(urlTab)) {
-      if (visibleMenuItems.length > 0) {
-        setActiveTab(visibleMenuItems[0].id);
+      const firstTab = allFlatItems.find(i => i.type === "tab");
+      if (firstTab) {
+        setActiveTab(firstTab.id);
       }
     }
-  }, [activeTab, visibleMenuItems, getTabFromUrl, setActiveTab]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, allFlatItems, getTabFromUrl, setActiveTab, hasOutlet]);
+
+  // Auto-expand group containing the active item (only on navigation, not every render)
+  useEffect(() => {
+    for (const item of menuItems) {
+      if (item.type !== "group") continue;
+      const hasActiveChild = item.children.some((child) => {
+        if (child.type === "tab" && !hasOutlet && child.id === activeTab) return true;
+        if (child.type === "route" && child.path && location.pathname.startsWith(child.path)) return true;
+        return false;
+      });
+      if (hasActiveChild && !expandedGroups[item.id]) {
+        setExpandedGroups((prev) => {
+          const next = { ...prev, [item.id]: true };
+          try { localStorage.setItem(SIDEBAR_EXPANDED_KEY, JSON.stringify(next)); } catch {}
+          return next;
+        });
+        break;
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, location.pathname, hasOutlet]);
 
   const handleHomeNavigation = () => {
     window.location.href = ROUTES.HOME_PAGE;
@@ -455,17 +591,82 @@ const AdminDashboard = () => {
         </div>
 
         <nav className="admin-sidebar-nav">
-          {visibleMenuItems.map((item) => (
-            <button
-              key={item.id}
-              className={`admin-nav-button ${
-                activeTab === item.id ? "active" : ""
-              }`}
-              onClick={() => handleMenuClick(item.id)}
-            >
-              <span className="admin-nav-label">{item.label}</span>
-            </button>
-          ))}
+          {visibleMenuItems.map((item) => {
+            // Standalone tab item
+            if (item.type === "tab") {
+              return (
+                <button
+                  key={item.id}
+                  className={`admin-nav-button ${!outlet && activeTab === item.id ? "active" : ""}`}
+                  onClick={() => handleMenuClick(item.id)}
+                >
+                  <span className="admin-nav-label">{item.label}</span>
+                </button>
+              );
+            }
+            // Standalone route item
+            if (item.type === "route") {
+              return (
+                <NavLink
+                  key={item.id}
+                  to={item.path}
+                  className={({ isActive }) => `admin-nav-button ${isActive ? "active" : ""}`}
+                  onClick={handleRouteClick}
+                >
+                  <span className="admin-nav-label">{item.label}</span>
+                </NavLink>
+              );
+            }
+            // Collapsible group
+            if (item.type === "group") {
+              const isExpanded = !!expandedGroups[item.id];
+              const hasActiveChild = item.children.some((child) => {
+                if (child.type === "tab" && !outlet && child.id === activeTab) return true;
+                if (child.type === "route" && child.path && location.pathname.startsWith(child.path)) return true;
+                return false;
+              });
+              return (
+                <div key={item.id} className="admin-nav-group">
+                  <button
+                    className={`admin-nav-group-header ${hasActiveChild ? "has-active" : ""}`}
+                    onClick={() => toggleGroup(item.id)}
+                    aria-expanded={isExpanded}
+                  >
+                    <span className="admin-nav-group-label">{item.label}</span>
+                    <span className={`admin-nav-group-chevron ${isExpanded ? "expanded" : ""}`}>&#9658;</span>
+                  </button>
+                  <div className={`admin-nav-group-children ${isExpanded ? "expanded" : ""}`}>
+                    <div className="admin-nav-group-children-inner">
+                      {item.children.map((child) => {
+                        if (child.type === "route") {
+                          return (
+                            <NavLink
+                              key={child.id}
+                              to={child.path}
+                              className={({ isActive }) => `admin-nav-button admin-nav-child ${isActive ? "active" : ""}`}
+                              onClick={handleRouteClick}
+                            >
+                              <span className="admin-nav-label">{child.label}</span>
+                            </NavLink>
+                          );
+                        }
+                        return (
+                          <button
+                            key={child.id}
+                            className={`admin-nav-button admin-nav-child ${!outlet && activeTab === child.id ? "active" : ""}`}
+                            onClick={() => handleMenuClick(child.id)}
+                          >
+                            <span className="admin-nav-label">{child.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })}
         </nav>
 
         <div className="admin-sidebar-footer">
@@ -498,17 +699,27 @@ const AdminDashboard = () => {
           <span className="admin-mobile-title">{portalInfo.title}</span>
         </div>
 
-        <div className="admin-content-header">
-          <div className="admin-breadcrumb">
-            <span>{portalInfo.breadcrumb}</span>
-            <span className="breadcrumb-separator">›</span>
-            <span>{getPageInfo().title}</span>
+        {outlet ? (
+          <div className="admin-content-header">
+            <div className="admin-breadcrumb">
+              <span>{portalInfo.breadcrumb}</span>
+              <span className="breadcrumb-separator">›</span>
+              <span>POD System</span>
+            </div>
           </div>
-          <h1 className="admin-page-title">{getPageInfo().title}</h1>
-          <p className="admin-page-description">{getPageInfo().description}</p>
-        </div>
+        ) : (
+          <div className="admin-content-header">
+            <div className="admin-breadcrumb">
+              <span>{portalInfo.breadcrumb}</span>
+              <span className="breadcrumb-separator">›</span>
+              <span>{getPageInfo().title}</span>
+            </div>
+            <h1 className="admin-page-title">{getPageInfo().title}</h1>
+            <p className="admin-page-description">{getPageInfo().description}</p>
+          </div>
+        )}
 
-        <div className="admin-content-body">{renderActiveTab()}</div>
+        <div className="admin-content-body">{outlet || renderActiveTab()}</div>
       </div>
     </div>
   );

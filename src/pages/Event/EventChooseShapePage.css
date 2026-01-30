@@ -61,7 +61,7 @@
   color: #000;
   text-align: center;
   z-index: 10;
-  margin-top: 160px;
+  margin-top: clamp(100px, 14vh, 160px);
 }
 
 /* Main Content Area */
@@ -356,7 +356,7 @@
 /* Place your note - Desktop: Top left corner */
 .event-choose-shape__note--desktop {
   position: fixed;
-  top: 120px;
+  top: clamp(76px, 11vh, 120px);
   left: 48px;
   max-width: 380px;
   z-index: 10;
@@ -399,6 +399,51 @@
   }
 }
 
+/* Choose shape button - fixed bottom center */
+.event-choose-shape__select-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+/* Animated dots for loading state */
+.event-choose-shape__loading-dots {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.event-choose-shape__loading-dot {
+  opacity: 0;
+  animation: chooseShapeDotFade 1.4s ease-in-out infinite;
+  margin-left: 1px;
+}
+
+.event-choose-shape__loading-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.event-choose-shape__loading-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.event-choose-shape__loading-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes chooseShapeDotFade {
+  0%, 20% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  60%, 100% {
+    opacity: 0;
+  }
+}
+
 /* Spacer - no longer needed */
 .event-choose-shape__spacer {
   display: none;
@@ -431,24 +476,24 @@
   }
 
   .event-choose-shape__orbits-svg {
-    top: 30%; /* Xịch xuống từ 0 → 30% */
-    width: 140vw; /* To ra từ 115vw → 140vw */
-    transform: translateX(-50%) scale(1.3); /* Scale thêm 1.3x */
+    top: 30%; /* Move down from 0 → 30% */
+    width: 140vw; /* Expand from 115vw → 140vw */
+    transform: translateX(-50%) scale(1.3); /* Scale by additional 1.3x */
   }
 
   .event-choose-shape__orbit-shapes {
-    top: 30%; /* Match với SVG top position */
-    width: 140vw; /* Match với SVG width */
-    transform: translateX(-50%) scale(1.3); /* Match với SVG scale */
+    top: 30%; /* Match with SVG top position */
+    width: 140vw; /* Match with SVG width */
+    transform: translateX(-50%) scale(1.3); /* Match with SVG scale */
   }
 
   /* Adjust gradient overlay to match orbits position */
   .event-choose-shape__orbits-container::before {
-    top: 65%; /* Di chuyển xuống để match với orbits (30% + offset) */
-    width: 200%; /* Rộng hơn để spread gradient */
-    height: 200%; /* Cao hơn để spread gradient */
-    opacity: 0.35; /* Giảm opacity từ 0.55 → 0.35 để nhẹ hơn */
-    transform: translate(-50%, -50%) scale(1.3); /* Scale match với orbits */
+    top: 65%; /* Move down to match with orbits (30% + offset) */
+    width: 200%; /* Wider to spread gradient */
+    height: 200%; /* Taller to spread gradient */
+    opacity: 0.35; /* Reduce opacity from 0.55 → 0.35 to be lighter */
+    transform: translate(-50%, -50%) scale(1.3); /* Scale match with orbits */
   }
 
   .event-choose-shape__bottom {
@@ -478,7 +523,7 @@
 
   .event-choose-shape__title {
     margin-bottom: 0px;
-    margin-top: 160px;
+    margin-top: clamp(100px, 14vh, 160px);
   }
 
   .event-choose-shape__center {

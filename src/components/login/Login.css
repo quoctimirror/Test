@@ -1,6 +1,6 @@
 /* src/components/Login/Login.css */
 
-/* Typography classes được import từ typography.css */
+/* Typography classes are imported from typography.css */
 
 /* --- General Styling & Centering --- */
 .login-container {
@@ -36,21 +36,21 @@
   flex-direction: column;
 }
 
-/* 
---- THAY ĐỔI CHÍNH BẮT ĐẦU TỪ ĐÂY --- 
+/*
+--- MAIN CHANGES START HERE ---
 */
 
-/* 1. Class mới để bọc input và lỗi */
+/* 1. New class to wrap input and error */
 .form-field-container {
-  /* Chuyển margin chính vào đây để tạo khoảng cách giữa các trường */
+  /* Move main margin here to create spacing between fields */
   margin-bottom: 35px;
   text-align: left;
 }
 
 .input-group {
   position: relative;
-  /* Bỏ margin-bottom ở đây để lỗi có thể nằm sát ngay dưới */
-  /* margin-bottom: 35px; <- Xóa dòng này */
+  /* Remove margin-bottom here so error can be positioned right below */
+  /* margin-bottom: 35px; <- Remove this line */
   transition: border-color 0.3s ease;
 }
 
@@ -250,11 +250,11 @@
 .input-error {
   color: #d9534f;
   text-align: left;
-  /* Thêm một chút margin-top để tạo khoảng cách với đường gạch */
+  /* Add a bit of margin-top to create spacing with the underline */
   margin-top: 4px;
 }
 
-/* Xóa bỏ luật CSS cũ không cần thiết nữa */
+/* Remove old CSS rules no longer needed */
 /*
 .input-group {
     margin-bottom: 35px;
@@ -423,7 +423,7 @@
   .login-title {
     margin-bottom: 40px;
     margin-left: 0;
-    /* Reset margin-left tr\u00ean mobile */
+    /* Reset margin-left on mobile */
   }
 
   .login-form-wrapper {

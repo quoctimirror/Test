@@ -29,7 +29,7 @@ const CollectionVideoSection = () => {
 
   return (
     <div ref={sectionRef} className="collection-video-section" data-navbar-theme="white">
-      {/* Sử dụng cùng background gif như trong Collection.css */}
+      {/* Use the same background gif as in Collection.css */}
       <div className="video-background"></div>
     </div>
   );

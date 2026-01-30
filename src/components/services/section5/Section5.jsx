@@ -54,11 +54,11 @@ const Section5 = () => {
         panel.style.maxHeight = null;
         setOpenFaq(null);
       } else {
-        // Đóng tất cả panels khác trước
+        // Close all other panels first
         document.querySelectorAll(".faq-answer").forEach((p) => {
           p.style.maxHeight = null;
         });
-        // Mở panel hiện tại
+        // Open the current panel
         panel.style.maxHeight = panel.scrollHeight + "px";
         setOpenFaq(id);
       }

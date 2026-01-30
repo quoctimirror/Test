@@ -117,7 +117,7 @@
 }
 
 /* ===================================================================
-   TABLET LANDSCAPE (≥992px) - iPad landscape, Laptop nhỏ
+   TABLET LANDSCAPE (≥992px) - iPad landscape, Small laptop
    =================================================================== */
 @media (min-width: 992px) {
     .pv2-section1 {

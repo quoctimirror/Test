@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import SEO from "@components/seo/SEO";
+import { LocalBusinessSchema } from "@components/seo/StructuredData";
 import ContactV2 from "@components/contactUs/ContactV2";
 import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
@@ -34,6 +36,12 @@ const ContactPage = () => {
 
   return (
     <div className="contact-page">
+      <SEO
+        title="Contact Us"
+        description="Get in touch with Mirror Future Diamond. Visit our showroom, book an appointment, or reach out for inquiries about our lab-grown diamond jewelry."
+        url="/contact"
+      />
+      <LocalBusinessSchema />
       <ContactV2 />
 
       <div className="fixed-immersive-container">

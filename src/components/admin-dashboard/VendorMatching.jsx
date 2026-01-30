@@ -102,7 +102,7 @@ const VendorMatching = ({ collectionPlanId, onBack, onNext }) => {
 
   if (loading) {
     return (
-      <div className="admin-empty-state">
+      <div className="admin-loading-state">
         Loading vendor matches...
       </div>
     );

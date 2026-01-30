@@ -5,27 +5,27 @@
 import { getDiamondConfig, DIAMOND_CONFIGS } from '../../constants/eventConstants';
 
 // Note frequencies (Hz) - Standard tuning A4 = 440Hz
-// 7 notes: Octave 4 only (Đô - Si)
+// 7 notes: Octave 4 only (Do - Si / C4 - B4)
 const NOTE_FREQUENCIES = {
-  C4: 261.63,   // Đô
-  D4: 293.66,   // Rê
+  C4: 261.63,   // Do
+  D4: 293.66,   // Re
   E4: 329.63,   // Mi
-  F4: 349.23,   // Pha
-  G4: 392.00,   // Son
+  F4: 349.23,   // Fa
+  G4: 392.00,   // Sol
   A4: 440.00,   // La
   B4: 493.88,   // Si
 };
 
 // Map Y position (0-6) on staff to note
 // 7 notes (C4-B4) mapped to 7 positions
-// Position 0 = bottom (Đô/C4), Position 6 = top (Si/B4)
-// Counting from bottom to top (từ dưới lên)
+// Position 0 = bottom (Do/C4), Position 6 = top (Si/B4)
+// Counting from bottom to top
 export const POSITION_TO_NOTE = {
-  0: 'C4',  // Line 3 (bottom) - Đô (lowest)
-  1: 'D4',  // Space 2         - Rê
+  0: 'C4',  // Line 3 (bottom) - Do (lowest)
+  1: 'D4',  // Space 2         - Re
   2: 'E4',  // Line 2          - Mi
-  3: 'F4',  // Space 1         - Pha
-  4: 'G4',  // Line 1          - Son
+  3: 'F4',  // Space 1         - Fa
+  4: 'G4',  // Line 1          - Sol
   5: 'A4',  // Space 0         - La
   6: 'B4',  // Line 0 (top)    - Si (highest)
 };

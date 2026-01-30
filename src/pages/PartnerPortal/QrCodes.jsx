@@ -3,6 +3,11 @@ import { QRCodeSVG } from "qrcode.react";
 import { partnerPortalApi, POD_ENUMS } from "@/services/podApi";
 import "@/components/pod-admin/PodAdminLayout.css";
 
+const getQrScanUrl = (shortCode) => {
+  if (!shortCode) return null;
+  return `${window.location.origin}/q/${shortCode}`;
+};
+
 export default function PartnerPortalQrCodes() {
   const [qrCodes, setQrCodes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -162,9 +167,9 @@ export default function PartnerPortalQrCodes() {
                 <div key={qr.id} className="pod-card" style={{ textAlign: "center" }}>
                   {/* QR Image - Generated from URL */}
                   <div style={{ marginBottom: "1rem" }}>
-                    {qr.fullUrl ? (
+                    {qr.shortCode ? (
                       <QRCodeSVG
-                        value={qr.fullUrl}
+                        value={getQrScanUrl(qr.shortCode)}
                         size={120}
                         level="H"
                         style={{
@@ -233,10 +238,10 @@ export default function PartnerPortalQrCodes() {
 
                   {/* Actions */}
                   <div style={{ marginTop: "1rem", display: "flex", gap: "0.5rem", justifyContent: "center" }}>
-                    {qr.fullUrl && (
+                    {qr.shortCode && (
                       <>
                         <a
-                          href={qr.fullUrl}
+                          href={getQrScanUrl(qr.shortCode)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="pod-btn pod-btn-secondary pod-btn-sm"
@@ -245,7 +250,7 @@ export default function PartnerPortalQrCodes() {
                         </a>
                         <button
                           className="pod-btn pod-btn-primary pod-btn-sm"
-                          onClick={() => handleDownloadQr(qr.shortCode, qr.fullUrl)}
+                          onClick={() => handleDownloadQr(qr.shortCode, getQrScanUrl(qr.shortCode))}
                         >
                           Download
                         </button>

@@ -3,7 +3,7 @@ import "./ProfileTabs.css";
 import ShineGlassButton from "@components/common/button/ShineGlassButton";
 
 const AddressBook = () => {
-  // Mock data - sẽ thay bằng API call sau
+  // Mock data - will be replaced with API call later
   const addresses = [
     {
       id: 1,

@@ -1,6 +1,6 @@
 /**
  * RippleEffect Component
- * Hiệu ứng sóng lan tỏa như giọt nước
+ * Water droplet ripple wave effect
  *
  * @author Mirror Future Diamond
  * @version 1.0.0
@@ -10,23 +10,23 @@ class RippleEffect {
     constructor(container, options = {}) {
         // Default options
         this.options = {
-            // Số vòng ripple liên tục
+            // Number of continuous ripple rings
             autoRippleCount: 6,
-            // Thời gian animation (ms)
+            // Animation duration (ms)
             duration: 6000,
-            // Delay giữa các vòng (ms)
+            // Delay between rings (ms)
             delay: 1000,
-            // Kích thước bắt đầu (px)
+            // Start size (px)
             startSize: 80,
-            // Kích thước kết thúc (px)
+            // End size (px)
             endSize: 950,
             // Opacity
             opacity: 0.65,
-            // Bật/tắt auto ripple
+            // Enable/disable auto ripple
             autoPlay: true,
-            // Cho phép click để tạo ripple
+            // Allow click to create ripple
             clickable: true,
-            // Số vòng khi click
+            // Number of rings on click
             clickRippleCount: 5,
             // Custom gradient (optional)
             gradient: null,
@@ -48,7 +48,7 @@ class RippleEffect {
         this.init();
     }
 
-    // Khởi tạo
+    // Initialize
     init() {
         this.injectStyles();
         this.createRippleArea();
@@ -185,9 +185,9 @@ class RippleEffect {
         document.head.appendChild(style);
     }
 
-    // Tạo ripple area container
+    // Create ripple area container
     createRippleArea() {
-        // Đảm bảo container có position
+        // Ensure container has position
         const containerStyle = window.getComputedStyle(this.container);
         if (containerStyle.position === 'static') {
             this.container.style.position = 'relative';
@@ -198,7 +198,7 @@ class RippleEffect {
         this.container.appendChild(this.rippleArea);
     }
 
-    // Tạo các vòng ripple liên tục
+    // Create continuous ripple rings
     createContinuousRipples() {
         for (let i = 0; i < this.options.autoRippleCount; i++) {
             const ripple = document.createElement('div');
@@ -208,7 +208,7 @@ class RippleEffect {
         }
     }
 
-    // Xóa continuous ripples
+    // Remove continuous ripples
     removeContinuousRipples() {
         const ripples = this.rippleArea.querySelectorAll('.ripple-effect-continuous');
         ripples.forEach(r => r.remove());
@@ -224,7 +224,7 @@ class RippleEffect {
         });
     }
 
-    // Tạo ripple tại vị trí cụ thể
+    // Create ripple at specific position
     createRipple(x, y) {
         const baseDelay = 300;
 
@@ -251,7 +251,7 @@ class RippleEffect {
         }
     }
 
-    // Tạo ripple ở giữa container
+    // Create ripple at center of container
     createCenterRipple() {
         const rect = this.container.getBoundingClientRect();
         this.createRipple(rect.width / 2, rect.height / 2);

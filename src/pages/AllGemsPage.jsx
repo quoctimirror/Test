@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SEO from "@components/seo/SEO";
 import AllGems from '@components/allGems/AllGems';
 import GlassThemeButton from "@components/common/button/GlassThemeButton";
 import { useScrollToNextSection } from "@/hooks/useScrollToNextSection";
@@ -26,6 +27,11 @@ const AllGemsPage = () => {
 
   return (
     <div className="all-gems-page-wrapper">
+      <SEO
+        title="All Gems"
+        description="Explore our complete collection of lab-grown diamonds and gemstones. Find the perfect gem for your custom jewelry design."
+        url="/all-gems"
+      />
       <AllGems />
 
       <div className="fixed-immersive-container">

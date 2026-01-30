@@ -13,7 +13,7 @@ const RBACMatrix = () => {
       setError(null);
       try {
         const { data } = await roleMatrixAPI.getMatrix();
-        setRows(data || []);
+        setRows(Array.isArray(data) ? data : data?.data || []);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to load role matrix");
       } finally {

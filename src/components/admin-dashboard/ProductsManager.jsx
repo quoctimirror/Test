@@ -386,7 +386,7 @@ const ProductsManager = () => {
   };
 
   if (loading) {
-    return <div className="admin-empty-state">Loading products...</div>;
+    return <div className="admin-loading-state">Loading products...</div>;
   }
 
   return (

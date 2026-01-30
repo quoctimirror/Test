@@ -1,29 +1,29 @@
 /**
- * SimpleMeshInspector.jsx - COMPONENT CHÍNH
+ * SimpleMeshInspector.jsx - MAIN COMPONENT
  *
- * NHIỆM VỤ TỔNG QUAN:
- * Công cụ để inspect và customize 3D model (nhẫn, trang sức)
- * - Upload model GLB/GLTF
- * - Xem danh sách mesh trong model
- * - Đổi màu từng mesh (color picker + HEX input)
- * - Điều chỉnh transform (rotation, position, scale)
+ * OVERVIEW:
+ * Tool to inspect and customize 3D model (ring, jewelry)
+ * - Upload GLB/GLTF model
+ * - View mesh list in model
+ * - Change color of each mesh (color picker + HEX input)
+ * - Adjust transform (rotation, position, scale)
  * - Auto-rotate model
- * - Highlight mesh khi click
+ * - Highlight mesh on click
  *
- * CÁCH DÙNG:
- * 1. Upload file GLB/GLTF hoặc dùng model mặc định
- * 2. Điều chỉnh transform (rotation, scale, v.v.)
- * 3. Click vào mesh trong danh sách để highlight
- * 4. Đổi màu mesh bằng color picker hoặc nhập HEX
+ * HOW TO USE:
+ * 1. Upload GLB/GLTF file or use default model
+ * 2. Adjust transform (rotation, scale, etc.)
+ * 3. Click on mesh in list to highlight
+ * 4. Change mesh color using color picker or enter HEX
  *
- * TƯƠNG THÍCH: React 19 (không dùng Leva)
+ * COMPATIBLE: React 19 (no Leva)
  */
 
 import { useState, useEffect, Suspense, useCallback, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 
-// Import các component con
+// Import child components
 import { Scene3D } from './components/Scene3D';
 import { ModelUploader } from './components/ModelUploader';
 import { TransformControls } from './components/TransformControls';
@@ -34,28 +34,28 @@ import { DiamondCustomizer } from './components/DiamondCustomizer';
 export default function SimpleMeshInspector() {
   // ===== STATE MANAGEMENT =====
 
-  // Mesh đang được chọn (highlight màu đỏ)
+  // Currently selected mesh (highlight with red)
   const [selectedMesh, setSelectedMesh] = useState(null);
 
-  // Danh sách tất cả mesh trong model
+  // List of all meshes in model
   const [meshList, setMeshList] = useState([]);
 
-  // Đường dẫn file model hiện tại
+  // Current model file path
   const [modelPath, setModelPath] = useState('/models/rings/myfav.glb');
 
-  // Màu của từng mesh (key: tên mesh, value: HEX color)
+  // Color of each mesh (key: mesh name, value: HEX color)
   const [meshColors, setMeshColors] = useState({});
 
-  // Trạng thái hiển thị của từng mesh (key: tên mesh, value: boolean)
+  // Visibility state of each mesh (key: mesh name, value: boolean)
   const [meshVisibility, setMeshVisibility] = useState({});
 
-  // Render mode: 'smooth' (mượt, hiệu suất cao) hoặc 'fullTopping' (đẹp, lấp lánh)
+  // Render mode: 'smooth' (smooth, high performance) or 'fullTopping' (beautiful, sparkling)
   const [renderMode, setRenderMode] = useState('smooth');
 
-  // Debug mode: Hiển thị/ẩn các helpers (tia sáng, quả cầu)
+  // Debug mode: Show/hide helpers (light rays, spheres)
   const [showDebugHelpers, setShowDebugHelpers] = useState(false);
 
-  // Bloom effect: Bật/tắt hiệu ứng lấp lánh (vùng sáng tỏa ra)
+  // Bloom effect: Enable/disable sparkle effect (bright areas glow)
   const [enableBloom, setEnableBloom] = useState(true);
 
   // Diamond customization states
@@ -67,21 +67,21 @@ export default function SimpleMeshInspector() {
   const [selectedBandMetal, setSelectedBandMetal] = useState('Rose Gold 2');
 
   // Transform controls (rotation, position, scale, auto-rotate)
-  // MẶC ĐỊNH: scale=0.1, posY=-0.12 để hiển thị đẹp
-  // Nếu muốn xem ORIGINAL: scale=1, posY=0
+  // DEFAULT: scale=0.1, posY=-0.12 for nice display
+  // For ORIGINAL view: scale=1, posY=0
   const [transform, setTransform] = useState({
     rotX: 0,
     rotY: 0,
     rotZ: 0,
     posX: 0,
-    posY: -0.12,    // Dịch xuống để center
+    posY: -0.12,    // Move down to center
     posZ: 0,
-    scale: 0.1,     // Thu nhỏ 10 lần (model gốc quá to)
+    scale: 0.1,     // Scale down 10x (original model too large)
     autoRotate: false,
   });
 
-  // ===== KHỞI TẠO MÀU VÀ VISIBILITY MẶC ĐỊNH CHO MESH =====
-  // Khi danh sách mesh thay đổi, tự động set màu và visibility mặc định
+  // ===== INITIALIZE DEFAULT COLOR AND VISIBILITY FOR MESH =====
+  // When mesh list changes, automatically set default color and visibility
   useEffect(() => {
     if (meshList.length === 0) return;
 
@@ -89,18 +89,18 @@ export default function SimpleMeshInspector() {
       const colors = { ...prev };
 
       meshList.forEach(mesh => {
-        // Nếu mesh chưa có màu, set màu mặc định theo tên
+        // If mesh has no color, set default color based on name
         if (!colors[mesh.name]) {
           const name = mesh.name.toLowerCase();
 
           if (name.includes('ring')) {
-            // Ring → Rose Gold 2 (mặc định)
+            // Ring -> Rose Gold 2 (default)
             colors[mesh.name] = '#ffaf83';
           } else if (name.includes('diamond') || name.includes('gem') || name.includes('stone')) {
-            // Đá quý → Xanh nhạt
+            // Gemstone -> Light blue
             colors[mesh.name] = '#b5cbdd';
           } else {
-            // Khác → Trắng
+            // Other -> White
             colors[mesh.name] = '#ffffff';
           }
         }
@@ -109,19 +109,19 @@ export default function SimpleMeshInspector() {
       return colors;
     });
 
-    // Khởi tạo visibility cho mesh mới (mặc định là hiển thị)
+    // Initialize visibility for new mesh (default is visible)
     setMeshVisibility(prev => {
       const visibility = { ...prev };
       meshList.forEach(mesh => {
         if (visibility[mesh.name] === undefined) {
-          visibility[mesh.name] = true; // Mặc định hiển thị
+          visibility[mesh.name] = true; // Default visible
         }
       });
       return visibility;
     });
   }, [meshList]);
 
-  // ===== KHI CHỌN BAND METAL → THAY ĐỔI MÀU BAND/RING =====
+  // ===== WHEN SELECTING BAND METAL -> CHANGE BAND/RING COLOR =====
   useEffect(() => {
     if (meshList.length === 0) return;
 
@@ -136,7 +136,7 @@ export default function SimpleMeshInspector() {
     const newColor = metalColorMap[selectedBandMetal];
     if (!newColor) return;
 
-    // Tìm mesh có tên chứa "ring" hoặc "band" và update màu
+    // Find mesh with name containing "ring" or "band" and update color
     setMeshColors(prev => {
       const colors = { ...prev };
       meshList.forEach(mesh => {
@@ -149,26 +149,26 @@ export default function SimpleMeshInspector() {
     });
   }, [selectedBandMetal, meshList]);
 
-  // ===== CONVERT SELECTED SIZE → DIAMOND SCALE =====
+  // ===== CONVERT SELECTED SIZE -> DIAMOND SCALE =====
   const diamondScale = useMemo(() => {
     const sizeMap = {
       '1 ct': 1.0,    // Original size
-      '1.5 ct': 1.15, // 15% lớn hơn
-      '2 ct': 1.3,    // 30% lớn hơn
-      '2.5 ct': 1.45  // 45% lớn hơn
+      '1.5 ct': 1.15, // 15% larger
+      '2 ct': 1.3,    // 30% larger
+      '2.5 ct': 1.45  // 45% larger
     };
     const scale = sizeMap[selectedSize] || 1.0;
     console.log('🔍 Diamond Scale:', selectedSize, '→', scale);
     return scale;
   }, [selectedSize]);
 
-  // ===== XỬ LÝ UPLOAD FILE =====
+  // ===== HANDLE FILE UPLOAD =====
   const handleFileUpload = useCallback(async (url) => {
     try {
-      // Clear GLTF cache để tránh conflict
+      // Clear GLTF cache to avoid conflict
       useGLTF.clear();
 
-      // Preload model để kiểm tra lỗi trước khi render
+      // Preload model to check for errors before rendering
       await useGLTF.preload(url);
 
       setModelPath(url);
@@ -177,7 +177,7 @@ export default function SimpleMeshInspector() {
       setMeshColors({});
       setMeshVisibility({});
 
-      // Reset transform về giá trị tốt cho model mới
+      // Reset transform to good values for new model
       setTransform({
         rotX: 0,
         rotY: 0,
@@ -190,14 +190,14 @@ export default function SimpleMeshInspector() {
       });
     } catch (error) {
       console.error('Error loading model:', error);
-      alert('Không thể load model này. Vui lòng chọn file GLB/GLTF hợp lệ.');
+      alert('Cannot load this model. Please select a valid GLB/GLTF file.');
     }
   }, []);
 
   // ===== RENDER UI =====
   return (
     <div style={{ display: 'flex', width: '100vw', height: '100vh', background: '#000' }}>
-      {/* ===== SIDEBAR TRÁI ===== */}
+      {/* ===== LEFT SIDEBAR ===== */}
       <div style={{
         width: '300px',
         background: '#1a1a1a',
@@ -237,8 +237,8 @@ export default function SimpleMeshInspector() {
             </label>
             <div style={{ fontSize: '11px', color: '#888', marginTop: '8px', marginLeft: '28px' }}>
               {renderMode === 'smooth'
-                ? 'Hiệu suất cao, mượt mà'
-                : 'Hiệu ứng đầy đủ, sáng lấp lánh'}
+                ? 'High performance, smooth'
+                : 'Full effects, sparkling bright'}
             </div>
           </div>
         </div>
@@ -262,8 +262,8 @@ export default function SimpleMeshInspector() {
             </label>
             <div style={{ fontSize: '11px', color: '#888', marginTop: '8px', marginLeft: '28px' }}>
               {showDebugHelpers
-                ? 'Hiển thị tia sáng và vị trí nguồn sáng'
-                : 'Ẩn các debug helpers'}
+                ? 'Show light rays and light source position'
+                : 'Hide debug helpers'}
             </div>
           </div>
         </div>
@@ -287,13 +287,13 @@ export default function SimpleMeshInspector() {
             </label>
             <div style={{ fontSize: '11px', color: '#888', marginTop: '8px', marginLeft: '28px' }}>
               {enableBloom
-                ? 'Hiệu ứng vùng sáng tỏa ra (2 vùng sáng)'
-                : 'Tắt bloom, không có vùng sáng'}
+                ? 'Bright areas glow effect (2 light zones)'
+                : 'Bloom off, no glow effect'}
             </div>
           </div>
         </div>
 
-        {/* Danh sách Mesh + Color Picker + Visibility Toggle */}
+        {/* Mesh List + Color Picker + Visibility Toggle */}
         <MeshList
           meshList={meshList}
           selectedMesh={selectedMesh}
@@ -305,11 +305,11 @@ export default function SimpleMeshInspector() {
         />
       </div>
 
-      {/* ===== 3D CANVAS (GIỮA) ===== */}
+      {/* ===== 3D CANVAS (CENTER) ===== */}
       <div style={{ flex: 1, background: renderMode === 'smooth' ? '#000000' : '#ffffff' }}>
-        {/* ErrorBoundary: Bắt lỗi khi load model */}
+        {/* ErrorBoundary: Catch errors when loading model */}
         <ErrorBoundary key={modelPath}>
-          {/* Suspense: Hiển thị "Loading..." khi đang load model */}
+          {/* Suspense: Show "Loading..." while loading model */}
           <Suspense
             fallback={
               <div style={{
@@ -351,7 +351,7 @@ export default function SimpleMeshInspector() {
         </ErrorBoundary>
       </div>
 
-      {/* ===== SIDEBAR PHẢI: DIAMOND CUSTOMIZER ===== */}
+      {/* ===== RIGHT SIDEBAR: DIAMOND CUSTOMIZER ===== */}
       <div style={{
         width: '350px',
         background: '#1a1a1a',

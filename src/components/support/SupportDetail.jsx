@@ -59,7 +59,7 @@ const SupportDetail = () => {
 
   const handleScrollRight = () => {
     if (tabsRef.current) {
-      const scrollAmount = tabsRef.current.clientWidth * 0.7; // Scroll 70% của width
+      const scrollAmount = tabsRef.current.clientWidth * 0.7; // Scroll 70% of width
       tabsRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };

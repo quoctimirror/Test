@@ -8,7 +8,7 @@ const CollectionHeroSection = () => {
       {/* Background Video */}
       <CollectionVideoSection />
 
-      {/* Text và Button Overlay */}
+      {/* Text and Button Overlay */}
       <div className="hero-overlay-content">
         {/* <div className="hero-text-container">
           <div className="text-treasure">TREASURE</div>

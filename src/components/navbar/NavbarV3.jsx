@@ -6,12 +6,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { optimizedTransitionUtils } from "@utils/transitionUtil/optimizedTransitionUtils";
 import UnderlineButton from "@/components/common/button/UnderlineButton";
 import { ROUTES } from "@/constants/routes";
+import { useImmersiveModal } from "@/contexts/ImmersiveModalContext";
 import { useNavbarTheme } from "@/hooks/useNavbarTheme";
 import DiamondFallingEffect from "@/utils/diamondFallingEffect";
 
 export default function NavbarV3() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { openModal } = useImmersiveModal();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuClosing, setIsMenuClosing] = useState(false);
 
@@ -21,7 +23,6 @@ export default function NavbarV3() {
   );
   const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isInScrollContainer, setIsInScrollContainer] = useState(false);
-  const [isInIntroSubmitSection, setIsInIntroSubmitSection] = useState(false);
   const logoRef = useRef(null);
   const diamondEffectRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuth();
@@ -42,18 +43,10 @@ export default function NavbarV3() {
   const isHomePage =
     location.pathname === ROUTES.HOME_PAGE ||
     location.pathname === ROUTES.HOME ||
-    location.pathname === ROUTES.WELCOME ||
-    location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
+    location.pathname === ROUTES.WELCOME;
 
-  // Check if current page is Milan submission page or Submit Success page
-  const isMilanPage = location.pathname.startsWith(ROUTES.MILAN_SUBMIT);
-
-  // Check if current page is submit page (not success page)
-  const isSubmitPage = location.pathname === ROUTES.MILAN_SUBMIT;
-
-  // Check if should hide menu, account, and immersive button (Milan and Immersive Showroom)
-  const shouldHideButtons =
-    isMilanPage || location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
+  // Check if should hide menu, account, and immersive button
+  const shouldHideButtons = false;
 
   // Check if logo click should be disabled (Milan and Immersive Showroom)
   const shouldDisableLogoClick = shouldHideButtons;
@@ -192,38 +185,6 @@ export default function NavbarV3() {
     };
   }, [isHomePage]);
 
-  // Detect when IntroSubmit section is in view (for immersive showroom page)
-  useEffect(() => {
-    const isImmersiveShowroom = location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
-    if (!isImmersiveShowroom) {
-      setIsInIntroSubmitSection(false);
-      return;
-    }
-
-    const handleScroll = () => {
-      const introSubmitSection = document.querySelector(
-        ".intro-submit-section"
-      );
-      if (!introSubmitSection) return;
-
-      const rect = introSubmitSection.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      // Only trigger when section top is very close to or past the top of viewport
-      // This ensures logo only changes when user has actually scrolled to the section
-      const isInView = rect.top <= 50 && rect.bottom > windowHeight * 0.2;
-
-      setIsInIntroSubmitSection(isInView);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial check
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [location.pathname]);
-
   const performTransition = async (route, options = {}) => {
     // Close menu immediately before transition to prevent animation loop
     if (isMenuOpen || isMenuClosing) {
@@ -233,7 +194,7 @@ export default function NavbarV3() {
       await new Promise(resolve => setTimeout(resolve, 50));
     }
 
-    // Sử dụng optimized transition system
+    // Use optimized transition system
     await optimizedTransitionUtils.transitionToRoute(navigate, route, options);
   };
 
@@ -428,14 +389,8 @@ export default function NavbarV3() {
     await performTransition(ROUTES.LOCATIONS);
   };
 
-  const handleImmersiveShowroomClick = async () => {
-    if (window.location.pathname === ROUTES.IMMERSIVE_SHOWROOM) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    sessionStorage.setItem("scrollToTop", "true");
-    await performTransition(ROUTES.IMMERSIVE_SHOWROOM);
+  const handleImmersiveShowroomClick = () => {
+    openModal();
   };
 
   const handleBookAppointmentClick = async () => {
@@ -550,15 +505,13 @@ export default function NavbarV3() {
         />
       )}
 
-      {/* DIV RIÊNG CHỈ DÀNH CHO LOGO BLEND */}
+      {/* SEPARATE DIV FOR LOGO BLEND ONLY */}
       <div
         className={`logo-v3-fixed-container navbar-v3-theme-${navbarTheme} ${
           isHomePage && !isMenuOpen ? "no-blend" : ""
         } ${
           isHomePage && isInScrollContainer && !isMenuOpen ? "scrolled" : ""
-        } ${shouldDisableLogoClick ? "no-click" : ""} ${
-          isSubmitPage ? "submit-page-logo" : ""
-        } ${isInIntroSubmitSection ? "intro-submit-logo" : ""}`}
+        } ${shouldDisableLogoClick ? "no-click" : ""}`}
         onClick={handleLogoClick}
       >
         <img
@@ -569,7 +522,7 @@ export default function NavbarV3() {
         />
       </div>
 
-      {/* MENU VÀ ACCOUNT LINK VỚI BLEND MODE */}
+      {/* MENU AND ACCOUNT LINK WITH BLEND MODE */}
       {!shouldHideButtons && (
         <div
           className={`menu-v3-fixed-container navbar-v3-theme-${navbarTheme} ${
@@ -859,14 +812,14 @@ export default function NavbarV3() {
         </div>
       )}
 
-      {/* IMMERSIVE BUTTON - chỉ glassmorphism */}
+      {/* IMMERSIVE BUTTON - glassmorphism only */}
       {!shouldHideButtons && (
         <>
           <div className="immersive-v3-fixed-container">
             <button className="immersive-v3-button" onClick={handleBookAppointmentClick}></button>
           </div>
 
-          {/* BORDER RIÊNG BIỆT - chỉ mix-blend-mode */}
+          {/* SEPARATE BORDER - mix-blend-mode only */}
           <div
             className={`immersive-v3-border-container navbar-v3-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""
@@ -877,7 +830,7 @@ export default function NavbarV3() {
             <div className="immersive-v3-border"></div>
           </div>
 
-          {/* TEXT RIÊNG BIỆT - chỉ mix-blend-mode */}
+          {/* SEPARATE TEXT - mix-blend-mode only */}
           <div
             className={`immersive-v3-text-container navbar-v3-theme-${navbarTheme} ${
               isHomePage && !isMenuOpen ? "no-blend" : ""

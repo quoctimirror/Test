@@ -202,7 +202,7 @@ const PaymentSchedulesManager = () => {
       </div>
 
       {loading ? (
-        <div className="admin-empty-state">Loading payment schedules…</div>
+        <div className="admin-loading-state">Loading payment schedules…</div>
       ) : error ? (
         <div className="admin-error-state">{error}</div>
       ) : schedules.length === 0 ? (

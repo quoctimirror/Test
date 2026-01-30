@@ -2,29 +2,29 @@
 import * as THREE from "three";
 
 /**
- * Tăng cường và làm đẹp mô hình nhẫn 3D
+ * Enhance and beautify 3D ring model
  *
- * Chức năng chính:
- * - Tự động phát hiện và phân loại các phần kim loại và kim cương
- * - Áp dụng vật liệu vật lý chất lượng cao cho từng loại vật liệu
- * - Tối ưu hóa ánh sáng và phản xạ để nhẫn trông thật và bắt mắt
- * - Loại bỏ các thuộc tính không cần thiết có thể ảnh hưởng đến chất lượng hiển thị
+ * Main features:
+ * - Auto detect and classify metal and diamond parts
+ * - Apply high quality physical materials for each type
+ * - Optimize lighting and reflections for realistic appearance
+ * - Remove unnecessary attributes that may affect display quality
  */
 export class RingEnhancer {
   constructor(envMap = null) {
     this.envMap = envMap;
-    this.enhancedMeshes = new Set(); // Theo dõi các mesh đã được tăng cường
+    this.enhancedMeshes = new Set(); // Track enhanced meshes
   }
 
   /**
-   * Tăng cường các mesh kim cương trong mô hình nhẫn
-   * Chỉ xử lý các mesh được phát hiện là kim cương, không chạm vào kim loại
-   * @param {THREE.Object3D} model - Mô hình nhẫn cần tăng cương
-   * @param {THREE.Texture} envMap - Environment map cho phản xạ (tùy chọn)
+   * Enhance diamond meshes in ring model
+   * Only process detected diamond meshes, leave metal untouched
+   * @param {THREE.Object3D} model - Ring model to enhance
+   * @param {THREE.Texture} envMap - Environment map for reflections (optional)
    */
   enhanceRingModel(model, envMap = null) {
     if (!model) {
-      console.warn("RingEnhancer: Không có mô hình để tăng cường");
+      console.warn("RingEnhancer: No model to enhance");
       return;
     }
 
@@ -32,11 +32,11 @@ export class RingEnhancer {
       this.envMap = envMap;
     }
 
-    console.log("🔧 Bắt đầu tăng cường kim cương trong nhẫn...");
+    console.log("🔧 Starting diamond enhancement in ring...");
 
     model.traverse((child) => {
       if (child.isMesh) {
-        // Chỉ tăng cường các mesh kim cương, bỏ qua kim loại
+        // Only enhance diamond meshes, skip metal
         const materialType = this._detectMaterialType(child);
         if (materialType === "diamond") {
           this._enhanceDiamondMesh(child);
@@ -45,51 +45,51 @@ export class RingEnhancer {
     });
 
     console.log(
-      `✨ Hoàn thành tăng cường ${this.enhancedMeshes.size} mesh kim cương`
+      `✨ Completed enhancing ${this.enhancedMeshes.size} diamond meshes`
     );
   }
 
   /**
-   * Tăng cường một mesh kim cương cụ thể
+   * Enhance a specific diamond mesh
    * @private
    */
   _enhanceDiamondMesh(mesh) {
-    // Chuẩn bị mesh cho việc tăng cường
+    // Prepare mesh for enhancement
     this._prepareMeshGeometry(mesh);
 
-    // Áp dụng vật liệu kim cương
+    // Apply diamond material
     this._applyDiamondMaterial(mesh);
     mesh.userData.isDiamond = true;
     mesh.userData.isMetal = false;
 
-    // Tối ưu hóa rendering
+    // Optimize rendering
     this._optimizeMeshRendering(mesh);
 
     this.enhancedMeshes.add(mesh);
 
-    console.log(`💎 Tăng cường kim cương: ${mesh.name || "mesh"}`);
+    console.log(`💎 Enhanced diamond: ${mesh.name || "mesh"}`);
   }
 
   /**
-   * Chuẩn bị geometry của mesh
+   * Prepare mesh geometry
    * @private
    */
   _prepareMeshGeometry(mesh) {
-    // Loại bỏ vertex colors có thể gây xung đột
+    // Remove vertex colors that may cause conflicts
     if (mesh.geometry.attributes.color) {
       mesh.geometry.deleteAttribute("color");
     }
 
-    // Tính toán lại normals để có ánh sáng chính xác
+    // Recalculate normals for accurate lighting
     mesh.geometry.computeVertexNormals();
 
-    // Tắt shadows để có hiệu suất tốt hơn với mirror effect
+    // Disable shadows for better performance with mirror effect
     mesh.castShadow = false;
     mesh.receiveShadow = false;
   }
 
   /**
-   * Phát hiện loại vật liệu dựa trên tên và thuộc tính
+   * Detect material type based on name and properties
    * @private
    */
   _detectMaterialType(mesh) {
@@ -99,7 +99,7 @@ export class RingEnhancer {
         ? mesh.material.name.toLowerCase()
         : "";
 
-    // Kiểm tra các từ khóa kim cương
+    // Check diamond keywords
     const diamondKeywords = [
       "diamond",
       "gem",
@@ -116,7 +116,7 @@ export class RingEnhancer {
       (keyword) => name.includes(keyword) || materialName.includes(keyword)
     );
 
-    // Kiểm tra thuộc tính vật liệu (kim cương thường trong suốt)
+    // Check material properties (diamonds are usually transparent)
     const isDiamondByProperties =
       mesh.material &&
       (mesh.material.transparent ||
@@ -130,54 +130,54 @@ export class RingEnhancer {
   }
 
   /**
-   * Áp dụng vật liệu kim cương chất lượng cao với hiệu ứng lấp lánh (iridescence)
-   * Tạo hiệu ứng như kim cương thật với tán sắc và lấp lánh
+   * Apply high quality diamond material with iridescence effect
+   * Creates realistic diamond effect with dispersion and sparkle
    * @private
    */
   _applyDiamondMaterial(mesh) {
     console.log(
-      `💎🔥 Áp dụng vật liệu kim cương CÓ LỬA cho: ${mesh.name || "mesh"}`
+      `💎🔥 Applying FIRE diamond material for: ${mesh.name || "mesh"}`
     );
 
     mesh.material = new THREE.MeshPhysicalMaterial({
-      // Màu trắng tinh khiết
+      // Pure white color
       color: 0xffffff,
 
-      // Không phải kim loại
+      // Not metallic
       metalness: 0.0,
 
-      // Độ nhám thấp cho kim cương thật
+      // Low roughness for real diamond
       roughness: 0.0,
 
-      // Transmission cao cho hiệu ứng trong suốt
+      // High transmission for transparency effect
       transmission: 1.0,
       transparent: true,
       opacity: 1.0,
 
-      // IOR của kim cương thật
+      // Real diamond IOR
       ior: 2.417,
 
-      // Thickness cho hiệu ứng ánh sáng
+      // Thickness for light effects
       thickness: 1.5,
 
-      // --- HIỆU ỨNG LẤPL ÁNH TÁN SẮC (IRIDESCENCE) - Giảm độ chói ---
-      iridescence: 0.4, // Giảm từ 1.0 xuống 0.6 - vừa đủ lấp lánh
-      iridescenceIOR: 1.2, // Giảm từ 1.8 xuống 1.5 - nhẹ nhàng hơn
-      iridescenceThicknessRange: [200, 300], // Thu nhỏ range để ít chói hơn
+      // --- IRIDESCENCE DISPERSION EFFECT - Reduced glare ---
+      iridescence: 0.4, // Reduced from 1.0 to 0.6 - moderate sparkle
+      iridescenceIOR: 1.2, // Reduced from 1.8 to 1.5 - gentler
+      iridescenceThicknessRange: [200, 300], // Smaller range for less glare
 
-      // QUAN TRỌNG: Sử dụng HDR environment riêng thay vì scene.environment
-      envMap: this.envMap, // HDR riêng cho kim cương
-      envMapIntensity: 1.3, // Tăng lên 1.3 để sáng hơn một chút
+      // IMPORTANT: Use separate HDR environment instead of scene.environment
+      envMap: this.envMap, // Separate HDR for diamond
+      envMapIntensity: 1.3, // Increased to 1.3 for slightly brighter
 
-      // Render cả hai mặt
+      // Render both sides
       side: THREE.DoubleSide,
 
-      // Đảm bảo rendering nhất quán
+      // Ensure consistent rendering
       flatShading: false,
       vertexColors: false,
     });
 
-    // Áp dụng environment map nếu có
+    // Apply environment map if available
     if (this.envMap) {
       mesh.material.envMap = this.envMap;
     }
@@ -185,12 +185,12 @@ export class RingEnhancer {
     mesh.material.needsUpdate = true;
 
     console.log(
-      `💎 Áp dụng vật liệu kim cương opal cho: ${mesh.name || "mesh"}`
+      `💎 Applied opal diamond material for: ${mesh.name || "mesh"}`
     );
   }
 
   /**
-   * Áp dụng vật liệu kim loại chất lượng cao (rose gold mặc định)
+   * Apply high quality metal material (rose gold default)
    * @private
    */
   _applyMetalMaterial(mesh, metalType = "rose-gold") {
@@ -240,41 +240,41 @@ export class RingEnhancer {
       envMapIntensity: config.envMapIntensity,
     });
 
-    // Áp dụng environment map nếu có
+    // Apply environment map if available
     if (this.envMap) {
       mesh.material.envMap = this.envMap;
     }
 
     mesh.material.needsUpdate = true;
 
-    console.log(`🥇 Áp dụng vật liệu ${metalType} cho: ${mesh.name || "mesh"}`);
+    console.log(`🥇 Applied ${metalType} material for: ${mesh.name || "mesh"}`);
   }
 
   /**
-   * Tối ưu hóa rendering cho mesh
+   * Optimize rendering for mesh
    * @private
    */
   _optimizeMeshRendering(mesh) {
-    // Tắt shadows để tương thích với mirror effect
+    // Disable shadows for mirror effect compatibility
     mesh.castShadow = false;
     mesh.receiveShadow = false;
 
-    // Đảm bảo mesh được render với độ ưu tiên phù hợp
+    // Ensure mesh is rendered with appropriate priority
     mesh.renderOrder = mesh.userData.isDiamond ? 1 : 0;
   }
 
   /**
-   * Lưu ý: RingEnhancer chỉ xử lý kim cương
-   * Để thay đổi vật liệu kim loại, cần sử dụng các method khác trong ThreeJSViewer
+   * Note: RingEnhancer only processes diamonds
+   * To change metal material, use other methods in ThreeJSViewer
    */
   setMetalMaterial(metalType = "rose-gold") {
     console.warn(
-      "RingEnhancer chỉ xử lý kim cương. Sử dụng ThreeJSViewer methods để thay đổi kim loại."
+      "RingEnhancer only processes diamonds. Use ThreeJSViewer methods to change metal."
     );
   }
 
   /**
-   * Áp dụng vật liệu kim cương tiêu chuẩn (trong suốt hoàn toàn)
+   * Apply standard diamond material (fully transparent)
    */
   setStandardDiamondMaterial() {
     this.enhancedMeshes.forEach((mesh) => {
@@ -305,14 +305,14 @@ export class RingEnhancer {
       }
     });
 
-    console.log("💎 Đã áp dụng vật liệu kim cương tiêu chuẩn");
+    console.log("💎 Applied standard diamond material");
   }
 
   /**
-   * Buộc tất cả các mesh có thể là kim cương thành kim cương
+   * Force all potential diamond meshes to become diamonds
    */
   forceAllPotentialDiamondsUniform() {
-    // Tìm tất cả mesh có thể là kim cương
+    // Find all meshes that could be diamonds
     const potentialDiamonds = Array.from(this.enhancedMeshes).filter((mesh) => {
       const name = mesh.name ? mesh.name.toLowerCase() : "";
       const materialName =
@@ -341,7 +341,7 @@ export class RingEnhancer {
       );
     });
 
-    // Áp dụng vật liệu kim cương thống nhất
+    // Apply uniform diamond material
     potentialDiamonds.forEach((mesh) => {
       mesh.userData.isDiamond = true;
       mesh.userData.isMetal = false;
@@ -372,12 +372,12 @@ export class RingEnhancer {
     });
 
     console.log(
-      `🔧 Đã buộc ${potentialDiamonds.length} mesh thành kim cương thống nhất`
+      `🔧 Forced ${potentialDiamonds.length} meshes to uniform diamond`
     );
   }
 
   /**
-   * Reset về vật liệu kim cương gốc (opal/moonstone style)
+   * Reset to original diamond materials (opal/moonstone style)
    */
   resetToOriginalMaterials() {
     this.enhancedMeshes.forEach((mesh) => {
@@ -385,11 +385,11 @@ export class RingEnhancer {
         this._applyDiamondMaterial(mesh);
       }
     });
-    console.log("🔄 Đã reset kim cương về vật liệu gốc");
+    console.log("🔄 Reset diamonds to original materials");
   }
 
   /**
-   * Lấy thống kê về các mesh đã tăng cường
+   * Get enhancement statistics
    */
   getEnhancementStats() {
     const stats = {
@@ -410,17 +410,17 @@ export class RingEnhancer {
   }
 
   /**
-   * Dọn dẹp tài nguyên
+   * Clean up resources
    */
   dispose() {
     this.enhancedMeshes.clear();
     this.envMap = null;
-    console.log("🧹 Đã dọn dẹp RingEnhancer");
+    console.log("🧹 Cleaned up RingEnhancer");
   }
 }
 
 /**
- * Hàm tiện ích để tạo và sử dụng RingEnhancer
+ * Utility function to create and use RingEnhancer
  */
 export const enhanceRingModel = (model, envMap = null) => {
   const enhancer = new RingEnhancer(envMap);
@@ -430,10 +430,10 @@ export const enhanceRingModel = (model, envMap = null) => {
 
 export default RingEnhancer;
 
-// // Three.js đã load studio_small_03_4k.hdr trong setupEnvironment() và truyền vào RingEnhancer thông qua:
+// // Three.js loaded studio_small_03_4k.hdr in setupEnvironment() and passed to RingEnhancer via:
 
-//   Trong loadModel() của Three.js
+//   In loadModel() of Three.js
 //   this.ringEnhancer = new RingEnhancer(this.envMap);
 //   this.ringEnhancer.enhanceRingModel(this.model, this.envMap);
 
-//   RingEnhancer chỉ việc nhận và sử dụng envMap đã được chuẩn bị sẵn
+//   RingEnhancer just receives and uses the pre-prepared envMap

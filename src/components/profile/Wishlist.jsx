@@ -2,7 +2,7 @@ import React from "react";
 import "./ProfileTabs.css";
 
 const Wishlist = () => {
-  // Mock data - sẽ thay bằng API call sau
+  // Mock data - will be replaced with API call later
   const wishlistItems = [
     {
       id: 1,

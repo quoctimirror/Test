@@ -1,20 +1,20 @@
 /**
  * =============================================================================
- * TRANG: DB Explorer
+ * PAGE: DB Explorer
  * =============================================================================
  *
- * MỤC ĐÍCH:
- * - Cho phép user chọn Database → Table → Columns
- * - Thêm Computed Columns (ví dụ: qr_url = prefix + sku)
+ * PURPOSE:
+ * - Allow user to select Database → Table → Columns
+ * - Add Computed Columns (e.g., qr_url = prefix + sku)
  * - Preview data
- * - Export ra CSV hoặc XLSX
+ * - Export to CSV or XLSX
  *
  * FLOW:
- * 1. Load danh sách databases từ API
- * 2. User chọn database → Load danh sách tables
- * 3. User chọn table → Load danh sách columns
- * 4. User tick chọn columns muốn export
- * 5. User thêm computed columns (optional)
+ * 1. Load database list from API
+ * 2. User selects database → Load table list
+ * 3. User selects table → Load column list
+ * 4. User checks columns to export
+ * 5. User adds computed columns (optional)
  * 6. Preview data
  * 7. Export CSV/XLSX
  *
@@ -25,18 +25,18 @@ import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import "./DBExplorerPage.css";
 
-// URL base của API (sẽ tự động dùng domain hiện tại khi deploy)
+// API base URL (automatically uses current domain when deployed)
 const API_BASE = "";
 
 export default function DBExplorerPage() {
   // ======================== STATE ========================
 
-  // Danh sách từ API
+  // Lists from API
   const [databases, setDatabases] = useState([]);
   const [tables, setTables] = useState([]);
   const [columns, setColumns] = useState([]);
 
-  // Giá trị đã chọn
+  // Selected values
   const [selectedDb, setSelectedDb] = useState("");
   const [selectedTable, setSelectedTable] = useState("");
   const [selectedColumns, setSelectedColumns] = useState([]); // Array of column names
@@ -48,7 +48,7 @@ export default function DBExplorerPage() {
   const [newComputedPrefix, setNewComputedPrefix] = useState("https://test-beryl-five-56.vercel.app/");
   const [newComputedSource, setNewComputedSource] = useState("");
 
-  // Data và Preview
+  // Data and Preview
   const [previewData, setPreviewData] = useState([]);
   const [totalRows, setTotalRows] = useState(0);
 
@@ -72,7 +72,7 @@ export default function DBExplorerPage() {
     loadDatabases();
   }, []);
 
-  // Load tables khi chọn database
+  // Load tables when database is selected
   useEffect(() => {
     if (selectedDb) {
       loadTables(selectedDb);
@@ -83,7 +83,7 @@ export default function DBExplorerPage() {
     }
   }, [selectedDb]);
 
-  // Load columns khi chọn table
+  // Load columns when table is selected
   useEffect(() => {
     if (selectedDb && selectedTable) {
       loadColumns(selectedDb, selectedTable);
@@ -149,7 +149,7 @@ export default function DBExplorerPage() {
       const data = await res.json();
       if (data.success) {
         setColumns(data.columns);
-        // Mặc định chọn tất cả columns
+        // Select all columns by default
         setSelectedColumns(data.columns.map((c) => c.name));
       } else {
         setError(data.error || "Không thể load columns");
@@ -181,7 +181,7 @@ export default function DBExplorerPage() {
       );
       const data = await res.json();
       if (data.success) {
-        // Thêm computed columns vào data
+        // Add computed columns to data
         const dataWithComputed = addComputedColumns(data.data);
         setPreviewData(dataWithComputed);
         setTotalRows(data.rowCount);
@@ -207,7 +207,7 @@ export default function DBExplorerPage() {
     return data.map((row) => {
       const newRow = { ...row };
       computedColumns.forEach((cc) => {
-        // Lấy giá trị từ source column và nối với prefix
+        // Get value from source column and concatenate with prefix
         const sourceValue = row[cc.sourceColumn] || "";
         newRow[cc.name] = cc.prefix + sourceValue;
       });
@@ -228,7 +228,7 @@ export default function DBExplorerPage() {
       return;
     }
 
-    // Kiểm tra tên đã tồn tại chưa
+    // Check if name already exists
     if (
       computedColumns.some((cc) => cc.name === newComputedName) ||
       columns.some((c) => c.name === newComputedName)
@@ -297,7 +297,7 @@ export default function DBExplorerPage() {
     setError(null);
 
     try {
-      // Lấy toàn bộ data (không limit)
+      // Get all data (no limit)
       const columnsParam = selectedColumns.join(",");
       const res = await fetch(
         `${API_BASE}/api/db/data?db=${encodeURIComponent(selectedDb)}&table=${encodeURIComponent(
@@ -311,21 +311,21 @@ export default function DBExplorerPage() {
         return;
       }
 
-      // Thêm computed columns
+      // Add computed columns
       const dataWithComputed = addComputedColumns(data.data);
 
-      // Tạo headers (columns gốc + computed columns)
+      // Create headers (original columns + computed columns)
       const headers = [...selectedColumns, ...computedColumns.map((cc) => cc.name)];
 
-      // Tạo workbook
+      // Create workbook
       const worksheet = XLSX.utils.json_to_sheet(dataWithComputed, { header: headers });
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, selectedTable);
 
-      // Tên file
+      // Filename
       const filename = `${selectedDb}_${selectedTable}_${new Date().toISOString().split("T")[0]}`;
 
-      // Export theo format đã chọn
+      // Export based on selected format
       if (exportFormat === "csv") {
         XLSX.writeFile(workbook, `${filename}.csv`, { bookType: "csv" });
       } else {
@@ -438,7 +438,7 @@ export default function DBExplorerPage() {
               Tạo cột mới bằng cách nối prefix với giá trị của cột có sẵn
             </p>
 
-            {/* Form thêm computed column */}
+            {/* Add computed column form */}
             <div className="computed-form">
               <input
                 type="text"
@@ -469,7 +469,7 @@ export default function DBExplorerPage() {
               </button>
             </div>
 
-            {/* Danh sách computed columns đã tạo */}
+            {/* List of created computed columns */}
             {computedColumns.length > 0 && (
               <div className="computed-list">
                 <table>

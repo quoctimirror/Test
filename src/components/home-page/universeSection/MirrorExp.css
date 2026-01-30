@@ -196,7 +196,7 @@
   z-index: 5;
 }
 
-/* Layer5 - counter-clockwise, lớn nhất */
+/* Layer5 - counter-clockwise, largest */
 .mirror-exp__layer5 {
   position: absolute;
   top: 50%;

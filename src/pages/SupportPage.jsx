@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SEO from "@components/seo/SEO";
 import Section3 from "@components/services/section3/Section3";
 import Section4 from "@components/services/section4/Section4";
 import Section5 from "@components/services/section5/Section5";
@@ -38,6 +39,11 @@ const SupportPage = () => {
 
   return (
     <div className="support-page">
+      <SEO
+        title="Customer Support"
+        description="Get support for your Mirror Future Diamond jewelry. Care instructions, warranty information, and customer service assistance."
+        url="/support"
+      />
       <main>
         <div data-section="section-3" data-navbar-theme="white">
           <Section3 />

@@ -59,7 +59,7 @@
 .pv2-size-selector-header {
     display: flex;
     gap: 1.5rem;
-    /* Khoảng cách giữa 2 tabs (24px = 1.5rem) */
+    /* Gap between 2 tabs (24px = 1.5rem) */
     padding: 0 0 20px 0;
     background: var(--Gray-1, #F6F6F6);
     justify-content: center;
@@ -70,7 +70,7 @@
     background: none;
     border: none;
     padding: 0 0 1px 0;
-    /* Khoảng cách giữa text và underline - giảm từ 8px xuống 4px */
+    /* Gap between text and underline - reduced from 8px to 4px */
     color: var(--transparent-black-50, rgba(0, 0, 0, 0.50));
     /* Inactive color */
     text-align: center;
@@ -218,11 +218,11 @@
     }
 }
 
-/* Country/Region select - arrow sát text hơn và canh giữa */
+/* Country/Region select - arrow closer to text and centered */
 .pv2-filter-select-country {
-    /* Padding trái để cân bằng và canh giữa */
+    /* Left padding for balance and centering */
     background-position: calc(50% + 60px) center;
-    /* Arrow canh giữa, offset để sát text */
+    /* Arrow centered, offset to be close to text */
 }
 
 /* Size Table Container */
@@ -599,7 +599,7 @@
 .pv2-shape-selector-close-button {
     position: absolute;
     top: 8vw;
-    /* 8vw từ trên xuống cho mobile */
+    /* 8vw from top for mobile */
     right: 5vw;
     z-index: 101;
     pointer-events: auto;

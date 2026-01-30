@@ -131,12 +131,28 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
+      // Build headers with POD attribution if available
+      const headers = {};
+      const podAttr = localStorage.getItem("pod_attribution");
+      if (podAttr) {
+        try {
+          const attr = JSON.parse(podAttr);
+          // Format: partnerId|podId|productId|qrCodeId|timestamp
+          headers["X-Pod-Attribution"] = `${attr.partnerId || ""}|${attr.podId}|${attr.productId || ""}|${attr.qrCodeId}|${attr.timestamp}`;
+        } catch (e) {
+          // Invalid attribution data, ignore
+        }
+      }
+
       const response = await api.post("/api/v1/auth/authenticate", {
         username,
         password,
-      });
+      }, { headers });
 
       const { accessToken, refreshToken } = response.data;
+
+      // Clear attribution after successful login
+      localStorage.removeItem("pod_attribution");
 
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);

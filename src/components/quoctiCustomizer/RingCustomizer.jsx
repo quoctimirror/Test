@@ -19,16 +19,16 @@ export default function RingCustomizer() {
     band: false,
   });
 
-  // Lấy danh sách disabled items
+  // Get list of disabled items
   const disabledHeads = getDisabledHeadsForDiamond(selection.diamond);
   const disabledDiamonds = getDisabledDiamondsForHead(selection.head);
 
-  // Handle selection changes với animation
+  // Handle selection changes with animation
   const handleDiamondChange = useCallback((diamondId) => {
-    // Kiểm tra nếu head hiện tại không hợp lệ với diamond mới
+    // Check if current head is invalid with the new diamond
     setSelection((prev) => {
       const newSelection = { ...prev, diamond: diamondId };
-      // Nếu head hiện tại không hợp lệ, reset về head 1 hoặc head hợp lệ đầu tiên
+      // If current head is invalid, reset to head 1 or the first valid head
       if (!isValidPair(diamondId, prev.head)) {
         const validHead = heads.find((h) => isValidPair(diamondId, h.id));
         newSelection.head = validHead ? validHead.id : 1;
@@ -40,10 +40,10 @@ export default function RingCustomizer() {
   }, []);
 
   const handleHeadChange = useCallback((headId) => {
-    // Kiểm tra nếu diamond hiện tại không hợp lệ với head mới
+    // Check if current diamond is invalid with the new head
     setSelection((prev) => {
       const newSelection = { ...prev, head: headId };
-      // Nếu diamond hiện tại không hợp lệ, reset về diamond hợp lệ đầu tiên
+      // If current diamond is invalid, reset to the first valid diamond
       if (!isValidPair(prev.diamond, headId)) {
         const validDiamond = diamonds.find((d) => isValidPair(d.id, headId));
         newSelection.diamond = validDiamond ? validDiamond.id : 1;

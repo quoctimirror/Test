@@ -22,13 +22,13 @@ const EmailVerification = () => {
       }
 
       try {
-        // Gọi API để verify email
+        // Call API to verify email
         const response = await authAPI.verifyEmail(token);
 
         setStatus("success");
         setMessage(response.data.message || "Email verified successfully!");
 
-        // Redirect về trang login sau 3 giây
+        // Redirect to login page after 3 seconds
         setTimeout(() => {
           navigate(ROUTES.AUTH_LOGIN);
         }, 3000);
@@ -36,13 +36,13 @@ const EmailVerification = () => {
         setStatus("error");
 
         if (error.response) {
-          // Lỗi từ server
+          // Server error
           setMessage(
             error.response.data.message ||
             "Verification failed. The link may be invalid or expired."
           );
         } else if (error.request) {
-          // Lỗi network
+          // Network error
           setMessage("Cannot connect to the server. Please check your network.");
         } else {
           setMessage("An unexpected error occurred. Please try again.");

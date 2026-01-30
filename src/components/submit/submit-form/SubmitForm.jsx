@@ -771,7 +771,7 @@ const SubmitForm = () => {
         });
 
       // Navigate to success page immediately
-      navigate(ROUTES.MILAN_SUBMIT_SUCCESS);
+      navigate(ROUTES.HOME);
     } catch (error) {
       alert(error.message || "Failed to submit form. Please try again.");
     } finally {

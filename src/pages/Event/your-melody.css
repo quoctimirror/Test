@@ -224,7 +224,7 @@
   z-index: 1;
 }
 
-/* Ledger line bar behind Đồ note (position 0) */
+/* Ledger line bar behind Do note (position 0) */
 .your-melody__note--position-do::before {
   content: '';
   position: absolute;
@@ -632,7 +632,7 @@
     align-items: center;
   }
 
-  /* Hide "Nghe nốt của tôi" button on mobile */
+  /* Hide "Listen to my note" button on mobile */
   .your-melody__actions .glass-theme-button--event_dark {
     display: none;
   }

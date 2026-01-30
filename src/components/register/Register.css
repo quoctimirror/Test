@@ -1,4 +1,4 @@
-/* Typography classes được import từ typography.css */
+/* Typography classes are imported from typography.css */
 
 /* --- General Styling & Centering --- */
 .register-container {
@@ -9,7 +9,7 @@
   width: 100%;
   background-color: #f6f6f6;
   /* padding: 40px 20px; */
-  /* Thêm padding trên dưới */
+  /* Add top/bottom padding */
   box-sizing: border-box;
   background: linear-gradient(0deg, #000 0%, #bc224c 5%, #f6f6f6 15%);
 }
@@ -66,23 +66,23 @@
   border-bottom-color: #000;
 }
 
-/* 
---- THAY ĐỔI CSS CHO INPUT VÀ LỖI --- 
+/*
+--- CSS CHANGES FOR INPUT AND ERRORS ---
 */
 
-/* Class mới để bọc input và lỗi */
+/* New class to wrap input and errors */
 .form-field-container {
-  /* Khoảng cách giữa các trường input */
+  /* Spacing between input fields */
   margin-bottom: 36px;
   position: relative;
 }
 
 .input-group {
   position: relative;
-  /* Bỏ margin-bottom ở đây */
+  /* Remove margin-bottom here */
 }
 
-/* Chữ người dùng gõ vào */
+/* User input text */
 .input-group input {
   width: 100%;
   border: none;
@@ -94,7 +94,7 @@
   transition: border-color 0.3s ease;
 }
 
-/* Label ban đầu */
+/* Initial label state */
 .input-group label {
   color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
   position: absolute;
@@ -104,7 +104,7 @@
   transition: all 0.2s ease;
 }
 
-/* Trạng thái "nổi lên" của label */
+/* Floating label state */
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown) + label {
   top: -14px;
@@ -115,12 +115,12 @@
   border-bottom-color: var(--transparent-black-50, rgba(0, 0, 0, 0.5));
 }
 
-/* --- Lớp CSS cho hiển thị lỗi --- */
+/* --- CSS class for error display --- */
 .input-error {
   color: #d9534f;
   text-align: left;
   margin-top: 8px;
-  /* Khoảng cách với đường gạch */
+  /* Spacing from underline */
 }
 
 /* --- Password Field Specifics --- */
@@ -146,10 +146,10 @@
   color: #333;
 }
 
-/* --- Các phần còn lại --- */
+/* --- Remaining sections --- */
 .password-requirements {
   color: #f00;
-  /* Giảm khoảng trống do margin của form-field-container cuối cùng */
+  /* Reduce spacing due to last form-field-container margin */
   margin-bottom: 60px;
 }
 

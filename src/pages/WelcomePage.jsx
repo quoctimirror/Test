@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import SEO from "@components/seo/SEO";
+import { OrganizationSchema } from "@components/seo/StructuredData";
 import { getImageUrl } from "@utils/cloudflareMediaUtil";
 import ScrollToTopArrow from "@components/common/button/ScrollToTopArrow";
 import { useBottomTheme } from "@/hooks/useBottomTheme";
@@ -22,15 +24,18 @@ const WelcomePage = () => {
   }, []);
 
   useEffect(() => {
-    // Set page title
-    document.title = "MIRROR FUTURE DIAMOND | Premium Diamond Jewelry";
-
     // Trigger animation after component mounts
     setTimeout(() => setIsLoaded(true), 100);
   }, []);
 
   return (
     <div className={`welcome-page ${isLoaded ? "loaded" : ""}`}>
+      <SEO
+        title="A Phygital Luxury Haus"
+        description="MIRROR FUTURE DIAMOND - Awakening Luxury through Your Senses. Discover premium lab-grown diamond jewelry with innovative AR try-on experience."
+        url="/welcome"
+      />
+      <OrganizationSchema />
       {/* Background Image */}
       <div className="welcome-background-image"></div>
 

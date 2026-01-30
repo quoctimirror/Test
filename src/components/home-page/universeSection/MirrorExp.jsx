@@ -60,11 +60,11 @@ const MirrorExp = ({
       const container = mirrorExpRef.current;
       const rect = container.getBoundingClientRect();
 
-      // Tọa độ center của container
+      // Center coordinates of container
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
-      // Xác định breakpoint
+      // Determine breakpoint
       const screenWidth = window.innerWidth;
       let breakpoint = '';
       let layer0Radius = 0;

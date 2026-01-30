@@ -41,7 +41,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
   z-index: 1;
-  display: none; /* Ẩn overlay ở desktop */
+  display: none; /* Hide overlay on desktop */
 }
 
 .section3-container {
@@ -85,13 +85,13 @@
     filter: grayscale(100%);
   }
 
-  /* Bỏ after pseudo-element ở tablet */
+  /* Remove after pseudo-element on tablet */
   .services-section3::after {
     display: none;
   }
 
   .section3-background-overlay {
-    display: block; /* Hiển thị lại overlay cho tablet */
+    display: block; /* Show overlay again for tablet */
   }
 
   .section3-container {
@@ -103,7 +103,7 @@
   }
 }
 
-/* Mobile (480px và xuống) */
+/* Mobile (480px and below) */
 @media screen and (max-width: 480px) {
   /* Reset the main section */
   .services-section3 {

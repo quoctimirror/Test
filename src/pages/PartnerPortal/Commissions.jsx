@@ -180,7 +180,7 @@ export default function PartnerPortalCommissions() {
               <div className="pod-empty">
                 <p>No commissions found</p>
                 <p style={{ fontSize: "0.875rem", color: "#6b7280" }}>
-                  Commissions are generated periodically based on your attributions
+                  Commissions are generated periodically based on your user activity
                 </p>
               </div>
             </div>

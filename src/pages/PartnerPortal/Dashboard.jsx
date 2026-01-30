@@ -146,35 +146,6 @@ export default function PartnerPortalDashboard() {
           </div>
         </div>
 
-        <div className="pod-stat-card">
-          <div className="stat-icon" style={{ background: "#fdf2f8" }}>
-            <span>🔗</span>
-          </div>
-          <div className="stat-content">
-            <div className="stat-value">{formatNumber(dashboard?.totalAttributions)}</div>
-            <div className="stat-label">Attributions</div>
-          </div>
-        </div>
-
-        <div className="pod-stat-card">
-          <div className="stat-icon" style={{ background: "#f0f9ff" }}>
-            <span>📈</span>
-          </div>
-          <div className="stat-content">
-            <div className="stat-value">{formatPercent(dashboard?.conversionRate)}</div>
-            <div className="stat-label">Conversion Rate</div>
-          </div>
-        </div>
-
-        <div className="pod-stat-card">
-          <div className="stat-icon" style={{ background: "#ecfdf5" }}>
-            <span>💰</span>
-          </div>
-          <div className="stat-content">
-            <div className="stat-value">{formatCurrency(dashboard?.totalAttributedAmount)}</div>
-            <div className="stat-label">Attributed Revenue</div>
-          </div>
-        </div>
       </div>
 
       {/* Commission Summary */}
@@ -213,8 +184,6 @@ export default function PartnerPortalDashboard() {
                   <th>POD Name</th>
                   <th>Location</th>
                   <th>Scans</th>
-                  <th>Attributions</th>
-                  <th>Revenue</th>
                 </tr>
               </thead>
               <tbody>
@@ -225,10 +194,6 @@ export default function PartnerPortalDashboard() {
                       {pod.location}
                     </td>
                     <td>{formatNumber(pod.totalScans)}</td>
-                    <td>{formatNumber(pod.totalAttributions)}</td>
-                    <td style={{ color: "#10b981" }}>
-                      {formatCurrency(pod.attributedAmount)}
-                    </td>
                   </tr>
                 ))}
               </tbody>

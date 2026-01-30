@@ -2,43 +2,43 @@ import React, { useEffect, useRef } from "react";
 import "./ProductsLeft.css";
 
 const ProductsLeft = () => {
-  // Tạo ref để tham chiếu đến DOM element chứa viewer
+  // Create ref to reference DOM element containing viewer
   const viewerRootRef = useRef(null);
 
   useEffect(() => {
-    // Kiểm tra xem DOM element đã render chưa và SDK đã load chưa
+    // Check if DOM element has rendered and SDK has loaded
     if (!viewerRootRef.current || !window.ijewelViewer) return;
 
-    // URL model 3D local từ public/models
+    // Local 3D model URL from public/models
     const model = "/models/rings/refine-mirror-fiston.glb";
 
-    // Khởi tạo iJewel3D Viewer
-    // Tham số 1: DOM element để render viewer
-    // Tham số 2: project config - chứa modelUrl và basePath
-    // Tham số 3: viewer options - các tùy chọn hiển thị
+    // Initialize iJewel3D Viewer
+    // Param 1: DOM element to render viewer
+    // Param 2: project config - contains modelUrl and basePath
+    // Param 3: viewer options - display options
     new window.ijewelViewer.Viewer(
       viewerRootRef.current,
       { modelUrl: model }, // project
-      { showCard: false } // viewer options - ẩn card thông tin
+      { showCard: false } // viewer options - hide info card
     );
 
-    // Event listener khi viewer đã sẵn sàng
+    // Event listener when viewer is ready
     const handleViewerReady = async (ev) => {
-      const viewer = ev.detail.viewer; // Lấy instance của viewer
-      // Có thể sử dụng viewer instance để control viewer (zoom, rotate, etc.)
+      const viewer = ev.detail.viewer; // Get viewer instance
+      // Can use viewer instance to control viewer (zoom, rotate, etc.)
     };
 
-    // Đăng ký event listener
+    // Register event listener
     window.addEventListener("webgi-viewer-ready", handleViewerReady);
 
-    // Cleanup function - xóa event listener khi component unmount
+    // Cleanup function - remove event listener when component unmounts
     return () => {
       window.removeEventListener("webgi-viewer-ready", handleViewerReady);
     };
-  }, []); // Empty dependency array - chỉ chạy 1 lần khi component mount
+  }, []); // Empty dependency array - run only once when component mounts
 
   return (
-    // Element để render viewer vào
+    // Element to render viewer into
     <div id="pv2-viewer-root" ref={viewerRootRef}></div>
   );
 };

@@ -158,6 +158,7 @@ export default function PodAdminPods() {
                       <th>Location</th>
                       <th>Status</th>
                       <th>Capacity</th>
+                      <th>Commission</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -192,6 +193,13 @@ export default function PodAdminPods() {
                           </span>
                         </td>
                         <td>{pod.displayCapacity}</td>
+                        <td>
+                          {pod.commissionRate != null ? (
+                            <span style={{ color: "#059669", fontWeight: 500 }}>{pod.commissionRate}%</span>
+                          ) : (
+                            <span style={{ color: "#9ca3af", fontSize: "0.75rem" }}>Partner rate</span>
+                          )}
+                        </td>
                         <td>
                           <div style={{ display: "flex", gap: "0.5rem" }}>
                             <button
