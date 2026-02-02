@@ -63,6 +63,7 @@ export const ROUTES = {
   PRODUCT_FINDER: "/find-your-piece",
   PRODUCT_FINDER_CHOOSE_SHAPE: "/find-your-piece/choose-shape",
   PRODUCT_FINDER_CHOOSE_BAND: "/find-your-piece/choose-band",
+  PRODUCT_FINDER_CHOOSE_SIDESTONE: "/find-your-piece/choose-sidestone",
   PRODUCT_FINDER_RESULT: "/find-your-piece/result",
 
   // Inventory Management routes

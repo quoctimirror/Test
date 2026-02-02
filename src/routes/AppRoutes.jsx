@@ -109,6 +109,7 @@ const RingCustomizer = lazy(() =>
 // Product Finder
 const ProductFinderPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderPage"));
 const ProductFinderResultPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderResultPage"));
+const ProductFinderAdminPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderAdminPage"));
 
 // Inventory Management
 const InventoryLayout = lazyWithRetry(() =>
@@ -238,6 +239,7 @@ export default function AppRoutes() {
       ROUTES.PRODUCT_FINDER,
       ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE,
       ROUTES.PRODUCT_FINDER_CHOOSE_BAND,
+      ROUTES.PRODUCT_FINDER_CHOOSE_SIDESTONE,
       ROUTES.PRODUCT_FINDER_RESULT,
       // POD Partner Portal routes
       ROUTES.POD_PARTNER,
@@ -528,6 +530,18 @@ export default function AppRoutes() {
             <Route path={ROUTES.PRODUCT_FINDER} element={<Navigate to={ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE} replace />} />
             <Route path="/find-your-piece/:step" element={<ProductFinderPage />} />
             <Route path={ROUTES.PRODUCT_FINDER_RESULT} element={<ProductFinderResultPage />} />
+
+            {/* Product Finder Admin */}
+            <Route
+              path="/admin/product-finder/combinations"
+              element={
+                <ProtectedRoute
+                  allowedRoles={["SUPER_ADMIN", "ADMIN", "IT_ADMIN"]}
+                >
+                  <ProductFinderAdminPage />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Inventory Management Routes */}
             <Route path={ROUTES.INVENTORY} element={<InventoryLayout />}>
