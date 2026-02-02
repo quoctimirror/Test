@@ -333,9 +333,9 @@ const ProductFinderPage = () => {
     if (currentStepIndex === 0) {
       return getMediaUrl(option.gif || option.image);
     } else if (currentStepIndex === 1) {
-      // Step 2: Band - use combo image as placeholder
+      // Step 2: Band - use combo image without sidestone as placeholder
       const mainStone = selections.diamond || 'round';
-      return buildImagePath(option.id, mainStone, 'baguette');
+      return buildImagePath(option.id, mainStone, 'noside');
     } else {
       // Step 3: Full combo images
       const mainStone = selections.diamond || 'round';
