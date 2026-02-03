@@ -289,9 +289,7 @@ const UsersManager = () => {
 
   if (loading) {
     return (
-      <div className="admin-card" style={{ padding: '3rem', textAlign: 'center' }}>
-        <div>Loading users...</div>
-      </div>
+      <div className="admin-loading-state">Loading users...</div>
     );
   }
 

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ring Customizer - Tùy biến nhẫn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .ring-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ring-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Lớp đai nhẫn (Nằm dưới) - ảnh cũ */
+        .ring-layer-base {
+            z-index: 10;
+        }
+
+        /* Lớp mới (Nằm trên) - ảnh mới đang reveal */
+        .ring-layer-new {
+            z-index: 20;
+        }
+
+        /* Animation reveal từ dưới lên (cho diamond) */
+        @keyframes revealFromBottom {
+            0% {
+                clip-path: inset(100% 0 0 0);
+            }
+            100% {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        /* Animation reveal từ trên xuống (cho band) */
+        @keyframes revealFromTop {
+            0% {
+                clip-path: inset(0 0 100% 0);
+            }
+            100% {
+                clip-path: inset(0 0 0 0);
+            }
+        }
+
+        .reveal-bottom {
+            animation: revealFromBottom 0.6s ease-out forwards;
+        }
+
+        .reveal-top {
+            animation: revealFromTop 0.6s ease-out forwards;
+        }
+
+        .color-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .color-dot:hover {
+            transform: scale(1.15);
+        }
+
+        .color-dot.active {
+            border-color: #1f2937;
+            box-shadow: 0 0 0 2px white, 0 0 10px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center py-10 px-4">
+
+    <div class="max-w-2xl w-full bg-white p-8 rounded-2xl shadow-lg text-center">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">Bộ Tùy Biến Nhẫn Trang Sức</h1>
+
+        <!-- Khu vực hiển thị nhẫn -->
+        <div class="ring-container border-2 border-dashed border-gray-200 mb-8">
+            <!-- Lớp ảnh cũ (dưới) -->
+            <img id="ringBase"
+                 src="rings/d1_h1_b1.jpg"
+                 alt="Ring Base"
+                 class="ring-layer ring-layer-base">
+
+            <!-- Lớp ảnh mới (trên) - dùng để reveal -->
+            <img id="ringNew"
+                 src="rings/d1_h1_b1.jpg"
+                 alt="Ring New"
+                 class="ring-layer ring-layer-new"
+                 style="clip-path: inset(100% 0 0 0);">
+        </div>
+
+        <!-- Khu vực điều khiển -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Điều khiển Đầu Kim Cương -->
+            <div class="p-4 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl">
+                <p class="font-semibold mb-3 text-gray-700 uppercase text-sm tracking-wider">Kim Cuong (Head)</p>
+                <p class="text-xs text-gray-500 mb-3">Reveal tu duoi len</p>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <div class="color-dot active bg-gradient-to-br from-white to-gray-200"
+                         onclick="changeDiamond('d1')" title="Kim cuong trang D1"></div>
+                    <div class="color-dot bg-gradient-to-br from-yellow-200 to-yellow-400"
+                         onclick="changeDiamond('d2')" title="Kim cuong vang D2"></div>
+                    <div class="color-dot bg-gradient-to-br from-pink-200 to-pink-400"
+                         onclick="changeDiamond('d3')" title="Kim cuong hong D3"></div>
+                </div>
+            </div>
+
+            <!-- Điều khiển Đai Nhẫn -->
+            <div class="p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl">
+                <p class="font-semibold mb-3 text-gray-700 uppercase text-sm tracking-wider">Dai Nhan (Band)</p>
+                <p class="text-xs text-gray-500 mb-3">Reveal tu tren xuong</p>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <div class="color-dot active bg-gradient-to-br from-yellow-300 to-yellow-500"
+                         onclick="changeBand('b1')" title="Vang 18K B1"></div>
+                    <div class="color-dot bg-gradient-to-br from-gray-300 to-gray-500"
+                         onclick="changeBand('b2')" title="Bach kim B2"></div>
+                    <div class="color-dot bg-gradient-to-br from-rose-300 to-rose-500"
+                         onclick="changeBand('b3')" title="Vang hong B3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 p-4 bg-gray-50 rounded-xl">
+            <p class="text-sm text-gray-600">Combo hien tai: <span id="currentCombo" class="font-bold text-blue-600">D1 + B1</span></p>
+        </div>
+
+        <!-- Debug info -->
+        <div class="mt-4 p-4 bg-yellow-50 border border-yellow-300 rounded-xl">
+            <p class="font-semibold text-yellow-800 mb-2">DEBUG - Click vao hinh de lay toa do Y</p>
+            <p class="text-sm text-gray-700">Y (px): <span id="debugY" class="font-bold text-red-600">--</span></p>
+            <p class="text-sm text-gray-700">Y (%): <span id="debugYPercent" class="font-bold text-blue-600">--</span></p>
+            <p class="text-sm text-gray-700">Image Height: <span id="debugHeight" class="font-bold">--</span></p>
+        </div>
+    </div>
+
+    <script>
+        let currentDiamond = 'd1';
+        let currentBand = 'b1';
+        let isAnimating = false;
+
+        const availableImages = {
+            'd1_h1_b1': 'rings/d1_h1_b1.jpg',
+            'd1_h1_b3': 'rings/d1_h1_b3.jpg',
+            'd2_h3_b3': 'rings/d2_h3_b3.jpg',
+        };
+
+        function findBestMatch(diamond, band) {
+            for (let key in availableImages) {
+                if (key.startsWith(diamond) && key.includes(band)) {
+                    return availableImages[key];
+                }
+            }
+            for (let key in availableImages) {
+                if (key.startsWith(diamond)) {
+                    return availableImages[key];
+                }
+            }
+            for (let key in availableImages) {
+                if (key.includes(band)) {
+                    return availableImages[key];
+                }
+            }
+            return Object.values(availableImages)[0];
+        }
+
+        function changeDiamond(diamond) {
+            if (currentDiamond === diamond || isAnimating) return;
+            currentDiamond = diamond;
+            updateActiveDots('diamond', diamond);
+            const newImage = findBestMatch(currentDiamond, currentBand);
+            animateChange('diamond', newImage);
+        }
+
+        function changeBand(band) {
+            if (currentBand === band || isAnimating) return;
+            currentBand = band;
+            updateActiveDots('band', band);
+            const newImage = findBestMatch(currentDiamond, currentBand);
+            animateChange('band', newImage);
+        }
+
+        function updateActiveDots(type, value) {
+            const container = type === 'diamond'
+                ? document.querySelector('.from-blue-50')
+                : document.querySelector('.from-yellow-50');
+
+            container.querySelectorAll('.color-dot').forEach((dot, index) => {
+                dot.classList.remove('active');
+                const values = type === 'diamond' ? ['d1', 'd2', 'd3'] : ['b1', 'b2', 'b3'];
+                if (values[index] === value) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        function animateChange(type, newImageUrl) {
+            const baseLayer = document.getElementById('ringBase');
+            const newLayer = document.getElementById('ringNew');
+
+            isAnimating = true;
+
+            // Reset new layer
+            newLayer.classList.remove('reveal-bottom', 'reveal-top');
+
+            if (type === 'diamond') {
+                // Diamond: tu tren xuong
+                newLayer.style.clipPath = 'inset(0 0 100% 0)';
+            } else {
+                // Band: tu duoi len
+                newLayer.style.clipPath = 'inset(100% 0 0 0)';
+            }
+
+            // Load anh moi
+            newLayer.src = newImageUrl;
+
+            newLayer.onload = () => {
+                // Force reflow
+                void newLayer.offsetWidth;
+
+                // Apply animation
+                if (type === 'diamond') {
+                    newLayer.classList.add('reveal-top');
+                } else {
+                    newLayer.classList.add('reveal-bottom');
+                }
+
+                // Sau khi animation xong
+                setTimeout(() => {
+                    baseLayer.src = newImageUrl;
+                    newLayer.style.clipPath = type === 'diamond' ? 'inset(0 0 100% 0)' : 'inset(100% 0 0 0)';
+                    newLayer.classList.remove('reveal-bottom', 'reveal-top');
+                    isAnimating = false;
+                    updateComboDisplay();
+                }, 650);
+            };
+        }
+
+        function updateComboDisplay() {
+            document.getElementById('currentCombo').textContent =
+                `${currentDiamond.toUpperCase()} + ${currentBand.toUpperCase()}`;
+        }
+
+        // Debug: Click vao hinh de lay toa do Y
+        document.getElementById('ringBase').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const y = e.clientY - rect.top;
+            const height = rect.height;
+            const yPercent = (y / height * 100).toFixed(1);
+
+            document.getElementById('debugY').textContent = Math.round(y) + ' px';
+            document.getElementById('debugYPercent').textContent = yPercent + '%';
+            document.getElementById('debugHeight').textContent = Math.round(height) + ' px';
+
+            console.log(`Click Y: ${y}px (${yPercent}%) - Height: ${height}px`);
+        });
+
+        // Cursor pointer cho ringBase
+        document.getElementById('ringBase').style.cursor = 'crosshair';
+    </script>
+
+</body>
+</html>

@@ -1,13 +1,13 @@
 /**
  * ModelUploader.jsx
  *
- * NHIỆM VỤ: Chọn model từ danh sách hoặc upload file
- * - Dropdown để chọn model có sẵn trong public/models/rings
- * - Input file để upload model từ máy
- * - Validate chỉ chấp nhận .glb và .gltf
+ * PURPOSE: Select model from list or upload file
+ * - Dropdown to select available model from public/models/rings
+ * - File input to upload model from local machine
+ * - Validates only .glb and .gltf files are accepted
  */
 
-// Danh sách models có sẵn trong public/models/rings
+// List of available models in public/models/rings
 const AVAILABLE_MODELS = [
   { name: 'Mirror Default', path: '/models/rings/mirror-default.glb' },
   { name: 'My Favorite', path: '/models/rings/myfav.glb' },
@@ -28,13 +28,13 @@ export function ModelUploader({ modelPath, onFileUpload }) {
 
     if (!file) return;
 
-    // Kiểm tra extension
+    // Check extension
     if (file.name.endsWith('.glb') || file.name.endsWith('.gltf')) {
-      // Tạo URL từ file để load model
+      // Create URL from file to load model
       const url = URL.createObjectURL(file);
       onFileUpload(url);
     } else {
-      alert('Chỉ chấp nhận file .glb hoặc .gltf');
+      alert('Only .glb or .gltf files are accepted');
     }
   };
 
@@ -51,7 +51,7 @@ export function ModelUploader({ modelPath, onFileUpload }) {
         Choose Model
       </h3>
 
-      {/* Dropdown chọn model có sẵn */}
+      {/* Dropdown to select available model */}
       <select
         value={modelPath}
         onChange={handleModelSelect}
@@ -74,7 +74,7 @@ export function ModelUploader({ modelPath, onFileUpload }) {
         ))}
       </select>
 
-      {/* Hoặc upload file từ máy */}
+      {/* Or upload file from local machine */}
       <p style={{ fontSize: '12px', color: '#888', marginBottom: '10px' }}>
         Or upload your own:
       </p>
@@ -94,7 +94,7 @@ export function ModelUploader({ modelPath, onFileUpload }) {
         }}
       />
 
-      {/* Hiển thị tên file hiện tại */}
+      {/* Display current file name */}
       <p style={{ fontSize: '12px', color: '#888', marginBottom: '20px' }}>
         📁 {modelPath.split('/').pop()}
       </p>

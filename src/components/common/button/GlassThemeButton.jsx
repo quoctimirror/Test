@@ -1,5 +1,3 @@
-import { useLocation } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
 import { useImmersiveModal } from "@/contexts/ImmersiveModalContext";
 import "./GlassThemeButton.css";
 
@@ -116,7 +114,6 @@ export default function GlassThemeButton({
   isCollapsed = false, // For expandable buttons (like immersive)
   expandable = true, // Set to false for regular buttons with both icon and text
 }) {
-  const location = useLocation();
   const { openModal } = useImmersiveModal();
 
   const renderIcon = () => {
@@ -127,12 +124,6 @@ export default function GlassThemeButton({
     return icon;
   };
 
-  const isImmersiveShowroomPage = location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
-
-  // Don't render globe button on Immersive Showroom page
-  if (icon === "globe" && isImmersiveShowroomPage) {
-    return null;
-  }
 
   // Handle click - for globe icon, open immersive modal
   const handleClick = (e) => {

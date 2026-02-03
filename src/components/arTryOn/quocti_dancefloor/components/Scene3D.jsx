@@ -1,12 +1,12 @@
 /**
  * Scene3D.jsx
  *
- * NHIỆM VỤ: Quản lý toàn bộ 3D scene
- * - Load model GLTF
+ * PURPOSE: Manage entire 3D scene
+ * - Load GLTF model
  * - Load environment map (HDR)
- * - Thêm lighting (spotlight)
- * - Thêm OrbitControls để xoay camera
- * - Trích xuất danh sách mesh từ model và gửi lên parent
+ * - Add lighting (spotlight)
+ * - Add OrbitControls to rotate camera
+ * - Extract mesh list from model and send to parent
  */
 
 import { useEffect, useRef, useCallback } from 'react';
@@ -19,13 +19,13 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
   // Load model GLTF
   const { nodes } = useGLTF(modelPath);
 
-  // Load environment map (HDR) để tạo phản chiếu
+  // Load environment map (HDR) for reflections
   const env = useEnvironment({ files: '/studio_env/brown_photostudio_02_4k.exr' });
 
   // Ref cho spotlight helper
   const spotLightRef = useRef();
 
-  // Trích xuất danh sách mesh từ model khi model được load
+  // Extract mesh list from model when model is loaded
   const handleMeshListLoad = useCallback((list) => {
     if (onMeshListLoad) {
       onMeshListLoad(list);
@@ -39,16 +39,16 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
       Object.keys(nodes).forEach(key => {
         const node = nodes[key];
 
-        // Chỉ lấy các node là Mesh hoặc InstancedMesh
+        // Only get nodes that are Mesh or InstancedMesh
         if (node.isMesh || node.isInstancedMesh) {
           list.push({
-            name: key,        // Tên mesh
-            type: node.type   // Loại: Mesh hoặc InstancedMesh
+            name: key,        // Mesh name
+            type: node.type   // Type: Mesh or InstancedMesh
           });
         }
       });
 
-      // Gửi danh sách mesh lên component cha
+      // Send mesh list to parent component
       handleMeshListLoad(list);
     }
   }, [nodes, handleMeshListLoad]);
@@ -56,10 +56,10 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
   return (
     <>
       {/* === BACKGROUND COLOR === */}
-      <color attach="background" args={['#ffffff']} /> {/* Background màu trắng */}
+      <color attach="background" args={['#ffffff']} /> {/* White background */}
 
       {/* === LIGHTING === */}
-      {/* SpotLight chính chiếu từ phía trên */}
+      {/* Main SpotLight shining from above */}
       <spotLight
         ref={spotLightRef}
         position={[10, 10, 10]}
@@ -72,20 +72,20 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
         shadow-bias={-0.0001}
       />
 
-      {/* ⚡ ÁNH SÁNG PHÍA SAU - để ánh sáng đi xuyên qua kim cương tạo khúc xạ */}
+      {/* Back lighting - to create light refraction through diamond */}
       <pointLight position={[0, -2, -3]} intensity={Math.PI * 2} color="#ffffff" />
       <pointLight position={[3, 0, -3]} intensity={Math.PI * 1.5} color="#ffffff" />
       <pointLight position={[-3, 0, -3]} intensity={Math.PI * 1.5} color="#ffffff" />
 
-      {/* Ambient light nhẹ */}
+      {/* Soft ambient light */}
       <ambientLight intensity={0.2} />
 
-      {/* 🔦 DEBUG: SpotLight Helper - Vẽ hình nón ánh sáng chiếu vào nhẫn */}
+      {/* DEBUG: SpotLight Helper - Draw light cone shining on ring */}
       {showDebugHelpers && spotLightRef.current && (
         <primitive object={new SpotLightHelper(spotLightRef.current, '#ffff00')} />
       )}
 
-      {/* 💡 DEBUG: Quả cầu đỏ đánh dấu vị trí nguồn sáng */}
+      {/* DEBUG: Red sphere marking light source position */}
       {showDebugHelpers && (
         <mesh position={[10, 10, 10]}>
           <sphereGeometry args={[0.3, 16, 16]} />
@@ -108,7 +108,7 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
       </group>
 
       {/* === CAMERA CONTROLS === */}
-      {/* OrbitControls: Click chuột trái để xoay, scroll để zoom */}
+      {/* OrbitControls: Left click to rotate, scroll to zoom */}
       <OrbitControls
         enablePan={false}
         minPolarAngle={0}
@@ -117,16 +117,16 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
       />
 
       {/* === POST-PROCESSING EFFECTS === */}
-      {/* EffectComposer: conditional rendering dựa trên renderMode */}
+      {/* EffectComposer: conditional rendering based on renderMode */}
       <EffectComposer
         disableNormalPass={renderMode === 'smooth'}
         multisampling={renderMode === 'fullTopping' ? 8 : 4}
         enabled={true}
       >
-        {/* SMAA: Anti-aliasing mạnh, chống răng cưa tốt hơn FXAA */}
+        {/* SMAA: Strong anti-aliasing, better than FXAA */}
         <SMAA />
 
-        {/* N8AO: Ambient Occlusion - Chỉ bật ở fullTopping mode */}
+        {/* N8AO: Ambient Occlusion - Only enabled in fullTopping mode */}
         {renderMode === 'fullTopping' && (
           <N8AO
             aoRadius={0.15}
@@ -135,7 +135,7 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
           />
         )}
 
-        {/* Bloom: hiệu ứng lấp lánh - Tăng cường cho kim cương */}
+        {/* Bloom: sparkle effect - Enhanced for diamond */}
         {enableBloom && (
           <Bloom
             luminanceThreshold={renderMode === 'fullTopping' ? 0.9 : 1.2}
@@ -145,13 +145,13 @@ export function Scene3D({ modelPath, selectedMesh, onMeshListLoad, transform, me
           />
         )}
 
-        {/* ToneMapping: ánh xạ màu HDR - TẮT để background trắng không bị xám */}
+        {/* ToneMapping: HDR color mapping - DISABLED to keep white background from turning gray */}
         {/* <ToneMapping /> */}
       </EffectComposer>
 
       {/* === ENVIRONMENT === */}
-      {/* Environment map để phản chiếu và ánh sáng */}
-      {/* background={false} → KHÔNG hiển thị HDRI làm background, chỉ dùng cho phản chiếu */}
+      {/* Environment map for reflections and lighting */}
+      {/* background={false} -> DO NOT display HDRI as background, only use for reflections */}
       <Environment map={env} background={false} />
     </>
   );

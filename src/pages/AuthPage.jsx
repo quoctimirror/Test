@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 
 const AuthPage = () => {
-    // State để quyết định hiển thị form nào. Mặc định là Login.
+    // State to decide which form to display. Default is Login.
     const navigate = useNavigate();
     const location = useLocation();
     useEffect(() => {

@@ -9,7 +9,7 @@
   font-family: "Cormorant Garamond", serif;
 }
 
-/* Đặt rule toàn cục để override mọi style khác */
+/* Set global rule to override all other styles */
 * {
   box-sizing: border-box;
 }
@@ -18,7 +18,7 @@
   outline: none !important;
 }
 
-/* CSS Variables để dễ quản lý màu */
+/* CSS Variables for easy color management */
 :root {
   --primary-color: #bc224c;
   --border-default: #ccc;
@@ -274,7 +274,7 @@
   border-bottom-color: #bc224c;
 }
 
-/* Đảm bảo tất cả input đều có màu viền đúng */
+/* Ensure all inputs have correct border color */
 .profile-form-input {
   width: 100%;
   padding: 12px 0 6px;
@@ -305,7 +305,7 @@
   box-shadow: none !important;
 }
 
-/* Đảm bảo không có outline mặc định của browser */
+/* Ensure no default browser outline */
 .profile-form-input:focus-visible {
   outline: none !important;
   border: none !important;
@@ -443,7 +443,7 @@
   font-weight: 500 !important;
 }
 
-/* Rule cho select để cũng chỉ có underline */
+/* Rule for select to also have only underline */
 select.profile-form-input,
 .profile-nationality-dropdown {
   border: none !important;
@@ -575,7 +575,7 @@ select.profile-form-input:active,
   font-weight: 600 !important;
 }
 
-/* Xóa các style không cần thiết cho password và các nút cũ */
+/* Remove unnecessary styles for password and old buttons */
 .password-field-container,
 .change-password-container,
 .edit-button,

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import SEO from "@components/seo/SEO";
 import "./AllNewsPage.css";
 import NewsHero from "@components/news/NewsHero";
 import NewsGrid from "@components/news/NewsGrid";
@@ -28,6 +29,11 @@ const AllNewsPage = () => {
 
   return (
     <div className="all-news-page">
+      <SEO
+        title="News & Stories"
+        description="Stay updated with the latest news, stories, and events from Mirror Future Diamond. Discover our journey in sustainable luxury jewelry."
+        url="/news"
+      />
       <div data-navbar-theme="white">
         <NewsHero />
       </div>

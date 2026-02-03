@@ -158,15 +158,15 @@
   justify-content: center;
   flex-wrap: nowrap;
   gap: 60px;
-  /* background: #fff; B\u1ecf background \u0111\u1ec3 mix-blend-mode c\u1ee7a navbar ho\u1ea1t \u0111\u1ed9ng */
+  /* background: #fff; Remove background so navbar's mix-blend-mode works */
   width: 100%;
   max-width: 922px;
-  /* height: 20px; Bỏ height cố định */
+  /* height: 20px; Removed fixed height */
   margin-left: auto;
   margin-right: auto;
   align-items: center;
   padding: 0;
-  /* Đặt z-index giống service detail để có thể tương tác và mix-blend-mode hoạt động */
+  /* Set z-index same as service detail for interaction and mix-blend-mode to work */
   position: relative;
   z-index: 100;
 }
@@ -180,7 +180,7 @@
   transition: all 0.3s ease;
   white-space: nowrap;
   position: relative;
-  /* Đảm bảo có thể tương tác */
+  /* Ensure interactivity */
   display: inline-block;
   padding: 0 0;
 }
@@ -222,7 +222,7 @@
 
 .tab-content {
   display: none;
-  /* animation: fadeIn 0.3s ease-in; Comment out để mix-blend-mode hoạt động */
+  /* animation: fadeIn 0.3s ease-in; Commented out so mix-blend-mode works */
 }
 
 .tab-content.active {

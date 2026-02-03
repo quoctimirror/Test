@@ -52,8 +52,8 @@ const NewCutComponent = () => {
 
       // Fade effect for hero (only on desktop)
       if (heroRef.current && isDesktop) {
-        const opacity = Math.max(0, 1 - scrolled / (windowHeight * 0.7)); // Fade nhanh hơn cho sync với 700ms
-        const scale = 1 - (scrolled / windowHeight) * 0.08; // Scale nhẹ hơn
+        const opacity = Math.max(0, 1 - scrolled / (windowHeight * 0.7)); // Fade faster to sync with 700ms
+        const scale = 1 - (scrolled / windowHeight) * 0.08; // Lighter scale
 
         heroRef.current.style.opacity = opacity;
         heroRef.current.style.transform = `scale(${scale})`;
@@ -83,7 +83,7 @@ const NewCutComponent = () => {
           scrolled < windowHeight * 0.5
         ) {
           isScrolling.current = true;
-          smoothScrollTo(windowHeight, 700); // Article trượt lên trong 1 giây
+          smoothScrollTo(windowHeight, 700); // Article slides up in 1 second
         }
 
         // Auto-scroll UP to hero when user scrolls up just a little
@@ -94,7 +94,7 @@ const NewCutComponent = () => {
           scrolled > windowHeight * 0.5
         ) {
           isScrolling.current = true;
-          smoothScrollTo(0, 700); // Quay về hero trong 0.8 giây
+          smoothScrollTo(0, 700); // Return to hero in 0.8 seconds
         }
       }
 

@@ -304,7 +304,7 @@ const SelectOptionSection = () => {
         );
         console.error("Error fetching data:", errorInfo.message);
 
-        // Fallback data khi API thất bại
+        // Fallback data when API fails
 
         // Fallback categories
         const fallbackCategories = [

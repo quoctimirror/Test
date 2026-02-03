@@ -11,6 +11,22 @@
   flex-direction: column;
 }
 
+/* iOS Safari: prevent rubber band scrolling on mobile/tablet */
+@media (max-width: 1024px) {
+  .your-melody {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: unset;
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+    touch-action: pan-x pan-y;
+  }
+}
+
 /* Background - same as place-note-new */
 .your-melody__bg {
   position: absolute;
@@ -152,7 +168,7 @@
   position: fixed;
   left: 0;
   top: 49%;
-  transform: translate(-40%, -50%); /* Show 20%, hide 80% on left */
+  /* transform: translate(-40%, -50%);  */
   height: 600px; /* staff height (360px) × 1.67 */
   width: auto;
   z-index: 4;
@@ -208,7 +224,7 @@
   z-index: 1;
 }
 
-/* Ledger line bar behind Đồ note (position 0) */
+/* Ledger line bar behind Do note (position 0) */
 .your-melody__note--position-do::before {
   content: '';
   position: absolute;
@@ -518,9 +534,9 @@
 
 /* Solock - equal to TOP staff height, fully visible */
   .your-melody__solock {
-    top: calc(422 / 1194 * 100vh); /* Staff1 center = (322 + 100) / 1194 (centered) */
+    top: calc(424 / 1194 * 100vh); /* Staff1 center = (322 + 100) / 1194 (centered) */
     transform: translate(-20%, -50%); /* Show 100%, only center vertically */
-    height: calc(320 / 1194 * 100vh); /* = staff1 height */
+    height: calc(314 / 1194 * 100vh); /* = staff1 height */
     animation: solockSlideInTabletYourMelody 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
@@ -616,7 +632,7 @@
     align-items: center;
   }
 
-  /* Hide "Nghe nốt của tôi" button on mobile */
+  /* Hide "Listen to my note" button on mobile */
   .your-melody__actions .glass-theme-button--event_dark {
     display: none;
   }
@@ -637,9 +653,9 @@
 
   /* Solock - equal to TOP staff height, show 40% */
   .your-melody__solock {
-    top: calc(265 / 844 * 100vh); /* Staff1 center = (172 + 100) / 844 (centered) */
+    top: calc(272 / 844 * 100vh); /* Staff1 center = (172 + 100) / 844 (centered) */
     transform: translate(-40%, -50%); /* Show 40%, hide 60% on left */
-    height: calc(360 / 844 * 100vh); /* = staff1 height */
+    height: calc(320 / 844 * 100vh); /* = staff1 height */
     animation: solockSlideInMobileYourMelody 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 

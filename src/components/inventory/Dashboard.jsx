@@ -38,21 +38,21 @@ const Dashboard = () => {
       setLoading(true);
       setError("");
 
-      // Gọi API dashboard để lấy thống kê
+      // Call dashboard API to get statistics
       const dashboardResponse = await inventoryProductsAPI.getDashboard();
       const dashboardData = dashboardResponse.data?.data || dashboardResponse.data;
 
       if (dashboardData) {
-        // Map theo API response format từ backend
+        // Map according to API response format from backend
         const statusCounts = dashboardData.productsByStatus || {};
         setStats({
           total: dashboardData.totalActiveProducts || 0,
           available: statusCounts.INSTOCK || statusCounts.IN_STOCK || statusCounts.PUBLISHED || 0,
           lowStock: dashboardData.lowStockProducts || 0,
           outOfStock: dashboardData.outOfStockProducts || 0,
-          totalValue: 0, // Backend không trả về totalInventoryValue
+          totalValue: 0, // Backend does not return totalInventoryValue
         });
-        // Backend không trả về recentProducts
+        // Backend does not return recentProducts
         setRecentProducts([]);
       }
     } catch (err) {

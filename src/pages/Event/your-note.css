@@ -163,7 +163,7 @@
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
 }
 
-/* Phase 2: Ledger line for random Đô notes */
+/* Phase 2: Ledger line for random Do notes */
 .place-note-new__random-note--position-do::before {
   content: '';
   position: absolute;
@@ -379,9 +379,10 @@
 .place-note-new__solock {
   position: fixed;
   left: 0;
-  top: calc(280 / 982 * 100vh + 180px); /* Staff center = staff top + half staff height (180px) */
+  /* top: calc(280 / 982 * 100vh + 180px); /* Staff center = staff top + half staff height (180px) */
+  top: 49%;
   transform: translate(-40%, -50%); /* Show 60%, hide 40% on left */
-  height: 650px; /* staff height (360px) × 1.67 */
+  height: 600px; /* same as your-melody desktop */
   width: auto;
   z-index: 4; /* Below gradient overlay (z-index: 5) */
   pointer-events: none;
@@ -562,7 +563,7 @@
   overflow: visible !important;
 }
 
-/* Ledger line bar behind Đồ note (position 0) */
+/* Ledger line bar behind Do note (position 0) */
 .place-note-new__diamond--position-do::before {
   content: '';
   position: absolute;
@@ -757,7 +758,7 @@
   .place-note-new__solock {
     top: 49%; /* Same as staff center on mobile */
     transform: translate(-50%, -50%); /* Show 20%, hide 80% on left */
-    height: 620px; /* larger than staff */
+    height: 610px; /* larger than staff */
     animation: solockSlideInMobilePlaceNote 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 

@@ -4,12 +4,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 export const optimizedTransitionUtils = {
   // Configuration
   config: {
-    duration: 0.9, // Tăng lên 900ms cho mượt hơn
-    easing: "power1.out", // Easing tự nhiên hơn
+    duration: 0.9, // Increased to 900ms for smoother transitions
+    easing: "power1.out", // More natural easing
     fadeEasing: "power1.out",
     enableGPU: true,
     enableWillChange: true,
-    enableRAF: true, // Bật lại RAF với easing cải thiện
+    enableRAF: true, // Re-enabled RAF with improved easing
     prefetchDelay: 100,
     // Performance settings
     isLowPerformance: false, // Will be auto-detected

@@ -63,7 +63,7 @@
     -webkit-text-fill-color: #BC224C !important;
     filter: none !important;
     backdrop-filter: none !important;
-    /* font-size kế thừa từ heading-2--no-margin trong typography.css */
+    /* font-size inherited from heading-2--no-margin in typography.css */
     margin: 0 !important;
     padding: 0 !important;
     flex-shrink: 0;
@@ -75,11 +75,11 @@
     display: flex;
     flex-direction: column;
     gap: clamp(3px, 0.6vh, 8px);
-    /* Dynamic gap: nhỏ hơn để fit 60vh */
+    /* Dynamic gap: smaller to fit 60vh */
     margin: 0;
     padding: 0;
     flex-shrink: 1;
-    /* Cho phép co lại */
+    /* Allow shrinking */
     min-height: 0;
 }
 
@@ -244,7 +244,7 @@
     justify-content: center;
     align-items: center;
     flex-shrink: 1;
-    /* Cho phép co lại */
+    /* Allow shrinking */
     min-height: 0;
 }
 
@@ -255,7 +255,7 @@
     margin-bottom: calc(8 / 652 * 90vh);
 }
 
-/* 5️⃣ + 6️⃣ BUTTONS CONTAINER - Chứa cả Action Buttons và Order Button */
+/* 5️⃣ + 6️⃣ BUTTONS CONTAINER - Contains both Action Buttons and Order Button */
 .pv2-mobile-buttons-container {
     display: flex;
     flex-direction: column;
@@ -393,7 +393,7 @@
     color: rgba(0, 0, 0, 0.9) !important;
 }
 
-/* 6️⃣ ORDER NOW BUTTON (nằm trong buttons-container) */
+/* 6️⃣ ORDER NOW BUTTON (inside buttons-container) */
 .pv2-mobile-modal-order-btn {
     width: 100%;
     height: calc(44 / 652 * 90vh);
@@ -501,7 +501,7 @@
 /* ===== TABLET (≥ 768px) - Still visible on tablet ===== */
 @media (min-width: 768px) {
 
-    /* Reset về giá trị cố định cho tablet */
+    /* Reset to fixed values for tablet */
     .pv2-mobile-config-modal {
         padding: 24px 18px;
     }
@@ -520,7 +520,7 @@
         gap: 2vh;
     }
 
-    /* font-size của title kế thừa từ typography.css */
+    /* font-size of title inherited from typography.css */
 
     .pv2-mobile-option-row {
         height: 46px;

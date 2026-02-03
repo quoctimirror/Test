@@ -130,22 +130,22 @@ export const generateStockReconciliationReport = async (params) => {
 
   // Column widths for landscape A4 (total usable ~14000 DXA)
   const colWidths = [
-    500,   // STT
-    2000,  // Tên hàng
-    1200,  // Mã số
-    600,   // ĐVT
-    900,   // Đơn giá
-    700,   // SL sổ
-    1100,  // Tiền sổ
-    700,   // SL kiểm
-    1100,  // Tiền kiểm
-    700,   // SL thừa
-    1000,  // Tiền thừa
-    700,   // SL thiếu
-    1000,  // Tiền thiếu
-    600,   // Tốt
-    600,   // Kém
-    600,   // Mất
+    500,   // No. (STT)
+    2000,  // Product name
+    1200,  // Code
+    600,   // Unit
+    900,   // Unit price
+    700,   // Book qty
+    1100,  // Book amount
+    700,   // Physical qty
+    1100,  // Physical amount
+    700,   // Excess qty
+    1000,  // Excess amount
+    700,   // Missing qty
+    1000,  // Missing amount
+    600,   // Good
+    600,   // Poor
+    600,   // Lost
   ];
 
   // Create header row with merged cells
@@ -167,7 +167,7 @@ export const generateStockReconciliationReport = async (params) => {
   const headerRow2 = new TableRow({
     tableHeader: true,
     children: [
-      // Empty cells for merged columns (STT, Tên, Mã, ĐVT, Đơn giá)
+      // Empty cells for merged columns (No., Name, Code, Unit, Price)
       centeredCell("Số lượng", { width: colWidths[5], bold: true, shading: "D9E2F3" }),
       centeredCell("Thành tiền", { width: colWidths[6], bold: true, shading: "D9E2F3" }),
       centeredCell("Số lượng", { width: colWidths[7], bold: true, shading: "D9E2F3" }),

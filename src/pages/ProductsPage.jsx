@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import SEO from "@components/seo/SEO";
 import View360 from "@components/view360/View360";
 import SelectOptionSection from "@components/selectOptionSection/SelectOptionSection";
 import ParallaxScrolling from "@components/parallaxScrolling/ParallaxScrolling";
@@ -40,6 +41,11 @@ const ProductsPage = () => {
 
   return (
     <div className="products-page">
+      <SEO
+        title="Lab Grown Diamond Products"
+        description="Browse our collection of premium lab-grown diamond jewelry. Rings, necklaces, earrings, and bracelets crafted with precision and elegance."
+        url="/products"
+      />
       {/* Section 1: View360 Component */}
       {/* <section className="products-section-1"><View360 /></section> */}
 

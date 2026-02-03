@@ -59,7 +59,7 @@
   justify-content: center;
 }
 
-/* Ảnh 1 - lệch trái 2.5vw (chỉ di chuyển, không ảnh hưởng size) */
+/* Image 1 - offset left 2.5vw (only moves, doesn't affect size) */
 .news-item-v2-gallery-item:first-child {
   transform: translateX(-2.5vw);
 }
@@ -68,7 +68,7 @@
   min-height: 150px;
 }
 
-/* Images 1 & 2 - fill cell với aspect ratio 4/5 */
+/* Images 1 & 2 - fill cell with aspect ratio 4/5 */
 .news-item-v2-gallery-item:not(.news-item-v2-gallery-item-large) img {
   width: 100%;
   height: auto;

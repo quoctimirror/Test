@@ -4,39 +4,89 @@ import axios from "axios";
 const isLocalDev = typeof window !== 'undefined' && window.location.hostname === 'localhost';
 const API_BASE_URL = isLocalDev
   ? '' // Use relative URLs through Vite proxy
-  : (import.meta.env.VITE_API_BASE_URL || "https://xpxr4xbvim.ap-southeast-1.awsapprunner.com");
+  : (import.meta.env.VITE_API_BASE_URL || "https://nsa4fef6um.ap-southeast-1.awsapprunner.com");
 
-// Create axios instance for POD API
+const AUTH_BASE_URL = isLocalDev
+  ? ''
+  : (import.meta.env.VITE_API_BASE_URL || "https://nsa4fef6um.ap-southeast-1.awsapprunner.com");
+
+const REFRESH_TOKEN_ENDPOINT = `${AUTH_BASE_URL}/api/v1/auth/refresh-token`;
+
+// Create axios instance for POD API (aligned with main api.js)
 const podApi = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  timeout: 10000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
+    "Cache-Control": "no-cache",
+    Pragma: "no-cache",
   },
 });
 
-// Request interceptor - add auth token
+// Request interceptor - add auth token + X-User-Id
 podApi.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+
+      // Add X-User-Id header from JWT token
+      try {
+        const base64Payload = token.split(".")[1];
+        const payload = JSON.parse(atob(base64Payload));
+        if (payload.userId) {
+          config.headers["X-User-Id"] = payload.userId.toString();
+        }
+      } catch (decodeError) {
+        // Silently ignore decode errors
+      }
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response interceptor - handle errors
+// Response interceptor - handle errors with token refresh
 podApi.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Clear token and redirect to login
-      localStorage.removeItem("accessToken");
-      // Use correct login route with UUID
-      window.location.href = '/a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d/login';
+  async (error) => {
+    const status = error.response?.status;
+    const originalRequest = error.config || {};
+    const requestUrl = originalRequest.url || "";
+
+    const isAuthEndpoint =
+      requestUrl.includes("/auth/authenticate") ||
+      requestUrl.includes("/auth/refresh-token");
+
+    if (status === 401 && !isAuthEndpoint && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) {
+        localStorage.removeItem("accessToken");
+        return Promise.reject(error);
+      }
+
+      try {
+        const refreshResponse = await axios.post(REFRESH_TOKEN_ENDPOINT, {
+          refreshToken,
+        });
+        const { accessToken: newAccessToken } = refreshResponse.data || {};
+
+        if (newAccessToken) {
+          localStorage.setItem("accessToken", newAccessToken);
+          originalRequest.headers = originalRequest.headers || {};
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return podApi(originalRequest);
+        }
+      } catch (refreshError) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        return Promise.reject(refreshError);
+      }
     }
+
     return Promise.reject(error);
   }
 );
@@ -154,23 +204,34 @@ export const qrCodeApi = {
     podApi.post(`/api/v1/admin/pod-qrcodes/${qrCodeId}/regenerate-image`),
 };
 
-// ==================== ATTRIBUTION API ====================
-export const attributionApi = {
-  // Get all attributions with pagination and filters
+// ==================== SCAN API (Admin) ====================
+export const scanApi = {
+  // Get all scans with pagination and filters
   getAll: (params = {}) =>
-    podApi.get("/api/v1/admin/pod-attributions", { params }),
+    podApi.get("/api/v1/admin/pod-qrcodes/scans", { params }),
 
-  // Get attribution by ID
-  getById: (attributionId) =>
-    podApi.get(`/api/v1/admin/pod-attributions/${attributionId}`),
+  // Get scan by ID
+  getById: (scanId) =>
+    podApi.get(`/api/v1/admin/pod-qrcodes/scans/${scanId}`),
 
-  // Create attribution manually
-  create: (data) =>
-    podApi.post("/api/v1/admin/pod-attributions", data),
+  // Get scans for a specific QR code
+  getByQrCodeId: (qrCodeId, params = {}) =>
+    podApi.get(`/api/v1/admin/pod-qrcodes/${qrCodeId}/scans`, { params }),
+};
 
-  // Update attribution status
-  updateStatus: (attributionId, status) =>
-    podApi.patch(`/api/v1/admin/pod-attributions/${attributionId}/status`, { status }),
+// ==================== USER ATTRIBUTION API ====================
+export const userAttributionApi = {
+  // Get all user attributions with pagination and filters
+  getAll: (params = {}) =>
+    podApi.get("/api/v1/admin/pod-user-attributions", { params }),
+
+  // Get user attribution by ID
+  getById: (id) =>
+    podApi.get(`/api/v1/admin/pod-user-attributions/${id}`),
+
+  // Get user attributions by partner
+  getByPartner: (partnerId, params = {}) =>
+    podApi.get(`/api/v1/admin/pod-user-attributions/partner/${partnerId}`, { params }),
 };
 
 // ==================== COMMISSION API ====================
@@ -182,6 +243,10 @@ export const commissionApi = {
   // Get commission by ID
   getById: (commissionId) =>
     podApi.get(`/api/v1/admin/pod-commissions/${commissionId}`),
+
+  // Get commission detail with attributions and customer info
+  getDetail: (commissionId) =>
+    podApi.get(`/api/v1/admin/pod-commissions/${commissionId}/detail`),
 
   // Generate commission for a partner and period
   generate: (data) =>
@@ -237,9 +302,9 @@ export const partnerPortalApi = {
   getMyScans: (params = {}) =>
     podApi.get("/api/v1/partner/scans", { params }),
 
-  // Get partner's attributions
-  getMyAttributions: (params = {}) =>
-    podApi.get("/api/v1/partner/attributions", { params }),
+  // Get partner's user attributions (which users are linked to partner's PODs)
+  getMyUserAttributions: (params = {}) =>
+    podApi.get("/api/v1/partner/user-attributions", { params }),
 
   // Get partner's commissions
   getMyCommissions: (params = {}) =>
@@ -249,21 +314,140 @@ export const partnerPortalApi = {
   getScanStats: (startDate, endDate) =>
     podApi.get("/api/v1/partner/stats/scans", { params: { startDate, endDate } }),
 
-  // Get attribution statistics
-  getAttributionStats: (startDate, endDate) =>
-    podApi.get("/api/v1/partner/stats/attributions", { params: { startDate, endDate } }),
+};
+
+// ==================== PHYGITAL PARTNER API ====================
+export const phygitalPartnerApi = {
+  getDashboard: () =>
+    podApi.get("/api/v1/partner/phygital/dashboard"),
+
+  getSalesReport: (startDate, endDate) =>
+    podApi.get("/api/v1/partner/phygital/reports/sales", { params: { startDate, endDate } }),
+};
+
+// ==================== PHYGITAL INVENTORY API ====================
+export const phygitalInventoryApi = {
+  getAll: (params = {}) =>
+    podApi.get("/api/v1/partner/phygital/inventory", { params }),
+
+  getById: (id) =>
+    podApi.get(`/api/v1/partner/phygital/inventory/${id}`),
+
+  updatePrice: (id, data) =>
+    podApi.put(`/api/v1/partner/phygital/inventory/${id}/price`, data),
+
+  adjustStock: (id, data) =>
+    podApi.post(`/api/v1/partner/phygital/inventory/${id}/adjust`, data),
+
+  getLowStock: () =>
+    podApi.get("/api/v1/partner/phygital/inventory/low-stock"),
+
+  getMovements: (id, params = {}) =>
+    podApi.get(`/api/v1/partner/phygital/inventory/${id}/movements`, { params }),
+};
+
+// ==================== PHYGITAL WHOLESALE API ====================
+export const phygitalWholesaleApi = {
+  getAll: (params = {}) =>
+    podApi.get("/api/v1/partner/phygital/wholesale-orders", { params }),
+
+  getById: (id) =>
+    podApi.get(`/api/v1/partner/phygital/wholesale-orders/${id}`),
+
+  create: (data) =>
+    podApi.post("/api/v1/partner/phygital/wholesale-orders", data),
+
+  submit: (id) =>
+    podApi.post(`/api/v1/partner/phygital/wholesale-orders/${id}/submit`),
+
+  cancel: (id, reason) =>
+    podApi.post(`/api/v1/partner/phygital/wholesale-orders/${id}/cancel`, null, { params: { reason } }),
+
+  confirmDelivery: (id) =>
+    podApi.post(`/api/v1/partner/phygital/wholesale-orders/${id}/confirm-delivery`),
+};
+
+// ==================== PHYGITAL SALES API ====================
+export const phygitalSalesApi = {
+  getAll: (params = {}) =>
+    podApi.get("/api/v1/partner/phygital/sales", { params }),
+
+  getById: (id) =>
+    podApi.get(`/api/v1/partner/phygital/sales/${id}`),
+
+  create: (data) =>
+    podApi.post("/api/v1/partner/phygital/sales", data),
+
+  confirm: (id) =>
+    podApi.post(`/api/v1/partner/phygital/sales/${id}/confirm`),
+
+  complete: (id) =>
+    podApi.post(`/api/v1/partner/phygital/sales/${id}/complete`),
+
+  cancel: (id, reason) =>
+    podApi.post(`/api/v1/partner/phygital/sales/${id}/cancel`, null, { params: { reason } }),
+
+  returnSale: (id) =>
+    podApi.post(`/api/v1/partner/phygital/sales/${id}/return`),
+};
+
+// ==================== ADMIN WHOLESALE API ====================
+export const adminWholesaleApi = {
+  getOrders: (params = {}) =>
+    podApi.get("/api/v1/admin/wholesale/orders", { params }),
+
+  getOrder: (id) =>
+    podApi.get(`/api/v1/admin/wholesale/orders/${id}`),
+
+  approve: (id) =>
+    podApi.post(`/api/v1/admin/wholesale/orders/${id}/approve`),
+
+  process: (id) =>
+    podApi.post(`/api/v1/admin/wholesale/orders/${id}/process`),
+
+  ship: (id, trackingNumber) =>
+    podApi.post(`/api/v1/admin/wholesale/orders/${id}/ship`, null, { params: { trackingNumber } }),
+
+  complete: (id) =>
+    podApi.post(`/api/v1/admin/wholesale/orders/${id}/complete`),
+
+  cancel: (id, reason) =>
+    podApi.post(`/api/v1/admin/wholesale/orders/${id}/cancel`, null, { params: { reason } }),
+
+  getPartners: (params = {}) =>
+    podApi.get("/api/v1/admin/wholesale/partners", { params }),
+
+  getPartnerInventory: (partnerId, params = {}) =>
+    podApi.get(`/api/v1/admin/wholesale/partners/${partnerId}/inventory`, { params }),
+
+  getPartnerSales: (partnerId, params = {}) =>
+    podApi.get(`/api/v1/admin/wholesale/partners/${partnerId}/sales`, { params }),
+
+  getPartnerOrders: (partnerId, params = {}) =>
+    podApi.get(`/api/v1/admin/wholesale/partners/${partnerId}/orders`, { params }),
+
+  getPartnerDashboard: (partnerId) =>
+    podApi.get(`/api/v1/admin/wholesale/partners/${partnerId}/dashboard`),
+};
+
+// ==================== PRODUCT CATALOG (public) ====================
+export const productCatalogApi = {
+  getAvailable: (params) => podApi.get("/api/products/available", { params }),
+  search: (keyword, params) => podApi.get("/api/products/search", { params: { q: keyword, ...params } }),
 };
 
 // ==================== ENUMS ====================
 export const POD_ENUMS = {
   partnerStatus: ['PENDING', 'APPROVED', 'ACTIVE', 'SUSPENDED', 'TERMINATED'],
   partnerTier: ['BRONZE', 'SILVER', 'GOLD', 'PLATINUM'],
+  partnerType: ['LOCATION', 'PHYGITAL'],
   businessType: ['SPA', 'HOTEL', 'SALON', 'RETAIL', 'RESTAURANT', 'OTHER'],
   podStatus: ['DRAFT', 'ACTIVE', 'MAINTENANCE', 'INACTIVE'],
   qrCodeStatus: ['ACTIVE', 'INACTIVE', 'EXPIRED'],
-  attributionStatus: ['PENDING', 'CONFIRMED', 'CANCELLED'],
-  attributionType: ['FIRST_TOUCH', 'LAST_TOUCH', 'MULTI_TOUCH'],
   commissionStatus: ['PENDING', 'APPROVED', 'PAID', 'CANCELLED'],
+  wholesaleOrderStatus: ['DRAFT', 'SUBMITTED', 'APPROVED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'COMPLETED', 'CANCELLED'],
+  partnerSaleStatus: ['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED', 'RETURNED'],
+  inventoryMovementType: ['WHOLESALE_IN', 'SALE_OUT', 'ADJUSTMENT_IN', 'ADJUSTMENT_OUT', 'RETURN_IN', 'TRANSFER_OUT', 'DAMAGED_OUT'],
 };
 
 export default podApi;

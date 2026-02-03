@@ -114,7 +114,7 @@ const BODMember = () => {
       highlightedWidth = Math.min(480, screenWidth * 0.3);
       highlightedHeight = Math.min(680, screenWidth * 0.42);
     } else if (screenWidth <= 1800) {
-      // Sync với CSS breakpoint cho 1728x1080
+      // Sync with CSS breakpoint for 1728x1080
       baseWidth = 265;
       baseHeight = 398;
       highlightedWidth = 545;

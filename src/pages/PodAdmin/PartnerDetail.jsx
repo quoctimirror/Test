@@ -10,6 +10,8 @@ export default function PodAdminPartnerDetail() {
   const [partner, setPartner] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [credentialPopup, setCredentialPopup] = useState(null);
+  const [copiedField, setCopiedField] = useState(null);
 
   useEffect(() => {
     fetchPartnerDetail();
@@ -34,12 +36,38 @@ export default function PodAdminPartnerDetail() {
       return;
     }
     try {
-      await partnerApi.updateStatus(partnerId, newStatus);
+      const response = await partnerApi.updateStatus(partnerId, newStatus);
+      const data = response.data;
+
+      // Show credentials popup if account was just created (activation)
+      if (data.generatedUsername && data.generatedPassword) {
+        setCredentialPopup({
+          username: data.generatedUsername,
+          password: data.generatedPassword,
+        });
+      }
+
       fetchPartnerDetail();
     } catch (err) {
       console.error("Error updating status:", err);
       alert("Failed to update status: " + (err.response?.data?.message || err.message));
     }
+  };
+
+  const handleCopyCredential = (field, text) => {
+    const doCopy = () => {
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    };
+    navigator.clipboard.writeText(text).then(doCopy).catch(() => {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      doCopy();
+    });
   };
 
   const handleDelete = async () => {
@@ -166,12 +194,18 @@ export default function PodAdminPartnerDetail() {
 
       {/* Status & Tier */}
       <div className="pod-card" style={{ marginBottom: "1rem" }}>
-        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center", flexWrap: "wrap" }}>
           <span className={`status-badge ${getStatusBadgeClass(partner.status)}`}>
             {partner.status}
           </span>
           <span className="status-badge" style={getTierBadgeStyle(partner.tier)}>
             {partner.tier}
+          </span>
+          <span className="status-badge" style={{
+            background: partner.partnerType === "PHYGITAL" ? "#dbeafe" : "#f3f4f6",
+            color: partner.partnerType === "PHYGITAL" ? "#1d4ed8" : "#374151",
+          }}>
+            {partner.partnerType || "LOCATION"}
           </span>
           <span style={{ color: "#6b7280" }}>
             Commission Rate: <strong>{partner.commissionRate}%</strong>
@@ -193,10 +227,6 @@ export default function PodAdminPartnerDetail() {
           <div className="pod-stat-card">
             <div className="pod-stat-value">{partner.totalScans || 0}</div>
             <div className="pod-stat-label">Total Scans</div>
-          </div>
-          <div className="pod-stat-card">
-            <div className="pod-stat-value">{partner.totalAttributions || 0}</div>
-            <div className="pod-stat-label">Attributions</div>
           </div>
           <div className="pod-stat-card">
             <div className="pod-stat-value">{formatCurrency(partner.totalRevenue)}</div>
@@ -258,9 +288,15 @@ export default function PodAdminPartnerDetail() {
               <span className="pod-detail-value">{partner.contactPhone || "-"}</span>
             </div>
             <div className="pod-detail-item">
-              <span className="pod-detail-label">User ID</span>
-              <span className="pod-detail-value">{partner.userId || "Not created yet"}</span>
+              <span className="pod-detail-label">Username</span>
+              <span className="pod-detail-value">{partner.username || "Not created yet"}</span>
             </div>
+            {partner.username && (
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Password</span>
+                <span className="pod-detail-value">********</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -321,6 +357,71 @@ export default function PodAdminPartnerDetail() {
         </div>
       </div>
 
+      {/* Phygital Settings */}
+      {partner.partnerType === "PHYGITAL" && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
+          <div className="pod-card">
+            <h2 style={{ marginBottom: "1rem", fontSize: "1.125rem", fontWeight: 600 }}>
+              Phygital Settings
+            </h2>
+            <div className="pod-detail-grid">
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Wholesale Discount Rate</span>
+                <span className="pod-detail-value">{partner.wholesaleDiscountRate != null ? `${partner.wholesaleDiscountRate}%` : "-"}</span>
+              </div>
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Territory</span>
+                <span className="pod-detail-value">{partner.territory || "-"}</span>
+              </div>
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Can Set Own Prices</span>
+                <span className="pod-detail-value">{partner.canSetOwnPrices ? "Yes" : "No"}</span>
+              </div>
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Markup Range</span>
+                <span className="pod-detail-value">
+                  {partner.minMarkupPercent != null || partner.maxMarkupPercent != null
+                    ? `${partner.minMarkupPercent ?? 0}% - ${partner.maxMarkupPercent ?? "∞"}%`
+                    : "-"}
+                </span>
+              </div>
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Contract Period</span>
+                <span className="pod-detail-value">
+                  {partner.contractStartDate || partner.contractEndDate
+                    ? `${partner.contractStartDate || "?"} → ${partner.contractEndDate || "?"}`
+                    : "-"}
+                </span>
+              </div>
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Security Deposit</span>
+                <span className="pod-detail-value">{partner.securityDeposit ? formatCurrency(partner.securityDeposit) : "-"}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="pod-card">
+            <h2 style={{ marginBottom: "1rem", fontSize: "1.125rem", fontWeight: 600 }}>
+              Bank Information
+            </h2>
+            <div className="pod-detail-grid">
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Bank Name</span>
+                <span className="pod-detail-value">{partner.bankName || "-"}</span>
+              </div>
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Account Number</span>
+                <span className="pod-detail-value">{partner.bankAccountNumber || "-"}</span>
+              </div>
+              <div className="pod-detail-item">
+                <span className="pod-detail-label">Branch</span>
+                <span className="pod-detail-value">{partner.bankBranch || "-"}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Notes */}
       {partner.notes && (
         <div className="pod-card" style={{ marginTop: "1rem" }}>
@@ -328,6 +429,88 @@ export default function PodAdminPartnerDetail() {
             Notes
           </h2>
           <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{partner.notes}</p>
+        </div>
+      )}
+
+      {/* Credentials Popup */}
+      {credentialPopup && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+          background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center",
+          zIndex: 1000,
+        }}>
+          <div style={{
+            background: "#fff", borderRadius: "12px", padding: "2rem", maxWidth: "480px", width: "90%",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+          }}>
+            <h2 style={{ margin: "0 0 0.5rem", fontSize: "1.25rem", fontWeight: 700 }}>
+              Partner Account Created
+            </h2>
+            <p style={{ color: "#6b7280", margin: "0 0 1.5rem", fontSize: "0.875rem" }}>
+              Please save these credentials. The password will not be shown again.
+            </p>
+
+            <div style={{ background: "#f9fafb", borderRadius: "8px", padding: "1rem", marginBottom: "1rem" }}>
+              <div style={{ marginBottom: "1rem" }}>
+                <label style={{ display: "block", fontSize: "0.75rem", color: "#6b7280", marginBottom: "0.25rem", fontWeight: 600 }}>
+                  Username
+                </label>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <code style={{
+                    flex: 1, background: "#fff", border: "1px solid #e5e7eb", borderRadius: "6px",
+                    padding: "0.5rem 0.75rem", fontSize: "0.95rem", fontFamily: "monospace",
+                  }}>
+                    {credentialPopup.username}
+                  </code>
+                  <button
+                    className="pod-btn pod-btn-secondary pod-btn-sm"
+                    onClick={() => handleCopyCredential("username", credentialPopup.username)}
+                  >
+                    Copy
+                  </button>
+                </div>
+                {copiedField === "username" && (
+                  <span style={{ color: "#dc2626", fontSize: "0.75rem", marginTop: "0.25rem", display: "block" }}>Copied!</span>
+                )}
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.75rem", color: "#6b7280", marginBottom: "0.25rem", fontWeight: 600 }}>
+                  Temporary Password
+                </label>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <code style={{
+                    flex: 1, background: "#fff", border: "1px solid #e5e7eb", borderRadius: "6px",
+                    padding: "0.5rem 0.75rem", fontSize: "0.95rem", fontFamily: "monospace",
+                  }}>
+                    {credentialPopup.password}
+                  </code>
+                  <button
+                    className="pod-btn pod-btn-secondary pod-btn-sm"
+                    onClick={() => handleCopyCredential("password", credentialPopup.password)}
+                  >
+                    Copy
+                  </button>
+                </div>
+                {copiedField === "password" && (
+                  <span style={{ color: "#dc2626", fontSize: "0.75rem", marginTop: "0.25rem", display: "block" }}>Copied!</span>
+                )}
+              </div>
+            </div>
+
+            <p style={{ color: "#dc2626", fontSize: "0.8rem", margin: "0 0 1.5rem" }}>
+              Warning: This is the only time the password will be displayed. Make sure to copy it now.
+            </p>
+
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <button
+                className="pod-btn pod-btn-primary"
+                onClick={() => setCredentialPopup(null)}
+              >
+                I've saved the credentials
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

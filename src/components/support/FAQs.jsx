@@ -7,7 +7,7 @@ const FAQs = () => {
   const [activeSection, setActiveSection] = useState("products");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Dữ liệu FAQs cho từng section
+  // FAQ data for each section
   const faqData = {
     products: [
       {
@@ -133,7 +133,7 @@ const FAQs = () => {
     ],
   };
 
-  // Dữ liệu để định nghĩa các section và sidebar, giúp chúng đồng bộ
+  // Data to define sections and sidebar, keeping them in sync
   const sectionsInfo = [
     { id: "products", title: "Products", image: "support/Products.webp" },
     { id: "orders", title: "Orders & Payments", image: "support/Orders & Payments.webp" },
@@ -143,7 +143,7 @@ const FAQs = () => {
     { id: "location", title: "Location", image: "support/Location.webp" },
   ];
 
-  // Logic Intersection Observer để theo dõi section active (giữ nguyên)
+  // Intersection Observer logic to track active section (unchanged)
   const observer = useRef(null);
   useEffect(() => {
     observer.current = new IntersectionObserver(
@@ -203,12 +203,12 @@ const FAQs = () => {
         panel.style.maxHeight = null;
         setExpandedFAQ(null);
       } else {
-        // Đóng tất cả panels khác trước
+        // Close all other panels first
         document.querySelectorAll(".faq-answer").forEach((p) => {
           p.style.maxHeight = null;
         });
 
-        // Mở panel hiện tại
+        // Open current panel
         panel.style.maxHeight = panel.scrollHeight + "px";
         setExpandedFAQ(id);
       }
@@ -244,11 +244,11 @@ const FAQs = () => {
   const filteredFAQs = getFilteredFAQs();
 
   return (
-    // Thêm container để xác định vùng hoạt động của sticky
+    // Add container to define sticky behavior area
     <div className="faqs-sticky-container">
       <div className="faqs-wrapper">
         <div className="faq-sidebar-section">
-          {/* Sidebar giờ sẽ được render động từ `sectionsInfo` */}
+          {/* Sidebar is now rendered dynamically from `sectionsInfo` */}
           <nav className="faq-nav">
             <ul>
               {sectionsInfo.map((section) => (

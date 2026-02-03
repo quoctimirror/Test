@@ -62,20 +62,20 @@
 }
 
 .same-collection-title {
-  /* Sử dụng class heading-1 từ typography.css */
-  /* Các thuộc tính font đã được xác định trong heading-1 */
+  /* Use heading-1 class from typography.css */
+  /* Font properties are defined in heading-1 */
   text-align: center;
   color: #333;
-  /* Ghi đè margin mặc định của heading-1 */
+  /* Override default margin of heading-1 */
   margin: 0 0 12px 0 !important;
 }
 
 .same-collection-description {
-  /* Sử dụng class body-text-4 từ typography.css */
-  /* Các thuộc tính font đã được xác định trong body-text-4 */
+  /* Use body-text-4 class from typography.css */
+  /* Font properties are defined in body-text-4 */
   text-align: center;
   color: #797979;
-  /* Ghi đè margin mặc định của body-text-4 */
+  /* Override default margin of body-text-4 */
   margin: 0 !important;
 }
 
@@ -183,7 +183,7 @@
   }
 }
 
-/* Mobile (425px và xuống) */
+/* Mobile (425px and below) */
 @media screen and (max-width: 425px) {
   .collection-section-4,
   .collection-section-4-gsap {

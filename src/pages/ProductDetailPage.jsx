@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import SEO from "@components/seo/SEO";
+import { ProductSchema, BreadcrumbSchema } from "@components/seo/StructuredData";
 import { productsAPI } from "@/services/api";
 import Section1ProductHero from "@components/product-detail/Section1ProductHero";
 import Section2ProductSpecs from "@components/product-detail/Section2ProductSpecs";
@@ -27,6 +29,24 @@ const ProductDetailPage = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Save POD attribution params from QR scan redirect
+  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    const ref = searchParams.get("ref");
+    if (ref === "pod") {
+      const attribution = {
+        podId: searchParams.get("pod"),
+        partnerId: searchParams.get("partner"),
+        productId: productId,
+        qrCodeId: searchParams.get("qr"),
+        timestamp: searchParams.get("t"),
+      };
+      if (attribution.podId && attribution.qrCodeId) {
+        localStorage.setItem("pod_attribution", JSON.stringify(attribution));
+      }
+    }
+  }, [searchParams, productId]);
 
   // Order modal states
   const [showOrderForm, setShowOrderForm] = useState(false);
@@ -133,6 +153,28 @@ const ProductDetailPage = () => {
 
   return (
     <div className="product-detail-wrapper">
+      <SEO
+        title={product.itemName || product.name || "Product Detail"}
+        description={product.description || `${product.itemName || product.name} - Premium lab-grown diamond jewelry by Mirror Future Diamond.`}
+        image={product.imageUrl || product.images?.[0]}
+        url={`/product/${productId}`}
+        type="product"
+      />
+      <ProductSchema
+        product={{
+          name: product.itemName || product.name,
+          description: product.description,
+          image: product.imageUrl || product.images?.[0],
+          price: product.salePrice || product.price,
+        }}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "/home" },
+          { name: "Products", url: "/products" },
+          { name: product.itemName || product.name || "Product" },
+        ]}
+      />
       {/* Section 1: Product Hero */}
       <Section1ProductHero product={product} onOrderNow={handleOrderNow} />
 

@@ -10,9 +10,9 @@
     width: 100%;
     max-width: 100%;
     height: auto;
-    /* Auto height - content tự nhiên */
+    /* Auto height - natural content */
     min-height: 100vh;
-    /* Tối thiểu full viewport */
+    /* Minimum full viewport */
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -22,7 +22,7 @@
     box-sizing: border-box;
     background: #ffffff;
     overflow-y: visible;
-    /* Scroll tự nhiên theo body */
+    /* Natural scroll with body */
     position: relative;
     z-index: 1;
 }
@@ -44,14 +44,14 @@
     .pv2-left-container {
         width: 66.25%;
         height: auto;
-        /* Auto height - cho phép expand với content */
+        /* Auto height - allows expand with content */
         min-height: 100vh;
-        /* Tối thiểu 100vh */
+        /* Minimum 100vh */
         overflow-y: visible;
-        /* Body scroll, không phải container scroll */
+        /* Body scroll, not container scroll */
         flex-shrink: 0;
         padding: 0;
-        /* Reset all padding - không cần space cho MobileProductBar */
+        /* Reset all padding - no space needed for MobileProductBar */
     }
 }
 

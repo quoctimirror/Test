@@ -1,4 +1,4 @@
-/* Thêm container để xác định "vùng" mà sidebar sẽ sticky */
+/* Add container to define the "area" where sidebar will be sticky */
 .faqs-sticky-container {
   /* padding: 0 0 120px 0; */
   /* background: white; */
@@ -8,22 +8,22 @@
 
 /* Note: Smooth scroll for anchor navigation is handled via JavaScript in FAQs.jsx */
 
-/* --- Container tạo vùng sticky bounds --- */
+/* --- Container creating sticky bounds area --- */
 .faqs-wrapper {
   position: relative;
   width: 100%;
-  padding-left: 0; /* Dành chỗ cho sidebar 200px + margin 40px */
+  padding-left: 0; /* Reserve space for sidebar 200px + margin 40px */
   display: flex;
   align-items: flex-start;
 }
 
-/* --- Sidebar sticky trong bounds --- */
+/* --- Sidebar sticky within bounds --- */
 .faq-sidebar-section {
   position: absolute;
   left: 2.5%;
   top: 0;
   width: 200px;
-  height: 100%; /* Chiều cao bằng wrapper (tức là bằng main content) */
+  height: 100%; /* Height equals wrapper (same as main content) */
 }
 
 .faq-nav {
@@ -32,7 +32,7 @@
   display: flex;
   align-items: flex-start;
   opacity: 1;
-  /* Sticky trong vùng giới hạn của faq-sidebar-section */
+  /* Sticky within faq-sidebar-section bounds */
   position: sticky;
   top: 300px;
   z-index: 105;
@@ -40,7 +40,7 @@
   /* backdrop-filter: blur(8px); */
 }
 
-/* Loại bỏ class .sticky vì không còn dùng state đó nữa */
+/* Removed .sticky class since that state is no longer used */
 /* .faq-nav.sticky { ... } */
 
 .faq-nav ul {
@@ -89,10 +89,10 @@
   color: #000;
 }
 
-/* Các class nav cụ thể không cần nữa vì đã render động */
+/* Specific nav classes no longer needed since rendering is dynamic */
 /* .faq-nav .products-nav, .orders-nav, etc... */
 
-/* --- Main content căn giữa toàn trang --- */
+/* --- Main content centered on page --- */
 .faqs-main-section {
   width: 100%;
   max-width: 702px;
@@ -316,7 +316,7 @@
   transition: max-height 0.3s ease-out;
 }
 
-/* Không cần class expanded nữa - sẽ dùng inline style */
+/* No need for expanded class anymore - will use inline style */
 
 .faq-answer p {
   color: #797979;

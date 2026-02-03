@@ -254,7 +254,7 @@ const EventGuidePage = () => {
       wrapper.style.setProperty('--hero-pointer', scrollProgress > 0.5 ? 'none' : 'auto');
       wrapper.style.setProperty('--music-pointer', scrollProgress > 0.5 ? 'auto' : 'none');
 
-      // Update hero section state for "Xem thêm" text visibility
+      // Update hero section state for "See more" text visibility
       setIsInHeroSection(scrollProgress < 0.5);
 
       if (isAutoScrolling) {

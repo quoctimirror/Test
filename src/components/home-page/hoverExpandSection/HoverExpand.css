@@ -92,7 +92,7 @@
   pointer-events: none;
 }
 
-/* Kích thước cụ thể cho màn hình 1920x1080 */
+/* Specific sizes for 1920x1080 screen */
 @media (min-width: 1920px) and (min-height: 1080px) {
   .hover-expand-gallery {
     grid-template-columns: repeat(4, 480px);

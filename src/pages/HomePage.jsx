@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import SEO from "@components/seo/SEO";
+import { WebSiteSchema } from "@components/seo/StructuredData";
 import ScrollEffect from "@components/home-page/scrollEffect/ScrollEffect";
 import ImmersiveShowroom from "@components/home-page/immersiveShowroom/ImmersiveShowroom";
 import BrandPillars from "@components/home-page/brandPillars/BrandPillars";
@@ -14,6 +16,12 @@ import { useBottomTheme } from "@/hooks/useBottomTheme";
 import "@components/home-page/scrollEffect/ScrollEffect.css";
 
 export default function HomePage() {
+  const seoProps = {
+    title: "Lab Grown Diamond Jewelry",
+    description: "Discover premium lab-grown diamond jewelry at Mirror Future Diamond. Innovative AR try-on experience, unique collections, and bespoke designs.",
+    url: "/home",
+  };
+
   // Overlay state management - lifted up from MirrorExp
   const [showSenseOverlay, setShowSenseOverlay] = useState(false);
   const [showPresenceOverlay, setShowPresenceOverlay] = useState(false);
@@ -45,7 +53,8 @@ export default function HomePage() {
 
   return (
     <>
-      {/* <TopBanner /> */}
+      <SEO {...seoProps} />
+      <WebSiteSchema />
 
       <div data-section="scroll-effect" data-navbar-theme="white">
         <ScrollEffect isAnyOverlayOpen={isAnyOverlayOpen} />

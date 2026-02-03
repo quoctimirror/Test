@@ -46,7 +46,7 @@ const ProductForm = ({ isEdit = false }) => {
   const { id } = useParams();
   const [formData, setFormData] = useState(initialFormData);
   const [originalData, setOriginalData] = useState(null);
-  const [originalSku, setOriginalSku] = useState(""); // Lưu SKU gốc để gọi API update
+  const [originalSku, setOriginalSku] = useState(""); // Save original SKU for update API call
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(isEdit);
   const [error, setError] = useState("");
@@ -82,7 +82,7 @@ const ProductForm = ({ isEdit = false }) => {
         };
         setFormData(data);
         setOriginalData(data);
-        setOriginalSku(product.skuId || product.sku); // Lưu SKU gốc
+        setOriginalSku(product.skuId || product.sku); // Save original SKU
       }
     } catch (err) {
       console.error("Error fetching product:", err);
@@ -123,7 +123,7 @@ const ProductForm = ({ isEdit = false }) => {
       setLoading(true);
       setError("");
 
-      // Chuẩn bị data theo format backend yêu cầu (camelCase)
+      // Prepare data according to backend required format (camelCase)
       const submitData = {
         name: formData.name,
         description: formData.description || null,
@@ -139,12 +139,12 @@ const ProductForm = ({ isEdit = false }) => {
       };
 
       if (isEdit) {
-        // Gọi API update theo SKU
+        // Call update API by SKU
         await inventoryProductsAPI.updateBySku(originalSku, submitData);
         setSuccess("Cap nhat san pham thanh cong!");
         setOriginalData(formData);
       } else {
-        // API tạo mới đang bị disable do foreign key constraint
+        // Create API is currently disabled due to foreign key constraint
         setError("Chuc nang them san pham tam thoi bi vo hieu hoa. Vui long them san pham qua backend.");
         return;
       }
@@ -195,7 +195,7 @@ const ProductForm = ({ isEdit = false }) => {
         <h1>{isEdit ? "Sua san pham" : "Them san pham moi"}</h1>
       </div>
 
-      {/* Thông báo cho mode Add */}
+      {/* Notice for Add mode */}
       {!isEdit && (
         <div className="form-info">
           <Info size={20} />
@@ -249,7 +249,7 @@ const ProductForm = ({ isEdit = false }) => {
                   value={formData.skuId}
                   onChange={handleChange}
                   placeholder="Nhap ma SKU"
-                  disabled={true} // SKU không được sửa
+                  disabled={true} // SKU cannot be modified
                 />
                 {isEdit && (
                   <small className="field-hint">SKU khong the thay doi</small>

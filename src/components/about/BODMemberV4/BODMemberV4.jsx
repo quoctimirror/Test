@@ -84,7 +84,7 @@ const BODMemberV4 = () => {
     },
   ];
 
-  // Preload all images on mount để tránh delay khi hover
+  // Preload all images on mount to avoid delay when hovering
   useEffect(() => {
     teamMembers.forEach((member) => {
       const img = new Image();

@@ -28,9 +28,9 @@
 }
 
 .pv2-product-title {
-    /* Override với specificity cao nhất */
+    /* Override with highest specificity */
     width: calc(552 / 1920 * 100vw) !important;
-    /* 28.75vw ≈ 552px trên màn 1920p */
+    /* 28.75vw ≈ 552px on 1920p screen */
     margin-bottom: 0 !important;
     text-align: center !important;
     align-self: center !important;
@@ -205,7 +205,7 @@
 
 .pv2-price-section {
     margin-bottom: calc(12 / 1080 * 100vh);
-    /* 1.11vh ≈ 12px trên màn 1080p */
+    /* 1.11vh ≈ 12px on 1080p screen */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -221,7 +221,7 @@
     display: flex;
     gap: 12px;
     margin-bottom: calc(12 / 1080 * 100vh);
-    /* 1.11vh ≈ 12px trên màn 1080p */
+    /* 1.11vh ≈ 12px on 1080p screen */
     width: 100%;
     align-items: stretch;
 }

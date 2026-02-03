@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useLocation } from "react-router-dom";
 import Logo from "@assets/images/Logo.svg";
-import { ROUTES } from "@/constants/routes";
 import GlassThemeButton from "@/components/common/button/GlassThemeButton";
 import { useBottomTheme } from "@/hooks/useBottomTheme";
 import "./ScrollEffect.css";
@@ -31,10 +29,7 @@ const useThrottle = (callback, delay) => {
 };
 
 export default function ScrollEffect({ isAnyOverlayOpen = false }) {
-  const location = useLocation();
   const { theme: arrowTheme } = useBottomTheme();
-  const isImmersiveShowroomPage =
-    location.pathname === ROUTES.IMMERSIVE_SHOWROOM;
 
   // Original ScrollEffect refs
   const finalGradientRef = useRef(null);
@@ -1024,7 +1019,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
       </div>
 
       {/* Fixed Immersive Button - visible except in Immersive Showroom and when overlay is open */}
-      {!isImmersiveShowroomPage && !isAnyOverlayOpen && (
+      {!isAnyOverlayOpen && (
         <div className="fixed-immersive-container">
           <GlassThemeButton
             theme={arrowTheme === "white" ? "dark" : "light"}
@@ -1037,7 +1032,7 @@ export default function ScrollEffect({ isAnyOverlayOpen = false }) {
       )}
 
       {/* Fixed Arrow Button - visible except in footer and when overlay is open */}
-      {!isImmersiveShowroomPage && !isAnyOverlayOpen && isArrowVisible && (
+      {!isAnyOverlayOpen && isArrowVisible && (
         <div className="fixed-arrow-container">
           <GlassThemeButton
             theme={arrowTheme === "white" ? "dark" : "light"}

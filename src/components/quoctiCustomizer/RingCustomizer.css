@@ -1,0 +1,405 @@
+/* Ring Customizer - Main Layout */
+.ring-customizer {
+  display: flex;
+  min-height: 100vh;
+  background: #fafafa;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Left Panel - Options (40%) */
+.ring-customizer__options {
+  width: 40%;
+  padding: 24px;
+  overflow-y: auto;
+  background: #ffffff;
+  border-right: 1px solid #e5e5e5;
+  max-height: 100vh;
+}
+
+/* Right Panel - Preview (60%) */
+.ring-customizer__preview {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #f8f8f8;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+/* Header */
+.ring-customizer__header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.ring-customizer__header h1 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.ring-customizer__price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.ring-customizer__price span {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #666;
+}
+
+/* Sections */
+.ring-customizer__section {
+  margin-bottom: 32px;
+}
+
+.ring-customizer__section h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.ring-customizer__label {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+.ring-customizer__label strong {
+  color: #1a1a1a;
+}
+
+/* Grid Layout */
+.ring-customizer__grid {
+  display: grid;
+  gap: 8px;
+}
+
+.ring-customizer__grid--diamond {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.ring-customizer__grid--head {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.ring-customizer__grid--band {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Option Buttons */
+.ring-customizer__option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ring-customizer__option:hover:not(:disabled) {
+  border-color: #999;
+  background: #fafafa;
+}
+
+.ring-customizer__option--selected {
+  border-color: #1a1a1a;
+  background: #f5f5f5;
+  box-shadow: 0 0 0 1px #1a1a1a;
+}
+
+.ring-customizer__option--disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+.ring-customizer__option-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.ring-customizer__option--disabled .ring-customizer__option-icon {
+  color: #999;
+}
+
+.ring-customizer__option-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ring-customizer__option-name {
+  font-size: 0.7rem;
+  color: #666;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.ring-customizer__option--selected .ring-customizer__option-name {
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+/* Preview Image */
+.ring-customizer__image-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ring-customizer__image-container--transitioning {
+  transform: scale(0.98);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.ring-customizer__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.ring-customizer__image-container--transitioning .ring-customizer__image {
+  opacity: 0.7;
+  transform: scale(1.02);
+}
+
+.ring-customizer__image-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.ring-customizer__change-indicator {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  animation: fadeInOut 0.3s ease;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0.8;
+    transform: translateY(0);
+  }
+}
+
+/* Selection Info */
+.ring-customizer__selection-info {
+  margin-top: 24px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px;
+}
+
+.ring-customizer__selection-info p {
+  margin: 4px 0;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.ring-customizer__selection-info strong {
+  color: #1a1a1a;
+}
+
+.ring-customizer__image-key {
+  margin-top: 8px !important;
+  font-family: monospace;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ring-customizer {
+    flex-direction: column;
+  }
+
+  .ring-customizer__options {
+    width: 100%;
+    max-height: none;
+    order: 2;
+  }
+
+  .ring-customizer__preview {
+    width: 100%;
+    height: auto;
+    min-height: 50vh;
+    position: relative;
+    order: 1;
+  }
+
+  .ring-customizer__grid--diamond {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .ring-customizer__grid--head,
+  .ring-customizer__grid--band {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .ring-customizer__grid--diamond {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .ring-customizer__grid--head,
+  .ring-customizer__grid--band {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .ring-customizer__option {
+    padding: 8px 4px;
+  }
+
+  .ring-customizer__option-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .ring-customizer__option-name {
+    font-size: 0.625rem;
+  }
+}
+
+/* ================================
+   Ring Preview - Smart Transitions
+   (Based on ring-customizer.html)
+   ================================ */
+
+.ring-preview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+}
+
+.ring-preview__base,
+.ring-preview__new {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Base layer (old image) - sits below */
+.ring-preview__base {
+  z-index: 10;
+}
+
+/* New layer (new image) - reveals on top */
+.ring-preview__new {
+  z-index: 20;
+}
+
+/* Animation: Reveal from TOP to BOTTOM (for Diamond/Head) */
+@keyframes revealFromTop {
+  0% {
+    clip-path: inset(0 0 100% 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Animation: Reveal from BOTTOM to TOP (for Band) */
+@keyframes revealFromBottom {
+  0% {
+    clip-path: inset(100% 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Apply animations */
+.ring-preview__new--reveal-top {
+  animation: revealFromTop 0.6s ease-out forwards;
+}
+
+.ring-preview__new--reveal-bottom {
+  animation: revealFromBottom 0.6s ease-out forwards;
+}
+
+/* Change indicator */
+.ring-preview__indicator {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  animation: indicatorPop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ring-preview__indicator-text {
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 24px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes indicatorPop {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px) scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}

@@ -29,6 +29,22 @@
   }
 }
 
+/* Loading State */
+.product-finder__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.product-finder__loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #BC224C;
+  border-radius: 50%;
+}
+
 /* Progress Bar */
 .product-finder__progress {
   position: fixed;
@@ -55,6 +71,72 @@
   color: rgba(0, 0, 0, 0.5);
   font-family: var(--font-body);
   z-index: 10;
+}
+
+/* Price Panel - Right side */
+.product-finder__price-panel {
+  position: absolute;
+  top: 140px;
+  right: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  z-index: 10;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  min-width: 160px;
+}
+
+/* Current Selection Price */
+.product-finder__current-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.product-finder__current-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  font-family: var(--font-body);
+}
+
+.product-finder__current-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #BC224C;
+  font-family: var(--font-body);
+}
+
+/* Estimated Total */
+.product-finder__estimated-total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.product-finder__estimated-label {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.5);
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-finder__estimated-price {
+  font-size: 22px;
+  font-weight: 600;
+  color: #000;
+  font-family: var(--font-body);
 }
 
 /* Title */
@@ -97,15 +179,32 @@
               opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Exit animation */
+/* Transition: exit — shrink down and fade out (diamond step) */
 .product-finder__diamond--exit {
   position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   animation: finderDiamondExit 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Enter animation */
+/* Transition: enter — grow up and fade in (diamond step) */
 .product-finder__diamond--enter {
   animation: finderDiamondEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Transition: fade out (band step) */
+.product-finder__diamond--fade-out {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  animation: finderFadeOut 0.6s ease-out forwards;
+}
+
+/* Transition: reveal from bottom (band step) */
+.product-finder__diamond--reveal-bottom {
+  animation: finderRevealFromBottom 0.6s ease-out forwards;
 }
 
 @keyframes finderDiamondExit {
@@ -130,10 +229,21 @@
   }
 }
 
+@keyframes finderFadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes finderRevealFromBottom {
+  0% { clip-path: inset(100% 0 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
 .product-finder__diamond-img {
   width: 100%;
   height: auto;
   object-fit: contain;
+  mix-blend-mode: multiply;
 }
 
 /* Entrance Animation */
@@ -266,6 +376,171 @@
   .product-finder__orbit-shape--blurred:hover .product-finder__orbit-shape-img {
     opacity: 0.8;
     filter: blur(0px) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+  }
+}
+
+/* ===== LOCKED ITEMS STYLES ===== */
+
+/* Locked orbit shape */
+.product-finder__orbit-shape--locked {
+  cursor: not-allowed;
+}
+
+.product-finder__orbit-shape--locked .product-finder__orbit-shape-img {
+  opacity: 0.3;
+  filter: grayscale(100%) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.product-finder__orbit-shape--locked:hover .product-finder__orbit-shape-img {
+  opacity: 0.4;
+  filter: grayscale(100%) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transform: none;
+}
+
+@media (hover: hover) {
+  .product-finder__orbit-shape--locked:hover {
+    transform: translate(-50%, -100%);
+  }
+}
+
+/* Lock icon on orbit shape */
+.product-finder__orbit-lock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  pointer-events: none;
+}
+
+.product-finder__orbit-lock svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Locked center image */
+.product-finder__diamond--locked .product-finder__diamond-img {
+  opacity: 0.4;
+  filter: grayscale(100%);
+}
+
+/* Locked overlay on center image */
+.product-finder__locked-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  pointer-events: none;
+}
+
+.product-finder__locked-overlay svg {
+  opacity: 0.8;
+}
+
+.product-finder__locked-overlay span {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Locked badge on title */
+.product-finder__locked-badge {
+  display: inline-block;
+  margin-left: 12px;
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  font-style: normal;
+  color: rgba(0, 0, 0, 0.5);
+  vertical-align: middle;
+}
+
+/* Disabled navigation button */
+.product-finder__nav-btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Idle Ripple Effect - centered on the next shape */
+.product-finder__idle-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.product-finder__idle-ripple-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    #F4A5B8 0%,
+    rgba(244, 165, 184, 0.00) 54.33%,
+    rgba(255, 255, 255, 0.6) 93.27%,
+    rgba(255, 255, 255, 0.00) 100%
+  );
+  opacity: 0.7;
+  animation: finderIdleRipplePulse 3s ease-out infinite;
+}
+
+.product-finder__idle-ripple-ring:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.product-finder__idle-ripple-ring:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+.product-finder__idle-ripple-ring:nth-child(3) {
+  animation-delay: 1.2s;
+}
+
+@keyframes finderIdleRipplePulse {
+  0% {
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.25;
+  }
+  100% {
+    width: 250px;
+    height: 250px;
+    opacity: 0;
   }
 }
 

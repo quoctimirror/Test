@@ -64,7 +64,7 @@ const CreateOrder = () => {
           price: data.sellingPrice,
           currency: "VND",
           imageUrl: data.picture,
-          stockQuantity: data.availableQuantity, // Số lượng có sẵn để bán
+          stockQuantity: data.availableQuantity, // Available quantity for sale
           totalOnHand: data.totalOnHand,
           stockStatus: data.stockStatus,
           branchStocks: data.branchStocks,

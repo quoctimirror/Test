@@ -209,9 +209,7 @@ const ComponentsManager = () => {
 
   if (loading) {
     return (
-      <div className="admin-card" style={{ padding: '3rem', textAlign: 'center' }}>
-        <div>Loading components...</div>
-      </div>
+      <div className="admin-loading-state">Loading components...</div>
     );
   }
 

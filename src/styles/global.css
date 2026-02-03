@@ -14,7 +14,7 @@
 
 body {
   margin: 0;
-  /* Chúng ta đã xóa display:flex và place-items:center từ đây */
+  /* We removed display:flex and place-items:center from here */
   overscroll-behavior-y: none;
   overscroll-behavior-x: auto;
   -webkit-overscroll-behavior-y: none;
@@ -28,7 +28,7 @@ html {
   -webkit-overscroll-behavior-x: auto;
 }
 
-/* Ẩn scrollbar cho toàn bộ hệ thống nhưng vẫn scroll được */
+/* Hide scrollbar for entire system while still allowing scroll */
 /* Chrome, Safari, Edge, Opera */
 *::-webkit-scrollbar {
   display: none;
@@ -39,7 +39,7 @@ html {
   scrollbar-width: none;
 }
 
-/* IE 10+ và Edge cũ */
+/* IE 10+ and legacy Edge */
 * {
   -ms-overflow-style: none;
 }

@@ -25,6 +25,7 @@ const REFRESH_TOKEN_ENDPOINT = `${AUTH_BASE_URL}/api/v1/auth/refresh-token`;
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     "Cache-Control": "no-cache",
@@ -70,7 +71,7 @@ api.interceptors.response.use(
       requestUrl.includes("/auth/authenticate") ||
       requestUrl.includes("/auth/refresh-token");
 
-    const requiresAuth = ["/users/", "/orders/", "/me/"].some((path) =>
+    const requiresAuth = ["/users/", "/orders/", "/me/", "/product-finder/"].some((path) =>
       requestUrl.includes(path)
     );
 
@@ -300,6 +301,8 @@ export const ordersAPI = {
       `/api/orders/${orderId}/payment-schedule/${scheduleId}/payments`,
       payload
     ),
+  getPaymentTransactions: (orderId) =>
+    api.get(`/api/orders/${orderId}/payment-transactions`),
 
   // NEW: Order Workflow endpoints (MISA SKU enforcement)
   confirm: (id, data) => api.post(`/api/orders/${id}/confirm`, data),
@@ -502,72 +505,6 @@ export const collectionsAPI = {
 };
 
 // ===== SKU DEFINITIONS API =====
-export const skusAPI = {
-  // Get all active SKU definitions
-  getAll: () =>
-    api.get("/api/skus").then((response) => ({
-      ...response,
-      data: (response.data || []).map((item) => ({
-        ...item,
-        categoryName: item.skuName,
-        categoryCode: item.skuCode,
-      })),
-    })),
-
-  // Get SKU definition by ID
-  getById: (id) =>
-    api.get(`/api/skus/${id}`).then((response) => ({
-      ...response,
-      data: response.data
-        ? {
-            ...response.data,
-            categoryName: response.data.skuName,
-            categoryCode: response.data.skuCode,
-          }
-        : response.data,
-    })),
-
-  // Get SKU definition by name
-  getByName: (name) =>
-    api.get(`/api/skus/name/${encodeURIComponent(name)}`).then((response) => ({
-      ...response,
-      data: response.data
-        ? {
-            ...response.data,
-            categoryName: response.data.skuName,
-            categoryCode: response.data.skuCode,
-          }
-        : response.data,
-    })),
-
-  // Check if SKU exists by name
-  checkExists: (name) =>
-    api.get(`/api/skus/exists/${encodeURIComponent(name)}`),
-
-  // Get active count
-  getActiveCount: () => api.get("/api/skus/count"),
-
-  // CRUD operations
-  create: (skuData) => {
-    const payload = {
-      skuName: skuData.skuName ?? skuData.categoryName,
-      description: skuData.description ?? skuData.categoryDescription,
-      skuCode: skuData.skuCode ?? skuData.categoryCode,
-    };
-    return api.post("/api/skus", payload);
-  },
-  update: (id, skuData) => {
-    const payload = {
-      skuName: skuData.skuName ?? skuData.categoryName,
-      description: skuData.description ?? skuData.categoryDescription,
-      skuCode: skuData.skuCode ?? skuData.categoryCode,
-    };
-    return api.put(`/api/skus/${id}`, payload);
-  },
-  delete: (id) => api.delete(`/api/skus/${id}`),
-  deactivate: (id) => api.patch(`/api/skus/${id}/deactivate`),
-};
-
 // ===== CATEGORIES API (MISA Product Categories - READ ONLY) =====
 export const categoriesAPI = {
   // Get all active categories synced from MISA
@@ -628,8 +565,8 @@ export const componentsAPI = {
       ...response,
       data: (response.data || []).map((component) => ({
         ...component,
-        categoryId: component.skuId,
-        categoryName: component.skuName,
+        categoryId: component.productId,
+        categoryName: component.productName,
       })),
     })),
 
@@ -640,20 +577,31 @@ export const componentsAPI = {
       data: response.data
         ? {
             ...response.data,
-            categoryId: response.data.skuId,
-            categoryName: response.data.skuName,
+            categoryId: response.data.productId,
+            categoryName: response.data.productName,
           }
         : response.data,
     })),
 
-  // Get components by SKU definition ID (legacy name kept for compatibility)
-  getByCategoryId: (skuId) =>
-    api.get(`/api/components/sku/${skuId}`).then((response) => ({
+  // Get components by product ID
+  getByProductId: (productId) =>
+    api.get(`/api/components/product/${productId}`).then((response) => ({
       ...response,
       data: (response.data || []).map((component) => ({
         ...component,
-        categoryId: component.skuId,
-        categoryName: component.skuName,
+        categoryId: component.productId,
+        categoryName: component.productName,
+      })),
+    })),
+
+  // Legacy alias
+  getByCategoryId: (productId) =>
+    api.get(`/api/components/product/${productId}`).then((response) => ({
+      ...response,
+      data: (response.data || []).map((component) => ({
+        ...component,
+        categoryId: component.productId,
+        categoryName: component.productName,
       })),
     })),
 
@@ -662,11 +610,11 @@ export const componentsAPI = {
     api.get(`/api/components/name/${encodeURIComponent(name)}`),
 
   // Check if component exists
-  checkExists: (name, skuId) =>
+  checkExists: (name, productId) =>
     api.get(
       `/api/components/exists/${encodeURIComponent(
         name
-      )}/sku/${skuId}`
+      )}/product/${productId}`
     ),
 
   // Get active count
@@ -676,7 +624,7 @@ export const componentsAPI = {
   create: (componentData) => {
     const payload = {
       ...componentData,
-      skuId: componentData.skuId ?? componentData.categoryId,
+      productId: componentData.productId ?? componentData.categoryId,
     };
     delete payload.categoryId;
     return api.post("/api/components", payload);
@@ -684,7 +632,7 @@ export const componentsAPI = {
   update: (id, componentData) => {
     const payload = {
       ...componentData,
-      skuId: componentData.skuId ?? componentData.categoryId,
+      productId: componentData.productId ?? componentData.categoryId,
     };
     delete payload.categoryId;
     return api.put(`/api/components/${id}`, payload);
@@ -1067,6 +1015,40 @@ export const dropdownConfigAPI = {
 
   // Get all country of origin options
   getCountries: () => api.get("/api/dropdown-config/countries"),
+};
+
+// ===== PRODUCT FINDER API =====
+export const productFinderAPI = {
+  // Public - no auth required
+  getDiamondShapes: (config) => api.get("/api/product-finder/diamond-shapes", config),
+  getBandStyles: (config) => api.get("/api/product-finder/band-styles", config),
+  getSideStones: (config) => api.get("/api/product-finder/side-stones", config),
+
+  // Authenticated - axios interceptor auto-attaches Bearer token + X-User-Id
+  getRecommendation: (data, config) => api.post("/api/product-finder/recommend", data, config),
+  getMySelections: () => api.get("/api/product-finder/my-selections"),
+  saveSelection: (data) => api.post("/api/product-finder/save-selection", data),
+};
+
+// ===== PRODUCT FINDER ADMIN API =====
+export const productFinderAdminAPI = {
+  // Get all combinations (admin)
+  getCombinations: () => api.get("/api/admin/product-finder/combinations"),
+
+  // Get combination by ID
+  getCombinationById: (id) => api.get(`/api/admin/product-finder/combinations/${id}`),
+
+  // Create new combination
+  createCombination: (data) => api.post("/api/admin/product-finder/combinations", data),
+
+  // Update combination
+  updateCombination: (id, data) => api.put(`/api/admin/product-finder/combinations/${id}`, data),
+
+  // Toggle combination active status
+  toggleCombination: (id) => api.patch(`/api/admin/product-finder/combinations/${id}/toggle`),
+
+  // Delete combination
+  deleteCombination: (id) => api.delete(`/api/admin/product-finder/combinations/${id}`),
 };
 
 // ===== FILE UPLOAD API =====

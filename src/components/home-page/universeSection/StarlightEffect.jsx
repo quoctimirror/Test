@@ -7,7 +7,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
 
     if (direction === "falling") {
         const gradientId = `gradient-falling-${uniqueId}`;
-        // Chỉ 1 vạch duy nhất ở giữa, rơi thẳng xuống với chiều cao tùy chỉnh
+        // Single line in the center, falling straight down with customizable height
         return (
             <div className="universe-star-container-center">
                 <svg
@@ -41,7 +41,7 @@ const StarlightEffect = ({ direction = "default", height = 170 }) => {
 
     if (direction === "rising") {
         const gradientId = `gradient-rising-${uniqueId}`;
-        // Vạch bay từ dưới lên trên
+        // Line flying from bottom to top
         return (
             <div className="universe-star-container-center">
                 <svg

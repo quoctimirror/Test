@@ -124,7 +124,7 @@ export default function PodAdminDashboard() {
       </div>
 
       {/* Scan Stats */}
-      <h3 style={{ marginBottom: "1rem", color: "#6b7280" }}>Scans & Attribution</h3>
+      <h3 style={{ marginBottom: "1rem", color: "#6b7280" }}>Scans</h3>
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-label">Total Scans</div>
@@ -140,29 +140,11 @@ export default function PodAdminDashboard() {
             </div>
           )}
         </div>
-        <div className="stat-card">
-          <div className="stat-label">Total Attributions</div>
-          <div className="stat-value">{formatNumber(dashboard?.totalAttributions)}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">Conversion Rate</div>
-          <div className="stat-value" style={{ color: "#4f8cff" }}>
-            {dashboard?.overallConversionRate?.toFixed(2) || "0"}%
-          </div>
-        </div>
       </div>
 
       {/* Revenue Stats */}
       <h3 style={{ marginBottom: "1rem", color: "#6b7280" }}>Revenue & Commission</h3>
       <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-label">Total Attributed Revenue</div>
-          <div className="stat-value">{formatCurrency(dashboard?.totalAttributedRevenue)}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-label">This Month Revenue</div>
-          <div className="stat-value">{formatCurrency(dashboard?.attributedRevenueThisMonth)}</div>
-        </div>
         <div className="stat-card">
           <div className="stat-label">Pending Commission</div>
           <div className="stat-value" style={{ color: "#f59e0b" }}>
@@ -230,7 +212,6 @@ export default function PodAdminDashboard() {
                   <th>Partner</th>
                   <th>City</th>
                   <th>Scans</th>
-                  <th>Attributions</th>
                   <th>Revenue</th>
                 </tr>
               </thead>
@@ -241,7 +222,6 @@ export default function PodAdminDashboard() {
                     <td>{pod.partnerName}</td>
                     <td>{pod.city}</td>
                     <td>{formatNumber(pod.scanCount)}</td>
-                    <td>{formatNumber(pod.attributionCount)}</td>
                     <td>{formatCurrency(pod.revenue)}</td>
                   </tr>
                 ))}

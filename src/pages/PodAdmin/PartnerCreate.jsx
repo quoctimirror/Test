@@ -24,13 +24,36 @@ export default function PodAdminPartnerCreate() {
     country: "Vietnam",
     tier: "BRONZE",
     commissionRate: "5.00",
+    partnerType: "LOCATION",
+    wholesaleDiscountRate: "",
+    territory: "",
+    canSetOwnPrices: false,
+    minMarkupPercent: "",
+    maxMarkupPercent: "",
+    contractStartDate: "",
+    contractEndDate: "",
+    securityDeposit: "",
+    bankAccountNumber: "",
+    bankName: "",
+    bankBranch: "",
     notes: "",
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: type === "checkbox" ? checked : value };
+      // Set default phygital values when switching to PHYGITAL
+      if (name === "partnerType" && value === "PHYGITAL") {
+        if (!updated.wholesaleDiscountRate) updated.wholesaleDiscountRate = "20";
+        if (!updated.minMarkupPercent) updated.minMarkupPercent = "15";
+        if (!updated.maxMarkupPercent) updated.maxMarkupPercent = "50";
+      }
+      return updated;
+    });
   };
+
+  const isPhygital = formData.partnerType === "PHYGITAL";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +71,16 @@ export default function PodAdminPartnerCreate() {
       const submitData = {
         ...formData,
         commissionRate: parseFloat(formData.commissionRate),
+        wholesaleDiscountRate: formData.wholesaleDiscountRate ? parseFloat(formData.wholesaleDiscountRate) : undefined,
+        minMarkupPercent: formData.minMarkupPercent ? parseFloat(formData.minMarkupPercent) : undefined,
+        maxMarkupPercent: formData.maxMarkupPercent ? parseFloat(formData.maxMarkupPercent) : undefined,
+        securityDeposit: formData.securityDeposit ? parseFloat(formData.securityDeposit) : undefined,
+        contractStartDate: formData.contractStartDate || undefined,
+        contractEndDate: formData.contractEndDate || undefined,
+        territory: formData.territory || undefined,
+        bankAccountNumber: formData.bankAccountNumber || undefined,
+        bankName: formData.bankName || undefined,
+        bankBranch: formData.bankBranch || undefined,
       };
 
       await partnerApi.create(submitData);
@@ -269,33 +302,52 @@ export default function PodAdminPartnerCreate() {
 
           <div className="pod-form-grid">
             <div className="pod-form-group">
-              <label className="pod-form-label">Partner Tier</label>
+              <label className="pod-form-label">Partner Type *</label>
               <select
-                name="tier"
+                name="partnerType"
                 className="pod-form-select"
-                value={formData.tier}
+                value={formData.partnerType}
                 onChange={handleChange}
+                required
               >
-                {POD_ENUMS.partnerTier.map((tier) => (
-                  <option key={tier} value={tier}>{tier}</option>
+                {POD_ENUMS.partnerType.map((type) => (
+                  <option key={type} value={type}>{type}</option>
                 ))}
               </select>
             </div>
 
-            <div className="pod-form-group">
-              <label className="pod-form-label">Commission Rate (%)</label>
-              <input
-                type="number"
-                name="commissionRate"
-                className="pod-form-input"
-                value={formData.commissionRate}
-                onChange={handleChange}
-                min="0"
-                max="100"
-                step="0.01"
-                placeholder="5.00"
-              />
-            </div>
+            {!isPhygital && (
+              <div className="pod-form-group">
+                <label className="pod-form-label">Partner Tier</label>
+                <select
+                  name="tier"
+                  className="pod-form-select"
+                  value={formData.tier}
+                  onChange={handleChange}
+                >
+                  {POD_ENUMS.partnerTier.map((tier) => (
+                    <option key={tier} value={tier}>{tier}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {!isPhygital && (
+              <div className="pod-form-group">
+                <label className="pod-form-label">Commission Rate (%)</label>
+                <input
+                  type="number"
+                  name="commissionRate"
+                  className="pod-form-input"
+                  value={formData.commissionRate}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  placeholder="5.00"
+                />
+              </div>
+            )}
 
             <div className="pod-form-group" style={{ gridColumn: "span 2" }}>
               <label className="pod-form-label">Notes</label>
@@ -311,6 +363,165 @@ export default function PodAdminPartnerCreate() {
             </div>
           </div>
         </div>
+
+        {/* Phygital Settings - only show when partnerType is PHYGITAL */}
+        {isPhygital && (
+          <div className="pod-card" style={{ marginTop: "1rem" }}>
+            <h2 style={{ marginBottom: "1.5rem", fontSize: "1.125rem", fontWeight: 600 }}>
+              Phygital Partner Settings
+            </h2>
+
+            <div className="pod-form-grid">
+              <div className="pod-form-group">
+                <label className="pod-form-label">Wholesale Discount Rate (%)</label>
+                <input
+                  type="number"
+                  name="wholesaleDiscountRate"
+                  className="pod-form-input"
+                  value={formData.wholesaleDiscountRate}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  placeholder="20.00"
+                />
+              </div>
+
+              <div className="pod-form-group">
+                <label className="pod-form-label">Territory</label>
+                <input
+                  type="text"
+                  name="territory"
+                  className="pod-form-input"
+                  value={formData.territory}
+                  onChange={handleChange}
+                  placeholder="e.g., Ho Chi Minh City - District 1"
+                />
+              </div>
+
+              <div className="pod-form-group">
+                <label className="pod-form-label">Min Markup (%)</label>
+                <input
+                  type="number"
+                  name="minMarkupPercent"
+                  className="pod-form-input"
+                  value={formData.minMarkupPercent}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  placeholder="10.00"
+                />
+              </div>
+
+              <div className="pod-form-group">
+                <label className="pod-form-label">Max Markup (%)</label>
+                <input
+                  type="number"
+                  name="maxMarkupPercent"
+                  className="pod-form-input"
+                  value={formData.maxMarkupPercent}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  placeholder="50.00"
+                />
+              </div>
+
+              <div className="pod-form-group" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <input
+                  type="checkbox"
+                  name="canSetOwnPrices"
+                  id="canSetOwnPrices"
+                  checked={formData.canSetOwnPrices}
+                  onChange={handleChange}
+                />
+                <label htmlFor="canSetOwnPrices" className="pod-form-label" style={{ marginBottom: 0 }}>
+                  Allow partner to set own retail prices
+                </label>
+              </div>
+
+              <div className="pod-form-group">
+                <label className="pod-form-label">Security Deposit</label>
+                <input
+                  type="number"
+                  name="securityDeposit"
+                  className="pod-form-input"
+                  value={formData.securityDeposit}
+                  onChange={handleChange}
+                  min="0"
+                  step="1000"
+                  placeholder="0"
+                />
+              </div>
+
+              <div className="pod-form-group">
+                <label className="pod-form-label">Contract Start Date</label>
+                <input
+                  type="date"
+                  name="contractStartDate"
+                  className="pod-form-input"
+                  value={formData.contractStartDate}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="pod-form-group">
+                <label className="pod-form-label">Contract End Date</label>
+                <input
+                  type="date"
+                  name="contractEndDate"
+                  className="pod-form-input"
+                  value={formData.contractEndDate}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <h3 style={{ margin: "1.5rem 0 1rem", fontSize: "1rem", fontWeight: 600 }}>
+              Bank Information
+            </h3>
+
+            <div className="pod-form-grid">
+              <div className="pod-form-group">
+                <label className="pod-form-label">Bank Name</label>
+                <input
+                  type="text"
+                  name="bankName"
+                  className="pod-form-input"
+                  value={formData.bankName}
+                  onChange={handleChange}
+                  placeholder="e.g., Vietcombank"
+                />
+              </div>
+
+              <div className="pod-form-group">
+                <label className="pod-form-label">Bank Account Number</label>
+                <input
+                  type="text"
+                  name="bankAccountNumber"
+                  className="pod-form-input"
+                  value={formData.bankAccountNumber}
+                  onChange={handleChange}
+                  placeholder="Account number"
+                />
+              </div>
+
+              <div className="pod-form-group">
+                <label className="pod-form-label">Bank Branch</label>
+                <input
+                  type="text"
+                  name="bankBranch"
+                  className="pod-form-input"
+                  value={formData.bankBranch}
+                  onChange={handleChange}
+                  placeholder="Branch name"
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         <div style={{ marginTop: "1.5rem", display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
           <Link to={ROUTES.POD_ADMIN_PARTNERS} className="pod-btn pod-btn-secondary">
