@@ -134,9 +134,9 @@ export const misaProductStockAPI = {
     return {
       found: true,
       productId: product.id,
-      code: product.skuId,
+      code: product.skuCode,
       name: product.name,
-      barcode: product.sku,
+      barcode: product.barcode,
       description: product.description,
       sellingPrice: product.price,
       picture: product.imageUrl,

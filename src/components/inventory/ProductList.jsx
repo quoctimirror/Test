@@ -70,8 +70,7 @@ const ProductList = () => {
       filtered = filtered.filter(
         (p) =>
           p.name?.toLowerCase().includes(term) ||
-          p.skuId?.toLowerCase().includes(term) ||
-          p.sku?.toLowerCase().includes(term)
+          p.skuCode?.toLowerCase().includes(term)
       );
     }
 
@@ -291,7 +290,7 @@ const ProductList = () => {
                       )}
                     </div>
                   </td>
-                  <td className="sku-cell">{product.skuId || product.sku}</td>
+                  <td className="sku-cell">{product.skuCode}</td>
                   <td className="name-cell">{product.name}</td>
                   <td className="metal-cell">
                     {product.metalType} {product.metalPurity}
