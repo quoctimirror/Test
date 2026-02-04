@@ -210,7 +210,7 @@ const ProductFinderAdminPage = () => {
   return (
     <div className="pf-admin">
       <div className="pf-admin__header">
-        <h1>Product Finder Combinations</h1>
+        <h1>Mirror Combinations</h1>
         <button className="pf-admin__btn pf-admin__btn--primary" onClick={handleCreate}>
           + Add New Combination
         </button>

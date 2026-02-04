@@ -239,6 +239,21 @@
   100% { clip-path: inset(0 0 0 0); }
 }
 
+/* Reveal from center at 40% - expands up and down */
+@keyframes finderRevealFromCenter {
+  0% {
+    clip-path: polygon(0 40%, 100% 40%, 100% 40%, 0 40%);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+/* Transition: reveal from center (sidestone step) */
+.product-finder__diamond--reveal-center {
+  animation: finderRevealFromCenter 0.6s ease-out forwards;
+}
+
 .product-finder__diamond-img {
   width: 100%;
   height: auto;

@@ -22,7 +22,7 @@ import {
 
 import './ProductFinderPage.css';
 
-const ProductFinderPage = () => {
+const ProductFinderPageV2 = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { step } = useParams();
@@ -87,21 +87,21 @@ const ProductFinderPage = () => {
     }
   }, [step, currentStepIndex, selectedIndices]);
 
-  // Guard: direct access without previous selections
+  // Guard: direct access without previous selections (V2 routes)
   useEffect(() => {
     if (apiLoading) return;
     if (step === 'choose-band' && !selections.diamond) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
+      navigate('/find-your-piece-v2/choose-shape', { replace: true });
     }
     if (step === 'choose-sidestone' && (!selections.diamond || !selections.band)) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
+      navigate('/find-your-piece-v2/choose-shape', { replace: true });
     }
   }, [step, selections, apiLoading, navigate]);
 
-  // Guard: invalid step
+  // Guard: invalid step (V2 routes)
   useEffect(() => {
     if (!['choose-shape', 'choose-band', 'choose-sidestone'].includes(step)) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
+      navigate('/find-your-piece-v2/choose-shape', { replace: true });
     }
   }, [step, navigate]);
 
@@ -287,18 +287,18 @@ const ProductFinderPage = () => {
     }, 600);
   };
 
-  // Handle back
+  // Handle back (V2 routes)
   const handleBack = () => {
     if (currentStepIndex === 2) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_BAND, { state: { selections, prices: selectedPrices } });
+      navigate('/find-your-piece-v2/choose-band', { state: { selections, prices: selectedPrices } });
     } else if (currentStepIndex === 1) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { state: { selections, prices: selectedPrices } });
+      navigate('/find-your-piece-v2/choose-shape', { state: { selections, prices: selectedPrices } });
     } else {
       navigate(-1);
     }
   };
 
-  // Handle next
+  // Handle next (V2 routes)
   const handleNext = () => {
     const option = currentStep.options[currentIndex];
     // Don't proceed if locked
@@ -313,9 +313,9 @@ const ProductFinderPage = () => {
     setSelectedIndices(newIndices);
 
     if (currentStepIndex === 0) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_BAND, { state: { selections: newSelections, prices: newPrices } });
+      navigate('/find-your-piece-v2/choose-band', { state: { selections: newSelections, prices: newPrices } });
     } else if (currentStepIndex === 1) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SIDESTONE, { state: { selections: newSelections, prices: newPrices } });
+      navigate('/find-your-piece-v2/choose-sidestone', { state: { selections: newSelections, prices: newPrices } });
     } else {
       // Step 3 → Result
       const modelKey = `${newSelections.band}_${newSelections.diamond}_${newSelections.sidestone}`;
@@ -434,8 +434,8 @@ const ProductFinderPage = () => {
               </div>
             );
           })()}
-          {/* Current image */}
-          <div className={`product-finder__diamond ${isAnimating ? (currentStepIndex === 0 ? 'product-finder__diamond--enter' : currentStepIndex === 1 ? 'product-finder__diamond--reveal-bottom' : 'product-finder__diamond--reveal-center') : ''} ${isLocked ? 'product-finder__diamond--locked' : ''}`}>
+          {/* Current image - V2: uses old reveal-bottom animation for all steps */}
+          <div className={`product-finder__diamond ${isAnimating ? (currentStepIndex > 0 ? 'product-finder__diamond--reveal-bottom' : 'product-finder__diamond--enter') : ''} ${isLocked ? 'product-finder__diamond--locked' : ''}`}>
             <img
               src={getCenterPreview(currentOption)}
               alt={currentOption.name}
@@ -558,4 +558,4 @@ const ProductFinderPage = () => {
   );
 };
 
-export default ProductFinderPage;
+export default ProductFinderPageV2;

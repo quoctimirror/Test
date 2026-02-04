@@ -108,8 +108,12 @@ const RingCustomizer = lazy(() =>
 
 // Product Finder
 const ProductFinderPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderPage"));
+const ProductFinderPageV2 = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderPageV2"));
 const ProductFinderResultPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderResultPage"));
-const ProductFinderAdminPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderAdminPage"));
+
+// Ring Customizer Admin (formerly Product Finder Admin)
+const RingCustomizerCombinationsPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderAdminPage"));
+const RingCustomizerSelectionsPage = lazyWithRetry(() => import("@pages/ProductFinder/UserSelectionsPage"));
 
 // Inventory Management
 const InventoryLayout = lazyWithRetry(() =>
@@ -488,6 +492,9 @@ export default function AppRoutes() {
               <Route path="pod/wholesale-orders/:orderId" element={<AdminWholesaleOrderDetail />} />
               <Route path="pod/phygital-partners" element={<AdminPhygitalPartners />} />
               <Route path="pod/phygital-partners/:partnerId" element={<AdminPhygitalPartnerDetail />} />
+              {/* Ring Customizer Admin routes */}
+              <Route path="ring-customizer/combinations" element={<RingCustomizerCombinationsPage />} />
+              <Route path="ring-customizer/selections" element={<RingCustomizerSelectionsPage />} />
             </Route>
 
             <Route
@@ -529,18 +536,13 @@ export default function AppRoutes() {
             {/* Product Finder */}
             <Route path={ROUTES.PRODUCT_FINDER} element={<Navigate to={ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE} replace />} />
             <Route path="/find-your-piece/:step" element={<ProductFinderPage />} />
+            <Route path="/find-your-piece-v2/:step" element={<ProductFinderPageV2 />} />
             <Route path={ROUTES.PRODUCT_FINDER_RESULT} element={<ProductFinderResultPage />} />
 
-            {/* Product Finder Admin */}
+            {/* Legacy redirect: /admin/product-finder/combinations -> /dashboard/admin/ring-customizer/combinations */}
             <Route
               path="/admin/product-finder/combinations"
-              element={
-                <ProtectedRoute
-                  allowedRoles={["SUPER_ADMIN", "ADMIN", "IT_ADMIN"]}
-                >
-                  <ProductFinderAdminPage />
-                </ProtectedRoute>
-              }
+              element={<Navigate to="/dashboard/admin/ring-customizer/combinations" replace />}
             />
 
             {/* Inventory Management Routes */}

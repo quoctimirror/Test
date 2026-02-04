@@ -120,6 +120,11 @@ export const ROUTES = {
   POD_ADMIN_WHOLESALE_ORDER_DETAIL: "/dashboard/admin/pod/wholesale-orders/:orderId",
   POD_ADMIN_PHYGITAL_PARTNERS: "/dashboard/admin/pod/phygital-partners",
   POD_ADMIN_PHYGITAL_PARTNER_DETAIL: "/dashboard/admin/pod/phygital-partners/:partnerId",
+
+  // Ring Customizer Admin routes (nested under admin dashboard)
+  RING_CUSTOMIZER_ADMIN: "/dashboard/admin/ring-customizer",
+  RING_CUSTOMIZER_ADMIN_COMBINATIONS: "/dashboard/admin/ring-customizer/combinations",
+  RING_CUSTOMIZER_ADMIN_SELECTIONS: "/dashboard/admin/ring-customizer/selections",
 };
 
 // Helper to get collection detail route with ID

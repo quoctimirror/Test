@@ -170,6 +170,8 @@ const AdminDashboard = () => {
         { id: "sku-codes", label: "SKU Codes", type: "tab" },
         { id: "categories", label: "Categories", type: "tab" },
         { id: "collections", label: "Collections", type: "tab" },
+        { id: "ring-customizer-combinations", label: "Mirror Combinations", type: "route", path: ROUTES.RING_CUSTOMIZER_ADMIN_COMBINATIONS },
+        { id: "ring-customizer-selections", label: "User Selections", type: "route", path: ROUTES.RING_CUSTOMIZER_ADMIN_SELECTIONS },
         // { id: "jewelry-specifications", label: "Jewelry Specifications", type: "tab" },
         // { id: "collection-plan-wizard", label: "Collection Plan Wizard", type: "tab" },
         // { id: "components", label: "Components", type: "tab" },
@@ -276,6 +278,9 @@ const AdminDashboard = () => {
       // Wholesale access
       "pod-wholesale-orders": ["ADMIN", "IT_ADMIN"],
       "pod-phygital-partners": ["ADMIN", "IT_ADMIN"],
+      // Ring Customizer access
+      "ring-customizer-combinations": ["SUPER_ADMIN", "ADMIN", "IT_ADMIN"],
+      "ring-customizer-selections": ["SUPER_ADMIN", "ADMIN", "IT_ADMIN"],
     }),
     [roles]
   );

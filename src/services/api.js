@@ -1030,7 +1030,7 @@ export const productFinderAPI = {
   saveSelection: (data) => api.post("/api/product-finder/save-selection", data),
 };
 
-// ===== PRODUCT FINDER ADMIN API =====
+// ===== PRODUCT FINDER ADMIN API (Ring Customizer) =====
 export const productFinderAdminAPI = {
   // Get all combinations (admin)
   getCombinations: () => api.get("/api/admin/product-finder/combinations"),
@@ -1049,6 +1049,9 @@ export const productFinderAdminAPI = {
 
   // Delete combination
   deleteCombination: (id) => api.delete(`/api/admin/product-finder/combinations/${id}`),
+
+  // Get all user selections (admin view)
+  getSelections: () => api.get("/api/admin/product-finder/selections"),
 };
 
 // ===== FILE UPLOAD API =====
