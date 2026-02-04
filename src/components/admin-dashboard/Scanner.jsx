@@ -1,18 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import {
-  inventoryProductsAPI,
   misaProductStockAPI,
   getStockStatusColor,
   getStockStatusText,
 } from "@/services/inventoryApi";
-import { getInventoryProductDetailRoute, getInventoryProductEditRoute } from "@/constants/routes";
 import {
   ScanLine,
   Search,
   Package,
-  Edit,
-  Trash2,
   Printer,
   X,
   AlertCircle,
@@ -25,15 +20,12 @@ import {
 import "./Scanner.css";
 
 const Scanner = () => {
-  const navigate = useNavigate();
   const inputRef = useRef(null);
   const [skuInput, setSkuInput] = useState("");
   const [product, setProduct] = useState(null);
   const [stockInfo, setStockInfo] = useState(null); // MISA stock info
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
   const [showBranchDetails, setShowBranchDetails] = useState(false);
 
   // Auto focus input on mount
@@ -129,25 +121,6 @@ const Scanner = () => {
     setError("");
     setShowBranchDetails(false);
     inputRef.current?.focus();
-  };
-
-  // Delete product
-  const handleDelete = async () => {
-    if (!product) return;
-
-    try {
-      setDeleteLoading(true);
-      await inventoryProductsAPI.delete(product.id);
-      setShowDeleteConfirm(false);
-      setProduct(null);
-      setSkuInput("");
-      inputRef.current?.focus();
-    } catch (err) {
-      console.error("Delete error:", err);
-      setError("Co loi xay ra khi xoa san pham");
-    } finally {
-      setDeleteLoading(false);
-    }
   };
 
   // Copy product data for printing
@@ -355,61 +328,10 @@ const Scanner = () => {
 
           {/* Action Buttons */}
           <div className="product-actions">
-            {product.id && (
-              <>
-                <button
-                  className="action-btn view-btn"
-                  onClick={() => navigate(getInventoryProductDetailRoute(product.id))}
-                >
-                  <Package size={20} />
-                  Xem chi tiet
-                </button>
-                <button
-                  className="action-btn edit-btn"
-                  onClick={() => navigate(getInventoryProductEditRoute(product.id))}
-                >
-                  <Edit size={20} />
-                  Sua
-                </button>
-                <button
-                  className="action-btn delete-btn"
-                  onClick={() => setShowDeleteConfirm(true)}
-                >
-                  <Trash2 size={20} />
-                  Xoa
-                </button>
-              </>
-            )}
             <button className="action-btn print-btn" onClick={handleCopyForPrint}>
               <Printer size={20} />
               Copy de in
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Xac nhan xoa</h3>
-            <p>Ban co chac chan muon xoa san pham "{product?.name}"?</p>
-            <div className="modal-actions">
-              <button
-                className="modal-btn cancel-btn"
-                onClick={() => setShowDeleteConfirm(false)}
-                disabled={deleteLoading}
-              >
-                Huy
-              </button>
-              <button
-                className="modal-btn confirm-btn"
-                onClick={handleDelete}
-                disabled={deleteLoading}
-              >
-                {deleteLoading ? "Dang xoa..." : "Xoa"}
-              </button>
-            </div>
           </div>
         </div>
       )}

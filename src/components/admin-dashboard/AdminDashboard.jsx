@@ -28,6 +28,9 @@ import AppointmentsManager from "./AppointmentsManager";
 import PackagePrintingKit from "./PackagePrintingKit";
 import StockReconciliation from "./StockReconciliation";
 import WarehouseManagement from "./WarehouseManagement";
+// Showroom Tools
+import Scanner from "./Scanner";
+import InvoiceGenerator from "./InvoiceGenerator";
 // Product Ops Dashboard
 import {
   ProductOpsDashboard,
@@ -45,6 +48,10 @@ import { ProductionPlanListPage, ProductionPlanFormPage } from "@pages/admin/pro
 // Production Order & Partner Assignment Pages (Sprint 5)
 import ProductionOrderListPage from "@pages/admin/production/ProductionOrderListPage";
 import PartnerAssignmentPage from "@pages/admin/production/PartnerAssignmentPage";
+// Sourcing Reports (Sprint 6)
+import SourcingReportPage from "./SourcingReportPage";
+// Component Tracking (Sprint 8)
+import ComponentTrackingDashboard from "@pages/admin/component-tracking/ComponentTrackingDashboard";
 // Label Printing System
 import { LabelTemplatesPage, LabelTemplateFormPage, LabelPrintingPage } from "@pages/admin/labels";
 import "./AdminDashboard.css";
@@ -183,6 +190,8 @@ const AdminDashboard = () => {
         { id: "workflow-templates", label: "Workflow Templates", type: "tab" },
         { id: "production-plans", label: "Production Plans", type: "tab" },
         { id: "production-orders", label: "Production Orders", type: "tab" },
+        { id: "component-tracking", label: "Component Tracking", type: "tab" },
+        { id: "sourcing-reports", label: "Sourcing Reports", type: "tab" },
       ],
     },
     {
@@ -215,6 +224,13 @@ const AdminDashboard = () => {
       children: [
         { id: "label-printing", label: "Print Labels", type: "tab" },
         { id: "label-templates", label: "Label Templates", type: "tab" },
+      ],
+    },
+    {
+      id: "group-showroom", label: "Showroom Tools", type: "group",
+      children: [
+        { id: "scanner", label: "Product Scanner", type: "tab" },
+        { id: "invoice-generator", label: "Invoice Generator", type: "tab" },
       ],
     },
     {
@@ -277,6 +293,8 @@ const AdminDashboard = () => {
       "production-plan-form": ["PRODUCTION_OPS", "CSO", "ADMIN", "IT_ADMIN"],
       "production-orders": ["PRODUCTION_OPS", "CSO", "ADMIN", "IT_ADMIN"],
       "partner-assignment": ["PRODUCTION_OPS", "CSO", "ADMIN", "IT_ADMIN"],
+      "sourcing-reports": ["PRODUCTION_OPS", "CSO", "ADMIN", "IT_ADMIN"],
+      "component-tracking": ["PRODUCTION_OPS", "CSO", "ADMIN", "IT_ADMIN"],
       // Existing tabs
       products: ["CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       "product-fulfillment": ["CREATIVE_DESIGN", "MARKETING", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
@@ -289,6 +307,9 @@ const AdminDashboard = () => {
       "label-printing": ["SALES_CUSTOMER_OPS", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       "label-templates": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       "label-template-form": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      // Showroom Tools
+      "scanner": ["SALES_CUSTOMER_OPS", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "invoice-generator": ["SALES_CUSTOMER_OPS", "FINANCE", "ADMIN", "IT_ADMIN"],
       categories: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       collections: ["PRODUCTION_OPS", "MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       locations: ["ADMIN", "IT_ADMIN"],
@@ -425,6 +446,10 @@ const AdminDashboard = () => {
         return <ProductionOrderListPage />;
       case "partner-assignment":
         return <PartnerAssignmentPage />;
+      case "sourcing-reports":
+        return <SourcingReportPage />;
+      case "component-tracking":
+        return <ComponentTrackingDashboard />;
       // Existing tabs
       case "products":
         return <ProductsManager />;
@@ -500,6 +525,11 @@ const AdminDashboard = () => {
             setActiveTab('label-templates');
           }}
         />;
+      // Showroom Tools
+      case "scanner":
+        return <Scanner />;
+      case "invoice-generator":
+        return <InvoiceGenerator />;
       default:
         return <DashboardHome />;
     }
@@ -560,6 +590,14 @@ const AdminDashboard = () => {
       "partner-assignment": {
         title: "Partner Assignment",
         description: "Assign vendors/partners to production order stages based on capabilities",
+      },
+      "sourcing-reports": {
+        title: "Sourcing Reports",
+        description: "Generate and send sourcing reports to production partners with material specifications",
+      },
+      "component-tracking": {
+        title: "Component Tracking",
+        description: "Track component locations across production partners with visual pipeline and overdue monitoring",
       },
       // Existing tabs
       products: {
@@ -687,6 +725,15 @@ const AdminDashboard = () => {
       "label-template-form": {
         title: "Label Template Form",
         description: "Create or edit ZPL label template",
+      },
+      // Showroom Tools
+      "scanner": {
+        title: "Product Scanner",
+        description: "Scan product barcodes to quickly look up stock information from MISA",
+      },
+      "invoice-generator": {
+        title: "Invoice Generator",
+        description: "Create and print luxury invoices for in-store transactions",
       },
     };
     return pageMap[activeTab] || pageMap.dashboard;

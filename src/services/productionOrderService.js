@@ -180,8 +180,15 @@ export const canSkipStage = (stage) => {
 
 /**
  * Check if vendor can be assigned to stage
+ * Note: This now uses the backend-computed canAssign field when available.
+ * Falls back to local check for backward compatibility.
  */
 export const canAssignVendor = (stage) => {
+  // Use backend-computed value if available
+  if (stage.canAssign !== undefined && stage.canAssign !== null) {
+    return stage.canAssign;
+  }
+  // Fallback to local check for backward compatibility
   return ![STAGE_STATUS.COMPLETED, STAGE_STATUS.SKIPPED].includes(stage.status);
 };
 

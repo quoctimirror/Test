@@ -66,21 +66,6 @@ export const ROUTES = {
   PRODUCT_FINDER_CHOOSE_SIDESTONE: "/find-your-piece/choose-sidestone",
   PRODUCT_FINDER_RESULT: "/find-your-piece/result",
 
-  // Inventory Management routes
-  INVENTORY: "/inventory",
-  INVENTORY_DASHBOARD: "/inventory/dashboard",
-  INVENTORY_SCANNER: "/inventory/scanner",
-  INVENTORY_ADD_PRODUCT: "/inventory/add",
-  INVENTORY_PRODUCTS: "/inventory/products",
-  INVENTORY_PRODUCT_DETAIL: "/inventory/products/:id",
-  INVENTORY_PRODUCT_EDIT: "/inventory/products/:id/edit",
-  INVENTORY_PRINT: "/inventory/print",
-  INVENTORY_CREATE_ORDER: "/inventory/create-order",
-  INVENTORY_INVOICE: "/inventory/invoice",
-  INVENTORY_LABEL_TEMPLATES: "/inventory/label-templates",
-  INVENTORY_LABEL_TEMPLATE_NEW: "/inventory/label-templates/new",
-  INVENTORY_LABEL_TEMPLATE_EDIT: "/inventory/label-templates/:id/edit",
-
   // POD Admin routes (nested under admin dashboard)
   POD_ADMIN: "/dashboard/admin/pod",
   POD_ADMIN_DASHBOARD: "/dashboard/admin/pod/dashboard",
@@ -138,16 +123,6 @@ export const getNewsDetailRoute = (slug) => {
 // Helper to get product detail route with ID
 export const getProductDetailRoute = (productId) => {
   return ROUTES.PRODUCT_DETAIL.replace(":productId", productId);
-};
-
-// Helper to get inventory product detail route
-export const getInventoryProductDetailRoute = (id) => {
-  return ROUTES.INVENTORY_PRODUCT_DETAIL.replace(":id", id);
-};
-
-// Helper to get inventory product edit route
-export const getInventoryProductEditRoute = (id) => {
-  return ROUTES.INVENTORY_PRODUCT_EDIT.replace(":id", id);
 };
 
 // Helper to get POD admin partner detail route

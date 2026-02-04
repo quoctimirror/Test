@@ -111,33 +111,6 @@ const ProductFinderPage = lazyWithRetry(() => import("@pages/ProductFinder/Produ
 const ProductFinderResultPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderResultPage"));
 const ProductFinderAdminPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderAdminPage"));
 
-// Inventory Management
-const InventoryLayout = lazyWithRetry(() =>
-  import("@components/inventory/InventoryLayout")
-);
-const InventoryDashboard = lazyWithRetry(() =>
-  import("@components/inventory/Dashboard")
-);
-const InventoryScanner = lazyWithRetry(() => import("@components/inventory/Scanner"));
-const InventoryProductForm = lazyWithRetry(() =>
-  import("@components/inventory/ProductForm")
-);
-const InventoryProductList = lazyWithRetry(() =>
-  import("@components/inventory/ProductList")
-);
-const InventoryProductDetail = lazyWithRetry(() =>
-  import("@components/inventory/ProductDetail")
-);
-const InventoryPrintLabel = lazyWithRetry(() =>
-  import("@components/inventory/PrintLabel")
-);
-const InventoryCreateOrder = lazyWithRetry(() =>
-  import("@components/inventory/CreateOrder")
-);
-const InventoryInvoicePreview = lazyWithRetry(() =>
-  import("@components/inventory/InvoicePreview")
-);
-
 // POD Admin Management (pages nested under AdminDashboard)
 const PodAdminDashboard = lazyWithRetry(() => import("@pages/PodAdmin/Dashboard"));
 const PodAdminPartners = lazyWithRetry(() => import("@pages/PodAdmin/Partners"));
@@ -180,10 +153,6 @@ const AdminWholesaleOrders = lazyWithRetry(() => import("@pages/PodAdmin/Wholesa
 const AdminWholesaleOrderDetail = lazyWithRetry(() => import("@pages/PodAdmin/WholesaleOrderDetail"));
 const AdminPhygitalPartners = lazyWithRetry(() => import("@pages/PodAdmin/PhygitalPartners"));
 const AdminPhygitalPartnerDetail = lazyWithRetry(() => import("@pages/PodAdmin/PhygitalPartnerDetail"));
-
-// Label Templates
-const LabelTemplatesPage = lazyWithRetry(() => import("@pages/admin/labels/LabelTemplatesPage"));
-const LabelTemplateFormPage = lazyWithRetry(() => import("@pages/admin/labels/LabelTemplateFormPage"));
 
 export default function AppRoutes() {
   const location = useLocation();
@@ -232,12 +201,6 @@ export default function AppRoutes() {
       ROUTES.EVENT_PLACE_NOTE,
       ROUTES.EVENT_WRITE_MESSAGE,
       ROUTES.EVENT_CHOOSE_NOTE,
-      ROUTES.INVENTORY,
-      ROUTES.INVENTORY_DASHBOARD,
-      ROUTES.INVENTORY_SCANNER,
-      ROUTES.INVENTORY_ADD_PRODUCT,
-      ROUTES.INVENTORY_PRODUCTS,
-      ROUTES.INVENTORY_PRINT,
       ROUTES.DB_EXPLORER,
       ROUTES.RING_CUSTOMIZER,
       ROUTES.PRODUCT_FINDER,
@@ -278,7 +241,6 @@ export default function AppRoutes() {
       location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
       location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
       location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
-      location.pathname.startsWith(ROUTES.INVENTORY) ||
       location.pathname.startsWith(ROUTES.POD_PARTNER)
     ) {
       return false;
@@ -302,7 +264,6 @@ export default function AppRoutes() {
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
-    location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname.startsWith(ROUTES.POD_PARTNER) ||
     location.pathname === ROUTES.DB_EXPLORER ||
     location.pathname === ROUTES.RING_CUSTOMIZER;
@@ -320,7 +281,6 @@ export default function AppRoutes() {
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
-    location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname.startsWith(ROUTES.POD_PARTNER) ||
     location.pathname === ROUTES.DB_EXPLORER ||
     location.pathname === ROUTES.RING_CUSTOMIZER;
@@ -546,26 +506,6 @@ export default function AppRoutes() {
                 </ProtectedRoute>
               }
             />
-
-            {/* Inventory Management Routes */}
-            <Route path={ROUTES.INVENTORY} element={<InventoryLayout />}>
-              <Route index element={<InventoryDashboard />} />
-              <Route path="dashboard" element={<InventoryDashboard />} />
-              <Route path="create-order" element={<InventoryCreateOrder />} />
-              <Route path="scanner" element={<InventoryScanner />} />
-              <Route path="add" element={<InventoryProductForm />} />
-              <Route path="products" element={<InventoryProductList />} />
-              <Route path="products/:id" element={<InventoryProductDetail />} />
-              <Route
-                path="products/:id/edit"
-                element={<InventoryProductForm isEdit={true} />}
-              />
-              <Route path="print" element={<InventoryPrintLabel />} />
-              <Route path="invoice" element={<InventoryInvoicePreview />} />
-              <Route path="label-templates" element={<LabelTemplatesPage />} />
-              <Route path="label-templates/new" element={<LabelTemplateFormPage />} />
-              <Route path="label-templates/:id/edit" element={<LabelTemplateFormPage />} />
-            </Route>
 
             {/* POD Partner Portal Routes */}
             <Route path={ROUTES.POD_PARTNER} element={<PartnerPortalLayout />}>
