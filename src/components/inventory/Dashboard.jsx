@@ -219,7 +219,7 @@ const Dashboard = () => {
                 </div>
                 <div className="recent-product-info">
                   <span className="recent-product-name">{product.name}</span>
-                  <span className="recent-product-sku">{product.skuId || product.sku}</span>
+                  <span className="recent-product-sku">{product.skuCode}</span>
                 </div>
                 <div className="recent-product-price">
                   {formatCurrency(product.price, product.currency)}

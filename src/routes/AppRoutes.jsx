@@ -181,6 +181,10 @@ const AdminWholesaleOrderDetail = lazyWithRetry(() => import("@pages/PodAdmin/Wh
 const AdminPhygitalPartners = lazyWithRetry(() => import("@pages/PodAdmin/PhygitalPartners"));
 const AdminPhygitalPartnerDetail = lazyWithRetry(() => import("@pages/PodAdmin/PhygitalPartnerDetail"));
 
+// Label Templates
+const LabelTemplatesPage = lazyWithRetry(() => import("@pages/admin/labels/LabelTemplatesPage"));
+const LabelTemplateFormPage = lazyWithRetry(() => import("@pages/admin/labels/LabelTemplateFormPage"));
+
 export default function AppRoutes() {
   const location = useLocation();
   const { isOpen: isImmersiveModalOpen } = useImmersiveModal();
@@ -558,6 +562,9 @@ export default function AppRoutes() {
               />
               <Route path="print" element={<InventoryPrintLabel />} />
               <Route path="invoice" element={<InventoryInvoicePreview />} />
+              <Route path="label-templates" element={<LabelTemplatesPage />} />
+              <Route path="label-templates/new" element={<LabelTemplateFormPage />} />
+              <Route path="label-templates/:id/edit" element={<LabelTemplateFormPage />} />
             </Route>
 
             {/* POD Partner Portal Routes */}

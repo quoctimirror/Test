@@ -77,6 +77,9 @@ export const ROUTES = {
   INVENTORY_PRINT: "/inventory/print",
   INVENTORY_CREATE_ORDER: "/inventory/create-order",
   INVENTORY_INVOICE: "/inventory/invoice",
+  INVENTORY_LABEL_TEMPLATES: "/inventory/label-templates",
+  INVENTORY_LABEL_TEMPLATE_NEW: "/inventory/label-templates/new",
+  INVENTORY_LABEL_TEMPLATE_EDIT: "/inventory/label-templates/:id/edit",
 
   // POD Admin routes (nested under admin dashboard)
   POD_ADMIN: "/dashboard/admin/pod",

@@ -123,7 +123,7 @@ const CreateOrder = () => {
       }
 
       // Check if product already in order
-      const existingItem = orderItems.find((item) => item.id === product.id || item.sku === product.sku);
+      const existingItem = orderItems.find((item) => item.id === product.id || item.skuCode === product.skuCode);
 
       if (existingItem) {
         // Check if can add more

@@ -68,7 +68,7 @@ const ProductForm = ({ isEdit = false }) => {
       if (product) {
         const data = {
           name: product.name || "",
-          skuId: product.skuId || product.sku || "",
+          skuId: product.skuCode || "",
           description: product.description || "",
           price: product.price?.toString() || "",
           currency: product.currency || "VND",
@@ -82,7 +82,7 @@ const ProductForm = ({ isEdit = false }) => {
         };
         setFormData(data);
         setOriginalData(data);
-        setOriginalSku(product.skuId || product.sku); // Save original SKU
+        setOriginalSku(product.skuCode); // Save original SKU
       }
     } catch (err) {
       console.error("Error fetching product:", err);

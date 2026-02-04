@@ -195,7 +195,7 @@ const PrintLabel = () => {
                   </div>
                   <div className="product-info">
                     <span className="product-name">{product.name}</span>
-                    <span className="product-sku">{product.skuId || product.sku}</span>
+                    <span className="product-sku">{product.skuCode}</span>
                   </div>
                   <div className="product-price">
                     {formatCurrency(product.price, product.currency)}

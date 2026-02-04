@@ -70,7 +70,7 @@ const ProductDetail = () => {
     if (!product) return;
 
     const printData = {
-      sku: product.skuId || product.sku,
+      sku: product.skuCode,
       name: product.name,
       price: product.price,
       currency: product.currency,
@@ -206,7 +206,7 @@ const ProductDetail = () => {
             </span>
           </div>
 
-          <p className="product-sku">SKU: {product.skuId || product.sku}</p>
+          <p className="product-sku">SKU: {product.skuCode}</p>
 
           <div className="product-price">
             {formatCurrency(product.price, product.currency)}

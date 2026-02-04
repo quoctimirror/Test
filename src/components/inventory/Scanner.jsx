@@ -155,7 +155,7 @@ const Scanner = () => {
     if (!product) return;
 
     const printData = {
-      sku: product.sku || product.skuId,
+      sku: product.skuCode,
       name: product.name,
       price: product.price,
       currency: product.currency,
@@ -237,7 +237,7 @@ const Scanner = () => {
 
             <div className="product-card-info">
               <h3 className="product-card-name">{product.name}</h3>
-              <p className="product-card-sku">SKU: {product.sku || product.skuId}</p>
+              <p className="product-card-sku">SKU: {product.skuCode}</p>
               {product.barcode && (
                 <p className="product-card-barcode">Barcode: {product.barcode}</p>
               )}

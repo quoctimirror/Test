@@ -36,6 +36,17 @@ import {
   MISAIntegration,
   ProductPublisher
 } from "../product-ops-dashboard";
+// JTRC (Jewelry Technical Report Card) Pages
+import { JTRCListPage, JTRCFormPage } from "@pages/admin/jtrc";
+// Workflow Template Pages (Sprint 4)
+import { WorkflowTemplateListPage, WorkflowTemplateFormPage } from "@pages/admin/workflow";
+// Production Plan Pages (Sprint 4)
+import { ProductionPlanListPage, ProductionPlanFormPage } from "@pages/admin/production";
+// Production Order & Partner Assignment Pages (Sprint 5)
+import ProductionOrderListPage from "@pages/admin/production/ProductionOrderListPage";
+import PartnerAssignmentPage from "@pages/admin/production/PartnerAssignmentPage";
+// Label Printing System
+import { LabelTemplatesPage, LabelTemplateFormPage, LabelPrintingPage } from "@pages/admin/labels";
 import "./AdminDashboard.css";
 import { ROUTES } from "@/constants/routes";
 import { useAuth } from "@/context/AuthContext";
@@ -136,6 +147,9 @@ const AdminDashboard = () => {
 
   const [activeTab, setActiveTabState] = useState(getTabFromUrl);
 
+  // State for label template editing
+  const [editTemplateId, setEditTemplateId] = useState(null);
+
   // Update URL when tab changes
   const setActiveTab = useCallback((tabId) => {
     setActiveTabState(tabId);
@@ -163,6 +177,15 @@ const AdminDashboard = () => {
       ],
     },
     {
+      id: "group-production", label: "Production", type: "group",
+      children: [
+        { id: "jtrc", label: "JTRC Management", type: "tab" },
+        { id: "workflow-templates", label: "Workflow Templates", type: "tab" },
+        { id: "production-plans", label: "Production Plans", type: "tab" },
+        { id: "production-orders", label: "Production Orders", type: "tab" },
+      ],
+    },
+    {
       id: "group-products", label: "Products", type: "group",
       children: [
         { id: "products", label: "Products", type: "tab" },
@@ -185,6 +208,13 @@ const AdminDashboard = () => {
         // { id: "purchase-orders", label: "Purchase Orders", type: "tab" },
         // { id: "currency-calculator", label: "Currency Calculator", type: "tab" },
         // { id: "metal-prices", label: "Metal Prices", type: "tab" },
+      ],
+    },
+    {
+      id: "group-labels", label: "Label Printing", type: "group",
+      children: [
+        { id: "label-printing", label: "Print Labels", type: "tab" },
+        { id: "label-templates", label: "Label Templates", type: "tab" },
       ],
     },
     {
@@ -238,6 +268,15 @@ const AdminDashboard = () => {
       "misa-integration": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       "product-publisher": ["PRODUCTION_OPS", "MARKETING", "ADMIN", "IT_ADMIN"],
       "stock-reconciliation": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      // Production Partner Workflow (Sprint 2-5)
+      "jtrc": ["PRODUCTION_OPS", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      "jtrc-form": ["PRODUCTION_OPS", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
+      "workflow-templates": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "workflow-template-form": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "production-plans": ["PRODUCTION_OPS", "CSO", "ADMIN", "IT_ADMIN"],
+      "production-plan-form": ["PRODUCTION_OPS", "CSO", "ADMIN", "IT_ADMIN"],
+      "production-orders": ["PRODUCTION_OPS", "CSO", "ADMIN", "IT_ADMIN"],
+      "partner-assignment": ["PRODUCTION_OPS", "CSO", "ADMIN", "IT_ADMIN"],
       // Existing tabs
       products: ["CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       "product-fulfillment": ["CREATIVE_DESIGN", "MARKETING", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
@@ -246,6 +285,10 @@ const AdminDashboard = () => {
       payments: ["FINANCE", "SALES_CUSTOMER_OPS", "ADMIN", "IT_ADMIN"],
       appointments: ["SALES_CUSTOMER_OPS", "ADMIN", "IT_ADMIN"],
       "package-printing-kit": ["SALES_CUSTOMER_OPS", "MARKETING", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      // Label Printing System
+      "label-printing": ["SALES_CUSTOMER_OPS", "PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "label-templates": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
+      "label-template-form": ["PRODUCTION_OPS", "ADMIN", "IT_ADMIN"],
       categories: ["MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       collections: ["PRODUCTION_OPS", "MARKETING", "CREATIVE_DESIGN", "ADMIN", "IT_ADMIN"],
       locations: ["ADMIN", "IT_ADMIN"],
@@ -365,6 +408,23 @@ const AdminDashboard = () => {
         return <ProductPublisher />;
       case "stock-reconciliation":
         return <StockReconciliation />;
+      // Production Partner Workflow (Sprint 2-5)
+      case "jtrc":
+        return <JTRCListPage />;
+      case "jtrc-form":
+        return <JTRCFormPage />;
+      case "workflow-templates":
+        return <WorkflowTemplateListPage />;
+      case "workflow-template-form":
+        return <WorkflowTemplateFormPage />;
+      case "production-plans":
+        return <ProductionPlanListPage />;
+      case "production-plan-form":
+        return <ProductionPlanFormPage />;
+      case "production-orders":
+        return <ProductionOrderListPage />;
+      case "partner-assignment":
+        return <PartnerAssignmentPage />;
       // Existing tabs
       case "products":
         return <ProductsManager />;
@@ -418,6 +478,28 @@ const AdminDashboard = () => {
         return <UsersManager />;
       case "rbac-matrix":
         return <RBACMatrix />;
+      // Label Printing System
+      case "label-printing":
+        return <LabelPrintingPage />;
+      case "label-templates":
+        return <LabelTemplatesPage onNavigate={(tabId, params) => {
+          if (tabId === 'label-template-form') {
+            setEditTemplateId(params?.templateId || null);
+            setActiveTab('label-template-form');
+          }
+        }} />;
+      case "label-template-form":
+        return <LabelTemplateFormPage
+          templateId={editTemplateId}
+          onBack={() => {
+            setEditTemplateId(null);
+            setActiveTab('label-templates');
+          }}
+          onSaved={() => {
+            setEditTemplateId(null);
+            setActiveTab('label-templates');
+          }}
+        />;
       default:
         return <DashboardHome />;
     }
@@ -445,6 +527,39 @@ const AdminDashboard = () => {
       "stock-reconciliation": {
         title: "Stock Reconciliation",
         description: "Scan barcodes to reconcile physical inventory against system records",
+      },
+      // Production Partner Workflow (Sprint 2-5)
+      "jtrc": {
+        title: "JTRC Management",
+        description: "Manage Jewelry Technical Report Cards for production specifications",
+      },
+      "jtrc-form": {
+        title: "JTRC Form",
+        description: "Create or edit Jewelry Technical Report Card",
+      },
+      "workflow-templates": {
+        title: "Workflow Templates",
+        description: "Define production workflow templates with sequential stages for different product categories",
+      },
+      "workflow-template-form": {
+        title: "Workflow Template Form",
+        description: "Create or edit workflow template with production stages",
+      },
+      "production-plans": {
+        title: "Production Plans",
+        description: "Manage production plans linking collections to workflow templates",
+      },
+      "production-plan-form": {
+        title: "Production Plan Form",
+        description: "Create or edit production plan for a collection",
+      },
+      "production-orders": {
+        title: "Production Orders",
+        description: "Manage production orders and assign partners to stages",
+      },
+      "partner-assignment": {
+        title: "Partner Assignment",
+        description: "Assign vendors/partners to production order stages based on capabilities",
       },
       // Existing tabs
       products: {
@@ -559,6 +674,19 @@ const AdminDashboard = () => {
       "rbac-matrix": {
         title: "RBAC Matrix",
         description: "View role purposes, UI access, and allowed actions",
+      },
+      // Label Printing System
+      "label-printing": {
+        title: "Label Printing",
+        description: "Print product labels using ZPL templates and Zebra printers",
+      },
+      "label-templates": {
+        title: "Label Templates",
+        description: "Manage ZPL label templates for product labeling",
+      },
+      "label-template-form": {
+        title: "Label Template Form",
+        description: "Create or edit ZPL label template",
       },
     };
     return pageMap[activeTab] || pageMap.dashboard;

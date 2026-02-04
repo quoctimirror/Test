@@ -1,0 +1,384 @@
+/* Label Template Form Page Styles */
+
+.label-template-form-page {
+  padding: 0;
+}
+
+/* Header */
+.ltf-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.ltf-back-btn {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ltf-back-btn:hover {
+  background: #f3f4f6;
+}
+
+.ltf-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Loading & Error States */
+.ltf-loading {
+  text-align: center;
+  padding: 48px;
+  color: #6b7280;
+}
+
+.ltf-error {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+/* Form Layout */
+.ltf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ltf-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 24px;
+}
+
+.ltf-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ltf-column-wide {
+  min-width: 0;
+}
+
+/* Section */
+.ltf-section {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.ltf-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.ltf-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ltf-section-header h3 {
+  margin: 0;
+}
+
+/* Fields */
+.ltf-field {
+  margin-bottom: 16px;
+}
+
+.ltf-field:last-child {
+  margin-bottom: 0;
+}
+
+.ltf-field label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.ltf-field input[type="text"],
+.ltf-field input[type="number"],
+.ltf-field textarea,
+.ltf-field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.ltf-field input:focus,
+.ltf-field textarea:focus,
+.ltf-field select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.ltf-field input.error,
+.ltf-field textarea.error,
+.ltf-field select.error {
+  border-color: #dc2626;
+}
+
+.ltf-field-error {
+  display: block;
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-top: 4px;
+}
+
+.ltf-field input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+}
+
+/* Row */
+.ltf-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* Presets */
+.ltf-presets {
+  margin-bottom: 16px;
+}
+
+.ltf-presets label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.ltf-preset-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ltf-preset-btn {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ltf-preset-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* Variables Bar */
+.ltf-variables-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.ltf-variables-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.ltf-variables-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ltf-variable-btn {
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: white;
+  color: #2563eb;
+  font-size: 0.7rem;
+  font-family: monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ltf-variable-btn:hover {
+  background: #dbeafe;
+  border-color: #2563eb;
+}
+
+.ltf-more-vars {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+/* ZPL Editor */
+.ltf-zpl-editor {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 300px;
+}
+
+/* Detected Variables */
+.ltf-detected-vars {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px;
+  background: #ecfdf5;
+  border-radius: 8px;
+}
+
+.ltf-detected-label {
+  font-size: 0.8rem;
+  color: #065f46;
+  font-weight: 500;
+}
+
+.ltf-detected-var {
+  padding: 2px 8px;
+  background: #d1fae5;
+  color: #047857;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: monospace;
+}
+
+/* Preview */
+.ltf-preview-loading {
+  text-align: center;
+  padding: 24px;
+  color: #6b7280;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.ltf-preview-error {
+  text-align: center;
+  padding: 16px;
+  color: #b91c1c;
+  background: #fee2e2;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.ltf-preview-container {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.ltf-preview-container h4 {
+  margin: 0 0 12px 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.ltf-preview-image {
+  max-width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+}
+
+/* Buttons */
+.ltf-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.ltf-btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.ltf-btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.ltf-btn-primary:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+.ltf-btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.ltf-btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+/* Actions */
+.ltf-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ltf-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .ltf-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ltf-actions {
+    flex-direction: column-reverse;
+  }
+
+  .ltf-actions .ltf-btn {
+    width: 100%;
+  }
+}
