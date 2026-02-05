@@ -375,11 +375,22 @@ const AdminDashboard = () => {
     item.type === "group" ? item.children : [item]
   );
 
+  // Hidden tabs that are navigated to from list pages (not shown in sidebar)
+  const hiddenTabs = [
+    "jtrc-form",
+    "workflow-template-form",
+    "production-plan-form",
+    "partner-assignment",
+    "label-template-form",
+  ];
+
   // Validate tab access and redirect to valid tab if needed (skip when outlet is active)
   useEffect(() => {
     if (hasOutlet) return; // Pod route is active, skip tab validation
     const urlTab = getTabFromUrl();
-    const validTabIds = allFlatItems.filter(i => i.type === "tab").map(item => item.id);
+    const menuTabIds = allFlatItems.filter(i => i.type === "tab").map(item => item.id);
+    // Include hidden tabs in valid tab list
+    const validTabIds = [...menuTabIds, ...hiddenTabs];
 
     // If tab from URL is invalid or not allowed, redirect to first allowed tab
     if (!validTabIds.includes(urlTab) || !isTabAllowed(urlTab)) {
