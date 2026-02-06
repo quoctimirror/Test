@@ -314,7 +314,13 @@ export const optimizedTransitionUtils = {
       return;
     }
 
-    // Always use full transition for consistent UX across all devices
+    // Mobile (≤425px): dùng lightweightTransition - chỉ fade, không slide
+    const isMobile = window.innerWidth <= 425;
+    if (isMobile) {
+      return optimizedTransitionUtils.lightweightTransition(navigateFunction, route, options);
+    }
+
+    // Desktop/Tablet (>425px): dùng full transition - slide up + fade/scale
 
     const {
       onStart = null,
