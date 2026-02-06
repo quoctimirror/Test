@@ -14,6 +14,23 @@ export const optimizedTransitionUtils = {
     // Performance settings
     isLowPerformance: false, // Will be auto-detected
     simplifiedTransition: false,
+    // Navbar height (desktop default)
+    navbarHeightDesktop: 69,
+  },
+
+  // Helper: Lấy chiều cao navbar hiện tại
+  // Trả về 0 nếu navbar không hiển thị (các trang ẩn navbar)
+  getNavbarHeight: () => {
+    const navbar = document.querySelector('.navbar-v4-glass-background');
+    if (!navbar) return 0;
+
+    // Kiểm tra xem navbar có visible không
+    const style = window.getComputedStyle(navbar);
+    if (style.display === 'none' || style.visibility === 'hidden') {
+      return 0;
+    }
+
+    return navbar.offsetHeight || optimizedTransitionUtils.config.navbarHeightDesktop;
   },
 
   // Detect device performance
@@ -316,11 +333,16 @@ export const optimizedTransitionUtils = {
       const root = document.getElementById("root");
       if (!root) throw new Error("Root element not found");
 
-      // Save current page state and scroll position
-      const originalContent = root.innerHTML;
+      // Lấy navbar height - navbar sẽ giữ nguyên, không bị clone
+      const navbarHeight = optimizedTransitionUtils.getNavbarHeight();
+
+      // Lấy main content thay vì toàn bộ root (để không clone navbar)
+      const mainContent = document.querySelector('.page-main-content');
+      const originalContent = mainContent ? mainContent.innerHTML : root.innerHTML;
       const currentScrollY = window.scrollY;
 
-      // Create a wrapper that can contain the full page
+      // Freeze trang cũ - phủ full viewport, z-index dưới navbar (200)
+      // Trang cũ nằm yên, không animate
       const frozenWrapper = document.createElement("div");
       frozenWrapper.id = "frozen-wrapper";
       frozenWrapper.style.cssText = `
@@ -329,13 +351,13 @@ export const optimizedTransitionUtils = {
         left: 0;
         width: 100vw;
         height: 100vh;
-        z-index: 9997;
+        z-index: 150;
         background: white;
         overflow: hidden;
         pointer-events: none;
       `;
 
-      // Create the actual frozen page content
+      // Clone chỉ main content (không có navbar)
       const frozenPage = document.createElement("div");
       frozenPage.innerHTML = originalContent;
       optimizedTransitionUtils.optimizations.disableClonedVideos(frozenPage);
@@ -351,9 +373,14 @@ export const optimizedTransitionUtils = {
       frozenWrapper.appendChild(frozenPage);
       document.body.appendChild(frozenWrapper);
 
-      // Hide the real root temporarily
-      root.style.opacity = "0";
-      root.style.pointerEvents = "none";
+      // Ẩn main content thật (nhưng KHÔNG ẩn navbar)
+      if (mainContent) {
+        mainContent.style.opacity = "0";
+        mainContent.style.pointerEvents = "none";
+      } else {
+        root.style.opacity = "0";
+        root.style.pointerEvents = "none";
+      }
 
       // Navigate to new route (hidden) - Pass options to preserve state
       const navigationOptions = {
@@ -365,16 +392,15 @@ export const optimizedTransitionUtils = {
       // Scroll to top once only
       window.scrollTo(0, 0);
 
-      // Wait for new content to fully load - improved for slow networks
+      // Chờ React render content mới (NHANH - không chờ images/videos)
       const waitForPageLoad = async () => {
         let retries = 0;
-        const maxRetries = 100; // Max wait time: 10 seconds for slow networks
+        const maxRetries = 20; // Max 2 giây - đủ để React render
 
-        // Step 1: Wait for React to render NEW content
         while (retries < maxRetries) {
           await new Promise((resolve) => setTimeout(resolve, 100));
 
-          // Check if React has rendered NEW content (not old content)
+          // Chỉ cần DOM render xong, không cần chờ images
           if (root.children.length > 0 && root.innerHTML !== originalContent) {
             break;
           }
@@ -382,95 +408,23 @@ export const optimizedTransitionUtils = {
           retries++;
         }
 
-        // Step 2: Wait for critical resources to load
-        const waitForResources = async () => {
-          const maxResourceRetries = 50; // Max 5 seconds for resources
-          let resourceRetries = 0;
-
-          while (resourceRetries < maxResourceRetries) {
-            // Get first few visible images
-            const images = Array.from(root.querySelectorAll('img')).slice(0, 5);
-            const videos = Array.from(root.querySelectorAll('video')).slice(0, 2);
-
-            // Check if critical images are loaded
-            let allImagesLoaded = true;
-            for (const img of images) {
-              if (img.src && !img.complete) {
-                allImagesLoaded = false;
-                break;
-              }
-            }
-
-            // Check if videos have metadata
-            let allVideosReady = true;
-            for (const video of videos) {
-              if (video.src && video.readyState < 1) {
-                allVideosReady = false;
-                break;
-              }
-            }
-
-            // If all critical resources loaded, we're done
-            if (allImagesLoaded && allVideosReady) {
-              break;
-            }
-
-            await new Promise((resolve) => setTimeout(resolve, 100));
-            resourceRetries++;
-          }
-        };
-
-        await waitForResources();
-
-        // Step 3: Final stabilization wait for JS to settle
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        // Chờ thêm 50ms để DOM ổn định
+        await new Promise((resolve) => setTimeout(resolve, 50));
       };
 
       await waitForPageLoad();
 
-      // Now content is loaded, prepare animation layers
-      // Remove frozen wrapper and create animation layers
-      frozenWrapper.remove();
+      // Content đã load xong, chuẩn bị animation
+      // KHÔNG xóa frozenWrapper - trang cũ sẽ nằm yên phía sau
 
-      // Create animated clone wrapper (keep current scroll position)
-      // Always use GPU-accelerated properties for smooth animation on all devices
-      const currentPageWrapper = document.createElement("div");
-      currentPageWrapper.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 9998;
-        background: white;
-        overflow: hidden;
-        pointer-events: none;
-        contain: layout style paint;
-        transform: translateZ(0);
-        backface-visibility: hidden;
-        will-change: transform, opacity;
-      `;
+      // Lấy content mới từ main content (không có navbar)
+      const newMainContent = document.querySelector('.page-main-content');
+      const newContent = newMainContent ? newMainContent.innerHTML : root.innerHTML;
 
-      // Create the actual page content clone
-      const currentPageClone = document.createElement("div");
-      currentPageClone.innerHTML = originalContent;
-      optimizedTransitionUtils.optimizations.disableClonedVideos(currentPageClone);
-      currentPageClone.style.cssText = `
-        position: absolute;
-        top: ${-currentScrollY}px;
-        left: 0;
-        width: 100vw;
-        min-height: 100vh;
-        background: white;
-      `;
-
-      currentPageWrapper.appendChild(currentPageClone);
-      document.body.appendChild(currentPageWrapper);
-
-      // Create new page container with slide-up animation
-      // Always use GPU-accelerated properties for smooth animation on all devices
+      // Tạo container cho trang mới - phủ full viewport, slide up từ dưới
+      // z-index dưới navbar (200), trên frozen wrapper (150)
       const newPageContainer = document.createElement("div");
-      newPageContainer.innerHTML = root.innerHTML;
+      newPageContainer.innerHTML = newContent;
       optimizedTransitionUtils.optimizations.disableClonedVideos(newPageContainer);
       newPageContainer.style.cssText = `
         position: fixed;
@@ -478,7 +432,7 @@ export const optimizedTransitionUtils = {
         left: 0;
         width: 100vw;
         height: 100vh;
-        z-index: 9999;
+        z-index: 160;
         background: white;
         overflow: hidden;
         pointer-events: none;
@@ -489,36 +443,37 @@ export const optimizedTransitionUtils = {
       `;
       document.body.appendChild(newPageContainer);
 
-      // Perform smooth animation using CSS transitions (GPU-accelerated, runs on compositor thread)
+      // Animation: Trang cũ fade + scale, trang mới slide lên
       const performAnimation = async () => {
         return new Promise((resolve) => {
-          // Use CSS transitions instead of JS animation for maximum smoothness
-          // CSS transitions run on the GPU compositor thread, independent of main JS thread
+          // Thêm will-change cho frozenWrapper để GPU accelerate
+          frozenWrapper.style.willChange = 'transform, opacity';
+          frozenWrapper.style.transformOrigin = 'center center';
 
-          // Force a reflow to ensure initial state is painted before transition
-          currentPageWrapper.offsetHeight;
+          // Force reflow trước khi transition
+          frozenWrapper.offsetHeight;
           newPageContainer.offsetHeight;
 
-          // Add CSS transitions (cubic-bezier for smooth easing similar to easeOutCubic)
+          // CSS transition timing (easeOutCubic)
           const transitionTiming = `${duration}s cubic-bezier(0.33, 1, 0.68, 1)`;
 
-          currentPageWrapper.style.transition = `opacity ${transitionTiming}, transform ${transitionTiming}`;
+          // Transition cho cả trang cũ và trang mới
+          frozenWrapper.style.transition = `opacity ${transitionTiming}, transform ${transitionTiming}`;
           newPageContainer.style.transition = `transform ${transitionTiming}`;
 
-          // Trigger animation by setting final state
-          // Double RAF ensures styles are applied before transition starts
+          // Trigger animation
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-              // Current page: fade out + scale down (always use translateZ for GPU layer)
-              currentPageWrapper.style.opacity = '0';
-              currentPageWrapper.style.transform = 'scale(0.95) translateZ(0)';
+              // Trang cũ: fade out + scale down
+              frozenWrapper.style.opacity = '0';
+              frozenWrapper.style.transform = 'scale(0.95) translateZ(0)';
 
-              // New page: slide up from 100% to 0%
+              // Trang mới: slide up từ 100% → 0%
               newPageContainer.style.transform = 'translateY(0%) translateZ(0)';
             });
           });
 
-          // Wait for transition to complete
+          // Wait for transition complete
           const onTransitionEnd = () => {
             newPageContainer.removeEventListener('transitionend', onTransitionEnd);
             resolve();
@@ -526,7 +481,7 @@ export const optimizedTransitionUtils = {
 
           newPageContainer.addEventListener('transitionend', onTransitionEnd);
 
-          // Fallback timeout in case transitionend doesn't fire
+          // Fallback timeout
           setTimeout(() => {
             newPageContainer.removeEventListener('transitionend', onTransitionEnd);
             resolve();
@@ -536,10 +491,18 @@ export const optimizedTransitionUtils = {
 
       await performAnimation();
 
-      // Clean up after animation
-      root.style.opacity = "1";
-      root.style.pointerEvents = "";
-      currentPageWrapper.remove();
+      // Clean up sau animation
+      // Hiện lại main content thật
+      if (mainContent) {
+        mainContent.style.opacity = "1";
+        mainContent.style.pointerEvents = "";
+      } else {
+        root.style.opacity = "1";
+        root.style.pointerEvents = "";
+      }
+
+      // Xóa các layers animation
+      frozenWrapper.remove();
       newPageContainer.remove();
 
       // Final scroll to top to ensure new page is at the beginning
@@ -574,13 +537,21 @@ export const optimizedTransitionUtils = {
 
       // Cleanup on error
       const root = document.getElementById("root");
+      const mainContent = document.querySelector('.page-main-content');
+
+      // Khôi phục visibility
+      if (mainContent) {
+        mainContent.style.opacity = "1";
+        mainContent.style.pointerEvents = "";
+      }
       if (root) {
         root.style.opacity = "1";
         optimizedTransitionUtils.optimizations.disableGPU(root);
       }
 
-      document.querySelectorAll('[style*="fixed"]').forEach((el) => {
-        if (el.id !== "root") el.remove();
+      // Xóa tất cả fixed elements (trừ root và navbar)
+      document.querySelectorAll('#frozen-wrapper, [id*="frozen"]').forEach((el) => {
+        el.remove();
       });
 
       if (optimizedTransitionUtils.state.rafId) {
