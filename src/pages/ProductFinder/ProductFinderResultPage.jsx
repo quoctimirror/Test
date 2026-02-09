@@ -104,13 +104,16 @@ const ProductFinderResultPage = () => {
 
   // iJewel SDK: load 3D model with configurator
   useEffect(() => {
-    if (!product?.modelId || !viewerContainerRef.current) return;
+    const modelId = product?.modelId;
+    if (!modelId || !viewerContainerRef.current) return;
     if (!window.ijewelViewer?.loadModelById) {
       console.error('iJewel SDK not loaded');
       return;
     }
-    if (isViewerInitializedRef.current) return;
-    isViewerInitializedRef.current = true;
+
+    // Prevent double initialization for same model
+    if (isViewerInitializedRef.current === modelId) return;
+    isViewerInitializedRef.current = modelId;
 
     let cancelled = false;
 
@@ -207,8 +210,14 @@ const ProductFinderResultPage = () => {
         viewerRef.current.dispose();
         viewerRef.current = null;
       }
+      // Reset initialization flag so viewer can reinitialize on next mount
+      isViewerInitializedRef.current = null;
+      // Clear the container to prevent stale content
+      if (viewerContainerRef.current) {
+        viewerContainerRef.current.innerHTML = '';
+      }
     };
-  }, [product]);
+  }, [product?.modelId]);
 
   const handleBookAppointment = () => {
     navigate(ROUTES.BOOK_APPOINTMENT);

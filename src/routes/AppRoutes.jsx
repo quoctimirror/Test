@@ -115,33 +115,6 @@ const ProductFinderResultPage = lazyWithRetry(() => import("@pages/ProductFinder
 const RingCustomizerCombinationsPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderAdminPage"));
 const RingCustomizerSelectionsPage = lazyWithRetry(() => import("@pages/ProductFinder/UserSelectionsPage"));
 
-// Inventory Management
-const InventoryLayout = lazyWithRetry(() =>
-  import("@components/inventory/InventoryLayout")
-);
-const InventoryDashboard = lazyWithRetry(() =>
-  import("@components/inventory/Dashboard")
-);
-const InventoryScanner = lazyWithRetry(() => import("@components/inventory/Scanner"));
-const InventoryProductForm = lazyWithRetry(() =>
-  import("@components/inventory/ProductForm")
-);
-const InventoryProductList = lazyWithRetry(() =>
-  import("@components/inventory/ProductList")
-);
-const InventoryProductDetail = lazyWithRetry(() =>
-  import("@components/inventory/ProductDetail")
-);
-const InventoryPrintLabel = lazyWithRetry(() =>
-  import("@components/inventory/PrintLabel")
-);
-const InventoryCreateOrder = lazyWithRetry(() =>
-  import("@components/inventory/CreateOrder")
-);
-const InventoryInvoicePreview = lazyWithRetry(() =>
-  import("@components/inventory/InvoicePreview")
-);
-
 // POD Admin Management (pages nested under AdminDashboard)
 const PodAdminDashboard = lazyWithRetry(() => import("@pages/PodAdmin/Dashboard"));
 const PodAdminPartners = lazyWithRetry(() => import("@pages/PodAdmin/Partners"));
@@ -535,23 +508,6 @@ export default function AppRoutes() {
               path="/admin/product-finder/combinations"
               element={<Navigate to="/dashboard/admin/ring-customizer/combinations" replace />}
             />
-
-            {/* Inventory Management Routes */}
-            <Route path={ROUTES.INVENTORY} element={<InventoryLayout />}>
-              <Route index element={<InventoryDashboard />} />
-              <Route path="dashboard" element={<InventoryDashboard />} />
-              <Route path="create-order" element={<InventoryCreateOrder />} />
-              <Route path="scanner" element={<InventoryScanner />} />
-              <Route path="add" element={<InventoryProductForm />} />
-              <Route path="products" element={<InventoryProductList />} />
-              <Route path="products/:id" element={<InventoryProductDetail />} />
-              <Route
-                path="products/:id/edit"
-                element={<InventoryProductForm isEdit={true} />}
-              />
-              <Route path="print" element={<InventoryPrintLabel />} />
-              <Route path="invoice" element={<InventoryInvoicePreview />} />
-            </Route>
 
             {/* POD Partner Portal Routes */}
             <Route path={ROUTES.POD_PARTNER} element={<PartnerPortalLayout />}>

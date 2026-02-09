@@ -53,6 +53,8 @@
   justify-content: center;
   padding: 40px;
   background: #f6f6f6;
+  min-height: calc(100vh - 80px);
+  overflow: hidden;
 }
 
 .product-finder-result__image {
@@ -63,9 +65,11 @@
 
 .product-finder-result__viewer {
   width: 100%;
-  height: 100%;
+  height: 70vh;
   min-height: 500px;
+  max-height: 80vh;
   position: relative;
+  overflow: hidden;
 }
 
 /* Info Section - Right (34% width) */
@@ -252,6 +256,12 @@
     max-height: 50vh;
   }
 
+  .product-finder-result__viewer {
+    height: 50vh;
+    min-height: 400px;
+    max-height: 60vh;
+  }
+
   .product-finder-result__info-section {
     padding: 40px 24px;
   }
@@ -282,6 +292,12 @@
 
   .product-finder-result__image {
     max-height: 40vh;
+  }
+
+  .product-finder-result__viewer {
+    height: 40vh;
+    min-height: 300px;
+    max-height: 50vh;
   }
 
   .product-finder-result__info-section {

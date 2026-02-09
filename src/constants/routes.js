@@ -66,18 +66,6 @@ export const ROUTES = {
   PRODUCT_FINDER_CHOOSE_SIDESTONE: "/find-your-piece/choose-sidestone",
   PRODUCT_FINDER_RESULT: "/find-your-piece/result",
 
-  // Inventory Management routes
-  INVENTORY: "/inventory",
-  INVENTORY_DASHBOARD: "/inventory/dashboard",
-  INVENTORY_SCANNER: "/inventory/scanner",
-  INVENTORY_ADD_PRODUCT: "/inventory/add",
-  INVENTORY_PRODUCTS: "/inventory/products",
-  INVENTORY_PRODUCT_DETAIL: "/inventory/products/:id",
-  INVENTORY_PRODUCT_EDIT: "/inventory/products/:id/edit",
-  INVENTORY_PRINT: "/inventory/print",
-  INVENTORY_CREATE_ORDER: "/inventory/create-order",
-  INVENTORY_INVOICE: "/inventory/invoice",
-
   // POD Admin routes (nested under admin dashboard)
   POD_ADMIN: "/dashboard/admin/pod",
   POD_ADMIN_DASHBOARD: "/dashboard/admin/pod/dashboard",
