@@ -232,12 +232,6 @@ export default function AppRoutes() {
       ROUTES.EVENT_PLACE_NOTE,
       ROUTES.EVENT_WRITE_MESSAGE,
       ROUTES.EVENT_CHOOSE_NOTE,
-      ROUTES.INVENTORY,
-      ROUTES.INVENTORY_DASHBOARD,
-      ROUTES.INVENTORY_SCANNER,
-      ROUTES.INVENTORY_ADD_PRODUCT,
-      ROUTES.INVENTORY_PRODUCTS,
-      ROUTES.INVENTORY_PRINT,
       ROUTES.DB_EXPLORER,
       ROUTES.RING_CUSTOMIZER,
       ROUTES.PRODUCT_FINDER,
@@ -278,7 +272,6 @@ export default function AppRoutes() {
       location.pathname.startsWith(ROUTES.DASHBOARD_DESIGNER) ||
       location.pathname.startsWith(ROUTES.SCAVENGER_HUNT) ||
       location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
-      location.pathname.startsWith(ROUTES.INVENTORY) ||
       location.pathname.startsWith(ROUTES.POD_PARTNER)
     ) {
       return false;
@@ -302,7 +295,6 @@ export default function AppRoutes() {
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
-    location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname.startsWith(ROUTES.POD_PARTNER) ||
     location.pathname === ROUTES.DB_EXPLORER ||
     location.pathname === ROUTES.RING_CUSTOMIZER;
@@ -320,7 +312,6 @@ export default function AppRoutes() {
     location.pathname === ROUTES.MESH_INSPECTOR ||
     location.pathname.startsWith(ROUTES.EVENT) ||
     location.pathname.startsWith(ROUTES.EVENT_GUIDE) ||
-    location.pathname.startsWith(ROUTES.INVENTORY) ||
     location.pathname.startsWith(ROUTES.POD_PARTNER) ||
     location.pathname === ROUTES.DB_EXPLORER ||
     location.pathname === ROUTES.RING_CUSTOMIZER;

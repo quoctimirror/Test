@@ -1,0 +1,482 @@
+/* Invoice Preview Page Styles */
+
+.invoice-preview-page {
+  min-height: 100vh;
+  background: #2a2a2a;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Spin animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Toolbar */
+.preview-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-btn {
+  background: transparent;
+  color: #888;
+  border: 1px solid #444;
+}
+
+.back-btn:hover {
+  background: #333;
+  color: #fff;
+  border-color: #555;
+}
+
+.clear-btn {
+  background: transparent;
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+}
+
+.clear-btn:hover {
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.print-btn {
+  background: linear-gradient(135deg, #b8860b 0%, #d4a84b 100%);
+  color: #fff;
+}
+
+.print-btn:hover {
+  background: linear-gradient(135deg, #d4a84b 0%, #b8860b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+}
+
+.toolbar-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbar-title h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.invoice-code {
+  font-size: 12px;
+  color: #b8860b;
+  font-weight: 500;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Preview Container */
+.preview-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow: auto;
+}
+
+.preview-paper {
+  background: #fff;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Footer */
+.preview-footer {
+  padding: 16px;
+  text-align: center;
+  background: #1a1a1a;
+  border-top: 1px solid #333;
+}
+
+.preview-footer p {
+  margin: 0;
+  color: #666;
+  font-size: 13px;
+}
+
+/* Print Styles */
+@media print {
+  .invoice-preview-page {
+    background: white;
+  }
+
+  .preview-toolbar,
+  .preview-footer {
+    display: none !important;
+  }
+
+  .preview-container {
+    padding: 0;
+  }
+
+  .preview-paper {
+    box-shadow: none;
+    border-radius: 0;
+  }
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .preview-toolbar {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .toolbar-title {
+    order: -1;
+    width: 100%;
+  }
+
+  .toolbar-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .preview-container {
+    padding: 20px 10px;
+  }
+
+  .preview-paper {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* No Order Message */
+.no-order-message {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.no-order-message h2 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.no-order-message p {
+  margin: 0 0 24px;
+  color: #888;
+  font-size: 14px;
+}
+
+.go-create-order-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #b8860b 0%, #d4a84b 100%);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.go-create-order-btn:hover {
+  background: linear-gradient(135deg, #d4a84b 0%, #b8860b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+}
+
+/* Invoice Generator Styles */
+.invoice-generator-page {
+  padding: 24px;
+  background: #f5f7fa;
+  min-height: 100%;
+}
+
+.invoice-generator-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  color: #1a1a2e;
+}
+
+.invoice-generator-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.invoice-generator-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.invoice-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.form-section h3 {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-header h3 {
+  margin: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #bc224c;
+  box-shadow: 0 0 0 3px rgba(188, 34, 76, 0.1);
+}
+
+.add-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #bc224c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-item-btn:hover {
+  background: #a01d42;
+}
+
+.items-table {
+  overflow-x: auto;
+}
+
+.items-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.items-table th {
+  padding: 12px 8px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.items-table td {
+  padding: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.items-table input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.items-table input:focus {
+  outline: none;
+  border-color: #bc224c;
+}
+
+.items-table .subtotal {
+  font-weight: 500;
+  color: #1a1a2e;
+  white-space: nowrap;
+}
+
+.items-table tfoot td {
+  padding-top: 16px;
+  border-bottom: none;
+}
+
+.remove-item-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  color: #999;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.remove-item-btn:hover:not(:disabled) {
+  background: #fff0f0;
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+.remove-item-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.print-invoice-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #b8860b 0%, #d4a84b 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.print-invoice-btn:hover {
+  background: linear-gradient(135deg, #d4a84b 0%, #b8860b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+}
+
+.invoice-preview-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.invoice-preview-section h3 {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.preview-container-small {
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 16px;
+  overflow: auto;
+  max-height: calc(100vh - 300px);
+}
+
+.preview-paper-small {
+  transform: scale(0.6);
+  transform-origin: top left;
+  width: 166.67%;
+}
+
+@media screen and (max-width: 1200px) {
+  .invoice-generator-content {
+    grid-template-columns: 1fr;
+  }
+
+  .invoice-preview-section {
+    order: -1;
+  }
+
+  .preview-container-small {
+    max-height: 400px;
+  }
+}

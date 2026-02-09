@@ -1,0 +1,773 @@
+/**
+ * JTRC (Jewelry Technical Report Card) Styles
+ * Following existing AdminDashboard design patterns
+ */
+
+/* ========================================
+   JTRC LIST PAGE
+   ======================================== */
+.jtrc-list-page {
+  width: 100%;
+}
+
+.jtrc-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.jtrc-list-header h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+}
+
+.jtrc-list-header p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--mirror-gray-600);
+}
+
+.jtrc-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+.jtrc-search-input {
+  min-width: 250px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.jtrc-filter-select {
+  min-width: 150px;
+}
+
+/* ========================================
+   JTRC FORM PAGE
+   ======================================== */
+.jtrc-form-page {
+  width: 100%;
+}
+
+.jtrc-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.jtrc-form-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.jtrc-form-title h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+}
+
+.jtrc-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--mirror-gray-600);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.jtrc-back-link:hover {
+  color: var(--mirror-navy);
+}
+
+/* Tabs */
+.jtrc-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--mirror-gray-200);
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.jtrc-tab {
+  padding: 0.875rem 1.25rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mirror-gray-600);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.jtrc-tab:hover {
+  color: var(--mirror-navy);
+  background: var(--mirror-gray-50);
+}
+
+.jtrc-tab.active {
+  color: var(--mirror-navy);
+  border-bottom-color: var(--mirror-navy);
+}
+
+.jtrc-tab-panel {
+  min-height: 400px;
+}
+
+/* Section Titles */
+.jtrc-section-title {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+}
+
+.jtrc-section-subtitle {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.875rem;
+  color: var(--mirror-gray-600);
+}
+
+/* Form Footer */
+.jtrc-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--mirror-gray-200);
+}
+
+/* ========================================
+   METAL COMPONENT FORM
+   ======================================== */
+.metal-component-form {
+  padding: 1.5rem;
+  background: var(--mirror-white);
+  border: 1px solid var(--mirror-gray-200);
+  border-radius: 8px;
+}
+
+.metal-cost-calculation {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+}
+
+.cost-calculation-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #166534;
+}
+
+.cost-calculation-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.cost-calculation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cost-calculation-item .cost-label {
+  font-size: 0.75rem;
+  color: var(--mirror-gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cost-calculation-item .cost-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+  font-family: var(--font-mono);
+}
+
+.cost-calculation-total {
+  background: #dcfce7;
+  padding: 0.75rem;
+  border-radius: 6px;
+}
+
+.cost-calculation-total .cost-value {
+  font-size: 1.125rem;
+  color: #166534;
+}
+
+.cost-calculation-note {
+  margin: 1rem 0 0 0;
+  font-size: 0.75rem;
+  color: var(--mirror-gray-500);
+  font-style: italic;
+}
+
+/* ========================================
+   STONE COMPONENT FORM
+   ======================================== */
+.stone-component-form {
+  padding: 1.5rem;
+  background: var(--mirror-white);
+  border: 1px solid var(--mirror-gray-200);
+  border-radius: 8px;
+}
+
+.stone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.stone-empty-state {
+  padding: 2rem;
+  text-align: center;
+  background: var(--mirror-gray-50);
+  border: 1px dashed var(--mirror-gray-300);
+  border-radius: 8px;
+  color: var(--mirror-gray-600);
+}
+
+.stone-empty-state p {
+  margin: 0;
+}
+
+.stone-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stone-card {
+  border: 1px solid var(--mirror-gray-200);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stone-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--mirror-gray-50);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.stone-card-header:hover {
+  background: var(--mirror-gray-100);
+}
+
+.stone-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stone-role-badge {
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.stone-type-label {
+  font-size: 0.875rem;
+  color: var(--mirror-gray-700);
+}
+
+.stone-carat-label {
+  font-size: 0.75rem;
+  color: var(--mirror-gray-500);
+  background: var(--mirror-gray-200);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.stone-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stone-price {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+}
+
+.stone-remove-btn,
+.labor-remove-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.stone-remove-btn:hover,
+.labor-remove-btn:hover {
+  background: #fecaca;
+}
+
+.stone-expand-icon {
+  font-size: 1rem;
+  color: var(--mirror-gray-500);
+  font-weight: 600;
+}
+
+.stone-card-body {
+  padding: 1rem;
+  border-top: 1px solid var(--mirror-gray-200);
+}
+
+.stone-total-cost,
+.labor-total-cost {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mirror-gray-200);
+}
+
+.stone-total-label,
+.labor-total-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mirror-gray-700);
+}
+
+.stone-total-value,
+.labor-total-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--mirror-navy);
+  font-family: var(--font-mono);
+}
+
+/* ========================================
+   LABOR COMPONENT FORM
+   ======================================== */
+.labor-component-form {
+  padding: 1.5rem;
+  background: var(--mirror-white);
+  border: 1px solid var(--mirror-gray-200);
+  border-radius: 8px;
+}
+
+.labor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.labor-empty-state {
+  padding: 2rem;
+  text-align: center;
+  background: var(--mirror-gray-50);
+  border: 1px dashed var(--mirror-gray-300);
+  border-radius: 8px;
+  color: var(--mirror-gray-600);
+}
+
+.labor-empty-state p {
+  margin: 0;
+}
+
+.labor-table-wrapper {
+  overflow-x: auto;
+}
+
+.labor-table {
+  width: 100%;
+}
+
+.labor-select,
+.labor-input {
+  width: 100%;
+}
+
+.labor-cost-input {
+  text-align: right;
+}
+
+/* ========================================
+   COST SUMMARY PANEL
+   ======================================== */
+.cost-summary-panel {
+  padding: 1.5rem;
+  background: var(--mirror-white);
+  border: 1px solid var(--mirror-gray-200);
+  border-radius: 8px;
+}
+
+.cost-summary-section {
+  margin-bottom: 1.5rem;
+}
+
+.cost-summary-section:last-child {
+  margin-bottom: 0;
+}
+
+.cost-summary-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cost-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cost-summary-table th,
+.cost-summary-table td {
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--mirror-gray-200);
+}
+
+.cost-summary-table th {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--mirror-gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cost-summary-table td {
+  font-size: 0.875rem;
+  color: var(--mirror-gray-900);
+}
+
+.cost-summary-total-row {
+  background: #f0fdf4;
+}
+
+.cost-summary-total-row td {
+  border-bottom: none;
+  color: #166534;
+}
+
+.cost-summary-snapshot {
+  background: var(--mirror-gray-50);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.cost-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.cost-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cost-summary-item-full {
+  grid-column: 1 / -1;
+}
+
+.cost-summary-label {
+  font-size: 0.75rem;
+  color: var(--mirror-gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cost-summary-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+}
+
+.cost-summary-value-small {
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.cost-summary-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cost-summary-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.difficulty-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.difficulty-bars {
+  display: flex;
+  gap: 4px;
+}
+
+.difficulty-bar {
+  width: 20px;
+  height: 8px;
+  background: var(--mirror-gray-200);
+  border-radius: 2px;
+}
+
+.difficulty-bar.active {
+  background: var(--mirror-navy);
+}
+
+.difficulty-text {
+  font-size: 0.8125rem;
+  color: var(--mirror-gray-700);
+}
+
+.casting-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.cost-summary-notes {
+  padding: 1rem;
+  background: var(--mirror-gray-50);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--mirror-gray-700);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.cost-summary-skeleton {
+  padding: 2rem;
+}
+
+.skeleton-line {
+  background: linear-gradient(
+    90deg,
+    var(--mirror-gray-200) 25%,
+    var(--mirror-gray-100) 50%,
+    var(--mirror-gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+/* ========================================
+   VISUAL ASSETS FORM
+   ======================================== */
+.visual-assets-form {
+  padding: 1.5rem;
+  background: var(--mirror-white);
+  border: 1px solid var(--mirror-gray-200);
+  border-radius: 8px;
+}
+
+.visual-assets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.asset-upload-card {
+  border: 2px dashed var(--mirror-gray-300);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.2s;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.asset-upload-card:hover {
+  border-color: var(--mirror-gray-400);
+  background: var(--mirror-gray-50);
+}
+
+.asset-upload-card.has-file {
+  border-style: solid;
+  border-color: var(--color-success);
+  background: var(--color-success-bg);
+}
+
+.asset-upload-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mirror-navy);
+}
+
+.asset-upload-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--mirror-gray-500);
+}
+
+.asset-upload-input {
+  display: none;
+}
+
+.asset-upload-btn {
+  margin-top: 1rem;
+}
+
+.asset-preview {
+  width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.asset-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.visual-assets-note {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: var(--color-info-bg);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  color: var(--color-info);
+}
+
+/* ========================================
+   COST DISPLAY FIELD
+   ======================================== */
+.cost-display-field {
+  background: #f0fdf4 !important;
+  border-color: #bbf7d0 !important;
+  color: #166534 !important;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* ========================================
+   REQUIRED INDICATOR
+   ======================================== */
+.required {
+  color: var(--color-error);
+}
+
+/* ========================================
+   RESPONSIVE STYLES
+   ======================================== */
+@media (max-width: 1199px) {
+  .cost-calculation-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cost-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .jtrc-list-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .jtrc-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .jtrc-search-input {
+    max-width: 100%;
+  }
+
+  .jtrc-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .jtrc-tab {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .jtrc-form-footer {
+    flex-direction: column-reverse;
+  }
+
+  .jtrc-form-footer .admin-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cost-calculation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stone-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .stone-card-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .visual-assets-grid {
+    grid-template-columns: 1fr;
+  }
+}

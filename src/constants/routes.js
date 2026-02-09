@@ -76,7 +76,7 @@ export const ROUTES = {
   INVENTORY_PRODUCT_EDIT: "/inventory/products/:id/edit",
   INVENTORY_PRINT: "/inventory/print",
   INVENTORY_CREATE_ORDER: "/inventory/create-order",
-  INVENTORY_INVOICE: "  ",
+  INVENTORY_INVOICE: "/inventory/invoice",
 
   // POD Admin routes (nested under admin dashboard)
   POD_ADMIN: "/dashboard/admin/pod",
@@ -140,16 +140,6 @@ export const getNewsDetailRoute = (slug) => {
 // Helper to get product detail route with ID
 export const getProductDetailRoute = (productId) => {
   return ROUTES.PRODUCT_DETAIL.replace(":productId", productId);
-};
-
-// Helper to get inventory product detail route
-export const getInventoryProductDetailRoute = (id) => {
-  return ROUTES.INVENTORY_PRODUCT_DETAIL.replace(":id", id);
-};
-
-// Helper to get inventory product edit route
-export const getInventoryProductEditRoute = (id) => {
-  return ROUTES.INVENTORY_PRODUCT_EDIT.replace(":id", id);
 };
 
 // Helper to get POD admin partner detail route
