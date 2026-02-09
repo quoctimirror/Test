@@ -7,6 +7,27 @@
   <!-- Force light mode - prevent browser dark mode from affecting site -->
   <meta name="color-scheme" content="light only" />
 
+  <!-- ========== PERFORMANCE: Preconnect to CDN & External Domains ========== -->
+  <!--
+    MỤC ĐÍCH: Thiết lập kết nối sớm đến các domain bên ngoài
+    HIỆU QUẢ: Giảm latency khi load resources từ các domain này
+  -->
+  <!-- Cloudflare R2 CDN - Media files -->
+  <link rel="preconnect" href="https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev" crossorigin />
+  <link rel="dns-prefetch" href="https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev" />
+
+  <!-- iJewel3D - 3D model viewer -->
+  <link rel="preconnect" href="https://drive.ijewel3d.com" crossorigin />
+  <link rel="dns-prefetch" href="https://drive.ijewel3d.com" />
+
+  <!-- iJewel3D SDK -->
+  <link rel="preconnect" href="https://releases.ijewel3d.com" crossorigin />
+  <link rel="dns-prefetch" href="https://releases.ijewel3d.com" />
+
+  <!-- CDN for external libraries -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+
   <!-- SEO Meta Tags -->
   <meta name="description" content="MIRROR FUTURE DIAMOND - Awakening Luxury through Your Senses. Premium diamond jewelry with innovative AR try-on experience. Discover unique collections and bespoke designs." />
   <link rel="canonical" href="https://www.mirrorfuturediamond.com" />

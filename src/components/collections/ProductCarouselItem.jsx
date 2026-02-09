@@ -91,7 +91,12 @@ const ProductCarouselItem = ({ images = [], label, className = "", productId = n
             key={index}
             className={`product-carousel-slide ${getSlideClass(index)}`}
           >
-            <MediaImage src={src} alt={`${label || "Product"} ${index + 1}`} />
+            <MediaImage
+                src={src}
+                alt={`${label || "Product"} ${index + 1}`}
+                priority={index === 0}
+                preloadMargin="800px"
+              />
           </div>
         ))}
       </div>

@@ -1,4 +1,16 @@
+/**
+ * Section1ProductHero Component
+ *
+ * CẬP NHẬT: Sử dụng MediaImage với lazy loading và placeholder
+ *
+ * TÍNH NĂNG MỚI:
+ * - Main image: priority=true (load ngay, không lazy - LCP image)
+ * - Thumbnails: lazy loading
+ * - Blur placeholder khi đang load
+ */
+
 import React, { useState, useMemo } from "react";
+import { MediaImage } from "@components/common/media";
 import "./Section1ProductHero.css";
 
 const Section1ProductHero = ({ product, onOrderNow }) => {
@@ -81,10 +93,11 @@ const Section1ProductHero = ({ product, onOrderNow }) => {
                 />
               </div>
             ) : selectedImage ? (
-              <img
+              <MediaImage
                 src={selectedImage}
                 alt={product?.name || "Product"}
                 className="gallery-main-image"
+                priority={true}
               />
             ) : (
               <div className="gallery-image-placeholder">
@@ -102,7 +115,11 @@ const Section1ProductHero = ({ product, onOrderNow }) => {
                   className={`gallery-thumbnail ${index === selectedImageIndex && !is3DViewActive ? 'active' : ''}`}
                   onClick={() => handleImageSelect(index)}
                 >
-                  <img src={image} alt={`${product?.name} - ${index + 1}`} />
+                  <MediaImage
+                    src={image}
+                    alt={`${product?.name} - ${index + 1}`}
+                    preloadMargin="500px"
+                  />
                 </div>
               ))}
               {/* 3D View Thumbnail */}

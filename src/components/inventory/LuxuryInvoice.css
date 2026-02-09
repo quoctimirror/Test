@@ -1,567 +1,326 @@
 /* ========================================
    LUXURY INVOICE STYLES
-   Elegant, Professional, High-end Design
+   Clean, Minimal, Bilingual Design
    ======================================== */
 
-/* Import elegant fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
-
 .luxury-invoice {
-  --gold: #b8860b;
-  --gold-light: #d4a84b;
-  --gold-dark: #8b6914;
-  --black: #1a1a1a;
-  --dark-gray: #333333;
-  --medium-gray: #666666;
-  --light-gray: #f5f5f3;
-  --cream: #faf9f7;
-  --white: #ffffff;
-  --border-color: #e0ddd8;
-
-  font-family: 'Montserrat', 'Segoe UI', sans-serif;
-  max-width: 210mm; /* A4 width */
-  min-height: 297mm; /* A4 height */
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  max-width: 210mm;
+  min-height: 297mm;
   margin: 0 auto;
-  padding: 40px 50px;
-  background: linear-gradient(135deg, var(--white) 0%, var(--cream) 100%);
-  color: var(--dark-gray);
+  padding: 50px 60px;
+  background: #ffffff;
+  color: #1a1a1a;
   font-size: 11pt;
   line-height: 1.5;
-  position: relative;
-  box-shadow: 0 10px 60px rgba(0, 0, 0, 0.1);
-}
-
-/* Print styles */
-@media print {
-  .luxury-invoice {
-    box-shadow: none;
-    margin: 0;
-    padding: 30px 40px;
-    min-height: auto;
-    background: white;
-  }
-}
-
-/* ===== Decorative Borders ===== */
-.invoice-top-border,
-.invoice-bottom-border {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.invoice-bottom-border {
-  margin-bottom: 0;
-  margin-top: 30px;
-}
-
-.border-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
-
-.border-diamond {
-  width: 10px;
-  height: 10px;
-  background: var(--gold);
-  transform: rotate(45deg);
-  box-shadow: 0 0 10px rgba(184, 134, 11, 0.3);
-}
-
-/* ===== Header Section ===== */
-.invoice-header {
-  margin-bottom: 30px;
-}
-
-.company-info {
-  display: flex;
-  align-items: flex-start;
-  gap: 25px;
-}
-
-.logo-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-width: 100px;
 }
 
-.company-logo {
-  width: 70px;
-  height: auto;
-  object-fit: contain;
-}
-
-.logo-text {
-  font-family: 'Playfair Display', serif;
-  font-size: 14pt;
-  font-weight: 600;
-  letter-spacing: 4px;
-  color: var(--black);
-  margin-top: 5px;
-}
-
-.company-details {
-  flex: 1;
-}
-
-.company-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 16pt;
-  font-weight: 700;
-  color: var(--black);
-  margin: 0 0 10px 0;
-  letter-spacing: 0.5px;
-}
-
-.company-meta {
-  margin: 4px 0;
-  font-size: 10pt;
-  color: var(--medium-gray);
-}
-
-.company-meta .label {
-  color: var(--dark-gray);
-  font-weight: 500;
-}
-
-/* ===== Invoice Title Section ===== */
-.invoice-title-section {
+/* Header */
+.luxury-invoice__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 25px;
-  padding: 20px 0;
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #eee;
 }
 
-.title-left {
-  text-align: center;
+.luxury-invoice__header-left {
   flex: 1;
 }
 
-.invoice-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 22pt;
-  font-weight: 700;
-  color: var(--gold-dark);
-  margin: 0 0 8px 0;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.invoice-date {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 12pt;
-  font-style: italic;
-  color: var(--medium-gray);
-  margin: 5px 0;
-}
-
-.tax-auth-code {
-  font-size: 10pt;
-  color: var(--medium-gray);
-  margin: 5px 0;
-}
-
-.title-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 15px;
-}
-
-.invoice-codes p {
-  margin: 4px 0;
-  font-size: 10pt;
-  text-align: right;
-}
-
-.invoice-codes .label {
-  color: var(--medium-gray);
-}
-
-.invoice-codes .code-value {
-  font-weight: 600;
-  color: var(--black);
-  margin-left: 8px;
-}
-
-.qr-code img {
-  width: 80px;
-  height: 80px;
-  border: 2px solid var(--border-color);
-  padding: 3px;
-  background: white;
-}
-
-/* ===== Section Divider ===== */
-.section-divider {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin: 20px 0;
-}
-
-.divider-line {
-  flex: 1;
-  height: 1px;
-  background: var(--border-color);
-}
-
-.divider-ornament {
-  width: 6px;
-  height: 6px;
-  background: var(--gold);
-  transform: rotate(45deg);
-}
-
-/* ===== Customer Section ===== */
-.customer-section {
-  background: var(--light-gray);
-  padding: 20px 25px;
-  border-radius: 4px;
-  margin-bottom: 25px;
-  border-left: 3px solid var(--gold);
-}
-
-.customer-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 30px;
-}
-
-.customer-row {
-  display: flex;
-  gap: 10px;
-  font-size: 10pt;
-}
-
-.customer-row.full-width {
-  grid-column: 1 / -1;
-}
-
-.customer-row.half {
-  /* Default - takes half */
-}
-
-.field-label {
-  color: var(--medium-gray);
-  white-space: nowrap;
-  min-width: fit-content;
-}
-
-.field-value {
-  color: var(--black);
-  font-weight: 500;
-}
-
-.payment-method {
-  background: var(--gold);
-  color: white;
-  padding: 2px 10px;
-  border-radius: 3px;
-  font-size: 9pt;
-  font-weight: 600;
-}
-
-/* ===== Items Table ===== */
-.items-section {
+.luxury-invoice__logo {
   margin-bottom: 20px;
 }
 
-.items-table {
+.luxury-invoice__logo-img {
+  height: 40px;
+  width: auto;
+}
+
+/* Header Right - Invoice Title */
+.luxury-invoice__header-right {
+  text-align: right;
+}
+
+.luxury-invoice__title {
+  font-size: 24pt;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+}
+
+.luxury-invoice__title-vi {
+  color: #1a1a1a;
+}
+
+.luxury-invoice__title-en {
+  font-weight: 400;
+  font-size: 14pt;
+  color: #999;
+}
+
+.luxury-invoice__meta p {
+  margin: 6px 0;
+  font-size: 10pt;
+}
+
+.luxury-invoice__meta-label {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.luxury-invoice__meta-label-en {
+  color: #999;
+  font-weight: 400;
+}
+
+.luxury-invoice__meta-value {
+  margin-left: 8px;
+  color: #1a1a1a;
+}
+
+/* Company Info */
+.luxury-invoice__company-name {
+  font-size: 12pt;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.luxury-invoice__company-detail {
+  font-size: 9pt;
+  color: #666;
+  margin: 0;
+}
+
+.luxury-invoice__separator {
+  margin: 0 12px;
+  color: #ccc;
+}
+
+/* Customer Section */
+.luxury-invoice__customer {
+  margin-bottom: 40px;
+}
+
+.luxury-invoice__customer-row {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.luxury-invoice__customer-field {
+  flex: 1;
+  font-size: 10pt;
+}
+
+.luxury-invoice__field-label {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.luxury-invoice__field-label-en {
+  color: #999;
+  font-weight: 400;
+}
+
+.luxury-invoice__field-value {
+  margin-left: 8px;
+  color: #1a1a1a;
+}
+
+/* Items Table */
+.luxury-invoice__items {
+  flex: 1;
+  margin-bottom: 40px;
+}
+
+.luxury-invoice__table {
   width: 100%;
   border-collapse: collapse;
   font-size: 10pt;
 }
 
-.items-table thead {
-  background: linear-gradient(135deg, var(--black) 0%, var(--dark-gray) 100%);
+.luxury-invoice__table thead tr {
+  border-bottom: 2px solid #eee;
 }
 
-.items-table th {
-  color: var(--gold-light);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 12px 10px;
+.luxury-invoice__table th {
+  padding: 12px 8px;
   text-align: left;
+  font-weight: 600;
+  vertical-align: bottom;
+}
+
+.luxury-invoice__th-vi {
+  display: block;
+  color: #BC224C;
+}
+
+.luxury-invoice__th-en {
+  display: block;
+  color: #999;
+  font-weight: 400;
   font-size: 9pt;
-  border: none;
 }
 
-.items-table th.col-stt,
-.items-table th.col-unit,
-.items-table th.col-qty {
-  text-align: center;
+.luxury-invoice__col-stt {
+  width: 40px;
+  text-align: center !important;
 }
 
-.items-table th.col-price,
-.items-table th.col-total {
-  text-align: right;
+.luxury-invoice__col-name {
+  width: auto;
 }
 
-.items-table tbody tr {
-  border-bottom: 1px solid var(--border-color);
-  transition: background-color 0.2s ease;
+.luxury-invoice__col-qty {
+  width: 60px;
+  text-align: center !important;
 }
 
-.items-table tbody tr:nth-child(even) {
-  background-color: rgba(184, 134, 11, 0.03);
+.luxury-invoice__col-price {
+  width: 120px;
+  text-align: right !important;
 }
 
-.items-table tbody tr:hover {
-  background-color: rgba(184, 134, 11, 0.08);
+.luxury-invoice__col-total {
+  width: 120px;
+  text-align: right !important;
 }
 
-.items-table td {
-  padding: 12px 10px;
+.luxury-invoice__table tbody tr {
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.luxury-invoice__table tbody td {
+  padding: 16px 8px;
   vertical-align: top;
 }
 
-.items-table td.col-stt {
-  text-align: center;
+.luxury-invoice__table tbody td.luxury-invoice__col-stt {
   font-weight: 600;
-  color: var(--gold-dark);
+  color: #1a1a1a;
 }
 
-.items-table td.col-name {
+.luxury-invoice__table tbody td.luxury-invoice__col-qty {
+  text-align: center;
+}
+
+.luxury-invoice__table tbody td.luxury-invoice__col-price,
+.luxury-invoice__table tbody td.luxury-invoice__col-total {
+  text-align: right;
   font-weight: 500;
-  color: var(--black);
+}
+
+.luxury-invoice__item-name {
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.luxury-invoice__item-desc {
+  font-size: 9pt;
+  color: #888;
+  white-space: pre-line;
   line-height: 1.4;
 }
 
-.items-table td.col-unit {
-  text-align: center;
-  color: var(--medium-gray);
-}
-
-.items-table td.col-qty {
-  text-align: center;
-  font-weight: 600;
-}
-
-.items-table td.col-price,
-.items-table td.col-total {
-  text-align: right;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-}
-
-.items-table td.col-total {
-  font-weight: 600;
-  color: var(--black);
-}
-
-.items-table .empty-row {
-  height: 35px;
-}
-
-.items-table .empty-row:hover {
-  background-color: transparent;
-}
-
-/* ===== Total Section ===== */
-.total-section {
-  background: linear-gradient(135deg, var(--black) 0%, #2a2a2a 100%);
-  padding: 20px 25px;
-  border-radius: 4px;
-  margin-bottom: 30px;
-}
-
-.total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.total-label {
-  color: var(--gold-light);
-  font-size: 11pt;
-  font-weight: 500;
-}
-
-.total-value {
-  font-family: 'Playfair Display', serif;
-  font-size: 18pt;
-  font-weight: 700;
-  color: var(--gold);
-  letter-spacing: 1px;
-}
-
-.total-words {
-  display: flex;
-  gap: 10px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.words-label {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 10pt;
-}
-
-.words-value {
-  color: white;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 11pt;
-  font-style: italic;
-  font-weight: 600;
-}
-
-/* ===== Signature Section ===== */
-.signature-section {
-  display: flex;
-  justify-content: space-around;
-  gap: 60px;
-  margin: 40px 0;
-}
-
-.signature-box {
-  flex: 1;
-  text-align: center;
-  max-width: 250px;
-}
-
-.signature-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 12pt;
-  font-weight: 600;
-  color: var(--black);
-  margin: 0 0 5px 0;
-}
-
-.signature-note {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 10pt;
-  font-style: italic;
-  color: var(--medium-gray);
-  margin: 0 0 15px 0;
-}
-
-.signature-space {
-  height: 80px;
-  border-bottom: 1px dotted var(--border-color);
-  margin: 0 20px;
-}
-
-/* ===== Footer ===== */
-.invoice-footer {
-  text-align: center;
-  margin-top: 30px;
+/* Total Section */
+.luxury-invoice__total {
+  margin-bottom: 60px;
   padding-top: 20px;
 }
 
-.footer-note {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 11pt;
-  font-style: italic;
-  color: var(--medium-gray);
-  margin-bottom: 15px;
-}
-
-.footer-brand {
+.luxury-invoice__total-row {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 40px;
+  margin-bottom: 12px;
 }
 
-.brand-text {
-  font-family: 'Playfair Display', serif;
-  font-size: 14pt;
+.luxury-invoice__total-label-vi {
+  font-weight: 600;
+  color: #BC224C;
+}
+
+.luxury-invoice__total-label-en {
+  color: #999;
+  font-weight: 400;
+}
+
+.luxury-invoice__total-value {
+  font-size: 16pt;
   font-weight: 700;
-  letter-spacing: 6px;
-  color: var(--gold-dark);
+  color: #1a1a1a;
 }
 
-.brand-tagline {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 9pt;
+.luxury-invoice__total-words {
+  text-align: right;
+  font-size: 10pt;
+  color: #666;
   font-style: italic;
-  color: var(--medium-gray);
+}
+
+/* Footer */
+.luxury-invoice__footer {
+  text-align: center;
+  padding-top: 30px;
+  border-top: 1px solid #eee;
+  margin-top: auto;
+}
+
+.luxury-invoice__footer-website {
+  font-size: 12pt;
+  font-weight: 600;
+  color: #BC224C;
+  margin: 0 0 4px 0;
+}
+
+.luxury-invoice__footer-tagline {
+  font-size: 8pt;
   letter-spacing: 2px;
+  color: #999;
+  margin: 0;
+  text-transform: uppercase;
 }
 
-/* ===== Watermark Effect (optional) ===== */
-.luxury-invoice::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(184, 134, 11, 0.03) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+/* Print Styles */
+@media print {
+  .luxury-invoice {
+    padding: 40px 50px;
+    min-height: auto;
+    box-shadow: none;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }
 
-/* Ensure content is above watermark */
-.luxury-invoice > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* ===== Responsive adjustments ===== */
+/* Responsive */
 @media screen and (max-width: 768px) {
   .luxury-invoice {
-    padding: 25px 20px;
+    padding: 30px 20px;
     font-size: 10pt;
   }
 
-  .company-info {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .invoice-title-section {
+  .luxury-invoice__header {
     flex-direction: column;
     gap: 20px;
   }
 
-  .title-right {
-    align-items: center;
+  .luxury-invoice__header-right {
+    text-align: left;
   }
 
-  .customer-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .signature-section {
+  .luxury-invoice__customer-row {
     flex-direction: column;
-    gap: 40px;
-    align-items: center;
-  }
-}
-
-/* ===== Print optimizations ===== */
-@media print {
-  .luxury-invoice {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    color-adjust: exact !important;
+    gap: 8px;
   }
 
-  .luxury-invoice::before {
-    display: none;
-  }
-
-  .items-table thead {
-    background: var(--black) !important;
-  }
-
-  .total-section {
-    background: var(--black) !important;
-  }
-
-  .items-table tbody tr:nth-child(even) {
-    background-color: #f8f8f8 !important;
+  .luxury-invoice__total-row {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
   }
 }
