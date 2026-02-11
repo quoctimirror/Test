@@ -54,8 +54,9 @@ const ProductFinderPage = () => {
   const [prevIndex, setPrevIndex] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [rotationOffset, setRotationOffset] = useState(0);
-  const [isEntering, setIsEntering] = useState(true);
+  const [isEntering, setIsEntering] = useState(false);
   const [showIdleRipple, setShowIdleRipple] = useState(false);
+  const [loadedGifs, setLoadedGifs] = useState(new Set());
   const animationRef = useRef(null);
   const idleTimerRef = useRef(null);
 
@@ -123,14 +124,18 @@ const ProductFinderPage = () => {
         // Note: princess and cushion are hidden (filtered out below)
         const shapes = (shapesRes.data || [])
           .filter(s => !['princess', 'cushion'].includes(s.id?.toLowerCase()))
-          .map(s => ({
-            id: s.id,
-            name: s.name,
-            price: s.price || 0,
-            image: s.image,
-            gif: s.gif,
-            isActive: s.isActive !== false,
-          }));
+          .map(s => {
+            // Radiant now on Cloudflare - no special handling needed
+            return {
+              id: s.id,
+              name: s.name,
+              price: s.price || 0,
+              image: s.image,
+              gif: s.gif,
+              isActive: s.isActive !== false,
+            };
+          });
+
         setDiamondShapes(shapes);
 
         // Band styles from API - only show single and double (have assets)
@@ -168,6 +173,9 @@ const ProductFinderPage = () => {
           band: savedPrices.band || bands[bandIdx]?.price || 0,
           sidestone: savedPrices.sidestone || stones[sidestoneIdx]?.price || 0,
         });
+
+        // GIFs will be loaded in background via useEffect
+        // UI shows immediately, loading spinners shown for shapes not yet loaded
       } catch (error) {
         if (abortController.signal.aborted) return;
         console.error('Failed to load product finder options:', error);
@@ -180,6 +188,40 @@ const ProductFinderPage = () => {
 
     return () => abortController.abort();
   }, []);
+
+  // Load shape GIFs in background - prioritize current selected shape first
+  useEffect(() => {
+    if (apiLoading || diamondShapes.length === 0) return;
+
+    const loadGif = (shape) => {
+      return new Promise((resolve) => {
+        const gifUrl = getMediaUrl(shape.gif || shape.image);
+        const img = new Image();
+        img.onload = () => {
+          setLoadedGifs(prev => new Set([...prev, shape.id]));
+          resolve(true);
+        };
+        img.onerror = () => resolve(false);
+        img.src = gifUrl;
+      });
+    };
+
+    const loadGifsInOrder = async () => {
+      // 1. Load current selected shape first (Round by default)
+      const currentShape = diamondShapes[currentIndex];
+      if (currentShape && !loadedGifs.has(currentShape.id)) {
+        await loadGif(currentShape);
+      }
+
+      // 2. Load remaining shapes in parallel
+      for (const shape of diamondShapes) {
+        if (loadedGifs.has(shape.id)) continue;
+        loadGif(shape); // Don't await - load in parallel
+      }
+    };
+
+    loadGifsInOrder();
+  }, [apiLoading, diamondShapes, currentIndex]);
 
   // Build quiz steps - memoized to prevent recalculation on every render
   const quizSteps = useMemo(() => [
@@ -215,10 +257,13 @@ const ProductFinderPage = () => {
   // Get angle for shape - memoized callback
   const getShapeAngle = useCallback((index) => {
     const baseAngle = orbitAngles[index];
-    let angle = baseAngle - rotationOffset + 90;
+    // Step 1 (choose-band): use horizontal layout (left/right)
+    // Other steps: use vertical layout (top/bottom)
+    const offsetAngle = currentStepIndex === 1 ? 0 : 90;
+    let angle = baseAngle - rotationOffset + offsetAngle;
     angle = ((angle % 360) + 360) % 360;
     return angle;
-  }, [orbitAngles, rotationOffset]);
+  }, [orbitAngles, rotationOffset, currentStepIndex]);
 
   // Animate rotation
   useEffect(() => {
@@ -358,11 +403,7 @@ const ProductFinderPage = () => {
     return (
       <div className="product-finder" data-navbar-theme="black">
         <div className="product-finder__loading">
-          <motion.div
-            className="product-finder__loading-spinner"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
+          <div className="product-finder__loading-spinner" />
         </div>
       </div>
     );
@@ -436,11 +477,15 @@ const ProductFinderPage = () => {
           })()}
           {/* Current image */}
           <div className={`product-finder__diamond ${isAnimating ? (currentStepIndex === 0 ? 'product-finder__diamond--enter' : currentStepIndex === 1 ? 'product-finder__diamond--reveal-bottom' : 'product-finder__diamond--reveal-center') : ''} ${isLocked ? 'product-finder__diamond--locked' : ''}`}>
-            <img
-              src={getCenterPreview(currentOption)}
-              alt={currentOption.name}
-              className="product-finder__diamond-img"
-            />
+            {currentStepIndex === 0 && !loadedGifs.has(currentOption.id) ? (
+              <div className="product-finder__center-loading" />
+            ) : (
+              <img
+                src={getCenterPreview(currentOption)}
+                alt={currentOption.name}
+                className="product-finder__diamond-img"
+              />
+            )}
           </div>
         </div>
       </div>
@@ -495,6 +540,7 @@ const ProductFinderPage = () => {
             const optionLocked = option.isActive === false;
             const rightShapeIndex = (currentIndex - 1 + currentStep.options.length) % currentStep.options.length;
             const showRippleOnThis = index === rightShapeIndex && showIdleRipple && !optionLocked;
+            const isGifLoading = currentStepIndex === 0 && !loadedGifs.has(option.id);
 
             return (
               <div
@@ -507,12 +553,19 @@ const ProductFinderPage = () => {
                 }}
                 onClick={() => handleOptionClick(index)}
               >
-                <img
-                  src={currentStepIndex === 0 ? getMediaUrl(option.gif || option.image) : option.image}
-                  alt={option.name}
-                  className="product-finder__orbit-shape-img"
-                  draggable="false"
-                />
+                {isGifLoading ? (
+                  <div className="product-finder__orbit-shape-loading" />
+                ) : (
+                  <img
+                    src={currentStepIndex === 0 ? getMediaUrl(option.gif || option.image) : getCenterPreview(option)}
+                    alt={option.name}
+                    className="product-finder__orbit-shape-img"
+                    draggable="false"
+                  />
+                )}
+                {currentStepIndex > 0 && (
+                  <span className="product-finder__orbit-shape-label">{option.name}</span>
+                )}
                 {showRippleOnThis && (
                   <div className="product-finder__idle-ripple">
                     <span className="product-finder__idle-ripple-ring"></span>

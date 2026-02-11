@@ -1,5 +1,6 @@
 /**
- * ProductFinderPage - Quiz to find the perfect jewelry piece
+ * ProductFinderPageStatic - Frontend-only version (no backend API required)
+ * Quiz to find the perfect jewelry piece
  * 3 Steps: Main Stone → Band → Side Stone → Result
  */
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
@@ -7,9 +8,8 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@/constants/routes';
 import GlassThemeButton from '@/components/common/button/GlassThemeButton';
-import { getMediaUrl } from '@/utils/cloudflareMediaUtil';
+// Note: Not using getMediaUrl - all URLs are hardcoded for static version
 import { formatPrice } from '@/utils/formatPrice';
-import { productFinderAPI } from '@/services/api';
 import { getProductFinderConfig } from '@/components/productsV2/shapeConfig';
 import {
   ORBIT_RADII,
@@ -22,18 +22,107 @@ import {
 
 import './ProductFinderPage.css';
 
-const ProductFinderPageV2 = () => {
+// ==================== STATIC DATA (No API needed) ====================
+
+// Cloudflare R2 base URL - same as backend uses
+const CLOUDFLARE_BASE = 'https://pub-0d0ac1b25b8f4a6ab2a01fcdb1dd59b0.r2.dev/media-webp';
+
+const STATIC_DIAMOND_SHAPES = [
+  {
+    id: 'round',
+    name: 'Round',
+    price: 0,
+    image: `${CLOUDFLARE_BASE}/mirror_DMM/ROUND-01.webp`,
+    gif: `${CLOUDFLARE_BASE}/mirror_DMM/ROUND.gif`,
+    isActive: true,
+  },
+  {
+    id: 'oval',
+    name: 'Oval',
+    price: 0,
+    image: `${CLOUDFLARE_BASE}/mirror_DMM/OVAL-01.webp`,
+    gif: `${CLOUDFLARE_BASE}/mirror_DMM/OVAL.gif`,
+    isActive: true,
+  },
+  {
+    id: 'pear',
+    name: 'Pear',
+    price: 0,
+    image: `${CLOUDFLARE_BASE}/mirror_DMM/PEAR-01.webp`,
+    gif: `${CLOUDFLARE_BASE}/mirror_DMM/PEAR.gif`,
+    isActive: true,
+  },
+  {
+    id: 'emerald',
+    name: 'Emerald',
+    price: 0,
+    image: `${CLOUDFLARE_BASE}/mirror_DMM/EMERALD-01.webp`,
+    gif: `${CLOUDFLARE_BASE}/mirror_DMM/EMERALD.gif`,
+    isActive: true,
+  },
+  {
+    id: 'radiant',
+    name: 'Radiant',
+    price: 0,
+    image: `${CLOUDFLARE_BASE}/mirror_DMM/RADIANT-01.webp`,
+    gif: `${CLOUDFLARE_BASE}/mirror_DMM/RADIANT.gif`,
+    isActive: true,
+  },
+];
+
+const STATIC_BAND_STYLES = [
+  {
+    id: 'single',
+    name: 'Single',
+    price: 0,
+    image: '/product-finder/bands/single.png',
+    isActive: true,
+  },
+  {
+    id: 'double',
+    name: 'Double',
+    price: 0,
+    image: '/product-finder/bands/double.png',
+    isActive: true,
+  },
+];
+
+const STATIC_SIDE_STONES = [
+  {
+    id: 'noside',
+    name: 'No Side',
+    price: 0,
+    image: '/product-finder/sidestones/noside.png',
+    isActive: true,
+  },
+  {
+    id: 'baguette',
+    name: 'Baguette',
+    price: 0,
+    image: '/product-finder/sidestones/baguette.png',
+    isActive: true,
+  },
+  {
+    id: 'halfmoon',
+    name: 'Half Moon',
+    price: 0,
+    image: '/product-finder/sidestones/halfmoon.png',
+    isActive: true,
+  },
+];
+
+// =====================================================================
+
+const ProductFinderPageStatic = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { step } = useParams();
   const currentStepIndex = STEP_MAP[step] ?? 0;
 
-  // API data states
-  const [diamondShapes, setDiamondShapes] = useState([]);
-  const [bandStyles, setBandStyles] = useState([]);
-  const [sideStones, setSideStones] = useState([]);
-  const [apiLoading, setApiLoading] = useState(true);
-  const [apiError, setApiError] = useState(null);
+  // Static data - no API calls needed
+  const diamondShapes = STATIC_DIAMOND_SHAPES;
+  const bandStyles = STATIC_BAND_STYLES;
+  const sideStones = STATIC_SIDE_STONES;
 
   // Read saved state from navigation
   const savedSelections = location.state?.selections || {};
@@ -45,16 +134,22 @@ const ProductFinderPageV2 = () => {
     band: savedPrices.band || 0,
     sidestone: savedPrices.sidestone || 0,
   });
+
+  // Initialize selected indices from saved selections
+  const initialDiamondIdx = getIndexFromSelection(diamondShapes, savedSelections.diamond);
+  const initialBandIdx = getIndexFromSelection(bandStyles, savedSelections.band);
+  const initialSidestoneIdx = getIndexFromSelection(sideStones, savedSelections.sidestone);
+
   const [selectedIndices, setSelectedIndices] = useState({
-    diamond: 0,
-    band: 0,
-    sidestone: 0,
+    diamond: initialDiamondIdx,
+    band: initialBandIdx,
+    sidestone: initialSidestoneIdx,
   });
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(initialDiamondIdx);
   const [prevIndex, setPrevIndex] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [rotationOffset, setRotationOffset] = useState(0);
-  const [isEntering, setIsEntering] = useState(true);
+  const [isEntering, setIsEntering] = useState(false);
   const [showIdleRipple, setShowIdleRipple] = useState(false);
   const animationRef = useRef(null);
   const idleTimerRef = useRef(null);
@@ -87,127 +182,22 @@ const ProductFinderPageV2 = () => {
     }
   }, [step, currentStepIndex, selectedIndices]);
 
-  // Guard: direct access without previous selections (V2 routes)
+  // Guard: direct access without previous selections
   useEffect(() => {
-    if (apiLoading) return;
     if (step === 'choose-band' && !selections.diamond) {
-      navigate('/find-your-piece-v2/choose-shape', { replace: true });
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
     }
     if (step === 'choose-sidestone' && (!selections.diamond || !selections.band)) {
-      navigate('/find-your-piece-v2/choose-shape', { replace: true });
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
     }
-  }, [step, selections, apiLoading, navigate]);
+  }, [step, selections, navigate]);
 
-  // Guard: invalid step (V2 routes)
+  // Guard: invalid step
   useEffect(() => {
     if (!['choose-shape', 'choose-band', 'choose-sidestone'].includes(step)) {
-      navigate('/find-your-piece-v2/choose-shape', { replace: true });
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
     }
   }, [step, navigate]);
-
-  // Fetch all options from API
-  useEffect(() => {
-    const abortController = new AbortController();
-
-    const loadOptions = async () => {
-      try {
-        // Fetch all 3 data sets in parallel
-        const [shapesRes, bandsRes, stonesRes] = await Promise.all([
-          productFinderAPI.getDiamondShapes({ signal: abortController.signal }),
-          productFinderAPI.getBandStyles({ signal: abortController.signal }),
-          productFinderAPI.getSideStones({ signal: abortController.signal }),
-        ]);
-        if (abortController.signal.aborted) return;
-
-        // Diamond shapes from API - use isActive from backend
-        // Note: princess and cushion are hidden (filtered out below)
-        const shapes = (shapesRes.data || [])
-          .filter(s => !['princess', 'cushion'].includes(s.id?.toLowerCase()))
-          .map(s => {
-            // Override radiant to use local gif file (bypass Cloudflare)
-            if (s.id?.toLowerCase() === 'radiant') {
-              return {
-                id: s.id,
-                name: s.name,
-                price: s.price || 0,
-                image: '/product-finder/radiant.gif',
-                gif: '/product-finder/radiant.gif',
-                isActive: s.isActive !== false,
-                isLocal: true,
-              };
-            }
-            return {
-              id: s.id,
-              name: s.name,
-              price: s.price || 0,
-              image: s.image,
-              gif: s.gif,
-              isActive: s.isActive !== false,
-            };
-          });
-
-        // Add radiant shape if not already in API response
-        const hasRadiant = shapes.some(s => s.id?.toLowerCase() === 'radiant');
-        if (!hasRadiant) {
-          shapes.push({
-            id: 'radiant',
-            name: 'Radiant',
-            price: 0,
-            image: '/product-finder/radiant.gif',
-            gif: '/product-finder/radiant.gif',
-            isActive: true,
-            isLocal: true,
-          });
-        }
-        setDiamondShapes(shapes);
-
-        // Band styles from API - only show single and double (have assets)
-        const bands = (bandsRes.data || [])
-          .filter(b => ['single', 'double'].includes(b.id?.toLowerCase()))
-          .map(b => ({
-            id: b.id,
-            name: b.name,
-            price: b.price || 0,
-            image: b.image || `/product-finder/bands/${b.id}.png`,
-            isActive: b.isActive !== false,
-          }));
-        setBandStyles(bands);
-
-        // Side stones from API - only show noside, baguette and halfmoon (have assets)
-        const stones = (stonesRes.data || [])
-          .filter(s => ['noside', 'baguette', 'halfmoon'].includes(s.id?.toLowerCase()))
-          .map(s => ({
-            id: s.id,
-            name: s.name,
-            price: s.price || 0,
-            image: s.image || `/product-finder/sidestones/${s.id}.png`,
-            isActive: s.isActive !== false,
-          }));
-        setSideStones(stones);
-
-        // Restore saved indices
-        const diamondIdx = getIndexFromSelection(shapes, savedSelections.diamond);
-        const bandIdx = getIndexFromSelection(bands, savedSelections.band);
-        const sidestoneIdx = getIndexFromSelection(stones, savedSelections.sidestone);
-        setSelectedIndices({ diamond: diamondIdx, band: bandIdx, sidestone: sidestoneIdx });
-        setCurrentIndex(diamondIdx);
-        setSelectedPrices({
-          diamond: savedPrices.diamond || shapes[diamondIdx]?.price || 0,
-          band: savedPrices.band || bands[bandIdx]?.price || 0,
-          sidestone: savedPrices.sidestone || stones[sidestoneIdx]?.price || 0,
-        });
-      } catch (error) {
-        if (abortController.signal.aborted) return;
-        console.error('Failed to load product finder options:', error);
-        setApiError('Không thể tải dữ liệu. Vui lòng thử lại.');
-      } finally {
-        if (!abortController.signal.aborted) setApiLoading(false);
-      }
-    };
-    loadOptions();
-
-    return () => abortController.abort();
-  }, []);
 
   // Build quiz steps - memoized to prevent recalculation on every render
   const quizSteps = useMemo(() => [
@@ -243,10 +233,13 @@ const ProductFinderPageV2 = () => {
   // Get angle for shape - memoized callback
   const getShapeAngle = useCallback((index) => {
     const baseAngle = orbitAngles[index];
-    let angle = baseAngle - rotationOffset + 90;
+    // Step 1 (choose-band): use horizontal layout (left/right)
+    // Other steps: use vertical layout (top/bottom)
+    const offsetAngle = currentStepIndex === 1 ? 0 : 90;
+    let angle = baseAngle - rotationOffset + offsetAngle;
     angle = ((angle % 360) + 360) % 360;
     return angle;
-  }, [orbitAngles, rotationOffset]);
+  }, [orbitAngles, rotationOffset, currentStepIndex]);
 
   // Animate rotation
   useEffect(() => {
@@ -315,18 +308,18 @@ const ProductFinderPageV2 = () => {
     }, 600);
   };
 
-  // Handle back (V2 routes)
+  // Handle back
   const handleBack = () => {
     if (currentStepIndex === 2) {
-      navigate('/find-your-piece-v2/choose-band', { state: { selections, prices: selectedPrices } });
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_BAND, { state: { selections, prices: selectedPrices } });
     } else if (currentStepIndex === 1) {
-      navigate('/find-your-piece-v2/choose-shape', { state: { selections, prices: selectedPrices } });
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { state: { selections, prices: selectedPrices } });
     } else {
       navigate(-1);
     }
   };
 
-  // Handle next (V2 routes)
+  // Handle next
   const handleNext = () => {
     const option = currentStep.options[currentIndex];
     // Don't proceed if locked
@@ -341,9 +334,9 @@ const ProductFinderPageV2 = () => {
     setSelectedIndices(newIndices);
 
     if (currentStepIndex === 0) {
-      navigate('/find-your-piece-v2/choose-band', { state: { selections: newSelections, prices: newPrices } });
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_BAND, { state: { selections: newSelections, prices: newPrices } });
     } else if (currentStepIndex === 1) {
-      navigate('/find-your-piece-v2/choose-sidestone', { state: { selections: newSelections, prices: newPrices } });
+      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SIDESTONE, { state: { selections: newSelections, prices: newPrices } });
     } else {
       // Step 3 → Result
       const modelKey = `${newSelections.band}_${newSelections.diamond}_${newSelections.sidestone}`;
@@ -366,11 +359,8 @@ const ProductFinderPageV2 = () => {
   // Get center preview for animation - memoized callback
   const getCenterPreview = useCallback((option) => {
     if (currentStepIndex === 0) {
-      // Use local path directly if isLocal flag is set (bypass Cloudflare)
-      if (option.isLocal) {
-        return option.gif || option.image;
-      }
-      return getMediaUrl(option.gif || option.image);
+      // URLs are already absolute (Cloudflare) or local path
+      return option.gif || option.image;
     } else if (currentStepIndex === 1) {
       // Step 2: Band - use combo image without sidestone as placeholder
       const mainStone = selections.diamond || 'round';
@@ -385,27 +375,12 @@ const ProductFinderPageV2 = () => {
 
   const currentOption = currentStep?.options?.[currentIndex];
 
-  // Loading state
-  if (apiLoading) {
+  // No loading state needed for static version
+  if (!currentOption) {
     return (
       <div className="product-finder" data-navbar-theme="black">
         <div className="product-finder__loading">
-          <motion.div
-            className="product-finder__loading-spinner"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (apiError || !currentOption) {
-    return (
-      <div className="product-finder" data-navbar-theme="black">
-        <div className="product-finder__loading">
-          <p className="bodytext-5--no-margin">{apiError || 'Không có dữ liệu'}</p>
+          <p className="bodytext-5--no-margin">Không có dữ liệu</p>
           <GlassThemeButton theme="event_dark" onClick={() => window.location.reload()}>
             Thử lại
           </GlassThemeButton>
@@ -466,8 +441,8 @@ const ProductFinderPageV2 = () => {
               </div>
             );
           })()}
-          {/* Current image - V2: uses old reveal-bottom animation for all steps */}
-          <div className={`product-finder__diamond ${isAnimating ? (currentStepIndex > 0 ? 'product-finder__diamond--reveal-bottom' : 'product-finder__diamond--enter') : ''} ${isLocked ? 'product-finder__diamond--locked' : ''}`}>
+          {/* Current image */}
+          <div className={`product-finder__diamond ${isAnimating ? (currentStepIndex === 0 ? 'product-finder__diamond--enter' : currentStepIndex === 1 ? 'product-finder__diamond--reveal-bottom' : 'product-finder__diamond--reveal-center') : ''} ${isLocked ? 'product-finder__diamond--locked' : ''}`}>
             <img
               src={getCenterPreview(currentOption)}
               alt={currentOption.name}
@@ -540,11 +515,14 @@ const ProductFinderPageV2 = () => {
                 onClick={() => handleOptionClick(index)}
               >
                 <img
-                  src={currentStepIndex === 0 ? (option.isLocal ? (option.gif || option.image) : getMediaUrl(option.gif || option.image)) : option.image}
+                  src={currentStepIndex === 0 ? (option.gif || option.image) : getCenterPreview(option)}
                   alt={option.name}
                   className="product-finder__orbit-shape-img"
                   draggable="false"
                 />
+                {currentStepIndex > 0 && (
+                  <span className="product-finder__orbit-shape-label">{option.name}</span>
+                )}
                 {showRippleOnThis && (
                   <div className="product-finder__idle-ripple">
                     <span className="product-finder__idle-ripple-ring"></span>
@@ -590,4 +568,4 @@ const ProductFinderPageV2 = () => {
   );
 };
 
-export default ProductFinderPageV2;
+export default ProductFinderPageStatic;

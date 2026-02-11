@@ -43,6 +43,13 @@
   border: 3px solid rgba(0, 0, 0, 0.1);
   border-top-color: #BC224C;
   border-radius: 50%;
+  animation: finderSpinnerRotate 1s linear infinite;
+}
+
+@keyframes finderSpinnerRotate {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Progress Bar */
@@ -261,6 +268,17 @@
   mix-blend-mode: multiply;
 }
 
+/* Center loading spinner */
+.product-finder__center-loading {
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #BC224C;
+  border-radius: 50%;
+  animation: finderSpinnerRotate 1s linear infinite;
+  margin: auto;
+}
+
 /* Entrance Animation */
 .product-finder__main--entering {
   animation: finderZoomFromCenterMain 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
@@ -362,6 +380,16 @@
   }
 }
 
+/* Small loading spinner on orbit shape */
+.product-finder__orbit-shape-loading {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #BC224C;
+  border-radius: 50%;
+  animation: finderSpinnerRotate 1s linear infinite;
+}
+
 .product-finder__orbit-shape-img {
   width: auto;
   max-height: 55px;
@@ -392,6 +420,28 @@
     opacity: 0.8;
     filter: blur(0px) drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
   }
+}
+
+/* Orbit shape label */
+.product-finder__orbit-shape-label {
+  display: block;
+  text-align: center;
+  font-family: var(--font-saol);
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 300;
+  color: #333;
+  margin-top: 8px;
+  white-space: nowrap;
+  transition: opacity 0.3s ease;
+}
+
+.product-finder__orbit-shape--selected .product-finder__orbit-shape-label {
+  opacity: 1;
+}
+
+.product-finder__orbit-shape--blurred .product-finder__orbit-shape-label {
+  opacity: 0.5;
 }
 
 /* ===== LOCKED ITEMS STYLES ===== */

@@ -108,8 +108,10 @@ const RingCustomizer = lazy(() =>
 
 // Product Finder
 const ProductFinderPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderPage"));
+const ProductFinderPageStatic = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderPageStatic"));
 const ProductFinderPageV2 = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderPageV2"));
 const ProductFinderResultPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderResultPage"));
+const ProductFinderResultPageStatic = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderResultPageStatic"));
 
 // Ring Customizer Admin (formerly Product Finder Admin)
 const RingCustomizerCombinationsPage = lazyWithRetry(() => import("@pages/ProductFinder/ProductFinderAdminPage"));
@@ -499,9 +501,15 @@ export default function AppRoutes() {
 
             {/* Product Finder */}
             <Route path={ROUTES.PRODUCT_FINDER} element={<Navigate to={ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE} replace />} />
-            <Route path="/find-your-piece/:step" element={<ProductFinderPage />} />
+            {/* Use Static version (no backend API required) */}
+            <Route path="/find-your-piece/:step" element={<ProductFinderPageStatic />} />
+            {/* Original API version at /find-your-piece-api/:step */}
+            <Route path="/find-your-piece-api/:step" element={<ProductFinderPage />} />
             <Route path="/find-your-piece-v2/:step" element={<ProductFinderPageV2 />} />
-            <Route path={ROUTES.PRODUCT_FINDER_RESULT} element={<ProductFinderResultPage />} />
+            {/* Use Static result page (no backend API required) */}
+            <Route path={ROUTES.PRODUCT_FINDER_RESULT} element={<ProductFinderResultPageStatic />} />
+            {/* Original API result page at /find-your-piece-api/result */}
+            <Route path="/find-your-piece-api/result" element={<ProductFinderResultPage />} />
 
             {/* Legacy redirect: /admin/product-finder/combinations -> /dashboard/admin/ring-customizer/combinations */}
             <Route
