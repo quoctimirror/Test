@@ -154,6 +154,21 @@ const ProductFinderPageStatic = () => {
   const animationRef = useRef(null);
   const idleTimerRef = useRef(null);
 
+  // Sync selections state when navigating between steps (not on initial mount)
+  useEffect(() => {
+    // Only sync if there's actual navigation state with selections
+    if (location.state?.selections) {
+      setSelections(location.state.selections);
+    }
+    if (location.state?.prices) {
+      setSelectedPrices({
+        diamond: location.state.prices.diamond || 0,
+        band: location.state.prices.band || 0,
+        sidestone: location.state.prices.sidestone || 0,
+      });
+    }
+  }, [location.state]);
+
   // Remove entering class after animation
   useEffect(() => {
     const timer = setTimeout(() => setIsEntering(false), 1500);
@@ -444,6 +459,7 @@ const ProductFinderPageStatic = () => {
           {/* Current image */}
           <div className={`product-finder__diamond ${isAnimating ? (currentStepIndex === 0 ? 'product-finder__diamond--enter' : currentStepIndex === 1 ? 'product-finder__diamond--reveal-bottom' : 'product-finder__diamond--reveal-center') : ''} ${isLocked ? 'product-finder__diamond--locked' : ''}`}>
             <img
+              key={currentOption.id}
               src={getCenterPreview(currentOption)}
               alt={currentOption.name}
               className="product-finder__diamond-img"

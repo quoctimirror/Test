@@ -104,7 +104,7 @@ export const PRODUCT_FINDER_CONFIGS = {
   },
   'double_round_baguette': {
     name: 'Double Round Baguette',
-    modelId: 'JXsWC993QZOv09hs6n3RLA',
+    modelId: 'bvrZSo8zRH6o1b7x96AnhA',
     band: 'double',
     mainStone: 'round',
     sideStone: 'baguette',

@@ -65,6 +65,12 @@ export const ROUTES = {
   PRODUCT_FINDER_CHOOSE_BAND: "/find-your-piece/choose-band",
   PRODUCT_FINDER_CHOOSE_SIDESTONE: "/find-your-piece/choose-sidestone",
   PRODUCT_FINDER_RESULT: "/find-your-piece/result",
+  // Product Finder API version (uses backend)
+  PRODUCT_FINDER_API: "/find-your-piece-api",
+  PRODUCT_FINDER_API_CHOOSE_SHAPE: "/find-your-piece-api/choose-shape",
+  PRODUCT_FINDER_API_CHOOSE_BAND: "/find-your-piece-api/choose-band",
+  PRODUCT_FINDER_API_CHOOSE_SIDESTONE: "/find-your-piece-api/choose-sidestone",
+  PRODUCT_FINDER_API_RESULT: "/find-your-piece-api/result",
 
   // POD Admin routes (nested under admin dashboard)
   POD_ADMIN: "/dashboard/admin/pod",

@@ -60,6 +60,21 @@ const ProductFinderPage = () => {
   const animationRef = useRef(null);
   const idleTimerRef = useRef(null);
 
+  // Sync selections state when navigating between steps (not on initial mount)
+  useEffect(() => {
+    // Only sync if there's actual navigation state with selections
+    if (location.state?.selections) {
+      setSelections(location.state.selections);
+    }
+    if (location.state?.prices) {
+      setSelectedPrices({
+        diamond: location.state.prices.diamond || 0,
+        band: location.state.prices.band || 0,
+        sidestone: location.state.prices.sidestone || 0,
+      });
+    }
+  }, [location.state]);
+
   // Remove entering class after animation
   useEffect(() => {
     const timer = setTimeout(() => setIsEntering(false), 1500);
@@ -92,17 +107,17 @@ const ProductFinderPage = () => {
   useEffect(() => {
     if (apiLoading) return;
     if (step === 'choose-band' && !selections.diamond) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
+      navigate(ROUTES.PRODUCT_FINDER_API_CHOOSE_SHAPE, { replace: true });
     }
     if (step === 'choose-sidestone' && (!selections.diamond || !selections.band)) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
+      navigate(ROUTES.PRODUCT_FINDER_API_CHOOSE_SHAPE, { replace: true });
     }
   }, [step, selections, apiLoading, navigate]);
 
   // Guard: invalid step
   useEffect(() => {
     if (!['choose-shape', 'choose-band', 'choose-sidestone'].includes(step)) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { replace: true });
+      navigate(ROUTES.PRODUCT_FINDER_API_CHOOSE_SHAPE, { replace: true });
     }
   }, [step, navigate]);
 
@@ -335,9 +350,9 @@ const ProductFinderPage = () => {
   // Handle back
   const handleBack = () => {
     if (currentStepIndex === 2) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_BAND, { state: { selections, prices: selectedPrices } });
+      navigate(ROUTES.PRODUCT_FINDER_API_CHOOSE_BAND, { state: { selections, prices: selectedPrices } });
     } else if (currentStepIndex === 1) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SHAPE, { state: { selections, prices: selectedPrices } });
+      navigate(ROUTES.PRODUCT_FINDER_API_CHOOSE_SHAPE, { state: { selections, prices: selectedPrices } });
     } else {
       navigate(-1);
     }
@@ -358,14 +373,14 @@ const ProductFinderPage = () => {
     setSelectedIndices(newIndices);
 
     if (currentStepIndex === 0) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_BAND, { state: { selections: newSelections, prices: newPrices } });
+      navigate(ROUTES.PRODUCT_FINDER_API_CHOOSE_BAND, { state: { selections: newSelections, prices: newPrices } });
     } else if (currentStepIndex === 1) {
-      navigate(ROUTES.PRODUCT_FINDER_CHOOSE_SIDESTONE, { state: { selections: newSelections, prices: newPrices } });
+      navigate(ROUTES.PRODUCT_FINDER_API_CHOOSE_SIDESTONE, { state: { selections: newSelections, prices: newPrices } });
     } else {
       // Step 3 → Result
       const modelKey = `${newSelections.band}_${newSelections.diamond}_${newSelections.sidestone}`;
       const config = getProductFinderConfig(newSelections.band, newSelections.diamond, newSelections.sidestone);
-      navigate(ROUTES.PRODUCT_FINDER_RESULT, {
+      navigate(ROUTES.PRODUCT_FINDER_API_RESULT, {
         state: {
           diamond: newSelections.diamond,
           band: newSelections.band,
@@ -481,6 +496,7 @@ const ProductFinderPage = () => {
               <div className="product-finder__center-loading" />
             ) : (
               <img
+                key={currentOption.id}
                 src={getCenterPreview(currentOption)}
                 alt={currentOption.name}
                 className="product-finder__diamond-img"
